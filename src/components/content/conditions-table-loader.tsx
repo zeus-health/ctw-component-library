@@ -1,4 +1,5 @@
 import { ConditionModel } from "@/models/conditions";
+import { useCTW } from "../core/ctw-provider";
 import { ConditionsTable } from "./conditions-table";
 
 const condition1: fhir4.Condition = {
@@ -156,5 +157,7 @@ const conditions: ConditionModel[] = [
 ];
 
 export function ConditionsTableLoader() {
+  const { url, bearerToken } = useCTW();
+  console.log("foo", url, bearerToken);
   return <ConditionsTable conditions={conditions} />;
 }
