@@ -1,6 +1,7 @@
+import { getFhirClient } from "@/fhir/client";
 import * as React from "react";
 
-type CTWState = { url: string; bearerToken: string };
+type CTWState = { url: string; authToken: string };
 
 type CTWProviderProps = { children: React.ReactNode } & CTWState;
 
@@ -19,7 +20,9 @@ function useCTW() {
   if (context === undefined) {
     throw new Error("useCTW must be used within a CTWProvider");
   }
-  return context;
+
+  const fhirClient = getFhirClient(context.url, context.authToken);
+  return { fhirClient };
 }
 
 export { CTWProvider, useCTW };

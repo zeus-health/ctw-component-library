@@ -51,6 +51,7 @@
   },
   "dependencies": {
     "date-fns": "^2.29.1",
+    "fhir-kit-client": "^1.9.1",
     "lodash": "^4.17.21"
   }
 }
