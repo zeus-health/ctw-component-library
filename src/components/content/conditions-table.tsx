@@ -1,41 +1,34 @@
+import { getConditions } from "@/fhir/conditions";
 import { ConditionModel } from "@/models/conditions";
-import { Table, TableColumn, TableOptionProps } from "../core/table";
+import { useEffect, useState } from "react";
+import { useCTW } from "../core/ctw-provider";
+import { ConditionsTableBase } from "./conditions-table-base";
 
 export type ConditionsTableProps = {
-  conditions: ConditionModel[];
-} & TableOptionProps<ConditionModel>;
+  patientUPID: string;
+};
 
-export function ConditionsTable({ conditions }: ConditionsTableProps) {
-  const columns: TableColumn<ConditionModel>[] = [
-    {
-      title: "Condition",
-      dataIndex: "display",
-    },
-    {
-      title: "Status",
-      dataIndex: "clinicalStatus",
-    },
-    {
-      title: "Category",
-      render: ({ categories }) => categories.join(", "),
-    },
-    {
-      title: "Onset",
-      dataIndex: "onset",
-    },
-    {
-      title: "Recorded Date",
-      dataIndex: "recordedDate",
-    },
-    {
-      title: "Recorder",
-      dataIndex: "recorder",
-    },
-  ];
+export function ConditionsTable({ patientUPID }: ConditionsTableProps) {
+  const [isLoading, setIsLoading] = useState(true);
+  const [conditions, setConditions] = useState<ConditionModel[]>([]);
+  const { fhirClient } = useCTW();
 
-  return (
-    <div>
-      <Table records={conditions} columns={columns} />
-    </div>
-  );
+  useEffect(() => {
+    async function load() {
+      const conditionResources = await getConditions(
+        fhirClient,
+        patientUPID,
+        {}
+      );
+      setConditions(conditionResources.map((c) => new ConditionModel(c)));
+      setIsLoading(false);
+    }
+    load();
+  }, [patientUPID]);
+
+  if (isLoading) {
+    return <div>loading...</div>;
+  }
+
+  return <ConditionsTableBase conditions={conditions} />;
 }

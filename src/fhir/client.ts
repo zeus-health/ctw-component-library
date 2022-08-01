@@ -1,6 +1,14 @@
+import { Env } from "@/components/core/ctw-provider";
 import Client from "fhir-kit-client";
 
-export function getFhirClient(url: string, accessToken: string) {
+export function getFhirClient(env: Env, accessToken: string) {
+  const url =
+    env === "production"
+      ? `https://api.zusapi.com/fhir`
+      : `https://api.${env}.zusapi.com/fhir`;
+
+  console.log(url);
+
   return new Client({
     baseUrl: url,
     bearerToken: accessToken,
