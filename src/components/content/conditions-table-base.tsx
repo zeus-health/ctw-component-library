@@ -5,7 +5,11 @@ export type ConditionsTableBaseProps = {
   conditions: ConditionModel[];
 } & TableOptionProps<ConditionModel>;
 
-export function ConditionsTableBase({ conditions }: ConditionsTableBaseProps) {
+export function ConditionsTableBase({
+  conditions,
+  isLoading,
+  emptyMessage,
+}: ConditionsTableBaseProps) {
   const columns: TableColumn<ConditionModel>[] = [
     {
       title: "Condition",
@@ -35,7 +39,12 @@ export function ConditionsTableBase({ conditions }: ConditionsTableBaseProps) {
 
   return (
     <div>
-      <Table records={conditions} columns={columns} />
+      <Table
+        records={conditions}
+        columns={columns}
+        isLoading={isLoading}
+        emptyMessage={emptyMessage}
+      />
     </div>
   );
 }

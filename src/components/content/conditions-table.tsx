@@ -26,9 +26,11 @@ export function ConditionsTable({ patientUPID }: ConditionsTableProps) {
     load();
   }, [patientUPID]);
 
-  if (isLoading) {
-    return <div>loading...</div>;
-  }
-
-  return <ConditionsTableBase conditions={conditions} />;
+  return (
+    <ConditionsTableBase
+      conditions={[]}
+      isLoading={isLoading}
+      emptyMessage="No Conditions Found"
+    />
+  );
 }
