@@ -20,7 +20,6 @@ export function ConditionsTable({ patientUPID }: ConditionsTableProps) {
       try {
         conditionResources = await getConditions(fhirClient, patientUPID, {});
       } catch (e) {
-        console.log("here");
         setMessage("Failed fetching condition information for patient");
       }
 
