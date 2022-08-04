@@ -12,14 +12,18 @@ export function ConditionsTable({ patientUPID }: ConditionsTableProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [conditions, setConditions] = useState<ConditionModel[]>([]);
   const { fhirClient } = useCTW();
+  const [message, setMessage] = useState("No Conditions Found");
 
   useEffect(() => {
     async function load() {
-      const conditionResources = await getConditions(
-        fhirClient,
-        patientUPID,
-        {}
-      );
+      let conditionResources: fhir4.Condition[] = [];
+      try {
+        conditionResources = await getConditions(fhirClient, patientUPID, {});
+      } catch (e) {
+        console.log("here");
+        setMessage("Failed fetching condition information for patient");
+      }
+
       setConditions(conditionResources.map((c) => new ConditionModel(c)));
       setIsLoading(false);
     }
@@ -28,9 +32,9 @@ export function ConditionsTable({ patientUPID }: ConditionsTableProps) {
 
   return (
     <ConditionsTableBase
-      conditions={[]}
+      conditions={conditions}
       isLoading={isLoading}
-      emptyMessage="No Conditions Found"
+      message={message}
     />
   );
 }

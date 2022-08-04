@@ -8,7 +8,7 @@ export type ConditionsTableBaseProps = {
 export function ConditionsTableBase({
   conditions,
   isLoading,
-  emptyMessage,
+  message,
 }: ConditionsTableBaseProps) {
   const columns: TableColumn<ConditionModel>[] = [
     {
@@ -43,7 +43,7 @@ export function ConditionsTableBase({
         records={conditions}
         columns={columns}
         isLoading={isLoading}
-        emptyMessage={emptyMessage}
+        message={message}
       />
     </div>
   );

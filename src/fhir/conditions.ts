@@ -34,8 +34,6 @@ export async function getConditions(
       "id"
     );
   } catch (e) {
-    throw new Error(
-      "Failed fetching active conditions information for patient: " + e
-    );
+    throw new Error("Failed fetching condition information for patient: " + e);
   }
 }
