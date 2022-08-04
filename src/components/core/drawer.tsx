@@ -63,7 +63,7 @@ export function Drawer({
                       <div className="ml-3 flex h-7 items-center">
                         <button
                           type="button"
-                          className="outline-none focus-visible:shadow-none"
+                          className="!outline-none focus-visible:shadow-none"
                           onClick={onClose}
                         >
                           <span className="sr-only">Close panel</span>

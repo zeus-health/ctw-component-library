@@ -6,51 +6,11 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 
-  Force supporting browsers to use overlay scrollbar for vertical scrolling.
-  This fixes an issue in chrome where the content would shift/jump when
-  the scrollbar appears or disappears.
-*/
-html {
-  overflow-y: overlay
-}
 
 /* Setup classes within base so that we can overwrite their styles with
    other classes.
  */
 @layer base {
-
-  /* 
-  Setup focus rings.
-  We use "focus-visible" so that they only show up when browsers
-  think they should (i.e. tabbing but not clicking).
-  We setup defaults for our different backgrounds (e.g. navbar).
-  */
-  button:focus-visible,
-  a:focus-visible {
-    @apply outline-none ring-2 ring-offset-2 ring-primary-500
-  }
-
-  /* Fix outline for inputs where default browser outline was causing
-     two outlines to appear. */
-  input:focus-visible {
-    outline-offset: -1px;
-    @apply outline outline-primary-500 outline-2;
-  }
-
-  .bg-gray-100 button,
-  .bg-gray-100 a {
-    @apply focus-visible:ring-offset-gray-100
-  }
-
-  .bg-primary-700 button {
-    @apply focus-visible:ring-white focus-visible:ring-offset-primary-700
-  }
-
-  .bg-gray-800 button,
-  .bg-gray-800 a {
-    @apply focus-visible:ring-white focus-visible:ring-offset-gray-800
-  }
 
   .btn {
     @apply rounded-md border border-transparent py-2 px-4 text-sm font-medium shadow-sm
