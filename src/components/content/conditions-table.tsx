@@ -13,7 +13,7 @@ export function ConditionsTable({ patientUPID }: ConditionsTableProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [conditions, setConditions] = useState<ConditionModel[]>([]);
   const { fhirClient } = useCTW();
-  const [message, setMessage] = useState("No Conditions Found");
+  const [message, setMessage] = useState("No conditions found");
 
   useEffect(() => {
     async function load() {

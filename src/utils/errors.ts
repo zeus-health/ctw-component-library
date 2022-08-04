@@ -6,5 +6,7 @@ export function isError(error: unknown): error is Error {
 }
 
 export function errorMessage(error: unknown): string {
-  return isError(error) ? error.message.split(":")[0] : "Error loading data";
+  return isError(error)
+    ? error.message.split(":")[0]
+    : "An unknown error occurred";
 }
