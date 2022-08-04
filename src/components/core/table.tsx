@@ -19,7 +19,7 @@ export type TableColumn<T extends MinRecordItem> = {
 export type TableOptionProps<T> = {
   className?: string;
   onClick?: (row: T) => void; // Adds a row hover effect and calls onClick.
-  isLoading: boolean;
+  isLoading?: boolean;
   message?: string;
 };
 
@@ -33,8 +33,8 @@ export const Table = <T extends MinRecordItem>({
   records,
   className,
   onClick,
-  isLoading,
-  message,
+  isLoading = false,
+  message = "No records found",
 }: TableProps<T>) => {
   const propsForClick = (record: T, recordIndex: number) =>
     onClick
@@ -89,29 +89,27 @@ export const Table = <T extends MinRecordItem>({
     } else if (records.length === 0) {
       return <TableFullLengthRow>{message}</TableFullLengthRow>;
     } else {
-      return records.map((record, recordIndex) => {
-        return (
-          <tr key={record.id} {...propsForClick(record, recordIndex)}>
-            {columns.map((column, index) => {
-              const value = column.dataIndex
-                ? (record[column.dataIndex] as unknown as ReactNode)
-                : undefined;
+      return records.map((record, recordIndex) => (
+        <tr key={record.id} {...propsForClick(record, recordIndex)}>
+          {columns.map((column, index) => {
+            const value = column.dataIndex
+              ? (record[column.dataIndex] as unknown as ReactNode)
+              : undefined;
 
-              return (
-                <td
-                  key={column.title ?? index}
-                  className={cx(
-                    "whitespace-nowrap px-3 py-4 text-sm",
-                    index === 0 ? "font-medium text-gray-900" : "text-gray-500"
-                  )}
-                >
-                  {column.render ? column.render(record) : value}
-                </td>
-              );
-            })}
-          </tr>
-        );
-      });
+            return (
+              <td
+                key={column.title ?? index}
+                className={cx(
+                  "whitespace-nowrap px-3 py-4 text-sm",
+                  index === 0 ? "font-medium text-gray-900" : "text-gray-500"
+                )}
+              >
+                {column.render ? column.render(record) : value}
+              </td>
+            );
+          })}
+        </tr>
+      ));
     }
   };
 

@@ -1,5 +1,6 @@
 import { getConditions } from "@/fhir/conditions";
 import { ConditionModel } from "@/models/conditions";
+import { errorMessage } from "@/utils/errors";
 import { useEffect, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
 import { ConditionsTableBase } from "./conditions-table-base";
@@ -20,7 +21,7 @@ export function ConditionsTable({ patientUPID }: ConditionsTableProps) {
       try {
         conditionResources = await getConditions(fhirClient, patientUPID, {});
       } catch (e) {
-        setMessage("Failed fetching condition information for patient");
+        setMessage(errorMessage(e));
       }
 
       setConditions(conditionResources.map((c) => new ConditionModel(c)));
