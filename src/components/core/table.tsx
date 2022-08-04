@@ -20,7 +20,7 @@ export type TableOptionProps<T> = {
   className?: string;
   onClick?: (row: T) => void; // Adds a row hover effect and calls onClick.
   isLoading: boolean;
-  emptyMessage?: string;
+  message?: string;
 };
 
 export type TableProps<T extends MinRecordItem> = {
@@ -34,7 +34,7 @@ export const Table = <T extends MinRecordItem>({
   className,
   onClick,
   isLoading,
-  emptyMessage,
+  message,
 }: TableProps<T>) => {
   const propsForClick = (record: T, recordIndex: number) =>
     onClick
@@ -73,7 +73,7 @@ export const Table = <T extends MinRecordItem>({
 
   const TableFullLengthRow = ({ children }: { children: ReactNode }) => (
     <tr>
-      <td className="text-gray-500 py-2" colSpan={columns.length}>
+      <td className="text-gray-500 py-6" colSpan={columns.length}>
         {children}
       </td>
     </tr>
@@ -87,7 +87,7 @@ export const Table = <T extends MinRecordItem>({
         </TableFullLengthRow>
       );
     } else if (records.length === 0) {
-      return <TableFullLengthRow>{emptyMessage}</TableFullLengthRow>;
+      return <TableFullLengthRow>{message}</TableFullLengthRow>;
     } else {
       return records.map((record, recordIndex) => {
         return (
