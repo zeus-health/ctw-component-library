@@ -16,72 +16,9 @@ html {
 }
 
 /* Setup classes within base so that we can overwrite their styles with
-   other classes. E.g. "link-primary text-color-900".
+   other classes.
  */
 @layer base {
-  .link-primary {
-    @apply cursor-pointer text-primary-900 hover:text-primary-600 hover:underline
-  }
-
-  .sidebar-nav-link {
-    @apply capitalize hover:text-gray-600 hover:bg-primary-50
-  }
-
-  .sidebar-nav-link.active {
-    @apply text-white bg-primary-600
-  }
-
-  .sidebar-nav-icon {
-    @apply text-gray-400 h-6 w-6
-  }
-
-  .sidebar-nav-link.active .sidebar-nav-icon {
-    @apply text-white
-  }
-
-  .sidebar-nav-link:not(.active):hover .sidebar-nav-icon {
-    @apply text-primary-600 
-  }
-
-  .listbox-button,
-  input {
-    @apply rounded-md border border-gray-300 py-2 px-3 text-sm shadow-sm
-  }
-
-  /* Make sure the floating dropdown get full-width of reference. */
-  .listbox-button + div {
-    width: 100%;
-  }
-
-  button:disabled {
-    @apply opacity-70 cursor-not-allowed
-  }
-
-  div.error .listbox-button {
-    @apply border-alert-300 text-alert-900
-  }
-
-  .listbox-button:disabled,
-  input:disabled {
-    @apply bg-gray-100 opacity-100 cursor-not-allowed
-  }
-
-  input.error {
-    @apply border-alert-300 pr-10 text-alert-900 focus:border-alert-500 focus:outline-none focus:ring-alert-500 focus:ring-1
-  }
-
-  input.dark {
-    @apply bg-gray-700 text-gray-100 focus:bg-gray-700 border-0
-  }
-
-  input.dark:focus-visible {
-    outline-offset: -1px;
-    @apply outline-white outline-2
-  }
-  
-  label.error {
-    @apply text-alert-600
-  }
 
   /* 
   Setup focus rings.
@@ -140,22 +77,5 @@ html {
 
   .btn-group button:last-child {
     @apply rounded-r-md;
-  }
-
-  .toggle-checkbox:checked {
-    @apply border-primary-600 right-0;
-  }
-
-  .toggle-checkbox {
-    @apply p-0.5 z-10;
-  }
-
-  .toggle-checkbox:checked + .toggle-span {
-    @apply absolute inset-0 pointer-events-none bg-primary-600;
-  }
-
-  tr.cursor-pointer:focus-visible td:first-child,
-  tr.cursor-pointer:hover td:first-child {
-    @apply text-primary-500
   }
 }
