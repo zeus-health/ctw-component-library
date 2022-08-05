@@ -1,5 +1,7 @@
 import { ConditionModel } from "@/models/conditions";
+import { useState } from "react";
 import { Table, TableColumn, TableOptionProps } from "../core/table";
+import { ConditionDrawer } from "./conditions-drawer";
 
 export type ConditionsTableBaseProps = {
   conditions: ConditionModel[];
@@ -10,6 +12,18 @@ export function ConditionsTableBase({
   isLoading,
   message,
 }: ConditionsTableBaseProps) {
+  const [detailsIsOpen, setDetailsIsOpen] = useState(false);
+  const [selectedCondition, setSelectedCondition] = useState<ConditionModel>();
+
+  function openDetails(condition: ConditionModel) {
+    setDetailsIsOpen(true);
+    setSelectedCondition(condition);
+  }
+
+  function closeDetails() {
+    setDetailsIsOpen(false);
+  }
+
   const columns: TableColumn<ConditionModel>[] = [
     {
       title: "Condition",
@@ -44,6 +58,12 @@ export function ConditionsTableBase({
         columns={columns}
         isLoading={isLoading}
         message={message}
+        onClick={openDetails}
+      />
+      <ConditionDrawer
+        condition={selectedCondition}
+        isOpen={detailsIsOpen}
+        onClose={closeDetails}
       />
     </div>
   );

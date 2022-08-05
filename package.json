@@ -22,7 +22,7 @@
     "dev:vite": "vite",
     "dev:css": "npm run generate:css -- --watch",
     "generate:css": "tailwindcss -i ./src/styles/tailwind.css -o ./src/styles/tailwind-gen.css",
-    "build": "run-p build:*",
+    "build": "npm run generate:css & run-p build:*",
     "build:scripts": "vite build",
     "build:types": "tsc --emitDeclarationOnly && tsc-alias",
     "preview": "vite preview"
@@ -50,6 +50,8 @@
     "vite": "^3.0.0"
   },
   "dependencies": {
+    "@headlessui/react": "^1.6.6",
+    "@heroicons/react": "^1.0.6",
     "date-fns": "^2.29.1",
     "fhir-kit-client": "^1.9.1",
     "lodash": "^4.17.21"
