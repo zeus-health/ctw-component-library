@@ -61,11 +61,7 @@ export function Drawer({
                         {title}
                       </Dialog.Title>
                       <div className="ml-3 flex h-7 items-center">
-                        <button
-                          type="button"
-                          className="!outline-none focus-visible:shadow-none"
-                          onClick={onClose}
-                        >
+                        <button type="button" onClick={onClose}>
                           <span className="sr-only">Close panel</span>
                           <XIcon className="h-6 w-6" aria-hidden="true" />
                         </button>
