@@ -86,31 +86,31 @@ export const Table = <T extends MinRecordItem>({
           Loading... <Spinner />
         </TableFullLengthRow>
       );
-    } else if (records.length === 0) {
-      return <TableFullLengthRow>{message}</TableFullLengthRow>;
-    } else {
-      return records.map((record, recordIndex) => (
-        <tr key={record.id} {...propsForClick(record, recordIndex)}>
-          {columns.map((column, index) => {
-            const value = column.dataIndex
-              ? (record[column.dataIndex] as unknown as ReactNode)
-              : undefined;
-
-            return (
-              <td
-                key={column.title ?? index}
-                className={cx(
-                  "whitespace-nowrap px-3 py-4 text-sm",
-                  index === 0 ? "font-medium text-gray-900" : "text-gray-500"
-                )}
-              >
-                {column.render ? column.render(record) : value}
-              </td>
-            );
-          })}
-        </tr>
-      ));
     }
+    if (records.length === 0) {
+      return <TableFullLengthRow>{message}</TableFullLengthRow>;
+    }
+    return records.map((record, recordIndex) => (
+      <tr key={record.id} {...propsForClick(record, recordIndex)}>
+        {columns.map((column, index) => {
+          const value = column.dataIndex
+            ? (record[column.dataIndex] as unknown as ReactNode)
+            : undefined;
+
+          return (
+            <td
+              key={column.title ?? index}
+              className={cx(
+                "whitespace-nowrap px-3 py-4 text-sm",
+                index === 0 ? "font-medium text-gray-900" : "text-gray-500"
+              )}
+            >
+              {column.render ? column.render(record) : value}
+            </td>
+          );
+        })}
+      </tr>
+    ));
   };
 
   return (
