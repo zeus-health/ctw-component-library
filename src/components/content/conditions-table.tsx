@@ -9,7 +9,7 @@ const DEFAULT_ERR_MSG =
 
 export type ConditionsTableProps = {
   patientUPID: string;
-  overrideErrMsg: string;
+  overrideErrMsg?: string;
 };
 
 export function ConditionsTable({
