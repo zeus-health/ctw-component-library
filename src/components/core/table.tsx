@@ -73,7 +73,7 @@ export const Table = <T extends MinRecordItem>({
 
   const TableFullLengthRow = ({ children }: { children: ReactNode }) => (
     <tr>
-      <td className="text-gray-500 py-6" colSpan={columns.length}>
+      <td className="text-gray-500 p-6" colSpan={columns.length}>
         {children}
       </td>
     </tr>
