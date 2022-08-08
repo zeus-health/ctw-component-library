@@ -9,15 +9,18 @@ let rl = readline.createInterface({
 });
 
 rcs.process
-  .auto(
-    ["./src/**/*.ts", "./src/**/*.tsx", "./src/**/*.css"],
+  .css(
+    ["src/**/*.css"],
     // all css files are now saved, renamed and stored in the selectorLibrary
-    { optimize: false }
+    {
+      ignoreCssVariables: true,
+      preventRandomName: true,
+      replaceKeyframes: true,
+    }
   )
   .then(() => {
     try {
       rmdirSync("./rcs", { recursive: true });
-      console.log(`./rcs is deleted!`);
     } catch (err) {
       console.error(`Error while deleting ./rcs.`);
     }
@@ -39,8 +42,8 @@ function remap() {
     "utf-8",
     (err: any, contents: string) => {
       const newContent = contents.replace(
-        /(?!"selectors":)(?!": {)(?:"([^a-z]*)(ctw-)*([^"]*)":[^,\n]*)/g,
-        '"$1$2$3": "$1ctw-$3"'
+        /(?!"selectors":)(?!": {)(?:"\.?([^a-z]*)([^\s"]+:)?([^a-z]*)(?:ctw-)*([^"]*)":[^,\n]*)/g,
+        '"$1$2$3$4": "$1$2$3ctw-$4"'
       );
       writeFile(
         "./scripts/prefixer/renaming_map.json",
@@ -48,18 +51,19 @@ function remap() {
         { flag: "w+" },
         (err) => {
           rl.question(
-            "Please make sure that: \n- The new class names in scripts/renaming_map.json are acceptable. \n- All CSS files that need prefixes have been generated. \n [y] - Refactor \n [q] - Quit \n",
+            "Please make sure that the new class names in scripts/renaming_map.json are acceptable and modify accordingly before refactoring. \n [y] - Refactor \n [q] - Quit \n >",
             (answer) => {
               switch (answer.toLowerCase()) {
                 case "y":
                   spawn(
-                    "tsc scripts/prefixer/prefixer_2.ts && node scripts/prefixer/prefixer_2.js",
+                    "tsc scripts/prefixer/prefixer_apply.ts && node scripts/prefixer/prefixer_apply.js",
                     [],
                     { shell: true, stdio: "inherit" }
                   );
                   break;
                 case "q":
                   rl.close();
+                  break;
                 default:
                   console.log("Invalid answer.");
               }

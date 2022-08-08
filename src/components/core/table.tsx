@@ -31,18 +31,18 @@ export const Table = <T extends MinRecordItem>({
   className,
   onClick,
 }: TableProps<T>) => (
-  <div className={cx(className, "flex flex-col")}>
-    <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-      <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-        <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-          <table className="min-w-full divide-y divide-gray-300">
-            <thead className="bg-gray-50">
+  <div className={cx(className, "ctw-flex ctw-flex-col")}>
+    <div className="-ctw-my-2 -ctw-mx-4 ctw-overflow-x-auto sm:-ctw-mx-6 lg:-ctw-mx-8">
+      <div className="ctw-inline-block ctw-min-w-full ctw-py-2 ctw-align-middle md:ctw-px-6 lg:ctw-px-8">
+        <div className="ctw-overflow-hidden ctw-shadow ctw-ring-1 ctw-ring-black ctw-ring-opacity-5 md:ctw-rounded-lg">
+          <table className="ctw-min-w-full ctw-divide-y ctw-divide-gray-300">
+            <thead className="ctw-bg-gray-50">
               <tr>
                 {columns.map((column, index) => (
                   <th
                     key={column.title ?? index}
                     scope="col"
-                    className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                    className="ctw-px-3 ctw-py-3 ctw-text-left ctw-text-xs ctw-font-medium ctw-uppercase ctw-tracking-wider ctw-text-gray-500"
                   >
                     {column.title}
                   </th>
@@ -50,15 +50,18 @@ export const Table = <T extends MinRecordItem>({
               </tr>
             </thead>
 
-            <tbody className="divide-y divide-gray-200 bg-white">
+            <tbody className="ctw-divide-y ctw-divide-gray-200 ctw-bg-white">
               {records.map((record, recordIndex) => {
                 const propsForClick = onClick
                   ? {
                       className: cx(
                         // Add bottom radius to last row to fix issue with focus ring.
                         // Otherwise the row's focus ring would get cutoff since the table is rounded.
-                        { "rounded-b-lg": recordIndex === records.length - 1 },
-                        "cursor-pointer hover:bg-gray-50 ring-primary-500 focus-visible:ring-2 ring-inset outline-none"
+                        {
+                          "ctw-rounded-b-lg":
+                            recordIndex === records.length - 1,
+                        },
+                        "ctw-cursor-pointer hover:ctw-bg-gray-50 ctw-ring-primary-500 focus-visible:ctw-ring-2 ctw-ring-inset ctw-outline-none"
                       ),
                       tabIndex: 0,
                       onKeyUp: (event: KeyboardEvent<HTMLTableRowElement>) => {
@@ -81,10 +84,10 @@ export const Table = <T extends MinRecordItem>({
                         <td
                           key={column.title ?? index}
                           className={cx(
-                            "whitespace-nowrap px-3 py-4 text-sm",
+                            "ctw-whitespace-nowrap ctw-px-3 ctw-py-4 ctw-text-sm",
                             index === 0
-                              ? "font-medium text-gray-900"
-                              : "text-gray-500"
+                              ? "ctw-font-medium ctw-text-gray-900"
+                              : "ctw-text-gray-500"
                           )}
                         >
                           {column.render ? column.render(record) : value}
