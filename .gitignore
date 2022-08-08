@@ -1,3 +1,5 @@
 dist
 src/components/content/conditions-table-loader.tsx
 src/styles/tailwind-gen.css
+node_modules
+.env
