@@ -9,12 +9,12 @@ const DEFAULT_ERR_MSG =
 
 export type ConditionsTableProps = {
   patientUPID: string;
-  overrideErrMsg?: string;
+  errorMessage?: string;
 };
 
 export function ConditionsTable({
   patientUPID,
-  overrideErrMsg = DEFAULT_ERR_MSG,
+  errorMessage = DEFAULT_ERR_MSG,
 }: ConditionsTableProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [conditions, setConditions] = useState<ConditionModel[]>([]);
@@ -27,7 +27,7 @@ export function ConditionsTable({
       try {
         conditionResources = await getConditions(fhirClient, patientUPID, {});
       } catch (e) {
-        setMessage(overrideErrMsg);
+        setMessage(errorMessage);
       }
 
       setConditions(conditionResources.map((c) => new ConditionModel(c)));
