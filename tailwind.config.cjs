@@ -1,5 +1,6 @@
 const lineClampPlugin = require("@tailwindcss/line-clamp");
 const defaultTheme = require("tailwindcss/defaultTheme");
+const plugin = require("tailwindcss/plugin");
 
 module.exports = {
   content: ["./src/**/*.{ts,tsx,jsx,js}"],
@@ -9,16 +10,16 @@ module.exports = {
       white: "#fff",
       black: "#000",
       brand: {
-        50: "#FCFAF4",
-        100: "#F4EBD2",
-        200: "#EEE1BB",
-        300: "#E9D7A4",
-        400: "#E3CD8D",
-        500: "#DDC377",
-        600: "#D8B960",
-        700: "#D2AF49",
-        800: "#CDA533",
-        900: "#C79B1C",
+        50: "var(--brand-50, #FCFAF4)",
+        100: "var(--brand-100, #F4EBD2)",
+        200: "var(--brand-200, #EEE1BB)",
+        300: "var(--brand-300, #E9D7A4)",
+        400: "var(--brand-400, #E3CD8D)",
+        500: "var(--brand-500, #DDC377)",
+        600: "var(--brand-600, #D8B960)",
+        700: "var(--brand-700, #D2AF49)",
+        800: "var(--brand-800, #CDA533)",
+        900: "var(--brand-900, #C79B1C)",
       },
       primary: {
         50: "#FAF5FF",
@@ -93,11 +94,18 @@ module.exports = {
         900: "#7F1D1D",
       },
     },
+
     extend: {
       fontFamily: {
         sans: [...defaultTheme.fontFamily.sans],
       },
+      borderRadius: {
+        none: "0",
+        sm: ".125rem",
+        DEFAULT: ".25rem",
+        lg: ".5rem",
+        full: "9999px",
+      },
     },
   },
-  plugins: [lineClampPlugin],
 };
