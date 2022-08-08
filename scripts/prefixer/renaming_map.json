@@ -1,0 +1,9 @@
+{
+  "selectors": {
+    ".logo": ".ctw-logo",
+    ".react": ".ctw-react",
+    ".card": ".ctw-card",
+    ".read-the-docs": ".ctw-read-the-docs",
+    "#root": "#ctw-root"
+  }
+}
