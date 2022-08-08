@@ -13,6 +13,7 @@ Then, [prefixer_apply](prefixer_apply.ts) applies the mapping to the files in th
 
 ## Usage
 
+1. Remove `prefix: "ctw-"` from [tailwind.config.cjs](../../tailwind.config.cjs)
 1. `npm run generate:css`.
 1. Remove `"type": "module"` from [package.json](../../package.json).
 1. `tsc scripts/prefixer/prefixer.ts && node scripts/prefixer/prefixer.js`
