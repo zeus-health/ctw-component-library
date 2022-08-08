@@ -103,5 +103,4 @@ module.exports = {
     preflight: false,
   },
   plugins: [lineClampPlugin],
-  prefix: "ctw-",
 };
