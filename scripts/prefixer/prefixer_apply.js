@@ -12,7 +12,7 @@ var mapDir = "./scripts/prefixer/renaming_map.json";
 var rcs = require("rename-css-selectors");
 var fs = require("fs");
 var glob = require("glob");
-var files = __spreadArray(__spreadArray(__spreadArray([], glob.sync(dir + ".ts"), true), glob.sync(dir + ".tsx"), true), glob.sync(dir + ".css"), true);
+var files = __spreadArray(__spreadArray(__spreadArray([], glob.sync(dir + ".ts"), true), glob.sync(dir + ".tsx"), true), glob.sync(dir + ".css", { ignore: ["./src/styles/*.css"] }), true);
 var map = JSON.parse(fs.readFileSync(mapDir)).selectors;
 var _loop_1 = function (file) {
     fs.readFile(file, "utf-8", function (err, contents) {
@@ -23,7 +23,7 @@ var _loop_1 = function (file) {
         var replaced = contents;
         for (var oldClassName in map) {
             if (file.split(".").pop() === "css") {
-                replaced = replaced.replaceAll(new RegExp("\\n([^\\w\\d\\s]|@keyframes )".concat(oldClassName, "([^\\w\\d])"), "g"), "\n$1" + map[oldClassName] + "$2");
+                replaced = replaced.replaceAll(new RegExp("\\n(\\s*)([^\\w\\d\\s]|@keyframes )".concat(oldClassName, "([^\\w\\d])"), "g"), "\n$1$2".concat(map[oldClassName], "$3"));
             }
             else {
                 replaced = replaced.replaceAll(new RegExp("(?<!from )(\"|(?:\".*\\s))".concat(oldClassName, "([\"(?:\\s.*\")])"), "g"), "$1" + map[oldClassName] + "$2");

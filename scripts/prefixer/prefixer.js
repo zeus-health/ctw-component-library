@@ -4,12 +4,13 @@ var fs_1 = require("fs");
 var readline = require("readline");
 var rcs = require("rename-css-selectors");
 var spawn = require("child_process").spawn;
+var glob = require("glob");
 var rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
 rcs.process
-    .css(["src/**/*.css"], 
+    .css(glob.sync("./**/*.css", { ignore: ["./src/styles/tailwind.css"] }), 
 // all css files are now saved, renamed and stored in the selectorLibrary
 {
     ignoreCssVariables: true,

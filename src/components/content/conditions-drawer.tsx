@@ -38,9 +38,9 @@ export function ConditionDrawer({
     <Drawer title="Condition" isOpen={isOpen} onClose={onClose}>
       <Drawer.Body>
         {condition ? (
-          <div className="space-y-7 text-black">
-            <div className="flex justify-between space-x-8">
-              <span className="text-3xl text-black font-bold">
+          <div className="ctw-space-y-7 ctw-text-black">
+            <div className="ctw-flex ctw-justify-between ctw-space-x-8">
+              <span className="ctw-text-3xl ctw-text-black ctw-font-bold">
                 {condition.display}
               </span>
             </div>
@@ -58,10 +58,10 @@ export function ConditionDrawer({
         ) : null}
       </Drawer.Body>
       <Drawer.Footer>
-        <div className="flex justify-end space-x-3 text-black ">
+        <div className="ctw-flex ctw-justify-end ctw-space-x-3 ctw-text-black ">
           <button
             type="button"
-            className="btn-default font-semibold outline-gray-100"
+            className="ctw-btn-default ctw-font-semibold ctw-outline-gray-100"
             onClick={onClose}
           >
             Close

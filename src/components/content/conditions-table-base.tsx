@@ -7,7 +7,11 @@ export type ConditionsTableBaseProps = {
   conditions: ConditionModel[];
 } & TableOptionProps<ConditionModel>;
 
-export function ConditionsTableBase({ conditions }: ConditionsTableBaseProps) {
+export function ConditionsTableBase({
+  conditions,
+  isLoading,
+  message,
+}: ConditionsTableBaseProps) {
   const [detailsIsOpen, setDetailsIsOpen] = useState(false);
   const [selectedCondition, setSelectedCondition] = useState<ConditionModel>();
 
@@ -49,8 +53,13 @@ export function ConditionsTableBase({ conditions }: ConditionsTableBaseProps) {
 
   return (
     <div>
-      <Table records={conditions} columns={columns} onClick={openDetails} />
-
+      <Table
+        records={conditions}
+        columns={columns}
+        isLoading={isLoading}
+        message={message}
+        onClick={openDetails}
+      />
       <ConditionDrawer
         condition={selectedCondition}
         isOpen={detailsIsOpen}

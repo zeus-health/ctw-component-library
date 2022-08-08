@@ -5,10 +5,10 @@ var rcs = require("rename-css-selectors");
 const fs = require("fs");
 const glob = require("glob");
 
-const files: string[] = [
+let files: string[] = [
   ...glob.sync(dir + ".ts"),
   ...glob.sync(dir + ".tsx"),
-  ...glob.sync(dir + ".css"),
+  ...glob.sync(dir + ".css", { ignore: ["./src/styles/*.css"] }),
 ];
 
 let map = JSON.parse(fs.readFileSync(mapDir)).selectors;
@@ -25,10 +25,10 @@ for (const file of files) {
       if (file.split(".").pop() === "css") {
         replaced = replaced.replaceAll(
           new RegExp(
-            `\\n([^\\w\\d\\s]|@keyframes )${oldClassName}([^\\w\\d])`,
+            `\\n(\\s*)([^\\w\\d\\s]|@keyframes )${oldClassName}([^\\w\\d])`,
             "g"
           ),
-          "\n$1" + map[oldClassName] + "$2"
+          `\n$1$2${map[oldClassName]}$3`
         );
       } else {
         replaced = replaced.replaceAll(

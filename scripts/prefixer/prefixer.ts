@@ -2,6 +2,7 @@ import { readFile, rmdirSync, writeFile } from "fs";
 import * as readline from "readline";
 var rcs = require("rename-css-selectors");
 const { spawn } = require("child_process");
+const glob = require("glob");
 
 let rl = readline.createInterface({
   input: process.stdin,
@@ -10,7 +11,7 @@ let rl = readline.createInterface({
 
 rcs.process
   .css(
-    ["src/**/*.css"],
+    glob.sync("./**/*.css", { ignore: ["./src/styles/tailwind.css"] }),
     // all css files are now saved, renamed and stored in the selectorLibrary
     {
       ignoreCssVariables: true,

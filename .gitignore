@@ -1,4 +1,9 @@
 dist
 src/components/content/conditions-table-loader.tsx
 src/styles/tailwind-gen.css
+<<<<<<< HEAD
 node_modules/
+=======
+node_modules
+.env
+>>>>>>> 87b7067cf4793fdd85edb30658d244147f433f82

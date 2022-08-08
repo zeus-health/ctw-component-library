@@ -18,13 +18,14 @@ export function Drawer({
   onAfterClosed,
   title,
 }: DrawerProps) {
-  const transitionClasses = "transform transition ease-in-out duration-300";
+  const transitionClasses =
+    "ctw-transform ctw-transition ctw-ease-in-out ctw-duration-300";
 
   return (
     <Transition.Root show={isOpen} as={Fragment}>
       <Dialog
         as="div"
-        className="relative z-10"
+        className="ctw-relative ctw-z-10"
         onClose={() => {
           /* do not close on esc or backdrop click  */
         }}
@@ -32,38 +33,41 @@ export function Drawer({
         <Transition.Child
           as={Fragment}
           enter={transitionClasses}
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
+          enterFrom="ctw-opacity-0"
+          enterTo="ctw-opacity-100"
           leave={transitionClasses}
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
+          leaveFrom="ctw-opacity-100"
+          leaveTo="ctw-opacity-0"
           afterLeave={onAfterClosed}
         >
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          <div className="ctw-fixed ctw-inset-0 ctw-bg-gray-500 ctw-bg-opacity-75 ctw-transition-opacity" />
         </Transition.Child>
 
-        <div className="fixed inset-0 overflow-hidden">
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+        <div className="ctw-fixed ctw-inset-0 ctw-overflow-hidden">
+          <div className="ctw-absolute ctw-inset-0 ctw-overflow-hidden">
+            <div className="ctw-pointer-events-none ctw-fixed ctw-inset-y-0 ctw-right-0 ctw-flex ctw-max-w-full ctw-pl-10">
               <Transition.Child
                 as={Fragment}
                 enter={transitionClasses}
-                enterFrom="translate-x-full"
-                enterTo="translate-x-0"
+                enterFrom="ctw-translate-x-full"
+                enterTo="ctw-translate-x-0"
                 leave={transitionClasses}
-                leaveFrom="translate-x-0"
-                leaveTo="translate-x-full"
+                leaveFrom="ctw-translate-x-0"
+                leaveTo="ctw-translate-x-full"
               >
-                <Dialog.Panel className="pointer-events-auto w-screen max-w-xl">
-                  <div className="flex h-full flex-col bg-white shadow-xl">
-                    <div className="flex h-14 flex-shrink-0 items-center justify-between bg-primary-700 px-6 text-white">
-                      <Dialog.Title className="text-lg font-semibold uppercase">
+                <Dialog.Panel className="ctw-pointer-events-auto ctw-w-screen ctw-max-w-xl">
+                  <div className="ctw-flex ctw-h-full ctw-flex-col ctw-bg-white ctw-shadow-xl">
+                    <div className="ctw-flex ctw-h-14 ctw-flex-shrink-0 ctw-items-center ctw-justify-between ctw-bg-primary-700 ctw-px-6 ctw-text-white">
+                      <Dialog.Title className="ctw-text-lg ctw-font-semibold ctw-uppercase">
                         {title}
                       </Dialog.Title>
-                      <div className="ml-3 flex h-7 items-center">
+                      <div className="ctw-ml-3 ctw-flex ctw-h-7 ctw-items-center">
                         <button type="button" onClick={onClose}>
-                          <span className="sr-only">Close panel</span>
-                          <XIcon className="h-6 w-6" aria-hidden="true" />
+                          <span className="ctw-sr-only">Close panel</span>
+                          <XIcon
+                            className="ctw-h-6 ctw-w-6"
+                            aria-hidden="true"
+                          />
                         </button>
                       </div>
                     </div>
@@ -85,7 +89,11 @@ Drawer.Footer = function DialogFooter({
 }: {
   children: ReactNode;
 }): JSX.Element {
-  return <div className="border-t border-gray-200 px-6 py-4">{children}</div>;
+  return (
+    <div className="ctw-border-t ctw-border-gray-200 ctw-px-6 ctw-py-4">
+      {children}
+    </div>
+  );
 };
 
 Drawer.Body = function DialogBody({
@@ -94,6 +102,8 @@ Drawer.Body = function DialogBody({
   children: ReactNode;
 }): JSX.Element {
   return (
-    <div className="flex h-full flex-col overflow-y-auto p-6">{children}</div>
+    <div className="ctw-flex ctw-h-full ctw-flex-col ctw-overflow-y-auto ctw-p-6">
+      {children}
+    </div>
   );
 };

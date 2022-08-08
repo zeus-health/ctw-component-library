@@ -25,3 +25,5 @@ Then, [prefixer_apply](prefixer_apply.ts) applies the mapping to the files in th
 
 This may miss some of the CSS classes (e.g. `.shadow`) or try to rename ones that you don't want to rename (e.g. `#root`). Make sure these edge cases are added/cleaned in [renaming_map.json](renaming_map.json) before you hit apply, or restart but remember to fix the map to undo the mistake.  
 These mistakes will re-appear in the mapping file if you start the script over again, as it is regenerated each time.
+
+If there is an entire CSS file you don't want the script to pull classes to rename from (e.g. tailwind.css), make sure to add it in [prefixer.ts](prefixer.ts) `ignore`.
