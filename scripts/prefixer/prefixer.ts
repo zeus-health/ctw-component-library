@@ -1,5 +1,11 @@
-import { spawn } from "child_process";
-import { readFile, rmdirSync, writeFile } from "fs";
+import { spawn, spawnSync } from "child_process";
+import {
+  readFile,
+  readFileSync,
+  rmdirSync,
+  writeFile,
+  writeFileSync,
+} from "fs";
 import glob from "glob";
 import readline from "readline";
 import rcs from "rename-css-selectors";
@@ -9,32 +15,47 @@ let rl = readline.createInterface({
   output: process.stdout,
 });
 
-rcs.process
-  .css(
-    glob.sync("./**/*.css", { ignore: ["./src/styles/tailwind.css"] }),
-    // all css files are now saved, renamed and stored in the selectorLibrary
-    {
-      ignoreCssVariables: true,
-      preventRandomName: true,
-      replaceKeyframes: true,
-    }
-  )
-  .then(() => {
-    try {
-      rmdirSync("./rcs", { recursive: true });
-    } catch (err) {
-      console.error(`Error while deleting ./rcs.`);
-    }
+tailwindNoPrefixGen();
+draftMap();
 
-    rcs.mapping.generate(
-      "./scripts/prefixer/",
-      { overwrite: true },
-      (err: any) => {
-        // the mapping file draft was generated
-        remap();
-      }
-    );
+function tailwindNoPrefixGen() {
+  let tailwindConfig = readFileSync("tailwind.config.cjs", "utf-8");
+  tailwindConfig = tailwindConfig.replace('"ctw-"', '""');
+  writeFileSync("tailwind.config.cjs", tailwindConfig, "utf-8");
+  let cssGenerate = spawnSync("npm run generate:css", [], {
+    shell: true,
+    stdio: "inherit",
   });
+}
+
+function draftMap() {
+  rcs.process
+    .css(
+      glob.sync("./**/*.css", { ignore: ["./src/styles/tailwind.css"] }),
+      // all css files are now saved, renamed and stored in the selectorLibrary
+      {
+        ignoreCssVariables: true,
+        preventRandomName: true,
+        replaceKeyframes: true,
+      }
+    )
+    .then(() => {
+      try {
+        rmdirSync("./rcs", { recursive: true });
+      } catch (err) {
+        console.error(`Error while deleting ./rcs.`);
+      }
+
+      rcs.mapping.generate(
+        "./scripts/prefixer/",
+        { overwrite: true },
+        (err: any) => {
+          // the mapping file draft was generated
+          remap();
+        }
+      );
+    });
+}
 
 function remap() {
   // add the prefixes to the mapping file

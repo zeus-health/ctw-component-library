@@ -2,23 +2,17 @@
 
 Adds the ctw- prefix to every CSS class in any CSS file in the folder where the following command is run, if it does not already have the prefix.
 
+## Usage
+
+`npx ts-node --esm scripts/prefixer/prefixer.ts`
+
 ## How
 
 [prefixer.ts](prefixer.ts) generates a mapping of original CSS class names to their prefixed versions based on the CSS files in `/src`.  
 Then, [prefixer_apply](prefixer_apply.ts) applies the mapping to the files in the directory.
 
 [View the Regex in prefixer.ts that adds prefixes to a map](http://regexr.com/6rflc)
-[View the Regex to apply a map on CSS files](http://regexr.com/6rfms)
 [View the Regex to apply a map on typescript files](http://regexr.com/6rflo)
-
-## Usage
-
-1. Remove `prefix: "ctw-"` from [tailwind.config.cjs](../../tailwind.config.cjs)
-1. `npm run generate:css`.
-1. `npx ts-node --esm scripts/prefixer/prefixer.ts`
-1. Add `prefix: "ctw-"` in [tailwind.config.cjs](../../tailwind.config.cjs)
-1. Add `"type": "module"` back to [package.json](../../package.json) temporarily.
-1. Re-run `generate:css` script.
 
 ## Limitation
 

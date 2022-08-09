@@ -1,3 +1,4 @@
+import { spawnSync } from "child_process";
 import fs from "fs";
 import glob from "glob";
 
@@ -23,25 +24,36 @@ for (const file of files) {
     for (const oldClassName in map) {
       if (file.split(".").pop() === "css") {
         replaced = replaced.replace(
-          new RegExp(`\.${oldClassName}`, "g"),
+          new RegExp(`\\.${oldClassName}`, "g"),
           `.${map[oldClassName]}`
         );
       } else {
         replaced = replaced.replace(
           new RegExp(
-            `(?<!from )("|(?:".*\\s))${oldClassName}(["(?:\\s.*")])`,
+            `(?<! from )` + // Don't replace if it's an import line with "from " right before it
+              `("(?:.*\\s)?)` + // Look for the start of a string, can list classes before this class
+              oldClassName + // Look for this class inside the string
+              `((?:\\s.*)?")`, // Look for the end of the string, can list classes before this class
             "g"
           ),
-          "$1" + map[oldClassName] + "$2"
+          "$1" + map[oldClassName] + "$2" // Add the classes before and after this one back, along with the renamed class.
         );
       }
     }
 
-    fs.writeFile(file, replaced, "utf-8", (err) => {
-      if (err) {
-        console.log(err);
-      }
-    });
+    fs.writeFileSync(file, replaced, "utf-8");
+  });
+}
+
+tailwindPrefixGen();
+
+function tailwindPrefixGen() {
+  let tailwindConfig = fs.readFileSync("tailwind.config.cjs", "utf-8");
+  tailwindConfig = tailwindConfig.replace('prefix: ""', 'prefix: "ctw-"');
+  fs.writeFileSync("tailwind.config.cjs", tailwindConfig, "utf-8");
+  let cssGenerate = spawnSync("npm run generate:css", [], {
+    shell: true,
+    stdio: "inherit",
   });
 }
 
