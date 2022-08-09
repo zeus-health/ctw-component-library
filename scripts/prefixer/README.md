@@ -15,8 +15,7 @@ Then, [prefixer_apply](prefixer_apply.ts) applies the mapping to the files in th
 
 1. Remove `prefix: "ctw-"` from [tailwind.config.cjs](../../tailwind.config.cjs)
 1. `npm run generate:css`.
-1. Remove `"type": "module"` from [package.json](../../package.json).
-1. `tsc scripts/prefixer/prefixer.ts && node scripts/prefixer/prefixer.js`
+1. `npx ts-node --esm scripts/prefixer/prefixer.ts`
 1. Add `prefix: "ctw-"` in [tailwind.config.cjs](../../tailwind.config.cjs)
 1. Add `"type": "module"` back to [package.json](../../package.json) temporarily.
 1. Re-run `generate:css` script.
