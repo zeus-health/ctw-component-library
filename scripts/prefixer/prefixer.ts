@@ -1,8 +1,8 @@
+import { spawn } from "child_process";
 import { readFile, rmdirSync, writeFile } from "fs";
-import * as readline from "readline";
-var rcs = require("rename-css-selectors");
-const { spawn } = require("child_process");
-const glob = require("glob");
+import glob from "glob";
+import readline from "readline";
+import rcs from "rename-css-selectors";
 
 let rl = readline.createInterface({
   input: process.stdin,
@@ -57,9 +57,12 @@ function remap() {
               switch (answer.toLowerCase()) {
                 case "y":
                   spawn(
-                    "tsc scripts/prefixer/prefixer_apply.ts && node scripts/prefixer/prefixer_apply.js",
+                    "npx ts-node --esm scripts/prefixer/prefixer_apply.ts",
                     [],
-                    { shell: true, stdio: "inherit" }
+                    {
+                      shell: true,
+                      stdio: "inherit",
+                    }
                   );
                   break;
                 case "q":

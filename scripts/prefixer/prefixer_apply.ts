@@ -1,9 +1,8 @@
+import fs from "fs";
+import glob from "glob";
+
 const dir = "./src/**/*";
 const mapDir = "./scripts/prefixer/renaming_map.json";
-
-var rcs = require("rename-css-selectors");
-const fs = require("fs");
-const glob = require("glob");
 
 let files: string[] = [
   ...glob.sync(dir + ".ts"),
@@ -11,7 +10,7 @@ let files: string[] = [
   ...glob.sync(dir + ".css", { ignore: ["./src/styles/*.css"] }),
 ];
 
-let map = JSON.parse(fs.readFileSync(mapDir)).selectors;
+let map = JSON.parse(fs.readFileSync(mapDir, "utf-8")).selectors;
 
 for (const file of files) {
   fs.readFile(file, "utf-8", (err, contents) => {
@@ -23,15 +22,12 @@ for (const file of files) {
 
     for (const oldClassName in map) {
       if (file.split(".").pop() === "css") {
-        replaced = replaced.replaceAll(
-          new RegExp(
-            `\\n(\\s*)([^\\w\\d\\s]|@keyframes )${oldClassName}([^\\w\\d])`,
-            "g"
-          ),
-          `\n$1$2${map[oldClassName]}$3`
+        replaced = replaced.replace(
+          new RegExp(`\.${oldClassName}`, "g"),
+          `.${map[oldClassName]}`
         );
       } else {
-        replaced = replaced.replaceAll(
+        replaced = replaced.replace(
           new RegExp(
             `(?<!from )("|(?:".*\\s))${oldClassName}(["(?:\\s.*")])`,
             "g"
@@ -48,3 +44,5 @@ for (const file of files) {
     });
   });
 }
+
+export {};
