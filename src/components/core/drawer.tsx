@@ -39,7 +39,7 @@ export function Drawer({
           leaveTo="opacity-0"
           afterLeave={onAfterClosed}
         >
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          <div className="fixed inset-0 bg-content-light bg-opacity-75 transition-opacity" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-hidden">
@@ -56,7 +56,7 @@ export function Drawer({
               >
                 <Dialog.Panel className="pointer-events-auto w-screen max-w-xl">
                   <div className="flex h-full flex-col bg-white shadow-xl">
-                    <div className="flex h-14 flex-shrink-0 items-center justify-between bg-primary-700 px-6 text-white">
+                    <div className="flex h-14 flex-shrink-0 items-center justify-between bg-primary-dark px-6 text-white">
                       <Dialog.Title className="text-lg font-semibold uppercase">
                         {title}
                       </Dialog.Title>
@@ -85,7 +85,9 @@ Drawer.Footer = function DialogFooter({
 }: {
   children: ReactNode;
 }): JSX.Element {
-  return <div className="border-t border-gray-200 px-6 py-4">{children}</div>;
+  return (
+    <div className="border-t border-divider-light px-6 py-4">{children}</div>
+  );
 };
 
 Drawer.Body = function DialogBody({

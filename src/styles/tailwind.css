@@ -6,23 +6,20 @@
 @tailwind components;
 @tailwind utilities;
 
-
 /* Setup classes within base so that we can overwrite their styles with
    other classes.
  */
 @layer base {
-
   .btn {
-    @apply rounded-md border border-transparent py-2 px-4 text-sm font-medium shadow-sm
+    @apply rounded-md border border-transparent py-2 px-4 text-sm font-medium shadow-sm;
   }
 
   .btn-default {
-    @apply btn border-gray-300 bg-white text-gray-700 hover:bg-gray-50
-
+    @apply btn border-divider-main bg-white text-content-light hover:bg-bg-lighter;
   }
 
   .btn-primary {
-    @apply btn bg-primary-600 text-white hover:bg-primary-700
+    @apply btn bg-primary-main text-white hover:bg-primary-dark;
   }
 
   .btn-group button {

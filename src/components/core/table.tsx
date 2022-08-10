@@ -45,7 +45,7 @@ export const Table = <T extends MinRecordItem>({
             {
               "rounded-b-lg": recordIndex === records.length - 1,
             },
-            "cursor-pointer hover:bg-gray-50 ring-primary-500 focus-visible:ring-2 ring-inset outline-none"
+            "cursor-pointer hover:bg-bg-lighter ring-primary-main focus-visible:ring-2 ring-inset outline-none"
           ),
           tabIndex: 0,
           onKeyUp: (event: KeyboardEvent<HTMLTableRowElement>) => {
@@ -63,7 +63,7 @@ export const Table = <T extends MinRecordItem>({
         <th
           key={column.title ?? index}
           scope="col"
-          className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+          className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider text-content-light"
         >
           {column.title}
         </th>
@@ -73,7 +73,7 @@ export const Table = <T extends MinRecordItem>({
 
   const TableFullLengthRow = ({ children }: { children: ReactNode }) => (
     <tr>
-      <td className="text-gray-500 p-6" colSpan={columns.length}>
+      <td className="text-content-light p-6" colSpan={columns.length}>
         {children}
       </td>
     </tr>
@@ -102,7 +102,9 @@ export const Table = <T extends MinRecordItem>({
               key={column.title ?? index}
               className={cx(
                 "whitespace-nowrap px-3 py-4 text-sm",
-                index === 0 ? "font-medium text-gray-900" : "text-gray-500"
+                index === 0
+                  ? "font-medium text-content-black"
+                  : "text-content-light"
               )}
             >
               {column.render ? column.render(record) : value}
@@ -118,9 +120,9 @@ export const Table = <T extends MinRecordItem>({
       <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
           <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg">
-            <table className="min-w-full divide-y divide-gray-300">
-              <thead className="bg-gray-50">{tableCols}</thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
+            <table className="min-w-full divide-y divide-divider-main">
+              <thead className="bg-bg-lighter">{tableCols}</thead>
+              <tbody className="divide-y divide-divider-light  bg-white">
                 {tableRows()}
               </tbody>
             </table>

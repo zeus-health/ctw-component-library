@@ -61,7 +61,7 @@ export function ConditionDrawer({
         <div className="flex justify-end space-x-3 text-black ">
           <button
             type="button"
-            className="btn-default font-semibold outline-gray-100"
+            className="btn-default font-semibold outline-bg-100"
             onClick={onClose}
           >
             Close
