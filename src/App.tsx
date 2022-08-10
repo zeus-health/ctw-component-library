@@ -10,7 +10,7 @@ function App() {
   return (
     <CTWProvider env="dev" authToken={AUTH_TOKEN} theme={{}}>
       <div className="App space-y-5">
-        <h1 className="bg-brand-50">CTW Component Library</h1>
+        <h1>CTW Component Library</h1>
         <ConditionsTable patientUPID={DEV_PENNY_UPID} />
       </div>
     </CTWProvider>
