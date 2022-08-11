@@ -40,7 +40,7 @@ export function Drawer({
           leaveTo="ctw-opacity-0"
           afterLeave={onAfterClosed}
         >
-          <div className="ctw-fixed ctw-inset-0 ctw-bg-gray-500 ctw-bg-opacity-75 ctw-transition-opacity" />
+          <div className="ctw-fixed ctw-inset-0 ctw-bg-content-light ctw-bg-opacity-75 ctw-transition-opacity" />
         </Transition.Child>
 
         <div className="ctw-fixed ctw-inset-0 ctw-overflow-hidden">
@@ -57,7 +57,7 @@ export function Drawer({
               >
                 <Dialog.Panel className="ctw-pointer-events-auto ctw-w-screen ctw-max-w-xl">
                   <div className="ctw-flex ctw-h-full ctw-flex-col ctw-bg-white ctw-shadow-xl">
-                    <div className="ctw-flex ctw-h-14 ctw-flex-shrink-0 ctw-items-center ctw-justify-between ctw-bg-primary-700 ctw-px-6 ctw-text-white">
+                    <div className="ctw-flex ctw-h-14 ctw-flex-shrink-0 ctw-items-center ctw-justify-between ctw-bg-primary-dark ctw-px-6 ctw-text-white">
                       <Dialog.Title className="ctw-text-lg ctw-font-semibold ctw-uppercase">
                         {title}
                       </Dialog.Title>
@@ -90,9 +90,7 @@ Drawer.Footer = function DialogFooter({
   children: ReactNode;
 }): JSX.Element {
   return (
-    <div className="ctw-border-t ctw-border-gray-200 ctw-px-6 ctw-py-4">
-      {children}
-    </div>
+    <div className="ctw-border-t ctw-border-divider-light ctw-px-6 ctw-py-4">{children}</div>
   );
 };
 
