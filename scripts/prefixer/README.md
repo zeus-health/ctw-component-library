@@ -4,9 +4,8 @@ Adds the ctw- prefix to every CSS class in any CSS file in the folder where the 
 
 ## Usage
 
-If there is an entire CSS file you don't want the script to pull classes to rename from (e.g. tailwind.css), you can configure this in the script.  
-Then just run the following in the project directory:  
-`npx ts-node --esm scripts/prefixer/prefixer.ts`
+1. Manually add CSS files to ignore to cssIgnore constant in prefixer.ts. These files will be skipped and not used for prefixing.
+1. Then just run the following in the project directory: `npx ts-node --esm scripts/prefixer/prefixer.ts`
 
 ## How
 
