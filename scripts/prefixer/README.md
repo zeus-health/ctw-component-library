@@ -1,11 +1,11 @@
 # Prefixer
 
-Adds the ctw- prefix to every CSS class in any CSS file in the folder where the following command is run, if it does not already have the prefix.
+Adds the "ctw-" (or other) prefix to CSS classes in any CSS/TS/TSX file, so long as it does not already have a prefix.
 
 ## Usage
 
-1. Manually add CSS files to ignore to cssIgnore constant in prefixer.ts. These files will be skipped and not used for prefixing.
-1. Then just run the following in the project directory: `npx ts-node --esm scripts/prefixer/prefixer.ts`
+1. If needed, manually add CSS files to ignore to cssIgnore constant in prefixer.ts. These files will be skipped and not used for prefixing.
+1. Run the following in the project directory: `npx ts-node --esm scripts/prefixer/prefixer.ts`
 
 ## How
 
@@ -13,5 +13,6 @@ A package generates a mapping of original CSS class names based on the CSS files
 
 ## Limitations
 
-This explicitly excludes CSS variables and only prefixes class selectors, not # selectors or keyframes.
-It adds prefixes to class names in CSS files somewhat blindly, so you may need to sometimes manually remove unwanted "ctw-"'s or add in your own new rule with RegEx negative lookahead/lookbehind.
+- This doesn't _change_ prefixes, only add them.
+- This explicitly excludes CSS variables and only prefixes class selectors, not # selectors or keyframes.
+- It uses RegEx to find where to prefix in the files, there may be extra or missing prefixes due to cases not accounted for.

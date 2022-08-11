@@ -1,138 +1,164 @@
 import { spawnSync } from "child_process";
-import { readFile, readFileSync, rmSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import glob from "glob";
 import readline from "readline";
 import rcs from "rename-css-selectors";
 
 // Configurables
 const dir = "./src/**/*";
-const mapDir = "./scripts/prefixer/renaming_map.json";
+const mapFile = "./scripts/prefixer/tmp/renaming_map.json";
 const cssIgnore = ["./src/styles/tailwind.css"]; // Filepaths to avoid pulling classes from and prefixing to.
+const prefix = "ctw-";
 
-let rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-
-let files: string[] = [
-  ...glob.sync(dir + ".ts"),
-  ...glob.sync(dir + ".tsx"),
-  ...glob.sync(dir + ".css", { ignore: cssIgnore }),
-];
-
-tailwindNoPrefixGen();
-getClasses();
+async function main() {
+  let rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+  tailwindNoPrefixGen();
+  await getClasses();
+  addPrefixes(prefix, filesToPrefix());
+  tailwindPrefixGen();
+  rmSync("scripts/prefixer/tmp", { recursive: true });
+  rl.close();
+}
 
 function tailwindNoPrefixGen() {
   let tailwindConfig = readFileSync("tailwind.config.cjs", "utf-8");
-  tailwindConfig = tailwindConfig.replace('"ctw-"', '""');
-  writeFileSync("tailwind.config.cjs", tailwindConfig, "utf-8");
-  let cssGenerate = spawnSync("npm run generate:css", [], {
-    shell: true,
-    stdio: "inherit",
-  });
+  if (!existsSync("./scripts/prefixer/tmp")) {
+    mkdirSync("./scripts/prefixer/tmp");
+  }
+  writeFileSync(
+    "scripts/prefixer/tmp/tailwind.config.cjs",
+    tailwindConfig.replace(/prefix: "\S*",\n/g, "")
+  );
+  let cssGenerate = spawnSync(
+    "tailwindcss -c ./scripts/prefixer/tmp/tailwind.config.cjs -i ./src/styles/tailwind.css -o ./src/styles/tailwind-gen.css",
+    [],
+    {
+      shell: true,
+      stdio: "inherit",
+    }
+  );
 }
 
-function getClasses() {
-  rcs.process
-    .css(
-      glob.sync("./**/*.css", { ignore: cssIgnore }),
-      // all css files are now saved, renamed and stored in the selectorLibrary
-      {
-        ignoreCssVariables: true,
-        preventRandomName: true,
-        replaceKeyframes: true,
-      }
-    )
-    .then(() => {
-      try {
-        rmSync("./rcs", { recursive: true });
-      } catch (err) {
-        console.error(`Error while deleting ./rcs.`);
-      }
-
-      rcs.mapping.generate(
-        "./scripts/prefixer/",
-        { overwrite: true },
-        (err: any) => {
-          // the mapping file draft was generated
-          prefixFiles();
-        }
-      );
-    });
+// Produce the json file with the CSS classes
+async function getClasses() {
+  await rcs.process.css(
+    glob.sync("./**/*.css", { ignore: cssIgnore }),
+    // all css files are now saved, renamed and stored in the selectorLibrary
+    {
+      ignoreCssVariables: true,
+      preventRandomName: true,
+      replaceKeyframes: true,
+    }
+  );
+  rmSync("./rcs", { recursive: true });
+  await rcs.mapping.generate("./scripts/prefixer/tmp", { overwrite: true });
 }
 
-function prefixFiles() {
-  let map = JSON.parse(readFileSync(mapDir, "utf-8")).selectors;
+// Get the files the prefixes need to be added to
+function filesToPrefix(): string[] {
+  return [
+    ...glob.sync(dir + ".ts"),
+    ...glob.sync(dir + ".tsx"),
+    ...glob.sync(dir + ".css", { ignore: cssIgnore }),
+  ];
+}
+
+// Add classname prefixes to a series of files
+function addPrefixes(prefix: string, files: string[]) {
+  let stringsToPrefix: Set<String> = getStringsToPrefix();
 
   for (const file of files) {
-    readFile(file, "utf-8", (err, contents) => {
-      if (err) {
-        console.log(err);
-        return;
-      }
-      let replaced = contents;
-
-      for (let oldClassName in map) {
-        if (oldClassName.charAt(0) == ".") {
-          // Only select selectors, not for example things that start with #
-          oldClassName = oldClassName.substring(1); // Exclude the dot from counting as part of the class name
-          let toPrefix = oldClassName;
-
-          let maybePseudoClass = "";
-          if (oldClassName.includes(":")) {
-            let splitClassName = oldClassName.split(":");
-            toPrefix = splitClassName.pop() || "";
-            maybePseudoClass = splitClassName.join(":") + ":";
-          }
-
-          let maybeDash = "";
-          if (toPrefix.startsWith("-")) {
-            maybeDash = "-";
-            toPrefix = toPrefix.substring(1);
-          }
-
-          if (!toPrefix.startsWith("ctw-")) {
-            let newClassName = maybePseudoClass + maybeDash + "ctw-" + toPrefix;
-            // Add prefix in CSS file
-            if (file.split(".").pop() === "css") {
-              replaced = replaced.replace(
-                // Replaces non-prefixed appearances of this class name that aren't part of a larger word. Be careful, this can replace things you didn't want to.
-                new RegExp(`(?<!ctw-)(?<!\\w)${oldClassName}(?!\\w)`, "g"),
-                newClassName
-              );
-            } else {
-              // Add prefix in another file (ts/tsx)
-              replaced = replaced.replace(
-                new RegExp(
-                  `(?<! from )` + // Don't replace if it's an import line (with " from " right before it)
-                    `("(?:.*\\s)?)` + // Look for the start of a string, can list classes before this class
-                    oldClassName + // Look for this class inside the string
-                    `((?:\\s.*)?")`, // Look for the end of the string, can list classes before this class
-                  "g"
-                ),
-                "$1" + newClassName + "$2" // Add the classes before and after this one back, along with the renamed class.
-              );
-            }
-          }
-        }
-      }
-      writeFileSync(file, replaced, "utf-8");
-    });
+    let prefixRegEx = new RegExp("");
+    // Add prefix in CSS file
+    const contents = readFileSync(file, "utf-8");
+    let replaced = contents;
+    for (const toPrefix in stringsToPrefix) {
+      replaced = replaced.replace(
+        // Replaces non-prefixed appearances of this class name that aren't part of a larger word. Be careful, this can replace things you didn't want to.
+        getReplaceRegEx(file, toPrefix),
+        `ctw-${toPrefix}`
+      );
+    }
+    writeFileSync(file, replaced, "utf-8");
   }
-  rmSync("./scripts/prefixer/renaming_map.json");
-  tailwindPrefixGen();
+}
+
+function getReplaceRegEx(file: string, toPrefix: string): RegExp {
+  if (file.split(".").pop() === "css") {
+    // Add prefix in a CSS file
+    return new RegExp(
+      `(?<!\\w|\\w-)` + // Not part of another name (part 1)
+        `(?<!${prefix})` + // Not already prefixed
+        toPrefix +
+        `(?!\\w|-)`, // Not part of another name (part 2)
+      "g"
+    );
+  } else {
+    // Add prefix in another file (ts/tsx)
+    return new RegExp(
+      `(?<!import )(?<! from ")` + // Not an import
+        `(?<!\\w|\\w-|\\.)` + // Not part of another name, incl not already prefixed (part 1), not a property/function
+        `(?<!${prefix})` + // Not already prefixed
+        toPrefix +
+        `(?!\\w|-|\\.)`, // Not part of another name (part 2), not an object
+      "g"
+    );
+  }
+}
+
+// Get just the list of the parts of the string that we need to prefix
+function getStringsToPrefix(): Set<String> {
+  let map = JSON.parse(readFileSync(mapFile, "utf-8")).selectors;
+  let stringsToPrefix = new Set<String>();
+  for (let oldClassName in map) {
+    if (oldClassName.charAt(0) == ".") {
+      // Only select selectors starting with ., not for example things that start with #
+      let toPrefix = oldClassName.substring(1); // Exclude the dot from counting as part of the class name
+
+      // Take out any pseudo classes
+      toPrefix = oldClassName.includes(":")
+        ? oldClassName.split(":").pop() || ""
+        : toPrefix;
+      // Take out the dash prefix if there is one
+      toPrefix = toPrefix.startsWith("-") ? toPrefix.substring(1) : toPrefix;
+
+      if (!toPrefix.startsWith(prefix)) {
+        stringsToPrefix.add(toPrefix);
+      }
+    }
+  }
+  return stringsToPrefix;
 }
 
 function tailwindPrefixGen() {
-  let tailwindConfig = readFileSync("tailwind.config.cjs", "utf-8");
-  tailwindConfig = tailwindConfig.replace('prefix: ""', 'prefix: "ctw-"');
-  writeFileSync("tailwind.config.cjs", tailwindConfig, "utf-8");
+  tailwindConfigPrefix();
+
   let cssGenerate = spawnSync("npm run generate:css", [], {
     shell: true,
     stdio: "inherit",
   });
-  rl.close();
 }
+
+function tailwindConfigPrefix() {
+  let tailwindConfig = readFileSync("tailwind.config.cjs", "utf-8");
+  // Update prefix in tailwind config
+  if (tailwindConfig.includes('prefix: "')) {
+    tailwindConfig = tailwindConfig.replace(
+      /prefix: "\S*",\n/g,
+      `prefix: "${prefix}",\n`
+    );
+  } else {
+    // Add prefix in tailwind config if there's no prefix
+    tailwindConfig =
+      tailwindConfig.substring(0, tailwindConfig.length - 3) +
+      `  prefix: "${prefix}",\n`;
+  }
+  writeFileSync("tailwind.config.cjs", tailwindConfig);
+}
+
+main();
 
 export {};
