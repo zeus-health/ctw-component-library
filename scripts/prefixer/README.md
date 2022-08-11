@@ -10,8 +10,7 @@ Then just run the following in the project directory:
 
 ## How
 
-[prefixer.ts](prefixer.ts) generates a mapping of original CSS class names to their prefixed versions based on the CSS files in `/src`.  
-Then, [prefixer_apply](prefixer_apply.ts) applies the mapping to the files in the directory.
+A package generates a mapping of original CSS class names based on the CSS files in `/src`. Then the script reads these and replaces them with prefixed versions in each file.
 
 ## Limitations
 
