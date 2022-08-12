@@ -62,7 +62,7 @@ function filesToPrefix(): string[] {
 
 // Add classname prefixes to a series of files
 function addPrefixes(prefix: string, files: string[]) {
-  let stringsToPrefix: Set<String> = getStringsToPrefix();
+  let stringsToPrefix = getStringsToPrefix();
 
   for (const file of files) {
     console.log(`Processing ${file}`);
