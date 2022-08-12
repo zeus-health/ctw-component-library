@@ -6,15 +6,18 @@ import rcs from "rename-css-selectors";
 // Configurables
 const dir = "./src/**/*";
 const mapFile = "./scripts/prefixer/tmp/renaming_map.json";
-const cssIgnore = ["./src/styles/tailwind.css"]; // Filepaths to avoid pulling classes from and prefixing to.
+// - Filepaths to avoid pulling classes from and prefixing to.
+const cssIgnore = [
+  "./src/styles/tailwind.css",
+  "./src/styles/tailwind-gen.css", // Ignore this file because the script generates the list of unprefixed classes in /tmp
+];
 const prefix = "ctw-";
 
 async function main() {
   tailwindNoPrefixGen();
   await getClasses();
   addPrefixes(prefix, filesToPrefix());
-  tailwindPrefixGen();
-  rmSync("scripts/prefixer/tmp", { recursive: true });
+  rmSync("scripts/prefixer/tmp", { recursive: true }); // Clear the temp directory
 }
 
 function tailwindNoPrefixGen() {
@@ -27,7 +30,7 @@ function tailwindNoPrefixGen() {
     tailwindConfig.replace(/prefix: "\S*",\n/g, "")
   );
   let cssGenerate = spawnSync(
-    "tailwindcss -c ./scripts/prefixer/tmp/tailwind.config.cjs -i ./src/styles/tailwind.css -o ./src/styles/tailwind-gen.css",
+    "tailwindcss -c ./scripts/prefixer/tmp/tailwind.config.cjs -i ./src/styles/tailwind.css -o ./scripts/prefixer/tmp/tailwind-gen-unprefixed.css",
     [],
     {
       shell: true,
@@ -127,32 +130,6 @@ function getStringsToPrefix(): Set<String> {
     }
   }
   return stringsToPrefix;
-}
-
-function tailwindPrefixGen() {
-  tailwindConfigPrefix();
-
-  let cssGenerate = spawnSync("npm run generate:css", [], {
-    shell: true,
-    stdio: "inherit",
-  });
-}
-
-function tailwindConfigPrefix() {
-  let tailwindConfig = readFileSync("tailwind.config.cjs", "utf-8");
-  // Update prefix in tailwind config
-  if (tailwindConfig.includes('prefix: "')) {
-    tailwindConfig = tailwindConfig.replace(
-      /prefix: "\S*",\n/g,
-      `prefix: "${prefix}",\n`
-    );
-  } else {
-    // Add prefix in tailwind config if there's no prefix
-    tailwindConfig =
-      tailwindConfig.substring(0, tailwindConfig.length - 3) +
-      `  prefix: "${prefix}",\n`;
-  }
-  writeFileSync("tailwind.config.cjs", tailwindConfig);
 }
 
 main();
