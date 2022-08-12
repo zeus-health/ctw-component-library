@@ -66,7 +66,6 @@ function addPrefixes(prefix: string, files: string[]) {
 
   for (const file of files) {
     console.log(`Processing ${file}`);
-    let prefixRegEx = new RegExp("");
     // Add prefix in CSS file
     const contents = readFileSync(file, "utf-8");
     let replaced = contents;
