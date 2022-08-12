@@ -41,7 +41,7 @@ export const Table = <T extends MinRecordItem>({
       ? {
           className: cx(
             // Add bottom radius to last row to fix issue with focus ring.
-            // Otherwise the row's focus ring would get cutoff since the table is rounded.
+            // Otherwise the row's focus ctw-ring would get cutoff since the table is rounded.
             {
               "ctw-rounded-b-lg": recordIndex === records.length - 1,
             },

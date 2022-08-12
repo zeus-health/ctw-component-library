@@ -1,7 +1,6 @@
 import { spawnSync } from "child_process";
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import glob from "glob";
-import readline from "readline";
 import rcs from "rename-css-selectors";
 
 // Configurables
@@ -11,16 +10,11 @@ const cssIgnore = ["./src/styles/tailwind.css"]; // Filepaths to avoid pulling c
 const prefix = "ctw-";
 
 async function main() {
-  let rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
   tailwindNoPrefixGen();
   await getClasses();
   addPrefixes(prefix, filesToPrefix());
   tailwindPrefixGen();
   rmSync("scripts/prefixer/tmp", { recursive: true });
-  rl.close();
 }
 
 function tailwindNoPrefixGen() {
@@ -71,17 +65,20 @@ function addPrefixes(prefix: string, files: string[]) {
   let stringsToPrefix: Set<String> = getStringsToPrefix();
 
   for (const file of files) {
+    console.log(`Processing ${file}`);
     let prefixRegEx = new RegExp("");
     // Add prefix in CSS file
     const contents = readFileSync(file, "utf-8");
     let replaced = contents;
-    for (const toPrefix in stringsToPrefix) {
+    stringsToPrefix.forEach((toPrefixUnconverted) => {
+      let toPrefix = toPrefixUnconverted.toString();
       replaced = replaced.replace(
         // Replaces non-prefixed appearances of this class name that aren't part of a larger word. Be careful, this can replace things you didn't want to.
         getReplaceRegEx(file, toPrefix),
         `ctw-${toPrefix}`
       );
-    }
+      console.log(`\tReplaced "${toPrefix}" with "ctw-${toPrefix}"`);
+    });
     writeFileSync(file, replaced, "utf-8");
   }
 }
@@ -127,6 +124,7 @@ function getStringsToPrefix(): Set<String> {
 
       if (!toPrefix.startsWith(prefix)) {
         stringsToPrefix.add(toPrefix);
+        console.log(`Planning to prefix the string "${toPrefix}"`);
       }
     }
   }
