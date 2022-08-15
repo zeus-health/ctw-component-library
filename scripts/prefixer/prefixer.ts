@@ -30,7 +30,7 @@ function tailwindNoPrefixGen() {
     tailwindConfig.replace(/prefix: "\S*",\n/g, "")
   );
   let cssGenerate = spawnSync(
-    "tailwindcss -c ./scripts/prefixer/tmp/tailwind.config.cjs -i ./src/styles/tailwind.css -o ./scripts/prefixer/tmp/tailwind-gen-unprefixed.css",
+    "npx tailwindcss -c ./scripts/prefixer/tmp/tailwind.config.cjs -i ./src/styles/tailwind.css -o ./scripts/prefixer/tmp/tailwind-gen-unprefixed.css",
     [],
     {
       shell: true,
@@ -97,8 +97,9 @@ function getReplaceRegEx(file: string, toPrefix: string): RegExp {
   } else {
     // Add prefix in another file (ts/tsx)
     return new RegExp(
-      `(?<!import )(?<! from ")` + // Not an import
+      `(?<!\\nimport .*)` + // Not an import
         `(?<!\\w|\\w-|\\.)` + // Not part of another name, incl not already prefixed (part 1), not a property/function
+        `(?<!//.*)` + // Not part of a comment
         `(?<!${prefix})` + // Not already prefixed
         toPrefix +
         `(?!\\w|-|\\.)`, // Not part of another name (part 2), not an object
