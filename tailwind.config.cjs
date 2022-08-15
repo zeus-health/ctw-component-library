@@ -98,4 +98,8 @@ module.exports = {
       sans: [...defaultTheme.fontFamily.sans],
     },
   },
+  corePlugins: {
+    preflight: false,
+  },
+  prefix: "ctw-",
 };

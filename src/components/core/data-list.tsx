@@ -17,18 +17,22 @@ export function entryFromArray(label: string, array: string[]) {
 
 export function DataList({ title, data }: DataListProps) {
   return (
-    <div className="space-y-4 rounded-lg bg-bg-lighter p-4">
-      <span className="text-sm uppercase text-content-light">{title}</span>
-      <dl className="space-y-3">
+    <div className="ctw-space-y-4 ctw-rounded-lg ctw-bg-bg-lighter ctw-p-4">
+      <span className="ctw-text-sm ctw-uppercase ctw-text-content-light">
+        {title}
+      </span>
+      <dl className="ctw-space-y-3">
         {data.map(({ label, value }, index) => (
           <div
             // label is not guarenteed to be unique so append index.
             // eslint-disable-next-line react/no-array-index-key
             key={label + index}
-            className="flex items-baseline space-x-4 text-content-black"
+            className="ctw-flex ctw-items-baseline ctw-space-x-4 ctw-text-content-black"
           >
-            <dt className="w-1/3 flex-shrink-0 font-medium">{label}:</dt>
-            <dd className="flex-grow">{value || ""}</dd>
+            <dt className="ctw-w-1/3 ctw-flex-shrink-0 ctw-font-medium">
+              {label}:
+            </dt>
+            <dd className="ctw-flex-grow">{value || ""}</dd>
           </div>
         ))}
       </dl>
