@@ -97,7 +97,7 @@ function getReplaceRegEx(file: string, toPrefix: string): RegExp {
   } else {
     // Add prefix in another file (ts/tsx)
     return new RegExp(
-      `(?<!\\nimport .*)` + // Not an import
+      `(?<!import .*)` + // Not an import
         `(?<!\\w|\\w-|\\.)` + // Not part of another name, incl not already prefixed (part 1), not a property/function
         `(?<!//.*)` + // Not part of a comment
         `(?<!${prefix})` + // Not already prefixed
