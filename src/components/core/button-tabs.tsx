@@ -1,4 +1,4 @@
-import { Tab } from "@headlessui/ctw-react";
+import { Tab } from "@headlessui/react";
 import type { ReactNode } from "react";
 
 export type ButtonTabsProps = {
