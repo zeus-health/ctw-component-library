@@ -9,7 +9,7 @@ const DEV_PENNY_UPID = "1b997957-e275-4e86-8f9a-8e0d03cecbab";
 function App() {
   return (
     <CTWProvider env="dev" authToken={AUTH_TOKEN} theme={{}}>
-      <div className="App space-y-5">
+      <div className="App ctw-space-y-5">
         <h1>CTW Component Library</h1>
         <ConditionsTable patientUPID={DEV_PENNY_UPID} />
       </div>

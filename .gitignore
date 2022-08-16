@@ -1,5 +1,7 @@
 dist
 src/components/content/conditions-table-loader.tsx
 src/styles/tailwind-gen.css
+scripts/prefixer/tmp/
 node_modules
 .env
+.DS_Store

@@ -9,12 +9,12 @@ export type ButtonTabsProps = {
 export function ButtonTabs({ tabs, children }: ButtonTabsProps) {
   return (
     <Tab.Group>
-      <Tab.List className="btn-group text-black">
+      <Tab.List className="ctw-btn-group ctw-text-black">
         {tabs.map((tab) => (
           <Tab
             key={tab}
             className={({ selected }) =>
-              selected ? "btn-primary" : "btn-default"
+              selected ? "ctw-btn-primary" : "ctw-btn-default"
             }
           >
             {tab}

@@ -43,9 +43,9 @@ export const Table = <T extends MinRecordItem>({
             // Add bottom radius to last row to fix issue with focus ring.
             // Otherwise the row's focus ring would get cutoff since the table is rounded.
             {
-              "rounded-b-lg": recordIndex === records.length - 1,
+              "ctw-rounded-b-lg": recordIndex === records.length - 1,
             },
-            "cursor-pointer hover:bg-bg-lighter ring-primary-main focus-visible:ring-2 ring-inset outline-none"
+            "ctw-cursor-pointer hover:ctw-bg-bg-lighter ctw-ring-primary-main focus-visible:ctw-ring-2 ctw-ring-inset ctw-outline-none"
           ),
           tabIndex: 0,
           onKeyUp: (event: KeyboardEvent<HTMLTableRowElement>) => {
@@ -63,7 +63,7 @@ export const Table = <T extends MinRecordItem>({
         <th
           key={column.title ?? index}
           scope="col"
-          className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider text-content-light"
+          className="ctw-px-3 ctw-py-3 ctw-text-left ctw-text-xs ctw-font-medium ctw-uppercase ctw-tracking-wider ctw-text-content-light"
         >
           {column.title}
         </th>
@@ -73,7 +73,7 @@ export const Table = <T extends MinRecordItem>({
 
   const TableFullLengthRow = ({ children }: { children: ReactNode }) => (
     <tr>
-      <td className="text-content-light p-6" colSpan={columns.length}>
+      <td className="ctw-text-content-light ctw-p-6" colSpan={columns.length}>
         {children}
       </td>
     </tr>
@@ -101,10 +101,10 @@ export const Table = <T extends MinRecordItem>({
             <td
               key={column.title ?? index}
               className={cx(
-                "whitespace-nowrap px-3 py-4 text-sm",
+                "ctw-whitespace-nowrap ctw-px-3 ctw-py-4 ctw-text-sm",
                 index === 0
-                  ? "font-medium text-content-black"
-                  : "text-content-light"
+                  ? "ctw-font-medium ctw-text-content-black"
+                  : "ctw-text-content-light"
               )}
             >
               {column.render ? column.render(record) : value}
@@ -116,13 +116,13 @@ export const Table = <T extends MinRecordItem>({
   };
 
   return (
-    <div className={cx(className, "flex flex-col")}>
-      <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-          <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg">
-            <table className="min-w-full divide-y divide-divider-main">
-              <thead className="bg-bg-lighter">{tableCols}</thead>
-              <tbody className="divide-y divide-divider-light  bg-white">
+    <div className={cx(className, "ctw-flex ctw-flex-col")}>
+      <div className="-ctw-my-2 -ctw-mx-4 ctw-overflow-x-auto sm:-ctw-mx-6 lg:-ctw-mx-8">
+        <div className="ctw-inline-block ctw-min-w-full ctw-py-2 ctw-align-middle md:ctw-px-6 lg:ctw-px-8">
+          <div className="ctw-overflow-hidden ctw-shadow ctw-ring-1 ctw-ring-black ctw-ring-opacity-5 ctw-rounded-lg">
+            <table className="ctw-min-w-full ctw-divide-y ctw-divide-divider-main">
+              <thead className="ctw-bg-bg-lighter">{tableCols}</thead>
+              <tbody className="ctw-divide-y ctw-divide-divider-light  ctw-bg-white">
                 {tableRows()}
               </tbody>
             </table>
