@@ -8,7 +8,7 @@
 .ctw-logo {
   height: 6em;
   padding: 1.5em;
-  will-change: ctw-filter;
+  will-change: filter;
 }
 .ctw-logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
@@ -19,10 +19,10 @@
 
 @keyframes logo-spin {
   from {
-    ctw-transform: rotate(0deg);
+    transform: rotate(0deg);
   }
   to {
-    ctw-transform: rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 

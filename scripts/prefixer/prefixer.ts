@@ -91,7 +91,7 @@ function getReplaceRegEx(file: string, toPrefix: string): RegExp {
       `(?<!\\w|\\w-)` + // Not part of another name (part 1)
         `(?<!${prefix})` + // Not already prefixed
         toPrefix +
-        `(?!\\w|-)`, // Not part of another name (part 2)
+        `(?!\\w|-|:)`, // Not part of another name (part 2), nor a CSS property
       "g"
     );
   } else {
