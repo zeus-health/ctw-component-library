@@ -49,15 +49,17 @@ function CTWProvider({ children, ...ctwState }: CTWProviderProps) {
   );
 }
 
-async function useCTW() {
+function useCTW() {
   const context = React.useContext(CTWStateContext);
   if (context === undefined) {
     throw new Error("useCTW must be used within a CTWProvider");
   }
-  await context.actions.handleAuth();
-  const tokenString = context.authToken ?? `${context.token.tokenType} ${context.token.accessToken}`;
-  const fhirClient = getFhirClient(context.env, tokenString);
-  return { fhirClient, theme: context.theme };
+  const getCTWFhirClient = async () => {
+    await context.actions.handleAuth();
+    const tokenString = context.authToken ?? `${context.token.tokenType} ${context.token.accessToken}`;
+    return getFhirClient(context.env, tokenString);
+  }
+  return { getCTWFhirClient, theme: context.theme };
 }
 
 async function checkOrRefreshAuth(token: CTWToken, url: CTWState["authTokenURL"]): CTWToken {
