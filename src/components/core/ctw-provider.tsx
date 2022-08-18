@@ -32,7 +32,7 @@ function CTWProvider({ children, ...ctwState }: CTWProviderProps) {
   const [token, setToken] = React.useState(ctwState.token);
   const handleAuth = async () => {
     if (ctwState.authToken) return null;
-    const newToken = await checkOrRefreshAuth(token);
+    const newToken = await checkOrRefreshAuth(token, ctwState.authTokenURL);
     if (token.accessToken === newToken.accessToken) return null;
     setToken(newToken);
   }
