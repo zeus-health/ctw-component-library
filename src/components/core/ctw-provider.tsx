@@ -17,12 +17,11 @@ type CTWState = {
   authToken?: string;
   authTokenURL: string;
   theme: any;
-} & { 
-  token: CTWToken,
+  token: CTWToken
   actions: {
     handleAuth: () => Promise<null | undefined>;
   }
-};
+}
 
 type CTWProviderProps = { children: React.ReactNode } & CTWState;
 
