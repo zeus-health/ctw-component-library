@@ -120,7 +120,7 @@ export const Table = <T extends MinRecordItem>({
       <div className="-ctw-my-2 -ctw-mx-4 ctw-overflow-x-auto sm:-ctw-mx-6 lg:-ctw-mx-8">
         <div className="ctw-inline-block ctw-min-w-full ctw-py-2 ctw-align-middle md:ctw-px-6 lg:ctw-px-8">
           <div className="ctw-overflow-hidden ctw-shadow ctw-ring-1 ctw-ring-black ctw-ring-opacity-5 ctw-rounded-lg">
-            <table className="ctw-min-w-full ctw-divide-y ctw-divide-divider-main">
+            <table className="ctw-min-w-full  ctw-divide-divider-main ctw-table-base ctw-divide-y">
               <thead className="ctw-bg-bg-lighter">{tableCols}</thead>
               <tbody className="ctw-divide-y ctw-divide-divider-light  ctw-bg-white">
                 {tableRows()}
