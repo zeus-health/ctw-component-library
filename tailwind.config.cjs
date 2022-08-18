@@ -1,6 +1,7 @@
 const lineClampPlugin = require("@tailwindcss/line-clamp");
 const defaultTheme = require("tailwindcss/defaultTheme");
 
+const CLASS_PREFIX = "ctw-";
 const CSSColorPalette = {
   colors: {
     transparent: "transparent",
@@ -53,7 +54,8 @@ const CSSColorPalette = {
   },
 };
 
-const createCSSVar = (name, defaultVal) => `var(--${name}, ${defaultVal})`;
+const createCSSVar = (name, defaultVal) =>
+  `var(--${CLASS_PREFIX}-${name}, ${defaultVal})`;
 
 // Loop over properties and adds css variables so that the properties can be overwritten.
 const addCSSVarReference = (colorConfig) => {
@@ -101,5 +103,5 @@ module.exports = {
   corePlugins: {
     preflight: false,
   },
-  prefix: "ctw-",
+  prefix: CLASS_PREFIX,
 };
