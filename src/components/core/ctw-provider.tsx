@@ -55,7 +55,7 @@ function useCTW() {
   }
   const getCTWFhirClient = async () => {
     await context.actions.handleAuth();
-    const tokenString = context.authToken ?? `${context.token.tokenType} ${context.token.accessToken}`;
+    const tokenString = context.authToken ?? context.token.accessToken;
     return getFhirClient(context.env, tokenString);
   }
   return { getCTWFhirClient, theme: context.theme };
