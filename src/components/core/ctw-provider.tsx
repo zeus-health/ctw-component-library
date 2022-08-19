@@ -74,7 +74,7 @@ async function checkOrRefreshAuth(token: CTWToken, url: CTWState["authTokenURL"]
         headers,
         body,
       })
-      const { token: newToken } = await response.json();
+      const newToken = await response.json();
       return {
         accessToken: newToken.access_token,
         issuedTokenType: newToken.issued_token_type,
