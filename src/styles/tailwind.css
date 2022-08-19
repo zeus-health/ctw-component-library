@@ -39,7 +39,7 @@
     margin-left: -1px; /* Counteract button borders. */
   }
 
-  .ctw-btn-group button:first-child {
+  .ctw-ctw-btn-group button:first-child {
     margin-left: 0;
     @apply ctw-rounded-l-md;
   }
@@ -85,5 +85,9 @@
     width: 4px;
     height: 4px;
     @apply ctw-bg-divider-main;
+  }
+
+  .ctw-btn-group button:last-child {
+    @apply ctw-rounded-r-md;
   }
 }
