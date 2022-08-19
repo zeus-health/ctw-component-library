@@ -16,17 +16,13 @@ export type TableColumn<T extends MinRecordItem> = {
   title?: string;
 } & (DataIndexSpecified<T> | RenderSpecified<T>);
 
-// Set of props that are optional configurations for the table.
-export type TableOptionProps<T> = {
+export type TableProps<T extends MinRecordItem> = {
+  records: T[];
+  columns: TableColumn<T>[];
   onRowClick?: (row: T) => void; // Adds a row hover effect and calls onClick.
   isLoading?: boolean;
   message?: string;
 };
-
-export type TableProps<T extends MinRecordItem> = {
-  records: T[];
-  columns: TableColumn<T>[];
-} & TableOptionProps<T>;
 
 export const Table = <T extends MinRecordItem>({
   columns,
