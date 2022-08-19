@@ -29,18 +29,18 @@ const CTWStateContext = React.createContext<CTWState | undefined>(undefined);
 
 function CTWProvider({ children, ...ctwState }: CTWProviderProps) {
   const [token, setToken] = React.useState(ctwState.token);
-  const handleAuth = async () => {
+  const handleAuth = React.useCallback(async () => {
     if (ctwState.authToken) return null;
     const newToken = await checkOrRefreshAuth(token, ctwState.authTokenURL);
     if (token.accessToken === newToken.accessToken) return null;
     setToken(newToken);
-  }
-  const providerState = {
+  }, [])
+  const providerState = React.useMemo(() => ({
     ...ctwState,
     actions: {
       handleAuth,
     },
-  }
+  }), [ctwState, handleAuth])
   return (
     <CTWStateContext.Provider value={providerState}>
       {children}
