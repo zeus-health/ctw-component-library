@@ -58,7 +58,7 @@ export function ConditionsTableBase({
         columns={columns}
         isLoading={isLoading}
         message={message}
-        onClick={openDetails}
+        onRowClick={openDetails}
       />
       <ConditionDrawer
         condition={selectedCondition}
