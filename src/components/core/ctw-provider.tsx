@@ -68,11 +68,11 @@ async function checkOrRefreshAuth(token: CTWToken, url: CTWState["authTokenURL"]
         authorization: `${token.tokenType} ${token.accessToken}`,
         contentType: "application/json",
       }
-      const body = { duration: 3600 } // From Healthie integration document spec.
-      const response = await fetch(url, {
+      const data = { duration: 3600 } // From Healthie integration document spec.
+      const response = await fetch(url as string, {
         method: "POST",
         headers,
-        body,
+        body: JSON.stringify(data),
       })
       const newToken = await response.json();
       return {
