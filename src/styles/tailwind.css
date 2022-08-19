@@ -10,6 +10,15 @@
    other classes.
  */
 @layer base {
+  .ctw-title {
+    @apply ctw-uppercase ctw-text-black ctw-font-semibold ctw-text-xs;
+    letter-spacing: 0.2rem;
+  }
+
+  .ctw-link {
+    @apply hover:ctw-text-primary-main ctw-text-primary-dark ctw-cursor-pointer ctw-font-medium ctw-text-xs;
+  }
+
   .ctw-btn {
     @apply ctw-rounded-md ctw-border ctw-border-transparent ctw-py-2 ctw-px-4 ctw-text-sm ctw-font-medium ctw-shadow-sm;
   }
@@ -41,4 +50,11 @@
   .ctw-btn-group button:last-child {
     @apply ctw-rounded-r-md;
   }
+}
+
+/* PREFLIGHT */
+*[class^="ctw-"],
+*[class^="ctw-"]:before,
+*[class^="ctw-"]:after {
+  box-sizing: border-box;
 }
