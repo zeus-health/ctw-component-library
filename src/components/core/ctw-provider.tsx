@@ -9,7 +9,7 @@ type CTWToken = {
   accessToken: string;
   issuedTokenType: string;
   tokenType: string;
-  expiresInSeconds: number;
+  expiresAt: number;
 }
 
 type CTWState = { 
@@ -61,18 +61,26 @@ function useCTW() {
   return { getCTWFhirClient, theme: context.theme };
 }
 
-async function checkOrRefreshAuth(token: CTWToken, url: CTWState["authTokenURL"]): CTWToken {
-  if (Date.now() >= token.expiresInSeconds * 1000 + EXPIRY_PADDING_MS) {
+async function checkOrRefreshAuth(token: CTWToken, url: CTWState["authTokenURL"]): Promise<CTWToken> {
+  if (Date.now() >= token.expiresAt + EXPIRY_PADDING_MS) {
     try {
-      const data = {
-        duration: 3600, // From Healthie spec.
+      const headers = {
+        authorization: `${token.tokenType} ${token.accessToken}`,
+        contentType: "application/json",
       }
+      const body = { duration: 3600 } // From Healthie integration document spec.
       const response = await fetch(url, {
         method: "POST",
-        body: data,
+        headers,
+        body,
       })
-      const result = await response.json();
-      return result.token;
+      const { token: newToken } = await response.json();
+      return {
+        accessToken: newToken.access_token,
+        issuedTokenType: newToken.issued_token_type,
+        tokenType: newToken.token_type,
+        expiresAt: Date.now() + newToken.expires_in * 1000,
+      };
     } catch (err) {
       console.error(err); // TODO: Better error handling.
     }
