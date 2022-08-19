@@ -19,7 +19,7 @@ type CTWState = {
   theme?: any;
   token?: CTWToken;
   actions: {
-    handleAuth: (t: CTWToken) => Promise<null | undefined>;
+    handleAuth: () => Promise<CTWToken | null>;
   }
 }
 
@@ -30,22 +30,22 @@ type CTWProviderProps = {
   children: React.ReactNode,
   env: Env;
   theme?: any;
-  token?: CTWToken;
 } & (AuthTokenSpecified | AuthTokenURLSpecified);
 
 const CTWStateContext = React.createContext<CTWState | undefined>(undefined);
 
 function CTWProvider({ children, ...ctwState }: CTWProviderProps) {
-  const [token, setToken] = React.useState(ctwState.token);
+  const [token, setToken] = React.useState<CTWToken>();
 
-  const handleAuth = React.useCallback(async (t: CTWToken) => {
+  const handleAuth = React.useCallback(async () => {
     if (ctwState.authToken) return null;
     try {
-      const newToken = await checkOrRefreshAuth(t, ctwState.authTokenURL);
-      if (t.accessToken === newToken.accessToken) return null;
+      const newToken = await checkOrRefreshAuth(token, ctwState.authTokenURL);
+      if (token?.accessToken === newToken.accessToken) return token;
       setToken(newToken);
+      return newToken;
     } catch (err) {
-      console.error(err); // Catch thrown error from `checkOrRefreshAuth`.
+      throw(err); // Throw error from `checkOrRefreshAuth`.
     }
   }, []);
 
@@ -71,21 +71,9 @@ function useCTW() {
   }
 
   const getCTWFhirClient = async () => {
-    try {
-      if (context.authToken) return getFhirClient(context.env, context.authToken);
-      if (context.token) {
-        await context.actions.handleAuth(context.token);
-        return getFhirClient(context.env, context.token.accessToken);
-      }
-
-      if (!context.token) {
-        const ctwToken = await checkOrRefreshAuth(undefined, context.authTokenURL);
-        await context.actions.handleAuth(ctwToken);
-        return getFhirClient(context.env, ctwToken.accessToken)
-      }
-    } catch (err) {
-      throw err; // Throw error to useCTW() consumer.
-    }
+    const token = await context.actions.handleAuth();
+    const tokenString = context.authToken ?? token?.accessToken as string;
+    return getFhirClient(context.env, tokenString);
   }
   return { getCTWFhirClient, theme: context.theme };
 }
