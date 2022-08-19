@@ -1,13 +1,13 @@
 import cx from "classnames";
 import { KeyboardEvent } from "react";
 import { Spinner } from "../spinner";
-import { MinRecordItem, TableColumn as TableColumnType } from "./table";
+import { MinRecordItem, TableColumn } from "./table";
 import { TableDataCell } from "./table-data-cell";
 import { TableFullLengthRow } from "./table-full-length-row";
 
 type TableRowsProps<T extends MinRecordItem> = {
   records: T[];
-  columns: TableColumnType<T>[];
+  columns: TableColumn<T>[];
   onRowClick: ((row: T) => void) | undefined;
   isLoading: boolean;
   emptyMessage: string;
