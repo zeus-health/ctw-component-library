@@ -1,12 +1,13 @@
 import cx from "classnames";
-import { KeyboardEvent, ReactNode } from "react";
+import { KeyboardEvent } from "react";
 import { Spinner } from "../spinner";
-import { MinRecordItem, TableColumn } from "./table";
+import { MinRecordItem, TableColumn as TableColumnType } from "./table";
+import { TableDataCell } from "./table-data-cell";
 import { TableFullLengthRow } from "./table-full-length-row";
 
 type TableRowsProps<T extends MinRecordItem> = {
   records: T[];
-  columns: TableColumn<T>[];
+  columns: TableColumnType<T>[];
   onRowClick: ((row: T) => void) | undefined;
   isLoading: boolean;
   emptyMessage: string;
@@ -61,25 +62,14 @@ export const TableRows = <T extends MinRecordItem>({
       {records.map((record, recordIndex) => (
         <tr key={record.id} {...tableRowProps(record, recordIndex)}>
           {columns.map((column, index) => {
-            const value = column.dataIndex
-              ? (record[column.dataIndex] as unknown as ReactNode)
-              : undefined;
-
             return (
-              <td
+              <TableDataCell
                 key={column.title ?? index}
-                className={cx(
-                  "ctw-whitespace-nowrap ctw-px-3 ctw-py-4 ctw-text-sm",
-                  index === 0
-                    ? "ctw-font-medium ctw-text-content-black"
-                    : "ctw-text-content-light",
-                  index === 0 && showLeftTableBorderShadow
-                    ? "ctw-table-scroll-left-shadow-sticky ctw-bg-white group-hover:ctw-bg-bg-lighter"
-                    : ""
-                )}
-              >
-                {column.render ? column.render(record) : value}
-              </td>
+                column={column}
+                record={record}
+                index={index}
+                showLeftTableBorderShadow={showLeftTableBorderShadow}
+              />
             );
           })}
         </tr>

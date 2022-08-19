@@ -1,6 +1,6 @@
 import cx from "classnames";
 import { ReactNode, useEffect, useRef, useState } from "react";
-import { TableHead } from "./table-columns";
+import { TableHead } from "./table-head";
 import { TableRows } from "./table-rows";
 
 export interface MinRecordItem {
@@ -23,6 +23,11 @@ export type TableProps<T extends MinRecordItem> = {
   isLoading?: boolean;
   message?: string;
 };
+
+export type TableBaseProps<T extends MinRecordItem> = Omit<
+  TableProps<T>,
+  "records" | "columns"
+>;
 
 export const Table = <T extends MinRecordItem>({
   columns,
@@ -70,14 +75,6 @@ export const Table = <T extends MinRecordItem>({
     };
   }, []);
 
-  const TableFullLengthRow = ({ children }: { children: ReactNode }) => (
-    <tr>
-      <td className="ctw-text-content-light ctw-p-6" colSpan={columns.length}>
-        {children}
-      </td>
-    </tr>
-  );
-
   return (
     <div className="ctw-py-2 ctw-align-middle md:ctw-px-6 lg:ctw-px-8">
       <div
@@ -95,14 +92,14 @@ export const Table = <T extends MinRecordItem>({
           className="ctw-scrollbar ctw-flex ctw-overflow-x-auto ctw-rounded-lg ctw-shadow ctw-ring-1 ctw-ring-black ctw-ring-opacity-5"
         >
           <table
-            className="ctw-divide-divider-main ctw-table-base ctw-divide-y"
+            className=" ctw-divide-divider-main ctw-table-base ctw-divide-y"
             ref={tableRef}
           >
             <TableHead
               columns={columns}
               showLeftTableBorderShadow={showLeftTableBorderShadow}
             />
-            <tbody className="ctw-divide-y ctw-divide-divider-light  ctw-bg-white">
+            <tbody className="ctw-divide-y ctw-divide-divider-light ctw-bg-white">
               <TableRows
                 records={records}
                 columns={columns}
