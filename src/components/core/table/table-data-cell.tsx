@@ -1,9 +1,9 @@
 import cx from "classnames";
 import { ReactNode } from "react";
-import { MinRecordItem, TableColumn as TableColumnType } from "./table";
+import { MinRecordItem, TableColumn } from "./table";
 
 type TableColumnProps<T extends MinRecordItem> = {
-  column: TableColumnType<T>;
+  column: TableColumn<T>;
   record: T;
   index: number;
   showLeftTableBorderShadow: boolean;
