@@ -15,15 +15,22 @@ type CTWToken = {
 type CTWState = { 
   env: Env;
   authToken?: string;
-  authTokenURL: string;
-  theme: any;
-  token: CTWToken
+  authTokenURL?: string;
+  theme?: any;
+  token?: CTWToken;
   actions: {
     handleAuth: () => Promise<null | undefined>;
   }
 }
 
-type CTWProviderProps = { children: React.ReactNode } & CTWState;
+type AuthTokenSpecified = { authToken: string; authTokenURL?: never, token?: never; };
+type AuthTokenURLSpecified = { authToken?: never; authTokenURL: string, token: CTWToken; };
+
+type CTWProviderProps = { 
+  children: React.ReactNode,
+  env: Env;
+  theme?: any;
+} & (AuthTokenSpecified | AuthTokenURLSpecified);
 
 const CTWStateContext = React.createContext<CTWState | undefined>(undefined);
 
