@@ -18,13 +18,14 @@ export function ConditionsTable({
 }: ConditionsTableProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [conditions, setConditions] = useState<ConditionModel[]>([]);
-  const { fhirClient } = useCTW();
+  const { getCTWFhirClient } = useCTW();
   const [message, setMessage] = useState("No conditions found");
 
   useEffect(() => {
     async function load() {
       let conditionResources: fhir4.Condition[] = [];
       try {
+        const fhirClient = await getCTWFhirClient();
         conditionResources = await getConditions(fhirClient, patientUPID, {});
       } catch (e) {
         setMessage(errorMessage);
