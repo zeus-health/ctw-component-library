@@ -1,6 +1,6 @@
 import { ConditionModel } from "@/models/conditions";
 import { useState } from "react";
-import { Table, TableColumn, TableOptionProps } from "../core/table";
+import { Table, TableColumn, TableOptionProps } from "../core/table/table";
 import { ConditionDrawer } from "./conditions-drawer";
 
 export type ConditionsTableBaseProps = {

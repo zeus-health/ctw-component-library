@@ -1,7 +1,7 @@
 import cx from "classnames";
 import { ReactNode, useEffect, useRef, useState } from "react";
-import { TableColumns } from "./columns";
-import { TableRows } from "./rows";
+import { TableHead } from "./table-columns";
+import { TableRows } from "./table-rows";
 
 export interface MinRecordItem {
   id: string | number;
@@ -102,12 +102,10 @@ export const Table = <T extends MinRecordItem>({
             className="ctw-divide-divider-main ctw-table-base ctw-divide-y"
             ref={tableRef}
           >
-            <thead className="ctw-bg-bg-lighter">
-              <TableColumns
-                columns={columns}
-                showLeftTableBorderShadow={showLeftTableBorderShadow}
-              />
-            </thead>
+            <TableHead
+              columns={columns}
+              showLeftTableBorderShadow={showLeftTableBorderShadow}
+            />
             <tbody className="ctw-divide-y ctw-divide-divider-light  ctw-bg-white">
               <TableRows
                 records={records}

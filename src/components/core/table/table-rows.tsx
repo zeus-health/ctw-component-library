@@ -1,7 +1,8 @@
 import cx from "classnames";
 import { KeyboardEvent, ReactNode } from "react";
-import { MinRecordItem, TableColumn } from ".";
 import { Spinner } from "../spinner";
+import { MinRecordItem, TableColumn } from "./table";
+import { TableFullLengthRow } from "./table-full-length-row";
 
 type TableRowsProps<T extends MinRecordItem> = {
   records: T[];
@@ -11,20 +12,6 @@ type TableRowsProps<T extends MinRecordItem> = {
   emptyMessage: string;
   showLeftTableBorderShadow: boolean;
 };
-
-const TableFullLengthRow = ({
-  children,
-  colSpan,
-}: {
-  children: ReactNode;
-  colSpan: number;
-}) => (
-  <tr>
-    <td className="ctw-text-content-light ctw-p-6" colSpan={colSpan}>
-      {children}
-    </td>
-  </tr>
-);
 
 export const TableRows = <T extends MinRecordItem>({
   records,
@@ -48,7 +35,7 @@ export const TableRows = <T extends MinRecordItem>({
       </TableFullLengthRow>
     );
   }
-  const propsForClick = (record: T, recordIndex: number) =>
+  const tableRowProps = (record: T, recordIndex: number) =>
     onRowClick
       ? {
           className: cx(
@@ -72,7 +59,7 @@ export const TableRows = <T extends MinRecordItem>({
   return (
     <>
       {records.map((record, recordIndex) => (
-        <tr key={record.id} {...propsForClick(record, recordIndex)}>
+        <tr key={record.id} {...tableRowProps(record, recordIndex)}>
           {columns.map((column, index) => {
             const value = column.dataIndex
               ? (record[column.dataIndex] as unknown as ReactNode)
@@ -87,7 +74,7 @@ export const TableRows = <T extends MinRecordItem>({
                     ? "ctw-font-medium ctw-text-content-black"
                     : "ctw-text-content-light",
                   index === 0 && showLeftTableBorderShadow
-                    ? "ctw-table-scroll-left-shadow-sticky ctw-bg-white group-hover:bg-gray-50"
+                    ? "ctw-table-scroll-left-shadow-sticky ctw-bg-white group-hover:ctw-bg-bg-lighter"
                     : ""
                 )}
               >
