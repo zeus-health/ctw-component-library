@@ -22,6 +22,7 @@ export type TableProps<T extends MinRecordItem> = {
   onRowClick?: (row: T) => void; // Adds a row hover effect and calls onClick.
   isLoading?: boolean;
   message?: string;
+  showTableHead?: boolean;
 };
 
 export type TableBaseProps<T extends MinRecordItem> = Omit<
@@ -35,6 +36,7 @@ export const Table = <T extends MinRecordItem>({
   onRowClick,
   isLoading = false,
   message = "No records found",
+  showTableHead = true,
 }: TableProps<T>) => {
   const tableRef = useRef<HTMLTableElement>(null);
   const containerTableRef = useRef<HTMLTableElement>(null);
@@ -92,13 +94,16 @@ export const Table = <T extends MinRecordItem>({
           className="ctw-scrollbar ctw-flex ctw-overflow-x-auto ctw-rounded-lg ctw-shadow ctw-ring-1 ctw-ring-black ctw-ring-opacity-5"
         >
           <table
-            className=" ctw-divide-divider-main ctw-table-base ctw-divide-y"
+            className=" ctw-divide-divider-main ctw-table-base ctw-divide-y ctw-w-full"
             ref={tableRef}
           >
-            <TableHead
-              columns={columns}
-              showLeftTableBorderShadow={showLeftTableBorderShadow}
-            />
+            {showTableHead ? (
+              <TableHead
+                columns={columns}
+                showLeftTableBorderShadow={showLeftTableBorderShadow}
+              />
+            ) : null}
+
             <tbody className="ctw-divide-y ctw-divide-divider-light ctw-bg-white">
               <TableRows
                 records={records}

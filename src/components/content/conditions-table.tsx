@@ -10,11 +10,13 @@ const DEFAULT_ERR_MSG =
 export type ConditionsTableProps = {
   patientUPID: string;
   errorMessage?: string;
+  showTableHead?: boolean;
 };
 
 export function ConditionsTable({
   patientUPID,
   errorMessage = DEFAULT_ERR_MSG,
+  showTableHead = true,
 }: ConditionsTableProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [conditions, setConditions] = useState<ConditionModel[]>([]);
@@ -42,6 +44,7 @@ export function ConditionsTable({
       conditions={conditions}
       isLoading={isLoading}
       message={message}
+      showTableHead={showTableHead}
     />
   );
 }
