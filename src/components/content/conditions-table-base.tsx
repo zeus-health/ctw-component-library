@@ -1,29 +1,14 @@
 import { ConditionModel } from "@/models/conditions";
-import { useState } from "react";
-import { Table, TableColumn, TableOptionProps } from "../core/table";
-import { ConditionDrawer } from "./conditions-drawer";
+import { Table, TableBaseProps, TableColumn } from "../core/table/table";
 
 export type ConditionsTableBaseProps = {
   conditions: ConditionModel[];
-} & TableOptionProps<ConditionModel>;
+} & TableBaseProps<ConditionModel>;
 
 export function ConditionsTableBase({
   conditions,
-  isLoading,
-  message,
+  ...tableProps
 }: ConditionsTableBaseProps) {
-  const [detailsIsOpen, setDetailsIsOpen] = useState(false);
-  const [selectedCondition, setSelectedCondition] = useState<ConditionModel>();
-
-  function openDetails(condition: ConditionModel) {
-    setDetailsIsOpen(true);
-    setSelectedCondition(condition);
-  }
-
-  function closeDetails() {
-    setDetailsIsOpen(false);
-  }
-
   const columns: TableColumn<ConditionModel>[] = [
     {
       title: "Condition",
@@ -34,37 +19,10 @@ export function ConditionsTableBase({
       dataIndex: "clinicalStatus",
     },
     {
-      title: "Category",
-      render: ({ categories }) => categories.join(", "),
-    },
-    {
-      title: "Onset",
-      dataIndex: "onset",
-    },
-    {
       title: "Recorded Date",
       dataIndex: "recordedDate",
     },
-    {
-      title: "Recorder",
-      dataIndex: "recorder",
-    },
   ];
 
-  return (
-    <div>
-      <Table
-        records={conditions}
-        columns={columns}
-        isLoading={isLoading}
-        message={message}
-        onClick={openDetails}
-      />
-      <ConditionDrawer
-        condition={selectedCondition}
-        isOpen={detailsIsOpen}
-        onClose={closeDetails}
-      />
-    </div>
-  );
+  return <Table records={conditions} columns={columns} {...tableProps} />;
 }

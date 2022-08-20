@@ -1,5 +1,5 @@
 import "./App.css";
-import { ConditionsTable } from "./components/content/conditions-table";
+import { Conditions } from "./components/content/conditions";
 import { CTWProvider } from "./components/core/ctw-provider";
 import "./styles/tailwind-gen.css";
 
@@ -11,7 +11,7 @@ function App() {
     <CTWProvider env="dev" authToken={AUTH_TOKEN} theme={{}}>
       <div className="App ctw-space-y-5">
         <h1>CTW Component Library</h1>
-        <ConditionsTable patientUPID={DEV_PENNY_UPID} />
+        <Conditions patientUPID={DEV_PENNY_UPID} />
       </div>
     </CTWProvider>
   );
