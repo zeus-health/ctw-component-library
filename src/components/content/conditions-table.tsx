@@ -1,5 +1,6 @@
 import { getConditions } from "@/fhir/conditions";
 import { ConditionModel } from "@/models/conditions";
+import { orderBy } from "lodash";
 import { useEffect, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
 import { ConditionsTableBase } from "./conditions-table-base";
@@ -33,7 +34,17 @@ export function ConditionsTable({
         setMessage(errorMessage);
       }
 
-      setConditions(conditionResources.map((c) => new ConditionModel(c)));
+      const conditionModels = conditionResources.map(
+        (c) => new ConditionModel(c)
+      );
+
+      const sortedConditionModels = orderBy(
+        conditionModels,
+        (condition) => condition["display"],
+        "asc"
+      );
+
+      setConditions(sortedConditionModels);
       setIsLoading(false);
     }
     load();
