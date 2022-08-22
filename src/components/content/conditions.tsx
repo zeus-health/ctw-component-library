@@ -25,7 +25,7 @@ export function Conditions({ patientUPID }: ConditionsProps) {
 
         <div className="ctw-space-y-3">
           <div className="ctw-title ctw-ml-3">Not Reviewed</div>
-          <ConditionsTable patientUPID={patientUPID} />
+          <ConditionsTable patientUPID={patientUPID} showTableHead={false} />
         </div>
       </div>
 

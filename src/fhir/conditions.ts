@@ -1,5 +1,4 @@
 import Client from "fhir-kit-client";
-import { sortBy } from "lodash";
 import { searchCommonRecords } from "./search-helpers";
 
 export type ClinicalStatus =
@@ -29,9 +28,8 @@ export async function getConditions(
       }
     );
 
-    return sortBy(
-      conditions.filter((condition) => condition.asserter?.type !== "Patient"),
-      "id"
+    return conditions.filter(
+      (condition) => condition.asserter?.type !== "Patient"
     );
   } catch (e) {
     throw new Error("Failed fetching condition information for patient: " + e);
