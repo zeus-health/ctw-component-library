@@ -15,7 +15,10 @@ const THIRD_PARTY_TAGS = [
 ];
 
 // Enumerating ALL of the lens tags.
-const LENS_TAGS = [`${SYSTEM_ZUS_LENS}|ActiveMedications`];
+const LENS_TAGS = [
+  `${SYSTEM_ZUS_LENS}|ActiveMedications`,
+  `${SYSTEM_ZUS_LENS}|ChronicConditions`,
+];
 
 export type SearchReturn<T extends ResourceTypeString> = {
   bundle: fhir4.Bundle;
@@ -80,11 +83,9 @@ export async function searchLensRecords<T extends ResourceTypeString>(
   fhirClient: Client,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
-  const lensTags = [`${SYSTEM_ZUS_LENS}|ActiveMedications`];
-
   return searchAllRecords(resourceType, fhirClient, {
     ...searchParams,
-    _tag: lensTags.join(","),
+    _tag: LENS_TAGS.join(","),
   });
 }
 

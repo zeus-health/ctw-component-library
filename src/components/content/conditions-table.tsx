@@ -1,4 +1,8 @@
-import { getConditions } from "@/fhir/conditions";
+import {
+  ConditionFilters,
+  getConfirmedConditions,
+  getLensConditions,
+} from "@/fhir/conditions";
 import { ConditionModel } from "@/models/conditions";
 import { orderBy } from "lodash";
 import { useEffect, useState } from "react";
@@ -12,12 +16,16 @@ export type ConditionsTableProps = {
   patientUPID: string;
   errorMessage?: string;
   showTableHead?: boolean;
+  isConfirmed?: boolean;
+  conditionFilter?: ConditionFilters;
 };
 
 export function ConditionsTable({
   patientUPID,
   errorMessage = DEFAULT_ERR_MSG,
   showTableHead = true,
+  isConfirmed = true,
+  conditionFilter = {},
 }: ConditionsTableProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [conditions, setConditions] = useState<ConditionModel[]>([]);
@@ -29,7 +37,19 @@ export function ConditionsTable({
       let conditionResources: fhir4.Condition[] = [];
       try {
         const fhirClient = await getCTWFhirClient();
-        conditionResources = await getConditions(fhirClient, patientUPID, {});
+        if (isConfirmed) {
+          conditionResources = await getConfirmedConditions(
+            fhirClient,
+            patientUPID,
+            conditionFilter
+          );
+        } else {
+          conditionResources = await getLensConditions(
+            fhirClient,
+            patientUPID,
+            conditionFilter
+          );
+        }
       } catch (e) {
         setMessage(errorMessage);
       }
