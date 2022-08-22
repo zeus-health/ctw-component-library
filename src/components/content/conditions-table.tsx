@@ -38,11 +38,7 @@ export function ConditionsTable({
         (c) => new ConditionModel(c)
       );
 
-      const sortedConditionModels = orderBy(
-        conditionModels,
-        (condition) => condition["display"],
-        "asc"
-      );
+      const sortedConditionModels = orderBy(conditionModels, "display", "asc");
 
       setConditions(sortedConditionModels);
       setIsLoading(false);
