@@ -1,13 +1,57 @@
+import { ConditionFilters } from "@/fhir/conditions";
 import { useState } from "react";
 import { ConditionFormDrawer } from "./condition-form-drawer";
 import { ConditionsTable } from "./conditions-table";
 
 export type ConditionsProps = {
   patientUPID: string;
+  whichTableToShow?: "confirmed" | "not reviewed" | "all";
+  conditionFilter?: ConditionFilters;
 };
 
-export function Conditions({ patientUPID }: ConditionsProps) {
+export function Conditions({
+  patientUPID,
+  whichTableToShow = "all",
+  conditionFilter = {},
+}: ConditionsProps) {
   const [addConditionIsOpen, setAddConditionIsOpen] = useState(false);
+
+  const DetermineWhichTableToShow = () => {
+    const ConfirmedTable = (
+      <div className="ctw-space-y-3">
+        <div className="ctw-title ctw-ml-3">Confirmed</div>
+        <ConditionsTable
+          patientUPID={patientUPID}
+          conditionFilter={conditionFilter}
+        />
+      </div>
+    );
+
+    const NotReviewed = (
+      <div className="ctw-space-y-3">
+        <div className="ctw-title ctw-ml-3">Not Reviewed</div>
+        <ConditionsTable
+          patientUPID={patientUPID}
+          isConfirmed={false}
+          showTableHead={false}
+        />
+      </div>
+    );
+
+    switch (whichTableToShow) {
+      case "confirmed":
+        return ConfirmedTable;
+      case "not reviewed":
+        return NotReviewed;
+      default:
+        return (
+          <>
+            {ConfirmedTable}
+            {NotReviewed}
+          </>
+        );
+    }
+  };
 
   return (
     <div className="ctw-border-divider-light ctw-border ctw-border-solid">
@@ -17,16 +61,9 @@ export function Conditions({ patientUPID }: ConditionsProps) {
           + Add Condition
         </div>
       </div>
-      <div className="ctw-py-3 ctw-px-4 ctw-space-y-5">
-        <div className="ctw-space-y-3">
-          <div className="ctw-title ctw-ml-3">Confirmed</div>
-          <ConditionsTable patientUPID={patientUPID} />
-        </div>
 
-        <div className="ctw-space-y-3">
-          <div className="ctw-title ctw-ml-3">Not Reviewed</div>
-          <ConditionsTable patientUPID={patientUPID} showTableHead={false} />
-        </div>
+      <div className="ctw-space-y-5 ctw-py-3 ctw-px-4 ">
+        <DetermineWhichTableToShow />
       </div>
 
       <ConditionFormDrawer
