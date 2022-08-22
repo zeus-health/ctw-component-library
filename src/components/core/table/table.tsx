@@ -91,18 +91,18 @@ export const Table = <T extends MinRecordItem>({
       >
         <div
           ref={containerTableRef}
-          className="ctw-scrollbar ctw-flex ctw-overflow-x-auto ctw-rounded-lg ctw-shadow ctw-ring-1 ctw-ring-black ctw-ring-opacity-5"
+          className="ctw-scrollbar ctw-flex ctw-overflow-x-auto ctw-rounded-lg ctw-shadow ctw-ring-1 ctw-ring-divider-light ctw-ring-opacity-5"
         >
           <table
             className=" ctw-divide-divider-main ctw-table-base ctw-divide-y ctw-w-full"
             ref={tableRef}
           >
-            {showTableHead ? (
+            {showTableHead && (
               <TableHead
                 columns={columns}
                 showLeftTableBorderShadow={showLeftTableBorderShadow}
               />
-            ) : null}
+            )}
 
             <tbody className="ctw-divide-y ctw-divide-divider-light ctw-bg-white">
               <TableRows
