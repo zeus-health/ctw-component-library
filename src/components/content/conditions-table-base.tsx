@@ -13,14 +13,17 @@ export function ConditionsTableBase({
     {
       title: "Condition",
       dataIndex: "display",
+      className: "ctw-w-[50%]",
     },
     {
       title: "Status",
       dataIndex: "clinicalStatus",
+      className: "ctw-w-[20%]",
     },
     {
       title: "Recorded Date",
       dataIndex: "recordedDate",
+      className: "ctw-w-[30%]",
     },
   ];
 

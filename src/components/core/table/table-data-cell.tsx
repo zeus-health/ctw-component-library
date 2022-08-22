@@ -29,7 +29,8 @@ export const TableDataCell = <T extends MinRecordItem>({
           : "ctw-text-content-light",
         index === 0 && showLeftTableBorderShadow
           ? "ctw-table-scroll-left-shadow-sticky ctw-bg-white group-hover:ctw-bg-bg-lighter"
-          : ""
+          : "",
+        column.className
       )}
     >
       {column.render ? column.render(record) : value}
