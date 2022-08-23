@@ -14,6 +14,7 @@ type RenderSpecified<T> = { dataIndex?: never; render: (row: T) => ReactNode };
 // and then either a dataIndex or a render method but not both.
 export type TableColumn<T extends MinRecordItem> = {
   title?: string;
+  className?: string;
 } & (DataIndexSpecified<T> | RenderSpecified<T>);
 
 export type TableProps<T extends MinRecordItem> = {

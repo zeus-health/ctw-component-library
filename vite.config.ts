@@ -27,7 +27,7 @@ export default defineConfig({
         ...Object.keys(dependencies),
       ],
     },
-    target: "esnext",
+    target: "es2015",
     sourcemap: true,
   },
 });
