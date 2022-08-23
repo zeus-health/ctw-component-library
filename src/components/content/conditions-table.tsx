@@ -64,7 +64,7 @@ export function ConditionsTable({
       setIsLoading(false);
     }
     load();
-  }, [patientUPID, isConfirmed]);
+  }, [patientUPID, isConfirmed, conditionFilter]);
 
   return (
     <ConditionsTableBase

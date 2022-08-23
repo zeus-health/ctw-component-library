@@ -79,7 +79,7 @@ export const Table = <T extends MinRecordItem>({
   }, []);
 
   return (
-    <div className="ctw-py-2 ctw-align-middle md:ctw-px-6 lg:ctw-px-8">
+    <div className="ctw-py-2 ctw-align-middle">
       <div
         /* Border radius has to be same as table. 
            For some reason the overflow: hidden also hides the table borders, so add some padding to get them back. */
