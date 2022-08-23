@@ -10,8 +10,8 @@ const CSSColorPalette = {
     primary: {
       lighter: "#FAF5FF",
       light: "#F3E8FF",
-      main: "#4990E2",
-      dark: "#577FE6",
+      main: "#A855F7",
+      dark: "#7E22CE",
     },
     icon: {
       default: "#374151",
@@ -47,7 +47,7 @@ const CSSColorPalette = {
     bg: {
       white: "#FFFFFF",
       lighter: "#F9FAFB",
-      light: "#F2F6FD",
+      light: "#F3F4F6",
       dark: "#E5E7EB",
       black: "#111827",
     },
