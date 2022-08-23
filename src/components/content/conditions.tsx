@@ -1,3 +1,4 @@
+import { ConditionFilters } from "@/fhir/conditions";
 import { useState } from "react";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionFormDrawer } from "./condition-form-drawer";
@@ -11,6 +12,13 @@ export function Conditions({ patientUPID }: ConditionsProps) {
   const [addConditionIsOpen, setAddConditionIsOpen] = useState(false);
   const [includeInactive, setIncludeInactive] = useState(true);
 
+  const handleFormChange = () => setIncludeInactive(!includeInactive);
+  const conditionFilter: ConditionFilters = includeInactive
+    ? {
+        "clinical-status": "active",
+      }
+    : {};
+
   return (
     <div className="ctw-border-divider-light ctw-border ctw-border-solid">
       <div className="ctw-bg-bg-light ctw-h-11 ctw-flex ctw-items-center ctw-justify-between ctw-p-3">
@@ -23,7 +31,7 @@ export function Conditions({ patientUPID }: ConditionsProps) {
       <div className="ctw-space-y-5 ctw-py-3 ctw-px-4 ">
         <div className="ctw-py-3 ctw-px-4 ctw-space-y-5">
           <ToggleControl
-            onFormChange={(e) => setIncludeInactive(!includeInactive)}
+            onFormChange={handleFormChange}
             toggleProps={{ name: "conditions", text: "Include Inactive" }}
           />
           <div className="ctw-space-y-3">
@@ -31,13 +39,7 @@ export function Conditions({ patientUPID }: ConditionsProps) {
             <ConditionsTable
               patientUPID={patientUPID}
               isConfirmed={true}
-              conditionFilter={
-                includeInactive
-                  ? {
-                      "clinical-status": "active",
-                    }
-                  : {}
-              }
+              conditionFilter={conditionFilter}
             />
           </div>
 
