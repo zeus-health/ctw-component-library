@@ -17,7 +17,7 @@ export type ConditionsTableProps = {
   errorMessage?: string;
   showTableHead?: boolean;
   isConfirmed?: boolean;
-  conditionFilter?: ConditionFilters;
+  includeInactive?: boolean;
 };
 
 export function ConditionsTable({
@@ -25,7 +25,7 @@ export function ConditionsTable({
   errorMessage = DEFAULT_ERR_MSG,
   showTableHead = true,
   isConfirmed = true,
-  conditionFilter = {},
+  includeInactive = false,
 }: ConditionsTableProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [conditions, setConditions] = useState<ConditionModel[]>([]);
@@ -34,6 +34,12 @@ export function ConditionsTable({
 
   useEffect(() => {
     async function load() {
+      const conditionFilter: ConditionFilters = includeInactive
+        ? {
+            "clinical-status": "active",
+          }
+        : {};
+
       let conditionResources: fhir4.Condition[] = [];
       try {
         const fhirClient = await getCTWFhirClient();
@@ -64,7 +70,7 @@ export function ConditionsTable({
       setIsLoading(false);
     }
     load();
-  }, [patientUPID, isConfirmed]);
+  }, [patientUPID, isConfirmed, includeInactive]);
 
   return (
     <ConditionsTableBase
