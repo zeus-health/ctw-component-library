@@ -107,6 +107,18 @@
     height: 4px;
     @apply ctw-bg-divider-main;
   }
+
+  .ctw-toggle-checkbox {
+    @apply ctw-p-0.5 ctw-z-10;
+  }
+
+  .ctw-toggle-checkbox:checked {
+    @apply ctw-border-primary-dark ctw-right-0;
+  }
+
+  .ctw-toggle-checkbox:checked + .ctw-toggle-span {
+    @apply ctw-absolute ctw-inset-0 ctw-pointer-events-none ctw-bg-primary-dark;
+  }
 }
 
 /* PREFLIGHT */
@@ -114,4 +126,9 @@
 *[class*="ctw-"]:before,
 *[class*="ctw-"]:after {
   box-sizing: border-box;
+}
+
+*[class*="ctw-"] button,
+input {
+  margin: 0;
 }
