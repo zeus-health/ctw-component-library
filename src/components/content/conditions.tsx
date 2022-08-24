@@ -1,4 +1,3 @@
-import { ConditionFilters } from "@/fhir/conditions";
 import { useState } from "react";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionFormDrawer } from "./condition-form-drawer";
@@ -13,11 +12,6 @@ export function Conditions({ patientUPID }: ConditionsProps) {
   const [includeInactive, setIncludeInactive] = useState(true);
 
   const handleFormChange = () => setIncludeInactive(!includeInactive);
-  const conditionFilter: ConditionFilters = includeInactive
-    ? {
-        "clinical-status": "active",
-      }
-    : {};
 
   return (
     <div className="ctw-border-divider-light ctw-border ctw-border-solid">
@@ -39,7 +33,7 @@ export function Conditions({ patientUPID }: ConditionsProps) {
             <ConditionsTable
               patientUPID={patientUPID}
               isConfirmed={true}
-              conditionFilter={conditionFilter}
+              includeInactive={includeInactive}
             />
           </div>
 
