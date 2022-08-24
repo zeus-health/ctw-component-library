@@ -11,7 +11,6 @@
   ignorePatterns: ["*.js"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    tsconfigRootDir: __dirname,
     project: ["./tsconfig.json"],
   },
   rules: {
@@ -19,6 +18,7 @@
     "@typescript-eslint/no-unnecessary-condition": "error",
     curly: "error",
     "import/extensions": "off",
+    "import/no-unresolved": "off",
     "import/prefer-default-export": "off",
     "import/no-extraneous-dependencies": [
       "error",
