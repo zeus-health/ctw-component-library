@@ -18,7 +18,7 @@
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-unnecessary-condition": "error",
     curly: "error",
-    "import/order": "off",
+    "import/extensions": "off",
     "import/prefer-default-export": "off",
     "import/no-extraneous-dependencies": [
       "error",
