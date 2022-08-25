@@ -11,12 +11,12 @@ on:
           - patch
           - minor
           - major
-      increment:
-        description: "Please enter a summary for this change (this will be in the changelogs)"
-        required: true
-        default: ""
-        type: string
-     
+      # increment:
+      #   description: "Please enter a summary for this change (this will be in the changelogs)"
+      #   required: true
+      #   default: ""
+      #   type: string
+
 jobs:
   add-changeset:
     runs-on: macos-latest
@@ -26,7 +26,7 @@ jobs:
         with:
           # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
           fetch-depth: 0
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -40,4 +40,3 @@ jobs:
           publish: npm run changeset --semvar-increment=${{ inputs.increment }} --summary=${{ inputs.summary }}
         env:
           GITHUB_TOKEN: ${{ secrets.READ_ONLY_GITHUB_TOKEN }}
-         
