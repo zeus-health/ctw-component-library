@@ -11,7 +11,7 @@ on:
           - patch
           - minor
           - major
-      increment:
+      summary:
         description: "Please enter a summary for this change (this will be in the changelogs)"
         required: true
         default: ""
