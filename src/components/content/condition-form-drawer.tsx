@@ -1,5 +1,4 @@
 import { ConditionModel } from "@/models/conditions";
-import cx from "classnames";
 import { Drawer } from "../core/drawer";
 
 export type ConditionFormDrawerProps = {
@@ -20,7 +19,7 @@ export function ConditionFormDrawer({
   const title = editing ? "Edit Condition" : "Add Condition";
 
   return (
-    <div className={cx(className)}>
+    <div className={className}>
       <Drawer title={title} isOpen={isOpen} onClose={onClose}>
         <Drawer.Body>TODO</Drawer.Body>
         <Drawer.Footer>

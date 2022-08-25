@@ -4,7 +4,6 @@ import {
   getLensConditions,
 } from "@/fhir/conditions";
 import { ConditionModel } from "@/models/conditions";
-import cx from "classnames";
 import { orderBy } from "lodash";
 import { useEffect, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
@@ -23,7 +22,7 @@ export type ConditionsTableProps = {
 };
 
 export function ConditionsTable({
-  className,
+  className: tableClassName,
   patientUPID,
   errorMessage = DEFAULT_ERR_MSG,
   showTableHead = true,
@@ -76,13 +75,12 @@ export function ConditionsTable({
   }, [patientUPID, isConfirmed, includeInactive]);
 
   return (
-    <div className={cx(className)}>
-      <ConditionsTableBase
-        conditions={conditions}
-        isLoading={isLoading}
-        message={message}
-        showTableHead={showTableHead}
-      />
-    </div>
+    <ConditionsTableBase
+      className={tableClassName}
+      conditions={conditions}
+      isLoading={isLoading}
+      message={message}
+      showTableHead={showTableHead}
+    />
   );
 }

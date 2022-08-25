@@ -1,6 +1,5 @@
 import { ConditionModel } from "@/models/conditions";
 import { Tab } from "@headlessui/react";
-import cx from "classnames";
 import { ButtonTabs } from "../core/button-tabs";
 import { DataList, entryFromArray } from "../core/data-list";
 import { Drawer } from "../core/drawer";
@@ -38,7 +37,7 @@ export function ConditionDrawer({
     : [];
 
   return (
-    <div className={cx(className)}>
+    <div className={className}>
       <Drawer title="Condition" isOpen={isOpen} onClose={onClose}>
         <Drawer.Body>
           {condition ? (

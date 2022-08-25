@@ -1,3 +1,4 @@
+import cx from "classnames";
 import { useState } from "react";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionFormDrawer } from "./condition-form-drawer";
@@ -16,7 +17,10 @@ export function Conditions({ className, patientUPID }: ConditionsProps) {
 
   return (
     <div
-      className={`ctw-border-divider-light ctw-border ctw-border-solid ${className}`}
+      className={cx(
+        "ctw-border-divider-light ctw-border ctw-border-solid",
+        className
+      )}
     >
       <div className="ctw-bg-bg-light ctw-h-11 ctw-flex ctw-items-center ctw-justify-between ctw-p-3">
         <div className="ctw-title">Conditions</div>

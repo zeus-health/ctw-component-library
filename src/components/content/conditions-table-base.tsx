@@ -1,5 +1,4 @@
 import { ConditionModel } from "@/models/conditions";
-import cx from "classnames";
 import { Table, TableBaseProps, TableColumn } from "../core/table/table";
 
 export type ConditionsTableBaseProps = {
@@ -31,7 +30,7 @@ export function ConditionsTableBase({
   ];
 
   return (
-    <div className={cx(className)}>
+    <div className={className}>
       <Table records={conditions} columns={columns} {...tableProps} />
     </div>
   );
