@@ -1,4 +1,5 @@
 import cx from "classnames";
+
 import { MinRecordItem, TableColumn } from "./table";
 
 export type TableHeadProps<T extends MinRecordItem> = {

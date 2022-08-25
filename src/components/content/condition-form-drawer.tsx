@@ -1,5 +1,6 @@
-import { ConditionModel } from "@/models/conditions";
 import { Drawer } from "../core/drawer";
+
+import { ConditionModel } from "@/models/conditions";
 
 export type ConditionFormDrawerProps = {
   editing?: boolean;

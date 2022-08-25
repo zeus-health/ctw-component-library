@@ -1,4 +1,5 @@
 import Client from "fhir-kit-client";
+
 import { searchBuilderRecords, searchLensRecords } from "./search-helpers";
 
 export type ClinicalStatus =
@@ -32,7 +33,7 @@ export async function getConfirmedConditions(
       (condition) => condition.asserter?.type !== "Patient"
     );
   } catch (e) {
-    throw new Error("Failed fetching condition information for patient: " + e);
+    throw new Error(`Failed fetching condition information for patient: ${e}`);
   }
 }
 
@@ -55,6 +56,6 @@ export async function getLensConditions(
       (condition) => condition.asserter?.type !== "Patient"
     );
   } catch (e) {
-    throw new Error("Failed fetching condition information for patient: " + e);
+    throw new Error(`Failed fetching condition information for patient: ${e}`);
   }
 }
