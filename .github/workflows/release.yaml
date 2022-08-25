@@ -1,0 +1,19 @@
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      increment:
+        description: "SemVer Increment"
+        required: true
+        default: "minor"
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+      increment:
+        description: "Please enter a summary for this change (this will be in the changelogs)"
+        required: true
+        default: ""
+        type: string
+     
