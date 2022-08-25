@@ -1,4 +1,5 @@
 import { FormEvent } from "react";
+
 import { Toggle, ToggleProps } from "./toggle";
 
 export type ToggleControlProps = {
@@ -9,10 +10,8 @@ export type ToggleControlProps = {
 export const ToggleControl = ({
   toggleProps,
   onFormChange,
-}: ToggleControlProps) => {
-  return (
-    <form onChange={onFormChange} className="ctw-text-end">
-      <Toggle {...toggleProps} />
-    </form>
-  );
-};
+}: ToggleControlProps) => (
+  <form onChange={onFormChange} className="ctw-text-end">
+    <Toggle {...toggleProps} />
+  </form>
+);

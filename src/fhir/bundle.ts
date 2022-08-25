@@ -1,4 +1,5 @@
 import type { FhirResource } from "fhir-kit-client";
+
 import type { ResourceMap, ResourceType, ResourceTypeString } from "./types";
 
 export const isBundle = (resource: fhir4.Resource): resource is fhir4.Bundle =>
