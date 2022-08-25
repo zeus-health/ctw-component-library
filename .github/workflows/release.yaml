@@ -2,6 +2,12 @@ name: Release
 on:
   workflow_dispatch:
     inputs:
+      summary:
+        description: "Please enter a summary for this change (this will be in the changelogs)"
+        required: true
+        default: ""
+        type: string
+
       increment:
         description: "SemVer Increment"
         required: true
@@ -11,11 +17,6 @@ on:
           - patch
           - minor
           - major
-      summary:
-        description: "Please enter a summary for this change (this will be in the changelogs)"
-        required: true
-        default: ""
-        type: string
 
 jobs:
   build:
