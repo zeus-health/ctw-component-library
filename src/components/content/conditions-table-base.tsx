@@ -1,11 +1,14 @@
 import { ConditionModel } from "@/models/conditions";
+import cx from "classnames";
 import { Table, TableBaseProps, TableColumn } from "../core/table/table";
 
 export type ConditionsTableBaseProps = {
+  className?: string;
   conditions: ConditionModel[];
 } & TableBaseProps<ConditionModel>;
 
 export function ConditionsTableBase({
+  className,
   conditions,
   ...tableProps
 }: ConditionsTableBaseProps) {
@@ -27,5 +30,9 @@ export function ConditionsTableBase({
     },
   ];
 
-  return <Table records={conditions} columns={columns} {...tableProps} />;
+  return (
+    <div className={cx(className)}>
+      <Table records={conditions} columns={columns} {...tableProps} />
+    </div>
+  );
 }

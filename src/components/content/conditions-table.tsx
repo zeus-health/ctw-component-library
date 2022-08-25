@@ -4,6 +4,7 @@ import {
   getLensConditions,
 } from "@/fhir/conditions";
 import { ConditionModel } from "@/models/conditions";
+import cx from "classnames";
 import { orderBy } from "lodash";
 import { useEffect, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
@@ -13,6 +14,7 @@ const DEFAULT_ERR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
 
 export type ConditionsTableProps = {
+  className?: string;
   patientUPID: string;
   errorMessage?: string;
   showTableHead?: boolean;
@@ -21,6 +23,7 @@ export type ConditionsTableProps = {
 };
 
 export function ConditionsTable({
+  className,
   patientUPID,
   errorMessage = DEFAULT_ERR_MSG,
   showTableHead = true,
@@ -73,11 +76,13 @@ export function ConditionsTable({
   }, [patientUPID, isConfirmed, includeInactive]);
 
   return (
-    <ConditionsTableBase
-      conditions={conditions}
-      isLoading={isLoading}
-      message={message}
-      showTableHead={showTableHead}
-    />
+    <div className={cx(className)}>
+      <ConditionsTableBase
+        conditions={conditions}
+        isLoading={isLoading}
+        message={message}
+        showTableHead={showTableHead}
+      />
+    </div>
   );
 }

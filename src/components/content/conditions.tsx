@@ -4,17 +4,20 @@ import { ConditionFormDrawer } from "./condition-form-drawer";
 import { ConditionsTable } from "./conditions-table";
 
 export type ConditionsProps = {
+  className?: string;
   patientUPID: string;
 };
 
-export function Conditions({ patientUPID }: ConditionsProps) {
+export function Conditions({ className, patientUPID }: ConditionsProps) {
   const [addConditionIsOpen, setAddConditionIsOpen] = useState(false);
   const [includeInactive, setIncludeInactive] = useState(true);
 
   const handleFormChange = () => setIncludeInactive(!includeInactive);
 
   return (
-    <div className="ctw-border-divider-light ctw-border ctw-border-solid">
+    <div
+      className={`ctw-border-divider-light ctw-border ctw-border-solid ${className}`}
+    >
       <div className="ctw-bg-bg-light ctw-h-11 ctw-flex ctw-items-center ctw-justify-between ctw-p-3">
         <div className="ctw-title">Conditions</div>
         <div className="ctw-link" onClick={() => setAddConditionIsOpen(true)}>

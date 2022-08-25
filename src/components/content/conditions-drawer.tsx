@@ -1,16 +1,19 @@
 import { ConditionModel } from "@/models/conditions";
 import { Tab } from "@headlessui/react";
+import cx from "classnames";
 import { ButtonTabs } from "../core/button-tabs";
 import { DataList, entryFromArray } from "../core/data-list";
 import { Drawer } from "../core/drawer";
 
 export type ConditionDrawerProps = {
+  className?: string;
   condition?: ConditionModel;
   isOpen: boolean;
   onClose: () => void;
 };
 
 export function ConditionDrawer({
+  className,
   condition,
   isOpen,
   onClose,
@@ -35,39 +38,41 @@ export function ConditionDrawer({
     : [];
 
   return (
-    <Drawer title="Condition" isOpen={isOpen} onClose={onClose}>
-      <Drawer.Body>
-        {condition ? (
-          <div className="ctw-space-y-7 ctw-text-black">
-            <div className="ctw-flex ctw-justify-between ctw-space-x-8">
-              <span className="ctw-text-3xl ctw-text-black ctw-font-bold">
-                {condition.display}
-              </span>
-            </div>
+    <div className={cx(className)}>
+      <Drawer title="Condition" isOpen={isOpen} onClose={onClose}>
+        <Drawer.Body>
+          {condition ? (
+            <div className="ctw-space-y-7 ctw-text-black">
+              <div className="ctw-flex ctw-justify-between ctw-space-x-8">
+                <span className="ctw-text-3xl ctw-text-black ctw-font-bold">
+                  {condition.display}
+                </span>
+              </div>
 
-            <ButtonTabs tabs={["Overview", "Comments (6)", "History"]}>
-              <Tab.Panels>
-                <Tab.Panel>
-                  <DataList title="Details" data={data} />
-                </Tab.Panel>
-                <Tab.Panel>TODO comments</Tab.Panel>
-                <Tab.Panel>TODO history</Tab.Panel>
-              </Tab.Panels>
-            </ButtonTabs>
+              <ButtonTabs tabs={["Overview", "Comments (6)", "History"]}>
+                <Tab.Panels>
+                  <Tab.Panel>
+                    <DataList title="Details" data={data} />
+                  </Tab.Panel>
+                  <Tab.Panel>TODO comments</Tab.Panel>
+                  <Tab.Panel>TODO history</Tab.Panel>
+                </Tab.Panels>
+              </ButtonTabs>
+            </div>
+          ) : null}
+        </Drawer.Body>
+        <Drawer.Footer>
+          <div className="ctw-flex ctw-justify-end ctw-space-x-3 ctw-text-black ">
+            <button
+              type="button"
+              className="ctw-btn-default ctw-font-semibold ctw-outline-bg-light"
+              onClick={onClose}
+            >
+              Close
+            </button>
           </div>
-        ) : null}
-      </Drawer.Body>
-      <Drawer.Footer>
-        <div className="ctw-flex ctw-justify-end ctw-space-x-3 ctw-text-black ">
-          <button
-            type="button"
-            className="ctw-btn-default ctw-font-semibold ctw-outline-bg-light"
-            onClick={onClose}
-          >
-            Close
-          </button>
-        </div>
-      </Drawer.Footer>
-    </Drawer>
+        </Drawer.Footer>
+      </Drawer>
+    </div>
   );
 }
