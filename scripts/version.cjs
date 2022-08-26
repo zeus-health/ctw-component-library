@@ -50,16 +50,23 @@ console.log(`Using --${SUMMARY_ARG}: ${summaryVal}`);
 let current = "";
 let currentQuestionIdx = 0;
 runRelease.stdout.on("data", (data) => {
-  current += data;
-  const [question, answer] = questionAnswerMap[currentQuestionIdx];
-  if (current.includes(question)) {
-    runRelease.stdin.write(`${answer}\n`);
-    currentQuestionIdx += 1;
-    current = "";
-    if (questionAnswerMap.length === currentQuestionIdx) {
-      console.log("...finished");
-
-      exit();
+  try {
+    current += data;
+    const [question, answer] = questionAnswerMap[currentQuestionIdx];
+    if (current.includes(question)) {
+      runRelease.stdin.write(`${answer}\n`);
+      currentQuestionIdx += 1;
+      current = "";
+      if (questionAnswerMap.length === currentQuestionIdx) {
+        console.log("...finished");
+        exit();
+      }
     }
+  } catch (e) {
+    console.log("error", e);
   }
+});
+
+runRelease.stdout.on("error", (error) => {
+  console.log("ERROR", error);
 });
