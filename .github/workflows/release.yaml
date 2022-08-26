@@ -32,11 +32,14 @@ jobs:
         with:
           node-version: 16.x
 
+      - name: Creates changeset
+        run: npm run prepublish --semvar-increment=${{ inputs.increment }} --summary=${{ inputs.summary }}
+
       - name: Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@v1
         with:
           # This expects you to have a script called release which does a build for your packages and calls changeset publish
-          version: node ./scripts/version.cjs --semvar-increment=${{ inputs.increment }} --summary=${{ inputs.summary }} && npm run version
+          version: npm run version
         env:
           GITHUB_TOKEN: ${{ secrets.READ_ONLY_GITHUB_TOKEN }}

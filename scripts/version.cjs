@@ -40,7 +40,7 @@ const questionAnswerMap = Object.entries({
   "Is this your desired changeset?": "Y",
 });
 
-const runRelease = childprocess.spawn("npm", ["run", "changeset"]);
+const runRelease = childprocess.spawn("npm", ["run", "prepublish"]);
 runRelease.stdout.setEncoding("utf8");
 
 let current = "";
