@@ -23,8 +23,10 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
+      - run: npm run build
 
       - name: Create Release Pull Request
         uses: changesets/action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.READ_ONLY_GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

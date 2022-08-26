@@ -1,5 +1,6 @@
-import { ConditionModel } from "@/models/conditions";
 import { Tab } from "@headlessui/react";
+
+import { ConditionModel } from "@/models/conditions";
 import { ButtonTabs } from "../core/button-tabs";
 import { DataList, entryFromArray } from "../core/data-list";
 import { Drawer } from "../core/drawer";
