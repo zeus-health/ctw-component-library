@@ -40,12 +40,8 @@ const questionAnswerMap = Object.entries({
   "Is this your desired changeset?": "Y",
 });
 
-try {
-  const runRelease = childprocess.spawn("npx", ["changeset"]);
-  runRelease.stdout.setEncoding("utf8");
-} catch (e) {
-  console.log("error", e);
-}
+const runRelease = childprocess.spawn("npx", ["changeset"]);
+runRelease.stdout.setEncoding("utf8");
 
 console.log("...child process started");
 console.log(`Using --${SEMVAR_INCREMENET_ARG}: ${semvarVal}`);
@@ -54,6 +50,7 @@ console.log(`Using --${SUMMARY_ARG}: ${summaryVal}`);
 let current = "";
 let currentQuestionIdx = 0;
 runRelease.stdout.on("data", (data) => {
+  console.log("entering");
   current += data;
   const [question, answer] = questionAnswerMap[currentQuestionIdx];
   if (current.includes(question)) {
@@ -67,8 +64,4 @@ runRelease.stdout.on("data", (data) => {
   }
 
   console.log("error", e);
-});
-
-runRelease.stdout.on("close", (error) => {
-  console.log("ERROR", error);
 });
