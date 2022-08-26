@@ -33,7 +33,7 @@ jobs:
           node-version: 16.x
 
       - name: Creates changeset
-        run: npm run prepublish --semvar-increment=${{ inputs.increment }} --summary=${{ inputs.summary }}
+        run: node ./scripts/version.cjs --semvar-increment=${{ inputs.increment }} --summary=${{ inputs.summary }}
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
