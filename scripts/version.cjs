@@ -44,6 +44,8 @@ const runRelease = childprocess.spawn("npx", ["changeset"]);
 runRelease.stdout.setEncoding("utf8");
 
 console.log("...child process started");
+console.log(`Using --${SEMVAR_INCREMENET_ARG}: ${semvarVal}`);
+console.log(`Using --${SUMMARY_ARG}: ${summaryVal}`);
 
 let current = "";
 let currentQuestionIdx = 0;
