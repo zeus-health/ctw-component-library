@@ -55,6 +55,8 @@ runRelease.stdout.on("data", (data) => {
     currentQuestionIdx += 1;
     current = "";
     if (questionAnswerMap.length === currentQuestionIdx) {
+      console.log("...finished");
+
       exit();
     }
   }
