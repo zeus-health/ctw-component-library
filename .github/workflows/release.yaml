@@ -33,7 +33,8 @@ jobs:
           node-version: 16.x
 
       - name: install deps
-        run: npm install
+         run: |
+          npm install --no-package-lock --no-save @changesets/cli
 
       - name: Creates changeset
         run: |
