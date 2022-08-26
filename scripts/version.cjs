@@ -64,6 +64,10 @@ runRelease.stdout.on("data", (data) => {
   }
 });
 
+runRelease.stderr.on("data", (data) => {
+  console.error(`stderr: ${data}`);
+});
+
 runRelease.stdout.on("end", (data) => {
   console.log("end", data);
 });
