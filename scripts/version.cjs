@@ -40,8 +40,12 @@ const questionAnswerMap = Object.entries({
   "Is this your desired changeset?": "Y",
 });
 
-const runRelease = childprocess.spawn("npx", ["changeset"]);
-runRelease.stdout.setEncoding("utf8");
+try {
+  const runRelease = childprocess.spawn("npx", ["changeset"]);
+  runRelease.stdout.setEncoding("utf8");
+} catch (e) {
+  console.log("error", e);
+}
 
 console.log("...child process started");
 console.log(`Using --${SEMVAR_INCREMENET_ARG}: ${semvarVal}`);
@@ -50,23 +54,21 @@ console.log(`Using --${SUMMARY_ARG}: ${summaryVal}`);
 let current = "";
 let currentQuestionIdx = 0;
 runRelease.stdout.on("data", (data) => {
-  try {
-    current += data;
-    const [question, answer] = questionAnswerMap[currentQuestionIdx];
-    if (current.includes(question)) {
-      runRelease.stdin.write(`${answer}\n`);
-      currentQuestionIdx += 1;
-      current = "";
-      if (questionAnswerMap.length === currentQuestionIdx) {
-        console.log("...finished");
-        exit();
-      }
+  current += data;
+  const [question, answer] = questionAnswerMap[currentQuestionIdx];
+  if (current.includes(question)) {
+    runRelease.stdin.write(`${answer}\n`);
+    currentQuestionIdx += 1;
+    current = "";
+    if (questionAnswerMap.length === currentQuestionIdx) {
+      console.log("...finished");
+      exit();
     }
-  } catch (e) {
-    console.log("error", e);
   }
+
+  console.log("error", e);
 });
 
-runRelease.stdout.on("error", (error) => {
+runRelease.stdout.on("close", (error) => {
   console.log("ERROR", error);
 });
