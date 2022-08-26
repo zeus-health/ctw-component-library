@@ -10,7 +10,7 @@ export type ConditionFormDrawerProps = {
 };
 
 export function ConditionFormDrawer({
-  className,
+  className: drawerClassName,
   editing,
   condition,
   isOpen,
@@ -19,21 +19,24 @@ export function ConditionFormDrawer({
   const title = editing ? "Edit Condition" : "Add Condition";
 
   return (
-    <div className={className}>
-      <Drawer title={title} isOpen={isOpen} onClose={onClose}>
-        <Drawer.Body>TODO</Drawer.Body>
-        <Drawer.Footer>
-          <div className="ctw-flex ctw-justify-end ctw-space-x-3 ctw-text-black ">
-            <button
-              type="button"
-              className="ctw-btn-default ctw-font-semibold ctw-outline-bg-light"
-              onClick={onClose}
-            >
-              Close
-            </button>
-          </div>
-        </Drawer.Footer>
-      </Drawer>
-    </div>
+    <Drawer
+      className={drawerClassName}
+      title={title}
+      isOpen={isOpen}
+      onClose={onClose}
+    >
+      <Drawer.Body>TODO</Drawer.Body>
+      <Drawer.Footer>
+        <div className="ctw-flex ctw-justify-end ctw-space-x-3 ctw-text-black ">
+          <button
+            type="button"
+            className="ctw-btn-default ctw-font-semibold ctw-outline-bg-light"
+            onClick={onClose}
+          >
+            Close
+          </button>
+        </div>
+      </Drawer.Footer>
+    </Drawer>
   );
 }
