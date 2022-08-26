@@ -43,6 +43,8 @@ const questionAnswerMap = Object.entries({
 const runRelease = childprocess.spawn("npx", ["changeset"]);
 runRelease.stdout.setEncoding("utf8");
 
+console.log("...child process started");
+
 let current = "";
 let currentQuestionIdx = 0;
 runRelease.stdout.on("data", (data) => {
