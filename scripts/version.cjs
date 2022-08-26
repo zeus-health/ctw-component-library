@@ -63,3 +63,7 @@ runRelease.stdout.on("data", (data) => {
     }
   }
 });
+
+runRelease.stdout.on("end", (data) => {
+  console.log("end", data);
+});
