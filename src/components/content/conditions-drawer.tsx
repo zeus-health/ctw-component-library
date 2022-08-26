@@ -14,7 +14,7 @@ export type ConditionDrawerProps = {
 export function ConditionDrawer({
   condition,
   isOpen,
-  onClose,
+  onClose
 }: ConditionDrawerProps) {
   const data = condition
     ? [
@@ -31,7 +31,7 @@ export function ConditionDrawer({
         { label: "Recorder", value: condition.recorder },
         ...entryFromArray("Stage", condition.stages),
         ...entryFromArray("Evidence", condition.evidences),
-        ...entryFromArray("Note", condition.notes),
+        ...entryFromArray("Note", condition.notes)
       ]
     : [];
 
@@ -41,7 +41,7 @@ export function ConditionDrawer({
         {condition ? (
           <div className="ctw-space-y-7 ctw-text-black">
             <div className="ctw-flex ctw-justify-between ctw-space-x-8">
-              <span className="ctw-text-3xl ctw-text-black ctw-font-bold">
+              <span className="ctw-text-3xl ctw-font-bold ctw-text-black">
                 {condition.display}
               </span>
             </div>
