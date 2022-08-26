@@ -33,7 +33,7 @@ jobs:
           node-version: 16.x
 
       - name: install deps
-      - run: npm ci
+        run: npm ci
 
       - name: Creates changeset
         run: |
