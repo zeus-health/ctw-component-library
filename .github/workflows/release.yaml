@@ -36,6 +36,8 @@ jobs:
       - name: Creates changeset
         run: |
           node ./scripts/version.cjs --semvar-increment=${{ inputs.increment }} --summary=${{ inputs.summary }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.READ_ONLY_GITHUB_TOKEN }}
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
