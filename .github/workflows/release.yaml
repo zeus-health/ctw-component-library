@@ -19,6 +19,8 @@ on:
 
 jobs:
   build:
+    # prevents this action from running on forks
+    if: github.repository == 'zeus-health/ctw-component-library'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -32,12 +34,9 @@ jobs:
         with:
           node-version: 16.x
 
-      - name: install deps
-        run: |
+      - run: |
           npm install --no-package-lock --no-save @changesets/cli
-
-      - name: Creates changeset
-        run: |
+      - run: |
           node ./scripts/version.cjs --semvar-increment=${{ inputs.increment }} --summary=${{ inputs.summary }}
         env:
           GITHUB_TOKEN: ${{ secrets.READ_ONLY_GITHUB_TOKEN }}
