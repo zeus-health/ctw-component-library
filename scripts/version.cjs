@@ -50,7 +50,7 @@ console.log(`Using --${SUMMARY_ARG}: ${summaryVal}`);
 let current = "";
 let currentQuestionIdx = 0;
 runRelease.stdout.on("data", (data) => {
-  console.log("entering");
+  console.log("entering", data);
   current += data;
   const [question, answer] = questionAnswerMap[currentQuestionIdx];
   if (current.includes(question)) {
@@ -62,6 +62,4 @@ runRelease.stdout.on("data", (data) => {
       exit();
     }
   }
-
-  console.log("error", e);
 });
