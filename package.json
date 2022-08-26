@@ -27,7 +27,8 @@
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "lint-fix": "eslint --fix --cache --cache-location ./node_modules/.cache/eslint .",
     "preview": "vite preview",
-    "changeset": "changeset"
+    "changeset": "changeset",
+    "version": "npm run changeset version"
   },
   "peerDependencies": {
     "classnames": "^2.3.1",

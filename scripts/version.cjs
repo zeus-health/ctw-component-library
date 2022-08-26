@@ -6,6 +6,8 @@ const SEMVAR_INCREMENET_ARG = "semvar-increment";
 const SUMMARY_ARG = "summary";
 const ALLOWED_SEMVAR_VALUE = ["patch", "minor", "major"];
 
+console.log("...starting");
+
 const argv = (key) => {
   // Return true if the key exists and a value is defined
   if (process.argv.includes(`--${key}`)) return true;
@@ -38,7 +40,7 @@ const questionAnswerMap = Object.entries({
   "Is this your desired changeset?": "Y",
 });
 
-const runRelease = childprocess.spawn("npm", ["run", "release"]);
+const runRelease = childprocess.spawn("npm", ["run", "changeset"]);
 runRelease.stdout.setEncoding("utf8");
 
 let current = "";
