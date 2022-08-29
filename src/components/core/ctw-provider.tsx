@@ -32,7 +32,7 @@ type CTWProviderProps = {
   children: React.ReactNode;
   env: Env;
   theme?: any;
-  headers: HeadersInit;
+  headers?: HeadersInit;
 } & (AuthTokenSpecified | AuthTokenURLSpecified);
 
 const CTWStateContext = React.createContext<CTWState | undefined>(undefined);
