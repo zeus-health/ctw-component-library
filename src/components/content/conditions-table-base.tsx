@@ -1,5 +1,6 @@
-import { ConditionModel } from "@/models/conditions";
 import { Table, TableBaseProps, TableColumn } from "../core/table/table";
+
+import { ConditionModel } from "@/models/conditions";
 
 export type ConditionsTableBaseProps = {
   className?: string;

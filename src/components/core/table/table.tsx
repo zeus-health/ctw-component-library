@@ -1,5 +1,6 @@
 import cx from "classnames";
 import { ReactNode, useEffect, useRef, useState } from "react";
+
 import { TableHead } from "./table-head";
 import { TableRows } from "./table-rows";
 
@@ -43,10 +44,12 @@ export const Table = <T extends MinRecordItem>({
 }: TableProps<T>) => {
   const tableRef = useRef<HTMLTableElement>(null);
   const containerTableRef = useRef<HTMLTableElement>(null);
-  const [showLeftTableBorderShadow, setShowLeftTableBorderShadow] =
-    useState(false);
-  const [showRightTableBorderShadow, setShowRightTableBorderShadow] =
-    useState(false);
+  const [showLeftTableBorderShadow, setShowLeftTableBorderShadow] = useState(
+    false
+  );
+  const [showRightTableBorderShadow, setShowRightTableBorderShadow] = useState(
+    false
+  );
   const handleShowingStickyTableScrollBorder = () => {
     if (containerTableRef.current && tableRef.current) {
       const containerRightSide =

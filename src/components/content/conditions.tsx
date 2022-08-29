@@ -1,6 +1,8 @@
 import cx from "classnames";
 import { useState } from "react";
+
 import { ToggleControl } from "../core/toggle-control";
+
 import { ConditionFormDrawer } from "./condition-form-drawer";
 import { ConditionsTable } from "./conditions-table";
 
@@ -39,7 +41,7 @@ export function Conditions({ className, patientUPID }: ConditionsProps) {
             <div className="ctw-title ctw-ml-3">Confirmed</div>
             <ConditionsTable
               patientUPID={patientUPID}
-              isConfirmed={true}
+              isConfirmed
               includeInactive={includeInactive}
             />
           </div>

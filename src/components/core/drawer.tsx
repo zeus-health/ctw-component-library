@@ -28,7 +28,7 @@ export function Drawer({
     <Transition.Root show={isOpen} as={Fragment}>
       <Dialog
         as="div"
-        className={cx("ctw-relative ctw-z-10", className)}
+        className={cx("ctw-relative ctw-z-[10000]", className)}
         onClose={() => {
           /* do not close on esc or backdrop click  */
         }}
