@@ -13,6 +13,7 @@ const DEFAULT_ERR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
 
 export type ConditionsTableProps = {
+  className?: string;
   patientUPID: string;
   errorMessage?: string;
   showTableHead?: boolean;
@@ -21,6 +22,7 @@ export type ConditionsTableProps = {
 };
 
 export function ConditionsTable({
+  className,
   patientUPID,
   errorMessage = DEFAULT_ERR_MSG,
   showTableHead = true,
@@ -74,6 +76,7 @@ export function ConditionsTable({
 
   return (
     <ConditionsTableBase
+      className={className}
       conditions={conditions}
       isLoading={isLoading}
       message={message}

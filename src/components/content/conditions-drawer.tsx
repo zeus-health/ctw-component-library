@@ -6,12 +6,14 @@ import { DataList, entryFromArray } from "../core/data-list";
 import { Drawer } from "../core/drawer";
 
 export type ConditionDrawerProps = {
+  className?: string;
   condition?: ConditionModel;
   isOpen: boolean;
   onClose: () => void;
 };
 
 export function ConditionDrawer({
+  className,
   condition,
   isOpen,
   onClose
@@ -36,7 +38,12 @@ export function ConditionDrawer({
     : [];
 
   return (
-    <Drawer title="Condition" isOpen={isOpen} onClose={onClose}>
+    <Drawer
+      className={className}
+      title="Condition"
+      isOpen={isOpen}
+      onClose={onClose}
+    >
       <Drawer.Body>
         {condition ? (
           <div className="ctw-space-y-7 ctw-text-black">
