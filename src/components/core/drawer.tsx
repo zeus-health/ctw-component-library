@@ -25,7 +25,7 @@ export function Drawer({
     <Transition.Root show={isOpen} as={Fragment}>
       <Dialog
         as="div"
-        className="ctw-relative ctw-z-10"
+        className="ctw-relative ctw-z-[10000]"
         onClose={() => {
           /* do not close on esc or backdrop click  */
         }}
@@ -40,7 +40,7 @@ export function Drawer({
           leaveTo="ctw-opacity-0"
           afterLeave={onAfterClosed}
         >
-          <div className="ctw-fixed ctw-inset-0  ctw-transition-opacity ctw-z-[10000]">
+          <div className="ctw-fixed ctw-inset-0  ctw-transition-opacity">
             <div className="ctw-bg-content-light ctw-opacity-75 ctw-w-full ctw-h-full" />
           </div>
         </Transition.Child>
