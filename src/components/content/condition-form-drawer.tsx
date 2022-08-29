@@ -10,7 +10,7 @@ export type ConditionFormDrawerProps = {
 };
 
 export function ConditionFormDrawer({
-  className: drawerClassName,
+  className,
   editing,
   condition,
   isOpen,
@@ -20,7 +20,7 @@ export function ConditionFormDrawer({
 
   return (
     <Drawer
-      className={drawerClassName}
+      className={className}
       title={title}
       isOpen={isOpen}
       onClose={onClose}

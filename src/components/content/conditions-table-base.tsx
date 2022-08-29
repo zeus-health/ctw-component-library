@@ -7,7 +7,7 @@ export type ConditionsTableBaseProps = {
 } & TableBaseProps<ConditionModel>;
 
 export function ConditionsTableBase({
-  className: tableClassName,
+  className,
   conditions,
   ...tableProps
 }: ConditionsTableBaseProps) {
@@ -30,6 +30,11 @@ export function ConditionsTableBase({
   ];
 
   return (
-      <Table className={tableClassName} records={conditions} columns={columns} {...tableProps} />
+    <Table
+      className={className}
+      records={conditions}
+      columns={columns}
+      {...tableProps}
+    />
   );
 }

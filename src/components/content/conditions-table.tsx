@@ -22,7 +22,7 @@ export type ConditionsTableProps = {
 };
 
 export function ConditionsTable({
-  className: tableClassName,
+  className,
   patientUPID,
   errorMessage = DEFAULT_ERR_MSG,
   showTableHead = true,
@@ -76,7 +76,7 @@ export function ConditionsTable({
 
   return (
     <ConditionsTableBase
-      className={tableClassName}
+      className={className}
       conditions={conditions}
       isLoading={isLoading}
       message={message}
