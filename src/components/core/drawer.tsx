@@ -40,7 +40,7 @@ export function Drawer({
           leaveTo="ctw-opacity-0"
           afterLeave={onAfterClosed}
         >
-          <div className="ctw-fixed ctw-inset-0  ctw-transition-opacity ctw-z-10000">
+          <div className="ctw-fixed ctw-inset-0  ctw-transition-opacity ctw-z-[10000]">
             <div className="ctw-bg-content-light ctw-opacity-75 ctw-w-full ctw-h-full" />
           </div>
         </Transition.Child>
