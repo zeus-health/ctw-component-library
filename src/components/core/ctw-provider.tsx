@@ -94,7 +94,6 @@ async function checkOrRefreshAuth(
   headers: HeadersInit
 ): Promise<CTWToken> {
   if (!token || Date.now() >= token.expiresAt + EXPIRY_PADDING_MS) {
-    console.log("headers here", headers);
     try {
       const response = await fetch(url as string, {
         headers,
