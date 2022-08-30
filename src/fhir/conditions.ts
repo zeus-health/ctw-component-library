@@ -26,10 +26,9 @@ export async function getConfirmedConditions(
       fhirClient,
       {
         patientID,
-        "_tag": "https://www.gethealtie.com",
+        ...conditionFilters
       }
     );
-
     return conditions.filter(
       (condition) => condition.asserter?.type !== "Patient"
     );
