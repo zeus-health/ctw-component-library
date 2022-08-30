@@ -12,11 +12,12 @@ export type ClinicalStatus =
 
 export type ConditionFilters = {
   "clinical-status"?: ClinicalStatus;
+  "systemURL"?: string;
 };
 
 export async function getConfirmedConditions(
   fhirClient: Client,
-  patientUPID: string,
+  patientID: string,
   conditionFilters: ConditionFilters = {}
 ) {
   try {
@@ -24,8 +25,8 @@ export async function getConfirmedConditions(
       "Condition",
       fhirClient,
       {
-        patientUPID,
-        ...conditionFilters,
+        patientID,
+        "_tag": "https://www.gethealtie.com",
       }
     );
 
@@ -39,7 +40,7 @@ export async function getConfirmedConditions(
 
 export async function getLensConditions(
   fhirClient: Client,
-  patientUPID: string,
+  patientID: string,
   conditionFilters: ConditionFilters = {}
 ) {
   try {
@@ -47,7 +48,7 @@ export async function getLensConditions(
       "Condition",
       fhirClient,
       {
-        patientUPID,
+        patientID,
         ...conditionFilters,
       }
     );

@@ -2,9 +2,9 @@ import Client, { SearchParams } from "fhir-kit-client";
 
 import { getResources } from "./bundle";
 import {
+  SYSTEM_HEALTHIE_ID,
   SYSTEM_ZUS_LENS,
-  SYSTEM_ZUS_THIRD_PARTY,
-  SYSTEM_ZUS_UNIVERSAL_ID,
+  SYSTEM_ZUS_THIRD_PARTY
 } from "./system-urls";
 import { ResourceType, ResourceTypeString } from "./types";
 
@@ -32,19 +32,19 @@ export type SearchReturn<T extends ResourceTypeString> = {
 // Returns {bundle: fhir4.Bundle, total: number, resources: ResourceType[]}.
 // Usage: {bundle, total, resources: tasks} =
 //          searchAllRecords("Task", fhirClient, searchParams)
-// NOTE: "patientUPID" is a special searchParam that will correctly
-//       filter down to the resources pertaining to that patient UPID.
+// NOTE: "patientID" is a special searchParam that will correctly
+//       filter down to the resources pertaining to that patient ID.
 export async function searchAllRecords<T extends ResourceTypeString>(
   resourceType: T,
   fhirClient: Client,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
-  const { patientUPID, ...params } = searchParams ?? {};
+  const { patientID, ...params } = searchParams ?? {};
   const bundle = (await fhirClient.search({
     resourceType,
     searchParams: {
       ...params,
-      ...patientSearchParams(resourceType, patientUPID as string),
+      ...patientSearchParams(resourceType, patientID as string),
     },
   })) as fhir4.Bundle;
 
@@ -91,17 +91,17 @@ export async function searchLensRecords<T extends ResourceTypeString>(
 }
 
 // Returns the needed search params to filter resources down to those
-// pertaining to our patientUPID.
+// pertaining to our patientID.
 function patientSearchParams(
   resourceType: ResourceTypeString,
-  patientUPID?: string
+  patientID?: string
 ): SearchParams {
-  // No search param needed when not searching for a patientUPID.
-  if (!patientUPID) {
+  // No search param needed when not searching for a patientID.
+  if (!patientID) {
     return {};
   }
 
-  const identifier = `${SYSTEM_ZUS_UNIVERSAL_ID}|${patientUPID}`;
+  const identifier = `${SYSTEM_HEALTHIE_ID}|${patientID}`;
 
   switch (resourceType) {
     case "Coverage":

@@ -18,3 +18,5 @@ export const SYSTEM_ZUS_THIRD_PARTY = "https://zusapi.com/thirdparty/source";
 
 export const SYSTEM_ZUS_UNIVERSAL_ID =
   "https://zusapi.com/fhir/identifier/universal-id";
+
+export const SYSTEM_HEALTHIE_ID = "https://www.gethealthie.com";

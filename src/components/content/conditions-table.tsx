@@ -1,7 +1,7 @@
 import {
   ConditionFilters,
   getConfirmedConditions,
-  getLensConditions,
+  getLensConditions
 } from "@/fhir/conditions";
 import { ConditionModel } from "@/models/conditions";
 import { orderBy } from "lodash";
@@ -13,19 +13,21 @@ const DEFAULT_ERR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
 
 export type ConditionsTableProps = {
-  patientUPID: string;
+  patientID: string;
   errorMessage?: string;
   showTableHead?: boolean;
   isConfirmed?: boolean;
   includeInactive?: boolean;
+  system: string;
 };
 
 export function ConditionsTable({
-  patientUPID,
+  patientID,
   errorMessage = DEFAULT_ERR_MSG,
   showTableHead = true,
   isConfirmed = true,
   includeInactive = false,
+  system,
 }: ConditionsTableProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [conditions, setConditions] = useState<ConditionModel[]>([]);
@@ -46,13 +48,13 @@ export function ConditionsTable({
         if (isConfirmed) {
           conditionResources = await getConfirmedConditions(
             fhirClient,
-            patientUPID,
+            patientID,
             conditionFilter
           );
         } else {
           conditionResources = await getLensConditions(
             fhirClient,
-            patientUPID,
+            patientID,
             conditionFilter
           );
         }
@@ -70,7 +72,7 @@ export function ConditionsTable({
       setIsLoading(false);
     }
     load();
-  }, [patientUPID, isConfirmed, includeInactive]);
+  }, [patientID, isConfirmed, includeInactive]);
 
   return (
     <ConditionsTableBase

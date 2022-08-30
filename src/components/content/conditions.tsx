@@ -6,10 +6,11 @@ import { ConditionFormDrawer } from "./condition-form-drawer";
 import { ConditionsTable } from "./conditions-table";
 
 export type ConditionsProps = {
-  patientUPID: string;
+  patientID: string;
+  system: string;
 };
 
-export function Conditions({ patientUPID }: ConditionsProps) {
+export function Conditions({ patientID, system }: ConditionsProps) {
   const [addConditionIsOpen, setAddConditionIsOpen] = useState(false);
   const [includeInactive, setIncludeInactive] = useState(true);
 
@@ -33,18 +34,20 @@ export function Conditions({ patientUPID }: ConditionsProps) {
           <div className="ctw-space-y-3">
             <div className="ctw-title ctw-ml-3">Confirmed</div>
             <ConditionsTable
-              patientUPID={patientUPID}
+              patientID={patientID}
               isConfirmed
               includeInactive={includeInactive}
+              system={system}
             />
           </div>
 
           <div className="ctw-space-y-3">
             <div className="ctw-title ctw-ml-3">Not Reviewed</div>
             <ConditionsTable
-              patientUPID={patientUPID}
+              patientID={patientID}
               showTableHead={false}
               isConfirmed={false}
+              system={system}
             />
           </div>
         </div>
