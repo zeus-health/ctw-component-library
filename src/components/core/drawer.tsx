@@ -1,9 +1,11 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
+import cx from "classnames";
 import type { ReactNode } from "react";
 import { Fragment } from "react";
 
 export type DrawerProps = {
+  className?: string;
   children: ReactNode;
   isOpen: boolean;
   onClose: () => void;
@@ -12,6 +14,7 @@ export type DrawerProps = {
 };
 
 export function Drawer({
+  className,
   children,
   isOpen,
   onClose,
@@ -25,7 +28,7 @@ export function Drawer({
     <Transition.Root show={isOpen} as={Fragment}>
       <Dialog
         as="div"
-        className="ctw-relative ctw-z-[10000]"
+        className={cx("ctw-relative ctw-z-[10000]", className)}
         onClose={() => {
           /* do not close on esc or backdrop click  */
         }}

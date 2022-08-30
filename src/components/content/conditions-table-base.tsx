@@ -3,10 +3,12 @@ import { Table, TableBaseProps, TableColumn } from "../core/table/table";
 import { ConditionModel } from "@/models/conditions";
 
 export type ConditionsTableBaseProps = {
+  className?: string;
   conditions: ConditionModel[];
 } & TableBaseProps<ConditionModel>;
 
 export function ConditionsTableBase({
+  className,
   conditions,
   ...tableProps
 }: ConditionsTableBaseProps) {
@@ -28,5 +30,12 @@ export function ConditionsTableBase({
     },
   ];
 
-  return <Table records={conditions} columns={columns} {...tableProps} />;
+  return (
+    <Table
+      className={className}
+      records={conditions}
+      columns={columns}
+      {...tableProps}
+    />
+  );
 }

@@ -1,3 +1,4 @@
+import cx from "classnames";
 import { useEffect, useState } from "react";
 
 import { useCTW } from "../core/ctw-provider";
@@ -14,13 +15,14 @@ import {
 import { ConditionModel } from "@/models/conditions";
 
 export type ConditionsProps = {
+  className?: string;
   patientUPID: string;
 };
 
 const DEFAULT_ERR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
 
-export function Conditions({ patientUPID }: ConditionsProps) {
+export function Conditions({ className, patientUPID }: ConditionsProps) {
   const [addConditionIsOpen, setAddConditionIsOpen] = useState(false);
 
   const [confirmedConditions, setConfirmedConditions] = useState<
@@ -100,7 +102,12 @@ export function Conditions({ patientUPID }: ConditionsProps) {
   }, [patientUPID, includeInactive]);
 
   return (
-    <div className="ctw-border ctw-border-solid ctw-border-divider-light">
+    <div
+      className={cx(
+        "ctw-border ctw-border-solid ctw-border-divider-light",
+        className
+      )}
+    >
       <div className="ctw-flex ctw-h-11 ctw-items-center ctw-justify-between ctw-bg-bg-light ctw-p-3">
         <div className="ctw-title">Conditions</div>
         <div className="ctw-link" onClick={() => setAddConditionIsOpen(true)}>
