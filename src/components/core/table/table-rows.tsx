@@ -1,4 +1,3 @@
-import { DotsHorizontalIcon } from "@heroicons/react/outline";
 import cx from "classnames";
 import { KeyboardEvent } from "react";
 
@@ -73,9 +72,6 @@ export const TableRows = <T extends MinRecordItem>({
               showLeftTableBorderShadow={showLeftTableBorderShadow}
             />
           ))}
-          <td className="ctw-min-w-[2rem]">
-            <DotsHorizontalIcon className="ctw-h-5 ctw-w-5 ctw-text-icon-default" />
-          </td>
         </tr>
       ))}
     </>
