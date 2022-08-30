@@ -1,14 +1,11 @@
 /**
  * @type {import('@types/eslint').Linter.BaseConfig}
  */
- module.exports = {
-  extends: [
-    "@kensho-technologies/eslint-config",
-    "prettier",
-  ],
+module.exports = {
+  extends: ["@kensho-technologies/eslint-config", "prettier"],
   // Ignore js files as we now have typescript parsing rules.
   // See https://stackoverflow.com/a/65063702 for more.
-  ignorePatterns: ["*.js"],
+  ignorePatterns: ["*.js", "*.cjs"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     project: ["./tsconfig.json"],
@@ -24,10 +21,7 @@
       "error",
       {
         // The following files can depend on devDependencies.
-        devDependencies: [
-          "*.config.*",
-          "*.env.*",
-        ],
+        devDependencies: ["*.config.*", "*.env.*"],
       },
     ],
   },
