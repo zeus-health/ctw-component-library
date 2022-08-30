@@ -16,7 +16,7 @@ type CTWToken = {
 type CTWState = {
   env: Env;
   authToken?: string;
-  headers: HeadersInit;
+  headers?: HeadersInit;
   authTokenURL?: string;
   theme?: any;
   token?: CTWToken;
