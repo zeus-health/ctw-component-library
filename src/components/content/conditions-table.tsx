@@ -14,6 +14,7 @@ const DEFAULT_ERR_MSG =
 
 export type ConditionsTableProps = {
   patientID: string;
+  className?: string;
   errorMessage?: string;
   showTableHead?: boolean;
   isConfirmed?: boolean;
@@ -23,6 +24,7 @@ export type ConditionsTableProps = {
 
 export function ConditionsTable({
   patientID,
+  className,
   errorMessage = DEFAULT_ERR_MSG,
   showTableHead = true,
   isConfirmed = true,
@@ -76,6 +78,7 @@ export function ConditionsTable({
 
   return (
     <ConditionsTableBase
+      className={className}
       conditions={conditions}
       isLoading={isLoading}
       message={message}
