@@ -1,13 +1,16 @@
+import { orderBy } from "lodash";
+import { useEffect, useState } from "react";
+
+import { useCTW } from "../core/ctw-provider";
+
+import { ConditionsTableBase } from "./conditions-table-base";
+
 import {
   ConditionFilters,
   getConfirmedConditions,
   getLensConditions,
 } from "@/fhir/conditions";
 import { ConditionModel } from "@/models/conditions";
-import { orderBy } from "lodash";
-import { useEffect, useState } from "react";
-import { useCTW } from "../core/ctw-provider";
-import { ConditionsTableBase } from "./conditions-table-base";
 
 const DEFAULT_ERR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";

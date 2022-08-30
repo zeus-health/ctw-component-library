@@ -1,7 +1,10 @@
+import { DotsHorizontalIcon } from "@heroicons/react/outline";
 import cx from "classnames";
 import { KeyboardEvent } from "react";
+
 import { Spinner } from "../spinner";
-import { MinRecordItem, TableColumn } from "./table";
+
+import type { MinRecordItem, TableColumn } from "./table";
 import { TableDataCell } from "./table-data-cell";
 import { TableFullLengthRow } from "./table-full-length-row";
 
@@ -61,17 +64,18 @@ export const TableRows = <T extends MinRecordItem>({
     <>
       {records.map((record, recordIndex) => (
         <tr key={record.id} {...tableRowProps(record, recordIndex)}>
-          {columns.map((column, index) => {
-            return (
-              <TableDataCell
-                key={column.title ?? index}
-                column={column}
-                record={record}
-                index={index}
-                showLeftTableBorderShadow={showLeftTableBorderShadow}
-              />
-            );
-          })}
+          {columns.map((column, index) => (
+            <TableDataCell
+              key={column.title ?? index}
+              column={column}
+              record={record}
+              index={index}
+              showLeftTableBorderShadow={showLeftTableBorderShadow}
+            />
+          ))}
+          <td className="ctw-min-w-[2rem]">
+            <DotsHorizontalIcon className="ctw-h-5 ctw-w-5 ctw-text-icon-default" />
+          </td>
         </tr>
       ))}
     </>
