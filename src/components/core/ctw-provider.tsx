@@ -91,7 +91,7 @@ function useCTW() {
 async function checkOrRefreshAuth(
   token: CTWToken | undefined,
   url: CTWState["authTokenURL"],
-  headers: HeadersInit
+  headers?: HeadersInit
 ): Promise<CTWToken> {
   if (!token || Date.now() >= token.expiresAt + EXPIRY_PADDING_MS) {
     try {
