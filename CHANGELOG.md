@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.2.0
+
+### Minor Changes
+
+- 497847f: Allow headers to be passed into provider.
+
 ## 0.1.0
 
 ### Minor Changes
