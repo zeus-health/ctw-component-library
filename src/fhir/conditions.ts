@@ -16,7 +16,7 @@ export type ConditionFilters = {
 
 export async function getConfirmedConditions(
   fhirClient: Client,
-  patientUPID: string,
+  patientID: string,
   system: string,
   conditionFilters: ConditionFilters = {}
 ) {
@@ -25,8 +25,8 @@ export async function getConfirmedConditions(
       "Condition",
       fhirClient,
       {
-        patientUPID,
-        system,
+        patientID,
+        systemURL: system,
         ...conditionFilters,
       }
     );

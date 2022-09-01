@@ -36,10 +36,10 @@ export function Conditions({ className }: ConditionsProps) {
             onFormChange={handleFormChange}
             toggleProps={{ name: "conditions", text: "Include Inactive" }}
           />
-          {/* <div className="ctw-space-y-3">
+          <div className="ctw-space-y-3">
             <div className="ctw-title ctw-ml-3">Confirmed</div>
             <ConditionsTable isConfirmed includeInactive={includeInactive} />
-          </div> */}
+          </div>
 
           <div className="ctw-space-y-3">
             <div className="ctw-title ctw-ml-3">Not Reviewed</div>

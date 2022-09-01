@@ -61,8 +61,8 @@ export function ConditionsTable({
         if (isConfirmed) {
           conditionResources = await getConfirmedConditions(
             fhirClient,
-            patientUPID,
-            system,
+            patientID,
+            systemURL,
             conditionFilter
           );
         } else {
