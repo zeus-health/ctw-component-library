@@ -51,7 +51,7 @@ export function ConditionsTable({
       try {
         const fhirClient = await getCTWFhirClient();
 
-        const { patientUPID, system } = await getUPIDfromPatientID(
+        const { patientUPID, systemZus } = await getUPIDfromPatientID(
           fhirClient,
           patientID,
           systemURL,
@@ -69,7 +69,7 @@ export function ConditionsTable({
           conditionResources = await getLensConditions(
             fhirClient,
             patientUPID,
-            system,
+            systemZus,
             conditionFilter
           );
         }

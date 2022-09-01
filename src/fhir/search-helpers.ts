@@ -133,7 +133,7 @@ export async function getUPIDfromPatientID(
   patientID: string,
   systemURL: string,
   patientFilters?: SearchParams
-): Promise<{ patientUPID: string; system: string }> {
+): Promise<{ patientUPID: string; systemZus: string }> {
   try {
     const { resources: patient } = await searchBuilderRecords(
       "Patient",
@@ -148,7 +148,7 @@ export async function getUPIDfromPatientID(
       system: SYSTEM_ZUS_UNIVERSAL_ID,
     })?.value as string;
 
-    return { patientUPID, system: SYSTEM_ZUS_UNIVERSAL_ID };
+    return { patientUPID, systemZus: SYSTEM_ZUS_UNIVERSAL_ID };
   } catch (e) {
     throw new Error(
       `Failed fetching patient UPID information for patient: ${e}`

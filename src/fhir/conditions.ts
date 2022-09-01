@@ -41,7 +41,7 @@ export async function getConfirmedConditions(
 export async function getLensConditions(
   fhirClient: Client,
   patientID: string,
-  system: string,
+  systemZus: string,
   conditionFilters: ConditionFilters = {}
 ) {
   try {
@@ -50,7 +50,7 @@ export async function getLensConditions(
       fhirClient,
       {
         patientID,
-        systemURL: system,
+        systemURL: systemZus,
         ...conditionFilters,
       }
     );
