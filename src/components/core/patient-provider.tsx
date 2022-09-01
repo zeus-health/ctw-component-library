@@ -16,7 +16,7 @@ export const CTWPatientContext = React.createContext<CTWID>({
   systemURL: "",
 });
 
-export function patientProvider({
+export function PatientProvider({
   children,
   ...ctwState
 }: PatientProviderProps) {

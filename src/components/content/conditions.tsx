@@ -80,7 +80,7 @@ export function Conditions({ className }: ConditionsProps) {
           getLensConditions(
             fhirClient,
             patientUPID,
-            systemURL,
+            systemZus,
             conditionFilter
           ),
         ]);
