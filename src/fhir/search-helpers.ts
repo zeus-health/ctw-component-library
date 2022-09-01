@@ -15,9 +15,6 @@ const THIRD_PARTY_TAGS = [
   `${SYSTEM_ZUS_THIRD_PARTY}|commonwell`,
   `${SYSTEM_ZUS_THIRD_PARTY}|elation`,
 ];
-// UPID tag
-
-const SYSTEM_ZUS_UPID = `${SYSTEM_ZUS_UNIVERSAL_ID}`;
 
 // Enumerating ALL of the lens tags.
 const LENS_TAGS = [
@@ -92,7 +89,6 @@ export async function searchLensRecords<T extends ResourceTypeString>(
   fhirClient: Client,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
-  console.log("earch", searchParams);
   return searchAllRecords(resourceType, fhirClient, {
     ...searchParams,
     _tag: LENS_TAGS.join(","),
