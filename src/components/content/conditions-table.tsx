@@ -2,6 +2,7 @@ import { orderBy } from "lodash";
 import { useEffect, useState } from "react";
 
 import { useCTW } from "../core/ctw-provider";
+import { usePatientContext } from "../core/patient-provider";
 
 import { ConditionsTableBase } from "./conditions-table-base";
 
@@ -12,7 +13,6 @@ import {
 } from "@/fhir/conditions";
 import { getUPIDfromPatientID } from "@/fhir/search-helpers";
 import { ConditionModel } from "@/models/conditions";
-import { usePatientContext } from "../core/patient-provider";
 
 const DEFAULT_ERR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
