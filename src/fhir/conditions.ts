@@ -20,7 +20,6 @@ export async function getConfirmedConditions(
   systemURL: string,
   conditionFilters: ConditionFilters = {}
 ) {
-  // console.log("inside getConfirmedMedication");
   try {
     const { resources: conditions } = await searchBuilderRecords(
       "Condition",

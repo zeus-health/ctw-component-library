@@ -36,6 +36,7 @@ export async function searchAllRecords<T extends ResourceTypeString>(
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
   const { patientID, systemURL, ...params } = searchParams ?? {};
+
   const bundle = (await fhirClient.search({
     resourceType,
     searchParams: {
@@ -48,7 +49,6 @@ export async function searchAllRecords<T extends ResourceTypeString>(
     },
   })) as fhir4.Bundle;
 
-  // console.log("bundle is: ", bundle);
   const resources = getResources(bundle, resourceType);
   return { bundle, total: bundle.total ?? 0, resources };
 }
@@ -105,7 +105,6 @@ function patientSearchParams(
   }
 
   const identifier = `${systemURL}|${patientID}`;
-  console.log("Identifier is: ", identifier);
 
   switch (resourceType) {
     case "Coverage":

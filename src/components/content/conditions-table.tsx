@@ -11,7 +11,7 @@ import {
   getLensConditions,
 } from "@/fhir/conditions";
 import { ConditionModel } from "@/models/conditions";
-import { usePatientContext } from "../core/id-provider";
+import { usePatientContext } from "../core/patient-provider";
 
 const DEFAULT_ERR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
@@ -36,9 +36,6 @@ export function ConditionsTable({
   const { getCTWFhirClient } = useCTW();
   const [message, setMessage] = useState("No conditions found");
   const { patientID, systemURL } = usePatientContext();
-
-  console.log("patientID is: ", patientID);
-  console.log("System url is: ", systemURL);
 
   useEffect(() => {
     async function load() {
@@ -67,7 +64,6 @@ export function ConditionsTable({
           );
         }
       } catch (e) {
-        console.log(e);
         setMessage(errorMessage);
       }
 

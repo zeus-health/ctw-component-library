@@ -7,8 +7,6 @@ import { ConditionFormDrawer } from "./condition-form-drawer";
 import { ConditionsTable } from "./conditions-table";
 
 export type ConditionsProps = {
-  // patientID: string;
-  // system: string;
   className?: string;
 };
 
