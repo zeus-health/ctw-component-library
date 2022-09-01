@@ -10,6 +10,7 @@ import {
   getConfirmedConditions,
   getLensConditions,
 } from "@/fhir/conditions";
+import { getUPIDfromPatientID } from "@/fhir/search-helpers";
 import { ConditionModel } from "@/models/conditions";
 import { usePatientContext } from "../core/patient-provider";
 
@@ -44,22 +45,34 @@ export function ConditionsTable({
             "clinical-status": "active",
           }
         : {};
+      const patientFilter = {};
 
       let conditionResources: fhir4.Condition[] = [];
       try {
         const fhirClient = await getCTWFhirClient();
+
+        const { patientUPID, system } = await getUPIDfromPatientID(
+          fhirClient,
+          patientID,
+          systemURL,
+          patientFilter
+        );
+
+        console.log("UPID is ", patientUPID);
+        console.log("System is ", system);
+
         if (isConfirmed) {
           conditionResources = await getConfirmedConditions(
             fhirClient,
-            patientID,
-            systemURL,
+            patientUPID,
+            system,
             conditionFilter
           );
         } else {
           conditionResources = await getLensConditions(
             fhirClient,
-            patientID,
-            systemURL,
+            patientUPID,
+            system,
             conditionFilter
           );
         }

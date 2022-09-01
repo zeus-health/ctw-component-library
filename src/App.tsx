@@ -6,7 +6,7 @@ import { SYSTEM_HEALTHIE_ID } from "./fhir/system-urls";
 import "./styles/tailwind-gen.css";
 
 const AUTH_TOKEN = import.meta.env.VITE_AUTH_TOKEN;
-const SB_SARAH_ID = "000001";
+const SB_SARAH_ID = "000002";
 
 function App() {
   return (

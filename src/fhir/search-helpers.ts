@@ -1,7 +1,12 @@
 import Client, { SearchParams } from "fhir-kit-client";
+import { find } from "lodash";
 
 import { getResources } from "./bundle";
-import { SYSTEM_ZUS_LENS, SYSTEM_ZUS_THIRD_PARTY } from "./system-urls";
+import {
+  SYSTEM_ZUS_LENS,
+  SYSTEM_ZUS_THIRD_PARTY,
+  SYSTEM_ZUS_UNIVERSAL_ID,
+} from "./system-urls";
 import { ResourceType, ResourceTypeString } from "./types";
 
 // Enumerating ALL of the third party tags.
@@ -10,6 +15,9 @@ const THIRD_PARTY_TAGS = [
   `${SYSTEM_ZUS_THIRD_PARTY}|commonwell`,
   `${SYSTEM_ZUS_THIRD_PARTY}|elation`,
 ];
+// UPID tag
+
+const SYSTEM_ZUS_UPID = `${SYSTEM_ZUS_UNIVERSAL_ID}`;
 
 // Enumerating ALL of the lens tags.
 const LENS_TAGS = [
@@ -35,16 +43,17 @@ export async function searchAllRecords<T extends ResourceTypeString>(
   fhirClient: Client,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
-  const { patientID, systemURL, ...params } = searchParams ?? {};
-
+  const { patientUPID, system, ...params } = searchParams ?? {};
+  console.log("patientUPID is ", patientUPID);
+  console.log("system is ", system);
   const bundle = (await fhirClient.search({
     resourceType,
     searchParams: {
       ...params,
       ...patientSearchParams(
         resourceType,
-        patientID as string,
-        systemURL as string
+        patientUPID as string,
+        system as string
       ),
     },
   })) as fhir4.Bundle;
@@ -95,16 +104,16 @@ export async function searchLensRecords<T extends ResourceTypeString>(
 // pertaining to our patientID and system url.
 function patientSearchParams(
   resourceType: ResourceTypeString,
-  patientID: string,
-  systemURL: string
+  patientUPID: string,
+  system: string
 ): SearchParams {
   // No search param needed when not searching for a patientID.
 
-  if (!patientID) {
+  if (!patientUPID) {
     return {};
   }
 
-  const identifier = `${systemURL}|${patientID}`;
+  const identifier = `${system}|${patientUPID}`;
 
   switch (resourceType) {
     case "Coverage":
@@ -122,5 +131,33 @@ function patientSearchParams(
       throw new Error(
         `Unhandled patient search for resource type: ${resourceType}`
       );
+  }
+}
+
+export async function getUPIDfromPatientID(
+  fhirClient: Client,
+  patientID: string,
+  systemURL: string,
+  patientFilters?: SearchParams
+): Promise<{ patientUPID: string; system: string }> {
+  try {
+    const { resources: patient } = await searchBuilderRecords(
+      "Patient",
+      fhirClient,
+      {
+        patientID,
+        systemURL,
+        ...patientFilters,
+      }
+    );
+    const patientUPID = find(patient[0].identifier, {
+      system: SYSTEM_ZUS_UNIVERSAL_ID,
+    })?.value as string;
+
+    return { patientUPID, system: SYSTEM_ZUS_UNIVERSAL_ID };
+  } catch (e) {
+    throw new Error(
+      `Failed fetching patient UPID information for patient: ${e}`
+    );
   }
 }
