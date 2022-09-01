@@ -4,7 +4,7 @@
 
 ### Minor Changes
 
-- 88d3b2e: filters out confirmed conditions for not reviewed conditions
+- 88d3b2e: filters out confirmed conditions from not reviewed conditions
 
 ## 0.2.0
 
