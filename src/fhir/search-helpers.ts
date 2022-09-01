@@ -92,6 +92,7 @@ export async function searchLensRecords<T extends ResourceTypeString>(
   fhirClient: Client,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
+  console.log("earch", searchParams);
   return searchAllRecords(resourceType, fhirClient, {
     ...searchParams,
     _tag: LENS_TAGS.join(","),

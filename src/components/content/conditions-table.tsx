@@ -58,9 +58,6 @@ export function ConditionsTable({
           patientFilter
         );
 
-        console.log("UPID is yooo", patientUPID);
-        console.log("System is ", system);
-
         if (isConfirmed) {
           conditionResources = await getConfirmedConditions(
             fhirClient,
@@ -77,7 +74,6 @@ export function ConditionsTable({
           );
         }
       } catch (e) {
-        console.log("e", e);
         setMessage(errorMessage);
       }
 
