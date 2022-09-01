@@ -43,17 +43,15 @@ export async function searchAllRecords<T extends ResourceTypeString>(
   fhirClient: Client,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
-  const { patientUPID, system, ...params } = searchParams ?? {};
-  console.log("patientUPID is ", patientUPID);
-  console.log("system is ", system);
+  const { patientID, systemURL, ...params } = searchParams ?? {};
   const bundle = (await fhirClient.search({
     resourceType,
     searchParams: {
       ...params,
       ...patientSearchParams(
         resourceType,
-        patientUPID as string,
-        system as string
+        patientID as string,
+        systemURL as string
       ),
     },
   })) as fhir4.Bundle;
@@ -104,16 +102,15 @@ export async function searchLensRecords<T extends ResourceTypeString>(
 // pertaining to our patientID and system url.
 function patientSearchParams(
   resourceType: ResourceTypeString,
-  patientUPID: string,
-  system: string
+  patientID: string,
+  systemURL: string
 ): SearchParams {
   // No search param needed when not searching for a patientID.
-
-  if (!patientUPID) {
+  if (!patientID) {
     return {};
   }
 
-  const identifier = `${system}|${patientUPID}`;
+  const identifier = `${systemURL}|${patientID}`;
 
   switch (resourceType) {
     case "Coverage":

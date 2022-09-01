@@ -58,7 +58,7 @@ export function ConditionsTable({
           patientFilter
         );
 
-        console.log("UPID is ", patientUPID);
+        console.log("UPID is yooo", patientUPID);
         console.log("System is ", system);
 
         if (isConfirmed) {
@@ -77,6 +77,7 @@ export function ConditionsTable({
           );
         }
       } catch (e) {
+        console.log("e", e);
         setMessage(errorMessage);
       }
 
