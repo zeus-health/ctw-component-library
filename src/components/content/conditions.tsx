@@ -6,25 +6,38 @@ import { ToggleControl } from "../core/toggle-control";
 import { ConditionFormDrawer } from "./condition-form-drawer";
 import { ConditionsTable } from "./conditions-table";
 
+import { CssVarsArray, Style } from "@/styles/styles-type";
+
 export type ConditionsProps = {
+  style?: Style;
   className?: string;
   patientUPID: string;
 };
 
-export function Conditions({ className, patientUPID }: ConditionsProps) {
+export function Conditions({ style, className, patientUPID }: ConditionsProps) {
   const [addConditionIsOpen, setAddConditionIsOpen] = useState(false);
   const [includeInactive, setIncludeInactive] = useState(true);
 
   const handleFormChange = () => setIncludeInactive(!includeInactive);
 
+  console.dir(style);
+  console.dir(CssVarsArray);
+  // setStyle(style, document.documentElement.style);
+  // if (style) {
+  //   for (const cssVar in style) {
+  //     console.log(cssVar);
+  //     document.documentElement.style.setProperty(cssVar, style[cssVar] || "");
+  //   }
+  // }
+
   return (
     <div
       className={cx(
-        "ctw-border-divider-light ctw-border ctw-border-solid",
+        "ctw-border ctw-border-solid ctw-border-divider-light",
         className
       )}
     >
-      <div className="ctw-bg-bg-light ctw-h-11 ctw-flex ctw-items-center ctw-justify-between ctw-p-3">
+      <div className="ctw-flex ctw-h-11 ctw-items-center ctw-justify-between ctw-bg-bg-light ctw-p-3">
         <div className="ctw-title">Conditions</div>
         <div className="ctw-link" onClick={() => setAddConditionIsOpen(true)}>
           + Add Condition
@@ -32,7 +45,7 @@ export function Conditions({ className, patientUPID }: ConditionsProps) {
       </div>
 
       <div className="ctw-space-y-5 ctw-py-3 ctw-px-4 ">
-        <div className="ctw-py-3 ctw-px-4 ctw-space-y-5">
+        <div className="ctw-space-y-5 ctw-py-3 ctw-px-4">
           <ToggleControl
             onFormChange={handleFormChange}
             toggleProps={{ name: "conditions", text: "Include Inactive" }}

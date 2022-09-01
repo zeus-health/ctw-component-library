@@ -11,7 +11,10 @@ function App() {
     <CTWProvider env="dev" authToken={AUTH_TOKEN} theme={{}}>
       <div className="App ctw-space-y-5">
         <h1>CTW Component Library</h1>
-        <Conditions patientUPID={DEV_PENNY_UPID} />
+        <Conditions
+          style={{ "--ctw--bg-light": "#000" }}
+          patientUPID={DEV_PENNY_UPID}
+        />
       </div>
     </CTWProvider>
   );
