@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 
 type CTWID = {
   patientID: string;
@@ -11,7 +11,7 @@ type IDProviderProps = {
   children: React.ReactNode;
 } & ThirdPartyID;
 
-export const CTWIDContext = React.createContext<CTWID>({
+export const CTWPatientContext = React.createContext<CTWID>({
   patientID: "",
   systemURL: "",
 });
@@ -25,8 +25,10 @@ export function IDProvider({ children, ...ctwState }: IDProviderProps) {
   );
 
   return (
-    <CTWIDContext.Provider value={providerState}>
+    <CTWPatientContext.Provider value={providerState}>
       {children}
-    </CTWIDContext.Provider>
+    </CTWPatientContext.Provider>
   );
 }
+
+export const usePatientContext = () => useContext(CTWPatientContext);

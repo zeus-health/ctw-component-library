@@ -1,6 +1,4 @@
-import { CTWIDContext } from "@/components/core/id-provider";
 import Client from "fhir-kit-client";
-import { useContext } from "react";
 
 import { searchBuilderRecords, searchLensRecords } from "./search-helpers";
 
@@ -18,9 +16,10 @@ export type ConditionFilters = {
 
 export async function getConfirmedConditions(
   fhirClient: Client,
+  patientID: string,
+  systemURL: string,
   conditionFilters: ConditionFilters = {}
 ) {
-  const { patientID, systemURL } = useContext(CTWIDContext);
   // console.log("inside getConfirmedMedication");
   try {
     const { resources: conditions } = await searchBuilderRecords(
@@ -28,6 +27,7 @@ export async function getConfirmedConditions(
       fhirClient,
       {
         patientID,
+        systemURL,
         ...conditionFilters,
       }
     );
@@ -41,17 +41,17 @@ export async function getConfirmedConditions(
 
 export async function getLensConditions(
   fhirClient: Client,
+  patientID: string,
+  systemURL: string,
   conditionFilters: ConditionFilters = {}
 ) {
-  const { patientID, systemURL } = useContext(CTWIDContext);
-  // console.log("inside getLensConditions");
-
   try {
     const { resources: conditions } = await searchLensRecords(
       "Condition",
       fhirClient,
       {
         patientID,
+        systemURL,
         ...conditionFilters,
       }
     );

@@ -1,5 +1,5 @@
 import { orderBy } from "lodash";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useCTW } from "../core/ctw-provider";
 
@@ -11,7 +11,7 @@ import {
   getLensConditions,
 } from "@/fhir/conditions";
 import { ConditionModel } from "@/models/conditions";
-import { CTWIDContext } from "../core/id-provider";
+import { usePatientContext } from "../core/id-provider";
 
 const DEFAULT_ERR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
@@ -35,7 +35,7 @@ export function ConditionsTable({
   const [conditions, setConditions] = useState<ConditionModel[]>([]);
   const { getCTWFhirClient } = useCTW();
   const [message, setMessage] = useState("No conditions found");
-  const { patientID, systemURL } = useContext(CTWIDContext);
+  const { patientID, systemURL } = usePatientContext();
 
   console.log("patientID is: ", patientID);
   console.log("System url is: ", systemURL);
@@ -54,11 +54,15 @@ export function ConditionsTable({
         if (isConfirmed) {
           conditionResources = await getConfirmedConditions(
             fhirClient,
+            patientID,
+            systemURL,
             conditionFilter
           );
         } else {
           conditionResources = await getLensConditions(
             fhirClient,
+            patientID,
+            systemURL,
             conditionFilter
           );
         }
