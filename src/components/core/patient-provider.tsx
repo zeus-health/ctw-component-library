@@ -7,7 +7,7 @@ type CTWID = {
 
 type ThirdPartyID = { patientID: string; systemURL: string };
 
-type IDProviderProps = {
+type PatientProviderProps = {
   children: React.ReactNode;
 } & ThirdPartyID;
 
@@ -16,7 +16,10 @@ export const CTWPatientContext = React.createContext<CTWID>({
   systemURL: "",
 });
 
-export function IDProvider({ children, ...ctwState }: IDProviderProps) {
+export function patientProvider({
+  children,
+  ...ctwState
+}: PatientProviderProps) {
   const providerState = React.useMemo(
     () => ({
       ...ctwState,
