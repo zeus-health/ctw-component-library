@@ -1,5 +1,6 @@
-import { getFhirClient } from "@/fhir/client";
 import * as React from "react";
+
+import { getFhirClient } from "@/fhir/client";
 
 export type Env = "dev" | "sandbox" | "production";
 
@@ -57,7 +58,7 @@ function CTWProvider({ children, ...ctwState }: CTWProviderProps) {
         handleAuth,
       },
     }),
-    [ctwState, handleAuth]
+    [ctwState, handleAuth, token]
   );
 
   return (

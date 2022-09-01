@@ -1,12 +1,12 @@
 import Client, { SearchParams } from "fhir-kit-client";
 
+import { useContext } from "react";
+
 import { getResources } from "./bundle";
-import {
-  SYSTEM_HEALTHIE_ID,
-  SYSTEM_ZUS_LENS,
-  SYSTEM_ZUS_THIRD_PARTY
-} from "./system-urls";
+import { SYSTEM_ZUS_LENS, SYSTEM_ZUS_THIRD_PARTY } from "./system-urls";
 import { ResourceType, ResourceTypeString } from "./types";
+
+import { CTWIDContext } from "@/components/core/id-provider";
 
 // Enumerating ALL of the third party tags.
 const THIRD_PARTY_TAGS = [
@@ -39,15 +39,16 @@ export async function searchAllRecords<T extends ResourceTypeString>(
   fhirClient: Client,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
-  const { patientID, ...params } = searchParams ?? {};
+  const { ...params } = searchParams ?? {};
   const bundle = (await fhirClient.search({
     resourceType,
     searchParams: {
       ...params,
-      ...patientSearchParams(resourceType, patientID as string),
+      ...patientSearchParams(resourceType),
     },
   })) as fhir4.Bundle;
 
+  // console.log("bundle is: ", bundle);
   const resources = getResources(bundle, resourceType);
   return { bundle, total: bundle.total ?? 0, resources };
 }
@@ -91,17 +92,17 @@ export async function searchLensRecords<T extends ResourceTypeString>(
 }
 
 // Returns the needed search params to filter resources down to those
-// pertaining to our patientID.
-function patientSearchParams(
-  resourceType: ResourceTypeString,
-  patientID?: string
-): SearchParams {
+// pertaining to our patientID and system url.
+function patientSearchParams(resourceType: ResourceTypeString): SearchParams {
   // No search param needed when not searching for a patientID.
+  const { patientID, systemURL } = useContext(CTWIDContext);
+
   if (!patientID) {
     return {};
   }
 
-  const identifier = `${SYSTEM_HEALTHIE_ID}|${patientID}`;
+  const identifier = `${systemURL}|${patientID}`;
+  console.log("Identifier is: ", identifier);
 
   switch (resourceType) {
     case "Coverage":

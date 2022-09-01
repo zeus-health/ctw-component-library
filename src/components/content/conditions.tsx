@@ -7,12 +7,12 @@ import { ConditionFormDrawer } from "./condition-form-drawer";
 import { ConditionsTable } from "./conditions-table";
 
 export type ConditionsProps = {
-  patientID: string;
-  system: string;
+  // patientID: string;
+  // system: string;
   className?: string;
 };
 
-export function Conditions({ className,system, patientID }: ConditionsProps) {
+export function Conditions({ className }: ConditionsProps) {
   const [addConditionIsOpen, setAddConditionIsOpen] = useState(false);
   const [includeInactive, setIncludeInactive] = useState(true);
 
@@ -21,11 +21,11 @@ export function Conditions({ className,system, patientID }: ConditionsProps) {
   return (
     <div
       className={cx(
-        "ctw-border-divider-light ctw-border ctw-border-solid",
+        "ctw-border ctw-border-solid ctw-border-divider-light",
         className
       )}
     >
-      <div className="ctw-bg-bg-light ctw-h-11 ctw-flex ctw-items-center ctw-justify-between ctw-p-3">
+      <div className="ctw-flex ctw-h-11 ctw-items-center ctw-justify-between ctw-bg-bg-light ctw-p-3">
         <div className="ctw-title">Conditions</div>
         <div className="ctw-link" onClick={() => setAddConditionIsOpen(true)}>
           + Add Condition
@@ -33,29 +33,19 @@ export function Conditions({ className,system, patientID }: ConditionsProps) {
       </div>
 
       <div className="ctw-space-y-5 ctw-py-3 ctw-px-4 ">
-        <div className="ctw-py-3 ctw-px-4 ctw-space-y-5">
+        <div className="ctw-space-y-5 ctw-py-3 ctw-px-4">
           <ToggleControl
             onFormChange={handleFormChange}
             toggleProps={{ name: "conditions", text: "Include Inactive" }}
           />
           <div className="ctw-space-y-3">
             <div className="ctw-title ctw-ml-3">Confirmed</div>
-            <ConditionsTable
-              patientID={patientID}
-              isConfirmed
-              includeInactive={includeInactive}
-              system={system}
-            />
+            <ConditionsTable isConfirmed includeInactive={includeInactive} />
           </div>
 
           <div className="ctw-space-y-3">
             <div className="ctw-title ctw-ml-3">Not Reviewed</div>
-            <ConditionsTable
-              patientID={patientID}
-              showTableHead={false}
-              isConfirmed={false}
-              system={system}
-            />
+            <ConditionsTable showTableHead={false} isConfirmed={false} />
           </div>
         </div>
       </div>
