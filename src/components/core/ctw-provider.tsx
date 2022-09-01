@@ -16,6 +16,7 @@ type CTWToken = {
 type CTWState = {
   env: Env;
   authToken?: string;
+  headers?: HeadersInit;
   authTokenURL?: string;
   theme?: any;
   token?: CTWToken;
@@ -31,6 +32,7 @@ type CTWProviderProps = {
   children: React.ReactNode;
   env: Env;
   theme?: any;
+  headers?: HeadersInit;
 } & (AuthTokenSpecified | AuthTokenURLSpecified);
 
 const CTWStateContext = React.createContext<CTWState | undefined>(undefined);
@@ -41,7 +43,11 @@ function CTWProvider({ children, ...ctwState }: CTWProviderProps) {
   const handleAuth = React.useCallback(async () => {
     if (ctwState.authToken) return null;
     try {
-      const newToken = await checkOrRefreshAuth(token, ctwState.authTokenURL);
+      const newToken = await checkOrRefreshAuth(
+        token,
+        ctwState.authTokenURL,
+        ctwState.headers
+      );
       if (token?.accessToken === newToken.accessToken) return token;
       setToken(newToken);
       return newToken;
@@ -84,11 +90,14 @@ function useCTW() {
 
 async function checkOrRefreshAuth(
   token: CTWToken | undefined,
-  url: CTWState["authTokenURL"]
+  url: CTWState["authTokenURL"],
+  headers?: HeadersInit
 ): Promise<CTWToken> {
   if (!token || Date.now() >= token.expiresAt + EXPIRY_PADDING_MS) {
     try {
-      const response = await fetch(url as string);
+      const response = await fetch(url as string, {
+        headers,
+      });
       const newToken = await response.json();
       return {
         accessToken: newToken.access_token,
