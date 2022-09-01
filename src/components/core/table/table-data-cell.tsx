@@ -1,7 +1,7 @@
 import cx from "classnames";
 import { ReactNode } from "react";
 
-import { MinRecordItem, TableColumn } from "./table";
+import type { MinRecordItem, TableColumn } from "./table";
 
 type TableColumnProps<T extends MinRecordItem> = {
   column: TableColumn<T>;
@@ -17,7 +17,7 @@ export const TableDataCell = <T extends MinRecordItem>({
   showLeftTableBorderShadow,
 }: TableColumnProps<T>) => {
   const value = column.dataIndex
-    ? ((record[column.dataIndex] as unknown) as ReactNode)
+    ? (record[column.dataIndex] as unknown as ReactNode)
     : undefined;
 
   return (

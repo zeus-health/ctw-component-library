@@ -1,7 +1,11 @@
+import { DotsHorizontalIcon } from "@heroicons/react/outline";
 import cx from "classnames";
-import { KeyboardEvent } from "react";
+import { Fragment, KeyboardEvent } from "react";
+
+import { DropdownMenu } from "../dropdown-menu";
 import { Spinner } from "../spinner";
-import { MinRecordItem, TableColumn } from "./table";
+
+import type { MinRecordItem, TableColumn } from "./table";
 import { TableDataCell } from "./table-data-cell";
 import { TableFullLengthRow } from "./table-full-length-row";
 
@@ -12,6 +16,7 @@ type TableRowsProps<T extends MinRecordItem> = {
   isLoading: boolean;
   emptyMessage: string;
   showLeftTableBorderShadow: boolean;
+  showRightTableBorderShadow: boolean;
 };
 
 export const TableRows = <T extends MinRecordItem>({
@@ -21,6 +26,7 @@ export const TableRows = <T extends MinRecordItem>({
   isLoading,
   emptyMessage,
   showLeftTableBorderShadow,
+  showRightTableBorderShadow,
 }: TableRowsProps<T>) => {
   if (isLoading) {
     return (
@@ -60,9 +66,9 @@ export const TableRows = <T extends MinRecordItem>({
   return (
     <>
       {records.map((record, recordIndex) => (
-        <tr key={record.id} {...tableRowProps(record, recordIndex)}>
-          {columns.map((column, index) => {
-            return (
+        <Fragment key={record.id}>
+          <tr {...tableRowProps(record, recordIndex)}>
+            {columns.map((column, index) => (
               <TableDataCell
                 key={column.title ?? index}
                 column={column}
@@ -70,9 +76,19 @@ export const TableRows = <T extends MinRecordItem>({
                 index={index}
                 showLeftTableBorderShadow={showLeftTableBorderShadow}
               />
-            );
-          })}
-        </tr>
+            ))}
+            <td
+              className={cx(
+                "ctw-table-action-column  ctw-min-w-[4rem] ctw-text-center ctw-text-icon-default",
+                { "ctw-table-action-column-sticky": showRightTableBorderShadow }
+              )}
+            >
+              <DropdownMenu>
+                <DotsHorizontalIcon className="ctw-2-5 ctw-w-5 ctw-cursor-pointer" />
+              </DropdownMenu>
+            </td>
+          </tr>
+        </Fragment>
       ))}
     </>
   );

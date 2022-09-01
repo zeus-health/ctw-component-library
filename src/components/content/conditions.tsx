@@ -16,8 +16,8 @@ export function Conditions({ patientUPID }: ConditionsProps) {
   const handleFormChange = () => setIncludeInactive(!includeInactive);
 
   return (
-    <div className="ctw-border-divider-light ctw-border ctw-border-solid">
-      <div className="ctw-bg-bg-light ctw-h-11 ctw-flex ctw-items-center ctw-justify-between ctw-p-3">
+    <div className="ctw-border ctw-border-solid ctw-border-divider-light">
+      <div className="ctw-flex ctw-h-11 ctw-items-center ctw-justify-between ctw-bg-bg-light ctw-p-3">
         <div className="ctw-title">Conditions</div>
         <div className="ctw-link" onClick={() => setAddConditionIsOpen(true)}>
           + Add Condition
@@ -25,7 +25,7 @@ export function Conditions({ patientUPID }: ConditionsProps) {
       </div>
 
       <div className="ctw-space-y-5 ctw-py-3 ctw-px-4 ">
-        <div className="ctw-py-3 ctw-px-4 ctw-space-y-5">
+        <div className="ctw-space-y-5 ctw-py-3 ctw-px-4">
           <ToggleControl
             onFormChange={handleFormChange}
             toggleProps={{ name: "conditions", text: "Include Inactive" }}
