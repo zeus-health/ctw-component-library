@@ -1,6 +1,6 @@
 import cx from "classnames";
 
-import { MinRecordItem, TableColumn } from "./table";
+import type { MinRecordItem, TableColumn } from "./table";
 
 export type TableHeadProps<T extends MinRecordItem> = {
   columns: TableColumn<T>[];

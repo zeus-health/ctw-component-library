@@ -17,6 +17,7 @@ type CTWToken = {
 type CTWState = {
   env: Env;
   authToken?: string;
+  headers?: HeadersInit;
   authTokenURL?: string;
   theme?: any;
   token?: CTWToken;
@@ -33,6 +34,7 @@ type CTWProviderProps = {
   env: Env;
   style?: Style;
   theme?: any;
+  headers?: HeadersInit;
 } & (AuthTokenSpecified | AuthTokenURLSpecified);
 
 const CTWStateContext = React.createContext<CTWState | undefined>(undefined);
@@ -43,7 +45,11 @@ function CTWProvider({ style, children, ...ctwState }: CTWProviderProps) {
   const handleAuth = React.useCallback(async () => {
     if (ctwState.authToken) return null;
     try {
-      const newToken = await checkOrRefreshAuth(token, ctwState.authTokenURL);
+      const newToken = await checkOrRefreshAuth(
+        token,
+        ctwState.authTokenURL,
+        ctwState.headers
+      );
       if (token?.accessToken === newToken.accessToken) return token;
       setToken(newToken);
       return newToken;
@@ -60,7 +66,7 @@ function CTWProvider({ style, children, ...ctwState }: CTWProviderProps) {
         handleAuth,
       },
     }),
-    [ctwState, handleAuth]
+    [ctwState, handleAuth, token]
   );
 
   // Casts Style as CSSProperties so that it can be passed as a style.
@@ -89,11 +95,14 @@ function useCTW() {
 
 async function checkOrRefreshAuth(
   token: CTWToken | undefined,
-  url: CTWState["authTokenURL"]
+  url: CTWState["authTokenURL"],
+  headers?: HeadersInit
 ): Promise<CTWToken> {
   if (!token || Date.now() >= token.expiresAt + EXPIRY_PADDING_MS) {
     try {
-      const response = await fetch(url as string);
+      const response = await fetch(url as string, {
+        headers,
+      });
       const newToken = await response.json();
       return {
         accessToken: newToken.access_token,
@@ -102,7 +111,7 @@ async function checkOrRefreshAuth(
         expiresAt: Date.now() + newToken.expires_in * 1000,
       };
     } catch (err) {
-      throw err; // TODO: Better error handling.
+      throw err;
     }
   }
   return token;

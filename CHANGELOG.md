@@ -1,5 +1,23 @@
 # ctw-component-library
 
+## 0.3.0
+
+### Minor Changes
+
+- 88d3b2e: filters out confirmed conditions for not reviewed conditions
+
+## 0.2.0
+
+### Minor Changes
+
+- 497847f: Allow headers to be passed into provider.
+
+## 0.1.0
+
+### Minor Changes
+
+- d49a70d: className prop added to all components and applied to their top div / element to provide an intuitive way for consumers to apply CSS classes. Consumers can choose to do things like <Conditions className="…">.
+
 ## 0.0.4
 
 ### Patch Changes
