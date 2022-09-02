@@ -1,18 +1,11 @@
 import { Tab } from "@headlessui/react";
-import config from "tailwind-config/index.js";
 
+import { ConditionModel } from "@/models/conditions";
 import { ButtonTabs } from "../core/button-tabs";
 import { DataList, entryFromArray } from "../core/data-list";
 import { Drawer } from "../core/drawer";
 
-import { ConditionModel } from "@/models/conditions";
-import { setStyle, Style } from "@/styles/styles-type";
-
-// eslint-disable-next-line no-console
-console.dir(config);
-
 export type ConditionDrawerProps = {
-  style?: Style;
   className?: string;
   condition?: ConditionModel;
   isOpen: boolean;
@@ -20,11 +13,10 @@ export type ConditionDrawerProps = {
 };
 
 export function ConditionDrawer({
-  style,
   className,
   condition,
   isOpen,
-  onClose,
+  onClose
 }: ConditionDrawerProps) {
   const data = condition
     ? [
@@ -41,11 +33,9 @@ export function ConditionDrawer({
         { label: "Recorder", value: condition.recorder },
         ...entryFromArray("Stage", condition.stages),
         ...entryFromArray("Evidence", condition.evidences),
-        ...entryFromArray("Note", condition.notes),
+        ...entryFromArray("Note", condition.notes)
       ]
     : [];
-
-  setStyle(style);
 
   return (
     <Drawer
