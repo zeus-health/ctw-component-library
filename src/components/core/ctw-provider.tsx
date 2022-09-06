@@ -1,11 +1,11 @@
-import { Style } from "util";
-
 import * as React from "react";
-import * as twconfig from "tailwind.config.mjs";
+import * as twconfig from "tailwind.config.cjs";
 
 import { getFhirClient } from "@/fhir/client";
 
-export type Theme = Partial<Record<keyof typeof twconfig.Theme, string>>;
+export type Theme = Partial<
+  Record<keyof typeof twconfig.Theme["colors"], string>
+>;
 
 export type Env = "dev" | "sandbox" | "production";
 
@@ -36,7 +36,7 @@ type AuthTokenURLSpecified = { authToken?: never; authTokenURL: string };
 type CTWProviderProps = {
   children: React.ReactNode;
   env: Env;
-  style?: Style;
+  style?: Theme;
   theme?: any;
   headers?: HeadersInit;
 } & (AuthTokenSpecified | AuthTokenURLSpecified);
