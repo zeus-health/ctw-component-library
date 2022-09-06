@@ -1,35 +1,37 @@
+import { Float } from "@headlessui-float/react";
 import { Menu, Transition } from "@headlessui/react";
 import cx from "classnames";
-import { Fragment } from "react";
+import { Fragment, ReactNode } from "react";
 
-export type DropdownMenuProps = {
-  children: JSX.Element;
-  menuItems: string[];
+export type MenuItems = {
+  name: string;
+  action: () => void;
 };
 
-export function DropdownMenu({
-  children,
-  menuItems = ["Edit", "View History"],
-}: DropdownMenuProps) {
+export type DropdownMenuProps = {
+  children: ReactNode;
+  menuItems: MenuItems[];
+};
+
+export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
   return (
-    <Menu as="div" className="ctw-relative ctw-inline-block ctw-text-left">
-      <div>
-        <Menu.Button className="ctw-focus-visible:ring-2 ctw-focus-visible:ring-white ctw-inline-flex ctw-w-min ctw-justify-center ctw-border-none ctw-bg-transparent">
+    <Menu as="div">
+      <Float portal placement="bottom-start" offset={10} flip arrow>
+        <Menu.Button className="ctw-border-none ctw-bg-transparent">
           {children}
         </Menu.Button>
-      </div>
-      <Transition
-        as={Fragment}
-        enter="transition ease-out duration-100"
-        enterFrom="transform opacity-0 scale-95"
-        enterTo="transform opacity-100 scale-100"
-        leave="transition ease-in duration-75"
-        leaveFrom="transform opacity-100 scale-100"
-        leaveTo="transform opacity-0 scale-95"
-      >
-        <div className="text-right ctw-fixed">
-          <Menu.Items className="ctw-absolute ctw-left-0 ctw-z-10 ctw-mt-2 ctw-w-56 ctw-origin-top-right ctw-divide-y ctw-bg-white ctw-shadow-lg ctw-ring-1 ctw-ring-black ctw-ring-opacity-5">
-            <div>
+        <Transition
+          as={Fragment}
+          enter="transition ease-out duration-100"
+          enterFrom="transform opacity-0 scale-95"
+          enterTo="transform opacity-100 scale-100"
+          leave="transition ease-in duration-75"
+          leaveFrom="transform opacity-100 scale-100"
+          leaveTo="transform opacity-0 scale-95"
+        >
+          <Menu.Items className="ctw-w-max ctw-bg-white ctw-ring-1 ctw-ring-black ctw-ring-opacity-5">
+            <Float.Arrow className="ctw-absolute ctw-h-5 ctw-w-5 ctw-rotate-45 ctw-border ctw-border-black ctw-bg-white" />
+            <div className="ctw-relative ctw-overflow-hidden ctw-bg-white">
               {menuItems.map((menuItem) => (
                 <Menu.Item key={menuItem}>
                   {({ active }) => (
@@ -49,8 +51,8 @@ export function DropdownMenu({
               ))}
             </div>
           </Menu.Items>
-        </div>
-      </Transition>
+        </Transition>
+      </Float>
     </Menu>
   );
 }

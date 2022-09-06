@@ -66,10 +66,12 @@
     "vite": "^3.0.0"
   },
   "dependencies": {
+    "@headlessui-float/react": "^0.8.0",
     "@headlessui/react": "^1.6.6",
     "@heroicons/react": "^1.0.6",
     "date-fns": "^2.29.1",
     "fhir-kit-client": "^1.9.1",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "react-portal": "^4.2.2"
   }
 }

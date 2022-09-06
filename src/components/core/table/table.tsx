@@ -1,5 +1,6 @@
 import cx from "classnames";
 import { ReactNode, useEffect, useRef, useState } from "react";
+import { MenuItems } from "../dropdown-menu";
 
 import { TableHead } from "./table-head";
 import { TableRows } from "./table-rows";
@@ -25,6 +26,7 @@ export type TableProps<T extends MinRecordItem> = {
   isLoading?: boolean;
   message?: string;
   showTableHead?: boolean;
+  ellipsesMenuAction?: MenuItems[];
 };
 
 export type TableBaseProps<T extends MinRecordItem> = Omit<
@@ -39,6 +41,7 @@ export const Table = <T extends MinRecordItem>({
   isLoading = false,
   message = "No records found",
   showTableHead = true,
+  ellipsesMenuAction,
 }: TableProps<T>) => {
   const tableRef = useRef<HTMLTableElement>(null);
   const containerTableRef = useRef<HTMLTableElement>(null);
@@ -104,6 +107,7 @@ export const Table = <T extends MinRecordItem>({
                 columns={columns}
                 showLeftTableBorderShadow={showLeftTableBorderShadow}
                 showRightTableBorderShadow={showRightTableBorderShadow}
+                ellipsesMenuAction={ellipsesMenuAction}
               />
             )}
 
@@ -116,6 +120,7 @@ export const Table = <T extends MinRecordItem>({
                 emptyMessage={message}
                 showLeftTableBorderShadow={showLeftTableBorderShadow}
                 showRightTableBorderShadow={showRightTableBorderShadow}
+                ellipsesMenuAction={ellipsesMenuAction}
               />
             </tbody>
           </table>

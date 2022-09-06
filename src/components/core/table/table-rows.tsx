@@ -2,7 +2,7 @@ import { DotsHorizontalIcon } from "@heroicons/react/outline";
 import cx from "classnames";
 import { Fragment, KeyboardEvent } from "react";
 
-import { DropdownMenu } from "../dropdown-menu";
+import { DropdownMenu, MenuItems } from "../dropdown-menu";
 import { Spinner } from "../spinner";
 
 import type { MinRecordItem, TableColumn } from "./table";
@@ -17,6 +17,7 @@ type TableRowsProps<T extends MinRecordItem> = {
   emptyMessage: string;
   showLeftTableBorderShadow: boolean;
   showRightTableBorderShadow: boolean;
+  ellipsesMenuAction?: MenuItems[];
 };
 
 export const TableRows = <T extends MinRecordItem>({
@@ -27,6 +28,7 @@ export const TableRows = <T extends MinRecordItem>({
   emptyMessage,
   showLeftTableBorderShadow,
   showRightTableBorderShadow,
+  ellipsesMenuAction,
 }: TableRowsProps<T>) => {
   if (isLoading) {
     return (
@@ -77,16 +79,21 @@ export const TableRows = <T extends MinRecordItem>({
                 showLeftTableBorderShadow={showLeftTableBorderShadow}
               />
             ))}
-            <td
-              className={cx(
-                "ctw-table-action-column  ctw-min-w-[4rem] ctw-text-center ctw-text-icon-default",
-                { "ctw-table-action-column-sticky": showRightTableBorderShadow }
-              )}
-            >
-              <DropdownMenu>
-                <DotsHorizontalIcon className="ctw-2-5 ctw-w-5 ctw-cursor-pointer" />
-              </DropdownMenu>
-            </td>
+            {ellipsesMenuAction && (
+              <td
+                className={cx(
+                  "ctw-table-action-column  ctw-min-w-[4rem] ctw-text-center ctw-text-icon-default",
+                  {
+                    "ctw-table-action-column-sticky":
+                      showRightTableBorderShadow,
+                  }
+                )}
+              >
+                <DropdownMenu menuItems={ellipsesMenuAction}>
+                  <DotsHorizontalIcon className="ctw-2-5 ctw-w-5 ctw-cursor-pointer" />
+                </DropdownMenu>
+              </td>
+            )}
           </tr>
         </Fragment>
       ))}
