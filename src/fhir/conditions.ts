@@ -54,7 +54,6 @@ export async function getLensConditions(
         ...conditionFilters,
       }
     );
-
     return conditions.filter(
       (condition) => condition.asserter?.type !== "Patient"
     );

@@ -13,7 +13,7 @@ import {
   getConfirmedConditions,
   getLensConditions,
 } from "@/fhir/conditions";
-import { getUPIDfromPatientID } from "@/fhir/search-helpers";
+import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 import { ConditionModel } from "@/models/conditions";
 
 export type ConditionsProps = {
@@ -46,7 +46,7 @@ export function Conditions({ className }: ConditionsProps) {
   const [includeInactive, setIncludeInactive] = useState(true);
   const { getCTWFhirClient } = useCTW();
 
-  const { patientID, systemURL } = usePatientContext();
+  const patientUPID = usePatientContext();
 
   const handleFormChange = () => setIncludeInactive(!includeInactive);
 
@@ -59,28 +59,20 @@ export function Conditions({ className }: ConditionsProps) {
         : {};
 
       const fhirClient = await getCTWFhirClient();
-      const patientFilter = {};
-
-      const { patientUPID, systemZus } = await getUPIDfromPatientID(
-        fhirClient,
-        patientID,
-        systemURL,
-        patientFilter
-      );
 
       // use AllSettled instead of all as we want confirmed to still if lens fails
       const [confirmedConditionInfo, notReviewedConditionInfo] =
         await Promise.allSettled([
           getConfirmedConditions(
             fhirClient,
-            patientID,
-            systemURL,
+            patientUPID,
+            SYSTEM_ZUS_UNIVERSAL_ID,
             conditionFilter
           ),
           getLensConditions(
             fhirClient,
             patientUPID,
-            systemZus,
+            SYSTEM_ZUS_UNIVERSAL_ID,
             conditionFilter
           ),
         ]);
@@ -120,7 +112,7 @@ export function Conditions({ className }: ConditionsProps) {
     load();
     // Including getCTWFhirClient causes an infinite loop so disabling this
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [patientID, includeInactive]);
+  }, [patientUPID, includeInactive]);
 
   return (
     <div
