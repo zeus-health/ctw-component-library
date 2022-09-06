@@ -1,7 +1,11 @@
+import { Style } from "util";
+
 import * as React from "react";
+import * as twconfig from "tailwind.config.mjs";
 
 import { getFhirClient } from "@/fhir/client";
-import { Style } from "@/styles/style";
+
+export type Theme = Partial<Record<keyof typeof twconfig.Theme, string>>;
 
 export type Env = "dev" | "sandbox" | "production";
 

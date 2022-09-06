@@ -1,8 +1,8 @@
-const lineClampPlugin = require("@tailwindcss/line-clamp");
-const defaultTheme = require("tailwindcss/defaultTheme");
+import lineClampPlugin from "@tailwindcss/line-clamp";
+import defaultTheme from "tailwindcss/defaultTheme";
 
 const CLASS_PREFIX = "ctw-";
-const CSSColorPalette = {
+export const Theme = {
   colors: {
     transparent: "transparent",
     white: "#fff",
@@ -89,7 +89,7 @@ const addCSSVarReference = (colorConfig) => {
   return { colors: flattenedColors };
 };
 
-module.exports = {
+export default {
   content: ["./src/**/*.{ts,tsx,jsx,js}"],
   theme: {
     ...addCSSVarReference(CSSColorPalette),

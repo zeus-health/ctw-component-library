@@ -5,7 +5,7 @@ module.exports = {
   extends: ["@kensho-technologies/eslint-config", "prettier"],
   // Ignore js files as we now have typescript parsing rules.
   // See https://stackoverflow.com/a/65063702 for more.
-  ignorePatterns: ["*.js", "*.cjs"],
+  ignorePatterns: ["*.js", "*.cjs", "*.mjs"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     tsconfigRootDir: __dirname,

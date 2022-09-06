@@ -20,7 +20,7 @@
     "dev": "run-p dev:*",
     "dev:vite": "vite",
     "dev:css": "npm run generate:css -- --watch",
-    "generate:css": "tailwindcss -i ./src/styles/tailwind.css -o ./src/styles/tailwind-gen.css",
+    "generate:css": "tailwindcss -c ./tailwind.config.mjs -i ./src/styles/tailwind.css -o ./src/styles/tailwind-gen.css",
     "build": "npm run generate:css && run-p build:*",
     "build:scripts": "vite build",
     "build:types": "tsc --emitDeclarationOnly && tsc-alias",

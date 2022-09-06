@@ -20,10 +20,12 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+    "typeRoots": ["./typings"],
   },
   "include": [
     "src",
     "scripts"
-  ]
+  ],
+  "exclude": ["./typings"],
 }
