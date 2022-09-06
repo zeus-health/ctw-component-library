@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 
 import { useCTW } from "./ctw-provider";
 
@@ -10,30 +10,21 @@ type PatientProviderProps = {
   children: React.ReactNode;
 } & ThirdPartyID;
 
-export const CTWPatientContext = React.createContext<string>("");
+export const CTWPatientContext = React.createContext<ThirdPartyID>({
+  patientID: "",
+  systemURL: "",
+});
 
 export function PatientProvider({
   children,
-  ...ctwState
+  ...ctwPatientState
 }: PatientProviderProps) {
-  const [providerState, setProviderState] = useState("");
-  const { getCTWFhirClient } = useCTW();
-
-  useEffect(() => {
-    async function getUPID() {
-      const fhirClient = await getCTWFhirClient();
-      const patientFilters = {};
-
-      const { patientUPID } = await getUPIDfromPatientID(
-        fhirClient,
-        ctwState.patientID,
-        ctwState.systemURL,
-        patientFilters
-      );
-      setProviderState(patientUPID);
-    }
-    getUPID();
-  }, [ctwState.patientID, ctwState.systemURL]);
+  const providerState = React.useMemo(
+    () => ({
+      ...ctwPatientState,
+    }),
+    [ctwPatientState]
+  );
 
   return (
     <CTWPatientContext.Provider value={providerState}>
@@ -42,4 +33,20 @@ export function PatientProvider({
   );
 }
 
-export const usePatientContext = () => useContext(CTWPatientContext);
+export function usePatient() {
+  const context = useContext(CTWPatientContext);
+  const { getCTWFhirClient } = useCTW();
+
+  async function getPatientUPID() {
+    const fhirClient = await getCTWFhirClient();
+    const patientFilters = {};
+
+    return getUPIDfromPatientID(
+      fhirClient,
+      context.patientID,
+      context.systemURL,
+      patientFilters
+    );
+  }
+  return { getPatientUPID };
+}

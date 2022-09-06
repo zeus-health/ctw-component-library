@@ -2,7 +2,6 @@ import cx from "classnames";
 import { useEffect, useState } from "react";
 
 import { useCTW } from "../core/ctw-provider";
-import { usePatientContext } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
 
 import { ConditionFormDrawer } from "./condition-form-drawer";
@@ -15,6 +14,7 @@ import {
 } from "@/fhir/conditions";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 import { ConditionModel } from "@/models/conditions";
+import { usePatient } from "../core/patient-provider";
 
 export type ConditionsProps = {
   className?: string;
@@ -46,7 +46,7 @@ export function Conditions({ className }: ConditionsProps) {
   const [includeInactive, setIncludeInactive] = useState(true);
   const { getCTWFhirClient } = useCTW();
 
-  const patientUPID = usePatientContext();
+  const { getPatientUPID } = usePatient();
 
   const handleFormChange = () => setIncludeInactive(!includeInactive);
 
@@ -59,6 +59,7 @@ export function Conditions({ className }: ConditionsProps) {
         : {};
 
       const fhirClient = await getCTWFhirClient();
+      const { patientUPID } = await getPatientUPID();
 
       // use AllSettled instead of all as we want confirmed to still if lens fails
       const [confirmedConditionInfo, notReviewedConditionInfo] =
@@ -112,7 +113,7 @@ export function Conditions({ className }: ConditionsProps) {
     load();
     // Including getCTWFhirClient causes an infinite loop so disabling this
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [patientUPID, includeInactive]);
+  }, [includeInactive]);
 
   return (
     <div
