@@ -127,6 +127,13 @@ export function Conditions({ className, patientUPID }: ConditionsProps) {
               conditions={confirmedConditions}
               isLoading={confirmedConditionsIsLoading}
               message={confirmedConditionsMessage}
+              ellipsesMenuAction={[
+                { name: "Edit", action: () => setAddConditionIsOpen(true) },
+                {
+                  name: "View History",
+                  action: () => setAddConditionIsOpen(true),
+                },
+              ]}
             />
           </div>
 
@@ -137,6 +144,13 @@ export function Conditions({ className, patientUPID }: ConditionsProps) {
               isLoading={notReviewedConditionsIsLoading}
               showTableHead={false}
               message={notReviewedConditionsMessage}
+              ellipsesMenuAction={[
+                { name: "Add", action: () => setAddConditionIsOpen(true) },
+                {
+                  name: "View History",
+                  action: () => setAddConditionIsOpen(true),
+                },
+              ]}
             />
           </div>
         </div>

@@ -6,6 +6,7 @@ import { Fragment, ReactNode } from "react";
 export type MenuItems = {
   name: string;
   action: () => void;
+  className?: string;
 };
 
 export type DropdownMenuProps = {
@@ -33,18 +34,20 @@ export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
             <Float.Arrow className="ctw-absolute ctw-h-5 ctw-w-5 ctw-rotate-45 ctw-border ctw-border-black ctw-bg-white" />
             <div className="ctw-relative ctw-overflow-hidden ctw-bg-white">
               {menuItems.map((menuItem) => (
-                <Menu.Item key={menuItem}>
+                <Menu.Item key={menuItem.name}>
                   {({ active }) => (
                     <button
+                      onClick={() => menuItem.action()}
                       type="button"
                       className={cx(
                         "group ctw-flex ctw-w-full ctw-items-center ctw-border-none ctw-bg-transparent ctw-py-2 ctw-px-2 ctw-text-content-black",
                         {
                           "hover:ctw-bg-icon-active": active,
-                        }
+                        },
+                        menuItem.className
                       )}
                     >
-                      {menuItem}
+                      {menuItem.name}
                     </button>
                   )}
                 </Menu.Item>
