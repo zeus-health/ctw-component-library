@@ -28,7 +28,7 @@ export const TableRows = <T extends MinRecordItem>({
   emptyMessage,
   showLeftTableBorderShadow,
   showRightTableBorderShadow,
-  ellipsesMenuAction,
+  rowActions,
 }: TableRowsProps<T>) => {
   if (isLoading) {
     return (
@@ -79,7 +79,7 @@ export const TableRows = <T extends MinRecordItem>({
                 showLeftTableBorderShadow={showLeftTableBorderShadow}
               />
             ))}
-            {ellipsesMenuAction && (
+            {rowActions && (
               <td
                 className={cx(
                   "ctw-table-action-column  ctw-min-w-[4rem] ctw-text-center ctw-text-icon-default",
@@ -89,7 +89,7 @@ export const TableRows = <T extends MinRecordItem>({
                   }
                 )}
               >
-                <DropdownMenu menuItems={ellipsesMenuAction}>
+                <DropdownMenu menuItems={rowActions}>
                   <DotsHorizontalIcon className="ctw-2-5 ctw-w-5 ctw-cursor-pointer" />
                 </DropdownMenu>
               </td>

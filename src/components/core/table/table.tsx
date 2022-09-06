@@ -27,7 +27,7 @@ export type TableProps<T extends MinRecordItem> = {
   isLoading?: boolean;
   message?: string;
   showTableHead?: boolean;
-  ellipsesMenuAction?: MenuItems[];
+  rowActions?: MenuItems[];
 };
 
 export type TableBaseProps<T extends MinRecordItem> = Omit<
@@ -43,7 +43,7 @@ export const Table = <T extends MinRecordItem>({
   isLoading = false,
   message = "No records found",
   showTableHead = true,
-  ellipsesMenuAction,
+  rowActions,
 }: TableProps<T>) => {
   const tableRef = useRef<HTMLTableElement>(null);
   const containerTableRef = useRef<HTMLTableElement>(null);
@@ -93,7 +93,7 @@ export const Table = <T extends MinRecordItem>({
           "ctw-relative ctw-overflow-hidden ctw-rounded-lg ctw-p-px",
           {
             "ctw-table-scroll-right-shadow":
-              ellipsesMenuAction && showRightTableBorderShadow,
+              rowActions && showRightTableBorderShadow,
           }
         )}
       >
@@ -110,7 +110,7 @@ export const Table = <T extends MinRecordItem>({
                 columns={columns}
                 showLeftTableBorderShadow={showLeftTableBorderShadow}
                 showRightTableBorderShadow={showRightTableBorderShadow}
-                ellipsesMenuAction={ellipsesMenuAction}
+                rowActions={rowActions}
               />
             )}
 
@@ -123,7 +123,7 @@ export const Table = <T extends MinRecordItem>({
                 emptyMessage={message}
                 showLeftTableBorderShadow={showLeftTableBorderShadow}
                 showRightTableBorderShadow={showRightTableBorderShadow}
-                ellipsesMenuAction={ellipsesMenuAction}
+                rowActions={rowActions}
               />
             </tbody>
           </table>

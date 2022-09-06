@@ -7,14 +7,14 @@ export type TableHeadProps<T extends MinRecordItem> = {
   columns: TableColumn<T>[];
   showLeftTableBorderShadow: boolean;
   showRightTableBorderShadow: boolean;
-  ellipsesMenuAction?: MenuItems[];
+  rowActions?: MenuItems[];
 };
 
 export const TableHead = <T extends MinRecordItem>({
   columns,
   showLeftTableBorderShadow,
   showRightTableBorderShadow,
-  ellipsesMenuAction,
+  rowActions,
 }: TableHeadProps<T>) => (
   <thead>
     <tr>
@@ -33,7 +33,7 @@ export const TableHead = <T extends MinRecordItem>({
           {column.title}
         </th>
       ))}
-      {ellipsesMenuAction && (
+      {rowActions && (
         <th
           className={cx("ctw-table-action-column", {
             "ctw-table-action-column-sticky": showRightTableBorderShadow,
