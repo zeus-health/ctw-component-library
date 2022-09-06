@@ -1,5 +1,6 @@
 import cx from "classnames";
 import { ReactNode, useEffect, useRef, useState } from "react";
+
 import { MenuItems } from "../dropdown-menu";
 
 import { TableHead } from "./table-head";
