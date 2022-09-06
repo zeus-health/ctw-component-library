@@ -46,7 +46,7 @@ export function Conditions({ className }: ConditionsProps) {
   const [includeInactive, setIncludeInactive] = useState(true);
   const { getCTWFhirClient } = useCTW();
 
-  const { getPatientUPID } = usePatient();
+  const { getPatientUPID, patientID, systemURL } = usePatient();
 
   const handleFormChange = () => setIncludeInactive(!includeInactive);
 
@@ -66,8 +66,8 @@ export function Conditions({ className }: ConditionsProps) {
         await Promise.allSettled([
           getConfirmedConditions(
             fhirClient,
-            patientUPID,
-            SYSTEM_ZUS_UNIVERSAL_ID,
+            patientID,
+            systemURL,
             conditionFilter
           ),
           getLensConditions(

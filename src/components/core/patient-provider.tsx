@@ -48,5 +48,9 @@ export function usePatient() {
       patientFilters
     );
   }
-  return { getPatientUPID };
+  return {
+    getPatientUPID,
+    patientID: context.patientID,
+    systemURL: context.systemURL,
+  };
 }
