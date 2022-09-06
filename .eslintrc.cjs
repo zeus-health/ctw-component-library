@@ -2,7 +2,11 @@
  * @type {import('@types/eslint').Linter.BaseConfig}
  */
 module.exports = {
-  extends: ["@kensho-technologies/eslint-config", "prettier", "plugin:storybook/recommended"],
+  extends: [
+    "@kensho-technologies/eslint-config",
+    "prettier",
+    "plugin:storybook/recommended",
+  ],
   // Ignore js files as we now have typescript parsing rules.
   // See https://stackoverflow.com/a/65063702 for more.
   ignorePatterns: ["*.js", "*.cjs", "vite.config.ts", "vitest.*.ts"],
@@ -51,7 +55,7 @@ module.exports = {
   // set the jest version.
   settings: {
     jest: {
-      version: 27
-    }
-  }
+      version: 27,
+    },
+  },
 };

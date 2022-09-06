@@ -34,7 +34,9 @@
     "build-storybook": "storybook build",
     "test": "vitest",
     "typecheck": "tsc -b",
-    "release": "changeset publish"
+    "release": "changeset publish",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "prettier": {},
   "repository": {
@@ -47,6 +49,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.19.0",
     "@changesets/cli": "^2.24.3",
     "@kensho-technologies/eslint-config": "^23.1.1",
     "@storybook/addon-actions": "^7.0.0-alpha.31",
