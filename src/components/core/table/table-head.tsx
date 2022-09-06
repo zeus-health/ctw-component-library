@@ -1,5 +1,4 @@
 import cx from "classnames";
-
 import { MenuItems } from "../dropdown-menu";
 
 import type { MinRecordItem, TableColumn } from "./table";

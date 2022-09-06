@@ -20,6 +20,7 @@ export type TableColumn<T extends MinRecordItem> = {
 } & (DataIndexSpecified<T> | RenderSpecified<T>);
 
 export type TableProps<T extends MinRecordItem> = {
+  className?: string;
   records: T[];
   columns: TableColumn<T>[];
   onRowClick?: (row: T) => void; // Adds a row hover effect and calls onClick.
@@ -35,6 +36,7 @@ export type TableBaseProps<T extends MinRecordItem> = Omit<
 >;
 
 export const Table = <T extends MinRecordItem>({
+  className,
   columns,
   records,
   onRowClick,
@@ -83,7 +85,7 @@ export const Table = <T extends MinRecordItem>({
   }, []);
 
   return (
-    <div className="ctw-py-2 ctw-align-middle">
+    <div className={cx("ctw-py-2 ctw-align-middle", className)}>
       <div
         /* Border radius has to be same as table. 
            For some reason the overflow: hidden also hides the table borders, so add some padding to get them back. */
