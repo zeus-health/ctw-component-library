@@ -92,7 +92,8 @@ export const Table = <T extends MinRecordItem>({
         className={cx(
           "ctw-relative ctw-overflow-hidden ctw-rounded-lg ctw-p-px",
           {
-            "ctw-table-scroll-right-shadow": false, // showRightTableBorderShadow,
+            "ctw-table-scroll-right-shadow":
+              ellipsesMenuAction && showRightTableBorderShadow,
           }
         )}
       >
