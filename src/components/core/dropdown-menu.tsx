@@ -40,7 +40,7 @@ export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
                       onClick={() => menuItem.action()}
                       type="button"
                       className={cx(
-                        "group ctw-flex ctw-w-full ctw-items-center ctw-border-none ctw-bg-transparent ctw-py-2 ctw-px-2 ctw-text-content-black",
+                        "ctw-flex ctw-w-full ctw-items-center ctw-border-none ctw-bg-transparent ctw-py-2 ctw-px-2 ctw-text-content-black",
                         {
                           "hover:ctw-bg-icon-active": active,
                         },

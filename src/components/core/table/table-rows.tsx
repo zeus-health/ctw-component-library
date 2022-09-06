@@ -1,6 +1,6 @@
 import { DotsHorizontalIcon } from "@heroicons/react/outline";
 import cx from "classnames";
-import { Fragment, KeyboardEvent } from "react";
+import { KeyboardEvent } from "react";
 
 import { DropdownMenu, MenuItems } from "../dropdown-menu";
 import { Spinner } from "../spinner";
@@ -68,34 +68,31 @@ export const TableRows = <T extends MinRecordItem>({
   return (
     <>
       {records.map((record, recordIndex) => (
-        <Fragment key={record.id}>
-          <tr {...tableRowProps(record, recordIndex)}>
-            {columns.map((column, index) => (
-              <TableDataCell
-                key={column.title ?? index}
-                column={column}
-                record={record}
-                index={index}
-                showLeftTableBorderShadow={showLeftTableBorderShadow}
-              />
-            ))}
-            {rowActions && (
-              <td
-                className={cx(
-                  "ctw-table-action-column  ctw-min-w-[4rem] ctw-text-center ctw-text-icon-default",
-                  {
-                    "ctw-table-action-column-sticky":
-                      showRightTableBorderShadow,
-                  }
-                )}
-              >
-                <DropdownMenu menuItems={rowActions}>
-                  <DotsHorizontalIcon className="ctw-2-5 ctw-w-5 ctw-cursor-pointer" />
-                </DropdownMenu>
-              </td>
-            )}
-          </tr>
-        </Fragment>
+        <tr {...tableRowProps(record, recordIndex)} key={record.id}>
+          {columns.map((column, index) => (
+            <TableDataCell
+              key={column.title ?? index}
+              column={column}
+              record={record}
+              index={index}
+              showLeftTableBorderShadow={showLeftTableBorderShadow}
+            />
+          ))}
+          {rowActions && (
+            <td
+              className={cx(
+                "ctw-table-action-column  ctw-min-w-[4rem] ctw-text-center ctw-text-icon-default",
+                {
+                  "ctw-table-action-column-sticky": showRightTableBorderShadow,
+                }
+              )}
+            >
+              <DropdownMenu menuItems={rowActions}>
+                <DotsHorizontalIcon className="ctw-w-5 ctw-cursor-pointer" />
+              </DropdownMenu>
+            </td>
+          )}
+        </tr>
       ))}
     </>
   );

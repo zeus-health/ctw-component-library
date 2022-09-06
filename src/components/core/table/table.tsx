@@ -94,7 +94,7 @@ export const Table = <T extends MinRecordItem>({
           "ctw-relative ctw-overflow-hidden ctw-rounded-lg ctw-p-px",
           {
             "ctw-table-scroll-right-shadow":
-              rowActions && showRightTableBorderShadow,
+              !rowActions && showRightTableBorderShadow,
           }
         )}
       >

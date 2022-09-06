@@ -71,7 +71,6 @@
 
   .ctw-table-action-column {
     @apply ctw-sticky ctw-right-0 ctw-bg-white;
-    /* z-index: 1; */
   }
 
   .ctw-table-action-column-sticky:before {
