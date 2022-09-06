@@ -5,3 +5,5 @@ scripts/prefixer/tmp/
 node_modules
 .env
 .DS_Store
+tailwind.theme.js
+tailwind.theme.cjs
