@@ -88,7 +88,7 @@ export const TableRows = <T extends MinRecordItem>({
               )}
             >
               <DropdownMenu menuItems={rowActions}>
-                <DotsHorizontalIcon className="ctw-w-5 ctw-cursor-pointer" />
+                <DotsHorizontalIcon className="ctw-w-5" />
               </DropdownMenu>
             </td>
           )}

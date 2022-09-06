@@ -18,7 +18,7 @@ export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
   return (
     <Menu as="div">
       <Float portal placement="bottom-start" offset={10} flip arrow>
-        <Menu.Button className="ctw-border-none ctw-bg-transparent">
+        <Menu.Button className="ctw-cursor-pointer ctw-border-none ctw-bg-transparent">
           {children}
         </Menu.Button>
         <Transition
@@ -40,7 +40,7 @@ export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
                       onClick={() => menuItem.action()}
                       type="button"
                       className={cx(
-                        "ctw-flex ctw-w-full ctw-items-center ctw-border-none ctw-bg-transparent ctw-py-2 ctw-px-2 ctw-text-content-black",
+                        "ctw-flex ctw-w-full ctw-cursor-pointer ctw-items-center ctw-border-none ctw-bg-transparent ctw-py-2 ctw-px-2 ctw-text-content-black",
                         {
                           "hover:ctw-bg-icon-active": active,
                         },

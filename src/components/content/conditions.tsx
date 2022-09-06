@@ -144,13 +144,6 @@ export function Conditions({ className, patientUPID }: ConditionsProps) {
               isLoading={notReviewedConditionsIsLoading}
               showTableHead={false}
               message={notReviewedConditionsMessage}
-              rowActions={[
-                { name: "Add", action: () => setAddConditionIsOpen(true) },
-                {
-                  name: "View History",
-                  action: () => setAddConditionIsOpen(true),
-                },
-              ]}
             />
           </div>
         </div>
