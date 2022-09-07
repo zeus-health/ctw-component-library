@@ -25,9 +25,7 @@ export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
         arrow
         tailwindcssOriginClass
       >
-        <Menu.Button className="ctw-btn-clear ctw-cursor-pointer ctw-border-none ctw-text-primary-dark hover:ctw-text-primary-main">
-          {children}
-        </Menu.Button>
+        <Menu.Button className="ctw-btn-clear ctw-link">{children}</Menu.Button>
 
         <Menu.Items
           static
