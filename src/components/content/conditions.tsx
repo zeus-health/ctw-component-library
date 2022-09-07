@@ -1,18 +1,15 @@
-import cx from "classnames";
-import { useEffect, useState } from "react";
-
-import { useCTW } from "../core/ctw-provider";
-import { ToggleControl } from "../core/toggle-control";
-
-import { ConditionFormDrawer } from "./condition-form-drawer";
-import { ConditionsTableBase } from "./conditions-table-base";
-
 import {
   ConditionFilters,
   getConfirmedConditions,
   getLensConditions,
 } from "@/fhir/conditions";
 import { ConditionModel } from "@/models/conditions";
+import cx from "classnames";
+import { useEffect, useState } from "react";
+import { useCTW } from "../core/ctw-provider";
+import { ToggleControl } from "../core/toggle-control";
+import { ConditionFormDrawer } from "./condition-form-drawer";
+import { ConditionsTableBase } from "./conditions-table-base";
 
 export type ConditionsProps = {
   className?: string;
@@ -51,7 +48,7 @@ export function Conditions({ className, patientUPID }: ConditionsProps) {
     async function load() {
       const conditionFilter: ConditionFilters = includeInactive
         ? {
-            "clinical-status": "active",
+            "clinical-status": ["active", "recurrence", "relapse"],
           }
         : {};
 
@@ -61,7 +58,7 @@ export function Conditions({ className, patientUPID }: ConditionsProps) {
       const [confirmedConditionInfo, notReviewedConditionInfo] =
         await Promise.allSettled([
           getConfirmedConditions(fhirClient, patientUPID, conditionFilter),
-          getLensConditions(fhirClient, patientUPID, conditionFilter),
+          getLensConditions(fhirClient, patientUPID),
         ]);
 
       setNotConfirmedConditionsIsLoading(false);

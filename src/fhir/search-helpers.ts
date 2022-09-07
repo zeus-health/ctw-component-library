@@ -1,4 +1,5 @@
 import Client, { SearchParams } from "fhir-kit-client";
+import { mapValues } from "lodash";
 
 import { getResources } from "./bundle";
 import {
@@ -87,6 +88,12 @@ export async function searchLensRecords<T extends ResourceTypeString>(
   return searchAllRecords(resourceType, fhirClient, {
     ...searchParams,
     _tag: LENS_TAGS.join(","),
+  });
+}
+
+export function flattenArrayFilters(filters: { [key: string]: unknown }) {
+  return mapValues(filters, (value) => {
+    return Array.isArray(value) ? value.join(", ") : value;
   });
 }
 
