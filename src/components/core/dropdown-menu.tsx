@@ -31,9 +31,9 @@ export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
 
         <Menu.Items
           static
-          className="ctw-w-max ctw-bg-white ctw-ring-1 ctw-ring-black ctw-ring-opacity-5"
+          className="ctw-w-max ctw-bg-white ctw-ring-1 ctw-ring-divider-light ctw-ring-opacity-5 focus:ctw-outline-none"
         >
-          <Float.Arrow className="ctw-absolute ctw-h-5 ctw-w-5 ctw-rotate-45 ctw-border ctw-border-black ctw-bg-white" />
+          <Float.Arrow className="ctw-absolute ctw-h-5 ctw-w-5 ctw-rotate-45 ctw-border ctw-border-divider-light ctw-bg-white" />
           <div className="ctw-relative  ctw-bg-white">
             {menuItems.map((menuItem) => (
               <Menu.Item key={menuItem.name}>
@@ -42,9 +42,9 @@ export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
                     type="button"
                     onClick={() => menuItem.action()}
                     className={cx(
-                      "ctw-flex ctw-w-full ctw-cursor-pointer ctw-items-center ctw-border-none ctw-bg-transparent ctw-py-2 ctw-px-2 ctw-text-content-black",
+                      "ctw-flex ctw-w-full ctw-cursor-pointer ctw-items-center ctw-border-none ctw-bg-transparent ctw-py-2 ctw-px-2 ctw-text-primary-main",
                       {
-                        "ctw-bg-icon-active hover:ctw-bg-icon-active": active,
+                        "ctw-bg-primary-light": active,
                       },
                       menuItem.className
                     )}
