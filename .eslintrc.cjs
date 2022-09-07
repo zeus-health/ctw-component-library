@@ -5,7 +5,7 @@ module.exports = {
   extends: ["@kensho-technologies/eslint-config", "prettier"],
   // Ignore js files as we now have typescript parsing rules.
   // See https://stackoverflow.com/a/65063702 for more.
-  ignorePatterns: ["*.js", "*.cjs", "vite.config.ts"],
+  ignorePatterns: ["*.js", "*.cjs", "vite.config.ts", "vitest.*.ts"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     project: ["./tsconfig.json"],
@@ -23,7 +23,13 @@ module.exports = {
       "error",
       {
         // The following files can depend on devDependencies.
-        devDependencies: ["*.config.*", "*.env.*", "*.test.*", "scripts/**/*"],
+        devDependencies: [
+          "*.config.*",
+          "*.env.*",
+          "scripts/**/*",
+          "**/*.test.*",
+          "test/**/*",
+        ],
       },
     ],
   },
