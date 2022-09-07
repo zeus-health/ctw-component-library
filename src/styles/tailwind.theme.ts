@@ -52,45 +52,32 @@ export const TailwindTheme = {
   },
 };
 
+// Style type is a nested partial
+export type Style = Subset<typeof TailwindTheme["colors"]>;
 type Subset<K> = {
   [attr in keyof K]?: K[attr] extends object ? Subset<K[attr]> : K[attr];
 };
 
-export type Style = Subset<typeof TailwindTheme["colors"]>;
-
-function nameCSSVar(name: string): string {
+// Helps name a CSS variable based on the class prefix.
+export function nameCSSVar(name: string): string {
   return `--${CLASS_PREFIX}-${name}`;
 }
 
-export function createCSSVar(name: string, defaultVal: string): string {
-  return `var(${nameCSSVar(name)}, ${defaultVal})`;
-}
-
-// Takes a theme and turns it into a CSSProperties that sets CSS Variable values
+// Takes a theme and turns it into a CSSProperties that sets CSS Variables.
 export function mapToCSSVar(colorConfig: Style): any {
   let properties: { [variable: string]: string } = {};
-  const config = Object.entries(colorConfig).map(
+  const config = Object.entries(colorConfig).forEach(
     ([colorTitle, colorValueOrObj]) => {
       if (typeof colorValueOrObj === "string") {
-        return { [colorTitle]: createCSSVar(colorTitle, colorValueOrObj) };
-      }
-      const transformedColorArr = Object.entries(colorValueOrObj).map(
-        ([colorName, value]) => {
-          properties[nameCSSVar(`${colorTitle}-${colorName}`)] = value;
-          return {
-            [colorName]: createCSSVar(`${colorTitle}-${colorName}`, value),
-          };
-        }
+        properties[nameCSSVar(colorTitle)] = colorValueOrObj;
+      } else {
+        Object.entries(colorValueOrObj).forEach(
+          ([colorName, value]) => {
+            properties[nameCSSVar(`${colorTitle}-${colorName}`)] = value;
+          }
       );
-
-      const flattenedTransformedColor = {};
-      for (let i = 0; i < transformedColorArr.length; i++) {
-        Object.assign(flattenedTransformedColor, transformedColorArr[i]);
       }
-
-      return { [colorTitle]: flattenedTransformedColor };
     }
   );
-
   return properties;
 }
