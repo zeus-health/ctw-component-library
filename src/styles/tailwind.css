@@ -77,6 +77,7 @@
     @apply ctw-absolute ctw-left-0 ctw-bottom-0 ctw-h-full ctw-w-full ctw-border-l ctw-border-divider-main;
     box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.1), -2px 0px 0px rgba(0, 0, 0, 0.06);
     content: "";
+    z-index: -1;
   }
 
   .ctw-table-scroll-right-shadow::after {

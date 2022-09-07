@@ -83,7 +83,7 @@ export const Table = <T extends MinRecordItem>({
         );
       }
     };
-  }, []);
+  }, [containerTableRef]);
 
   return (
     <div className={cx("ctw-py-2 ctw-align-middle", className)}>
