@@ -62,7 +62,7 @@ function nameCSSVar(name: string): string {
   return `--${CLASS_PREFIX}-${name}`;
 }
 
-function createCSSVar(name: string, defaultVal: string): string {
+export function createCSSVar(name: string, defaultVal: string): string {
   return `var(${nameCSSVar(name)}, ${defaultVal})`;
 }
 
@@ -94,35 +94,3 @@ export function mapToCSSVar(colorConfig: Style): any {
 
   return properties;
 }
-
-// Loop over properties and adds css variables so that the properties can be overwritten.
-export const addCSSVarReference = (colorConfig: typeof TailwindTheme) => {
-  const config = Object.entries(colorConfig.colors).map(
-    ([colorTitle, colorValueOrObj]) => {
-      if (typeof colorValueOrObj === "string") {
-        return { [colorTitle]: createCSSVar(colorTitle, colorValueOrObj) };
-      }
-      const transformedColorArr = Object.entries(colorValueOrObj).map(
-        ([colorName, value]) => {
-          return {
-            [colorName]: createCSSVar(`${colorTitle}-${colorName}`, value),
-          };
-        }
-      );
-
-      const flattenedTransformedColor = {};
-      for (let i = 0; i < transformedColorArr.length; i++) {
-        Object.assign(flattenedTransformedColor, transformedColorArr[i]);
-      }
-
-      return { [colorTitle]: flattenedTransformedColor };
-    }
-  );
-
-  const flattenedColors = {};
-  for (let i = 0; i < config.length; i++) {
-    Object.assign(flattenedColors, config[i]);
-  }
-
-  return { colors: flattenedColors };
-};
