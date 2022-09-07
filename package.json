@@ -25,9 +25,12 @@
     "build": "npm run generate:css && run-p build:*",
     "build:scripts": "vite build",
     "build:types": "tsc --emitDeclarationOnly && tsc-alias",
+    "format": "prettier --write .",
+    "format-check": "prettier --check .",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "lint-fix": "eslint --fix --cache --cache-location ./node_modules/.cache/eslint .",
     "preview": "vite preview",
+    "typecheck": "tsc -b",
     "release": "changeset publish"
   },
   "prettier": {},
