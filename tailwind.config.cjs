@@ -1,9 +1,9 @@
 const lineClampPlugin = require("@tailwindcss/line-clamp");
 const defaultTheme = require("tailwindcss/defaultTheme");
-const ThemeUtil = require("./tailwind-gen.theme.cjs");
+const {TailwindTheme, CLASS_PREFIX, nameCSSVar} = require("./tailwind-gen.theme.cjs");
 
 const createCSSVar = (name, defaultVal) =>
-  `var(${ThemeUtil.nameCSSVar(name)}, ${defaultVal})`;
+  `var(${nameCSSVar(name)}, ${defaultVal})`;
 
 // Loop over properties and adds css variables so that the properties can be overwritten.
 const addCSSVarReference = (colorConfig) => {
@@ -36,7 +36,7 @@ const addCSSVarReference = (colorConfig) => {
 module.exports = {
   content: ["./src/**/*.{ts,tsx,jsx,js}"],
   theme: {
-    ...addCSSVarReference(ThemeUtil.TailwindTheme),
+    ...addCSSVarReference(TailwindTheme),
   },
   plugin: [lineClampPlugin],
   extend: {
@@ -47,5 +47,5 @@ module.exports = {
   corePlugins: {
     preflight: false,
   },
-  prefix: ThemeUtil.CLASS_PREFIX,
+  prefix: CLASS_PREFIX,
 };
