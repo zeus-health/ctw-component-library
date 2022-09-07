@@ -33,11 +33,11 @@ export type SearchReturn<T extends ResourceTypeString> = {
 function patientSearchParams(
   resourceType: ResourceTypeString,
   patientID: string,
-  systemURL: string
+  systemURL?: string
 ): SearchParams {
   // No search param needed when not searching for a patientID.
 
-  const identifier = `${systemURL}|${patientID}`;
+  const identifier = `${systemURL ?? SYSTEM_ZUS_UNIVERSAL_ID}|${patientID}`;
 
   switch (resourceType) {
     case "Coverage":
@@ -70,16 +70,12 @@ export async function searchAllRecords<T extends ResourceTypeString>(
   fhirClient: Client,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
-  const { patientID, systemURL, ...params } = searchParams ?? {};
+  const { patientID, ...params } = searchParams ?? {};
   const bundle = (await fhirClient.search({
     resourceType,
     searchParams: {
       ...params,
-      ...patientSearchParams(
-        resourceType,
-        patientID as string,
-        systemURL as string
-      ),
+      ...patientSearchParams(resourceType, patientID as string),
     },
   })) as fhir4.Bundle;
 
@@ -128,19 +124,17 @@ export async function searchLensRecords<T extends ResourceTypeString>(
 export async function getUPIDfromPatientID(
   fhirClient: Client,
   patientID: string,
-  systemURL: string,
-  patientFilters?: SearchParams
+  systemURL: string
 ): Promise<{ patientUPID: string }> {
   try {
-    const { resources: patient } = await searchBuilderRecords(
-      "Patient",
-      fhirClient,
-      {
-        patientID,
-        systemURL,
-        ...patientFilters,
-      }
-    );
+    const bundle = (await fhirClient.search({
+      resourceType: "Patient",
+      searchParams: {
+        ...patientSearchParams("Patient", patientID, systemURL),
+      },
+    })) as fhir4.Bundle;
+
+    const patient = getResources(bundle, "Patient");
 
     const patientUPID = find(patient[0].identifier, {
       system: SYSTEM_ZUS_UNIVERSAL_ID,

@@ -2,6 +2,7 @@ import cx from "classnames";
 import { useEffect, useState } from "react";
 
 import { useCTW } from "../core/ctw-provider";
+import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
 
 import { ConditionFormDrawer } from "./condition-form-drawer";
@@ -12,9 +13,7 @@ import {
   getConfirmedConditions,
   getLensConditions,
 } from "@/fhir/conditions";
-import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 import { ConditionModel } from "@/models/conditions";
-import { usePatient } from "../core/patient-provider";
 
 export type ConditionsProps = {
   className?: string;
@@ -46,7 +45,7 @@ export function Conditions({ className }: ConditionsProps) {
   const [includeInactive, setIncludeInactive] = useState(true);
   const { getCTWFhirClient } = useCTW();
 
-  const { getPatientUPID, patientID, systemURL } = usePatient();
+  const { getPatientUPID } = usePatient();
 
   const handleFormChange = () => setIncludeInactive(!includeInactive);
 
@@ -64,18 +63,8 @@ export function Conditions({ className }: ConditionsProps) {
       // use AllSettled instead of all as we want confirmed to still if lens fails
       const [confirmedConditionInfo, notReviewedConditionInfo] =
         await Promise.allSettled([
-          getConfirmedConditions(
-            fhirClient,
-            patientID,
-            systemURL,
-            conditionFilter
-          ),
-          getLensConditions(
-            fhirClient,
-            patientUPID,
-            SYSTEM_ZUS_UNIVERSAL_ID,
-            conditionFilter
-          ),
+          getConfirmedConditions(fhirClient, patientUPID, conditionFilter),
+          getLensConditions(fhirClient, patientUPID, conditionFilter),
         ]);
 
       setNotConfirmedConditionsIsLoading(false);

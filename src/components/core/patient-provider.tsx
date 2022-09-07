@@ -39,18 +39,12 @@ export function usePatient() {
 
   async function getPatientUPID() {
     const fhirClient = await getCTWFhirClient();
-    const patientFilters = {};
 
     return getUPIDfromPatientID(
       fhirClient,
       context.patientID,
-      context.systemURL,
-      patientFilters
+      context.systemURL
     );
   }
-  return {
-    getPatientUPID,
-    patientID: context.patientID,
-    systemURL: context.systemURL,
-  };
+  return { getPatientUPID };
 }
