@@ -27,7 +27,9 @@
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "lint-fix": "eslint --fix --cache --cache-location ./node_modules/.cache/eslint .",
     "preview": "vite preview",
-    "release": "changeset publish"
+    "release": "changeset publish",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "prettier": {},
   "repository": {
@@ -40,8 +42,16 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.19.0",
     "@changesets/cli": "^2.24.3",
     "@kensho-technologies/eslint-config": "^23.1.1",
+    "@storybook/addon-actions": "^7.0.0-alpha.31",
+    "@storybook/addon-essentials": "^7.0.0-alpha.31",
+    "@storybook/addon-interactions": "^7.0.0-alpha.31",
+    "@storybook/addon-links": "^7.0.0-alpha.31",
+    "@storybook/react": "^7.0.0-alpha.31",
+    "@storybook/react-vite": "^7.0.0-alpha.31",
+    "@storybook/testing-library": "^0.0.14-next.0",
     "@tailwindcss/line-clamp": "^0.4.0",
     "@types/classnames": "^2.3.1",
     "@types/fhir": "^0.0.35",
@@ -51,8 +61,10 @@
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
     "@vitejs/plugin-react": "^2.0.0",
+    "babel-loader": "^8.2.5",
     "eslint": "^8.22.0",
     "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-storybook": "^0.6.4",
     "list-selectors": "^2.0.1",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.7.1",
@@ -60,6 +72,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rename-css-selectors": "^4.1.0",
+    "storybook": "^7.0.0-alpha.31",
     "tailwindcss": "^3.1.6",
     "tsc-alias": "^1.7.0",
     "typescript": "^4.7.4",
@@ -68,6 +81,7 @@
   "dependencies": {
     "@headlessui/react": "^1.6.6",
     "@heroicons/react": "^1.0.6",
+    "@storybook/cli": "^7.0.0-alpha.31",
     "date-fns": "^2.29.1",
     "fhir-kit-client": "^1.9.1",
     "lodash": "^4.17.21"
