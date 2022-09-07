@@ -1,43 +1,9 @@
 const lineClampPlugin = require("@tailwindcss/line-clamp");
 const defaultTheme = require("tailwindcss/defaultTheme");
-const TailwindTheme = require("./tailwind.theme.cjs").TailwindTheme;
-
-const CLASS_PREFIX = "ctw-";
-
-const createCSSVar = (name, defaultVal) =>
-  `var(--${CLASS_PREFIX}-${name}, ${defaultVal})`;
-
-// Loop over properties and adds css variables so that the properties can be overwritten.
-const addCSSVarReference = (colorConfig) => {
-  const config = Object.entries(colorConfig.colors).map(
-    ([colorTitle, colorValueOrObj]) => {
-      if (typeof colorValueOrObj === "string") {
-        return { [colorTitle]: createCSSVar(colorTitle, colorValueOrObj) };
-      }
-      const transformedColorArr = Object.entries(colorValueOrObj).map(
-        ([colorName, value]) => {
-          return {
-            [colorName]: createCSSVar(`${colorTitle}-${colorName}`, value),
-          };
-        }
-      );
-
-      const flattenedTransformedColor = {};
-      for (let i = 0; i < transformedColorArr.length; i++) {
-        Object.assign(flattenedTransformedColor, transformedColorArr[i]);
-      }
-
-      return { [colorTitle]: flattenedTransformedColor };
-    }
-  );
-
-  const flattenedColors = {};
-  for (let i = 0; i < config.length; i++) {
-    Object.assign(flattenedColors, config[i]);
-  }
-
-  return { colors: flattenedColors };
-};
+const TailwindTheme = require("./tailwind-gen.theme.cjs").TailwindTheme;
+const CLASS_PREFIX = require("./tailwind-gen.theme.cjs").CLASS_PREFIX;
+const addCSSVarReference =
+  require("./tailwind-gen.theme.cjs").addCSSVarReference;
 
 module.exports = {
   content: ["./src/**/*.{ts,tsx,jsx,js}"],

@@ -1,10 +1,6 @@
 import { getFhirClient } from "@/fhir/client";
+import { mapToCSSVar, Style } from "@/styles/tailwind.theme";
 import * as React from "react";
-import { TailwindTheme } from "tailwind.theme";
-
-export type Theme = Partial<
-  Record<keyof typeof TailwindTheme["colors"], string>
->;
 
 export type Env = "dev" | "sandbox" | "production";
 
@@ -22,7 +18,7 @@ type CTWState = {
   authToken?: string;
   headers?: HeadersInit;
   authTokenURL?: string;
-  theme?: Theme;
+  theme?: Style;
   token?: CTWToken;
   actions: {
     handleAuth: () => Promise<CTWToken | null>;
@@ -35,15 +31,20 @@ type AuthTokenURLSpecified = { authToken?: never; authTokenURL: string };
 type CTWProviderProps = {
   children: React.ReactNode;
   env: Env;
-  theme?: Theme;
+  style?: Style;
+  theme?: any;
   headers?: HeadersInit;
 } & (AuthTokenSpecified | AuthTokenURLSpecified);
 
 const CTWStateContext = React.createContext<CTWState | undefined>(undefined);
 
-function CTWProvider({ theme, children, ...ctwState }: CTWProviderProps) {
+function CTWProvider({
+  style,
+  theme,
+  children,
+  ...ctwState
+}: CTWProviderProps) {
   const [token, setToken] = React.useState<CTWToken>();
-  console.log("we got some theme", theme);
 
   const handleAuth = React.useCallback(async () => {
     if (ctwState.authToken) return null;
@@ -72,10 +73,8 @@ function CTWProvider({ theme, children, ...ctwState }: CTWProviderProps) {
     [ctwState, handleAuth, token]
   );
 
-  // Casts Style as CSSProperties so that it can be passed as a style.
   return (
-    // TODO convert theme to CSS vars for "styles".
-    <div>
+    <div style={mapToCSSVar(style || {})}>
       <CTWStateContext.Provider value={providerState}>
         {children}
       </CTWStateContext.Provider>
