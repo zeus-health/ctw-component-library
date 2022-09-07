@@ -9,7 +9,7 @@ export const TableFullLengthRow = ({
 }) => (
   <tr>
     <td
-      className="ctw-text-content-light ctw-p-6 ctw-text-center"
+      className="ctw-p-6 ctw-text-center ctw-text-content-light"
       colSpan={colSpan}
     >
       {children}
