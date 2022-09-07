@@ -52,8 +52,8 @@ export const TailwindTheme = {
   },
 };
 
-// Style type is a nested partial
-export type Style = Subset<typeof TailwindTheme["colors"]>;
+// Theme type is a nested partial
+export type Theme = Subset<typeof TailwindTheme["colors"]>;
 type Subset<K> = {
   [attr in keyof K]?: K[attr] extends object ? Subset<K[attr]> : K[attr];
 };
@@ -64,7 +64,7 @@ export function nameCSSVar(name: string): string {
 }
 
 // Takes a theme and turns it into a CSSProperties that sets CSS Variables.
-export function mapToCSSVar(colorConfig: Style): any {
+export function mapToCSSVar(colorConfig: Theme): any {
   let properties: { [variable: string]: string } = {};
   const config = Object.entries(colorConfig).forEach(
     ([colorTitle, colorValueOrObj]) => {

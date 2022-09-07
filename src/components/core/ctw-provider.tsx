@@ -1,5 +1,5 @@
 import { getFhirClient } from "@/fhir/client";
-import { mapToCSSVar, Style } from "@/styles/tailwind.theme";
+import { mapToCSSVar, Theme } from "@/styles/tailwind.theme";
 import * as React from "react";
 
 export type Env = "dev" | "sandbox" | "production";
@@ -18,7 +18,7 @@ type CTWState = {
   authToken?: string;
   headers?: HeadersInit;
   authTokenURL?: string;
-  theme?: Style;
+  theme?: Theme;
   token?: CTWToken;
   actions: {
     handleAuth: () => Promise<CTWToken | null>;
@@ -31,15 +31,13 @@ type AuthTokenURLSpecified = { authToken?: never; authTokenURL: string };
 type CTWProviderProps = {
   children: React.ReactNode;
   env: Env;
-  style?: Style;
-  theme?: any;
+  theme?: Theme;
   headers?: HeadersInit;
 } & (AuthTokenSpecified | AuthTokenURLSpecified);
 
 const CTWStateContext = React.createContext<CTWState | undefined>(undefined);
 
 function CTWProvider({
-  style,
   theme,
   children,
   ...ctwState
@@ -74,7 +72,7 @@ function CTWProvider({
   );
 
   return (
-    <div style={mapToCSSVar(style || {})}>
+    <div style={mapToCSSVar(theme || {})}>
       <CTWStateContext.Provider value={providerState}>
         {children}
       </CTWStateContext.Provider>
