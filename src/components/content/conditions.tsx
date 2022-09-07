@@ -107,9 +107,13 @@ export function Conditions({ className, patientUPID }: ConditionsProps) {
     >
       <div className="ctw-flex ctw-h-11 ctw-items-center ctw-justify-between ctw-bg-bg-light ctw-p-3">
         <div className="ctw-title">Conditions</div>
-        <div className="ctw-link" onClick={() => setAddConditionIsOpen(true)}>
+        <button
+          type="button"
+          className="ctw-btn-clear ctw-link"
+          onClick={() => setAddConditionIsOpen(true)}
+        >
           + Add Condition
-        </div>
+        </button>
       </div>
 
       <div className="ctw-space-y-5 ctw-py-3 ctw-px-4 ">
