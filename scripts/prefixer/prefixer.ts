@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { spawnSync } from "child_process";
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import glob from "glob";
@@ -16,12 +17,12 @@ const prefix = "ctw-";
 async function main() {
   tailwindNoPrefixGen();
   await getClasses();
-  addPrefixes(prefix, filesToPrefix());
+  addPrefixes(filesToPrefix());
   rmSync("scripts/prefixer/tmp", { recursive: true }); // Clear the temp directory
 }
 
 function tailwindNoPrefixGen() {
-  let tailwindConfig = readFileSync("tailwind.config.cjs", "utf-8");
+  const tailwindConfig = readFileSync("tailwind.config.cjs", "utf-8");
   if (!existsSync("./scripts/prefixer/tmp")) {
     mkdirSync("./scripts/prefixer/tmp");
   }
@@ -29,7 +30,7 @@ function tailwindNoPrefixGen() {
     "scripts/prefixer/tmp/tailwind.config.cjs",
     tailwindConfig.replace(/prefix: "\S*",\n/g, "")
   );
-  let cssGenerate = spawnSync(
+  const cssGenerate = spawnSync(
     "npx tailwindcss -c ./scripts/prefixer/tmp/tailwind.config.cjs -i ./src/styles/tailwind.css -o ./scripts/prefixer/tmp/tailwind-gen-unprefixed.css",
     [],
     {
@@ -57,22 +58,22 @@ async function getClasses() {
 // Get the files the prefixes need to be added to
 function filesToPrefix(): string[] {
   return [
-    ...glob.sync(dir + ".ts"),
-    ...glob.sync(dir + ".tsx"),
-    ...glob.sync(dir + ".css", { ignore: cssIgnore }),
+    ...glob.sync(`${dir}.ts`),
+    ...glob.sync(`${dir}.tsx`),
+    ...glob.sync(`${dir}.css`, { ignore: cssIgnore }),
   ];
 }
 
 // Add classname prefixes to a series of files
-function addPrefixes(prefix: string, files: string[]) {
-  let stringsToPrefix = getStringsToPrefix();
+function addPrefixes(files: string[]) {
+  const stringsToPrefix = getStringsToPrefix();
 
-  for (const file of files) {
+  files.forEach((file) => {
     console.log(`Processing ${file}`);
     // Add prefix in CSS file
     let replaced = readFileSync(file, "utf-8");
     stringsToPrefix.forEach((toPrefixUnconverted) => {
-      let toPrefix = toPrefixUnconverted.toString();
+      const toPrefix = toPrefixUnconverted.toString();
       replaced = replaced.replace(
         // Replaces non-prefixed appearances of this class name that aren't part of a larger word. Be careful, this can replace things you didn't want to.
         getReplaceRegEx(file, toPrefix),
@@ -81,7 +82,7 @@ function addPrefixes(prefix: string, files: string[]) {
       console.log(`\tReplaced "${toPrefix}" with "ctw-${toPrefix}"`);
     });
     writeFileSync(file, replaced, "utf-8");
-  }
+  });
 }
 
 function getReplaceRegEx(file: string, toPrefix: string): RegExp {
@@ -89,31 +90,32 @@ function getReplaceRegEx(file: string, toPrefix: string): RegExp {
     // Add prefix in a CSS file
     return new RegExp(
       `(?<!\\w|\\w-)` + // Not part of another name (part 1)
-        `(?<!${prefix})` + // Not already prefixed
-        toPrefix +
-        `(?!\\w|-|:)`, // Not part of another name (part 2), nor a CSS property
-      "g"
-    );
-  } else {
-    // Add prefix in another file (ts/tsx)
-    return new RegExp(
-      `(?<!import .*)` + // Not an import
-        `(?<!\\w|\\w-|\\.)` + // Not part of another name, incl not already prefixed (part 1), not a property/function
-        `(?<!//.*)` + // Not part of a comment
-        `(?<!${prefix})` + // Not already prefixed
-        toPrefix +
-        `(?!\\w|-|\\.)`, // Not part of another name (part 2), not an object
+        `(?<!${prefix})${
+          // Not already prefixed
+          toPrefix
+        }(?!\\w|-|:)`, // Not part of another name (part 2), nor a CSS property
       "g"
     );
   }
+  // Add prefix in another file (ts/tsx)
+  return new RegExp(
+    `(?<!import .*)` + // Not an import
+      `(?<!\\w|\\w-|\\.)` + // Not part of another name, incl not already prefixed (part 1), not a property/function
+      `(?<!//.*)` + // Not part of a comment
+      `(?<!${prefix})${
+        // Not already prefixed
+        toPrefix
+      }(?!\\w|-|\\.)`, // Not part of another name (part 2), not an object
+    "g"
+  );
 }
 
 // Get just the list of the parts of the string that we need to prefix
-function getStringsToPrefix(): Set<String> {
-  let map = JSON.parse(readFileSync(mapFile, "utf-8")).selectors;
-  let stringsToPrefix = new Set<String>();
-  for (let oldClassName in map) {
-    if (oldClassName.charAt(0) == ".") {
+function getStringsToPrefix(): Set<string> {
+  const map = JSON.parse(readFileSync(mapFile, "utf-8")).selectors;
+  const stringsToPrefix = new Set<string>();
+  map.forEach((oldClassName: string) => {
+    if (oldClassName.charAt(0) === ".") {
       // Only select selectors starting with ., not for example things that start with #
       let toPrefix = oldClassName.substring(1); // Exclude the dot from counting as part of the class name
 
@@ -129,7 +131,7 @@ function getStringsToPrefix(): Set<String> {
         console.log(`Planning to prefix the string "${toPrefix}"`);
       }
     }
-  }
+  });
   return stringsToPrefix;
 }
 
