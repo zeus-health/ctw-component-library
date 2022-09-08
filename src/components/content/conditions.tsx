@@ -58,7 +58,7 @@ export function Conditions({ className }: ConditionsProps) {
         : {};
 
       const fhirClient = await getCTWFhirClient();
-      const { patientUPID } = await getPatientUPID();
+      const patientUPID = await getPatientUPID();
 
       // use AllSettled instead of all as we want confirmed to still if lens fails
       const [confirmedConditionInfo, notReviewedConditionInfo] =

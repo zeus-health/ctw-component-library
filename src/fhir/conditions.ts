@@ -16,7 +16,7 @@ export type ConditionFilters = {
 
 export async function getConfirmedConditions(
   fhirClient: Client,
-  patientID: string,
+  patientUPID: string,
   conditionFilters: ConditionFilters = {}
 ) {
   try {
@@ -24,7 +24,7 @@ export async function getConfirmedConditions(
       "Condition",
       fhirClient,
       {
-        patientID,
+        patientUPID,
         ...conditionFilters,
       }
     );
@@ -38,7 +38,7 @@ export async function getConfirmedConditions(
 
 export async function getLensConditions(
   fhirClient: Client,
-  patientID: string,
+  patientUPID: string,
   conditionFilters: ConditionFilters = {}
 ) {
   try {
@@ -46,7 +46,7 @@ export async function getLensConditions(
       "Condition",
       fhirClient,
       {
-        patientID,
+        patientUPID,
         ...conditionFilters,
       }
     );
