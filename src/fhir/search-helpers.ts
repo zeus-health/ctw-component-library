@@ -95,12 +95,11 @@ export async function searchLensRecords<T extends ResourceTypeString>(
 // pertaining to our patientID and system url.
 function patientSearchParams(
   resourceType: ResourceTypeString,
-  patientUPID: string,
-  systemURL?: string
+  patientUPID: string
 ): SearchParams {
   // No search param needed when not searching for a patientID.
 
-  const identifier = `${systemURL ?? SYSTEM_ZUS_UNIVERSAL_ID}|${patientUPID}`;
+  const identifier = `${SYSTEM_ZUS_UNIVERSAL_ID}|${patientUPID}`;
 
   switch (resourceType) {
     case "Coverage":
@@ -130,7 +129,7 @@ export async function getUPIDfromPatientID(
     const bundle = (await fhirClient.search({
       resourceType: "Patient",
       searchParams: {
-        ...patientSearchParams("Patient", patientID, systemURL),
+        ...patientSearchParams("Patient", patientID),
       },
     })) as fhir4.Bundle;
 
