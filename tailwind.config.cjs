@@ -1,6 +1,10 @@
 const lineClampPlugin = require("@tailwindcss/line-clamp");
 const defaultTheme = require("tailwindcss/defaultTheme");
-const {TailwindTheme, CLASS_PREFIX, nameCSSVar} = require("./tailwind-gen.theme.cjs");
+const {
+  TailwindTheme,
+  CLASS_PREFIX,
+  nameCSSVar,
+} = require("./tailwind-gen.theme.cjs");
 
 const createCSSVar = (name, defaultVal) =>
   `var(${nameCSSVar(name)}, ${defaultVal})`;

@@ -20,7 +20,12 @@ export function ConditionFormDrawer({
   const title = editing ? "Edit Condition" : "Add Condition";
 
   return (
-    <Drawer className={className} title={title} isOpen={isOpen} onClose={onClose}>
+    <Drawer
+      className={className}
+      title={title}
+      isOpen={isOpen}
+      onClose={onClose}
+    >
       <Drawer.Body>TODO</Drawer.Body>
       <Drawer.Footer>
         <div className="ctw-flex ctw-justify-end ctw-space-x-3 ctw-text-black ">

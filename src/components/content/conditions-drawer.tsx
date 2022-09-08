@@ -16,7 +16,7 @@ export function ConditionDrawer({
   className,
   condition,
   isOpen,
-  onClose
+  onClose,
 }: ConditionDrawerProps) {
   const data = condition
     ? [
@@ -33,7 +33,7 @@ export function ConditionDrawer({
         { label: "Recorder", value: condition.recorder },
         ...entryFromArray("Stage", condition.stages),
         ...entryFromArray("Evidence", condition.evidences),
-        ...entryFromArray("Note", condition.notes)
+        ...entryFromArray("Note", condition.notes),
       ]
     : [];
 

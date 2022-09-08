@@ -64,20 +64,16 @@ export function nameCSSVar(name: string): string {
 }
 
 // Takes a theme and turns it into a CSSProperties that sets CSS Variables.
-export function mapToCSSVar(colorConfig: Theme): any {
-  let properties: { [variable: string]: string } = {};
-  const config = Object.entries(colorConfig).forEach(
-    ([colorTitle, colorValueOrObj]) => {
-      if (typeof colorValueOrObj === "string") {
-        properties[nameCSSVar(colorTitle)] = colorValueOrObj;
-      } else {
-        Object.entries(colorValueOrObj).forEach(
-          ([colorName, value]) => {
-            properties[nameCSSVar(`${colorTitle}-${colorName}`)] = value;
-          }
-      );
-      }
+export function mapToCSSVar(colorConfig: Theme): { [key: string]: string } {
+  const properties: { [variable: string]: string } = {};
+  Object.entries(colorConfig).forEach(([colorTitle, colorValueOrObj]) => {
+    if (typeof colorValueOrObj === "string") {
+      properties[nameCSSVar(colorTitle)] = colorValueOrObj;
+    } else {
+      Object.entries(colorValueOrObj).forEach(([colorName, value]) => {
+        properties[nameCSSVar(`${colorTitle}-${colorName}`)] = value;
+      });
     }
-  );
+  });
   return properties;
 }

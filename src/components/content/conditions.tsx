@@ -1,19 +1,15 @@
-import cx from "classnames";
-import { useEffect, useState } from "react";
-
-import { useCTW } from "../core/ctw-provider";
-import { usePatient } from "../core/patient-provider";
-import { ToggleControl } from "../core/toggle-control";
-
-import { ConditionFormDrawer } from "./condition-form-drawer";
-import { ConditionsTableBase } from "./conditions-table-base";
-
 import {
   ConditionFilters,
   getConfirmedConditions,
   getLensConditions,
 } from "@/fhir/conditions";
 import { ConditionModel } from "@/models/conditions";
+import cx from "classnames";
+import { useEffect, useState } from "react";
+import { useCTW } from "../core/ctw-provider";
+import { ToggleControl } from "../core/toggle-control";
+import { ConditionFormDrawer } from "./condition-form-drawer";
+import { ConditionsTableBase } from "./conditions-table-base";
 
 export type ConditionsProps = {
   className?: string;
@@ -113,9 +109,13 @@ export function Conditions({ className }: ConditionsProps) {
     >
       <div className="ctw-flex ctw-h-11 ctw-items-center ctw-justify-between ctw-bg-bg-light ctw-p-3">
         <div className="ctw-title">Conditions</div>
-        <div className="ctw-link" onClick={() => setAddConditionIsOpen(true)}>
+        <button
+          type="button"
+          className="ctw-btn-clear ctw-link"
+          onClick={() => setAddConditionIsOpen(true)}
+        >
           + Add Condition
-        </div>
+        </button>
       </div>
 
       <div className="ctw-space-y-5 ctw-py-3 ctw-px-4 ">
@@ -131,6 +131,13 @@ export function Conditions({ className }: ConditionsProps) {
               conditions={confirmedConditions}
               isLoading={confirmedConditionsIsLoading}
               message={confirmedConditionsMessage}
+              rowActions={[
+                { name: "Edit", action: () => setAddConditionIsOpen(true) },
+                {
+                  name: "View History",
+                  action: () => setAddConditionIsOpen(true),
+                },
+              ]}
             />
           </div>
 
@@ -141,6 +148,13 @@ export function Conditions({ className }: ConditionsProps) {
               isLoading={notReviewedConditionsIsLoading}
               showTableHead={false}
               message={notReviewedConditionsMessage}
+              rowActions={[
+                { name: "Add", action: () => setAddConditionIsOpen(true) },
+                {
+                  name: "View History",
+                  action: () => setAddConditionIsOpen(true),
+                },
+              ]}
             />
           </div>
         </div>

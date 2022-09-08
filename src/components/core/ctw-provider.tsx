@@ -37,28 +37,20 @@ type CTWProviderProps = {
 
 const CTWStateContext = React.createContext<CTWState | undefined>(undefined);
 
-function CTWProvider({
-  theme,
-  children,
-  ...ctwState
-}: CTWProviderProps) {
+function CTWProvider({ theme, children, ...ctwState }: CTWProviderProps) {
   const [token, setToken] = React.useState<CTWToken>();
 
   const handleAuth = React.useCallback(async () => {
     if (ctwState.authToken) return null;
-    try {
-      const newToken = await checkOrRefreshAuth(
-        token,
-        ctwState.authTokenURL,
-        ctwState.headers
-      );
-      if (token?.accessToken === newToken.accessToken) return token;
-      setToken(newToken);
-      return newToken;
-    } catch (err) {
-      throw err; // Throw error from `checkOrRefreshAuth`.
-    }
-  }, []);
+    const newToken = await checkOrRefreshAuth(
+      token,
+      ctwState.authTokenURL,
+      ctwState.headers
+    );
+    if (token?.accessToken === newToken.accessToken) return token;
+    setToken(newToken);
+    return newToken;
+  }, [token, ctwState]);
 
   const providerState = React.useMemo(
     () => ({
@@ -100,20 +92,16 @@ async function checkOrRefreshAuth(
   headers?: HeadersInit
 ): Promise<CTWToken> {
   if (!token || Date.now() >= token.expiresAt + EXPIRY_PADDING_MS) {
-    try {
-      const response = await fetch(url as string, {
-        headers,
-      });
-      const newToken = await response.json();
-      return {
-        accessToken: newToken.access_token,
-        issuedTokenType: newToken.issued_token_type,
-        tokenType: newToken.token_type,
-        expiresAt: Date.now() + newToken.expires_in * 1000,
-      };
-    } catch (err) {
-      throw err; // TODO: Better error handling.
-    }
+    const response = await fetch(url as string, {
+      headers,
+    });
+    const newToken = await response.json();
+    return {
+      accessToken: newToken.access_token,
+      issuedTokenType: newToken.issued_token_type,
+      tokenType: newToken.token_type,
+      expiresAt: Date.now() + newToken.expires_in * 1000,
+    };
   }
   return token;
 }

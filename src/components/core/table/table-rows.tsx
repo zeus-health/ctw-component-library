@@ -1,6 +1,8 @@
+import { DotsHorizontalIcon } from "@heroicons/react/outline";
 import cx from "classnames";
 import { KeyboardEvent } from "react";
 
+import { DropdownMenu, MenuItems } from "../dropdown-menu";
 import { Spinner } from "../spinner";
 
 import type { MinRecordItem, TableColumn } from "./table";
@@ -14,6 +16,8 @@ type TableRowsProps<T extends MinRecordItem> = {
   isLoading: boolean;
   emptyMessage: string;
   showLeftTableBorderShadow: boolean;
+  showRightTableBorderShadow: boolean;
+  rowActions?: MenuItems[];
 };
 
 export const TableRows = <T extends MinRecordItem>({
@@ -23,6 +27,8 @@ export const TableRows = <T extends MinRecordItem>({
   isLoading,
   emptyMessage,
   showLeftTableBorderShadow,
+  showRightTableBorderShadow,
+  rowActions,
 }: TableRowsProps<T>) => {
   if (isLoading) {
     return (
@@ -62,7 +68,7 @@ export const TableRows = <T extends MinRecordItem>({
   return (
     <>
       {records.map((record, recordIndex) => (
-        <tr key={record.id} {...tableRowProps(record, recordIndex)}>
+        <tr {...tableRowProps(record, recordIndex)} key={record.id}>
           {columns.map((column, index) => (
             <TableDataCell
               key={column.title ?? index}
@@ -72,6 +78,20 @@ export const TableRows = <T extends MinRecordItem>({
               showLeftTableBorderShadow={showLeftTableBorderShadow}
             />
           ))}
+          {rowActions && (
+            <td
+              className={cx(
+                "ctw-table-action-column  ctw-min-w-[4rem] ctw-text-center ctw-text-icon-default",
+                {
+                  "ctw-table-action-column-sticky": showRightTableBorderShadow,
+                }
+              )}
+            >
+              <DropdownMenu menuItems={rowActions}>
+                <DotsHorizontalIcon className="ctw-w-5" />
+              </DropdownMenu>
+            </td>
+          )}
         </tr>
       ))}
     </>
