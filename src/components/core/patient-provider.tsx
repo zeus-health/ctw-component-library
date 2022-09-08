@@ -1,4 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import { useCTW } from "./ctw-provider";
 
@@ -9,19 +16,23 @@ type ThirdPartyID = {
   patientID: string;
   systemURL: string;
 };
-type CtwUPID = { patientUPID: string; patientID?: never; systemURL?: never };
+type PatientUPIDSpecified = {
+  patientUPID: string;
+  patientID?: never;
+  systemURL?: never;
+};
 
 type ProviderState = {
   patientUPIDPromise: Promise<string>;
 };
 
 type PatientProviderProps = {
-  children: React.ReactNode;
-} & (ThirdPartyID | CtwUPID);
+  children: ReactNode;
+} & (ThirdPartyID | PatientUPIDSpecified);
 
 const unresolvedPromise = new Promise<string>((resolve, reject) => {});
 
-export const CTWPatientContext = React.createContext<ProviderState>({
+export const CTWPatientContext = createContext<ProviderState>({
   patientUPIDPromise: unresolvedPromise,
 });
 
@@ -50,7 +61,7 @@ export function PatientProvider({
     setPatientUPIDPromise(getPatientUPID());
   }, [patientID, systemURL, patientUPID, getCTWFhirClient]);
 
-  const providerState = React.useMemo(
+  const providerState = useMemo(
     () => ({ patientUPIDPromise }),
     [patientUPIDPromise]
   );
@@ -62,6 +73,5 @@ export function PatientProvider({
 }
 
 export function usePatient() {
-  const { patientUPIDPromise } = useContext(CTWPatientContext);
-  return { patientUPIDPromise };
+  return useContext(CTWPatientContext);
 }

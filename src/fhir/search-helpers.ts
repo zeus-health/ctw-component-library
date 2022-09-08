@@ -33,8 +33,8 @@ export type SearchReturn<T extends ResourceTypeString> = {
 // Returns {bundle: fhir4.Bundle, total: number, resources: ResourceType[]}.
 // Usage: {bundle, total, resources: tasks} =
 //          searchAllRecords("Task", fhirClient, searchParams)
-// NOTE: "patientID" is a special searchParam that will correctly
-//       filter down to the resources pertaining to that patient ID.
+// NOTE: "patientUPID" is a special searchParam that will correctly
+//       filter down to the resources pertaining to that patient UPID.
 export async function searchAllRecords<T extends ResourceTypeString>(
   resourceType: T,
   fhirClient: Client,
@@ -51,18 +51,6 @@ export async function searchAllRecords<T extends ResourceTypeString>(
 
   const resources = getResources(bundle, resourceType);
   return { bundle, total: bundle.total ?? 0, resources };
-}
-
-// Like searchAllRecords, but filters out lens resources.
-export async function searchCommonRecords<T extends ResourceTypeString>(
-  resourceType: T,
-  fhirClient: Client,
-  searchParams?: SearchParams
-): Promise<SearchReturn<T>> {
-  return searchAllRecords(resourceType, fhirClient, {
-    ...searchParams,
-    "_tag:not": LENS_TAGS.join(","),
-  });
 }
 
 // Like searchAllRecords, but filters out lens & third party resources.
