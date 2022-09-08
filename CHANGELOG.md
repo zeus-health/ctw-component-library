@@ -1,5 +1,16 @@
 # ctw-component-library
 
+## 0.4.0
+
+### Minor Changes
+
+- 9d0f29b: Allows the client to pass in a theme object that redefines our overridable CSS variables for more customizability. The client can choose to pass in this obect, or simply make no change to their code and keep the default styling.
+- 101ed98: Adds sticky rightmost column that allows consumers to code different actions on a dropdown menu
+
+### Patch Changes
+
+- 57123f8: Treat more condition statuses as "active".
+
 ## 0.3.0
 
 ### Minor Changes
