@@ -1,6 +1,10 @@
 import Client from "fhir-kit-client";
 
-import { searchBuilderRecords, searchLensRecords } from "./search-helpers";
+import {
+  flattenArrayFilters,
+  searchBuilderRecords,
+  searchLensRecords,
+} from "./search-helpers";
 
 export type ClinicalStatus =
   | "active"
@@ -11,7 +15,7 @@ export type ClinicalStatus =
   | "resolved";
 
 export type ConditionFilters = {
-  "clinical-status"?: ClinicalStatus;
+  "clinical-status"?: ClinicalStatus | ClinicalStatus[];
 };
 
 export async function getConfirmedConditions(
@@ -25,7 +29,7 @@ export async function getConfirmedConditions(
       fhirClient,
       {
         patientUPID,
-        ...conditionFilters,
+        ...flattenArrayFilters(conditionFilters),
       }
     );
 
