@@ -42,7 +42,7 @@ export function Conditions({ className }: ConditionsProps) {
   const [includeInactive, setIncludeInactive] = useState(true);
   const { getCTWFhirClient } = useCTW();
 
-  const { getPatientUPID } = usePatient();
+  const { patientUPIDPromise } = usePatient();
 
   const handleFormChange = () => setIncludeInactive(!includeInactive);
 
@@ -55,7 +55,7 @@ export function Conditions({ className }: ConditionsProps) {
         : {};
 
       const fhirClient = await getCTWFhirClient();
-      const patientUPID = await getPatientUPID();
+      const patientUPID = await patientUPIDPromise;
 
       // use AllSettled instead of all as we want confirmed to still if lens fails
       const [confirmedConditionInfo, notReviewedConditionInfo] =
@@ -97,9 +97,7 @@ export function Conditions({ className }: ConditionsProps) {
       }
     }
     load();
-    // Including getCTWFhirClient causes an infinite loop so disabling this
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [includeInactive]);
+  }, [includeInactive, patientUPIDPromise, getCTWFhirClient]);
 
   return (
     <div

@@ -129,7 +129,7 @@ export async function getUPIDfromPatientID(
     const bundle = (await fhirClient.search({
       resourceType: "Patient",
       searchParams: {
-        ...patientSearchParams("Patient", patientID),
+        identifier: `${systemURL}|${patientID}`,
       },
     })) as fhir4.Bundle;
 

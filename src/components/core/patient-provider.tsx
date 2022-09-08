@@ -1,31 +1,59 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { useCTW } from "./ctw-provider";
 
 import { getUPIDfromPatientID } from "@/fhir/search-helpers";
 
-type ThirdPartyID = { patientID: string; systemURL: string };
+type ThirdPartyID = {
+  patientUPID?: never;
+  patientID: string;
+  systemURL: string;
+};
+type CtwUPID = { patientUPID: string; patientID?: never; systemURL?: never };
+
+type ProviderState = {
+  patientUPIDPromise: Promise<string>;
+};
 
 type PatientProviderProps = {
   children: React.ReactNode;
-} & ThirdPartyID;
+} & (ThirdPartyID | CtwUPID);
 
-export const CTWPatientContext = React.createContext<ThirdPartyID>({
-  patientID: "",
-  systemURL: "",
+const unresolvedPromise = new Promise<string>((resolve, reject) => {});
+
+export const CTWPatientContext = React.createContext<ProviderState>({
+  patientUPIDPromise: unresolvedPromise,
 });
 
 export function PatientProvider({
   children,
-  ...ctwPatientState
+  patientUPID,
+  patientID,
+  systemURL,
 }: PatientProviderProps) {
-  const providerState = React.useMemo(
-    () => ({
-      ...ctwPatientState,
-    }),
-    [ctwPatientState]
-  );
+  const [patientUPIDPromise, setPatientUPIDPromise] =
+    useState(unresolvedPromise);
+  const { getCTWFhirClient } = useCTW();
 
+  useEffect(() => {
+    async function getPatientUPID() {
+      if (patientUPID) {
+        return patientUPID;
+      }
+      if (patientID && systemURL) {
+        const fhirClient = await getCTWFhirClient();
+        return getUPIDfromPatientID(fhirClient, patientID, systemURL);
+      }
+      // This should not actually be possible.
+      throw new Error("Patient UPID or patient id/system url was not defined.");
+    }
+    setPatientUPIDPromise(getPatientUPID());
+  }, [patientID, systemURL, patientUPID, getCTWFhirClient]);
+
+  const providerState = React.useMemo(
+    () => ({ patientUPIDPromise }),
+    [patientUPIDPromise]
+  );
   return (
     <CTWPatientContext.Provider value={providerState}>
       {children}
@@ -34,17 +62,6 @@ export function PatientProvider({
 }
 
 export function usePatient() {
-  const context = useContext(CTWPatientContext);
-  const { getCTWFhirClient } = useCTW();
-
-  async function getPatientUPID() {
-    const fhirClient = await getCTWFhirClient();
-
-    return getUPIDfromPatientID(
-      fhirClient,
-      context.patientID,
-      context.systemURL
-    );
-  }
-  return { getPatientUPID };
+  const { patientUPIDPromise } = useContext(CTWPatientContext);
+  return { patientUPIDPromise };
 }
