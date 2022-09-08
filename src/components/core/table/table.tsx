@@ -1,6 +1,8 @@
 import cx from "classnames";
 import { ReactNode, useEffect, useRef, useState } from "react";
 
+import { MenuItems } from "../dropdown-menu";
+
 import { TableHead } from "./table-head";
 import { TableRows } from "./table-rows";
 
@@ -26,6 +28,7 @@ export type TableProps<T extends MinRecordItem> = {
   isLoading?: boolean;
   message?: string;
   showTableHead?: boolean;
+  rowActions?: MenuItems[];
 };
 
 export type TableBaseProps<T extends MinRecordItem> = Omit<
@@ -41,15 +44,14 @@ export const Table = <T extends MinRecordItem>({
   isLoading = false,
   message = "No records found",
   showTableHead = true,
+  rowActions,
 }: TableProps<T>) => {
   const tableRef = useRef<HTMLTableElement>(null);
   const containerTableRef = useRef<HTMLTableElement>(null);
-  const [showLeftTableBorderShadow, setShowLeftTableBorderShadow] = useState(
-    false
-  );
-  const [showRightTableBorderShadow, setShowRightTableBorderShadow] = useState(
-    false
-  );
+  const [showLeftTableBorderShadow, setShowLeftTableBorderShadow] =
+    useState(false);
+  const [showRightTableBorderShadow, setShowRightTableBorderShadow] =
+    useState(false);
   const handleShowingStickyTableScrollBorder = () => {
     if (containerTableRef.current && tableRef.current) {
       const containerRightSide =
@@ -81,7 +83,7 @@ export const Table = <T extends MinRecordItem>({
         );
       }
     };
-  }, []);
+  }, [containerTableRef]);
 
   return (
     <div className={cx("ctw-py-2 ctw-align-middle", className)}>
@@ -91,7 +93,8 @@ export const Table = <T extends MinRecordItem>({
         className={cx(
           "ctw-relative ctw-overflow-hidden ctw-rounded-lg ctw-p-px",
           {
-            "ctw-table-scroll-right-shadow": showRightTableBorderShadow,
+            "ctw-table-scroll-right-shadow":
+              !rowActions && showRightTableBorderShadow,
           }
         )}
       >
@@ -100,13 +103,15 @@ export const Table = <T extends MinRecordItem>({
           className="ctw-scrollbar ctw-flex ctw-overflow-x-auto ctw-rounded-lg ctw-shadow ctw-ring-1 ctw-ring-divider-light ctw-ring-opacity-5"
         >
           <table
-            className=" ctw-divide-divider-main ctw-table-base ctw-divide-y ctw-w-full"
+            className=" ctw-table-base ctw-w-full ctw-divide-y ctw-divide-divider-main"
             ref={tableRef}
           >
             {showTableHead && (
               <TableHead
                 columns={columns}
                 showLeftTableBorderShadow={showLeftTableBorderShadow}
+                showRightTableBorderShadow={showRightTableBorderShadow}
+                rowActions={rowActions}
               />
             )}
 
@@ -118,6 +123,8 @@ export const Table = <T extends MinRecordItem>({
                 isLoading={isLoading}
                 emptyMessage={message}
                 showLeftTableBorderShadow={showLeftTableBorderShadow}
+                showRightTableBorderShadow={showRightTableBorderShadow}
+                rowActions={rowActions}
               />
             </tbody>
           </table>

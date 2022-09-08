@@ -1,0 +1,7 @@
+node_modules
+
+/dist
+.env
+
+/src/styles/tailwind-gen.css
+tailwind-gen.theme.cjs

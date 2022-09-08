@@ -1,6 +1,6 @@
-import * as React from "react";
-
 import { getFhirClient } from "@/fhir/client";
+import { mapToCSSVar, Theme } from "@/styles/tailwind.theme";
+import * as React from "react";
 
 export type Env = "dev" | "sandbox" | "production";
 
@@ -18,7 +18,7 @@ type CTWState = {
   authToken?: string;
   headers?: HeadersInit;
   authTokenURL?: string;
-  theme?: any;
+  theme?: Theme;
   token?: CTWToken;
   actions: {
     handleAuth: () => Promise<CTWToken | null>;
@@ -31,30 +31,26 @@ type AuthTokenURLSpecified = { authToken?: never; authTokenURL: string };
 type CTWProviderProps = {
   children: React.ReactNode;
   env: Env;
-  theme?: any;
+  theme?: Theme;
   headers?: HeadersInit;
 } & (AuthTokenSpecified | AuthTokenURLSpecified);
 
 const CTWStateContext = React.createContext<CTWState | undefined>(undefined);
 
-function CTWProvider({ children, ...ctwState }: CTWProviderProps) {
+function CTWProvider({ theme, children, ...ctwState }: CTWProviderProps) {
   const [token, setToken] = React.useState<CTWToken>();
 
   const handleAuth = React.useCallback(async () => {
     if (ctwState.authToken) return null;
-    try {
-      const newToken = await checkOrRefreshAuth(
-        token,
-        ctwState.authTokenURL,
-        ctwState.headers
-      );
-      if (token?.accessToken === newToken.accessToken) return token;
-      setToken(newToken);
-      return newToken;
-    } catch (err) {
-      throw err; // Throw error from `checkOrRefreshAuth`.
-    }
-  }, []);
+    const newToken = await checkOrRefreshAuth(
+      token,
+      ctwState.authTokenURL,
+      ctwState.headers
+    );
+    if (token?.accessToken === newToken.accessToken) return token;
+    setToken(newToken);
+    return newToken;
+  }, [token, ctwState]);
 
   const providerState = React.useMemo(
     () => ({
@@ -68,9 +64,11 @@ function CTWProvider({ children, ...ctwState }: CTWProviderProps) {
   );
 
   return (
-    <CTWStateContext.Provider value={providerState}>
-      {children}
-    </CTWStateContext.Provider>
+    <div style={mapToCSSVar(theme || {})}>
+      <CTWStateContext.Provider value={providerState}>
+        {children}
+      </CTWStateContext.Provider>
+    </div>
   );
 }
 
@@ -94,20 +92,16 @@ async function checkOrRefreshAuth(
   headers?: HeadersInit
 ): Promise<CTWToken> {
   if (!token || Date.now() >= token.expiresAt + EXPIRY_PADDING_MS) {
-    try {
-      const response = await fetch(url as string, {
-        headers,
-      });
-      const newToken = await response.json();
-      return {
-        accessToken: newToken.access_token,
-        issuedTokenType: newToken.issued_token_type,
-        tokenType: newToken.token_type,
-        expiresAt: Date.now() + newToken.expires_in * 1000,
-      };
-    } catch (err) {
-      throw err;
-    }
+    const response = await fetch(url as string, {
+      headers,
+    });
+    const newToken = await response.json();
+    return {
+      accessToken: newToken.access_token,
+      issuedTokenType: newToken.issued_token_type,
+      tokenType: newToken.token_type,
+      expiresAt: Date.now() + newToken.expires_in * 1000,
+    };
   }
   return token;
 }

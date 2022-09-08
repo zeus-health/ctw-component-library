@@ -44,7 +44,7 @@ export function Drawer({
           afterLeave={onAfterClosed}
         >
           <div className="ctw-fixed ctw-inset-0  ctw-transition-opacity">
-            <div className="ctw-bg-content-light ctw-opacity-75 ctw-w-full ctw-h-full" />
+            <div className="ctw-h-full ctw-w-full ctw-bg-content-light ctw-opacity-75" />
           </div>
         </Transition.Child>
 
@@ -62,7 +62,7 @@ export function Drawer({
               >
                 <Dialog.Panel className="ctw-pointer-events-auto ctw-w-screen ctw-max-w-xl">
                   <div className="ctw-flex ctw-h-full ctw-flex-col ctw-bg-white ctw-shadow-xl">
-                    <div className="ctw-flex ctw-h-14 ctw-flex-shrink-0 ctw-items-center ctw-justify-between ctw-mx-6 ctw-border-b ctw-border-content-lighter ctw-border-solid">
+                    <div className="ctw-mx-6 ctw-flex ctw-h-14 ctw-flex-shrink-0 ctw-items-center ctw-justify-between ctw-border-b ctw-border-solid ctw-border-content-lighter">
                       <Dialog.Title className="ctw-text-lg ctw-font-semibold ctw-uppercase">
                         {title}
                       </Dialog.Title>
