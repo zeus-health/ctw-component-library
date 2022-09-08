@@ -1,19 +1,23 @@
-import { ComponentMeta, ComponentStoryFn } from "@storybook/react";
+import { ComponentMeta, ComponentStoryObj } from "@storybook/react";
 
-import { Spinner } from "@/components/core/spinner";
+import { Spinner as SpinnerComponent } from "@/components/core/spinner";
 
 import "@/styles/tailwind-gen.css";
 
 export default {
   title: "Core/Spinner",
-  component: Spinner,
+  component: SpinnerComponent,
   argTypes: {
-    className: { name: "className", type: { name: "string", required: false } },
+    className: {
+      name: "className",
+      type: { name: "string", required: false },
+      control: { type: "text" },
+    },
   },
-} as ComponentMeta<typeof Spinner>;
+} as ComponentMeta<typeof SpinnerComponent>;
 
-const Template: ComponentStoryFn<typeof Spinner> = (args) => (
-  <Spinner {...args} />
-);
-
-export const Primary = Template.bind({});
+export const Spinner: ComponentStoryObj<typeof SpinnerComponent> = {
+  args: {
+    className: "",
+  },
+};
