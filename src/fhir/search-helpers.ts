@@ -1,5 +1,5 @@
 import Client, { SearchParams } from "fhir-kit-client";
-import { find } from "lodash";
+import { find, mapValues } from "lodash";
 
 import { getResources } from "./bundle";
 import {
@@ -89,6 +89,16 @@ export async function searchLensRecords<T extends ResourceTypeString>(
     ...searchParams,
     _tag: LENS_TAGS.join(","),
   });
+}
+
+// Returns a new filers object with every value that was an array,
+// flattened into a single comma separated string.
+// This way we can treat array values as ORs in FHIR requests.
+// E.g. {status: ['active', 'relapse']} -> {status: "active, relapse"}.
+export function flattenArrayFilters(filters: { [key: string]: unknown }) {
+  return mapValues(filters, (value) =>
+    Array.isArray(value) ? value.join(", ") : value
+  );
 }
 
 // Returns the needed search params to filter resources down to those

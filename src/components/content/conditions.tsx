@@ -50,7 +50,7 @@ export function Conditions({ className }: ConditionsProps) {
     async function load() {
       const conditionFilter: ConditionFilters = includeInactive
         ? {
-            "clinical-status": "active",
+            "clinical-status": ["active", "recurrence", "relapse"],
           }
         : {};
 
@@ -61,7 +61,7 @@ export function Conditions({ className }: ConditionsProps) {
       const [confirmedConditionInfo, notReviewedConditionInfo] =
         await Promise.allSettled([
           getConfirmedConditions(fhirClient, patientUPID, conditionFilter),
-          getLensConditions(fhirClient, patientUPID, conditionFilter),
+          getLensConditions(fhirClient, patientUPID),
         ]);
 
       setNotConfirmedConditionsIsLoading(false);
