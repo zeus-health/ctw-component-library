@@ -1,4 +1,23 @@
+import { TableColumn } from "@/components/core/table/table";
 import { ConditionModel } from "@/models/conditions";
+
+export const CONDITION_COLUMNS: TableColumn<ConditionModel>[] = [
+  {
+    title: "Condition",
+    dataIndex: "display",
+    className: "ctw-w-[50%]",
+  },
+  {
+    title: "Status",
+    dataIndex: "clinicalStatus",
+    className: "ctw-w-[20%]",
+  },
+  {
+    title: "Recorded Date",
+    dataIndex: "recordedDate",
+    className: "ctw-w-[30%]",
+  },
+];
 
 // Attention deficit
 export const Condition1: fhir4.Condition = {
