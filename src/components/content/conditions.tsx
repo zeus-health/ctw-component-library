@@ -7,6 +7,7 @@ import { ConditionModel } from "@/models/conditions";
 import cx from "classnames";
 import { useEffect, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
+import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionFormDrawer } from "./condition-form-drawer";
 import { ConditionsTableBase } from "./conditions-table-base";

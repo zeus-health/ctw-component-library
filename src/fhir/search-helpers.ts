@@ -28,36 +28,6 @@ export type SearchReturn<T extends ResourceTypeString> = {
   resources: ResourceType<T>[];
 };
 
-// Returns the needed search params to filter resources down to those
-// pertaining to our patientID and system url.
-function patientSearchParams(
-  resourceType: ResourceTypeString,
-  patientUPID: string,
-  systemURL?: string
-): SearchParams {
-  // No search param needed when not searching for a patientID.
-
-  const identifier = `${systemURL ?? SYSTEM_ZUS_UNIVERSAL_ID}|${patientUPID}`;
-
-  switch (resourceType) {
-    case "Coverage":
-      return { "beneficiary.identifier": identifier };
-    case "Condition":
-    case "Encounter":
-    case "MedicationAdministration":
-    case "MedicationDispense":
-    case "MedicationRequest":
-    case "MedicationStatement":
-      return { "patient.identifier": identifier };
-    case "Patient":
-      return { identifier };
-    default:
-      throw new Error(
-        `Unhandled patient search for resource type: ${resourceType}`
-      );
-  }
-}
-
 // Performs a FHIR search for the given resourceType accross all resources
 // the user has access to. This can include lens and third party resources!
 // Returns {bundle: fhir4.Bundle, total: number, resources: ResourceType[]}.
@@ -121,6 +91,36 @@ export async function searchLensRecords<T extends ResourceTypeString>(
   });
 }
 
+// Returns the needed search params to filter resources down to those
+// pertaining to our patientID and system url.
+function patientSearchParams(
+  resourceType: ResourceTypeString,
+  patientUPID: string,
+  systemURL?: string
+): SearchParams {
+  // No search param needed when not searching for a patientID.
+
+  const identifier = `${systemURL ?? SYSTEM_ZUS_UNIVERSAL_ID}|${patientUPID}`;
+
+  switch (resourceType) {
+    case "Coverage":
+      return { "beneficiary.identifier": identifier };
+    case "Condition":
+    case "Encounter":
+    case "MedicationAdministration":
+    case "MedicationDispense":
+    case "MedicationRequest":
+    case "MedicationStatement":
+      return { "patient.identifier": identifier };
+    case "Patient":
+      return { identifier };
+    default:
+      throw new Error(
+        `Unhandled patient search for resource type: ${resourceType}`
+      );
+  }
+}
+
 export async function getUPIDfromPatientID(
   fhirClient: Client,
   patientID: string,
@@ -140,7 +140,7 @@ export async function getUPIDfromPatientID(
       system: SYSTEM_ZUS_UNIVERSAL_ID,
     })?.value as string;
 
-    return { patientUPID };
+    return patientUPID;
   } catch (e) {
     throw new Error(
       `Failed fetching patient UPID information for patient from patientID ${patientID} with system ${systemURL}: ${e}`
