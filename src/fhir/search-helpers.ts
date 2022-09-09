@@ -79,6 +79,18 @@ export async function searchLensRecords<T extends ResourceTypeString>(
   });
 }
 
+// Like searchAllRecords, but filters out lens resources.
+export async function searchCommonRecords<T extends ResourceTypeString>(
+  resourceType: T,
+  fhirClient: Client,
+  searchParams?: SearchParams
+): Promise<SearchReturn<T>> {
+  return searchAllRecords(resourceType, fhirClient, {
+    ...searchParams,
+    "_tag:not": LENS_TAGS.join(","),
+  });
+}
+
 // Returns a new filers object with every value that was an array,
 // flattened into a single comma separated string.
 // This way we can treat array values as ORs in FHIR requests.
@@ -90,12 +102,15 @@ export function flattenArrayFilters(filters: { [key: string]: unknown }) {
 }
 
 // Returns the needed search params to filter resources down to those
-// pertaining to our patientID and system url.
+// pertaining to our patientUPID.
 function patientSearchParams(
   resourceType: ResourceTypeString,
-  patientUPID: string
+  patientUPID?: string
 ): SearchParams {
-  // No search param needed when not searching for a patientID.
+  // No search param needed when not searching for a patientUPID.
+  if (!patientUPID) {
+    return {};
+  }
 
   const identifier = `${SYSTEM_ZUS_UNIVERSAL_ID}|${patientUPID}`;
 
