@@ -4,9 +4,11 @@ import {
   getLensConditions,
 } from "@/fhir/conditions";
 import { ConditionModel } from "@/models/conditions";
+import { conditionSchema, getConditionFormData } from "@/utils/helpers";
 import cx from "classnames";
 import { useEffect, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
+import { DrawerFormWithFields } from "../core/forms/drawer-form-with-fields";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionFormDrawer } from "./condition-form-drawer";
 import { ConditionsTableBase } from "./conditions-table-base";
@@ -98,6 +100,16 @@ export function Conditions({ className, patientUPID }: ConditionsProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [patientUPID, includeInactive]);
 
+  const newMedicationStatement = new ConditionModel({
+    resourceType: "Condition",
+    subject: { reference: `Patient/${patient.id}`, display: patient.display },
+    informationSource: {
+      type: "Organization",
+      reference: `Organization/${patient.organization?.id}`,
+      display: patient.organization?.name,
+    },
+  });
+
   return (
     <div
       className={cx(
@@ -156,6 +168,15 @@ export function Conditions({ className, patientUPID }: ConditionsProps) {
           </div>
         </div>
       </div>
+
+      <DrawerFormWithFields
+        title="Add Condition"
+        action="createMedicationStatement"
+        data={getConditionFormData(newMedicationStatement)}
+        schema={conditionSchema}
+        isOpen={addConditionIsOpen}
+        onClose={() => setAddConditionIsOpen(false)}
+      />
 
       <ConditionFormDrawer
         isOpen={addConditionIsOpen}
