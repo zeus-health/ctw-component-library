@@ -21,7 +21,7 @@ type CTWState = {
   theme?: Theme;
   token?: CTWToken;
   actions: {
-    handleAuth: () => Promise<CTWToken | null>;
+    handleAuth: () => Promise<string>;
   };
 };
 
@@ -41,15 +41,19 @@ function CTWProvider({ theme, children, ...ctwState }: CTWProviderProps) {
   const [token, setToken] = React.useState<CTWToken>();
 
   const handleAuth = React.useCallback(async () => {
-    if (ctwState.authToken) return null;
+    if (ctwState.authToken) {
+      return ctwState.authToken;
+    }
+
     const newToken = await checkOrRefreshAuth(
       token,
       ctwState.authTokenURL,
       ctwState.headers
     );
-    if (token?.accessToken === newToken.accessToken) return token;
-    setToken(newToken);
-    return newToken;
+    if (token?.accessToken !== newToken.accessToken) {
+      setToken(newToken);
+    }
+    return newToken.accessToken;
   }, [token, ctwState]);
 
   const providerState = React.useMemo(
@@ -78,11 +82,10 @@ function useCTW() {
     throw new Error("useCTW must be used within a CTWProvider");
   }
 
-  const getCTWFhirClient = async () => {
-    const token = await context.actions.handleAuth();
-    const tokenString = context.authToken ?? (token?.accessToken as string);
-    return getFhirClient(context.env, tokenString);
-  };
+  const getCTWFhirClient = React.useCallback(async () => {
+    const authToken = await context.actions.handleAuth();
+    return getFhirClient(context.env, authToken);
+  }, [context]);
   return { getCTWFhirClient, theme: context.theme };
 }
 

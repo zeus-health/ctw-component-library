@@ -32,7 +32,6 @@ export async function getConfirmedConditions(
         ...flattenArrayFilters(conditionFilters),
       }
     );
-
     return conditions.filter(
       (condition) => condition.asserter?.type !== "Patient"
     );
@@ -55,7 +54,6 @@ export async function getLensConditions(
         ...conditionFilters,
       }
     );
-
     return conditions.filter(
       (condition) => condition.asserter?.type !== "Patient"
     );
