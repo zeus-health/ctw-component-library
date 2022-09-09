@@ -43,7 +43,10 @@ export const FormField = ({
       return (
         <textarea
           rows={lines}
-          className={cx({ error }, "ctw-w-full", "ctw-whitespace-pre-wrap")}
+          className={cx(
+            { error },
+            "ctw-listbox-textarea ctw-w-full ctw-whitespace-pre-wrap"
+          )}
           defaultValue={value}
           disabled={inputProps.disabled}
           readOnly={readonly}
@@ -55,7 +58,7 @@ export const FormField = ({
       <input
         {...inputProps}
         type={inputProps.type}
-        className={cx({ error }, "ctw-w-full")}
+        className={cx({ error }, "ctw-listbox-input ctw-w-full")}
         readOnly={readonly}
         defaultValue={value}
       />
@@ -64,7 +67,7 @@ export const FormField = ({
 
   return (
     <>
-      <div className="relative">
+      <div className="ctw-relative">
         {getFieldComponent()}
         {readonly && (
           <LockClosedIcon className="ctw-absolute ctw-right-3 ctw-top-1/2 ctw-h-4 ctw-w-4 ctw--translate-y-1/2 ctw-transform ctw-fill-content-lighter" />

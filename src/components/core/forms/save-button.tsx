@@ -10,7 +10,9 @@ export const SaveButton = ({ submitting, action }: SaveButtonProps) => (
   <button
     type="submit"
     disabled={submitting}
-    className={cx("ctw-btn-primary ctw-w-28 ctw-whitespace-nowrap")}
+    className={cx(
+      "ctw-btn-primary ctw-save-button ctw-w-28 ctw-whitespace-nowrap"
+    )}
     name="action"
     value={action}
   >

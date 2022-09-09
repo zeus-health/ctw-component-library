@@ -30,7 +30,7 @@ export const DrawerFormWithFields = ({
   return (
     <DrawerForm title={title} action={action} {...drawerFormProps}>
       {(submitting, errors) => (
-        <div className="space-y-6">
+        <div className="ctw-space-y-6">
           {data.map(({ label, field, value, lines, readonly }) => {
             const error = errors?.[field];
             // Parse out options if there are any.
@@ -39,14 +39,14 @@ export const DrawerFormWithFields = ({
             return (
               <div
                 key={label}
-                className="space-y-1.5 text-sm font-medium text-gray-700"
+                className="ctw-space-y-1.5 ctw-text-sm ctw-font-medium ctw-text-content-black"
               >
-                <div className="flex justify-between">
+                <div className="ctw-flex ctw-justify-between">
                   <label className={cx({ error }, "leading-tight")}>
                     {label}
                   </label>
                   {isOptional(schema, field) && (
-                    <p className="right-0 inline-block text-xs text-gray-600">
+                    <p className="ctw-right-0 ctw-inline-block ctw-text-xs ctw-text-content-black">
                       Optional
                     </p>
                   )}

@@ -25,10 +25,13 @@ export const DrawerForm = ({
 
   return (
     <Drawer {...drawerProps} onClose={onClose} onAfterClosed={reset}>
-      <form method="POST" className="flex h-full flex-col overflow-y-auto">
+      <form
+        method="POST"
+        className="ctw-flex ctw-h-full ctw-flex-col ctw-overflow-y-auto"
+      >
         <Drawer.Body>{children(isSubmitting, errors)}</Drawer.Body>
         <Drawer.Footer>
-          <div className="flex h-full justify-end space-x-3">
+          <div className="ctw-flex ctw-h-full ctw-justify-end ctw-space-x-3">
             <button type="button" className="btn-default" onClick={onClose}>
               Cancel
             </button>

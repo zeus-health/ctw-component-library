@@ -11,7 +11,6 @@ import { useCTW } from "../core/ctw-provider";
 import { DrawerFormWithFields } from "../core/forms/drawer-form-with-fields";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
-import { ConditionFormDrawer } from "./condition-form-drawer";
 import { ConditionsTableBase } from "./conditions-table-base";
 
 export type ConditionsProps = {
@@ -101,6 +100,11 @@ export function Conditions({ className }: ConditionsProps) {
     load();
   }, [includeInactive, patientUPIDPromise, getCTWFhirClient]);
 
+  const newCondition = new ConditionModel({
+    resourceType: "Condition",
+    subject: { reference: `Patient/`, display: "" },
+  });
+
   return (
     <div
       className={cx(
@@ -164,16 +168,16 @@ export function Conditions({ className }: ConditionsProps) {
       <DrawerFormWithFields
         title="Add Condition"
         action="createMedicationStatement"
-        data={getConditionFormData(newMedicationStatement)}
+        data={getConditionFormData(newCondition)}
         schema={conditionSchema}
         isOpen={addConditionIsOpen}
         onClose={() => setAddConditionIsOpen(false)}
       />
 
-      <ConditionFormDrawer
+      {/* <ConditionFormDrawer
         isOpen={addConditionIsOpen}
         onClose={() => setAddConditionIsOpen(false)}
-      />
+      /> */}
     </div>
   );
 }

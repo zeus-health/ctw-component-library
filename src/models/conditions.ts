@@ -5,8 +5,8 @@ import { SYSTEM_ICD10 } from "../fhir/system-urls";
 export class ConditionModel {
   private resource: fhir4.Condition;
 
-  constructor(cond: fhir4.Condition) {
-    this.resource = cond;
+  constructor(condition: fhir4.Condition) {
+    this.resource = condition;
   }
 
   get abatement(): string | undefined {

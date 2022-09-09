@@ -42,15 +42,15 @@ export default function SelectField({
             </span>
           </Listbox.Button>
 
-          <Listbox.Options className="ctw-max-h-60 ctw-overflow-auto ctw-rounded-md ctw-bg-white ctw-py-1 ctw-text-base ctw-shadow-lg ctw-ring-1 ctw-ring-black ctw-ring-opacity-5 focus:ctw-outline-none sm:ctw-text-sm">
+          <Listbox.Options className="ctw-listbox ctw-max-h-60 ctw-overflow-auto ctw-rounded-md ctw-bg-white ctw-py-1 ctw-text-base ctw-shadow-lg ctw-ring-1 ctw-ring-black ctw-ring-opacity-5 focus:ctw-outline-none sm:ctw-text-sm">
             {[noneSelected, ...options].map((option) => (
               <Listbox.Option
                 key={option}
                 className={({ active }) =>
                   `ctw-relative ctw-cursor-default ctw-select-none ctw-py-2 ctw-pr-4 ctw-pl-10 ${
                     active
-                      ? "ctw-bg-primary-100 ctw-text-primary-900"
-                      : "ctw-text-gray-900"
+                      ? "ctw-bg-primary-light ctw-text-primary-dark"
+                      : "ctw-text-content-black"
                   }`
                 }
                 value={option === noneSelected ? undefined : option}
@@ -65,7 +65,7 @@ export default function SelectField({
                       {option}
                     </span>
                     {isSelected ? (
-                      <span className="ctw-text-primary-600 ctw-absolute ctw-inset-y-0 ctw-left-0 ctw-flex ctw-items-center ctw-pl-3">
+                      <span className="ctw-absolute ctw-inset-y-0 ctw-left-0 ctw-flex ctw-items-center ctw-pl-3 ctw-text-primary-main">
                         <CheckIcon
                           className="ctw-h-5 ctw-w-5"
                           aria-hidden="true"
