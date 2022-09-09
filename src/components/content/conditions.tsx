@@ -7,19 +7,19 @@ import { ConditionModel } from "@/models/conditions";
 import cx from "classnames";
 import { useEffect, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
+import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionFormDrawer } from "./condition-form-drawer";
 import { ConditionsTableBase } from "./conditions-table-base";
 
 export type ConditionsProps = {
   className?: string;
-  patientUPID: string;
 };
 
 const DEFAULT_ERR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
 
-export function Conditions({ className, patientUPID }: ConditionsProps) {
+export function Conditions({ className }: ConditionsProps) {
   const [addConditionIsOpen, setAddConditionIsOpen] = useState(false);
 
   const [confirmedConditions, setConfirmedConditions] = useState<
@@ -42,6 +42,8 @@ export function Conditions({ className, patientUPID }: ConditionsProps) {
   const [includeInactive, setIncludeInactive] = useState(true);
   const { getCTWFhirClient } = useCTW();
 
+  const { patientUPIDPromise } = usePatient();
+
   const handleFormChange = () => setIncludeInactive(!includeInactive);
 
   useEffect(() => {
@@ -53,6 +55,7 @@ export function Conditions({ className, patientUPID }: ConditionsProps) {
         : {};
 
       const fhirClient = await getCTWFhirClient();
+      const patientUPID = await patientUPIDPromise;
 
       // use AllSettled instead of all as we want confirmed to still if lens fails
       const [confirmedConditionInfo, notReviewedConditionInfo] =
@@ -94,9 +97,7 @@ export function Conditions({ className, patientUPID }: ConditionsProps) {
       }
     }
     load();
-    // Including getCTWFhirClient causes an infinite loop so disabling this
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [patientUPID, includeInactive]);
+  }, [includeInactive, patientUPIDPromise, getCTWFhirClient]);
 
   return (
     <div
@@ -124,6 +125,7 @@ export function Conditions({ className, patientUPID }: ConditionsProps) {
           />
           <div className="ctw-space-y-3">
             <div className="ctw-title ctw-ml-3">Confirmed</div>
+
             <ConditionsTableBase
               conditions={confirmedConditions}
               isLoading={confirmedConditionsIsLoading}

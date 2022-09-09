@@ -1,5 +1,5 @@
 import Client, { SearchParams } from "fhir-kit-client";
-import { mapValues } from "lodash";
+import { find, mapValues } from "lodash";
 
 import { getResources } from "./bundle";
 import {
@@ -53,18 +53,6 @@ export async function searchAllRecords<T extends ResourceTypeString>(
   return { bundle, total: bundle.total ?? 0, resources };
 }
 
-// Like searchAllRecords, but filters out lens resources.
-export async function searchCommonRecords<T extends ResourceTypeString>(
-  resourceType: T,
-  fhirClient: Client,
-  searchParams?: SearchParams
-): Promise<SearchReturn<T>> {
-  return searchAllRecords(resourceType, fhirClient, {
-    ...searchParams,
-    "_tag:not": LENS_TAGS.join(","),
-  });
-}
-
 // Like searchAllRecords, but filters out lens & third party resources.
 export async function searchBuilderRecords<T extends ResourceTypeString>(
   resourceType: T,
@@ -88,6 +76,18 @@ export async function searchLensRecords<T extends ResourceTypeString>(
   return searchAllRecords(resourceType, fhirClient, {
     ...searchParams,
     _tag: LENS_TAGS.join(","),
+  });
+}
+
+// Like searchAllRecords, but filters out lens resources.
+export async function searchCommonRecords<T extends ResourceTypeString>(
+  resourceType: T,
+  fhirClient: Client,
+  searchParams?: SearchParams
+): Promise<SearchReturn<T>> {
+  return searchAllRecords(resourceType, fhirClient, {
+    ...searchParams,
+    "_tag:not": LENS_TAGS.join(","),
   });
 }
 
@@ -130,5 +130,32 @@ function patientSearchParams(
       throw new Error(
         `Unhandled patient search for resource type: ${resourceType}`
       );
+  }
+}
+
+export async function getUPIDfromPatientID(
+  fhirClient: Client,
+  patientID: string,
+  systemURL: string
+): Promise<string> {
+  try {
+    const bundle = (await fhirClient.search({
+      resourceType: "Patient",
+      searchParams: {
+        identifier: `${systemURL}|${patientID}`,
+      },
+    })) as fhir4.Bundle;
+
+    const patient = getResources(bundle, "Patient");
+
+    const patientUPID = find(patient[0].identifier, {
+      system: SYSTEM_ZUS_UNIVERSAL_ID,
+    })?.value as string;
+
+    return patientUPID;
+  } catch (e) {
+    throw new Error(
+      `Failed fetching patient UPID information for patient from patientID ${patientID} with system ${systemURL}: ${e}`
+    );
   }
 }
