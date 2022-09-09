@@ -105,6 +105,7 @@
     "fhir-kit-client": "^1.9.1",
     "jwt-decode": "^3.1.2",
     "lodash": "^4.17.21",
-    "zod": "^3.19.0"
+    "zod": "^3.19.0",
+    "storybook-addon-mock": "^2.4.1"
   }
 }
