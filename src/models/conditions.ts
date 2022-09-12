@@ -1,3 +1,4 @@
+import { getFhirClient, omitEmptyArrays } from "@/fhir/client";
 import { codeableConceptLabel, findCoding } from "../fhir/codeable-concept";
 import { formatDateISOToLocal } from "../fhir/formatters";
 import { SYSTEM_ICD10 } from "../fhir/system-urls";
@@ -7,6 +8,26 @@ export class ConditionModel {
 
   constructor(condition: fhir4.Condition) {
     this.resource = condition;
+  }
+
+  async save(accessToken: string) {
+    const fhirClient = await getFhirClient(accessToken);
+
+    try {
+      if (this.id) {
+        return await fhirClient.update({
+          resourceType: "Condition",
+          id: this.id,
+          body: omitEmptyArrays(this.resource) as fhir4.Condition,
+        });
+      }
+      return await fhirClient.create({
+        resourceType: "Condition",
+        body: omitEmptyArrays(this.resource) as fhir4.Condition,
+      });
+    } catch (err) {
+      throw errorResponse("Failed saving condition.", err);
+    }
   }
 
   get abatement(): string | undefined {

@@ -167,7 +167,7 @@ export function Conditions({ className }: ConditionsProps) {
 
       <DrawerFormWithFields
         title="Add Condition"
-        action="createMedicationStatement"
+        action="createCondition"
         data={getConditionFormData(newCondition)}
         schema={conditionSchema}
         isOpen={addConditionIsOpen}
