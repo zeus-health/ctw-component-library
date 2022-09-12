@@ -33,15 +33,15 @@ const containerQuery = plugin(
     )
 
     matchVariant({
-      'cq-h': (queryValue) => `@container (min-height: ${queryValue})`,
+      'cq-h': (queryValue) => `@container (max-height: ${queryValue})`,
     })
     matchVariant({
-      'cq-w': (queryValue) => `@container (min-width: ${queryValue})`,
+      'cq-w': (queryValue) => `@container (max-width: ${queryValue})`,
     })
 
     Object.entries(containerQuery).map(([key, value]) => {
       return addVariant(`cq-w-${key}`, ({ container, separator }) => {
-        const cqRule = postcss.atRule({ name: 'container', params: `(min-width: ${value})` })
+        const cqRule = postcss.atRule({ name: 'container', params: `(max-width: ${value})` })
         cqRule.append(container.nodes)
         container.append(cqRule)
         cqRule.walkRules(rule => {
@@ -53,7 +53,7 @@ const containerQuery = plugin(
     Object.entries(containerQuery).map(([queryName, queryValue]) => {
       return Object.entries(containerName).map(([nameKey, nameValue]) => {
         return addVariant(`cq-w-${nameKey}-${queryName}`, ({ container, separator }) => {
-          const cqRule = postcss.atRule({ name: 'container', params: `${nameValue} (min-width: ${queryValue})` })
+          const cqRule = postcss.atRule({ name: 'container', params: `${nameValue} (max-width: ${queryValue})` })
           cqRule.append(container.nodes)
           container.append(cqRule)
           cqRule.walkRules(rule => {
@@ -65,7 +65,7 @@ const containerQuery = plugin(
 
     Object.entries(containerQuery).map(([key, value]) => {
       return addVariant(`cq-h-${key}`, ({ container, separator }) => {
-        const cqRule = postcss.atRule({ name: 'container', params: `(min-height: ${value})` })
+        const cqRule = postcss.atRule({ name: 'container', params: `(max-height: ${value})` })
         cqRule.append(container.nodes)
         container.append(cqRule)
         cqRule.walkRules(rule => {
@@ -77,7 +77,7 @@ const containerQuery = plugin(
     Object.entries(containerQuery).map(([queryName, queryValue]) => {
       return Object.entries(containerName).map(([nameKey, nameValue]) => {
         return addVariant(`cq-h-${nameKey}-${queryName}`, ({ container, separator }) => {
-          const cqRule = postcss.atRule({ name: 'container', params: `${nameValue} (min-height: ${queryValue})` })
+          const cqRule = postcss.atRule({ name: 'container', params: `${nameValue} (max-height: ${queryValue})` })
           cqRule.append(container.nodes)
           container.append(cqRule)
           cqRule.walkRules(rule => {
