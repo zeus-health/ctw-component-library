@@ -1,9 +1,9 @@
 import { Conditions } from "@/components/content/conditions";
 import { ComponentMeta, ComponentStoryFn } from "@storybook/react";
-import withMock from "storybook-addon-mock";
 
 import { CTWProvider } from "@/components/core/ctw-provider";
 import "@/styles/tailwind-gen.css";
+import withMock from "storybook-addon-mock";
 import {
   CONDITIONS_BUNDLE_BUILDER,
   CONDITIONS_BUNDLE_LENS,
@@ -43,8 +43,8 @@ const MOCK_RESPONSE = {
       method: "GET",
       status: 200,
       response: {
-        header: JSON.stringify(CONDITIONS_RESPONSE_HEADER),
-        data: JSON.stringify(CONDITIONS_BUNDLE_BUILDER),
+        header: CONDITIONS_RESPONSE_HEADER,
+        data: CONDITIONS_BUNDLE_BUILDER,
       },
       delay: 350,
     },
