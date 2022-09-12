@@ -69,6 +69,11 @@
     @apply ctw-border-0 ctw-border-solid ctw-border-divider-light;
   }
 
+  .ctw-divide-x > :not([hidden]) ~ :not([hidden]),
+  .ctw-divide-y > :not([hidden]) ~ :not([hidden]) {
+    @apply ctw-border-0 ctw-border-solid;
+  }
+
   .ctw-table-action-column {
     @apply ctw-sticky ctw-right-0 ctw-bg-white;
   }
