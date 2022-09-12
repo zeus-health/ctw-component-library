@@ -26,8 +26,15 @@ export const DrawerForm = ({
   return (
     <Drawer {...drawerProps} onClose={onClose} onAfterClosed={reset}>
       <form
-        method="POST"
         className="ctw-flex ctw-h-full ctw-flex-col ctw-overflow-y-auto"
+        onSubmit={(event) => {
+          event.preventDefault();
+          const form = event.target;
+          const data = Object.fromEntries(
+            new FormData(form as HTMLFormElement)
+          );
+          console.log("data", data);
+        }}
       >
         <Drawer.Body>{children(isSubmitting, errors)}</Drawer.Body>
         <Drawer.Footer>
