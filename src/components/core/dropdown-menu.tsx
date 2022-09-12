@@ -20,12 +20,14 @@ export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
       <Float
         portal
         placement="bottom-start"
-        offset={10}
+        offset={5}
         flip
         arrow
         tailwindcssOriginClass
       >
-        <Menu.Button className="ctw-btn-clear ctw-link">{children}</Menu.Button>
+        <Menu.Button className="ctw-btn-clear ctw-link ctw-flex">
+          {children}
+        </Menu.Button>
 
         <Menu.Items
           static
