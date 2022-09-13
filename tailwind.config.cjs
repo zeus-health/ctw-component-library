@@ -41,8 +41,16 @@ module.exports = {
   content: ["./src/**/*.{ts,tsx,jsx,js}"],
   theme: {
     ...addCSSVarReference(TailwindTheme),
+    containerQuery: {
+      xs: '320px',
+      sm: '640px',
+      md: '768px',
+      lg: '1024px',
+    },
   },
-  plugin: [lineClampPlugin],
+  plugins: [lineClampPlugin,
+require('./tailwind.container-query-plugin.cjs')
+  ],
   extend: {
     fontFamily: {
       sans: [...defaultTheme.fontFamily.sans],

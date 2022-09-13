@@ -37,6 +37,7 @@ export const TableRows = <T extends MinRecordItem>({
       </TableFullLengthRow>
     );
   }
+
   if (records.length === 0) {
     return (
       <TableFullLengthRow colSpan={columns.length}>
@@ -44,26 +45,33 @@ export const TableRows = <T extends MinRecordItem>({
       </TableFullLengthRow>
     );
   }
-  const tableRowProps = (record: T, recordIndex: number) =>
-    onRowClick
-      ? {
-          className: cx(
-            // Add bottom radius to last row to fix issue with focus ring.
-            // Otherwise the row's focus ring would get cutoff since the table is rounded.
-            {
-              "ctw-rounded-b-lg": recordIndex === records.length - 1,
-            },
-            "ctw-cursor-pointer hover:ctw-bg-bg-lighter ctw-ring-primary-main focus-visible:ctw-ring-2 ctw-ring-inset ctw-outline-none"
-          ),
-          tabIndex: 0,
-          onKeyUp: (event: KeyboardEvent<HTMLTableRowElement>) => {
-            if (event.key === "Enter") {
-              onRowClick(record);
-            }
-          },
-          onClick: () => onRowClick(record),
+
+  const tableRowProps = (record: T, recordIndex: number) => {
+    const classes = "ctw-relative cq-w-sm:ctw-block cq-w-sm:ctw-p-3";
+
+    if (!onRowClick) {
+      return { className: classes };
+    }
+
+    return {
+      className: cx(
+        classes,
+        // Add bottom radius to last row to fix issue with focus ring.
+        // Otherwise the row's focus ring would get cutoff since the table is rounded.
+        {
+          "ctw-rounded-b-lg": recordIndex === records.length - 1,
+        },
+        "ctw-cursor-pointer hover:ctw-bg-bg-lighter ctw-ring-primary-main focus-visible:ctw-ring-2 ctw-ring-inset ctw-outline-none"
+      ),
+      tabIndex: 0,
+      onKeyUp: (event: KeyboardEvent<HTMLTableRowElement>) => {
+        if (event.key === "Enter") {
+          onRowClick(record);
         }
-      : {};
+      },
+      onClick: () => onRowClick(record),
+    };
+  };
 
   return (
     <>
@@ -80,11 +88,15 @@ export const TableRows = <T extends MinRecordItem>({
           ))}
           {rowActions && (
             <td
-              className={cx("ctw-table-action-column ctw-px-4", {
-                "ctw-table-action-column-sticky": showRightTableBorderShadow,
-              })}
+              className={cx(
+                "cq-w-sm:ctw-absolute cq-w-sm:ctw-top-2 cq-w-sm:ctw-right-2 cq-w-sm:ctw-bg-transparent cq-w-sm:ctw-p-0",
+                "ctw-table-action-column ctw-px-4",
+                {
+                  "ctw-table-action-column-sticky": showRightTableBorderShadow,
+                }
+              )}
             >
-              <DropdownMenu menuItems={rowActions}>
+              <DropdownMenu menuItems={rowActions} buttonClass="ctw-ml-auto">
                 <DotsHorizontalIcon className="ctw-w-5" />
               </DropdownMenu>
             </td>

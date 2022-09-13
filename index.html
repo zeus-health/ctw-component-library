@@ -3,6 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <script
+      type="module"
+      src="https://unpkg.com/container-query-polyfill@^0.2.0"
+    ></script>
+    <style type="text/css">
+      @container (min-width: 64px) {
+        .cq-w-4\:ctw-bg-primary-main {
+          background-color: var(--ctw--primary-main, #A855F7);
+        }
+      }
+    </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CTW Component Library</title>
   </head>

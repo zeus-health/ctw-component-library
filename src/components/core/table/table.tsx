@@ -86,26 +86,15 @@ export const Table = <T extends MinRecordItem>({
   }, [containerTableRef]);
 
   return (
-    <div className={cx("ctw-py-2 ctw-align-middle", className)}>
+    <div className={cx("ctw-table-container", className)}>
       <div
-        /* Border radius has to be same as table. 
-           For some reason the overflow: hidden also hides the table borders, so add some padding to get them back. */
-        className={cx(
-          "ctw-relative ctw-overflow-hidden ctw-rounded-lg ctw-p-px",
-          {
-            "ctw-table-scroll-right-shadow":
-              !rowActions && showRightTableBorderShadow,
-          }
-        )}
+        className={cx("ctw-table-scroll-container", {
+          "ctw-table-scroll-right-shadow":
+            !rowActions && showRightTableBorderShadow,
+        })}
       >
-        <div
-          ref={containerTableRef}
-          className="ctw-scrollbar ctw-flex ctw-overflow-x-auto ctw-rounded-lg ctw-shadow ctw-ring-1 ctw-ring-divider-light ctw-ring-opacity-5"
-        >
-          <table
-            className=" ctw-table-base ctw-w-full ctw-divide-y ctw-divide-divider-main"
-            ref={tableRef}
-          >
+        <div ref={containerTableRef} className="ctw-table-container2">
+          <table className="ctw-table-base ctw-w-full" ref={tableRef}>
             {showTableHead && (
               <TableHead
                 columns={columns}

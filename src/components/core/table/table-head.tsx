@@ -17,7 +17,7 @@ export const TableHead = <T extends MinRecordItem>({
   rowActions,
 }: TableHeadProps<T>) => (
   <thead>
-    <tr>
+    <tr className="ctw-hidden ctw-border-b-divider-main">
       {columns.map((column, index) => (
         <th
           key={column.title ?? index}

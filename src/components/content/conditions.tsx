@@ -102,60 +102,63 @@ export function Conditions({ className }: ConditionsProps) {
   return (
     <div
       className={cx(
-        "ctw-border ctw-border-solid ctw-border-divider-light",
+        "ctw-space-y-5 ctw-border ctw-border-solid ctw-border-divider-light ctw-container-type-inline-size",
         className
       )}
     >
-      <div className="ctw-flex ctw-h-11 ctw-items-center ctw-justify-between ctw-bg-bg-light ctw-p-3">
+      <div className="cq-w-4:ctw-bg-primary-main ctw-flex ctw-h-11 ctw-items-center ctw-justify-between ctw-bg-primary-lighter ctw-p-3">
         <div className="ctw-title">Conditions</div>
         <button
           type="button"
-          className="ctw-btn-clear ctw-link"
+          className="ctw-btn-clear ctw-link ctw-p-0"
           onClick={() => setAddConditionIsOpen(true)}
         >
-          + Add Condition
+          + Add
+          <span className="cq-w-xs:ctw-hidden"> Condition</span>
         </button>
       </div>
 
-      <div className="ctw-space-y-5 ctw-py-3 ctw-px-4 ">
-        <div className="ctw-space-y-5 ctw-py-3 ctw-px-4">
-          <ToggleControl
-            onFormChange={handleFormChange}
-            toggleProps={{ name: "conditions", text: "Include Inactive" }}
+      <div className="ctw-space-y-5">
+        <div className="ctw-space-y-3">
+          <div className="ctw-flex ctw-items-center ctw-justify-between ctw-px-3">
+            <div className="ctw-title">Confirmed</div>
+            <ToggleControl
+              onFormChange={handleFormChange}
+              toggleProps={{ name: "conditions", text: "Include Inactive" }}
+            />
+          </div>
+
+          <ConditionsTableBase
+            className="ctw-px-3 cq-w-sm:-ctw-mx-px cq-w-sm:ctw-px-0"
+            conditions={confirmedConditions}
+            isLoading={confirmedConditionsIsLoading}
+            message={confirmedConditionsMessage}
+            rowActions={[
+              { name: "Edit", action: () => setAddConditionIsOpen(true) },
+              {
+                name: "View History",
+                action: () => setAddConditionIsOpen(true),
+              },
+            ]}
           />
-          <div className="ctw-space-y-3">
-            <div className="ctw-title ctw-ml-3">Confirmed</div>
+        </div>
 
-            <ConditionsTableBase
-              conditions={confirmedConditions}
-              isLoading={confirmedConditionsIsLoading}
-              message={confirmedConditionsMessage}
-              rowActions={[
-                { name: "Edit", action: () => setAddConditionIsOpen(true) },
-                {
-                  name: "View History",
-                  action: () => setAddConditionIsOpen(true),
-                },
-              ]}
-            />
-          </div>
-
-          <div className="ctw-space-y-3">
-            <div className="ctw-title ctw-ml-3">Not Reviewed</div>
-            <ConditionsTableBase
-              conditions={notReviewedConditions}
-              isLoading={notReviewedConditionsIsLoading}
-              showTableHead={false}
-              message={notReviewedConditionsMessage}
-              rowActions={[
-                { name: "Add", action: () => setAddConditionIsOpen(true) },
-                {
-                  name: "View History",
-                  action: () => setAddConditionIsOpen(true),
-                },
-              ]}
-            />
-          </div>
+        <div className="ctw-space-y-3">
+          <div className="ctw-title ctw-ml-3">Not Reviewed</div>
+          <ConditionsTableBase
+            className="ctw-px-3"
+            conditions={notReviewedConditions}
+            isLoading={notReviewedConditionsIsLoading}
+            showTableHead={false}
+            message={notReviewedConditionsMessage}
+            rowActions={[
+              { name: "Add", action: () => setAddConditionIsOpen(true) },
+              {
+                name: "View History",
+                action: () => setAddConditionIsOpen(true),
+              },
+            ]}
+          />
         </div>
       </div>
 

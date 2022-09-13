@@ -26,7 +26,7 @@ export function ConditionsTableBase({
     {
       title: "Recorded Date",
       dataIndex: "recordedDate",
-      className: "ctw-w-[30%]",
+      className: "ctw-w-[20%]",
     },
   ];
 

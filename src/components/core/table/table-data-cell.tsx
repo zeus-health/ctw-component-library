@@ -24,7 +24,8 @@ export const TableDataCell = <T extends MinRecordItem>({
     <td
       key={column.title ?? index}
       className={cx(
-        "ctw-whitespace-nowrap ctw-px-3 ctw-py-4 ctw-text-sm",
+        "cq-w-sm:ctw-block cq-w-sm:ctw-w-full cq-w-sm:ctw-p-0 cq-w-sm:ctw-pr-7",
+        "ctw-whitespace-pre-wrap ctw-px-3 ctw-py-4 ctw-text-sm",
         index === 0
           ? "ctw-font-medium ctw-text-content-black"
           : "ctw-text-content-light",

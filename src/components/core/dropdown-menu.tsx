@@ -10,11 +10,16 @@ export type MenuItems = {
 };
 
 export type DropdownMenuProps = {
+  buttonClass?: string;
   children: ReactNode;
   menuItems: MenuItems[];
 };
 
-export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
+export function DropdownMenu({
+  buttonClass,
+  children,
+  menuItems,
+}: DropdownMenuProps) {
   return (
     <Menu>
       <Float
@@ -25,7 +30,9 @@ export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
         arrow
         tailwindcssOriginClass
       >
-        <Menu.Button className="ctw-btn-clear ctw-link ctw-flex">
+        <Menu.Button
+          className={cx(buttonClass, "ctw-btn-clear ctw-link ctw-flex")}
+        >
           {children}
         </Menu.Button>
 

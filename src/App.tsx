@@ -9,6 +9,11 @@ const SB_SARAH_ID = "000002";
 const SYSTEM_HEALTHIE_ID = "https://www.ctwhealth.com";
 
 function App() {
+  if (!("container" in document.documentElement.style)) {
+    console.log("rar");
+    // @ts-ignore
+    import("https://unpkg.com/container-query-polyfill@^0.2.0");
+  }
   return (
     <CTWProvider env="dev" authToken={AUTH_TOKEN} theme={{}}>
       <PatientProvider patientID={SB_SARAH_ID} systemURL={SYSTEM_HEALTHIE_ID}>
