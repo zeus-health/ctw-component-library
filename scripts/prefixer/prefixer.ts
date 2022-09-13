@@ -1,6 +1,13 @@
 /* eslint-disable no-console */
 import { spawnSync } from "child_process";
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "fs";
+import {
+  copyFileSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "fs";
 import glob from "glob";
 import rcs from "rename-css-selectors";
 
@@ -18,7 +25,7 @@ async function main() {
   tailwindNoPrefixGen();
   await getClasses();
   addPrefixes(filesToPrefix());
-  rmSync("scripts/prefixer/tmp", { recursive: true }); // Clear the temp directory
+  // rmSync("scripts/prefixer/tmp", { recursive: true }); // Clear the temp directory
 }
 
 function tailwindNoPrefixGen() {
@@ -29,6 +36,10 @@ function tailwindNoPrefixGen() {
   writeFileSync(
     "scripts/prefixer/tmp/tailwind.config.cjs",
     tailwindConfig.replace(/prefix: "\S*",\n/g, "")
+  );
+  copyFileSync(
+    "tailwind-gen.theme.cjs",
+    "scripts/prefixer/tmp/tailwind-gen.theme.cjs"
   );
   const cssGenerate = spawnSync(
     "npx tailwindcss -c ./scripts/prefixer/tmp/tailwind.config.cjs -i ./src/styles/tailwind.css -o ./scripts/prefixer/tmp/tailwind-gen-unprefixed.css",
@@ -70,7 +81,6 @@ function addPrefixes(files: string[]) {
 
   files.forEach((file) => {
     console.log(`Processing ${file}`);
-    // Add prefix in CSS file
     let replaced = readFileSync(file, "utf-8");
     stringsToPrefix.forEach((toPrefixUnconverted) => {
       const toPrefix = toPrefixUnconverted.toString();
@@ -114,7 +124,7 @@ function getReplaceRegEx(file: string, toPrefix: string): RegExp {
 function getStringsToPrefix(): Set<string> {
   const map = JSON.parse(readFileSync(mapFile, "utf-8")).selectors;
   const stringsToPrefix = new Set<string>();
-  map.forEach((oldClassName: string) => {
+  for (let oldClassName in map) {
     if (oldClassName.charAt(0) === ".") {
       // Only select selectors starting with ., not for example things that start with #
       let toPrefix = oldClassName.substring(1); // Exclude the dot from counting as part of the class name
@@ -131,7 +141,7 @@ function getStringsToPrefix(): Set<string> {
         console.log(`Planning to prefix the string "${toPrefix}"`);
       }
     }
-  });
+  }
   return stringsToPrefix;
 }
 
