@@ -94,7 +94,6 @@
     "@storybook/cli": "^7.0.0-alpha.31",
     "date-fns": "^2.29.1",
     "fhir-kit-client": "^1.9.1",
-    "lodash": "^4.17.21",
-    "storybook-addon-mock": "^2.4.1"
+    "lodash": "^4.17.21"
   }
 }
