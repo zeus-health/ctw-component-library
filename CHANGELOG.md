@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 0.5.0
+
+### Minor Changes
+
+- 6a8755c: Fixup library packaging, tweak few styles, and make PatientProvider exported.
+- 538c409: There's a new PatientProvider that provides a UPID via the user providing either a PatientUPID or a combination of PatientID/SystemUrl.
+
 ## 0.4.0
 
 ### Minor Changes
