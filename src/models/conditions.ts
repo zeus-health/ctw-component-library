@@ -1,7 +1,7 @@
 import { getFhirClient, omitEmptyArrays } from "@/fhir/client";
 import { codeableConceptLabel, findCoding } from "../fhir/codeable-concept";
 import { formatDateISOToLocal } from "../fhir/formatters";
-import { SYSTEM_ICD10 } from "../fhir/system-urls";
+import { SYSTEM_ICD10, SYSTEM_SNOMED } from "../fhir/system-urls";
 
 export class ConditionModel {
   private resource: fhir4.Condition;
@@ -26,7 +26,7 @@ export class ConditionModel {
         body: omitEmptyArrays(this.resource) as fhir4.Condition,
       });
     } catch (err) {
-      throw errorResponse("Failed saving condition.", err);
+      throw Error("Failed saving condition.");
     }
   }
 
@@ -150,6 +150,10 @@ export class ConditionModel {
         return `Summary: ${summary}, Type: ${type}`;
       }) || []
     );
+  }
+
+  get snomedCode(): string | undefined {
+    return findCoding(SYSTEM_SNOMED, this.resource.code)?.code;
   }
 
   get verificationStatus(): string {

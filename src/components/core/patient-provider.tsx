@@ -32,6 +32,12 @@ type PatientProviderProps = {
 
 const unresolvedPromise = new Promise<string>((resolve, reject) => {});
 
+// const response = await searchBuilderRecords("Patient", accessToken, {
+//   patientUPID,
+//   _count: 1,
+//   _include: "Patient:organization",
+// });
+
 export const CTWPatientContext = createContext<ProviderState>({
   patientUPIDPromise: unresolvedPromise,
 });

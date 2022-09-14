@@ -3,10 +3,10 @@ import { Spinner } from "../spinner";
 
 export type SaveButtonProps = {
   submitting: boolean;
-  action: string;
+  actionName: string;
 };
 
-export const SaveButton = ({ submitting, action }: SaveButtonProps) => (
+export const SaveButton = ({ submitting, actionName }: SaveButtonProps) => (
   <button
     type="submit"
     disabled={submitting}
@@ -14,7 +14,7 @@ export const SaveButton = ({ submitting, action }: SaveButtonProps) => (
       "ctw-btn-primary ctw-save-button ctw-w-28 ctw-whitespace-nowrap"
     )}
     name="action"
-    value={action}
+    value={actionName}
   >
     {submitting ? "Saving..." : "Save"}
     {submitting && <Spinner className="ctw-ml-2 ctw-text-white" />}

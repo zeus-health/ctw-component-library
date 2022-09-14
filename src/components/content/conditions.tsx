@@ -1,10 +1,13 @@
 import {
+  conditionSchema,
+  getConditionFormData,
+} from "@/components/core/forms/helpers";
+import {
   ConditionFilters,
   getConfirmedConditions,
   getLensConditions,
 } from "@/fhir/conditions";
 import { ConditionModel } from "@/models/conditions";
-import { conditionSchema, getConditionFormData } from "@/utils/helpers";
 import cx from "classnames";
 import { useEffect, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
@@ -46,6 +49,8 @@ export function Conditions({ className }: ConditionsProps) {
   const { patientUPIDPromise } = usePatient();
 
   const handleFormChange = () => setIncludeInactive(!includeInactive);
+
+  console.log("notReviewedConditions", notReviewedConditions);
 
   useEffect(() => {
     async function load() {
@@ -102,7 +107,7 @@ export function Conditions({ className }: ConditionsProps) {
 
   const newCondition = new ConditionModel({
     resourceType: "Condition",
-    subject: { reference: `Patient/`, display: "" },
+    subject: { type: "Patient", reference: `Patient/` },
   });
 
   return (
@@ -167,17 +172,12 @@ export function Conditions({ className }: ConditionsProps) {
 
       <DrawerFormWithFields
         title="Add Condition"
-        action="createCondition"
+        actionName="createCondition"
         data={getConditionFormData(newCondition)}
         schema={conditionSchema}
         isOpen={addConditionIsOpen}
         onClose={() => setAddConditionIsOpen(false)}
       />
-
-      {/* <ConditionFormDrawer
-        isOpen={addConditionIsOpen}
-        onClose={() => setAddConditionIsOpen(false)}
-      /> */}
     </div>
   );
 }

@@ -14,21 +14,21 @@ export type FormEntry = {
 
 export type DrawerFormWithFieldsProps = {
   title: string;
-  action: string;
+  actionName: string;
   data: FormEntry[];
   schema: Zod.AnyZodObject;
 } & Pick<DrawerFormProps, "onClose" | "isOpen">;
 
 export const DrawerFormWithFields = ({
   title,
-  action,
+  actionName,
   data,
   schema,
   ...drawerFormProps
 }: DrawerFormWithFieldsProps) => {
   const inputProps = useFormInputProps(schema);
   return (
-    <DrawerForm title={title} action={action} {...drawerFormProps}>
+    <DrawerForm title={title} actionName={actionName} {...drawerFormProps}>
       {(submitting, errors) => (
         <div className="ctw-space-y-6">
           {data.map(({ label, field, value, lines, readonly }) => {

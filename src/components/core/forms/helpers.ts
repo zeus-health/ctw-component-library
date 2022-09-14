@@ -3,10 +3,17 @@ import { dateToISO } from "@/fhir/formatters";
 import { SYSTEM_RXNORM } from "@/fhir/system-urls";
 import { ConditionModel } from "@/models/conditions";
 import { z } from "zod";
+import { getFormData } from "../../../utils/form-helper";
 
 export const getConditionFormData = (
   condition?: ConditionModel
 ): FormEntry[] => [
+  // {
+  //   label: "subject",
+  //   value: condition?.subject,
+  //   field: "subject",
+  //   readonly: true,
+  // },
   {
     label: "Name",
     value: condition?.display,
@@ -15,7 +22,7 @@ export const getConditionFormData = (
   {
     label: "Snomed Code",
     value: condition?.abatement,
-    field: "updatedBy",
+    field: "snomedCode",
   },
   {
     label: "Clinical Status",
@@ -46,52 +53,48 @@ export const getConditionFormData = (
 
 export const conditionSchema = z.object({
   display: z.string({ required_error: "Condition name must be specified." }),
-  updatedBy: z.string({
-    required_error: "The updating party must be identified.",
-  }),
+  snomedCode: z.string({ required_error: "Snomed code must be provided." }),
   clinicalStatus: z.string({
     required_error: "clinical status is required.",
   }),
+  onset: z.date({ required_error: "Conditions's onset is required." }),
+  abatement: z.date({ required_error: "Condition's abatement is required." }),
   verificationStatus: z.string({
     required_error: "verification status is required.",
   }),
   note: z.string().optional(),
-  onset: z.date({ required_error: "Conditions's onset is required." }),
-  abatement: z.date({ required_error: "Condition's abatement is required." }),
 });
 
-export const createCondition = async (request: Request) => {
-  const { accessToken, headers } = await requireValidUserForAction(request);
-  const result = await getFormData(request, conditionSchema);
+export const createCondition = async (data: FormData) => {
+  // const { accessToken, headers } = await requireValidUserForAction(request);
+  const result = await getFormData(data, conditionSchema);
   if (!result.success) {
-    // TODO: fix this
-    return unprocessableEntity(result.errors);
+    return result;
   }
+
+  console.log("result", result.data);
+
   // Some fields will need to be set as they are required.
   const fhirCondition: fhir4.Condition = {
     resourceType: "Condition",
-    status: result.data.status,
-    dateAsserted: dateToISO(result.data.dateAsserted),
-    informationSource: {
-      reference: result.data.updatedBy,
-      type: result.data.updatedBy.split("/")[0],
-    },
-    subject: { type: "Patient", reference: `Patient/${result.data.subjectID}` },
-    medicationCodeableConcept: {
+    clinicalStatus: {
       coding: [
         {
           system: SYSTEM_RXNORM,
-          code: result.data.rxNorm,
+          code: result.data.clinicalStatus,
           display: result.data.display,
         },
       ],
     },
+    onsetDateTime: dateToISO(result.data.onset),
+    recordedDate: dateToISO(new Date()),
+    subject: { type: "Patient", reference: `Patient/${result.data.subjectID}` },
     note: result.data.note ? [{ text: result.data.note }] : undefined,
   };
 
-  const medicationStatement = new ConditionModel(fhirCondition);
+  const conditionModel = new ConditionModel(fhirCondition);
 
-  await ConditionModel.save(accessToken);
+  // await conditionModel.save(accessToken);
 
-  return new Response(null, { headers });
+  return result;
 };
