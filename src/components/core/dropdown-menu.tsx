@@ -18,11 +18,18 @@ export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
   return (
     <Menu>
       <Float
-        portal
-        placement="bottom-start"
-        offset={10}
-        flip
         arrow
+        enter="ctw-transition ctw-duration-75 ctw-ease-out"
+        flip
+        offset={5}
+        placement="bottom-start"
+        portal
+        shift={10}
+        enterFrom="ctw-opacity-0"
+        enterTo="ctw-opacity-100"
+        leave="ctw-transition ctw-duration-75 ctw-ease-in"
+        leaveFrom="ctw-opacity-100"
+        leaveTo="ctw-opacity-0"
         tailwindcssOriginClass
       >
         <Menu.Button className="ctw-btn-clear ctw-link">{children}</Menu.Button>
@@ -32,7 +39,7 @@ export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
           className="ctw-w-max ctw-bg-white ctw-ring-1 ctw-ring-divider-light ctw-ring-opacity-5 focus:ctw-outline-none"
         >
           <Float.Arrow className="ctw-absolute ctw-h-5 ctw-w-5 ctw-rotate-45 ctw-border ctw-border-divider-light ctw-bg-white" />
-          <div className="ctw-relative  ctw-bg-white">
+          <div className="ctw-relative ctw-bg-white">
             {menuItems.map((menuItem) => (
               <Menu.Item key={menuItem.name}>
                 {({ active }) => (
