@@ -20,7 +20,7 @@ export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
       <Float
         portal
         placement="bottom-start"
-        offset={10}
+        offset={5}
         flip
         arrow
         tailwindcssOriginClass
