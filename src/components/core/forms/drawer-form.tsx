@@ -26,9 +26,6 @@ export const DrawerForm = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
 
-  // TODO: update reset and errors
-  const reset = () => null;
-
   const onFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsSubmitting(true);
