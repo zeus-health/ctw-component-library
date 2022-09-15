@@ -1,9 +1,9 @@
+import { getOptions, isOptional, useFormInputProps } from "@/utils/form-helper";
 import cx from "classnames";
 import { useCTW } from "../ctw-provider";
 import type { DrawerFormProps } from "./drawer-form";
 import { DrawerForm } from "./drawer-form";
 import { FormField } from "./form-field";
-import { getOptions, isOptional, useFormInputProps } from "./form-utils";
 
 export type FormEntry = {
   label: string;
