@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.5.1
+
+### Patch Changes
+
+- 7605db1: Use more robust library for dropdown menu and cleanup some styles.
+
 ## 0.5.0
 
 ### Minor Changes
