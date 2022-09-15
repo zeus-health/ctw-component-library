@@ -67,8 +67,6 @@
     @apply ctw-outline ctw-outline-2 ctw-outline-primary-main;
   }
 
-  /*****************/
-
   .ctw-title {
     @apply ctw-text-xs ctw-font-semibold ctw-uppercase ctw-text-black;
     letter-spacing: 0.2rem;
