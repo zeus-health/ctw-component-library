@@ -5,14 +5,17 @@ import type { DrawerProps } from "../drawer";
 import { Drawer } from "../drawer";
 import { SaveButton } from "./save-button";
 
+export type FormErrors =
+  | {
+      [key: string]: string;
+    }
+  | undefined;
+
 export type DrawerFormProps = {
   actionName: string;
   patientID: string;
   getCTWFhirClient: () => Promise<Client>;
-  children: (
-    submitting: boolean,
-    errors?: { [key: string]: string }
-  ) => ReactNode;
+  children: (submitting: boolean, errors?: FormErrors) => ReactNode;
 } & DrawerProps;
 
 export const DrawerForm = ({
@@ -24,10 +27,10 @@ export const DrawerForm = ({
   ...drawerProps
 }: DrawerFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [errors, setErrors] = useState<FormErrors>(undefined);
 
   const reset = () => {
-    setErrors({});
+    setErrors(undefined);
     setIsSubmitting(false);
   };
 
