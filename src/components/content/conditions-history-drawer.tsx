@@ -1,22 +1,24 @@
-import { Drawer } from "../core/drawer";
-
 import { ConditionModel } from "@/models/conditions";
+import { Drawer } from "../core/drawer";
+import { ConditionHistory } from "./conditions-history";
 
-export type ConditionFormDrawerProps = {
+export type ConditionHistoryDrawerProps = {
   className?: string;
-  editing?: boolean;
   condition?: ConditionModel;
   isOpen: boolean;
   onClose: () => void;
 };
 
-export function ConditionFormDrawer({
+export function ConditionHistoryDrawer({
   className,
-  editing,
+  condition,
   isOpen,
   onClose,
-}: ConditionFormDrawerProps) {
-  const title = "Edit Condition";
+}: ConditionHistoryDrawerProps) {
+  console.log(condition);
+  console.log("icd10 is", condition?.icd10);
+  const data = ConditionHistory({ icd10: condition?.icd10 });
+  const title = "Condition History";
 
   return (
     <Drawer
@@ -25,7 +27,7 @@ export function ConditionFormDrawer({
       isOpen={isOpen}
       onClose={onClose}
     >
-      <Drawer.Body>TODO</Drawer.Body>
+      <Drawer.Body>{data}</Drawer.Body>
       <Drawer.Footer>
         <div className="ctw-flex ctw-justify-end ctw-space-x-3 ctw-text-black ">
           <button

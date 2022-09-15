@@ -3,6 +3,7 @@ import Client from "fhir-kit-client";
 import {
   flattenArrayFilters,
   searchBuilderRecords,
+  searchCommonRecords,
   searchLensRecords,
 } from "./search-helpers";
 
@@ -59,5 +60,26 @@ export async function getLensConditions(
     );
   } catch (e) {
     throw new Error(`Failed fetching condition information for patient: ${e}`);
+  }
+}
+
+export async function getConditionHistory(
+  fhirClient: Client,
+  patientUPID: string
+) {
+  try {
+    const { resources: conditions } = await searchCommonRecords(
+      "Condition",
+      fhirClient,
+      {
+        patientUPID,
+        _include: ["Condition:patient", "Condition:encounter"],
+      }
+    );
+    return conditions;
+  } catch (e) {
+    throw new Error(
+      `Failed fetching condition history information for patient: ${e}`
+    );
   }
 }

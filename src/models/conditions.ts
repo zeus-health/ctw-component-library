@@ -1,6 +1,6 @@
 import { codeableConceptLabel, findCoding } from "../fhir/codeable-concept";
 import { formatDateISOToLocal } from "../fhir/formatters";
-import { SYSTEM_ICD10 } from "../fhir/system-urls";
+import { SYSTEM_ICD10, SYSTEM_SNOMED } from "../fhir/system-urls";
 
 export class ConditionModel {
   private resource: fhir4.Condition;
@@ -133,5 +133,13 @@ export class ConditionModel {
 
   get verificationStatus(): string {
     return codeableConceptLabel(this.resource.verificationStatus);
+  }
+
+  get code(): string | undefined {
+    return findCoding(SYSTEM_SNOMED, this.resource.code)?.code;
+  }
+
+  get system(): string | undefined {
+    return findCoding(SYSTEM_SNOMED, this.resource.code)?.system;
   }
 }

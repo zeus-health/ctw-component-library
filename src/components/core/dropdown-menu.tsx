@@ -5,16 +5,17 @@ import { ReactNode } from "react";
 
 export type MenuItems = {
   name: string;
-  action: () => void;
+  action: (e: any, data: any) => void;
   className?: string;
 };
 
 export type DropdownMenuProps = {
   children: ReactNode;
   menuItems: MenuItems[];
+  data: any;
 };
 
-export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
+export function DropdownMenu({ children, menuItems, data }: DropdownMenuProps) {
   return (
     <Menu>
       <Float
@@ -38,7 +39,7 @@ export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
                 {({ active }) => (
                   <button
                     type="button"
-                    onClick={() => menuItem.action()}
+                    onClick={(e) => menuItem.action(e, data)}
                     className={cx(
                       "ctw-flex ctw-w-full ctw-cursor-pointer ctw-items-center ctw-border-none ctw-bg-transparent ctw-py-2 ctw-px-2 ctw-text-primary-main",
                       {
