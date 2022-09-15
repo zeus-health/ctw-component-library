@@ -21,20 +21,21 @@ export type ConditionsProps = {
   className?: string;
 };
 
-const DEFAULT_MSG = "No conditions found";
-const DEFAULT_ERR_MSG =
+const EMPTY_MESSAGE = "No conditions found";
+const ERROR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
 
 export function Conditions({ className }: ConditionsProps) {
   const [addConditionIsOpen, setAddConditionIsOpen] = useState(false);
   const [confirmed, setConfirmed] = useState<ConditionModel[]>([]);
-  const [confirmedMessage, setConfirmedMessage] = useState(DEFAULT_MSG);
+  const [confirmedMessage, setConfirmedMessage] = useState(EMPTY_MESSAGE);
   const [confirmedIsLoading, setConfirmedIsLoading] = useState(true);
   const [notReviewed, setNotReviewed] = useState<ConditionModel[]>([]);
   const [notReviewedIsLoading, setNotReviewedIsLoading] = useState(true);
-  const [notReviewedMessage, setNotReviewedMessage] = useState(DEFAULT_MSG);
+  const [notReviewedMessage, setNotReviewedMessage] = useState(EMPTY_MESSAGE);
   const [includeInactive, setIncludeInactive] = useState(true);
   const [patient, setPatient] = useState<PatientModel>();
+  const [currentlySelected, setCurrentlySelected] = useState<ConditionModel>();
 
   const { getCTWFhirClient } = useCTW();
   const { patientPromise } = usePatient();
@@ -84,22 +85,17 @@ export function Conditions({ className }: ConditionsProps) {
           );
         } else {
           setNotReviewed([]);
-          setNotReviewedMessage(DEFAULT_ERR_MSG);
+          setNotReviewedMessage(ERROR_MSG);
         }
       } else {
         setConfirmed([]);
-        setConfirmedMessage(DEFAULT_ERR_MSG);
+        setConfirmedMessage(ERROR_MSG);
         setNotReviewed([]);
-        setNotReviewedMessage(DEFAULT_ERR_MSG);
+        setNotReviewedMessage(ERROR_MSG);
       }
     }
     load();
   }, [includeInactive, patientPromise, getCTWFhirClient, patient]);
-
-  const addCondition = new ConditionModel({
-    resourceType: "Condition",
-    subject: { type: "Patient", reference: `Patient/${patient?.id}` },
-  });
 
   return (
     <div
@@ -150,7 +146,13 @@ export function Conditions({ className }: ConditionsProps) {
               showTableHead={false}
               message={notReviewedMessage}
               rowActions={[
-                { name: "Add", action: () => setAddConditionIsOpen(true) },
+                {
+                  name: "Add",
+                  action: (_, condition) => {
+                    setAddConditionIsOpen(true);
+                    setCurrentlySelected(condition);
+                  },
+                },
                 {
                   name: "View History",
                   action: () => setAddConditionIsOpen(true),
@@ -161,12 +163,15 @@ export function Conditions({ className }: ConditionsProps) {
         </div>
       </div>
 
-      {patient && (
+      {patient && currentlySelected && (
         <DrawerFormWithFields
           patientID={patient.id}
           title="Add Condition"
           actionName="createCondition"
-          data={getConditionFormData(addCondition)}
+          data={getConditionFormData({
+            condition: currentlySelected,
+            patientID: patient.id,
+          })}
           schema={conditionSchema}
           isOpen={addConditionIsOpen}
           onClose={() => setAddConditionIsOpen(false)}

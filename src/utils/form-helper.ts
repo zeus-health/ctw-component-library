@@ -21,6 +21,7 @@ import Zod, {
 export function parseParams(o: any, schema: any, key: string, value: any) {
   // find actual shape definition for this key
   let shape = schema;
+  console.log("shape", shape);
   while (shape instanceof ZodObject || shape instanceof ZodEffects) {
     shape =
       shape instanceof ZodObject

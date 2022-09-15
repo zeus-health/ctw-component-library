@@ -84,7 +84,7 @@ export const TableRows = <T extends MinRecordItem>({
                 "ctw-table-action-column-sticky": showRightTableBorderShadow,
               })}
             >
-              <DropdownMenu menuItems={rowActions}>
+              <DropdownMenu menuItems={rowActions} data={record}>
                 <DotsHorizontalIcon className="ctw-w-5" />
               </DropdownMenu>
             </td>

@@ -156,7 +156,19 @@ export class ConditionModel {
     return findCoding(SYSTEM_SNOMED, this.resource.code)?.code;
   }
 
+  get subjectID(): string {
+    const [, subjectID] = this.resource.subject.reference?.split("/") || [];
+    return subjectID || "";
+  }
+
   get verificationStatus(): string {
     return codeableConceptLabel(this.resource.verificationStatus);
+  }
+
+  public setSubjectID(patientID: string) {
+    this.resource.subject = {
+      type: "Patient",
+      reference: `Patient/${patientID}`,
+    };
   }
 }

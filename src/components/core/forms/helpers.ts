@@ -1,4 +1,3 @@
-import { FormEntry } from "@/components/core/forms/drawer-form-with-fields";
 import { dateToISO } from "@/fhir/formatters";
 import {
   SYSTEM_CONDITION_CLINICAL,
@@ -9,54 +8,65 @@ import { ConditionModel } from "@/models/conditions";
 import Client from "fhir-kit-client";
 import { z } from "zod";
 import { getFormData } from "../../../utils/form-helper";
+import type { FormEntry } from "./drawer-form-with-fields";
 
-export const getConditionFormData = (
-  condition?: ConditionModel
-): FormEntry[] => [
-  // {
-  //   label: "subject",
-  //   value: condition?.subject,
-  //   field: "subject",
-  //   readonly: true,
-  // },
-  {
-    label: "Name",
-    value: condition?.display,
-    field: "display",
-  },
-  {
-    label: "Snomed Code",
-    value: condition?.abatement,
-    field: "snomedCode",
-  },
-  {
-    label: "Clinical Status",
-    value: condition?.clinicalStatus,
-    field: "clinicalStatus",
-  },
-  {
-    label: "Verification Status",
-    value: condition?.verificationStatus,
-    field: "verificationStatus",
-  },
-  {
-    label: "Onset",
-    value: condition?.onset,
-    field: "onset",
-  },
-  {
-    label: "Abatement",
-    value: condition?.abatement,
-    field: "abatement",
-  },
-  {
-    label: "Note",
-    lines: 3,
-    field: "note",
-  },
-];
+export const getConditionFormData = ({
+  condition,
+  patientID,
+}: {
+  condition: ConditionModel;
+  patientID: string;
+}): FormEntry[] => {
+  condition.setSubjectID(patientID);
+  return [
+    {
+      label: "subject",
+      value: condition.subjectID,
+      field: "subjectID",
+      readonly: true,
+    },
+    {
+      label: "Name",
+      value: condition.display,
+      field: "display",
+    },
+    {
+      label: "Snomed Code",
+      value: condition.snomedCode,
+      field: "snomedCode",
+    },
+    {
+      label: "Clinical Status",
+      value: condition.clinicalStatus,
+      field: "clinicalStatus",
+    },
+    {
+      label: "Verification Status",
+      value: condition.verificationStatus,
+      field: "verificationStatus",
+    },
+    {
+      label: "Onset",
+      value: condition.onset,
+      field: "onset",
+    },
+    {
+      label: "Abatement",
+      value: condition.abatement,
+      field: "abatement",
+    },
+    {
+      label: "Note",
+      lines: 3,
+      field: "note",
+    },
+  ];
+};
 
 export const conditionSchema = z.object({
+  subjectID: z.string({
+    required_error: "Condition subjectID must be specified.",
+  }),
   display: z.string({ required_error: "Condition name must be specified." }),
   snomedCode: z.string({ required_error: "Snomed code must be provided." }),
   clinicalStatus: z.enum([
