@@ -1,8 +1,8 @@
 import { DotsHorizontalIcon } from "@heroicons/react/outline";
 import cx from "classnames";
 import { KeyboardEvent } from "react";
-
 import { DropdownMenu, MenuItems } from "../dropdown-menu";
+
 import { Spinner } from "../spinner";
 
 import type { MinRecordItem, TableColumn } from "./table";
@@ -80,12 +80,9 @@ export const TableRows = <T extends MinRecordItem>({
           ))}
           {rowActions && (
             <td
-              className={cx(
-                "ctw-table-action-column  ctw-min-w-[4rem] ctw-text-center ctw-text-icon-default",
-                {
-                  "ctw-table-action-column-sticky": showRightTableBorderShadow,
-                }
-              )}
+              className={cx("ctw-table-action-column", {
+                "ctw-table-action-column-sticky": showRightTableBorderShadow,
+              })}
             >
               <DropdownMenu menuItems={rowActions}>
                 <DotsHorizontalIcon className="ctw-w-5" />

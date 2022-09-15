@@ -1,5 +1,5 @@
-import { Float } from "@headlessui-float/react";
 import { Menu } from "@headlessui/react";
+import * as RadixDropdownMenu from "@radix-ui/react-dropdown-menu";
 import cx from "classnames";
 import { ReactNode } from "react";
 
@@ -17,51 +17,32 @@ export type DropdownMenuProps = {
 export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
   return (
     <Menu>
-      <Float
-        arrow
-        enter="ctw-transition ctw-duration-75 ctw-ease-out"
-        flip
-        offset={5}
-        placement="bottom-start"
-        portal
-        shift={10}
-        enterFrom="ctw-opacity-0"
-        enterTo="ctw-opacity-100"
-        leave="ctw-transition ctw-duration-75 ctw-ease-in"
-        leaveFrom="ctw-opacity-100"
-        leaveTo="ctw-opacity-0"
-        tailwindcssOriginClass
-      >
-        <Menu.Button className="ctw-btn-clear ctw-link">{children}</Menu.Button>
+      <RadixDropdownMenu.Root modal={false}>
+        <RadixDropdownMenu.Trigger className="ctw-btn-clear ctw-link">
+          {children}
+        </RadixDropdownMenu.Trigger>
 
-        <Menu.Items
-          static
-          className="ctw-w-max ctw-bg-white ctw-ring-1 ctw-ring-divider-light ctw-ring-opacity-5 focus:ctw-outline-none"
-        >
-          <Float.Arrow className="ctw-absolute ctw-h-5 ctw-w-5 ctw-rotate-45 ctw-border ctw-border-divider-light ctw-bg-white" />
-          <div className="ctw-relative ctw-bg-white">
+        <RadixDropdownMenu.Portal>
+          <RadixDropdownMenu.Content
+            className="ctw-dropdown-menu-container"
+            collisionPadding={10}
+          >
+            <RadixDropdownMenu.Arrow asChild>
+              <div className="ctw-dropdown-menu-arrow" />
+            </RadixDropdownMenu.Arrow>
+
             {menuItems.map((menuItem) => (
-              <Menu.Item key={menuItem.name}>
-                {({ active }) => (
-                  <button
-                    type="button"
-                    onClick={() => menuItem.action()}
-                    className={cx(
-                      "ctw-flex ctw-w-full ctw-cursor-pointer ctw-items-center ctw-border-none ctw-bg-transparent ctw-py-2 ctw-px-2 ctw-text-primary-main",
-                      {
-                        "ctw-bg-primary-light": active,
-                      },
-                      menuItem.className
-                    )}
-                  >
-                    {menuItem.name}
-                  </button>
-                )}
-              </Menu.Item>
+              <RadixDropdownMenu.Item
+                onClick={menuItem.action}
+                key={menuItem.name}
+                className={cx(menuItem.className, "ctw-dropdown-menu-item")}
+              >
+                {menuItem.name}
+              </RadixDropdownMenu.Item>
             ))}
-          </div>
-        </Menu.Items>
-      </Float>
+          </RadixDropdownMenu.Content>
+        </RadixDropdownMenu.Portal>
+      </RadixDropdownMenu.Root>
     </Menu>
   );
 }
