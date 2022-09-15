@@ -24,7 +24,7 @@ export const DrawerForm = ({
   ...drawerProps
 }: DrawerFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const reset = () => {
     setErrors({});
