@@ -197,8 +197,3 @@
 *[class*="ctw-"]:after {
   box-sizing: border-box;
 }
-
-*[class*="ctw-"] button,
-input {
-  margin: 0;
-}
