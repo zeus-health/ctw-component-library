@@ -141,7 +141,7 @@ export function getParamsInternal<T>(
     }
   };
 
-  result.error.issues.forEach((issue) => {
+  result.error.issues.forEach((issue: any) => {
     const { message, path, code, expected, received } = issue;
     const [key, index] = path;
     let value = o[key];
