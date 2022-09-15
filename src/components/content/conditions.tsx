@@ -161,15 +161,17 @@ export function Conditions({ className }: ConditionsProps) {
         </div>
       </div>
 
-      <DrawerFormWithFields
-        patientID={patient?.id}
-        title="Add Condition"
-        actionName="createCondition"
-        data={getConditionFormData(addCondition)}
-        schema={conditionSchema}
-        isOpen={addConditionIsOpen}
-        onClose={() => setAddConditionIsOpen(false)}
-      />
+      {patient && (
+        <DrawerFormWithFields
+          patientID={patient.id}
+          title="Add Condition"
+          actionName="createCondition"
+          data={getConditionFormData(addCondition)}
+          schema={conditionSchema}
+          isOpen={addConditionIsOpen}
+          onClose={() => setAddConditionIsOpen(false)}
+        />
+      )}
     </div>
   );
 }
