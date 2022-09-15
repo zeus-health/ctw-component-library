@@ -43,7 +43,7 @@ export const DrawerForm = ({
       patientID,
       getCTWFhirClient
     );
-    setIsSubmitting(false);
+
     if (!response.success) {
       setErrors(response.errors);
     }
