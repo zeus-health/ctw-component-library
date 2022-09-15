@@ -3,6 +3,7 @@
 import {
   z,
   ZodArray,
+  ZodBoolean,
   ZodDate,
   ZodDefault,
   ZodEffects,

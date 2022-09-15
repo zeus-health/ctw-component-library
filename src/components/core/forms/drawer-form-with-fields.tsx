@@ -1,4 +1,5 @@
 import cx from "classnames";
+import { useCTW } from "../ctw-provider";
 import type { DrawerFormProps } from "./drawer-form";
 import { DrawerForm } from "./drawer-form";
 import { FormField } from "./form-field";
@@ -17,6 +18,7 @@ export type DrawerFormWithFieldsProps = {
   actionName: string;
   data: FormEntry[];
   schema: Zod.AnyZodObject;
+  patientID: string;
 } & Pick<DrawerFormProps, "onClose" | "isOpen">;
 
 export const DrawerFormWithFields = ({
@@ -24,11 +26,20 @@ export const DrawerFormWithFields = ({
   actionName,
   data,
   schema,
+  patientID,
   ...drawerFormProps
 }: DrawerFormWithFieldsProps) => {
   const inputProps = useFormInputProps(schema);
+  const { getCTWFhirClient } = useCTW();
+
   return (
-    <DrawerForm title={title} actionName={actionName} {...drawerFormProps}>
+    <DrawerForm
+      patientID={patientID}
+      title={title}
+      actionName={actionName}
+      getCTWFhirClient={getCTWFhirClient}
+      {...drawerFormProps}
+    >
       {(submitting, errors) => (
         <div className="ctw-space-y-6">
           {data.map(({ label, field, value, lines, readonly }) => {

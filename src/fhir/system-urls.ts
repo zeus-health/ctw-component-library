@@ -1,3 +1,9 @@
+export const SYSTEM_CONDITION_VERIFICATION_STATUS =
+  "http://terminology.hl7.org/CodeSystem/condition-ver-status";
+
+export const SYSTEM_CONDITION_CLINICAL =
+  "http://terminology.hl7.org/CodeSystem/condition-clinical";
+
 export const SYSTEM_ICD10 = "http://hl7.org/fhir/sid/icd-10";
 
 export const SYSTEM_MARITAL_STATUS =

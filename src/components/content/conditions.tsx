@@ -8,6 +8,7 @@ import {
   getLensConditions,
 } from "@/fhir/conditions";
 import { ConditionModel } from "@/models/conditions";
+import { PatientModel } from "@/models/patients";
 import cx from "classnames";
 import { useEffect, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
@@ -20,37 +21,25 @@ export type ConditionsProps = {
   className?: string;
 };
 
+const DEFAULT_MSG = "No conditions found";
 const DEFAULT_ERR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
 
 export function Conditions({ className }: ConditionsProps) {
   const [addConditionIsOpen, setAddConditionIsOpen] = useState(false);
-
-  const [confirmedConditions, setConfirmedConditions] = useState<
-    ConditionModel[]
-  >([]);
-  const [confirmedConditionsMessage, setConfirmedConditionsMessage] = useState(
-    "No conditions found"
-  );
-  const [confirmedConditionsIsLoading, setConfirmedConditionsIsLoading] =
-    useState(true);
-
-  const [notReviewedConditions, setNotReviewedConditions] = useState<
-    ConditionModel[]
-  >([]);
-  const [notReviewedConditionsIsLoading, setNotConfirmedConditionsIsLoading] =
-    useState(true);
-  const [notReviewedConditionsMessage, setNotReviewedConditionsMessage] =
-    useState("No conditions found");
-
+  const [confirmed, setConfirmed] = useState<ConditionModel[]>([]);
+  const [confirmedMessage, setConfirmedMessage] = useState(DEFAULT_MSG);
+  const [confirmedIsLoading, setConfirmedIsLoading] = useState(true);
+  const [notReviewed, setNotReviewed] = useState<ConditionModel[]>([]);
+  const [notReviewedIsLoading, setNotReviewedIsLoading] = useState(true);
+  const [notReviewedMessage, setNotReviewedMessage] = useState(DEFAULT_MSG);
   const [includeInactive, setIncludeInactive] = useState(true);
-  const { getCTWFhirClient } = useCTW();
+  const [patient, setPatient] = useState<PatientModel>();
 
+  const { getCTWFhirClient } = useCTW();
   const { patientUPIDPromise } = usePatient();
 
   const handleFormChange = () => setIncludeInactive(!includeInactive);
-
-  console.log("notReviewedConditions", notReviewedConditions);
 
   useEffect(() => {
     async function load() {
@@ -61,7 +50,9 @@ export function Conditions({ className }: ConditionsProps) {
         : {};
 
       const fhirClient = await getCTWFhirClient();
-      const patientUPID = await patientUPIDPromise;
+      const patientData = await patientUPIDPromise;
+      const patientUPID = patientData.UPID;
+      setPatient(patient);
 
       // use AllSettled instead of all as we want confirmed to still if lens fails
       const [confirmedConditionInfo, notReviewedConditionInfo] =
@@ -70,13 +61,13 @@ export function Conditions({ className }: ConditionsProps) {
           getLensConditions(fhirClient, patientUPID),
         ]);
 
-      setNotConfirmedConditionsIsLoading(false);
-      setConfirmedConditionsIsLoading(false);
+      setNotReviewedIsLoading(false);
+      setConfirmedIsLoading(false);
 
       /* notReviewedConditons depends confirmedConditions so that we can correctly filter out 
          conditions that appear in confirmedConditions from notReviewedConditons */
       if (confirmedConditionInfo.status === "fulfilled") {
-        setConfirmedConditions(
+        setConfirmed(
           confirmedConditionInfo.value.map((c) => new ConditionModel(c))
         );
         const ICD10ConfirmedCodes = confirmedConditionInfo.value.map(
@@ -88,18 +79,18 @@ export function Conditions({ className }: ConditionsProps) {
             notReviewedConditionInfo.value.filter(
               (c) => !ICD10ConfirmedCodes.includes(new ConditionModel(c).icd10)
             );
-          setNotReviewedConditions(
+          setNotReviewed(
             notReviewedConditionsFiltered.map((c) => new ConditionModel(c))
           );
         } else {
-          setNotReviewedConditions([]);
-          setNotReviewedConditionsMessage(DEFAULT_ERR_MSG);
+          setNotReviewed([]);
+          setNotReviewedMessage(DEFAULT_ERR_MSG);
         }
       } else {
-        setConfirmedConditions([]);
-        setConfirmedConditionsMessage(DEFAULT_ERR_MSG);
-        setNotReviewedConditions([]);
-        setNotReviewedConditionsMessage(DEFAULT_ERR_MSG);
+        setConfirmed([]);
+        setConfirmedMessage(DEFAULT_ERR_MSG);
+        setNotReviewed([]);
+        setNotReviewedMessage(DEFAULT_ERR_MSG);
       }
     }
     load();
@@ -138,9 +129,9 @@ export function Conditions({ className }: ConditionsProps) {
             <div className="ctw-title ctw-ml-3">Confirmed</div>
 
             <ConditionsTableBase
-              conditions={confirmedConditions}
-              isLoading={confirmedConditionsIsLoading}
-              message={confirmedConditionsMessage}
+              conditions={confirmed}
+              isLoading={confirmedIsLoading}
+              message={confirmedMessage}
               rowActions={[
                 { name: "Edit", action: () => setAddConditionIsOpen(true) },
                 {
@@ -154,10 +145,10 @@ export function Conditions({ className }: ConditionsProps) {
           <div className="ctw-space-y-3">
             <div className="ctw-title ctw-ml-3">Not Reviewed</div>
             <ConditionsTableBase
-              conditions={notReviewedConditions}
-              isLoading={notReviewedConditionsIsLoading}
+              conditions={notReviewed}
+              isLoading={notReviewedIsLoading}
               showTableHead={false}
-              message={notReviewedConditionsMessage}
+              message={notReviewedMessage}
               rowActions={[
                 { name: "Add", action: () => setAddConditionIsOpen(true) },
                 {
@@ -171,6 +162,7 @@ export function Conditions({ className }: ConditionsProps) {
       </div>
 
       <DrawerFormWithFields
+        patientID={patient?.id as string}
         title="Add Condition"
         actionName="createCondition"
         data={getConditionFormData(newCondition)}

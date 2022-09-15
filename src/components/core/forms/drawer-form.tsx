@@ -1,4 +1,5 @@
 import { action } from "@/components/core/forms/actions";
+import Client from "fhir-kit-client";
 import { ReactNode, useState } from "react";
 import type { DrawerProps } from "../drawer";
 import { Drawer } from "../drawer";
@@ -6,6 +7,8 @@ import { SaveButton } from "./save-button";
 
 export type DrawerFormProps = {
   actionName: string;
+  patientID: string;
+  getCTWFhirClient: Promise<Client>;
   children: (
     submitting: boolean,
     errors?: { [key: string]: string }
@@ -16,6 +19,8 @@ export const DrawerForm = ({
   actionName,
   onClose,
   children,
+  patientID,
+  getCTWFhirClient,
   ...drawerProps
 }: DrawerFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,7 +35,12 @@ export const DrawerForm = ({
     const form = event.target;
     const actionButton = form.action;
     const data = new FormData(form as HTMLFormElement);
-    const response = await action(data, actionButton.value);
+    const response = await action(
+      data,
+      actionButton.value,
+      patientID,
+      getCTWFhirClient
+    );
     setIsSubmitting(false);
     if (!response.success) {
       setErrors(response.errors);

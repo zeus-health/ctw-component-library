@@ -1,4 +1,5 @@
-import { getFhirClient, omitEmptyArrays } from "@/fhir/client";
+import { omitEmptyArrays } from "@/fhir/client";
+import Client from "fhir-kit-client";
 import { codeableConceptLabel, findCoding } from "../fhir/codeable-concept";
 import { formatDateISOToLocal } from "../fhir/formatters";
 import { SYSTEM_ICD10, SYSTEM_SNOMED } from "../fhir/system-urls";
@@ -10,9 +11,8 @@ export class ConditionModel {
     this.resource = condition;
   }
 
-  async save(accessToken: string) {
-    const fhirClient = await getFhirClient(accessToken);
-
+  async save(getCTWFhirClient: Promise<Client>) {
+    const fhirClient = await getCTWFhirClient();
     try {
       if (this.id) {
         return await fhirClient.update({

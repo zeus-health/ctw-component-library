@@ -1,3 +1,5 @@
+import { getBuilderFhirPatient } from "@/fhir/patient-helper";
+import { PatientModel } from "@/models/patients";
 import {
   createContext,
   ReactNode,
@@ -8,8 +10,6 @@ import {
 } from "react";
 
 import { useCTW } from "./ctw-provider";
-
-import { getUPIDfromPatientID } from "@/fhir/search-helpers";
 
 type ThirdPartyID = {
   patientUPID?: never;
@@ -23,20 +23,14 @@ type PatientUPIDSpecified = {
 };
 
 type ProviderState = {
-  patientUPIDPromise: Promise<string>;
+  patientUPIDPromise: Promise<PatientModel>;
 };
 
 type PatientProviderProps = {
   children: ReactNode;
 } & (ThirdPartyID | PatientUPIDSpecified);
 
-const unresolvedPromise = new Promise<string>((resolve, reject) => {});
-
-// const response = await searchBuilderRecords("Patient", accessToken, {
-//   patientUPID,
-//   _count: 1,
-//   _include: "Patient:organization",
-// });
+const unresolvedPromise = new Promise<PatientModel>((resolve, reject) => {});
 
 export const CTWPatientContext = createContext<ProviderState>({
   patientUPIDPromise: unresolvedPromise,
@@ -54,12 +48,12 @@ export function PatientProvider({
 
   useEffect(() => {
     async function getPatientUPID() {
-      if (patientUPID) {
-        return patientUPID;
-      }
+      // if (patientUPID) {
+      //   return patientUPID;
+      // }
       if (patientID && systemURL) {
         const fhirClient = await getCTWFhirClient();
-        return getUPIDfromPatientID(fhirClient, patientID, systemURL);
+        return getBuilderFhirPatient(fhirClient, patientID, systemURL);
       }
       // This should not actually be possible.
       throw new Error("Patient UPID or patient id/system url was not defined.");
