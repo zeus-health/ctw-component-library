@@ -85,7 +85,6 @@ export const createCondition = async (
   patientID: string,
   getCTWFhirClient: Promise<Client>
 ) => {
-  // const { accessToken, headers } = await requireValidUserForAction(request);
   const result = await getFormData(data, conditionSchema);
   if (!result.success) {
     return result;
