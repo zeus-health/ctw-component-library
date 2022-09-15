@@ -37,8 +37,11 @@ export default function SelectField({
             <span className="ctw-block ctw-truncate">
               {selected ?? noneSelected}
             </span>
-            <span className="ctw-pointer-events-none ctw-mr-1">
-              <SelectorIcon className="ctw-h-5 ctw-w-5" aria-hidden="true" />
+            <span className="ctw-pointer-events-none ctw--mr-1">
+              <SelectorIcon
+                className="ctw-block ctw-h-5 ctw-w-5"
+                aria-hidden="true"
+              />
             </span>
           </Listbox.Button>
 
@@ -67,7 +70,7 @@ export default function SelectField({
                     {isSelected ? (
                       <span className="ctw-absolute ctw-inset-y-0 ctw-left-0 ctw-flex ctw-items-center ctw-pl-3 ctw-text-primary-main">
                         <CheckIcon
-                          className="ctw-h-5 ctw-w-5"
+                          className="ctw-block ctw-h-5 ctw-w-5"
                           aria-hidden="true"
                         />
                       </span>

@@ -33,8 +33,13 @@ export class PatientModel {
     return undefined;
   }
 
-  get UPID(): string | undefined {
-    return find(this.resource.identifier, { system: SYSTEM_ZUS_UNIVERSAL_ID })
-      ?.value;
+  get UPID(): string {
+    const upid = find(this.resource.identifier, {
+      system: SYSTEM_ZUS_UNIVERSAL_ID,
+    })?.value;
+    if (!upid) {
+      throw Error(`"UPID not found on patient, ${this.id}`);
+    }
+    return upid;
   }
 }

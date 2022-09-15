@@ -37,7 +37,7 @@ export function Conditions({ className }: ConditionsProps) {
   const [patient, setPatient] = useState<PatientModel>();
 
   const { getCTWFhirClient } = useCTW();
-  const { patientUPIDPromise } = usePatient();
+  const { patientPromise } = usePatient();
 
   const handleFormChange = () => setIncludeInactive(!includeInactive);
 
@@ -50,9 +50,9 @@ export function Conditions({ className }: ConditionsProps) {
         : {};
 
       const fhirClient = await getCTWFhirClient();
-      const patientData = await patientUPIDPromise;
-      const patientUPID = patientData.UPID;
-      setPatient(patientData);
+      const patientTemp = await patientPromise;
+      const patientUPID = patientTemp.UPID;
+      setPatient(patientTemp);
 
       // use AllSettled instead of all as we want confirmed to still if lens fails
       const [confirmedConditionInfo, notReviewedConditionInfo] =
@@ -94,11 +94,11 @@ export function Conditions({ className }: ConditionsProps) {
       }
     }
     load();
-  }, [includeInactive, patientUPIDPromise, getCTWFhirClient, patient]);
+  }, [includeInactive, patientPromise, getCTWFhirClient, patient]);
 
-  const newCondition = new ConditionModel({
+  const addCondition = new ConditionModel({
     resourceType: "Condition",
-    subject: { type: "Patient", reference: `Patient/` },
+    subject: { type: "Patient", reference: `Patient/${patient?.id}` },
   });
 
   return (
@@ -162,10 +162,10 @@ export function Conditions({ className }: ConditionsProps) {
       </div>
 
       <DrawerFormWithFields
-        patientID={patient?.id as string}
+        patientID={patient?.id}
         title="Add Condition"
         actionName="createCondition"
-        data={getConditionFormData(newCondition)}
+        data={getConditionFormData(addCondition)}
         schema={conditionSchema}
         isOpen={addConditionIsOpen}
         onClose={() => setAddConditionIsOpen(false)}

@@ -15,6 +15,7 @@
   .ctw-listbox-input {
     @apply ctw-rounded-md ctw-border ctw-border-icon-light ctw-px-3 ctw-py-2 ctw-text-sm ctw-shadow-sm;
     border-style: solid;
+    background-color: initial;
   }
 
   .ctw-listbox {

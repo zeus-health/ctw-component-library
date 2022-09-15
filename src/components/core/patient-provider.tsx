@@ -23,7 +23,7 @@ type PatientUPIDSpecified = {
 };
 
 type ProviderState = {
-  patientUPIDPromise: Promise<PatientModel>;
+  patientPromise: Promise<PatientModel>;
 };
 
 type PatientProviderProps = {
@@ -33,7 +33,7 @@ type PatientProviderProps = {
 const unresolvedPromise = new Promise<PatientModel>((resolve, reject) => {});
 
 export const CTWPatientContext = createContext<ProviderState>({
-  patientUPIDPromise: unresolvedPromise,
+  patientPromise: unresolvedPromise,
 });
 
 export function PatientProvider({
@@ -42,12 +42,11 @@ export function PatientProvider({
   patientID,
   systemURL,
 }: PatientProviderProps) {
-  const [patientUPIDPromise, setPatientUPIDPromise] =
-    useState(unresolvedPromise);
+  const [patientPromise, setPatientPromise] = useState(unresolvedPromise);
   const { getCTWFhirClient } = useCTW();
 
   useEffect(() => {
-    async function getPatientUPID() {
+    async function getPatient() {
       // if (patientUPID) {
       //   return patientUPID;
       // }
@@ -58,13 +57,10 @@ export function PatientProvider({
       // This should not actually be possible.
       throw new Error("Patient UPID or patient id/system url was not defined.");
     }
-    setPatientUPIDPromise(getPatientUPID());
+    setPatientPromise(getPatient());
   }, [patientID, systemURL, patientUPID, getCTWFhirClient]);
 
-  const providerState = useMemo(
-    () => ({ patientUPIDPromise }),
-    [patientUPIDPromise]
-  );
+  const providerState = useMemo(() => ({ patientPromise }), [patientPromise]);
   return (
     <CTWPatientContext.Provider value={providerState}>
       {children}
