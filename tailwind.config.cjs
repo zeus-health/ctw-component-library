@@ -7,7 +7,7 @@ const {
 } = require("./tailwind-gen.theme.cjs");
 
 const createCSSVar = (name, defaultVal) =>
-  `var(${nameCSSVar(name)}, ${defaultVal}) `;
+  `var(${nameCSSVar(name)}, ${defaultVal})`;
 
 // Loop over properties and adds css variables so that the properties can be overwritten.
 const addCSSVarReference = (colorConfig) => {
