@@ -8,7 +8,7 @@ import { SaveButton } from "./save-button";
 export type DrawerFormProps = {
   actionName: string;
   patientID: string;
-  getCTWFhirClient: Promise<Client>;
+  getCTWFhirClient: () => Promise<Client>;
   children: (
     submitting: boolean,
     errors?: { [key: string]: string }

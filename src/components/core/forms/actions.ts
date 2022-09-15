@@ -5,7 +5,7 @@ export const action = async (
   formData: FormData,
   formAction: string,
   patientID: string,
-  getCTWFhirClient: Promise<Client>
+  getCTWFhirClient: () => Promise<Client>
 ) => {
   switch (formAction) {
     case "createCondition":

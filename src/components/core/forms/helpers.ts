@@ -83,7 +83,7 @@ export const conditionSchema = z.object({
 export const createCondition = async (
   data: FormData,
   patientID: string,
-  getCTWFhirClient: Promise<Client>
+  getCTWFhirClient: () => Promise<Client>
 ) => {
   const result = await getFormData(data, conditionSchema);
   if (!result.success) {

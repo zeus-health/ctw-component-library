@@ -11,7 +11,7 @@ export class ConditionModel {
     this.resource = condition;
   }
 
-  async save(getCTWFhirClient: Promise<Client>) {
+  async save(getCTWFhirClient: () => Promise<Client>) {
     const fhirClient = await getCTWFhirClient();
     try {
       if (this.id) {
