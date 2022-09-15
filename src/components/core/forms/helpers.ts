@@ -127,7 +127,6 @@ export const createCondition = async (
   };
 
   const conditionModel = new ConditionModel(fhirCondition);
-
   await conditionModel.save(getCTWFhirClient);
 
   return result;

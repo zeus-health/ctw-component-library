@@ -45,8 +45,6 @@ export const DrawerForm = ({
     if (!response.success) {
       setErrors(response.errors);
     }
-
-    console.log("response", response);
   };
 
   return (

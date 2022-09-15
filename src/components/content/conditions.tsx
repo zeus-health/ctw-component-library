@@ -52,7 +52,7 @@ export function Conditions({ className }: ConditionsProps) {
       const fhirClient = await getCTWFhirClient();
       const patientData = await patientUPIDPromise;
       const patientUPID = patientData.UPID;
-      setPatient(patient);
+      setPatient(patientData);
 
       // use AllSettled instead of all as we want confirmed to still if lens fails
       const [confirmedConditionInfo, notReviewedConditionInfo] =
@@ -94,7 +94,7 @@ export function Conditions({ className }: ConditionsProps) {
       }
     }
     load();
-  }, [includeInactive, patientUPIDPromise, getCTWFhirClient]);
+  }, [includeInactive, patientUPIDPromise, getCTWFhirClient, patient]);
 
   const newCondition = new ConditionModel({
     resourceType: "Condition",
