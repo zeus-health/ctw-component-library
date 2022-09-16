@@ -54,28 +54,27 @@ export function Conditions({ className }: ConditionsProps) {
       setPatient(patientTemp);
 
       // use AllSettled instead of all as we want confirmed to still if lens fails
-      const [confirmedConditionInfo, notReviewedConditionInfo] =
-        await Promise.allSettled([
+      const [confirmedResponse, notReviewedResponse] = await Promise.allSettled(
+        [
           getConfirmedConditions(fhirClient, patientUPID, conditionFilter),
           getLensConditions(fhirClient, patientUPID),
-        ]);
+        ]
+      );
 
       setNotReviewedIsLoading(false);
       setConfirmedIsLoading(false);
 
       /* notReviewedConditons depends confirmedConditions so that we can correctly filter out 
          conditions that appear in confirmedConditions from notReviewedConditons */
-      if (confirmedConditionInfo.status === "fulfilled") {
-        setConfirmed(
-          confirmedConditionInfo.value.map((c) => new ConditionModel(c))
-        );
-        const ICD10ConfirmedCodes = confirmedConditionInfo.value.map(
+      if (confirmedResponse.status === "fulfilled") {
+        setConfirmed(confirmedResponse.value.map((c) => new ConditionModel(c)));
+        const ICD10ConfirmedCodes = confirmedResponse.value.map(
           (c) => new ConditionModel(c).icd10
         );
 
-        if (notReviewedConditionInfo.status === "fulfilled") {
+        if (notReviewedResponse.status === "fulfilled") {
           const notReviewedConditionsFiltered =
-            notReviewedConditionInfo.value.filter(
+            notReviewedResponse.value.filter(
               (c) => !ICD10ConfirmedCodes.includes(new ConditionModel(c).icd10)
             );
           setNotReviewed(
