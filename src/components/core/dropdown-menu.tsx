@@ -34,7 +34,7 @@ export function DropdownMenu({ children, menuItems, data }: DropdownMenuProps) {
 
             {menuItems.map((menuItem) => (
               <RadixDropdownMenu.Item
-                onClick={menuItem.action}
+                onClick={(e) => menuItem.action(e, data)}
                 key={menuItem.name}
                 className={cx(menuItem.className, "ctw-dropdown-menu-item")}
               >
