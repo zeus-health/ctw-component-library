@@ -1,3 +1,4 @@
+import { ConditionModel } from "@/models/conditions";
 import { Menu } from "@headlessui/react";
 import * as RadixDropdownMenu from "@radix-ui/react-dropdown-menu";
 import cx from "classnames";
@@ -5,14 +6,17 @@ import { ReactNode } from "react";
 
 export type MenuItems = {
   name: string;
-  action: (e, data: any) => void;
+  action: (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    data: ConditionModel
+  ) => void;
   className?: string;
 };
 
 export type DropdownMenuProps = {
   children: ReactNode;
   menuItems: MenuItems[];
-  data: any;
+  data: ConditionModel;
 };
 
 export function DropdownMenu({ children, menuItems, data }: DropdownMenuProps) {

@@ -15,7 +15,6 @@ export function ConditionHistoryDrawer({
   isOpen,
   onClose,
 }: ConditionHistoryDrawerProps) {
-  console.log("icd10", condition?.icd10);
   const data = ConditionHistory({ icd10: condition?.icd10 });
   const conditionName = condition?.display;
   const title = "Condition History";

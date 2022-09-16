@@ -10,7 +10,7 @@ import {
 import { usePatient } from "../core/patient-provider";
 import { Spinner } from "../core/spinner";
 
-const CONDITION_HISTORY_LIMIT = 2;
+const CONDITION_HISTORY_LIMIT = 10;
 
 export type ConditionHistoryProps = {
   icd10?: string | undefined;
