@@ -120,7 +120,8 @@ export function Conditions({ className }: ConditionsProps) {
           + Add Condition
         </button>
       </div>
-      <div className="ctw-space-y-5 ctw-py-3 ctw-px-4 ">
+
+      <div className="ctw-space-y-5 ctw-bg-bg-white ctw-py-3 ctw-px-4">
         <div className="ctw-space-y-5 ctw-py-3 ctw-px-4">
           <ToggleControl
             onFormChange={handleFormChange}

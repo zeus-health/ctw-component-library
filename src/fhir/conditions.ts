@@ -1,4 +1,6 @@
+import { ConditionModel } from "@/models/conditions";
 import Client from "fhir-kit-client";
+import { sortBy } from "lodash";
 
 import {
   flattenArrayFilters,
@@ -33,9 +35,8 @@ export async function getConfirmedConditions(
         ...flattenArrayFilters(conditionFilters),
       }
     );
-    return conditions.filter(
-      (condition) => condition.asserter?.type !== "Patient"
-    );
+
+    return filterAndSort(conditions);
   } catch (e) {
     throw new Error(`Failed fetching condition information for patient: ${e}`);
   }
@@ -55,9 +56,7 @@ export async function getLensConditions(
         ...conditionFilters,
       }
     );
-    return conditions.filter(
-      (condition) => condition.asserter?.type !== "Patient"
-    );
+    return filterAndSort(conditions);
   } catch (e) {
     throw new Error(`Failed fetching condition information for patient: ${e}`);
   }
@@ -82,4 +81,11 @@ export async function getConditionHistory(
       `Failed fetching condition history information for patient: ${e}`
     );
   }
+}
+
+function filterAndSort(conditions: fhir4.Condition[]) {
+  return sortBy(
+    conditions.filter((condition) => condition.asserter?.type !== "Patient"),
+    (condition) => new ConditionModel(condition).display
+  );
 }

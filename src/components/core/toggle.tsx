@@ -16,7 +16,7 @@ export const Toggle = ({ name, text, inputRest }: ToggleProps) => (
           type="checkbox"
           name={name}
           id={name}
-          className="ctw-toggle-checkbox ctw-absolute ctw-block ctw-h-6 ctw-w-6 ctw-cursor-pointer ctw-appearance-none ctw-rounded-full ctw-border-4 ctw-bg-white"
+          className="ctw-toggle-checkbox ctw-absolute ctw-m-0 ctw-block ctw-h-6 ctw-w-6 ctw-cursor-pointer ctw-appearance-none ctw-rounded-full ctw-border-4 ctw-bg-white"
         />
         <span className="ctw-toggle-span" />
       </label>
