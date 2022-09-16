@@ -11,6 +11,7 @@ export type FormEntry = {
   value?: string;
   lines?: number;
   readonly?: boolean;
+  hidden?: boolean;
 };
 
 export type DrawerFormWithFieldsProps = {
@@ -42,11 +43,28 @@ export const DrawerFormWithFields = ({
     >
       {(submitting, errors) => (
         <div className="ctw-space-y-6">
-          {data.map(({ label, field, value, lines, readonly }) => {
+          {data.map(({ label, field, value, lines, readonly, hidden }) => {
             const error = errors?.[field];
             // Parse out options if there are any.
             // See https://github.com/kiliman/remix-params-helper/issues/26
             const options = getOptions(schema, field);
+
+            if (hidden) {
+              return (
+                <FormField
+                  {...inputProps(field)}
+                  options={options}
+                  lines={lines}
+                  disabled={submitting}
+                  readonly={readonly}
+                  required={false} // Work around bug -- https://github.com/kiliman/remix-params-helper/issues/22
+                  defaultValue={value}
+                  error={error}
+                  hidden={hidden}
+                />
+              );
+            }
+
             return (
               <div
                 key={label}
@@ -62,6 +80,7 @@ export const DrawerFormWithFields = ({
                     </p>
                   )}
                 </div>
+
                 <FormField
                   {...inputProps(field)}
                   options={options}
@@ -71,6 +90,7 @@ export const DrawerFormWithFields = ({
                   required={false} // Work around bug -- https://github.com/kiliman/remix-params-helper/issues/22
                   defaultValue={value}
                   error={error}
+                  hidden={hidden}
                 />
               </div>
             );

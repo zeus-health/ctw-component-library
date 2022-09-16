@@ -18,6 +18,7 @@ export const FormField = ({
   lines,
   defaultValue,
   readonly,
+  hidden,
   ...inputProps
 }: FormFieldProps) => {
   // We display dates in MM/DD/YYYY format, but date input fields
@@ -64,6 +65,17 @@ export const FormField = ({
       />
     );
   };
+
+  if (hidden) {
+    return (
+      <input
+        {...inputProps}
+        className={cx({ error }, "ctw-listbox-input ctw-w-full")}
+        defaultValue={value}
+        hidden={hidden}
+      />
+    );
+  }
 
   return (
     <>

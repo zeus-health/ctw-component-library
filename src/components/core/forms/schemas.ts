@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const conditionSchema = z.object({
+  id: z.string().optional(),
   subjectID: z.string({
     required_error: "Condition subjectID must be specified.",
   }),

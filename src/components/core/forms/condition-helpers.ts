@@ -34,6 +34,13 @@ export const getEditingOrAddingFromLensConditionData = ({
 }): FormEntry[] => {
   condition.setSubjectID(patientID);
   return [
+    {
+      label: "id",
+      value: condition.id,
+      field: "id",
+      readonly: true,
+      hidden: true,
+    },
     ...editOrAddFromLensSharedFields(condition),
     ...sharedFields(condition),
   ];

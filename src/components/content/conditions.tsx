@@ -151,14 +151,14 @@ export function Conditions({ className }: ConditionsProps) {
                 {
                   name: "Edit",
                   action: (_, condition) => {
-                    // setAddConditionIsOpen(true);
-                    // setFormDrawerTitle("Edit");
-                    // setCurrentlySelectedData(
-                    //   getEditingOrAddingFromLensConditionData({
-                    //     condition,
-                    //     patientID: patient.id,
-                    //   })
-                    // );
+                    setAddConditionIsOpen(true);
+                    setFormDrawerTitle("Edit");
+                    setCurrentlySelectedData(
+                      getEditingOrAddingFromLensConditionData({
+                        condition,
+                        patientID: patient.id,
+                      })
+                    );
                   },
                 },
                 {

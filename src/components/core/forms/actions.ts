@@ -38,6 +38,7 @@ export const createCondition = async (
   // Some fields will need to be set as they are required.
   const fhirCondition: fhir4.Condition = {
     resourceType: "Condition",
+    ...(result.data.id && { id: result.data.id }),
     clinicalStatus: {
       coding: [
         {
