@@ -64,7 +64,9 @@ export const createCondition = async (
       ],
       text: result.data.display,
     },
-    abatementDateTime: dateToISO(result.data.abatement),
+    ...(result.data.abatement && {
+      abatementDateTime: dateToISO(result.data.abatement),
+    }),
     onsetDateTime: dateToISO(result.data.onset),
     recordedDate: dateToISO(result.data.recordedDate),
     subject: { type: "Patient", reference: `Patient/${patientID}` },

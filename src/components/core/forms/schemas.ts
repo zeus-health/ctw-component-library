@@ -18,7 +18,7 @@ export const conditionSchema = z.object({
     "resolved",
   ]),
   onset: z.date({ required_error: "Conditions's onset is required." }),
-  abatement: z.date({ required_error: "Condition's abatement is required." }),
+  abatement: z.date().optional(),
   verificationStatus: z.enum([
     "unconfirmed",
     "provisional",
