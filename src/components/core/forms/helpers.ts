@@ -27,19 +27,16 @@ export const getConditionFormData = ({
       readonly: true,
     },
     {
-      label: "Recorded Date",
-      value: condition.recordedDate,
-      field: "recordedDate",
-    },
-    {
       label: "Name",
       value: condition.display,
       field: "display",
+      readonly: true,
     },
     {
       label: "Snomed Code",
       value: condition.snomedCode,
       field: "snomedCode",
+      readonly: true,
     },
     {
       label: "Clinical Status",
@@ -50,6 +47,11 @@ export const getConditionFormData = ({
       label: "Verification Status",
       value: condition.verificationStatus,
       field: "verificationStatus",
+    },
+    {
+      label: "Recorded Date",
+      value: condition.recordedDate,
+      field: "recordedDate",
     },
     {
       label: "Onset",
