@@ -1,4 +1,7 @@
-import { getConditionFormData } from "@/components/core/forms/helpers";
+import {
+  getAddConditionData,
+  getEditingOrAddingFromLensConditionData,
+} from "@/components/core/forms/condition-helpers";
 import {
   ConditionFilters,
   getConfirmedConditions,
@@ -9,7 +12,10 @@ import { PatientModel } from "@/models/patients";
 import cx from "classnames";
 import { useEffect, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
-import { DrawerFormWithFields } from "../core/forms/drawer-form-with-fields";
+import {
+  DrawerFormWithFields,
+  FormEntry,
+} from "../core/forms/drawer-form-with-fields";
 import { conditionSchema } from "../core/forms/schemas";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
@@ -33,7 +39,10 @@ export function Conditions({ className }: ConditionsProps) {
   const [notReviewedMessage, setNotReviewedMessage] = useState(EMPTY_MESSAGE);
   const [includeInactive, setIncludeInactive] = useState(true);
   const [patient, setPatient] = useState<PatientModel>();
+  const [formDrawerTitle, setFormDrawerTitle] = useState("");
   const [currentlySelected, setCurrentlySelected] = useState<ConditionModel>();
+  const [currentSelectedData, setCurrentlySelectedData] =
+    useState<FormEntry[]>();
 
   const { getCTWFhirClient } = useCTW();
   const { patientPromise } = usePatient();
@@ -106,7 +115,20 @@ export function Conditions({ className }: ConditionsProps) {
         <button
           type="button"
           className="ctw-btn-clear ctw-link"
-          onClick={() => setAddConditionIsOpen(true)}
+          onClick={() => {
+            const newCondition: fhir4.Condition = {
+              resourceType: "Condition",
+              subject: { type: "Patient", reference: `Patient/${patient.id}` },
+            };
+
+            setAddConditionIsOpen(true);
+            setFormDrawerTitle("Add");
+            setCurrentlySelectedData(
+              getAddConditionData({
+                condition: new ConditionModel(newCondition),
+              })
+            );
+          }}
         >
           + Add Condition
         </button>
@@ -126,7 +148,19 @@ export function Conditions({ className }: ConditionsProps) {
               isLoading={confirmedIsLoading}
               message={confirmedMessage}
               rowActions={[
-                { name: "Edit", action: () => setAddConditionIsOpen(true) },
+                {
+                  name: "Edit",
+                  action: (_, condition) => {
+                    setAddConditionIsOpen(true);
+                    setFormDrawerTitle("Edit");
+                    setCurrentlySelectedData(
+                      getEditingOrAddingFromLensConditionData({
+                        condition,
+                        patientID: patient.id,
+                      })
+                    );
+                  },
+                },
                 {
                   name: "View History",
                   action: () => setAddConditionIsOpen(true),
@@ -147,7 +181,13 @@ export function Conditions({ className }: ConditionsProps) {
                   name: "Add",
                   action: (_, condition) => {
                     setAddConditionIsOpen(true);
-                    setCurrentlySelected(condition);
+                    setFormDrawerTitle("Add");
+                    setCurrentlySelectedData(
+                      getEditingOrAddingFromLensConditionData({
+                        condition,
+                        patientID: patient.id,
+                      })
+                    );
                   },
                 },
                 {
@@ -160,15 +200,12 @@ export function Conditions({ className }: ConditionsProps) {
         </div>
       </div>
 
-      {patient && currentlySelected && (
+      {patient && currentSelectedData && (
         <DrawerFormWithFields
           patientID={patient.id}
-          title="Add Condition"
+          title={`${formDrawerTitle} Condition`}
           actionName="createCondition"
-          data={getConditionFormData({
-            condition: currentlySelected,
-            patientID: patient.id,
-          })}
+          data={currentSelectedData}
           schema={conditionSchema}
           isOpen={addConditionIsOpen}
           onClose={() => setAddConditionIsOpen(false)}
