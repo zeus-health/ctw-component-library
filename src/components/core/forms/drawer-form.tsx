@@ -48,6 +48,7 @@ export const DrawerForm = ({
 
     if (!response.success) {
       setErrors(response.errors);
+      setIsSubmitting(false);
     }
   };
 

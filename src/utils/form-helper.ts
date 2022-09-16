@@ -21,7 +21,6 @@ import Zod, {
 export function parseParams(o: any, schema: any, key: string, value: any) {
   // find actual shape definition for this key
   let shape = schema;
-  console.log("shape", shape);
   while (shape instanceof ZodObject || shape instanceof ZodEffects) {
     shape =
       shape instanceof ZodObject
@@ -106,7 +105,7 @@ export function getParamsInternal<T>(
   params: URLSearchParams | FormData | Record<string, string | undefined>,
   schema: any
 ):
-  | { success: true; data: T; errors: undefined }
+  | { success: true | false; data: T; errors: undefined }
   | { success: false; data: undefined; errors: { [key: string]: string } } {
   // @ts-ignore
   let o: any = {};

@@ -1,3 +1,4 @@
+import { isFhirError } from "@/fhir/errors";
 import { dateToISO } from "@/fhir/formatters";
 import {
   SYSTEM_CONDITION_CLINICAL,
@@ -137,7 +138,11 @@ export const createCondition = async (
   };
 
   const conditionModel = new ConditionModel(fhirCondition);
-  await conditionModel.save(getCTWFhirClient);
+  const response = await conditionModel.save(getCTWFhirClient);
+
+  if (isFhirError(response)) {
+    result.success = false;
+  }
 
   return result;
 };

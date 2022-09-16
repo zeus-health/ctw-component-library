@@ -1,4 +1,5 @@
 import { omitEmptyArrays } from "@/fhir/client";
+import { isFhirError } from "@/fhir/errors";
 import Client from "fhir-kit-client";
 import { codeableConceptLabel, findCoding } from "../fhir/codeable-concept";
 import { formatDateISOToLocal } from "../fhir/formatters";
@@ -26,7 +27,10 @@ export class ConditionModel {
         body: omitEmptyArrays(this.resource) as fhir4.Condition,
       });
     } catch (err) {
-      throw Error("Failed saving condition.");
+      if (isFhirError(err)) {
+        return err;
+      }
+      throw Error("Failed saving error");
     }
   }
 
