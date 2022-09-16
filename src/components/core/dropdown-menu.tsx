@@ -5,7 +5,7 @@ import { ReactNode } from "react";
 
 export type MenuItems = {
   name: string;
-  action: (e: any, data: any) => void;
+  action: (e, data: any) => void;
   className?: string;
 };
 

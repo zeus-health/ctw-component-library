@@ -135,11 +135,15 @@ export class ConditionModel {
     return codeableConceptLabel(this.resource.verificationStatus);
   }
 
-  get code(): string | undefined {
+  get snomedCode(): string | undefined {
     return findCoding(SYSTEM_SNOMED, this.resource.code)?.code;
   }
 
-  get system(): string | undefined {
+  get snomedSystem(): string | undefined {
     return findCoding(SYSTEM_SNOMED, this.resource.code)?.system;
+  }
+
+  get snomedDisplay(): string | undefined {
+    return findCoding(SYSTEM_SNOMED, this.resource.code)?.display;
   }
 }

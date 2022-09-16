@@ -15,9 +15,8 @@ export function ConditionHistoryDrawer({
   isOpen,
   onClose,
 }: ConditionHistoryDrawerProps) {
-  console.log(condition);
-  console.log("icd10 is", condition?.icd10);
   const data = ConditionHistory({ icd10: condition?.icd10 });
+  const conditionName = condition?.display;
   const title = "Condition History";
 
   return (
@@ -27,6 +26,9 @@ export function ConditionHistoryDrawer({
       isOpen={isOpen}
       onClose={onClose}
     >
+      <div className="ctw-flex ctw-p-6 ctw-text-2xl ctw-text-black">
+        {conditionName}
+      </div>
       <Drawer.Body>{data}</Drawer.Body>
       <Drawer.Footer>
         <div className="ctw-flex ctw-justify-end ctw-space-x-3 ctw-text-black ">

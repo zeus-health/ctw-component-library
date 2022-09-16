@@ -23,7 +23,7 @@ const DEFAULT_ERR_MSG =
 export function Conditions({ className }: ConditionsProps) {
   const [addConditionIsOpen, setAddConditionIsOpen] = useState(false);
   const [viewConditionIsOpen, setViewConditionIsOpen] = useState(false);
-  const [currentConditionFromClick, setCurrentConditionFromclick] =
+  const [currentlyClickedCondition, setcurrentlyClickedCondition] =
     useState<ConditionModel>();
 
   const [confirmedConditions, setConfirmedConditions] = useState<
@@ -139,7 +139,7 @@ export function Conditions({ className }: ConditionsProps) {
                   name: "View History",
                   action: (e, data) => {
                     setViewConditionIsOpen(true);
-                    setCurrentConditionFromclick(data);
+                    setcurrentlyClickedCondition(data);
                   },
                 },
               ]}
@@ -159,7 +159,7 @@ export function Conditions({ className }: ConditionsProps) {
                   name: "View History",
                   action: (e, data) => {
                     setViewConditionIsOpen(true);
-                    setCurrentConditionFromclick(data);
+                    setcurrentlyClickedCondition(data);
                   },
                 },
               ]}
@@ -174,7 +174,7 @@ export function Conditions({ className }: ConditionsProps) {
       <ConditionHistoryDrawer
         isOpen={viewConditionIsOpen}
         onClose={() => setViewConditionIsOpen(false)}
-        condition={currentConditionFromClick}
+        condition={currentlyClickedCondition}
       />
     </div>
   );

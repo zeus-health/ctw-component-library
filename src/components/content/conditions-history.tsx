@@ -10,7 +10,7 @@ import {
 import { usePatient } from "../core/patient-provider";
 import { Spinner } from "../core/spinner";
 
-const CONDITION_HISTORY_LIMIT = 10;
+const CONDITION_HISTORY_LIMIT = 2;
 
 export type ConditionHistoryProps = {
   icd10?: string | undefined;
@@ -27,7 +27,6 @@ export function ConditionHistory({ icd10 }: ConditionHistoryProps) {
       const fhirClient = await getCTWFhirClient();
       const patientUPID = await patientUPIDPromise;
 
-      // fhirclient call
       const allConditions = await getConditionHistory(fhirClient, patientUPID);
       const models = allConditions.map(
         (condition) => new ConditionModel(condition)
@@ -37,7 +36,6 @@ export function ConditionHistory({ icd10 }: ConditionHistoryProps) {
       );
       setConditions(filteredConditions.map((model) => setupData(model)));
       setLoading(false);
-      console.log(filteredConditions);
     }
 
     load();
@@ -60,16 +58,16 @@ export function ConditionHistory({ icd10 }: ConditionHistoryProps) {
           value: condition.recordedDate,
         },
         {
+          label: "Display",
+          value: condition.snomedDisplay,
+        },
+        {
           label: "Code",
-          value: condition.code,
+          value: condition.snomedCode,
         },
         {
           label: "System",
-          value: condition.system,
-        },
-        {
-          label: "Display",
-          value: condition.display,
+          value: condition.snomedSystem,
         },
       ],
     };
@@ -81,8 +79,10 @@ export function ConditionHistory({ icd10 }: ConditionHistoryProps) {
 
   if (loading) {
     return (
-      <div className="space-x-2">
-        <span className="text-sm italic">Loading condition history...</span>
+      <div className="ctw-space-x-2">
+        <span className="ctw-text-sm ctw-italic">
+          Loading condition history...
+        </span>
         <Spinner />
       </div>
     );
