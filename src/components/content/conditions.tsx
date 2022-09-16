@@ -1,7 +1,4 @@
-import {
-  conditionSchema,
-  getConditionFormData,
-} from "@/components/core/forms/helpers";
+import { getConditionFormData } from "@/components/core/forms/helpers";
 import {
   ConditionFilters,
   getConfirmedConditions,
@@ -13,6 +10,7 @@ import cx from "classnames";
 import { useEffect, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
 import { DrawerFormWithFields } from "../core/forms/drawer-form-with-fields";
+import { conditionSchema } from "../core/forms/schemas";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionsTableBase } from "./conditions-table-base";
