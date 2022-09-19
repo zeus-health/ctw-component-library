@@ -134,13 +134,13 @@ export function Conditions({ className }: ConditionsProps) {
               conditions={confirmedConditions}
               isLoading={confirmedConditionsIsLoading}
               message={confirmedConditionsMessage}
-              rowActions={(data) => [
+              rowActions={(condition) => [
                 { name: "Edit", action: () => setAddConditionIsOpen(true) },
                 {
                   name: "View History",
                   action: () => {
                     setViewConditionIsOpen(true);
-                    setcurrentlyClickedCondition(data);
+                    setcurrentlyClickedCondition(condition);
                   },
                 },
               ]}
