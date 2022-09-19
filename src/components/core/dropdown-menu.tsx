@@ -10,16 +10,11 @@ export type MenuItems = {
 };
 
 export type DropdownMenuProps = {
-  buttonClass?: string;
   children: ReactNode;
   menuItems: MenuItems[];
 };
 
-export function DropdownMenu({
-  buttonClass,
-  children,
-  menuItems,
-}: DropdownMenuProps) {
+export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
   return (
     <Menu>
       <RadixDropdownMenu.Root modal={false}>

@@ -1,8 +1,6 @@
 import cx from "classnames";
 import { ReactNode } from "react";
 
-import { MenuItems } from "../dropdown-menu";
-
 import { TableHead } from "./table-head";
 import { TableRows } from "./table-rows";
 
@@ -28,7 +26,6 @@ export type TableProps<T extends MinRecordItem> = {
   isLoading?: boolean;
   message?: string;
   showTableHead?: boolean;
-  rowActions?: MenuItems[];
 };
 
 export type TableBaseProps<T extends MinRecordItem> = Omit<
@@ -44,20 +41,19 @@ export const Table = <T extends MinRecordItem>({
   isLoading = false,
   message = "No records found",
   showTableHead = true,
-  rowActions,
 }: TableProps<T>) => (
-  <table className={cx("ctw-table-base", className)}>
-    {showTableHead && <TableHead columns={columns} rowActions={rowActions} />}
+  <div className={cx("ctw-table-base-container", className)}>
+    <table className="ctw-table-base">
+      {showTableHead && <TableHead columns={columns} />}
 
-    <tbody>
-      <TableRows
-        records={records}
-        columns={columns}
-        onRowClick={onRowClick}
-        isLoading={isLoading}
-        emptyMessage={message}
-        rowActions={rowActions}
-      />
-    </tbody>
-  </table>
+      <tbody>
+        <TableRows
+          records={records}
+          columns={columns}
+          isLoading={isLoading}
+          emptyMessage={message}
+        />
+      </tbody>
+    </table>
+  </div>
 );

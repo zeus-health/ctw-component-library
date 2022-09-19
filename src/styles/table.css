@@ -1,25 +1,29 @@
 @layer base {
+  .ctw-table-base-container {
+    @apply ctw-overflow-hidden ctw-rounded-lg ctw-border-solid ctw-border-divider-light;
+  }
+
   .ctw-table-base {
     container-type: normal;
-    border-collapse: collapse;
     table-layout: fixed;
     border-collapse: collapse;
-    overflow: hidden;
-    box-shadow: 0 0 0 1px var(--tw-shadow-color);
-    @apply ctw-w-full ctw-rounded-lg ctw-shadow-divider-light;
-    @apply cq-w-sm:ctw-rounded-none;
+    @apply ctw-w-full;
   }
 
-  .ctw-table-base tbody {
-    @apply ctw-divide-y ctw-divide-divider-light ctw-bg-white;
+  .ctw-table-base tr {
+    @apply ctw-border-0 ctw-border-b ctw-border-solid ctw-border-divider-light;
   }
 
-  .ctw-table-row-container {
+  .ctw-table-base thead th {
+    @apply ctw-p-3 ctw-text-left ctw-text-xs ctw-font-medium ctw-uppercase ctw-tracking-wider ctw-text-content-light;
+  }
+
+  .ctw-table-base tbody tr {
     @apply ctw-relative ctw-align-top cq-w-sm:ctw-block cq-w-sm:ctw-p-3;
   }
 
   .ctw-table-action-column {
-    @apply ctw-right-0 ctw-bg-white;
+    @apply ctw-right-0 ctw-bg-white ctw-text-right;
     @apply cq-w-sm:ctw-absolute cq-w-sm:ctw-top-0 cq-w-sm:-ctw-right-4 cq-w-sm:ctw-bg-transparent cq-w-sm:ctw-p-0;
   }
 }

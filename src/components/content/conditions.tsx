@@ -132,7 +132,7 @@ export function Conditions({ className }: ConditionsProps) {
             conditions={confirmedConditions}
             isLoading={confirmedConditionsIsLoading}
             message={confirmedConditionsMessage}
-            rowActions={[
+            rowActions={(condition) => [
               { name: "Edit", action: () => setAddConditionIsOpen(true) },
               {
                 name: "View History",
@@ -149,7 +149,7 @@ export function Conditions({ className }: ConditionsProps) {
             isLoading={notReviewedConditionsIsLoading}
             showTableHead={false}
             message={notReviewedConditionsMessage}
-            rowActions={[
+            rowActions={(condition) => [
               { name: "Add", action: () => setAddConditionIsOpen(true) },
               {
                 name: "View History",
