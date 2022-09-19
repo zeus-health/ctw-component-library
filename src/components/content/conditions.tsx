@@ -8,7 +8,6 @@ import {
   getLensConditions,
 } from "@/fhir/conditions";
 import { ConditionModel } from "@/models/conditions";
-import { PatientModel } from "@/models/patients";
 import cx from "classnames";
 import { useEffect, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
@@ -38,7 +37,7 @@ export function Conditions({ className }: ConditionsProps) {
   const [notReviewedIsLoading, setNotReviewedIsLoading] = useState(true);
   const [notReviewedMessage, setNotReviewedMessage] = useState(EMPTY_MESSAGE);
   const [includeInactive, setIncludeInactive] = useState(true);
-  const [patient, setPatient] = useState<PatientModel>();
+  const [patientID, setPatientID] = useState<string>();
   const [formAction, setFormAction] = useState("");
   const [currentSelectedData, setCurrentlySelectedData] =
     useState<FormEntry[]>();
@@ -59,7 +58,7 @@ export function Conditions({ className }: ConditionsProps) {
       const fhirClient = await getCTWFhirClient();
       const patientTemp = await patientPromise;
       const patientUPID = patientTemp.UPID;
-      setPatient(patientTemp);
+      setPatientID(patientUPID);
 
       // use AllSettled instead of all as we want confirmed to still if lens fails
       const [confirmedResponse, notReviewedResponse] = await Promise.allSettled(
@@ -100,12 +99,12 @@ export function Conditions({ className }: ConditionsProps) {
       }
     }
     load();
-  }, [includeInactive, patientPromise, getCTWFhirClient, patient]);
+  }, [includeInactive, patientPromise, getCTWFhirClient, patientID]);
 
   const addNewCondition = () => {
     const newCondition: fhir4.Condition = {
       resourceType: "Condition",
-      subject: { type: "Patient", reference: `Patient/${patient.id}` },
+      subject: { type: "Patient", reference: `Patient/${patientID}` },
     };
     setDrawerIsOpen(true);
     setFormAction("Add");
@@ -151,14 +150,16 @@ export function Conditions({ className }: ConditionsProps) {
                 {
                   name: "Edit",
                   action: (_, condition) => {
-                    setDrawerIsOpen(true);
-                    setFormAction("Edit");
-                    setCurrentlySelectedData(
-                      getEditingOrAddingFromLensConditionData({
-                        condition,
-                        patientID: patient.id,
-                      })
-                    );
+                    if (patientID) {
+                      setDrawerIsOpen(true);
+                      setFormAction("Edit");
+                      setCurrentlySelectedData(
+                        getEditingOrAddingFromLensConditionData({
+                          condition,
+                          patientID,
+                        })
+                      );
+                    }
                   },
                 },
                 {
@@ -180,14 +181,16 @@ export function Conditions({ className }: ConditionsProps) {
                 {
                   name: "Add",
                   action: (_, condition) => {
-                    setDrawerIsOpen(true);
-                    setFormAction("Add");
-                    setCurrentlySelectedData(
-                      getEditingOrAddingFromLensConditionData({
-                        condition,
-                        patientID: patient.id,
-                      })
-                    );
+                    if (patientID) {
+                      setDrawerIsOpen(true);
+                      setFormAction("Add");
+                      setCurrentlySelectedData(
+                        getEditingOrAddingFromLensConditionData({
+                          condition,
+                          patientID,
+                        })
+                      );
+                    }
                   },
                 },
                 {
@@ -200,9 +203,9 @@ export function Conditions({ className }: ConditionsProps) {
         </div>
       </div>
 
-      {patient && (
+      {patientID && (
         <DrawerFormWithFields
-          patientID={patient.id}
+          patientID={patientID}
           title={`${formAction} Condition`}
           action={createCondition}
           data={currentSelectedData}

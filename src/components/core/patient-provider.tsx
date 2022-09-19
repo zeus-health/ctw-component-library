@@ -23,7 +23,7 @@ type PatientUPIDSpecified = {
 };
 
 type ProviderState = {
-  patientPromise: Promise<PatientModel>;
+  patientPromise: Promise<string | PatientModel>;
 };
 
 type PatientProviderProps = {
@@ -42,14 +42,15 @@ export function PatientProvider({
   patientID,
   systemURL,
 }: PatientProviderProps) {
-  const [patientPromise, setPatientPromise] = useState(unresolvedPromise);
+  const [patientPromise, setPatientPromise] =
+    useState<Promise<string | PatientModel>>(unresolvedPromise);
   const { getCTWFhirClient } = useCTW();
 
   useEffect(() => {
     async function getPatient() {
-      // if (patientUPID) {
-      //   return patientUPID;
-      // }
+      if (patientUPID) {
+        return patientUPID;
+      }
       if (patientID && systemURL) {
         const fhirClient = await getCTWFhirClient();
         return getBuilderFhirPatient(fhirClient, patientID, systemURL);
