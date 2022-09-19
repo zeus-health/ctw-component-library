@@ -1,6 +1,10 @@
 @layer base {
   .ctw-table-container {
-    @apply ctw-py-2 ctw-align-middle;
+    @apply ctw-align-middle;
+  }
+
+  .ctw-table-row-container {
+    @apply ctw-relative ctw-align-top cq-w-sm:ctw-block cq-w-sm:ctw-p-3;
   }
 
   .ctw-table-scroll-container {
@@ -11,6 +15,7 @@
 
   .ctw-table-container2 {
     @apply ctw-scrollbar ctw-flex ctw-overflow-x-auto ctw-rounded-lg ctw-shadow ctw-ring-1 ctw-ring-divider-light ctw-ring-opacity-5;
+    @apply cq-w-sm:ctw-rounded-none;
   }
 
   .ctw-table-base {
@@ -23,6 +28,7 @@
 
   .ctw-table-action-column {
     @apply ctw-sticky ctw-right-0 ctw-bg-white;
+    @apply cq-w-sm:ctw-absolute cq-w-sm:ctw-top-0 cq-w-sm:-ctw-right-4 cq-w-sm:ctw-bg-transparent cq-w-sm:ctw-p-0;
   }
 
   .ctw-table-action-column-sticky:before {

@@ -26,7 +26,8 @@
   }
 
   .ctw-btn-clear {
-    @apply ctw-cursor-pointer ctw-border-transparent ctw-bg-transparent ctw-text-sm ctw-font-medium ctw-outline-none;
+    @apply ctw-cursor-pointer ctw-border-0 ctw-border-transparent ctw-bg-transparent ctw-p-0 ctw-text-sm ctw-font-medium ctw-outline-none;
+    line-height: 0;
   }
 
   *[class^="ctw-"],
@@ -70,6 +71,35 @@
     @apply ctw-border-0 ctw-border-solid;
   }
 
+  .ctw-table-action-column-sticky:before {
+    @apply ctw-absolute ctw-left-0 ctw-bottom-0 ctw-h-full ctw-w-full ctw-border-l ctw-border-divider-main;
+    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.1), -2px 0px 0px rgba(0, 0, 0, 0.06);
+    content: "";
+    z-index: -1;
+  }
+
+  .ctw-table-scroll-right-shadow::after {
+    @apply ctw-pointer-events-none ctw-absolute ctw-z-10 ctw-block ctw-h-full ctw-w-1;
+    left: calc(100% - 4px);
+    background: linear-gradient(
+      to right,
+      rgba(99, 114, 130, 0) 0px,
+      rgba(9, 30, 66, 0.13) 100%
+    );
+    content: "";
+    top: -5px;
+  }
+
+  .ctw-table-scroll-left-shadow-sticky {
+    @apply ctw-sticky ctw-left-0;
+  }
+
+  .ctw-table-scroll-left-shadow-sticky::after {
+    @apply ctw-absolute ctw-left-0 ctw-bottom-0 ctw-h-full ctw-w-full ctw-border-r ctw-border-divider-main;
+    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.1), 2px 0px 0px rgba(0, 0, 0, 0.06);
+    content: "";
+  }
+
   .ctw-scrollbar::-webkit-scrollbar {
     -webkit-appearance: none;
     width: 4px;
@@ -97,6 +127,40 @@
 
   .ctw-toggle-checkbox:checked + .ctw-toggle-span {
     @apply ctw-pointer-events-none ctw-absolute ctw-inset-0 ctw-bg-primary-dark;
+  }
+
+  .ctw-dropdown-menu-container {
+    @apply ctw-bg-white ctw-ring-1 ctw-ring-divider-light;
+  }
+
+  .ctw-dropdown-menu-item {
+    @apply ctw-flex ctw-w-full ctw-cursor-pointer ctw-p-2 ctw-text-primary-main ctw-outline-none;
+  }
+
+  .ctw-dropdown-menu-item[data-highlighted] {
+    @apply ctw-bg-primary-light;
+  }
+
+  .ctw-dropdown-menu-arrow {
+    position: relative;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 10px 10px 0 10px;
+    border-color: transparent;
+    @apply ctw-border-t-divider-light;
+  }
+  .ctw-dropdown-menu-arrow::before {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 9px 9px 0 9px;
+    border-color: transparent;
+    border-top-color: white;
+    top: -10px;
+    left: -9px;
   }
 }
 

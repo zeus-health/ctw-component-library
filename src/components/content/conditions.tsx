@@ -102,7 +102,7 @@ export function Conditions({ className }: ConditionsProps) {
   return (
     <div
       className={cx(
-        "ctw-space-y-5 ctw-border ctw-border-solid ctw-border-divider-light ctw-container-type-inline-size",
+        "ctw-border ctw-border-solid ctw-border-divider-light ctw-container-type-inline-size",
         className
       )}
     >
@@ -118,9 +118,9 @@ export function Conditions({ className }: ConditionsProps) {
         </button>
       </div>
 
-      <div className="ctw-space-y-5">
+      <div className="ctw-space-y-5 ctw-bg-bg-white ctw-p-5 cq-w-sm:ctw-px-0">
         <div className="ctw-space-y-3">
-          <div className="ctw-flex ctw-items-center ctw-justify-between ctw-px-3">
+          <div className="ctw-flex ctw-items-center ctw-justify-between">
             <div className="ctw-title">Confirmed</div>
             <ToggleControl
               onFormChange={handleFormChange}
@@ -129,7 +129,7 @@ export function Conditions({ className }: ConditionsProps) {
           </div>
 
           <ConditionsTableBase
-            className="ctw-px-3 cq-w-sm:-ctw-mx-px cq-w-sm:ctw-px-0"
+            className="cq-w-sm:-ctw-mx-px"
             conditions={confirmedConditions}
             isLoading={confirmedConditionsIsLoading}
             message={confirmedConditionsMessage}
@@ -144,9 +144,9 @@ export function Conditions({ className }: ConditionsProps) {
         </div>
 
         <div className="ctw-space-y-3">
-          <div className="ctw-title ctw-ml-3">Not Reviewed</div>
+          <div className="ctw-title">Not Reviewed</div>
           <ConditionsTableBase
-            className="ctw-px-3"
+            className="cq-w-sm:-ctw-mx-px"
             conditions={notReviewedConditions}
             isLoading={notReviewedConditionsIsLoading}
             showTableHead={false}
