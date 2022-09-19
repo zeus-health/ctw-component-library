@@ -16,6 +16,8 @@ export const SYSTEM_RXNORM = "http://www.nlm.nih.gov/research/umls/rxnorm";
 
 export const SYSTEM_SNOMED = "http://snomed.info/sct";
 
+export const SYSTEM_SUMMARY = "https://zusapi.com/summary";
+
 export const SYSTEM_TASK_STATUS =
   "https://www.hl7.org/fhir/codesystem-task-status.html";
 

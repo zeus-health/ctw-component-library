@@ -1,37 +1,12 @@
-import { omitEmptyArrays } from "@/fhir/client";
-import { isFhirError } from "@/fhir/errors";
-import Client from "fhir-kit-client";
 import { codeableConceptLabel, findCoding } from "../fhir/codeable-concept";
 import { formatDateISOToLocal } from "../fhir/formatters";
 import { SYSTEM_ICD10, SYSTEM_SNOMED } from "../fhir/system-urls";
 
 export class ConditionModel {
-  private resource: fhir4.Condition;
+  public resource: fhir4.Condition;
 
   constructor(condition: fhir4.Condition) {
     this.resource = condition;
-  }
-
-  async save(getCTWFhirClient: () => Promise<Client>) {
-    const fhirClient = await getCTWFhirClient();
-    try {
-      if (this.id) {
-        return await fhirClient.update({
-          resourceType: "Condition",
-          id: this.id,
-          body: omitEmptyArrays(this.resource) as fhir4.Condition,
-        });
-      }
-      return await fhirClient.create({
-        resourceType: "Condition",
-        body: omitEmptyArrays(this.resource) as fhir4.Condition,
-      });
-    } catch (err) {
-      if (isFhirError(err)) {
-        return err;
-      }
-      throw Error("Failed saving error");
-    }
   }
 
   get abatement(): string | undefined {
@@ -167,6 +142,10 @@ export class ConditionModel {
 
   get verificationStatus(): string {
     return codeableConceptLabel(this.resource.verificationStatus);
+  }
+
+  get resourceType(): string {
+    return this.resource.resourceType;
   }
 
   public setSubjectID(patientID: string) {

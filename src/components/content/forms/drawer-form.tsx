@@ -1,54 +1,52 @@
 import Client from "fhir-kit-client";
 import { ReactNode, useState } from "react";
-import type { DrawerProps } from "../drawer";
-import { Drawer } from "../drawer";
-import { action } from "./actions";
+import type { DrawerProps } from "../../core/drawer";
+import { Drawer } from "../../core/drawer";
 import { SaveButton } from "./save-button";
+import { ActionReturn } from "./types";
 
-export type FormErrors =
-  | {
-      [key: string]: string;
-    }
-  | undefined;
+export type FormErrors = Record<string, string>;
 
-export type DrawerFormProps = {
-  actionName: string;
+export type DrawerFormProps<T> = {
+  action: (
+    data: FormData,
+    patientID: string,
+    getCTWFhirClient: () => Promise<Client>
+  ) => Promise<ActionReturn<T>>;
   patientID: string;
   getCTWFhirClient: () => Promise<Client>;
   children: (submitting: boolean, errors?: FormErrors) => ReactNode;
 } & Omit<DrawerProps, "children">;
 
-export const DrawerForm = ({
-  actionName,
+export const DrawerForm = <T,>({
+  action,
   onClose,
   children,
   patientID,
   getCTWFhirClient,
   ...drawerProps
-}: DrawerFormProps) => {
+}: DrawerFormProps<T>) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState<FormErrors>(undefined);
+  const [errors, setErrors] = useState<FormErrors>();
 
   const reset = () => {
-    setErrors(undefined);
+    setErrors({});
     setIsSubmitting(false);
   };
 
   const onFormSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsSubmitting(true);
-    const form = event.target as HTMLFormElement;
+    const form = event.target;
     const data = new FormData(form as HTMLFormElement);
-    const response = await action(
-      data,
-      actionName,
-      patientID,
-      getCTWFhirClient
-    );
+    const response = await action(data, patientID, getCTWFhirClient);
 
     if (!response.success) {
       setErrors(response.errors);
       setIsSubmitting(false);
+    } else {
+      setIsSubmitting(false);
+      onClose();
     }
   };
 
@@ -64,7 +62,7 @@ export const DrawerForm = ({
             <button type="button" className="ctw-btn-default" onClick={onClose}>
               Cancel
             </button>
-            <SaveButton submitting={isSubmitting} actionName={actionName} />
+            <SaveButton submitting={isSubmitting} />
           </div>
         </Drawer.Footer>
       </form>

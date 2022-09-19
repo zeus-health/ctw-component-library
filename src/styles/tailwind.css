@@ -45,20 +45,20 @@
     @apply ctw-border-error-light ctw-text-error-main;
   }
 
-  input.error {
+  .ctw-input-container input.error {
     @apply ctw-border-error-light ctw-pr-10 ctw-text-error-main focus:ctw-border-error-main focus:ctw-outline-none focus:ctw-ring-1 focus:ctw-ring-error-main;
   }
 
-  input.dark {
+  .ctw-input-container input.dark {
     @apply ctw-border-0 ctw-bg-icon-default ctw-text-bg-light focus:ctw-bg-icon-default;
   }
 
-  input.dark:focus-visible {
+  .ctw-input-container input.dark:focus-visible {
     outline-offset: -1px;
     @apply ctw-outline-2 ctw-outline-white;
   }
 
-  label.error {
+  .ctw-input-container label.error {
     @apply ctw-text-error-main;
   }
 

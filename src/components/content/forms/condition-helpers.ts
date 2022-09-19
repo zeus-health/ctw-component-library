@@ -11,6 +11,7 @@ export const getAddConditionData = ({
     value: condition.subjectID,
     field: "subjectID",
     readonly: true,
+    hidden: true,
   },
   {
     label: "Name",
@@ -31,27 +32,20 @@ export const getEditingOrAddingFromLensConditionData = ({
 }: {
   condition: ConditionModel;
   patientID: string;
-}): FormEntry[] => {
-  condition.setSubjectID(patientID);
-  return [
-    {
-      label: "id",
-      value: condition.id,
-      field: "id",
-      readonly: true,
-      hidden: true,
-    },
-    ...editOrAddFromLensSharedFields(condition),
-    ...sharedFields(condition),
-  ];
-};
-
-const editOrAddFromLensSharedFields = (condition: ConditionModel) => [
+}): FormEntry[] => [
+  {
+    label: "id",
+    value: condition.id,
+    field: "id",
+    readonly: true,
+    hidden: false,
+  },
   {
     label: "subject",
     value: condition.subjectID,
     field: "subjectID",
     readonly: true,
+    hidden: true,
   },
   {
     label: "Name",
@@ -65,6 +59,7 @@ const editOrAddFromLensSharedFields = (condition: ConditionModel) => [
     field: "snomedCode",
     readonly: true,
   },
+  ...sharedFields(condition),
 ];
 
 const sharedFields = (condition: ConditionModel) => [

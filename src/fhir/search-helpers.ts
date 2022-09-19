@@ -3,6 +3,7 @@ import { find, mapValues } from "lodash";
 
 import { getResources } from "./bundle";
 import {
+  SYSTEM_SUMMARY,
   SYSTEM_ZUS_LENS,
   SYSTEM_ZUS_THIRD_PARTY,
   SYSTEM_ZUS_UNIVERSAL_ID,
@@ -20,6 +21,7 @@ const THIRD_PARTY_TAGS = [
 const LENS_TAGS = [
   `${SYSTEM_ZUS_LENS}|ActiveMedications`,
   `${SYSTEM_ZUS_LENS}|ChronicConditions`,
+  `${SYSTEM_SUMMARY}|Common`,
 ];
 
 export type SearchReturn<T extends ResourceTypeString> = {

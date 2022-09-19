@@ -1,20 +1,17 @@
 import cx from "classnames";
-import { Spinner } from "../spinner";
+import { Spinner } from "../../core/spinner";
 
 export type SaveButtonProps = {
   submitting: boolean;
-  actionName: string;
 };
 
-export const SaveButton = ({ submitting, actionName }: SaveButtonProps) => (
+export const SaveButton = ({ submitting }: SaveButtonProps) => (
   <button
     type="submit"
     disabled={submitting}
     className={cx(
       "ctw-btn-primary ctw-save-button ctw-w-28 ctw-whitespace-nowrap"
     )}
-    name="action"
-    value={actionName}
   >
     {submitting ? "Saving..." : "Save"}
     {submitting && <Spinner className="ctw-ml-2 ctw-text-white" />}

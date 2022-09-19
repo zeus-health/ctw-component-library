@@ -164,7 +164,7 @@ export async function getFormData<T extends ZodType<any, any, any>>(
   return getParamsInternal<ParamsType>(data, schema);
 }
 
-export function getOptions(
+function getOptions(
   schema: Zod.AnyZodObject,
   field: string
 ): string[] | undefined {
@@ -184,6 +184,7 @@ export type InputPropType = {
   minLength?: number;
   maxLength?: number;
   pattern?: string;
+  options?: string[] | undefined;
 };
 
 export function useFormInputProps(schema: any, options: any = {}) {
@@ -195,17 +196,22 @@ export function useFormInputProps(schema: any, options: any = {}) {
     if (!def) {
       throw new Error(`no such key: ${key}`);
     }
-    return getInputProps(key, def);
+    return getInputProps(key, schema, def);
   };
 }
 
-export function getInputProps(name: string, def: ZodTypeAny): InputPropType {
+export function getInputProps(
+  name: string,
+  schema: any,
+  def: ZodTypeAny
+): InputPropType {
   let type = "text";
   let min;
   let max;
   let minlength;
   let maxlength;
   let pattern;
+  const options = getOptions(schema, name);
   if (def instanceof ZodString) {
     if (def.isEmail) {
       type = "email";
@@ -214,7 +220,7 @@ export function getInputProps(name: string, def: ZodTypeAny): InputPropType {
     }
     minlength = def.minLength ?? undefined;
     maxlength = def.maxLength ?? undefined;
-    // TODO: update this type
+
     const check: any = def._def.checks.find((c) => c.kind === "regex");
     pattern = check ? check.regex.source : undefined;
   } else if (def instanceof ZodNumber) {
@@ -226,16 +232,16 @@ export function getInputProps(name: string, def: ZodTypeAny): InputPropType {
   } else if (def instanceof ZodDate) {
     type = "date";
   } else if (def instanceof ZodArray) {
-    return getInputProps(name, def.element);
-  } else if (def instanceof ZodOptional) {
-    return getInputProps(name, def.unwrap());
+    return getInputProps(name, schema, def.element);
   }
 
   const inputProps: InputPropType = {
     name,
     type,
+    options,
   };
-  if (!def.isOptional()) inputProps.required = true;
+
+  if (!(def instanceof ZodOptional)) inputProps.required = true;
   if (min) inputProps.min = min;
   if (max) inputProps.max = max;
   if (minlength && Number.isFinite(minlength)) inputProps.minLength = minlength;

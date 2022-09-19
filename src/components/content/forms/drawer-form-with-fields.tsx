@@ -1,9 +1,11 @@
-import { getOptions, isOptional, useFormInputProps } from "@/utils/form-helper";
+import { useFormInputProps } from "@/utils/form-helper";
 import cx from "classnames";
-import { useCTW } from "../ctw-provider";
+import Client from "fhir-kit-client";
+import { useCTW } from "../../core/ctw-provider";
 import type { DrawerFormProps } from "./drawer-form";
 import { DrawerForm } from "./drawer-form";
 import { FormField } from "./form-field";
+import { ActionReturn } from "./types";
 
 export type FormEntry = {
   label: string;
@@ -14,22 +16,26 @@ export type FormEntry = {
   hidden?: boolean;
 };
 
-export type DrawerFormWithFieldsProps = {
+export type DrawerFormWithFieldsProps<T> = {
   title: string;
-  actionName: string;
-  data: FormEntry[];
+  action: (
+    data: FormData,
+    patientID: string,
+    getCTWFhirClient: () => Promise<Client>
+  ) => Promise<ActionReturn<T>>;
+  data: FormEntry[] | undefined;
   schema: Zod.AnyZodObject;
   patientID: string;
-} & Pick<DrawerFormProps, "onClose" | "isOpen">;
+} & Pick<DrawerFormProps<T>, "onClose" | "isOpen">;
 
-export const DrawerFormWithFields = ({
+export const DrawerFormWithFields = <T,>({
   title,
-  actionName,
-  data,
+  data = [],
   schema,
   patientID,
+  action,
   ...drawerFormProps
-}: DrawerFormWithFieldsProps) => {
+}: DrawerFormWithFieldsProps<T>) => {
   const inputProps = useFormInputProps(schema);
   const { getCTWFhirClient } = useCTW();
 
@@ -37,27 +43,23 @@ export const DrawerFormWithFields = ({
     <DrawerForm
       patientID={patientID}
       title={title}
-      actionName={actionName}
+      action={action}
       getCTWFhirClient={getCTWFhirClient}
       {...drawerFormProps}
     >
       {(submitting, errors) => (
-        <div className="ctw-space-y-6">
+        <div className="ctw-input-container ctw-space-y-6">
           {data.map(({ label, field, value, lines, readonly, hidden }) => {
             const error = errors?.[field];
-            // Parse out options if there are any.
-            // See https://github.com/kiliman/remix-params-helper/issues/26
-            const options = getOptions(schema, field);
 
             if (hidden) {
               return (
                 <FormField
-                  {...inputProps(field)}
-                  options={options}
+                  key={label}
+                  {...inputProps(field, schema)}
                   lines={lines}
                   disabled={submitting}
                   readonly={readonly}
-                  required={false} // Work around bug -- https://github.com/kiliman/remix-params-helper/issues/22
                   defaultValue={value}
                   error={error}
                   hidden={hidden}
@@ -74,7 +76,7 @@ export const DrawerFormWithFields = ({
                   <label className={cx({ error }, "leading-tight")}>
                     {label}
                   </label>
-                  {isOptional(schema, field) && (
+                  {!inputProps(field).required && (
                     <p className="ctw-right-0 ctw-inline-block ctw-text-xs ctw-text-content-black">
                       Optional
                     </p>
@@ -82,12 +84,10 @@ export const DrawerFormWithFields = ({
                 </div>
 
                 <FormField
-                  {...inputProps(field)}
-                  options={options}
+                  {...inputProps(field, schema)}
                   lines={lines}
                   disabled={submitting}
                   readonly={readonly}
-                  required={false} // Work around bug -- https://github.com/kiliman/remix-params-helper/issues/22
                   defaultValue={value}
                   error={error}
                   hidden={hidden}

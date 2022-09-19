@@ -8,7 +8,7 @@ export type FhirError = {
   config: {
     method: string;
     url: string;
-    headers: { [key: string]: string };
+    headers: Record<string, string>;
   };
 };
 
@@ -26,5 +26,5 @@ export const fhirErrorResponse = (title: string, e: FhirError) => {
     errorStr = listErrorIssues(data);
   }
 
-  return { ...{ title }, ...{ status, statusText: errorStr } };
+  return { title, status, statusText: errorStr };
 };

@@ -5,18 +5,19 @@ import { ReactNode } from "react";
 
 export type MenuItems = {
   name: string;
-  action: (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    data: unknown
-  ) => void;
+  action: (e: React.MouseEvent<HTMLDivElement, MouseEvent>, data: T3) => void;
   className?: string;
 };
 
 export type DropdownMenuProps = {
   children: ReactNode;
   menuItems: MenuItems[];
-  data: unknown;
+  data: any;
 };
+
+type S = Pick<DropdownMenuProps, "data">;
+
+type T3 = Parameters<S>;
 
 export function DropdownMenu({ children, menuItems, data }: DropdownMenuProps) {
   return (
