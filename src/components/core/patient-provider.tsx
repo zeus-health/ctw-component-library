@@ -1,4 +1,5 @@
 import { getBuilderFhirPatient } from "@/fhir/patient-helper";
+import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 import { PatientModel } from "@/models/patients";
 import {
   createContext,
@@ -23,7 +24,7 @@ type PatientUPIDSpecified = {
 };
 
 type ProviderState = {
-  patientPromise: Promise<string | PatientModel>;
+  patientPromise: Promise<PatientModel>;
 };
 
 type PatientProviderProps = {
@@ -43,17 +44,18 @@ export function PatientProvider({
   systemURL,
 }: PatientProviderProps) {
   const [patientPromise, setPatientPromise] =
-    useState<Promise<string | PatientModel>>(unresolvedPromise);
+    useState<Promise<PatientModel>>(unresolvedPromise);
   const { getCTWFhirClient } = useCTW();
 
   useEffect(() => {
     async function getPatient() {
-      if (patientUPID) {
-        return patientUPID;
-      }
-      if (patientID && systemURL) {
+      if ((patientID && systemURL) || patientUPID) {
         const fhirClient = await getCTWFhirClient();
-        return getBuilderFhirPatient(fhirClient, patientID, systemURL);
+        return getBuilderFhirPatient(
+          fhirClient,
+          patientID ?? patientUPID,
+          systemURL ?? SYSTEM_ZUS_UNIVERSAL_ID
+        );
       }
       // This should not actually be possible.
       throw new Error("Patient UPID or patient id/system url was not defined.");

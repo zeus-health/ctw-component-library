@@ -1,7 +1,6 @@
-import { DotsHorizontalIcon } from "@heroicons/react/outline";
 import cx from "classnames";
 import { KeyboardEvent } from "react";
-import { DropdownMenu, MenuItems } from "../dropdown-menu";
+import { MenuItems } from "../dropdown-menu";
 
 import { Spinner } from "../spinner";
 
@@ -16,7 +15,7 @@ type TableRowsProps<T extends MinRecordItem> = {
   isLoading: boolean;
   emptyMessage: string;
   showLeftTableBorderShadow: boolean;
-  showRightTableBorderShadow: boolean;
+  showRightTableBorderShadow?: boolean;
   rowActions?: MenuItems[];
 };
 
@@ -27,8 +26,6 @@ export const TableRows = <T extends MinRecordItem>({
   isLoading,
   emptyMessage,
   showLeftTableBorderShadow,
-  showRightTableBorderShadow,
-  rowActions,
 }: TableRowsProps<T>) => {
   if (isLoading) {
     return (
@@ -78,17 +75,6 @@ export const TableRows = <T extends MinRecordItem>({
               showLeftTableBorderShadow={showLeftTableBorderShadow}
             />
           ))}
-          {rowActions && (
-            <td
-              className={cx("ctw-table-action-column", {
-                "ctw-table-action-column-sticky": showRightTableBorderShadow,
-              })}
-            >
-              <DropdownMenu menuItems={rowActions} data={record}>
-                <DotsHorizontalIcon className="ctw-w-5" />
-              </DropdownMenu>
-            </td>
-          )}
         </tr>
       ))}
     </>

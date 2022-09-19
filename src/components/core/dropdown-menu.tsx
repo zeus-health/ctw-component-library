@@ -5,21 +5,16 @@ import { ReactNode } from "react";
 
 export type MenuItems = {
   name: string;
-  action: (e: React.MouseEvent<HTMLDivElement, MouseEvent>, data: T3) => void;
+  action: () => void;
   className?: string;
 };
 
 export type DropdownMenuProps = {
   children: ReactNode;
   menuItems: MenuItems[];
-  data: any;
 };
 
-type S = Pick<DropdownMenuProps, "data">;
-
-type T3 = Parameters<S>;
-
-export function DropdownMenu({ children, menuItems, data }: DropdownMenuProps) {
+export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
   return (
     <Menu>
       <RadixDropdownMenu.Root modal={false}>
@@ -38,7 +33,7 @@ export function DropdownMenu({ children, menuItems, data }: DropdownMenuProps) {
 
             {menuItems.map((menuItem) => (
               <RadixDropdownMenu.Item
-                onClick={(e) => menuItem.action(e, data)}
+                onClick={menuItem.action}
                 key={menuItem.name}
                 className={cx(menuItem.className, "ctw-dropdown-menu-item")}
               >

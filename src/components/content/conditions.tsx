@@ -8,6 +8,7 @@ import {
   getLensConditions,
 } from "@/fhir/conditions";
 import { ConditionModel } from "@/models/conditions";
+import { PatientModel } from "@/models/patients";
 import cx from "classnames";
 import { useEffect, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
@@ -37,7 +38,7 @@ export function Conditions({ className }: ConditionsProps) {
   const [notReviewedIsLoading, setNotReviewedIsLoading] = useState(true);
   const [notReviewedMessage, setNotReviewedMessage] = useState(EMPTY_MESSAGE);
   const [includeInactive, setIncludeInactive] = useState(true);
-  const [patientID, setPatientID] = useState<string>();
+  const [patient, setPatient] = useState<PatientModel>();
   const [formAction, setFormAction] = useState("");
   const [currentSelectedData, setCurrentlySelectedData] =
     useState<FormEntry[]>();
@@ -57,60 +58,57 @@ export function Conditions({ className }: ConditionsProps) {
 
       const fhirClient = await getCTWFhirClient();
       const patientTemp = await patientPromise;
-      let patientUPID = "";
-      if (typeof patientTemp === "string") {
-        setPatientID(patientTemp);
-        patientUPID = patientTemp;
-      } else {
-        patientUPID = patientTemp.UPID;
-        setPatientID(patientUPID);
-      }
+      setPatient(patientTemp);
 
-      // use AllSettled instead of all as we want confirmed to still if lens fails
-      const [confirmedResponse, notReviewedResponse] = await Promise.allSettled(
-        [
-          getConfirmedConditions(fhirClient, patientUPID, conditionFilter),
-          getLensConditions(fhirClient, patientUPID),
-        ]
-      );
+      if (patient) {
+        // use AllSettled instead of all as we want confirmed to still if lens fails
+        const [confirmedResponse, notReviewedResponse] =
+          await Promise.allSettled([
+            getConfirmedConditions(fhirClient, patient.UPID, conditionFilter),
+            getLensConditions(fhirClient, patient.UPID),
+          ]);
 
-      setNotReviewedIsLoading(false);
-      setConfirmedIsLoading(false);
+        setNotReviewedIsLoading(false);
+        setConfirmedIsLoading(false);
 
-      /* notReviewedConditons depends confirmedConditions so that we can correctly filter out 
+        /* notReviewedConditons depends confirmedConditions so that we can correctly filter out 
          conditions that appear in confirmedConditions from notReviewedConditons */
-      if (confirmedResponse.status === "fulfilled") {
-        setConfirmed(confirmedResponse.value.map((c) => new ConditionModel(c)));
-        const ICD10ConfirmedCodes = confirmedResponse.value.map(
-          (c) => new ConditionModel(c).icd10
-        );
-
-        if (notReviewedResponse.status === "fulfilled") {
-          const notReviewedConditionsFiltered =
-            notReviewedResponse.value.filter(
-              (c) => !ICD10ConfirmedCodes.includes(new ConditionModel(c).icd10)
-            );
-          setNotReviewed(
-            notReviewedConditionsFiltered.map((c) => new ConditionModel(c))
+        if (confirmedResponse.status === "fulfilled") {
+          setConfirmed(
+            confirmedResponse.value.map((c) => new ConditionModel(c))
           );
+          const ICD10ConfirmedCodes = confirmedResponse.value.map(
+            (c) => new ConditionModel(c).icd10
+          );
+
+          if (notReviewedResponse.status === "fulfilled") {
+            const notReviewedConditionsFiltered =
+              notReviewedResponse.value.filter(
+                (c) =>
+                  !ICD10ConfirmedCodes.includes(new ConditionModel(c).icd10)
+              );
+            setNotReviewed(
+              notReviewedConditionsFiltered.map((c) => new ConditionModel(c))
+            );
+          } else {
+            setNotReviewed([]);
+            setNotReviewedMessage(ERROR_MSG);
+          }
         } else {
+          setConfirmed([]);
+          setConfirmedMessage(ERROR_MSG);
           setNotReviewed([]);
           setNotReviewedMessage(ERROR_MSG);
         }
-      } else {
-        setConfirmed([]);
-        setConfirmedMessage(ERROR_MSG);
-        setNotReviewed([]);
-        setNotReviewedMessage(ERROR_MSG);
       }
     }
     load();
-  }, [includeInactive, patientPromise, getCTWFhirClient, patientID]);
+  }, [includeInactive, patientPromise, getCTWFhirClient, patient]);
 
   const addNewCondition = () => {
     const newCondition: fhir4.Condition = {
       resourceType: "Condition",
-      subject: { type: "Patient", reference: `Patient/${patientID}` },
+      subject: { type: "Patient", reference: `Patient/${patient?.id}` },
     };
     setDrawerIsOpen(true);
     setFormAction("Add");
@@ -152,17 +150,18 @@ export function Conditions({ className }: ConditionsProps) {
               conditions={confirmed}
               isLoading={confirmedIsLoading}
               message={confirmedMessage}
-              rowActions={[
+              rowActions={(condition) => [
                 {
                   name: "Edit",
-                  action: (_, condition) => {
-                    if (patientID) {
+                  action: () => {
+                    console.log("condition", condition);
+                    if (patient) {
                       setDrawerIsOpen(true);
                       setFormAction("Edit");
                       setCurrentlySelectedData(
                         getEditingOrAddingFromLensConditionData({
                           condition,
-                          patientID,
+                          patientID: patient.id,
                         })
                       );
                     }
@@ -183,17 +182,17 @@ export function Conditions({ className }: ConditionsProps) {
               isLoading={notReviewedIsLoading}
               showTableHead={false}
               message={notReviewedMessage}
-              rowActions={[
+              rowActions={(condition) => [
                 {
                   name: "Add",
-                  action: (_, condition) => {
-                    if (patientID) {
+                  action: () => {
+                    if (patient) {
                       setDrawerIsOpen(true);
                       setFormAction("Add");
                       setCurrentlySelectedData(
                         getEditingOrAddingFromLensConditionData({
                           condition,
-                          patientID,
+                          patientID: patient.id,
                         })
                       );
                     }
@@ -209,9 +208,9 @@ export function Conditions({ className }: ConditionsProps) {
         </div>
       </div>
 
-      {patientID && (
+      {patient && (
         <DrawerFormWithFields
-          patientID={patientID}
+          patientID={patient.id}
           title={`${formAction} Condition`}
           action={createCondition}
           data={currentSelectedData}
