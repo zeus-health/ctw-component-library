@@ -96,7 +96,7 @@ export const createCondition = async (
   const response = await createOrEditFhirResource({
     resourceModel: conditionModel,
     getCTWFhirClient,
-  })<ConditionModel>;
+  });
 
   if (isFhirError(response)) {
     result.success = false;
