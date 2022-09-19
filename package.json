@@ -11,7 +11,7 @@
       "import": "./dist/index.es.js",
       "types": "./dist/src/index.d.ts"
     },
-    "./style.css": "./dist/style.css"
+    "./dist/style.css": "./dist/style.css"
   },
   "sideEffects": false,
   "files": [
@@ -62,7 +62,6 @@
     "@vitejs/plugin-react": "^2.0.0",
     "eslint": "^8.22.0",
     "eslint-config-prettier": "^8.5.0",
-    "list-selectors": "^2.0.1",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.7.1",
     "prettier-plugin-tailwindcss": "^0.1.13",
