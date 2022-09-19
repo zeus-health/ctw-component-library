@@ -57,10 +57,12 @@ export function Conditions({ className }: ConditionsProps) {
 
       const fhirClient = await getCTWFhirClient();
       const patientTemp = await patientPromise;
+      let patientUPID = "";
       if (typeof patientTemp === "string") {
         setPatientID(patientTemp);
+        patientUPID = patientTemp;
       } else {
-        const patientUPID = patientTemp.UPID;
+        patientUPID = patientTemp.UPID;
         setPatientID(patientUPID);
       }
 
