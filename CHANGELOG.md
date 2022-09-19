@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.5.2
+
+### Patch Changes
+
+- 98d876d: Update how style.css is imported.
+
 ## 0.5.1
 
 ### Patch Changes
