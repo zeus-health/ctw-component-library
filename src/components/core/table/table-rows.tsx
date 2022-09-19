@@ -16,7 +16,7 @@ type TableRowsProps<T extends MinRecordItem> = {
   emptyMessage: string;
   showLeftTableBorderShadow: boolean;
   showRightTableBorderShadow?: boolean;
-  rowActions?: MenuItems[];
+  rowActions?: (data: T) => MenuItems[];
 };
 
 export const TableRows = <T extends MinRecordItem>({
