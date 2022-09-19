@@ -11,6 +11,7 @@ npm i @zus-health/ctw-component-library
 ## Include CSS Stylesheet.
 
 Include the CSS file:
+
 ```typescript
 import ctwStyles from "@zus-health/ctw-component-library/dist/style.css";
 ```
@@ -25,6 +26,7 @@ The `CTWProvider` component provides authentication details needed for other com
 4. Optioally pass in a `theme` to overwrite styles across all of the components.
 
 Example:
+
 ```typescript
 import { CTWProvider } from "@zus-health/ctw-component-library";
 
@@ -37,7 +39,7 @@ function App() {
         </Route>
       </Routes>
     </CTWProvider>
-  )
+  );
 }
 ```
 
@@ -49,16 +51,17 @@ The `PatientProvider` component provides patient details needed by other compone
 2. Pass in identifier information for this patient via `patientID` and `systemURL`.
 
 Example:
+
 ```typescript
 import { PatientProvider, Conditions } from "@zus-health/ctw-component-library";
 
-function PatientPortal({patientID}: PatientPortalProps) {
+function PatientPortal({ patientID }: PatientPortalProps) {
   return (
     <PatientProvider patientID={patientID} systemURL="https://www.example.com">
       // Any nested components can now use any patient specific components.
-      <Conditions/>
+      <Conditions />
     </PatientProvider>
-  )
+  );
 }
 ```
 
