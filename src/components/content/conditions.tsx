@@ -57,8 +57,12 @@ export function Conditions({ className }: ConditionsProps) {
 
       const fhirClient = await getCTWFhirClient();
       const patientTemp = await patientPromise;
-      const patientUPID = patientTemp.UPID;
-      setPatientID(patientUPID);
+      if (typeof patientTemp === "string") {
+        setPatientID(patientTemp);
+      } else {
+        const patientUPID = patientTemp.UPID;
+        setPatientID(patientUPID);
+      }
 
       // use AllSettled instead of all as we want confirmed to still if lens fails
       const [confirmedResponse, notReviewedResponse] = await Promise.allSettled(
