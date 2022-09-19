@@ -15,8 +15,6 @@ type TableRowsProps<T extends MinRecordItem> = {
   onRowClick: ((row: T) => void) | undefined;
   isLoading: boolean;
   emptyMessage: string;
-  showLeftTableBorderShadow: boolean;
-  showRightTableBorderShadow: boolean;
   rowActions?: MenuItems[];
 };
 
@@ -26,14 +24,15 @@ export const TableRows = <T extends MinRecordItem>({
   onRowClick,
   isLoading,
   emptyMessage,
-  showLeftTableBorderShadow,
-  showRightTableBorderShadow,
   rowActions,
 }: TableRowsProps<T>) => {
   if (isLoading) {
     return (
       <TableFullLengthRow colSpan={columns.length}>
-        Loading... <Spinner />
+        <div className="ctw-flex ctw-items-center ctw-justify-center ctw-space-x-2">
+          <span>Loading...</span>
+          <Spinner />
+        </div>
       </TableFullLengthRow>
     );
   }
@@ -83,15 +82,10 @@ export const TableRows = <T extends MinRecordItem>({
               column={column}
               record={record}
               index={index}
-              showLeftTableBorderShadow={showLeftTableBorderShadow}
             />
           ))}
           {rowActions && (
-            <td
-              className={cx("ctw-table-action-column", {
-                "ctw-table-action-column-sticky": showRightTableBorderShadow,
-              })}
-            >
+            <td className="ctw-table-action-column">
               <DropdownMenu menuItems={rowActions} buttonClass="ctw-ml-auto">
                 <DotsHorizontalIcon className="ctw-w-5" />
               </DropdownMenu>

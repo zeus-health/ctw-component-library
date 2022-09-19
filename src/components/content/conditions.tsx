@@ -129,7 +129,6 @@ export function Conditions({ className }: ConditionsProps) {
           </div>
 
           <ConditionsTableBase
-            className="cq-w-sm:-ctw-mx-px"
             conditions={confirmedConditions}
             isLoading={confirmedConditionsIsLoading}
             message={confirmedConditionsMessage}
@@ -146,7 +145,6 @@ export function Conditions({ className }: ConditionsProps) {
         <div className="ctw-space-y-3">
           <div className="ctw-title">Not Reviewed</div>
           <ConditionsTableBase
-            className="cq-w-sm:-ctw-mx-px"
             conditions={notReviewedConditions}
             isLoading={notReviewedConditionsIsLoading}
             showTableHead={false}

@@ -1,5 +1,5 @@
 import cx from "classnames";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode } from "react";
 
 import { MenuItems } from "../dropdown-menu";
 
@@ -45,80 +45,19 @@ export const Table = <T extends MinRecordItem>({
   message = "No records found",
   showTableHead = true,
   rowActions,
-}: TableProps<T>) => {
-  const tableRef = useRef<HTMLTableElement>(null);
-  const containerTableRef = useRef<HTMLTableElement>(null);
-  const [showLeftTableBorderShadow, setShowLeftTableBorderShadow] =
-    useState(false);
-  const [showRightTableBorderShadow, setShowRightTableBorderShadow] =
-    useState(false);
-  const handleShowingStickyTableScrollBorder = () => {
-    if (containerTableRef.current && tableRef.current) {
-      const containerRightSide =
-        containerTableRef.current.scrollLeft +
-        containerTableRef.current.clientWidth;
-      setShowLeftTableBorderShadow(containerTableRef.current.scrollLeft > 0);
-      setShowRightTableBorderShadow(
-        containerRightSide < tableRef.current.clientWidth
-      );
-    }
-  };
+}: TableProps<T>) => (
+  <table className={cx("ctw-table-base", className)}>
+    {showTableHead && <TableHead columns={columns} rowActions={rowActions} />}
 
-  useEffect(() => {
-    const containerTableRefCurrent = containerTableRef.current;
-    handleShowingStickyTableScrollBorder();
-
-    if (containerTableRefCurrent) {
-      containerTableRefCurrent.addEventListener(
-        "scroll",
-        handleShowingStickyTableScrollBorder
-      );
-    }
-
-    return () => {
-      if (containerTableRefCurrent) {
-        containerTableRefCurrent.removeEventListener(
-          "scroll",
-          handleShowingStickyTableScrollBorder
-        );
-      }
-    };
-  }, [containerTableRef]);
-
-  return (
-    <div className={cx("ctw-table-container", className)}>
-      <div
-        className={cx("ctw-table-scroll-container", {
-          "ctw-table-scroll-right-shadow":
-            !rowActions && showRightTableBorderShadow,
-        })}
-      >
-        <div ref={containerTableRef} className="ctw-table-container2">
-          <table className="ctw-table-base ctw-w-full" ref={tableRef}>
-            {showTableHead && (
-              <TableHead
-                columns={columns}
-                showLeftTableBorderShadow={showLeftTableBorderShadow}
-                showRightTableBorderShadow={showRightTableBorderShadow}
-                rowActions={rowActions}
-              />
-            )}
-
-            <tbody className="ctw-divide-y ctw-divide-divider-light ctw-bg-white">
-              <TableRows
-                records={records}
-                columns={columns}
-                onRowClick={onRowClick}
-                isLoading={isLoading}
-                emptyMessage={message}
-                showLeftTableBorderShadow={showLeftTableBorderShadow}
-                showRightTableBorderShadow={showRightTableBorderShadow}
-                rowActions={rowActions}
-              />
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  );
-};
+    <tbody>
+      <TableRows
+        records={records}
+        columns={columns}
+        onRowClick={onRowClick}
+        isLoading={isLoading}
+        emptyMessage={message}
+        rowActions={rowActions}
+      />
+    </tbody>
+  </table>
+);
