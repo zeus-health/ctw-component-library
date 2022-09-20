@@ -10,6 +10,7 @@ import { useCTW } from "../core/ctw-provider";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionFormDrawer } from "./condition-form-drawer";
+import { ConditionHistoryDrawer } from "./conditions-history-drawer";
 import { ConditionsTableBase } from "./conditions-table-base";
 
 export type ConditionsProps = {
@@ -21,6 +22,9 @@ const DEFAULT_ERR_MSG =
 
 export function Conditions({ className }: ConditionsProps) {
   const [addConditionIsOpen, setAddConditionIsOpen] = useState(false);
+  const [viewConditionIsOpen, setViewConditionIsOpen] = useState(false);
+  const [currentlyClickedCondition, setcurrentlyClickedCondition] =
+    useState<ConditionModel>();
 
   const [confirmedConditions, setConfirmedConditions] = useState<
     ConditionModel[]
@@ -130,11 +134,14 @@ export function Conditions({ className }: ConditionsProps) {
               conditions={confirmedConditions}
               isLoading={confirmedConditionsIsLoading}
               message={confirmedConditionsMessage}
-              rowActions={[
+              rowActions={(condition) => [
                 { name: "Edit", action: () => setAddConditionIsOpen(true) },
                 {
                   name: "View History",
-                  action: () => setAddConditionIsOpen(true),
+                  action: () => {
+                    setViewConditionIsOpen(true);
+                    setcurrentlyClickedCondition(condition);
+                  },
                 },
               ]}
             />
@@ -147,21 +154,28 @@ export function Conditions({ className }: ConditionsProps) {
               isLoading={notReviewedConditionsIsLoading}
               showTableHead={false}
               message={notReviewedConditionsMessage}
-              rowActions={[
+              rowActions={(condition) => [
                 { name: "Add", action: () => setAddConditionIsOpen(true) },
                 {
                   name: "View History",
-                  action: () => setAddConditionIsOpen(true),
+                  action: () => {
+                    setViewConditionIsOpen(true);
+                    setcurrentlyClickedCondition(condition);
+                  },
                 },
               ]}
             />
           </div>
         </div>
       </div>
-
       <ConditionFormDrawer
         isOpen={addConditionIsOpen}
         onClose={() => setAddConditionIsOpen(false)}
+      />
+      <ConditionHistoryDrawer
+        isOpen={viewConditionIsOpen}
+        onClose={() => setViewConditionIsOpen(false)}
+        condition={currentlyClickedCondition}
       />
     </div>
   );
