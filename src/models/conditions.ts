@@ -154,4 +154,16 @@ export class ConditionModel {
       reference: `Patient/${patientID}`,
     };
   }
+
+  get snomedCode(): string | undefined {
+    return findCoding(SYSTEM_SNOMED, this.resource.code)?.code;
+  }
+
+  get snomedSystem(): string | undefined {
+    return findCoding(SYSTEM_SNOMED, this.resource.code)?.system;
+  }
+
+  get snomedDisplay(): string | undefined {
+    return findCoding(SYSTEM_SNOMED, this.resource.code)?.display;
+  }
 }

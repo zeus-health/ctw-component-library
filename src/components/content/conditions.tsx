@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
+import { ConditionHistoryDrawer } from "./conditions-history-drawer";
 import { ConditionsTableBase } from "./conditions-table-base";
 import { conditionSchema, createCondition } from "./forms/conditions";
 import {
@@ -30,13 +31,25 @@ const ERROR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
 
 export function Conditions({ className }: ConditionsProps) {
-  const [drawerIsOpen, setDrawerIsOpen] = useState(false);
-  const [confirmed, setConfirmed] = useState<ConditionModel[]>([]);
-  const [confirmedMessage, setConfirmedMessage] = useState(EMPTY_MESSAGE);
-  const [confirmedIsLoading, setConfirmedIsLoading] = useState(true);
-  const [notReviewed, setNotReviewed] = useState<ConditionModel[]>([]);
-  const [notReviewedIsLoading, setNotReviewedIsLoading] = useState(true);
-  const [notReviewedMessage, setNotReviewedMessage] = useState(EMPTY_MESSAGE);
+  const [addConditionIsOpen, setAddConditionIsOpen] = useState(false);
+
+  const [confirmedConditions, setConfirmedConditions] = useState<
+    ConditionModel[]
+  >([]);
+  const [confirmedConditionsMessage, setConfirmedConditionsMessage] = useState(
+    "No conditions found"
+  );
+  const [confirmedConditionsIsLoading, setConfirmedConditionsIsLoading] =
+    useState(true);
+
+  const [notReviewedConditions, setNotReviewedConditions] = useState<
+    ConditionModel[]
+  >([]);
+  const [notReviewedConditionsIsLoading, setNotConfirmedConditionsIsLoading] =
+    useState(true);
+  const [notReviewedConditionsMessage, setNotReviewedConditionsMessage] =
+    useState("No conditions found");
+
   const [includeInactive, setIncludeInactive] = useState(true);
   const [patient, setPatient] = useState<PatientModel>();
   const [formAction, setFormAction] = useState("");
@@ -169,7 +182,10 @@ export function Conditions({ className }: ConditionsProps) {
                 },
                 {
                   name: "View History",
-                  action: () => setDrawerIsOpen(true),
+                  action: () => {
+                    setViewConditionIsOpen(true);
+                    setcurrentlyClickedCondition(condition);
+                  },
                 },
               ]}
             />
@@ -200,14 +216,16 @@ export function Conditions({ className }: ConditionsProps) {
                 },
                 {
                   name: "View History",
-                  action: () => setDrawerIsOpen(true),
+                  action: () => {
+                    setViewConditionIsOpen(true);
+                    setcurrentlyClickedCondition(condition);
+                  },
                 },
               ]}
             />
           </div>
         </div>
       </div>
-
       {patient && (
         <DrawerFormWithFields
           patientID={patient.id}
@@ -219,6 +237,11 @@ export function Conditions({ className }: ConditionsProps) {
           onClose={() => setDrawerIsOpen(false)}
         />
       )}
+      <ConditionHistoryDrawer
+        isOpen={viewConditionIsOpen}
+        onClose={() => setViewConditionIsOpen(false)}
+        condition={currentlyClickedCondition}
+      />
     </div>
   );
 }
