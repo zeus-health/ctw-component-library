@@ -31,30 +31,21 @@ const ERROR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
 
 export function Conditions({ className }: ConditionsProps) {
-  const [addConditionIsOpen, setAddConditionIsOpen] = useState(false);
-
-  const [confirmedConditions, setConfirmedConditions] = useState<
-    ConditionModel[]
-  >([]);
-  const [confirmedConditionsMessage, setConfirmedConditionsMessage] = useState(
-    "No conditions found"
-  );
-  const [confirmedConditionsIsLoading, setConfirmedConditionsIsLoading] =
-    useState(true);
-
-  const [notReviewedConditions, setNotReviewedConditions] = useState<
-    ConditionModel[]
-  >([]);
-  const [notReviewedConditionsIsLoading, setNotConfirmedConditionsIsLoading] =
-    useState(true);
-  const [notReviewedConditionsMessage, setNotReviewedConditionsMessage] =
-    useState("No conditions found");
-
+  const [drawerIsOpen, setDrawerIsOpen] = useState(false);
+  const [historyDrawerIsOpen, setHistoryDrawerIsOpen] = useState(false);
+  const [confirmed, setConfirmed] = useState<ConditionModel[]>([]);
+  const [confirmedMessage, setConfirmedMessage] = useState(EMPTY_MESSAGE);
+  const [confirmedIsLoading, setConfirmedIsLoading] = useState(true);
+  const [notReviewed, setNotReviewed] = useState<ConditionModel[]>([]);
+  const [notReviewedIsLoading, setNotReviewedIsLoading] = useState(true);
+  const [notReviewedMessage, setNotReviewedMessage] = useState(EMPTY_MESSAGE);
   const [includeInactive, setIncludeInactive] = useState(true);
   const [patient, setPatient] = useState<PatientModel>();
   const [formAction, setFormAction] = useState("");
   const [currentSelectedData, setCurrentlySelectedData] =
     useState<FormEntry[]>();
+  const [currentlyClickedCondition, setcurrentlyClickedCondition] =
+    useState<ConditionModel>();
 
   const { getCTWFhirClient } = useCTW();
   const { patientPromise } = usePatient();
@@ -183,7 +174,7 @@ export function Conditions({ className }: ConditionsProps) {
                 {
                   name: "View History",
                   action: () => {
-                    setViewConditionIsOpen(true);
+                    setHistoryDrawerIsOpen(true);
                     setcurrentlyClickedCondition(condition);
                   },
                 },
@@ -217,7 +208,7 @@ export function Conditions({ className }: ConditionsProps) {
                 {
                   name: "View History",
                   action: () => {
-                    setViewConditionIsOpen(true);
+                    setHistoryDrawerIsOpen(true);
                     setcurrentlyClickedCondition(condition);
                   },
                 },
@@ -226,6 +217,7 @@ export function Conditions({ className }: ConditionsProps) {
           </div>
         </div>
       </div>
+
       {patient && (
         <DrawerFormWithFields
           patientID={patient.id}
@@ -238,8 +230,8 @@ export function Conditions({ className }: ConditionsProps) {
         />
       )}
       <ConditionHistoryDrawer
-        isOpen={viewConditionIsOpen}
-        onClose={() => setViewConditionIsOpen(false)}
+        isOpen={historyDrawerIsOpen}
+        onClose={() => setHistoryDrawerIsOpen(false)}
         condition={currentlyClickedCondition}
       />
     </div>
