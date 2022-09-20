@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.6.0
+
+### Minor Changes
+
+- ad56045: Add ability to view condition history.
+
 ## 0.5.2
 
 ### Patch Changes
