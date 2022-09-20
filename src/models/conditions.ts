@@ -129,6 +129,18 @@ export class ConditionModel {
     return codeableConceptLabel(this.resource.severity);
   }
 
+  get snomedCode(): string | undefined {
+    return findCoding(SYSTEM_SNOMED, this.resource.code)?.code;
+  }
+
+  get snomedDisplay(): string | undefined {
+    return findCoding(SYSTEM_SNOMED, this.resource.code)?.display;
+  }
+
+  get snomedSystem(): string | undefined {
+    return findCoding(SYSTEM_SNOMED, this.resource.code)?.system;
+  }
+
   get stages(): string[] {
     return (
       this.resource.stage?.map((stage) => {
@@ -141,17 +153,5 @@ export class ConditionModel {
 
   get verificationStatus(): string {
     return codeableConceptLabel(this.resource.verificationStatus);
-  }
-
-  get snomedCode(): string | undefined {
-    return findCoding(SYSTEM_SNOMED, this.resource.code)?.code;
-  }
-
-  get snomedSystem(): string | undefined {
-    return findCoding(SYSTEM_SNOMED, this.resource.code)?.system;
-  }
-
-  get snomedDisplay(): string | undefined {
-    return findCoding(SYSTEM_SNOMED, this.resource.code)?.display;
   }
 }
