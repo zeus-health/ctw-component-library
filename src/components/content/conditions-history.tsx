@@ -36,23 +36,13 @@ export function ConditionHistory({
         (condition) => new ConditionModel(condition)
       );
 
-      let filteredConditions;
-
-      if (icd10Code && snomedCode) {
-        filteredConditions = models.filter(
-          (condition) =>
-            condition.icd10Code === icd10Code ||
-            condition.snomedCode === snomedCode
-        );
-      } else if (icd10Code) {
-        filteredConditions = models.filter(
-          (condition) => condition.icd10Code === icd10Code
-        );
-      } else {
-        filteredConditions = models.filter(
-          (condition) => condition.snomedCode === snomedCode
-        );
-      }
+      const filteredConditions = models.filter(
+        (condition) =>
+          (condition.icd10Code === icd10Code &&
+            typeof icd10Code !== "undefined") ||
+          (condition.snomedCode === snomedCode &&
+            typeof snomedCode !== "undefined")
+      );
 
       setConditions(filteredConditions.map((model) => setupData(model)));
       setLoading(false);
@@ -61,109 +51,60 @@ export function ConditionHistory({
     load();
 
     function setupData(condition: ConditionModel): DataListStackEntry {
-      if (icd10Code && snomedCode) {
-        return {
-          id: condition.id,
-          data: [
-            {
-              label: "Verification Status",
-              value: condition.verificationStatus,
-            },
-            {
-              label: "Clinical Status",
-              value: condition.clinicalStatus,
-            },
-            {
-              label: "Recorded Date",
-              value: condition.recordedDate,
-            },
-            {
-              label: "ICD10 Display",
-              value: condition.icd10Display,
-            },
-            {
-              label: "ICD10 Code",
-              value: condition.icd10Code,
-            },
-            {
-              label: "ICD10 System",
-              value: condition.icd10System,
-            },
-            {
-              label: "SNOMED Display",
-              value: condition.snomedDisplay,
-            },
-            {
-              label: "SNOMED Code",
-              value: condition.snomedCode,
-            },
-            {
-              label: "SNOMED System",
-              value: condition.snomedSystem,
-            },
-          ],
-        };
+      let data = [
+        {
+          label: "Verification Status",
+          value: condition.verificationStatus,
+        },
+        {
+          label: "Clinical Status",
+          value: condition.clinicalStatus,
+        },
+        {
+          label: "Recorded Date",
+          value: condition.recordedDate,
+        },
+      ];
+      const ICD10Fields = [
+        {
+          label: "ICD10 Display",
+          value: condition.icd10Display,
+        },
+        {
+          label: "ICD10 Code",
+          value: condition.icd10Code,
+        },
+        {
+          label: "ICD10 System",
+          value: condition.icd10System,
+        },
+      ];
+      const SNOMEDFields = [
+        {
+          label: "SNOMED Display",
+          value: condition.snomedDisplay,
+        },
+        {
+          label: "SNOMED Code",
+          value: condition.snomedCode,
+        },
+        {
+          label: "SNOMED System",
+          value: condition.snomedSystem,
+        },
+      ];
+
+      if (icd10Code) {
+        data = data.concat(ICD10Fields);
       }
 
       if (snomedCode) {
-        return {
-          id: condition.id,
-          data: [
-            {
-              label: "Verification Status",
-              value: condition.verificationStatus,
-            },
-            {
-              label: "Clinical Status",
-              value: condition.clinicalStatus,
-            },
-            {
-              label: "Recorded Date",
-              value: condition.recordedDate,
-            },
-            {
-              label: "Display",
-              value: condition.snomedDisplay,
-            },
-            {
-              label: "Code",
-              value: condition.snomedCode,
-            },
-            {
-              label: "System",
-              value: condition.snomedSystem,
-            },
-          ],
-        };
+        data = data.concat(SNOMEDFields);
       }
+
       return {
         id: condition.id,
-        data: [
-          {
-            label: "Verification Status",
-            value: condition.verificationStatus,
-          },
-          {
-            label: "Clinical Status",
-            value: condition.clinicalStatus,
-          },
-          {
-            label: "Recorded Date",
-            value: condition.recordedDate,
-          },
-          {
-            label: "Display",
-            value: condition.icd10Display,
-          },
-          {
-            label: "Code",
-            value: condition.icd10Code,
-          },
-          {
-            label: "System",
-            value: condition.icd10System,
-          },
-        ],
+        data: [...data],
       };
     }
   }, [getCTWFhirClient, icd10Code, snomedCode, patientUPIDPromise]);

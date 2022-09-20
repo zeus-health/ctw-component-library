@@ -15,17 +15,10 @@ export function ConditionHistoryDrawer({
   isOpen,
   onClose,
 }: ConditionHistoryDrawerProps) {
-  // let data;
   const data = ConditionHistory({
     icd10Code: condition?.icd10Code,
     snomedCode: condition?.snomedCode,
   });
-
-  // if (condition?.icd10Code) {
-  //   data = ConditionHistory({ icd10Code: condition.icd10Code });
-  // } else if (condition?.snomedCode) {
-  //   data = ConditionHistory({ snomedCode: condition.snomedCode });
-  // }
   const conditionName = condition?.display;
   const title = "Condition History";
 
