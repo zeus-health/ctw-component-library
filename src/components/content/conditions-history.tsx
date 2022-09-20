@@ -84,15 +84,15 @@ export function ConditionHistory({
               value: condition.icd10System,
             },
             {
-              label: "SnoMed Display",
+              label: "SNOMED Display",
               value: condition.snomedDisplay,
             },
             {
-              label: "SnoMed Code",
+              label: "SNOMED Code",
               value: condition.snomedCode,
             },
             {
-              label: "SnoMed System",
+              label: "SNOMED System",
               value: condition.snomedSystem,
             },
           ],
