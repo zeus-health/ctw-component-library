@@ -48,8 +48,6 @@ export function ConditionHistory({
         );
       }
 
-      console.log(filteredConditions);
-
       setConditions(filteredConditions.map((model) => setupData(model)));
       setLoading(false);
     }
@@ -74,16 +72,28 @@ export function ConditionHistory({
               value: condition.recordedDate,
             },
             {
-              label: "Display",
+              label: "ICD10 Display",
               value: condition.icd10Display,
             },
             {
-              label: "Code",
+              label: "ICD10 Code",
               value: condition.icd10Code,
             },
             {
-              label: "System",
+              label: "ICD10 System",
               value: condition.icd10System,
+            },
+            {
+              label: "SnoMed Display",
+              value: condition.snomedDisplay,
+            },
+            {
+              label: "SnoMed Code",
+              value: condition.snomedCode,
+            },
+            {
+              label: "SnoMed System",
+              value: condition.snomedSystem,
             },
           ],
         };
