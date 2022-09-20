@@ -71,8 +71,16 @@ export class ConditionModel {
     );
   }
 
-  get icd10(): string | undefined {
+  get icd10Code(): string | undefined {
     return findCoding(SYSTEM_ICD10, this.resource.code)?.code;
+  }
+
+  get icd10System(): string | undefined {
+    return findCoding(SYSTEM_ICD10, this.resource.code)?.system;
+  }
+
+  get icd10Display(): string | undefined {
+    return findCoding(SYSTEM_ICD10, this.resource.code)?.display;
   }
 
   get id(): string {
@@ -121,6 +129,18 @@ export class ConditionModel {
     return codeableConceptLabel(this.resource.severity);
   }
 
+  get snomedCode(): string | undefined {
+    return findCoding(SYSTEM_SNOMED, this.resource.code)?.code;
+  }
+
+  get snomedDisplay(): string | undefined {
+    return findCoding(SYSTEM_SNOMED, this.resource.code)?.display;
+  }
+
+  get snomedSystem(): string | undefined {
+    return findCoding(SYSTEM_SNOMED, this.resource.code)?.system;
+  }
+
   get stages(): string[] {
     return (
       this.resource.stage?.map((stage) => {
@@ -138,18 +158,6 @@ export class ConditionModel {
 
   get resourceType(): string {
     return this.resource.resourceType;
-  }
-
-  get snomedCode(): string | undefined {
-    return findCoding(SYSTEM_SNOMED, this.resource.code)?.code;
-  }
-
-  get snomedSystem(): string | undefined {
-    return findCoding(SYSTEM_SNOMED, this.resource.code)?.system;
-  }
-
-  get snomedDisplay(): string | undefined {
-    return findCoding(SYSTEM_SNOMED, this.resource.code)?.display;
   }
 
   get verificationStatus(): string {
