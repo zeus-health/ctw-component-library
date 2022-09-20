@@ -158,7 +158,6 @@ export function Conditions({ className }: ConditionsProps) {
                 {
                   name: "Edit",
                   action: () => {
-                    console.log("condition", condition);
                     if (patient) {
                       setDrawerIsOpen(true);
                       setFormAction("Edit");

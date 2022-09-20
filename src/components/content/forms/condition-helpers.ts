@@ -38,7 +38,7 @@ export const getEditingOrAddingFromLensConditionData = ({
     value: condition.id,
     field: "id",
     readonly: true,
-    hidden: false,
+    hidden: true,
   },
   {
     label: "subject",
