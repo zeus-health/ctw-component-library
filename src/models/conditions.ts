@@ -131,28 +131,13 @@ export class ConditionModel {
     );
   }
 
-  get snomedCode(): string | undefined {
-    return findCoding(SYSTEM_SNOMED, this.resource.code)?.code;
-  }
-
   get subjectID(): string {
     const [, subjectID] = this.resource.subject.reference?.split("/") || [];
     return subjectID || "";
   }
 
-  get verificationStatus(): string {
-    return codeableConceptLabel(this.resource.verificationStatus);
-  }
-
   get resourceType(): string {
     return this.resource.resourceType;
-  }
-
-  public setSubjectID(patientID: string) {
-    this.resource.subject = {
-      type: "Patient",
-      reference: `Patient/${patientID}`,
-    };
   }
 
   get snomedCode(): string | undefined {
@@ -165,5 +150,9 @@ export class ConditionModel {
 
   get snomedDisplay(): string | undefined {
     return findCoding(SYSTEM_SNOMED, this.resource.code)?.display;
+  }
+
+  get verificationStatus(): string {
+    return codeableConceptLabel(this.resource.verificationStatus);
   }
 }

@@ -20,14 +20,17 @@ export function ConditionHistory({ icd10 }: ConditionHistoryProps) {
   const [conditions, setConditions] = useState<DataListStackEntries>([]);
   const [loading, setLoading] = useState(true);
   const { getCTWFhirClient } = useCTW();
-  const { patientUPIDPromise } = usePatient();
+  const { patientPromise } = usePatient();
 
   useEffect(() => {
     async function load() {
       const fhirClient = await getCTWFhirClient();
-      const patientUPID = await patientUPIDPromise;
+      const patientTemp = await patientPromise;
 
-      const allConditions = await getConditionHistory(fhirClient, patientUPID);
+      const allConditions = await getConditionHistory(
+        fhirClient,
+        patientTemp.UPID
+      );
       const models = allConditions.map(
         (condition) => new ConditionModel(condition)
       );
@@ -39,7 +42,7 @@ export function ConditionHistory({ icd10 }: ConditionHistoryProps) {
     }
 
     load();
-  }, [getCTWFhirClient, icd10, patientUPIDPromise]);
+  }, [getCTWFhirClient, icd10, patientPromise]);
 
   function setupData(condition: ConditionModel): DataListStackEntry {
     return {
