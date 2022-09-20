@@ -38,7 +38,13 @@ export function ConditionHistory({
 
       let filteredConditions;
 
-      if (icd10Code) {
+      if (icd10Code && snomedCode) {
+        filteredConditions = models.filter(
+          (condition) =>
+            condition.icd10Code === icd10Code ||
+            condition.snomedCode === snomedCode
+        );
+      } else if (icd10Code) {
         filteredConditions = models.filter(
           (condition) => condition.icd10Code === icd10Code
         );
@@ -55,7 +61,7 @@ export function ConditionHistory({
     load();
 
     function setupData(condition: ConditionModel): DataListStackEntry {
-      if (icd10Code) {
+      if (icd10Code && snomedCode) {
         return {
           id: condition.id,
           data: [
@@ -98,6 +104,38 @@ export function ConditionHistory({
           ],
         };
       }
+
+      if (snomedCode) {
+        return {
+          id: condition.id,
+          data: [
+            {
+              label: "Verification Status",
+              value: condition.verificationStatus,
+            },
+            {
+              label: "Clinical Status",
+              value: condition.clinicalStatus,
+            },
+            {
+              label: "Recorded Date",
+              value: condition.recordedDate,
+            },
+            {
+              label: "Display",
+              value: condition.snomedDisplay,
+            },
+            {
+              label: "Code",
+              value: condition.snomedCode,
+            },
+            {
+              label: "System",
+              value: condition.snomedSystem,
+            },
+          ],
+        };
+      }
       return {
         id: condition.id,
         data: [
@@ -115,15 +153,15 @@ export function ConditionHistory({
           },
           {
             label: "Display",
-            value: condition.snomedDisplay,
+            value: condition.icd10Display,
           },
           {
             label: "Code",
-            value: condition.snomedCode,
+            value: condition.icd10Code,
           },
           {
             label: "System",
-            value: condition.snomedSystem,
+            value: condition.icd10System,
           },
         ],
       };
