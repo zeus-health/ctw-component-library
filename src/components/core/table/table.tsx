@@ -28,7 +28,7 @@ export type TableProps<T extends MinRecordItem> = {
   isLoading?: boolean;
   message?: string;
   showTableHead?: boolean;
-  rowActions?: MenuItems[];
+  rowActions?: (data: T) => MenuItems[];
 };
 
 export type TableBaseProps<T extends MinRecordItem> = Omit<
@@ -111,7 +111,6 @@ export const Table = <T extends MinRecordItem>({
                 columns={columns}
                 showLeftTableBorderShadow={showLeftTableBorderShadow}
                 showRightTableBorderShadow={showRightTableBorderShadow}
-                rowActions={rowActions}
               />
             )}
 
