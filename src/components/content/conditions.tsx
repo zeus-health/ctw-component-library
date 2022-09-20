@@ -82,14 +82,14 @@ export function Conditions({ className }: ConditionsProps) {
             confirmedResponse.value.map((c) => new ConditionModel(c))
           );
           const ICD10ConfirmedCodes = confirmedResponse.value.map(
-            (c) => new ConditionModel(c).icd10
+            (c) => new ConditionModel(c).icd10Code
           );
 
           if (notReviewedResponse.status === "fulfilled") {
             const notReviewedConditionsFiltered =
               notReviewedResponse.value.filter(
                 (c) =>
-                  !ICD10ConfirmedCodes.includes(new ConditionModel(c).icd10)
+                  !ICD10ConfirmedCodes.includes(new ConditionModel(c).icd10Code)
               );
             setNotReviewed(
               notReviewedConditionsFiltered.map((c) => new ConditionModel(c))

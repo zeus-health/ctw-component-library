@@ -5,7 +5,7 @@ import { useCTW } from "../core/ctw-provider";
 import {
   DataListStack,
   DataListStackEntries,
-  DataListStackEntry
+  DataListStackEntry,
 } from "../core/data-stack-list";
 import { usePatient } from "../core/patient-provider";
 import { Spinner } from "../core/spinner";
@@ -52,7 +52,6 @@ export function ConditionHistory({
     }
 
     load();
-  }, [getCTWFhirClient, icd10, patientPromise]);
 
     function setupData(condition: ConditionModel): DataListStackEntry {
       let data = [
@@ -111,7 +110,7 @@ export function ConditionHistory({
         data: [...data],
       };
     }
-  }, [getCTWFhirClient, icd10Code, snomedCode, patientUPIDPromise]);
+  }, [getCTWFhirClient, icd10Code, snomedCode, patientPromise]);
 
   if (!icd10Code && !snomedCode) {
     return <div>No history found.</div>;
