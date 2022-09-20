@@ -15,7 +15,12 @@ export function ConditionHistoryDrawer({
   isOpen,
   onClose,
 }: ConditionHistoryDrawerProps) {
-  const data = ConditionHistory({ icd10: condition?.icd10 });
+  let data;
+  if (condition?.icd10Code) {
+    data = ConditionHistory({ icd10Code: condition.icd10Code });
+  } else if (condition?.snomedCode) {
+    data = ConditionHistory({ snomedCode: condition.snomedCode });
+  }
   const conditionName = condition?.display;
   const title = "Condition History";
 

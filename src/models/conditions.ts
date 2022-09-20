@@ -71,8 +71,16 @@ export class ConditionModel {
     );
   }
 
-  get icd10(): string | undefined {
+  get icd10Code(): string | undefined {
     return findCoding(SYSTEM_ICD10, this.resource.code)?.code;
+  }
+
+  get icd10System(): string | undefined {
+    return findCoding(SYSTEM_ICD10, this.resource.code)?.system;
+  }
+
+  get icd10Display(): string | undefined {
+    return findCoding(SYSTEM_ICD10, this.resource.code)?.display;
   }
 
   get id(): string {
