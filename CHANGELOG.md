@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.7.0
+
+### Minor Changes
+
+- 7b71ff0: Fix the condition filter to fetch by icd10 and snomed and not just one or the other if both are present.
+
 ## 0.6.0
 
 ### Minor Changes
