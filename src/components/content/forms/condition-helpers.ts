@@ -26,12 +26,10 @@ export const getAddConditionData = ({
   ...sharedFields(condition),
 ];
 
-export const getEditingOrAddingFromLensConditionData = ({
+export const getEditingFromLensConditionData = ({
   condition,
-  patientID,
 }: {
   condition: ConditionModel;
-  patientID: string;
 }): FormEntry[] => [
   {
     label: "id",

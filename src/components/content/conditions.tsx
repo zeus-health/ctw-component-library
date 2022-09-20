@@ -1,6 +1,6 @@
 import {
   getAddConditionData,
-  getEditingOrAddingFromLensConditionData,
+  getEditingFromLensConditionData,
 } from "@/components/content/forms/condition-helpers";
 import {
   ConditionFilters,
@@ -162,10 +162,7 @@ export function Conditions({ className }: ConditionsProps) {
                       setDrawerIsOpen(true);
                       setFormAction("Edit");
                       setCurrentlySelectedData(
-                        getEditingOrAddingFromLensConditionData({
-                          condition,
-                          patientID: patient.id,
-                        })
+                        getEditingFromLensConditionData({ condition })
                       );
                     }
                   },
@@ -196,10 +193,7 @@ export function Conditions({ className }: ConditionsProps) {
                       setDrawerIsOpen(true);
                       setFormAction("Add");
                       setCurrentlySelectedData(
-                        getEditingOrAddingFromLensConditionData({
-                          condition,
-                          patientID: patient.id,
-                        })
+                        getAddConditionData({ condition })
                       );
                     }
                   },
