@@ -24,14 +24,17 @@ export function ConditionHistory({
   const [conditions, setConditions] = useState<DataListStackEntries>([]);
   const [loading, setLoading] = useState(true);
   const { getCTWFhirClient } = useCTW();
-  const { patientUPIDPromise } = usePatient();
+  const { patientPromise } = usePatient();
 
   useEffect(() => {
     async function load() {
       const fhirClient = await getCTWFhirClient();
-      const patientUPID = await patientUPIDPromise;
+      const patientTemp = await patientPromise;
 
-      const allConditions = await getConditionHistory(fhirClient, patientUPID);
+      const allConditions = await getConditionHistory(
+        fhirClient,
+        patientTemp.UPID
+      );
       const models = allConditions.map(
         (condition) => new ConditionModel(condition)
       );
@@ -107,7 +110,7 @@ export function ConditionHistory({
         data: [...data],
       };
     }
-  }, [getCTWFhirClient, icd10Code, snomedCode, patientUPIDPromise]);
+  }, [getCTWFhirClient, icd10Code, snomedCode, patientPromise]);
 
   if (!icd10Code && !snomedCode) {
     return <div>No history found.</div>;

@@ -3,10 +3,10 @@ import { formatDateISOToLocal } from "../fhir/formatters";
 import { SYSTEM_ICD10, SYSTEM_SNOMED } from "../fhir/system-urls";
 
 export class ConditionModel {
-  private resource: fhir4.Condition;
+  public resource: fhir4.Condition;
 
-  constructor(cond: fhir4.Condition) {
-    this.resource = cond;
+  constructor(condition: fhir4.Condition) {
+    this.resource = condition;
   }
 
   get abatement(): string | undefined {
@@ -149,6 +149,15 @@ export class ConditionModel {
         return `Summary: ${summary}, Type: ${type}`;
       }) || []
     );
+  }
+
+  get subjectID(): string {
+    const [, subjectID] = this.resource.subject.reference?.split("/") || [];
+    return subjectID || "";
+  }
+
+  get resourceType(): string {
+    return this.resource.resourceType;
   }
 
   get verificationStatus(): string {

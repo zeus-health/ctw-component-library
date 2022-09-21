@@ -15,7 +15,7 @@ type TableRowsProps<T extends MinRecordItem> = {
   isLoading: boolean;
   emptyMessage: string;
   showLeftTableBorderShadow: boolean;
-  showRightTableBorderShadow: boolean;
+  showRightTableBorderShadow?: boolean;
   rowActions?: (data: T) => MenuItems[];
 };
 

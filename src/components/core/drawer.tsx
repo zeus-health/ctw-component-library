@@ -105,11 +105,7 @@ Drawer.Footer = function DialogFooter({
   );
 };
 
-Drawer.Body = function DialogBody({
-  children,
-}: {
-  children: ReactNode;
-}): JSX.Element {
+Drawer.Body = function DialogBody({ children }: { children: ReactNode }) {
   return (
     <div className="ctw-flex ctw-h-full ctw-flex-col ctw-overflow-y-auto ctw-p-6">
       {children}
