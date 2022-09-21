@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.8.1
+
+### Patch Changes
+
+- 1f5e4ea: Resets history loading state after fetching condition history for a particular condition and increases fetch size for searchAllRecords.
+
 ## 0.8.0
 
 ### Minor Changes
