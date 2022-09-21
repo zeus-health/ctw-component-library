@@ -10,6 +10,8 @@ import {
 } from "./system-urls";
 import { ResourceType, ResourceTypeString } from "./types";
 
+const MAX_COUNT = 250;
+
 // Enumerating ALL of the third party tags.
 const THIRD_PARTY_TAGS = [
   `${SYSTEM_ZUS_THIRD_PARTY}|surescripts`,
@@ -29,8 +31,6 @@ export type SearchReturn<T extends ResourceTypeString> = {
   total: number;
   resources: ResourceType<T>[];
 };
-
-const MAX_COUNT = 250;
 
 // Performs a FHIR search for the given resourceType accross all resources
 // the user has access to. This can include lens and third party resources!
