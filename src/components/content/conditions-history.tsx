@@ -113,10 +113,11 @@ export function ConditionHistory({
 
     return function cleanup() {
       setConditions([]);
+      setLoading(true);
     };
   }, [getCTWFhirClient, icd10Code, snomedCode, patientPromise]);
 
-  if (!icd10Code && !snomedCode) {
+  if (conditions.length === 0 && !loading) {
     return <div>No history found.</div>;
   }
 

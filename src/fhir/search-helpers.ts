@@ -30,6 +30,8 @@ export type SearchReturn<T extends ResourceTypeString> = {
   resources: ResourceType<T>[];
 };
 
+const MAX_COUNT = 250;
+
 // Performs a FHIR search for the given resourceType accross all resources
 // the user has access to. This can include lens and third party resources!
 // Returns {bundle: fhir4.Bundle, total: number, resources: ResourceType[]}.
@@ -42,11 +44,14 @@ export async function searchAllRecords<T extends ResourceTypeString>(
   fhirClient: Client,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
-  const { patientUPID, ...params } = searchParams ?? {};
+  const { patientUPID, _count, ...params } = searchParams ?? {};
+  const fetchAll = typeof _count === "undefined";
+  const count = fetchAll ? MAX_COUNT : _count;
   const bundle = (await fhirClient.search({
     resourceType,
     searchParams: {
       ...params,
+      _count: count,
       ...patientSearchParams(resourceType, patientUPID as string),
     },
   })) as fhir4.Bundle;
