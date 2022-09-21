@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.8.0
+
+### Minor Changes
+
+- 8146b27: Add ability to add not reviewed condition to confirmed condition section, edit confirmed conditions and add new conditions.
+
 ## 0.7.0
 
 ### Minor Changes
