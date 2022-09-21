@@ -35,6 +35,10 @@ export async function createOrEditFhirResource<T extends FhirResourceBase>({
       return err;
     }
 
-    throw Error("Failed saving error");
+    throw Error(
+      `Failed ${resourceModel.id ? "updating" : "creating"} ${
+        resourceModel.resourceType
+      }`
+    );
   }
 }

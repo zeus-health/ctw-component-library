@@ -67,14 +67,7 @@ export const FormField = ({
   };
 
   if (hidden) {
-    return (
-      <input
-        {...inputProps}
-        className={cx({ error }, "ctw-listbox-input ctw-w-full")}
-        defaultValue={value}
-        hidden={hidden}
-      />
-    );
+    return <input {...inputProps} defaultValue={value} hidden={hidden} />;
   }
 
   return (

@@ -1,6 +1,6 @@
 import {
   getAddConditionData,
-  getEditingFromLensConditionData,
+  getEditingConfirmedConditionData,
 } from "@/components/content/forms/condition-helpers";
 import {
   ConditionFilters,
@@ -44,13 +44,43 @@ export function Conditions({ className }: ConditionsProps) {
   const [formAction, setFormAction] = useState("");
   const [currentSelectedData, setCurrentlySelectedData] =
     useState<FormEntry[]>();
-  const [currentlyClickedCondition, setcurrentlyClickedCondition] =
+  const [conditionForHistory, setConditionForHistory] =
     useState<ConditionModel>();
 
   const { getCTWFhirClient } = useCTW();
   const { patientPromise } = usePatient();
 
   const handleFormChange = () => setIncludeInactive(!includeInactive);
+
+  const handleConditionEdit = (condition: ConditionModel) => {
+    if (patient) {
+      setDrawerIsOpen(true);
+      setFormAction("Edit");
+      setCurrentlySelectedData(getEditingConfirmedConditionData({ condition }));
+    }
+  };
+
+  const handleNotReviewedCondition = (condition: ConditionModel) => {
+    if (patient) {
+      setDrawerIsOpen(true);
+      setFormAction("Add");
+      setCurrentlySelectedData(getAddConditionData({ condition }));
+    }
+  };
+
+  const handleAddNewCondition = () => {
+    const newCondition: fhir4.Condition = {
+      resourceType: "Condition",
+      subject: { type: "Patient", reference: `Patient/${patient?.id}` },
+    };
+    setDrawerIsOpen(true);
+    setFormAction("Add");
+    setCurrentlySelectedData(
+      getAddConditionData({
+        condition: new ConditionModel(newCondition),
+      })
+    );
+  };
 
   useEffect(() => {
     async function load() {
@@ -82,14 +112,14 @@ export function Conditions({ className }: ConditionsProps) {
             confirmedResponse.value.map((c) => new ConditionModel(c))
           );
           const ICD10ConfirmedCodes = confirmedResponse.value.map(
-            (c) => new ConditionModel(c).icd10Code
+            (c) => new ConditionModel(c).icd10
           );
 
           if (notReviewedResponse.status === "fulfilled") {
             const notReviewedConditionsFiltered =
               notReviewedResponse.value.filter(
                 (c) =>
-                  !ICD10ConfirmedCodes.includes(new ConditionModel(c).icd10Code)
+                  !ICD10ConfirmedCodes.includes(new ConditionModel(c).icd10)
               );
             setNotReviewed(
               notReviewedConditionsFiltered.map((c) => new ConditionModel(c))
@@ -109,20 +139,6 @@ export function Conditions({ className }: ConditionsProps) {
     load();
   }, [includeInactive, patientPromise, getCTWFhirClient, patient]);
 
-  const addNewCondition = () => {
-    const newCondition: fhir4.Condition = {
-      resourceType: "Condition",
-      subject: { type: "Patient", reference: `Patient/${patient?.id}` },
-    };
-    setDrawerIsOpen(true);
-    setFormAction("Add");
-    setCurrentlySelectedData(
-      getAddConditionData({
-        condition: new ConditionModel(newCondition),
-      })
-    );
-  };
-
   return (
     <div
       className={cx(
@@ -135,7 +151,7 @@ export function Conditions({ className }: ConditionsProps) {
         <button
           type="button"
           className="ctw-btn-clear ctw-link"
-          onClick={addNewCondition}
+          onClick={handleAddNewCondition}
         >
           + Add Condition
         </button>
@@ -158,20 +174,14 @@ export function Conditions({ className }: ConditionsProps) {
                 {
                   name: "Edit",
                   action: () => {
-                    if (patient) {
-                      setDrawerIsOpen(true);
-                      setFormAction("Edit");
-                      setCurrentlySelectedData(
-                        getEditingFromLensConditionData({ condition })
-                      );
-                    }
+                    handleConditionEdit(condition);
                   },
                 },
                 {
                   name: "View History",
                   action: () => {
                     setHistoryDrawerIsOpen(true);
-                    setcurrentlyClickedCondition(condition);
+                    setConditionForHistory(condition);
                   },
                 },
               ]}
@@ -189,20 +199,14 @@ export function Conditions({ className }: ConditionsProps) {
                 {
                   name: "Add",
                   action: () => {
-                    if (patient) {
-                      setDrawerIsOpen(true);
-                      setFormAction("Add");
-                      setCurrentlySelectedData(
-                        getAddConditionData({ condition })
-                      );
-                    }
+                    handleNotReviewedCondition(condition);
                   },
                 },
                 {
                   name: "View History",
                   action: () => {
                     setHistoryDrawerIsOpen(true);
-                    setcurrentlyClickedCondition(condition);
+                    setConditionForHistory(condition);
                   },
                 },
               ]}
@@ -222,11 +226,11 @@ export function Conditions({ className }: ConditionsProps) {
           onClose={() => setDrawerIsOpen(false)}
         />
       )}
-      {currentlyClickedCondition && (
+      {conditionForHistory && (
         <ConditionHistoryDrawer
           isOpen={historyDrawerIsOpen}
           onClose={() => setHistoryDrawerIsOpen(false)}
-          condition={currentlyClickedCondition}
+          condition={conditionForHistory}
         />
       )}
     </div>

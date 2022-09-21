@@ -26,7 +26,7 @@ export const getAddConditionData = ({
   ...sharedFields(condition),
 ];
 
-export const getEditingFromLensConditionData = ({
+export const getEditingConfirmedConditionData = ({
   condition,
 }: {
   condition: ConditionModel;
