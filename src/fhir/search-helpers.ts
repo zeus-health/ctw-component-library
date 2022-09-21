@@ -10,6 +10,8 @@ import {
 } from "./system-urls";
 import { ResourceType, ResourceTypeString } from "./types";
 
+const MAX_COUNT = 250;
+
 // Enumerating ALL of the third party tags.
 const THIRD_PARTY_TAGS = [
   `${SYSTEM_ZUS_THIRD_PARTY}|surescripts`,
@@ -42,11 +44,14 @@ export async function searchAllRecords<T extends ResourceTypeString>(
   fhirClient: Client,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
-  const { patientUPID, ...params } = searchParams ?? {};
+  const { patientUPID, _count, ...params } = searchParams ?? {};
+  const fetchAll = typeof _count === "undefined";
+  const count = fetchAll ? MAX_COUNT : _count;
   const bundle = (await fhirClient.search({
     resourceType,
     searchParams: {
       ...params,
+      _count: count,
       ...patientSearchParams(resourceType, patientUPID as string),
     },
   })) as fhir4.Bundle;

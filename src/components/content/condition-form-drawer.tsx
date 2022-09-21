@@ -12,7 +12,6 @@ export type ConditionFormDrawerProps = {
 
 export function ConditionFormDrawer({
   className,
-  editing,
   isOpen,
   onClose,
 }: ConditionFormDrawerProps) {
