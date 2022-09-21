@@ -110,6 +110,10 @@ export function ConditionHistory({
         data: [...data],
       };
     }
+
+    return function cleanup() {
+      setConditions([]);
+    };
   }, [getCTWFhirClient, icd10Code, snomedCode, patientPromise]);
 
   if (!icd10Code && !snomedCode) {
