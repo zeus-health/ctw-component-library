@@ -11,9 +11,12 @@ export function formatDateISOToLocal(dateStr?: string): string | undefined {
 // Formats a date from MM/DD/YYYY to YYYY-MM-DD.
 export function formatDateLocalToISO(dateStr?: string): string | undefined {
   if (!dateStr) return undefined;
-
-  const date = parse(dateStr, "P", new Date());
-  return formatISO(date, { representation: "date" });
+  try {
+    const date = parse(dateStr, "P", new Date());
+    return formatISO(date, { representation: "date" });
+  } catch (e) {
+    return dateStr;
+  }
 }
 
 // Returns the ISO string (YYYY-MM-DD) for a given date.

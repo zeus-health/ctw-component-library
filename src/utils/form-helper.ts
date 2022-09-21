@@ -229,7 +229,7 @@ export function getInputProps(
     max = def.maxValue ?? undefined;
   } else if (def instanceof ZodBoolean) {
     type = "checkbox";
-  } else if (def instanceof ZodDate) {
+  } else if (def instanceof ZodDate || def._def.innerType instanceof ZodDate) {
     type = "date";
   } else if (def instanceof ZodArray) {
     return getInputProps(name, schema, def.element);
