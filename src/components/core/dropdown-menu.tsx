@@ -2,6 +2,7 @@ import { Menu } from "@headlessui/react";
 import * as RadixDropdownMenu from "@radix-ui/react-dropdown-menu";
 import cx from "classnames";
 import { ReactNode } from "react";
+import "./dropdown-menu.scss";
 
 export type MenuItems = {
   name: string;
