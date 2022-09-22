@@ -48,7 +48,7 @@ export const DrawerFormWithFields = <T,>({
       {...drawerFormProps}
     >
       {(submitting, errors) => (
-        <div className="ctw-input-container ctw-space-y-6">
+        <div className="ctw-space-y-6">
           {data.map(({ label, field, value, lines, readonly, hidden }) => {
             const error = errors?.[field];
 
@@ -73,7 +73,9 @@ export const DrawerFormWithFields = <T,>({
                 className="ctw-space-y-1.5 ctw-text-sm ctw-font-medium ctw-text-content-black"
               >
                 <div className="ctw-flex ctw-justify-between">
-                  <label className={cx({ error }, "leading-tight")}>
+                  <label
+                    className={cx({ "ctw-error": error }, "leading-tight")}
+                  >
                     {label}
                   </label>
                   {!inputProps(field).required && (
