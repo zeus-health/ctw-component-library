@@ -30,7 +30,7 @@ export function ConditionsTableBase({
     {
       title: "Status",
       dataIndex: "clinicalStatus",
-      className: "ctw-w-[10%]",
+      className: "ctw-w-[5%]",
     },
     {
       title: "Recorded Date",
@@ -38,7 +38,7 @@ export function ConditionsTableBase({
       className: "ctw-w-[10%]",
     },
     {
-      className: "ctw-w-[10%] ctw-table-action-column",
+      className: "ctw-w-[5%] ctw-table-action-column",
       render: (condition: ConditionModel) => (
         <DropdownMenu menuItems={rowActions(condition)}>
           <DotsHorizontalIcon className="ctw-w-5" />
