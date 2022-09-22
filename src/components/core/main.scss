@@ -86,12 +86,6 @@
     line-height: 0;
   }
 
-  .ctw-table-base {
-    text-indent: 0;
-    border-color: inherit;
-    border-collapse: collapse;
-  }
-
   *[class^="ctw-"],
   *[class^="ctw-"]:before,
   *[class^="ctw-"]:after {
@@ -126,10 +120,6 @@
 
   *[class*="ctw-border"] {
     @apply ctw-border-0 ctw-border-solid ctw-border-divider-light;
-  }
-
-  .ctw-table-action-column {
-    @apply ctw-min-w-[4rem] ctw-py-4 ctw-text-right;
   }
 
   .ctw-scrollbar::-webkit-scrollbar {
