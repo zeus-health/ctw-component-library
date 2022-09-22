@@ -1,6 +1,6 @@
 import { codeableConceptLabel, findCoding } from "../fhir/codeable-concept";
 import { formatDateISOToLocal } from "../fhir/formatters";
-import { SYSTEM_ICD10, SYSTEM_SNOMED } from "../fhir/system-urls";
+import { SYSTEM_CCS, SYSTEM_ICD10, SYSTEM_SNOMED } from "../fhir/system-urls";
 
 export class ConditionModel {
   public resource: fhir4.Condition;
@@ -81,6 +81,10 @@ export class ConditionModel {
 
   get icd10Display(): string | undefined {
     return findCoding(SYSTEM_ICD10, this.resource.code)?.display;
+  }
+
+  get group(): string | undefined {
+    return findCoding(SYSTEM_CCS, this.resource.code)?.display;
   }
 
   get id(): string {
