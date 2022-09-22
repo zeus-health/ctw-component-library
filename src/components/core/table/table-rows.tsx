@@ -1,6 +1,5 @@
 import cx from "classnames";
 import { KeyboardEvent } from "react";
-import { MenuItems } from "../dropdown-menu";
 
 import { Spinner } from "../spinner";
 
@@ -14,9 +13,6 @@ type TableRowsProps<T extends MinRecordItem> = {
   onRowClick: ((row: T) => void) | undefined;
   isLoading: boolean;
   emptyMessage: string;
-  showLeftTableBorderShadow: boolean;
-  showRightTableBorderShadow?: boolean;
-  rowActions?: (data: T) => MenuItems[];
 };
 
 export const TableRows = <T extends MinRecordItem>({
@@ -25,7 +21,6 @@ export const TableRows = <T extends MinRecordItem>({
   onRowClick,
   isLoading,
   emptyMessage,
-  showLeftTableBorderShadow,
 }: TableRowsProps<T>) => {
   if (isLoading) {
     return (
@@ -72,7 +67,6 @@ export const TableRows = <T extends MinRecordItem>({
               column={column}
               record={record}
               index={index}
-              showLeftTableBorderShadow={showLeftTableBorderShadow}
             />
           ))}
         </tr>

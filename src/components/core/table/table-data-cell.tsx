@@ -7,14 +7,12 @@ type TableColumnProps<T extends MinRecordItem> = {
   column: TableColumn<T>;
   record: T;
   index: number;
-  showLeftTableBorderShadow: boolean;
 };
 
 export const TableDataCell = <T extends MinRecordItem>({
   column,
   record,
   index,
-  showLeftTableBorderShadow,
 }: TableColumnProps<T>) => {
   const value = column.dataIndex
     ? (record[column.dataIndex] as unknown as ReactNode)
@@ -28,9 +26,6 @@ export const TableDataCell = <T extends MinRecordItem>({
         index === 0
           ? "ctw-font-medium ctw-text-content-black"
           : "ctw-text-content-light",
-        index === 0 && showLeftTableBorderShadow
-          ? "ctw-table-scroll-left-shadow-sticky ctw-bg-white group-hover:ctw-bg-bg-lighter"
-          : "",
         column.className
       )}
     >
