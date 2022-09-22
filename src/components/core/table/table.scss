@@ -1,44 +1,40 @@
-@tailwind base;
+@mixin bottom-border {
+  @apply ctw-border-0 ctw-border-b ctw-border-solid ctw-border-divider-light;
+}
 
-@layer base {
-  @mixin bottom-border {
-    @apply ctw-border-0 ctw-border-b ctw-border-solid ctw-border-divider-light;
+.ctw-table-container {
+  @apply ctw-overflow-hidden ctw-rounded-lg ctw-border-solid ctw-border-divider-light;
+
+  table {
+    container-type: normal;
+    table-layout: fixed;
+    border-collapse: collapse;
+    @apply ctw-w-full;
+
+    thead {
+      @include bottom-border;
+
+      th {
+        @apply ctw-p-3 ctw-text-left ctw-text-xs ctw-font-medium ctw-uppercase ctw-tracking-wider ctw-text-content-light;
+      }
+    }
+
+    tbody {
+      tr {
+        @apply ctw-align-top;
+
+        &:not(:last-child) {
+          @include bottom-border;
+        }
+
+        td {
+          @apply ctw-whitespace-pre-wrap ctw-px-3 ctw-py-4 ctw-text-sm ctw-text-content-light;
+        }
+      }
+    }
   }
 
-  .ctw-table-container {
-    @apply ctw-overflow-hidden ctw-rounded-lg ctw-border-solid ctw-border-divider-light;
-
-    table {
-      container-type: normal;
-      table-layout: fixed;
-      border-collapse: collapse;
-      @apply ctw-w-full;
-
-      thead {
-        @include bottom-border;
-
-        th {
-          @apply ctw-p-3 ctw-text-left ctw-text-xs ctw-font-medium ctw-uppercase ctw-tracking-wider ctw-text-content-light;
-        }
-      }
-
-      tbody {
-        tr {
-          @apply ctw-align-top;
-
-          &:not(:last-child) {
-            @include bottom-border;
-          }
-
-          td {
-            @apply ctw-whitespace-pre-wrap ctw-px-3 ctw-py-4 ctw-text-sm ctw-text-content-light;
-          }
-        }
-      }
-    }
-
-    .ctw-table-action-column {
-      @apply ctw-min-w-[4rem] ctw-py-4 ctw-text-right;
-    }
+  .ctw-table-action-column {
+    @apply ctw-min-w-[4rem] ctw-py-4 ctw-text-right;
   }
 }
