@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.9.1
+
+### Patch Changes
+
+- f3def6c: In the condition table, column widths were recalculated to add up to 100% to avoid confusion. This will not impact how the table is viewed.
+
 ## 0.9.0
 
 ### Minor Changes
