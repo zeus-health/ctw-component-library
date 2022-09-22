@@ -23,14 +23,19 @@ export function ConditionsTableBase({
       className: "ctw-w-[50%]",
     },
     {
+      title: "Group",
+      dataIndex: "ccsGrouping",
+      className: "ctw-w-[30%]",
+    },
+    {
       title: "Status",
       dataIndex: "clinicalStatus",
-      className: "ctw-w-[20%]",
+      className: "ctw-w-[10%]",
     },
     {
       title: "Recorded Date",
       dataIndex: "recordedDate",
-      className: "ctw-w-[20%]",
+      className: "ctw-w-[10%]",
     },
     {
       className: "ctw-w-[10%] ctw-table-action-column",

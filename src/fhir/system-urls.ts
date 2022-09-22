@@ -1,3 +1,6 @@
+export const SYSTEM_CCS =
+  "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp";
+
 export const SYSTEM_CONDITION_VERIFICATION_STATUS =
   "http://terminology.hl7.org/CodeSystem/condition-ver-status";
 
@@ -23,6 +26,5 @@ export const SYSTEM_TASK_STATUS =
 
 export const SYSTEM_ZUS_LENS = "https://zusapi.com/lens";
 export const SYSTEM_ZUS_THIRD_PARTY = "https://zusapi.com/thirdparty/source";
-
 export const SYSTEM_ZUS_UNIVERSAL_ID =
   "https://zusapi.com/fhir/identifier/universal-id";
