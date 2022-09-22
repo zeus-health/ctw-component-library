@@ -83,7 +83,7 @@ export class ConditionModel {
     return findCoding(SYSTEM_ICD10, this.resource.code)?.display;
   }
 
-  get group(): string | undefined {
+  get ccsGrouping(): string | undefined {
     return findCoding(SYSTEM_CCS, this.resource.code)?.display;
   }
 

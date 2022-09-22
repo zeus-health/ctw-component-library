@@ -24,7 +24,7 @@ export function ConditionsTableBase({
     },
     {
       title: "Group",
-      dataIndex: "group",
+      dataIndex: "ccsGrouping",
       className: "ctw-w-[30%]",
     },
     {
