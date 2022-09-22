@@ -1,5 +1,15 @@
 # ctw-component-library
 
+## 0.9.0
+
+### Minor Changes
+
+- 53e07aa: In condition tables, the CCS group of a condition is now displayed as a new column beside the name of the condition. Since some condition names are overly detailed, the CCS group can serve as a more readable description. If a condition does not have a CCS code, it will simply be left blank.
+
+### Patch Changes
+
+- 65c744e: Simplify table component by removing sticky columns. Table will be responsive in the future.
+
 ## 0.8.1
 
 ### Patch Changes
