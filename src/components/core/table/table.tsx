@@ -1,8 +1,6 @@
 import cx from "classnames";
 import { ReactNode } from "react";
 
-import { MenuItems } from "../dropdown-menu";
-
 import { TableHead } from "./table-head";
 import { TableRows } from "./table-rows";
 
@@ -28,7 +26,6 @@ export type TableProps<T extends MinRecordItem> = {
   isLoading?: boolean;
   message?: string;
   showTableHead?: boolean;
-  rowActions?: (data: T) => MenuItems[];
 };
 
 export type TableBaseProps<T extends MinRecordItem> = Omit<
@@ -44,7 +41,6 @@ export const Table = <T extends MinRecordItem>({
   isLoading = false,
   message = "No records found",
   showTableHead = true,
-  rowActions,
 }: TableProps<T>) => (
   <div className={cx("ctw-py-2 ctw-align-middle", className)}>
     <div
@@ -63,7 +59,6 @@ export const Table = <T extends MinRecordItem>({
               onRowClick={onRowClick}
               isLoading={isLoading}
               emptyMessage={message}
-              rowActions={rowActions}
             />
           </tbody>
         </table>
