@@ -1,5 +1,6 @@
 import cx from "classnames";
 import { ReactNode, useEffect, useRef, useState } from "react";
+import { TableColgroup } from "./table-colgroup";
 
 import { TableHead } from "./table-head";
 import { TableRows } from "./table-rows";
@@ -89,21 +90,7 @@ export const Table = <T extends MinRecordItem>({
     >
       <div className="ctw-scrollbar" ref={containerRef}>
         <table ref={tableRef}>
-          {hasData && (
-            <colgroup>
-              {columns.map((column, index) => (
-                <col
-                  key={column.title ?? index}
-                  className={column.className}
-                  style={{
-                    minWidth: column.minWidth,
-                    width: `${column.widthPercent}%`,
-                  }}
-                />
-              ))}
-            </colgroup>
-          )}
-
+          {hasData && <TableColgroup columns={columns} />}
           {showTableHead && hasData && <TableHead columns={columns} />}
 
           <tbody>
