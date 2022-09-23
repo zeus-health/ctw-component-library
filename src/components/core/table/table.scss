@@ -2,8 +2,33 @@
   @apply ctw-border-0 ctw-border-b ctw-border-solid ctw-border-divider-light;
 }
 
+.ctw-table-scroll-right-shadow::after,
+.ctw-table-scroll-left-shadow::before {
+  @apply ctw-pointer-events-none ctw-absolute ctw-z-10 ctw-block ctw-h-full ctw-w-1;
+  top: 0;
+  content: "";
+  background: linear-gradient(
+    to right,
+    rgba(99, 114, 130, 0) 0px,
+    rgba(9, 30, 66, 0.13) 100%
+  );
+}
+
+.ctw-table-scroll-right-shadow::after {
+  right: 0;
+}
+
+.ctw-table-scroll-left-shadow::before {
+  left: 0;
+  transform: rotate(180deg); // Flip the background gradient direction.
+}
+
 .ctw-table-container {
-  @apply ctw-overflow-hidden ctw-overflow-x-scroll ctw-rounded-lg ctw-border ctw-border-solid ctw-border-divider-light;
+  @apply ctw-relative ctw-overflow-hidden ctw-rounded-lg ctw-border ctw-border-solid ctw-border-divider-light;
+
+  .ctw-scrollbar {
+    @apply ctw-overflow-x-auto;
+  }
 
   table {
     container-type: normal;
