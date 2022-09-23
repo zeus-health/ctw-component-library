@@ -106,7 +106,7 @@ export function Conditions({ className }: ConditionsProps) {
         setNotReviewedIsLoading(false);
         setConfirmedIsLoading(false);
 
-        /* notReviewedConditons depends confirmedConditions so that we can correctly filter out 
+        /* notReviewedConditons depends confirmedConditions so that we can correctly filter out
          conditions that appear in confirmedConditions from notReviewedConditons */
         if (confirmedResponse.status === "fulfilled") {
           setConfirmed(
@@ -194,7 +194,6 @@ export function Conditions({ className }: ConditionsProps) {
             className="ctw-conditions-not-reviewed"
             conditions={notReviewed}
             isLoading={notReviewedIsLoading}
-            showTableHead={false}
             message={notReviewedMessage}
             rowActions={(condition) => [
               {

@@ -42,32 +42,38 @@ export const Table = <T extends MinRecordItem>({
   isLoading = false,
   message = "No records found",
   showTableHead = true,
-}: TableProps<T>) => (
-  <div className={cx("ctw-table-container", className)}>
-    <table>
-      <colgroup>
-        {columns.map((column, index) => (
-          <col
-            key={column.title ?? index}
-            className={column.className}
-            style={{
-              minWidth: column.minWidth,
-              width: `${column.widthPercent}%`,
-            }}
+}: TableProps<T>) => {
+  const hasData = !isLoading && records.length > 0;
+
+  return (
+    <div className={cx("ctw-table-container", className)}>
+      <table>
+        {hasData && (
+          <colgroup>
+            {columns.map((column, index) => (
+              <col
+                key={column.title ?? index}
+                className={column.className}
+                style={{
+                  minWidth: column.minWidth,
+                  width: `${column.widthPercent}%`,
+                }}
+              />
+            ))}
+          </colgroup>
+        )}
+
+        {showTableHead && hasData && <TableHead columns={columns} />}
+
+        <tbody>
+          <TableRows
+            records={records}
+            columns={columns}
+            isLoading={isLoading}
+            emptyMessage={message}
           />
-        ))}
-      </colgroup>
-
-      {showTableHead && <TableHead columns={columns} />}
-
-      <tbody>
-        <TableRows
-          records={records}
-          columns={columns}
-          isLoading={isLoading}
-          emptyMessage={message}
-        />
-      </tbody>
-    </table>
-  </div>
-);
+        </tbody>
+      </table>
+    </div>
+  );
+};

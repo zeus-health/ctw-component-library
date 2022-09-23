@@ -26,20 +26,20 @@ export function ConditionsTableBase({
     {
       title: "Group",
       dataIndex: "ccsGrouping",
-      widthPercent: 20,
+      widthPercent: 30,
       minWidth: 200,
     },
     {
       title: "Status",
       dataIndex: "clinicalStatus",
-      widthPercent: 25,
+      widthPercent: 20,
       minWidth: 128,
     },
     {
       title: "Recorded Date",
       dataIndex: "recordedDate",
-      widthPercent: 25,
-      minWidth: 128,
+      widthPercent: 20,
+      minWidth: 132,
     },
     {
       className: "ctw-table-action-column",
