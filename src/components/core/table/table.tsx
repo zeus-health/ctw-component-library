@@ -47,6 +47,7 @@ export const Table = <T extends MinRecordItem>({
   const containerRef = useRef<HTMLTableElement>(null);
   const [showLeftShadow, setShowLeftShadow] = useState(false);
   const [showRightShadow, setShowRightShadow] = useState(false);
+
   const updateShadows = () => {
     const container = containerRef.current;
     const table = tableRef.current;
@@ -59,7 +60,11 @@ export const Table = <T extends MinRecordItem>({
 
   useEffect(() => {
     const container = containerRef.current;
+
+    // Update right away.
     updateShadows();
+
+    // Update on scroll or resize events.
     container?.addEventListener("scroll", updateShadows);
     window.addEventListener("resize", updateShadows);
 
@@ -67,7 +72,7 @@ export const Table = <T extends MinRecordItem>({
       container?.removeEventListener("scroll", updateShadows);
       window.removeEventListener("resize", updateShadows);
     };
-  }, [containerRef]);
+  }, [containerRef, isLoading]);
 
   const hasData = !isLoading && records.length > 0;
 
