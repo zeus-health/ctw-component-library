@@ -11,6 +11,7 @@ import { ConditionModel } from "@/models/conditions";
 import { PatientModel } from "@/models/patients";
 import { useQuery } from "@tanstack/react-query";
 import cx from "classnames";
+import Client from "fhir-kit-client";
 import { useEffect, useRef, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
 import { usePatient } from "../core/patient-provider";
@@ -45,8 +46,8 @@ export function Conditions({ className }: ConditionsProps) {
   const [formAction, setFormAction] = useState("");
   // We use a ref here because if we pass FHIR Client to meta normally it will use whatever
   // you passed as meta when the query was created which means it can be come stale
-  const fhirClientRef = useRef();
-  const [conditionFilter, setConditionFilter] = useState({});
+  const fhirClientRef = useRef<Client>();
+  const [conditionFilter, setConditionFilter] = useState<ConditionFilters>({});
   const [patientUPID, setPatientUPID] = useState<string>("");
   const [currentSelectedData, setCurrentlySelectedData] =
     useState<FormEntry[]>();
@@ -57,7 +58,7 @@ export function Conditions({ className }: ConditionsProps) {
     getConfirmedConditions,
     {
       enabled: !!patientUPID,
-      meta: fhirClientRef,
+      meta: fhirClientRef as unknown as Record<string, unknown>,
     }
   );
 
@@ -66,7 +67,7 @@ export function Conditions({ className }: ConditionsProps) {
     getLensConditions,
     {
       enabled: !!patientUPID,
-      meta: fhirClientRef,
+      meta: fhirClientRef as unknown as Record<string, unknown>,
     }
   );
 
