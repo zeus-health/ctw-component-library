@@ -1,0 +1,34 @@
+.ctw-dropdown-menu-container {
+  @apply ctw-bg-white ctw-ring-1 ctw-ring-divider-light;
+}
+
+.ctw-dropdown-menu-item {
+  @apply ctw-flex ctw-w-full ctw-cursor-pointer ctw-p-2 ctw-text-primary-main ctw-outline-none;
+
+  &[data-highlighted] {
+    @apply ctw-bg-primary-light;
+  }
+}
+
+.ctw-dropdown-menu-arrow {
+  position: relative;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 10px 10px 0 10px;
+  border-color: transparent;
+  @apply ctw-border-t-divider-light;
+
+  &:before {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 9px 9px 0 9px;
+    border-color: transparent;
+    border-top-color: white;
+    top: -10px;
+    left: -9px;
+  }
+}

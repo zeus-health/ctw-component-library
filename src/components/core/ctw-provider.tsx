@@ -1,6 +1,7 @@
 import { getFhirClient } from "@/fhir/client";
 import { mapToCSSVar, Theme } from "@/styles/tailwind.theme";
 import * as React from "react";
+import "./main.scss";
 
 export type Env = "dev" | "sandbox" | "production";
 

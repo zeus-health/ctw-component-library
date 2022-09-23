@@ -62,7 +62,7 @@ export function Drawer({
               >
                 <Dialog.Panel className="ctw-pointer-events-auto ctw-w-screen ctw-max-w-xl">
                   <div className="ctw-flex ctw-h-full ctw-flex-col ctw-bg-white ctw-shadow-xl">
-                    <div className="ctw-mx-6 ctw-flex ctw-h-14 ctw-flex-shrink-0 ctw-items-center ctw-justify-between ctw-border-b ctw-border-solid ctw-border-content-lighter">
+                    <div className="ctw-mx-6 ctw-flex ctw-h-14 ctw-flex-shrink-0 ctw-items-center ctw-justify-between ctw-border-0 ctw-border-b ctw-border-solid ctw-border-content-lighter">
                       <Dialog.Title className="ctw-text-lg ctw-font-semibold ctw-uppercase">
                         {title}
                       </Dialog.Title>
@@ -99,7 +99,7 @@ Drawer.Footer = function DialogFooter({
   children: ReactNode;
 }): JSX.Element {
   return (
-    <div className="ctw-border-t ctw-border-divider-light ctw-px-6 ctw-py-4">
+    <div className="ctw-border-default ctw-border-t ctw-px-6 ctw-py-4">
       {children}
     </div>
   );

@@ -1,0 +1,30 @@
+.ctw-btn {
+  @apply ctw-cursor-pointer ctw-rounded-md ctw-py-2 ctw-px-4 ctw-text-sm ctw-font-medium ctw-shadow-sm;
+}
+
+.ctw-btn-clear {
+  @apply ctw-cursor-pointer ctw-border-0 ctw-bg-transparent ctw-p-0 ctw-text-sm ctw-font-medium ctw-outline-none;
+  line-height: 0;
+}
+
+.ctw-btn-default {
+  @apply ctw-btn ctw-border ctw-border-solid ctw-border-divider-main ctw-bg-white ctw-text-content-light hover:ctw-bg-bg-lighter;
+}
+
+.ctw-btn-primary {
+  @apply ctw-btn ctw-border-0 ctw-bg-primary-main ctw-text-white hover:ctw-bg-primary-dark;
+}
+
+.ctw-btn-group button {
+  @apply ctw-rounded-none;
+  margin-left: -1px; /* Counteract button borders. */
+
+  &:first-child {
+    margin-left: 0;
+    @apply ctw-rounded-l-md;
+  }
+
+  &:last-child {
+    @apply ctw-rounded-r-md;
+  }
+}

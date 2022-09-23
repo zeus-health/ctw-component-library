@@ -1,0 +1,100 @@
+/* 
+  These styles are applied to the entire app.
+  NOTE: This is the only file where we can use @apply from tailwind.
+*/
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "buttons.scss";
+
+/* Setup classes within base so that we can overwrite their styles with
+   other classes.
+ */
+@layer base {
+  *[class^="ctw-"],
+  *[class^="ctw-"] *,
+  *[class^="ctw-"]:before,
+  *[class^="ctw-"]:after {
+    box-sizing: border-box;
+  }
+
+  .ctw-border-default {
+    @apply ctw-border-0 ctw-border-solid ctw-border-divider-light;
+  }
+
+  .ctw-listbox-button,
+  .ctw-listbox-textarea,
+  .ctw-listbox-input {
+    @apply ctw-rounded-md ctw-border ctw-border-icon-light ctw-px-3 ctw-py-2 ctw-text-sm ctw-shadow-sm;
+    border-style: solid;
+    background-color: initial;
+  }
+
+  .ctw-listbox {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Make sure the floating dropdown get full-width of reference. */
+  .ctw-listbox-button + div {
+    width: 100%;
+  }
+
+  .ctw-listbox-button:disabled,
+  .ctw-listbox-textarea:disabled,
+  .ctw-listbox-textarea:read-only,
+  .ctw-listbox-input:disabled,
+  .ctw-listbox-input:read-only {
+    @apply ctw-cursor-not-allowed ctw-bg-bg-light ctw-opacity-100;
+  }
+
+  .ctw-save-button:disabled {
+    @apply ctw-cursor-not-allowed ctw-opacity-70;
+  }
+
+  div.error .ctw-listbox-button {
+    @apply ctw-border-error-light ctw-text-error-main;
+  }
+
+  .ctw-listbox-textarea:focus-visible,
+  .ctw-listbox-input:focus-visible {
+    outline-offset: -1px;
+    @apply ctw-outline ctw-outline-2 ctw-outline-primary-main;
+  }
+
+  .ctw-title {
+    @apply ctw-text-xs ctw-font-semibold ctw-uppercase ctw-text-black;
+    letter-spacing: 0.2rem;
+  }
+
+  .ctw-link {
+    @apply ctw-cursor-pointer ctw-text-xs ctw-font-medium ctw-text-primary-dark hover:ctw-text-primary-main;
+  }
+
+  .ctw-scrollbar::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 4px;
+    height: 4px;
+  }
+
+  .ctw-scrollbar::-webkit-scrollbar-thumb {
+    @apply ctw-bg-content-light;
+    -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+  }
+
+  .ctw-scrollbar::-webkit-scrollbar-track {
+    width: 4px;
+    height: 4px;
+    @apply ctw-bg-divider-main;
+  }
+
+  input.ctw-error {
+    @apply ctw-border-error-light ctw-pr-10 ctw-text-error-main focus:ctw-border-error-main focus:ctw-outline-none focus:ctw-ring-1 focus:ctw-ring-error-main;
+  }
+
+  label.ctw-error {
+    @apply ctw-text-error-main;
+  }
+}
