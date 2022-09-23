@@ -17,6 +17,8 @@ type RenderSpecified<T> = { dataIndex?: never; render: (row: T) => ReactNode };
 export type TableColumn<T extends MinRecordItem> = {
   title?: string;
   className?: string;
+  widthPercent?: number;
+  minWidth?: number;
 } & (DataIndexSpecified<T> | RenderSpecified<T>);
 
 export type TableProps<T extends MinRecordItem> = {
@@ -43,6 +45,19 @@ export const Table = <T extends MinRecordItem>({
 }: TableProps<T>) => (
   <div className={cx("ctw-table-container", className)}>
     <table>
+      <colgroup>
+        {columns.map((column, index) => (
+          <col
+            key={column.title ?? index}
+            className={column.className}
+            style={{
+              minWidth: column.minWidth,
+              width: `${column.widthPercent}%`,
+            }}
+          />
+        ))}
+      </colgroup>
+
       {showTableHead && <TableHead columns={columns} />}
 
       <tbody>

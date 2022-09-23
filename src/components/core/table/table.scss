@@ -3,7 +3,7 @@
 }
 
 .ctw-table-container {
-  @apply ctw-overflow-hidden ctw-rounded-lg ctw-border ctw-border-solid ctw-border-divider-light;
+  @apply ctw-overflow-hidden ctw-overflow-x-scroll ctw-rounded-lg ctw-border ctw-border-solid ctw-border-divider-light;
 
   table {
     container-type: normal;
@@ -35,7 +35,7 @@
   }
 
   .ctw-table-action-column {
-    @apply ctw-min-w-[4rem] ctw-py-4 ctw-text-right;
+    @apply ctw-w-12 ctw-py-4 ctw-text-right;
   }
 
   &.ctw-stacked {
