@@ -16,6 +16,7 @@ import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionHistoryDrawer } from "./conditions-history-drawer";
 import { ConditionsTableBase } from "./conditions-table-base";
+import "./conditions.scss";
 import { conditionSchema, createCondition } from "./forms/conditions";
 import {
   DrawerFormWithFields,
@@ -105,7 +106,7 @@ export function Conditions({ className }: ConditionsProps) {
         setNotReviewedIsLoading(false);
         setConfirmedIsLoading(false);
 
-        /* notReviewedConditons depends confirmedConditions so that we can correctly filter out 
+        /* notReviewedConditons depends confirmedConditions so that we can correctly filter out
          conditions that appear in confirmedConditions from notReviewedConditons */
         if (confirmedResponse.status === "fulfilled") {
           setConfirmed(
@@ -140,12 +141,7 @@ export function Conditions({ className }: ConditionsProps) {
   }, [includeInactive, patientPromise, getCTWFhirClient, patient]);
 
   return (
-    <div
-      className={cx(
-        "ctw-border ctw-border-solid ctw-border-divider-light",
-        className
-      )}
-    >
+    <div className={cx("ctw-conditions", className)}>
       <div className="ctw-flex ctw-h-11 ctw-items-center ctw-justify-between ctw-bg-bg-light ctw-p-3">
         <div className="ctw-title">Conditions</div>
         <button
@@ -157,61 +153,64 @@ export function Conditions({ className }: ConditionsProps) {
         </button>
       </div>
 
-      <div className="ctw-space-y-5 ctw-bg-bg-white ctw-py-3 ctw-px-4">
-        <div className="ctw-space-y-5 ctw-py-3 ctw-px-4">
-          <ToggleControl
-            onFormChange={handleFormChange}
-            toggleProps={{ name: "conditions", text: "Include Inactive" }}
+      <div className="ctw-conditions-body">
+        <div className="ctw-space-y-3">
+          <div className="ctw-conditions-title-container">
+            <div className="ctw-title">Confirmed</div>
+            <ToggleControl
+              onFormChange={handleFormChange}
+              toggleProps={{ name: "conditions", text: "Include Inactive" }}
+            />
+          </div>
+
+          <ConditionsTableBase
+            className="ctw-conditions-table"
+            conditions={confirmed}
+            isLoading={confirmedIsLoading}
+            message={confirmedMessage}
+            rowActions={(condition) => [
+              {
+                name: "Edit",
+                action: () => {
+                  handleConditionEdit(condition);
+                },
+              },
+              {
+                name: "View History",
+                action: () => {
+                  setHistoryDrawerIsOpen(true);
+                  setConditionForHistory(condition);
+                },
+              },
+            ]}
           />
-          <div className="ctw-space-y-3">
-            <div className="ctw-title ctw-ml-3">Confirmed</div>
+        </div>
 
-            <ConditionsTableBase
-              conditions={confirmed}
-              isLoading={confirmedIsLoading}
-              message={confirmedMessage}
-              rowActions={(condition) => [
-                {
-                  name: "Edit",
-                  action: () => {
-                    handleConditionEdit(condition);
-                  },
-                },
-                {
-                  name: "View History",
-                  action: () => {
-                    setHistoryDrawerIsOpen(true);
-                    setConditionForHistory(condition);
-                  },
-                },
-              ]}
-            />
+        <div className="ctw-space-y-3">
+          <div className="ctw-conditions-title-container">
+            <div className="ctw-title">Not Reviewed</div>
           </div>
-
-          <div className="ctw-space-y-3">
-            <div className="ctw-title ctw-ml-3">Not Reviewed</div>
-            <ConditionsTableBase
-              conditions={notReviewed}
-              isLoading={notReviewedIsLoading}
-              showTableHead={false}
-              message={notReviewedMessage}
-              rowActions={(condition) => [
-                {
-                  name: "Add",
-                  action: () => {
-                    handleNotReviewedCondition(condition);
-                  },
+          <ConditionsTableBase
+            className="ctw-conditions-not-reviewed"
+            conditions={notReviewed}
+            isLoading={notReviewedIsLoading}
+            message={notReviewedMessage}
+            rowActions={(condition) => [
+              {
+                name: "Add",
+                action: () => {
+                  handleNotReviewedCondition(condition);
                 },
-                {
-                  name: "View History",
-                  action: () => {
-                    setHistoryDrawerIsOpen(true);
-                    setConditionForHistory(condition);
-                  },
+              },
+              {
+                name: "View History",
+                action: () => {
+                  setHistoryDrawerIsOpen(true);
+                  setConditionForHistory(condition);
                 },
-              ]}
-            />
-          </div>
+              },
+            ]}
+          />
         </div>
       </div>
 
