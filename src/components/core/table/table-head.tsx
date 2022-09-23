@@ -10,11 +10,7 @@ export const TableHead = <T extends MinRecordItem>({
   <thead>
     <tr>
       {columns.map((column, index) => (
-        <th
-          key={column.title ?? index}
-          scope="col"
-          className={column.className}
-        >
+        <th key={column.title ?? index} scope="col">
           {column.title}
         </th>
       ))}

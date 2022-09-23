@@ -20,25 +20,29 @@ export function ConditionsTableBase({
     {
       title: "Condition",
       dataIndex: "display",
-      className: "ctw-w-[50%]",
+      widthPercent: 30,
+      minWidth: 320,
     },
     {
       title: "Group",
       dataIndex: "ccsGrouping",
-      className: "ctw-w-[30%]",
+      widthPercent: 30,
+      minWidth: 200,
     },
     {
       title: "Status",
       dataIndex: "clinicalStatus",
-      className: "ctw-w-[5%]",
+      widthPercent: 20,
+      minWidth: 128,
     },
     {
       title: "Recorded Date",
       dataIndex: "recordedDate",
-      className: "ctw-w-[10%]",
+      widthPercent: 20,
+      minWidth: 132,
     },
     {
-      className: "ctw-w-[5%] ctw-table-action-column",
+      className: "ctw-table-action-column",
       render: (condition: ConditionModel) => (
         <DropdownMenu menuItems={rowActions(condition)}>
           <DotsHorizontalIcon className="ctw-w-5" />
