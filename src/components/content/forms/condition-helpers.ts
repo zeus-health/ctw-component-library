@@ -36,7 +36,7 @@ export const getEditingConfirmedConditionData = ({
     value: condition.id,
     field: "id",
     readonly: true,
-    hidden: true,
+    hidden: false,
   },
   {
     label: "subject",

@@ -21,11 +21,18 @@ export type ConditionFilters = {
   "clinical-status"?: ClinicalStatus | ClinicalStatus[];
 };
 
-export async function getConfirmedConditions(
-  fhirClient: Client,
-  patientUPID: string,
-  conditionFilters: ConditionFilters = {}
-) {
+export type ConfirmedConditions = {
+  queryKey: [string, string, ConditionFilters];
+  meta: { current: Client };
+};
+
+export async function getConfirmedConditions({
+  queryKey,
+  meta,
+}: ConfirmedConditions) {
+  const { current } = meta;
+  const fhirClient = current;
+  const [_, patientUPID, conditionFilters] = queryKey;
   try {
     const { resources: conditions } = await searchBuilderRecords(
       "Condition",
@@ -42,18 +49,21 @@ export async function getConfirmedConditions(
   }
 }
 
-export async function getLensConditions(
-  fhirClient: Client,
-  patientUPID: string,
-  conditionFilters: ConditionFilters = {}
-) {
+export type LensConditions = {
+  queryKey: [string, string];
+  meta: { current: Client };
+};
+
+export async function getLensConditions({ queryKey, meta }: LensConditions) {
+  const { current } = meta;
+  const fhirClient = current;
+  const [_, patientUPID] = queryKey;
   try {
     const { resources: conditions } = await searchLensRecords(
       "Condition",
       fhirClient,
       {
         patientUPID,
-        ...conditionFilters,
       }
     );
     return filterAndSort(conditions);

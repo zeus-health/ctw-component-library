@@ -1,5 +1,8 @@
 import { getFhirClient } from "@/fhir/client";
 import { mapToCSSVar, Theme } from "@/styles/tailwind.theme";
+import { queryClient } from "@/utils/request";
+import { QueryClientProvider } from "@tanstack/react-query";
+
 import * as React from "react";
 
 export type Env = "dev" | "sandbox" | "production";
@@ -69,9 +72,11 @@ function CTWProvider({ theme, children, ...ctwState }: CTWProviderProps) {
 
   return (
     <div style={mapToCSSVar(theme || {})}>
-      <CTWStateContext.Provider value={providerState}>
-        {children}
-      </CTWStateContext.Provider>
+      <QueryClientProvider client={queryClient}>
+        <CTWStateContext.Provider value={providerState}>
+          {children}
+        </CTWStateContext.Provider>
+      </QueryClientProvider>
     </div>
   );
 }

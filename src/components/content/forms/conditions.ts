@@ -8,6 +8,7 @@ import {
 } from "@/fhir/system-urls";
 import { ConditionModel } from "@/models/conditions";
 import { getFormData } from "@/utils/form-helper";
+import { queryClient } from "@/utils/request";
 import Client from "fhir-kit-client";
 import { z } from "zod";
 
@@ -101,6 +102,8 @@ export const createCondition = async (
   if (isFhirError(response)) {
     result.success = false;
   }
+
+  queryClient.invalidateQueries(["conditions"]);
 
   return result;
 };

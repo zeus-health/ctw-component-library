@@ -9,8 +9,9 @@ import {
 } from "@/fhir/conditions";
 import { ConditionModel } from "@/models/conditions";
 import { PatientModel } from "@/models/patients";
+import { useQuery } from "@tanstack/react-query";
 import cx from "classnames";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
@@ -42,16 +43,37 @@ export function Conditions({ className }: ConditionsProps) {
   const [includeInactive, setIncludeInactive] = useState(true);
   const [patient, setPatient] = useState<PatientModel>();
   const [formAction, setFormAction] = useState("");
+  // We use a ref here because if we pass FHIR Client to meta normally it will use whatever
+  // you passed as meta when the query was created which means it can be come stale
+  const fhirClientRef = useRef();
+  const [conditionFilter, setConditionFilter] = useState({});
+  const [patientUPID, setPatientUPID] = useState<string>("");
   const [currentSelectedData, setCurrentlySelectedData] =
     useState<FormEntry[]>();
   const [conditionForHistory, setConditionForHistory] =
     useState<ConditionModel>();
+  const confirmedResponse = useQuery(
+    ["conditions", patientUPID, conditionFilter],
+    getConfirmedConditions,
+    {
+      enabled: !!patientUPID,
+      meta: fhirClientRef,
+    }
+  );
+
+  const notReviewedResponse = useQuery(
+    ["conditions", patientUPID],
+    getLensConditions,
+    {
+      enabled: !!patientUPID,
+      meta: fhirClientRef,
+    }
+  );
 
   const { getCTWFhirClient } = useCTW();
   const { patientPromise } = usePatient();
 
   const handleFormChange = () => setIncludeInactive(!includeInactive);
-
   const handleConditionEdit = (condition: ConditionModel) => {
     if (patient) {
       setDrawerIsOpen(true);
@@ -84,60 +106,64 @@ export function Conditions({ className }: ConditionsProps) {
 
   useEffect(() => {
     async function load() {
-      const conditionFilter: ConditionFilters = includeInactive
+      const tempConditionFilters: ConditionFilters = includeInactive
         ? {
             "clinical-status": ["active", "recurrence", "relapse"],
           }
         : {};
 
-      const fhirClient = await getCTWFhirClient();
+      setConditionFilter(tempConditionFilters);
+
+      const tempClient = await getCTWFhirClient();
+      fhirClientRef.current = tempClient;
       const patientTemp = await patientPromise;
       setPatient(patientTemp);
+      if (patient?.UPID) {
+        setPatientUPID(patient.UPID);
+      }
 
-      if (patient) {
-        // use AllSettled instead of all as we want confirmed to still if lens fails
-        const [confirmedResponse, notReviewedResponse] =
-          await Promise.allSettled([
-            getConfirmedConditions(fhirClient, patient.UPID, conditionFilter),
-            getLensConditions(fhirClient, patient.UPID),
-          ]);
-
+      /* notReviewedConditons depends confirmedConditions so that we can correctly filter out 
+         conditions that appear in confirmedConditions from notReviewedConditons */
+      if (confirmedResponse.data) {
         setNotReviewedIsLoading(false);
         setConfirmedIsLoading(false);
 
-        /* notReviewedConditons depends confirmedConditions so that we can correctly filter out 
-         conditions that appear in confirmedConditions from notReviewedConditons */
-        if (confirmedResponse.status === "fulfilled") {
-          setConfirmed(
-            confirmedResponse.value.map((c) => new ConditionModel(c))
-          );
-          const ICD10ConfirmedCodes = confirmedResponse.value.map(
-            (c) => new ConditionModel(c).icd10Code
+        setConfirmed(confirmedResponse.data.map((c) => new ConditionModel(c)));
+
+        const ICD10ConfirmedCodes = confirmedResponse.data.map(
+          (c) => new ConditionModel(c).icd10Code
+        );
+
+        if (notReviewedResponse.data) {
+          const notReviewedFiltered = notReviewedResponse.data.filter(
+            (c) =>
+              !ICD10ConfirmedCodes.includes(new ConditionModel(c).icd10Code)
           );
 
-          if (notReviewedResponse.status === "fulfilled") {
-            const notReviewedConditionsFiltered =
-              notReviewedResponse.value.filter(
-                (c) =>
-                  !ICD10ConfirmedCodes.includes(new ConditionModel(c).icd10Code)
-              );
-            setNotReviewed(
-              notReviewedConditionsFiltered.map((c) => new ConditionModel(c))
-            );
-          } else {
-            setNotReviewed([]);
-            setNotReviewedMessage(ERROR_MSG);
-          }
+          setNotReviewed(notReviewedFiltered.map((c) => new ConditionModel(c)));
         } else {
-          setConfirmed([]);
-          setConfirmedMessage(ERROR_MSG);
           setNotReviewed([]);
           setNotReviewedMessage(ERROR_MSG);
         }
       }
+
+      if (confirmedResponse.error) {
+        setConfirmed([]);
+        setConfirmedMessage(ERROR_MSG);
+        setNotReviewed([]);
+        setNotReviewedMessage(ERROR_MSG);
+      }
     }
     load();
-  }, [includeInactive, patientPromise, getCTWFhirClient, patient]);
+  }, [
+    includeInactive,
+    patientPromise,
+    patient,
+    confirmedResponse.data,
+    notReviewedResponse.data,
+    confirmedResponse.error,
+    getCTWFhirClient,
+  ]);
 
   return (
     <div
