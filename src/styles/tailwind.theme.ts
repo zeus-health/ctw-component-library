@@ -1,4 +1,4 @@
-import { Subset } from "@/utils/typescript";
+import { Subset } from "../utils/typescript";
 
 export const CLASS_PREFIX = "ctw-";
 
