@@ -1,24 +1,17 @@
+import { useCTW } from "@/components/core/ctw-provider";
+import { defaultBreakpoints } from "@/styles/tailwind.theme";
 import useResizeObserver from "@react-hook/resize-observer";
+import { mapValues } from "lodash";
 import { RefObject, useLayoutEffect, useState } from "react";
 
-const breakpoints2 = {
-  sm: 640,
-  md: 768,
-  lg: 1024,
-};
-
-type Breakpoints = {
-  sm: boolean;
-  md: boolean;
-  lg: boolean;
-};
+type BreakpointKeys = keyof typeof defaultBreakpoints;
+type Breakpoints = Record<BreakpointKeys, boolean>;
 
 export function useBreakpoints<T extends HTMLElement>(target: RefObject<T>) {
-  const [breakpoints, setBreakpoints] = useState<Breakpoints>({
-    sm: false,
-    md: false,
-    lg: false,
-  });
+  const { theme } = useCTW();
+  const [breakpoints, setBreakpoints] = useState<Breakpoints>(
+    mapValues(defaultBreakpoints, () => false)
+  );
 
   function updateBreakpointClasses() {
     const targetEl = target.current;
@@ -26,14 +19,14 @@ export function useBreakpoints<T extends HTMLElement>(target: RefObject<T>) {
     const { width } = targetEl.getBoundingClientRect();
 
     const breakpointsTmp = {} as Breakpoints;
-    Object.entries(breakpoints2).forEach(([key, value]) => {
+    Object.entries(theme.breakpoints).forEach(([key, value]) => {
       breakpointsTmp[key as keyof Breakpoints] = width < value;
     });
     setBreakpoints(breakpointsTmp);
   }
 
   // Update on initial render (useLayout) and on any resizes.
-  useLayoutEffect(updateBreakpointClasses, [target]);
+  useLayoutEffect(updateBreakpointClasses, [target, theme]);
   useResizeObserver(target, (_) => updateBreakpointClasses());
 
   return breakpoints;

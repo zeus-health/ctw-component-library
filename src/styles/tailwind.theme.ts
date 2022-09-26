@@ -1,4 +1,12 @@
+import { Subset } from "@/utils/typescript";
+
 export const CLASS_PREFIX = "ctw-";
+
+export const defaultBreakpoints = {
+  sm: 640,
+  md: 768,
+  lg: 1024,
+};
 
 export const TailwindTheme = {
   colors: {
@@ -53,9 +61,14 @@ export const TailwindTheme = {
 };
 
 // Theme type is a nested partial
-export type Theme = Subset<typeof TailwindTheme["colors"]>;
-type Subset<K> = {
-  [attr in keyof K]?: K[attr] extends object ? Subset<K[attr]> : K[attr];
+export type ColorTheme = Subset<typeof TailwindTheme["colors"]>;
+export type Theme = {
+  colors?: ColorTheme;
+  breakpoints?: Subset<typeof defaultBreakpoints>;
+};
+export const DefaultTheme = {
+  ...TailwindTheme,
+  breakpoints: defaultBreakpoints,
 };
 
 // Helps name a CSS variable based on the class prefix.
@@ -64,7 +77,7 @@ export function nameCSSVar(name: string): string {
 }
 
 // Takes a theme and turns it into a CSSProperties that sets CSS Variables.
-export function mapToCSSVar(colorConfig: Theme): { [key: string]: string } {
+export function mapToCSSVar(colorConfig: ColorTheme): Record<string, string> {
   const properties: { [variable: string]: string } = {};
   Object.entries(colorConfig).forEach(([colorTitle, colorValueOrObj]) => {
     if (typeof colorValueOrObj === "string") {
