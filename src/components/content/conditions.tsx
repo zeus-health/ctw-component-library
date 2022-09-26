@@ -115,8 +115,8 @@ export function Conditions({ className }: ConditionsProps) {
         : {};
 
       setConditionFilter(tempConditionFilters);
-
       const patientTemp = await patientPromise;
+
       setPatient(patientTemp);
       if (patient?.UPID) {
         setPatientUPID(patient.UPID);
@@ -127,7 +127,6 @@ export function Conditions({ className }: ConditionsProps) {
       if (confirmedResponse.data) {
         setNotReviewedIsLoading(false);
         setConfirmedIsLoading(false);
-
         setConfirmed(confirmedResponse.data.map((c) => new ConditionModel(c)));
 
         const ICD10ConfirmedCodes = confirmedResponse.data.map(
