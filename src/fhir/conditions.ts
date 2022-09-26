@@ -28,7 +28,7 @@ export type QueryKeyLensConditions = [string, string];
 
 export type ConfirmedConditions = QueryFunction & {
   queryKey: QueryFunctionContext<[string, string, ConditionFilters]>;
-  meta: { current: Client };
+  meta: { fhirClient: { current: Client } };
 };
 
 export async function getConfirmedConditions(
@@ -38,7 +38,7 @@ export async function getConfirmedConditions(
   let fhirClient;
 
   if (meta?.current) {
-    fhirClient = meta.current as Client;
+    fhirClient = meta.fhirClient.current as Client;
   }
 
   if (!fhirClient) {
@@ -63,7 +63,7 @@ export async function getConfirmedConditions(
 
 export type LensConditions = {
   queryKey: [string, string];
-  meta: { current: Client };
+  meta: { fhirClient: { current: Client } };
 };
 
 export async function getLensConditions(
@@ -73,7 +73,7 @@ export async function getLensConditions(
   let fhirClient;
 
   if (meta?.current) {
-    fhirClient = meta.current as Client;
+    fhirClient = meta.fhirClient.current as Client;
   }
 
   if (!fhirClient) {

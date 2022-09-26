@@ -58,7 +58,7 @@ export function Conditions({ className }: ConditionsProps) {
     getConfirmedConditions,
     {
       enabled: !!patientUPID,
-      meta: fhirClientRef as unknown as Record<string, unknown>,
+      meta: { fhirClientRef },
     }
   );
 
@@ -67,7 +67,7 @@ export function Conditions({ className }: ConditionsProps) {
     getLensConditions,
     {
       enabled: !!patientUPID,
-      meta: fhirClientRef as unknown as Record<string, unknown>,
+      meta: { fhirClientRef },
     }
   );
 
