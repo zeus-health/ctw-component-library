@@ -82,6 +82,8 @@ export function Conditions({ className }: ConditionsProps) {
     );
   };
 
+  console.log("confirmed", confirmed);
+
   useEffect(() => {
     async function load() {
       const conditionFilter: ConditionFilters = includeInactive
@@ -111,6 +113,8 @@ export function Conditions({ className }: ConditionsProps) {
           setConfirmed(
             confirmedResponse.value.map((c) => new ConditionModel(c))
           );
+
+          const codes = ["SNOMED", "ICD-10", "ICD-10CM", "ICD-9", "ICD-9CM"];
           const ICD10ConfirmedCodes = confirmedResponse.value.map(
             (c) => new ConditionModel(c).icd10Code
           );

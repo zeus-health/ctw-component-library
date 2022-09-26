@@ -1,6 +1,13 @@
 import { codeableConceptLabel, findCoding } from "../fhir/codeable-concept";
 import { formatDateISOToLocal } from "../fhir/formatters";
-import { SYSTEM_CCS, SYSTEM_ICD10, SYSTEM_SNOMED } from "../fhir/system-urls";
+import {
+  SYSTEM_CCS,
+  SYSTEM_ICD10,
+  SYSTEM_ICD10_CM,
+  SYSTEM_ICD9,
+  SYSTEM_ICD9_CM,
+  SYSTEM_SNOMED,
+} from "../fhir/system-urls";
 
 export class ConditionModel {
   public resource: fhir4.Condition;
@@ -69,6 +76,18 @@ export class ConditionModel {
         codeableConceptLabel(evidence.code?.[0])
       ) || []
     );
+  }
+
+  get icd9Code(): string | undefined {
+    return findCoding(SYSTEM_ICD9, this.resource.code)?.code;
+  }
+
+  get icd9CMCode(): string | undefined {
+    return findCoding(SYSTEM_ICD9_CM, this.resource.code)?.code;
+  }
+
+  get icd10CMCode(): string | undefined {
+    return findCoding(SYSTEM_ICD10_CM, this.resource.code)?.code;
   }
 
   get icd10Code(): string | undefined {
