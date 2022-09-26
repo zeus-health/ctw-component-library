@@ -2,7 +2,6 @@ import "./App.css";
 import { Conditions } from "./components/content/conditions";
 import { CTWProvider } from "./components/core/ctw-provider";
 import { PatientProvider } from "./components/core/patient-provider";
-import "./styles/tailwind-gen.css";
 
 const { VITE_SYSTEM_URL, VITE_AUTH_TOKEN, VITE_PATIENT_ID } = import.meta.env;
 

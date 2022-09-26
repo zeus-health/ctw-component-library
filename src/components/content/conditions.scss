@@ -1,0 +1,30 @@
+.ctw-conditions {
+  @apply ctw-border ctw-border-solid ctw-border-divider-light;
+}
+
+.ctw-conditions-body {
+  @apply ctw-m-3 ctw-space-y-5 ctw-bg-bg-white;
+}
+
+.ctw-conditions-title-container {
+  @apply ctw-flex ctw-items-center ctw-justify-between;
+}
+
+.ctw-conditions.ctw-stacked {
+  .ctw-conditions-body {
+    @apply ctw-m-0;
+  }
+
+  .ctw-conditions-title-container {
+    @apply ctw-m-3 ctw-mb-0;
+  }
+
+  .ctw-conditions-not-reviewed,
+  .ctw-conditions-table {
+    @apply ctw-rounded-none ctw-border-x-0;
+  }
+
+  .ctw-conditions-not-reviewed {
+    @apply ctw-border-b-0;
+  }
+}

@@ -4,6 +4,7 @@ import { queryClient } from "@/utils/request";
 import { QueryClientProvider } from "@tanstack/react-query";
 
 import * as React from "react";
+import "./main.scss";
 
 export type Env = "dev" | "sandbox" | "production";
 
