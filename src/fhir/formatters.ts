@@ -34,9 +34,6 @@ export function formatDateLocalToISO(dateStr?: string): string | undefined {
   return date;
 }
 
-// 201911011338
-// 2019 11 01 13 38
-
 // Returns the ISO string (YYYY-MM-DD) for a given date.
 // We avoid using date-fn's format method to avoid timezone issues.
 export function dateToISO(date: Date) {
