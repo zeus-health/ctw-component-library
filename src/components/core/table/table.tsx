@@ -1,10 +1,12 @@
 import cx from "classnames";
-import { ReactNode, useEffect, useRef, useState } from "react";
-import { TableColgroup } from "./table-colgroup";
+import { ReactNode, RefObject, useEffect, useRef, useState } from "react";
 
 import { TableHead } from "./table-head";
 import { TableRows } from "./table-rows";
 import "./table.scss";
+
+import { useClassBreakpoints } from "@/hooks/use-breakpoints";
+import { TableColgroup } from "./table-colgroup";
 
 export interface MinRecordItem {
   id: string | number;
@@ -23,6 +25,7 @@ export type TableColumn<T extends MinRecordItem> = {
 } & (DataIndexSpecified<T> | RenderSpecified<T>);
 
 export type TableProps<T extends MinRecordItem> = {
+  breakpointObserver?: RefObject<HTMLElement>;
   className?: string;
   records: T[];
   columns: TableColumn<T>[];
@@ -37,6 +40,7 @@ export type TableBaseProps<T extends MinRecordItem> = Omit<
 >;
 
 export const Table = <T extends MinRecordItem>({
+  breakpointObserver,
   className,
   columns,
   records,
@@ -45,12 +49,14 @@ export const Table = <T extends MinRecordItem>({
   showTableHead = true,
 }: TableProps<T>) => {
   const tableRef = useRef<HTMLTableElement>(null);
-  const containerRef = useRef<HTMLTableElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showLeftShadow, setShowLeftShadow] = useState(false);
   const [showRightShadow, setShowRightShadow] = useState(false);
+  useClassBreakpoints(containerRef, breakpointObserver);
 
   const updateShadows = () => {
-    const container = containerRef.current;
+    const container = scrollContainerRef.current;
     const table = tableRef.current;
     if (container && table) {
       setShowLeftShadow(container.scrollLeft > 0);
@@ -60,7 +66,7 @@ export const Table = <T extends MinRecordItem>({
   };
 
   useEffect(() => {
-    const container = containerRef.current;
+    const container = scrollContainerRef.current;
 
     // Update right away.
     updateShadows();
@@ -73,12 +79,13 @@ export const Table = <T extends MinRecordItem>({
       container?.removeEventListener("scroll", updateShadows);
       window.removeEventListener("resize", updateShadows);
     };
-  }, [containerRef, isLoading]);
+  }, [scrollContainerRef, isLoading]);
 
   const hasData = !isLoading && records.length > 0;
 
   return (
     <div
+      ref={containerRef}
       className={cx(
         "ctw-table-container",
         {
@@ -88,7 +95,7 @@ export const Table = <T extends MinRecordItem>({
         className
       )}
     >
-      <div className="ctw-scrollbar" ref={containerRef}>
+      <div className="ctw-scrollbar" ref={scrollContainerRef}>
         <table ref={tableRef}>
           {hasData && <TableColgroup columns={columns} />}
           {showTableHead && hasData && <TableHead columns={columns} />}
