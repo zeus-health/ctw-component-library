@@ -1,5 +1,4 @@
 import { ConditionModel } from "@/models/conditions";
-import type { QueryFunction } from "@tanstack/query-core";
 import { QueryFunctionContext } from "@tanstack/react-query";
 import Client from "fhir-kit-client";
 import { sortBy } from "lodash";
@@ -10,6 +9,7 @@ import {
   searchCommonRecords,
   searchLensRecords,
 } from "./search-helpers";
+import { getFhirClientFromQuery } from "./utils";
 
 export type ClinicalStatus =
   | "active"
@@ -26,24 +26,13 @@ export type ConditionFilters = {
 export type QueryKeyConfirmedConditions = [string, string, ConditionFilters];
 export type QueryKeyLensConditions = [string, string];
 
-export type ConfirmedConditions = QueryFunction & {
-  queryKey: QueryFunctionContext<[string, string, ConditionFilters]>;
-  meta: { fhirClient: { current: Client } };
-};
-
 export async function getConfirmedConditions(
   queryParams: QueryFunctionContext<QueryKeyConfirmedConditions>
 ) {
   const { meta, queryKey } = queryParams;
-  let fhirClient;
 
-  if (meta?.current) {
-    fhirClient = meta.fhirClient.current as Client;
-  }
+  const fhirClient = getFhirClientFromQuery(meta);
 
-  if (!fhirClient) {
-    throw Error("Fhir Client is required");
-  }
   const [_, patientUPID, conditionFilters] = queryKey;
   try {
     const { resources: conditions } = await searchBuilderRecords(
@@ -61,24 +50,11 @@ export async function getConfirmedConditions(
   }
 }
 
-export type LensConditions = {
-  queryKey: [string, string];
-  meta: { fhirClient: { current: Client } };
-};
-
 export async function getLensConditions(
   queryParams: QueryFunctionContext<QueryKeyLensConditions>
 ) {
   const { meta, queryKey } = queryParams;
-  let fhirClient;
-
-  if (meta?.current) {
-    fhirClient = meta.fhirClient.current as Client;
-  }
-
-  if (!fhirClient) {
-    throw Error("Fhir Client is required");
-  }
+  const fhirClient = getFhirClientFromQuery(meta);
 
   const [_, patientUPID] = queryKey;
   try {
