@@ -8,16 +8,34 @@ export function formatDateISOToLocal(dateStr?: string): string | undefined {
   return format(date, "P");
 }
 
+export const matchDatePattern = (dateStr: string): Date | string => {
+  const patterns = ["P", "yyyyMMddHHmm"];
+
+  // Going to try to parse all the patterns and it will return the date as is
+  for (let i = 0; i < patterns.length; i += 1) {
+    const parsedDate = parse(dateStr, patterns[i], new Date());
+    if (!(parsedDate instanceof Date && !Number.isNaN(parsedDate))) {
+      return parsedDate;
+    }
+  }
+
+  return dateStr;
+};
+
 // Formats a date from MM/DD/YYYY to YYYY-MM-DD.
 export function formatDateLocalToISO(dateStr?: string): string | undefined {
   if (!dateStr) return undefined;
-  try {
-    const date = parse(dateStr, "P", new Date());
+
+  const date = matchDatePattern(dateStr);
+  if (typeof date !== "string") {
     return formatISO(date, { representation: "date" });
-  } catch (e) {
-    return dateStr;
   }
+
+  return date;
 }
+
+// 201911011338
+// 2019 11 01 13 38
 
 // Returns the ISO string (YYYY-MM-DD) for a given date.
 // We avoid using date-fn's format method to avoid timezone issues.
