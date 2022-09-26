@@ -11,7 +11,7 @@ export function formatDateISOToLocal(dateStr?: string): string | undefined {
 export const matchDatePattern = (dateStr: string): Date | string => {
   const patterns = ["P", "yyyyMMddHHmm"];
 
-  // Going to try to parse all the patterns and it will return the date as is
+  // Going to try to parse all the patterns and if pattern is not recognized then will return date as is
   for (let i = 0; i < patterns.length; i += 1) {
     const parsedDate = parse(dateStr, patterns[i], new Date());
     if (!(parsedDate instanceof Date && !Number.isNaN(parsedDate))) {
