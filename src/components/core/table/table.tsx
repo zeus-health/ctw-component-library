@@ -1,11 +1,10 @@
 import cx from "classnames";
-import { ReactNode, RefObject, useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 
 import { TableHead } from "./table-head";
 import { TableRows } from "./table-rows";
 import "./table.scss";
 
-import { useClassBreakpoints } from "@/hooks/use-breakpoints";
 import { TableColgroup } from "./table-colgroup";
 
 export interface MinRecordItem {
@@ -25,13 +24,13 @@ export type TableColumn<T extends MinRecordItem> = {
 } & (DataIndexSpecified<T> | RenderSpecified<T>);
 
 export type TableProps<T extends MinRecordItem> = {
-  breakpointObserver?: RefObject<HTMLElement>;
   className?: string;
   records: T[];
   columns: TableColumn<T>[];
   isLoading?: boolean;
   message?: string;
   showTableHead?: boolean;
+  stacked?: boolean;
 };
 
 export type TableBaseProps<T extends MinRecordItem> = Omit<
@@ -40,20 +39,18 @@ export type TableBaseProps<T extends MinRecordItem> = Omit<
 >;
 
 export const Table = <T extends MinRecordItem>({
-  breakpointObserver,
   className,
   columns,
   records,
   isLoading = false,
   message = "No records found",
   showTableHead = true,
+  stacked,
 }: TableProps<T>) => {
   const tableRef = useRef<HTMLTableElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showLeftShadow, setShowLeftShadow] = useState(false);
   const [showRightShadow, setShowRightShadow] = useState(false);
-  useClassBreakpoints(containerRef, breakpointObserver);
 
   const updateShadows = () => {
     const container = scrollContainerRef.current;
@@ -85,10 +82,10 @@ export const Table = <T extends MinRecordItem>({
 
   return (
     <div
-      ref={containerRef}
       className={cx(
         "ctw-table-container",
         {
+          "ctw-table-stacked": stacked,
           "ctw-table-scroll-left-shadow": showLeftShadow,
           "ctw-table-scroll-right-shadow": showRightShadow,
         },

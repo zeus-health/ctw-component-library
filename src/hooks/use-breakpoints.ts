@@ -1,31 +1,40 @@
 import useResizeObserver from "@react-hook/resize-observer";
-import { RefObject, useLayoutEffect } from "react";
+import { RefObject, useLayoutEffect, useState } from "react";
 
-const breakpoints = {
+const breakpoints2 = {
   sm: 640,
   md: 768,
   lg: 1024,
 };
 
-export function useClassBreakpoints<T extends HTMLElement>(
-  classTarget: RefObject<T>,
-  observedTarget?: RefObject<T>
-) {
-  function updateBreakpointClasses() {
-    const targetEl = classTarget.current;
-    const observedEl = observedTarget?.current ?? targetEl;
-    if (!targetEl || !observedEl) return;
-    const { width } = observedEl.getBoundingClientRect();
+type Breakpoints = {
+  sm: boolean;
+  md: boolean;
+  lg: boolean;
+};
 
-    Object.entries(breakpoints).forEach(([key, value]) => {
-      targetEl.classList.toggle(`ctw-bp-${key}`, width < value);
+export function useBreakpoints<T extends HTMLElement>(target: RefObject<T>) {
+  const [breakpoints, setBreakpoints] = useState<Breakpoints>({
+    sm: false,
+    md: false,
+    lg: false,
+  });
+
+  function updateBreakpointClasses() {
+    const targetEl = target.current;
+    if (!targetEl) return;
+    const { width } = targetEl.getBoundingClientRect();
+
+    const breakpointsTmp = {} as Breakpoints;
+    Object.entries(breakpoints2).forEach(([key, value]) => {
+      breakpointsTmp[key as keyof Breakpoints] = width < value;
     });
+    setBreakpoints(breakpointsTmp);
   }
 
-  useLayoutEffect(updateBreakpointClasses, [classTarget, observedTarget]);
+  // Update on initial render (useLayout) and on any resizes.
+  useLayoutEffect(updateBreakpointClasses, [target]);
+  useResizeObserver(target, (_) => updateBreakpointClasses());
 
-  // Where the magic happens
-  useResizeObserver(observedTarget ?? classTarget, (entry) =>
-    updateBreakpointClasses()
-  );
+  return breakpoints;
 }
