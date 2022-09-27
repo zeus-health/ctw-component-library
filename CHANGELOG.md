@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.10.3
+
+### Patch Changes
+
+- f4f85be: Fix SSR issue by avoiding use of useLayoutEffect directly.
+
 ## 0.10.2
 
 ### Patch Changes
