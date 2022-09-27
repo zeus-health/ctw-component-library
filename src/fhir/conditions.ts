@@ -1,4 +1,5 @@
 import { ConditionModel } from "@/models/conditions";
+import { QueryFunctionContext } from "@tanstack/react-query";
 import Client from "fhir-kit-client";
 import { sortBy } from "lodash";
 
@@ -8,6 +9,7 @@ import {
   searchCommonRecords,
   searchLensRecords,
 } from "./search-helpers";
+import { getFhirClientFromQuery } from "./utils";
 
 export type ClinicalStatus =
   | "active"
@@ -21,11 +23,17 @@ export type ConditionFilters = {
   "clinical-status"?: ClinicalStatus | ClinicalStatus[];
 };
 
+export type QueryKeyConfirmedConditions = [string, string, ConditionFilters];
+export type QueryKeyLensConditions = [string, string];
+
 export async function getConfirmedConditions(
-  fhirClient: Client,
-  patientUPID: string,
-  conditionFilters: ConditionFilters = {}
+  queryParams: QueryFunctionContext<QueryKeyConfirmedConditions>
 ) {
+  const { meta, queryKey } = queryParams;
+
+  const fhirClient = getFhirClientFromQuery(meta);
+
+  const [_, patientUPID, conditionFilters] = queryKey;
   try {
     const { resources: conditions } = await searchBuilderRecords(
       "Condition",
@@ -43,17 +51,18 @@ export async function getConfirmedConditions(
 }
 
 export async function getLensConditions(
-  fhirClient: Client,
-  patientUPID: string,
-  conditionFilters: ConditionFilters = {}
+  queryParams: QueryFunctionContext<QueryKeyLensConditions>
 ) {
+  const { meta, queryKey } = queryParams;
+  const fhirClient = getFhirClientFromQuery(meta);
+
+  const [_, patientUPID] = queryKey;
   try {
     const { resources: conditions } = await searchLensRecords(
       "Condition",
       fhirClient,
       {
         patientUPID,
-        ...conditionFilters,
       }
     );
     return filterAndSort(conditions);
