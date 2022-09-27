@@ -3,8 +3,8 @@ import Client from "fhir-kit-client";
 import { useRef } from "react";
 import { useCTW } from "../components/core/ctw-provider";
 
-// We use a ref here because if we pass FHIR Client to meta normally it will use whatever
-// you passed as meta when the query was created which means it can be come stale
+// A reference to fhirClient is useful for things like useQuery where we pass it in as part of the meta data.
+// This allows useQuery to always use a fresh copy of fhirClient (whatever the reference points to).
 export function useFhirClientRef() {
   const fhirClientRef = useRef<Client>();
   const { getCTWFhirClient } = useCTW();
