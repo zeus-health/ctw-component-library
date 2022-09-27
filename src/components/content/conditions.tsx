@@ -19,7 +19,7 @@ import { ToggleControl } from "../core/toggle-control";
 import { ConditionHistoryDrawer } from "./conditions-history-drawer";
 import { ConditionsTableBase } from "./conditions-table-base";
 import "./conditions.scss";
-import { conditionSchema, createCondition } from "./forms/conditions";
+import { conditionSchema, createOrEditCondition } from "./forms/conditions";
 import {
   DrawerFormWithFields,
   FormEntry,
@@ -240,7 +240,7 @@ export function Conditions({ className }: ConditionsProps) {
         <DrawerFormWithFields
           patientID={patient.id}
           title={`${formAction} Condition`}
-          action={createCondition}
+          action={createOrEditCondition}
           data={currentSelectedData}
           schema={conditionSchema}
           isOpen={drawerIsOpen}

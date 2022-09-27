@@ -1,4 +1,4 @@
-import { format, formatISO, parse, parseISO } from "date-fns";
+import { format, formatISO, isValid, parse, parseISO } from "date-fns";
 
 // Formats a date from YYYY-MM-DD to MM/DD/YYYY.
 export function formatDateISOToLocal(dateStr?: string): string | undefined {
@@ -14,7 +14,7 @@ export const matchDatePattern = (dateStr: string): Date | string => {
   // Going to try to parse all the patterns and if pattern is not recognized then will return date as is
   for (let i = 0; i < patterns.length; i += 1) {
     const parsedDate = parse(dateStr, patterns[i], new Date());
-    if (!(parsedDate instanceof Date && !Number.isNaN(parsedDate))) {
+    if (isValid(parsedDate)) {
       return parsedDate;
     }
   }

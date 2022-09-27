@@ -43,7 +43,7 @@ export const conditionSchema = z.object({
   note: z.string().optional(),
 });
 
-export const createCondition = async (
+export const createOrEditCondition = async (
   data: FormData,
   patientID: string,
   getCTWFhirClient: () => Promise<Client>
