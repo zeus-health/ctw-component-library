@@ -7,3 +7,4 @@ scripts/prefixer/tmp/
 node_modules
 .env
 .DS_Store
+src/utils/typescript.js

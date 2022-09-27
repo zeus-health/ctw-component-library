@@ -20,25 +20,25 @@ export function ConditionsTableBase({
     {
       title: "Condition",
       dataIndex: "display",
-      widthPercent: 30,
+      widthPercent: 40,
       minWidth: 320,
     },
     {
       title: "Group",
       dataIndex: "ccsGrouping",
-      widthPercent: 30,
-      minWidth: 200,
+      widthPercent: 25,
+      minWidth: 192,
     },
     {
       title: "Status",
       dataIndex: "clinicalStatus",
-      widthPercent: 20,
+      widthPercent: 17.5,
       minWidth: 128,
     },
     {
       title: "Recorded Date",
       dataIndex: "recordedDate",
-      widthPercent: 20,
+      widthPercent: 17.5,
       minWidth: 132,
     },
     {

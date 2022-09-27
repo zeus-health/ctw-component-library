@@ -1,10 +1,11 @@
 import cx from "classnames";
 import { ReactNode, useEffect, useRef, useState } from "react";
-import { TableColgroup } from "./table-colgroup";
 
 import { TableHead } from "./table-head";
 import { TableRows } from "./table-rows";
 import "./table.scss";
+
+import { TableColgroup } from "./table-colgroup";
 
 export interface MinRecordItem {
   id: string | number;
@@ -29,6 +30,7 @@ export type TableProps<T extends MinRecordItem> = {
   isLoading?: boolean;
   message?: string;
   showTableHead?: boolean;
+  stacked?: boolean;
 };
 
 export type TableBaseProps<T extends MinRecordItem> = Omit<
@@ -43,14 +45,15 @@ export const Table = <T extends MinRecordItem>({
   isLoading = false,
   message = "No records found",
   showTableHead = true,
+  stacked,
 }: TableProps<T>) => {
   const tableRef = useRef<HTMLTableElement>(null);
-  const containerRef = useRef<HTMLTableElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showLeftShadow, setShowLeftShadow] = useState(false);
   const [showRightShadow, setShowRightShadow] = useState(false);
 
   const updateShadows = () => {
-    const container = containerRef.current;
+    const container = scrollContainerRef.current;
     const table = tableRef.current;
     if (container && table) {
       setShowLeftShadow(container.scrollLeft > 0);
@@ -60,7 +63,7 @@ export const Table = <T extends MinRecordItem>({
   };
 
   useEffect(() => {
-    const container = containerRef.current;
+    const container = scrollContainerRef.current;
 
     // Update right away.
     updateShadows();
@@ -73,7 +76,7 @@ export const Table = <T extends MinRecordItem>({
       container?.removeEventListener("scroll", updateShadows);
       window.removeEventListener("resize", updateShadows);
     };
-  }, [containerRef, isLoading]);
+  }, [scrollContainerRef, isLoading]);
 
   const hasData = !isLoading && records.length > 0;
 
@@ -82,13 +85,14 @@ export const Table = <T extends MinRecordItem>({
       className={cx(
         "ctw-table-container",
         {
+          "ctw-table-stacked": stacked,
           "ctw-table-scroll-left-shadow": showLeftShadow,
           "ctw-table-scroll-right-shadow": showRightShadow,
         },
         className
       )}
     >
-      <div className="ctw-scrollbar" ref={containerRef}>
+      <div className="ctw-scrollbar" ref={scrollContainerRef}>
         <table ref={tableRef}>
           {hasData && <TableColgroup columns={columns} />}
           {showTableHead && hasData && <TableHead columns={columns} />}

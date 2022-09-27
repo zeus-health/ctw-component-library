@@ -63,8 +63,21 @@
     @apply ctw-w-12 ctw-py-4 ctw-text-right;
   }
 
-  &.ctw-stacked {
+  &.ctw-table-stacked {
+    .ctw-scrollbar {
+      @apply ctw-overflow-x-hidden;
+    }
+
+    &.ctw-table-scroll-right-shadow::after,
+    &.ctw-table-scroll-left-shadow::before {
+      display: none;
+    }
+
     table {
+      colgroup {
+        display: none;
+      }
+
       thead {
         @apply ctw-hidden;
       }
