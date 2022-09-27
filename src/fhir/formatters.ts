@@ -27,7 +27,7 @@ export function formatDateLocalToISO(dateStr?: string): string | undefined {
   if (!dateStr) return undefined;
 
   const date = matchDatePattern(dateStr);
-  if (typeof date !== "string") {
+  if (date instanceof Date) {
     return formatISO(date, { representation: "date" });
   }
 
