@@ -8,11 +8,12 @@ import {
   getLensConditions,
 } from "@/fhir/conditions";
 import { useFhirClientRef } from "@/fhir/utils";
+import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { ConditionModel } from "@/models/conditions";
 import { PatientModel } from "@/models/patients";
 import { useQuery } from "@tanstack/react-query";
 import cx from "classnames";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
@@ -34,6 +35,8 @@ const ERROR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
 
 export function Conditions({ className }: ConditionsProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const breakpoints = useBreakpoints(containerRef);
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
   const [historyDrawerIsOpen, setHistoryDrawerIsOpen] = useState(false);
   const [confirmed, setConfirmed] = useState<ConditionModel[]>([]);
@@ -163,7 +166,12 @@ export function Conditions({ className }: ConditionsProps) {
   ]);
 
   return (
-    <div className={cx("ctw-conditions", className)}>
+    <div
+      ref={containerRef}
+      className={cx("ctw-conditions", className, {
+        "ctw-conditions-stacked": breakpoints.sm,
+      })}
+    >
       <div className="ctw-flex ctw-h-11 ctw-items-center ctw-justify-between ctw-bg-bg-light ctw-p-3">
         <div className="ctw-title">Conditions</div>
         <button
@@ -187,6 +195,7 @@ export function Conditions({ className }: ConditionsProps) {
 
           <ConditionsTableBase
             className="ctw-conditions-table"
+            stacked={breakpoints.sm}
             conditions={confirmed}
             isLoading={confirmedIsLoading}
             message={confirmedMessage}
@@ -214,6 +223,7 @@ export function Conditions({ className }: ConditionsProps) {
           </div>
           <ConditionsTableBase
             className="ctw-conditions-not-reviewed"
+            stacked={breakpoints.sm}
             conditions={notReviewed}
             isLoading={notReviewedIsLoading}
             message={notReviewedMessage}
