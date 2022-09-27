@@ -1,7 +1,11 @@
 import { getConditionHistory } from "@/fhir/conditions";
 import { ConditionModel } from "@/models/conditions";
 import { useEffect, useState } from "react";
-import { ConditionHistoryList } from "../core/condition-history-list";
+import {
+  ConditionHistoryList,
+  DataListStackEntries,
+  DataListStackEntry,
+} from "../core/condition-history-list";
 import { useCTW } from "../core/ctw-provider";
 import { usePatient } from "../core/patient-provider";
 import { Spinner } from "../core/spinner";
@@ -17,7 +21,7 @@ export function ConditionHistory({
   icd10Code,
   snomedCode,
 }: ConditionHistoryProps) {
-  const [conditions, setConditions] = useState<ConditionModel[]>([]);
+  const [conditions, setConditions] = useState<DataListStackEntries>([]);
   const [loading, setLoading] = useState(true);
   const { getCTWFhirClient } = useCTW();
   const { patientPromise } = usePatient();
@@ -43,71 +47,69 @@ export function ConditionHistory({
             typeof snomedCode !== "undefined")
       );
 
-      setConditions(filteredConditions);
-
-      // setConditions(filteredConditions.map((model) => setupData(model)));
+      setConditions(filteredConditions.map((model) => setupData(model)));
       setLoading(false);
     }
 
     load();
 
-    // function setupData(condition: ConditionModel): DataListStackEntry {
-    //   let data = [
-    //     {
-    //       label: "Verification Status",
-    //       value: condition.verificationStatus,
-    //     },
-    //     {
-    //       label: "Clinical Status",
-    //       value: condition.clinicalStatus,
-    //     },
-    //     {
-    //       label: "Recorded Date",
-    //       value: condition.recordedDate,
-    //     },
-    //   ];
-    //   const ICD10Fields = [
-    //     {
-    //       label: "ICD10 Display",
-    //       value: condition.icd10Display,
-    //     },
-    //     {
-    //       label: "ICD10 Code",
-    //       value: condition.icd10Code,
-    //     },
-    //     {
-    //       label: "ICD10 System",
-    //       value: condition.icd10System,
-    //     },
-    //   ];
-    //   const SNOMEDFields = [
-    //     {
-    //       label: "SNOMED Display",
-    //       value: condition.snomedDisplay,
-    //     },
-    //     {
-    //       label: "SNOMED Code",
-    //       value: condition.snomedCode,
-    //     },
-    //     {
-    //       label: "SNOMED System",
-    //       value: condition.snomedSystem,
-    //     },
-    //   ];
+    function setupData(condition: ConditionModel): DataListStackEntry {
+      let data = [
+        {
+          label: "Verification Status",
+          value: condition.verificationStatus,
+        },
+        {
+          label: "Clinical Status",
+          value: condition.clinicalStatus,
+        },
+        {
+          label: "Recorded Date",
+          value: condition.recordedDate,
+        },
+      ];
+      const ICD10Fields = [
+        {
+          label: "ICD10 Display",
+          value: condition.icd10Display,
+        },
+        {
+          label: "ICD10 Code",
+          value: condition.icd10Code,
+        },
+        {
+          label: "ICD10 System",
+          value: condition.icd10System,
+        },
+      ];
+      const SNOMEDFields = [
+        {
+          label: "SNOMED Display",
+          value: condition.snomedDisplay,
+        },
+        {
+          label: "SNOMED Code",
+          value: condition.snomedCode,
+        },
+        {
+          label: "SNOMED System",
+          value: condition.snomedSystem,
+        },
+      ];
 
-    //   if (icd10Code) {
-    //     data = data.concat(ICD10Fields);
-    //   }
+      if (icd10Code) {
+        data = data.concat(ICD10Fields);
+      }
 
-    //   if (snomedCode) {
-    //     data = data.concat(SNOMEDFields);
-    //   }
+      if (snomedCode) {
+        data = data.concat(SNOMEDFields);
+      }
 
-    //   return {
-    //     id: condition.id,
-    //     data: [...data],
-    //   };
-    // }
+      return {
+        id: condition.id,
+        data: [...data],
+      };
+    }
 
     return function cleanup() {
       setConditions([]);
@@ -118,7 +120,7 @@ export function ConditionHistory({
   if (conditions.length === 0 && !loading) {
     return <div>No history found.</div>;
   }
-
+  // move from here to drawer
   if (loading) {
     return (
       <div className="ctw-space-x-2">

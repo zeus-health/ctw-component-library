@@ -1,5 +1,4 @@
 import { ConditionModel } from "@/models/conditions";
-import { ChevronRightIcon } from "@heroicons/react/outline";
 
 export type ConditionHistoryDetailCardProp = {
   condition: ConditionModel;
@@ -20,9 +19,6 @@ export function ConditionHistoryDetailCard({
         <p className="ctw-text-gray-500 ctw-truncate ctw-text-sm">
           {condition.recorder}
         </p>
-      </div>
-      <div className="ctw-text-gray-500 ctw-inline-flex ctw-items-center">
-        <ChevronRightIcon className="ctw-h-5 ctw-w-5" />
       </div>
     </ul>
   );

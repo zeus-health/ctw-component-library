@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { ConditionModel } from "../../models/conditions";
 import { Drawer } from "../core/drawer";
 import { ConditionHistory } from "./conditions-history";
@@ -16,13 +15,18 @@ export function ConditionHistoryDrawer({
   isOpen,
   onClose,
 }: ConditionHistoryDrawerProps) {
-  const [selectedCondition, setSelectedCondition] = useState<ConditionModel>();
-
-  const data = ConditionHistory({
+  const conditionElements = ConditionHistory({
     icd10Code: condition?.icd10Code,
     snomedCode: condition?.snomedCode,
   });
   const title = "Condition History";
+  // refactor data fetching and setup loader
+
+  // 1. get collapsible data list rendering hardcoded data correctly
+  // 2. refactor to pass in a prop into a collapisble data list - pass in object
+  // 3. set drawer up to load data and render loading spinner and display conditions count when it has gotten it
+  // 4. map over conditions and render a collapsible data list for each entry - construct a prop for the data (might be object of keys to strings or jsx)*
+  // create a data list code component - specifically for rendering the code field (common across medications, etc..) - under content
 
   return (
     <Drawer
@@ -37,7 +41,8 @@ export function ConditionHistoryDrawer({
       <div className="ctw-flex ctw-p-6 ctw-text-sm ctw-text-black">
         {condition?.ccsGrouping}
       </div>
-      <Drawer.Body>{data}</Drawer.Body>
+
+      <Drawer.Body>{conditionElements}</Drawer.Body>
       <Drawer.Footer>
         <div className="ctw-flex ctw-justify-end ctw-space-x-3 ctw-text-black ">
           <button
