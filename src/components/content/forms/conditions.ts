@@ -8,6 +8,7 @@ import {
 } from "@/fhir/system-urls";
 import { ConditionModel } from "@/models/conditions";
 import { getFormData } from "@/utils/form-helper";
+import { queryClient } from "@/utils/request";
 import Client from "fhir-kit-client";
 import { z } from "zod";
 
@@ -42,7 +43,7 @@ export const conditionSchema = z.object({
   note: z.string().optional(),
 });
 
-export const createCondition = async (
+export const createOrEditCondition = async (
   data: FormData,
   patientID: string,
   getCTWFhirClient: () => Promise<Client>
@@ -101,6 +102,8 @@ export const createCondition = async (
   if (isFhirError(response)) {
     result.success = false;
   }
+
+  queryClient.invalidateQueries(["conditions"]);
 
   return result;
 };
