@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.10.1
+
+### Patch Changes
+
+- 075719c: Re-add style.css as a required export for consumers.
+
 ## 0.10.0
 
 ### Minor Changes
