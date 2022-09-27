@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 0.10.0
+
+### Minor Changes
+
+- 6cbb910: Conditions container and table will now switch to a responsive stack layout when container width is less than "breakpoint.sm" pixels (defaults to 640px and can be overwriten via CTWProvider theme).
+- 38cfc7e: Switch to dynamic CSS imports (using sass). This is a breaking change in that consuming applications no longer need to import our style.css themselves.
+
+### Patch Changes
+
+- f222c7e: Better support column widths and prepare conditions and tables for responsive design.
+- 3e5da9c: Refetches condition when adding new condition or adding condition from not reviewed. Additionally fixes bug when editing condition and date is of bad format
+
 ## 0.9.1
 
 ### Patch Changes
