@@ -8,6 +8,14 @@ Library maintained by Zus Health.
 npm i @zus-health/ctw-component-library
 ```
 
+## Include CSS Stylesheet.
+
+Include the CSS file:
+
+```typescript
+import ctwStyles from "@zus-health/ctw-component-library/dist/style.css";
+```
+
 ## Setup `CTWProvider`
 
 The `CTWProvider` component provides authentication details needed for other components to make API requests to Zus.
