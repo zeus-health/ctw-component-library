@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { ConditionModel } from "../../models/conditions";
 import { Drawer } from "../core/drawer";
 import { ConditionHistory } from "./conditions-history";
@@ -15,11 +16,12 @@ export function ConditionHistoryDrawer({
   isOpen,
   onClose,
 }: ConditionHistoryDrawerProps) {
+  const [selectedCondition, setSelectedCondition] = useState<ConditionModel>();
+
   const data = ConditionHistory({
     icd10Code: condition?.icd10Code,
     snomedCode: condition?.snomedCode,
   });
-  const conditionName = condition?.display;
   const title = "Condition History";
 
   return (
@@ -30,7 +32,10 @@ export function ConditionHistoryDrawer({
       onClose={onClose}
     >
       <div className="ctw-flex ctw-p-6 ctw-text-2xl ctw-text-black">
-        {conditionName}
+        {condition?.display} ({condition?.snomedCode})
+      </div>
+      <div className="ctw-flex ctw-p-6 ctw-text-sm ctw-text-black">
+        {condition?.ccsGrouping}
       </div>
       <Drawer.Body>{data}</Drawer.Body>
       <Drawer.Footer>
