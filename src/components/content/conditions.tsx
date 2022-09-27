@@ -132,7 +132,31 @@ export function Conditions({ className }: ConditionsProps) {
         setConfirmedIsLoading(false);
         setConfirmed(confirmedResponse.data.map((c) => new ConditionModel(c)));
 
-        const codes = ["SNOMED", "ICD-10", "ICD-10CM", "ICD-9", "ICD-9CM"];
+        const codes = [
+          "snomedCode",
+          "icd10Code",
+          "icd10CMCode",
+          "icd9Code",
+          "icd9CMCode",
+        ];
+
+        type ConfirmedCodes = { [key: string]: [] };
+
+        const confirmedCodeDict: ConfirmedCodes = {};
+
+        confirmedResponse.data.forEach((condition) => {
+          const conditionModel = new ConditionModel(condition);
+          codes.forEach((code) => {
+            if (!(code in confirmedCodeDict)) {
+              confirmedCodeDict[code] = [];
+            }
+            if (typeof conditionModel[code] !== "undefined") {
+              confirmedCodeDict[code].push(conditionModel[code]);
+            }
+          });
+        });
+
+        console.log("confirmedCodeDict", confirmedCodeDict);
 
         const ICD10ConfirmedCodes = confirmedResponse.data.map(
           (c) => new ConditionModel(c).icd10Code
