@@ -45,11 +45,9 @@ export function Conditions({ className }: ConditionsProps) {
   const [includeInactive, setIncludeInactive] = useState(true);
   const [patient, setPatient] = useState<PatientModel>();
   const [formAction, setFormAction] = useState("");
-  // We use a ref here because if we pass FHIR Client to meta normally it will use whatever
-  // you passed as meta when the query was created which means it can be come stale
   const [conditionFilter, setConditionFilter] = useState<ConditionFilters>({});
   const [patientUPID, setPatientUPID] = useState<string>("");
-  const { fhirClientRef } = useFhirClientRef();
+  const fhirClientRef = useFhirClientRef();
   const [currentSelectedData, setCurrentlySelectedData] =
     useState<FormEntry[]>();
   const [conditionForHistory, setConditionForHistory] =

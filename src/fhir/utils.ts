@@ -3,6 +3,8 @@ import Client from "fhir-kit-client";
 import { useRef } from "react";
 import { useCTW } from "../components/core/ctw-provider";
 
+// We use a ref here because if we pass FHIR Client to meta normally it will use whatever
+// you passed as meta when the query was created which means it can be come stale
 export function useFhirClientRef() {
   const fhirClientRef = useRef<Client>();
   const { getCTWFhirClient } = useCTW();
@@ -15,7 +17,7 @@ export function useFhirClientRef() {
       throw Error("Failed to get the FHIR Client");
     });
 
-  return { fhirClientRef };
+  return fhirClientRef;
 }
 
 export const getFhirClientFromQuery = (meta: QueryMeta | undefined) => {
