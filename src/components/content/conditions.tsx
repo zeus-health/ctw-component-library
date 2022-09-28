@@ -34,7 +34,7 @@ const EMPTY_MESSAGE = "No conditions found";
 const ERROR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
 
-const CODES = [
+const CODES: (keyof ConditionModel)[] = [
   "snomedCode",
   "icd10Code",
   "icd10CMCode",
@@ -157,29 +157,13 @@ export function Conditions({ className }: ConditionsProps) {
         setConfirmedIsLoading(false);
         setConfirmed(confirmedResponse.data.map((c) => new ConditionModel(c)));
 
-        const codes = [
-          "snomedCode",
-          "icd10Code",
-          "icd10CMCode",
-          "icd9Code",
-          "icd9CMCode",
-        ];
-
         const confirmedCodeDict = createConditionCodeDict(
           confirmedResponse.data
         );
 
-        const ICD10ConfirmedCodes = confirmedResponse.data.map(
-          (c) => new ConditionModel(c).icd10Code
-        );
-
         if (notReviewedResponse.data) {
-          const notReviewedCodeDict = createConditionCodeDict(
-            notReviewedResponse.data
-          );
-
           const notReviewedFiltered = notReviewedResponse.data.filter((c) => {
-            const isDuplicate = codes.some((code) => {
+            const isDuplicate = CODES.some((code) => {
               const conditionModel = new ConditionModel(c);
               if (conditionModel[code]) {
                 return confirmedCodeDict[code].includes(conditionModel[code]);
