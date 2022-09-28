@@ -119,8 +119,7 @@ export const createConditionCodeDict = (data: fhir4.Condition[]) => {
         confirmedCodeDict[code] = [];
       }
       if (typeof conditionModel[code] === "string") {
-        const modelCode = conditionModel[code];
-        confirmedCodeDict[code].push(modelCode as string);
+        confirmedCodeDict[code].push(conditionModel[code] as string);
       }
     });
   });
@@ -136,8 +135,7 @@ export const filterDuplicateCodesFromTarget = (
     const isDuplicate = ACCEPTABLE_CODES.some((code) => {
       const conditionModel = new ConditionModel(c);
       if (conditionModel[code]) {
-        const modelCode = conditionModel[code];
-        return codesLookup[code].includes(modelCode as string);
+        return codesLookup[code].includes(conditionModel[code] as string);
       }
       return false;
     });
