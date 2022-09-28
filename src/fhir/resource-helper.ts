@@ -15,6 +15,10 @@ export function findReference<T extends ResourceTypeString>(
     return undefined;
   }
 
+  console.log("reference", reference);
+
+  console.log("includedResources", includedResources);
+
   if (reference.startsWith("#")) {
     return find(contained, {
       id: reference.substring(1), // Remove preceding # when looking up contained resource.

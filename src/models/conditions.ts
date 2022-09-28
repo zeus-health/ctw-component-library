@@ -10,8 +10,9 @@ export class ConditionModel {
 
   private includedResources?: ResourceMap;
 
-  constructor(condition: fhir4.Condition) {
+  constructor(condition: fhir4.Condition, includedResources?: ResourceMap) {
     this.resource = condition;
+    this.includedResources = includedResources;
   }
 
   get abatement(): string | undefined {
@@ -123,6 +124,7 @@ export class ConditionModel {
   }
 
   get patient(): PatientModel | undefined {
+    console.log("included Resources", this.includedResources);
     const reference = findReference(
       "Patient",
       this.resource.contained,

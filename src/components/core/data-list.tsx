@@ -1,6 +1,6 @@
 export type DataListEntry = {
   label: string;
-  value?: string;
+  value?: string | string[];
 };
 
 export type DataListProps = {

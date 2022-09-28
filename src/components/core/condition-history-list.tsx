@@ -2,7 +2,11 @@ import { useState } from "react";
 import { CollapsibleDataList } from "./collapsible-data-list";
 import { DataListEntry } from "./data-list";
 
-export type DataListStackEntry = { id: string; data: DataListEntry[] };
+export type DataListStackEntry = {
+  id: string;
+  detailData: DataListEntry[];
+  previewData: DataListEntry[];
+};
 export type DataListStackEntries = DataListStackEntry[];
 
 export type CollapsibleListProp = {
@@ -14,7 +18,6 @@ export const ConditionHistoryList = ({
   entries,
   limit,
 }: CollapsibleListProp) => {
-  const [isDetailShown, setIsDetailShown] = useState(false);
   const [showAll, setShowAll] = useState(false);
 
   const displayedEntries =

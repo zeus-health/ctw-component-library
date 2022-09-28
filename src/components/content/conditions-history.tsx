@@ -54,64 +54,95 @@ export function ConditionHistory({
     load();
 
     function setupData(condition: ConditionModel): DataListStackEntry {
-      let data = [
-        {
-          label: "Verification Status",
-          value: condition.verificationStatus,
-        },
-        {
-          label: "Clinical Status",
-          value: condition.clinicalStatus,
-        },
+      const previewData = [
         {
           label: "Recorded Date",
           value: condition.recordedDate,
         },
-        // {
-        //   label: "Managing Organization",
-        //   value: condition.patient?.organization,
-        // },
-      ];
-      const ICD10Fields = [
-        {
-          label: "ICD10 Display",
-          value: condition.icd10Display,
-        },
-        {
-          label: "ICD10 Code",
-          value: condition.icd10Code,
-        },
-        {
-          label: "ICD10 System",
-          value: condition.icd10System,
-        },
-      ];
-      const SNOMEDFields = [
         {
           label: "SNOMED Display",
           value: condition.snomedDisplay,
         },
         {
-          label: "SNOMED Code",
+          label: "Managing Organization",
+          value: condition.patient?.organization?.name,
+        },
+      ];
+      const detailData = [
+        {
+          label: "Clinical Status",
+          value: condition.clinicalStatus,
+        },
+        {
+          label: "Verification Status",
+          value: condition.verificationStatus,
+        },
+        {
+          label: "Recorded Date",
+          value: condition.recordedDate,
+        },
+        {
+          label: "Categories",
+          value: condition.categories[0],
+        },
+        {
+          label: "Data",
           value: condition.snomedCode,
         },
         {
-          label: "SNOMED System",
-          value: condition.snomedSystem,
+          label: "Onset Date",
+          value: condition.onset,
+        },
+        {
+          label: "Abatement Date",
+          value: condition.abatement,
+        },
+        {
+          label: "Encounter",
+          value: condition.encounter,
         },
       ];
+      // const ICD10Fields = [
+      //   {
+      //     label: "ICD10 Display",
+      //     value: condition.icd10Display,
+      //   },
+      //   {
+      //     label: "ICD10 Code",
+      //     value: condition.icd10Code,
+      //   },
+      //   {
+      //     label: "ICD10 System",
+      //     value: condition.icd10System,
+      //   },
+      // ];
+      // const SNOMEDFields = [
+      //   {
+      //     label: "SNOMED Display",
+      //     value: condition.snomedDisplay,
+      //   },
+      //   {
+      //     label: "SNOMED Code",
+      //     value: condition.snomedCode,
+      //   },
+      //   {
+      //     label: "SNOMED System",
+      //     value: condition.snomedSystem,
+      //   },
+      // ];
 
-      if (icd10Code) {
-        data = data.concat(ICD10Fields);
-      }
+      // if (icd10Code) {
+      //   data = data.concat(ICD10Fields);
+      // }
 
-      if (snomedCode) {
-        data = data.concat(SNOMEDFields);
-      }
+      // if (snomedCode) {
+      //   data = data.concat(SNOMEDFields);
+      // }
 
       return {
         id: condition.id,
-        data: [...data],
+        detailData: [...detailData],
+        previewData: [...previewData],
       };
     }
 

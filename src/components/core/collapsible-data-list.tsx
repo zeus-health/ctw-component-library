@@ -10,12 +10,13 @@ export const CollapsibleDataList = ({ entry }) => {
         <div className="ctw-text-primary-700 ctw-truncate ctw-text-sm ctw-font-medium">
           <div className="ctw-divide-y ctw-bg-bg-lighter">
             <dl className="ctw-left-2 ctw-flex ctw-space-y-2" key={entry.id}>
-              {entry.data.map(({ label, value }) => {
+              {entry.previewData.map(({ label, value }) => {
                 if (value) {
                   return (
                     <div
                       // label is not guarenteed to be unique so append index.
                       // eslint-disable-next-line react/no-array-index-key
+                      key={label + Math.random}
                       className="ctw-text-gray-900 ctw-flex ctw-items-baseline ctw-space-x-4"
                     >
                       {label === "Recorded Date" && value && (
@@ -30,6 +31,7 @@ export const CollapsibleDataList = ({ entry }) => {
                     </div>
                   );
                 }
+                return <div />;
               })}
             </dl>
             <ChevronRightIcon
@@ -43,13 +45,13 @@ export const CollapsibleDataList = ({ entry }) => {
         <div className="ctw-space-y-4 ctw-bg-bg-lighter">
           <div className="ctw-divide-y ctw-rounded-lg ctw-border">
             <dl className="ctw-space-y-2 ctw-p-4" key={entry.id}>
-              {entry.data.map(({ label, value }, labelIndex) => {
-                if (label && value) {
+              {entry.detailData.map(({ label, value }) => {
+                if (value) {
                   return (
                     <div
                       // label is not guarenteed to be unique so append index.
                       // eslint-disable-next-line react/no-array-index-key
-                      key={label + labelIndex}
+                      key={label + Math.random}
                       className="ctw-text-gray-900 ctw-flex ctw-items-baseline ctw-space-x-4"
                     >
                       <dt className="ctw-w-1/3 ctw-flex-shrink-0 ctw-font-medium">
@@ -59,6 +61,7 @@ export const CollapsibleDataList = ({ entry }) => {
                     </div>
                   );
                 }
+                return <div />;
               })}
             </dl>
           </div>
