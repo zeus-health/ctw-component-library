@@ -1,6 +1,17 @@
 import { getFhirClient } from "@/fhir/client";
-import { mapToCSSVar, Theme } from "@/styles/tailwind.theme";
-import * as React from "react";
+import { DefaultTheme, mapToCSSVar, Theme } from "@/styles/tailwind.theme";
+import { queryClient } from "@/utils/request";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { merge } from "lodash";
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
+import "./main.scss";
 
 export type Env = "dev" | "sandbox" | "production";
 
@@ -29,18 +40,18 @@ type AuthTokenSpecified = { authToken: string; authTokenURL?: never };
 type AuthTokenURLSpecified = { authToken?: never; authTokenURL: string };
 
 type CTWProviderProps = {
-  children: React.ReactNode;
+  children: ReactNode;
   env: Env;
   theme?: Theme;
   headers?: HeadersInit;
 } & (AuthTokenSpecified | AuthTokenURLSpecified);
 
-const CTWStateContext = React.createContext<CTWState | undefined>(undefined);
+const CTWStateContext = createContext<CTWState | undefined>(undefined);
 
 function CTWProvider({ theme, children, ...ctwState }: CTWProviderProps) {
-  const [token, setToken] = React.useState<CTWToken>();
+  const [token, setToken] = useState<CTWToken>();
 
-  const handleAuth = React.useCallback(async () => {
+  const handleAuth = useCallback(async () => {
     if (ctwState.authToken) {
       return ctwState.authToken;
     }
@@ -56,37 +67,44 @@ function CTWProvider({ theme, children, ...ctwState }: CTWProviderProps) {
     return newToken.accessToken;
   }, [token, ctwState]);
 
-  const providerState = React.useMemo(
+  const providerState = useMemo(
     () => ({
       ...ctwState,
+      // Set our context theme to our default theme merged
+      // with any of the provided theme overwrites.
+      // This way consumers of useCTW can get access to
+      // the full true theme being applied.
+      theme: merge({}, DefaultTheme, theme),
       token,
       actions: {
         handleAuth,
       },
     }),
-    [ctwState, handleAuth, token]
+    [ctwState, theme, handleAuth, token]
   );
 
   return (
-    <div style={mapToCSSVar(theme || {})}>
-      <CTWStateContext.Provider value={providerState}>
-        {children}
-      </CTWStateContext.Provider>
+    <div style={mapToCSSVar(theme?.colors || {})}>
+      <QueryClientProvider client={queryClient}>
+        <CTWStateContext.Provider value={providerState}>
+          {children}
+        </CTWStateContext.Provider>
+      </QueryClientProvider>
     </div>
   );
 }
 
 function useCTW() {
-  const context = React.useContext(CTWStateContext);
-  if (context === undefined) {
+  const context = useContext(CTWStateContext);
+  if (context === undefined || context.theme === undefined) {
     throw new Error("useCTW must be used within a CTWProvider");
   }
 
-  const getCTWFhirClient = React.useCallback(async () => {
+  const getCTWFhirClient = useCallback(async () => {
     const authToken = await context.actions.handleAuth();
     return getFhirClient(context.env, authToken);
   }, [context]);
-  return { getCTWFhirClient, theme: context.theme };
+  return { getCTWFhirClient, theme: context.theme as Required<Theme> };
 }
 
 async function checkOrRefreshAuth(

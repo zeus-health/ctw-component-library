@@ -32,7 +32,7 @@ export const FormField = ({
     if (options) {
       return (
         <SelectField
-          className={cx({ error }, "ctw-w-full")}
+          className={cx({ "ctw-error": error }, "ctw-w-full")}
           options={options}
           name={inputProps.name || ""}
           disabled={inputProps.disabled}
@@ -45,7 +45,7 @@ export const FormField = ({
         <textarea
           rows={lines}
           className={cx(
-            { error },
+            { "ctw-error": error },
             "ctw-listbox-textarea ctw-w-full ctw-whitespace-pre-wrap"
           )}
           defaultValue={value}
@@ -59,7 +59,7 @@ export const FormField = ({
       <input
         {...inputProps}
         type={inputProps.type}
-        className={cx({ error }, "ctw-listbox-input ctw-w-full")}
+        className={cx({ "ctw-error": error }, "ctw-listbox-input ctw-w-full")}
         readOnly={readonly}
         defaultValue={value}
       />

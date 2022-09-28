@@ -1,8 +1,11 @@
 import cx from "classnames";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 
 import { TableHead } from "./table-head";
 import { TableRows } from "./table-rows";
+import "./table.scss";
+
+import { TableColgroup } from "./table-colgroup";
 
 export interface MinRecordItem {
   id: string | number;
@@ -16,16 +19,18 @@ type RenderSpecified<T> = { dataIndex?: never; render: (row: T) => ReactNode };
 export type TableColumn<T extends MinRecordItem> = {
   title?: string;
   className?: string;
+  widthPercent?: number;
+  minWidth?: number;
 } & (DataIndexSpecified<T> | RenderSpecified<T>);
 
 export type TableProps<T extends MinRecordItem> = {
   className?: string;
   records: T[];
   columns: TableColumn<T>[];
-  onRowClick?: (row: T) => void; // Adds a row hover effect and calls onClick.
   isLoading?: boolean;
   message?: string;
   showTableHead?: boolean;
+  stacked?: boolean;
 };
 
 export type TableBaseProps<T extends MinRecordItem> = Omit<
@@ -37,26 +42,65 @@ export const Table = <T extends MinRecordItem>({
   className,
   columns,
   records,
-  onRowClick,
   isLoading = false,
   message = "No records found",
   showTableHead = true,
-}: TableProps<T>) => (
-  <div className={cx("ctw-py-2 ctw-align-middle", className)}>
-    <div
-      /* Border radius has to be same as table. 
-           For some reason the overflow: hidden also hides the table borders, so add some padding to get them back. */
-      className="ctw-relative ctw-overflow-hidden ctw-rounded-lg ctw-p-px"
-    >
-      <div className="ctw-flex ctw-overflow-x-auto ctw-rounded-lg ctw-shadow ctw-ring-1 ctw-ring-divider-light ctw-ring-opacity-5">
-        <table className="ctw-table-base ctw-w-full ctw-divide-y ctw-divide-divider-main">
-          {showTableHead && <TableHead columns={columns} />}
+  stacked,
+}: TableProps<T>) => {
+  const tableRef = useRef<HTMLTableElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [showLeftShadow, setShowLeftShadow] = useState(false);
+  const [showRightShadow, setShowRightShadow] = useState(false);
 
-          <tbody className="ctw-divide-y ctw-divide-divider-light ctw-bg-white">
+  const updateShadows = () => {
+    const container = scrollContainerRef.current;
+    const table = tableRef.current;
+    if (container && table) {
+      setShowLeftShadow(container.scrollLeft > 0);
+      const rightSide = container.scrollLeft + container.clientWidth;
+      setShowRightShadow(rightSide < table.clientWidth);
+    }
+  };
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+
+    // Update right away.
+    updateShadows();
+
+    // Update on scroll or resize events.
+    container?.addEventListener("scroll", updateShadows);
+    window.addEventListener("resize", updateShadows);
+
+    return () => {
+      container?.removeEventListener("scroll", updateShadows);
+      window.removeEventListener("resize", updateShadows);
+    };
+  }, [scrollContainerRef, isLoading]);
+
+  const hasData = !isLoading && records.length > 0;
+
+  return (
+    <div
+      className={cx(
+        "ctw-table-container",
+        {
+          "ctw-table-stacked": stacked,
+          "ctw-table-scroll-left-shadow": showLeftShadow,
+          "ctw-table-scroll-right-shadow": showRightShadow,
+        },
+        className
+      )}
+    >
+      <div className="ctw-scrollbar" ref={scrollContainerRef}>
+        <table ref={tableRef}>
+          {hasData && <TableColgroup columns={columns} />}
+          {showTableHead && hasData && <TableHead columns={columns} />}
+
+          <tbody>
             <TableRows
               records={records}
               columns={columns}
-              onRowClick={onRowClick}
               isLoading={isLoading}
               emptyMessage={message}
             />
@@ -64,5 +108,5 @@ export const Table = <T extends MinRecordItem>({
         </table>
       </div>
     </div>
-  </div>
-);
+  );
+};
