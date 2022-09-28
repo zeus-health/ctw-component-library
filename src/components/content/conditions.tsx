@@ -34,6 +34,33 @@ const EMPTY_MESSAGE = "No conditions found";
 const ERROR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
 
+const CODES = [
+  "snomedCode",
+  "icd10Code",
+  "icd10CMCode",
+  "icd9Code",
+  "icd9CMCode",
+];
+const createConditionCodeDict = (data: fhir4.Condition[]) => {
+  type ConfirmedCodes = { [key: string]: [] };
+
+  const confirmedCodeDict: ConfirmedCodes = {};
+
+  data.forEach((condition) => {
+    const conditionModel = new ConditionModel(condition);
+    CODES.forEach((code) => {
+      if (!(code in confirmedCodeDict)) {
+        confirmedCodeDict[code] = [];
+      }
+      if (typeof conditionModel[code] !== "undefined") {
+        confirmedCodeDict[code].push(conditionModel[code]);
+      }
+    });
+  });
+
+  return confirmedCodeDict;
+};
+
 export function Conditions({ className }: ConditionsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
@@ -107,8 +134,6 @@ export function Conditions({ className }: ConditionsProps) {
     );
   };
 
-  console.log("confirmed", confirmed);
-
   useEffect(() => {
     async function load() {
       const tempConditionFilters: ConditionFilters = includeInactive
@@ -140,33 +165,29 @@ export function Conditions({ className }: ConditionsProps) {
           "icd9CMCode",
         ];
 
-        type ConfirmedCodes = { [key: string]: [] };
-
-        const confirmedCodeDict: ConfirmedCodes = {};
-
-        confirmedResponse.data.forEach((condition) => {
-          const conditionModel = new ConditionModel(condition);
-          codes.forEach((code) => {
-            if (!(code in confirmedCodeDict)) {
-              confirmedCodeDict[code] = [];
-            }
-            if (typeof conditionModel[code] !== "undefined") {
-              confirmedCodeDict[code].push(conditionModel[code]);
-            }
-          });
-        });
-
-        console.log("confirmedCodeDict", confirmedCodeDict);
+        const confirmedCodeDict = createConditionCodeDict(
+          confirmedResponse.data
+        );
 
         const ICD10ConfirmedCodes = confirmedResponse.data.map(
           (c) => new ConditionModel(c).icd10Code
         );
 
         if (notReviewedResponse.data) {
-          const notReviewedFiltered = notReviewedResponse.data.filter(
-            (c) =>
-              !ICD10ConfirmedCodes.includes(new ConditionModel(c).icd10Code)
+          const notReviewedCodeDict = createConditionCodeDict(
+            notReviewedResponse.data
           );
+
+          const notReviewedFiltered = notReviewedResponse.data.filter((c) => {
+            const isDuplicate = codes.some((code) => {
+              const conditionModel = new ConditionModel(c);
+              if (conditionModel[code]) {
+                return confirmedCodeDict[code].includes(conditionModel[code]);
+              }
+              return false;
+            });
+            return !isDuplicate;
+          });
 
           setNotReviewed(notReviewedFiltered.map((c) => new ConditionModel(c)));
         } else {
