@@ -22,15 +22,11 @@ export const ConditionHistoryList = ({
 
   return (
     <>
-      {entries.map((entry) => {
-        console.log(entry);
-
-        return (
-          <>
-            <CollapsibleDataList entry={entry} />
-          </>
-        );
-      })}
+      {entries.map((entry) => (
+        <>
+          <CollapsibleDataList entry={entry} />
+        </>
+      ))}
       {!showAll && limit && entries.length > limit && (
         <div className="ctw-text-center">
           <button

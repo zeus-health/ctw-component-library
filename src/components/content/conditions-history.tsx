@@ -67,6 +67,10 @@ export function ConditionHistory({
           label: "Recorded Date",
           value: condition.recordedDate,
         },
+        // {
+        //   label: "Managing Organization",
+        //   value: condition.patient?.organization,
+        // },
       ];
       const ICD10Fields = [
         {
