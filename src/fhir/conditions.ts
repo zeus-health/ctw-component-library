@@ -11,6 +11,16 @@ import {
 } from "./search-helpers";
 import { getFhirClientFromQuery } from "./utils";
 
+export const ACCEPTABLE_CODES: (keyof ConditionModel)[] = [
+  "snomedCode",
+  "icd10Code",
+  "icd10CMCode",
+  "icd9Code",
+  "icd9CMCode",
+];
+
+export type ConfirmedCodes = { [key: string]: string[] };
+
 export type ClinicalStatus =
   | "active"
   | "recurrence"
@@ -98,3 +108,36 @@ function filterAndSort(conditions: fhir4.Condition[]) {
     (condition) => new ConditionModel(condition).display
   );
 }
+
+export const createConditionCodeDict = (data: fhir4.Condition[]) => {
+  const confirmedCodeDict: ConfirmedCodes = {};
+
+  data.forEach((condition) => {
+    const conditionModel = new ConditionModel(condition);
+    ACCEPTABLE_CODES.forEach((code) => {
+      if (!(code in confirmedCodeDict)) {
+        confirmedCodeDict[code] = [];
+      }
+      if (typeof conditionModel[code] === "string") {
+        confirmedCodeDict[code].push(conditionModel[code]);
+      }
+    });
+  });
+
+  return confirmedCodeDict;
+};
+
+export const filterDuplicateCodesFromTarget = (
+  target: fhir4.Condition[],
+  codesLookup: ConfirmedCodes
+) =>
+  target.filter((c) => {
+    const isDuplicate = ACCEPTABLE_CODES.some((code) => {
+      const conditionModel = new ConditionModel(c);
+      if (conditionModel[code]) {
+        return codesLookup[code].includes(conditionModel[code]);
+      }
+      return false;
+    });
+    return !isDuplicate;
+  });

@@ -4,6 +4,8 @@ import {
 } from "@/components/content/forms/condition-helpers";
 import {
   ConditionFilters,
+  createConditionCodeDict,
+  filterDuplicateCodesFromTarget,
   getConfirmedConditions,
   getLensConditions,
 } from "@/fhir/conditions";
@@ -33,33 +35,6 @@ export type ConditionsProps = {
 const EMPTY_MESSAGE = "No conditions found";
 const ERROR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
-
-const CODES: (keyof ConditionModel)[] = [
-  "snomedCode",
-  "icd10Code",
-  "icd10CMCode",
-  "icd9Code",
-  "icd9CMCode",
-];
-const createConditionCodeDict = (data: fhir4.Condition[]) => {
-  type ConfirmedCodes = { [key: string]: [] };
-
-  const confirmedCodeDict: ConfirmedCodes = {};
-
-  data.forEach((condition) => {
-    const conditionModel = new ConditionModel(condition);
-    CODES.forEach((code) => {
-      if (!(code in confirmedCodeDict)) {
-        confirmedCodeDict[code] = [];
-      }
-      if (typeof conditionModel[code] !== "undefined") {
-        confirmedCodeDict[code].push(conditionModel[code]);
-      }
-    });
-  });
-
-  return confirmedCodeDict;
-};
 
 export function Conditions({ className }: ConditionsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -157,21 +132,11 @@ export function Conditions({ className }: ConditionsProps) {
         setConfirmedIsLoading(false);
         setConfirmed(confirmedResponse.data.map((c) => new ConditionModel(c)));
 
-        const confirmedCodeDict = createConditionCodeDict(
-          confirmedResponse.data
-        );
-
         if (notReviewedResponse.data) {
-          const notReviewedFiltered = notReviewedResponse.data.filter((c) => {
-            const isDuplicate = CODES.some((code) => {
-              const conditionModel = new ConditionModel(c);
-              if (conditionModel[code]) {
-                return confirmedCodeDict[code].includes(conditionModel[code]);
-              }
-              return false;
-            });
-            return !isDuplicate;
-          });
+          const notReviewedFiltered = filterDuplicateCodesFromTarget(
+            notReviewedResponse.data,
+            createConditionCodeDict(confirmedResponse.data)
+          );
 
           setNotReviewed(notReviewedFiltered.map((c) => new ConditionModel(c)));
         } else {
