@@ -1,3 +1,5 @@
+import { CONDITION_CODE_SYSTEMS } from "@/fhir/conditions";
+import { compact } from "lodash";
 import { codeableConceptLabel, findCoding } from "../fhir/codeable-concept";
 import { formatDateISOToLocal } from "../fhir/formatters";
 import {
@@ -40,6 +42,14 @@ export class ConditionModel {
 
   get asserter(): string | undefined {
     return this.resource.asserter?.display;
+  }
+
+  get availableCodes(): fhir4.Coding[] {
+    return compact(
+      CONDITION_CODE_SYSTEMS.map((system) =>
+        findCoding(system, this.resource.code)
+      )
+    );
   }
 
   get bodySites(): string[] {

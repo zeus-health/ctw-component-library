@@ -8,14 +8,20 @@ import {
   searchCommonRecords,
   searchLensRecords,
 } from "./search-helpers";
+import {
+  SYSTEM_ICD10,
+  SYSTEM_ICD10_CM,
+  SYSTEM_ICD9,
+  SYSTEM_SNOMED,
+} from "./system-urls";
 import { getFhirClientFromQuery } from "./utils";
 
-export const ACCEPTABLE_CODES: (keyof ConditionModel)[] = [
-  "snomedCoding",
-  "icd10Coding",
-  "icd10CMCoding",
-  "icd9Coding",
-  "icd9CMCoding",
+export const CONDITION_CODE_SYSTEMS = [
+  SYSTEM_ICD10,
+  SYSTEM_ICD10_CM,
+  SYSTEM_ICD9,
+  SYSTEM_ICD10_CM,
+  SYSTEM_SNOMED,
 ];
 
 export type ClinicalStatus =
@@ -34,17 +40,8 @@ export type QueryKeyConfirmedConditions = [string, string, ConditionFilters];
 export type QueryKeyLensConditions = [string, string];
 export type QueryKeyConditionHistory = [string, string, string[]];
 
-export const getConditionFilterTokens = (condition: ConditionModel) => {
-  const tokens: string[] = [];
-  ACCEPTABLE_CODES.forEach((code) => {
-    if (condition[code]) {
-      const coding = condition[code] as fhir4.Coding;
-      tokens.push(`${coding.system}|${coding.code}`);
-    }
-  });
-
-  return tokens;
-};
+export const getConditionFilterTokens = (condition: ConditionModel) =>
+  condition.availableCodes.map((coding) => `${coding.system}|${coding.code}`);
 
 export async function getConfirmedConditions(
   queryParams: QueryFunctionContext<QueryKeyConfirmedConditions>
