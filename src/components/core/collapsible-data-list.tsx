@@ -1,4 +1,5 @@
 import { ChevronRightIcon } from "@heroicons/react/outline";
+import cx from "classnames";
 import { useState } from "react";
 import { CodeListElement } from "./code-list";
 
@@ -20,25 +21,36 @@ export const CollapsibleDataList = ({ entry }) => {
                       key={label + Math.random}
                       className="ctw-text-gray-900 ctw-flex ctw-items-baseline ctw-space-x-4"
                     >
-                      {label === "Recorded Date" && value && (
-                        <dd className="ctw-flex-grow">{value}</dd>
-                      )}
-                      {label === "SNOMED Display" && value && (
-                        <dd className="ctw-flex-grow">{value}</dd>
-                      )}
-                      {label === "Managing Organization" && value && (
-                        <dd className="ctw-flex-grow">{value}</dd>
-                      )}
+                      <div className="ctw-flex ctw-align-bottom">
+                        {label === "Recorded Date" && value && (
+                          <dd className="ctw-flex-grow">{value}</dd>
+                        )}
+                      </div>
+                      <div>
+                        {label === "SNOMED Display" && value && (
+                          <dd className="ctw-flex-grow">{value}</dd>
+                        )}
+                      </div>
+                      <div>
+                        {label === "Managing Organization" && value && (
+                          <dd className="ctw-flex-grow">{value}</dd>
+                        )}
+                      </div>
                     </div>
                   );
                 }
                 return <div />;
               })}
             </dl>
-            <ChevronRightIcon
-              className="ctw-h-5 ctw-w-5"
-              onClick={() => setIsDetailShown(!isDetailShown)}
-            />
+            <div className="ctw-justify-right ctw-flex">
+              <ChevronRightIcon
+                className={cx(
+                  "ctw-h-5 ctw-w-5",
+                  !isDetailShown ? "" : "ctw-rotate-90"
+                )}
+                onClick={() => setIsDetailShown(!isDetailShown)}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -51,7 +63,7 @@ export const CollapsibleDataList = ({ entry }) => {
                   if (label === "Code") {
                     return <CodeListElement label={label} value={value} />;
                   }
-                  if (label !== "Code(s)" && value) {
+                  if (value) {
                     return (
                       <div
                         // label is not guarenteed to be unique so append index.
