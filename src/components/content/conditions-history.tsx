@@ -1,3 +1,4 @@
+import { getIncludedResources } from "@/fhir/bundle";
 import { getConditionHistory } from "@/fhir/conditions";
 import { ConditionModel } from "@/models/conditions";
 import { useEffect, useState } from "react";
@@ -31,12 +32,13 @@ export function ConditionHistory({
       const fhirClient = await getCTWFhirClient();
       const patientTemp = await patientPromise;
 
-      const allConditions = await getConditionHistory(
-        fhirClient,
-        patientTemp.UPID
-      );
+      const { conditions: allConditions, bundle: bundleResources } =
+        await getConditionHistory(fhirClient, patientTemp.UPID);
+
+      const includedResources = getIncludedResources(bundleResources);
+
       const models = allConditions.map(
-        (condition) => new ConditionModel(condition)
+        (condition) => new ConditionModel(condition, includedResources)
       );
 
       const filteredConditions = models.filter(
@@ -86,8 +88,8 @@ export function ConditionHistory({
           value: condition.categories[0],
         },
         {
-          label: "Data",
-          value: condition.snomedCode,
+          label: "Code",
+          value: getAllCodes(condition),
         },
         {
           label: "Onset Date",
@@ -102,48 +104,23 @@ export function ConditionHistory({
           value: condition.encounter,
         },
       ];
-      // const ICD10Fields = [
-      //   {
-      //     label: "ICD10 Display",
-      //     value: condition.icd10Display,
-      //   },
-      //   {
-      //     label: "ICD10 Code",
-      //     value: condition.icd10Code,
-      //   },
-      //   {
-      //     label: "ICD10 System",
-      //     value: condition.icd10System,
-      //   },
-      // ];
-      // const SNOMEDFields = [
-      //   {
-      //     label: "SNOMED Display",
-      //     value: condition.snomedDisplay,
-      //   },
-      //   {
-      //     label: "SNOMED Code",
-      //     value: condition.snomedCode,
-      //   },
-      //   {
-      //     label: "SNOMED System",
-      //     value: condition.snomedSystem,
-      //   },
-      // ];
-
-      // if (icd10Code) {
-      //   data = data.concat(ICD10Fields);
-      // }
-
-      // if (snomedCode) {
-      //   data = data.concat(SNOMEDFields);
-      // }
 
       return {
         id: condition.id,
         detailData: [...detailData],
         previewData: [...previewData],
       };
+    }
+
+    function getAllCodes(condition: ConditionModel): string[] {
+      return [
+        condition.icd10Display || "",
+        condition.icd10Code || "",
+        condition.icd10System || "",
+        condition.snomedDisplay || "",
+        condition.snomedCode || "",
+        condition.snomedSystem || "",
+      ];
     }
 
     return function cleanup() {

@@ -124,7 +124,6 @@ export class ConditionModel {
   }
 
   get patient(): PatientModel | undefined {
-    console.log("included Resources", this.includedResources);
     const reference = findReference(
       "Patient",
       this.resource.contained,

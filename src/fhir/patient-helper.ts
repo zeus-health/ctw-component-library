@@ -20,7 +20,6 @@ export async function getBuilderFhirPatient(
 
     patients = response.resources;
     bundle = response.bundle;
-    console.log("response", response);
   } catch (e) {
     throw errorResponse("Failed fetching patient", e);
   }

@@ -1,5 +1,6 @@
 import { ChevronRightIcon } from "@heroicons/react/outline";
 import { useState } from "react";
+import { CodeListElement } from "./code-list";
 
 export const CollapsibleDataList = ({ entry }) => {
   const [isDetailShown, setIsDetailShown] = useState(false);
@@ -25,9 +26,9 @@ export const CollapsibleDataList = ({ entry }) => {
                       {label === "SNOMED Display" && value && (
                         <dd className="ctw-flex-grow">{value}</dd>
                       )}
-                      {/* {label === "Managing Organization" && value && (
+                      {label === "Managing Organization" && value && (
                         <dd className="ctw-flex-grow">{value}</dd>
-                      )} */}
+                      )}
                     </div>
                   );
                 }
@@ -46,20 +47,25 @@ export const CollapsibleDataList = ({ entry }) => {
           <div className="ctw-divide-y ctw-rounded-lg ctw-border">
             <dl className="ctw-space-y-2 ctw-p-4" key={entry.id}>
               {entry.detailData.map(({ label, value }) => {
-                if (value) {
-                  return (
-                    <div
-                      // label is not guarenteed to be unique so append index.
-                      // eslint-disable-next-line react/no-array-index-key
-                      key={label + Math.random}
-                      className="ctw-text-gray-900 ctw-flex ctw-items-baseline ctw-space-x-4"
-                    >
-                      <dt className="ctw-w-1/3 ctw-flex-shrink-0 ctw-font-medium">
-                        {label}
-                      </dt>
-                      <dd className="ctw-flex-grow">{value}</dd>
-                    </div>
-                  );
+                if (label) {
+                  if (label === "Code") {
+                    return <CodeListElement label={label} value={value} />;
+                  }
+                  if (label !== "Code(s)" && value) {
+                    return (
+                      <div
+                        // label is not guarenteed to be unique so append index.
+                        // eslint-disable-next-line react/no-array-index-key
+                        key={label + Math.random}
+                        className="ctw-text-gray-900 ctw-flex ctw-items-baseline ctw-space-x-4"
+                      >
+                        <dt className="ctw-w-1/3 ctw-flex-shrink-0 ctw-font-medium">
+                          {label}
+                        </dt>
+                        <dd className="ctw-flex-grow">{value}</dd>
+                      </div>
+                    );
+                  }
                 }
                 return <div />;
               })}
