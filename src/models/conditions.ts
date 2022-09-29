@@ -78,16 +78,16 @@ export class ConditionModel {
     );
   }
 
-  get icd9Code(): string | undefined {
-    return findCoding(SYSTEM_ICD9, this.resource.code)?.code;
+  get icd9CMCoding(): fhir4.Coding | undefined {
+    return findCoding(SYSTEM_ICD9_CM, this.resource.code);
   }
 
-  get icd9CMCode(): string | undefined {
-    return findCoding(SYSTEM_ICD9_CM, this.resource.code)?.code;
+  get icd9Coding(): fhir4.Coding | undefined {
+    return findCoding(SYSTEM_ICD9, this.resource.code);
   }
 
-  get icd10CMCode(): string | undefined {
-    return findCoding(SYSTEM_ICD10_CM, this.resource.code)?.code;
+  get icd10CMCoding(): fhir4.Coding | undefined {
+    return findCoding(SYSTEM_ICD10_CM, this.resource.code);
   }
 
   get icd10Coding(): fhir4.Coding | undefined {
@@ -95,10 +95,6 @@ export class ConditionModel {
   }
 
   get icd10Code(): string | undefined {
-    console.log(
-      "findCoding(SYSTEM_ICD10, this.resource.code)",
-      findCoding(SYSTEM_ICD10, this.resource.code)
-    );
     return findCoding(SYSTEM_ICD10, this.resource.code)?.code;
   }
 
@@ -158,6 +154,10 @@ export class ConditionModel {
 
   get severity(): string {
     return codeableConceptLabel(this.resource.severity);
+  }
+
+  get snomedCoding(): fhir4.Coding | undefined {
+    return findCoding(SYSTEM_SNOMED, this.resource.code);
   }
 
   get snomedCode(): string | undefined {

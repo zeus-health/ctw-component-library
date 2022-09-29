@@ -11,11 +11,11 @@ import {
 import { getFhirClientFromQuery } from "./utils";
 
 export const ACCEPTABLE_CODES: (keyof ConditionModel)[] = [
-  "snomedCode",
-  "icd10Code",
-  "icd10CMCode",
-  "icd9Code",
-  "icd9CMCode",
+  "snomedCoding",
+  "icd10Coding",
+  "icd10CMCoding",
+  "icd9Coding",
+  "icd9CMCoding",
 ];
 
 export type ClinicalStatus =
@@ -32,7 +32,19 @@ export type ConditionFilters = {
 
 export type QueryKeyConfirmedConditions = [string, string, ConditionFilters];
 export type QueryKeyLensConditions = [string, string];
-export type QueryKeyConditionHistory = [string, string, Record<string, string>];
+export type QueryKeyConditionHistory = [string, string, string[]];
+
+export const getConditionFilterTokens = (condition: ConditionModel) => {
+  const tokens: string[] = [];
+  ACCEPTABLE_CODES.forEach((code) => {
+    if (condition[code]) {
+      const coding = condition[code] as fhir4.Coding;
+      tokens.push(`${coding.system}|${coding.code}`);
+    }
+  });
+
+  return tokens;
+};
 
 export async function getConfirmedConditions(
   queryParams: QueryFunctionContext<QueryKeyConfirmedConditions>
@@ -85,7 +97,7 @@ export async function getConditionHistory(
   try {
     const { meta, queryKey } = queryParams;
     const fhirClient = getFhirClientFromQuery(meta);
-    const [_, patientUPID, searchParams] = queryKey;
+    const [_, patientUPID, tokens] = queryKey;
 
     const { resources: conditions } = await searchCommonRecords(
       "Condition",
@@ -93,10 +105,9 @@ export async function getConditionHistory(
       {
         patientUPID,
         _include: ["Condition:patient", "Condition:encounter"],
-        ...searchParams,
+        code: tokens.join(","),
       }
     );
-    console.log("conditions", conditions);
 
     return conditions;
   } catch (e) {
