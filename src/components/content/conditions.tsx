@@ -4,7 +4,6 @@ import {
 } from "@/components/content/forms/condition-helpers";
 import {
   ConditionFilters,
-  createConditionCodeDict,
   filterDuplicateCodesFromTarget,
   getConfirmedConditions,
   getLensConditions,
@@ -15,6 +14,7 @@ import { ConditionModel } from "@/models/conditions";
 import { PatientModel } from "@/models/patients";
 import { useQuery } from "@tanstack/react-query";
 import cx from "classnames";
+import { union } from "lodash";
 import { useEffect, useRef, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
 import { usePatient } from "../core/patient-provider";
@@ -133,9 +133,15 @@ export function Conditions({ className }: ConditionsProps) {
         setConfirmed(confirmedResponse.data.map((c) => new ConditionModel(c)));
 
         if (notReviewedResponse.data) {
+          const confirmedCodes = union(
+            ...confirmedResponse.data.map(
+              (c) => new ConditionModel(c).availableCodes
+            )
+          );
+
           const notReviewedFiltered = filterDuplicateCodesFromTarget(
             notReviewedResponse.data,
-            createConditionCodeDict(confirmedResponse.data)
+            confirmedCodes
           );
 
           setNotReviewed(notReviewedFiltered.map((c) => new ConditionModel(c)));

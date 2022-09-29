@@ -9,17 +9,21 @@ import {
   searchCommonRecords,
   searchLensRecords,
 } from "./search-helpers";
+import {
+  SYSTEM_ICD10,
+  SYSTEM_ICD10_CM,
+  SYSTEM_ICD9,
+  SYSTEM_SNOMED,
+} from "./system-urls";
 import { getFhirClientFromQuery } from "./utils";
 
-export const ACCEPTABLE_CODES: (keyof ConditionModel)[] = [
-  "snomedCode",
-  "icd10Code",
-  "icd10CMCode",
-  "icd9Code",
-  "icd9CMCode",
+export const CONDITION_CODE_SYSTEMS = [
+  SYSTEM_ICD10,
+  SYSTEM_ICD10_CM,
+  SYSTEM_ICD9,
+  SYSTEM_ICD10_CM,
+  SYSTEM_SNOMED,
 ];
-
-export type ConfirmedCodes = { [key: string]: string[] };
 
 export type ClinicalStatus =
   | "active"
@@ -109,35 +113,18 @@ function filterAndSort(conditions: fhir4.Condition[]) {
   );
 }
 
-export const createConditionCodeDict = (data: fhir4.Condition[]) => {
-  const confirmedCodeDict: ConfirmedCodes = {};
-
-  data.forEach((condition) => {
-    const conditionModel = new ConditionModel(condition);
-    ACCEPTABLE_CODES.forEach((code) => {
-      if (!(code in confirmedCodeDict)) {
-        confirmedCodeDict[code] = [];
-      }
-      if (typeof conditionModel[code] === "string") {
-        confirmedCodeDict[code].push(conditionModel[code] as string);
-      }
-    });
-  });
-
-  return confirmedCodeDict;
-};
-
 export const filterDuplicateCodesFromTarget = (
   target: fhir4.Condition[],
-  codesLookup: ConfirmedCodes
+  confirmedCodes: fhir4.Coding[]
 ) =>
   target.filter((c) => {
-    const isDuplicate = ACCEPTABLE_CODES.some((code) => {
-      const conditionModel = new ConditionModel(c);
-      if (conditionModel[code]) {
-        return codesLookup[code].includes(conditionModel[code] as string);
-      }
-      return false;
-    });
-    return !isDuplicate;
+    const conditionModel = new ConditionModel(c);
+
+    return !confirmedCodes.some((code) =>
+      conditionModel.availableCodes.some(
+        (availableCode) =>
+          availableCode.code === code.code &&
+          availableCode.system === code.system
+      )
+    );
   });
