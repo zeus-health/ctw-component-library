@@ -2,9 +2,12 @@ import Client, { SearchParams } from "fhir-kit-client";
 import { find, mapValues } from "lodash";
 
 import { getResources } from "./bundle";
+import { getJWT } from "./client";
 import {
   SYSTEM_SUMMARY,
+  SYSTEM_ZUS_BUILDER_ID,
   SYSTEM_ZUS_LENS,
+  SYSTEM_ZUS_OWNER,
   SYSTEM_ZUS_THIRD_PARTY,
   SYSTEM_ZUS_UNIVERSAL_ID,
 } from "./system-urls";
@@ -60,17 +63,17 @@ export async function searchAllRecords<T extends ResourceTypeString>(
   return { bundle, total: bundle.total ?? 0, resources };
 }
 
-// Like searchAllRecords, but filters out lens & third party resources.
+// Like searchAllRecords, but only for resources from this builder.
 export async function searchBuilderRecords<T extends ResourceTypeString>(
   resourceType: T,
   fhirClient: Client,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
-  const nonBuilderTags = [...THIRD_PARTY_TAGS, ...LENS_TAGS];
-
+  const jwt = getJWT(fhirClient);
+  const builderTag = `${SYSTEM_ZUS_OWNER}|builder/${jwt[SYSTEM_ZUS_BUILDER_ID]}`;
   return searchAllRecords(resourceType, fhirClient, {
     ...searchParams,
-    "_tag:not": nonBuilderTags.join(","),
+    _tag: builderTag,
   });
 }
 

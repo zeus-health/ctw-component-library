@@ -24,7 +24,9 @@ export const SYSTEM_SUMMARY = "https://zusapi.com/summary";
 export const SYSTEM_TASK_STATUS =
   "https://www.hl7.org/fhir/codesystem-task-status.html";
 
+export const SYSTEM_ZUS_BUILDER_ID = "https://zusapi.com/builder_id";
 export const SYSTEM_ZUS_LENS = "https://zusapi.com/lens";
+export const SYSTEM_ZUS_OWNER = "https://zusapi.com/accesscontrol/owner";
 export const SYSTEM_ZUS_THIRD_PARTY = "https://zusapi.com/thirdparty/source";
 export const SYSTEM_ZUS_UNIVERSAL_ID =
   "https://zusapi.com/fhir/identifier/universal-id";
