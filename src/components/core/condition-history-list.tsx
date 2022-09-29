@@ -41,7 +41,6 @@ export const ConditionHistoryList = ({
           </button>
         </div>
       )}
-      ;
     </>
   );
 };

@@ -58,6 +58,7 @@ export const CollapsibleDataList = ({ entry }) => {
         <div className="ctw-space-y-4 ctw-bg-bg-lighter">
           <div className="ctw-divide-y ctw-rounded-lg ctw-border">
             <dl className="ctw-space-y-2 ctw-p-4" key={entry.id}>
+              <div> Details </div>
               {entry.detailData.map(({ label, value }) => {
                 if (label) {
                   if (label === "Code") {
