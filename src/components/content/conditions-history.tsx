@@ -58,16 +58,18 @@ export function ConditionHistory({
     function setupData(condition: ConditionModel): DataListStackEntry {
       const previewData = [
         {
-          label: "Recorded Date",
-          value: condition.recordedDate,
-        },
-        {
           label: "SNOMED Display",
           value: condition.snomedDisplay,
         },
         {
           label: "Managing Organization",
           value: condition.patient?.organization?.name,
+        },
+      ];
+      const dateData = [
+        {
+          label: "Recorded Date",
+          value: condition.recordedDate,
         },
       ];
       const detailData = [
@@ -108,6 +110,7 @@ export function ConditionHistory({
       return {
         id: condition.id,
         detailData: [...detailData],
+        dateData: [...dateData],
         previewData: [...previewData],
       };
     }

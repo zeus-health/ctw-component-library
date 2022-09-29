@@ -6,6 +6,7 @@ export type DataListStackEntry = {
   id: string;
   detailData: DataListEntry[];
   previewData: DataListEntry[];
+  dateData: DataListEntry[];
 };
 export type DataListStackEntries = DataListStackEntry[];
 

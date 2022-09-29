@@ -28,10 +28,10 @@ export function ConditionHistoryDrawer({
       isOpen={isOpen}
       onClose={onClose}
     >
-      <div className="ctw-flex ctw-p-6 ctw-text-2xl ctw-text-black">
+      <div className="ctw-pad-0 ctw-flex ctw-space-x-10 ctw-space-y-10 ctw-text-2xl ctw-text-black">
         {condition?.display} ({condition?.snomedCode})
       </div>
-      <div className="ctw-flex ctw-p-6 ctw-text-sm ctw-text-black">
+      <div className="ctw-flex ctw-p-0 ctw-text-sm ctw-text-black">
         {condition?.ccsGrouping}
       </div>
 
