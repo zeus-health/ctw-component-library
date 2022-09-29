@@ -26,6 +26,8 @@ const LENS_TAGS = [
   `${SYSTEM_SUMMARY}|Common`,
 ];
 
+const SUMMARY_TAGS = [`${SYSTEM_SUMMARY}|Common`];
+
 export type SearchReturn<T extends ResourceTypeString> = {
   bundle: fhir4.Bundle;
   total: number;
@@ -82,7 +84,7 @@ export async function searchLensRecords<T extends ResourceTypeString>(
 ): Promise<SearchReturn<T>> {
   return searchAllRecords(resourceType, fhirClient, {
     ...searchParams,
-    _tag: LENS_TAGS.join(","),
+    _tag: [...LENS_TAGS, ...SUMMARY_TAGS].join(","),
   });
 }
 

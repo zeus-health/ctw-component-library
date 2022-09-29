@@ -4,7 +4,7 @@ import { ConditionHistory } from "./conditions-history";
 
 export type ConditionHistoryDrawerProps = {
   className?: string;
-  condition?: ConditionModel;
+  condition: ConditionModel;
   isOpen: boolean;
   onClose: () => void;
 };
@@ -15,11 +15,8 @@ export function ConditionHistoryDrawer({
   isOpen,
   onClose,
 }: ConditionHistoryDrawerProps) {
-  const data = ConditionHistory({
-    icd10Code: condition?.icd10Code,
-    snomedCode: condition?.snomedCode,
-  });
-  const conditionName = condition?.display;
+  const data = ConditionHistory({ condition });
+  const conditionName = condition.display;
   const title = "Condition History";
 
   return (

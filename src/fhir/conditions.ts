@@ -1,6 +1,5 @@
 import { ConditionModel } from "@/models/conditions";
 import { QueryFunctionContext } from "@tanstack/react-query";
-import Client from "fhir-kit-client";
 import { sortBy } from "lodash";
 
 import {
@@ -10,6 +9,14 @@ import {
   searchLensRecords,
 } from "./search-helpers";
 import { getFhirClientFromQuery } from "./utils";
+
+export const ACCEPTABLE_CODES: (keyof ConditionModel)[] = [
+  "snomedCode",
+  "icd10Code",
+  "icd10CMCode",
+  "icd9Code",
+  "icd9CMCode",
+];
 
 export type ClinicalStatus =
   | "active"
@@ -25,6 +32,7 @@ export type ConditionFilters = {
 
 export type QueryKeyConfirmedConditions = [string, string, ConditionFilters];
 export type QueryKeyLensConditions = [string, string];
+export type QueryKeyConditionHistory = [string, string, Record<string, string>];
 
 export async function getConfirmedConditions(
   queryParams: QueryFunctionContext<QueryKeyConfirmedConditions>
@@ -72,18 +80,24 @@ export async function getLensConditions(
 }
 
 export async function getConditionHistory(
-  fhirClient: Client,
-  patientUPID: string
+  queryParams: QueryFunctionContext<QueryKeyConditionHistory>
 ) {
   try {
+    const { meta, queryKey } = queryParams;
+    const fhirClient = getFhirClientFromQuery(meta);
+    const [_, patientUPID, searchParams] = queryKey;
+
     const { resources: conditions } = await searchCommonRecords(
       "Condition",
       fhirClient,
       {
         patientUPID,
         _include: ["Condition:patient", "Condition:encounter"],
+        ...searchParams,
       }
     );
+    console.log("conditions", conditions);
+
     return conditions;
   } catch (e) {
     throw new Error(
