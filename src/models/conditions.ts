@@ -2,14 +2,7 @@ import { CONDITION_CODE_SYSTEMS } from "@/fhir/conditions";
 import { compact } from "lodash";
 import { codeableConceptLabel, findCoding } from "../fhir/codeable-concept";
 import { formatDateISOToLocal } from "../fhir/formatters";
-import {
-  SYSTEM_CCS,
-  SYSTEM_ICD10,
-  SYSTEM_ICD10_CM,
-  SYSTEM_ICD9,
-  SYSTEM_ICD9_CM,
-  SYSTEM_SNOMED,
-} from "../fhir/system-urls";
+import { SYSTEM_CCS, SYSTEM_ICD10, SYSTEM_SNOMED } from "../fhir/system-urls";
 
 export class ConditionModel {
   public resource: fhir4.Condition;
@@ -88,22 +81,6 @@ export class ConditionModel {
     );
   }
 
-  get icd9CMCoding(): fhir4.Coding | undefined {
-    return findCoding(SYSTEM_ICD9_CM, this.resource.code);
-  }
-
-  get icd9Coding(): fhir4.Coding | undefined {
-    return findCoding(SYSTEM_ICD9, this.resource.code);
-  }
-
-  get icd10CMCoding(): fhir4.Coding | undefined {
-    return findCoding(SYSTEM_ICD10_CM, this.resource.code);
-  }
-
-  get icd10Coding(): fhir4.Coding | undefined {
-    return findCoding(SYSTEM_ICD10, this.resource.code);
-  }
-
   get icd10Code(): string | undefined {
     return findCoding(SYSTEM_ICD10, this.resource.code)?.code;
   }
@@ -164,10 +141,6 @@ export class ConditionModel {
 
   get severity(): string {
     return codeableConceptLabel(this.resource.severity);
-  }
-
-  get snomedCoding(): fhir4.Coding | undefined {
-    return findCoding(SYSTEM_SNOMED, this.resource.code);
   }
 
   get snomedCode(): string | undefined {
