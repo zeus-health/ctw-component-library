@@ -1,11 +1,11 @@
 import {
   getAddConditionData,
-  getEditingConfirmedConditionData,
+  getEditingPatientConditionData,
 } from "@/components/content/forms/condition-helpers";
 import {
   ConditionFilters,
-  getConfirmedConditions,
-  getLensConditions,
+  getOtherProviderConditions,
+  getPatientConditions,
 } from "@/fhir/conditions";
 import { useFhirClientRef } from "@/fhir/utils";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
@@ -39,12 +39,17 @@ export function Conditions({ className }: ConditionsProps) {
   const breakpoints = useBreakpoints(containerRef);
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
   const [historyDrawerIsOpen, setHistoryDrawerIsOpen] = useState(false);
-  const [confirmed, setConfirmed] = useState<ConditionModel[]>([]);
-  const [confirmedMessage, setConfirmedMessage] = useState(EMPTY_MESSAGE);
-  const [confirmedIsLoading, setConfirmedIsLoading] = useState(true);
-  const [notReviewed, setNotReviewed] = useState<ConditionModel[]>([]);
-  const [notReviewedIsLoading, setNotReviewedIsLoading] = useState(true);
-  const [notReviewedMessage, setNotReviewedMessage] = useState(EMPTY_MESSAGE);
+  const [patientRecord, setPatientRecord] = useState<ConditionModel[]>([]);
+  const [patientRecordMessage, setPatientRecordMessage] =
+    useState(EMPTY_MESSAGE);
+  const [patientRecordIsLoading, setPatientRecordIsLoading] = useState(true);
+  const [OtherProviderRecords, setOtherProviderRecords] = useState<
+    ConditionModel[]
+  >([]);
+  const [OtherProviderRecordsIsLoading, setOtherProviderRecordsIsLoading] =
+    useState(true);
+  const [OtherProviderRecordsMessage, setOtherProviderRecordsMessage] =
+    useState(EMPTY_MESSAGE);
   const [includeInactive, setIncludeInactive] = useState(true);
   const [patient, setPatient] = useState<PatientModel>();
   const [formAction, setFormAction] = useState("");
@@ -55,18 +60,18 @@ export function Conditions({ className }: ConditionsProps) {
     useState<FormEntry[]>();
   const [conditionForHistory, setConditionForHistory] =
     useState<ConditionModel>();
-  const confirmedResponse = useQuery(
+  const patientRecordResponse = useQuery(
     ["conditions", patientUPID, conditionFilter],
-    getConfirmedConditions,
+    getPatientConditions,
     {
       enabled: !!patientUPID && !!fhirClientRef,
       meta: { fhirClientRef },
     }
   );
 
-  const notReviewedResponse = useQuery(
+  const OtherProviderRecordsResponse = useQuery(
     ["conditions", patientUPID],
-    getLensConditions,
+    getOtherProviderConditions,
     {
       enabled: !!patientUPID && !!fhirClientRef,
       meta: { fhirClientRef },
@@ -81,11 +86,11 @@ export function Conditions({ className }: ConditionsProps) {
     if (patient) {
       setDrawerIsOpen(true);
       setFormAction("Edit");
-      setCurrentlySelectedData(getEditingConfirmedConditionData({ condition }));
+      setCurrentlySelectedData(getEditingPatientConditionData({ condition }));
     }
   };
 
-  const handleNotReviewedCondition = (condition: ConditionModel) => {
+  const handleOtherProviderRecordsCondition = (condition: ConditionModel) => {
     if (patient) {
       setDrawerIsOpen(true);
       setFormAction("Add");
@@ -123,35 +128,42 @@ export function Conditions({ className }: ConditionsProps) {
         setPatientUPID(patient.UPID);
       }
 
-      /* notReviewedConditons depends confirmedConditions so that we can correctly filter out 
-         conditions that appear in confirmedConditions from notReviewedConditons */
-      if (confirmedResponse.data) {
-        setNotReviewedIsLoading(false);
-        setConfirmedIsLoading(false);
-        setConfirmed(confirmedResponse.data.map((c) => new ConditionModel(c)));
+      /* OtherProviderRecordsConditons depends patientRecordConditions so that we can correctly filter out 
+         conditions that appear in patientRecordConditions from OtherProviderRecordsConditons */
+      if (patientRecordResponse.data) {
+        setOtherProviderRecordsIsLoading(false);
+        setPatientRecordIsLoading(false);
+        setPatientRecord(
+          patientRecordResponse.data.map((c) => new ConditionModel(c))
+        );
 
-        const ICD10ConfirmedCodes = confirmedResponse.data.map(
+        const ICD10patientRecordCodes = patientRecordResponse.data.map(
           (c) => new ConditionModel(c).icd10Code
         );
 
-        if (notReviewedResponse.data) {
-          const notReviewedFiltered = notReviewedResponse.data.filter(
-            (c) =>
-              !ICD10ConfirmedCodes.includes(new ConditionModel(c).icd10Code)
-          );
+        if (OtherProviderRecordsResponse.data) {
+          const OtherProviderRecordsFiltered =
+            OtherProviderRecordsResponse.data.filter(
+              (c) =>
+                !ICD10patientRecordCodes.includes(
+                  new ConditionModel(c).icd10Code
+                )
+            );
 
-          setNotReviewed(notReviewedFiltered.map((c) => new ConditionModel(c)));
+          setOtherProviderRecords(
+            OtherProviderRecordsFiltered.map((c) => new ConditionModel(c))
+          );
         } else {
-          setNotReviewed([]);
-          setNotReviewedMessage(ERROR_MSG);
+          setOtherProviderRecords([]);
+          setOtherProviderRecordsMessage(ERROR_MSG);
         }
       }
 
-      if (confirmedResponse.error) {
-        setConfirmed([]);
-        setConfirmedMessage(ERROR_MSG);
-        setNotReviewed([]);
-        setNotReviewedMessage(ERROR_MSG);
+      if (patientRecordResponse.error) {
+        setPatientRecord([]);
+        setPatientRecordMessage(ERROR_MSG);
+        setOtherProviderRecords([]);
+        setOtherProviderRecordsMessage(ERROR_MSG);
       }
     }
     load();
@@ -159,9 +171,9 @@ export function Conditions({ className }: ConditionsProps) {
     includeInactive,
     patientPromise,
     patient,
-    confirmedResponse.data,
-    notReviewedResponse.data,
-    confirmedResponse.error,
+    patientRecordResponse.data,
+    OtherProviderRecordsResponse.data,
+    patientRecordResponse.error,
     getCTWFhirClient,
   ]);
 
@@ -186,7 +198,7 @@ export function Conditions({ className }: ConditionsProps) {
       <div className="ctw-conditions-body">
         <div className="ctw-space-y-3">
           <div className="ctw-conditions-title-container">
-            <div className="ctw-title">Confirmed</div>
+            <div className="ctw-title">Patient Record</div>
             <ToggleControl
               onFormChange={handleFormChange}
               toggleProps={{ name: "conditions", text: "Include Inactive" }}
@@ -196,9 +208,9 @@ export function Conditions({ className }: ConditionsProps) {
           <ConditionsTableBase
             className="ctw-conditions-table"
             stacked={breakpoints.sm}
-            conditions={confirmed}
-            isLoading={confirmedIsLoading}
-            message={confirmedMessage}
+            conditions={patientRecord}
+            isLoading={patientRecordIsLoading}
+            message={patientRecordMessage}
             rowActions={(condition) => [
               {
                 name: "Edit",
@@ -219,19 +231,19 @@ export function Conditions({ className }: ConditionsProps) {
 
         <div className="ctw-space-y-3">
           <div className="ctw-conditions-title-container">
-            <div className="ctw-title">Not Reviewed</div>
+            <div className="ctw-title">Other Provider Records</div>
           </div>
           <ConditionsTableBase
             className="ctw-conditions-not-reviewed"
             stacked={breakpoints.sm}
-            conditions={notReviewed}
-            isLoading={notReviewedIsLoading}
-            message={notReviewedMessage}
+            conditions={OtherProviderRecords}
+            isLoading={OtherProviderRecordsIsLoading}
+            message={OtherProviderRecordsMessage}
             rowActions={(condition) => [
               {
                 name: "Add",
                 action: () => {
-                  handleNotReviewedCondition(condition);
+                  handleOtherProviderRecordsCondition(condition);
                 },
               },
               {
