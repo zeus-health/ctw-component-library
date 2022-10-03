@@ -9,29 +9,31 @@ export function getFhirClient(env: Env, accessToken: string) {
       ? `https://api.zusapi.com/fhir`
       : `https://api.${env}.zusapi.com/fhir`;
 
-  const client = new Client({
+  return new Client({
     baseUrl: url,
     bearerToken: accessToken,
     customHeaders: {
       "User-Agent": "zus_ctw_component_library fhirclient",
     },
   });
-
-  return client;
 }
+
+export type ClientAuth = {
+  httpClient: {
+    authHeader: { authorization: string };
+  };
+} & Client;
 
 export type ZusJWT = {
   SYSTEM_ZUS_BUILDER_ID: string;
   // We only use the above properties. Others can be any key with any type.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
+  [key: string]: string | string[];
 };
 
 export function getJWT(fhirClient: Client): ZusJWT {
-  // To access an unexposed property, cast as any.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const authHeader = (fhirClient as any).httpClient.authHeader
-    .authorization as string;
+  // Cast to access an unexposed property.
+  const authHeader = (fhirClient as ClientAuth).httpClient.authHeader
+    .authorization;
   const bearerToken = authHeader.substring(7);
   // Cast because a decoded JWT is an unknown.
   const jwt = jwt_decode(bearerToken) as ZusJWT;

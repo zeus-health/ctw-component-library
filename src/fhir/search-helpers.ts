@@ -69,11 +69,13 @@ export async function searchBuilderRecords<T extends ResourceTypeString>(
   fhirClient: Client,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
+  const nonBuilderTags = [...THIRD_PARTY_TAGS, ...LENS_TAGS];
   const jwt = getJWT(fhirClient);
   const builderTag = `${SYSTEM_ZUS_OWNER}|builder/${jwt[SYSTEM_ZUS_BUILDER_ID]}`;
   return searchAllRecords(resourceType, fhirClient, {
     ...searchParams,
     _tag: builderTag,
+    "_tag:not": nonBuilderTags.join(","),
   });
 }
 
