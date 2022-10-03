@@ -37,15 +37,15 @@ export type ConditionFilters = {
   "clinical-status"?: ClinicalStatus | ClinicalStatus[];
 };
 
-export type QueryKeyConfirmedConditions = [string, string, ConditionFilters];
-export type QueryKeyLensConditions = [string, string];
 export type QueryKeyConditionHistory = [string, string, string[]];
+export type QueryKeyPatientConditions = [string, string, ConditionFilters];
+export type QueryKeyOtherProviderConditions = [string, string];
 
 export const getConditionFilterTokens = (condition: ConditionModel) =>
   condition.knownCodings.map((coding) => `${coding.system}|${coding.code}`);
 
-export async function getConfirmedConditions(
-  queryParams: QueryFunctionContext<QueryKeyConfirmedConditions>
+export async function getPatientConditions(
+  queryParams: QueryFunctionContext<QueryKeyPatientConditions>
 ) {
   const { meta, queryKey } = queryParams;
 
@@ -68,8 +68,8 @@ export async function getConfirmedConditions(
   }
 }
 
-export async function getLensConditions(
-  queryParams: QueryFunctionContext<QueryKeyLensConditions>
+export async function getOtherProviderConditions(
+  queryParams: QueryFunctionContext<QueryKeyOtherProviderConditions>
 ) {
   const { meta, queryKey } = queryParams;
   const fhirClient = getFhirClientFromQuery(meta);

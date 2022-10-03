@@ -26,7 +26,7 @@ export const getAddConditionData = ({
   ...sharedFields(condition),
 ];
 
-export const getEditingConfirmedConditionData = ({
+export const getEditingPatientConditionData = ({
   condition,
 }: {
   condition: ConditionModel;
