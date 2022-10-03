@@ -28,7 +28,7 @@ export type ZusJWT = {
   [key: string]: string | string[];
 };
 
-export function getJWT(fhirClient: Client): ZusJWT {
+export function getClaims(fhirClient: Client): ZusJWT {
   // Cast to access an unexposed property.
   const authHeader = (fhirClient as ClientAuth).httpClient.authHeader
     .authorization;

@@ -2,7 +2,7 @@ import Client, { SearchParams } from "fhir-kit-client";
 import { find, mapValues } from "lodash";
 
 import { getResources } from "./bundle";
-import { getJWT } from "./client";
+import { getClaims } from "./client";
 import {
   SYSTEM_SUMMARY,
   SYSTEM_ZUS_BUILDER_ID,
@@ -70,7 +70,7 @@ export async function searchBuilderRecords<T extends ResourceTypeString>(
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
   const nonBuilderTags = [...THIRD_PARTY_TAGS, ...LENS_TAGS];
-  const jwt = getJWT(fhirClient);
+  const jwt = getClaims(fhirClient);
   const builderTag = `${SYSTEM_ZUS_OWNER}|builder/${jwt[SYSTEM_ZUS_BUILDER_ID]}`;
   return searchAllRecords(resourceType, fhirClient, {
     ...searchParams,
