@@ -15,13 +15,13 @@ export const CollapsibleDataList = ({
   return (
     <div className="ctw-divide-gray-200 ctw-sbg-white ctw-divide-y ctw-p-0">
       <DetailSummary
-        date
-        title
-        subTitle
+        date={date}
+        title={title}
+        subTitle={subTitle}
         isDetailShown={isDetailShown}
         setIsDetailShown={setIsDetailShown}
       />
-      {isDetailShown && <Details id data />}
+      {isDetailShown && <Details id={id} data={data} />}
     </div>
   );
 };
@@ -54,6 +54,7 @@ const Details = ({ id, data }: any) => (
   <div className="ctw-divide-y ctw-rounded-lg ctw-border">
     <dl className="ctw-space-y-2 ctw-p-4" key={id}>
       <div> Details </div>
+      {console.log(typeof data)}
       {data.map(({ label, value }) => {
         if (value) {
           return (
