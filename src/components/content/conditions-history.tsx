@@ -2,6 +2,7 @@ import { getIncludedResources } from "@/fhir/bundle";
 import { getConditionHistory } from "@/fhir/conditions";
 import { ConditionModel } from "@/models/conditions";
 import { useEffect, useState } from "react";
+import { CodeList } from "../core/code-list";
 import {
   ConditionHistoryList,
   DataListStackEntries,
@@ -56,22 +57,6 @@ export function ConditionHistory({
     load();
 
     function setupData(condition: ConditionModel): DataListStackEntry {
-      const previewData = [
-        {
-          label: "SNOMED Display",
-          value: condition.snomedDisplay,
-        },
-        {
-          label: "Managing Organization",
-          value: condition.patient?.organization?.name,
-        },
-      ];
-      const dateData = [
-        {
-          label: "Recorded Date",
-          value: condition.recordedDate,
-        },
-      ];
       const detailData = [
         {
           label: "Clinical Status",
@@ -91,7 +76,7 @@ export function ConditionHistory({
         },
         {
           label: "Code",
-          value: getAllCodes(condition),
+          value: <CodeList codes={getAllCodes(condition)} />,
         },
         {
           label: "Onset Date",
@@ -109,9 +94,12 @@ export function ConditionHistory({
 
       return {
         id: condition.id,
-        detailData: [...detailData],
-        dateData: [...dateData],
-        previewData: [...previewData],
+        code: condition.snomedCode,
+        ccs: condition.ccsGrouping,
+        date: condition.recordedDate,
+        title: condition.snomedDisplay || condition.icd10Display,
+        subTitle: condition.patient?.organization?.name,
+        data: [...detailData],
       };
     }
 

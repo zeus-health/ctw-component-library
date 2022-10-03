@@ -15,10 +15,6 @@ export function ConditionHistoryDrawer({
   isOpen,
   onClose,
 }: ConditionHistoryDrawerProps) {
-  const conditionElements = ConditionHistory({
-    icd10Code: condition?.icd10Code,
-    snomedCode: condition?.snomedCode,
-  });
   const title = "Condition History";
 
   return (
@@ -28,14 +24,12 @@ export function ConditionHistoryDrawer({
       isOpen={isOpen}
       onClose={onClose}
     >
-      <div className="ctw-pad-0 ctw-flex ctw-space-x-10 ctw-space-y-10 ctw-text-2xl ctw-text-black">
-        {condition?.display} ({condition?.snomedCode})
-      </div>
-      <div className="ctw-flex ctw-p-0 ctw-text-sm ctw-text-black">
-        {condition?.ccsGrouping}
-      </div>
-
-      <Drawer.Body>{conditionElements}</Drawer.Body>
+      <Drawer.Body>
+        {ConditionHistory({
+          icd10Code: condition?.icd10Code,
+          snomedCode: condition?.snomedCode,
+        })}
+      </Drawer.Body>
       <Drawer.Footer>
         <div className="ctw-flex ctw-justify-end ctw-space-x-3 ctw-text-black ">
           <button

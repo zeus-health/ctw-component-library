@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { CollapsibleDataList } from "./collapsible-data-list";
-import { DataListEntry } from "./data-list";
 
 export type DataListStackEntry = {
   id: string;
-  detailData: DataListEntry[];
-  previewData: DataListEntry[];
-  dateData: DataListEntry[];
+  code?: string;
+  ccs?: string;
+  date?: string;
+  title?: string;
+  subTitle?: string;
+  data: Record<string, ReactNode>[];
 };
+
 export type DataListStackEntries = DataListStackEntry[];
 
 export type CollapsibleListProp = {
@@ -28,7 +31,19 @@ export const ConditionHistoryList = ({
     <>
       {entries.map((entry) => (
         <>
-          <CollapsibleDataList entry={entry} />
+          <div className="ctw-pad-6 ctw-flex ctw-space-x-10 ctw-space-y-10 ctw-text-2xl ctw-text-black">
+            {entry.title} ({entry.code})
+          </div>
+          <div className="ctw-flex ctw-p-0 ctw-text-sm ctw-text-black">
+            {entry.ccs}
+          </div>
+          <CollapsibleDataList
+            id={entry.id}
+            date={entry.date}
+            title={entry.title}
+            subTitle={entry.subTitle}
+            data={entry.data}
+          />
         </>
       ))}
       {!showAll && limit && entries.length > limit && (
