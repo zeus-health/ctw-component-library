@@ -18,13 +18,13 @@ export function getFhirClient(env: Env, accessToken: string) {
   });
 }
 
-export type ClientAuth = {
+type ClientAuth = {
   httpClient: {
     authHeader: { authorization: string };
   };
 } & Client;
 
-export type ZusJWT = {
+type ZusJWT = {
   [key: string]: string | string[];
 };
 
