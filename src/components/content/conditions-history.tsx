@@ -123,7 +123,6 @@ export function ConditionHistory({
   if (conditions.length === 0 && !loading) {
     return <div>No history found.</div>;
   }
-  // move from here to drawer
   if (loading) {
     return (
       <div className="ctw-space-x-2">

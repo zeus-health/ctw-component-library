@@ -1,7 +1,7 @@
 import { ChevronRightIcon } from "@heroicons/react/outline";
 import cx from "classnames";
-import { useState } from "react";
-import { DataListStackEntry } from "./condition-history-list";
+import { ReactNode, useState } from "react";
+import type { DataListStackEntry } from "./condition-history-list";
 
 export const CollapsibleDataList = ({
   id,
@@ -32,27 +32,44 @@ const DetailSummary = ({
   subTitle,
   isDetailShown,
   setIsDetailShown,
-}: any) => (
+}: {
+  date?: string;
+  title?: string;
+  subTitle?: string;
+  isDetailShown: boolean;
+  setIsDetailShown: React.Dispatch<React.SetStateAction<boolean>>;
+}) => (
   <div className="ctw-flex ctw-justify-between ctw-divide-y ctw-bg-bg-lighter ctw-p-4">
     <div className="ctw-flex-column ctw-flex ctw-space-x-3">
       <div className="ctw-text-gray-900 ctw-flex ctw-items-baseline ctw-space-x-4">
         {date}
       </div>
       <div className="ctw-">
-        <div className="ctw-flex ctw-space-x-4">{title}</div>
+        <div className="ctw-flex ctw-space-x-4 ctw-text-primary-dark">
+          {title}
+        </div>
         <div>{subTitle}</div>
       </div>
     </div>
     <div className="ctw-justify-right ctw-flex">
       <ChevronRightIcon
-        className={cx("ctw-h-5 ctw-w-5", !isDetailShown ? "" : "ctw-rotate-90")}
+        className={cx(
+          "ctw-h-5 ctw-w-5 ctw-text-primary-dark",
+          !isDetailShown ? "" : "ctw-rotate-90"
+        )}
         onClick={() => setIsDetailShown(!isDetailShown)}
       />
     </div>
   </div>
 );
 
-const Details = ({ id, data }: any) => (
+const Details = ({
+  id,
+  data,
+}: {
+  id: string;
+  data: Record<string, ReactNode>[];
+}) => (
   <div className="ctw-divide-y ctw-rounded-lg ctw-border ctw-bg-bg-lighter">
     <dl className="ctw-space-y-2 ctw-p-4" key={id}>
       <div> Details </div>
@@ -62,7 +79,7 @@ const Details = ({ id, data }: any) => (
             <div
               // label is not guarenteed to be unique so append index.
               // eslint-disable-next-line react/no-array-index-key
-              key={label}
+              key={label?.toString()}
               className="ctw-text-gray-900 ctw-flex ctw-items-baseline ctw-space-x-4"
             >
               <dt className="ctw-w-1/3 ctw-flex-shrink-0 ctw-font-medium">

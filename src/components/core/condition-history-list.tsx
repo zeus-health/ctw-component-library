@@ -31,12 +31,6 @@ export const ConditionHistoryList = ({
     <>
       {entries.map((entry) => (
         <>
-          <div className="ctw-pad-6 ctw-flex ctw-space-x-10 ctw-space-y-10 ctw-text-2xl ctw-text-black">
-            {entry.title} ({entry.code})
-          </div>
-          <div className="ctw-flex ctw-p-0 ctw-text-sm ctw-text-black">
-            {entry.ccs}
-          </div>
           <div className="ctw-pad-2">
             <CollapsibleDataList
               id={entry.id}
