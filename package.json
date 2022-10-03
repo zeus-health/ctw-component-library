@@ -100,6 +100,7 @@
     "@tanstack/react-query": "^4.3.9",
     "date-fns": "^2.29.1",
     "fhir-kit-client": "^1.9.1",
+    "jwt-decode": "^3.1.2",
     "lodash": "^4.17.21",
     "zod": "^3.19.0"
   }
