@@ -26,8 +26,9 @@ const THIRD_PARTY_TAGS = [
 const LENS_TAGS = [
   `${SYSTEM_ZUS_LENS}|ActiveMedications`,
   `${SYSTEM_ZUS_LENS}|ChronicConditions`,
-  `${SYSTEM_SUMMARY}|Common`,
 ];
+
+const SUMMARY_TAGS = [`${SYSTEM_SUMMARY}|Common`];
 
 export type SearchReturn<T extends ResourceTypeString> = {
   bundle: fhir4.Bundle;
@@ -69,7 +70,7 @@ export async function searchBuilderRecords<T extends ResourceTypeString>(
   fhirClient: Client,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
-  const nonBuilderTags = [...THIRD_PARTY_TAGS, ...LENS_TAGS];
+  const nonBuilderTags = [...THIRD_PARTY_TAGS, ...LENS_TAGS, SUMMARY_TAGS];
   const jwt = getClaims(fhirClient);
   const builderTag = `${SYSTEM_ZUS_OWNER}|builder/${jwt[SYSTEM_ZUS_BUILDER_ID]}`;
   return searchAllRecords(resourceType, fhirClient, {
@@ -87,7 +88,7 @@ export async function searchLensRecords<T extends ResourceTypeString>(
 ): Promise<SearchReturn<T>> {
   return searchAllRecords(resourceType, fhirClient, {
     ...searchParams,
-    _tag: LENS_TAGS.join(","),
+    _tag: SUMMARY_TAGS.join(","),
   });
 }
 
