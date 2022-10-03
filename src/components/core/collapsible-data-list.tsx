@@ -38,7 +38,7 @@ const DetailSummary = ({
       <div className="ctw-text-gray-900 ctw-flex ctw-items-baseline ctw-space-x-4">
         {date}
       </div>
-      <div>{title}</div>
+      <div className="ctw-flex ctw-justify-between ctw-space-x-4">{title}</div>
       <div>{subTitle}</div>
     </div>
     <div className="ctw-justify-right ctw-flex">
@@ -51,10 +51,9 @@ const DetailSummary = ({
 );
 
 const Details = ({ id, data }: any) => (
-  <div className="ctw-divide-y ctw-rounded-lg ctw-border">
+  <div className="ctw-divide-y ctw-rounded-lg ctw-border ctw-bg-bg-lighter">
     <dl className="ctw-space-y-2 ctw-p-4" key={id}>
       <div> Details </div>
-      {console.log(typeof data)}
       {data.map(({ label, value }) => {
         if (value) {
           return (

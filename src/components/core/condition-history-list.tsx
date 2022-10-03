@@ -37,13 +37,15 @@ export const ConditionHistoryList = ({
           <div className="ctw-flex ctw-p-0 ctw-text-sm ctw-text-black">
             {entry.ccs}
           </div>
-          <CollapsibleDataList
-            id={entry.id}
-            date={entry.date}
-            title={entry.title}
-            subTitle={entry.subTitle}
-            data={entry.data}
-          />
+          <div className="ctw-pad-2">
+            <CollapsibleDataList
+              id={entry.id}
+              date={entry.date}
+              title={entry.title}
+              subTitle={entry.subTitle}
+              data={entry.data}
+            />
+          </div>
         </>
       ))}
       {!showAll && limit && entries.length > limit && (
