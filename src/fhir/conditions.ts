@@ -9,7 +9,22 @@ import {
   searchCommonRecords,
   searchLensRecords,
 } from "./search-helpers";
+import {
+  SYSTEM_ICD10,
+  SYSTEM_ICD10_CM,
+  SYSTEM_ICD9,
+  SYSTEM_ICD9_CM,
+  SYSTEM_SNOMED,
+} from "./system-urls";
 import { getFhirClientFromQuery } from "./utils";
+
+export const CONDITION_CODE_SYSTEMS = [
+  SYSTEM_ICD9_CM,
+  SYSTEM_ICD9,
+  SYSTEM_ICD10_CM,
+  SYSTEM_ICD10,
+  SYSTEM_SNOMED,
+];
 
 export type ClinicalStatus =
   | "active"
@@ -99,3 +114,19 @@ function filterAndSort(conditions: fhir4.Condition[]) {
     (condition) => new ConditionModel(condition).display
   );
 }
+
+export const filterConditionsWithConfirmedCodes = (
+  target: fhir4.Condition[],
+  confirmedCodes: fhir4.Coding[]
+) =>
+  target.filter((c) => {
+    const conditionModel = new ConditionModel(c);
+
+    return !confirmedCodes.some((code) =>
+      conditionModel.knownCodings.some(
+        (availableCode) =>
+          availableCode.code === code.code &&
+          availableCode.system === code.system
+      )
+    );
+  });
