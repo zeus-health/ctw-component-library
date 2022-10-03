@@ -33,13 +33,15 @@ const DetailSummary = ({
   isDetailShown,
   setIsDetailShown,
 }: any) => (
-  <div className="ctw-flex ctw-divide-y ctw-bg-bg-lighter">
-    <div className="ctw-flex-column ctw-flex">
+  <div className="ctw-flex ctw-justify-between ctw-divide-y ctw-bg-bg-lighter ctw-p-4">
+    <div className="ctw-flex-column ctw-flex ctw-space-x-3">
       <div className="ctw-text-gray-900 ctw-flex ctw-items-baseline ctw-space-x-4">
         {date}
       </div>
-      <div className="ctw-flex ctw-justify-between ctw-space-x-4">{title}</div>
-      <div>{subTitle}</div>
+      <div className="ctw-">
+        <div className="ctw-flex ctw-space-x-4">{title}</div>
+        <div>{subTitle}</div>
+      </div>
     </div>
     <div className="ctw-justify-right ctw-flex">
       <ChevronRightIcon
