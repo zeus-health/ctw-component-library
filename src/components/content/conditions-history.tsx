@@ -2,12 +2,12 @@ import { getIncludedResources } from "@/fhir/bundle";
 import { getConditionHistory } from "@/fhir/conditions";
 import { ConditionModel } from "@/models/conditions";
 import { useEffect, useState } from "react";
-import { CodeList } from "../core/code-list";
+import { CodingList } from "../core/coding-list";
+import { CollapsibleDataListProps } from "../core/collapsible-data-list";
 import {
-  ConditionHistoryList,
-  DataListStackEntries,
-  DataListStackEntry,
-} from "../core/condition-history-list";
+  CollapsibleDataListStack,
+  CollapsibleDataListStackEntries,
+} from "../core/collapsible-data-list-stack";
 import { useCTW } from "../core/ctw-provider";
 import { usePatient } from "../core/patient-provider";
 import { Spinner } from "../core/spinner";
@@ -23,7 +23,9 @@ export function ConditionHistory({
   icd10Code,
   snomedCode,
 }: ConditionHistoryProps) {
-  const [conditions, setConditions] = useState<DataListStackEntries>([]);
+  const [conditions, setConditions] = useState<CollapsibleDataListStackEntries>(
+    []
+  );
   const [loading, setLoading] = useState(true);
   const { getCTWFhirClient } = useCTW();
   const { patientPromise } = usePatient();
@@ -56,7 +58,7 @@ export function ConditionHistory({
 
     load();
 
-    function setupData(condition: ConditionModel): DataListStackEntry {
+    function setupData(condition: ConditionModel): CollapsibleDataListProps {
       const detailData = [
         {
           label: "Clinical Status",
@@ -76,7 +78,7 @@ export function ConditionHistory({
         },
         {
           label: "Code",
-          value: <CodeList codes={getAllCodes(condition)} />,
+          value: <CodingList codings={condition.knownCodings} />,
         },
         {
           label: "Onset Date",
@@ -94,24 +96,11 @@ export function ConditionHistory({
 
       return {
         id: condition.id,
-        code: condition.snomedCode,
-        ccs: condition.ccsGrouping,
         date: condition.recordedDate,
         title: condition.snomedDisplay || condition.icd10Display,
         subTitle: condition.patient?.organization?.name,
-        data: [...detailData],
+        data: detailData,
       };
-    }
-
-    function getAllCodes(condition: ConditionModel): string[] {
-      return [
-        condition.icd10Display || "",
-        condition.icd10Code || "",
-        condition.icd10System || "",
-        condition.snomedDisplay || "",
-        condition.snomedCode || "",
-        condition.snomedSystem || "",
-      ];
     }
 
     return function cleanup() {
@@ -119,6 +108,8 @@ export function ConditionHistory({
       setLoading(true);
     };
   }, [getCTWFhirClient, icd10Code, snomedCode, patientPromise]);
+
+  // Refactor these 2 if things to be a single function and then do a return for the div title for the history component
 
   if (conditions.length === 0 && !loading) {
     return <div>No history found.</div>;
@@ -135,7 +126,7 @@ export function ConditionHistory({
   }
 
   return (
-    <ConditionHistoryList
+    <CollapsibleDataListStack
       entries={conditions}
       limit={CONDITION_HISTORY_LIMIT}
     />

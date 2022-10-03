@@ -29,10 +29,10 @@ export function ConditionHistoryDrawer({
         code={condition?.snomedCode || condition?.icd10Code}
         ccs={condition?.ccsGrouping}
       >
-        {ConditionHistory({
-          icd10Code: condition?.icd10Code,
-          snomedCode: condition?.snomedCode,
-        })}
+        <ConditionHistory
+          icd10Code={condition?.icd10Code}
+          snomedCode={condition?.snomedCode}
+        />
       </Drawer.Body>
       <Drawer.Footer>
         <div className="ctw-flex ctw-justify-end ctw-space-x-3 ctw-text-black ">

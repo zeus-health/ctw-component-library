@@ -1,7 +1,19 @@
 import { ChevronRightIcon } from "@heroicons/react/outline";
 import cx from "classnames";
 import { ReactNode, useState } from "react";
-import type { DataListStackEntry } from "./condition-history-list";
+
+export type CollapsibleDataListEntry = {
+  label: string;
+  value: ReactNode;
+};
+
+export type CollapsibleDataListProps = {
+  id: string;
+  date?: string;
+  title?: string;
+  subTitle?: string;
+  data: CollapsibleDataListEntry[];
+};
 
 export const CollapsibleDataList = ({
   id,
@@ -9,7 +21,7 @@ export const CollapsibleDataList = ({
   title,
   subTitle,
   data,
-}: DataListStackEntry) => {
+}: CollapsibleDataListProps) => {
   const [isDetailShown, setIsDetailShown] = useState(false);
 
   return (
@@ -44,7 +56,7 @@ const DetailSummary = ({
       <div className="ctw-text-gray-900 ctw-flex ctw-items-baseline ctw-space-x-4">
         {date}
       </div>
-      <div className="ctw-">
+      <div>
         <div className="ctw-flex ctw-space-x-4 ctw-text-primary-dark">
           {title}
         </div>
@@ -53,10 +65,9 @@ const DetailSummary = ({
     </div>
     <div className="ctw-justify-right ctw-flex">
       <ChevronRightIcon
-        className={cx(
-          "ctw-h-5 ctw-w-5 ctw-text-primary-dark",
-          !isDetailShown ? "" : "ctw-rotate-90"
-        )}
+        className={cx("ctw-h-5 ctw-w-5 ctw-text-primary-dark", {
+          "ctw-rotate-90": isDetailShown,
+        })}
         onClick={() => setIsDetailShown(!isDetailShown)}
       />
     </div>
@@ -68,18 +79,17 @@ const Details = ({
   data,
 }: {
   id: string;
-  data: Record<string, ReactNode>[];
+  data: CollapsibleDataListEntry[];
 }) => (
   <div className="ctw-divide-y ctw-rounded-lg ctw-border ctw-bg-bg-lighter">
-    <dl className="ctw-space-y-2 ctw-p-4" key={id}>
-      <div> Details </div>
+    <dl className="ctw-space-y-2 ctw-p-4">
+      <div className="ctw-text-sm"> Details </div>
       {data.map(({ label, value }) => {
         if (value) {
           return (
             <div
-              // label is not guarenteed to be unique so append index.
               // eslint-disable-next-line react/no-array-index-key
-              key={label?.toString()}
+              key={label}
               className="ctw-text-gray-900 ctw-flex ctw-items-baseline ctw-space-x-4"
             >
               <dt className="ctw-w-1/3 ctw-flex-shrink-0 ctw-font-medium">

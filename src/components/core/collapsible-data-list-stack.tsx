@@ -1,31 +1,21 @@
-import { ReactNode, useState } from "react";
-import { CollapsibleDataList } from "./collapsible-data-list";
+import { useState } from "react";
+import {
+  CollapsibleDataList,
+  CollapsibleDataListProps,
+} from "./collapsible-data-list";
 
-export type DataListStackEntry = {
-  id: string;
-  code?: string;
-  ccs?: string;
-  date?: string;
-  title?: string;
-  subTitle?: string;
-  data: Record<string, ReactNode>[];
-};
-
-export type DataListStackEntries = DataListStackEntry[];
+export type CollapsibleDataListStackEntries = CollapsibleDataListProps[];
 
 export type CollapsibleListProp = {
-  entries: DataListStackEntries;
+  entries: CollapsibleDataListStackEntries;
   limit?: number;
 };
 
-export const ConditionHistoryList = ({
+export const CollapsibleDataListStack = ({
   entries,
   limit,
 }: CollapsibleListProp) => {
-  const [showAll, setShowAll] = useState(false);
-
-  const displayedEntries =
-    showAll || !limit ? entries : entries.slice(0, limit);
+  const [showAll, setShowAll] = useState(!limit || entries.length <= limit);
 
   return (
     <>
@@ -42,14 +32,16 @@ export const ConditionHistoryList = ({
           </div>
         </>
       ))}
-      {!showAll && limit && entries.length > limit && (
+      {!showAll && (
         <div className="ctw-text-center">
           <button
             type="button"
             className="ctw-link-primary"
             onClick={() => setShowAll(true)}
           >
-            Load {entries.length - limit} More
+            {/* We know limit must be set if showAll is false. */}
+            {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
+            Load {entries.length - limit!} More
           </button>
         </div>
       )}
