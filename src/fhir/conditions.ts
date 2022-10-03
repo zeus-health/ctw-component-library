@@ -121,3 +121,19 @@ function filterAndSort(conditions: fhir4.Condition[]) {
     (condition) => new ConditionModel(condition).display
   );
 }
+
+export const filterConditionsWithConfirmedCodes = (
+  target: fhir4.Condition[],
+  confirmedCodes: fhir4.Coding[]
+) =>
+  target.filter((c) => {
+    const conditionModel = new ConditionModel(c);
+
+    return !confirmedCodes.some((code) =>
+      conditionModel.knownCodings.some(
+        (availableCode) =>
+          availableCode.code === code.code &&
+          availableCode.system === code.system
+      )
+    );
+  });

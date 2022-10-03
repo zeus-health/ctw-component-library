@@ -81,6 +81,14 @@ export class ConditionModel {
     );
   }
 
+  get knownCodings(): fhir4.Coding[] {
+    return compact(
+      CONDITION_CODE_SYSTEMS.map((system) =>
+        findCoding(system, this.resource.code)
+      )
+    );
+  }
+
   get icd10Code(): string | undefined {
     return findCoding(SYSTEM_ICD10, this.resource.code)?.code;
   }
