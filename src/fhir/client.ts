@@ -1,4 +1,5 @@
 import Client from "fhir-kit-client";
+import jwt_decode from "jwt-decode";
 
 import { Env } from "@/components/core/ctw-provider";
 
@@ -15,6 +16,26 @@ export function getFhirClient(env: Env, accessToken: string) {
       "User-Agent": "zus_ctw_component_library fhirclient",
     },
   });
+}
+
+type ClientAuth = {
+  httpClient: {
+    authHeader: { authorization: string };
+  };
+} & Client;
+
+type ZusJWT = {
+  [key: string]: string | string[];
+};
+
+export function getClaims(fhirClient: Client): ZusJWT {
+  // Cast to access an unexposed property.
+  const authHeader = (fhirClient as ClientAuth).httpClient.authHeader
+    .authorization;
+  const bearerToken = authHeader.substring(7);
+  // Cast because a decoded JWT is an unknown.
+  const jwt = jwt_decode(bearerToken) as ZusJWT;
+  return jwt;
 }
 
 // Returns a new value with all empty arrays replaced with "undefined".
