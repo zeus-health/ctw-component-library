@@ -121,7 +121,7 @@ export const filterDuplicateCodesFromTarget = (
     const conditionModel = new ConditionModel(c);
 
     return !confirmedCodes.some((code) =>
-      conditionModel.availableCodes.some(
+      conditionModel.allSystemCodings.some(
         (availableCode) =>
           availableCode.code === code.code &&
           availableCode.system === code.system

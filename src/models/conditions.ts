@@ -73,7 +73,7 @@ export class ConditionModel {
     );
   }
 
-  get availableCodes(): fhir4.Coding[] {
+  get allSystemCodings(): fhir4.Coding[] {
     return compact(
       CONDITION_CODE_SYSTEMS.map((system) =>
         findCoding(system, this.resource.code)

@@ -135,7 +135,7 @@ export function Conditions({ className }: ConditionsProps) {
         if (notReviewedResponse.data) {
           const confirmedCodes = union(
             ...confirmedResponse.data.map(
-              (c) => new ConditionModel(c).availableCodes
+              (c) => new ConditionModel(c).allSystemCodings
             )
           );
 
