@@ -12,14 +12,15 @@ import {
   SYSTEM_ICD10,
   SYSTEM_ICD10_CM,
   SYSTEM_ICD9,
+  SYSTEM_ICD9_CM,
   SYSTEM_SNOMED,
 } from "./system-urls";
 import { getFhirClientFromQuery } from "./utils";
 
 export const CONDITION_CODE_SYSTEMS = [
-  SYSTEM_ICD10,
-  SYSTEM_ICD10_CM,
   SYSTEM_ICD9,
+  SYSTEM_ICD9_CM,
+  SYSTEM_ICD10,
   SYSTEM_ICD10_CM,
   SYSTEM_SNOMED,
 ];
@@ -41,7 +42,7 @@ export type QueryKeyLensConditions = [string, string];
 export type QueryKeyConditionHistory = [string, string, string[]];
 
 export const getConditionFilterTokens = (condition: ConditionModel) =>
-  condition.availableCodes.map((coding) => `${coding.system}|${coding.code}`);
+  condition.knownCodings.map((coding) => `${coding.system}|${coding.code}`);
 
 export async function getConfirmedConditions(
   queryParams: QueryFunctionContext<QueryKeyConfirmedConditions>

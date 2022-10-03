@@ -37,7 +37,7 @@ export class ConditionModel {
     return this.resource.asserter?.display;
   }
 
-  get availableCodes(): fhir4.Coding[] {
+  get knownCodings(): fhir4.Coding[] {
     return compact(
       CONDITION_CODE_SYSTEMS.map((system) =>
         findCoding(system, this.resource.code)
