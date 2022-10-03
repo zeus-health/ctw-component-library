@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 0.10.4
+
+### Patch Changes
+
+- fb028c6: Use more codes to filter out duplicate condition records from notReviewed
+- 9e5bb33: Continue enforcing the rule of only showing builder-owned records as confirmed, by covering the new edge case where there are shared resources with other builders. Clients will not need to make any changes.
+
 ## 0.10.3
 
 ### Patch Changes
