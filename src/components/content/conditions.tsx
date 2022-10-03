@@ -4,6 +4,7 @@ import {
 } from "@/components/content/forms/condition-helpers";
 import {
   ConditionFilters,
+  filterConditionsWithConfirmedCodes,
   getConfirmedConditions,
   getLensConditions,
 } from "@/fhir/conditions";
@@ -13,6 +14,7 @@ import { ConditionModel } from "@/models/conditions";
 import { PatientModel } from "@/models/patients";
 import { useQuery } from "@tanstack/react-query";
 import cx from "classnames";
+import { union } from "lodash";
 import { useEffect, useRef, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
 import { usePatient } from "../core/patient-provider";
@@ -130,14 +132,16 @@ export function Conditions({ className }: ConditionsProps) {
         setConfirmedIsLoading(false);
         setConfirmed(confirmedResponse.data.map((c) => new ConditionModel(c)));
 
-        const ICD10ConfirmedCodes = confirmedResponse.data.map(
-          (c) => new ConditionModel(c).icd10Code
-        );
-
         if (notReviewedResponse.data) {
-          const notReviewedFiltered = notReviewedResponse.data.filter(
-            (c) =>
-              !ICD10ConfirmedCodes.includes(new ConditionModel(c).icd10Code)
+          const confirmedCodes = union(
+            ...confirmedResponse.data.map(
+              (c) => new ConditionModel(c).knownCodings
+            )
+          );
+
+          const notReviewedFiltered = filterConditionsWithConfirmedCodes(
+            notReviewedResponse.data,
+            confirmedCodes
           );
 
           setNotReviewed(notReviewedFiltered.map((c) => new ConditionModel(c)));
