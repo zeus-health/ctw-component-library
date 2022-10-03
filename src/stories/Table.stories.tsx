@@ -1,10 +1,28 @@
 import { ComponentMeta, ComponentStoryFn } from "@storybook/react";
 
-import { Table } from "@/components/core/table/table";
+import { Table, TableColumn } from "@/components/core/table/table";
 
 import { ConditionModel } from "@/models/conditions";
 import "@/styles/tailwind-gen.css";
-import { ConditionRecords, CONDITION_COLUMNS } from "./resources/conditions";
+import { ConditionRecords } from "./resources/conditions";
+
+const CONDITION_COLUMNS: TableColumn<ConditionModel>[] = [
+  {
+    title: "Condition",
+    dataIndex: "display",
+    className: "ctw-w-[50%]",
+  },
+  {
+    title: "Status",
+    dataIndex: "clinicalStatus",
+    className: "ctw-w-[20%]",
+  },
+  {
+    title: "Recorded Date",
+    dataIndex: "recordedDate",
+    className: "ctw-w-[30%]",
+  },
+];
 
 export default {
   title: "Core/Table",
