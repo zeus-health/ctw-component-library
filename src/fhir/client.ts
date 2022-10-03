@@ -25,8 +25,6 @@ export type ClientAuth = {
 } & Client;
 
 export type ZusJWT = {
-  SYSTEM_ZUS_BUILDER_ID: string;
-  // We only use the above properties. Others can be any key with any type.
   [key: string]: string | string[];
 };
 
