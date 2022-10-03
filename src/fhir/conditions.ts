@@ -13,15 +13,16 @@ import {
   SYSTEM_ICD10,
   SYSTEM_ICD10_CM,
   SYSTEM_ICD9,
+  SYSTEM_ICD9_CM,
   SYSTEM_SNOMED,
 } from "./system-urls";
 import { getFhirClientFromQuery } from "./utils";
 
 export const CONDITION_CODE_SYSTEMS = [
-  SYSTEM_ICD10,
-  SYSTEM_ICD10_CM,
+  SYSTEM_ICD9_CM,
   SYSTEM_ICD9,
   SYSTEM_ICD10_CM,
+  SYSTEM_ICD10,
   SYSTEM_SNOMED,
 ];
 
@@ -113,7 +114,7 @@ function filterAndSort(conditions: fhir4.Condition[]) {
   );
 }
 
-export const filterDuplicateCodesFromTarget = (
+export const filterConditionsWithConfirmedCodes = (
   target: fhir4.Condition[],
   confirmedCodes: fhir4.Coding[]
 ) =>
@@ -121,7 +122,7 @@ export const filterDuplicateCodesFromTarget = (
     const conditionModel = new ConditionModel(c);
 
     return !confirmedCodes.some((code) =>
-      conditionModel.allSystemCodings.some(
+      conditionModel.knownCodings.some(
         (availableCode) =>
           availableCode.code === code.code &&
           availableCode.system === code.system

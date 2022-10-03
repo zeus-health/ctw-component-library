@@ -4,7 +4,7 @@ import {
 } from "@/components/content/forms/condition-helpers";
 import {
   ConditionFilters,
-  filterDuplicateCodesFromTarget,
+  filterConditionsWithConfirmedCodes,
   getConfirmedConditions,
   getLensConditions,
 } from "@/fhir/conditions";
@@ -135,11 +135,11 @@ export function Conditions({ className }: ConditionsProps) {
         if (notReviewedResponse.data) {
           const confirmedCodes = union(
             ...confirmedResponse.data.map(
-              (c) => new ConditionModel(c).allSystemCodings
+              (c) => new ConditionModel(c).knownCodings
             )
           );
 
-          const notReviewedFiltered = filterDuplicateCodesFromTarget(
+          const notReviewedFiltered = filterConditionsWithConfirmedCodes(
             notReviewedResponse.data,
             confirmedCodes
           );
