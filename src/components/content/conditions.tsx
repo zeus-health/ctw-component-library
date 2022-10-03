@@ -4,6 +4,7 @@ import {
 } from "@/components/content/forms/condition-helpers";
 import {
   ConditionFilters,
+  filterConditionsWithConfirmedCodes,
   getOtherProviderConditions,
   getPatientConditions,
 } from "@/fhir/conditions";
@@ -13,6 +14,7 @@ import { ConditionModel } from "@/models/conditions";
 import { PatientModel } from "@/models/patients";
 import { useQuery } from "@tanstack/react-query";
 import cx from "classnames";
+import { union } from "lodash";
 import { useEffect, useRef, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
 import { usePatient } from "../core/patient-provider";
@@ -137,17 +139,17 @@ export function Conditions({ className }: ConditionsProps) {
           patientRecordResponse.data.map((c) => new ConditionModel(c))
         );
 
-        const ICD10patientRecordCodes = patientRecordResponse.data.map(
-          (c) => new ConditionModel(c).icd10Code
-        );
-
         if (OtherProviderRecordsResponse.data) {
+          const confirmedCodes = union(
+            ...patientRecordResponse.data.map(
+              (c) => new ConditionModel(c).knownCodings
+            )
+          );
+
           const OtherProviderRecordsFiltered =
-            OtherProviderRecordsResponse.data.filter(
-              (c) =>
-                !ICD10patientRecordCodes.includes(
-                  new ConditionModel(c).icd10Code
-                )
+            filterConditionsWithConfirmedCodes(
+              OtherProviderRecordsResponse.data,
+              confirmedCodes
             );
 
           setOtherProviderRecords(

@@ -7,7 +7,13 @@ export const SYSTEM_CONDITION_VERIFICATION_STATUS =
 export const SYSTEM_CONDITION_CLINICAL =
   "http://terminology.hl7.org/CodeSystem/condition-clinical";
 
+export const SYSTEM_ICD9 = "http://hl7.org/fhir/sid/icd-9";
+
+export const SYSTEM_ICD9_CM = "http://hl7.org/fhir/sid/icd-9-cm";
+
 export const SYSTEM_ICD10 = "http://hl7.org/fhir/sid/icd-10";
+
+export const SYSTEM_ICD10_CM = "http://hl7.org/fhir/sid/icd-10-cm";
 
 export const SYSTEM_MARITAL_STATUS =
   "http://terminology.hl7.org/CodeSystem/v3-MaritalStatus";
