@@ -52,7 +52,7 @@ const DetailSummary = ({
   <button
     type="button"
     onClick={() => setIsDetailShown(!isDetailShown)}
-    className="ctw-w-full ctw-cursor-pointer ctw-border-none ctw-bg-transparent ctw-text-base ctw-outline-none"
+    className="ctw-w-full ctw-cursor-pointer ctw-rounded-lg ctw-border-none ctw-bg-transparent ctw-text-base ctw-outline-none"
   >
     <div className="ctw-flex ctw-items-center ctw-justify-between ctw-bg-bg-lighter ctw-p-3 ctw-text-left">
       <div className="ctw-flex ctw-space-x-3">
@@ -74,7 +74,7 @@ const DetailSummary = ({
 );
 
 const Details = ({ data }: { data: CollapsibleDataListEntry[] }) => (
-  <div className="ctw-divide-y ctw-rounded-lg ctw-border ctw-bg-bg-lighter">
+  <div className="ctw-rounded-lg ctw-bg-bg-lighter">
     <dl className="ctw-space-y-2 ctw-p-4">
       <div className="ctw-text-sm ctw-text-content-light">Details</div>
       {data
@@ -82,7 +82,7 @@ const Details = ({ data }: { data: CollapsibleDataListEntry[] }) => (
         .map(({ label, value }) => (
           <div
             key={label}
-            className="ctw-text-gray-900 ctw-flex ctw-items-baseline ctw-space-x-4"
+            className="ctw-text-gray-900 ctw-flex ctw-items-baseline"
           >
             <dt className="ctw-w-1/3 ctw-flex-shrink-0 ctw-font-medium">
               {label}
