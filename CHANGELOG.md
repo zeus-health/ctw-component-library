@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.13.2
+
+### Patch Changes
+
+- b3c68a3: No longer refetch on window focus
+
 ## 0.13.1
 
 ### Patch Changes
