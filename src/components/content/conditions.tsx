@@ -1,12 +1,12 @@
 import {
   getAddConditionData,
-  getEditingPatientConditionData,
+  getEditingPatientConditionData
 } from "@/components/content/forms/condition-helpers";
 import {
   ConditionFilters,
   filterConditionsWithConfirmedCodes,
   getOtherProviderConditions,
-  getPatientConditions,
+  getPatientConditions
 } from "@/fhir/conditions";
 import { useFhirClientRef } from "@/fhir/utils";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
@@ -25,7 +25,7 @@ import "./conditions.scss";
 import { conditionSchema, createOrEditCondition } from "./forms/conditions";
 import {
   DrawerFormWithFields,
-  FormEntry,
+  FormEntry
 } from "./forms/drawer-form-with-fields";
 
 export type ConditionsProps = {
@@ -155,6 +155,13 @@ export function Conditions({ className }: ConditionsProps) {
           setOtherProviderRecords(
             OtherProviderRecordsFiltered.map((c) => new ConditionModel(c))
           );
+
+          const notReviewedFiltered = filterConditionsWithConfirmedCodes(
+            notReviewedResponse.data,
+            confirmedCodes
+          );
+
+          setNotReviewed(notReviewedFiltered.map((c) => new ConditionModel(c)));
         } else {
           setOtherProviderRecords([]);
           setOtherProviderRecordsMessage(ERROR_MSG);

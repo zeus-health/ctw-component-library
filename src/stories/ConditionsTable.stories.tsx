@@ -12,16 +12,22 @@ export default {
   component: Conditions,
   argTypes: {
     className: { name: "className", type: { name: "string", required: false } },
-    patientUPID: {
-      name: "Patient UPID",
+    patientID: {
+      name: "Patient ID",
       type: { name: "string", required: true },
     },
+    patientSystemURL: {
+      name: "System URL of Patient ID",
+      type: { name: "string", required: true },
+    }
   },
 } as ComponentMeta<typeof Conditions>;
 
 const Template: ComponentStoryFn<typeof Conditions> = (args) => (
   <CTWProvider env="dev" authToken={AUTH_TOKEN}>
-    <Conditions {...args} />
+    <PatientProvider patientID={args.patientSystemURL} systemURL={VITE_SYSTEM_URL}>
+      <Conditions {args.className} />
+    </PatientProvider>
   </CTWProvider>
 );
 

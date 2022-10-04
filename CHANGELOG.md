@@ -1,17 +1,5 @@
 # ctw-component-library
 
-## 0.12.0
-
-### Minor Changes
-
-- 67ddbb0: Manage inconsistent coding in Conditions History Panel. Now supports SNOMED, ICD-10, ICD-10CM, ICD-9, ICD-9CM for code matching. Will now filter out summary and lens tags as well.
-
-## 0.11.0
-
-### Minor Changes
-
-- 047cfeb: Confirmed changes to Patient Record in table label and Not Reviewed changes to Other Provider Records
-
 ## 0.10.4
 
 ### Patch Changes
@@ -106,7 +94,7 @@
 ### Minor Changes
 
 - 6a8755c: Fixup library packaging, tweak few styles, and make PatientProvider exported.
-- 538c409: Adds a PatientProvider that provides a UPID via the user providing either a PatientUPID or a combination of PatientID/SystemUrl.
+- 538c409: There's a new PatientProvider that provides a UPID via the user providing either a PatientUPID or a combination of PatientID/SystemUrl.
 
 ## 0.4.0
 

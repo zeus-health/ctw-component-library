@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import {
   DataListStack,
   DataListStackEntries,
-  DataListStackEntry,
+  DataListStackEntry
 } from "../core/data-stack-list";
 import { usePatient } from "../core/patient-provider";
 import { Spinner } from "../core/spinner";

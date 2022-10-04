@@ -6,14 +6,14 @@ import {
   flattenArrayFilters,
   searchBuilderRecords,
   searchCommonRecords,
-  searchLensRecords,
+  searchLensRecords
 } from "./search-helpers";
 import {
   SYSTEM_ICD10,
   SYSTEM_ICD10_CM,
   SYSTEM_ICD9,
   SYSTEM_ICD9_CM,
-  SYSTEM_SNOMED,
+  SYSTEM_SNOMED
 } from "./system-urls";
 import { getFhirClientFromQuery } from "./utils";
 
