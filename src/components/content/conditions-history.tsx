@@ -129,12 +129,10 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
           </div>
           <div className="ctw-text-sm">{condition.ccsGrouping}</div>
         </div>
-        <div className="ctw-space-y-3">
-          <CollapsibleDataListStack
-            entries={conditions}
-            limit={CONDITION_HISTORY_LIMIT}
-          />
-        </div>
+        <CollapsibleDataListStack
+          entries={conditions}
+          limit={CONDITION_HISTORY_LIMIT}
+        />
       </div>
     );
   }

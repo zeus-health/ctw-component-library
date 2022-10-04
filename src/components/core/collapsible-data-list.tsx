@@ -78,7 +78,7 @@ const Details = ({ data }: { data: CollapsibleDataListEntry[] }) => (
     <dl className="ctw-space-y-2 ctw-p-4">
       <div className="ctw-text-sm ctw-text-content-light">Details</div>
       {data
-        .filter((d) => !!d.value && d.value !== 0)
+        .filter((d) => d.value || d.value === 0)
         .map(({ label, value }) => (
           <div
             key={label}

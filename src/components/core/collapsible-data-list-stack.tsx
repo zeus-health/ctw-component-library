@@ -18,9 +18,9 @@ export const CollapsibleDataListStack = ({
   const [showAll, setShowAll] = useState(!limit || entries.length <= limit);
 
   return (
-    <>
+    <div className="ctw-space-y-3">
       {entries.map((entry) => (
-        <div className="ctw-pad-2">
+        <div>
           <CollapsibleDataList
             date={entry.date}
             title={entry.title}
@@ -42,6 +42,6 @@ export const CollapsibleDataListStack = ({
           </button>
         </div>
       )}
-    </>
+    </div>
   );
 };
