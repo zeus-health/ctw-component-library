@@ -19,9 +19,10 @@ export const CollapsibleDataListStack = ({
 
   return (
     <div className="ctw-space-y-3">
-      {entries.map((entry, index) => (
-        <div key={`${entry.title}-${index}`}>
+      {entries.map((entry) => (
+        <div key={`${entry.id}`}>
           <CollapsibleDataList
+            id={entry.id}
             date={entry.date}
             title={entry.title}
             subTitle={entry.subTitle}

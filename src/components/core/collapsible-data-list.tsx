@@ -8,6 +8,7 @@ export type CollapsibleDataListEntry = {
 };
 
 export type CollapsibleDataListProps = {
+  id: string;
   date?: string;
   title?: string;
   subTitle?: string;
@@ -15,6 +16,7 @@ export type CollapsibleDataListProps = {
 };
 
 export const CollapsibleDataList = ({
+  id,
   date,
   title,
   subTitle,

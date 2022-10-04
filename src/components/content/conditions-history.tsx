@@ -52,6 +52,7 @@ function setupData(condition: ConditionModel): CollapsibleDataListProps {
   ];
 
   return {
+    id: condition.id,
     date: condition.recordedDate,
     title: condition.snomedDisplay || condition.icd10Display,
     subTitle: condition.patient?.organization?.name,
