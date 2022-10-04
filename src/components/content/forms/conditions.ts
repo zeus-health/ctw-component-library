@@ -1,9 +1,11 @@
 import { createOrEditFhirResource } from "@/fhir/action-helper";
+import { getClaims } from "@/fhir/client";
 import { isFhirError } from "@/fhir/errors";
 import { dateToISO } from "@/fhir/formatters";
 import {
   SYSTEM_CONDITION_CLINICAL,
   SYSTEM_CONDITION_VERIFICATION_STATUS,
+  SYSTEM_PRACTITIONER_ID,
   SYSTEM_SNOMED,
 } from "@/fhir/system-urls";
 import { ConditionModel } from "@/models/conditions";
@@ -43,6 +45,11 @@ export const conditionSchema = z.object({
   note: z.string().optional(),
 });
 
+const setRecorderField = (practitionerId: string) => ({
+  reference: `Practitioner/${practitionerId}`,
+  type: "Practitioner",
+});
+
 export const createOrEditCondition = async (
   data: FormData,
   patientID: string,
@@ -53,10 +60,15 @@ export const createOrEditCondition = async (
     return result;
   }
 
+  const fhirClient = await getCTWFhirClient();
+  const practitionerId = result.data.id
+    ? (getClaims(fhirClient)[SYSTEM_PRACTITIONER_ID] as string)
+    : "";
   // Some fields will need to be set as they are required.
   const fhirCondition: fhir4.Condition = {
     resourceType: "Condition",
     id: result.data.id,
+    ...(practitionerId && { recorder: setRecorderField(practitionerId) }),
     clinicalStatus: {
       coding: [
         {
@@ -96,7 +108,7 @@ export const createOrEditCondition = async (
 
   const response = await createOrEditFhirResource({
     resourceModel: conditionModel,
-    getCTWFhirClient,
+    fhirClient,
   });
 
   if (isFhirError(response)) {

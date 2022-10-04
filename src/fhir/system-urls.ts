@@ -18,6 +18,8 @@ export const SYSTEM_ICD10_CM = "http://hl7.org/fhir/sid/icd-10-cm";
 export const SYSTEM_MARITAL_STATUS =
   "http://terminology.hl7.org/CodeSystem/v3-MaritalStatus";
 
+export const SYSTEM_PRACTITIONER_ID = "https://zusapi.com/practitioner_id";
+
 export const SYSTEM_RELATIONSHIP =
   "http://terminology.hl7.org/CodeSystem/v2-0131";
 
