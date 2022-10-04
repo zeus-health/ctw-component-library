@@ -59,7 +59,7 @@ const DetailSummary = ({
         <div className="ctw-min-w-[5rem]">{date}</div>
         <div>
           <div className="ctw-text-primary-dark">{title}</div>
-          <div>{subTitle}</div>
+          <div className="ctw-text-content-light">{subTitle}</div>
         </div>
       </div>
       <div className="ctw-justify-right ctw-flex">
