@@ -37,12 +37,13 @@ export type ConditionFilters = {
   "clinical-status"?: ClinicalStatus | ClinicalStatus[];
 };
 
-export type QueryKeyConditionHistory = [string, string, string[]];
+export type QueryKeyConditionHistory = [
+  string,
+  string,
+  ConditionModel | undefined
+];
 export type QueryKeyPatientConditions = [string, string, ConditionFilters];
 export type QueryKeyOtherProviderConditions = [string, string];
-
-export const getConditionFilterTokens = (condition: ConditionModel) =>
-  condition.knownCodings.map((coding) => `${coding.system}|${coding.code}`);
 
 export async function getPatientConditions(
   queryParams: QueryFunctionContext<QueryKeyPatientConditions>
@@ -95,7 +96,15 @@ export async function getConditionHistory(
   try {
     const { meta, queryKey } = queryParams;
     const fhirClient = getFhirClientFromQuery(meta);
-    const [_, patientUPID, tokens] = queryKey;
+    const [_, patientUPID, condition] = queryKey;
+
+    if (!condition) {
+      throw Error("Condition is required");
+    }
+
+    const tokens = condition.knownCodings.map(
+      (coding) => `${coding.system}|${coding.code}`
+    );
 
     const { resources: conditions } = await searchCommonRecords(
       "Condition",
