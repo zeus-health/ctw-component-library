@@ -53,6 +53,10 @@ export class ConditionModel {
     );
   }
 
+  get ccsGrouping(): string | undefined {
+    return findCoding(SYSTEM_CCS, this.resource.code)?.display;
+  }
+
   get clinicalStatus(): string {
     return codeableConceptLabel(this.resource.clinicalStatus);
   }
@@ -73,14 +77,6 @@ export class ConditionModel {
     );
   }
 
-  get knownCodings(): fhir4.Coding[] {
-    return compact(
-      CONDITION_CODE_SYSTEMS.map((system) =>
-        findCoding(system, this.resource.code)
-      )
-    );
-  }
-
   get icd10Code(): string | undefined {
     return findCoding(SYSTEM_ICD10, this.resource.code)?.code;
   }
@@ -93,12 +89,16 @@ export class ConditionModel {
     return findCoding(SYSTEM_ICD10, this.resource.code)?.display;
   }
 
-  get ccsGrouping(): string | undefined {
-    return findCoding(SYSTEM_CCS, this.resource.code)?.display;
-  }
-
   get id(): string {
     return this.resource.id || "";
+  }
+
+  get knownCodings(): fhir4.Coding[] {
+    return compact(
+      CONDITION_CODE_SYSTEMS.map((system) =>
+        findCoding(system, this.resource.code)
+      )
+    );
   }
 
   get notes(): string[] {
