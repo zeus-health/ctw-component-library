@@ -44,9 +44,6 @@ export function ConditionHistory({
       const models = allConditions.map(
         (condition) => new ConditionModel(condition, includedResources)
       );
-
-      setSingleCondition(models[0]);
-
       const filteredConditions = models.filter(
         (condition) =>
           (condition.icd10Code === icd10Code &&
@@ -55,6 +52,7 @@ export function ConditionHistory({
             typeof snomedCode !== "undefined")
       );
 
+      setSingleCondition(filteredConditions[0]);
       setConditions(filteredConditions.map((model) => setupData(model)));
       setLoading(false);
     }
