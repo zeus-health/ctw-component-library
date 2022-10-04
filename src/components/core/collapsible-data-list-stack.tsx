@@ -23,7 +23,6 @@ export const CollapsibleDataListStack = ({
         <>
           <div className="ctw-pad-2">
             <CollapsibleDataList
-              id={entry.id}
               date={entry.date}
               title={entry.title}
               subTitle={entry.subTitle}
