@@ -3,38 +3,13 @@ import { DefaultTheme, mapToCSSVar, Theme } from "@/styles/tailwind.theme";
 import { queryClient } from "@/utils/request";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { merge } from "lodash";
-import {
-  createContext,
-  ReactNode,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from "react";
+import { ReactNode, useCallback, useContext, useMemo, useState } from "react";
+import { CTWState, CTWStateContext, CTWToken } from "./ctw-context";
 import "./main.scss";
 
 export type Env = "dev" | "sandbox" | "production";
 
 const EXPIRY_PADDING_MS = 60000;
-
-type CTWToken = {
-  accessToken: string;
-  issuedTokenType: string;
-  tokenType: string;
-  expiresAt: number;
-};
-
-type CTWState = {
-  env: Env;
-  authToken?: string;
-  headers?: HeadersInit;
-  authTokenURL?: string;
-  theme?: Theme;
-  token?: CTWToken;
-  actions: {
-    handleAuth: () => Promise<string>;
-  };
-};
 
 type AuthTokenSpecified = { authToken: string; authTokenURL?: never };
 type AuthTokenURLSpecified = { authToken?: never; authTokenURL: string };
@@ -45,8 +20,6 @@ type CTWProviderProps = {
   theme?: Theme;
   headers?: HeadersInit;
 } & (AuthTokenSpecified | AuthTokenURLSpecified);
-
-const CTWStateContext = createContext<CTWState | undefined>(undefined);
 
 function CTWProvider({ theme, children, ...ctwState }: CTWProviderProps) {
   const [token, setToken] = useState<CTWToken>();

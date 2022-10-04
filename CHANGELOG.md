@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.12.0
+
+### Minor Changes
+
+- 67ddbb0: Manage inconsistent coding in Conditions History Panel. Now supports SNOMED, ICD-10, ICD-10CM, ICD-9, ICD-9CM for code matching. Will now filter out summary and lens tags as well.
+
 ## 0.11.0
 
 ### Minor Changes
