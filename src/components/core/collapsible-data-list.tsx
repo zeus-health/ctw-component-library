@@ -84,23 +84,20 @@ const Details = ({
   <div className="ctw-divide-y ctw-rounded-lg ctw-border ctw-bg-bg-lighter">
     <dl className="ctw-space-y-2 ctw-p-4">
       <div className="ctw-text-sm"> Details </div>
-      {data.map(({ label, value }) => {
-        if (value) {
-          return (
-            <div
-              // eslint-disable-next-line react/no-array-index-key
-              key={label}
-              className="ctw-text-gray-900 ctw-flex ctw-items-baseline ctw-space-x-4"
-            >
-              <dt className="ctw-w-1/3 ctw-flex-shrink-0 ctw-font-medium">
-                {label}
-              </dt>
-              <dd className="ctw-flex-grow">{value}</dd>
-            </div>
-          );
-        }
-        return <div />;
-      })}
+      {data
+        .filter((d) => !!d.value)
+        .map(({ label, value }) => (
+          <div
+            // eslint-disable-next-line react/no-array-index-key
+            key={label}
+            className="ctw-text-gray-900 ctw-flex ctw-items-baseline ctw-space-x-4"
+          >
+            <dt className="ctw-w-1/3 ctw-flex-shrink-0 ctw-font-medium">
+              {label}
+            </dt>
+            <dd className="ctw-flex-grow">{value}</dd>
+          </div>
+        ))}
     </dl>
   </div>
 );

@@ -29,6 +29,7 @@ export function ConditionHistory({
   const [loading, setLoading] = useState(true);
   const { getCTWFhirClient } = useCTW();
   const { patientPromise } = usePatient();
+  const [singleCondition, setSingleCondition] = useState<ConditionModel>();
 
   useEffect(() => {
     async function load() {
@@ -43,6 +44,8 @@ export function ConditionHistory({
       const models = allConditions.map(
         (condition) => new ConditionModel(condition, includedResources)
       );
+
+      setSingleCondition(models[0]);
 
       const filteredConditions = models.filter(
         (condition) =>
@@ -109,26 +112,36 @@ export function ConditionHistory({
     };
   }, [getCTWFhirClient, icd10Code, snomedCode, patientPromise]);
 
-  // Refactor these 2 if things to be a single function and then do a return for the div title for the history component
-
-  if (conditions.length === 0 && !loading) {
-    return <div>No history found.</div>;
-  }
-  if (loading) {
+  function conditionHistoryDisplay() {
+    if (conditions.length === 0 && !loading) {
+      return <div>No history found.</div>;
+    }
+    if (loading) {
+      return (
+        <div className="ctw-space-x-2">
+          <span className="ctw-text-sm ctw-italic">
+            Loading condition history...
+          </span>
+          <Spinner />
+        </div>
+      );
+    }
     return (
-      <div className="ctw-space-x-2">
-        <span className="ctw-text-sm ctw-italic">
-          Loading condition history...
-        </span>
-        <Spinner />
-      </div>
+      <>
+        <div className="ctw-pad-0 ctw-flex ctw-space-x-10 ctw-space-y-10 ctw-text-2xl ctw-text-black">
+          {singleCondition?.display} (
+          {singleCondition?.icd10Code || singleCondition?.snomedCode})
+        </div>
+        <div className="ctw-flex ctw-p-2 ctw-text-sm ctw-text-black">
+          {singleCondition?.ccsGrouping}
+        </div>
+        <CollapsibleDataListStack
+          entries={conditions}
+          limit={CONDITION_HISTORY_LIMIT}
+        />
+      </>
     );
   }
 
-  return (
-    <CollapsibleDataListStack
-      entries={conditions}
-      limit={CONDITION_HISTORY_LIMIT}
-    />
-  );
+  return conditionHistoryDisplay();
 }

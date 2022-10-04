@@ -105,23 +105,9 @@ Drawer.Footer = function DialogFooter({
   );
 };
 
-Drawer.Body = function DialogBody({
-  display,
-  code,
-  ccs,
-  children,
-}: {
-  display?: string;
-  code?: string;
-  ccs?: string;
-  children: ReactNode;
-}) {
+Drawer.Body = function DialogBody({ children }: { children: ReactNode }) {
   return (
     <div className="ctw-flex ctw-h-full ctw-flex-col ctw-overflow-y-auto ctw-p-6">
-      <div className="ctw-pad-0 ctw-flex ctw-space-x-10 ctw-space-y-10 ctw-text-2xl ctw-text-black">
-        {display} ({code})
-      </div>
-      <div className="ctw-flex ctw-p-2 ctw-text-sm ctw-text-black">{ccs}</div>
       {children}
     </div>
   );

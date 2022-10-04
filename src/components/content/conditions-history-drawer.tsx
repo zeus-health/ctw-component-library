@@ -24,11 +24,7 @@ export function ConditionHistoryDrawer({
       isOpen={isOpen}
       onClose={onClose}
     >
-      <Drawer.Body
-        display={condition?.display}
-        code={condition?.snomedCode || condition?.icd10Code}
-        ccs={condition?.ccsGrouping}
-      >
+      <Drawer.Body>
         <ConditionHistory
           icd10Code={condition?.icd10Code}
           snomedCode={condition?.snomedCode}
