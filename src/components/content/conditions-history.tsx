@@ -98,7 +98,6 @@ export function ConditionHistory({
       ];
 
       return {
-        id: condition.id,
         date: condition.recordedDate,
         title: condition.snomedDisplay || condition.icd10Display,
         subTitle: condition.patient?.organization?.name,

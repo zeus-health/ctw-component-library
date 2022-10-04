@@ -8,7 +8,6 @@ export type CollapsibleDataListEntry = {
 };
 
 export type CollapsibleDataListProps = {
-  id: string;
   date?: string;
   title?: string;
   subTitle?: string;
@@ -16,7 +15,6 @@ export type CollapsibleDataListProps = {
 };
 
 export const CollapsibleDataList = ({
-  id,
   date,
   title,
   subTitle,
@@ -33,7 +31,7 @@ export const CollapsibleDataList = ({
         isDetailShown={isDetailShown}
         setIsDetailShown={setIsDetailShown}
       />
-      {isDetailShown && <Details id={id} data={data} />}
+      {isDetailShown && <Details data={data} />}
     </div>
   );
 };
@@ -74,13 +72,7 @@ const DetailSummary = ({
   </div>
 );
 
-const Details = ({
-  id,
-  data,
-}: {
-  id: string;
-  data: CollapsibleDataListEntry[];
-}) => (
+const Details = ({ data }: { data: CollapsibleDataListEntry[] }) => (
   <div className="ctw-divide-y ctw-rounded-lg ctw-border ctw-bg-bg-lighter">
     <dl className="ctw-space-y-2 ctw-p-4">
       <div className="ctw-text-sm"> Details </div>
