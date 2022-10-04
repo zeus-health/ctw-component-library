@@ -49,7 +49,11 @@ const DetailSummary = ({
   isDetailShown: boolean;
   setIsDetailShown: React.Dispatch<React.SetStateAction<boolean>>;
 }) => (
-  <button type="button" onClick={() => setIsDetailShown(!isDetailShown)}>
+  <button
+    type="button"
+    onClick={() => setIsDetailShown(!isDetailShown)}
+    className="ctw-cursor-pointer ctw-border-none ctw-bg-transparent ctw-text-base ctw-outline-none"
+  >
     <div className="ctw-flex ctw-justify-between ctw-bg-bg-lighter ctw-p-3">
       <div className="ctw-flex ctw-space-x-3">
         <div className="ctw-min-w-[5rem]">{date}</div>
