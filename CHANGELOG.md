@@ -1,5 +1,16 @@
 # ctw-component-library
 
+## 0.13.0
+
+### Minor Changes
+
+- 1086140: Condition History Panel now has a stacked UI list detailing previous occurrences of different conditions. There is a preview summary card followed by a detailed card for each of the different conditions that have been recorded.
+- fb5fd96: When user edits or adds a condition, practitioner id will now be used to set the recorder field automatically. If no practitioner id is found then recorder will be nulled else the current practitioner id for the user will be used.
+
+### Patch Changes
+
+- 112d3df: Move ctw provider and context into separate files to avoid bug outlined in https://github.com/vitejs/vite/pull/10239
+
 ## 0.12.0
 
 ### Minor Changes
