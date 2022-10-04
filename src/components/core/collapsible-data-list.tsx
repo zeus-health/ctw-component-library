@@ -71,23 +71,6 @@ const DetailSummary = ({
       </div>
     </div>
   </button>
-  // <div className="ctw-flex ctw-justify-between ctw-bg-bg-lighter ctw-p-4">
-  //   <div className="ctw-flex ctw-space-x-3">
-  //     <div className="ctw-min-w-[5rem]">{date}</div>
-  //     <div>
-  //       <div className="ctw-text-primary-dark">{title}</div>
-  //       <div>{subTitle}</div>
-  //     </div>
-  //   </div>
-  //   <div className="ctw-justify-right ctw-flex">
-  //     <ChevronRightIcon
-  //       className={cx("ctw-h-5 ctw-w-5 ctw-text-primary-dark", {
-  //         "ctw-rotate-90": isDetailShown,
-  //       })}
-  //       onClick={() => setIsDetailShown(!isDetailShown)}
-  //     />
-  //   </div>
-  // </div>
 );
 
 const Details = ({ data }: { data: CollapsibleDataListEntry[] }) => (
