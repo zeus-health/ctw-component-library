@@ -20,16 +20,14 @@ export const CollapsibleDataListStack = ({
   return (
     <>
       {entries.map((entry) => (
-        <>
-          <div className="ctw-pad-2">
-            <CollapsibleDataList
-              date={entry.date}
-              title={entry.title}
-              subTitle={entry.subTitle}
-              data={entry.data}
-            />
-          </div>
-        </>
+        <div className="ctw-pad-2">
+          <CollapsibleDataList
+            date={entry.date}
+            title={entry.title}
+            subTitle={entry.subTitle}
+            data={entry.data}
+          />
+        </div>
       ))}
       {!showAll && (
         <div className="ctw-text-center">

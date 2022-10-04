@@ -87,8 +87,6 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
       }
 
       if (historyResponse.data) {
-        console.log(historyResponse.data);
-
         const includedResources = getIncludedResources(
           historyResponse.data.bundle
         );
@@ -124,18 +122,20 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
       );
     }
     return (
-      <>
-        <div className="ctw-pad-0 ctw-flex ctw-space-x-10 ctw-space-y-10 ctw-text-2xl ctw-text-black">
-          {condition.display} ({condition.icd10Code || condition.snomedCode})
+      <div className="ctw-space-y-6">
+        <div>
+          <div className="ctw-text-2xl">
+            {condition.display} ({condition.icd10Code || condition.snomedCode})
+          </div>
+          <div className="ctw-text-sm">{condition.ccsGrouping}</div>
         </div>
-        <div className="ctw-flex ctw-p-2 ctw-text-sm ctw-text-black">
-          {condition.ccsGrouping}
+        <div className="ctw-space-y-3">
+          <CollapsibleDataListStack
+            entries={conditions}
+            limit={CONDITION_HISTORY_LIMIT}
+          />
         </div>
-        <CollapsibleDataListStack
-          entries={conditions}
-          limit={CONDITION_HISTORY_LIMIT}
-        />
-      </>
+      </div>
     );
   }
 

@@ -23,7 +23,7 @@ export const CollapsibleDataList = ({
   const [isDetailShown, setIsDetailShown] = useState(false);
 
   return (
-    <div className="ctw-divide-gray-200 ctw-sbg-white ctw-divide-y ctw-p-0">
+    <div>
       <DetailSummary
         date={date}
         title={title}
@@ -49,45 +49,58 @@ const DetailSummary = ({
   isDetailShown: boolean;
   setIsDetailShown: React.Dispatch<React.SetStateAction<boolean>>;
 }) => (
-  <div className="ctw-flex ctw-justify-between ctw-divide-y ctw-bg-bg-lighter ctw-p-4">
-    <div className="ctw-flex-column ctw-flex ctw-space-x-3">
-      <div className="ctw-text-gray-900 ctw-flex ctw-items-baseline ctw-space-x-4">
-        {date}
-      </div>
-      <div>
-        <div className="ctw-flex ctw-space-x-4 ctw-text-primary-dark">
-          {title}
+  <button type="button" onClick={() => setIsDetailShown(!isDetailShown)}>
+    <div className="ctw-flex ctw-justify-between ctw-bg-bg-lighter ctw-p-3">
+      <div className="ctw-flex ctw-space-x-3">
+        <div className="ctw-min-w-[5rem]">{date}</div>
+        <div>
+          <div className="ctw-text-primary-dark">{title}</div>
+          <div>{subTitle}</div>
         </div>
-        <div>{subTitle}</div>
+      </div>
+      <div className="ctw-justify-right ctw-flex">
+        <ChevronRightIcon
+          className={cx("ctw-h-5 ctw-w-5 ctw-text-primary-dark", {
+            "ctw-rotate-90": isDetailShown,
+          })}
+        />
       </div>
     </div>
-    <div className="ctw-justify-right ctw-flex">
-      <ChevronRightIcon
-        className={cx("ctw-h-5 ctw-w-5 ctw-text-primary-dark", {
-          "ctw-rotate-90": isDetailShown,
-        })}
-        onClick={() => setIsDetailShown(!isDetailShown)}
-      />
-    </div>
-  </div>
+  </button>
+  // <div className="ctw-flex ctw-justify-between ctw-bg-bg-lighter ctw-p-4">
+  //   <div className="ctw-flex ctw-space-x-3">
+  //     <div className="ctw-min-w-[5rem]">{date}</div>
+  //     <div>
+  //       <div className="ctw-text-primary-dark">{title}</div>
+  //       <div>{subTitle}</div>
+  //     </div>
+  //   </div>
+  //   <div className="ctw-justify-right ctw-flex">
+  //     <ChevronRightIcon
+  //       className={cx("ctw-h-5 ctw-w-5 ctw-text-primary-dark", {
+  //         "ctw-rotate-90": isDetailShown,
+  //       })}
+  //       onClick={() => setIsDetailShown(!isDetailShown)}
+  //     />
+  //   </div>
+  // </div>
 );
 
 const Details = ({ data }: { data: CollapsibleDataListEntry[] }) => (
   <div className="ctw-divide-y ctw-rounded-lg ctw-border ctw-bg-bg-lighter">
     <dl className="ctw-space-y-2 ctw-p-4">
-      <div className="ctw-text-sm"> Details </div>
+      <div className="ctw-text-sm ctw-text-content-light">Details</div>
       {data
-        .filter((d) => !!d.value)
+        .filter((d) => !!d.value && d.value !== 0)
         .map(({ label, value }) => (
           <div
-            // eslint-disable-next-line react/no-array-index-key
             key={label}
             className="ctw-text-gray-900 ctw-flex ctw-items-baseline ctw-space-x-4"
           >
             <dt className="ctw-w-1/3 ctw-flex-shrink-0 ctw-font-medium">
               {label}
             </dt>
-            <dd className="ctw-flex-grow">{value}</dd>
+            <dd className="ctw-m-0">{value}</dd>
           </div>
         ))}
     </dl>
