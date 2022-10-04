@@ -1,6 +1,5 @@
 import { ConditionModel } from "@/models/conditions";
 import { QueryFunctionContext } from "@tanstack/react-query";
-import Client from "fhir-kit-client";
 import { sortBy } from "lodash";
 
 import {
@@ -19,10 +18,10 @@ import {
 import { getFhirClientFromQuery } from "./utils";
 
 export const CONDITION_CODE_SYSTEMS = [
-  SYSTEM_ICD9_CM,
   SYSTEM_ICD9,
-  SYSTEM_ICD10_CM,
+  SYSTEM_ICD9_CM,
   SYSTEM_ICD10,
+  SYSTEM_ICD10_CM,
   SYSTEM_SNOMED,
 ];
 
@@ -38,6 +37,11 @@ export type ConditionFilters = {
   "clinical-status"?: ClinicalStatus | ClinicalStatus[];
 };
 
+export type QueryKeyConditionHistory = [
+  string,
+  string,
+  ConditionModel | undefined
+];
 export type QueryKeyPatientConditions = [string, string, ConditionFilters];
 export type QueryKeyOtherProviderConditions = [string, string];
 
@@ -87,10 +91,21 @@ export async function getOtherProviderConditions(
 }
 
 export async function getConditionHistory(
-  fhirClient: Client,
-  patientUPID: string
+  queryParams: QueryFunctionContext<QueryKeyConditionHistory>
 ) {
   try {
+    const { meta, queryKey } = queryParams;
+    const fhirClient = getFhirClientFromQuery(meta);
+    const [_, patientUPID, condition] = queryKey;
+
+    if (!condition) {
+      throw Error("Condition is required");
+    }
+
+    const tokens = condition.knownCodings.map(
+      (coding) => `${coding.system}|${coding.code}`
+    );
+
     const { resources: conditions, bundle } = await searchCommonRecords(
       "Condition",
       fhirClient,
@@ -98,8 +113,10 @@ export async function getConditionHistory(
         patientUPID,
         _include: ["Condition:patient", "Condition:encounter"],
         "_include:iterate": "Patient:organization",
+        code: tokens.join(","),
       }
     );
+
     return { conditions, bundle };
   } catch (e) {
     throw new Error(

@@ -1,11 +1,11 @@
 export const SYSTEM_CCS =
   "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp";
 
-export const SYSTEM_CONDITION_VERIFICATION_STATUS =
-  "http://terminology.hl7.org/CodeSystem/condition-ver-status";
-
 export const SYSTEM_CONDITION_CLINICAL =
   "http://terminology.hl7.org/CodeSystem/condition-clinical";
+
+export const SYSTEM_CONDITION_VERIFICATION_STATUS =
+  "http://terminology.hl7.org/CodeSystem/condition-ver-status";
 
 export const SYSTEM_ICD9 = "http://hl7.org/fhir/sid/icd-9";
 
