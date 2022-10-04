@@ -106,17 +106,18 @@ export async function getConditionHistory(
       (coding) => `${coding.system}|${coding.code}`
     );
 
-    const { resources: conditions } = await searchCommonRecords(
+    const { resources: conditions, bundle } = await searchCommonRecords(
       "Condition",
       fhirClient,
       {
         patientUPID,
         _include: ["Condition:patient", "Condition:encounter"],
+        "_include:iterate": "Patient:organization",
         code: tokens.join(","),
       }
     );
 
-    return conditions;
+    return { conditions, bundle };
   } catch (e) {
     throw new Error(
       `Failed fetching condition history information for patient: ${e}`

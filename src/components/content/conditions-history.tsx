@@ -1,20 +1,69 @@
+import { getIncludedResources } from "@/fhir/bundle";
 import { getConditionHistory } from "@/fhir/conditions";
 import { useFhirClientRef } from "@/fhir/utils";
 import { ConditionModel } from "@/models/conditions";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { CodingList } from "../core/coding-list";
+import { CollapsibleDataListProps } from "../core/collapsible-data-list";
 import {
-  DataListStack,
-  DataListStackEntries,
-  DataListStackEntry,
-} from "../core/data-stack-list";
+  CollapsibleDataListStack,
+  CollapsibleDataListStackEntries,
+} from "../core/collapsible-data-list-stack";
 import { usePatient } from "../core/patient-provider";
 import { Spinner } from "../core/spinner";
 
 const CONDITION_HISTORY_LIMIT = 10;
 
+function setupData(condition: ConditionModel): CollapsibleDataListProps {
+  const detailData = [
+    {
+      label: "Clinical Status",
+      value: condition.clinicalStatus,
+    },
+    {
+      label: "Verification Status",
+      value: condition.verificationStatus,
+    },
+    {
+      label: "Recorded Date",
+      value: condition.recordedDate,
+    },
+    {
+      label: "Categories",
+      value: condition.categories[0],
+    },
+    {
+      label: "Code",
+      value: <CodingList codings={condition.knownCodings} />,
+    },
+    {
+      label: "Onset Date",
+      value: condition.onset,
+    },
+    {
+      label: "Abatement Date",
+      value: condition.abatement,
+    },
+    {
+      label: "Encounter",
+      value: condition.encounter,
+    },
+  ];
+
+  return {
+    id: condition.id,
+    date: condition.recordedDate,
+    title: condition.snomedDisplay || condition.icd10Display,
+    subTitle: condition.patient?.organization?.name,
+    data: detailData,
+  };
+}
+
 export function ConditionHistory({ condition }: { condition: ConditionModel }) {
-  const [conditions, setConditions] = useState<DataListStackEntries>([]);
+  const [conditions, setConditions] = useState<CollapsibleDataListStackEntries>(
+    []
+  );
   const [loading, setLoading] = useState(true);
   const [patientUPID, setPatientUPID] = useState("");
   const [conditionForSearch, setConditionForSearch] =
@@ -39,72 +88,15 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
       }
 
       if (historyResponse.data) {
-        const filteredConditions = historyResponse.data.map(
-          (c) => new ConditionModel(c)
+        const includedResources = getIncludedResources(
+          historyResponse.data.bundle
+        );
+        const filteredConditions = historyResponse.data.conditions.map(
+          (c) => new ConditionModel(c, includedResources)
         );
 
         setConditions(filteredConditions.map((model) => setupData(model)));
         setLoading(false);
-      }
-
-      function setupData(
-        conditionForSetup: ConditionModel
-      ): DataListStackEntry {
-        let data = [
-          {
-            label: "Verification Status",
-            value: conditionForSetup.verificationStatus,
-          },
-          {
-            label: "Clinical Status",
-            value: conditionForSetup.clinicalStatus,
-          },
-          {
-            label: "Recorded Date",
-            value: conditionForSetup.recordedDate,
-          },
-        ];
-        const ICD10Fields = [
-          {
-            label: "ICD10 Display",
-            value: conditionForSetup.icd10Display,
-          },
-          {
-            label: "ICD10 Code",
-            value: conditionForSetup.icd10Code,
-          },
-          {
-            label: "ICD10 System",
-            value: conditionForSetup.icd10System,
-          },
-        ];
-        const SNOMEDFields = [
-          {
-            label: "SNOMED Display",
-            value: conditionForSetup.snomedDisplay,
-          },
-          {
-            label: "SNOMED Code",
-            value: conditionForSetup.snomedCode,
-          },
-          {
-            label: "SNOMED System",
-            value: conditionForSetup.snomedSystem,
-          },
-        ];
-
-        if (conditionForSetup.icd10Code) {
-          data = data.concat(ICD10Fields);
-        }
-
-        if (conditionForSetup.snomedCode) {
-          data = data.concat(SNOMEDFields);
-        }
-
-        return {
-          id: conditionForSetup.id,
-          data: [...data],
-        };
       }
     }
 
@@ -116,20 +108,35 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
     };
   }, [condition, patientPromise, historyResponse.data]);
 
-  if (conditions.length === 0 && !loading) {
-    return <div>No history found.</div>;
-  }
-
-  if (loading) {
+  function conditionHistoryDisplay() {
+    if (conditions.length === 0 && !loading) {
+      return <div>No history found.</div>;
+    }
+    if (loading) {
+      return (
+        <div className="ctw-space-x-2">
+          <span className="ctw-text-sm ctw-italic">
+            Loading condition history...
+          </span>
+          <Spinner />
+        </div>
+      );
+    }
     return (
-      <div className="ctw-space-x-2">
-        <span className="ctw-text-sm ctw-italic">
-          Loading condition history...
-        </span>
-        <Spinner />
+      <div className="ctw-space-y-6">
+        <div>
+          <div className="ctw-text-2xl">
+            {condition.display} ({condition.icd10Code || condition.snomedCode})
+          </div>
+          <div className="ctw-text-sm">{condition.ccsGrouping}</div>
+        </div>
+        <CollapsibleDataListStack
+          entries={conditions}
+          limit={CONDITION_HISTORY_LIMIT}
+        />
       </div>
     );
   }
 
-  return <DataListStack entries={conditions} limit={CONDITION_HISTORY_LIMIT} />;
+  return conditionHistoryDisplay();
 }
