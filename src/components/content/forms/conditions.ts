@@ -45,27 +45,10 @@ export const conditionSchema = z.object({
   note: z.string().optional(),
 });
 
-const setRecorderField = (
-  practitionerId: string,
-  conditionId: string | undefined
-) => {
-  // For edits
-  if (conditionId) {
-    return {
-      reference: `Practitioner/${practitionerId}`,
-      type: "Practitioner",
-    };
-  }
-  // For adds
-  if (!practitionerId) {
-    return {};
-  }
-
-  return {
-    reference: `Practitioner/${practitionerId}`,
-    type: "Practitioner",
-  };
-};
+const setRecorderField = (practitionerId: string) => ({
+  reference: `Practitioner/${practitionerId}`,
+  type: "Practitioner",
+});
 
 export const createOrEditCondition = async (
   data: FormData,
@@ -85,7 +68,7 @@ export const createOrEditCondition = async (
   const fhirCondition: fhir4.Condition = {
     resourceType: "Condition",
     id: result.data.id,
-    recorder: setRecorderField(practitionerId, result.data.id),
+    ...(practitionerId && { recorder: setRecorderField(practitionerId) }),
     clinicalStatus: {
       coding: [
         {
