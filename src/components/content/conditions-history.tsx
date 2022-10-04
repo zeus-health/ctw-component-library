@@ -47,60 +47,62 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
         setLoading(false);
       }
 
-      function setupData(condition: ConditionModel): DataListStackEntry {
+      function setupData(
+        conditionForSetup: ConditionModel
+      ): DataListStackEntry {
         let data = [
           {
             label: "Verification Status",
-            value: condition.verificationStatus,
+            value: conditionForSetup.verificationStatus,
           },
           {
             label: "Clinical Status",
-            value: condition.clinicalStatus,
+            value: conditionForSetup.clinicalStatus,
           },
           {
             label: "Recorded Date",
-            value: condition.recordedDate,
+            value: conditionForSetup.recordedDate,
           },
         ];
         const ICD10Fields = [
           {
             label: "ICD10 Display",
-            value: condition.icd10Display,
+            value: conditionForSetup.icd10Display,
           },
           {
             label: "ICD10 Code",
-            value: condition.icd10Code,
+            value: conditionForSetup.icd10Code,
           },
           {
             label: "ICD10 System",
-            value: condition.icd10System,
+            value: conditionForSetup.icd10System,
           },
         ];
         const SNOMEDFields = [
           {
             label: "SNOMED Display",
-            value: condition.snomedDisplay,
+            value: conditionForSetup.snomedDisplay,
           },
           {
             label: "SNOMED Code",
-            value: condition.snomedCode,
+            value: conditionForSetup.snomedCode,
           },
           {
             label: "SNOMED System",
-            value: condition.snomedSystem,
+            value: conditionForSetup.snomedSystem,
           },
         ];
 
-        if (condition.icd10Code) {
+        if (conditionForSetup.icd10Code) {
           data = data.concat(ICD10Fields);
         }
 
-        if (condition.snomedCode) {
+        if (conditionForSetup.snomedCode) {
           data = data.concat(SNOMEDFields);
         }
 
         return {
-          id: condition.id,
+          id: conditionForSetup.id,
           data: [...data],
         };
       }
