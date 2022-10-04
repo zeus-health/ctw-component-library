@@ -52,9 +52,9 @@ const DetailSummary = ({
   <button
     type="button"
     onClick={() => setIsDetailShown(!isDetailShown)}
-    className="ctw-w-full ctw-cursor-pointer ctw-rounded-lg ctw-border-none ctw-bg-transparent ctw-text-base ctw-outline-none"
+    className="ctw-w-full ctw-cursor-pointer ctw-border-none ctw-bg-transparent ctw-text-base ctw-outline-none"
   >
-    <div className="ctw-flex ctw-items-center ctw-justify-between ctw-bg-bg-lighter ctw-p-3 ctw-text-left">
+    <div className="ctw-flex ctw-items-center ctw-justify-between ctw-rounded-lg ctw-bg-bg-lighter ctw-p-3 ctw-text-left">
       <div className="ctw-flex ctw-space-x-3">
         <div className="ctw-min-w-[5rem]">{date}</div>
         <div>
