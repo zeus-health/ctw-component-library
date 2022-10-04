@@ -54,7 +54,6 @@ const setRecorderField = (
     return {
       reference: `Practitioner/${practitionerId}`,
       type: "Practitioner",
-      // TODO: what should the display be?
     };
   }
   // For adds
@@ -79,7 +78,6 @@ export const createOrEditCondition = async (
   }
 
   const fhirClient = await getCTWFhirClient();
-
   const practitionerId = result.data.id
     ? (getClaims(fhirClient)[SYSTEM_PRACTITIONER_ID] as string)
     : "";
