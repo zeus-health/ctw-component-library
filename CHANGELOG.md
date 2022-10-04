@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.13.1
+
+### Patch Changes
+
+- 9ee5168: Condition history detail card and summary card now have a space between them.
+
 ## 0.13.0
 
 ### Minor Changes
