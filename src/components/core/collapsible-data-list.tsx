@@ -25,7 +25,7 @@ export const CollapsibleDataList = ({
   const [isDetailShown, setIsDetailShown] = useState(false);
 
   return (
-    <div className="space-y-3">
+    <div className="ctw-space-y-3">
       <DetailSummary
         date={date}
         title={title}
