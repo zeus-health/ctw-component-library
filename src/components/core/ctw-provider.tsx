@@ -85,11 +85,11 @@ function CTWProvider({ theme, children, ...ctwState }: CTWProviderProps) {
 
   return (
     <div style={mapToCSSVar(theme?.colors || {})}>
-      <QueryClientProvider client={queryClient}>
-        <CTWStateContext.Provider value={providerState}>
+      <CTWStateContext.Provider value={providerState}>
+        <QueryClientProvider client={queryClient}>
           {children}
-        </CTWStateContext.Provider>
-      </QueryClientProvider>
+        </QueryClientProvider>
+      </CTWStateContext.Provider>
     </div>
   );
 }

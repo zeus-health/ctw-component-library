@@ -100,7 +100,7 @@ export async function searchCommonRecords<T extends ResourceTypeString>(
 ): Promise<SearchReturn<T>> {
   return searchAllRecords(resourceType, fhirClient, {
     ...searchParams,
-    "_tag:not": LENS_TAGS.join(","),
+    "_tag:not": [...LENS_TAGS, ...SUMMARY_TAGS].join(","),
   });
 }
 
