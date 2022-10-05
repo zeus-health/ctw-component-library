@@ -2,4 +2,4 @@
 "@zus-health/ctw-component-library": patch
 ---
 
-Don't fetch when not on patient provider. Also fixes overfetching
+Adds an error display to the conditions table if there is no patientID corresponding in Zus Health.
