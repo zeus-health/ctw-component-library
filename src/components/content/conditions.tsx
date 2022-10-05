@@ -169,7 +169,6 @@ export function Conditions({ className }: ConditionsProps) {
   }, [
     includeInactive,
     patientResponse.data,
-    patientResponse.error,
     patient,
     patientRecordResponse.data,
     OtherProviderRecordsResponse.data,
@@ -185,7 +184,7 @@ export function Conditions({ className }: ConditionsProps) {
     >
       <div className="ctw-flex ctw-h-11 ctw-items-center ctw-justify-between ctw-bg-bg-light ctw-p-3">
         <div className="ctw-title">Conditions</div>
-        {!patientResponse.error && (
+        {!patientResponse.isError && (
           <button
             type="button"
             className="ctw-btn-clear ctw-link"
@@ -195,8 +194,17 @@ export function Conditions({ className }: ConditionsProps) {
           </button>
         )}
       </div>
-      {patientResponse.error && <AlertDialog />}
-      {!patientResponse.error && (
+      <>
+        {patientResponse.isError && (
+          <div className="ctw-p-5">
+            <AlertDialog
+              resourceType="Condition"
+              message="We are unable to access Condition information for this patient. Contact your system administrator or customer service for assistance."
+            />
+          </div>
+        )}
+      </>
+      {!patientResponse.isError && (
         <div className="ctw-conditions-body">
           <div className="ctw-space-y-3">
             <div className="ctw-conditions-title-container">
@@ -261,7 +269,7 @@ export function Conditions({ className }: ConditionsProps) {
         </div>
       )}
 
-      {patient && !patientResponse.error && (
+      {patient && !patientResponse.isError && (
         <DrawerFormWithFields
           patientID={patient.id}
           title={`${formAction} Condition`}
@@ -272,7 +280,7 @@ export function Conditions({ className }: ConditionsProps) {
           onClose={() => setDrawerIsOpen(false)}
         />
       )}
-      {conditionForHistory && !patientResponse.error && (
+      {conditionForHistory && !patientResponse.isError && (
         <ConditionHistoryDrawer
           isOpen={historyDrawerIsOpen}
           onClose={() => setHistoryDrawerIsOpen(false)}
