@@ -198,7 +198,7 @@ export function Conditions({ className }: ConditionsProps) {
         {patientResponse.isError && (
           <div className="ctw-p-5">
             <AlertDialog
-              resourceType="Condition"
+              resourceType="Conditions"
               message="We are unable to access Condition information for this patient. Contact your system administrator or customer service for assistance."
             />
           </div>
