@@ -128,7 +128,10 @@ export async function getConditionHistory(
 function filterAndSort(conditions: fhir4.Condition[]) {
   return sortBy(
     conditions.filter((condition) => condition.asserter?.type !== "Patient"),
-    (condition) => new ConditionModel(condition).display
+    (condition) => {
+      const model = new ConditionModel(condition);
+      return model.ccsGrouping || model.display;
+    }
   );
 }
 
