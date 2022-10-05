@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 0.13.3
+
+### Patch Changes
+
+- ba94843: Alphabetize conditions primarily by CCS grouping and secondarily the condition name so that users can quickly find the conditions by their category.
+- 1e346c8: Don't fetch when not on patient provider. Also fixes overfetching
+
 ## 0.13.2
 
 ### Patch Changes
