@@ -19,6 +19,8 @@ export async function getPatient(
     );
     return response;
   } catch (e) {
-    throw new Error(`Failed fetching condition information for patient: ${e}`);
+    throw new Error(
+      `Failed fetching patient information for patient: ${patientID}`
+    );
   }
 }
