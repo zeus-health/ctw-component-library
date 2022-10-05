@@ -6,7 +6,7 @@ export type ThirdPartyID = {
   patientID: string;
   systemURL: string;
 };
-export type PatientUPIDSpecified = {
+type PatientUPIDSpecified = {
   patientUPID: string;
   patientID?: never;
   systemURL?: never;
