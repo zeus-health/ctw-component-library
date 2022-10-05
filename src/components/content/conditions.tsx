@@ -17,7 +17,6 @@ import { useQuery } from "@tanstack/react-query";
 import cx from "classnames";
 import { union } from "lodash";
 import { useEffect, useRef, useState } from "react";
-import { useCTW } from "../core/ctw-provider";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionHistoryDrawer } from "./conditions-history-drawer";
@@ -46,6 +45,7 @@ export function Conditions({ className }: ConditionsProps) {
   const [patientRecordMessage, setPatientRecordMessage] =
     useState(EMPTY_MESSAGE);
   const [patientRecordIsLoading, setPatientRecordIsLoading] = useState(true);
+
   const [OtherProviderRecords, setOtherProviderRecords] = useState<
     ConditionModel[]
   >([]);
@@ -53,36 +53,34 @@ export function Conditions({ className }: ConditionsProps) {
     useState(true);
   const [OtherProviderRecordsMessage, setOtherProviderRecordsMessage] =
     useState(EMPTY_MESSAGE);
-  const [includeInactive, setIncludeInactive] = useState(true);
   const [patient, setPatient] = useState<PatientModel>();
+  const [includeInactive, setIncludeInactive] = useState(true);
   const [formAction, setFormAction] = useState("");
   const [conditionFilter, setConditionFilter] = useState<ConditionFilters>({});
-  const [patientUPID, setPatientUPID] = useState<string>("");
   const fhirClientRef = useFhirClientRef();
   const [currentSelectedData, setCurrentlySelectedData] =
     useState<FormEntry[]>();
   const [conditionForHistory, setConditionForHistory] =
     useState<ConditionModel>();
+  const patientResponse = usePatient();
+
   const patientRecordResponse = useQuery(
-    ["conditions", patientUPID, conditionFilter],
+    ["conditions", patient?.UPID, conditionFilter],
     getPatientConditions,
     {
-      enabled: !!patientUPID && !!fhirClientRef,
+      enabled: !!patient && !!fhirClientRef,
       meta: { fhirClientRef },
     }
   );
 
   const OtherProviderRecordsResponse = useQuery(
-    ["conditions", patientUPID],
+    ["conditions", patient?.UPID],
     getOtherProviderConditions,
     {
-      enabled: !!patientUPID && !!fhirClientRef,
+      enabled: !!patient && !!fhirClientRef,
       meta: { fhirClientRef },
     }
   );
-
-  const { getCTWFhirClient } = useCTW();
-  const { patientPromise } = usePatient();
 
   const handleFormChange = () => setIncludeInactive(!includeInactive);
   const handleConditionEdit = (condition: ConditionModel) => {
@@ -138,6 +136,10 @@ export function Conditions({ className }: ConditionsProps) {
 
   useEffect(() => {
     async function load() {
+      if (patientResponse.data) {
+        setPatient(patientResponse.data);
+      }
+
       const tempConditionFilters: ConditionFilters = includeInactive
         ? {
             "clinical-status": ["active", "recurrence", "relapse"],
@@ -145,12 +147,6 @@ export function Conditions({ className }: ConditionsProps) {
         : {};
 
       setConditionFilter(tempConditionFilters);
-      const patientTemp = await patientPromise;
-
-      setPatient(patientTemp);
-      if (patient?.UPID) {
-        setPatientUPID(patient.UPID);
-      }
 
       /* OtherProviderRecordsConditons depends patientRecordConditions so that we can correctly filter out 
          conditions that appear in patientRecordConditions from OtherProviderRecordsConditons */
@@ -193,12 +189,11 @@ export function Conditions({ className }: ConditionsProps) {
     load();
   }, [
     includeInactive,
-    patientPromise,
+    patientResponse.data,
     patient,
     patientRecordResponse.data,
     OtherProviderRecordsResponse.data,
     patientRecordResponse.error,
-    getCTWFhirClient,
   ]);
 
   return (
