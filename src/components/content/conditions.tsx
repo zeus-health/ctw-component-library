@@ -117,10 +117,7 @@ export function Conditions({ className }: ConditionsProps) {
     async function load() {
       if (patientResponse.data) {
         setPatient(patientResponse.data);
-      }
-
-      if (patient?.UPID) {
-        setPatientUPID(patient.UPID);
+        setPatientUPID(patientResponse.data.UPID);
       }
 
       const tempConditionFilters: ConditionFilters = includeInactive
