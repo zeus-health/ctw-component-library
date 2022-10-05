@@ -16,6 +16,7 @@ import { useQuery } from "@tanstack/react-query";
 import cx from "classnames";
 import { union } from "lodash";
 import { useEffect, useRef, useState } from "react";
+import { AlertDialog } from "../core/alert";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionHistoryDrawer } from "./conditions-history-drawer";
@@ -168,6 +169,7 @@ export function Conditions({ className }: ConditionsProps) {
   }, [
     includeInactive,
     patientResponse.data,
+    patientResponse.error,
     patient,
     patientRecordResponse.data,
     OtherProviderRecordsResponse.data,
@@ -183,79 +185,83 @@ export function Conditions({ className }: ConditionsProps) {
     >
       <div className="ctw-flex ctw-h-11 ctw-items-center ctw-justify-between ctw-bg-bg-light ctw-p-3">
         <div className="ctw-title">Conditions</div>
-        <button
-          type="button"
-          className="ctw-btn-clear ctw-link"
-          onClick={handleAddNewCondition}
-        >
-          + Add Condition
-        </button>
+        {!patientResponse.error && (
+          <button
+            type="button"
+            className="ctw-btn-clear ctw-link"
+            onClick={handleAddNewCondition}
+          >
+            + Add Condition
+          </button>
+        )}
       </div>
+      {patientResponse.error && <AlertDialog />}
+      {!patientResponse.error && (
+        <div className="ctw-conditions-body">
+          <div className="ctw-space-y-3">
+            <div className="ctw-conditions-title-container">
+              <div className="ctw-title">Patient Record</div>
+              <ToggleControl
+                onFormChange={handleFormChange}
+                toggleProps={{ name: "conditions", text: "Include Inactive" }}
+              />
+            </div>
 
-      <div className="ctw-conditions-body">
-        <div className="ctw-space-y-3">
-          <div className="ctw-conditions-title-container">
-            <div className="ctw-title">Patient Record</div>
-            <ToggleControl
-              onFormChange={handleFormChange}
-              toggleProps={{ name: "conditions", text: "Include Inactive" }}
+            <ConditionsTableBase
+              className="ctw-conditions-table"
+              stacked={breakpoints.sm}
+              conditions={patientRecord}
+              isLoading={patientRecordIsLoading}
+              message={patientRecordMessage}
+              rowActions={(condition) => [
+                {
+                  name: "Edit",
+                  action: () => {
+                    handleConditionEdit(condition);
+                  },
+                },
+                {
+                  name: "View History",
+                  action: () => {
+                    setHistoryDrawerIsOpen(true);
+                    setConditionForHistory(condition);
+                  },
+                },
+              ]}
             />
           </div>
 
-          <ConditionsTableBase
-            className="ctw-conditions-table"
-            stacked={breakpoints.sm}
-            conditions={patientRecord}
-            isLoading={patientRecordIsLoading}
-            message={patientRecordMessage}
-            rowActions={(condition) => [
-              {
-                name: "Edit",
-                action: () => {
-                  handleConditionEdit(condition);
+          <div className="ctw-space-y-3">
+            <div className="ctw-conditions-title-container">
+              <div className="ctw-title">Other Provider Records</div>
+            </div>
+            <ConditionsTableBase
+              className="ctw-conditions-not-reviewed"
+              stacked={breakpoints.sm}
+              conditions={OtherProviderRecords}
+              isLoading={OtherProviderRecordsIsLoading}
+              message={OtherProviderRecordsMessage}
+              rowActions={(condition) => [
+                {
+                  name: "Add",
+                  action: () => {
+                    handleOtherProviderRecordsCondition(condition);
+                  },
                 },
-              },
-              {
-                name: "View History",
-                action: () => {
-                  setHistoryDrawerIsOpen(true);
-                  setConditionForHistory(condition);
+                {
+                  name: "View History",
+                  action: () => {
+                    setHistoryDrawerIsOpen(true);
+                    setConditionForHistory(condition);
+                  },
                 },
-              },
-            ]}
-          />
-        </div>
-
-        <div className="ctw-space-y-3">
-          <div className="ctw-conditions-title-container">
-            <div className="ctw-title">Other Provider Records</div>
+              ]}
+            />
           </div>
-          <ConditionsTableBase
-            className="ctw-conditions-not-reviewed"
-            stacked={breakpoints.sm}
-            conditions={OtherProviderRecords}
-            isLoading={OtherProviderRecordsIsLoading}
-            message={OtherProviderRecordsMessage}
-            rowActions={(condition) => [
-              {
-                name: "Add",
-                action: () => {
-                  handleOtherProviderRecordsCondition(condition);
-                },
-              },
-              {
-                name: "View History",
-                action: () => {
-                  setHistoryDrawerIsOpen(true);
-                  setConditionForHistory(condition);
-                },
-              },
-            ]}
-          />
         </div>
-      </div>
+      )}
 
-      {patient && (
+      {patient && !patientResponse.error && (
         <DrawerFormWithFields
           patientID={patient.id}
           title={`${formAction} Condition`}
@@ -266,7 +272,7 @@ export function Conditions({ className }: ConditionsProps) {
           onClose={() => setDrawerIsOpen(false)}
         />
       )}
-      {conditionForHistory && (
+      {conditionForHistory && !patientResponse.error && (
         <ConditionHistoryDrawer
           isOpen={historyDrawerIsOpen}
           onClose={() => setHistoryDrawerIsOpen(false)}
