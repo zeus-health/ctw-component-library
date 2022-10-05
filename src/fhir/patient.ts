@@ -20,7 +20,7 @@ export async function getPatient(
     return response;
   } catch (e) {
     throw new Error(
-      `Failed fetching patient information for patient: ${patientID}`
+      `Failed fetching patient information for patient: ${patientID} and system: ${systemURL}`
     );
   }
 }

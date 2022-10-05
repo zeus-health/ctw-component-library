@@ -32,15 +32,6 @@ export function PatientProvider({
   patientID,
   systemURL,
 }: PatientProviderProps) {
-  // Case to catch if user doesnt provide either of the
-  if (!patientID && !systemURL) {
-    if (!patientUPID) {
-      throw Error(
-        "Need to provide either patientID and systemURL, or patientUPID"
-      );
-    }
-  }
-
   const providerState = useMemo(
     () => ({
       patientID: patientUPID || patientID,
@@ -50,7 +41,7 @@ export function PatientProvider({
   );
 
   return (
-    <CTWPatientContext.Provider value={providerState}>
+    <CTWPatientContext.Provider value={providerState as ProviderState}>
       {children}
     </CTWPatientContext.Provider>
   );
