@@ -53,7 +53,6 @@ export function Conditions({ className }: ConditionsProps) {
   const [OtherProviderRecordsMessage, setOtherProviderRecordsMessage] =
     useState(EMPTY_MESSAGE);
   const [patient, setPatient] = useState<PatientModel>();
-  const [patientUPID, setPatientUPID] = useState<string>("");
   const [includeInactive, setIncludeInactive] = useState(true);
   const [formAction, setFormAction] = useState("");
   const [conditionFilter, setConditionFilter] = useState<ConditionFilters>({});
@@ -65,19 +64,19 @@ export function Conditions({ className }: ConditionsProps) {
   const patientResponse = usePatient();
 
   const patientRecordResponse = useQuery(
-    ["conditions", patientUPID, conditionFilter],
+    ["conditions", patient?.UPID, conditionFilter],
     getPatientConditions,
     {
-      enabled: !!patientUPID && !!fhirClientRef,
+      enabled: !!patient && !!fhirClientRef,
       meta: { fhirClientRef },
     }
   );
 
   const OtherProviderRecordsResponse = useQuery(
-    ["conditions", patientUPID],
+    ["conditions", patient?.UPID],
     getOtherProviderConditions,
     {
-      enabled: !!patientUPID && !!fhirClientRef,
+      enabled: !!patient && !!fhirClientRef,
       meta: { fhirClientRef },
     }
   );
@@ -117,7 +116,6 @@ export function Conditions({ className }: ConditionsProps) {
     async function load() {
       if (patientResponse.data) {
         setPatient(patientResponse.data);
-        setPatientUPID(patientResponse.data.UPID);
       }
 
       const tempConditionFilters: ConditionFilters = includeInactive
