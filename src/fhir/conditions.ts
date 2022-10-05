@@ -130,7 +130,7 @@ function filterAndSort(conditions: fhir4.Condition[]) {
     conditions.filter((condition) => condition.asserter?.type !== "Patient"),
     (condition) => {
       const model = new ConditionModel(condition);
-      return model.ccsGrouping || model.display;
+      return model.ccsGrouping || "" + model.display || "";
     }
   );
 }
