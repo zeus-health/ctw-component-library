@@ -8,7 +8,6 @@ import {
   getOtherProviderConditions,
   getPatientConditions,
 } from "@/fhir/conditions";
-import { getPatient } from "@/fhir/patient";
 import { useFhirClientRef } from "@/fhir/utils";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { ConditionModel } from "@/models/conditions";
@@ -63,16 +62,7 @@ export function Conditions({ className }: ConditionsProps) {
     useState<FormEntry[]>();
   const [conditionForHistory, setConditionForHistory] =
     useState<ConditionModel>();
-  const { patientID, systemURL } = usePatient();
-
-  const patientResponse = useQuery(
-    ["patient", patientID, systemURL],
-    getPatient,
-    {
-      enabled: !!fhirClientRef,
-      meta: { fhirClientRef },
-    }
-  );
+  const patientResponse = usePatient();
 
   const patientRecordResponse = useQuery(
     ["conditions", patientUPID, conditionFilter],

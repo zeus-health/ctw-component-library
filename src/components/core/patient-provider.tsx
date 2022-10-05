@@ -1,4 +1,8 @@
+import { getPatient } from "@/fhir/patient";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
+import { useFhirClientRef } from "@/fhir/utils";
+import { PatientModel } from "@/models/patients";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { createContext, ReactNode, useContext, useMemo } from "react";
 
 export type ThirdPartyID = {
@@ -47,6 +51,16 @@ export function PatientProvider({
   );
 }
 
-export function usePatient() {
-  return useContext(CTWPatientContext);
+export function usePatient(): UseQueryResult<PatientModel, unknown> {
+  const fhirClientRef = useFhirClientRef();
+  const { patientID, systemURL } = useContext(CTWPatientContext);
+  const patientResponse = useQuery(
+    ["patient", patientID, systemURL],
+    getPatient,
+    {
+      enabled: !!fhirClientRef,
+      meta: { fhirClientRef },
+    }
+  );
+  return patientResponse;
 }

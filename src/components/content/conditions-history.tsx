@@ -69,7 +69,7 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
   const [conditionForSearch, setConditionForSearch] =
     useState<ConditionModel>();
   const fhirClientRef = useFhirClientRef();
-  const { patientPromise } = usePatient();
+  const patientResponse = usePatient();
   const historyResponse = useQuery(
     ["conditions", patientUPID, conditionForSearch],
     getConditionHistory,
@@ -82,9 +82,9 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
   useEffect(() => {
     async function load() {
       setConditionForSearch(condition);
-      const patientTemp = await patientPromise;
-      if (patientTemp.UPID) {
-        setPatientUPID(patientTemp.UPID);
+
+      if (patientResponse.data) {
+        setPatientUPID(patientResponse.data.UPID);
       }
 
       if (historyResponse.data) {
@@ -106,7 +106,7 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
       setConditions([]);
       setLoading(true);
     };
-  }, [condition, patientPromise, historyResponse.data]);
+  }, [condition, patientResponse.data, historyResponse.data]);
 
   function conditionHistoryDisplay() {
     if (conditions.length === 0 && !loading) {
