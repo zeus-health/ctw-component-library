@@ -187,7 +187,7 @@ export function Conditions({ className }: ConditionsProps) {
           <div className="ctw-title">Conditions</div>
         </div>
         <div className="ctw-p-5">
-          <AlertDialog resourceType="Conditions Unavailable">
+          <AlertDialog header="Conditions Unavailable">
             <div>
               We are unable to access Condition information for this patient.
             </div>
