@@ -1,6 +1,6 @@
 {
   "name": "@zus-health/ctw-component-library",
-  "version": "0.13.3",
+  "version": "0.13.4",
   "type": "module",
   "main": "dist/index.cjs",
   "module": "dist/index.es.js",
