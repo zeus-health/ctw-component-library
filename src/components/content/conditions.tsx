@@ -183,11 +183,11 @@ export function Conditions({ className }: ConditionsProps) {
           "ctw-conditions-stacked": breakpoints.sm,
         })}
       >
-        <div className="ctw-flex ctw-h-11 ctw-items-center ctw-justify-between ctw-bg-bg-light ctw-p-3">
+        <div className="ctw-conditions-heading-container">
           <div className="ctw-title">Conditions</div>
         </div>
         <div className="ctw-p-5">
-          <AlertDialog resourceType="Conditions">
+          <AlertDialog resourceType="Conditions Unavailable">
             <div>
               We are unable to access Condition information for this patient.
             </div>
@@ -208,7 +208,7 @@ export function Conditions({ className }: ConditionsProps) {
         "ctw-conditions-stacked": breakpoints.sm,
       })}
     >
-      <div className="ctw-flex ctw-h-11 ctw-items-center ctw-justify-between ctw-bg-bg-light ctw-p-3">
+      <div className="ctw-conditions-heading-container">
         <div className="ctw-title">Conditions</div>
         <button
           type="button"
