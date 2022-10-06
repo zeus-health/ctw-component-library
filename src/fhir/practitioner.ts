@@ -7,17 +7,22 @@ export const getPractitioner = async (
   fhirClient: Client
 ) => {
   try {
+    console.log("here", practitionerId);
     const { resources: practitioners } = await searchBuilderRecords(
       "Practitioner",
       fhirClient,
       {
-        patientUPID,
-        identifier: practitionerId,
+        // patientUPID,
+        _id: practitionerId,
       }
     );
+    console.log("practitioners", practitioners);
 
     return practitioners;
   } catch (e) {
-    throw new Error(`Failed fetching condition information for patient: ${e}`);
+    console.log(e);
+    throw new Error(
+      `Failed fetching condition information for practitioner: ${e}`
+    );
   }
 };

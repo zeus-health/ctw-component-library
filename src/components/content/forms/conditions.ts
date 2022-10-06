@@ -1,6 +1,4 @@
-import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { getClaims } from "@/fhir/client";
-import { isFhirError } from "@/fhir/errors";
 import { dateToISO } from "@/fhir/formatters";
 import { getPractitioner } from "@/fhir/practitioner";
 import {
@@ -17,6 +15,7 @@ import { z } from "zod";
 
 export const conditionSchema = z.object({
   id: z.string().optional(),
+  patientID: z.string().optional(),
   subjectID: z.string({
     required_error: "Condition subjectID must be specified.",
   }),
@@ -63,11 +62,18 @@ export const createOrEditCondition = async (
 
   const fhirClient = await getCTWFhirClient();
   let display;
+  console.log("getClaims(fhirClient)", getClaims(fhirClient));
   const practitionerId = result.data.id
     ? (getClaims(fhirClient)[SYSTEM_PRACTITIONER_ID] as string)
     : "";
-  if (practitionerId) {
-    const practitioner = await getPractitioner(practitionerId, "", fhirClient);
+  if (practitionerId && result.data.patientID) {
+    console.log("practitioner", practitionerId);
+    const practitioner = await getPractitioner(
+      practitionerId,
+      result.data.patientID,
+      fhirClient
+    );
+    console.log("practitioner", practitioner);
     display = "";
   }
 
@@ -113,14 +119,14 @@ export const createOrEditCondition = async (
 
   const conditionModel = new ConditionModel(fhirCondition);
 
-  const response = await createOrEditFhirResource({
-    resourceModel: conditionModel,
-    fhirClient,
-  });
+  // const response = await createOrEditFhirResource({
+  //   resourceModel: conditionModel,
+  //   fhirClient,
+  // });
 
-  if (isFhirError(response)) {
-    result.success = false;
-  }
+  // if (isFhirError(response)) {
+  //   result.success = false;
+  // }
 
   queryClient.invalidateQueries(["conditions"]);
 

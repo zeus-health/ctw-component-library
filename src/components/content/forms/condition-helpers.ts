@@ -3,8 +3,10 @@ import type { FormEntry } from "./drawer-form-with-fields";
 
 export const getAddConditionData = ({
   condition,
+  patientID,
 }: {
   condition: ConditionModel;
+  patientID: string;
 }): FormEntry[] => [
   {
     label: "subject",
@@ -23,13 +25,15 @@ export const getAddConditionData = ({
     value: condition.snomedCode,
     field: "snomedCode",
   },
-  ...sharedFields(condition),
+  ...sharedFields(condition, patientID),
 ];
 
 export const getEditingPatientConditionData = ({
   condition,
+  patientID,
 }: {
   condition: ConditionModel;
+  patientID: string;
 }): FormEntry[] => [
   {
     label: "id",
@@ -57,10 +61,17 @@ export const getEditingPatientConditionData = ({
     field: "snomedCode",
     readonly: true,
   },
-  ...sharedFields(condition),
+  ...sharedFields(condition, patientID),
 ];
 
-const sharedFields = (condition: ConditionModel) => [
+const sharedFields = (condition: ConditionModel, patientID: string) => [
+  {
+    label: "PatientID",
+    value: patientID,
+    field: "patientID",
+    hidden: true,
+    readonly: true,
+  },
   {
     label: "Clinical Status",
     value: condition.clinicalStatus,

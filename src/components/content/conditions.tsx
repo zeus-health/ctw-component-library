@@ -86,7 +86,9 @@ export function Conditions({ className }: ConditionsProps) {
     if (patient) {
       setDrawerIsOpen(true);
       setFormAction("Edit");
-      setCurrentlySelectedData(getEditingPatientConditionData({ condition }));
+      setCurrentlySelectedData(
+        getEditingPatientConditionData({ condition, patientID: patient.UPID })
+      );
     }
   };
 
@@ -94,7 +96,9 @@ export function Conditions({ className }: ConditionsProps) {
     if (patient) {
       setDrawerIsOpen(true);
       setFormAction("Add");
-      setCurrentlySelectedData(getAddConditionData({ condition }));
+      setCurrentlySelectedData(
+        getAddConditionData({ condition, patientID: patient.UPID })
+      );
     }
   };
 
@@ -103,13 +107,16 @@ export function Conditions({ className }: ConditionsProps) {
       resourceType: "Condition",
       subject: { type: "Patient", reference: `Patient/${patient?.id}` },
     };
-    setDrawerIsOpen(true);
-    setFormAction("Add");
-    setCurrentlySelectedData(
-      getAddConditionData({
-        condition: new ConditionModel(newCondition),
-      })
-    );
+    if (patient) {
+      setDrawerIsOpen(true);
+      setFormAction("Add");
+      setCurrentlySelectedData(
+        getAddConditionData({
+          condition: new ConditionModel(newCondition),
+          patientID: patient.UPID,
+        })
+      );
+    }
   };
 
   useEffect(() => {
