@@ -54,7 +54,7 @@ function setupData(condition: ConditionModel): CollapsibleDataListProps {
 
   return {
     id: condition.id,
-    date: condition.recordedDate || "",
+    date: condition.recordedDate,
     title: condition.snomedDisplay || condition.icd10Display,
     subTitle: condition.patient?.organization?.name,
     data: detailData,
@@ -62,9 +62,10 @@ function setupData(condition: ConditionModel): CollapsibleDataListProps {
 }
 
 export function ConditionHistory({ condition }: { condition: ConditionModel }) {
-  const [conditions, setConditions] = useState<CollapsibleDataListStackEntries>(
-    []
-  );
+  const [conditionsWithDate, setConditionsWithDate] =
+    useState<CollapsibleDataListStackEntries>([]);
+  const [conditionsWithoutDate, setConditionsWithoutDate] =
+    useState<CollapsibleDataListStackEntries>([]);
   const [loading, setLoading] = useState(true);
   const [patientUPID, setPatientUPID] = useState("");
   const [conditionForSearch, setConditionForSearch] =
@@ -102,7 +103,20 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
           "desc"
         );
 
-        setConditions(sortedConditions.map((model) => setupData(model)));
+        const conditionsFilteredWithDate = sortedConditions.filter(
+          (c) => c.recordedDate
+        );
+        const conditionsFilteredWithoutDate = sortedConditions.filter(
+          (c) => !c.recordedDate
+        );
+
+        setConditionsWithDate(
+          conditionsFilteredWithDate.map((model) => setupData(model))
+        );
+
+        setConditionsWithoutDate(
+          conditionsFilteredWithoutDate.map((model) => setupData(model))
+        );
         setLoading(false);
       }
     }
@@ -110,13 +124,18 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
     load();
 
     return function cleanup() {
-      setConditions([]);
+      setConditionsWithDate([]);
+      setConditionsWithoutDate([]);
       setLoading(true);
     };
   }, [condition, patientResponse.data, historyResponse.data]);
 
   function conditionHistoryDisplay() {
-    if (conditions.length === 0 && !loading) {
+    if (
+      conditionsWithDate.length === 0 &&
+      conditionsWithoutDate.length === 0 &&
+      !loading
+    ) {
       return <div>No history found.</div>;
     }
     if (loading) {
@@ -129,6 +148,7 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
         </div>
       );
     }
+
     return (
       <div className="ctw-space-y-6">
         <div>
@@ -138,9 +158,20 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
           <div className="ctw-text-sm">{condition.ccsGrouping}</div>
         </div>
         <CollapsibleDataListStack
-          entries={conditions}
+          entries={conditionsWithDate}
           limit={CONDITION_HISTORY_LIMIT}
         />
+        {conditionsWithoutDate.length !== 0 && (
+          <div className="ctw-space-y-2">
+            <div className="ctw-pl-4 ctw-font-medium">
+              Records with no date:
+            </div>
+            <CollapsibleDataListStack
+              entries={conditionsWithoutDate}
+              limit={CONDITION_HISTORY_LIMIT}
+            />
+          </div>
+        )}
       </div>
     );
   }
