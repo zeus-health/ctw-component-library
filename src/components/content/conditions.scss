@@ -10,6 +10,10 @@
   @apply ctw-flex ctw-items-center ctw-justify-between;
 }
 
+.ctw-conditions-heading-container {
+  @apply ctw-flex ctw-h-11 ctw-items-center ctw-justify-between ctw-bg-bg-light ctw-p-3;
+}
+
 .ctw-conditions.ctw-conditions-stacked {
   .ctw-conditions-body {
     @apply ctw-m-0;
