@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.13.6
+
+### Patch Changes
+
+- 9e80016: Add “Records with no date” section to condition history.
+
 ## 0.13.5
 
 ### Patch Changes
