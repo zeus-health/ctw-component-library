@@ -175,6 +175,32 @@ export function Conditions({ className }: ConditionsProps) {
     patientRecordResponse.error,
   ]);
 
+  if (patientResponse.isError) {
+    return (
+      <div
+        ref={containerRef}
+        className={cx("ctw-conditions", className, {
+          "ctw-conditions-stacked": breakpoints.sm,
+        })}
+      >
+        <div className="ctw-flex ctw-h-11 ctw-items-center ctw-justify-between ctw-bg-bg-light ctw-p-3">
+          <div className="ctw-title">Conditions</div>
+        </div>
+        <div className="ctw-p-5">
+          <AlertDialog resourceType="Conditions">
+            <div>
+              We are unable to access Condition information for this patient.
+            </div>
+            <div>
+              Contact your system administrator or customer service for
+              assistance.
+            </div>
+          </AlertDialog>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       ref={containerRef}
@@ -184,92 +210,78 @@ export function Conditions({ className }: ConditionsProps) {
     >
       <div className="ctw-flex ctw-h-11 ctw-items-center ctw-justify-between ctw-bg-bg-light ctw-p-3">
         <div className="ctw-title">Conditions</div>
-        {!patientResponse.isError && (
-          <button
-            type="button"
-            className="ctw-btn-clear ctw-link"
-            onClick={handleAddNewCondition}
-          >
-            + Add Condition
-          </button>
-        )}
+        <button
+          type="button"
+          className="ctw-btn-clear ctw-link"
+          onClick={handleAddNewCondition}
+        >
+          + Add Condition
+        </button>
       </div>
-      <>
-        {patientResponse.isError && (
-          <div className="ctw-p-5">
-            <AlertDialog
-              resourceType="Conditions"
-              message="We are unable to access Condition information for this patient. Contact your system administrator or customer service for assistance."
-            />
-          </div>
-        )}
-      </>
-      {!patientResponse.isError && (
-        <div className="ctw-conditions-body">
-          <div className="ctw-space-y-3">
-            <div className="ctw-conditions-title-container">
-              <div className="ctw-title">Patient Record</div>
-              <ToggleControl
-                onFormChange={handleFormChange}
-                toggleProps={{ name: "conditions", text: "Include Inactive" }}
-              />
-            </div>
-
-            <ConditionsTableBase
-              className="ctw-conditions-table"
-              stacked={breakpoints.sm}
-              conditions={patientRecord}
-              isLoading={patientRecordIsLoading}
-              message={patientRecordMessage}
-              rowActions={(condition) => [
-                {
-                  name: "Edit",
-                  action: () => {
-                    handleConditionEdit(condition);
-                  },
-                },
-                {
-                  name: "View History",
-                  action: () => {
-                    setHistoryDrawerIsOpen(true);
-                    setConditionForHistory(condition);
-                  },
-                },
-              ]}
+      <div className="ctw-conditions-body">
+        <div className="ctw-space-y-3">
+          <div className="ctw-conditions-title-container">
+            <div className="ctw-title">Patient Record</div>
+            <ToggleControl
+              onFormChange={handleFormChange}
+              toggleProps={{ name: "conditions", text: "Include Inactive" }}
             />
           </div>
 
-          <div className="ctw-space-y-3">
-            <div className="ctw-conditions-title-container">
-              <div className="ctw-title">Other Provider Records</div>
-            </div>
-            <ConditionsTableBase
-              className="ctw-conditions-not-reviewed"
-              stacked={breakpoints.sm}
-              conditions={OtherProviderRecords}
-              isLoading={OtherProviderRecordsIsLoading}
-              message={OtherProviderRecordsMessage}
-              rowActions={(condition) => [
-                {
-                  name: "Add",
-                  action: () => {
-                    handleOtherProviderRecordsCondition(condition);
-                  },
+          <ConditionsTableBase
+            className="ctw-conditions-table"
+            stacked={breakpoints.sm}
+            conditions={patientRecord}
+            isLoading={patientRecordIsLoading}
+            message={patientRecordMessage}
+            rowActions={(condition) => [
+              {
+                name: "Edit",
+                action: () => {
+                  handleConditionEdit(condition);
                 },
-                {
-                  name: "View History",
-                  action: () => {
-                    setHistoryDrawerIsOpen(true);
-                    setConditionForHistory(condition);
-                  },
+              },
+              {
+                name: "View History",
+                action: () => {
+                  setHistoryDrawerIsOpen(true);
+                  setConditionForHistory(condition);
                 },
-              ]}
-            />
-          </div>
+              },
+            ]}
+          />
         </div>
-      )}
 
-      {patient && !patientResponse.isError && (
+        <div className="ctw-space-y-3">
+          <div className="ctw-conditions-title-container">
+            <div className="ctw-title">Other Provider Records</div>
+          </div>
+          <ConditionsTableBase
+            className="ctw-conditions-not-reviewed"
+            stacked={breakpoints.sm}
+            conditions={OtherProviderRecords}
+            isLoading={OtherProviderRecordsIsLoading}
+            message={OtherProviderRecordsMessage}
+            rowActions={(condition) => [
+              {
+                name: "Add",
+                action: () => {
+                  handleOtherProviderRecordsCondition(condition);
+                },
+              },
+              {
+                name: "View History",
+                action: () => {
+                  setHistoryDrawerIsOpen(true);
+                  setConditionForHistory(condition);
+                },
+              },
+            ]}
+          />
+        </div>
+      </div>
+
+      {patient && (
         <DrawerFormWithFields
           patientID={patient.id}
           title={`${formAction} Condition`}
@@ -280,7 +292,7 @@ export function Conditions({ className }: ConditionsProps) {
           onClose={() => setDrawerIsOpen(false)}
         />
       )}
-      {conditionForHistory && !patientResponse.isError && (
+      {conditionForHistory && (
         <ConditionHistoryDrawer
           isOpen={historyDrawerIsOpen}
           onClose={() => setHistoryDrawerIsOpen(false)}
