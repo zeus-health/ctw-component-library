@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.13.5
+
+### Patch Changes
+
+- 417d6b6: Condition History now sorts by date and the entries without a date are filtered to the end.
+
 ## 0.13.4
 
 ### Patch Changes
