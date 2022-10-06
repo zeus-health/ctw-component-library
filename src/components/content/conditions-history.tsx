@@ -92,12 +92,12 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
         const includedResources = getIncludedResources(
           historyResponse.data.bundle
         );
-        const historyConditions = historyResponse.data.conditions.map(
+        const conditionModels = historyResponse.data.conditions.map(
           (c) => new ConditionModel(c, includedResources)
         );
 
         const sortedConditions = orderBy(
-          historyConditions,
+          conditionModels,
           (c) => c.recordedDate ?? "",
           "desc"
         );
