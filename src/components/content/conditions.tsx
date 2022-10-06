@@ -16,6 +16,7 @@ import { useQuery } from "@tanstack/react-query";
 import cx from "classnames";
 import { union } from "lodash";
 import { useEffect, useRef, useState } from "react";
+import { AlertDialog } from "../core/alert";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionHistoryDrawer } from "./conditions-history-drawer";
@@ -174,6 +175,32 @@ export function Conditions({ className }: ConditionsProps) {
     patientRecordResponse.error,
   ]);
 
+  if (patientResponse.isError) {
+    return (
+      <div
+        ref={containerRef}
+        className={cx("ctw-conditions", className, {
+          "ctw-conditions-stacked": breakpoints.sm,
+        })}
+      >
+        <div className="ctw-conditions-heading-container">
+          <div className="ctw-title">Conditions</div>
+        </div>
+        <div className="ctw-p-5">
+          <AlertDialog header="Conditions Unavailable">
+            <div>
+              We are unable to access Condition information for this patient.
+            </div>
+            <div>
+              Contact your system administrator or customer service for
+              assistance.
+            </div>
+          </AlertDialog>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       ref={containerRef}
@@ -181,7 +208,7 @@ export function Conditions({ className }: ConditionsProps) {
         "ctw-conditions-stacked": breakpoints.sm,
       })}
     >
-      <div className="ctw-flex ctw-h-11 ctw-items-center ctw-justify-between ctw-bg-bg-light ctw-p-3">
+      <div className="ctw-conditions-heading-container">
         <div className="ctw-title">Conditions</div>
         <button
           type="button"
@@ -191,7 +218,6 @@ export function Conditions({ className }: ConditionsProps) {
           + Add Condition
         </button>
       </div>
-
       <div className="ctw-conditions-body">
         <div className="ctw-space-y-3">
           <div className="ctw-conditions-title-container">
