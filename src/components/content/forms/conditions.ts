@@ -1,4 +1,6 @@
+import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { getClaims } from "@/fhir/client";
+import { isFhirError } from "@/fhir/errors";
 import { dateToISO } from "@/fhir/formatters";
 import { getPractitioner } from "@/fhir/practitioner";
 import {
@@ -8,6 +10,7 @@ import {
   SYSTEM_SNOMED,
 } from "@/fhir/system-urls";
 import { ConditionModel } from "@/models/conditions";
+import { PractitionerModel } from "@/models/practitioner";
 import { getFormData } from "@/utils/form-helper";
 import { queryClient } from "@/utils/request";
 import Client from "fhir-kit-client";
@@ -45,10 +48,20 @@ export const conditionSchema = z.object({
   note: z.string().optional(),
 });
 
-const setRecorderField = (practitionerId: string) => ({
-  reference: `Practitioner/${practitionerId}`,
-  type: "Practitioner",
-});
+const setRecorderField = async (practitionerId: string, fhirClient: Client) => {
+  let display;
+  if (practitionerId) {
+    const practitioner = await getPractitioner(practitionerId, fhirClient);
+    const practitionerModel = new PractitionerModel(practitioner[0]);
+    display = practitionerModel.fullName;
+  }
+
+  return {
+    reference: `Practitioner/${practitionerId}`,
+    type: "Practitioner",
+    display,
+  };
+};
 
 export const createOrEditCondition = async (
   data: FormData,
@@ -61,27 +74,17 @@ export const createOrEditCondition = async (
   }
 
   const fhirClient = await getCTWFhirClient();
-  let display;
-  console.log("getClaims(fhirClient)", getClaims(fhirClient));
   const practitionerId = result.data.id
     ? (getClaims(fhirClient)[SYSTEM_PRACTITIONER_ID] as string)
     : "";
-  if (practitionerId && result.data.patientID) {
-    console.log("practitioner", practitionerId);
-    const practitioner = await getPractitioner(
-      practitionerId,
-      result.data.patientID,
-      fhirClient
-    );
-    console.log("practitioner", practitioner);
-    display = "";
-  }
 
   // Some fields will need to be set as they are required.
   const fhirCondition: fhir4.Condition = {
     resourceType: "Condition",
     id: result.data.id,
-    ...(practitionerId && { recorder: setRecorderField(practitionerId) }),
+    ...(practitionerId && {
+      recorder: await setRecorderField(practitionerId, fhirClient),
+    }),
     clinicalStatus: {
       coding: [
         {
@@ -119,14 +122,14 @@ export const createOrEditCondition = async (
 
   const conditionModel = new ConditionModel(fhirCondition);
 
-  // const response = await createOrEditFhirResource({
-  //   resourceModel: conditionModel,
-  //   fhirClient,
-  // });
+  const response = await createOrEditFhirResource({
+    resourceModel: conditionModel,
+    fhirClient,
+  });
 
-  // if (isFhirError(response)) {
-  //   result.success = false;
-  // }
+  if (isFhirError(response)) {
+    result.success = false;
+  }
 
   queryClient.invalidateQueries(["conditions"]);
 
