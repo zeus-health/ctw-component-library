@@ -103,15 +103,13 @@ export function Conditions({ className }: ConditionsProps) {
       resourceType: "Condition",
       subject: { type: "Patient", reference: `Patient/${patient?.id}` },
     };
-    if (patient) {
-      setDrawerIsOpen(true);
-      setFormAction("Add");
-      setCurrentlySelectedData(
-        getAddConditionData({
-          condition: new ConditionModel(newCondition),
-        })
-      );
-    }
+    setDrawerIsOpen(true);
+    setFormAction("Add");
+    setCurrentlySelectedData(
+      getAddConditionData({
+        condition: new ConditionModel(newCondition),
+      })
+    );
   };
 
   useEffect(() => {
