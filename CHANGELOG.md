@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.13.4
+
+### Patch Changes
+
+- 5344fa5: Adds an error display to the conditions table if patient could not be found.
+
 ## 0.13.3
 
 ### Patch Changes
