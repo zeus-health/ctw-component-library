@@ -133,8 +133,8 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
   function conditionHistoryDisplay() {
     if (
       conditionsWithDate.length === 0 &&
-      !loading &&
-      conditionsWithoutDate.length === 0
+      conditionsWithoutDate.length === 0 &&
+      !loading
     ) {
       return <div>No history found.</div>;
     }
@@ -161,14 +161,18 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
           entries={conditionsWithDate}
           limit={CONDITION_HISTORY_LIMIT}
         />
-        <div className="ctw-space-y-2 ctw-text-base">
+        <div className="ctw-space-y-2">
           {conditionsWithoutDate.length !== 0 && (
-            <div className="ctw-space-y-2">Records with no date:</div>
+            <>
+              <div className="ctw-pl-4 ctw-font-medium">
+                Records with no date:
+              </div>
+              <CollapsibleDataListStack
+                entries={conditionsWithoutDate}
+                limit={CONDITION_HISTORY_LIMIT}
+              />
+            </>
           )}
-          <CollapsibleDataListStack
-            entries={conditionsWithoutDate}
-            limit={CONDITION_HISTORY_LIMIT}
-          />
         </div>
       </div>
     );
