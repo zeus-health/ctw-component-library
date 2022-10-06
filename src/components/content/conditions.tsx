@@ -86,9 +86,7 @@ export function Conditions({ className }: ConditionsProps) {
     if (patient) {
       setDrawerIsOpen(true);
       setFormAction("Edit");
-      setCurrentlySelectedData(
-        getEditingPatientConditionData({ condition, patientID: patient.UPID })
-      );
+      setCurrentlySelectedData(getEditingPatientConditionData({ condition }));
     }
   };
 
@@ -96,9 +94,7 @@ export function Conditions({ className }: ConditionsProps) {
     if (patient) {
       setDrawerIsOpen(true);
       setFormAction("Add");
-      setCurrentlySelectedData(
-        getAddConditionData({ condition, patientID: patient.UPID })
-      );
+      setCurrentlySelectedData(getAddConditionData({ condition }));
     }
   };
 
@@ -113,7 +109,6 @@ export function Conditions({ className }: ConditionsProps) {
       setCurrentlySelectedData(
         getAddConditionData({
           condition: new ConditionModel(newCondition),
-          patientID: patient.UPID,
         })
       );
     }
