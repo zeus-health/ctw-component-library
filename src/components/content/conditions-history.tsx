@@ -161,9 +161,9 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
           entries={conditionsWithDate}
           limit={CONDITION_HISTORY_LIMIT}
         />
-        <div className="ctw-space-y-2">
-          {conditionsWithoutDate.length !== 0 && (
-            <>
+        {conditionsWithoutDate.length !== 0 && (
+          <>
+            <div className="ctw-space-y-2">
               <div className="ctw-pl-4 ctw-font-medium">
                 Records with no date:
               </div>
@@ -171,9 +171,9 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
                 entries={conditionsWithoutDate}
                 limit={CONDITION_HISTORY_LIMIT}
               />
-            </>
-          )}
-        </div>
+            </div>
+          </>
+        )}
       </div>
     );
   }
