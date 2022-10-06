@@ -2,6 +2,7 @@ import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { getClaims } from "@/fhir/client";
 import { isFhirError } from "@/fhir/errors";
 import { dateToISO } from "@/fhir/formatters";
+import { getPractitioner } from "@/fhir/practitioner";
 import {
   SYSTEM_CONDITION_CLINICAL,
   SYSTEM_CONDITION_VERIFICATION_STATUS,
@@ -61,9 +62,15 @@ export const createOrEditCondition = async (
   }
 
   const fhirClient = await getCTWFhirClient();
+  let display;
   const practitionerId = result.data.id
     ? (getClaims(fhirClient)[SYSTEM_PRACTITIONER_ID] as string)
     : "";
+  if (practitionerId) {
+    const practitioner = await getPractitioner(practitionerId, "", fhirClient);
+    display = "";
+  }
+
   // Some fields will need to be set as they are required.
   const fhirCondition: fhir4.Condition = {
     resourceType: "Condition",
