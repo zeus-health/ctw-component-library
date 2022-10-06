@@ -3,6 +3,7 @@ import { getConditionHistory } from "@/fhir/conditions";
 import { useFhirClientRef } from "@/fhir/utils";
 import { ConditionModel } from "@/models/conditions";
 import { useQuery } from "@tanstack/react-query";
+import { orderBy } from "lodash";
 import { useEffect, useState } from "react";
 import { CodingList } from "../core/coding-list";
 import { CollapsibleDataListProps } from "../core/collapsible-data-list";
@@ -53,7 +54,7 @@ function setupData(condition: ConditionModel): CollapsibleDataListProps {
 
   return {
     id: condition.id,
-    date: condition.recordedDate,
+    date: condition.recordedDate || "",
     title: condition.snomedDisplay || condition.icd10Display,
     subTitle: condition.patient?.organization?.name,
     data: detailData,
@@ -95,7 +96,13 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
           (c) => new ConditionModel(c, includedResources)
         );
 
-        setConditions(filteredConditions.map((model) => setupData(model)));
+        const sortedConditions = orderBy(
+          filteredConditions,
+          (c) => c.recordedDate ?? "",
+          "desc"
+        );
+
+        setConditions(sortedConditions.map((model) => setupData(model)));
         setLoading(false);
       }
     }
