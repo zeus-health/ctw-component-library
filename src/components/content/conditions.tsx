@@ -5,13 +5,10 @@ import {
 import {
   ConditionFilters,
   filterConditionsWithConfirmedCodes,
+  getNewCondition,
   getOtherProviderConditions,
   getPatientConditions,
 } from "@/fhir/conditions";
-import {
-  SYSTEM_CONDITION_CLINICAL,
-  SYSTEM_CONDITION_VERIFICATION_STATUS,
-} from "@/fhir/system-urls";
 import { useFhirClientRef } from "@/fhir/utils";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { ConditionModel } from "@/models/conditions";
@@ -19,10 +16,10 @@ import { useQuery } from "@tanstack/react-query";
 import cx from "classnames";
 import { union } from "lodash";
 import { useEffect, useRef, useState } from "react";
-import { AlertDialog } from "../core/alert";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionHistoryDrawer } from "./conditions-history-drawer";
+import { ConditionsNoPatient } from "./conditions-no-patient";
 import { ConditionsTableBase } from "./conditions-table-base";
 import "./conditions.scss";
 import { conditionSchema, createOrEditCondition } from "./forms/conditions";
@@ -102,33 +99,9 @@ export function Conditions({ className }: ConditionsProps) {
   };
 
   const handleAddNewCondition = () => {
-    const newCondition: fhir4.Condition = {
-      resourceType: "Condition",
-      subject: {
-        type: "Patient",
-        reference: `Patient/${patientResponse.data?.id}`,
-      },
-      clinicalStatus: {
-        coding: [
-          {
-            system: SYSTEM_CONDITION_CLINICAL,
-            code: "active",
-            display: "Active",
-          },
-        ],
-        text: "active",
-      },
-      verificationStatus: {
-        coding: [
-          {
-            system: SYSTEM_CONDITION_VERIFICATION_STATUS,
-            code: "confirmed",
-            display: "Confirmed",
-          },
-        ],
-        text: "confirmed",
-      },
-    };
+    if (!patientResponse.data) return;
+
+    const newCondition = getNewCondition(patientResponse.data.id);
     setDrawerIsOpen(true);
     setFormAction("Add");
     setCurrentlySelectedData(
@@ -191,29 +164,7 @@ export function Conditions({ className }: ConditionsProps) {
   ]);
 
   if (patientResponse.isError) {
-    return (
-      <div
-        ref={containerRef}
-        className={cx("ctw-conditions", className, {
-          "ctw-conditions-stacked": breakpoints.sm,
-        })}
-      >
-        <div className="ctw-conditions-heading-container">
-          <div className="ctw-title">Conditions</div>
-        </div>
-        <div className="ctw-p-5">
-          <AlertDialog header="Conditions Unavailable">
-            <div>
-              We are unable to access Condition information for this patient.
-            </div>
-            <div>
-              Contact your system administrator or customer service for
-              assistance.
-            </div>
-          </AlertDialog>
-        </div>
-      </div>
-    );
+    return <ConditionsNoPatient className={className} />;
   }
 
   return (
@@ -275,7 +226,10 @@ export function Conditions({ className }: ConditionsProps) {
             className="ctw-conditions-not-reviewed"
             stacked={breakpoints.sm}
             conditions={OtherProviderRecords}
-            isLoading={OtherProviderRecordsResponse.isLoading}
+            isLoading={
+              OtherProviderRecordsResponse.isLoading ||
+              patientRecordsResponse.isLoading
+            }
             message={otherProviderRecordMessage}
             rowActions={(condition) => [
               {
@@ -307,13 +261,12 @@ export function Conditions({ className }: ConditionsProps) {
           onClose={() => setDrawerIsOpen(false)}
         />
       )}
-      {conditionForHistory && (
-        <ConditionHistoryDrawer
-          isOpen={historyDrawerIsOpen}
-          onClose={() => setHistoryDrawerIsOpen(false)}
-          condition={conditionForHistory}
-        />
-      )}
+
+      <ConditionHistoryDrawer
+        isOpen={historyDrawerIsOpen}
+        onClose={() => setHistoryDrawerIsOpen(false)}
+        condition={conditionForHistory}
+      />
     </div>
   );
 }
