@@ -75,6 +75,7 @@ const sharedFields = (condition: ConditionModel) => [
     label: "Recorded Date",
     value: condition.recordedDate,
     field: "recordedDate",
+    hidden: true,
   },
   {
     label: "Onset",
