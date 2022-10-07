@@ -226,7 +226,10 @@ export function Conditions({ className }: ConditionsProps) {
             className="ctw-conditions-not-reviewed"
             stacked={breakpoints.sm}
             conditions={OtherProviderRecords}
-            isLoading={OtherProviderRecordsResponse.isLoading}
+            isLoading={
+              OtherProviderRecordsResponse.isLoading ||
+              patientRecordsResponse.isLoading
+            }
             message={otherProviderRecordMessage}
             rowActions={(condition) => [
               {
