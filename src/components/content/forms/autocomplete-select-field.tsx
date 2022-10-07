@@ -19,9 +19,9 @@ export const AutoCompleteSelect = (authToken: string) => {
   const filteredPeople =
     query === ""
       ? people
-      : people.filter((person) => {
-          return person.toLowerCase().includes(query.toLowerCase());
-        });
+      : people.filter((person) =>
+          person.toLowerCase().includes(query.toLowerCase())
+        );
 
   useEffect(() => {
     async function load() {
