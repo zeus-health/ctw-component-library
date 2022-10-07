@@ -76,7 +76,7 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
     ["conditions", patientUPID, conditionForSearch],
     getConditionHistory,
     {
-      enabled: !!patientUPID && !!fhirClientRef,
+      enabled: !!patientUPID && !!fhirClientRef.current,
       meta: { fhirClientRef },
     }
   );
