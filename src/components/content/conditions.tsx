@@ -307,13 +307,12 @@ export function Conditions({ className }: ConditionsProps) {
           onClose={() => setDrawerIsOpen(false)}
         />
       )}
-      {conditionForHistory && (
-        <ConditionHistoryDrawer
-          isOpen={historyDrawerIsOpen}
-          onClose={() => setHistoryDrawerIsOpen(false)}
-          condition={conditionForHistory}
-        />
-      )}
+
+      <ConditionHistoryDrawer
+        isOpen={historyDrawerIsOpen}
+        onClose={() => setHistoryDrawerIsOpen(false)}
+        condition={conditionForHistory}
+      />
     </div>
   );
 }
