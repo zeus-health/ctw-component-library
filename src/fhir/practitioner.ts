@@ -4,7 +4,7 @@ import { searchBuilderRecords } from "./search-helpers";
 class PractitionerNotFoundError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = "PractitionerNotFound";
+    this.name = "PractitionerNotFoundError";
   }
 }
 
