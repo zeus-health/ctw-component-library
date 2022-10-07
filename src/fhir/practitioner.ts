@@ -1,3 +1,4 @@
+import { PractitionerModel } from "@/models/practitioner";
 import Client from "fhir-kit-client";
 import { searchBuilderRecords } from "./search-helpers";
 
@@ -26,5 +27,5 @@ export const getPractitioner = async (
     throw new Error(`No practitioner found with an id of: ${practitionerId}`);
   }
 
-  return practitioners[0];
+  return new PractitionerModel(practitioners[0]);
 };

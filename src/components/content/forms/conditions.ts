@@ -10,7 +10,6 @@ import {
   SYSTEM_SNOMED,
 } from "@/fhir/system-urls";
 import { ConditionModel } from "@/models/conditions";
-import { PractitionerModel } from "@/models/practitioner";
 import { getFormData } from "@/utils/form-helper";
 import { queryClient } from "@/utils/request";
 import Client from "fhir-kit-client";
@@ -48,8 +47,7 @@ export const conditionSchema = z.object({
 });
 
 const setRecorderField = async (practitionerId: string, fhirClient: Client) => {
-  const practitioner = await getPractitioner(practitionerId, fhirClient);
-  const practitionerModel = new PractitionerModel(practitioner);
+  const practitionerModel = await getPractitioner(practitionerId, fhirClient);
   const display = practitionerModel.fullName;
 
   return {
