@@ -8,6 +8,7 @@ import {
   getOtherProviderConditions,
   getPatientConditions,
 } from "@/fhir/conditions";
+import { dateToISO } from "@/fhir/formatters";
 import { useFhirClientRef } from "@/fhir/utils";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { ConditionModel } from "@/models/conditions";
@@ -104,6 +105,27 @@ export function Conditions({ className }: ConditionsProps) {
     const newCondition: fhir4.Condition = {
       resourceType: "Condition",
       subject: { type: "Patient", reference: `Patient/${patient?.id}` },
+      clinicalStatus: {
+        coding: [
+          {
+            system: "http://hl7.org/CodeSystem/condition-clinical",
+            code: "active",
+            display: "Active",
+          },
+        ],
+        text: "active",
+      },
+      verificationStatus: {
+        coding: [
+          {
+            system: "http://hl7.org/fhir/ValueSet/condition-ver-status",
+            code: "confirmed",
+            display: "Confirmed",
+          },
+        ],
+        text: "confirmed",
+      },
+      recordedDate: dateToISO(new Date()),
     };
     setDrawerIsOpen(true);
     setFormAction("Add");
