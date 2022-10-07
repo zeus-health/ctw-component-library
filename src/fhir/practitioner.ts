@@ -14,7 +14,11 @@ export const getPractitioner = async (
       }
     );
 
-    return practitioners;
+    if (practitioners.length === 0) {
+      throw new Error(`No practitioner found with an id of: ${practitionerId}`);
+    }
+
+    return practitioners[0];
   } catch (e) {
     throw new Error(
       `Failed fetching practitioner with an id of: ${practitionerId}. ${e}`

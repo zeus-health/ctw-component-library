@@ -49,7 +49,7 @@ export const conditionSchema = z.object({
 
 const setRecorderField = async (practitionerId: string, fhirClient: Client) => {
   const practitioner = await getPractitioner(practitionerId, fhirClient);
-  const practitionerModel = new PractitionerModel(practitioner[0]);
+  const practitionerModel = new PractitionerModel(practitioner);
   const display = practitionerModel.fullName;
 
   return {
