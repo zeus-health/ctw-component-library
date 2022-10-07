@@ -64,7 +64,7 @@ export const createOrEditCondition = async (
   const practitionerId = result.data.id
     ? (getClaims(fhirClient)[SYSTEM_PRACTITIONER_ID] as string)
     : "";
-  // Some fields will be set to default values.
+  // Some fields will need to be set as they are required.
   const fhirCondition: fhir4.Condition = {
     resourceType: "Condition",
     id: result.data.id,
