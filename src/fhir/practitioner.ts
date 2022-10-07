@@ -16,6 +16,8 @@ export const getPractitioner = async (
 
     return practitioners;
   } catch (e) {
-    throw new Error(`Failed fetching practitioner: ${e}`);
+    throw new Error(
+      `Failed fetching practitioner with an id of: ${practitionerId}. ${e}`
+    );
   }
 };
