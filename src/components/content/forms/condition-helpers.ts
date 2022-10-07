@@ -1,4 +1,3 @@
-import { dateToISO } from "@/fhir/formatters";
 import { ConditionModel } from "@/models/conditions";
 import type { FormEntry } from "./drawer-form-with-fields";
 
@@ -71,12 +70,6 @@ const sharedFields = (condition: ConditionModel) => [
     label: "Verification Status",
     value: condition.verificationStatus,
     field: "verificationStatus",
-  },
-  {
-    label: "Recorded Date",
-    value: dateToISO(new Date()),
-    field: "recordedDate",
-    hidden: true,
   },
   {
     label: "Onset",

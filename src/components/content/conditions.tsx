@@ -8,7 +8,6 @@ import {
   getOtherProviderConditions,
   getPatientConditions,
 } from "@/fhir/conditions";
-import { dateToISO } from "@/fhir/formatters";
 import {
   SYSTEM_CONDITION_CLINICAL,
   SYSTEM_CONDITION_VERIFICATION_STATUS,
@@ -129,7 +128,6 @@ export function Conditions({ className }: ConditionsProps) {
         ],
         text: "confirmed",
       },
-      recordedDate: dateToISO(new Date()),
     };
     setDrawerIsOpen(true);
     setFormAction("Add");
