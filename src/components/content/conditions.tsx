@@ -8,6 +8,10 @@ import {
   getOtherProviderConditions,
   getPatientConditions,
 } from "@/fhir/conditions";
+import {
+  SYSTEM_CONDITION_CLINICAL,
+  SYSTEM_CONDITION_VERIFICATION_STATUS,
+} from "@/fhir/system-urls";
 import { useFhirClientRef } from "@/fhir/utils";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { ConditionModel } from "@/models/conditions";
@@ -103,6 +107,26 @@ export function Conditions({ className }: ConditionsProps) {
       subject: {
         type: "Patient",
         reference: `Patient/${patientResponse.data?.id}`,
+      },
+      clinicalStatus: {
+        coding: [
+          {
+            system: SYSTEM_CONDITION_CLINICAL,
+            code: "active",
+            display: "Active",
+          },
+        ],
+        text: "active",
+      },
+      verificationStatus: {
+        coding: [
+          {
+            system: SYSTEM_CONDITION_VERIFICATION_STATUS,
+            code: "confirmed",
+            display: "Confirmed",
+          },
+        ],
+        text: "confirmed",
       },
     };
     setDrawerIsOpen(true);

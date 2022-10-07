@@ -1,5 +1,5 @@
 import { Theme } from "@/styles/tailwind.theme";
-import { createContext } from "react";
+import { createContext, RefObject } from "react";
 import type { Env } from "./ctw-provider";
 
 export type CTWToken = {
@@ -15,6 +15,7 @@ export type CTWState = {
   headers?: HeadersInit;
   authTokenURL?: string;
   theme?: Theme;
+  ctwProviderRef: RefObject<HTMLDivElement>;
   token?: CTWToken;
   actions: {
     handleAuth: () => Promise<string>;

@@ -79,11 +79,6 @@ const sharedFields = (condition: ConditionModel) => [
     field: "verificationStatus",
   },
   {
-    label: "Recorded Date",
-    value: condition.recordedDate,
-    field: "recordedDate",
-  },
-  {
     label: "Onset",
     value: condition.onset,
     field: "onset",

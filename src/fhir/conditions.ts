@@ -59,7 +59,7 @@ export async function getPatientConditions(
   const [_, patientUPID, conditionFilters] = queryKey;
 
   if (!patientUPID) {
-    throw Error("Patient UPID is required to run getPatientConditions");
+    throw new Error("Patient UPID is required to run getPatientConditions");
   }
 
   try {
@@ -87,7 +87,9 @@ export async function getOtherProviderConditions(
   const [_, patientUPID] = queryKey;
 
   if (!patientUPID) {
-    throw Error("Patient UPID is required to run getOtherProviderConditions");
+    throw new Error(
+      "Patient UPID is required to run getOtherProviderConditions"
+    );
   }
 
   try {
@@ -113,7 +115,7 @@ export async function getConditionHistory(
     const [_, patientUPID, condition] = queryKey;
 
     if (!condition) {
-      throw Error("Condition is required");
+      throw new Error("Condition is required");
     }
 
     const tokens = condition.knownCodings.map(
