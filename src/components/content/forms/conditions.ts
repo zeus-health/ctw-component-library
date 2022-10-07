@@ -47,8 +47,8 @@ export const conditionSchema = z.object({
 });
 
 const setRecorderField = async (practitionerId: string, fhirClient: Client) => {
-  const practitionerModel = await getPractitioner(practitionerId, fhirClient);
-  const display = practitionerModel.fullName;
+  const practitioner = await getPractitioner(practitionerId, fhirClient);
+  const display = practitioner.fullName;
 
   return {
     reference: `Practitioner/${practitionerId}`,
