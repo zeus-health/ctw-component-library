@@ -19,9 +19,6 @@ export const conditionSchema = z.object({
   subjectID: z.string({
     required_error: "Condition subjectID must be specified.",
   }),
-  recordedDate: z.date({
-    required_error: "Condition recorded date must be specified.",
-  }),
   display: z.string({ required_error: "Condition name must be specified." }),
   snomedCode: z.string({ required_error: "Snomed code must be provided." }),
   clinicalStatus: z.enum([
@@ -99,7 +96,7 @@ export const createOrEditCondition = async (
       abatementDateTime: dateToISO(result.data.abatement),
     }),
     onsetDateTime: dateToISO(result.data.onset),
-    recordedDate: dateToISO(result.data.recordedDate),
+    recordedDate: dateToISO(new Date()),
     subject: { type: "Patient", reference: `Patient/${patientID}` },
     note: result.data.note ? [{ text: result.data.note }] : undefined,
   };
