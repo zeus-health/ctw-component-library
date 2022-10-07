@@ -9,6 +9,10 @@ import {
   getPatientConditions,
 } from "@/fhir/conditions";
 import { dateToISO } from "@/fhir/formatters";
+import {
+  SYSTEM_CONDITION_CLINICAL,
+  SYSTEM_CONDITION_VERIFICATION_STATUS,
+} from "@/fhir/system-urls";
 import { useFhirClientRef } from "@/fhir/utils";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { ConditionModel } from "@/models/conditions";
@@ -108,7 +112,7 @@ export function Conditions({ className }: ConditionsProps) {
       clinicalStatus: {
         coding: [
           {
-            system: "http://hl7.org/CodeSystem/condition-clinical",
+            system: SYSTEM_CONDITION_CLINICAL,
             code: "active",
             display: "Active",
           },
@@ -118,7 +122,7 @@ export function Conditions({ className }: ConditionsProps) {
       verificationStatus: {
         coding: [
           {
-            system: "http://hl7.org/fhir/ValueSet/condition-ver-status",
+            system: SYSTEM_CONDITION_VERIFICATION_STATUS,
             code: "confirmed",
             display: "Confirmed",
           },
