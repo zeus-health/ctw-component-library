@@ -33,6 +33,10 @@ export const AutoCompleteSelect = ({ authToken }: AutoCompleteSelectProps) => {
       console.log("data", data);
       setOptions(data.conditionsList);
     }
+    if (query.length < 2) {
+      setOptions([]);
+    }
+
     if (query.length > 1) {
       load();
     }
@@ -47,28 +51,65 @@ export const AutoCompleteSelect = ({ authToken }: AutoCompleteSelectProps) => {
       <Combobox.Input
         className="ctw-listbox-input ctw-w-full"
         onChange={debouncedSearchInputChange}
+        placeholder="Type to search"
       />
       <Combobox.Options className="ctw-listbox ctw-max-h-60 ctw-overflow-auto ctw-rounded-md ctw-bg-white ctw-py-1 ctw-text-base ctw-shadow-lg ctw-ring-1 ctw-ring-black ctw-ring-opacity-5 focus:ctw-outline-none sm:ctw-text-sm">
-        {options.length !== 0 && (
-          <>
-            {options.map((option) => (
-              <Combobox.Option
-                key={option.code}
-                value={option.display}
-                className={({ active }) =>
-                  `ctw-relative ctw-cursor-default ctw-select-none ctw-py-2 ctw-pr-4 ctw-pl-10 ${
-                    active
-                      ? "ctw-bg-primary-light ctw-text-primary-dark"
-                      : "ctw-text-content-black"
-                  }`
-                }
-              >
-                {option.display}
-              </Combobox.Option>
-            ))}
-          </>
-        )}
+        <RenderCorrectOptions options={options} query={query} />
       </Combobox.Options>
     </Combobox>
+  );
+};
+
+const RenderCorrectOptions = ({ options, query }) => {
+  if (query.length === 0) {
+    return (
+      <ComboboxOption option={{ display: "Type to search", code: "empty" }} />
+    );
+  }
+
+  if (query.length < 2) {
+    return (
+      <ComboboxOption
+        option={{ display: "No choices to choose from", code: "empty" }}
+      />
+    );
+  }
+
+  if (options.length === 0) {
+    return (
+      <ComboboxOption
+        option={{
+          display: `No results found for search term '${query}'`,
+          code: "empty",
+        }}
+      />
+    );
+  }
+
+  return (
+    <>
+      {options.map((option) => (
+        <ComboboxOption option={option} />
+      ))}
+    </>
+  );
+};
+
+const ComboboxOption = ({ option }) => {
+  console.log("combox option", option);
+  return (
+    <Combobox.Option
+      key={option.code}
+      value={option.display}
+      className={({ active }) =>
+        `ctw-relative ctw-cursor-default ctw-select-none ctw-py-2 ctw-pr-4 ctw-pl-10 ${
+          active
+            ? "ctw-bg-primary-light ctw-text-primary-dark"
+            : "ctw-text-content-black"
+        }`
+      }
+    >
+      {option.display}
+    </Combobox.Option>
   );
 };
