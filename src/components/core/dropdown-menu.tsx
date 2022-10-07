@@ -2,6 +2,7 @@ import { Menu } from "@headlessui/react";
 import * as RadixDropdownMenu from "@radix-ui/react-dropdown-menu";
 import cx from "classnames";
 import { ReactNode } from "react";
+import { useCTW } from "./ctw-provider";
 import "./dropdown-menu.scss";
 
 export type MenuItems = {
@@ -16,6 +17,8 @@ export type DropdownMenuProps = {
 };
 
 export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
+  const { ctwProviderRef } = useCTW();
+
   return (
     <Menu>
       <RadixDropdownMenu.Root modal={false}>
@@ -23,7 +26,7 @@ export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
           {children}
         </RadixDropdownMenu.Trigger>
 
-        <RadixDropdownMenu.Portal>
+        <RadixDropdownMenu.Portal container={ctwProviderRef.current}>
           <RadixDropdownMenu.Content
             className="ctw-dropdown-menu-container"
             collisionPadding={10}

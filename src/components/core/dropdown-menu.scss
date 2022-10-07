@@ -3,7 +3,7 @@
 }
 
 .ctw-dropdown-menu-item {
-  @apply ctw-flex ctw-w-full ctw-cursor-pointer ctw-p-2 ctw-text-primary-main ctw-outline-none;
+  @apply ctw-flex ctw-w-full ctw-cursor-pointer ctw-p-2 ctw-text-primary-dark ctw-outline-none;
 
   &[data-highlighted] {
     @apply ctw-bg-primary-light;
