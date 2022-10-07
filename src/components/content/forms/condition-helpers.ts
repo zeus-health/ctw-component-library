@@ -62,6 +62,13 @@ export const getEditingPatientConditionData = ({
 
 const sharedFields = (condition: ConditionModel) => [
   {
+    label: "test",
+    value: "",
+    field: "test",
+    readonly: false,
+    autocomplete: true,
+  },
+  {
     label: "Clinical Status",
     value: condition.clinicalStatus,
     field: "clinicalStatus",

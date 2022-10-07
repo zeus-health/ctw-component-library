@@ -14,6 +14,7 @@ export type FormEntry = {
   lines?: number;
   readonly?: boolean;
   hidden?: boolean;
+  autocomplete?: boolean;
 };
 
 export type DrawerFormWithFieldsProps<T> = {
@@ -49,54 +50,65 @@ export const DrawerFormWithFields = <T,>({
     >
       {(submitting, errors) => (
         <div className="ctw-space-y-6">
-          {data.map(({ label, field, value, lines, readonly, hidden }) => {
-            const error = errors?.[field];
+          {data.map(
+            ({
+              label,
+              field,
+              value,
+              lines,
+              readonly,
+              hidden,
+              autocomplete,
+            }) => {
+              const error = errors?.[field];
 
-            if (hidden) {
+              if (hidden) {
+                return (
+                  <FormField
+                    key={label}
+                    {...inputProps(field, schema)}
+                    lines={lines}
+                    disabled={submitting}
+                    readonly={readonly}
+                    defaultValue={value}
+                    error={error}
+                    hidden={hidden}
+                  />
+                );
+              }
+
               return (
-                <FormField
+                <div
                   key={label}
-                  {...inputProps(field, schema)}
-                  lines={lines}
-                  disabled={submitting}
-                  readonly={readonly}
-                  defaultValue={value}
-                  error={error}
-                  hidden={hidden}
-                />
+                  className="ctw-space-y-1.5 ctw-text-sm ctw-font-medium ctw-text-content-black"
+                >
+                  <div className="ctw-flex ctw-justify-between">
+                    <label
+                      className={cx({ "ctw-error": error }, "leading-tight")}
+                    >
+                      {label}
+                    </label>
+                    {!inputProps(field).required && (
+                      <p className="ctw-right-0 ctw-inline-block ctw-text-xs ctw-text-content-black">
+                        Optional
+                      </p>
+                    )}
+                  </div>
+
+                  <FormField
+                    {...inputProps(field, schema)}
+                    lines={lines}
+                    disabled={submitting}
+                    readonly={readonly}
+                    defaultValue={value}
+                    error={error}
+                    hidden={hidden}
+                    autocomplete={autocomplete}
+                  />
+                </div>
               );
             }
-
-            return (
-              <div
-                key={label}
-                className="ctw-space-y-1.5 ctw-text-sm ctw-font-medium ctw-text-content-black"
-              >
-                <div className="ctw-flex ctw-justify-between">
-                  <label
-                    className={cx({ "ctw-error": error }, "leading-tight")}
-                  >
-                    {label}
-                  </label>
-                  {!inputProps(field).required && (
-                    <p className="ctw-right-0 ctw-inline-block ctw-text-xs ctw-text-content-black">
-                      Optional
-                    </p>
-                  )}
-                </div>
-
-                <FormField
-                  {...inputProps(field, schema)}
-                  lines={lines}
-                  disabled={submitting}
-                  readonly={readonly}
-                  defaultValue={value}
-                  error={error}
-                  hidden={hidden}
-                />
-              </div>
-            );
-          })}
+          )}
         </div>
       )}
     </DrawerForm>

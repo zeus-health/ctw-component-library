@@ -1,7 +1,9 @@
+import { useCTW } from "@/components/core/ctw-provider";
 import { formatDateLocalToISO } from "@/fhir/formatters";
 import { ExclamationCircleIcon, LockClosedIcon } from "@heroicons/react/solid";
 import cx from "classnames";
 import type { InputHTMLAttributes } from "react";
+import { AutoCompleteSelect } from "./autocomplete-select-field";
 import SelectField from "./select-field";
 
 export type FormFieldProps = {
@@ -10,6 +12,7 @@ export type FormFieldProps = {
   lines?: number;
   defaultValue?: string;
   readonly?: boolean;
+  autocomplete?: boolean;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 export const FormField = ({
@@ -19,16 +22,28 @@ export const FormField = ({
   defaultValue,
   readonly,
   hidden,
+  autocomplete,
   ...inputProps
 }: FormFieldProps) => {
+  const { authToken } = useCTW();
   // We display dates in MM/DD/YYYY format, but date input fields
   // expect it to be in YYYY-MM-DD format.
+
   const value =
     inputProps.type === "date"
       ? formatDateLocalToISO(defaultValue as string)
       : defaultValue;
 
   const getFieldComponent = () => {
+    if (autocomplete) {
+      return (
+        <AutoCompleteSelect
+          className={cx({ "ctw-error": error }, "ctw-w-full")}
+          name={inputProps.name || ""}
+          authToken={authToken}
+        />
+      );
+    }
     if (options) {
       return (
         <SelectField

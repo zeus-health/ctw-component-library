@@ -77,7 +77,11 @@ function useCTW() {
     const authToken = await context.actions.handleAuth();
     return getFhirClient(context.env, authToken);
   }, [context]);
-  return { getCTWFhirClient, theme: context.theme as Required<Theme> };
+  return {
+    getCTWFhirClient,
+    theme: context.theme as Required<Theme>,
+    authToken: context.authToken as string,
+  };
 }
 
 async function checkOrRefreshAuth(
