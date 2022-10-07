@@ -10,14 +10,13 @@ export interface FhirResourceBase {
 
 type CreateOrEditData<T extends FhirResourceBase> = {
   resourceModel: T;
-  getCTWFhirClient: () => Promise<Client>;
+  fhirClient: Client;
 };
 
 export async function createOrEditFhirResource<T extends FhirResourceBase>({
   resourceModel,
-  getCTWFhirClient,
+  fhirClient,
 }: CreateOrEditData<T>) {
-  const fhirClient = await getCTWFhirClient();
   try {
     if (resourceModel.id) {
       return await fhirClient.update({

@@ -15,8 +15,6 @@ export function ConditionHistoryDrawer({
   isOpen,
   onClose,
 }: ConditionHistoryDrawerProps) {
-  const data = ConditionHistory({ condition });
-  const conditionName = condition.display;
   const title = "Condition History";
 
   return (
@@ -26,10 +24,9 @@ export function ConditionHistoryDrawer({
       isOpen={isOpen}
       onClose={onClose}
     >
-      <div className="ctw-flex ctw-p-6 ctw-text-2xl ctw-text-black">
-        {conditionName}
-      </div>
-      <Drawer.Body>{data}</Drawer.Body>
+      <Drawer.Body>
+        <ConditionHistory condition={condition} />
+      </Drawer.Body>
       <Drawer.Footer>
         <div className="ctw-flex ctw-justify-end ctw-space-x-3 ctw-text-black ">
           <button

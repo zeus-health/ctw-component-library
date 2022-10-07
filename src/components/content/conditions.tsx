@@ -11,12 +11,11 @@ import {
 import { useFhirClientRef } from "@/fhir/utils";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { ConditionModel } from "@/models/conditions";
-import { PatientModel } from "@/models/patients";
 import { useQuery } from "@tanstack/react-query";
 import cx from "classnames";
 import { union } from "lodash";
 import { useEffect, useRef, useState } from "react";
-import { useCTW } from "../core/ctw-provider";
+import { AlertDialog } from "../core/alert";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionHistoryDrawer } from "./conditions-history-drawer";
@@ -41,51 +40,49 @@ export function Conditions({ className }: ConditionsProps) {
   const breakpoints = useBreakpoints(containerRef);
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
   const [historyDrawerIsOpen, setHistoryDrawerIsOpen] = useState(false);
-  const [patientRecord, setPatientRecord] = useState<ConditionModel[]>([]);
-  const [patientRecordMessage, setPatientRecordMessage] =
-    useState(EMPTY_MESSAGE);
-  const [patientRecordIsLoading, setPatientRecordIsLoading] = useState(true);
+  const [patientRecords, setPatientRecords] = useState<ConditionModel[]>([]);
   const [OtherProviderRecords, setOtherProviderRecords] = useState<
     ConditionModel[]
   >([]);
-  const [OtherProviderRecordsIsLoading, setOtherProviderRecordsIsLoading] =
-    useState(true);
-  const [OtherProviderRecordsMessage, setOtherProviderRecordsMessage] =
-    useState(EMPTY_MESSAGE);
   const [includeInactive, setIncludeInactive] = useState(true);
-  const [patient, setPatient] = useState<PatientModel>();
   const [formAction, setFormAction] = useState("");
   const [conditionFilter, setConditionFilter] = useState<ConditionFilters>({});
-  const [patientUPID, setPatientUPID] = useState<string>("");
   const fhirClientRef = useFhirClientRef();
   const [currentSelectedData, setCurrentlySelectedData] =
     useState<FormEntry[]>();
   const [conditionForHistory, setConditionForHistory] =
     useState<ConditionModel>();
-  const patientRecordResponse = useQuery(
-    ["conditions", patientUPID, conditionFilter],
+  const patientResponse = usePatient();
+
+  const patientRecordsResponse = useQuery(
+    ["conditions", patientResponse.data?.UPID, conditionFilter],
     getPatientConditions,
     {
-      enabled: !!patientUPID && !!fhirClientRef,
+      enabled: !!patientResponse.data && !!fhirClientRef.current,
       meta: { fhirClientRef },
     }
   );
 
   const OtherProviderRecordsResponse = useQuery(
-    ["conditions", patientUPID],
+    ["conditions", patientResponse.data?.UPID],
     getOtherProviderConditions,
     {
-      enabled: !!patientUPID && !!fhirClientRef,
+      enabled: !!patientResponse.data && !!fhirClientRef.current,
       meta: { fhirClientRef },
     }
   );
 
-  const { getCTWFhirClient } = useCTW();
-  const { patientPromise } = usePatient();
+  const patientRecordsMessage = patientRecordsResponse.isError
+    ? ERROR_MSG
+    : EMPTY_MESSAGE;
 
-  const handleFormChange = () => setIncludeInactive(!includeInactive);
+  const otherProviderRecordMessage = OtherProviderRecordsResponse.isError
+    ? ERROR_MSG
+    : EMPTY_MESSAGE;
+
+  const handleToggleChange = () => setIncludeInactive(!includeInactive);
   const handleConditionEdit = (condition: ConditionModel) => {
-    if (patient) {
+    if (patientResponse.data) {
       setDrawerIsOpen(true);
       setFormAction("Edit");
       setCurrentlySelectedData(getEditingPatientConditionData({ condition }));
@@ -93,7 +90,7 @@ export function Conditions({ className }: ConditionsProps) {
   };
 
   const handleOtherProviderRecordsCondition = (condition: ConditionModel) => {
-    if (patient) {
+    if (patientResponse.data) {
       setDrawerIsOpen(true);
       setFormAction("Add");
       setCurrentlySelectedData(getAddConditionData({ condition }));
@@ -103,7 +100,10 @@ export function Conditions({ className }: ConditionsProps) {
   const handleAddNewCondition = () => {
     const newCondition: fhir4.Condition = {
       resourceType: "Condition",
-      subject: { type: "Patient", reference: `Patient/${patient?.id}` },
+      subject: {
+        type: "Patient",
+        reference: `Patient/${patientResponse.data?.id}`,
+      },
     };
     setDrawerIsOpen(true);
     setFormAction("Add");
@@ -123,25 +123,17 @@ export function Conditions({ className }: ConditionsProps) {
         : {};
 
       setConditionFilter(tempConditionFilters);
-      const patientTemp = await patientPromise;
 
-      setPatient(patientTemp);
-      if (patient?.UPID) {
-        setPatientUPID(patient.UPID);
-      }
-
-      /* OtherProviderRecordsConditons depends patientRecordConditions so that we can correctly filter out 
-         conditions that appear in patientRecordConditions from OtherProviderRecordsConditons */
-      if (patientRecordResponse.data) {
-        setOtherProviderRecordsIsLoading(false);
-        setPatientRecordIsLoading(false);
-        setPatientRecord(
-          patientRecordResponse.data.map((c) => new ConditionModel(c))
+      /* OtherProviderRecordsConditons depends patientRecordsConditions so that we can correctly filter out 
+         conditions that appear in patientRecordsConditions from OtherProviderRecordsConditons */
+      if (patientRecordsResponse.data) {
+        setPatientRecords(
+          patientRecordsResponse.data.map((c) => new ConditionModel(c))
         );
 
         if (OtherProviderRecordsResponse.data) {
           const confirmedCodes = union(
-            ...patientRecordResponse.data.map(
+            ...patientRecordsResponse.data.map(
               (c) => new ConditionModel(c).knownCodings
             )
           );
@@ -157,27 +149,48 @@ export function Conditions({ className }: ConditionsProps) {
           );
         } else {
           setOtherProviderRecords([]);
-          setOtherProviderRecordsMessage(ERROR_MSG);
         }
       }
 
-      if (patientRecordResponse.error) {
-        setPatientRecord([]);
-        setPatientRecordMessage(ERROR_MSG);
+      if (patientRecordsResponse.error) {
+        setPatientRecords([]);
         setOtherProviderRecords([]);
-        setOtherProviderRecordsMessage(ERROR_MSG);
       }
     }
     load();
   }, [
     includeInactive,
-    patientPromise,
-    patient,
-    patientRecordResponse.data,
+    patientResponse.data,
+    patientRecordsResponse.data,
     OtherProviderRecordsResponse.data,
-    patientRecordResponse.error,
-    getCTWFhirClient,
+    patientRecordsResponse.error,
   ]);
+
+  if (patientResponse.isError) {
+    return (
+      <div
+        ref={containerRef}
+        className={cx("ctw-conditions", className, {
+          "ctw-conditions-stacked": breakpoints.sm,
+        })}
+      >
+        <div className="ctw-conditions-heading-container">
+          <div className="ctw-title">Conditions</div>
+        </div>
+        <div className="ctw-p-5">
+          <AlertDialog header="Conditions Unavailable">
+            <div>
+              We are unable to access Condition information for this patient.
+            </div>
+            <div>
+              Contact your system administrator or customer service for
+              assistance.
+            </div>
+          </AlertDialog>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -186,7 +199,7 @@ export function Conditions({ className }: ConditionsProps) {
         "ctw-conditions-stacked": breakpoints.sm,
       })}
     >
-      <div className="ctw-flex ctw-h-11 ctw-items-center ctw-justify-between ctw-bg-bg-light ctw-p-3">
+      <div className="ctw-conditions-heading-container">
         <div className="ctw-title">Conditions</div>
         <button
           type="button"
@@ -196,13 +209,12 @@ export function Conditions({ className }: ConditionsProps) {
           + Add Condition
         </button>
       </div>
-
       <div className="ctw-conditions-body">
         <div className="ctw-space-y-3">
           <div className="ctw-conditions-title-container">
             <div className="ctw-title">Patient Record</div>
             <ToggleControl
-              onFormChange={handleFormChange}
+              onFormChange={handleToggleChange}
               toggleProps={{ name: "conditions", text: "Include Inactive" }}
             />
           </div>
@@ -210,9 +222,9 @@ export function Conditions({ className }: ConditionsProps) {
           <ConditionsTableBase
             className="ctw-conditions-table"
             stacked={breakpoints.sm}
-            conditions={patientRecord}
-            isLoading={patientRecordIsLoading}
-            message={patientRecordMessage}
+            conditions={patientRecords}
+            isLoading={patientRecordsResponse.isLoading}
+            message={patientRecordsMessage}
             rowActions={(condition) => [
               {
                 name: "Edit",
@@ -239,8 +251,8 @@ export function Conditions({ className }: ConditionsProps) {
             className="ctw-conditions-not-reviewed"
             stacked={breakpoints.sm}
             conditions={OtherProviderRecords}
-            isLoading={OtherProviderRecordsIsLoading}
-            message={OtherProviderRecordsMessage}
+            isLoading={OtherProviderRecordsResponse.isLoading}
+            message={otherProviderRecordMessage}
             rowActions={(condition) => [
               {
                 name: "Add",
@@ -260,9 +272,9 @@ export function Conditions({ className }: ConditionsProps) {
         </div>
       </div>
 
-      {patient && (
+      {patientResponse.data && (
         <DrawerFormWithFields
-          patientID={patient.id}
+          patientID={patientResponse.data.id}
           title={`${formAction} Condition`}
           action={createOrEditCondition}
           data={currentSelectedData}

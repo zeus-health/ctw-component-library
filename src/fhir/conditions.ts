@@ -42,8 +42,12 @@ export type QueryKeyConditionHistory = [
   string,
   ConditionModel | undefined
 ];
-export type QueryKeyPatientConditions = [string, string, ConditionFilters];
-export type QueryKeyOtherProviderConditions = [string, string];
+export type QueryKeyPatientConditions = [
+  string,
+  string | undefined,
+  ConditionFilters
+];
+export type QueryKeyOtherProviderConditions = [string, string | undefined];
 
 export async function getPatientConditions(
   queryParams: QueryFunctionContext<QueryKeyPatientConditions>
@@ -53,6 +57,11 @@ export async function getPatientConditions(
   const fhirClient = getFhirClientFromQuery(meta);
 
   const [_, patientUPID, conditionFilters] = queryKey;
+
+  if (!patientUPID) {
+    throw Error("Patient UPID is required to run getPatientConditions");
+  }
+
   try {
     const { resources: conditions } = await searchBuilderRecords(
       "Condition",
@@ -76,6 +85,11 @@ export async function getOtherProviderConditions(
   const fhirClient = getFhirClientFromQuery(meta);
 
   const [_, patientUPID] = queryKey;
+
+  if (!patientUPID) {
+    throw Error("Patient UPID is required to run getOtherProviderConditions");
+  }
+
   try {
     const { resources: conditions } = await searchLensRecords(
       "Condition",
@@ -106,17 +120,18 @@ export async function getConditionHistory(
       (coding) => `${coding.system}|${coding.code}`
     );
 
-    const { resources: conditions } = await searchCommonRecords(
+    const { resources: conditions, bundle } = await searchCommonRecords(
       "Condition",
       fhirClient,
       {
         patientUPID,
         _include: ["Condition:patient", "Condition:encounter"],
+        "_include:iterate": "Patient:organization",
         code: tokens.join(","),
       }
     );
 
-    return conditions;
+    return { conditions, bundle };
   } catch (e) {
     throw new Error(
       `Failed fetching condition history information for patient: ${e}`
@@ -127,6 +142,7 @@ export async function getConditionHistory(
 function filterAndSort(conditions: fhir4.Condition[]) {
   return sortBy(
     conditions.filter((condition) => condition.asserter?.type !== "Patient"),
+    (condition) => new ConditionModel(condition).ccsGrouping,
     (condition) => new ConditionModel(condition).display
   );
 }

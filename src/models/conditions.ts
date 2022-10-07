@@ -1,14 +1,20 @@
 import { CONDITION_CODE_SYSTEMS } from "@/fhir/conditions";
+import { findReference } from "@/fhir/resource-helper";
+import { ResourceMap } from "@/fhir/types";
 import { compact } from "lodash";
 import { codeableConceptLabel, findCoding } from "../fhir/codeable-concept";
 import { formatDateISOToLocal } from "../fhir/formatters";
 import { SYSTEM_CCS, SYSTEM_ICD10, SYSTEM_SNOMED } from "../fhir/system-urls";
+import { PatientModel } from "./patients";
 
 export class ConditionModel {
   public resource: fhir4.Condition;
 
-  constructor(condition: fhir4.Condition) {
+  private includedResources?: ResourceMap;
+
+  constructor(condition: fhir4.Condition, includedResources?: ResourceMap) {
     this.resource = condition;
+    this.includedResources = includedResources;
   }
 
   get abatement(): string | undefined {
@@ -125,6 +131,21 @@ export class ConditionModel {
     }
 
     return this.resource.onsetString;
+  }
+
+  get patient(): PatientModel | undefined {
+    const reference = findReference(
+      "Patient",
+      this.resource.contained,
+      this.includedResources,
+      this.resource.subject.reference
+    );
+
+    if (reference) {
+      return new PatientModel(reference, this.includedResources);
+    }
+
+    return undefined;
   }
 
   get recordedDate(): string | undefined {

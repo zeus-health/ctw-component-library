@@ -1,5 +1,53 @@
 # ctw-component-library
 
+## 0.13.6
+
+### Patch Changes
+
+- 9e80016: Add “Records with no date” section to condition history.
+
+## 0.13.5
+
+### Patch Changes
+
+- 417d6b6: Condition History now sorts by date and the entries without a date are filtered to the end.
+
+## 0.13.4
+
+### Patch Changes
+
+- 5344fa5: Adds an error display to the conditions table if patient could not be found.
+
+## 0.13.3
+
+### Patch Changes
+
+- ba94843: Alphabetize conditions primarily by CCS grouping and secondarily the condition name so that users can quickly find the conditions by their category.
+- 1e346c8: Don't fetch when not on patient provider. Also fixes overfetching
+
+## 0.13.2
+
+### Patch Changes
+
+- b3c68a3: No longer refetch on window focus
+
+## 0.13.1
+
+### Patch Changes
+
+- 9ee5168: Condition history detail card and summary card now have a space between them.
+
+## 0.13.0
+
+### Minor Changes
+
+- 1086140: Condition History Panel now has a stacked UI list detailing previous occurrences of different conditions. There is a preview summary card followed by a detailed card for each of the different conditions that have been recorded.
+- fb5fd96: When user edits or adds a condition, practitioner id will now be used to set the recorder field automatically. If no practitioner id is found then recorder will be nulled else the current practitioner id for the user will be used.
+
+### Patch Changes
+
+- 112d3df: Move ctw provider and context into separate files to avoid bug outlined in https://github.com/vitejs/vite/pull/10239
+
 ## 0.12.0
 
 ### Minor Changes
