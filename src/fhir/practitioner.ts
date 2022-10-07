@@ -1,19 +1,13 @@
 import Client from "fhir-kit-client";
 import { searchBuilderRecords } from "./search-helpers";
 
-class PractitionerNotFoundError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "PractitionerNotFoundError";
-  }
-}
-
 export const getPractitioner = async (
   practitionerId: string,
   fhirClient: Client
 ) => {
+  let practitioners = [];
   try {
-    const { resources: practitioners } = await searchBuilderRecords(
+    const { resources } = await searchBuilderRecords(
       "Practitioner",
       fhirClient,
       {
@@ -21,22 +15,16 @@ export const getPractitioner = async (
       }
     );
 
-    if (practitioners.length === 0) {
-      throw new PractitionerNotFoundError(
-        `No practitioner found with an id of: ${practitionerId}`
-      );
-    }
-
-    return practitioners[0];
+    practitioners = resources;
   } catch (error) {
-    if (error instanceof PractitionerNotFoundError) {
-      throw new PractitionerNotFoundError(
-        `No practitioner found with an id of: ${practitionerId}`
-      );
-    }
-
     throw new Error(
       `Failed fetching practitioner with an id of: ${practitionerId}. ${error}`
     );
   }
+
+  if (!practitioners[0]) {
+    throw new Error(`No practitioner found with an id of: ${practitionerId}`);
+  }
+
+  return practitioners[0];
 };
