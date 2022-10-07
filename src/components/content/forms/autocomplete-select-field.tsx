@@ -1,7 +1,28 @@
-import { useEffect } from "react";
-import SelectField from "./select-field";
+import { Combobox } from "@headlessui/react";
+import console from "console";
+import { useEffect, useState } from "react";
 
-export const AutoCompleteSelect = () => {
+const people = [
+  "Durward Reynolds",
+  "Kenton Towne",
+  "Therese Wunsch",
+  "Benedict Kessler",
+  "Katelyn Rohan",
+];
+
+export const AutoCompleteSelect = (authToken: string) => {
+  const [options, setOptions] = useState();
+  const [selectedPerson, setSelectedPerson] = useState(people[0]);
+
+  const [query, setQuery] = useState("");
+
+  const filteredPeople =
+    query === ""
+      ? people
+      : people.filter((person) => {
+          return person.toLowerCase().includes(query.toLowerCase());
+        });
+
   useEffect(() => {
     async function load() {
       const response = await fetch(
@@ -11,10 +32,22 @@ export const AutoCompleteSelect = () => {
         }
       );
       const data = await response.json();
+      // setOptions(data);
       console.log("data", data);
     }
     load();
   });
 
-  return <SelectField options={[]} />;
+  return (
+    <Combobox value={selectedPerson} onChange={setSelectedPerson}>
+      <Combobox.Input onChange={(event) => setQuery(event.target.value)} />
+      <Combobox.Options>
+        {filteredPeople.map((person) => (
+          <Combobox.Option key={person} value={person}>
+            {person}
+          </Combobox.Option>
+        ))}
+      </Combobox.Options>
+    </Combobox>
+  );
 };
