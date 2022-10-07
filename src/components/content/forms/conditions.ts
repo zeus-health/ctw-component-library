@@ -2,6 +2,7 @@ import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { getClaims } from "@/fhir/client";
 import { isFhirError } from "@/fhir/errors";
 import { dateToISO } from "@/fhir/formatters";
+import { getPractitioner } from "@/fhir/practitioner";
 import {
   SYSTEM_CONDITION_CLINICAL,
   SYSTEM_CONDITION_VERIFICATION_STATUS,
@@ -42,10 +43,16 @@ export const conditionSchema = z.object({
   note: z.string().optional(),
 });
 
-const setRecorderField = (practitionerId: string) => ({
-  reference: `Practitioner/${practitionerId}`,
-  type: "Practitioner",
-});
+const setRecorderField = async (practitionerId: string, fhirClient: Client) => {
+  const practitioner = await getPractitioner(practitionerId, fhirClient);
+  const display = practitioner.fullName;
+
+  return {
+    reference: `Practitioner/${practitionerId}`,
+    type: "Practitioner",
+    display,
+  };
+};
 
 export const createOrEditCondition = async (
   data: FormData,
@@ -61,11 +68,14 @@ export const createOrEditCondition = async (
   const practitionerId = result.data.id
     ? (getClaims(fhirClient)[SYSTEM_PRACTITIONER_ID] as string)
     : "";
+
   // Some fields will need to be set as they are required.
   const fhirCondition: fhir4.Condition = {
     resourceType: "Condition",
     id: result.data.id,
-    ...(practitionerId && { recorder: setRecorderField(practitionerId) }),
+    ...(practitionerId && {
+      recorder: await setRecorderField(practitionerId, fhirClient),
+    }),
     clinicalStatus: {
       coding: [
         {
