@@ -3,6 +3,7 @@ import { getConditionHistory } from "@/fhir/conditions";
 import { useFhirClientRef } from "@/fhir/utils";
 import { ConditionModel } from "@/models/conditions";
 import { useQuery } from "@tanstack/react-query";
+import { orderBy } from "lodash";
 import { useEffect, useState } from "react";
 import { CodingList } from "../core/coding-list";
 import { CollapsibleDataListProps } from "../core/collapsible-data-list";
@@ -61,9 +62,10 @@ function setupData(condition: ConditionModel): CollapsibleDataListProps {
 }
 
 export function ConditionHistory({ condition }: { condition: ConditionModel }) {
-  const [conditions, setConditions] = useState<CollapsibleDataListStackEntries>(
-    []
-  );
+  const [conditionsWithDate, setConditionsWithDate] =
+    useState<CollapsibleDataListStackEntries>([]);
+  const [conditionsWithoutDate, setConditionsWithoutDate] =
+    useState<CollapsibleDataListStackEntries>([]);
   const [loading, setLoading] = useState(true);
   const [patientUPID, setPatientUPID] = useState("");
   const [conditionForSearch, setConditionForSearch] =
@@ -74,7 +76,7 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
     ["conditions", patientUPID, conditionForSearch],
     getConditionHistory,
     {
-      enabled: !!patientUPID && !!fhirClientRef,
+      enabled: !!patientUPID && !!fhirClientRef.current,
       meta: { fhirClientRef },
     }
   );
@@ -91,11 +93,30 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
         const includedResources = getIncludedResources(
           historyResponse.data.bundle
         );
-        const filteredConditions = historyResponse.data.conditions.map(
+        const conditionModels = historyResponse.data.conditions.map(
           (c) => new ConditionModel(c, includedResources)
         );
 
-        setConditions(filteredConditions.map((model) => setupData(model)));
+        const sortedConditions = orderBy(
+          conditionModels,
+          (c) => c.recordedDate ?? "",
+          "desc"
+        );
+
+        const conditionsFilteredWithDate = sortedConditions.filter(
+          (c) => c.recordedDate
+        );
+        const conditionsFilteredWithoutDate = sortedConditions.filter(
+          (c) => !c.recordedDate
+        );
+
+        setConditionsWithDate(
+          conditionsFilteredWithDate.map((model) => setupData(model))
+        );
+
+        setConditionsWithoutDate(
+          conditionsFilteredWithoutDate.map((model) => setupData(model))
+        );
         setLoading(false);
       }
     }
@@ -103,13 +124,18 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
     load();
 
     return function cleanup() {
-      setConditions([]);
+      setConditionsWithDate([]);
+      setConditionsWithoutDate([]);
       setLoading(true);
     };
   }, [condition, patientResponse.data, historyResponse.data]);
 
   function conditionHistoryDisplay() {
-    if (conditions.length === 0 && !loading) {
+    if (
+      conditionsWithDate.length === 0 &&
+      conditionsWithoutDate.length === 0 &&
+      !loading
+    ) {
       return <div>No history found.</div>;
     }
     if (loading) {
@@ -122,6 +148,7 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
         </div>
       );
     }
+
     return (
       <div className="ctw-space-y-6">
         <div>
@@ -131,9 +158,20 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
           <div className="ctw-text-sm">{condition.ccsGrouping}</div>
         </div>
         <CollapsibleDataListStack
-          entries={conditions}
+          entries={conditionsWithDate}
           limit={CONDITION_HISTORY_LIMIT}
         />
+        {conditionsWithoutDate.length !== 0 && (
+          <div className="ctw-space-y-2">
+            <div className="ctw-pl-4 ctw-font-medium">
+              Records with no date:
+            </div>
+            <CollapsibleDataListStack
+              entries={conditionsWithoutDate}
+              limit={CONDITION_HISTORY_LIMIT}
+            />
+          </div>
+        )}
       </div>
     );
   }

@@ -1,5 +1,23 @@
 # ctw-component-library
 
+## 0.13.6
+
+### Patch Changes
+
+- 9e80016: Add “Records with no date” section to condition history.
+
+## 0.13.5
+
+### Patch Changes
+
+- 417d6b6: Condition History now sorts by date and the entries without a date are filtered to the end.
+
+## 0.13.4
+
+### Patch Changes
+
+- 5344fa5: Adds an error display to the conditions table if patient could not be found.
+
 ## 0.13.3
 
 ### Patch Changes
