@@ -23,7 +23,7 @@ export const conditionSchema = z.object({
   recordedDate: z.date({
     required_error: "Condition recorded date must be specified.",
   }),
-  test: z.string({ required_error: "Condition name must be specified." }),
+  condition: z.string({ required_error: "Condition name must be specified." }),
   display: z.string({ required_error: "Condition name must be specified." }),
   snomedCode: z.string({ required_error: "Snomed code must be provided." }),
   clinicalStatus: z.enum([

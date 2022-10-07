@@ -9,7 +9,6 @@ export type AutoCompleteSelectProps = {
 export const AutoCompleteSelect = ({ authToken }: AutoCompleteSelectProps) => {
   const [options, setOptions] = useState([]);
   const [selectedPerson, setSelectedPerson] = useState();
-
   const [query, setQuery] = useState("");
 
   const handleSearchInputChange = (
@@ -95,21 +94,18 @@ const RenderCorrectOptions = ({ options, query }) => {
   );
 };
 
-const ComboboxOption = ({ option }) => {
-  console.log("combox option", option);
-  return (
-    <Combobox.Option
-      key={option.code}
-      value={option.display}
-      className={({ active }) =>
-        `ctw-relative ctw-cursor-default ctw-select-none ctw-py-2 ctw-pr-4 ctw-pl-10 ${
-          active
-            ? "ctw-bg-primary-light ctw-text-primary-dark"
-            : "ctw-text-content-black"
-        }`
-      }
-    >
-      {option.display}
-    </Combobox.Option>
-  );
-};
+const ComboboxOption = ({ option }) => (
+  <Combobox.Option
+    key={option.code}
+    value={option.display}
+    className={({ active }) =>
+      `ctw-relative ctw-cursor-default ctw-select-none ctw-py-2 ctw-pr-4 ctw-pl-10 ${
+        active
+          ? "ctw-bg-primary-light ctw-text-primary-dark"
+          : "ctw-text-content-black"
+      }`
+    }
+  >
+    {option.display}
+  </Combobox.Option>
+);
