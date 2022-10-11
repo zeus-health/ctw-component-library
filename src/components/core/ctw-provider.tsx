@@ -3,7 +3,14 @@ import { DefaultTheme, mapToCSSVar, Theme } from "@/styles/tailwind.theme";
 import { queryClient } from "@/utils/request";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { merge } from "lodash";
-import { ReactNode, useCallback, useContext, useMemo, useState } from "react";
+import {
+  ReactNode,
+  useCallback,
+  useContext,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { CTWState, CTWStateContext, CTWToken } from "./ctw-context";
 import "./main.scss";
 
@@ -23,6 +30,7 @@ type CTWProviderProps = {
 
 function CTWProvider({ theme, children, ...ctwState }: CTWProviderProps) {
   const [token, setToken] = useState<CTWToken>();
+  const ctwProviderRef = useRef<HTMLDivElement>(null);
 
   const handleAuth = useCallback(async () => {
     if (ctwState.authToken) {
@@ -49,20 +57,28 @@ function CTWProvider({ theme, children, ...ctwState }: CTWProviderProps) {
       // the full true theme being applied.
       theme: merge({}, DefaultTheme, theme),
       token,
+      ctwProviderRef,
       actions: {
         handleAuth,
       },
     }),
-    [ctwState, theme, handleAuth, token]
+    [ctwState, theme, handleAuth, token, ctwProviderRef]
   );
 
   return (
-    <div style={mapToCSSVar(theme?.colors || {})}>
+    <div style={mapToCSSVar(theme?.colors || {})} ref={ctwProviderRef}>
       <CTWStateContext.Provider value={providerState}>
         <QueryClientProvider client={queryClient}>
           {children}
         </QueryClientProvider>
       </CTWStateContext.Provider>
+
+      {/* Workaround for https://github.com/tailwindlabs/headlessui/discussions/666 */}
+      <div id="headlessui-portal-root">
+        {/* It needs at least one child, so that HeadlessUI doesn't remove this portal root workaround
+        ( https://github.com/tailwindlabs/headlessui/blob/main/packages/@headlessui-react/src/components/portal/portal.tsx#L84 ) */}
+        <div />
+      </div>
     </div>
   );
 }
@@ -77,7 +93,11 @@ function useCTW() {
     const authToken = await context.actions.handleAuth();
     return getFhirClient(context.env, authToken);
   }, [context]);
-  return { getCTWFhirClient, theme: context.theme as Required<Theme> };
+  return {
+    getCTWFhirClient,
+    theme: context.theme as Required<Theme>,
+    ctwProviderRef: context.ctwProviderRef,
+  };
 }
 
 async function checkOrRefreshAuth(

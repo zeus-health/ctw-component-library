@@ -20,9 +20,6 @@ export const conditionSchema = z.object({
   subjectID: z.string({
     required_error: "Condition subjectID must be specified.",
   }),
-  recordedDate: z.date({
-    required_error: "Condition recorded date must be specified.",
-  }),
   display: z.string({ required_error: "Condition name must be specified." }),
   snomedCode: z.string({ required_error: "Snomed code must be provided." }),
   clinicalStatus: z.enum([
@@ -46,10 +43,16 @@ export const conditionSchema = z.object({
   note: z.string().optional(),
 });
 
-const setRecorderField = (practitionerId: string) => ({
-  reference: `Practitioner/${practitionerId}`,
-  type: "Practitioner",
-});
+const setRecorderField = async (practitionerId: string, fhirClient: Client) => {
+  const practitioner = await getPractitioner(practitionerId, fhirClient);
+  const display = practitioner.fullName;
+
+  return {
+    reference: `Practitioner/${practitionerId}`,
+    type: "Practitioner",
+    display,
+  };
+};
 
 export const createOrEditCondition = async (
   data: FormData,
@@ -66,16 +69,14 @@ export const createOrEditCondition = async (
   const practitionerId = result.data.id
     ? (getClaims(fhirClient)[SYSTEM_PRACTITIONER_ID] as string)
     : "";
-  if (practitionerId) {
-    const practitioner = await getPractitioner(practitionerId, "", fhirClient);
-    display = "";
-  }
 
   // Some fields will need to be set as they are required.
   const fhirCondition: fhir4.Condition = {
     resourceType: "Condition",
     id: result.data.id,
-    ...(practitionerId && { recorder: setRecorderField(practitionerId) }),
+    ...(practitionerId && {
+      recorder: await setRecorderField(practitionerId, fhirClient),
+    }),
     clinicalStatus: {
       coding: [
         {
@@ -106,7 +107,7 @@ export const createOrEditCondition = async (
       abatementDateTime: dateToISO(result.data.abatement),
     }),
     onsetDateTime: dateToISO(result.data.onset),
-    recordedDate: dateToISO(result.data.recordedDate),
+    recordedDate: dateToISO(new Date()),
     subject: { type: "Patient", reference: `Patient/${patientID}` },
     note: result.data.note ? [{ text: result.data.note }] : undefined,
   };

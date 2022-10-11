@@ -1,23 +1,31 @@
+import { PractitionerModel } from "@/models/practitioner";
 import Client from "fhir-kit-client";
 import { searchBuilderRecords } from "./search-helpers";
 
 export const getPractitioner = async (
   practitionerId: string,
-  patientUPID: string,
   fhirClient: Client
 ) => {
+  let practitioners = [];
   try {
-    const { resources: practitioners } = await searchBuilderRecords(
+    const { resources } = await searchBuilderRecords(
       "Practitioner",
       fhirClient,
       {
-        patientUPID,
-        identifier: practitionerId,
+        _id: practitionerId,
       }
     );
 
-    return practitioners;
-  } catch (e) {
-    throw new Error(`Failed fetching condition information for patient: ${e}`);
+    practitioners = resources;
+  } catch (error) {
+    throw new Error(
+      `Failed fetching practitioner with an id of: ${practitionerId}. ${error}`
+    );
   }
+
+  if (!practitioners[0]) {
+    throw new Error(`No practitioner found with an id of: ${practitionerId}`);
+  }
+
+  return new PractitionerModel(practitioners[0]);
 };

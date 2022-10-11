@@ -14,7 +14,6 @@ export const TailwindTheme = {
     white: "#fff",
     black: "#000",
     primary: {
-      lighter: "#FAF5FF",
       light: "#F3E8FF",
       main: "#A855F7",
       dark: "#7E22CE",
@@ -32,7 +31,6 @@ export const TailwindTheme = {
       black: "#111827",
       light: "#6B7280",
       lighter: "#9CA3AF",
-      reverse: "#FFFFFF",
     },
     error: {
       main: "#EF4444",
@@ -45,6 +43,10 @@ export const TailwindTheme = {
     caution: {
       main: "#F59E0B",
       light: "#FEF3C7",
+      heading: "#92400E",
+      message: "#B45309",
+      bg: "#FFFBEB",
+      icon: "#FBBF24",
     },
     info: {
       main: "#0EA5E9",

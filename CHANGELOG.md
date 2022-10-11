@@ -1,5 +1,36 @@
 # ctw-component-library
 
+## 0.14.0
+
+### Minor Changes
+
+- 2d00ed0: Simplify the user experience of adding a new condition by pre-populating some fields with practical default values. Additionally hides the reported date field, as the now pre-populated value of today's date should not be tampered with by the user.
+- 86ac54f: Add display field to the recorder object when saving a condition.
+
+### Patch Changes
+
+- 3e72ac1: General code cleanup. Remove case where FhirClient must be provided error was thrown.
+- 10aae20: Adjust use of portals to inherit proper CSS vars setup by CTWProvider. This fixes a theming bug where drawer and dropdown-menu were not properly themed.
+- 02f3aec: Other provider records now correctly shows loading spinner while still waiting for patient records to load.
+
+## 0.13.6
+
+### Patch Changes
+
+- 9e80016: Add “Records with no date” section to condition history.
+
+## 0.13.5
+
+### Patch Changes
+
+- 417d6b6: Condition History now sorts by date and the entries without a date are filtered to the end.
+
+## 0.13.4
+
+### Patch Changes
+
+- 5344fa5: Adds an error display to the conditions table if patient could not be found.
+
 ## 0.13.3
 
 ### Patch Changes

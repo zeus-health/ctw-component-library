@@ -9,6 +9,8 @@ import {
   searchLensRecords,
 } from "./search-helpers";
 import {
+  SYSTEM_CONDITION_CLINICAL,
+  SYSTEM_CONDITION_VERIFICATION_STATUS,
   SYSTEM_ICD10,
   SYSTEM_ICD10_CM,
   SYSTEM_ICD9,
@@ -49,6 +51,38 @@ export type QueryKeyPatientConditions = [
 ];
 export type QueryKeyOtherProviderConditions = [string, string | undefined];
 
+export function getNewCondition(patientId: string) {
+  const newCondition: fhir4.Condition = {
+    resourceType: "Condition",
+    subject: {
+      type: "Patient",
+      reference: `Patient/${patientId}`,
+    },
+    clinicalStatus: {
+      coding: [
+        {
+          system: SYSTEM_CONDITION_CLINICAL,
+          code: "active",
+          display: "Active",
+        },
+      ],
+      text: "active",
+    },
+    verificationStatus: {
+      coding: [
+        {
+          system: SYSTEM_CONDITION_VERIFICATION_STATUS,
+          code: "confirmed",
+          display: "Confirmed",
+        },
+      ],
+      text: "confirmed",
+    },
+  };
+
+  return newCondition;
+}
+
 export async function getPatientConditions(
   queryParams: QueryFunctionContext<QueryKeyPatientConditions>
 ) {
@@ -59,7 +93,7 @@ export async function getPatientConditions(
   const [_, patientUPID, conditionFilters] = queryKey;
 
   if (!patientUPID) {
-    throw Error("Patient UPID is required to run getPatientConditions");
+    throw new Error("Patient UPID is required to run getPatientConditions");
   }
 
   try {
@@ -87,7 +121,9 @@ export async function getOtherProviderConditions(
   const [_, patientUPID] = queryKey;
 
   if (!patientUPID) {
-    throw Error("Patient UPID is required to run getOtherProviderConditions");
+    throw new Error(
+      "Patient UPID is required to run getOtherProviderConditions"
+    );
   }
 
   try {
@@ -113,7 +149,7 @@ export async function getConditionHistory(
     const [_, patientUPID, condition] = queryKey;
 
     if (!condition) {
-      throw Error("Condition is required");
+      throw new Error("Condition is required");
     }
 
     const tokens = condition.knownCodings.map(

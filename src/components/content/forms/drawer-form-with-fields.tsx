@@ -79,9 +79,9 @@ export const DrawerFormWithFields = <T,>({
                     {label}
                   </label>
                   {!inputProps(field).required && (
-                    <p className="ctw-right-0 ctw-inline-block ctw-text-xs ctw-text-content-black">
+                    <span className="ctw-right-0 ctw-inline-block ctw-text-xs ctw-text-content-black">
                       Optional
-                    </p>
+                    </span>
                   )}
                 </div>
 
