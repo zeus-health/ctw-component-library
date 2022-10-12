@@ -5,7 +5,7 @@ import { TableHead } from "./table-head";
 import { TableRows } from "./table-rows";
 import "./table.scss";
 
-import { TableColgroup } from "./table-colgroup";
+import { TableColGroup } from "./table-colgroup";
 
 export interface MinRecordItem {
   id: string | number;
@@ -94,7 +94,7 @@ export const Table = <T extends MinRecordItem>({
     >
       <div className="ctw-scrollbar" ref={scrollContainerRef}>
         <table ref={tableRef}>
-          {hasData && <TableColgroup columns={columns} />}
+          {hasData && <TableColGroup columns={columns} />}
           {showTableHead && hasData && <TableHead columns={columns} />}
 
           <tbody>

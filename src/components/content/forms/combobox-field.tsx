@@ -1,59 +1,42 @@
 import { Combobox } from "@headlessui/react";
 import { debounce } from "lodash";
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 
-export type AutoCompleteSelectProps = {
-  authToken: string;
+export type ComboboxFieldProps = {
+  query: string;
+  setQuery: React.Dispatch<React.SetStateAction<string>>;
+  options: any; // TODO: update this
 };
 
-export const AutoCompleteSelect = ({ authToken }: AutoCompleteSelectProps) => {
-  const [options, setOptions] = useState([]);
-  const [selectedPerson, setSelectedPerson] = useState();
-  const [query, setQuery] = useState("");
+export const ComboboxField = ({
+  options,
+  query,
+  setQuery,
+}: ComboboxFieldProps) => {
+  const debouncedSearchInputChange = useMemo(() => {
+    const handleSearchInputChange = (
+      event: React.ChangeEvent<HTMLInputElement>
+    ) => setQuery(event.target.value);
 
-  const handleSearchInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => setQuery(event.target.value);
+    return debounce(handleSearchInputChange, 300);
+  }, [setQuery]);
 
-  const debouncedSearchInputChange = useMemo(
-    () => debounce(handleSearchInputChange, 300),
-    []
+  useEffect(
+    () => () => {
+      debouncedSearchInputChange.cancel();
+    },
+    [query, debouncedSearchInputChange]
   );
 
-  useEffect(() => {
-    async function load() {
-      const response = await fetch(
-        `https://api.dev.zusapi.com/forms-data/terminology/conditions?display=${query}`,
-        {
-          headers: { Authorization: `Bearer ${authToken}` },
-        }
-      );
-      const data = await response.json();
-      console.log("data", data);
-      setOptions(data.conditionsList);
-    }
-    if (query.length < 2) {
-      setOptions([]);
-    }
-
-    if (query.length > 1) {
-      load();
-    }
-
-    return () => {
-      debouncedSearchInputChange.cancel();
-    };
-  }, [query, authToken, debouncedSearchInputChange]);
-
   return (
-    <Combobox value={selectedPerson} onChange={setSelectedPerson}>
+    <Combobox>
       <Combobox.Input
         className="ctw-listbox-input ctw-w-full"
         onChange={debouncedSearchInputChange}
         placeholder="Type to search"
       />
       <Combobox.Options className="ctw-listbox ctw-max-h-60 ctw-overflow-auto ctw-rounded-md ctw-bg-white ctw-py-1 ctw-text-base ctw-shadow-lg ctw-ring-1 ctw-ring-black ctw-ring-opacity-5 focus:ctw-outline-none sm:ctw-text-sm">
-        <RenderCorrectOptions options={options} query={query} />
+        <RenderCorrectOptions options={options || []} query={query} />
       </Combobox.Options>
     </Combobox>
   );

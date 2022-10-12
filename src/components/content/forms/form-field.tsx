@@ -3,7 +3,7 @@ import { formatDateLocalToISO } from "@/fhir/formatters";
 import { ExclamationCircleIcon, LockClosedIcon } from "@heroicons/react/solid";
 import cx from "classnames";
 import type { InputHTMLAttributes } from "react";
-import { AutoCompleteSelect } from "./autocomplete-select-field";
+import { AutoCompleteCombobox } from "./autocomplete-data-wrapper";
 import SelectField from "./select-field";
 
 export type FormFieldProps = {
@@ -37,9 +37,9 @@ export const FormField = ({
   const getFieldComponent = () => {
     if (autocomplete) {
       return (
-        <AutoCompleteSelect
-          className={cx({ "ctw-error": error }, "ctw-w-full")}
-          name={inputProps.name || ""}
+        <AutoCompleteCombobox
+          // className={cx({ "ctw-error": error }, "ctw-w-full")}
+          // name={inputProps.name || ""}
           authToken={authToken}
         />
       );
