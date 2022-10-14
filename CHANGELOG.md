@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.14.1
+
+### Patch Changes
+
+- 04de856: Remove dependency on headlessui-float by replacing custom select field with html native select.
+
 ## 0.14.0
 
 ### Minor Changes
