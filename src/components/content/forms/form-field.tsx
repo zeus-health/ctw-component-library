@@ -38,9 +38,7 @@ export const FormField = ({
           defaultValue={value as string | undefined}
         >
           {options.map((option) => (
-            <option value={option} className="ctw-w-capitalize">
-              {capitalize(option)}
-            </option>
+            <option value={option}>{capitalize(option)}</option>
           ))}
         </select>
       );
