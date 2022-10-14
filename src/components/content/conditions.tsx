@@ -16,6 +16,7 @@ import { useQuery } from "@tanstack/react-query";
 import cx from "classnames";
 import { union } from "lodash";
 import { useEffect, useRef, useState } from "react";
+import { Modal } from "../core/modal";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionHistoryDrawer } from "./conditions-history-drawer";
@@ -34,12 +35,13 @@ export type ConditionsProps = {
 
 const EMPTY_MESSAGE = "No conditions found";
 const ERROR_MSG =
-  "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
+  "There was an ctw-error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
 
 export function Conditions({ className }: ConditionsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [historyDrawerIsOpen, setHistoryDrawerIsOpen] = useState(false);
   const [patientRecords, setPatientRecords] = useState<ConditionModel[]>([]);
   const [OtherProviderRecords, setOtherProviderRecords] = useState<
@@ -52,6 +54,8 @@ export function Conditions({ className }: ConditionsProps) {
   const [currentSelectedData, setCurrentlySelectedData] =
     useState<FormEntry[]>();
   const [conditionForHistory, setConditionForHistory] =
+    useState<ConditionModel>();
+  const [conditionForDelete, setConditionForDelete] =
     useState<ConditionModel>();
   const patientResponse = usePatient();
 
@@ -88,6 +92,11 @@ export function Conditions({ className }: ConditionsProps) {
       setFormAction("Edit");
       setCurrentlySelectedData(getEditingPatientConditionData({ condition }));
     }
+  };
+
+  const handleConditionDelete = (condition: ConditionModel) => {
+    setShowModal(true);
+    setConditionForDelete(condition);
   };
 
   const handleOtherProviderRecordsCondition = (condition: ConditionModel) => {
@@ -214,6 +223,12 @@ export function Conditions({ className }: ConditionsProps) {
                   setConditionForHistory(condition);
                 },
               },
+              {
+                name: "Delete",
+                action: () => {
+                  handleConditionDelete(condition);
+                },
+              },
             ]}
           />
         </div>
@@ -267,6 +282,46 @@ export function Conditions({ className }: ConditionsProps) {
         onClose={() => setHistoryDrawerIsOpen(false)}
         condition={conditionForHistory}
       />
+
+      {conditionForDelete && (
+        <Modal
+          title="Remove Condition"
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+        >
+          <Modal.Body>
+            <p className="ctw-max-w-xl ctw-text-center">
+              Please confirm that you want to remove the condition &ldquo;
+              {conditionForDelete.display}&rdquo; from this client&apos;s
+              profile.
+            </p>
+          </Modal.Body>
+          <Modal.Footer>
+            <button
+              type="button"
+              onClick={() => {
+                const fhirClient = fhirClientRef.current;
+                fhirClient?.delete({
+                  resourceType: "Condition",
+                  id: "incorrect", // conditionForDelete.id,
+                });
+                setShowModal(false);
+                // queryClient.invalidateQueries(["conditions"]);
+              }}
+              className="ctw-btn-warn"
+            >
+              Remove Condition
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowModal(false)}
+              className="ctw-btn-default"
+            >
+              Cancel
+            </button>
+          </Modal.Footer>
+        </Modal>
+      )}
     </div>
   );
 }
