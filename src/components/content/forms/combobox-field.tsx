@@ -6,13 +6,16 @@ export type ComboboxFieldProps = {
   query: string;
   setQuery: React.Dispatch<React.SetStateAction<string>>;
   options: any; // TODO: update this
+  name: string;
 };
 
 export const ComboboxField = ({
   options,
   query,
   setQuery,
+  name,
 }: ComboboxFieldProps) => {
+  console.log("options", options);
   const debouncedSearchInputChange = useMemo(() => {
     const handleSearchInputChange = (
       event: React.ChangeEvent<HTMLInputElement>
@@ -34,7 +37,9 @@ export const ComboboxField = ({
         className="ctw-listbox-input ctw-w-full"
         onChange={debouncedSearchInputChange}
         placeholder="Type to search"
+        name={name}
       />
+      <input name={`${name}-code`} value="" hidden />
       <Combobox.Options className="ctw-listbox ctw-max-h-60 ctw-overflow-auto ctw-rounded-md ctw-bg-white ctw-py-1 ctw-text-base ctw-shadow-lg ctw-ring-1 ctw-ring-black ctw-ring-opacity-5 focus:ctw-outline-none sm:ctw-text-sm">
         <RenderCorrectOptions options={options || []} query={query} />
       </Combobox.Options>

@@ -5,10 +5,12 @@ import { ComboboxField } from "./combobox-field";
 
 export type AutoCompleteComboboxProps = {
   authToken: string;
+  name: string;
 };
 
 export const ConditionsAutoComplete = ({
   authToken,
+  name,
 }: AutoCompleteComboboxProps) => {
   const [query, setQuery] = useState("");
   const conditions = useQuery(
@@ -22,6 +24,7 @@ export const ConditionsAutoComplete = ({
       options={conditions.data}
       query={query}
       setQuery={setQuery}
+      name={name}
     />
   );
 };
