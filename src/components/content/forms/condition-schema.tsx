@@ -1,4 +1,6 @@
 import { ConditionModel } from "@/models/conditions";
+import { z } from "zod";
+import { ConditionsAutoComplete } from "./conditions-autocomplete";
 import type { FormEntry } from "./drawer-form-with-fields";
 
 export const getAddConditionData = ({
@@ -45,18 +47,7 @@ export const getEditingPatientConditionData = ({
     readonly: true,
     hidden: true,
   },
-  {
-    label: "Name",
-    value: condition.display,
-    field: "display",
-    readonly: true,
-  },
-  {
-    label: "Snomed Code",
-    value: condition.snomedCode,
-    field: "snomedCode",
-    readonly: true,
-  },
+
   ...sharedFields(condition),
 ];
 
@@ -66,7 +57,9 @@ const sharedFields = (condition: ConditionModel) => [
     value: "",
     field: "condition",
     readonly: false,
-    autocomplete: true,
+    render: (authToken: string) => (
+      <ConditionsAutoComplete authToken={authToken} />
+    ),
   },
   {
     label: "Clinical Status",
@@ -94,3 +87,33 @@ const sharedFields = (condition: ConditionModel) => [
     field: "note",
   },
 ];
+
+export const conditionSchema = z.object({
+  id: z.string().optional(),
+  subjectID: z.string({
+    required_error: "Condition subjectID must be specified.",
+  }),
+  recordedDate: z.date({
+    required_error: "Condition recorded date must be specified.",
+  }),
+  condition: z.string({ required_error: "Condition name must be specified." }),
+  clinicalStatus: z.enum([
+    "active",
+    "recurrence",
+    "relapse",
+    "inactive",
+    "remission",
+    "resolved",
+  ]),
+  onset: z.date({ required_error: "Conditions's onset is required." }),
+  abatement: z.date().optional(),
+  verificationStatus: z.enum([
+    "unconfirmed",
+    "provisional",
+    "differential",
+    "confirmed",
+    "refuted",
+    "entered-in-error",
+  ]),
+  note: z.string().optional(),
+});

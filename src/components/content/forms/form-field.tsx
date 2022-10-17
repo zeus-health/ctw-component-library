@@ -2,8 +2,7 @@ import { useCTW } from "@/components/core/ctw-provider";
 import { formatDateLocalToISO } from "@/fhir/formatters";
 import { ExclamationCircleIcon, LockClosedIcon } from "@heroicons/react/solid";
 import cx from "classnames";
-import type { InputHTMLAttributes } from "react";
-import { AutoCompleteCombobox } from "./autocomplete-data-wrapper";
+import type { InputHTMLAttributes, ReactNode } from "react";
 import SelectField from "./select-field";
 
 export type FormFieldProps = {
@@ -12,7 +11,7 @@ export type FormFieldProps = {
   lines?: number;
   defaultValue?: string;
   readonly?: boolean;
-  autocomplete?: boolean;
+  render?: (authToken: string) => ReactNode;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 export const FormField = ({
@@ -22,7 +21,7 @@ export const FormField = ({
   defaultValue,
   readonly,
   hidden,
-  autocomplete,
+  render,
   ...inputProps
 }: FormFieldProps) => {
   const { authToken } = useCTW();
@@ -35,14 +34,8 @@ export const FormField = ({
       : defaultValue;
 
   const getFieldComponent = () => {
-    if (autocomplete) {
-      return (
-        <AutoCompleteCombobox
-          // className={cx({ "ctw-error": error }, "ctw-w-full")}
-          // name={inputProps.name || ""}
-          authToken={authToken}
-        />
-      );
+    if (render) {
+      return render(authToken);
     }
     if (options) {
       return (

@@ -1,7 +1,8 @@
 import {
+  conditionSchema,
   getAddConditionData,
   getEditingPatientConditionData,
-} from "@/components/content/forms/condition-helpers";
+} from "@/components/content/forms/condition-schema";
 import {
   ConditionFilters,
   filterConditionsWithConfirmedCodes,
@@ -22,7 +23,7 @@ import { ConditionHistoryDrawer } from "./conditions-history-drawer";
 import { ConditionsNoPatient } from "./conditions-no-patient";
 import { ConditionsTableBase } from "./conditions-table-base";
 import "./conditions.scss";
-import { conditionSchema, createOrEditCondition } from "./forms/conditions";
+import { createOrEditCondition } from "./forms/conditions";
 import {
   DrawerFormWithFields,
   FormEntry,

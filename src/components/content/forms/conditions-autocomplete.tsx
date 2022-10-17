@@ -7,7 +7,7 @@ export type AutoCompleteComboboxProps = {
   authToken: string;
 };
 
-export const AutoCompleteCombobox = ({
+export const ConditionsAutoComplete = ({
   authToken,
 }: AutoCompleteComboboxProps) => {
   const [query, setQuery] = useState("");

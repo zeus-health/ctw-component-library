@@ -1,6 +1,7 @@
 import { useFormInputProps } from "@/utils/form-helper";
 import cx from "classnames";
 import Client from "fhir-kit-client";
+import { ReactNode } from "react";
 import { useCTW } from "../../core/ctw-provider";
 import type { DrawerFormProps } from "./drawer-form";
 import { DrawerForm } from "./drawer-form";
@@ -14,7 +15,7 @@ export type FormEntry = {
   lines?: number;
   readonly?: boolean;
   hidden?: boolean;
-  autocomplete?: boolean;
+  render?: (authToken: string) => ReactNode;
 };
 
 export type DrawerFormWithFieldsProps<T> = {
@@ -51,15 +52,7 @@ export const DrawerFormWithFields = <T,>({
       {(submitting, errors) => (
         <div className="ctw-space-y-6">
           {data.map(
-            ({
-              label,
-              field,
-              value,
-              lines,
-              readonly,
-              hidden,
-              autocomplete,
-            }) => {
+            ({ label, field, value, lines, readonly, hidden, render }) => {
               const error = errors?.[field];
 
               if (hidden) {
@@ -103,7 +96,7 @@ export const DrawerFormWithFields = <T,>({
                     defaultValue={value}
                     error={error}
                     hidden={hidden}
-                    autocomplete={autocomplete}
+                    render={render}
                   />
                 </div>
               );
