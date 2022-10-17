@@ -33,6 +33,7 @@ export const SYSTEM_TASK_STATUS =
   "https://www.hl7.org/fhir/codesystem-task-status.html";
 
 export const SYSTEM_ZUS_BUILDER_ID = "https://zusapi.com/builder_id";
+export const SYSTEM_ZUS_USER_TYPE = "https://zusapi.com/user_type";
 export const SYSTEM_ZUS_LENS = "https://zusapi.com/lens";
 export const SYSTEM_ZUS_OWNER = "https://zusapi.com/accesscontrol/owner";
 export const SYSTEM_ZUS_THIRD_PARTY = "https://zusapi.com/thirdparty/source";
