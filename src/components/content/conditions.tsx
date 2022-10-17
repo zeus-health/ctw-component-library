@@ -225,6 +225,7 @@ export function Conditions({ className }: ConditionsProps) {
               },
               {
                 name: "Delete",
+                className: "dangerous",
                 action: () => {
                   handleConditionDelete(condition);
                 },

@@ -61,7 +61,7 @@ export const Modal = ({
               )}
             >
               <div className="ctw-flex ctw-h-full ctw-flex-col">
-                <Dialog.Title className="ctw-text-center ctw-text-2xl ctw-text-content-black">
+                <Dialog.Title className="ctw-text-center ctw-text-2xl">
                   {title}
                 </Dialog.Title>
                 {children}
