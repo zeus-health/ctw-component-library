@@ -9,8 +9,7 @@ import {
   SYSTEM_ZUS_LENS,
   SYSTEM_ZUS_OWNER,
   SYSTEM_ZUS_THIRD_PARTY,
-  SYSTEM_ZUS_UNIVERSAL_ID,
-  SYSTEM_ZUS_USER_TYPE
+  SYSTEM_ZUS_UNIVERSAL_ID
 } from "./system-urls";
 import { ResourceType, ResourceTypeString } from "./types";
 
@@ -88,10 +87,7 @@ export async function searchLensRecords<T extends ResourceTypeString>(
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
   const claims = getClaims(fhirClient);
-  const tagFilter = [SUMMARY_TAGS.join(",")];
-  if (claims[SYSTEM_ZUS_USER_TYPE]?.toString().toLowerCase() !== "zus") {
-    tagFilter.push(`${SYSTEM_ZUS_OWNER}|builder/${claims[SYSTEM_ZUS_BUILDER_ID]}`);
-  }
+  const tagFilter = [SUMMARY_TAGS.join(","),`${SYSTEM_ZUS_OWNER}|builder/${claims[SYSTEM_ZUS_BUILDER_ID]}`];
   return searchAllRecords(resourceType, fhirClient, {
     ...searchParams,
     _tag: tagFilter,
