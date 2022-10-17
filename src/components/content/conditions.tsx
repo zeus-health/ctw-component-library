@@ -174,16 +174,18 @@ export function Conditions({ className }: ConditionsProps) {
         "ctw-conditions-stacked": breakpoints.sm,
       })}
     >
-      <div className="ctw-conditions-heading-container">
-        <div className="ctw-title">Conditions</div>
-        <button
-          type="button"
-          className="ctw-btn-clear ctw-link"
-          onClick={handleAddNewCondition}
-        >
-          + Add Condition
-        </button>
-      </div>
+      {!breakpoints.esm && (
+        <div className="ctw-conditions-heading-container">
+          <div className="ctw-title">Conditions</div>
+          <button
+            type="button"
+            className="ctw-btn-clear ctw-link"
+            onClick={handleAddNewCondition}
+          >
+            + Add Condition
+          </button>
+        </div>
+      )}
       <div className="ctw-conditions-body">
         <div className="ctw-space-y-3">
           <div className="ctw-conditions-title-container">
@@ -200,6 +202,7 @@ export function Conditions({ className }: ConditionsProps) {
             conditions={patientRecords}
             isLoading={patientRecordsResponse.isLoading}
             message={patientRecordsMessage}
+            breakPoint={breakpoints}
             rowActions={(condition) => [
               {
                 name: "Edit",
@@ -231,6 +234,7 @@ export function Conditions({ className }: ConditionsProps) {
               patientRecordsResponse.isLoading
             }
             message={otherProviderRecordMessage}
+            breakPoint={breakpoints}
             rowActions={(condition) => [
               {
                 name: "Add",

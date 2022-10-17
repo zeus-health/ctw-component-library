@@ -1,5 +1,6 @@
 import { Table, TableBaseProps, TableColumn } from "../core/table/table";
 
+import { Breakpoints } from "@/hooks/use-breakpoints";
 import { ConditionModel } from "@/models/conditions";
 import { DotsHorizontalIcon } from "@heroicons/react/outline";
 import { DropdownMenu, MenuItems } from "../core/dropdown-menu";
@@ -8,12 +9,14 @@ export type ConditionsTableBaseProps = {
   className?: string;
   conditions: ConditionModel[];
   rowActions: (condition: ConditionModel) => MenuItems[];
+  breakPoint: Breakpoints;
 } & TableBaseProps<ConditionModel>;
 
 export function ConditionsTableBase({
   className,
   conditions,
   rowActions,
+  breakPoint,
   ...tableProps
 }: ConditionsTableBaseProps) {
   const columns: TableColumn<ConditionModel>[] = [
@@ -50,6 +53,10 @@ export function ConditionsTableBase({
       ),
     },
   ];
+
+  if (breakPoint.esm) {
+    columns.splice(-1);
+  }
 
   return (
     <Table
