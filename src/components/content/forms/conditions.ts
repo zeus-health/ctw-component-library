@@ -1,11 +1,12 @@
+import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { getClaims } from "@/fhir/client";
+import { isFhirError } from "@/fhir/errors";
 import { dateToISO } from "@/fhir/formatters";
 import { getPractitioner } from "@/fhir/practitioner";
 import {
   SYSTEM_CONDITION_CLINICAL,
   SYSTEM_CONDITION_VERIFICATION_STATUS,
   SYSTEM_PRACTITIONER_ID,
-  SYSTEM_SNOMED,
 } from "@/fhir/system-urls";
 import { ConditionModel } from "@/models/conditions";
 import { getFormData } from "@/utils/form-helper";
@@ -31,13 +32,9 @@ export const createOrEditCondition = async (
 ) => {
   const result = await getFormData(data, conditionSchema);
 
-  console.log("result", result);
-
   if (!result.success) {
     return result;
   }
-
-  console.log("result", result);
 
   const fhirClient = await getCTWFhirClient();
   const practitionerId = result.data.id
@@ -70,12 +67,12 @@ export const createOrEditCondition = async (
     code: {
       coding: [
         {
-          system: SYSTEM_SNOMED,
+          system: result.data.conditionSystem,
           code: result.data.conditionCode,
-          display: result.data.conditionName,
+          display: result.data.condition,
         },
       ],
-      text: result.data.conditionName,
+      text: result.data.condition,
     },
     ...(result.data.abatement && {
       abatementDateTime: dateToISO(result.data.abatement),
@@ -88,14 +85,14 @@ export const createOrEditCondition = async (
 
   const conditionModel = new ConditionModel(fhirCondition);
 
-  // const response = await createOrEditFhirResource({
-  //   resourceModel: conditionModel,
-  //   fhirClient,
-  // });
+  const response = await createOrEditFhirResource({
+    resourceModel: conditionModel,
+    fhirClient,
+  });
 
-  // if (isFhirError(response)) {
-  //   result.success = false;
-  // }
+  if (isFhirError(response)) {
+    result.success = false;
+  }
 
   queryClient.invalidateQueries(["conditions"]);
 

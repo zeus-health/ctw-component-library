@@ -8,7 +8,7 @@ export type ComboboxFieldProps<T> = {
   options: ComboxboxFieldOption[];
   query: string;
   setQuery: React.Dispatch<React.SetStateAction<string>>;
-  handleSelectedConditonChange: (e: React.ChangeEvent) => void;
+  handleSelectedConditonChange: (eventValue: string) => void;
   name: string;
 };
 
@@ -84,7 +84,7 @@ const RenderCorrectOptions = ({
   return (
     <>
       {options.map((option) => (
-        <ComboboxOption option={option} />
+        <ComboboxOption option={option} key={option.id} />
       ))}
     </>
   );
@@ -92,7 +92,6 @@ const RenderCorrectOptions = ({
 
 const ComboboxOption = ({ option }: { option: ComboxboxFieldOption }) => (
   <Combobox.Option
-    key={option.id}
     value={option.value}
     className={({ active }) =>
       `ctw-relative ctw-cursor-default ctw-select-none ctw-py-2 ctw-pr-4 ctw-pl-10 ${

@@ -39,10 +39,11 @@ export const ConditionsAutoComplete = ({
     })
   );
 
-  const handleSelectedConditonChange = (e: any) => {
+  const handleSelectedConditonChange = (eventValue: string) => {
     setSelectedCondition(
       conditions.data.filter(
-        (condition: ConditionsAutoCompleteOption) => condition.display === e
+        (condition: ConditionsAutoCompleteOption) =>
+          condition.display === eventValue
       )[0]
     );
   };
@@ -61,12 +62,12 @@ export const ConditionsAutoComplete = ({
         defaultValue={selectedCondition?.code}
         hidden
       />
-      {/* <input
+      <input
         name={`${name}System`}
-        value={selectedCondition?.id}
+        value={selectedCondition?.system}
         hidden
         readOnly
-      /> */}
+      />
     </>
   );
 };
