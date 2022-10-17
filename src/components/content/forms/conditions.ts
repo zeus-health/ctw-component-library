@@ -1,6 +1,4 @@
-import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { getClaims } from "@/fhir/client";
-import { isFhirError } from "@/fhir/errors";
 import { dateToISO } from "@/fhir/formatters";
 import { getPractitioner } from "@/fhir/practitioner";
 import {
@@ -32,9 +30,13 @@ export const createOrEditCondition = async (
   getCTWFhirClient: () => Promise<Client>
 ) => {
   const result = await getFormData(data, conditionSchema);
+  console.log("result", result);
+
   if (!result.success) {
     return result;
   }
+
+  console.log("result", result);
 
   const fhirClient = await getCTWFhirClient();
   const practitionerId = result.data.id
@@ -85,14 +87,14 @@ export const createOrEditCondition = async (
 
   const conditionModel = new ConditionModel(fhirCondition);
 
-  const response = await createOrEditFhirResource({
-    resourceModel: conditionModel,
-    fhirClient,
-  });
+  // const response = await createOrEditFhirResource({
+  //   resourceModel: conditionModel,
+  //   fhirClient,
+  // });
 
-  if (isFhirError(response)) {
-    result.success = false;
-  }
+  // if (isFhirError(response)) {
+  //   result.success = false;
+  // }
 
   queryClient.invalidateQueries(["conditions"]);
 

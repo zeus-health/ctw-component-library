@@ -39,6 +39,7 @@ export const DrawerForm = <T,>({
     setIsSubmitting(true);
     const form = event.target;
     const data = new FormData(form as HTMLFormElement);
+    console.log("data", data);
     const response = await action(data, patientID, getCTWFhirClient);
 
     if (!response.success) {
