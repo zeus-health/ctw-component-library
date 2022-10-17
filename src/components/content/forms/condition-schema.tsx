@@ -93,7 +93,15 @@ export const conditionSchema = z.object({
   subjectID: z.string({
     required_error: "Condition subjectID must be specified.",
   }),
-  condition: z.string().optional(), // z.string({ required_error: "Condition name must be specified." }),
+  conditionSystem: z.string({
+    required_error: "Condition system must be specified.",
+  }),
+  conditionCode: z.string({
+    required_error: "Condition code must be specified.",
+  }),
+  condition: z.string({
+    required_error: "Condition name must be specified.",
+  }),
   clinicalStatus: z.enum([
     "active",
     "recurrence",

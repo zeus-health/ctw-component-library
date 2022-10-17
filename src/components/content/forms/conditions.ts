@@ -30,6 +30,7 @@ export const createOrEditCondition = async (
   getCTWFhirClient: () => Promise<Client>
 ) => {
   const result = await getFormData(data, conditionSchema);
+
   console.log("result", result);
 
   if (!result.success) {
@@ -70,11 +71,11 @@ export const createOrEditCondition = async (
       coding: [
         {
           system: SYSTEM_SNOMED,
-          code: result.data.snomedCode,
-          display: result.data.display,
+          code: result.data.conditionCode,
+          display: result.data.conditionName,
         },
       ],
-      text: result.data.display,
+      text: result.data.conditionName,
     },
     ...(result.data.abatement && {
       abatementDateTime: dateToISO(result.data.abatement),

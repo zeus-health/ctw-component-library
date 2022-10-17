@@ -2,20 +2,23 @@ import { Combobox } from "@headlessui/react";
 import { debounce } from "lodash";
 import React, { useEffect, useMemo } from "react";
 
-export type ComboboxFieldProps = {
+export type ComboxboxFieldOption = { value: string; id: string };
+
+export type ComboboxFieldProps<T> = {
+  options: ComboxboxFieldOption[];
   query: string;
   setQuery: React.Dispatch<React.SetStateAction<string>>;
-  options: any; // TODO: update this
+  handleSelectedConditonChange: (e: React.ChangeEvent) => void;
   name: string;
 };
 
-export const ComboboxField = ({
+export const ComboboxField = <T,>({
   options,
   query,
   setQuery,
+  handleSelectedConditonChange,
   name,
-}: ComboboxFieldProps) => {
-  console.log("options", options);
+}: ComboboxFieldProps<T>) => {
   const debouncedSearchInputChange = useMemo(() => {
     const handleSearchInputChange = (
       event: React.ChangeEvent<HTMLInputElement>
@@ -32,32 +35,37 @@ export const ComboboxField = ({
   );
 
   return (
-    <Combobox>
+    <Combobox onChange={handleSelectedConditonChange}>
       <Combobox.Input
         className="ctw-listbox-input ctw-w-full"
         onChange={debouncedSearchInputChange}
         placeholder="Type to search"
         name={name}
       />
-      <input name={`${name}-code`} value="" hidden />
       <Combobox.Options className="ctw-listbox ctw-max-h-60 ctw-overflow-auto ctw-rounded-md ctw-bg-white ctw-py-1 ctw-text-base ctw-shadow-lg ctw-ring-1 ctw-ring-black ctw-ring-opacity-5 focus:ctw-outline-none sm:ctw-text-sm">
-        <RenderCorrectOptions options={options || []} query={query} />
+        <RenderCorrectOptions options={options} query={query} />
       </Combobox.Options>
     </Combobox>
   );
 };
 
-const RenderCorrectOptions = ({ options, query }) => {
+type RenderCorrectOptionsProps = {
+  options: ComboxboxFieldOption[];
+  query: string;
+};
+
+const RenderCorrectOptions = ({
+  options,
+  query,
+}: RenderCorrectOptionsProps) => {
   if (query.length === 0) {
-    return (
-      <ComboboxOption option={{ display: "Type to search", code: "empty" }} />
-    );
+    return <ComboboxOption option={{ value: "Type to search", id: "empty" }} />;
   }
 
   if (query.length < 2) {
     return (
       <ComboboxOption
-        option={{ display: "No choices to choose from", code: "empty" }}
+        option={{ value: "No choices to choose from", id: "empty" }}
       />
     );
   }
@@ -66,8 +74,8 @@ const RenderCorrectOptions = ({ options, query }) => {
     return (
       <ComboboxOption
         option={{
-          display: `No results found for search term '${query}'`,
-          code: "empty",
+          value: `No results found for search term '${query}'`,
+          id: "empty",
         }}
       />
     );
@@ -82,10 +90,10 @@ const RenderCorrectOptions = ({ options, query }) => {
   );
 };
 
-const ComboboxOption = ({ option }) => (
+const ComboboxOption = ({ option }: { option: ComboxboxFieldOption }) => (
   <Combobox.Option
-    key={option.code}
-    value={option.display}
+    key={option.id}
+    value={option.value}
     className={({ active }) =>
       `ctw-relative ctw-cursor-default ctw-select-none ctw-py-2 ctw-pr-4 ctw-pl-10 ${
         active
@@ -94,6 +102,6 @@ const ComboboxOption = ({ option }) => (
       }`
     }
   >
-    {option.display}
+    {option.value}
   </Combobox.Option>
 );
