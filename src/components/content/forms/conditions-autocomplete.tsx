@@ -19,7 +19,6 @@ export const ConditionsAutoComplete = ({
   readonly,
   ...inputProps
 }: AutoCompleteComboboxProps) => {
-  console.log("input props", inputProps);
   const { authToken, env } = useCTW();
   const [query, setQuery] = useState((inputProps.defaultValue as string) || "");
   const [selectedCondition, setSelectedCondition] = useState<
