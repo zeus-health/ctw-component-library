@@ -1,6 +1,6 @@
 import {
-  addConditionFormEntries,
-  editConditionFormEntries,
+  getAddConditionFormEntries,
+  getEditConditionFormEntries,
 } from "@/components/content/forms/condition-helpers";
 import {
   ConditionFilters,
@@ -86,7 +86,7 @@ export function Conditions({ className }: ConditionsProps) {
     if (patientResponse.data) {
       setDrawerIsOpen(true);
       setFormAction("Edit");
-      setCurrentlySelectedData(editConditionFormEntries({ condition }));
+      setCurrentlySelectedData(getEditConditionFormEntries({ condition }));
     }
   };
 
@@ -94,7 +94,7 @@ export function Conditions({ className }: ConditionsProps) {
     if (patientResponse.data) {
       setDrawerIsOpen(true);
       setFormAction("Add");
-      setCurrentlySelectedData(addConditionFormEntries({ condition }));
+      setCurrentlySelectedData(getAddConditionFormEntries({ condition }));
     }
   };
 
@@ -105,7 +105,7 @@ export function Conditions({ className }: ConditionsProps) {
     setDrawerIsOpen(true);
     setFormAction("Add");
     setCurrentlySelectedData(
-      addConditionFormEntries({
+      getAddConditionFormEntries({
         condition: new ConditionModel(newCondition),
       })
     );

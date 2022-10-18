@@ -1,7 +1,7 @@
 import { ConditionModel } from "@/models/conditions";
 import type { FormEntry } from "./drawer-form-with-fields";
 
-export const addConditionFormEntries = ({
+export const getAddConditionFormEntries = ({
   condition,
 }: {
   condition: ConditionModel;
@@ -23,10 +23,10 @@ export const addConditionFormEntries = ({
     value: condition.snomedCode,
     field: "snomedCode",
   },
-  ...sharedFields(condition),
+  ...getSharedFields(condition),
 ];
 
-export const editConditionFormEntries = ({
+export const getEditConditionFormEntries = ({
   condition,
 }: {
   condition: ConditionModel;
@@ -57,10 +57,10 @@ export const editConditionFormEntries = ({
     field: "snomedCode",
     readonly: true,
   },
-  ...sharedFields(condition),
+  ...getSharedFields(condition),
 ];
 
-const sharedFields = (condition: ConditionModel) => [
+const getSharedFields = (condition: ConditionModel) => [
   {
     label: "Clinical Status",
     value: condition.clinicalStatus,
