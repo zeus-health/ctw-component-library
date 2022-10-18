@@ -86,9 +86,14 @@ export async function searchLensRecords<T extends ResourceTypeString>(
   fhirClient: Client,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
+  const claims = getClaims(fhirClient);
+  const tagFilter = [
+    SUMMARY_TAGS.join(","),
+    `${SYSTEM_ZUS_OWNER}|builder/${claims[SYSTEM_ZUS_BUILDER_ID]}`,
+  ];
   return searchAllRecords(resourceType, fhirClient, {
     ...searchParams,
-    _tag: SUMMARY_TAGS.join(","),
+    _tag: tagFilter,
   });
 }
 
