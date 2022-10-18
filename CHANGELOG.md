@@ -1,5 +1,15 @@
 # ctw-component-library
 
+## 0.15.0
+
+### Minor Changes
+
+- 33f88e0: Add optional readOnly property to conditions. This will hide the “…” menu and the “add conditions” link.
+
+### Patch Changes
+
+- 9b0b1ff: Limiting lens requests to resources tagged with the callers builder.
+
 ## 0.14.2
 
 ### Patch Changes
