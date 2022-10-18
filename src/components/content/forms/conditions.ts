@@ -65,10 +65,9 @@ export const createOrEditCondition = async (
   }
 
   const fhirClient = await getCTWFhirClient();
-  let display;
-  const practitionerId = result.data.id
-    ? (getClaims(fhirClient)[SYSTEM_PRACTITIONER_ID] as string)
-    : "";
+  const practitionerId = getClaims(fhirClient)[
+    SYSTEM_PRACTITIONER_ID
+  ] as string;
 
   // Some fields will need to be set as they are required.
   const fhirCondition: fhir4.Condition = {
