@@ -28,7 +28,7 @@ export const ModalConfirmDelete = ({
         );
       }
       const response = await fhirClient.delete({
-        resourceType: "Conditions",
+        resourceType: "Condition",
         id: resource.id,
       });
       queryClient.invalidateQueries(["conditions"]);
