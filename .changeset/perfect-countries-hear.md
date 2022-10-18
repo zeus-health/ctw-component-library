@@ -2,4 +2,4 @@
 "@zus-health/ctw-component-library": minor
 ---
 
-Added an optional readyOnly functionality to provide a read only view for the conditions table. If this readOnly functionality is on, the meatball menu will be hidden.
+Add optional readOnly property to conditions. This will hide the “…” menu and the “add conditions” link.

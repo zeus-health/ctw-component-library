@@ -196,6 +196,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               toggleProps={{ name: "conditions", text: "Include Inactive" }}
             />
           </div>
+
           <ConditionsTableBase
             className="ctw-conditions-table"
             stacked={breakpoints.sm}
@@ -219,10 +220,12 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
             ]}
           />
         </div>
+
         <div className="ctw-space-y-3">
           <div className="ctw-conditions-title-container">
             <div className="ctw-title">Other Provider Records</div>
           </div>
+
           <ConditionsTableBase
             className="ctw-conditions-not-reviewed"
             stacked={breakpoints.sm}
