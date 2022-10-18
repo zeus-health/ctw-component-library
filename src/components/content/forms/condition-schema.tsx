@@ -15,6 +15,14 @@ export const getAddConditionData = ({
     readonly: true,
     hidden: true,
   },
+  {
+    label: "Condition",
+    field: "condition",
+    readonly: false,
+    render: (name: string) => (
+      <ConditionsAutoComplete name={name} defaultValue={condition.display} />
+    ),
+  },
   ...sharedFields(condition),
 ];
 
@@ -31,6 +39,15 @@ export const getEditingPatientConditionData = ({
     hidden: true,
   },
   {
+    label: "Condition",
+    field: "condition",
+    value: condition.display,
+    readonly: true,
+    render: (readonly: boolean | undefined, inputProps) => (
+      <ConditionsAutoComplete readonly={readonly} {...inputProps} />
+    ),
+  },
+  {
     label: "subject",
     value: condition.subjectID,
     field: "subjectID",
@@ -42,14 +59,6 @@ export const getEditingPatientConditionData = ({
 ];
 
 const sharedFields = (condition: ConditionModel) => [
-  {
-    label: "Condition",
-    field: "condition",
-    readonly: false,
-    render: (name: string) => (
-      <ConditionsAutoComplete name={name} defaultValue={condition.display} />
-    ),
-  },
   {
     label: "Clinical Status",
     value: condition.clinicalStatus,

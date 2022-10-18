@@ -10,6 +10,7 @@ export type ComboboxFieldProps = {
   setQuery: React.Dispatch<React.SetStateAction<string>>;
   handleSelectChange: (eventValue: string) => void;
   name: string;
+  readonly: boolean | undefined;
 };
 
 export const ComboboxField = ({
@@ -18,6 +19,7 @@ export const ComboboxField = ({
   setQuery,
   handleSelectChange,
   name,
+  readonly,
 }: ComboboxFieldProps) => {
   const debouncedSearchInputChange = useMemo(() => {
     const handleSearchInputChange = (
@@ -34,7 +36,7 @@ export const ComboboxField = ({
     [query, debouncedSearchInputChange]
   );
   return (
-    <Combobox onChange={handleSelectChange} value={query}>
+    <Combobox onChange={handleSelectChange} value={query} disabled={readonly}>
       <Combobox.Input
         className="ctw-listbox-input ctw-w-full"
         onChange={debouncedSearchInputChange}

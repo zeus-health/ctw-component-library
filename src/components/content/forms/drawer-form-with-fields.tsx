@@ -1,7 +1,7 @@
 import { useFormInputProps } from "@/utils/form-helper";
 import cx from "classnames";
 import Client from "fhir-kit-client";
-import { ReactNode } from "react";
+import { InputHTMLAttributes, ReactNode } from "react";
 import { useCTW } from "../../core/ctw-provider";
 import type { DrawerFormProps } from "./drawer-form";
 import { DrawerForm } from "./drawer-form";
@@ -15,7 +15,10 @@ export type FormEntry = {
   lines?: number;
   readonly?: boolean;
   hidden?: boolean;
-  render?: (name: string, value: string) => ReactNode;
+  render?: (
+    readOnly: boolean | undefined,
+    inputProps: InputHTMLAttributes<HTMLInputElement>
+  ) => ReactNode;
 };
 
 export type DrawerFormWithFieldsProps<T> = {

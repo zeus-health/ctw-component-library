@@ -1,13 +1,13 @@
 import { getAutoCompleteConditions } from "@/api/conditions";
 import { useCTW } from "@/components/core/ctw-provider";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { InputHTMLAttributes, useState } from "react";
 import { ComboboxField } from "./combobox-field";
 
 export type AutoCompleteComboboxProps = {
-  name: string;
-  defaultValue: string | undefined;
-};
+  readonly: boolean | undefined;
+  inputProps: InputHTMLAttributes<HTMLInputElement>;
+} & InputHTMLAttributes<HTMLInputElement>;
 
 export type ConditionsAutoCompleteOption = {
   display: string;
@@ -16,11 +16,11 @@ export type ConditionsAutoCompleteOption = {
 };
 
 export const ConditionsAutoComplete = ({
-  name,
-  defaultValue,
+  readonly,
+  ...inputProps
 }: AutoCompleteComboboxProps) => {
   const { authToken, env } = useCTW();
-  const [query, setQuery] = useState(defaultValue || "");
+  const [query, setQuery] = useState((inputProps.defaultValue as string) || "");
   const [selectedCondition, setSelectedCondition] = useState<
     ConditionsAutoCompleteOption | undefined
   >({
@@ -41,13 +41,13 @@ export const ConditionsAutoComplete = ({
     })
   );
 
-  useEffect(() => {
-    /* This handles the case where a user goes to an existing condition that has already been added but doesn't exist
-       in our search, so we clear the input so that the user does not try adding a condition that doesnt exist. */
-    if (conditions.data && !conditions.data.length && query === defaultValue) {
-      setQuery("");
-    }
-  }, [conditions.data, defaultValue, query]);
+  // useEffect(() => {
+  //   /* This handles the case where a user goes to an existing condition that has already been added but doesn't exist
+  //      in our search, so we clear the input so that the user does not try adding a condition that doesnt exist. */
+  //   if (conditions.data && !conditions.data.length && query === defaultValue) {
+  //     setQuery("");
+  //   }
+  // }, [conditions.data, defaultValue, query]);
 
   const handleSelectedConditonChange = (eventValue: string) => {
     setSelectedCondition(
@@ -68,15 +68,16 @@ export const ConditionsAutoComplete = ({
         query={query}
         setQuery={setQuery}
         handleSelectChange={handleSelectedConditonChange}
-        name={name}
+        name={inputProps.name as string}
+        readonly={readonly}
       />
       <input
-        name={`${name}Code`}
+        name={`${inputProps.name}Code`}
         defaultValue={selectedCondition?.code}
         hidden
       />
       <input
-        name={`${name}System`}
+        name={`${inputProps.name}System`}
         value={selectedCondition?.system}
         hidden
         readOnly
