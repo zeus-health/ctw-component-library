@@ -15,16 +15,6 @@ export const getAddConditionData = ({
     readonly: true,
     hidden: true,
   },
-  {
-    label: "Name",
-    value: condition.display,
-    field: "display",
-  },
-  {
-    label: "Snomed Code",
-    value: condition.snomedCode,
-    field: "snomedCode",
-  },
   ...sharedFields(condition),
 ];
 
@@ -54,11 +44,14 @@ export const getEditingPatientConditionData = ({
 const sharedFields = (condition: ConditionModel) => [
   {
     label: "Condition",
-    value: "",
     field: "condition",
     readonly: false,
-    render: (authToken: string, name: string) => (
-      <ConditionsAutoComplete authToken={authToken} name={name} />
+    render: (authToken: string, name: string, value: string) => (
+      <ConditionsAutoComplete
+        authToken={authToken}
+        name={name}
+        value={condition.display}
+      />
     ),
   },
   {

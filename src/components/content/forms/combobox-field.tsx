@@ -4,21 +4,21 @@ import React, { useEffect, useMemo } from "react";
 
 export type ComboxboxFieldOption = { value: string; id: string };
 
-export type ComboboxFieldProps<T> = {
+export type ComboboxFieldProps = {
   options: ComboxboxFieldOption[];
   query: string;
   setQuery: React.Dispatch<React.SetStateAction<string>>;
-  handleSelectedConditonChange: (eventValue: string) => void;
+  handleSelectChange: (eventValue: string) => void;
   name: string;
 };
 
-export const ComboboxField = <T,>({
+export const ComboboxField = ({
   options,
   query,
   setQuery,
-  handleSelectedConditonChange,
+  handleSelectChange,
   name,
-}: ComboboxFieldProps<T>) => {
+}: ComboboxFieldProps) => {
   const debouncedSearchInputChange = useMemo(() => {
     const handleSearchInputChange = (
       event: React.ChangeEvent<HTMLInputElement>
@@ -33,9 +33,8 @@ export const ComboboxField = <T,>({
     },
     [query, debouncedSearchInputChange]
   );
-
   return (
-    <Combobox onChange={handleSelectedConditonChange}>
+    <Combobox onChange={handleSelectChange} value={query}>
       <Combobox.Input
         className="ctw-listbox-input ctw-w-full"
         onChange={debouncedSearchInputChange}

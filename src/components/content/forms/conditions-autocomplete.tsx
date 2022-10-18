@@ -1,11 +1,12 @@
 import { getAutoCompleteConditions } from "@/api/conditions";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ComboboxField } from "./combobox-field";
 
 export type AutoCompleteComboboxProps = {
   authToken: string;
   name: string;
+  value: string | undefined;
 };
 
 export type ConditionsAutoCompleteOption = {
@@ -17,8 +18,9 @@ export type ConditionsAutoCompleteOption = {
 export const ConditionsAutoComplete = ({
   authToken,
   name,
+  value,
 }: AutoCompleteComboboxProps) => {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(value || "");
   const [selectedCondition, setSelectedCondition] = useState<
     ConditionsAutoCompleteOption | undefined
   >({
@@ -39,6 +41,12 @@ export const ConditionsAutoComplete = ({
     })
   );
 
+  useEffect(() => {
+    if (conditions.data && !conditions.data.length) {
+      setQuery("");
+    }
+  }, [conditions.data]);
+
   const handleSelectedConditonChange = (eventValue: string) => {
     setSelectedCondition(
       conditions.data.filter(
@@ -46,6 +54,9 @@ export const ConditionsAutoComplete = ({
           condition.display === eventValue
       )[0]
     );
+    if (conditions.data.length) {
+      setQuery(eventValue);
+    }
   };
 
   return (
@@ -54,7 +65,7 @@ export const ConditionsAutoComplete = ({
         options={options || []}
         query={query}
         setQuery={setQuery}
-        handleSelectedConditonChange={handleSelectedConditonChange}
+        handleSelectChange={handleSelectedConditonChange}
         name={name}
       />
       <input

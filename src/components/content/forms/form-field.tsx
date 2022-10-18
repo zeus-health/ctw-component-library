@@ -11,7 +11,7 @@ export type FormFieldProps = {
   lines?: number;
   defaultValue?: string;
   readonly?: boolean;
-  render?: (authToken: string, name: string) => ReactNode;
+  render?: (authToken: string, name: string, value: string) => ReactNode;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 export const FormField = ({
@@ -35,7 +35,11 @@ export const FormField = ({
 
   const getFieldComponent = () => {
     if (render) {
-      return render(authToken, inputProps.name || "");
+      return render(
+        authToken,
+        inputProps.name || "",
+        inputProps.value as string
+      );
     }
     if (options) {
       return (
