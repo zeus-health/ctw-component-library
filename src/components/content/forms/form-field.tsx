@@ -2,8 +2,8 @@ import { useCTW } from "@/components/core/ctw-provider";
 import { formatDateLocalToISO } from "@/fhir/formatters";
 import { ExclamationCircleIcon, LockClosedIcon } from "@heroicons/react/solid";
 import cx from "classnames";
+import { capitalize } from "lodash";
 import type { InputHTMLAttributes, ReactNode } from "react";
-import SelectField from "./select-field";
 
 export type FormFieldProps = {
   error?: string;
@@ -43,13 +43,16 @@ export const FormField = ({
     }
     if (options) {
       return (
-        <SelectField
-          className={cx({ "ctw-error": error }, "ctw-w-full")}
-          options={options}
+        <select
+          className="ctw-listbox-button ctw-w-full"
           name={inputProps.name || ""}
           disabled={inputProps.disabled}
           defaultValue={value as string | undefined}
-        />
+        >
+          {options.map((option) => (
+            <option value={option}>{capitalize(option)}</option>
+          ))}
+        </select>
       );
     }
     if (lines) {
