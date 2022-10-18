@@ -261,6 +261,13 @@ export function Conditions({ className }: ConditionsProps) {
                   setConditionForHistory(condition);
                 },
               },
+              {
+                name: "Delete",
+                className: "dangerous",
+                action: () => {
+                  handleConditionDelete(condition);
+                },
+              },
             ]}
           />
         </div>
