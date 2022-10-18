@@ -191,7 +191,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         <div className="ctw-space-y-3">
           <div
             className={
-              !breakpoints.esm
+              !breakpoints.xs
                 ? "ctw-conditions-title-container"
                 : "ctw-flex ctw-flex-col ctw-items-start ctw-space-y-2 ctw-p-3"
             }
