@@ -31,7 +31,7 @@ export const createOrEditCondition = async (
   getCTWFhirClient: () => Promise<Client>
 ) => {
   const result = await getFormData(data, conditionSchema);
-
+  console.log("result", result);
   if (!result.success) {
     return result;
   }

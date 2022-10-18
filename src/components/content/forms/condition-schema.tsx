@@ -50,7 +50,7 @@ const sharedFields = (condition: ConditionModel) => [
       <ConditionsAutoComplete
         authToken={authToken}
         name={name}
-        value={condition.display}
+        defaultValue={condition.display}
       />
     ),
   },
@@ -86,6 +86,7 @@ export const conditionSchema = z.object({
   subjectID: z.string({
     required_error: "Condition subjectID must be specified.",
   }),
+
   conditionSystem: z.string({
     required_error: "Condition system must be specified.",
   }),

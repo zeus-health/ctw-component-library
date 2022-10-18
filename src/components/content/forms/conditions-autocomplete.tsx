@@ -6,7 +6,7 @@ import { ComboboxField } from "./combobox-field";
 export type AutoCompleteComboboxProps = {
   authToken: string;
   name: string;
-  value: string | undefined;
+  defaultValue: string | undefined;
 };
 
 export type ConditionsAutoCompleteOption = {
@@ -18,9 +18,9 @@ export type ConditionsAutoCompleteOption = {
 export const ConditionsAutoComplete = ({
   authToken,
   name,
-  value,
+  defaultValue,
 }: AutoCompleteComboboxProps) => {
-  const [query, setQuery] = useState(value || "");
+  const [query, setQuery] = useState(defaultValue || "");
   const [selectedCondition, setSelectedCondition] = useState<
     ConditionsAutoCompleteOption | undefined
   >({
@@ -42,10 +42,12 @@ export const ConditionsAutoComplete = ({
   );
 
   useEffect(() => {
-    if (conditions.data && !conditions.data.length) {
+    /* This handles the case where a user goes to an existing condition that has already been added but doesn't exist
+       in our search, so we clear the input so that the user does not try adding a condition that doesnt exist. */
+    if (conditions.data && !conditions.data.length && query === defaultValue) {
       setQuery("");
     }
-  }, [conditions.data]);
+  }, [conditions.data, defaultValue, query]);
 
   const handleSelectedConditonChange = (eventValue: string) => {
     setSelectedCondition(
