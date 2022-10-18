@@ -7,7 +7,7 @@
 }
 
 .ctw-conditions-title-container {
-  @apply ctw-flex ctw-items-center ctw-justify-between;
+  @apply ctw-flex ctw-flex-wrap ctw-items-center ctw-justify-between ctw-gap-x-2 ctw-gap-y-2;
 }
 
 .ctw-conditions-heading-container {
