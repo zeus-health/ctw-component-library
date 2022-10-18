@@ -1,4 +1,5 @@
 import { QueryFunctionContext } from "@tanstack/react-query";
+import { FORMS_CONDITIONS_URL } from "./urls";
 
 export type QueryKeyAutoCompleteConditions = [string, string, string];
 
@@ -8,9 +9,8 @@ export const getAutoCompleteConditions = async (
   const { queryKey } = queryParams;
   const [_, authToken, searchTerm] = queryKey;
 
-  // TODO: update to add url in system like url area.
   const response = await fetch(
-    `https://api.dev.zusapi.com/forms-data/terminology/conditions?display=${searchTerm}`,
+    `${FORMS_CONDITIONS_URL}?display=${searchTerm}`,
     {
       headers: { Authorization: `Bearer ${authToken}` },
     }
