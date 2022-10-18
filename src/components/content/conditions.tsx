@@ -30,14 +30,17 @@ import {
 
 export type ConditionsProps = {
   className?: string;
-  quickProfile: boolean;
+  quickProfile?: boolean;
 };
 
 const EMPTY_MESSAGE = "No conditions found";
 const ERROR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
 
-export function Conditions({ className, quickProfile }: ConditionsProps) {
+export function Conditions({
+  className,
+  quickProfile = false,
+}: ConditionsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
