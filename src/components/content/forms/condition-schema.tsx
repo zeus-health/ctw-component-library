@@ -39,6 +39,25 @@ export const getEditingPatientConditionData = ({
     hidden: true,
   },
   {
+    label: "id",
+    value: condition.id,
+    field: "id",
+    readonly: true,
+    hidden: true,
+  },
+  {
+    label: "Name",
+    value: condition.display,
+    field: "condition",
+    hidden: true,
+  },
+  {
+    label: "Snomed Code",
+    value: condition.snomedCode,
+    field: "conditionCode",
+    hidden: true,
+  },
+  {
     label: "Condition",
     field: "condition",
     value: condition.display,
@@ -86,12 +105,46 @@ const sharedFields = (condition: ConditionModel) => [
   },
 ];
 
-export const conditionSchema = z.object({
+export const conditionEditSchema = z.object({
   id: z.string().optional(),
   subjectID: z.string({
     required_error: "Condition subjectID must be specified.",
   }),
+  system: z.string({
+    required_error: "Condition system must be specified.",
+  }),
+  code: z.string({
+    required_error: "Condition code must be specified.",
+  }),
+  condition: z.string({
+    required_error: "Condition name must be specified.",
+  }),
+  clinicalStatus: z.enum([
+    "active",
+    "recurrence",
+    "relapse",
+    "inactive",
+    "remission",
+    "resolved",
+  ]),
+  onset: z.date({ required_error: "Conditions's onset is required." }),
+  abatement: z.date().optional(),
+  verificationStatus: z.enum([
+    "unconfirmed",
+    "provisional",
+    "differential",
+    "confirmed",
+    "refuted",
+    "entered-in-error",
+  ]),
+  note: z.string().optional(),
+});
 
+export const conditionAddSchema = z.object({
+  id: z.string().optional(),
+  subjectID: z.string({
+    required_error: "Condition subjectID must be specified.",
+  }),
   conditionSystem: z.string({
     required_error: "Condition system must be specified.",
   }),

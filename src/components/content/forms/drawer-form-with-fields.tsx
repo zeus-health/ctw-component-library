@@ -50,6 +50,7 @@ export const DrawerFormWithFields = <T,>({
       title={title}
       action={action}
       getCTWFhirClient={getCTWFhirClient}
+      schema={schema}
       {...drawerFormProps}
     >
       {(submitting, errors) => (

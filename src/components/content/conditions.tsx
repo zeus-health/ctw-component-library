@@ -1,5 +1,6 @@
 import {
-  conditionSchema,
+  conditionAddSchema,
+  conditionEditSchema,
   getAddConditionData,
   getEditingPatientConditionData,
 } from "@/components/content/forms/condition-schema";
@@ -50,6 +51,7 @@ export function Conditions({ className }: ConditionsProps) {
   const [formAction, setFormAction] = useState("");
   const [conditionFilter, setConditionFilter] = useState<ConditionFilters>({});
   const fhirClientRef = useFhirClientRef();
+  const [schema, setSchema] = useState<Zod.AnyZodObject>();
   const [currentSelectedData, setCurrentlySelectedData] =
     useState<FormEntry[]>();
   const [conditionForHistory, setConditionForHistory] =
@@ -87,6 +89,7 @@ export function Conditions({ className }: ConditionsProps) {
     if (patientResponse.data) {
       setDrawerIsOpen(true);
       setFormAction("Edit");
+      setSchema(conditionEditSchema);
       setCurrentlySelectedData(getEditingPatientConditionData({ condition }));
     }
   };
@@ -95,6 +98,7 @@ export function Conditions({ className }: ConditionsProps) {
     if (patientResponse.data) {
       setDrawerIsOpen(true);
       setFormAction("Add");
+      setSchema(conditionAddSchema);
       setCurrentlySelectedData(getAddConditionData({ condition }));
     }
   };
@@ -105,6 +109,7 @@ export function Conditions({ className }: ConditionsProps) {
     const newCondition = getNewCondition(patientResponse.data.id);
     setDrawerIsOpen(true);
     setFormAction("Add");
+    setSchema(conditionAddSchema);
     setCurrentlySelectedData(
       getAddConditionData({
         condition: new ConditionModel(newCondition),
@@ -257,7 +262,7 @@ export function Conditions({ className }: ConditionsProps) {
           title={`${formAction} Condition`}
           action={createOrEditCondition}
           data={currentSelectedData}
-          schema={conditionSchema}
+          schema={schema}
           isOpen={drawerIsOpen}
           onClose={() => setDrawerIsOpen(false)}
         />

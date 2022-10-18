@@ -41,14 +41,6 @@ export const ConditionsAutoComplete = ({
     })
   );
 
-  // useEffect(() => {
-  //   /* This handles the case where a user goes to an existing condition that has already been added but doesn't exist
-  //      in our search, so we clear the input so that the user does not try adding a condition that doesnt exist. */
-  //   if (conditions.data && !conditions.data.length && query === defaultValue) {
-  //     setQuery("");
-  //   }
-  // }, [conditions.data, defaultValue, query]);
-
   const handleSelectedConditonChange = (eventValue: string) => {
     setSelectedCondition(
       conditions.data.filter(
