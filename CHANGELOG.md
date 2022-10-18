@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.14.2
+
+### Patch Changes
+
+- d91b2b5: Recorder will now be added when adding conditions as well.
+
 ## 0.14.1
 
 ### Patch Changes
