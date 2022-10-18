@@ -30,7 +30,7 @@ function App() {
       <PatientProvider patientID={VITE_PATIENT_ID} systemURL={VITE_SYSTEM_URL}>
         <div className="App ctw-space-y-5">
           <h1>CTW Component Library</h1>
-          <Conditions />
+          <Conditions quickProfile={false} />
         </div>
       </PatientProvider>
     </CTWProvider>

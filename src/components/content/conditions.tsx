@@ -30,13 +30,14 @@ import {
 
 export type ConditionsProps = {
   className?: string;
+  quickProfile: boolean;
 };
 
 const EMPTY_MESSAGE = "No conditions found";
 const ERROR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
 
-export function Conditions({ className }: ConditionsProps) {
+export function Conditions({ className, quickProfile }: ConditionsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
@@ -174,7 +175,7 @@ export function Conditions({ className }: ConditionsProps) {
         "ctw-conditions-stacked": breakpoints.sm,
       })}
     >
-      {!breakpoints.esm && (
+      {!quickProfile && (
         <div className="ctw-conditions-heading-container">
           <div className="ctw-title">Conditions</div>
           <button
@@ -188,21 +189,26 @@ export function Conditions({ className }: ConditionsProps) {
       )}
       <div className="ctw-conditions-body">
         <div className="ctw-space-y-3">
-          <div className="ctw-conditions-title-container">
+          <div
+            className={
+              !breakpoints.esm
+                ? "ctw-conditions-title-container"
+                : "ctw-flex ctw-flex-col ctw-items-start ctw-space-y-2 ctw-p-3"
+            }
+          >
             <div className="ctw-title">Patient Record</div>
             <ToggleControl
               onFormChange={handleToggleChange}
               toggleProps={{ name: "conditions", text: "Include Inactive" }}
             />
           </div>
-
           <ConditionsTableBase
             className="ctw-conditions-table"
             stacked={breakpoints.sm}
             conditions={patientRecords}
             isLoading={patientRecordsResponse.isLoading}
             message={patientRecordsMessage}
-            breakPoint={breakpoints}
+            quickProfile={quickProfile}
             rowActions={(condition) => [
               {
                 name: "Edit",
@@ -220,7 +226,6 @@ export function Conditions({ className }: ConditionsProps) {
             ]}
           />
         </div>
-
         <div className="ctw-space-y-3">
           <div className="ctw-conditions-title-container">
             <div className="ctw-title">Other Provider Records</div>
@@ -234,7 +239,7 @@ export function Conditions({ className }: ConditionsProps) {
               patientRecordsResponse.isLoading
             }
             message={otherProviderRecordMessage}
-            breakPoint={breakpoints}
+            quickProfile={quickProfile}
             rowActions={(condition) => [
               {
                 name: "Add",
