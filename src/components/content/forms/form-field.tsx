@@ -1,4 +1,3 @@
-import { useCTW } from "@/components/core/ctw-provider";
 import { formatDateLocalToISO } from "@/fhir/formatters";
 import { ExclamationCircleIcon, LockClosedIcon } from "@heroicons/react/solid";
 import cx from "classnames";
@@ -11,7 +10,7 @@ export type FormFieldProps = {
   lines?: number;
   defaultValue?: string;
   readonly?: boolean;
-  render?: (authToken: string, name: string, value: string) => ReactNode;
+  render?: (name: string, value: string) => ReactNode;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 export const FormField = ({
@@ -24,7 +23,6 @@ export const FormField = ({
   render,
   ...inputProps
 }: FormFieldProps) => {
-  const { authToken } = useCTW();
   // We display dates in MM/DD/YYYY format, but date input fields
   // expect it to be in YYYY-MM-DD format.
 
@@ -35,11 +33,7 @@ export const FormField = ({
 
   const getFieldComponent = () => {
     if (render) {
-      return render(
-        authToken,
-        inputProps.name || "",
-        inputProps.value as string
-      );
+      return render(inputProps.name || "", inputProps.value as string);
     }
     if (options) {
       return (

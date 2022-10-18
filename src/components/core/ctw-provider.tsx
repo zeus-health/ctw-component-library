@@ -97,6 +97,7 @@ function useCTW() {
     getCTWFhirClient,
     theme: context.theme as Required<Theme>,
     authToken: context.authToken as string,
+    env: context.env,
     ctwProviderRef: context.ctwProviderRef,
   };
 }

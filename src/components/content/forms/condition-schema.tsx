@@ -46,12 +46,8 @@ const sharedFields = (condition: ConditionModel) => [
     label: "Condition",
     field: "condition",
     readonly: false,
-    render: (authToken: string, name: string, value: string) => (
-      <ConditionsAutoComplete
-        authToken={authToken}
-        name={name}
-        defaultValue={condition.display}
-      />
+    render: (name: string) => (
+      <ConditionsAutoComplete name={name} defaultValue={condition.display} />
     ),
   },
   {

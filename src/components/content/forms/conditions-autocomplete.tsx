@@ -1,10 +1,10 @@
 import { getAutoCompleteConditions } from "@/api/conditions";
+import { useCTW } from "@/components/core/ctw-provider";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { ComboboxField } from "./combobox-field";
 
 export type AutoCompleteComboboxProps = {
-  authToken: string;
   name: string;
   defaultValue: string | undefined;
 };
@@ -16,10 +16,10 @@ export type ConditionsAutoCompleteOption = {
 };
 
 export const ConditionsAutoComplete = ({
-  authToken,
   name,
   defaultValue,
 }: AutoCompleteComboboxProps) => {
+  const { authToken, env } = useCTW();
   const [query, setQuery] = useState(defaultValue || "");
   const [selectedCondition, setSelectedCondition] = useState<
     ConditionsAutoCompleteOption | undefined
@@ -29,7 +29,7 @@ export const ConditionsAutoComplete = ({
     system: "",
   });
   const conditions = useQuery(
-    ["condition-autocomplete", authToken, query],
+    ["condition-autocomplete", authToken, env, query],
     getAutoCompleteConditions,
     { enabled: !!authToken && query.length > 1 }
   );
