@@ -189,13 +189,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       )}
       <div className="ctw-conditions-body">
         <div className="ctw-space-y-3">
-          <div
-            className={
-              !breakpoints.xs
-                ? "ctw-conditions-title-container"
-                : "ctw-flex ctw-flex-col ctw-items-start ctw-space-y-2 ctw-p-3"
-            }
-          >
+          <div className="ctw-conditions-title-container">
             <div className="ctw-title">Patient Record</div>
             <ToggleControl
               onFormChange={handleToggleChange}
@@ -208,7 +202,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
             conditions={patientRecords}
             isLoading={patientRecordsResponse.isLoading}
             message={patientRecordsMessage}
-            hideMenu={readOnly}
             rowActions={(condition) => [
               {
                 name: "Edit",
@@ -239,7 +232,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               patientRecordsResponse.isLoading
             }
             message={otherProviderRecordMessage}
-            hideMenu={readOnly}
             rowActions={(condition) => [
               {
                 name: "Add",

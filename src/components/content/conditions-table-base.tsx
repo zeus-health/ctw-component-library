@@ -8,14 +8,14 @@ export type ConditionsTableBaseProps = {
   className?: string;
   conditions: ConditionModel[];
   rowActions: (condition: ConditionModel) => MenuItems[];
-  hideMenu: boolean;
+  hideMenu?: boolean;
 } & TableBaseProps<ConditionModel>;
 
 export function ConditionsTableBase({
   className,
   conditions,
   rowActions,
-  hideMenu,
+  hideMenu = false,
   ...tableProps
 }: ConditionsTableBaseProps) {
   const columns: TableColumn<ConditionModel>[] = [

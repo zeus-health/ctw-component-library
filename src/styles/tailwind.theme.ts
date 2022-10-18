@@ -3,7 +3,6 @@ import { Subset } from "../utils/typescript";
 export const CLASS_PREFIX = "ctw-";
 
 export const defaultBreakpoints = {
-  xs: 320,
   sm: 640,
   md: 768,
   lg: 1024,
