@@ -8,14 +8,14 @@ export type ConditionsTableBaseProps = {
   className?: string;
   conditions: ConditionModel[];
   rowActions: (condition: ConditionModel) => MenuItems[];
-  quickProfile: boolean;
+  hideMenu: boolean;
 } & TableBaseProps<ConditionModel>;
 
 export function ConditionsTableBase({
   className,
   conditions,
   rowActions,
-  quickProfile,
+  hideMenu,
   ...tableProps
 }: ConditionsTableBaseProps) {
   const columns: TableColumn<ConditionModel>[] = [
@@ -43,18 +43,17 @@ export function ConditionsTableBase({
       widthPercent: 17.5,
       minWidth: 132,
     },
-    {
+  ];
+
+  if (!hideMenu) {
+    columns.push({
       className: "ctw-table-action-column",
       render: (condition: ConditionModel) => (
         <DropdownMenu menuItems={rowActions(condition)}>
           <DotsHorizontalIcon className="ctw-w-5" />
         </DropdownMenu>
       ),
-    },
-  ];
-
-  if (quickProfile) {
-    columns.splice(-1);
+    });
   }
 
   return (

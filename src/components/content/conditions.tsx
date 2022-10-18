@@ -30,17 +30,14 @@ import {
 
 export type ConditionsProps = {
   className?: string;
-  quickProfile?: boolean;
+  readOnly?: boolean;
 };
 
 const EMPTY_MESSAGE = "No conditions found";
 const ERROR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
 
-export function Conditions({
-  className,
-  quickProfile = false,
-}: ConditionsProps) {
+export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
@@ -178,7 +175,7 @@ export function Conditions({
         "ctw-conditions-stacked": breakpoints.sm,
       })}
     >
-      {!quickProfile && (
+      {!readOnly && (
         <div className="ctw-conditions-heading-container">
           <div className="ctw-title">Conditions</div>
           <button
@@ -211,7 +208,7 @@ export function Conditions({
             conditions={patientRecords}
             isLoading={patientRecordsResponse.isLoading}
             message={patientRecordsMessage}
-            quickProfile={quickProfile}
+            hideMenu={readOnly}
             rowActions={(condition) => [
               {
                 name: "Edit",
@@ -242,7 +239,7 @@ export function Conditions({
               patientRecordsResponse.isLoading
             }
             message={otherProviderRecordMessage}
-            quickProfile={quickProfile}
+            hideMenu={readOnly}
             rowActions={(condition) => [
               {
                 name: "Add",
