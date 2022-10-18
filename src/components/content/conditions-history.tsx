@@ -1,7 +1,7 @@
 import { getIncludedResources } from "@/fhir/bundle";
 import { getConditionHistory } from "@/fhir/conditions";
 import { useFhirClientRef } from "@/fhir/utils";
-import { ConditionModel } from "@/models/conditions";
+import { ConditionModel } from "@/models/condition";
 import { useQuery } from "@tanstack/react-query";
 import { orderBy } from "lodash";
 import { useEffect, useState } from "react";

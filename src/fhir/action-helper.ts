@@ -1,19 +1,14 @@
+import { ResourceModel } from "@/models/resource";
 import Client from "fhir-kit-client";
 import { omitEmptyArrays } from "./client";
 import { isFhirError } from "./errors";
 
-export interface FhirResourceBase {
-  id: string | undefined;
-  resourceType: string;
-  resource: fhir4.Condition;
-}
-
-type CreateOrEditData<T extends FhirResourceBase> = {
+type CreateOrEditData<T extends ResourceModel> = {
   resourceModel: T;
   fhirClient: Client;
 };
 
-export async function createOrEditFhirResource<T extends FhirResourceBase>({
+export async function createOrEditFhirResource<T extends ResourceModel>({
   resourceModel,
   fhirClient,
 }: CreateOrEditData<T>) {

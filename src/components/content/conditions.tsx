@@ -11,12 +11,11 @@ import {
 } from "@/fhir/conditions";
 import { useFhirClientRef } from "@/fhir/utils";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
-import { ConditionModel } from "@/models/conditions";
+import { ConditionModel } from "@/models/condition";
 import { useQuery } from "@tanstack/react-query";
 import cx from "classnames";
 import { union } from "lodash";
 import { useEffect, useRef, useState } from "react";
-import { Modal } from "../core/modal";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionHistoryDrawer } from "./conditions-history-drawer";
@@ -28,6 +27,7 @@ import {
   DrawerFormWithFields,
   FormEntry,
 } from "./forms/drawer-form-with-fields";
+import { ModalConfirmDelete } from "./modal-confirm-delete";
 
 export type ConditionsProps = {
   className?: string;
@@ -285,43 +285,13 @@ export function Conditions({ className }: ConditionsProps) {
       />
 
       {conditionForDelete && (
-        <Modal
-          title="Remove Condition"
-          isOpen={showModal}
+        <ModalConfirmDelete
+          resource={conditionForDelete}
+          message={`Please confirm that you want to remove the condition 
+          "${conditionForDelete.display}" from this client's profile.`}
           onClose={() => setShowModal(false)}
-        >
-          <Modal.Body>
-            <p className="ctw-max-w-xl ctw-text-center">
-              Please confirm that you want to remove the condition &ldquo;
-              {conditionForDelete.display}&rdquo; from this client&apos;s
-              profile.
-            </p>
-          </Modal.Body>
-          <Modal.Footer>
-            <button
-              type="button"
-              onClick={() => {
-                const fhirClient = fhirClientRef.current;
-                fhirClient?.delete({
-                  resourceType: "Condition",
-                  id: "incorrect", // conditionForDelete.id,
-                });
-                setShowModal(false);
-                // queryClient.invalidateQueries(["conditions"]);
-              }}
-              className="ctw-btn-warn"
-            >
-              Remove Condition
-            </button>
-            <button
-              type="button"
-              onClick={() => setShowModal(false)}
-              className="ctw-btn-default"
-            >
-              Cancel
-            </button>
-          </Modal.Footer>
-        </Modal>
+          isOpen={showModal}
+        />
       )}
     </div>
   );

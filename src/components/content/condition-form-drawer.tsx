@@ -1,6 +1,6 @@
 import { Drawer } from "../core/drawer";
 
-import { ConditionModel } from "@/models/conditions";
+import { ConditionModel } from "@/models/condition";
 
 export type ConditionFormDrawerProps = {
   className?: string;

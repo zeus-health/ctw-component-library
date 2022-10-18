@@ -9,7 +9,7 @@ import {
   SYSTEM_PRACTITIONER_ID,
   SYSTEM_SNOMED,
 } from "@/fhir/system-urls";
-import { ConditionModel } from "@/models/conditions";
+import { ConditionModel } from "@/models/condition";
 import { getFormData } from "@/utils/form-helper";
 import { queryClient } from "@/utils/request";
 import Client from "fhir-kit-client";

@@ -1,4 +1,4 @@
-import { ConditionModel } from "@/models/conditions";
+import { ConditionModel } from "@/models/condition";
 import type { FormEntry } from "./drawer-form-with-fields";
 
 export const getAddConditionData = ({

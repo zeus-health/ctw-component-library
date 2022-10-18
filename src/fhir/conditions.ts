@@ -1,4 +1,4 @@
-import { ConditionModel } from "@/models/conditions";
+import { ConditionModel } from "@/models/condition";
 import { QueryFunctionContext } from "@tanstack/react-query";
 import { sortBy } from "lodash";
 
