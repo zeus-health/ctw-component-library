@@ -15,7 +15,7 @@ export type FormEntry = {
   lines?: number;
   readonly?: boolean;
   hidden?: boolean;
-  render?: (authToken: string, name: string, value: string) => ReactNode;
+  render?: (name: string, value: string) => ReactNode;
 };
 
 export type DrawerFormWithFieldsProps<T> = {
