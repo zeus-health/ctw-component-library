@@ -114,6 +114,18 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     );
   };
 
+  const addCondtiotnBtn = (
+    <p>
+      <button
+        className="ctw-btn-primary"
+        type="button"
+        onClick={handleAddNewCondition}
+      >
+        Add Condition
+      </button>
+    </p>
+  );
+
   useEffect(() => {
     async function load() {
       const tempConditionFilters: ConditionFilters = includeInactive
@@ -170,18 +182,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     return <ConditionsNoPatient className={className} />;
   }
 
-  const addCondtiotnBtn = (
-    <p>
-      <button
-        className="ctw-btn-primary"
-        type="button"
-        onClick={handleAddNewCondition}
-      >
-        Add Condition
-      </button>
-    </p>
-  );
-
   return (
     <div
       ref={containerRef}
@@ -216,8 +216,12 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
             stacked={breakpoints.sm}
             conditions={patientRecords}
             isLoading={patientRecordsResponse.isLoading}
-            message={patientRecordsMessage}
-            emptyElements={addCondtiotnBtn}
+            message={
+              <>
+                {patientRecordsMessage}
+                {addCondtiotnBtn}
+              </>
+            }
             rowActions={(condition) => [
               {
                 name: "Edit",

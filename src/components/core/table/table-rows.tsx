@@ -9,8 +9,7 @@ type TableRowsProps<T extends MinRecordItem> = {
   records: T[];
   columns: TableColumn<T>[];
   isLoading: boolean;
-  emptyMessage: string;
-  emptyElements: ReactElement;
+  emptyMessage: string | ReactElement;
 };
 
 export const TableRows = <T extends MinRecordItem>({
@@ -18,7 +17,6 @@ export const TableRows = <T extends MinRecordItem>({
   columns,
   isLoading,
   emptyMessage,
-  emptyElements,
 }: TableRowsProps<T>) => {
   if (isLoading) {
     return (
@@ -35,7 +33,6 @@ export const TableRows = <T extends MinRecordItem>({
     return (
       <TableFullLengthRow colSpan={columns.length}>
         {emptyMessage}
-        {emptyElements}
       </TableFullLengthRow>
     );
   }

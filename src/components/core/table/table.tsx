@@ -28,8 +28,7 @@ export type TableProps<T extends MinRecordItem> = {
   records: T[];
   columns: TableColumn<T>[];
   isLoading?: boolean;
-  message?: string;
-  elements?: ReactElement;
+  message?: string | ReactElement;
   showTableHead?: boolean;
   stacked?: boolean;
 };
@@ -45,7 +44,6 @@ export const Table = <T extends MinRecordItem>({
   records,
   isLoading = false,
   message = "No records found",
-  elements = <></>,
   showTableHead = true,
   stacked,
 }: TableProps<T>) => {
@@ -105,7 +103,6 @@ export const Table = <T extends MinRecordItem>({
               columns={columns}
               isLoading={isLoading}
               emptyMessage={message}
-              emptyElements={elements}
             />
           </tbody>
         </table>
