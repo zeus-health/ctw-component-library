@@ -12,6 +12,7 @@ import {
 import { useFhirClientRef } from "@/fhir/utils";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { ConditionModel } from "@/models/condition";
+import { queryClient } from "@/utils/request";
 import { useQuery } from "@tanstack/react-query";
 import cx from "classnames";
 import { union } from "lodash";
@@ -35,7 +36,7 @@ export type ConditionsProps = {
 
 const EMPTY_MESSAGE = "No conditions found";
 const ERROR_MSG =
-  "There was an ctw-error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
+  "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
 
 export function Conditions({ className }: ConditionsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -53,10 +54,7 @@ export function Conditions({ className }: ConditionsProps) {
   const fhirClientRef = useFhirClientRef();
   const [currentSelectedData, setCurrentlySelectedData] =
     useState<FormEntry[]>();
-  const [conditionForHistory, setConditionForHistory] =
-    useState<ConditionModel>();
-  const [conditionForDelete, setConditionForDelete] =
-    useState<ConditionModel>();
+  const [selectedCondition, setSelectedCondition] = useState<ConditionModel>();
   const patientResponse = usePatient();
 
   const patientRecordsResponse = useQuery(
@@ -96,7 +94,7 @@ export function Conditions({ className }: ConditionsProps) {
 
   const handleConditionDelete = (condition: ConditionModel) => {
     setShowModal(true);
-    setConditionForDelete(condition);
+    setSelectedCondition(condition);
   };
 
   const handleOtherProviderRecordsCondition = (condition: ConditionModel) => {
@@ -179,24 +177,24 @@ export function Conditions({ className }: ConditionsProps) {
   return (
     <div
       ref={containerRef}
-      className={cx("ctw-conditions", className, {
-        "ctw-conditions-stacked": breakpoints.sm,
+      className={cx("conditionFoconditions", className, {
+        "conditionFoconditions-stacked": breakpoints.sm,
       })}
     >
-      <div className="ctw-conditions-heading-container">
-        <div className="ctw-title">Conditions</div>
+      <div className="conditionFoconditions-heading-container">
+        <div className="conditionFotitle">Conditions</div>
         <button
           type="button"
-          className="ctw-btn-clear ctw-link"
+          className="conditionFobtn-clear conditionFolink"
           onClick={handleAddNewCondition}
         >
           + Add Condition
         </button>
       </div>
-      <div className="ctw-conditions-body">
-        <div className="ctw-space-y-3">
-          <div className="ctw-conditions-title-container">
-            <div className="ctw-title">Patient Record</div>
+      <div className="conditionFoconditions-body">
+        <div className="conditionFospace-y-3">
+          <div className="conditionFoconditions-title-container">
+            <div className="conditionFotitle">Patient Record</div>
             <ToggleControl
               onFormChange={handleToggleChange}
               toggleProps={{ name: "conditions", text: "Include Inactive" }}
@@ -204,7 +202,7 @@ export function Conditions({ className }: ConditionsProps) {
           </div>
 
           <ConditionsTableBase
-            className="ctw-conditions-table"
+            className="conditionFoconditions-table"
             stacked={breakpoints.sm}
             conditions={patientRecords}
             isLoading={patientRecordsResponse.isLoading}
@@ -220,7 +218,7 @@ export function Conditions({ className }: ConditionsProps) {
                 name: "View History",
                 action: () => {
                   setHistoryDrawerIsOpen(true);
-                  setConditionForHistory(condition);
+                  setSelectedCondition(condition);
                 },
               },
               {
@@ -234,12 +232,12 @@ export function Conditions({ className }: ConditionsProps) {
           />
         </div>
 
-        <div className="ctw-space-y-3">
-          <div className="ctw-conditions-title-container">
-            <div className="ctw-title">Other Provider Records</div>
+        <div className="conditionFospace-y-3">
+          <div className="conditionFoconditions-title-container">
+            <div className="conditionFotitle">Other Provider Records</div>
           </div>
           <ConditionsTableBase
-            className="ctw-conditions-not-reviewed"
+            className="conditionFoconditions-not-reviewed"
             stacked={breakpoints.sm}
             conditions={OtherProviderRecords}
             isLoading={
@@ -258,7 +256,7 @@ export function Conditions({ className }: ConditionsProps) {
                 name: "View History",
                 action: () => {
                   setHistoryDrawerIsOpen(true);
-                  setConditionForHistory(condition);
+                  setSelectedCondition(condition);
                 },
               },
               {
@@ -288,16 +286,17 @@ export function Conditions({ className }: ConditionsProps) {
       <ConditionHistoryDrawer
         isOpen={historyDrawerIsOpen}
         onClose={() => setHistoryDrawerIsOpen(false)}
-        condition={conditionForHistory}
+        condition={selectedCondition}
       />
 
-      {conditionForDelete && (
+      {selectedCondition && (
         <ModalConfirmDelete
-          resource={conditionForDelete}
+          resource={selectedCondition}
           message={`Please confirm that you want to remove the condition 
-          "${conditionForDelete.display}" from this client's profile.`}
+          "${selectedCondition.display}" from this client's profile.`}
           onClose={() => setShowModal(false)}
           isOpen={showModal}
+          onDelete={() => queryClient.invalidateQueries(["conditions"])}
         />
       )}
     </div>

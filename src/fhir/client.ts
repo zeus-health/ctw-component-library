@@ -41,7 +41,11 @@ export function getClaims(fhirClient: Client): ZusJWT {
 // Returns a new value with all empty arrays replaced with "undefined".
 // This fixes an issue where ODS will complain with:
 // "Array cannot be empty - the property should not be present if it has no values"
-export const omitEmptyArrays = (value: unknown): unknown => {
+export const omitEmptyArrays = <T>(value: T): T =>
+  // Cast because the function that finds and omits arrays produces an unknown.
+  omitEmptyArraysHelper(value) as T;
+
+const omitEmptyArraysHelper = (value: unknown): unknown => {
   if (Array.isArray(value)) {
     if (value.length === 0) {
       return undefined;
