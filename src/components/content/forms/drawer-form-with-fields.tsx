@@ -71,6 +71,7 @@ export const DrawerFormWithFields = <T,>({
               <div
                 key={label}
                 className="ctw-space-y-1.5 ctw-text-sm ctw-font-medium ctw-text-content-black"
+                aria-required
               >
                 <div className="ctw-flex ctw-justify-between">
                   <label
@@ -78,7 +79,7 @@ export const DrawerFormWithFields = <T,>({
                   >
                     {label}
                   </label>
-                  {!inputProps(field).required && (
+                  {!inputProps(field)["aria-required"] && (
                     <span className="ctw-right-0 ctw-inline-block ctw-text-xs ctw-text-content-black">
                       Optional
                     </span>
