@@ -1,18 +1,20 @@
 import { PatientModel } from "@/models/patients";
 import { errorResponse } from "@/utils/errors";
-import Client from "fhir-kit-client";
+import Client, { SearchParams } from "fhir-kit-client";
 import { getIncludedResources } from "./bundle";
 import { searchBuilderRecords } from "./search-helpers";
 
 export async function getBuilderFhirPatient(
   fhirClient: Client,
   patientID: string,
-  systemURL: string
+  systemURL: string,
+  searchParams?: SearchParams
 ): Promise<PatientModel> {
   let patients = [];
   let bundle;
   try {
     const response = await searchBuilderRecords("Patient", fhirClient, {
+      ...searchParams,
       identifier: `${systemURL}|${patientID}`,
       _count: 1,
       _include: "Patient:organization",

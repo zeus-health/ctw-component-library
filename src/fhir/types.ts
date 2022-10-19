@@ -10,3 +10,5 @@ export type ResourceType<T extends ResourceTypeString> = Extract<
 >;
 
 export type ResourceMap = { [key: string]: fhir4.Resource };
+
+export type Tag = { system: string; code: string };
