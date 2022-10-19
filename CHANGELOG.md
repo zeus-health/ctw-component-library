@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.15.2
+
+### Patch Changes
+
+- b4db81c: Fix sorting and styling of dates and labels within the condition history panel.
+
 ## 0.15.1
 
 ### Patch Changes
