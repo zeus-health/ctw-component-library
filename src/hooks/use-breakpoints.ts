@@ -14,7 +14,7 @@ export function useBreakpoints<T extends HTMLElement>(target: RefObject<T>) {
     mapValues(defaultBreakpoints, () => false)
   );
 
-  function updateBreakpointClasses() {
+  function updateBreakpoints() {
     const targetEl = target.current;
     if (!targetEl) return;
     const { width } = targetEl.getBoundingClientRect();
@@ -28,8 +28,8 @@ export function useBreakpoints<T extends HTMLElement>(target: RefObject<T>) {
 
   // Update on initial render (useIsomorphicLayoutEffect) and
   // on any resizes.
-  useIsomorphicLayoutEffect(updateBreakpointClasses, [target, theme]);
-  useResizeObserver(target, (_) => updateBreakpointClasses());
+  useIsomorphicLayoutEffect(updateBreakpoints, [target, theme]);
+  useResizeObserver(target, (_) => updateBreakpoints());
 
   return breakpoints;
 }
