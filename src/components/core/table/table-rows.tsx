@@ -18,7 +18,7 @@ export const TableRows = <T extends MinRecordItem>({
   columns,
   isLoading,
   emptyMessage,
-  emptyElements
+  emptyElements,
 }: TableRowsProps<T>) => {
   if (isLoading) {
     return (
