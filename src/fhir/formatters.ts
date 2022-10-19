@@ -34,6 +34,16 @@ export function formatDateLocalToISO(dateStr?: string): string | undefined {
   return date;
 }
 
+// Formats a string yyyymmdd or yyyyMMddHHmmss into YYYY-MM-DD.
+export function formatStringToDate(dateStr?: string): string | undefined {
+  if (!dateStr) return undefined;
+
+  return `${dateStr.substring(0, 4)}-${dateStr.substring(
+    4,
+    6
+  )}-${dateStr.substring(6, 8)}`;
+}
+
 // Returns the ISO string (YYYY-MM-DD) for a given date.
 // We avoid using date-fn's format method to avoid timezone issues.
 export function dateToISO(date: Date) {
@@ -53,4 +63,11 @@ export function formatPhoneNumber(phoneNumber?: string): string | undefined {
   // Return the new format OR the original if we don't have a match.
   // This would happen if we didn't have the expected 10 digits.
   return match ? `${match[1]}-${match[2]}-${match[3]}` : phoneNumber;
+}
+
+// Formats the date from MM/DD/YYYY to yyyyMMDD
+export function sortDate(date?: string): string | undefined {
+  if (!date) return undefined;
+  const arr = date.split("/").reverse();
+  return `${arr[0]}${arr[2]}${arr[1]}`;
 }

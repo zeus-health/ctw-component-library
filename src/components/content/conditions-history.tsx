@@ -1,5 +1,6 @@
 import { getIncludedResources } from "@/fhir/bundle";
 import { getConditionHistory } from "@/fhir/conditions";
+import { sortDate } from "@/fhir/formatters";
 import { useFhirClientRef } from "@/fhir/utils";
 import { ConditionModel } from "@/models/conditions";
 import { useQuery } from "@tanstack/react-query";
@@ -31,7 +32,7 @@ function setupData(condition: ConditionModel): CollapsibleDataListProps {
       value: condition.recordedDate,
     },
     {
-      label: "Categories",
+      label: "Category",
       value: condition.categories[0],
     },
     {
@@ -99,7 +100,7 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
 
         const sortedConditions = orderBy(
           conditionModels,
-          (c) => c.recordedDate ?? "",
+          (c) => sortDate(c.recordedDate) ?? "",
           "desc"
         );
 
@@ -163,9 +164,7 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
         />
         {conditionsWithoutDate.length !== 0 && (
           <div className="ctw-space-y-2">
-            <div className="ctw-pl-4 ctw-font-medium">
-              Records with no date:
-            </div>
+            <div className="ctw-font-medium">Records with no date:</div>
             <CollapsibleDataListStack
               entries={conditionsWithoutDate}
               limit={CONDITION_HISTORY_LIMIT}
