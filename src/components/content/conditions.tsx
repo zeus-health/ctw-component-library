@@ -34,7 +34,9 @@ export type ConditionsProps = {
   readOnly?: boolean;
 };
 
-const EMPTY_MESSAGE = "No conditions found";
+const EMPTY_MESSAGE_PATIENT_RECORD =
+  "There are no conditions in this patient's record.";
+const EMPTY_MESSAGE_PROVIDER = "There are no conditions available.";
 const ERROR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
 
@@ -77,11 +79,11 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
 
   const patientRecordsMessage = patientRecordsResponse.isError
     ? ERROR_MSG
-    : EMPTY_MESSAGE;
+    : EMPTY_MESSAGE_PATIENT_RECORD;
 
   const otherProviderRecordMessage = OtherProviderRecordsResponse.isError
     ? ERROR_MSG
-    : EMPTY_MESSAGE;
+    : EMPTY_MESSAGE_PROVIDER;
 
   const handleToggleChange = () => setIncludeInactive(!includeInactive);
   const handleConditionEdit = (condition: ConditionModel) => {
@@ -118,6 +120,16 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       })
     );
   };
+
+  const addCondtiotnBtn = (
+    <button
+      className="ctw-btn-primary"
+      type="button"
+      onClick={handleAddNewCondition}
+    >
+      Add Condition
+    </button>
+  );
 
   useEffect(() => {
     async function load() {
@@ -209,7 +221,14 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
             stacked={breakpoints.sm}
             conditions={patientRecords}
             isLoading={patientRecordsResponse.isLoading}
-            message={patientRecordsMessage}
+            message={
+              <>
+                {patientRecordsMessage}
+                {!patientRecordsResponse.isError && (
+                  <div className="ctw-my-5">{addCondtiotnBtn}</div>
+                )}
+              </>
+            }
             rowActions={(condition) => [
               {
                 name: "Edit",
