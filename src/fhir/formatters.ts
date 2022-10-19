@@ -65,10 +65,3 @@ export function formatPhoneNumber(phoneNumber?: string): string | undefined {
   // This would happen if we didn't have the expected 10 digits.
   return match ? `${match[1]}-${match[2]}-${match[3]}` : phoneNumber;
 }
-
-// Formats the date from MM/DD/YYYY to yyyyMMDD.
-export function convertDatetoString(date?: string): string | undefined {
-  if (!date) return undefined;
-  const arr = date.split("/").reverse();
-  return `${arr[0]}${arr[2]}${arr[1]}`;
-}
