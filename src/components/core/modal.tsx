@@ -24,9 +24,7 @@ export const Modal = ({
     <Dialog
       as="div"
       className="ctw-relative ctw-z-10"
-      onClose={() => {
-        /* do not close on esc or backdrop click  */
-      }}
+      onClose={onClose /* close on esc or backdrop click  */}
     >
       <Transition.Child
         as={Fragment}
@@ -73,23 +71,3 @@ export const Modal = ({
     </Dialog>
   </Transition>
 );
-
-Modal.Body = function DialogBody({ children }: { children: ReactNode }) {
-  return (
-    <div className="ctw-flex ctw-h-full ctw-flex-col ctw-overflow-y-auto">
-      {children}
-    </div>
-  );
-};
-
-Modal.Footer = function DialogFooter({
-  children,
-}: {
-  children: ReactNode;
-}): JSX.Element {
-  return (
-    <div className="ctw-flex ctw-flex-col ctw-items-center ctw-space-y-4 ctw-py-4">
-      {children}
-    </div>
-  );
-};

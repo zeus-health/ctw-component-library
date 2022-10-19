@@ -17,6 +17,7 @@ import { useQuery } from "@tanstack/react-query";
 import cx from "classnames";
 import { union } from "lodash";
 import { useEffect, useRef, useState } from "react";
+import { ModalConfirmDelete } from "../core/modal-confirm-delete";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionHistoryDrawer } from "./conditions-history-drawer";
@@ -28,7 +29,6 @@ import {
   DrawerFormWithFields,
   FormEntry,
 } from "./forms/drawer-form-with-fields";
-import { ModalConfirmDelete } from "./modal-confirm-delete";
 
 export type ConditionsProps = {
   className?: string;

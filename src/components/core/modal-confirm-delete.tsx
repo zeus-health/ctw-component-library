@@ -1,19 +1,20 @@
 import { isFhirError } from "@/fhir/errors";
 import { ResourceModel } from "@/models/resource";
-import { queryClient } from "@/utils/request";
 import { useState } from "react";
-import { AlertDialog } from "../core/alert";
-import { useCTW } from "../core/ctw-provider";
-import { Modal, ModalProps } from "../core/modal";
+import { AlertDialog } from "./alert";
+import { useCTW } from "./ctw-provider";
+import { Modal, ModalProps } from "./modal";
 
 export type ModalConfirmDeleteProps = {
   resource: ResourceModel;
   message: string;
+  onDelete: () => void;
 } & Pick<ModalProps, "onClose" | "isOpen">;
 
 export const ModalConfirmDelete = ({
   resource,
   message,
+  onDelete,
   ...modalProps
 }: ModalConfirmDeleteProps) => {
   const { getCTWFhirClient } = useCTW();
@@ -28,10 +29,10 @@ export const ModalConfirmDelete = ({
         );
       }
       const response = await fhirClient.delete({
-        resourceType: "Condition",
+        resourceType: resource.resourceType,
         id: resource.id,
       });
-      queryClient.invalidateQueries(["conditions"]);
+      onDelete();
       modalProps.onClose();
     } catch (err) {
       if (isFhirError(err)) {
@@ -41,7 +42,7 @@ export const ModalConfirmDelete = ({
   };
   return (
     <Modal title={`Remove ${resource.resourceType}`} {...modalProps}>
-      <Modal.Body>
+      <div className="ctw-flex ctw-h-full ctw-flex-col ctw-overflow-y-auto">
         {error && (
           <AlertDialog header="Failed to Remove">
             <div>{error}</div>
@@ -52,8 +53,8 @@ export const ModalConfirmDelete = ({
           </AlertDialog>
         )}
         <p className="ctw-max-w-xl ctw-text-center">{message}</p>
-      </Modal.Body>
-      <Modal.Footer>
+      </div>
+      <div className="ctw-flex ctw-flex-col ctw-items-center ctw-space-y-4 ctw-py-4">
         <button type="button" onClick={onConfirm} className="ctw-btn-warn">
           Remove Condition
         </button>
@@ -64,7 +65,7 @@ export const ModalConfirmDelete = ({
         >
           Cancel
         </button>
-      </Modal.Footer>
+      </div>
     </Modal>
   );
 };

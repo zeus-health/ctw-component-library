@@ -9,7 +9,6 @@ import {
   SYSTEM_PRACTITIONER_ID,
   SYSTEM_SNOMED,
 } from "@/fhir/system-urls";
-import { ConditionModel } from "@/models/condition";
 import { getFormData } from "@/utils/form-helper";
 import { queryClient } from "@/utils/request";
 import Client from "fhir-kit-client";
@@ -111,12 +110,7 @@ export const createOrEditCondition = async (
     note: result.data.note ? [{ text: result.data.note }] : undefined,
   };
 
-  const conditionModel = new ConditionModel(fhirCondition);
-
-  const response = await createOrEditFhirResource({
-    resourceModel: conditionModel,
-    fhirClient,
-  });
+  const response = await createOrEditFhirResource(fhirCondition, fhirClient);
 
   if (isFhirError(response)) {
     result.success = false;
