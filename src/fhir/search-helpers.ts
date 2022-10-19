@@ -1,5 +1,5 @@
 import Client, { SearchParams } from "fhir-kit-client";
-import { find, mapValues } from "lodash";
+import { find, mapValues, mergeWith } from "lodash";
 
 import { getResources } from "./bundle";
 import { getClaims } from "./client";
@@ -10,6 +10,7 @@ import {
   SYSTEM_ZUS_OWNER,
   SYSTEM_ZUS_THIRD_PARTY,
   SYSTEM_ZUS_UNIVERSAL_ID,
+  SYSTEM_ZUS_UPI_RECORD_TYPE,
 } from "./system-urls";
 import { ResourceType, ResourceTypeString } from "./types";
 
@@ -27,6 +28,8 @@ const LENS_TAGS = [
   `${SYSTEM_ZUS_LENS}|ActiveMedications`,
   `${SYSTEM_ZUS_LENS}|ChronicConditions`,
 ];
+
+const UPI_TAGS = [`${SYSTEM_ZUS_UPI_RECORD_TYPE}|universal`];
 
 const SUMMARY_TAGS = [`${SYSTEM_SUMMARY}|Common`];
 
@@ -70,14 +73,19 @@ export async function searchBuilderRecords<T extends ResourceTypeString>(
   fhirClient: Client,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
-  const nonBuilderTags = [...THIRD_PARTY_TAGS, ...LENS_TAGS, SUMMARY_TAGS];
+  const nonBuilderTags = [
+    ...THIRD_PARTY_TAGS,
+    ...LENS_TAGS,
+    ...SUMMARY_TAGS,
+    ...UPI_TAGS,
+  ];
   const claims = getClaims(fhirClient);
   const builderTag = `${SYSTEM_ZUS_OWNER}|builder/${claims[SYSTEM_ZUS_BUILDER_ID]}`;
-  return searchAllRecords(resourceType, fhirClient, {
-    ...searchParams,
-    _tag: builderTag,
-    "_tag:not": nonBuilderTags.join(","),
+  const params = mergeParams(searchParams, {
+    _tag: [builderTag],
+    "_tag:not": nonBuilderTags,
   });
+  return searchAllRecords(resourceType, fhirClient, params);
 }
 
 // Like searchAllRecords, but filters down to only the lens.
@@ -88,13 +96,13 @@ export async function searchLensRecords<T extends ResourceTypeString>(
 ): Promise<SearchReturn<T>> {
   const claims = getClaims(fhirClient);
   const tagFilter = [
-    SUMMARY_TAGS.join(","),
+    ...SUMMARY_TAGS,
     `${SYSTEM_ZUS_OWNER}|builder/${claims[SYSTEM_ZUS_BUILDER_ID]}`,
   ];
-  return searchAllRecords(resourceType, fhirClient, {
-    ...searchParams,
+  const params = mergeParams(searchParams, {
     _tag: tagFilter,
   });
+  return searchAllRecords(resourceType, fhirClient, params);
 }
 
 // Like searchAllRecords, but filters out lens resources.
@@ -103,10 +111,10 @@ export async function searchCommonRecords<T extends ResourceTypeString>(
   fhirClient: Client,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
-  return searchAllRecords(resourceType, fhirClient, {
-    ...searchParams,
-    "_tag:not": [...LENS_TAGS, ...SUMMARY_TAGS].join(","),
+  const params = mergeParams(searchParams, {
+    "_tag:not": [...LENS_TAGS, ...SUMMARY_TAGS, ...UPI_TAGS],
   });
+  return searchAllRecords(resourceType, fhirClient, params);
 }
 
 // Returns a new filers object with every value that was an array,
@@ -176,4 +184,18 @@ export async function getUPIDfromPatientID(
       `Failed fetching patient UPID information for patient from patientID ${patientID} with system ${systemURL}: ${e}`
     );
   }
+}
+
+// Merges two sets of params into a single set,
+// taking special care to concat any arrays.
+// E.g. mergeParams({_tag: [1], foo: "foo"}, {_tag: [2], bar: "bar"})
+//   -> {_tag: [1, 2], foo: "foo", bar: "bar"}
+function mergeParams(
+  params: SearchParams | undefined,
+  params2: SearchParams
+): SearchParams {
+  return mergeWith(params, params2, (v, v2) =>
+    // Concat arrays otherwise return undefined to let mergeWith handle it.
+    Array.isArray(v) ? v.concat(v2) : undefined
+  );
 }
