@@ -189,6 +189,7 @@ export type InputPropType = {
 
 export function useFormInputProps(schema: any, options: any = {}) {
   const { shape } = schema;
+  console.log("shape", shape);
   const defaultOptions = options;
   return function props(key: string, options: any = {}) {
     options = { ...defaultOptions, ...options };

@@ -60,16 +60,17 @@ export const ConditionsAutoComplete = ({
         query={query}
         setQuery={setQuery}
         handleSelectChange={handleSelectedConditonChange}
-        name={inputProps.name as string}
+        name={`${inputProps.name}` as string}
         readonly={readonly}
       />
       <input
-        name={`${inputProps.name}Code`}
-        defaultValue={selectedCondition?.code}
+        name={`${inputProps.name}`}
+        value={selectedCondition?.code}
         hidden
+        readOnly
       />
       <input
-        name={`${inputProps.name}System`}
+        name={`${inputProps.name}`}
         value={selectedCondition?.system}
         hidden
         readOnly

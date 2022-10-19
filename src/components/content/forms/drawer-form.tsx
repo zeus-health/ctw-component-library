@@ -11,8 +11,7 @@ export type DrawerFormProps<T> = {
   action: (
     data: FormData,
     patientID: string,
-    getCTWFhirClient: () => Promise<Client>,
-    schema: Zod.AnyZodObject
+    getCTWFhirClient: () => Promise<Client>
   ) => Promise<ActionReturn<T>>;
   patientID: string;
   getCTWFhirClient: () => Promise<Client>;
@@ -26,7 +25,6 @@ export const DrawerForm = <T,>({
   children,
   patientID,
   getCTWFhirClient,
-  schema,
   ...drawerProps
 }: DrawerFormProps<T>) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -42,7 +40,7 @@ export const DrawerForm = <T,>({
     setIsSubmitting(true);
     const form = event.target;
     const data = new FormData(form as HTMLFormElement);
-    const response = await action(data, patientID, getCTWFhirClient, schema);
+    const response = await action(data, patientID, getCTWFhirClient);
 
     if (!response.success) {
       setErrors(response.errors);

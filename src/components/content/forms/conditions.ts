@@ -1,6 +1,4 @@
-import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { getClaims } from "@/fhir/client";
-import { isFhirError } from "@/fhir/errors";
 import { dateToISO } from "@/fhir/formatters";
 import { getPractitioner } from "@/fhir/practitioner";
 import {
@@ -12,6 +10,7 @@ import { ConditionModel } from "@/models/conditions";
 import { getFormData } from "@/utils/form-helper";
 import { queryClient } from "@/utils/request";
 import Client from "fhir-kit-client";
+import { conditionSchema } from "./condition-schema";
 
 const setRecorderField = async (practitionerId: string, fhirClient: Client) => {
   const practitioner = await getPractitioner(practitionerId, fhirClient);
@@ -27,10 +26,9 @@ const setRecorderField = async (practitionerId: string, fhirClient: Client) => {
 export const createOrEditCondition = async (
   data: FormData,
   patientID: string,
-  getCTWFhirClient: () => Promise<Client>,
-  schema: Zod.AnyZodObject
+  getCTWFhirClient: () => Promise<Client>
 ) => {
-  const result = await getFormData(data, schema);
+  const result = await getFormData(data, conditionSchema);
   if (!result.success) {
     return result;
   }
@@ -92,14 +90,14 @@ export const createOrEditCondition = async (
 
   const conditionModel = new ConditionModel(fhirCondition);
 
-  const response = await createOrEditFhirResource({
-    resourceModel: conditionModel,
-    fhirClient,
-  });
+  // const response = await createOrEditFhirResource({
+  //   resourceModel: conditionModel,
+  //   fhirClient,
+  // });
 
-  if (isFhirError(response)) {
-    result.success = false;
-  }
+  // if (isFhirError(response)) {
+  //   result.success = false;
+  // }
 
   queryClient.invalidateQueries(["conditions"]);
 

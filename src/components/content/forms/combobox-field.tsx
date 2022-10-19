@@ -21,6 +21,7 @@ export const ComboboxField = ({
   name,
   readonly,
 }: ComboboxFieldProps) => {
+  // Delay handle search input so that we don't fire a bunch of events until the user has had time to type.
   const debouncedSearchInputChange = useMemo(() => {
     const handleSearchInputChange = (
       event: React.ChangeEvent<HTMLInputElement>
@@ -35,6 +36,7 @@ export const ComboboxField = ({
     },
     [query, debouncedSearchInputChange]
   );
+
   return (
     <Combobox onChange={handleSelectChange} value={query} disabled={readonly}>
       <Combobox.Input

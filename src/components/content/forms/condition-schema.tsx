@@ -1,3 +1,4 @@
+import { SYSTEM_SNOMED } from "@/fhir/system-urls";
 import { ConditionModel } from "@/models/conditions";
 import { z } from "zod";
 import { ConditionsAutoComplete } from "./conditions-autocomplete";
@@ -54,7 +55,13 @@ export const getEditingPatientConditionData = ({
   {
     label: "Snomed Code",
     value: condition.snomedCode,
-    field: "conditionCode",
+    field: "code",
+    hidden: true,
+  },
+  {
+    label: "Snomed Code",
+    value: SYSTEM_SNOMED,
+    field: "system",
     hidden: true,
   },
   {
@@ -105,55 +112,21 @@ const sharedFields = (condition: ConditionModel) => [
   },
 ];
 
-export const conditionEditSchema = z.object({
+export const conditionSchema = z.object({
   id: z.string().optional(),
   subjectID: z.string({
     required_error: "Condition subjectID must be specified.",
   }),
-  system: z.string({
-    required_error: "Condition system must be specified.",
-  }),
-  code: z.string({
-    required_error: "Condition code must be specified.",
-  }),
+  // conditionSystem: z.string({
+  //   required_error: "Condition system must be specified.",
+  // }),
+  // conditionCode: z.string({
+  //   required_error: "Condition code must be specified.",
+  // }),
   condition: z.string({
     required_error: "Condition name must be specified.",
   }),
-  clinicalStatus: z.enum([
-    "active",
-    "recurrence",
-    "relapse",
-    "inactive",
-    "remission",
-    "resolved",
-  ]),
-  onset: z.date({ required_error: "Conditions's onset is required." }),
-  abatement: z.date().optional(),
-  verificationStatus: z.enum([
-    "unconfirmed",
-    "provisional",
-    "differential",
-    "confirmed",
-    "refuted",
-    "entered-in-error",
-  ]),
-  note: z.string().optional(),
-});
 
-export const conditionAddSchema = z.object({
-  id: z.string().optional(),
-  subjectID: z.string({
-    required_error: "Condition subjectID must be specified.",
-  }),
-  conditionSystem: z.string({
-    required_error: "Condition system must be specified.",
-  }),
-  conditionCode: z.string({
-    required_error: "Condition code must be specified.",
-  }),
-  condition: z.string({
-    required_error: "Condition name must be specified.",
-  }),
   clinicalStatus: z.enum([
     "active",
     "recurrence",
