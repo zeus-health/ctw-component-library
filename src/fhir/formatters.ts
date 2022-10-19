@@ -66,7 +66,7 @@ export function formatPhoneNumber(phoneNumber?: string): string | undefined {
 }
 
 // Formats the date from MM/DD/YYYY to yyyyMMDD.
-export function sortDate(date?: string): string | undefined {
+export function convertDatetoString(date?: string): string | undefined {
   if (!date) return undefined;
   const arr = date.split("/").reverse();
   return `${arr[0]}${arr[2]}${arr[1]}`;
