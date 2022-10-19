@@ -114,7 +114,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     );
   };
 
-  const addCondtiotnBtn = (
+  const addConditionBtn = (
     <button
       className="ctw-btn-primary"
       type="button"
@@ -218,7 +218,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               <>
                 {patientRecordsMessage}
                 {!patientRecordsResponse.isError && (
-                  <div className="ctw-my-5">{addCondtiotnBtn}</div>
+                  <div className="ctw-my-5">{addConditionBtn}</div>
                 )}
               </>
             }
