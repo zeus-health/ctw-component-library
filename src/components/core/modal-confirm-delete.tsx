@@ -9,12 +9,14 @@ export type ModalConfirmDeleteProps = {
   resource: ResourceModel;
   message: string;
   onDelete: () => void;
-} & Pick<ModalProps, "onClose" | "isOpen">;
+  onClose: () => void;
+} & Omit<ModalProps, "title">;
 
 export const ModalConfirmDelete = ({
   resource,
   message,
   onDelete,
+  onClose,
   ...modalProps
 }: ModalConfirmDeleteProps) => {
   const { getCTWFhirClient } = useCTW();
@@ -33,7 +35,7 @@ export const ModalConfirmDelete = ({
         id: resource.id,
       });
       onDelete();
-      modalProps.onClose();
+      onClose();
     } catch (err) {
       if (isFhirError(err)) {
         setError("A FHIR error was thrown.");
@@ -52,17 +54,13 @@ export const ModalConfirmDelete = ({
             </div>
           </AlertDialog>
         )}
-        <p className="ctw-max-w-xl ctw-text-center">{message}</p>
+        <p className="ctw-subtext ctw-max-w-md ctw-text-center">{message}</p>
       </div>
-      <div className="ctw-flex ctw-flex-col ctw-items-center ctw-space-y-4 ctw-py-4">
+      <div className="ctw-flex ctw-flex-col ctw-items-center ctw-space-y-4">
         <button type="button" onClick={onConfirm} className="ctw-btn-warn">
           Remove Condition
         </button>
-        <button
-          type="button"
-          onClick={modalProps.onClose}
-          className="ctw-btn-default"
-        >
+        <button type="button" onClick={onClose} className="ctw-btn-clear">
           Cancel
         </button>
       </div>

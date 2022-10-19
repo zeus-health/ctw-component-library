@@ -5,7 +5,6 @@ import { Fragment } from "react";
 
 export type ModalProps = {
   isOpen: boolean;
-  onClose: () => void;
   onAfterClosed?: () => void; // sometimes we want to wait for the Transition to end
   title: string;
   children: ReactNode;
@@ -15,7 +14,6 @@ export type ModalProps = {
 export const Modal = ({
   title,
   isOpen,
-  onClose,
   onAfterClosed,
   children,
   className,
@@ -24,7 +22,9 @@ export const Modal = ({
     <Dialog
       as="div"
       className="ctw-relative ctw-z-10"
-      onClose={onClose /* close on esc or backdrop click  */}
+      onClose={
+        () => {} /* Do not close on esc or backdrop click. A method for the user to close the modal should be passed as a child.  */
+      }
     >
       <Transition.Child
         as={Fragment}
@@ -54,12 +54,12 @@ export const Modal = ({
           >
             <Dialog.Panel
               className={cx(
-                "ctw-w-full ctw-min-w-fit ctw-max-w-lg ctw-transform ctw-rounded-lg ctw-bg-white ctw-p-6 ctw-align-middle ctw-shadow-xl ctw-transition-all",
+                "ctw-w-full ctw-min-w-fit ctw-max-w-lg ctw-transform ctw-rounded-lg ctw-bg-white ctw-py-14 ctw-px-8 ctw-align-middle ctw-shadow-xl ctw-transition-all",
                 className
               )}
             >
-              <div className="ctw-flex ctw-h-full ctw-flex-col">
-                <Dialog.Title className="ctw-text-center ctw-text-2xl">
+              <div className="ctw-flex ctw-h-full ctw-flex-col ctw-space-y-4">
+                <Dialog.Title className="ctw-m-0 ctw-text-center ctw-text-2xl ctw-text-content-black">
                   {title}
                 </Dialog.Title>
                 {children}

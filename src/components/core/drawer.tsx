@@ -70,7 +70,7 @@ export function Drawer({
                         <button
                           type="button"
                           onClick={onClose}
-                          className="ctw-btn-clear ctw-text-primary-dark hover:ctw-text-primary-main"
+                          className="ctw-btn-clear"
                         >
                           <span className="ctw-sr-only">Close panel</span>
                           <XIcon

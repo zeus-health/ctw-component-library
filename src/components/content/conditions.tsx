@@ -177,24 +177,24 @@ export function Conditions({ className }: ConditionsProps) {
   return (
     <div
       ref={containerRef}
-      className={cx("conditionFoconditions", className, {
-        "conditionFoconditions-stacked": breakpoints.sm,
+      className={cx("ctw-conditions", className, {
+        "ctw-conditions-stacked": breakpoints.sm,
       })}
     >
-      <div className="conditionFoconditions-heading-container">
-        <div className="conditionFotitle">Conditions</div>
+      <div className="ctw-conditions-heading-container">
+        <div className="ctw-title">Conditions</div>
         <button
           type="button"
-          className="conditionFobtn-clear conditionFolink"
+          className="ctw-btn-clear ctw-link"
           onClick={handleAddNewCondition}
         >
           + Add Condition
         </button>
       </div>
-      <div className="conditionFoconditions-body">
-        <div className="conditionFospace-y-3">
-          <div className="conditionFoconditions-title-container">
-            <div className="conditionFotitle">Patient Record</div>
+      <div className="ctw-conditions-body">
+        <div className="ctw-space-y-3">
+          <div className="ctw-conditions-title-container">
+            <div className="ctw-title">Patient Record</div>
             <ToggleControl
               onFormChange={handleToggleChange}
               toggleProps={{ name: "conditions", text: "Include Inactive" }}
@@ -202,7 +202,7 @@ export function Conditions({ className }: ConditionsProps) {
           </div>
 
           <ConditionsTableBase
-            className="conditionFoconditions-table"
+            className="ctw-conditions-table"
             stacked={breakpoints.sm}
             conditions={patientRecords}
             isLoading={patientRecordsResponse.isLoading}
@@ -232,12 +232,12 @@ export function Conditions({ className }: ConditionsProps) {
           />
         </div>
 
-        <div className="conditionFospace-y-3">
-          <div className="conditionFoconditions-title-container">
-            <div className="conditionFotitle">Other Provider Records</div>
+        <div className="ctw-space-y-3">
+          <div className="ctw-conditions-title-container">
+            <div className="ctw-title">Other Provider Records</div>
           </div>
           <ConditionsTableBase
-            className="conditionFoconditions-not-reviewed"
+            className="ctw-conditions-not-reviewed"
             stacked={breakpoints.sm}
             conditions={OtherProviderRecords}
             isLoading={

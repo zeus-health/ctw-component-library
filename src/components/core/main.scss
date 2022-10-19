@@ -69,6 +69,10 @@
     letter-spacing: 0.2rem;
   }
 
+  .ctw-subtext {
+    @apply ctw-text-sm ctw-text-content-lighter;
+  }
+
   .ctw-link {
     @apply ctw-cursor-pointer ctw-text-xs ctw-font-medium ctw-text-primary-dark hover:ctw-text-primary-main;
   }
