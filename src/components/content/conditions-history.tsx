@@ -1,6 +1,5 @@
 import { getIncludedResources } from "@/fhir/bundle";
 import { getConditionHistory } from "@/fhir/conditions";
-import { convertDatetoString } from "@/fhir/formatters";
 import { useFhirClientRef } from "@/fhir/utils";
 import { ConditionModel } from "@/models/conditions";
 import { useQuery } from "@tanstack/react-query";
@@ -100,7 +99,7 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
 
         const sortedConditions = orderBy(
           conditionModels,
-          (c) => convertDatetoString(c.recordedDate) ?? "",
+          (c) => c.resource.recordedDate ?? "",
           "desc"
         );
 
