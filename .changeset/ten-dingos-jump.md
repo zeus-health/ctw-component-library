@@ -2,4 +2,4 @@
 "@zus-health/ctw-component-library": patch
 ---
 
-update null states for condition tables
+Update null states for condition tables.
