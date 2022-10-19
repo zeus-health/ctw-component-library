@@ -34,14 +34,14 @@ export function formatDateLocalToISO(dateStr?: string): string | undefined {
   return date;
 }
 
-// Formats a string yyyymmdd or yyyyMMddHHmmss into YYYY-MM-DD.
+// Formats a string yyyymmdd or yyyyMMddHHmmss into MM/DD/YYYY.
 export function formatStringToDate(dateStr?: string): string | undefined {
   if (!dateStr) return undefined;
 
-  return `${dateStr.substring(0, 4)}-${dateStr.substring(
-    4,
-    6
-  )}-${dateStr.substring(6, 8)}`;
+  return `${dateStr.substring(4, 6)}/${dateStr.substring(
+    6,
+    8
+  )}/${dateStr.substring(0, 4)}`;
 }
 
 // Returns the ISO string (YYYY-MM-DD) for a given date.
