@@ -192,6 +192,7 @@ export type InputPropType = {
   name: string;
   type: string;
   required?: boolean;
+  "aria-required"?: boolean;
   min?: number;
   max?: number;
   minLength?: number;
@@ -254,7 +255,9 @@ export function getInputProps(
     options,
   };
 
-  if (!(def instanceof ZodOptional)) inputProps.required = true;
+  if (!(def instanceof ZodOptional)) {
+    inputProps["aria-required"] = true;
+  }
   if (min) inputProps.min = min;
   if (max) inputProps.max = max;
   if (minlength && Number.isFinite(minlength)) inputProps.minLength = minlength;

@@ -1,5 +1,35 @@
 # ctw-component-library
 
+## 0.16.0
+
+### Minor Changes
+
+- 5bb7428: Add optional "tags" filters to PatientProvider. This allows filtering by any number of meta.tags on the FHIR patient resources.
+
+### Patch Changes
+
+- 46eb897: Remove uncessary code.
+- 76f7583: Remove required attributes from input fields and add aria-required attribute to those input fields when adding/editing conditions.
+- 5bb7428: Fix condition history bug where conditions without codes would show all conditions in history view.
+
+## 0.15.3
+
+### Patch Changes
+
+- 62dcb25: Remove unnecessary function to convert the date.
+
+## 0.15.2
+
+### Patch Changes
+
+- b4db81c: Fix sorting and styling of dates and labels within the condition history panel.
+
+## 0.15.1
+
+### Patch Changes
+
+- 29185c9: Update null states for condition tables.
+
 ## 0.15.0
 
 ### Minor Changes
