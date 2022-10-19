@@ -115,15 +115,13 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   };
 
   const addCondtiotnBtn = (
-    <p>
-      <button
-        className="ctw-btn-primary"
-        type="button"
-        onClick={handleAddNewCondition}
-      >
-        Add Condition
-      </button>
-    </p>
+    <button
+      className="ctw-btn-primary"
+      type="button"
+      onClick={handleAddNewCondition}
+    >
+      Add Condition
+    </button>
   );
 
   useEffect(() => {
@@ -219,7 +217,9 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
             message={
               <>
                 {patientRecordsMessage}
-                {!patientRecordsResponse.isError && addCondtiotnBtn}
+                {!patientRecordsResponse.isError && (
+                  <div className="ctw-my-5">{addCondtiotnBtn}</div>
+                )}
               </>
             }
             rowActions={(condition) => [
