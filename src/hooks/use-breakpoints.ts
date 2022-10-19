@@ -6,7 +6,7 @@ import { RefObject, useState } from "react";
 import { useIsomorphicLayoutEffect } from "./use-isomorphic-layout-effect";
 
 type BreakpointKeys = keyof typeof defaultBreakpoints;
-type Breakpoints = Record<BreakpointKeys, boolean>;
+export type Breakpoints = Record<BreakpointKeys, boolean>;
 
 export function useBreakpoints<T extends HTMLElement>(target: RefObject<T>) {
   const { theme } = useCTW();
