@@ -65,7 +65,7 @@ export function formatPhoneNumber(phoneNumber?: string): string | undefined {
   return match ? `${match[1]}-${match[2]}-${match[3]}` : phoneNumber;
 }
 
-// Formats the date from MM/DD/YYYY to yyyyMMDD
+// Formats the date from MM/DD/YYYY to yyyyMMDD.
 export function sortDate(date?: string): string | undefined {
   if (!date) return undefined;
   const arr = date.split("/").reverse();
