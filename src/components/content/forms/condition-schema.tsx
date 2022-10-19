@@ -1,4 +1,3 @@
-import { SYSTEM_SNOMED } from "@/fhir/system-urls";
 import { ConditionModel } from "@/models/conditions";
 import { z } from "zod";
 import { ConditionsAutoComplete } from "./conditions-autocomplete";
@@ -9,13 +8,6 @@ export const getAddConditionData = ({
 }: {
   condition: ConditionModel;
 }): FormEntry[] => [
-  {
-    label: "subject",
-    value: condition.subjectID,
-    field: "subjectID",
-    readonly: true,
-    hidden: true,
-  },
   {
     label: "Condition",
     field: "condition",
@@ -40,28 +32,9 @@ export const getEditingPatientConditionData = ({
     hidden: true,
   },
   {
-    label: "id",
-    value: condition.id,
-    field: "id",
-    readonly: true,
-    hidden: true,
-  },
-  {
     label: "Name",
     value: condition.display,
     field: "condition",
-    hidden: true,
-  },
-  {
-    label: "Snomed Code",
-    value: condition.snomedCode,
-    field: "code",
-    hidden: true,
-  },
-  {
-    label: "Snomed Code",
-    value: SYSTEM_SNOMED,
-    field: "system",
     hidden: true,
   },
   {
@@ -73,6 +46,11 @@ export const getEditingPatientConditionData = ({
       <ConditionsAutoComplete readonly={readonly} {...inputProps} />
     ),
   },
+
+  ...sharedFields(condition),
+];
+
+const sharedFields = (condition: ConditionModel) => [
   {
     label: "subject",
     value: condition.subjectID,
@@ -80,11 +58,6 @@ export const getEditingPatientConditionData = ({
     readonly: true,
     hidden: true,
   },
-
-  ...sharedFields(condition),
-];
-
-const sharedFields = (condition: ConditionModel) => [
   {
     label: "Clinical Status",
     value: condition.clinicalStatus,
@@ -123,10 +96,13 @@ export const conditionSchema = z.object({
   // conditionCode: z.string({
   //   required_error: "Condition code must be specified.",
   // }),
-  condition: z.string({
-    required_error: "Condition name must be specified.",
-  }),
-
+  condition: z
+    .object({
+      display: z.string(),
+      code: z.string(),
+      system: z.string(),
+    })
+    .required(),
   clinicalStatus: z.enum([
     "active",
     "recurrence",

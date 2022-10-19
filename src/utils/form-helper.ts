@@ -21,6 +21,7 @@ import Zod, {
 export function parseParams(o: any, schema: any, key: string, value: any) {
   // find actual shape definition for this key
   let shape = schema;
+
   while (shape instanceof ZodObject || shape instanceof ZodEffects) {
     shape =
       shape instanceof ZodObject
@@ -85,6 +86,14 @@ export function processDef(
   } else if (def instanceof ZodEffects) {
     processDef(def._def.schema, o, key, value);
     return;
+  } else if (def instanceof ZodObject) {
+    const parsedJson = JSON.parse(value);
+    parsedValue = parsedJson;
+    Object.entries(def.shape).forEach(([key, _]) => {
+      if (!parsedValue[key]) {
+        delete parsedJson[key];
+      }
+    });
   } else {
     throw new Error(`Unexpected type ${def._def.typeName} for key ${key}`);
   }
@@ -116,7 +125,6 @@ export function getParamsInternal<T>(
     entries = Object.entries(params);
   }
 
-  // TODO: update this
   for (const [key, value] of entries) {
     // infer an empty param as if it wasn't defined in the first place
     if (value === "") {
@@ -125,12 +133,15 @@ export function getParamsInternal<T>(
     parseParams(o, schema, key, value);
   }
 
+  console.log("OOOO", o);
+
   const result = schema.safeParse(o);
   if (result.success) {
     return { success: true, data: result.data as T, errors: undefined };
   }
   const errors: any = {};
   const addError = (key: string, message: string) => {
+    console.log("key", key, message);
     if (!errors.hasOwnProperty(key)) {
       errors[key] = message;
     } else {
@@ -140,8 +151,10 @@ export function getParamsInternal<T>(
       errors[key].push(message);
     }
   };
+  console.log("result error", result.error);
 
   result.error.issues.forEach((issue: any) => {
+    console.log("issue", issue);
     const { message, path, code, expected, received } = issue;
     const [key, index] = path;
     let value = o[key];
@@ -189,7 +202,6 @@ export type InputPropType = {
 
 export function useFormInputProps(schema: any, options: any = {}) {
   const { shape } = schema;
-  console.log("shape", shape);
   const defaultOptions = options;
   return function props(key: string, options: any = {}) {
     options = { ...defaultOptions, ...options };

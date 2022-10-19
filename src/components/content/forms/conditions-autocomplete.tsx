@@ -42,12 +42,12 @@ export const ConditionsAutoComplete = ({
   );
 
   const handleSelectedConditonChange = (eventValue: string) => {
-    setSelectedCondition(
-      conditions.data.filter(
-        (condition: ConditionsAutoCompleteOption) =>
-          condition.display === eventValue
-      )[0]
-    );
+    const currentCondition = conditions.data.filter(
+      (condition: ConditionsAutoCompleteOption) =>
+        condition.display === eventValue
+    )[0];
+    setSelectedCondition(currentCondition);
+
     if (conditions.data.length) {
       setQuery(eventValue);
     }
@@ -64,6 +64,12 @@ export const ConditionsAutoComplete = ({
         readonly={readonly}
       />
       <input
+        hidden
+        name={`${inputProps.name}`}
+        value={JSON.stringify(selectedCondition)}
+      />
+
+      {/* <input
         name={`${inputProps.name}`}
         value={selectedCondition?.code}
         hidden
@@ -74,7 +80,7 @@ export const ConditionsAutoComplete = ({
         value={selectedCondition?.system}
         hidden
         readOnly
-      />
+      /> */}
     </>
   );
 };
