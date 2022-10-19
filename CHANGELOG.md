@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.15.1
+
+### Patch Changes
+
+- 29185c9: Update null states for condition tables.
+
 ## 0.15.0
 
 ### Minor Changes
