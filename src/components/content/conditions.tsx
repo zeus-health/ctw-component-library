@@ -219,7 +219,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
             message={
               <>
                 {patientRecordsMessage}
-                {addCondtiotnBtn}
+                {!patientRecordsResponse.isError && addCondtiotnBtn}
               </>
             }
             rowActions={(condition) => [
