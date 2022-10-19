@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 0.16.0
+
+### Minor Changes
+
+- 5bb7428: Add optional "tags" filters to PatientProvider. This allows filtering by any number of meta.tags on the FHIR patient resources.
+
+### Patch Changes
+
+- 46eb897: Remove uncessary code.
+- 76f7583: Remove required attributes from input fields and add aria-required attribute to those input fields when adding/editing conditions.
+- 5bb7428: Fix condition history bug where conditions without codes would show all conditions in history view.
+
 ## 0.15.3
 
 ### Patch Changes
