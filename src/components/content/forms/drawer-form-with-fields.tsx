@@ -71,7 +71,6 @@ export const DrawerFormWithFields = <T,>({
               <div
                 key={label}
                 className="ctw-space-y-1.5 ctw-text-sm ctw-font-medium ctw-text-content-black"
-                aria-required
               >
                 <div className="ctw-flex ctw-justify-between">
                   <label
