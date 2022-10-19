@@ -33,7 +33,7 @@ export type ConditionsProps = {
   readOnly?: boolean;
 };
 
-const EMPTY_MESSAGE_RECORD =
+const EMPTY_MESSAGE_PATIENT_RECORD =
   "There are no conditions in this patient's record.";
 const EMPTY_MESSAGE_PROVIDER = "There are no conditions available.";
 const ERROR_MSG =
@@ -78,7 +78,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
 
   const patientRecordsMessage = patientRecordsResponse.isError
     ? ERROR_MSG
-    : EMPTY_MESSAGE_RECORD;
+    : EMPTY_MESSAGE_PATIENT_RECORD;
 
   const otherProviderRecordMessage = OtherProviderRecordsResponse.isError
     ? ERROR_MSG
