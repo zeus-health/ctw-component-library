@@ -33,7 +33,9 @@ export type ConditionsProps = {
   readOnly?: boolean;
 };
 
-const EMPTY_MESSAGE = "No conditions found";
+const EMPTY_MESSAGE_RECORD =
+  "There are no conditions in this patient's record.";
+const EMPTY_MESSAGE_PROVIDER = "There are no conditions available.";
 const ERROR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
 
@@ -76,11 +78,11 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
 
   const patientRecordsMessage = patientRecordsResponse.isError
     ? ERROR_MSG
-    : EMPTY_MESSAGE;
+    : EMPTY_MESSAGE_RECORD;
 
   const otherProviderRecordMessage = OtherProviderRecordsResponse.isError
     ? ERROR_MSG
-    : EMPTY_MESSAGE;
+    : EMPTY_MESSAGE_PROVIDER;
 
   const handleToggleChange = () => setIncludeInactive(!includeInactive);
   const handleConditionEdit = (condition: ConditionModel) => {
@@ -168,6 +170,18 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     return <ConditionsNoPatient className={className} />;
   }
 
+  const addCondtiotnBtn = (
+    <p>
+      <button
+        className="ctw-btn-primary"
+        type="button"
+        onClick={handleAddNewCondition}
+      >
+        Add Condition
+      </button>
+    </p>
+  );
+
   return (
     <div
       ref={containerRef}
@@ -203,6 +217,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
             conditions={patientRecords}
             isLoading={patientRecordsResponse.isLoading}
             message={patientRecordsMessage}
+            emptyElements={addCondtiotnBtn}
             rowActions={(condition) => [
               {
                 name: "Edit",

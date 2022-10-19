@@ -2,6 +2,7 @@ import { Table, TableBaseProps, TableColumn } from "../core/table/table";
 
 import { ConditionModel } from "@/models/conditions";
 import { DotsHorizontalIcon } from "@heroicons/react/outline";
+import { ReactElement } from "react";
 import { DropdownMenu, MenuItems } from "../core/dropdown-menu";
 
 export type ConditionsTableBaseProps = {
@@ -9,6 +10,7 @@ export type ConditionsTableBaseProps = {
   conditions: ConditionModel[];
   rowActions: (condition: ConditionModel) => MenuItems[];
   hideMenu?: boolean;
+  emptyElements?: ReactElement;
 } & TableBaseProps<ConditionModel>;
 
 export function ConditionsTableBase({
@@ -16,6 +18,7 @@ export function ConditionsTableBase({
   conditions,
   rowActions,
   hideMenu = false,
+  emptyElements = <></>,
   ...tableProps
 }: ConditionsTableBaseProps) {
   const columns: TableColumn<ConditionModel>[] = [
@@ -61,6 +64,7 @@ export function ConditionsTableBase({
       className={className}
       records={conditions}
       columns={columns}
+      elements={emptyElements}
       {...tableProps}
     />
   );

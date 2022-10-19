@@ -1,5 +1,5 @@
 import cx from "classnames";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactElement, ReactNode, useEffect, useRef, useState } from "react";
 
 import { TableHead } from "./table-head";
 import { TableRows } from "./table-rows";
@@ -29,6 +29,7 @@ export type TableProps<T extends MinRecordItem> = {
   columns: TableColumn<T>[];
   isLoading?: boolean;
   message?: string;
+  elements?: ReactElement;
   showTableHead?: boolean;
   stacked?: boolean;
 };
@@ -44,6 +45,7 @@ export const Table = <T extends MinRecordItem>({
   records,
   isLoading = false,
   message = "No records found",
+  elements = <></>,
   showTableHead = true,
   stacked,
 }: TableProps<T>) => {
@@ -103,6 +105,7 @@ export const Table = <T extends MinRecordItem>({
               columns={columns}
               isLoading={isLoading}
               emptyMessage={message}
+              emptyElements={elements}
             />
           </tbody>
         </table>

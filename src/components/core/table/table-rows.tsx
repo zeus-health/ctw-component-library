@@ -1,3 +1,4 @@
+import { ReactElement } from "react";
 import { Spinner } from "../spinner";
 
 import type { MinRecordItem, TableColumn } from "./table";
@@ -9,6 +10,7 @@ type TableRowsProps<T extends MinRecordItem> = {
   columns: TableColumn<T>[];
   isLoading: boolean;
   emptyMessage: string;
+  emptyElements: ReactElement;
 };
 
 export const TableRows = <T extends MinRecordItem>({
@@ -16,6 +18,7 @@ export const TableRows = <T extends MinRecordItem>({
   columns,
   isLoading,
   emptyMessage,
+  emptyElements
 }: TableRowsProps<T>) => {
   if (isLoading) {
     return (
@@ -32,6 +35,7 @@ export const TableRows = <T extends MinRecordItem>({
     return (
       <TableFullLengthRow colSpan={columns.length}>
         {emptyMessage}
+        {emptyElements}
       </TableFullLengthRow>
     );
   }
