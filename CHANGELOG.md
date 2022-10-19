@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.15.3
+
+### Patch Changes
+
+- 62dcb25: Remove unnecessary function to convert the date.
+
 ## 0.15.2
 
 ### Patch Changes
