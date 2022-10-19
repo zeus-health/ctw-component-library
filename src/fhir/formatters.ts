@@ -38,10 +38,11 @@ export function formatDateLocalToISO(dateStr?: string): string | undefined {
 export function formatStringToDate(dateStr?: string): string | undefined {
   if (!dateStr) return undefined;
 
-  return `${dateStr.substring(4, 6)}/${dateStr.substring(
-    6,
-    8
-  )}/${dateStr.substring(0, 4)}`;
+  const month = dateStr.substring(4, 6);
+  const day = dateStr.substring(6, 8);
+  const year = dateStr.substring(0, 4);
+
+  return `${month}/${day}/${year}`;
 }
 
 // Returns the ISO string (YYYY-MM-DD) for a given date.
