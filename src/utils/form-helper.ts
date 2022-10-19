@@ -243,7 +243,6 @@ export function getInputProps(
   };
 
   if (!(def instanceof ZodOptional)) {
-    inputProps.required = false;
     inputProps["aria-required"] = true;
   }
   if (min) inputProps.min = min;
