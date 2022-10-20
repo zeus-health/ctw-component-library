@@ -1,4 +1,4 @@
-import { getAutoCompleteConditions } from "@/api/conditions";
+import { getAutoCompleteConditions } from "@/api/autocomplete-conditions";
 import { useCTW } from "@/components/core/ctw-provider";
 import { useQuery } from "@tanstack/react-query";
 import { InputHTMLAttributes, useState } from "react";
