@@ -133,7 +133,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
 
     setConditionFilter(tempConditionFilters);
 
-    /* OtherProviderRecordsConditons depends patientRecordsConditions so that we can correctly filter out
+    /* OtherProviderRecordsConditons depends on patientRecordsConditions so that we can correctly filter out
        conditions that appear in patientRecordsConditions from OtherProviderRecordsConditons */
     if (patientRecordsResponse.data) {
       setPatientRecords(
