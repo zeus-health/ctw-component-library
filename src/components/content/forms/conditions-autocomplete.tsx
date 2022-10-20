@@ -1,8 +1,7 @@
-import { getAutoCompleteConditions } from "@/api/autocomplete-conditions";
+import { setAutoCompleteConditions } from "@/api/autocomplete-conditions";
 import { useCTW } from "@/components/core/ctw-provider";
-import { useQuery } from "@tanstack/react-query";
-import { InputHTMLAttributes, useState } from "react";
-import { ComboboxField } from "./combobox-field";
+import { InputHTMLAttributes, useEffect, useState } from "react";
+import { ComboboxField, ComboxboxFieldOption } from "./combobox-field";
 
 export type AutoCompleteComboboxProps = {
   defaultCoding?: fhir4.Coding;
@@ -22,28 +21,34 @@ export const ConditionsAutoComplete = ({
 }: AutoCompleteComboboxProps) => {
   const { authToken, env } = useCTW();
   const [query, setQuery] = useState((inputProps.defaultValue as string) || "");
-  const [selectedCoding, setSelectedCoding] = useState();
+  const [selectedCoding, setSelectedCoding] = useState<fhir4.Coding>();
+  const [conditions, setConditions] = useState<fhir4.Coding[]>();
+  const [options, setOptions] = useState<ComboxboxFieldOption[]>();
 
-  const conditions = useQuery(
-    ["condition-autocomplete", authToken, env, query],
-    getAutoCompleteConditions,
-    { enabled: !!authToken && query.length > 1 }
-  );
+  useEffect(() => {
+    if (query.length > 1) {
+      setAutoCompleteConditions(authToken, env, query, setConditions);
+    }
 
-  const options = conditions.data?.map(
-    (item: ConditionsAutoCompleteOption) => ({
-      value: item.display,
-      id: item.code,
-    })
-  );
+    if (conditions) {
+      setOptions(
+        conditions.map((item: fhir4.Coding) => ({
+          value: item.display,
+          id: item.code,
+        })) as ComboxboxFieldOption[]
+      );
+    }
+  }, [authToken, env, query, conditions]);
 
   const handleSelectedConditonChange = (eventValue: string) => {
-    const currentCondition = conditions.data.filter(
-      (item: fhir4.Coding) => item.display === eventValue
-    )[0];
-    setSelectedCoding(currentCondition);
+    if (conditions) {
+      const currentCondition = conditions.filter(
+        (item: fhir4.Coding) => item.display === eventValue
+      )[0];
+      setSelectedCoding(currentCondition);
+    }
 
-    if (conditions.data.length) {
+    if (conditions?.length) {
       setQuery(eventValue);
     }
   };
