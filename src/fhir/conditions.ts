@@ -11,7 +11,6 @@ import {
   searchLensRecords,
 } from "./search-helpers";
 import {
-  SYSTEM_CONDITION_CLINICAL,
   SYSTEM_ICD10,
   SYSTEM_ICD10_CM,
   SYSTEM_ICD9,
@@ -58,16 +57,6 @@ export function getNewCondition(patientId: string) {
     subject: {
       type: "Patient",
       reference: `Patient/${patientId}`,
-    },
-    clinicalStatus: {
-      coding: [
-        {
-          system: SYSTEM_CONDITION_CLINICAL,
-          code: "active",
-          display: "Active",
-        },
-      ],
-      text: "active",
     },
   };
   newCondition = applyAddConditionDefaults(newCondition);

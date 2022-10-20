@@ -1,4 +1,7 @@
-import { SYSTEM_CONDITION_VERIFICATION_STATUS } from "@/fhir/system-urls";
+import {
+  SYSTEM_CONDITION_CLINICAL,
+  SYSTEM_CONDITION_VERIFICATION_STATUS,
+} from "@/fhir/system-urls";
 import { ConditionModel } from "@/models/conditions";
 import { Condition } from "fhir/r4";
 import type { FormEntry } from "./drawer-form-with-fields";
@@ -91,9 +94,18 @@ const getSharedFields = (condition: ConditionModel) => [
 ];
 
 // Sets any autofill values that apply when a user adds a medication, whether creating or confirming.
-// Right now this only includes the verification status property.
 export function applyAddConditionDefaults(condition: Condition): Condition {
   const addDefaults: Partial<Condition> = {
+    clinicalStatus: {
+      coding: [
+        {
+          system: SYSTEM_CONDITION_CLINICAL,
+          code: "active",
+          display: "Active",
+        },
+      ],
+      text: "active",
+    },
     verificationStatus: {
       coding: [
         {
