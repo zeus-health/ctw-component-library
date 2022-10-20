@@ -1,4 +1,5 @@
 import { ConditionModel } from "@/models/conditions";
+import { ReactNode } from "react";
 import { z } from "zod";
 import { ConditionsAutoComplete } from "./conditions-autocomplete";
 import type { FormEntry } from "./drawer-form-with-fields";
@@ -31,7 +32,18 @@ export const getEditingPatientConditionData = ({
     readonly: true,
     hidden: true,
   },
-
+  {
+    label: "coding",
+    field: "coding",
+    hidden: true,
+    render: (readonly, inputProps): ReactNode => (
+      <input
+        value={JSON.stringify(condition.codings)}
+        {...inputProps}
+        disabled={readonly}
+      />
+    ),
+  },
   {
     label: "Condition",
     field: "condition",
@@ -84,24 +96,11 @@ const sharedFields = (condition: ConditionModel) => [
   },
 ];
 
-export const conditionSchema = z.object({
+const sharedSchema = {
   id: z.string().optional(),
   subjectID: z.string({
     required_error: "Condition subjectID must be specified.",
   }),
-  condition: z
-    .object({
-      display: z.string({
-        required_error: "Please choose a condition.",
-      }),
-      code: z.string({
-        required_error: "Please choose a condition.",
-      }),
-      system: z.string({
-        required_error: "Please choose a condition.",
-      }),
-    })
-    .required(),
   clinicalStatus: z.enum([
     "active",
     "recurrence",
@@ -121,4 +120,33 @@ export const conditionSchema = z.object({
     "entered-in-error",
   ]),
   note: z.string().optional(),
+};
+
+export const conditionEditSchema = z.object({
+  ...sharedSchema,
+  coding: z.unknown(),
+  condition: z
+    .object({
+      display: z.string(),
+      code: z.string(),
+      system: z.string(),
+    })
+    .optional(),
+});
+
+export const conditionAddSchema = z.object({
+  ...sharedSchema,
+  condition: z
+    .object({
+      display: z.string({
+        required_error: "Please choose a condition.",
+      }),
+      code: z.string({
+        required_error: "Please choose a condition.",
+      }),
+      system: z.string({
+        required_error: "Please choose a condition.",
+      }),
+    })
+    .required(),
 });

@@ -26,7 +26,8 @@ export type DrawerFormWithFieldsProps<T> = {
   action: (
     data: FormData,
     patientID: string,
-    getCTWFhirClient: () => Promise<Client>
+    getCTWFhirClient: () => Promise<Client>,
+    schema: Zod.AnyZodObject
   ) => Promise<ActionReturn<T>>;
   data: FormEntry[] | undefined;
   schema: Zod.AnyZodObject;
@@ -50,6 +51,7 @@ export const DrawerFormWithFields = <T,>({
       title={title}
       action={action}
       getCTWFhirClient={getCTWFhirClient}
+      schema={schema}
       {...drawerFormProps}
     >
       {(submitting, errors) => (
@@ -69,6 +71,7 @@ export const DrawerFormWithFields = <T,>({
                     defaultValue={value}
                     error={error}
                     hidden={hidden}
+                    render={render}
                   />
                 );
               }

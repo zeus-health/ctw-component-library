@@ -16,6 +16,7 @@ import Zod, {
   ZodString,
   ZodType,
   ZodTypeAny,
+  ZodUnknown,
 } from "zod";
 
 export function parseParams(o: any, schema: any, key: string, value: any) {
@@ -94,6 +95,8 @@ export function processDef(
         delete parsedJson[key];
       }
     });
+  } else if (def instanceof ZodUnknown) {
+    parsedValue = JSON.parse(value);
   } else {
     throw new Error(`Unexpected type ${def._def.typeName} for key ${key}`);
   }

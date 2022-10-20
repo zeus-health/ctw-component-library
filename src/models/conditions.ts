@@ -67,6 +67,10 @@ export class ConditionModel {
     return codeableConceptLabel(this.resource.clinicalStatus);
   }
 
+  get codings(): fhir4.CodeableConcept | undefined {
+    return this.resource.code;
+  }
+
   get display(): string | undefined {
     return codeableConceptLabel(this.resource.code);
   }

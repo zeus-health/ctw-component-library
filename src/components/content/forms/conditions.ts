@@ -12,7 +12,6 @@ import { ConditionModel } from "@/models/conditions";
 import { getFormData } from "@/utils/form-helper";
 import { queryClient } from "@/utils/request";
 import Client from "fhir-kit-client";
-import { conditionSchema } from "./condition-schema";
 
 const setRecorderField = async (practitionerId: string, fhirClient: Client) => {
   const practitioner = await getPractitioner(practitionerId, fhirClient);
@@ -28,9 +27,11 @@ const setRecorderField = async (practitionerId: string, fhirClient: Client) => {
 export const createOrEditCondition = async (
   data: FormData,
   patientID: string,
-  getCTWFhirClient: () => Promise<Client>
+  getCTWFhirClient: () => Promise<Client>,
+  schema: Zod.AnyZodObject
 ) => {
-  const result = await getFormData(data, conditionSchema);
+  const result = await getFormData(data, schema);
+
   if (!result.success) {
     return result;
   }
@@ -64,16 +65,18 @@ export const createOrEditCondition = async (
       ],
     },
 
-    code: {
-      coding: [
-        {
-          system: result.data.condition.system,
-          code: result.data.condition.code,
-          display: result.data.condition.display,
+    code: result.data.id
+      ? result.data.coding
+      : {
+          coding: [
+            {
+              system: result.data.condition.system,
+              code: result.data.condition.code,
+              display: result.data.condition.display,
+            },
+          ],
+          text: result.data.condition.display,
         },
-      ],
-      text: result.data.condition.display,
-    },
     ...(result.data.abatement && {
       abatementDateTime: dateToISO(result.data.abatement),
     }),
