@@ -1,4 +1,4 @@
-import { isFhirError } from "@/fhir/errors";
+import { fhirErrorResponse, isFhirError } from "@/fhir/errors";
 import { ResourceModel } from "@/models/resource";
 import { useState } from "react";
 import { Alert } from "./alert";
@@ -20,7 +20,7 @@ export const ModalConfirmDelete = ({
   ...modalProps
 }: ModalConfirmDeleteProps) => {
   const { getCTWFhirClient } = useCTW();
-  const [error, setError] = useState<string>();
+  const [alert, setAlert] = useState<{ header: string; message: string }>();
 
   const onConfirm = async () => {
     const fhirClient = await getCTWFhirClient();
@@ -31,43 +31,34 @@ export const ModalConfirmDelete = ({
         );
       }
       const response = await fhirClient.delete({
-        resourceType: "poo",
-        // resourceType: resource.resourceType,
+        resourceType: resource.resourceType,
         id: resource.id,
       });
       onClose();
       onDelete();
     } catch (err) {
       if (isFhirError(err)) {
-        setError("A FHIR error was thrown.");
-      } else if (err instanceof Error) setError(err.message);
+        const response = fhirErrorResponse("Failed to Remove", err);
+        setAlert({
+          header: `${response.status} ${response.title}`,
+          message: response.statusText,
+        });
+      } else if (err instanceof Error) {
+        setAlert({ header: err.name, message: err.message });
+      }
     }
   };
   return (
     <Modal
       title={`Remove ${resource.resourceType}`}
-      onAfterClosed={() => setError(undefined)}
+      onAfterClosed={() => setAlert(undefined)}
       {...modalProps}
     >
-      <div className="ctw-flex ctw-h-full ctw-flex-col ctw-overflow-y-auto">
-        {error && (
-          <Alert header="Failed to Remove" type="error">
-            <div>{error}</div>
-            <div>
-              Contact your system administrator or customer service for
-              assistance.
-            </div>
+      <div className="ctw-flex ctw-h-full ctw-flex-col ctw-items-center ctw-overflow-y-auto">
+        {alert && (
+          <Alert header={alert.header} type="error">
+            <div className="ctw-max-w-sm ctw-truncate">{alert.message}</div>
           </Alert>
-          // <ErrorAlert
-          //   className="ctw-my-3 ctw-max-w-fit"
-          //   header="Failed to Remove"
-          // >
-          //   <div>{error}</div>
-          //   <div>
-          //     Contact your system administrator or customer service for
-          //     assistance.
-          //   </div>
-          // </ErrorAlert>
         )}
         <p className="ctw-subtext ctw-max-w-md ctw-text-center">{message}</p>
       </div>

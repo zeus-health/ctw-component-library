@@ -42,7 +42,7 @@ export function Conditions({ className }: ConditionsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [historyDrawerIsOpen, setHistoryDrawerIsOpen] = useState(false);
   const [patientRecords, setPatientRecords] = useState<ConditionModel[]>([]);
   const [OtherProviderRecords, setOtherProviderRecords] = useState<
@@ -93,7 +93,7 @@ export function Conditions({ className }: ConditionsProps) {
   };
 
   const handleConditionDelete = (condition: ConditionModel) => {
-    setShowModal(true);
+    setShowConfirmDelete(true);
     setSelectedCondition(condition);
   };
 
@@ -294,8 +294,8 @@ export function Conditions({ className }: ConditionsProps) {
           resource={selectedCondition}
           message={`Please confirm that you want to remove the condition 
           "${selectedCondition.display}" from this client's profile.`}
-          onClose={() => setShowModal(false)}
-          isOpen={showModal}
+          onClose={() => setShowConfirmDelete(false)}
+          isOpen={showConfirmDelete}
           onDelete={() => queryClient.invalidateQueries(["conditions"])}
         />
       )}
