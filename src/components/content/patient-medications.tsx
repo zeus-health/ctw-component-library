@@ -50,10 +50,6 @@ type LoaderData = {
   includedResources?: ResourceMap;
 };
 
-export type MedicationFilters = {
-  "clinical-status"?: ClinicalStatus | ClinicalStatus[];
-};
-
 type PatientMedicationsProps = {
   className?: string;
   status?: ClinicalStatus;
@@ -62,14 +58,14 @@ type PatientMedicationsProps = {
   // should we render the Zus confirmed meds component (default true)
   showConfirmedMedsTable?: boolean;
   // should we show the button to add new meds (default true)?
-  showAddNewMedsButton?: boolean;
+  readOnly?: boolean;
 };
 
 export function PatientMedications({
   className,
   medsSort = "",
   potentialMedsSort = "",
-  showAddNewMedsButton = true,
+  readOnly = true,
   showConfirmedMedsTable = true,
 }: PatientMedicationsProps) {
   const [
@@ -275,7 +271,7 @@ export function PatientMedications({
     >
       <div className="ctw-heading-container">
         <div className="ctw-title">Medications</div>
-        {showAddNewMedsButton && (
+        {readOnly && (
           <button
             className="ctw-btn-clear ctw-link"
             type="button"

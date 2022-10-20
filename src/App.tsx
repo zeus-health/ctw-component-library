@@ -50,7 +50,7 @@ function App() {
           <ErrorBoundary>
             <PatientMedications
               showConfirmedMedsTable={false}
-              showAddNewMedsButton={false}
+              readOnly={false}
             />
           </ErrorBoundary>
         </div>
