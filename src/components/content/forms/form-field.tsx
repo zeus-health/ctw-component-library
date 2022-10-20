@@ -31,7 +31,7 @@ export const FormField = ({
 
   const value =
     inputProps.type === "date"
-      ? formatDateLocalToISO(defaultValue as string)
+      ? formatDateLocalToISO(defaultValue)
       : defaultValue;
 
   const getFieldComponent = () => {
