@@ -69,7 +69,8 @@ export const createOrEditCondition = async (
     SYSTEM_PRACTITIONER_ID
   ] as string;
 
-  // Some fields will need to be set as they are required.
+  // Defines the properties of the condition based on the form.
+  // The autofill values that apply to both edits and creates are here; including Practitioner, Recorder, Patient, and Recorded date.
   const fhirCondition: fhir4.Condition = {
     resourceType: "Condition",
     id: result.data.id,

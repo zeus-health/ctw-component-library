@@ -1,4 +1,5 @@
 import {
+  applyAddConditionDefaults,
   getAddConditionFormEntries,
   getEditConditionFormEntries,
 } from "@/components/content/forms/condition-helpers";
@@ -97,7 +98,13 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     if (patientResponse.data) {
       setDrawerIsOpen(true);
       setFormAction("Add");
-      setCurrentlySelectedData(getAddConditionFormEntries({ condition }));
+      setCurrentlySelectedData(
+        getAddConditionFormEntries({
+          condition: new ConditionModel(
+            applyAddConditionDefaults(condition.resource)
+          ),
+        })
+      );
     }
   };
 
