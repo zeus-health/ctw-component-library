@@ -3,18 +3,27 @@ import jwt_decode from "jwt-decode";
 
 import { Env } from "@/components/core/ctw-provider";
 
-export function getFhirClient(env: Env, accessToken: string) {
+export function getFhirClient(
+  env: Env,
+  accessToken: string,
+  builderId?: string
+) {
   const url =
     env === "production"
       ? `https://api.zusapi.com/fhir`
       : `https://api.${env}.zusapi.com/fhir`;
 
+  const customHeaders: HeadersInit = {
+    "User-Agent": "zus_ctw_component_library fhirclient",
+  };
+  if (builderId) {
+    customHeaders["Zus-Account"] = builderId;
+  }
+
   return new Client({
     baseUrl: url,
     bearerToken: accessToken,
-    customHeaders: {
-      "User-Agent": "zus_ctw_component_library fhirclient",
-    },
+    customHeaders,
   });
 }
 
