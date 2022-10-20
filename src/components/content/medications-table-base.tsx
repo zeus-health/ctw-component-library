@@ -15,12 +15,11 @@ export type MedicationsTableBaseProps = {
 };
 
 // @todo this isn't doing pagination
-export const MedicationsTableBase = (
-  {
-    className = "",
-    medicationStatements,
-    total,
-  }: MedicationsTableBaseProps) => {
+export const MedicationsTableBase = ({
+  className = "",
+  medicationStatements,
+  total,
+}: MedicationsTableBaseProps) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedMedication, setSelectedMedication] =
     useState<MedicationStatementModel>();

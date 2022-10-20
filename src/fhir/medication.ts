@@ -16,7 +16,7 @@ export type ClinicalStatus =
   | "completed"
   | "on-hold"
   | "intended"
-  | "stopped"
+  | "stopped";
 
 // Hardcoded aliased display statuses for patient-reported statuses.
 const medStatusDisplays: Record<ClinicalStatus, string> = {

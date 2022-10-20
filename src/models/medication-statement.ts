@@ -17,7 +17,7 @@ export class MedicationStatementModel {
 
   private lensActiveRxNorms?: string[];
 
-  readonly builderPatientRxNormStatus?: Record<string,string>;
+  readonly builderPatientRxNormStatus?: Record<string, string>;
 
   constructor(
     medicationStatement: fhir4.MedicationStatement,
@@ -141,7 +141,7 @@ export class MedicationStatementModel {
   }
 
   get subject(): Reference {
-    return this.resource.subject
+    return this.resource.subject;
   }
 
   get subjectID(): string {

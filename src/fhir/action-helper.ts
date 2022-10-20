@@ -5,7 +5,7 @@ import { isFhirError } from "./errors";
 export interface FhirResourceBase {
   id: string | undefined;
   resourceType: string;
-  resource: fhir4.Condition|fhir4.MedicationStatement|fhir4.FhirResource;
+  resource: fhir4.Condition | fhir4.MedicationStatement | fhir4.FhirResource;
 }
 
 type CreateOrEditData<T extends FhirResourceBase> = {

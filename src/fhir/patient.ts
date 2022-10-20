@@ -13,12 +13,9 @@ export async function getPatient(
   const [_, patientID, systemURL, tags] = queryKey;
 
   try {
-    return await getBuilderFhirPatient(
-      fhirClient,
-      patientID,
-      systemURL,
-      { _tag: tags?.map((tag) => `${tag.system}|${tag.code}`) ?? [] }
-    );
+    return await getBuilderFhirPatient(fhirClient, patientID, systemURL, {
+      _tag: tags?.map((tag) => `${tag.system}|${tag.code}`) ?? [],
+    });
   } catch (e) {
     throw new Error(
       `Failed fetching patient information for patient: ${patientID} and system: ${systemURL}`

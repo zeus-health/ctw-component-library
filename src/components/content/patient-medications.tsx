@@ -2,24 +2,31 @@ import { format } from "date-fns";
 import { compact } from "lodash";
 import { useEffect, useContext, useRef, useState } from "react";
 import { MedicationsTableBase } from "@/components/content/medications-table-base";
-import { DrawerFormWithFields, FormEntry } from "@/components/content/forms/drawer-form-with-fields";
-import { createMedicationStatement, getMedicationFormData, medicationStatementSchema } from "./forms/medications";
+import {
+  DrawerFormWithFields,
+  FormEntry,
+} from "@/components/content/forms/drawer-form-with-fields";
+import {
+  createMedicationStatement,
+  getMedicationFormData,
+  medicationStatementSchema,
+} from "./forms/medications";
 import type { ResourceMap } from "@/fhir/types";
 import { MedicationStatementModel } from "@/models/medication-statement";
 import { CTWPatientContext, usePatient } from "../core/patient-provider";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { useFhirClientRef } from "@/fhir/utils";
 import { getMergedIncludedResources } from "@/fhir/bundle";
-import {
-  createPatientStatusMap,
-  getRxNormCode,
-} from "@/fhir/medication";
+import { createPatientStatusMap, getRxNormCode } from "@/fhir/medication";
 import type { ClinicalStatus } from "@/fhir/medication";
 import { getSortInfo, sort } from "@/utils/sort";
 import cx from "classnames";
 import "./patient-medications.scss";
 import { ToggleControl } from "@/components/core/toggle-control";
-import { useQueryPatientLensMeds, useQueryPatientMeds } from "@/hooks/use-medications";
+import {
+  useQueryPatientLensMeds,
+  useQueryPatientMeds,
+} from "@/hooks/use-medications";
 
 const BUILDER_PAGING = {
   size: 10,
@@ -49,33 +56,36 @@ export type MedicationFilters = {
 
 type PatientMedicationsProps = {
   className?: string;
-  status?: ClinicalStatus,
-  medsSort?: string,
-  potentialMedsSort?: string,
+  status?: ClinicalStatus;
+  medsSort?: string;
+  potentialMedsSort?: string;
   // should we render the Zus confirmed meds component (default true)
-  showConfirmedMedsTable?: boolean,
+  showConfirmedMedsTable?: boolean;
   // should we show the button to add new meds (default true)?
-  showAddNewMedsButton?: boolean,
-}
+  showAddNewMedsButton?: boolean;
+};
 
-export function PatientMedications (
-  { className,
-    medsSort = "",
-    potentialMedsSort = "",
-    showAddNewMedsButton = true,
-    showConfirmedMedsTable = true,
-  }: PatientMedicationsProps) {
-  const [{
-    builderMedications = [],
-    lensMedications = [],
-    builderMedicationsTotal = 0,
-    builderMedicationsPage = 0,
-    builderPatientRxNormStatuses,
-    lensMedicationsTotal = 0,
-    lensMedicationsPage = 0,
-    lensActiveRxNorms,
-    includedResources,
-  }, setLoaderState] = useState<LoaderData>({});
+export function PatientMedications({
+  className,
+  medsSort = "",
+  potentialMedsSort = "",
+  showAddNewMedsButton = true,
+  showConfirmedMedsTable = true,
+}: PatientMedicationsProps) {
+  const [
+    {
+      builderMedications = [],
+      lensMedications = [],
+      builderMedicationsTotal = 0,
+      builderMedicationsPage = 0,
+      builderPatientRxNormStatuses,
+      lensMedicationsTotal = 0,
+      lensMedicationsPage = 0,
+      lensActiveRxNorms,
+      includedResources,
+    },
+    setLoaderState,
+  ] = useState<LoaderData>({});
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const { patientID, systemURL } = useContext(CTWPatientContext);
@@ -92,7 +102,10 @@ export function PatientMedications (
     const newMedicationStatement = new MedicationStatementModel({
       resourceType: "MedicationStatement",
       status: "active",
-      subject: { reference: `Patient/${patient.data.id}`, display: patient.data.display },
+      subject: {
+        reference: `Patient/${patient.data.id}`,
+        display: patient.data.display,
+      },
       dateAsserted: format(new Date(), "yyyy-MM-dd"),
       informationSource: {
         type: "Organization",
@@ -116,121 +129,122 @@ export function PatientMedications (
 
   // START TMP BUILD
   useEffect(() => {
-      if (medicationsResponse.data?.bundle && lensActiveMedicationsResponse.data?.bundle && patientMedicationsResponse.data?.bundle) {
-        let { medications } = medicationsResponse.data;
-        let lensActiveMedications = lensActiveMedicationsResponse.data.medications;
-        const patientMedications = lensActiveMedicationsResponse.data.medications;
-        // @todo refactor so eslint directive not needed
-        // eslint-disable-next-line @typescript-eslint/no-shadow
-        const includedResources = getMergedIncludedResources([
-          medicationsResponse.data.bundle,
-          lensActiveMedicationsResponse.data.bundle,
-          patientMedicationsResponse.data.bundle
-        ]);
+    if (
+      medicationsResponse.data?.bundle &&
+      lensActiveMedicationsResponse.data?.bundle &&
+      patientMedicationsResponse.data?.bundle
+    ) {
+      let { medications } = medicationsResponse.data;
+      let lensActiveMedications =
+        lensActiveMedicationsResponse.data.medications;
+      const patientMedications = lensActiveMedicationsResponse.data.medications;
+      // @todo refactor so eslint directive not needed
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      const includedResources = getMergedIncludedResources([
+        medicationsResponse.data.bundle,
+        lensActiveMedicationsResponse.data.bundle,
+        patientMedicationsResponse.data.bundle,
+      ]);
 
-        // @todo refactor so eslint directive not needed
-        // eslint-disable-next-line @typescript-eslint/no-shadow
-        const builderPatientRxNormStatuses = createPatientStatusMap(
-          patientMedications,
-          includedResources
-        );
+      // @todo refactor so eslint directive not needed
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      const builderPatientRxNormStatuses = createPatientStatusMap(
+        patientMedications,
+        includedResources
+      );
 
-        const builderActiveRxNorms = compact(
-          medications
-            .filter((m) => m.status === "active") // Track ONLY active builder meds.
-            .map((medication) => getRxNormCode(medication, includedResources))
-        ) as string[];
+      const builderActiveRxNorms = compact(
+        medications
+          .filter((m) => m.status === "active") // Track ONLY active builder meds.
+          .map((medication) => getRxNormCode(medication, includedResources))
+      ) as string[];
 
-        const activeRxNorms = compact(
-          lensActiveMedications.map((medication) =>
-            getRxNormCode(medication, includedResources)
-          )) as string[];
+      const activeRxNorms = compact(
+        lensActiveMedications.map((medication) =>
+          getRxNormCode(medication, includedResources)
+        )
+      ) as string[];
 
-        // Filter out any active medications that the builder already knows about.
-        lensActiveMedications = lensActiveMedications.filter(
-          (medication) =>
-            !builderActiveRxNorms.includes(
-              getRxNormCode(medication, includedResources) ?? ""
-            )
-        );
+      // Filter out any active medications that the builder already knows about.
+      lensActiveMedications = lensActiveMedications.filter(
+        (medication) =>
+          !builderActiveRxNorms.includes(
+            getRxNormCode(medication, includedResources) ?? ""
+          )
+      );
 
-        const {
-          sortColumn: myMedSortColumn = "display",
-          sortOrder: myMedSortOrder = "asc"
-        } = getSortInfo<MedicationStatementModel>(
-          MedicationStatementModel,
-          medsSort
-        );
+      const {
+        sortColumn: myMedSortColumn = "display",
+        sortOrder: myMedSortOrder = "asc",
+      } = getSortInfo<MedicationStatementModel>(
+        MedicationStatementModel,
+        medsSort
+      );
 
-        medications = sort(
-          medications,
-          (c) =>
-            new MedicationStatementModel(
-              c,
-              includedResources,
-              activeRxNorms,
-              builderPatientRxNormStatuses
-            )[myMedSortColumn],
-          myMedSortOrder,
-          myMedSortColumn === "effectiveStart"
-        );
+      medications = sort(
+        medications,
+        (c) =>
+          new MedicationStatementModel(
+            c,
+            includedResources,
+            activeRxNorms,
+            builderPatientRxNormStatuses
+          )[myMedSortColumn],
+        myMedSortOrder,
+        myMedSortColumn === "effectiveStart"
+      );
 
-        const {
-          sortColumn: potentialMedSortColumn = "display",
-          sortOrder: potentialMedSortOrder = "asc",
-        } = getSortInfo(
-          MedicationStatementModel,
-          potentialMedsSort
-        );
+      const {
+        sortColumn: potentialMedSortColumn = "display",
+        sortOrder: potentialMedSortOrder = "asc",
+      } = getSortInfo(MedicationStatementModel, potentialMedsSort);
 
-        lensActiveMedications = sort(
-          lensActiveMedications,
-          (c) =>
-            new MedicationStatementModel(
-              c,
-              includedResources,
-              activeRxNorms,
-              builderPatientRxNormStatuses
-            )[potentialMedSortColumn],
-          potentialMedSortOrder,
-          potentialMedSortColumn === "effectiveStart"
-        );
+      lensActiveMedications = sort(
+        lensActiveMedications,
+        (c) =>
+          new MedicationStatementModel(
+            c,
+            includedResources,
+            activeRxNorms,
+            builderPatientRxNormStatuses
+          )[potentialMedSortColumn],
+        potentialMedSortOrder,
+        potentialMedSortColumn === "effectiveStart"
+      );
 
-        // @todo: don't set these to 0 automatically
-        const builderMedicationsPageOffset = 0;
-        const lensMedicationsPageOffset = 0;
+      // @todo: don't set these to 0 automatically
+      const builderMedicationsPageOffset = 0;
+      const lensMedicationsPageOffset = 0;
 
-        setLoaderState({
-          lensMedications: lensActiveMedications.slice(
-            lensMedicationsPageOffset,
-            lensMedicationsPageOffset + LENS_PAGING.size
-          ),
-          builderMedications: medications.slice(
-            builderMedicationsPageOffset,
-            builderMedicationsPageOffset + BUILDER_PAGING.size
-          ),
-          builderMedicationsTotal: medications.length,
-          builderMedicationsPage,
-          builderPatientRxNormStatuses,
-          lensMedicationsTotal: lensActiveMedications.length,
-          lensMedicationsPage,
-          lensActiveRxNorms: activeRxNorms,
-          includedResources,
-        });
-      }
-    },
-    [
-      medicationsResponse.data,
-      lensActiveMedicationsResponse.data,
-      patientMedicationsResponse.data,
-      builderMedicationsPage,
-      lensMedicationsPage,
-      includeInactiveMeds,
-      potentialMedsSort,
-      medsSort,
-    ]);
+      setLoaderState({
+        lensMedications: lensActiveMedications.slice(
+          lensMedicationsPageOffset,
+          lensMedicationsPageOffset + LENS_PAGING.size
+        ),
+        builderMedications: medications.slice(
+          builderMedicationsPageOffset,
+          builderMedicationsPageOffset + BUILDER_PAGING.size
+        ),
+        builderMedicationsTotal: medications.length,
+        builderMedicationsPage,
+        builderPatientRxNormStatuses,
+        lensMedicationsTotal: lensActiveMedications.length,
+        lensMedicationsPage,
+        lensActiveRxNorms: activeRxNorms,
+        includedResources,
+      });
+    }
+  }, [
+    medicationsResponse.data,
+    lensActiveMedicationsResponse.data,
+    patientMedicationsResponse.data,
+    builderMedicationsPage,
+    lensMedicationsPage,
+    includeInactiveMeds,
+    potentialMedsSort,
+    medsSort,
+  ]);
   // END TMP BUILD
-
 
   const activeMedicationModels = builderMedications.map(
     (medication) =>
@@ -261,38 +275,45 @@ export function PatientMedications (
     >
       <div className="ctw-heading-container">
         <div className="ctw-title">Medications</div>
-        { showAddNewMedsButton && <button
-          className="ctw-btn-clear ctw-link"
-          type="button"
-          onClick={handleAddNewMedication}
-        >
-          + Add Medication
-        </button> }
+        {showAddNewMedsButton && (
+          <button
+            className="ctw-btn-clear ctw-link"
+            type="button"
+            onClick={handleAddNewMedication}
+          >
+            + Add Medication
+          </button>
+        )}
       </div>
 
       <div className="ctw-body-container">
-        { showConfirmedMedsTable && <div className="ctw-space-y-3">
-          <div className="ctw-title-container">
-            <div className="ctw-title">Confirmed Medications</div>
-            <ToggleControl
-              onFormChange={() => setIncludeInactiveMeds(!includeInactiveMeds)}
-              toggleProps={{ name: "status", text: "Include Inactive Medications" }}
+        {showConfirmedMedsTable && (
+          <div className="ctw-space-y-3">
+            <div className="ctw-title-container">
+              <div className="ctw-title">Confirmed Medications</div>
+              <ToggleControl
+                onFormChange={() =>
+                  setIncludeInactiveMeds(!includeInactiveMeds)
+                }
+                toggleProps={{
+                  name: "status",
+                  text: "Include Inactive Medications",
+                }}
+              />
+            </div>
+            <MedicationsTableBase
+              medicationStatements={activeMedicationModels}
+              total={builderMedicationsTotal}
+              param={BUILDER_PAGING.param}
+              pageSize={BUILDER_PAGING.size}
+              currentPage={builderMedicationsPage}
             />
           </div>
-          <MedicationsTableBase
-            medicationStatements={activeMedicationModels}
-            total={builderMedicationsTotal}
-            param={BUILDER_PAGING.param}
-            pageSize={BUILDER_PAGING.size}
-            currentPage={builderMedicationsPage}
-          />
-        </div> }
+        )}
 
         <div className="ctw-space-y-3">
           <div className="ctw-title-container">
-            <div className="ctw-title">
-              Potential Active Medications
-            </div>
+            <div className="ctw-title">Potential Active Medications</div>
           </div>
           <MedicationsTableBase
             medicationStatements={potentialActiveMedicationModels}

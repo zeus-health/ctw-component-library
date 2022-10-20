@@ -3,7 +3,11 @@ import { omit } from "lodash/fp";
 import { errorResponse } from "@/utils/errors";
 import { bundleToResourceMap } from "./bundle";
 import { getRxNormCode } from "./medication";
-import { searchBuilderRecords, searchLensRecords, SearchReturn } from "./search-helpers";
+import {
+  searchBuilderRecords,
+  searchLensRecords,
+  SearchReturn,
+} from "./search-helpers";
 import { QueryFunctionContext } from "@tanstack/react-query";
 import { getFhirClientFromQuery } from "@/fhir/utils";
 
@@ -25,16 +29,19 @@ type QueryKeyMedicationFilter = [
   string,
   PatientUPID | undefined,
   MedicationFilter | undefined
-]
+];
 
 export type MedicationBuilder = {
   bundle: fhir4.Bundle;
   medications: fhir4.MedicationStatement[];
 };
 
-const omitClientFilters = omit(['informationSourceNot', 'informationSource'])
+const omitClientFilters = omit(["informationSourceNot", "informationSource"]);
 
-function applySearchFiltersToResponse(response: SearchReturn<"MedicationStatement">, searchFilters: MedicationFilter = {}) {
+function applySearchFiltersToResponse(
+  response: SearchReturn<"MedicationStatement">,
+  searchFilters: MedicationFilter = {}
+) {
   let medications = filterMedicationsWithNoRxNorms(
     response.resources,
     response.bundle
@@ -43,8 +50,7 @@ function applySearchFiltersToResponse(response: SearchReturn<"MedicationStatemen
   if (searchFilters.informationSource) {
     medications = medications.filter(
       (medication) =>
-        medication.informationSource?.type ===
-        searchFilters.informationSource
+        medication.informationSource?.type === searchFilters.informationSource
     );
   }
 
@@ -66,7 +72,7 @@ export async function getBuilderMedications(
   const { meta, queryKey } = queryParams;
 
   const fhirClient = getFhirClientFromQuery(meta);
-  const [_, patientUPID = '', searchFilters = {}] = queryKey;
+  const [_, patientUPID = "", searchFilters = {}] = queryKey;
 
   try {
     const response = await searchBuilderRecords(
@@ -94,7 +100,7 @@ export async function getPatientLensMedications(
   const { meta, queryKey } = queryParams;
 
   const fhirClient = getFhirClientFromQuery(meta);
-  const [_, patientUPID = '', searchFilters = {}] = queryKey;
+  const [_, patientUPID = "", searchFilters = {}] = queryKey;
 
   try {
     const response = await searchLensRecords(
@@ -121,7 +127,5 @@ export function filterMedicationsWithNoRxNorms(
   bundle: FhirResource
 ) {
   const resourceMap = bundleToResourceMap(bundle);
-  return medications.filter(
-    (m) => getRxNormCode(m, resourceMap) !== undefined
-  );
+  return medications.filter((m) => getRxNormCode(m, resourceMap) !== undefined);
 }

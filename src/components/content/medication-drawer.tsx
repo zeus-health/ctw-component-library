@@ -61,7 +61,7 @@ export const MedicationDrawer = ({
                 <DataList title="Details" data={data} />
               </Tab.Panel>
               <Tab.Panel>
-                 <MedicationHistory rxNorm={medication?.rxNorm} />
+                <MedicationHistory rxNorm={medication?.rxNorm} />
               </Tab.Panel>
             </Tab.Panels>
           </ButtonTabs>

@@ -147,11 +147,10 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           )
         );
 
-        const OtherProviderRecordsFiltered =
-          filterConditionsWithConfirmedCodes(
-            OtherProviderRecordsResponse.data,
-            confirmedCodes
-          );
+        const OtherProviderRecordsFiltered = filterConditionsWithConfirmedCodes(
+          OtherProviderRecordsResponse.data,
+          confirmedCodes
+        );
 
         setOtherProviderRecords(
           OtherProviderRecordsFiltered.map((c) => new ConditionModel(c))
@@ -184,18 +183,18 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         "ctw-stacked": breakpoints.sm,
       })}
     >
-    {!readOnly && (
-      <div className="ctw-heading-container">
-        <div className="ctw-title">Conditions</div>
-        <button
-          type="button"
-          className="ctw-btn-clear ctw-link"
-          onClick={handleAddNewCondition}
-        >
-          + Add Condition
-        </button>
-      </div>
-    )}
+      {!readOnly && (
+        <div className="ctw-heading-container">
+          <div className="ctw-title">Conditions</div>
+          <button
+            type="button"
+            className="ctw-btn-clear ctw-link"
+            onClick={handleAddNewCondition}
+          >
+            + Add Condition
+          </button>
+        </div>
+      )}
       <div className="ctw-body-container">
         <div className="ctw-space-y-3">
           <div className="ctw-title-container">

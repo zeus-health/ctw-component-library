@@ -36,17 +36,22 @@ function App() {
             <Conditions />
           </ErrorBoundary>
 
-          <br/>
+          <br />
 
           <h3>Patient Meds default</h3>
           <ErrorBoundary>
             <PatientMedications />
           </ErrorBoundary>
-          <br/>
+          <br />
 
-          <h3>Patient Meds <small>(no add button or confirmed meds)</small></h3>
+          <h3>
+            Patient Meds <small>(no add button or confirmed meds)</small>
+          </h3>
           <ErrorBoundary>
-            <PatientMedications showConfirmedMedsTable={false} showAddNewMedsButton={false} />
+            <PatientMedications
+              showConfirmedMedsTable={false}
+              showAddNewMedsButton={false}
+            />
           </ErrorBoundary>
         </div>
       </PatientProvider>

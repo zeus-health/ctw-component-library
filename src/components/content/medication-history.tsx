@@ -1,7 +1,10 @@
 import { capitalize } from "lodash";
 import { useContext, useEffect, useState } from "react";
 import { MedicationModel } from "@/models/medication";
-import { CTWPatientContext, usePatient } from "@/components/core/patient-provider";
+import {
+  CTWPatientContext,
+  usePatient,
+} from "@/components/core/patient-provider";
 import { useFhirClientRef } from "@/fhir/utils";
 import { DataListStack } from "../core/data-list-table";
 import { Spinner } from "../core/spinner";
