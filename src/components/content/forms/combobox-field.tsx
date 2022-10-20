@@ -65,7 +65,7 @@ const RenderCorrectOptions = ({
   if (query.length < 2) {
     return (
       <ComboboxOption
-        option={{ value: "No choices to choose from", id: "empty" }}
+        option={{ value: "Pleae type at least two characters", id: "empty" }}
       />
     );
   }
