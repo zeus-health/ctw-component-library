@@ -73,6 +73,7 @@ export async function searchBuilderRecords<T extends ResourceTypeString>(
   const nonBuilderTags = [...THIRD_PARTY_TAGS, ...LENS_TAGS, SUMMARY_TAGS];
   const claims = getClaims(fhirClient);
   const builderTag = `${SYSTEM_ZUS_OWNER}|builder/${claims[SYSTEM_ZUS_BUILDER_ID]}`;
+
   return searchAllRecords(resourceType, fhirClient, {
     ...searchParams,
     _tag: builderTag,

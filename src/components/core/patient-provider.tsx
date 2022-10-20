@@ -54,7 +54,7 @@ export function PatientProvider({
 export function usePatient(): UseQueryResult<PatientModel, unknown> {
   const fhirClientRef = useFhirClientRef();
   const { patientID, systemURL } = useContext(CTWPatientContext);
-  const patientResponse = useQuery(
+  return useQuery(
     ["patient", patientID, systemURL],
     getPatient,
     {
@@ -62,5 +62,4 @@ export function usePatient(): UseQueryResult<PatientModel, unknown> {
       meta: { fhirClientRef },
     }
   );
-  return patientResponse;
 }

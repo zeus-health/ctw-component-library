@@ -85,7 +85,7 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
     async function load() {
       setConditionForSearch(condition);
 
-      if (patientResponse.data) {
+      if (patientResponse.data?.UPID) {
         setPatientUPID(patientResponse.data.UPID);
       }
 

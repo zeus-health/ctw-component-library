@@ -112,49 +112,46 @@ export function Conditions({ className }: ConditionsProps) {
   };
 
   useEffect(() => {
-    async function load() {
-      const tempConditionFilters: ConditionFilters = includeInactive
-        ? {
-            "clinical-status": ["active", "recurrence", "relapse"],
-          }
-        : {};
+    const tempConditionFilters: ConditionFilters = includeInactive
+      ? {
+          "clinical-status": ["active", "recurrence", "relapse"],
+        }
+      : {};
 
-      setConditionFilter(tempConditionFilters);
+    setConditionFilter(tempConditionFilters);
 
-      /* OtherProviderRecordsConditons depends patientRecordsConditions so that we can correctly filter out 
-         conditions that appear in patientRecordsConditions from OtherProviderRecordsConditons */
-      if (patientRecordsResponse.data) {
-        setPatientRecords(
-          patientRecordsResponse.data.map((c) => new ConditionModel(c))
+    /* OtherProviderRecordsConditons depends patientRecordsConditions so that we can correctly filter out
+       conditions that appear in patientRecordsConditions from OtherProviderRecordsConditons */
+    if (patientRecordsResponse.data) {
+      setPatientRecords(
+        patientRecordsResponse.data.map((c) => new ConditionModel(c))
+      );
+
+      if (OtherProviderRecordsResponse.data) {
+        const confirmedCodes = union(
+          ...patientRecordsResponse.data.map(
+            (c) => new ConditionModel(c).knownCodings
+          )
         );
 
-        if (OtherProviderRecordsResponse.data) {
-          const confirmedCodes = union(
-            ...patientRecordsResponse.data.map(
-              (c) => new ConditionModel(c).knownCodings
-            )
+        const OtherProviderRecordsFiltered =
+          filterConditionsWithConfirmedCodes(
+            OtherProviderRecordsResponse.data,
+            confirmedCodes
           );
 
-          const OtherProviderRecordsFiltered =
-            filterConditionsWithConfirmedCodes(
-              OtherProviderRecordsResponse.data,
-              confirmedCodes
-            );
-
-          setOtherProviderRecords(
-            OtherProviderRecordsFiltered.map((c) => new ConditionModel(c))
-          );
-        } else {
-          setOtherProviderRecords([]);
-        }
-      }
-
-      if (patientRecordsResponse.error) {
-        setPatientRecords([]);
+        setOtherProviderRecords(
+          OtherProviderRecordsFiltered.map((c) => new ConditionModel(c))
+        );
+      } else {
         setOtherProviderRecords([]);
       }
     }
-    load();
+
+    if (patientRecordsResponse.error) {
+      setPatientRecords([]);
+      setOtherProviderRecords([]);
+    }
   }, [
     includeInactive,
     patientResponse.data,
@@ -171,10 +168,10 @@ export function Conditions({ className }: ConditionsProps) {
     <div
       ref={containerRef}
       className={cx("ctw-conditions", className, {
-        "ctw-conditions-stacked": breakpoints.sm,
+        "ctw-stacked": breakpoints.sm,
       })}
     >
-      <div className="ctw-conditions-heading-container">
+      <div className="ctw-heading-container">
         <div className="ctw-title">Conditions</div>
         <button
           type="button"
@@ -184,9 +181,9 @@ export function Conditions({ className }: ConditionsProps) {
           + Add Condition
         </button>
       </div>
-      <div className="ctw-conditions-body">
+      <div className="ctw-body-container">
         <div className="ctw-space-y-3">
-          <div className="ctw-conditions-title-container">
+          <div className="ctw-title-container">
             <div className="ctw-title">Patient Record</div>
             <ToggleControl
               onFormChange={handleToggleChange}
@@ -195,7 +192,7 @@ export function Conditions({ className }: ConditionsProps) {
           </div>
 
           <ConditionsTableBase
-            className="ctw-conditions-table"
+            className="ctw-table"
             stacked={breakpoints.sm}
             conditions={patientRecords}
             isLoading={patientRecordsResponse.isLoading}
@@ -219,7 +216,7 @@ export function Conditions({ className }: ConditionsProps) {
         </div>
 
         <div className="ctw-space-y-3">
-          <div className="ctw-conditions-title-container">
+          <div className="ctw-title-container">
             <div className="ctw-title">Other Provider Records</div>
           </div>
           <ConditionsTableBase

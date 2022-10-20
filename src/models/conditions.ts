@@ -1,16 +1,16 @@
+import { compact } from "lodash";
 import { CONDITION_CODE_SYSTEMS } from "@/fhir/conditions";
 import { findReference } from "@/fhir/resource-helper";
 import { ResourceMap } from "@/fhir/types";
-import { compact } from "lodash";
-import { codeableConceptLabel, findCoding } from "../fhir/codeable-concept";
-import { formatDateISOToLocal } from "../fhir/formatters";
-import { SYSTEM_CCS, SYSTEM_ICD10, SYSTEM_SNOMED } from "../fhir/system-urls";
+import { codeableConceptLabel, findCoding } from "@/fhir/codeable-concept";
+import { formatDateISOToLocal } from "@/fhir/formatters";
+import { SYSTEM_CCS, SYSTEM_ICD10, SYSTEM_SNOMED } from "@/fhir/system-urls";
 import { PatientModel } from "./patients";
 
 export class ConditionModel {
   public resource: fhir4.Condition;
 
-  private includedResources?: ResourceMap;
+  readonly includedResources?: ResourceMap;
 
   constructor(condition: fhir4.Condition, includedResources?: ResourceMap) {
     this.resource = condition;

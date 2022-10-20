@@ -12,12 +12,11 @@ export async function getPatient(
   const [_, patientID, systemURL] = queryKey;
 
   try {
-    const response = await getBuilderFhirPatient(
+    return await getBuilderFhirPatient(
       fhirClient,
       patientID,
       systemURL
     );
-    return response;
   } catch (e) {
     throw new Error(
       `Failed fetching patient information for patient: ${patientID} and system: ${systemURL}`

@@ -111,10 +111,10 @@ export const createOrEditCondition = async (
     note: result.data.note ? [{ text: result.data.note }] : undefined,
   };
 
-  const conditionModel = new ConditionModel(fhirCondition);
+  const resourceModel = new ConditionModel(fhirCondition);
 
   const response = await createOrEditFhirResource({
-    resourceModel: conditionModel,
+    resourceModel,
     fhirClient,
   });
 
