@@ -33,12 +33,14 @@ type ZusJWT = {
   scope: string;
 };
 
+function getClaims(authToken: string): ZusJWT {
+  return jwt_decode(authToken);
+}
+
 export function claimsBuilderId(authToken: string): string {
-  const claims = jwt_decode(authToken) as ZusJWT;
-  return claims[AUTH_BUILDER_ID];
+  return getClaims(authToken)[AUTH_BUILDER_ID];
 }
 
 export function claimsPractitionerId(authToken: string): string {
-  const claims = jwt_decode(authToken) as ZusJWT;
-  return claims[AUTH_PRACTITIONER_ID];
+  return getClaims(authToken)[AUTH_PRACTITIONER_ID];
 }

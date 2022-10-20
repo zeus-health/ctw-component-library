@@ -53,9 +53,10 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     useState<FormEntry[]>();
   const [conditionForHistory, setConditionForHistory] =
     useState<ConditionModel>();
+
+  const patientResponse = usePatient();
   const patientRecordsResponse = usePatientConditions(conditionFilter);
   const otherProviderRecordsResponse = useOtherProviderConditions();
-  const patientResponse = usePatient();
 
   const patientRecordsMessage = patientRecordsResponse.isError
     ? ERROR_MSG

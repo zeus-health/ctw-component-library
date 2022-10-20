@@ -1,7 +1,7 @@
+import { useQueryWithPatient } from "@/components/core/patient-provider";
 import { ConditionModel } from "@/models/conditions";
 import { SearchParams } from "fhir-kit-client";
 import { sortBy } from "lodash";
-import { useQueryWithPatient } from "..";
 
 import {
   flattenArrayFilters,
