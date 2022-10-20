@@ -50,11 +50,21 @@ export type MedicationFilters = {
 type PatientMedicationsProps = {
   className?: string;
   status?: ClinicalStatus,
-  medsSort: string,
-  potentialMedsSort: string,
+  medsSort?: string,
+  potentialMedsSort?: string,
+  // should we render the Zus confirmed meds component (default true)
+  showConfirmedMedsTable?: boolean,
+  // should we show the button to add new meds (default true)?
+  showAddNewMedsButton?: boolean,
 }
 
-export function PatientMedications ({ className, medsSort = "", potentialMedsSort = "" }: PatientMedicationsProps) {
+export function PatientMedications (
+  { className,
+    medsSort = "",
+    potentialMedsSort = "",
+    showAddNewMedsButton = true,
+    showConfirmedMedsTable = true,
+  }: PatientMedicationsProps) {
   const [{
     builderMedications = [],
     lensMedications = [],
@@ -102,7 +112,7 @@ export function PatientMedications ({ className, medsSort = "", potentialMedsSor
   };
   const medicationsResponse = useQueryPatientMeds(statusParam);
   const lensActiveMedicationsResponse = useQueryPatientLensMeds();
-  const patientMedicationsResponse = useQueryPatientMeds(statusParam);
+  const patientMedicationsResponse = useQueryPatientMeds();
 
   // START TMP BUILD
   useEffect(() => {
@@ -251,17 +261,17 @@ export function PatientMedications ({ className, medsSort = "", potentialMedsSor
     >
       <div className="ctw-heading-container">
         <div className="ctw-title">Medications</div>
-        <button
+        { showAddNewMedsButton && <button
           className="ctw-btn-clear ctw-link"
           type="button"
           onClick={handleAddNewMedication}
         >
           + Add Medication
-        </button>
+        </button> }
       </div>
 
       <div className="ctw-body-container">
-        <div className="ctw-space-y-3">
+        { showConfirmedMedsTable && <div className="ctw-space-y-3">
           <div className="ctw-title-container">
             <div className="ctw-title">Confirmed Medications</div>
             <ToggleControl
@@ -276,7 +286,7 @@ export function PatientMedications ({ className, medsSort = "", potentialMedsSor
             pageSize={BUILDER_PAGING.size}
             currentPage={builderMedicationsPage}
           />
-        </div>
+        </div> }
 
         <div className="ctw-space-y-3">
           <div className="ctw-title-container">
