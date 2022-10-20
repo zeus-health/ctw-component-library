@@ -1,15 +1,17 @@
 import { getPatient } from "@/fhir/patient";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
+import { Tag } from "@/fhir/types";
 import { useFhirClientRef } from "@/fhir/utils";
 import { PatientModel } from "@/models/patients";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { createContext, ReactNode, useContext, useMemo } from "react";
 
-export type ThirdPartyID = {
+type ThirdPartyID = {
   patientUPID?: never;
   patientID: string;
   systemURL: string;
 };
+
 type PatientUPIDSpecified = {
   patientUPID: string;
   patientID?: never;
@@ -19,10 +21,12 @@ type PatientUPIDSpecified = {
 type ProviderState = {
   patientID: string;
   systemURL: string;
+  tags?: Tag[];
 };
 
 type PatientProviderProps = {
   children: ReactNode;
+  tags?: Tag[];
 } & (ThirdPartyID | PatientUPIDSpecified);
 
 export const CTWPatientContext = createContext<ProviderState>({
@@ -35,13 +39,15 @@ export function PatientProvider({
   patientUPID,
   patientID,
   systemURL,
+  tags,
 }: PatientProviderProps) {
   const providerState = useMemo(
     () => ({
       patientID: patientUPID || patientID,
       systemURL: patientUPID ? SYSTEM_ZUS_UNIVERSAL_ID : systemURL,
+      tags,
     }),
-    [patientID, patientUPID, systemURL]
+    [patientID, patientUPID, systemURL, tags]
   );
 
   return (
@@ -53,9 +59,9 @@ export function PatientProvider({
 
 export function usePatient(): UseQueryResult<PatientModel, unknown> {
   const fhirClientRef = useFhirClientRef();
-  const { patientID, systemURL } = useContext(CTWPatientContext);
+  const { patientID, systemURL, tags } = useContext(CTWPatientContext);
   return useQuery(
-    ["patient", patientID, systemURL],
+    ["patient", patientID, systemURL, tags],
     getPatient,
     {
       enabled: !!fhirClientRef,

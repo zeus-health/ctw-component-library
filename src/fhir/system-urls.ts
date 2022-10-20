@@ -38,3 +38,6 @@ export const SYSTEM_ZUS_OWNER = "https://zusapi.com/accesscontrol/owner";
 export const SYSTEM_ZUS_THIRD_PARTY = "https://zusapi.com/thirdparty/source";
 export const SYSTEM_ZUS_UNIVERSAL_ID =
   "https://zusapi.com/fhir/identifier/universal-id";
+export const SYSTEM_ZUS_UPI_RECORD_TYPE =
+  "https://zusapi.com/fhir/tag/upi-record-type";
+export const SYSTEM_ZUS_USER_TYPE = "https://zusapi.com/user_type";

@@ -2,7 +2,11 @@
   @apply ctw-border ctw-border-solid ctw-border-divider-light ctw-bg-white;
 
   .ctw-title-container {
-    @apply ctw-flex ctw-items-center ctw-justify-between;
+    @apply ctw-flex ctw-flex-wrap ctw-items-center ctw-justify-between ctw-gap-x-2 ctw-gap-y-2;
+  }
+
+  .ctw-body {
+    @apply ctw-m-3 ctw-space-y-5 ctw-bg-bg-white;
   }
 
   .ctw-heading-container {
