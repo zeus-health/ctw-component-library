@@ -1,7 +1,6 @@
 import { applyAddConditionDefaults } from "@/components/content/forms/condition-helpers";
 import { ConditionModel } from "@/models/conditions";
 import { QueryFunctionContext } from "@tanstack/react-query";
-import { SearchParams } from "fhir-kit-client";
 import { sortBy } from "lodash";
 
 import {
@@ -137,27 +136,15 @@ export async function getConditionHistory(
       (coding) => `${coding.system}|${coding.code}`
     );
 
-    const searchParams: SearchParams = {
-      patientUPID,
-      _include: ["Condition:patient", "Condition:encounter"],
-      "_include:iterate": "Patient:organization",
-    };
-
-    // If we have any known codings, then do an OR search.
-    // Otherwise fall back to searching for this single condition.
-    // That way, conditions that don't have any good codes to match on
-    // will only show themselves in the history.
-    if (tokens.length > 0) {
-      searchParams.code = tokens.join(",");
-    } else {
-      // eslint-disable-next-line no-underscore-dangle
-      searchParams._id = condition.id;
-    }
-
     const { resources: conditions, bundle } = await searchCommonRecords(
       "Condition",
       fhirClient,
-      searchParams
+      {
+        patientUPID,
+        _include: ["Condition:patient", "Condition:encounter"],
+        "_include:iterate": "Patient:organization",
+        code: tokens.join(","),
+      }
     );
 
     return { conditions, bundle };

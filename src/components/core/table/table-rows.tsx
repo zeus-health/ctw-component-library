@@ -1,4 +1,3 @@
-import { ReactElement } from "react";
 import { Spinner } from "../spinner";
 
 import type { MinRecordItem, TableColumn } from "./table";
@@ -9,7 +8,7 @@ type TableRowsProps<T extends MinRecordItem> = {
   records: T[];
   columns: TableColumn<T>[];
   isLoading: boolean;
-  emptyMessage: string | ReactElement;
+  emptyMessage: string;
 };
 
 export const TableRows = <T extends MinRecordItem>({

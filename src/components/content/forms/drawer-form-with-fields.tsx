@@ -78,7 +78,7 @@ export const DrawerFormWithFields = <T,>({
                   >
                     {label}
                   </label>
-                  {!inputProps(field)["aria-required"] && (
+                  {!inputProps(field).required && (
                     <span className="ctw-right-0 ctw-inline-block ctw-text-xs ctw-text-content-black">
                       Optional
                     </span>

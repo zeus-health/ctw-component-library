@@ -65,9 +65,9 @@ export const createOrEditCondition = async (
   }
 
   const fhirClient = await getCTWFhirClient();
-  const practitionerId = getClaims(fhirClient)[
-    SYSTEM_PRACTITIONER_ID
-  ] as string;
+  const practitionerId = result.data.id
+    ? (getClaims(fhirClient)[SYSTEM_PRACTITIONER_ID] as string)
+    : "";
 
   // Defines the properties of the condition based on the form.
   // The autofill values that apply to both edits and creates are here; including Practitioner, Recorder, Patient, and Recorded date.

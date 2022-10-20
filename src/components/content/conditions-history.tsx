@@ -31,7 +31,7 @@ function setupData(condition: ConditionModel): CollapsibleDataListProps {
       value: condition.recordedDate,
     },
     {
-      label: "Category",
+      label: "Categories",
       value: condition.categories[0],
     },
     {
@@ -99,7 +99,7 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
 
         const sortedConditions = orderBy(
           conditionModels,
-          (c) => c.resource.recordedDate ?? "",
+          (c) => c.recordedDate ?? "",
           "desc"
         );
 
@@ -163,7 +163,9 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
         />
         {conditionsWithoutDate.length !== 0 && (
           <div className="ctw-space-y-2">
-            <div className="ctw-font-medium">Records with no date:</div>
+            <div className="ctw-pl-4 ctw-font-medium">
+              Records with no date:
+            </div>
             <CollapsibleDataListStack
               entries={conditionsWithoutDate}
               limit={CONDITION_HISTORY_LIMIT}

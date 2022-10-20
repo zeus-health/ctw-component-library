@@ -31,16 +31,13 @@ import {
 
 export type ConditionsProps = {
   className?: string;
-  readOnly?: boolean;
 };
 
-const EMPTY_MESSAGE_PATIENT_RECORD =
-  "There are no conditions in this patient's record.";
-const EMPTY_MESSAGE_PROVIDER = "There are no conditions available.";
+const EMPTY_MESSAGE = "No conditions found";
 const ERROR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
 
-export function Conditions({ className, readOnly = false }: ConditionsProps) {
+export function Conditions({ className }: ConditionsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
@@ -79,11 +76,11 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
 
   const patientRecordsMessage = patientRecordsResponse.isError
     ? ERROR_MSG
-    : EMPTY_MESSAGE_PATIENT_RECORD;
+    : EMPTY_MESSAGE;
 
   const otherProviderRecordMessage = OtherProviderRecordsResponse.isError
     ? ERROR_MSG
-    : EMPTY_MESSAGE_PROVIDER;
+    : EMPTY_MESSAGE;
 
   const handleToggleChange = () => setIncludeInactive(!includeInactive);
   const handleConditionEdit = (condition: ConditionModel) => {
@@ -120,16 +117,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       })
     );
   };
-
-  const addConditionBtn = (
-    <button
-      className="ctw-btn-primary"
-      type="button"
-      onClick={handleAddNewCondition}
-    >
-      Add Condition
-    </button>
-  );
 
   useEffect(() => {
     async function load() {
@@ -194,18 +181,16 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         "ctw-conditions-stacked": breakpoints.sm,
       })}
     >
-      {!readOnly && (
-        <div className="ctw-conditions-heading-container">
-          <div className="ctw-title">Conditions</div>
-          <button
-            type="button"
-            className="ctw-btn-clear ctw-link"
-            onClick={handleAddNewCondition}
-          >
-            + Add Condition
-          </button>
-        </div>
-      )}
+      <div className="ctw-conditions-heading-container">
+        <div className="ctw-title">Conditions</div>
+        <button
+          type="button"
+          className="ctw-btn-clear ctw-link"
+          onClick={handleAddNewCondition}
+        >
+          + Add Condition
+        </button>
+      </div>
       <div className="ctw-conditions-body">
         <div className="ctw-space-y-3">
           <div className="ctw-conditions-title-container">
@@ -221,15 +206,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
             stacked={breakpoints.sm}
             conditions={patientRecords}
             isLoading={patientRecordsResponse.isLoading}
-            hideMenu={readOnly}
-            message={
-              <>
-                {patientRecordsMessage}
-                {!patientRecordsResponse.isError && (
-                  <div className="ctw-my-5">{addConditionBtn}</div>
-                )}
-              </>
-            }
+            message={patientRecordsMessage}
             rowActions={(condition) => [
               {
                 name: "Edit",
@@ -252,7 +229,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           <div className="ctw-conditions-title-container">
             <div className="ctw-title">Other Provider Records</div>
           </div>
-
           <ConditionsTableBase
             className="ctw-conditions-not-reviewed"
             stacked={breakpoints.sm}
@@ -261,7 +237,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               OtherProviderRecordsResponse.isLoading ||
               patientRecordsResponse.isLoading
             }
-            hideMenu={readOnly}
             message={otherProviderRecordMessage}
             rowActions={(condition) => [
               {
