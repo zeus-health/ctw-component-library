@@ -1,7 +1,7 @@
 import { isFhirError } from "@/fhir/errors";
 import { ResourceModel } from "@/models/resource";
 import { useState } from "react";
-import { AlertDialog } from "./alert";
+import { ErrorAlert } from "./alerts";
 import { useCTW } from "./ctw-provider";
 import { Modal, ModalProps } from "./modal";
 
@@ -10,7 +10,7 @@ export type ModalConfirmDeleteProps = {
   message: string;
   onDelete: () => void;
   onClose: () => void;
-} & Omit<ModalProps, "title">;
+} & Omit<ModalProps, "title" | "children" | "onAfterClosed">;
 
 export const ModalConfirmDelete = ({
   resource,
@@ -31,11 +31,12 @@ export const ModalConfirmDelete = ({
         );
       }
       const response = await fhirClient.delete({
-        resourceType: resource.resourceType,
+        resourceType: "poo",
+        // resourceType: resource.resourceType,
         id: resource.id,
       });
-      onDelete();
       onClose();
+      onDelete();
     } catch (err) {
       if (isFhirError(err)) {
         setError("A FHIR error was thrown.");
@@ -43,16 +44,23 @@ export const ModalConfirmDelete = ({
     }
   };
   return (
-    <Modal title={`Remove ${resource.resourceType}`} {...modalProps}>
+    <Modal
+      title={`Remove ${resource.resourceType}`}
+      onAfterClosed={() => setError(undefined)}
+      {...modalProps}
+    >
       <div className="ctw-flex ctw-h-full ctw-flex-col ctw-overflow-y-auto">
         {error && (
-          <AlertDialog header="Failed to Remove">
+          <ErrorAlert
+            className="ctw-my-3 ctw-max-w-fit"
+            header="Failed to Remove"
+          >
             <div>{error}</div>
             <div>
               Contact your system administrator or customer service for
               assistance.
             </div>
-          </AlertDialog>
+          </ErrorAlert>
         )}
         <p className="ctw-subtext ctw-max-w-md ctw-text-center">{message}</p>
       </div>
