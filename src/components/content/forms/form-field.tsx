@@ -80,11 +80,15 @@ export const FormField = ({
   };
 
   if (render && hidden) {
-    return render(readonly, {
-      ...inputProps,
-      defaultValue,
-      hidden,
-    });
+    return (
+      <>
+        {render(readonly, {
+          ...inputProps,
+          defaultValue,
+          hidden,
+        })}
+      </>
+    );
   }
 
   if (hidden) {
