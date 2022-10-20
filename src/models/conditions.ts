@@ -164,6 +164,10 @@ export class ConditionModel {
     return codeableConceptLabel(this.resource.severity);
   }
 
+  get snomedCoding(): fhir4.Coding | undefined {
+    return findCoding(SYSTEM_SNOMED, this.resource.code);
+  }
+
   get snomedCode(): string | undefined {
     return findCoding(SYSTEM_SNOMED, this.resource.code)?.code;
   }

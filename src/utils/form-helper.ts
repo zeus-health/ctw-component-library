@@ -133,28 +133,23 @@ export function getParamsInternal<T>(
     parseParams(o, schema, key, value);
   }
 
-  console.log("OOOO", o);
-
   const result = schema.safeParse(o);
   if (result.success) {
     return { success: true, data: result.data as T, errors: undefined };
   }
   const errors: any = {};
   const addError = (key: string, message: string) => {
-    console.log("key", key, message);
     if (!errors.hasOwnProperty(key)) {
       errors[key] = message;
     } else {
       if (!Array.isArray(errors[key])) {
         errors[key] = [errors[key]];
       }
-      errors[key].push(message);
+      // errors[key].push(message);
     }
   };
-  console.log("result error", result.error);
 
   result.error.issues.forEach((issue: any) => {
-    console.log("issue", issue);
     const { message, path, code, expected, received } = issue;
     const [key, index] = path;
     let value = o[key];
@@ -163,6 +158,7 @@ export function getParamsInternal<T>(
       value = value[index];
       prop = `${key}[${index}]`;
     }
+
     addError(key, message);
   });
 

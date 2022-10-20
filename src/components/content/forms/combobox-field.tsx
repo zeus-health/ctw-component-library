@@ -9,7 +9,6 @@ export type ComboboxFieldProps = {
   query: string;
   setQuery: React.Dispatch<React.SetStateAction<string>>;
   handleSelectChange: (eventValue: string) => void;
-  name: string;
   readonly: boolean | undefined;
 };
 
@@ -18,7 +17,6 @@ export const ComboboxField = ({
   query,
   setQuery,
   handleSelectChange,
-  name,
   readonly,
 }: ComboboxFieldProps) => {
   // Delay handle search input so that we don't fire a bunch of events until the user has had time to type.
@@ -43,7 +41,6 @@ export const ComboboxField = ({
         className="ctw-listbox-input ctw-w-full"
         onChange={debouncedSearchInputChange}
         placeholder="Type to search"
-        name="dummy"
       />
       <Combobox.Options className="ctw-listbox ctw-max-h-60 ctw-overflow-auto ctw-rounded-md ctw-bg-white ctw-py-1 ctw-text-base ctw-shadow-lg ctw-ring-1 ctw-ring-black ctw-ring-opacity-5 focus:ctw-outline-none sm:ctw-text-sm">
         <RenderCorrectOptions options={options} query={query} />

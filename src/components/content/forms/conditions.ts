@@ -29,7 +29,6 @@ export const createOrEditCondition = async (
   getCTWFhirClient: () => Promise<Client>
 ) => {
   const result = await getFormData(data, conditionSchema);
-  console.log("result", result);
   if (!result.success) {
     return result;
   }
@@ -63,22 +62,15 @@ export const createOrEditCondition = async (
       ],
     },
 
-    // {
-    //     system: SYSTEM_SNOMED,
-    //     code: result.data.snomedCode,
-    //     display: result.data.display,
-    //   },
-    // ],
-    // text: result.data.display,
     code: {
       coding: [
         {
-          system: result.data.conditionSystem,
-          code: result.data.conditionCode,
-          display: result.data.condition,
+          system: result.data.condition.system,
+          code: result.data.condition.code,
+          display: result.data.condition.display,
         },
       ],
-      text: result.data.condition,
+      text: result.data.condition.display,
     },
     ...(result.data.abatement && {
       abatementDateTime: dateToISO(result.data.abatement),

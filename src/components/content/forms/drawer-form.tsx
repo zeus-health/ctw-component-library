@@ -16,7 +16,6 @@ export type DrawerFormProps<T> = {
   patientID: string;
   getCTWFhirClient: () => Promise<Client>;
   children: (submitting: boolean, errors?: FormErrors) => ReactNode;
-  schema: Zod.AnyZodObject;
 } & Omit<DrawerProps, "children">;
 
 export const DrawerForm = <T,>({
@@ -40,10 +39,6 @@ export const DrawerForm = <T,>({
     setIsSubmitting(true);
     const form = event.target;
     const data = new FormData(form as HTMLFormElement);
-    console.log("data", data);
-    for (const pair of data.entries()) {
-      console.log(`${pair[0]}, ${pair[1]}`);
-    }
     const response = await action(data, patientID, getCTWFhirClient);
 
     if (!response.success) {

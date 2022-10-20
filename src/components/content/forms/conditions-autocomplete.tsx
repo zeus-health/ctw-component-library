@@ -5,8 +5,8 @@ import { InputHTMLAttributes, useState } from "react";
 import { ComboboxField } from "./combobox-field";
 
 export type AutoCompleteComboboxProps = {
+  defaultCoding?: fhir4.Coding;
   readonly: boolean | undefined;
-  inputProps: InputHTMLAttributes<HTMLInputElement>;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 export type ConditionsAutoCompleteOption = {
@@ -16,18 +16,14 @@ export type ConditionsAutoCompleteOption = {
 };
 
 export const ConditionsAutoComplete = ({
+  defaultCoding,
   readonly,
   ...inputProps
 }: AutoCompleteComboboxProps) => {
   const { authToken, env } = useCTW();
   const [query, setQuery] = useState((inputProps.defaultValue as string) || "");
-  const [selectedCondition, setSelectedCondition] = useState<
-    ConditionsAutoCompleteOption | undefined
-  >({
-    display: "",
-    code: "",
-    system: "",
-  });
+  const [selectedCoding, setSelectedCoding] = useState();
+
   const conditions = useQuery(
     ["condition-autocomplete", authToken, env, query],
     getAutoCompleteConditions,
@@ -35,18 +31,17 @@ export const ConditionsAutoComplete = ({
   );
 
   const options = conditions.data?.map(
-    (condition: ConditionsAutoCompleteOption) => ({
-      value: condition.display,
-      id: condition.code,
+    (item: ConditionsAutoCompleteOption) => ({
+      value: item.display,
+      id: item.code,
     })
   );
 
   const handleSelectedConditonChange = (eventValue: string) => {
     const currentCondition = conditions.data.filter(
-      (condition: ConditionsAutoCompleteOption) =>
-        condition.display === eventValue
+      (item: fhir4.Coding) => item.display === eventValue
     )[0];
-    setSelectedCondition(currentCondition);
+    setSelectedCoding(currentCondition);
 
     if (conditions.data.length) {
       setQuery(eventValue);
@@ -60,27 +55,13 @@ export const ConditionsAutoComplete = ({
         query={query}
         setQuery={setQuery}
         handleSelectChange={handleSelectedConditonChange}
-        name={`${inputProps.name}` as string}
         readonly={readonly}
       />
       <input
         hidden
         name={`${inputProps.name}`}
-        value={JSON.stringify(selectedCondition)}
+        defaultValue={JSON.stringify(defaultCoding || selectedCoding)}
       />
-
-      {/* <input
-        name={`${inputProps.name}`}
-        value={selectedCondition?.code}
-        hidden
-        readOnly
-      />
-      <input
-        name={`${inputProps.name}`}
-        value={selectedCondition?.system}
-        hidden
-        readOnly
-      /> */}
     </>
   );
 };

@@ -31,19 +31,18 @@ export const getEditingPatientConditionData = ({
     readonly: true,
     hidden: true,
   },
-  {
-    label: "Name",
-    value: condition.display,
-    field: "condition",
-    hidden: true,
-  },
+
   {
     label: "Condition",
     field: "condition",
     value: condition.display,
     readonly: true,
     render: (readonly: boolean | undefined, inputProps) => (
-      <ConditionsAutoComplete readonly={readonly} {...inputProps} />
+      <ConditionsAutoComplete
+        defaultCoding={condition.snomedCoding}
+        readonly={readonly}
+        {...inputProps}
+      />
     ),
   },
 
@@ -90,17 +89,17 @@ export const conditionSchema = z.object({
   subjectID: z.string({
     required_error: "Condition subjectID must be specified.",
   }),
-  // conditionSystem: z.string({
-  //   required_error: "Condition system must be specified.",
-  // }),
-  // conditionCode: z.string({
-  //   required_error: "Condition code must be specified.",
-  // }),
   condition: z
     .object({
-      display: z.string(),
-      code: z.string(),
-      system: z.string(),
+      display: z.string({
+        required_error: "Please choose a condition.",
+      }),
+      code: z.string({
+        required_error: "Please choose a condition.",
+      }),
+      system: z.string({
+        required_error: "Please choose a condition.",
+      }),
     })
     .required(),
   clinicalStatus: z.enum([
