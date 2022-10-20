@@ -86,7 +86,7 @@ export function PatientMedications ({ className, medsSort = "", potentialMedsSor
       dateAsserted: format(new Date(), "yyyy-MM-dd"),
       informationSource: {
         type: "Organization",
-        reference: `Organization/${patient.data.organization?.id || 'd614ef4d-0aec-4a11-b7bb-ed44c504ba7c'}`,
+        reference: `Organization/${patient.data.organization?.id}`,
         display: patient.data.organization?.name,
       },
     });
