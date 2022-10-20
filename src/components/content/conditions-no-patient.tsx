@@ -1,5 +1,5 @@
 import cx from "classnames";
-import { CautionAlert } from "../core/alerts";
+import { Alert } from "../core/alert";
 
 export function ConditionsNoPatient({ className }: { className?: string }) {
   return (
@@ -8,7 +8,7 @@ export function ConditionsNoPatient({ className }: { className?: string }) {
         <div className="ctw-title">Conditions</div>
       </div>
       <div className="ctw-p-5">
-        <CautionAlert header="Conditions Unavailable">
+        <Alert header="Conditions Unavailable" type="caution">
           <div>
             We are unable to access Condition information for this patient.
           </div>
@@ -16,7 +16,7 @@ export function ConditionsNoPatient({ className }: { className?: string }) {
             Contact your system administrator or customer service for
             assistance.
           </div>
-        </CautionAlert>
+        </Alert>
       </div>
     </div>
   );

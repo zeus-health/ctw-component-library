@@ -1,7 +1,7 @@
 import { isFhirError } from "@/fhir/errors";
 import { ResourceModel } from "@/models/resource";
 import { useState } from "react";
-import { ErrorAlert } from "./alerts";
+import { Alert } from "./alert";
 import { useCTW } from "./ctw-provider";
 import { Modal, ModalProps } from "./modal";
 
@@ -51,16 +51,23 @@ export const ModalConfirmDelete = ({
     >
       <div className="ctw-flex ctw-h-full ctw-flex-col ctw-overflow-y-auto">
         {error && (
-          <ErrorAlert
-            className="ctw-my-3 ctw-max-w-fit"
-            header="Failed to Remove"
-          >
+          <Alert header="Failed to Remove" type="error">
             <div>{error}</div>
             <div>
               Contact your system administrator or customer service for
               assistance.
             </div>
-          </ErrorAlert>
+          </Alert>
+          // <ErrorAlert
+          //   className="ctw-my-3 ctw-max-w-fit"
+          //   header="Failed to Remove"
+          // >
+          //   <div>{error}</div>
+          //   <div>
+          //     Contact your system administrator or customer service for
+          //     assistance.
+          //   </div>
+          // </ErrorAlert>
         )}
         <p className="ctw-subtext ctw-max-w-md ctw-text-center">{message}</p>
       </div>
