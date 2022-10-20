@@ -145,7 +145,6 @@ export function getParamsInternal<T>(
       if (!Array.isArray(errors[key])) {
         errors[key] = [errors[key]];
       }
-      // errors[key].push(message);
     }
   };
 

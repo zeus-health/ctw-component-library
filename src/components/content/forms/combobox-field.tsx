@@ -94,7 +94,7 @@ const ComboboxOption = ({ option }: { option: ComboxboxFieldOption }) => (
   <Combobox.Option
     value={option.value}
     className={({ active }) =>
-      `ctw-relative ctw-cursor-default ctw-select-none ctw-py-2 ctw-pr-4 ctw-pl-10 ${
+      `ctw-relative ctw-cursor-default ctw-select-none ctw-py-2 ctw-pr-4 ctw-pl-4 ${
         active
           ? "ctw-bg-primary-light ctw-text-primary-dark"
           : "ctw-text-content-black"
