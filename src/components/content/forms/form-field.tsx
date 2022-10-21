@@ -2,7 +2,7 @@ import { formatDateLocalToISO } from "@/fhir/formatters";
 import { ExclamationCircleIcon, LockClosedIcon } from "@heroicons/react/solid";
 import cx from "classnames";
 import { capitalize } from "lodash";
-import type { InputHTMLAttributes, ReactNode } from "react";
+import type { InputHTMLAttributes } from "react";
 
 export type FormFieldProps = {
   error?: string;
@@ -13,7 +13,7 @@ export type FormFieldProps = {
   render?: (
     readonly: boolean | undefined,
     props: InputHTMLAttributes<HTMLInputElement>
-  ) => ReactNode;
+  ) => JSX.Element;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 export const FormField = ({
@@ -80,15 +80,11 @@ export const FormField = ({
   };
 
   if (render && hidden) {
-    return (
-      <>
-        {render(readonly, {
-          ...inputProps,
-          defaultValue,
-          hidden,
-        })}
-      </>
-    );
+    return render(readonly, {
+      ...inputProps,
+      defaultValue,
+      hidden,
+    });
   }
 
   if (hidden) {

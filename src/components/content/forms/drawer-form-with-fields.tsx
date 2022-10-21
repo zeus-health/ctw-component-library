@@ -1,6 +1,6 @@
 import { useFormInputProps } from "@/utils/form-helper";
 import cx from "classnames";
-import { InputHTMLAttributes, ReactNode } from "react";
+import { InputHTMLAttributes } from "react";
 import type { DrawerFormProps } from "./drawer-form";
 import { DrawerForm } from "./drawer-form";
 import { FormField } from "./form-field";
@@ -15,7 +15,7 @@ export type FormEntry = {
   render?: (
     readOnly: boolean | undefined,
     inputProps: InputHTMLAttributes<HTMLInputElement>
-  ) => ReactNode;
+  ) => JSX.Element;
 };
 
 export type DrawerFormWithFieldsProps<T> = {

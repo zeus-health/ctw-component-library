@@ -1,5 +1,4 @@
 import { ConditionModel } from "@/models/conditions";
-import { ReactNode } from "react";
 import { z } from "zod";
 import { ConditionsAutoComplete } from "./conditions-autocomplete";
 import type { FormEntry } from "./drawer-form-with-fields";
@@ -36,7 +35,7 @@ export const getEditingPatientConditionData = ({
     label: "coding",
     field: "coding",
     hidden: true,
-    render: (readonly, inputProps): ReactNode => (
+    render: (readonly, inputProps): JSX.Element => (
       <input
         value={JSON.stringify(condition.codings)}
         {...inputProps}
@@ -136,17 +135,15 @@ export const conditionEditSchema = z.object({
 
 export const conditionAddSchema = z.object({
   ...sharedSchema,
-  condition: z
-    .object({
-      display: z.string({
-        required_error: "Please choose a condition.",
-      }),
-      code: z.string({
-        required_error: "Please choose a condition.",
-      }),
-      system: z.string({
-        required_error: "Please choose a condition.",
-      }),
-    })
-    .required(),
+  condition: z.object({
+    display: z.string({
+      required_error: "Please choose a condition.",
+    }),
+    code: z.string({
+      required_error: "Please choose a condition.",
+    }),
+    system: z.string({
+      required_error: "Please choose a condition.",
+    }),
+  }),
 });

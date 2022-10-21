@@ -1,54 +1,63 @@
 import { Combobox } from "@headlessui/react";
 import { debounce } from "lodash";
-import {
-  ChangeEvent,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useMemo,
-} from "react";
+import { ChangeEvent, useMemo, useState } from "react";
 
-export type ComboxboxFieldOption = { value: string; id: string };
+export type ComboxboxFieldOption = { value: unknown; label: string };
 
-export type ComboboxFieldProps = {
+export type ComboboxFieldProps<T> = {
   options: ComboxboxFieldOption[];
-  query: string;
-  setQuery: Dispatch<SetStateAction<string>>;
-  handleSelectChange: (eventValue: string) => void;
+  name: string;
+  defaultValue: T;
+  defaultSearchTerm: string;
+  onSearchChange: (searchTerm: string) => void;
   readonly: boolean | undefined;
 };
 
-export const ComboboxField = ({
+export const ComboboxField = <T,>({
   options,
-  query,
-  setQuery,
-  handleSelectChange,
+  name,
+  defaultSearchTerm,
+  defaultValue,
+  onSearchChange,
   readonly,
-}: ComboboxFieldProps) => {
+}: ComboboxFieldProps<T>) => {
+  const [searchTerm, setSearchTerm] = useState(defaultSearchTerm || "");
+  const [inputValue, setInputValue] = useState<unknown>({});
+
   // Delay handle search input so that we don't fire a bunch of events until the user has had time to type.
   const debouncedSearchInputChange = useMemo(() => {
-    const handleSearchInputChange = (event: ChangeEvent<HTMLInputElement>) =>
-      setQuery(event.target.value);
+    const handleSearchInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+      setInputValue({});
+      if (searchTerm.length > 1) {
+        onSearchChange(searchTerm);
+      }
+      setSearchTerm(event.target.value);
+    };
 
     return debounce(handleSearchInputChange, 300);
-  }, [setQuery]);
+  }, [onSearchChange, searchTerm]);
 
-  useEffect(
-    () => () => {
-      debouncedSearchInputChange.cancel();
-    },
-    [query, debouncedSearchInputChange]
-  );
+  const onSelectChange = (eventValue: string) => {
+    const currentItem = options.filter((item) => item.label === eventValue)[0];
+    setInputValue(currentItem.value);
+    setSearchTerm(eventValue);
+  };
 
   return (
-    <Combobox onChange={handleSelectChange} value={query} disabled={readonly}>
+    <Combobox onChange={onSelectChange} value={searchTerm} disabled={readonly}>
       <Combobox.Input
         className="ctw-listbox-input ctw-w-full"
         onChange={debouncedSearchInputChange}
         placeholder="Type to search"
       />
+
+      <input
+        hidden
+        name={name}
+        value={JSON.stringify(defaultValue || inputValue)}
+      />
       <Combobox.Options className="ctw-listbox ctw-max-h-60 ctw-overflow-auto ctw-rounded-md ctw-bg-white ctw-py-1 ctw-text-base ctw-shadow-lg ctw-ring-1 ctw-ring-black ctw-ring-opacity-5 focus:ctw-outline-none sm:ctw-text-sm">
-        <ComboboxOptions options={options} query={query} />
+        <ComboboxOptions options={options} query={searchTerm} />
       </Combobox.Options>
     </Combobox>
   );
@@ -61,13 +70,13 @@ type RenderCorrectOptionsProps = {
 
 const ComboboxOptions = ({ options, query }: RenderCorrectOptionsProps) => {
   if (query.length === 0) {
-    return <ComboboxOption option={{ value: "Type to search", id: "empty" }} />;
+    return <ComboboxOption option={{ value: "", label: "Type to search" }} />;
   }
 
   if (query.length < 2) {
     return (
       <ComboboxOption
-        option={{ value: "Pleae type at least two characters", id: "empty" }}
+        option={{ value: "", label: "Pleae type at least two characters" }}
       />
     );
   }
@@ -76,8 +85,8 @@ const ComboboxOptions = ({ options, query }: RenderCorrectOptionsProps) => {
     return (
       <ComboboxOption
         option={{
-          value: `No results found for search term '${query}'`,
-          id: "empty",
+          value: ``,
+          label: `No results found for search term '${query}'`,
         }}
       />
     );
@@ -86,7 +95,7 @@ const ComboboxOptions = ({ options, query }: RenderCorrectOptionsProps) => {
   return (
     <>
       {options.map((option) => (
-        <ComboboxOption option={option} key={option.id} />
+        <ComboboxOption option={option} key={option.label} />
       ))}
     </>
   );
@@ -94,7 +103,7 @@ const ComboboxOptions = ({ options, query }: RenderCorrectOptionsProps) => {
 
 const ComboboxOption = ({ option }: { option: ComboxboxFieldOption }) => (
   <Combobox.Option
-    value={option.value}
+    value={option.label}
     className={({ active }) =>
       `ctw-relative ctw-cursor-default ctw-select-none ctw-py-2 ctw-pr-4 ctw-pl-4 ${
         active
@@ -103,6 +112,6 @@ const ComboboxOption = ({ option }: { option: ComboxboxFieldOption }) => (
       }`
     }
   >
-    {option.value}
+    {option.label}
   </Combobox.Option>
 );

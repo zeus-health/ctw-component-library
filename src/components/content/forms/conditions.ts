@@ -1,6 +1,4 @@
 import { CTWRequestContext } from "@/components/core/ctw-context";
-import { createOrEditFhirResource } from "@/fhir/action-helper";
-import { isFhirError } from "@/fhir/errors";
 import { dateToISO } from "@/fhir/formatters";
 import { getPractitioner } from "@/fhir/practitioner";
 import {
@@ -92,14 +90,14 @@ export const createOrEditCondition = async (
 
   const conditionModel = new ConditionModel(fhirCondition);
 
-  const response = await createOrEditFhirResource({
-    resourceModel: conditionModel,
-    fhirClient: requestContext.fhirClient,
-  });
+  // const response = await createOrEditFhirResource({
+  //   resourceModel: conditionModel,
+  //   fhirClient: requestContext.fhirClient,
+  // });
 
-  if (isFhirError(response)) {
-    result.success = false;
-  }
+  // if (isFhirError(response)) {
+  //   result.success = false;
+  // }
 
   queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]);
   queryClient.invalidateQueries([QUERY_KEY_OTHER_PROVIDER_CONDITIONS]);
