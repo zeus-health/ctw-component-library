@@ -4,7 +4,8 @@ import { CTWProvider } from "./components/core/ctw-provider";
 import { PatientProvider } from "./components/core/patient-provider";
 import { Theme } from "./styles/tailwind.theme";
 
-const { VITE_SYSTEM_URL, VITE_AUTH_TOKEN, VITE_PATIENT_ID } = import.meta.env;
+const { VITE_SYSTEM_URL, VITE_AUTH_TOKEN, VITE_PATIENT_ID, VITE_BUILDER_ID } =
+  import.meta.env;
 
 const theme: Theme = {
   colors: {
@@ -26,7 +27,12 @@ const theme: Theme = {
 
 function App() {
   return (
-    <CTWProvider env="dev" authToken={VITE_AUTH_TOKEN} theme={theme}>
+    <CTWProvider
+      env="dev"
+      authToken={VITE_AUTH_TOKEN}
+      theme={theme}
+      builderId={VITE_BUILDER_ID}
+    >
       <PatientProvider patientID={VITE_PATIENT_ID} systemURL={VITE_SYSTEM_URL}>
         <div className="App ctw-space-y-5">
           <h1>CTW Component Library</h1>

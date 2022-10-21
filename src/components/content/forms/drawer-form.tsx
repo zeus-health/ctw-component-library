@@ -1,4 +1,5 @@
-import Client from "fhir-kit-client";
+import { CTWRequestContext } from "@/components/core/ctw-context";
+import { useCTW } from "@/components/core/ctw-provider";
 import { ReactNode, useState } from "react";
 import type { DrawerProps } from "../../core/drawer";
 import { Drawer } from "../../core/drawer";
@@ -11,10 +12,9 @@ export type DrawerFormProps<T> = {
   action: (
     data: FormData,
     patientID: string,
-    getCTWFhirClient: () => Promise<Client>
+    getRequestContext: () => Promise<CTWRequestContext>
   ) => Promise<ActionReturn<T>>;
   patientID: string;
-  getCTWFhirClient: () => Promise<Client>;
   children: (submitting: boolean, errors?: FormErrors) => ReactNode;
 } & Omit<DrawerProps, "children">;
 
@@ -23,11 +23,11 @@ export const DrawerForm = <T,>({
   onClose,
   children,
   patientID,
-  getCTWFhirClient,
   ...drawerProps
 }: DrawerFormProps<T>) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<FormErrors>();
+  const { getRequestContext } = useCTW();
 
   const reset = () => {
     setErrors({});
@@ -39,7 +39,7 @@ export const DrawerForm = <T,>({
     setIsSubmitting(true);
     const form = event.target;
     const data = new FormData(form as HTMLFormElement);
-    const response = await action(data, patientID, getCTWFhirClient);
+    const response = await action(data, patientID, getRequestContext);
 
     if (!response.success) {
       setErrors(response.errors);
