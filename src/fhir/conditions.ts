@@ -1,4 +1,4 @@
-import { applyAddConditionDefaults } from "@/components/content/forms/condition-helpers";
+import { setAddConditionDefaults } from "@/components/content/forms/condition-helpers";
 import { ConditionModel } from "@/models/conditions";
 import { QueryFunctionContext } from "@tanstack/react-query";
 import { SearchParams } from "fhir-kit-client";
@@ -59,7 +59,7 @@ export function getNewCondition(patientId: string) {
       reference: `Patient/${patientId}`,
     },
   };
-  newCondition = applyAddConditionDefaults(newCondition);
+  setAddConditionDefaults(newCondition);
 
   return newCondition;
 }

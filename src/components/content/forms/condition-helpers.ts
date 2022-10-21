@@ -93,8 +93,8 @@ const getSharedFields = (condition: ConditionModel) => [
   },
 ];
 
-// Sets any autofill values that apply when a user adds a medication, whether creating or confirming.
-export function applyAddConditionDefaults(condition: Condition): Condition {
+// Sets any autofill values that apply when a user adds a condition, whether creating or confirming.
+export function setAddConditionDefaults(condition: Condition): void {
   const addDefaults: Partial<Condition> = {
     clinicalStatus: {
       coding: [
@@ -118,5 +118,5 @@ export function applyAddConditionDefaults(condition: Condition): Condition {
     },
   };
 
-  return Object.assign(condition, addDefaults);
+  Object.assign(condition, addDefaults);
 }

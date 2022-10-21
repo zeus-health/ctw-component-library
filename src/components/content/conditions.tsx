@@ -1,7 +1,7 @@
 import {
-  applyAddConditionDefaults,
   getAddConditionFormEntries,
   getEditConditionFormEntries,
+  setAddConditionDefaults,
 } from "@/components/content/forms/condition-helpers";
 import {
   ConditionFilters,
@@ -86,7 +86,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     : EMPTY_MESSAGE_PROVIDER;
 
   const handleToggleChange = () => setIncludeInactive(!includeInactive);
-  const handleConditionEdit = (condition: ConditionModel) => {
+  const handleEditCondition = (condition: ConditionModel) => {
     if (patientResponse.data) {
       setDrawerIsOpen(true);
       setFormAction("Edit");
@@ -94,14 +94,14 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     }
   };
 
-  const handleConfirmCondition = (condition: ConditionModel) => {
+  const handleAddOtherProviderCondition = (condition: ConditionModel) => {
     if (patientResponse.data) {
       setDrawerIsOpen(true);
       setFormAction("Add");
       setCurrentlySelectedData(
         getAddConditionFormEntries({
           condition: new ConditionModel(
-            applyAddConditionDefaults(condition.resource)
+            setAddConditionDefaults(condition.resource)
           ),
         })
       );
@@ -234,7 +234,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               {
                 name: "Edit",
                 action: () => {
-                  handleConditionEdit(condition);
+                  handleEditCondition(condition);
                 },
               },
               {
@@ -267,7 +267,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               {
                 name: "Add",
                 action: () => {
-                  handleConfirmCondition(condition);
+                  handleAddOtherProviderCondition(condition);
                 },
               },
               {
