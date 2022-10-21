@@ -4,10 +4,9 @@ Adds the "ctw-" (or other) prefix to unprefixed Tailwind CSS selectors in a targ
 
 ## Usage
 
-1. Set the target file in `scripts/prefixer/prefixer.ts`
-1. Run the following in the project directory: `npx ts-node --esm scripts/prefixer/prefixer.ts`
+Run the following in the project directory: `npx ts-node --esm scripts/prefixer/prefixer.ts`
 
 ## Limitations
 
-Uses regex to find what to replace and where, so may not perfectly replace each instance of the class name.
-If an incorrect or missing renaming was found, edit the `renamings.json` file.
+- Uses regex to find where to add the prefix to the file, so the job may not be perfect.
+- The portions of which Tailwind selectors to prefix are hard-coded. If Tailwind adds prefixes, the script will need to be updated.
