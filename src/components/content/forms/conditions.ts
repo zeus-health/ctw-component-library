@@ -10,6 +10,10 @@ import {
 import { ConditionModel } from "@/models/conditions";
 import { claimsPractitionerId } from "@/utils/auth";
 import { getFormData } from "@/utils/form-helper";
+import {
+  OTHER_PROVIDER_CONDITIONS_KEY,
+  PATIENT_CONDITIONS_KEY,
+} from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 
 const setRecorderField = async (
@@ -97,7 +101,8 @@ export const createOrEditCondition = async (
     result.success = false;
   }
 
-  queryClient.invalidateQueries(["conditions"]);
+  queryClient.invalidateQueries([PATIENT_CONDITIONS_KEY]);
+  queryClient.invalidateQueries([OTHER_PROVIDER_CONDITIONS_KEY]);
 
   return result;
 };

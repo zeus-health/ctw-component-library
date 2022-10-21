@@ -1,5 +1,10 @@
 import { useQueryWithPatient } from "@/components/core/patient-provider";
 import { ConditionModel } from "@/models/conditions";
+import {
+  CONDITION_HISTORY_KEY,
+  OTHER_PROVIDER_CONDITIONS_KEY,
+  PATIENT_CONDITIONS_KEY,
+} from "@/utils/query-keys";
 import { SearchParams } from "fhir-kit-client";
 import { sortBy } from "lodash";
 
@@ -85,7 +90,7 @@ export function getNewCondition(patientId: string) {
 
 export function usePatientConditions(conditionFilters: ConditionFilters) {
   return useQueryWithPatient(
-    ["patientConditions", conditionFilters],
+    [PATIENT_CONDITIONS_KEY, conditionFilters],
     async (requestContext, patient) => {
       try {
         const { resources: conditions } = await searchBuilderRecords(
@@ -108,7 +113,7 @@ export function usePatientConditions(conditionFilters: ConditionFilters) {
 
 export function useOtherProviderConditions() {
   return useQueryWithPatient(
-    ["otherProviderConditions"],
+    [OTHER_PROVIDER_CONDITIONS_KEY],
     async (requestContext, patient) => {
       try {
         const { resources: conditions } = await searchLensRecords(
@@ -130,7 +135,7 @@ export function useOtherProviderConditions() {
 
 export function useConditionHistory(condition?: ConditionModel) {
   return useQueryWithPatient(
-    ["conditionHistory", condition],
+    [CONDITION_HISTORY_KEY, condition],
     async (requestContext, patient) => {
       if (!condition) return undefined;
 
