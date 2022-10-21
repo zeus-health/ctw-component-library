@@ -1,10 +1,7 @@
 import { useFormInputProps } from "@/utils/form-helper";
-import Client from "fhir-kit-client";
-import { useCTW } from "../../core/ctw-provider";
 import type { DrawerFormProps } from "./drawer-form";
 import { DrawerForm } from "./drawer-form";
 import { FormField } from "./form-field";
-import { ActionReturn } from "./types";
 
 export type FormEntry = {
   label: string;
@@ -17,15 +14,10 @@ export type FormEntry = {
 
 export type DrawerFormWithFieldsProps<T> = {
   title: string;
-  action: (
-    data: FormData,
-    patientID: string,
-    getCTWFhirClient: () => Promise<Client>
-  ) => Promise<ActionReturn<T>>;
   data: FormEntry[] | undefined;
   schema: Zod.AnyZodObject;
   patientID: string;
-} & Pick<DrawerFormProps<T>, "onClose" | "isOpen">;
+} & Pick<DrawerFormProps<T>, "onClose" | "isOpen" | "action">;
 
 export const DrawerFormWithFields = <T,>({
   title,
@@ -36,14 +28,12 @@ export const DrawerFormWithFields = <T,>({
   ...drawerFormProps
 }: DrawerFormWithFieldsProps<T>) => {
   const inputProps = useFormInputProps(schema);
-  const { getCTWFhirClient } = useCTW();
 
   return (
     <DrawerForm
       patientID={patientID}
       title={title}
       action={action}
-      getCTWFhirClient={getCTWFhirClient}
       {...drawerFormProps}
     >
       {(submitting, errors) => (

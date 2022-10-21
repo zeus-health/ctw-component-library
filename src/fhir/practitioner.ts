@@ -1,16 +1,16 @@
+import { CTWRequestContext } from "@/components/core/ctw-context";
 import { PractitionerModel } from "@/models/practitioner";
-import Client from "fhir-kit-client";
 import { searchBuilderRecords } from "./search-helpers";
 
 export const getPractitioner = async (
   practitionerId: string,
-  fhirClient: Client
+  requestContext: CTWRequestContext
 ) => {
   let practitioners = [];
   try {
     const { resources } = await searchBuilderRecords(
       "Practitioner",
-      fhirClient,
+      requestContext,
       {
         _id: practitionerId,
       }
