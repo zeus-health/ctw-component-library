@@ -1,13 +1,10 @@
 import { Env } from "..";
 import { getFormsConditionsUrl } from "./urls";
 
-export const setAutoCompleteConditions = async (
+export const getAutoCompleteConditions = async (
   authToken: string,
   env: Env,
-  searchTerm: string,
-  setConditions: React.Dispatch<
-    React.SetStateAction<fhir4.Coding[] | undefined>
-  >
+  searchTerm: string
 ) => {
   const response = await fetch(
     `${getFormsConditionsUrl(env)}?display=${searchTerm}`,
@@ -16,5 +13,5 @@ export const setAutoCompleteConditions = async (
     }
   );
   const data = await response.json();
-  setConditions(data.conditionsList);
+  return data.conditionsList;
 };

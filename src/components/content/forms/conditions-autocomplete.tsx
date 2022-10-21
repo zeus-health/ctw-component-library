@@ -1,5 +1,5 @@
-import { setAutoCompleteConditions } from "@/api/autocomplete-conditions";
-import { useCTW } from "@/components/core/ctw-provider";
+import { getAutoCompleteConditions } from "@/api/autocomplete-conditions";
+import { Env, useCTW } from "@/components/core/ctw-provider";
 import { InputHTMLAttributes, useEffect, useState } from "react";
 import {
   ComboboxField,
@@ -15,6 +15,17 @@ export type ConditionsAutoCompleteOption = {
   display: string;
   code: string;
   system: string;
+};
+
+const setAutoCompleteConditions = async (
+  authToken: string,
+  env: Env,
+  searchTerm: string,
+  setConditions: React.Dispatch<
+    React.SetStateAction<fhir4.Coding[] | undefined>
+  >
+) => {
+  setConditions(await getAutoCompleteConditions(authToken, env, searchTerm));
 };
 
 export const ConditionsAutoComplete = ({
