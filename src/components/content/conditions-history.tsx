@@ -1,8 +1,6 @@
 import { getIncludedResources } from "@/fhir/bundle";
-import { getConditionHistory } from "@/fhir/conditions";
-import { useFhirClientRef } from "@/fhir/utils";
+import { useConditionHistory } from "@/fhir/conditions";
 import { ConditionModel } from "@/models/conditions";
-import { useQuery } from "@tanstack/react-query";
 import { orderBy } from "lodash";
 import { useEffect, useState } from "react";
 import { CodingList } from "../core/coding-list";
@@ -11,7 +9,6 @@ import {
   CollapsibleDataListStack,
   CollapsibleDataListStackEntries,
 } from "../core/collapsible-data-list-stack";
-import { usePatient } from "../core/patient-provider";
 import { Spinner } from "../core/spinner";
 
 const CONDITION_HISTORY_LIMIT = 10;
@@ -67,27 +64,13 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
   const [conditionsWithoutDate, setConditionsWithoutDate] =
     useState<CollapsibleDataListStackEntries>([]);
   const [loading, setLoading] = useState(true);
-  const [patientUPID, setPatientUPID] = useState("");
   const [conditionForSearch, setConditionForSearch] =
     useState<ConditionModel>();
-  const fhirClientRef = useFhirClientRef();
-  const patientResponse = usePatient();
-  const historyResponse = useQuery(
-    ["conditions", patientUPID, conditionForSearch],
-    getConditionHistory,
-    {
-      enabled: !!patientUPID && !!fhirClientRef.current,
-      meta: { fhirClientRef },
-    }
-  );
+  const historyResponse = useConditionHistory(conditionForSearch);
 
   useEffect(() => {
     async function load() {
       setConditionForSearch(condition);
-
-      if (patientResponse.data) {
-        setPatientUPID(patientResponse.data.UPID);
-      }
 
       if (historyResponse.data) {
         const includedResources = getIncludedResources(
@@ -128,7 +111,7 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
       setConditionsWithoutDate([]);
       setLoading(true);
     };
-  }, [condition, patientResponse.data, historyResponse.data]);
+  }, [condition, historyResponse.data]);
 
   function conditionHistoryDisplay() {
     if (

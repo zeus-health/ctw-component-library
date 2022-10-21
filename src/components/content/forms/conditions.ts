@@ -1,18 +1,17 @@
+import { CTWRequestContext } from "@/components/core/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
-import { getClaims } from "@/fhir/client";
 import { isFhirError } from "@/fhir/errors";
 import { dateToISO } from "@/fhir/formatters";
 import { getPractitioner } from "@/fhir/practitioner";
 import {
   SYSTEM_CONDITION_CLINICAL,
   SYSTEM_CONDITION_VERIFICATION_STATUS,
-  SYSTEM_PRACTITIONER_ID,
   SYSTEM_SNOMED,
 } from "@/fhir/system-urls";
 import { ConditionModel } from "@/models/conditions";
+import { claimsPractitionerId } from "@/utils/auth";
 import { getFormData } from "@/utils/form-helper";
 import { queryClient } from "@/utils/request";
-import Client from "fhir-kit-client";
 import { z } from "zod";
 
 export const conditionSchema = z.object({
@@ -43,8 +42,11 @@ export const conditionSchema = z.object({
   note: z.string().optional(),
 });
 
-const setRecorderField = async (practitionerId: string, fhirClient: Client) => {
-  const practitioner = await getPractitioner(practitionerId, fhirClient);
+const setRecorderField = async (
+  practitionerId: string,
+  requestContext: CTWRequestContext
+) => {
+  const practitioner = await getPractitioner(practitionerId, requestContext);
   const display = practitioner.fullName;
 
   return {
@@ -57,17 +59,15 @@ const setRecorderField = async (practitionerId: string, fhirClient: Client) => {
 export const createOrEditCondition = async (
   data: FormData,
   patientID: string,
-  getCTWFhirClient: () => Promise<Client>
+  getRequestContext: () => Promise<CTWRequestContext>
 ) => {
   const result = await getFormData(data, conditionSchema);
   if (!result.success) {
     return result;
   }
 
-  const fhirClient = await getCTWFhirClient();
-  const practitionerId = getClaims(fhirClient)[
-    SYSTEM_PRACTITIONER_ID
-  ] as string;
+  const requestContext = await getRequestContext();
+  const practitionerId = claimsPractitionerId(requestContext.authToken);
 
   // Defines the properties of the condition based on the form.
   // The autofill values that apply to both edits and creates are here; including Practitioner, Recorder, Patient, and Recorded date.
@@ -75,7 +75,7 @@ export const createOrEditCondition = async (
     resourceType: "Condition",
     id: result.data.id,
     ...(practitionerId && {
-      recorder: await setRecorderField(practitionerId, fhirClient),
+      recorder: await setRecorderField(practitionerId, requestContext),
     }),
     clinicalStatus: {
       coding: [
@@ -116,7 +116,7 @@ export const createOrEditCondition = async (
 
   const response = await createOrEditFhirResource({
     resourceModel: conditionModel,
-    fhirClient,
+    fhirClient: requestContext.fhirClient,
   });
 
   if (isFhirError(response)) {

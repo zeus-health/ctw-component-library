@@ -1,11 +1,12 @@
+import { CTWRequestContext } from "@/components/core/ctw-context";
 import { PatientModel } from "@/models/patients";
 import { errorResponse } from "@/utils/errors";
-import Client, { SearchParams } from "fhir-kit-client";
+import { SearchParams } from "fhir-kit-client";
 import { getIncludedResources } from "./bundle";
 import { searchBuilderRecords } from "./search-helpers";
 
 export async function getBuilderFhirPatient(
-  fhirClient: Client,
+  requestContext: CTWRequestContext,
   patientID: string,
   systemURL: string,
   searchParams?: SearchParams
@@ -13,7 +14,7 @@ export async function getBuilderFhirPatient(
   let patients = [];
   let bundle;
   try {
-    const response = await searchBuilderRecords("Patient", fhirClient, {
+    const response = await searchBuilderRecords("Patient", requestContext, {
       ...searchParams,
       identifier: `${systemURL}|${patientID}`,
       _count: 1,
