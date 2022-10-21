@@ -1,6 +1,6 @@
 import { getAutoCompleteConditions } from "@/api/autocomplete-conditions";
 import { useCTW } from "@/components/core/ctw-provider";
-import { InputHTMLAttributes, useEffect, useState } from "react";
+import { InputHTMLAttributes, useCallback, useEffect, useState } from "react";
 import {
   ComboboxField,
   ComboxboxFieldOption,
@@ -26,9 +26,13 @@ export const ConditionsAutoComplete = ({
   const [conditions, setConditions] = useState<fhir4.Coding[]>();
   const [options, setOptions] = useState<ComboxboxFieldOption[]>();
 
-  const onSearchChange = async (query: string) => {
-    setConditions(await getAutoCompleteConditions(authToken, env, query));
-  };
+  const onSearchChange = useCallback(
+    async (query: string) => {
+      console.log("quer", query);
+      setConditions(await getAutoCompleteConditions(authToken, env, query));
+    },
+    [authToken, env]
+  );
 
   useEffect(() => {
     if (conditions) {
