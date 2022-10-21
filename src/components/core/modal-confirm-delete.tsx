@@ -19,11 +19,11 @@ export const ModalConfirmDelete = ({
   onClose,
   ...modalProps
 }: ModalConfirmDeleteProps) => {
-  const { getCTWFhirClient } = useCTW();
+  const { getRequestContext } = useCTW();
   const [alert, setAlert] = useState<{ header: string; message: string }>();
 
   const onConfirm = async () => {
-    const fhirClient = await getCTWFhirClient();
+    const { fhirClient } = await getRequestContext();
     try {
       if (!resource.id) {
         throw new Error(
