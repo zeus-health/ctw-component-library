@@ -125,45 +125,49 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   );
 
   useEffect(() => {
-    const tempConditionFilters: ConditionFilters = includeInactive
-      ? {
-          "clinical-status": ["active", "recurrence", "relapse"],
+    async function load() {
+      const tempConditionFilters: ConditionFilters = includeInactive
+        ? {
+            "clinical-status": ["active", "recurrence", "relapse"],
+          }
+        : {};
+
+      setConditionFilter(tempConditionFilters);
+
+      /* OtherProviderRecordsConditons depends patientRecordsConditions so that we can correctly filter out
+         conditions that appear in patientRecordsConditions from OtherProviderRecordsConditons */
+      if (patientRecordsResponse.data) {
+        setPatientRecords(
+          patientRecordsResponse.data.map((c) => new ConditionModel(c))
+        );
+
+        if (OtherProviderRecordsResponse.data) {
+          const confirmedCodes = union(
+            ...patientRecordsResponse.data.map(
+              (c) => new ConditionModel(c).knownCodings
+            )
+          );
+
+          const OtherProviderRecordsFiltered =
+            filterConditionsWithConfirmedCodes(
+              OtherProviderRecordsResponse.data,
+              confirmedCodes
+            );
+
+          setOtherProviderRecords(
+            OtherProviderRecordsFiltered.map((c) => new ConditionModel(c))
+          );
+        } else {
+          setOtherProviderRecords([]);
         }
-      : {};
+      }
 
-    setConditionFilter(tempConditionFilters);
-
-    /* OtherProviderRecordsConditons depends on patientRecordsConditions so that we can correctly filter out
-       conditions that appear in patientRecordsConditions from OtherProviderRecordsConditons */
-    if (patientRecordsResponse.data) {
-      setPatientRecords(
-        patientRecordsResponse.data.map((c) => new ConditionModel(c))
-      );
-
-      if (OtherProviderRecordsResponse.data) {
-        const confirmedCodes = union(
-          ...patientRecordsResponse.data.map(
-            (c) => new ConditionModel(c).knownCodings
-          )
-        );
-
-        const OtherProviderRecordsFiltered = filterConditionsWithConfirmedCodes(
-          OtherProviderRecordsResponse.data,
-          confirmedCodes
-        );
-
-        setOtherProviderRecords(
-          OtherProviderRecordsFiltered.map((c) => new ConditionModel(c))
-        );
-      } else {
+      if (patientRecordsResponse.error) {
+        setPatientRecords([]);
         setOtherProviderRecords([]);
       }
     }
-
-    if (patientRecordsResponse.error) {
-      setPatientRecords([]);
-      setOtherProviderRecords([]);
-    }
+    load();
   }, [
     includeInactive,
     patientResponse.data,
