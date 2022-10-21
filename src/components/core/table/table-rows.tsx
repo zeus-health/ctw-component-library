@@ -42,9 +42,12 @@ export const TableRows = <T extends MinRecordItem>({
   return (
     <>
       {records.map((record) => (
-        <tr key={record.id} onClick={() => {
-          if (handleRowClick) handleRowClick(record);
-        }}>
+        <tr
+          key={record.id}
+          onClick={() => {
+            if (handleRowClick) handleRowClick(record);
+          }}
+        >
           {columns.map((column, index) => (
             <TableDataCell
               key={column.title ?? index}

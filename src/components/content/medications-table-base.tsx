@@ -48,11 +48,13 @@ export const MedicationsTableBase = ({
       dataIndex: "status",
       className: "w-[20%] min-w-[8rem]",
     },
-    !showLensStatus ? null : {
-      title: "Lens Status",
-      render: () => <ActiveColumn status="active" />,
-      className: "w-[20%] min-w-[9rem]",
-    },
+    !showLensStatus
+      ? null
+      : {
+          title: "Lens Status",
+          render: () => <ActiveColumn status="active" />,
+          className: "w-[20%] min-w-[9rem]",
+        },
   ]);
 
   return (

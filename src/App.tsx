@@ -43,14 +43,18 @@ const DemoApp = ({ accessToken = "" }) => (
         <h1>CTW Component Library</h1>
 
         <div className="ctw-space-y-5">
-          <h3>Patient Conditions <small>(default)</small></h3>
+          <h3>
+            Patient Conditions <small>(default)</small>
+          </h3>
           <ErrorBoundary>
             <Conditions />
           </ErrorBoundary>
         </div>
 
         <div className="ctw-space-y-5">
-          <h3>Patient Meds <small>(default)</small></h3>
+          <h3>
+            Patient Meds <small>(default)</small>
+          </h3>
           <ErrorBoundary>
             <PatientMedications />
           </ErrorBoundary>
@@ -86,7 +90,7 @@ function App() {
     );
   }
 
-  return <DemoApp accessToken={VITE_AUTH_TOKEN} />
+  return <DemoApp accessToken={VITE_AUTH_TOKEN} />;
 }
 
 export default App;
