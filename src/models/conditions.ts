@@ -83,7 +83,6 @@ export class ConditionModel {
       console.log("code", code);
       if (code.enrichemnt) {
         codeSystem = findCodingWithEnrichment(code.system, this.resource.code);
-        console.log("code system", codeSystem);
         // if (codeSystem) {
         //   break;
         // }

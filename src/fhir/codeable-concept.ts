@@ -31,7 +31,7 @@ export function findCodingWithEnrichment(
     system: "http://snomed.info/sct",
     extension: [{ url: "https://zusapi.com/terminology/enrichment" }],
   });
-  console.log({
+  console.log("incoming system", {
     system,
     extension: [{ url: SYSTEM_ENRICHMENT }],
   });
