@@ -1,6 +1,12 @@
 import { getAutoCompleteConditions } from "@/api/autocomplete-conditions";
 import { Env, useCTW } from "@/components/core/ctw-provider";
-import { InputHTMLAttributes, useEffect, useState } from "react";
+import {
+  Dispatch,
+  InputHTMLAttributes,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import {
   ComboboxField,
   ComboxboxFieldOption,
@@ -21,9 +27,7 @@ const setAutoCompleteConditions = async (
   authToken: string,
   env: Env,
   searchTerm: string,
-  setConditions: React.Dispatch<
-    React.SetStateAction<fhir4.Coding[] | undefined>
-  >
+  setConditions: Dispatch<SetStateAction<fhir4.Coding[] | undefined>>
 ) => {
   setConditions(await getAutoCompleteConditions(authToken, env, searchTerm));
 };
