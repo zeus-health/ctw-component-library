@@ -76,12 +76,11 @@ export class ConditionModel {
 
   get display(): string | undefined {
     let codeSystem;
-    // console.log("object", this.resource.code);
 
     for (let i = 0; i < BEST_CODE_PREFERENCE_ORDER.length; i += 1) {
       const code = BEST_CODE_PREFERENCE_ORDER[i];
       console.log("code", code);
-      if (code.enrichemnt) {
+      if (code.checkForEnrichment) {
         codeSystem = findCodingWithEnrichment(code.system, this.resource.code);
         // if (codeSystem) {
         //   break;
