@@ -1,8 +1,7 @@
 import { getIncludedResources } from "@/fhir/bundle";
-import { getConditionHistory } from "@/fhir/conditions";
-import { useFhirClientRef } from "@/fhir/utils";
+import { useConditionHistory } from "@/fhir/conditions";
 import { ConditionModel } from "@/models/condition";
-import { useQuery } from "@tanstack/react-query";
+import { Condition } from "fhir/r4";
 import { orderBy } from "lodash";
 import { useEffect, useState } from "react";
 import { CodingList } from "../core/coding-list";
@@ -11,7 +10,6 @@ import {
   CollapsibleDataListStack,
   CollapsibleDataListStackEntries,
 } from "../core/collapsible-data-list-stack";
-import { usePatient } from "../core/patient-provider";
 import { Spinner } from "../core/spinner";
 
 const CONDITION_HISTORY_LIMIT = 10;
@@ -31,7 +29,7 @@ function setupData(condition: ConditionModel): CollapsibleDataListProps {
       value: condition.recordedDate,
     },
     {
-      label: "Categories",
+      label: "Category",
       value: condition.categories[0],
     },
     {
@@ -67,39 +65,25 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
   const [conditionsWithoutDate, setConditionsWithoutDate] =
     useState<CollapsibleDataListStackEntries>([]);
   const [loading, setLoading] = useState(true);
-  const [patientUPID, setPatientUPID] = useState("");
   const [conditionForSearch, setConditionForSearch] =
     useState<ConditionModel>();
-  const fhirClientRef = useFhirClientRef();
-  const patientResponse = usePatient();
-  const historyResponse = useQuery(
-    ["conditions", patientUPID, conditionForSearch],
-    getConditionHistory,
-    {
-      enabled: !!patientUPID && !!fhirClientRef.current,
-      meta: { fhirClientRef },
-    }
-  );
+  const historyResponse = useConditionHistory(conditionForSearch);
 
   useEffect(() => {
     async function load() {
       setConditionForSearch(condition);
-
-      if (patientResponse.data) {
-        setPatientUPID(patientResponse.data.UPID);
-      }
 
       if (historyResponse.data) {
         const includedResources = getIncludedResources(
           historyResponse.data.bundle
         );
         const conditionModels = historyResponse.data.conditions.map(
-          (c) => new ConditionModel(c, includedResources)
+          (c: Condition) => new ConditionModel(c, includedResources)
         );
 
         const sortedConditions = orderBy(
           conditionModels,
-          (c) => c.recordedDate ?? "",
+          (c) => c.resource.recordedDate ?? "",
           "desc"
         );
 
@@ -128,7 +112,7 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
       setConditionsWithoutDate([]);
       setLoading(true);
     };
-  }, [condition, patientResponse.data, historyResponse.data]);
+  }, [condition, historyResponse.data]);
 
   function conditionHistoryDisplay() {
     if (
@@ -163,9 +147,7 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
         />
         {conditionsWithoutDate.length !== 0 && (
           <div className="ctw-space-y-2">
-            <div className="ctw-pl-4 ctw-font-medium">
-              Records with no date:
-            </div>
+            <div className="ctw-font-medium">Records with no date:</div>
             <CollapsibleDataListStack
               entries={conditionsWithoutDate}
               limit={CONDITION_HISTORY_LIMIT}

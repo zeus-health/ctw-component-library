@@ -1,5 +1,6 @@
+import { useQueryWithPatient } from "@/components/core/patient-provider";
 import { ConditionModel } from "@/models/condition";
-import { QueryFunctionContext } from "@tanstack/react-query";
+import { SearchParams } from "fhir-kit-client";
 import { sortBy } from "lodash";
 
 import {
@@ -17,7 +18,6 @@ import {
   SYSTEM_ICD9_CM,
   SYSTEM_SNOMED,
 } from "./system-urls";
-import { getFhirClientFromQuery } from "./utils";
 
 export const CONDITION_CODE_SYSTEMS = [
   SYSTEM_ICD9,
@@ -83,96 +83,93 @@ export function getNewCondition(patientId: string) {
   return newCondition;
 }
 
-export async function getPatientConditions(
-  queryParams: QueryFunctionContext<QueryKeyPatientConditions>
-) {
-  const { meta, queryKey } = queryParams;
-
-  const fhirClient = getFhirClientFromQuery(meta);
-
-  const [_, patientUPID, conditionFilters] = queryKey;
-
-  if (!patientUPID) {
-    throw new Error("Patient UPID is required to run getPatientConditions");
-  }
-
-  try {
-    const { resources: conditions } = await searchBuilderRecords(
-      "Condition",
-      fhirClient,
-      {
-        patientUPID,
-        ...flattenArrayFilters(conditionFilters),
+export function usePatientConditions(conditionFilters: ConditionFilters) {
+  return useQueryWithPatient(
+    ["patientConditions", conditionFilters],
+    async (requestContext, patient) => {
+      try {
+        const { resources: conditions } = await searchBuilderRecords(
+          "Condition",
+          requestContext,
+          {
+            patientUPID: patient.UPID,
+            ...flattenArrayFilters(conditionFilters),
+          }
+        );
+        return filterAndSort(conditions);
+      } catch (e) {
+        throw new Error(
+          `Failed fetching condition information for patient: ${e}`
+        );
       }
-    );
-
-    return filterAndSort(conditions);
-  } catch (e) {
-    throw new Error(`Failed fetching condition information for patient: ${e}`);
-  }
-}
-
-export async function getOtherProviderConditions(
-  queryParams: QueryFunctionContext<QueryKeyOtherProviderConditions>
-) {
-  const { meta, queryKey } = queryParams;
-  const fhirClient = getFhirClientFromQuery(meta);
-
-  const [_, patientUPID] = queryKey;
-
-  if (!patientUPID) {
-    throw new Error(
-      "Patient UPID is required to run getOtherProviderConditions"
-    );
-  }
-
-  try {
-    const { resources: conditions } = await searchLensRecords(
-      "Condition",
-      fhirClient,
-      {
-        patientUPID,
-      }
-    );
-    return filterAndSort(conditions);
-  } catch (e) {
-    throw new Error(`Failed fetching condition information for patient: ${e}`);
-  }
-}
-
-export async function getConditionHistory(
-  queryParams: QueryFunctionContext<QueryKeyConditionHistory>
-) {
-  try {
-    const { meta, queryKey } = queryParams;
-    const fhirClient = getFhirClientFromQuery(meta);
-    const [_, patientUPID, condition] = queryKey;
-
-    if (!condition) {
-      throw new Error("Condition is required");
     }
+  );
+}
 
-    const tokens = condition.knownCodings.map(
-      (coding) => `${coding.system}|${coding.code}`
-    );
-
-    const { resources: conditions, bundle } = await searchCommonRecords(
-      "Condition",
-      fhirClient,
-      {
-        patientUPID,
-        _include: ["Condition:patient", "Condition:encounter"],
-        "_include:iterate": "Patient:organization",
-        code: tokens.join(","),
+export function useOtherProviderConditions() {
+  return useQueryWithPatient(
+    ["otherProviderConditions"],
+    async (requestContext, patient) => {
+      try {
+        const { resources: conditions } = await searchLensRecords(
+          "Condition",
+          requestContext,
+          {
+            patientUPID: patient.UPID,
+          }
+        );
+        return filterAndSort(conditions);
+      } catch (e) {
+        throw new Error(
+          `Failed fetching condition information for patient: ${e}`
+        );
       }
-    );
+    }
+  );
+}
 
-    return { conditions, bundle };
-  } catch (e) {
-    throw new Error(
-      `Failed fetching condition history information for patient: ${e}`
-    );
-  }
+export function useConditionHistory(condition?: ConditionModel) {
+  return useQueryWithPatient(
+    ["conditionHistory", condition],
+    async (requestContext, patient) => {
+      if (!condition) return undefined;
+
+      try {
+        const tokens = condition.knownCodings.map(
+          (coding) => `${coding.system}|${coding.code}`
+        );
+
+        const searchParams: SearchParams = {
+          patientUPID: patient.UPID,
+          _include: ["Condition:patient", "Condition:encounter"],
+          "_include:iterate": "Patient:organization",
+        };
+
+        // If we have any known codings, then do an OR search.
+        // Otherwise fall back to searching for this single condition.
+        // That way, conditions that don't have any good codes to match on
+        // will only show themselves in the history.
+        if (tokens.length > 0) {
+          searchParams.code = tokens.join(",");
+        } else {
+          // eslint-disable-next-line no-underscore-dangle
+          searchParams._id = condition.id;
+        }
+
+        const { resources: conditions, bundle } = await searchCommonRecords(
+          "Condition",
+          requestContext,
+          searchParams
+        );
+
+        return { conditions, bundle };
+      } catch (e) {
+        throw new Error(
+          `Failed fetching condition history information for patient: ${e}`
+        );
+      }
+    }
+  );
 }
 
 function filterAndSort(conditions: fhir4.Condition[]) {

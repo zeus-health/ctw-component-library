@@ -3,7 +3,7 @@ import { findReference } from "@/fhir/resource-helper";
 import { ResourceMap } from "@/fhir/types";
 import { compact } from "lodash";
 import { codeableConceptLabel, findCoding } from "../fhir/codeable-concept";
-import { formatDateISOToLocal } from "../fhir/formatters";
+import { formatDateISOToLocal, formatStringToDate } from "../fhir/formatters";
 import { SYSTEM_CCS, SYSTEM_ICD10, SYSTEM_SNOMED } from "../fhir/system-urls";
 import { PatientModel } from "./patients";
 import { ResourceModel } from "./resource";
@@ -131,7 +131,7 @@ export class ConditionModel implements ResourceModel {
       );
     }
 
-    return this.resource.onsetString;
+    return formatStringToDate(this.resource.onsetString);
   }
 
   get patient(): PatientModel | undefined {

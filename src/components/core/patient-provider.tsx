@@ -1,15 +1,21 @@
-import { getPatient } from "@/fhir/patient";
+import { getBuilderFhirPatient } from "@/fhir/patient-helper";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
-import { useFhirClientRef } from "@/fhir/utils";
+import { Tag } from "@/fhir/types";
 import { PatientModel } from "@/models/patients";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { createContext, ReactNode, useContext, useMemo } from "react";
+import { CTWRequestContext } from "./ctw-context";
+import { useCTW } from "./ctw-provider";
 
-export type ThirdPartyID = {
+// Cache patient for 5 minutes.
+const PATIENT_STALE_TIME = 1000 * 60 * 5;
+
+type ThirdPartyID = {
   patientUPID?: never;
   patientID: string;
   systemURL: string;
 };
+
 type PatientUPIDSpecified = {
   patientUPID: string;
   patientID?: never;
@@ -19,10 +25,12 @@ type PatientUPIDSpecified = {
 type ProviderState = {
   patientID: string;
   systemURL: string;
+  tags?: Tag[];
 };
 
 type PatientProviderProps = {
   children: ReactNode;
+  tags?: Tag[];
 } & (ThirdPartyID | PatientUPIDSpecified);
 
 export const CTWPatientContext = createContext<ProviderState>({
@@ -35,13 +43,15 @@ export function PatientProvider({
   patientUPID,
   patientID,
   systemURL,
+  tags,
 }: PatientProviderProps) {
   const providerState = useMemo(
     () => ({
       patientID: patientUPID || patientID,
       systemURL: patientUPID ? SYSTEM_ZUS_UNIVERSAL_ID : systemURL,
+      tags,
     }),
-    [patientID, patientUPID, systemURL]
+    [patientID, patientUPID, systemURL, tags]
   );
 
   return (
@@ -52,15 +62,39 @@ export function PatientProvider({
 }
 
 export function usePatient(): UseQueryResult<PatientModel, unknown> {
-  const fhirClientRef = useFhirClientRef();
-  const { patientID, systemURL } = useContext(CTWPatientContext);
+  const { getRequestContext } = useCTW();
+  const { patientID, systemURL, tags } = useContext(CTWPatientContext);
   const patientResponse = useQuery(
-    ["patient", patientID, systemURL],
-    getPatient,
-    {
-      enabled: !!fhirClientRef,
-      meta: { fhirClientRef },
-    }
+    ["patient", patientID, systemURL, tags],
+    async () => {
+      const requestContext = await getRequestContext();
+      return getBuilderFhirPatient(requestContext, patientID, systemURL, {
+        _tag: tags?.map((tag) => `${tag.system}|${tag.code}`) ?? [],
+      });
+    },
+    { staleTime: PATIENT_STALE_TIME }
   );
   return patientResponse;
+}
+
+export function useQueryWithPatient<T>(
+  keys: unknown[],
+  query: (
+    requestContext: CTWRequestContext,
+    patient: PatientModel
+  ) => Promise<T>
+) {
+  const { getRequestContext } = useCTW();
+  const patientResponse = usePatient();
+  return useQuery(
+    [patientResponse.data?.UPID, ...keys],
+    async () => {
+      const requestContext = await getRequestContext();
+      // Ignore eslint warning as we should always have a valid
+      // patient thanks to the enabled check.
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      return query(requestContext, patientResponse.data!);
+    },
+    { enabled: !!patientResponse.data?.UPID }
+  );
 }

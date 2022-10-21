@@ -34,6 +34,17 @@ export function formatDateLocalToISO(dateStr?: string): string | undefined {
   return date;
 }
 
+// Formats a string yyyymmdd or yyyyMMddHHmmss into MM/DD/YYYY.
+export function formatStringToDate(dateStr?: string): string | undefined {
+  if (!dateStr) return undefined;
+
+  const month = dateStr.substring(4, 6);
+  const day = dateStr.substring(6, 8);
+  const year = dateStr.substring(0, 4);
+
+  return `${month}/${day}/${year}`;
+}
+
 // Returns the ISO string (YYYY-MM-DD) for a given date.
 // We avoid using date-fn's format method to avoid timezone issues.
 export function dateToISO(date: Date) {
