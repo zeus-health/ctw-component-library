@@ -1,30 +1,13 @@
 .ctw-conditions {
   @apply ctw-border ctw-border-solid ctw-border-divider-light ctw-bg-white;
+}
 
-  .ctw-title-container {
-    @apply ctw-flex ctw-flex-wrap ctw-items-center ctw-justify-between ctw-gap-x-2 ctw-gap-y-2;
+.ctw-conditions.ctw-stacked {
+  .ctw-conditions-not-reviewed {
+    @apply ctw-table-x;
   }
 
-  .ctw-body {
-    @apply ctw-m-3 ctw-space-y-5 ctw-bg-bg-white;
-  }
-
-  .ctw-heading-container {
-    @apply ctw-flex ctw-h-11 ctw-items-center ctw-justify-between ctw-bg-bg-light ctw-p-3;
-  }
-
-  &.ctw-stacked {
-    .ctw-conditions-body {
-      @apply ctw-m-0;
-    }
-
-    .ctw-conditions-not-reviewed,
-    .ctw-table {
-      @apply ctw-rounded-none ctw-border-x-0;
-    }
-
-    .ctw-conditions-not-reviewed {
-      @apply ctw-border-b-0;
-    }
+  .ctw-conditions-not-reviewed {
+    @apply ctw-border-b-0;
   }
 }
