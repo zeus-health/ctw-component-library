@@ -11,8 +11,8 @@ import { ConditionModel } from "@/models/conditions";
 import { claimsPractitionerId } from "@/utils/auth";
 import { getFormData } from "@/utils/form-helper";
 import {
-  OTHER_PROVIDER_CONDITIONS_KEY,
-  PATIENT_CONDITIONS_KEY,
+  QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
+  QUERY_KEY_PATIENT_CONDITIONS,
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 
@@ -68,7 +68,7 @@ export const createOrEditCondition = async (
         },
       ],
     },
-
+    // Keep all existing codings when editing a condition
     code: result.data.id
       ? result.data.coding
       : {
@@ -101,8 +101,8 @@ export const createOrEditCondition = async (
     result.success = false;
   }
 
-  queryClient.invalidateQueries([PATIENT_CONDITIONS_KEY]);
-  queryClient.invalidateQueries([OTHER_PROVIDER_CONDITIONS_KEY]);
+  queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]);
+  queryClient.invalidateQueries([QUERY_KEY_OTHER_PROVIDER_CONDITIONS]);
 
   return result;
 };

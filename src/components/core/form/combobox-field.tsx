@@ -1,13 +1,19 @@
 import { Combobox } from "@headlessui/react";
 import { debounce } from "lodash";
-import React, { useEffect, useMemo } from "react";
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useMemo,
+} from "react";
 
 export type ComboxboxFieldOption = { value: string; id: string };
 
 export type ComboboxFieldProps = {
   options: ComboxboxFieldOption[];
   query: string;
-  setQuery: React.Dispatch<React.SetStateAction<string>>;
+  setQuery: Dispatch<SetStateAction<string>>;
   handleSelectChange: (eventValue: string) => void;
   readonly: boolean | undefined;
 };
@@ -21,9 +27,8 @@ export const ComboboxField = ({
 }: ComboboxFieldProps) => {
   // Delay handle search input so that we don't fire a bunch of events until the user has had time to type.
   const debouncedSearchInputChange = useMemo(() => {
-    const handleSearchInputChange = (
-      event: React.ChangeEvent<HTMLInputElement>
-    ) => setQuery(event.target.value);
+    const handleSearchInputChange = (event: ChangeEvent<HTMLInputElement>) =>
+      setQuery(event.target.value);
 
     return debounce(handleSearchInputChange, 300);
   }, [setQuery]);
@@ -43,7 +48,7 @@ export const ComboboxField = ({
         placeholder="Type to search"
       />
       <Combobox.Options className="ctw-listbox ctw-max-h-60 ctw-overflow-auto ctw-rounded-md ctw-bg-white ctw-py-1 ctw-text-base ctw-shadow-lg ctw-ring-1 ctw-ring-black ctw-ring-opacity-5 focus:ctw-outline-none sm:ctw-text-sm">
-        <RenderCorrectOptions options={options} query={query} />
+        <ComboboxOptions options={options} query={query} />
       </Combobox.Options>
     </Combobox>
   );
@@ -54,10 +59,7 @@ type RenderCorrectOptionsProps = {
   query: string;
 };
 
-const RenderCorrectOptions = ({
-  options,
-  query,
-}: RenderCorrectOptionsProps) => {
+const ComboboxOptions = ({ options, query }: RenderCorrectOptionsProps) => {
   if (query.length === 0) {
     return <ComboboxOption option={{ value: "Type to search", id: "empty" }} />;
   }

@@ -1,8 +1,5 @@
-import React from "react";
 import { Env } from "..";
 import { getFormsConditionsUrl } from "./urls";
-
-export type QueryKeyAutoCompleteConditions = [string, string, Env, string];
 
 export const setAutoCompleteConditions = async (
   authToken: string,

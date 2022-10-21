@@ -2,7 +2,7 @@ import { getBuilderFhirPatient } from "@/fhir/patient-helper";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 import { Tag } from "@/fhir/types";
 import { PatientModel } from "@/models/patients";
-import { PATIENT_KEY } from "@/utils/query-keys";
+import { QUERY_KEY_PATIENT } from "@/utils/query-keys";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { createContext, ReactNode, useContext, useMemo } from "react";
 import { CTWRequestContext } from "./ctw-context";
@@ -66,7 +66,7 @@ export function usePatient(): UseQueryResult<PatientModel, unknown> {
   const { getRequestContext } = useCTW();
   const { patientID, systemURL, tags } = useContext(CTWPatientContext);
   const patientResponse = useQuery(
-    [PATIENT_KEY, patientID, systemURL, tags],
+    [QUERY_KEY_PATIENT, patientID, systemURL, tags],
     async () => {
       const requestContext = await getRequestContext();
       return getBuilderFhirPatient(requestContext, patientID, systemURL, {
