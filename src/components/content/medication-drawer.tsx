@@ -46,8 +46,8 @@ export const MedicationDrawer = ({
   const data = getDataEntriesFromMedicationStatement(medication);
   function renderDrawerContentTop() {
     return (
-      <div className="flex justify-between space-x-8">
-        <span className="text-3xl">{medication?.display}</span>
+      <div className="ctw-flex ctw-justify-between ctw-space-x-8">
+        <span className="ctw-text-3xl">{medication?.display}</span>
       </div>
     );
   }
@@ -55,7 +55,7 @@ export const MedicationDrawer = ({
   return (
     <Drawer title="Medication" {...drawerProps}>
       <Drawer.Body>
-        <div className="space-y-7">
+        <div className="ctw-space-y-7">
           {medication && renderDrawerContentTop()}
 
           {/* @todo: Refactor this to not use tabs (only show Overview) */}
@@ -72,7 +72,7 @@ export const MedicationDrawer = ({
         </div>
       </Drawer.Body>
       <Drawer.Footer>
-        <div className="flex justify-end">
+        <div className="ctw-flex ctw-justify-end">
           <button
             type="button"
             className="btn-primary"

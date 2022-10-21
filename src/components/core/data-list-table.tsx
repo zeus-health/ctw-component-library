@@ -16,19 +16,21 @@ export function DataListStack({ entries, limit }: DataListStackProps) {
     showAll || !limit ? entries : entries.slice(0, limit);
 
   return (
-    <div className="space-y-4">
-      <div className="divide-y rounded-lg border">
+    <div className="ctw-space-y-4">
+      <div className="ctw-divide-y ctw-rounded-lg ctw-border">
         {displayedEntries.map((entry) => (
-          <dl className="space-y-2 p-4" key={entry.id}>
+          <dl className="ctw-space-y-2 ctw-p-4" key={entry.id}>
             {entry.data.map(({ label, value }, labelIndex) => (
               <div
                 // label is not guarenteed to be unique so append index.
                 // eslint-disable-next-line react/no-array-index-key
                 key={label + labelIndex}
-                className="flex items-baseline space-x-4 text-gray-900"
+                className="ctw-text-gray-900 ctw-flex ctw-items-baseline ctw-space-x-4"
               >
-                <dt className="w-1/3 flex-shrink-0 font-medium">{label}:</dt>
-                <dd className="flex-grow">{value || ""}</dd>
+                <dt className="ctw-w-1/3 ctw-flex-shrink-0 ctw-font-medium">
+                  {label}:
+                </dt>
+                <dd className="ctw-flex-grow">{value || ""}</dd>
               </div>
             ))}
           </dl>
@@ -36,7 +38,7 @@ export function DataListStack({ entries, limit }: DataListStackProps) {
       </div>
 
       {!showAll && limit && entries.length > limit && (
-        <div className="text-center">
+        <div className="ctw-text-center">
           <button
             type="button"
             className="link-primary"

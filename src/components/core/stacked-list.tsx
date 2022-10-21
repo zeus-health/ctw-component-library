@@ -12,20 +12,20 @@ export type StackedListProps = {
 };
 
 export const StackedList = ({ entries }: StackedListProps) => (
-  <ul className="divide-y divide-gray-200 bg-white">
+  <ul className="ctw-divide-gray-200 ctw-divide-y ctw-bg-white">
     {entries.map(({ title, description, onClick, render }) => (
-      <li key={title} className="hover:bg-gray-50">
+      <li key={title} className="ctw-hover:ctw-bg-gray-50">
         <button
           type="button"
           onClick={onClick}
-          className="flex w-full items-center space-x-4 p-4 text-left ring-inset"
+          className="ctw-flex ctw-w-full ctw-items-center ctw-space-x-4 ctw-p-4 ctw-text-left ctw-ring-inset"
         >
           {render || (
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium hover:text-primary-700">
+            <div className="ctw-min-w-0 ctw-flex-1">
+              <p className="ctw-hover:text-primary-700 ctw-truncate ctw-text-sm ctw-font-medium">
                 {title || ""}
               </p>
-              <p className="truncate text-sm text-gray-500">
+              <p className="ctw-text-gray-500 ctw-truncate ctw-text-sm">
                 {description || ""}
               </p>
             </div>

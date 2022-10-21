@@ -83,7 +83,9 @@ export function MedicationHistory({ rxNorm }: MedicationHistoryProps) {
   if (loading) {
     return (
       <div className="space-x-2">
-        <span className="text-sm italic">Loading medication history...</span>
+        <span className="ctw-text-sm ctw-italic">
+          Loading medication history...
+        </span>
         <Spinner />
       </div>
     );
