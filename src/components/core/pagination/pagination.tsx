@@ -23,8 +23,12 @@ export const Pagination = ({
   return (
     <div className="ctw-flex ctw-items-center ctw-justify-between ctw-py-3 ctw-px-6">
       <div className="ctw-text-gray-600 ctw-text-sm">
-        Showing <span className="ctw-font-medium">{currentNumber}</span> of{" "}
-        <span className="ctw-font-medium">{total}</span> results
+        { total === 0 ? (<>
+          No results found
+        </>) : (<>
+          Showing <span className="ctw-font-medium">{currentNumber}</span> of{" "}
+          <span className="ctw-font-medium">{total}</span> results
+        </>)}
       </div>
       <div className="ctw-flex ctw-h-full ctw-justify-end ctw-space-x-3">
         {!allShown && total > 20 && (

@@ -35,7 +35,7 @@ const BUILDER_PAGING = {
 
 const LENS_PAGING = {
   size: 10,
-  param: "potential-medications-page",
+  param: "otherProvider-medications-page",
 };
 
 type LoaderData = {
@@ -54,7 +54,7 @@ type PatientMedicationsProps = {
   className?: string;
   status?: ClinicalStatus;
   medsSort?: string;
-  potentialMedsSort?: string;
+  otherProviderMedsSort?: string;
   // should we render the Zus confirmed meds component (default true)
   showConfirmedMedsTable?: boolean;
   // should we show the button to add new meds (default true)?
@@ -64,8 +64,8 @@ type PatientMedicationsProps = {
 export function PatientMedications({
   className,
   medsSort = "",
-  potentialMedsSort = "",
-  readOnly = true,
+  otherProviderMedsSort = "",
+  readOnly = false,
   showConfirmedMedsTable = true,
 }: PatientMedicationsProps) {
   const [
@@ -114,16 +114,10 @@ export function PatientMedications({
     setCreateMedData(getMedicationFormData(newMedicationStatement));
   };
 
-  // QUERIES
-  const options = {
-    enabled: !!(patient.data && fhirClientRef.current),
-    meta: { fhirClientRef },
-  };
   const medicationsResponse = useQueryPatientMeds(statusParam);
   const lensActiveMedicationsResponse = useQueryPatientLensMeds();
   const patientMedicationsResponse = useQueryPatientMeds();
 
-  // START TMP BUILD
   useEffect(() => {
     if (
       medicationsResponse.data?.bundle &&
@@ -153,13 +147,13 @@ export function PatientMedications({
         medications
           .filter((m) => m.status === "active") // Track ONLY active builder meds.
           .map((medication) => getRxNormCode(medication, includedResources))
-      ) as string[];
+      );
 
       const activeRxNorms = compact(
         lensActiveMedications.map((medication) =>
           getRxNormCode(medication, includedResources)
         )
-      ) as string[];
+      );
 
       // Filter out any active medications that the builder already knows about.
       lensActiveMedications = lensActiveMedications.filter(
@@ -191,9 +185,9 @@ export function PatientMedications({
       );
 
       const {
-        sortColumn: potentialMedSortColumn = "display",
-        sortOrder: potentialMedSortOrder = "asc",
-      } = getSortInfo(MedicationStatementModel, potentialMedsSort);
+        sortColumn: otherProviderMedSortColumn = "display",
+        sortOrder: otherProviderMedSortOrder = "asc",
+      } = getSortInfo(MedicationStatementModel, otherProviderMedsSort);
 
       lensActiveMedications = sort(
         lensActiveMedications,
@@ -203,9 +197,9 @@ export function PatientMedications({
             includedResources,
             activeRxNorms,
             builderPatientRxNormStatuses
-          )[potentialMedSortColumn],
-        potentialMedSortOrder,
-        potentialMedSortColumn === "effectiveStart"
+          )[otherProviderMedSortColumn],
+        otherProviderMedSortOrder,
+        otherProviderMedSortColumn === "effectiveStart"
       );
 
       // @todo: don't set these to 0 automatically
@@ -237,10 +231,9 @@ export function PatientMedications({
     builderMedicationsPage,
     lensMedicationsPage,
     includeInactiveMeds,
-    potentialMedsSort,
+    otherProviderMedsSort,
     medsSort,
   ]);
-  // END TMP BUILD
 
   const activeMedicationModels = builderMedications.map(
     (medication) =>
@@ -252,7 +245,7 @@ export function PatientMedications({
       )
   );
 
-  const potentialActiveMedicationModels = lensMedications.map(
+  const otherProviderActiveMedicationModels = lensMedications.map(
     (medication) =>
       new MedicationStatementModel(
         medication,
@@ -271,7 +264,7 @@ export function PatientMedications({
     >
       <div className="ctw-heading-container">
         <div className="ctw-title">Medications</div>
-        {readOnly && (
+        {!readOnly && (
           <button
             className="ctw-btn-clear ctw-link"
             type="button"
@@ -309,10 +302,10 @@ export function PatientMedications({
 
         <div className="ctw-space-y-3">
           <div className="ctw-title-container">
-            <div className="ctw-title">Potential Active Medications</div>
+            <div className="ctw-title">Other Provider Records</div>
           </div>
           <MedicationsTableBase
-            medicationStatements={potentialActiveMedicationModels}
+            medicationStatements={otherProviderActiveMedicationModels}
             total={lensMedicationsTotal}
             param={LENS_PAGING.param}
             pageSize={LENS_PAGING.size}

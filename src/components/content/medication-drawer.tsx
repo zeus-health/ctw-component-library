@@ -1,3 +1,5 @@
+// noinspection JSXNamespaceValidation
+
 import { Tab } from "@headlessui/react";
 import type { MedicationStatementModel } from "@/models/medication-statement";
 import { ButtonTabs } from "../core/button-tabs";
@@ -17,20 +19,20 @@ function getDataEntriesFromMedicationStatement(
   return medication
     ? [
         { label: "Status", value: medication.status },
-        { label: "Status Reason", value: medication.statusReason },
-        { label: "Category", value: medication.category },
-        {
-          label: "Medication Reference",
-          value: medication.medicationReference,
-        },
-        { label: "Context", value: medication.context },
-        { label: "Effective Start", value: medication.effectiveStart },
-        { label: "Date Asserted", value: medication.dateAsserted },
-        {
-          label: "Information Source",
-          value: medication.informationSourceDisplay,
-        },
-        { label: "Reason", value: medication.reason },
+        // { label: "Status Reason", value: medication.statusReason },
+        // { label: "Category", value: medication.category },
+        // {
+        //   label: "Medication Reference",
+        //   value: medication.medicationReference,
+        // },
+        // { label: "Context", value: medication.context },
+        // { label: "Effective Start", value: medication.effectiveStart },
+        // { label: "Date Asserted", value: medication.dateAsserted },
+        // {
+        //   label: "Information Source",
+        //   value: medication.informationSourceDisplay,
+        // },
+        // { label: "Reason", value: medication.reason },
         { label: "Dosage", value: medication.dosage },
         ...entryFromArray("Note", medication.notesDisplay),
       ]
@@ -55,6 +57,8 @@ export const MedicationDrawer = ({
       <Drawer.Body>
         <div className="space-y-7">
           {medication && renderDrawerContentTop()}
+
+          {/* @todo: Refactor this to not use tabs (only show Overview) */}
           <ButtonTabs tabs={["Overview", "History"]}>
             <Tab.Panels>
               <Tab.Panel>

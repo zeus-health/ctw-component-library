@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { compact } from "lodash/fp";
 import type { TableColumn } from "@/components/core/table/table";
 import { Table } from "@/components/core/table/table";
 import type { MedicationStatementModel } from "@/models/medication-statement";
@@ -11,6 +12,7 @@ export type MedicationsTableBaseProps = {
   pageSize: number;
   param: string;
   total: number;
+  showLensStatus?: boolean;
   className?: string;
 };
 
@@ -18,6 +20,7 @@ export type MedicationsTableBaseProps = {
 export const MedicationsTableBase = ({
   className = "",
   medicationStatements,
+  showLensStatus = false,
   total,
 }: MedicationsTableBaseProps) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -29,43 +32,28 @@ export const MedicationsTableBase = ({
     setDrawerOpen(true);
   }
 
-  const columns: TableColumn<MedicationStatementModel>[] = [
+  const columns: TableColumn<MedicationStatementModel>[] = compact([
     {
       title: "Medication Name",
       dataIndex: "display",
-      className: "w-[17.5%] min-w-[14rem]",
+      className: "w-[30%] min-w-[14rem]",
     },
     {
       title: "Dosage",
       dataIndex: "dosage",
-      className: "w-[25%] min-w-[20rem]",
-    },
-    {
-      title: "Effective Start Period",
-      dataIndex: "effectiveStart",
-      className: "w-[10%] min-w-[9rem]",
+      className: "w-[30%] min-w-[20rem]",
     },
     {
       title: "Status",
       dataIndex: "status",
-      className: "w-[10%] min-w-[8rem]",
+      className: "w-[20%] min-w-[8rem]",
     },
-    {
+    !showLensStatus ? null : {
       title: "Lens Status",
       render: () => <ActiveColumn status="active" />,
-      className: "w-[10%] min-w-[9rem]",
+      className: "w-[20%] min-w-[9rem]",
     },
-    {
-      title: "Patient Status",
-      dataIndex: "patientStatus",
-      className: "w-[10%] min-w-[8rem]",
-    },
-    {
-      title: "Reason",
-      dataIndex: "reason",
-      className: "w-[17.5%] min-w-[14rem]",
-    },
-  ];
+  ]);
 
   return (
     <div className={`ctw-table ${className}`.trim()}>
@@ -74,6 +62,7 @@ export const MedicationsTableBase = ({
         records={medicationStatements}
         columns={columns}
         message="There are no medications to display."
+        handleRowClick={handleRowClick}
       />
       <MedicationDrawer
         medication={selectedMedication}
