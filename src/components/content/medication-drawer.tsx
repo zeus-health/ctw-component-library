@@ -1,5 +1,3 @@
-// noinspection JSXNamespaceValidation
-
 import { Tab } from "@headlessui/react";
 import type { MedicationStatementModel } from "@/models/medication-statement";
 import { ButtonTabs } from "../core/button-tabs";
