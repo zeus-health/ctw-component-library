@@ -8,7 +8,7 @@
   &.dangerous {
     @apply ctw-text-error-main;
   }
-  
+
   &[data-highlighted] {
     @apply ctw-bg-primary-light;
   }
