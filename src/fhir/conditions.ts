@@ -20,6 +20,14 @@ import {
 } from "./system-urls";
 import { getFhirClientFromQuery } from "./utils";
 
+export const BEST_CODE_PREFERENCE_ORDER = [
+  { system: SYSTEM_SNOMED, enrichment: true },
+  { system: SYSTEM_ICD10, enrichemnt: true },
+  { system: SYSTEM_ICD10_CM },
+  { system: SYSTEM_ICD9 },
+  { system: SYSTEM_ICD9_CM },
+];
+
 export const CONDITION_CODE_SYSTEMS = [
   SYSTEM_ICD9,
   SYSTEM_ICD9_CM,
