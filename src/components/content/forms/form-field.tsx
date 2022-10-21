@@ -35,7 +35,7 @@ export const FormField = ({
           className="ctw-listbox-button ctw-w-full"
           name={inputProps.name || ""}
           disabled={inputProps.disabled}
-          defaultValue={value as string | undefined}
+          defaultValue={value}
         >
           {options.map((option) => (
             <option value={option}>{capitalize(option)}</option>

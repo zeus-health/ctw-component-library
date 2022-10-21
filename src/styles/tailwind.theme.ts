@@ -83,12 +83,26 @@ export function mapToCSSVar(colorConfig: ColorTheme): Record<string, string> {
   const properties: { [variable: string]: string } = {};
   Object.entries(colorConfig).forEach(([colorTitle, colorValueOrObj]) => {
     if (typeof colorValueOrObj === "string") {
-      properties[nameCSSVar(colorTitle)] = colorValueOrObj;
+      properties[nameCSSVar(colorTitle)] = hexToRGB(colorValueOrObj, 1);
     } else {
       Object.entries(colorValueOrObj).forEach(([colorName, value]) => {
-        properties[nameCSSVar(`${colorTitle}-${colorName}`)] = value;
+        properties[nameCSSVar(`${colorTitle}-${colorName}`)] = hexToRGB(
+          value,
+          1
+        );
       });
     }
   });
   return properties;
+}
+
+// Converts hex values to RGB values.
+function hexToRGB(hex: string, opacity?: number): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  if (opacity) {
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+  }
+  return `rgb(${r}, ${g}, ${b})`;
 }

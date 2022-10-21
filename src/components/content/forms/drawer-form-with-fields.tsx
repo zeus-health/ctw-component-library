@@ -1,5 +1,4 @@
 import { useFormInputProps } from "@/utils/form-helper";
-import cx from "classnames";
 import Client from "fhir-kit-client";
 import { useCTW } from "../../core/ctw-provider";
 import type { DrawerFormProps } from "./drawer-form";
@@ -73,11 +72,7 @@ export const DrawerFormWithFields = <T,>({
                 className="ctw-space-y-1.5 ctw-text-sm ctw-font-medium ctw-text-content-black"
               >
                 <div className="ctw-flex ctw-justify-between">
-                  <label
-                    className={cx({ "ctw-error": error }, "leading-tight")}
-                  >
-                    {label}
-                  </label>
+                  <label>{label}</label>
                   {!inputProps(field)["aria-required"] && (
                     <span className="ctw-right-0 ctw-inline-block ctw-text-xs ctw-text-content-black">
                       Optional
