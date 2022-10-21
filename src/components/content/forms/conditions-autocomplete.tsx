@@ -28,7 +28,6 @@ export const ConditionsAutoComplete = ({
 
   const onSearchChange = useCallback(
     async (query: string) => {
-      console.log("quer", query);
       setConditions(await getAutoCompleteConditions(authToken, env, query));
     },
     [authToken, env]
