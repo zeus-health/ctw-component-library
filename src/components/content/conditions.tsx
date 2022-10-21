@@ -8,13 +8,11 @@ import {
   ConditionFilters,
   filterConditionsWithConfirmedCodes,
   getNewCondition,
-  getOtherProviderConditions,
-  getPatientConditions,
+  useOtherProviderConditions,
+  usePatientConditions,
 } from "@/fhir/conditions";
-import { useFhirClientRef } from "@/fhir/utils";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { ConditionModel } from "@/models/conditions";
-import { useQuery } from "@tanstack/react-query";
 import cx from "classnames";
 import { union } from "lodash";
 import { useEffect, useRef, useState } from "react";
@@ -47,43 +45,27 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
   const [historyDrawerIsOpen, setHistoryDrawerIsOpen] = useState(false);
   const [patientRecords, setPatientRecords] = useState<ConditionModel[]>([]);
-  const [OtherProviderRecords, setOtherProviderRecords] = useState<
+  const [otherProviderRecords, setOtherProviderRecords] = useState<
     ConditionModel[]
   >([]);
   const [includeInactive, setIncludeInactive] = useState(true);
   const [formAction, setFormAction] = useState("");
   const [conditionFilter, setConditionFilter] = useState<ConditionFilters>({});
-  const fhirClientRef = useFhirClientRef();
   const [schema, setSchema] = useState<Zod.AnyZodObject>(conditionAddSchema);
   const [currentSelectedData, setCurrentlySelectedData] =
     useState<FormEntry[]>();
   const [conditionForHistory, setConditionForHistory] =
     useState<ConditionModel>();
+
   const patientResponse = usePatient();
-
-  const patientRecordsResponse = useQuery(
-    ["conditions", patientResponse.data?.UPID, conditionFilter],
-    getPatientConditions,
-    {
-      enabled: !!patientResponse.data && !!fhirClientRef.current,
-      meta: { fhirClientRef },
-    }
-  );
-
-  const OtherProviderRecordsResponse = useQuery(
-    ["conditions", patientResponse.data?.UPID],
-    getOtherProviderConditions,
-    {
-      enabled: !!patientResponse.data && !!fhirClientRef.current,
-      meta: { fhirClientRef },
-    }
-  );
+  const patientRecordsResponse = usePatientConditions(conditionFilter);
+  const otherProviderRecordsResponse = useOtherProviderConditions();
 
   const patientRecordsMessage = patientRecordsResponse.isError
     ? ERROR_MSG
     : EMPTY_MESSAGE_PATIENT_RECORD;
 
-  const otherProviderRecordMessage = OtherProviderRecordsResponse.isError
+  const otherProviderRecordMessage = otherProviderRecordsResponse.isError
     ? ERROR_MSG
     : EMPTY_MESSAGE_PROVIDER;
 
@@ -146,7 +128,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           patientRecordsResponse.data.map((c) => new ConditionModel(c))
         );
 
-        if (OtherProviderRecordsResponse.data) {
+        if (otherProviderRecordsResponse.data) {
           const confirmedCodes = union(
             ...patientRecordsResponse.data.map(
               (c) => new ConditionModel(c).knownCodings
@@ -155,7 +137,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
 
           const OtherProviderRecordsFiltered =
             filterConditionsWithConfirmedCodes(
-              OtherProviderRecordsResponse.data,
+              otherProviderRecordsResponse.data,
               confirmedCodes
             );
 
@@ -177,7 +159,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     includeInactive,
     patientResponse.data,
     patientRecordsResponse.data,
-    OtherProviderRecordsResponse.data,
+    otherProviderRecordsResponse.data,
     patientRecordsResponse.error,
   ]);
 
@@ -254,9 +236,9 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           <ConditionsTableBase
             className="ctw-conditions-not-reviewed"
             stacked={breakpoints.sm}
-            conditions={OtherProviderRecords}
+            conditions={otherProviderRecords}
             isLoading={
-              OtherProviderRecordsResponse.isLoading ||
+              otherProviderRecordsResponse.isLoading ||
               patientRecordsResponse.isLoading
             }
             hideMenu={readOnly}

@@ -1,11 +1,10 @@
-import Client, { SearchParams } from "fhir-kit-client";
-import { find, mapValues, mergeWith } from "lodash";
+import { CTWRequestContext } from "@/components/core/ctw-context";
+import { SearchParams } from "fhir-kit-client";
+import { mapValues, mergeWith } from "lodash";
 
 import { getResources } from "./bundle";
-import { getClaims } from "./client";
 import {
   SYSTEM_SUMMARY,
-  SYSTEM_ZUS_BUILDER_ID,
   SYSTEM_ZUS_LENS,
   SYSTEM_ZUS_OWNER,
   SYSTEM_ZUS_THIRD_PARTY,
@@ -43,18 +42,18 @@ export type SearchReturn<T extends ResourceTypeString> = {
 // the user has access to. This can include lens and third party resources!
 // Returns {bundle: fhir4.Bundle, total: number, resources: ResourceType[]}.
 // Usage: {bundle, total, resources: tasks} =
-//          searchAllRecords("Task", fhirClient, searchParams)
+//          searchAllRecords("Task", requestContext, searchParams)
 // NOTE: "patientUPID" is a special searchParam that will correctly
 //       filter down to the resources pertaining to that patient UPID.
 export async function searchAllRecords<T extends ResourceTypeString>(
   resourceType: T,
-  fhirClient: Client,
+  requestContext: CTWRequestContext,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
   const { patientUPID, _count, ...params } = searchParams ?? {};
   const fetchAll = typeof _count === "undefined";
   const count = fetchAll ? MAX_COUNT : _count;
-  const bundle = (await fhirClient.search({
+  const bundle = (await requestContext.fhirClient.search({
     resourceType,
     searchParams: {
       ...params,
@@ -70,7 +69,7 @@ export async function searchAllRecords<T extends ResourceTypeString>(
 // Like searchAllRecords, but only for resources from this builder.
 export async function searchBuilderRecords<T extends ResourceTypeString>(
   resourceType: T,
-  fhirClient: Client,
+  requestContext: CTWRequestContext,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
   const nonBuilderTags = [
@@ -79,42 +78,40 @@ export async function searchBuilderRecords<T extends ResourceTypeString>(
     ...SUMMARY_TAGS,
     ...UPI_TAGS,
   ];
-  const claims = getClaims(fhirClient);
-  const builderTag = `${SYSTEM_ZUS_OWNER}|builder/${claims[SYSTEM_ZUS_BUILDER_ID]}`;
+  const builderTag = `${SYSTEM_ZUS_OWNER}|builder/${requestContext.builderId}`;
   const params = mergeParams(searchParams, {
     _tag: [builderTag],
     "_tag:not": nonBuilderTags,
   });
-  return searchAllRecords(resourceType, fhirClient, params);
+  return searchAllRecords(resourceType, requestContext, params);
 }
 
 // Like searchAllRecords, but filters down to only the lens.
 export async function searchLensRecords<T extends ResourceTypeString>(
   resourceType: T,
-  fhirClient: Client,
+  requestContext: CTWRequestContext,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
-  const claims = getClaims(fhirClient);
   const tagFilter = [
     ...SUMMARY_TAGS,
-    `${SYSTEM_ZUS_OWNER}|builder/${claims[SYSTEM_ZUS_BUILDER_ID]}`,
+    `${SYSTEM_ZUS_OWNER}|builder/${requestContext.builderId}`,
   ];
   const params = mergeParams(searchParams, {
     _tag: tagFilter,
   });
-  return searchAllRecords(resourceType, fhirClient, params);
+  return searchAllRecords(resourceType, requestContext, params);
 }
 
 // Like searchAllRecords, but filters out lens resources.
 export async function searchCommonRecords<T extends ResourceTypeString>(
   resourceType: T,
-  fhirClient: Client,
+  requestContext: CTWRequestContext,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
   const params = mergeParams(searchParams, {
     "_tag:not": [...LENS_TAGS, ...SUMMARY_TAGS, ...UPI_TAGS],
   });
-  return searchAllRecords(resourceType, fhirClient, params);
+  return searchAllRecords(resourceType, requestContext, params);
 }
 
 // Returns a new filers object with every value that was an array,
@@ -156,33 +153,6 @@ function patientSearchParams(
       throw new Error(
         `Unhandled patient search for resource type: ${resourceType}`
       );
-  }
-}
-
-export async function getUPIDfromPatientID(
-  fhirClient: Client,
-  patientID: string,
-  systemURL: string
-): Promise<string> {
-  try {
-    const bundle = (await fhirClient.search({
-      resourceType: "Patient",
-      searchParams: {
-        identifier: `${systemURL}|${patientID}`,
-      },
-    })) as fhir4.Bundle;
-
-    const patient = getResources(bundle, "Patient");
-
-    const patientUPID = find(patient[0].identifier, {
-      system: SYSTEM_ZUS_UNIVERSAL_ID,
-    })?.value as string;
-
-    return patientUPID;
-  } catch (e) {
-    throw new Error(
-      `Failed fetching patient UPID information for patient from patientID ${patientID} with system ${systemURL}: ${e}`
-    );
   }
 }
 
