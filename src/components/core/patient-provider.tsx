@@ -79,6 +79,7 @@ export function usePatient(): UseQueryResult<PatientModel, unknown> {
 }
 
 export function useQueryWithPatient<T>(
+  queryKey: string,
   keys: unknown[],
   query: (
     requestContext: CTWRequestContext,
@@ -87,7 +88,6 @@ export function useQueryWithPatient<T>(
 ) {
   const { getRequestContext } = useCTW();
   const patientResponse = usePatient();
-  const queryKey = keys.shift();
 
   return useQuery(
     [queryKey, patientResponse.data?.UPID, ...keys],

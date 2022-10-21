@@ -90,7 +90,8 @@ export function getNewCondition(patientId: string) {
 
 export function usePatientConditions(conditionFilters: ConditionFilters) {
   return useQueryWithPatient(
-    [PATIENT_CONDITIONS_KEY, conditionFilters],
+    PATIENT_CONDITIONS_KEY,
+    [conditionFilters],
     async (requestContext, patient) => {
       try {
         const { resources: conditions } = await searchBuilderRecords(
@@ -113,7 +114,8 @@ export function usePatientConditions(conditionFilters: ConditionFilters) {
 
 export function useOtherProviderConditions() {
   return useQueryWithPatient(
-    [OTHER_PROVIDER_CONDITIONS_KEY],
+    OTHER_PROVIDER_CONDITIONS_KEY,
+    [],
     async (requestContext, patient) => {
       try {
         const { resources: conditions } = await searchLensRecords(
@@ -135,7 +137,8 @@ export function useOtherProviderConditions() {
 
 export function useConditionHistory(condition?: ConditionModel) {
   return useQueryWithPatient(
-    [CONDITION_HISTORY_KEY, condition],
+    CONDITION_HISTORY_KEY,
+    [condition],
     async (requestContext, patient) => {
       if (!condition) return undefined;
 
