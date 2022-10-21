@@ -115,6 +115,7 @@ export const Table = <T extends MinRecordItem>({
       <div
         className={cx(
           "ctw-table-container",
+          "ctw-table",
           {
             "ctw-table-stacked": stacked,
             "ctw-table-scroll-left-shadow": showLeftShadow,

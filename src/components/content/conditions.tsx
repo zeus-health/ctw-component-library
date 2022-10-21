@@ -206,7 +206,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           </div>
 
           <ConditionsTableBase
-            className="ctw-table"
             stacked={breakpoints.sm}
             conditions={patientRecords}
             isLoading={patientRecordsResponse.isLoading}

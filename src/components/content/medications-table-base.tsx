@@ -60,7 +60,6 @@ export const MedicationsTableBase = ({
   return (
     <div className={`ctw-table ${className}`.trim()}>
       <Table
-        className="ctw-table"
         records={medicationStatements}
         columns={columns}
         message="There are no medications to display."
