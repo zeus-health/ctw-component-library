@@ -99,9 +99,9 @@ export const FormField = ({
           <LockClosedIcon className="ctw-absolute ctw-right-3 ctw-top-1/2 ctw-h-4 ctw-w-4 ctw--translate-y-1/2 ctw-transform ctw-fill-content-lighter" />
         )}
         {error && (
-          <div className="ctw-pointer-events-none ctw-absolute ctw-inset-y-0 ctw-right-0 ctw-flex ctw-items-center ctw-pr-3">
+          <div className="ctw-pointer-events-none ctw-absolute ctw-inset-y-0 ctw-right-0 ctw-top-2 ctw-flex ctw-h-min ctw-items-center ctw-pr-3">
             <ExclamationCircleIcon
-              className="ctw-h-5 ctw-w-5 ctw-text-error-main"
+              className="ctw-h-5 ctw-w-5 ctw-text-error-main  "
               aria-hidden="true"
             />
           </div>
