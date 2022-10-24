@@ -11,8 +11,9 @@ import { Theme } from "./styles/tailwind.theme";
 
 const {
   VITE_SYSTEM_URL,
-  VITE_PATIENT_ID,
   VITE_AUTH_TOKEN,
+  VITE_PATIENT_ID,
+  VITE_BUILDER_ID,
   VITE_AUTH0_DOMAIN,
   VITE_AUTH0_CLIENT_ID,
   VITE_AUTH0_AUDIENCE,
@@ -37,7 +38,12 @@ const theme: Theme = {
 };
 
 const DemoApp = ({ accessToken = "" }) => (
-  <CTWProvider env="dev" authToken={accessToken} theme={theme}>
+  <CTWProvider
+    env="dev"
+    authToken={accessToken}
+    theme={theme}
+    builderId={VITE_BUILDER_ID}
+  >
     <PatientProvider patientID={VITE_PATIENT_ID} systemURL={VITE_SYSTEM_URL}>
       <div className="App">
         <h1>CTW Component Library</h1>

@@ -23,7 +23,7 @@ import "./patient-medications.scss";
 import { ToggleControl } from "@/components/core/toggle-control";
 import {
   useQueryPatientLensMeds,
-  useQueryPatientMeds,
+  useQueryPatientBuilderMeds,
 } from "@/hooks/use-medications";
 
 type LoaderData = {
@@ -85,9 +85,9 @@ export function PatientMedications({
     setCreateMedData(getMedicationFormData(newMedicationStatement));
   };
 
-  const medicationsResponse = useQueryPatientMeds(statusParam);
+  const medicationsResponse = useQueryPatientBuilderMeds(statusParam);
   const lensActiveMedicationsResponse = useQueryPatientLensMeds();
-  const patientMedicationsResponse = useQueryPatientMeds();
+  const patientMedicationsResponse = useQueryPatientBuilderMeds();
 
   useEffect(() => {
     if (

@@ -8,8 +8,8 @@ import {
   searchLensRecords,
   SearchReturn,
 } from "./search-helpers";
-import { QueryFunctionContext } from "@tanstack/react-query";
-import { getFhirClientFromQuery } from "@/fhir/utils";
+import { CTWRequestContext } from "@/components/core/ctw-context";
+import { PatientModel } from "@/models/patients";
 
 export type InformationSource =
   | "Patient"
@@ -23,13 +23,6 @@ type MedicationFilter = {
   informationSource?: InformationSource;
   informationSourceNot?: InformationSource;
 };
-
-type PatientUPID = string;
-type QueryKeyMedicationFilter = [
-  string,
-  PatientUPID | undefined,
-  MedicationFilter | undefined
-];
 
 export type MedicationBuilder = {
   bundle: fhir4.Bundle;
@@ -67,19 +60,18 @@ function applySearchFiltersToResponse(
 
 /* Note when filtering the bundle may contain data that will no longer be in the returned medications. */
 export async function getBuilderMedications(
-  queryParams: QueryFunctionContext<QueryKeyMedicationFilter>
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  keys: object[] = []
 ): Promise<MedicationBuilder> {
-  const { meta, queryKey } = queryParams;
-
-  const fhirClient = getFhirClientFromQuery(meta);
-  const [_, patientUPID = "", searchFilters = {}] = queryKey;
+  const [searchFilters = {}] = keys;
 
   try {
     const response = await searchBuilderRecords(
       "MedicationStatement",
-      fhirClient,
+      requestContext,
       {
-        patientUPID,
+        patientUPID: patient.UPID as string,
         _include: "MedicationStatement:medication",
         ...omitClientFilters(searchFilters),
       }
@@ -95,19 +87,18 @@ export async function getBuilderMedications(
 
 /* Note when filtering the bundle may contain data that will no longer be in the returned medications. */
 export async function getPatientLensMedications(
-  queryParams: QueryFunctionContext<QueryKeyMedicationFilter>
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  keys = []
 ): Promise<MedicationBuilder> {
-  const { meta, queryKey } = queryParams;
-
-  const fhirClient = getFhirClientFromQuery(meta);
-  const [_, patientUPID = "", searchFilters = {}] = queryKey;
+  const [searchFilters = {}] = keys;
 
   try {
     const response = await searchLensRecords(
       "MedicationStatement",
-      fhirClient,
+      requestContext,
       {
-        patientUPID,
+        patientUPID: patient.UPID as string,
         _include: "MedicationStatement:medication",
         ...omitClientFilters(searchFilters),
       }

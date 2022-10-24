@@ -1,5 +1,6 @@
 import { getFhirClient } from "@/fhir/client";
 import { DefaultTheme, mapToCSSVar, Theme } from "@/styles/tailwind.theme";
+import { claimsBuilderId } from "@/utils/auth";
 import { queryClient } from "@/utils/request";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { merge } from "lodash";
@@ -7,12 +8,19 @@ import {
   ReactNode,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
-import { CTWState, CTWStateContext, CTWToken } from "./ctw-context";
+import {
+  CTWRequestContext,
+  CTWState,
+  CTWStateContext,
+  CTWToken,
+} from "./ctw-context";
 import "./main.scss";
+import { version } from "../../../package.json";
 
 export type Env = "dev" | "sandbox" | "production";
 
@@ -24,13 +32,28 @@ type AuthTokenURLSpecified = { authToken?: never; authTokenURL: string };
 type CTWProviderProps = {
   children: ReactNode;
   env: Env;
+  builderId?: string;
   theme?: Theme;
   headers?: HeadersInit;
 } & (AuthTokenSpecified | AuthTokenURLSpecified);
 
+declare global {
+  interface Window {
+    CTWComponentLibrary: {
+      version: string;
+    };
+  }
+}
+
 function CTWProvider({ theme, children, ...ctwState }: CTWProviderProps) {
   const [token, setToken] = useState<CTWToken>();
   const ctwProviderRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    window.CTWComponentLibrary = {
+      version,
+    };
+  }, []);
 
   const handleAuth = useCallback(async () => {
     if (ctwState.authToken) {
@@ -89,13 +112,22 @@ function useCTW() {
     throw new Error("useCTW must be used within a CTWProvider");
   }
 
-  const getCTWFhirClient = useCallback(async () => {
+  const getRequestContext = useCallback(async () => {
     const authToken = await context.actions.handleAuth();
-    return getFhirClient(context.env, authToken);
+    const requestContext: CTWRequestContext = {
+      env: context.env,
+      authToken,
+      builderId: context.builderId ?? claimsBuilderId(authToken),
+      fhirClient: getFhirClient(context.env, authToken, context.builderId),
+    };
+    return requestContext;
   }, [context]);
+
   return {
-    getCTWFhirClient,
+    getRequestContext,
     theme: context.theme as Required<Theme>,
+    authToken: context.authToken as string,
+    env: context.env,
     ctwProviderRef: context.ctwProviderRef,
   };
 }

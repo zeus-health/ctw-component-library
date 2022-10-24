@@ -1,50 +1,26 @@
+import { CTWRequestContext } from "@/components/core/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
-import { getClaims } from "@/fhir/client";
 import { isFhirError } from "@/fhir/errors";
 import { dateToISO } from "@/fhir/formatters";
 import { getPractitioner } from "@/fhir/practitioner";
 import {
   SYSTEM_CONDITION_CLINICAL,
   SYSTEM_CONDITION_VERIFICATION_STATUS,
-  SYSTEM_PRACTITIONER_ID,
-  SYSTEM_SNOMED,
 } from "@/fhir/system-urls";
 import { ConditionModel } from "@/models/conditions";
+import { claimsPractitionerId } from "@/utils/auth";
 import { getFormData } from "@/utils/form-helper";
+import {
+  QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
+  QUERY_KEY_PATIENT_CONDITIONS,
+} from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
-import Client from "fhir-kit-client";
-import { z } from "zod";
 
-export const conditionSchema = z.object({
-  id: z.string().optional(),
-  subjectID: z.string({
-    required_error: "Condition subjectID must be specified.",
-  }),
-  display: z.string({ required_error: "Condition name must be specified." }),
-  snomedCode: z.string({ required_error: "Snomed code must be provided." }),
-  clinicalStatus: z.enum([
-    "active",
-    "recurrence",
-    "relapse",
-    "inactive",
-    "remission",
-    "resolved",
-  ]),
-  onset: z.date({ required_error: "Conditions's onset is required." }),
-  abatement: z.date().optional(),
-  verificationStatus: z.enum([
-    "unconfirmed",
-    "provisional",
-    "differential",
-    "confirmed",
-    "refuted",
-    "entered-in-error",
-  ]),
-  note: z.string().optional(),
-});
-
-const setRecorderField = async (practitionerId: string, fhirClient: Client) => {
-  const practitioner = await getPractitioner(practitionerId, fhirClient);
+const setRecorderField = async (
+  practitionerId: string,
+  requestContext: CTWRequestContext
+) => {
+  const practitioner = await getPractitioner(practitionerId, requestContext);
   const display = practitioner.fullName;
 
   return {
@@ -57,24 +33,24 @@ const setRecorderField = async (practitionerId: string, fhirClient: Client) => {
 export const createOrEditCondition = async (
   data: FormData,
   patientID: string,
-  getCTWFhirClient: () => Promise<Client>
+  getRequestContext: () => Promise<CTWRequestContext>,
+  schema: Zod.AnyZodObject
 ) => {
-  const result = await getFormData(data, conditionSchema);
+  const result = await getFormData(data, schema);
+
   if (!result.success) {
     return result;
   }
 
-  const fhirClient = await getCTWFhirClient();
-  const practitionerId = getClaims(fhirClient)[
-    SYSTEM_PRACTITIONER_ID
-  ] as string;
+  const requestContext = await getRequestContext();
+  const practitionerId = claimsPractitionerId(requestContext.authToken);
 
   // Some fields will need to be set as they are required.
   const fhirCondition: fhir4.Condition = {
     resourceType: "Condition",
     id: result.data.id,
     ...(practitionerId && {
-      recorder: await setRecorderField(practitionerId, fhirClient),
+      recorder: await setRecorderField(practitionerId, requestContext),
     }),
     clinicalStatus: {
       coding: [
@@ -92,16 +68,20 @@ export const createOrEditCondition = async (
         },
       ],
     },
-    code: {
-      coding: [
-        {
-          system: SYSTEM_SNOMED,
-          code: result.data.snomedCode,
-          display: result.data.display,
-        },
-      ],
-      text: result.data.display,
-    },
+    // Keep all existing codings when editing a condition
+    code:
+      result.data.id && result.data.condition.coding
+        ? result.data.condition
+        : {
+            coding: [
+              {
+                system: result.data.condition.system,
+                code: result.data.condition.code,
+                display: result.data.condition.display,
+              },
+            ],
+            text: result.data.condition.display,
+          },
     ...(result.data.abatement && {
       abatementDateTime: dateToISO(result.data.abatement),
     }),
@@ -115,14 +95,15 @@ export const createOrEditCondition = async (
 
   const response = await createOrEditFhirResource({
     resourceModel,
-    fhirClient,
+    fhirClient: requestContext.fhirClient,
   });
 
   if (isFhirError(response)) {
     result.success = false;
   }
 
-  queryClient.invalidateQueries(["conditions"]);
+  queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]);
+  queryClient.invalidateQueries([QUERY_KEY_OTHER_PROVIDER_CONDITIONS]);
 
   return result;
 };

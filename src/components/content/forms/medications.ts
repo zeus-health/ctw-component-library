@@ -1,14 +1,13 @@
+import { z } from "zod";
+import Client from "fhir-kit-client";
+import { CTWRequestContext } from "@/components/core/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
-import { getClaims } from "@/fhir/client";
 import { isFhirError } from "@/fhir/errors";
 import { dateToISO } from "@/fhir/formatters";
-import { getPractitioner } from "@/fhir/practitioner";
-import { SYSTEM_PRACTITIONER_ID, SYSTEM_RXNORM } from "@/fhir/system-urls";
+import { SYSTEM_RXNORM } from "@/fhir/system-urls";
 import { MedicationStatementModel } from "@/models/medication-statement";
 import { getFormData } from "@/utils/form-helper";
 import { queryClient } from "@/utils/request";
-import Client from "fhir-kit-client";
-import { z } from "zod";
 import type { FormEntry } from "./drawer-form-with-fields";
 
 export const medicationStatementSchema = z.object({
@@ -35,14 +34,14 @@ export const medicationStatementSchema = z.object({
 export const createMedicationStatement = async (
   data: FormData,
   patientID: string,
-  getCTWFhirClient: () => Promise<Client>
+  getRequestContext: () => Promise<CTWRequestContext>
 ) => {
   const result = await getFormData(data, medicationStatementSchema);
   if (!result.success) {
     return result;
   }
 
-  const fhirClient = await getCTWFhirClient();
+  const { fhirClient } = await getRequestContext();
 
   // Some fields will need to be set as they are required.
   const fhirMedicationStatement: fhir4.MedicationStatement = {
@@ -77,6 +76,7 @@ export const createMedicationStatement = async (
     result.success = false;
   }
 
+  // @todo replace these with constants
   queryClient.invalidateQueries(["medications"]);
   queryClient.invalidateQueries(["lens-medications"]);
   queryClient.invalidateQueries(["patient-medications"]);

@@ -1,11 +1,10 @@
 import { capitalize } from "lodash";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { MedicationModel } from "@/models/medication";
 import {
   CTWPatientContext,
   usePatient,
 } from "@/components/core/patient-provider";
-import { useFhirClientRef } from "@/fhir/utils";
 import { DataListStack } from "../core/data-list-table";
 import { Spinner } from "../core/spinner";
 import type {
@@ -20,8 +19,6 @@ export type MedicationHistoryProps = {
 };
 
 export function MedicationHistory({ rxNorm }: MedicationHistoryProps) {
-  const { patientID, systemURL } = useContext(CTWPatientContext);
-  const fhirClientRef = useFhirClientRef();
   const patient = usePatient();
   const [medications, setMedications] = useState<DataListStackEntries>([]);
   const [loading, setLoading] = useState(true);
