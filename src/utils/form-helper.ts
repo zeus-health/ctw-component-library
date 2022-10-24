@@ -16,11 +16,13 @@ import Zod, {
   ZodString,
   ZodType,
   ZodTypeAny,
+  ZodUnknown,
 } from "zod";
 
 export function parseParams(o: any, schema: any, key: string, value: any) {
   // find actual shape definition for this key
   let shape = schema;
+
   while (shape instanceof ZodObject || shape instanceof ZodEffects) {
     shape =
       shape instanceof ZodObject
@@ -85,6 +87,16 @@ export function processDef(
   } else if (def instanceof ZodEffects) {
     processDef(def._def.schema, o, key, value);
     return;
+  } else if (def instanceof ZodObject) {
+    const parsedJson = JSON.parse(value);
+    parsedValue = parsedJson;
+    Object.entries(def.shape).forEach(([key, _]) => {
+      if (!parsedValue[key]) {
+        delete parsedJson[key];
+      }
+    });
+  } else if (def instanceof ZodUnknown) {
+    parsedValue = JSON.parse(value);
   } else {
     throw new Error(`Unexpected type ${def._def.typeName} for key ${key}`);
   }
@@ -116,7 +128,6 @@ export function getParamsInternal<T>(
     entries = Object.entries(params);
   }
 
-  // TODO: update this
   for (const [key, value] of entries) {
     // infer an empty param as if it wasn't defined in the first place
     if (value === "") {
@@ -137,7 +148,6 @@ export function getParamsInternal<T>(
       if (!Array.isArray(errors[key])) {
         errors[key] = [errors[key]];
       }
-      errors[key].push(message);
     }
   };
 
@@ -150,6 +160,7 @@ export function getParamsInternal<T>(
       value = value[index];
       prop = `${key}[${index}]`;
     }
+
     addError(key, message);
   });
 

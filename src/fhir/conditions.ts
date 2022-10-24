@@ -1,9 +1,13 @@
-import { setAddConditionDefaults } from "@/components/content/forms/condition-helpers";
+import { setAddConditionDefaults } from "@/components/content/forms/conditions-autocomplete";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
 import { ConditionModel } from "@/models/conditions";
+import {
+  QUERY_KEY_CONDITION_HISTORY,
+  QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
+  QUERY_KEY_PATIENT_CONDITIONS,
+} from "@/utils/query-keys";
 import { SearchParams } from "fhir-kit-client";
 import { sortBy } from "lodash";
-
 import {
   flattenArrayFilters,
   searchBuilderRecords,
@@ -65,7 +69,8 @@ export function getNewCondition(patientId: string) {
 
 export function usePatientConditions(conditionFilters: ConditionFilters) {
   return useQueryWithPatient(
-    ["patientConditions", conditionFilters],
+    QUERY_KEY_PATIENT_CONDITIONS,
+    [conditionFilters],
     async (requestContext, patient) => {
       try {
         const { resources: conditions } = await searchBuilderRecords(
@@ -88,7 +93,8 @@ export function usePatientConditions(conditionFilters: ConditionFilters) {
 
 export function useOtherProviderConditions() {
   return useQueryWithPatient(
-    ["otherProviderConditions"],
+    QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
+    [],
     async (requestContext, patient) => {
       try {
         const { resources: conditions } = await searchLensRecords(
@@ -110,7 +116,8 @@ export function useOtherProviderConditions() {
 
 export function useConditionHistory(condition?: ConditionModel) {
   return useQueryWithPatient(
-    ["conditionHistory", condition],
+    QUERY_KEY_CONDITION_HISTORY,
+    [condition],
     async (requestContext, patient) => {
       if (!condition) return undefined;
 
