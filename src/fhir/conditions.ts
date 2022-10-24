@@ -9,7 +9,6 @@ import {
 import { SearchParams } from "fhir-kit-client";
 import { sortBy } from "lodash";
 import { CodePreference } from "./codeable-concept";
-
 import {
   flattenArrayFilters,
   searchBuilderRecords,
