@@ -13,6 +13,10 @@ import {
 } from "@/fhir/conditions";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { ConditionModel } from "@/models/condition";
+import {
+  QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
+  QUERY_KEY_PATIENT_CONDITIONS,
+} from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import cx from "classnames";
 import { union } from "lodash";
@@ -306,7 +310,12 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           resourceName={selectedCondition.display || "unnamed condition"}
           onClose={() => setShowConfirmDelete(false)}
           isOpen={showConfirmDelete}
-          onDelete={() => queryClient.invalidateQueries(["conditions"])}
+          onDelete={() => {
+            queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]);
+            queryClient.invalidateQueries([
+              QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
+            ]);
+          }}
         />
       )}
     </div>
