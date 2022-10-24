@@ -1,5 +1,5 @@
 import { useQueryWithPatient } from "@/components/core/patient-provider";
-import { ConditionModel } from "@/models/conditions";
+import { ConditionModel } from "@/models/condition";
 import {
   QUERY_KEY_CONDITION_HISTORY,
   QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
@@ -193,7 +193,7 @@ export const filterConditionsWithConfirmedCodes = (
   confirmedCodes: fhir4.Coding[]
 ) =>
   target.filter((c) => {
-    const conditionModel = new ConditionModel(c);
+    const conditionModel: ConditionModel = new ConditionModel(c);
 
     return !confirmedCodes.some((code) =>
       conditionModel.knownCodings.some(
