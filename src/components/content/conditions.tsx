@@ -22,8 +22,10 @@ import { ConditionsNoPatient } from "./conditions-no-patient";
 import { ConditionsTableBase } from "./conditions-table-base";
 import "./conditions.scss";
 import { getAddConditionData } from "./forms/condition-schema";
-import { createOrEditCondition } from "./forms/conditions";
-import { setAddConditionDefaults } from "./forms/conditions-autocomplete";
+import {
+  createOrEditCondition,
+  setAddConditionDefaults,
+} from "./forms/conditions";
 import {
   DrawerFormWithFields,
   FormEntry,
