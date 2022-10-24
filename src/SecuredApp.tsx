@@ -27,7 +27,7 @@ const SecuredAppComponent = ({ AppComponent }: SecuredAppProps) => {
         Log Out
       </button>
 
-      <AppComponent accessToken={authToken} />
+      {authToken && <AppComponent accessToken={authToken} />}
     </>
   );
 };

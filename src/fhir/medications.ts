@@ -117,7 +117,7 @@ export async function getPatientLensMedications(
 
     return { bundle: response.bundle, medications };
   } catch (e) {
-    throw errorResponse("Failed fetching active medications for patient", e);
+    throw errorResponse("Failed fetching medications for patient", e);
   }
 }
 

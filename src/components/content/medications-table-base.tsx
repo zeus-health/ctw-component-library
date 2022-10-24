@@ -7,21 +7,15 @@ import { ActiveColumn } from "./columns/active-column";
 import { MedicationDrawer } from "./medication-drawer";
 
 export type MedicationsTableBaseProps = {
-  currentPage: number;
   medicationStatements: MedicationStatementModel[];
-  pageSize: number;
-  param: string;
-  total: number;
   showLensStatus?: boolean;
   className?: string;
 };
 
-// @todo this isn't doing pagination
 export const MedicationsTableBase = ({
   className = "",
   medicationStatements,
   showLensStatus = false,
-  total,
 }: MedicationsTableBaseProps) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedMedication, setSelectedMedication] =

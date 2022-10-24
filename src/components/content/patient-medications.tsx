@@ -11,11 +11,9 @@ import {
   getMedicationFormData,
   medicationStatementSchema,
 } from "./forms/medications";
-import type { ResourceMap } from "@/fhir/types";
 import { MedicationStatementModel } from "@/models/medication-statement";
 import { CTWPatientContext, usePatient } from "../core/patient-provider";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
-import { useFhirClientRef } from "@/fhir/utils";
 import { getMergedIncludedResources } from "@/fhir/bundle";
 import { createPatientStatusMap, getRxNormCode } from "@/fhir/medication";
 import type { ClinicalStatus } from "@/fhir/medication";
@@ -28,26 +26,10 @@ import {
   useQueryPatientMeds,
 } from "@/hooks/use-medications";
 
-const BUILDER_PAGING = {
-  size: 10,
-  param: "my-medications-page",
-};
-
-const LENS_PAGING = {
-  size: 10,
-  param: "otherProvider-medications-page",
-};
-
 type LoaderData = {
-  builderMedications?: fhir4.MedicationStatement[];
-  builderMedicationsTotal?: number;
-  builderMedicationsPage?: number;
   builderPatientRxNormStatuses?: Record<string, string>;
-  lensMedications?: fhir4.MedicationStatement[];
-  lensMedicationsTotal?: number;
-  lensMedicationsPage?: number;
-  lensActiveRxNorms?: string[];
-  includedResources?: ResourceMap;
+  activeMedicationModels?: MedicationStatementModel[];
+  otherProviderActiveMedicationModels?: MedicationStatementModel[];
 };
 
 type PatientMedicationsProps = {
@@ -69,23 +51,12 @@ export function PatientMedications({
   showConfirmedMedsTable = true,
 }: PatientMedicationsProps) {
   const [
-    {
-      builderMedications = [],
-      lensMedications = [],
-      builderMedicationsTotal = 0,
-      builderMedicationsPage = 0,
-      builderPatientRxNormStatuses,
-      lensMedicationsTotal = 0,
-      lensMedicationsPage = 0,
-      lensActiveRxNorms,
-      includedResources,
-    },
+    { activeMedicationModels = [], otherProviderActiveMedicationModels = [] },
     setLoaderState,
   ] = useState<LoaderData>({});
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
-  const { patientID, systemURL } = useContext(CTWPatientContext);
-  const fhirClientRef = useFhirClientRef();
+  const { patientID } = useContext(CTWPatientContext);
   const patient = usePatient();
   const [createMedData, setCreateMedData] = useState<FormEntry[]>();
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
@@ -125,19 +96,15 @@ export function PatientMedications({
       patientMedicationsResponse.data?.bundle
     ) {
       let { medications } = medicationsResponse.data;
-      let lensActiveMedications =
-        lensActiveMedicationsResponse.data.medications;
+      let lensMedications = lensActiveMedicationsResponse.data.medications;
       const patientMedications = lensActiveMedicationsResponse.data.medications;
-      // @todo refactor so eslint directive not needed
-      // eslint-disable-next-line @typescript-eslint/no-shadow
+
       const includedResources = getMergedIncludedResources([
         medicationsResponse.data.bundle,
         lensActiveMedicationsResponse.data.bundle,
         patientMedicationsResponse.data.bundle,
       ]);
 
-      // @todo refactor so eslint directive not needed
-      // eslint-disable-next-line @typescript-eslint/no-shadow
       const builderPatientRxNormStatuses = createPatientStatusMap(
         patientMedications,
         includedResources
@@ -149,14 +116,14 @@ export function PatientMedications({
           .map((medication) => getRxNormCode(medication, includedResources))
       );
 
-      const activeRxNorms = compact(
-        lensActiveMedications.map((medication) =>
+      const lensActiveRxNorms = compact(
+        lensMedications.map((medication) =>
           getRxNormCode(medication, includedResources)
         )
       );
 
       // Filter out any active medications that the builder already knows about.
-      lensActiveMedications = lensActiveMedications.filter(
+      lensMedications = lensMedications.filter(
         (medication) =>
           !builderActiveRxNorms.includes(
             getRxNormCode(medication, includedResources) ?? ""
@@ -177,7 +144,7 @@ export function PatientMedications({
           new MedicationStatementModel(
             c,
             includedResources,
-            activeRxNorms,
+            lensActiveRxNorms,
             builderPatientRxNormStatuses
           )[myMedSortColumn],
         myMedSortOrder,
@@ -189,71 +156,49 @@ export function PatientMedications({
         sortOrder: otherProviderMedSortOrder = "asc",
       } = getSortInfo(MedicationStatementModel, otherProviderMedsSort);
 
-      lensActiveMedications = sort(
-        lensActiveMedications,
+      lensMedications = sort(
+        lensMedications,
         (c) =>
           new MedicationStatementModel(
             c,
             includedResources,
-            activeRxNorms,
+            lensActiveRxNorms,
             builderPatientRxNormStatuses
           )[otherProviderMedSortColumn],
         otherProviderMedSortOrder,
         otherProviderMedSortColumn === "effectiveStart"
       );
 
-      // @todo: don't set these to 0 automatically
-      const builderMedicationsPageOffset = 0;
-      const lensMedicationsPageOffset = 0;
-
       setLoaderState({
-        lensMedications: lensActiveMedications.slice(
-          lensMedicationsPageOffset,
-          lensMedicationsPageOffset + LENS_PAGING.size
-        ),
-        builderMedications: medications.slice(
-          builderMedicationsPageOffset,
-          builderMedicationsPageOffset + BUILDER_PAGING.size
-        ),
-        builderMedicationsTotal: medications.length,
-        builderMedicationsPage,
         builderPatientRxNormStatuses,
-        lensMedicationsTotal: lensActiveMedications.length,
-        lensMedicationsPage,
-        lensActiveRxNorms: activeRxNorms,
-        includedResources,
+        activeMedicationModels: medications.map(
+          (medication) =>
+            new MedicationStatementModel(
+              medication,
+              includedResources,
+              lensActiveRxNorms,
+              builderPatientRxNormStatuses
+            )
+        ),
+        otherProviderActiveMedicationModels: lensMedications.map(
+          (medication) =>
+            new MedicationStatementModel(
+              medication,
+              includedResources,
+              lensActiveRxNorms,
+              builderPatientRxNormStatuses
+            )
+        ),
       });
     }
   }, [
     medicationsResponse.data,
     lensActiveMedicationsResponse.data,
     patientMedicationsResponse.data,
-    builderMedicationsPage,
-    lensMedicationsPage,
     includeInactiveMeds,
     otherProviderMedsSort,
     medsSort,
   ]);
-
-  const activeMedicationModels = builderMedications.map(
-    (medication) =>
-      new MedicationStatementModel(
-        medication,
-        includedResources,
-        lensActiveRxNorms,
-        builderPatientRxNormStatuses
-      )
-  );
-
-  const otherProviderActiveMedicationModels = lensMedications.map(
-    (medication) =>
-      new MedicationStatementModel(
-        medication,
-        includedResources,
-        lensActiveRxNorms,
-        builderPatientRxNormStatuses
-      )
-  );
 
   return (
     <div
@@ -292,10 +237,6 @@ export function PatientMedications({
             </div>
             <MedicationsTableBase
               medicationStatements={activeMedicationModels}
-              total={builderMedicationsTotal}
-              param={BUILDER_PAGING.param}
-              pageSize={BUILDER_PAGING.size}
-              currentPage={builderMedicationsPage}
             />
           </div>
         )}
@@ -306,10 +247,6 @@ export function PatientMedications({
           </div>
           <MedicationsTableBase
             medicationStatements={otherProviderActiveMedicationModels}
-            total={lensMedicationsTotal}
-            param={LENS_PAGING.param}
-            pageSize={LENS_PAGING.size}
-            currentPage={lensMedicationsPage}
           />
         </div>
       </div>
