@@ -5,7 +5,7 @@ import { SecuredApp } from "./SecuredApp";
 import { Conditions } from "./components/content/conditions";
 import { PatientMedications } from "./components/content/patient-medications";
 import { CTWProvider } from "./components/core/ctw-provider";
-import { ErrorBoundary } from "./components/core/error-boundary";
+import { ErrorBoundary } from "./error-boundary";
 import { PatientProvider } from "./components/core/patient-provider";
 import { Theme } from "./styles/tailwind.theme";
 
