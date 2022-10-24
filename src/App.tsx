@@ -89,7 +89,8 @@ function App() {
         domain={VITE_AUTH0_DOMAIN}
         clientId={VITE_AUTH0_CLIENT_ID}
         audience={VITE_AUTH0_AUDIENCE}
-        redirectUri={window.location.origin}
+        redirectUri={`${window.location.origin}/auth/callback`}
+        scope="openid profile email offline_access"
       >
         <SecuredApp AppComponent={DemoApp} />
       </Auth0Provider>
