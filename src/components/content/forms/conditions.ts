@@ -6,46 +6,15 @@ import { getPractitioner } from "@/fhir/practitioner";
 import {
   SYSTEM_CONDITION_CLINICAL,
   SYSTEM_CONDITION_VERIFICATION_STATUS,
-  SYSTEM_SNOMED,
 } from "@/fhir/system-urls";
 import { ConditionModel } from "@/models/conditions";
 import { claimsPractitionerId } from "@/utils/auth";
 import { getFormData } from "@/utils/form-helper";
+import {
+  QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
+  QUERY_KEY_PATIENT_CONDITIONS,
+} from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
-import { z } from "zod";
-
-export const conditionSchema = z.object({
-  id: z.string().optional(),
-  subjectID: z.string({
-    required_error: "Condition subjectID must be specified.",
-  }),
-  display: z.string({ required_error: "Condition name must be specified." }),
-  snomedCode: z.string({ required_error: "Snomed code must be provided." }),
-  clinicalStatus: z.enum([
-    "active",
-    "recurrence",
-    "relapse",
-    "inactive",
-    "remission",
-    "resolved",
-  ]),
-  onset: z
-    .date({ required_error: "Condition's onset is required." })
-    .max(new Date(), { message: "Onset cannot be a future date." }),
-  abatement: z
-    .date()
-    .max(new Date(), { message: "Abatement cannot be a future date." })
-    .optional(),
-  verificationStatus: z.enum([
-    "unconfirmed",
-    "provisional",
-    "differential",
-    "confirmed",
-    "refuted",
-    "entered-in-error",
-  ]),
-  note: z.string().optional(),
-});
 
 const setRecorderField = async (
   practitionerId: string,
@@ -64,9 +33,11 @@ const setRecorderField = async (
 export const createOrEditCondition = async (
   data: FormData,
   patientID: string,
-  getRequestContext: () => Promise<CTWRequestContext>
+  getRequestContext: () => Promise<CTWRequestContext>,
+  schema: Zod.AnyZodObject
 ) => {
-  const result = await getFormData(data, conditionSchema);
+  const result = await getFormData(data, schema);
+
   if (!result.success) {
     return result;
   }
@@ -97,16 +68,20 @@ export const createOrEditCondition = async (
         },
       ],
     },
-    code: {
-      coding: [
-        {
-          system: SYSTEM_SNOMED,
-          code: result.data.snomedCode,
-          display: result.data.display,
-        },
-      ],
-      text: result.data.display,
-    },
+    // Keep all existing codings when editing a condition
+    code:
+      result.data.id && result.data.condition.coding
+        ? result.data.condition
+        : {
+            coding: [
+              {
+                system: result.data.condition.system,
+                code: result.data.condition.code,
+                display: result.data.condition.display,
+              },
+            ],
+            text: result.data.condition.display,
+          },
     ...(result.data.abatement && {
       abatementDateTime: dateToISO(result.data.abatement),
     }),
@@ -127,7 +102,8 @@ export const createOrEditCondition = async (
     result.success = false;
   }
 
-  queryClient.invalidateQueries(["conditions"]);
+  queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]);
+  queryClient.invalidateQueries([QUERY_KEY_OTHER_PROVIDER_CONDITIONS]);
 
   return result;
 };

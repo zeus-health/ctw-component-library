@@ -1,4 +1,5 @@
 import { useFormInputProps } from "@/utils/form-helper";
+import { InputHTMLAttributes } from "react";
 import type { DrawerFormProps } from "./drawer-form";
 import { DrawerForm } from "./drawer-form";
 import { FormField } from "./form-field";
@@ -10,6 +11,10 @@ export type FormEntry = {
   lines?: number;
   readonly?: boolean;
   hidden?: boolean;
+  render?: (
+    readOnly: boolean | undefined,
+    inputProps: InputHTMLAttributes<HTMLInputElement>
+  ) => JSX.Element;
 };
 
 export type DrawerFormWithFieldsProps<T> = {
@@ -34,54 +39,59 @@ export const DrawerFormWithFields = <T,>({
       patientID={patientID}
       title={title}
       action={action}
+      schema={schema}
       {...drawerFormProps}
     >
       {(submitting, errors) => (
         <div className="ctw-space-y-6">
-          {data.map(({ label, field, value, lines, readonly, hidden }) => {
-            const error = errors?.[field];
+          {data.map(
+            ({ label, field, value, lines, readonly, hidden, render }) => {
+              const error = errors?.[field];
 
-            if (hidden) {
+              if (hidden) {
+                return (
+                  <FormField
+                    key={label}
+                    {...inputProps(field, schema)}
+                    lines={lines}
+                    disabled={submitting}
+                    readonly={readonly}
+                    defaultValue={value}
+                    error={error}
+                    hidden={hidden}
+                    render={render}
+                  />
+                );
+              }
+
               return (
-                <FormField
+                <div
                   key={label}
-                  {...inputProps(field, schema)}
-                  lines={lines}
-                  disabled={submitting}
-                  readonly={readonly}
-                  defaultValue={value}
-                  error={error}
-                  hidden={hidden}
-                />
+                  className="ctw-space-y-1.5 ctw-text-sm ctw-font-medium ctw-text-content-black"
+                >
+                  <div className="ctw-flex ctw-justify-between">
+                    <label>{label}</label>
+                    {!inputProps(field)["aria-required"] && (
+                      <span className="ctw-right-0 ctw-inline-block ctw-text-xs ctw-text-content-black">
+                        Optional
+                      </span>
+                    )}
+                  </div>
+
+                  <FormField
+                    {...inputProps(field, schema)}
+                    lines={lines}
+                    disabled={submitting}
+                    readonly={readonly}
+                    defaultValue={value}
+                    error={error}
+                    hidden={hidden}
+                    render={render}
+                  />
+                </div>
               );
             }
-
-            return (
-              <div
-                key={label}
-                className="ctw-space-y-1.5 ctw-text-sm ctw-font-medium ctw-text-content-black"
-              >
-                <div className="ctw-flex ctw-justify-between">
-                  <label>{label}</label>
-                  {!inputProps(field)["aria-required"] && (
-                    <span className="ctw-right-0 ctw-inline-block ctw-text-xs ctw-text-content-black">
-                      Optional
-                    </span>
-                  )}
-                </div>
-
-                <FormField
-                  {...inputProps(field, schema)}
-                  lines={lines}
-                  disabled={submitting}
-                  readonly={readonly}
-                  defaultValue={value}
-                  error={error}
-                  hidden={hidden}
-                />
-              </div>
-            );
-          })}
+          )}
         </div>
       )}
     </DrawerForm>

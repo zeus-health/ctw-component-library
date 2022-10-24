@@ -1,12 +1,12 @@
 import type { MinRecordItem, TableColumn } from "./table";
 
-export type TableColgroupProps<T extends MinRecordItem> = {
+export type TableColGroupProps<T extends MinRecordItem> = {
   columns: TableColumn<T>[];
 };
 
-export const TableColgroup = <T extends MinRecordItem>({
+export const TableColGroup = <T extends MinRecordItem>({
   columns,
-}: TableColgroupProps<T>) => (
+}: TableColGroupProps<T>) => (
   <colgroup>
     {columns.map((column, index) => (
       <col
