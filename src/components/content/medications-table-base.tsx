@@ -3,8 +3,23 @@ import { compact } from "lodash/fp";
 import type { TableColumn } from "@/components/core/table/table";
 import { Table } from "@/components/core/table/table";
 import type { MedicationStatementModel } from "@/models/medication-statement";
-import { ActiveColumn } from "./columns/active-column";
 import { MedicationDrawer } from "./medication-drawer";
+import { Badge } from "@/components/core/badge";
+
+const LensStatusColumn = ({ status }: { status: string }) => {
+  function statusToColor() {
+    switch (status.toLowerCase()) {
+      case "inactive":
+        return "caution";
+      case "active":
+        return "good";
+      default:
+        return "caution";
+    }
+  }
+
+  return <Badge color={statusToColor()} text={status} className="uppercase" />;
+};
 
 export type MedicationsTableBaseProps = {
   medicationStatements: MedicationStatementModel[];
@@ -26,7 +41,7 @@ export const MedicationsTableBase = ({
     setDrawerOpen(true);
   }
 
-  const columns: TableColumn<MedicationStatementModel>[] = compact([
+  const columns = compact([
     {
       title: "Medication Name",
       dataIndex: "display",
@@ -46,10 +61,13 @@ export const MedicationsTableBase = ({
       ? null
       : {
           title: "Lens Status",
-          render: () => <ActiveColumn status="active" />,
+          dataIndex: "lensStatus",
           className: "w-[20%] min-w-[9rem]",
+          render: (ms: MedicationStatementModel) => (
+            <LensStatusColumn status={ms.lensStatus} />
+          ),
         },
-  ]);
+  ]) as TableColumn<MedicationStatementModel>[];
 
   return (
     <div className={`ctw-table ${className}`.trim()}>
