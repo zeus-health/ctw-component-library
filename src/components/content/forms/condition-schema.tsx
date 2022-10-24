@@ -32,25 +32,13 @@ export const getEditingPatientConditionData = ({
     hidden: true,
   },
   {
-    label: "condition",
-    field: "condition",
-    hidden: true,
-    render: (readonly, inputProps): JSX.Element => (
-      <input
-        value={JSON.stringify(condition.codings)}
-        {...inputProps}
-        disabled={readonly}
-      />
-    ),
-  },
-  {
     label: "Condition",
     field: "condition",
     value: condition.display,
     readonly: true,
     render: (readonly: boolean | undefined, inputProps) => (
       <ConditionsAutoComplete
-        defaultCoding={condition.snomedCoding}
+        defaultCoding={condition.codings}
         readonly={readonly}
         {...inputProps}
       />

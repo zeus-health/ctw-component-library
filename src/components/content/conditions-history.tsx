@@ -86,6 +86,8 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
           "desc"
         );
 
+        console.log("sorted", sortedConditions);
+
         const conditionsFilteredWithDate = sortedConditions.filter(
           (c) => c.recordedDate
         );
