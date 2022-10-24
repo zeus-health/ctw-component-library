@@ -69,18 +69,19 @@ export const createOrEditCondition = async (
       ],
     },
     // Keep all existing codings when editing a condition
-    code: result.data.id
-      ? result.data.coding
-      : {
-          coding: [
-            {
-              system: result.data.condition.system,
-              code: result.data.condition.code,
-              display: result.data.condition.display,
-            },
-          ],
-          text: result.data.condition.display,
-        },
+    code:
+      result.data.id && result.data.condition.coding
+        ? result.data.condition
+        : {
+            coding: [
+              {
+                system: result.data.condition.system,
+                code: result.data.condition.code,
+                display: result.data.condition.display,
+              },
+            ],
+            text: result.data.condition.display,
+          },
     ...(result.data.abatement && {
       abatementDateTime: dateToISO(result.data.abatement),
     }),
