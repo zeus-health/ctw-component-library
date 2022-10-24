@@ -94,11 +94,14 @@ export function mapToCSSVar(colorConfig: ColorTheme): Record<string, string> {
 }
 
 // Converts hex values to RGB values if it's not already in RGB format.
-function hexToRGB(colorMapping: string): string {
-  if (colorMapping.includes("#")) {
+function hexToRGB(colorMapping: string, opacity?: string): string {
+  if (colorMapping.startsWith("#")) {
     const r = parseInt(colorMapping.slice(1, 3), 16);
     const g = parseInt(colorMapping.slice(3, 5), 16);
     const b = parseInt(colorMapping.slice(5, 7), 16);
+    if (opacity) {
+      return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+    }
     return `rgb(${r}, ${g}, ${b})`;
   }
   return colorMapping;
