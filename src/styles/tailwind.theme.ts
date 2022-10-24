@@ -35,7 +35,7 @@ export const TailwindTheme = {
     error: {
       main: "#EF4444",
       light: "#FEE2E2",
-      dark: "#8B0000",
+      dark: "#7F1D1D",
       heading: "#991B1B",
       message: "#B91C1B",
       bg: "#FEF2F2",
