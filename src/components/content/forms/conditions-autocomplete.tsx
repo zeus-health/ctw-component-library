@@ -1,6 +1,6 @@
 import { getAutoCompleteConditions } from "@/api/autocomplete-conditions";
 import { useCTW } from "@/components/core/ctw-provider";
-import { InputHTMLAttributes, useCallback, useEffect, useState } from "react";
+import { InputHTMLAttributes, useState } from "react";
 import {
   ComboboxField,
   ComboxboxFieldOption,
@@ -23,17 +23,11 @@ export const ConditionsAutoComplete = ({
   ...inputProps
 }: AutoCompleteComboboxProps) => {
   const { authToken, env } = useCTW();
-  const [conditions, setConditions] = useState<fhir4.Coding[]>();
   const [options, setOptions] = useState<ComboxboxFieldOption[]>();
 
-  const onSearchChange = useCallback(
-    async (query: string) => {
-      setConditions(await getAutoCompleteConditions(authToken, env, query));
-    },
-    [authToken, env]
-  );
+  const handleSearchChange = async (query: string) => {
+    const conditions = await getAutoCompleteConditions(authToken, env, query);
 
-  useEffect(() => {
     if (conditions) {
       setOptions(
         conditions.map((item: fhir4.Coding) => ({
@@ -42,7 +36,7 @@ export const ConditionsAutoComplete = ({
         })) as ComboxboxFieldOption[]
       );
     }
-  }, [authToken, env, conditions]);
+  };
 
   return (
     <>
@@ -51,7 +45,7 @@ export const ConditionsAutoComplete = ({
         name={`${inputProps.name}`}
         defaultSearchTerm={inputProps.defaultValue as string}
         readonly={readonly}
-        onSearchChange={onSearchChange}
+        onSearchChange={handleSearchChange}
         defaultValue={defaultCoding}
       />
     </>

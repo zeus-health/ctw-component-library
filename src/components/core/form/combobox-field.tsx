@@ -1,6 +1,6 @@
 import { Combobox } from "@headlessui/react";
 import { debounce } from "lodash";
-import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, useMemo, useState } from "react";
 
 export type ComboxboxFieldOption = { value: unknown; label: string };
 
@@ -27,18 +27,15 @@ export const ComboboxField = <T,>({
   // Delay handle search input so that we don't fire a bunch of events until the user has had time to type.
   const debouncedSearchInputChange = useMemo(() => {
     const handleSearchInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+      if (e.target.value.length > 1) {
+        onSearchChange(e.target.value);
+      }
       setInputValue({});
       setSearchTerm(e.target.value);
     };
 
     return debounce(handleSearchInputChange, 300);
-  }, []);
-
-  useEffect(() => {
-    if (searchTerm.length > 1) {
-      onSearchChange(searchTerm);
-    }
-  }, [searchTerm, onSearchChange]);
+  }, [onSearchChange]);
 
   const onSelectChange = (eventValue: string) => {
     const currentItem = options.filter((item) => item.label === eventValue)[0];
