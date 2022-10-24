@@ -6,9 +6,8 @@ import { codeableConceptLabel, findCoding } from "../fhir/codeable-concept";
 import { formatDateISOToLocal, formatStringToDate } from "../fhir/formatters";
 import { SYSTEM_CCS, SYSTEM_ICD10, SYSTEM_SNOMED } from "../fhir/system-urls";
 import { PatientModel } from "./patients";
-import { ResourceModel } from "./resource";
 
-export class ConditionModel implements ResourceModel {
+export class ConditionModel {
   public resource: fhir4.Condition;
 
   private includedResources?: ResourceMap;

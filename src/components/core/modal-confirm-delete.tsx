@@ -1,12 +1,12 @@
 import { fhirErrorResponse, isFhirError } from "@/fhir/errors";
-import { ResourceModel } from "@/models/resource";
+import { Resource } from "fhir/r4";
 import { useState } from "react";
 import { Alert } from "./alert";
 import { useCTW } from "./ctw-provider";
 import { Modal, ModalProps } from "./modal";
 
 export type ModalConfirmDeleteProps = {
-  resource: ResourceModel;
+  resource: Resource;
   message: string;
   onDelete: () => void;
   onClose: () => void;
@@ -64,7 +64,7 @@ export const ModalConfirmDelete = ({
       </div>
       <div className="ctw-flex ctw-flex-col ctw-items-center ctw-space-y-4">
         <button type="button" onClick={onConfirm} className="ctw-btn-warn">
-          Remove Condition
+          Remove {resource.resourceType}
         </button>
         <button type="button" onClick={onClose} className="ctw-btn-clear">
           Cancel
