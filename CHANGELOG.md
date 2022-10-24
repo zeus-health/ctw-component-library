@@ -1,5 +1,15 @@
 # ctw-component-library
 
+## 0.18.0
+
+### Minor Changes
+
+- 8749891: Replace snomed and condition name field with an autocomplete conditions component.
+
+### Patch Changes
+
+- 209ad0e: Allow the overall color scheme to be implemented into borders instead of a generic black color.
+
 ## 0.17.0
 
 ### Minor Changes
