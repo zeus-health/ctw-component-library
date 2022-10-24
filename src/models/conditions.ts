@@ -74,6 +74,10 @@ export class ConditionModel {
     return codeableConceptLabel(this.resource.clinicalStatus);
   }
 
+  get codings(): fhir4.CodeableConcept | undefined {
+    return this.resource.code;
+  }
+
   get display(): string | undefined {
     let codeSystem;
 
@@ -182,6 +186,10 @@ export class ConditionModel {
 
   get severity(): string {
     return codeableConceptLabel(this.resource.severity);
+  }
+
+  get snomedCoding(): fhir4.Coding | undefined {
+    return findCoding(SYSTEM_SNOMED, this.resource.code);
   }
 
   get snomedCode(): string | undefined {

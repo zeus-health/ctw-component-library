@@ -1,5 +1,23 @@
 # ctw-component-library
 
+## 0.18.0
+
+### Minor Changes
+
+- 8749891: Replace snomed and condition name field with an autocomplete conditions component.
+
+### Patch Changes
+
+- 209ad0e: Allow the overall color scheme to be implemented into borders instead of a generic black color.
+
+## 0.17.0
+
+### Minor Changes
+
+- 293ead2: Add pagination element to the Table component with buttons "Show More", "Show All", and "Reset".
+- 791eef6: Add optional builderId prop to CTWProvider. When set, we'll use that builderId for any filtering AND we'll set the Zus-Account header for FHIR requests.
+- afb2b48: Add library version to window.CTWComponentLibrary.version variable which allows version to export to dependents.
+
 ## 0.16.0
 
 ### Minor Changes
