@@ -91,7 +91,7 @@
   }
 
   input.ctw-error {
-    @apply ctw-border-error-main ctw-pr-10 ctw-text-error-main focus:ctw-border-error-main focus:ctw-outline-none focus:ctw-ring-1 focus:ctw-ring-error-main;
+    @apply ctw-border-error-main ctw-pr-10 ctw-text-error-dark focus:ctw-border-error-main focus:ctw-outline-none focus:ctw-ring-1 focus:ctw-ring-error-main;
   }
 
   label.ctw-error {
