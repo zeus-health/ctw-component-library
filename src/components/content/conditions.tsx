@@ -1,7 +1,9 @@
 import {
+  conditionAddSchema,
+  conditionEditSchema,
   getAddConditionData,
   getEditingPatientConditionData,
-} from "@/components/content/forms/condition-helpers";
+} from "@/components/content/forms/condition-schema";
 import {
   ConditionFilters,
   filterConditionsWithConfirmedCodes,
@@ -22,7 +24,7 @@ import { ConditionHistoryDrawer } from "./conditions-history-drawer";
 import { ConditionsNoPatient } from "./conditions-no-patient";
 import { ConditionsTableBase } from "./conditions-table-base";
 import "./conditions.scss";
-import { conditionSchema, createOrEditCondition } from "./forms/conditions";
+import { createOrEditCondition } from "./forms/conditions";
 import {
   DrawerFormWithFields,
   FormEntry,
@@ -52,6 +54,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const [includeInactive, setIncludeInactive] = useState(true);
   const [formAction, setFormAction] = useState("");
   const [conditionFilter, setConditionFilter] = useState<ConditionFilters>({});
+  const [schema, setSchema] = useState<Zod.AnyZodObject>(conditionAddSchema);
   const [currentSelectedData, setCurrentlySelectedData] =
     useState<FormEntry[]>();
   const [selectedCondition, setSelectedCondition] = useState<ConditionModel>();
@@ -72,6 +75,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     if (patientResponse.data) {
       setDrawerIsOpen(true);
       setFormAction("Edit");
+      setSchema(conditionEditSchema);
       setCurrentlySelectedData(getEditingPatientConditionData({ condition }));
     }
   };
@@ -95,6 +99,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     const newCondition = getNewCondition(patientResponse.data.id);
     setDrawerIsOpen(true);
     setFormAction("Add");
+    setSchema(conditionAddSchema);
     setCurrentlySelectedData(
       getAddConditionData({
         condition: new ConditionModel(newCondition),
@@ -283,7 +288,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           title={`${formAction} Condition`}
           action={createOrEditCondition}
           data={currentSelectedData}
-          schema={conditionSchema}
+          schema={schema}
           isOpen={drawerIsOpen}
           onClose={() => setDrawerIsOpen(false)}
         />

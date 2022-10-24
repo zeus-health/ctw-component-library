@@ -126,6 +126,8 @@ function useCTW() {
   return {
     getRequestContext,
     theme: context.theme as Required<Theme>,
+    authToken: context.authToken as string,
+    env: context.env,
     ctwProviderRef: context.ctwProviderRef,
   };
 }
