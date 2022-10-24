@@ -1,14 +1,11 @@
-import {
-  BEST_CODE_PREFERENCE_ORDER,
-  CONDITION_CODE_SYSTEMS,
-} from "@/fhir/conditions";
+import { CONDITION_CODE_SYSTEMS } from "@/fhir/conditions";
 import { findReference } from "@/fhir/resource-helper";
 import { ResourceMap } from "@/fhir/types";
 import { compact } from "lodash";
 import {
   codeableConceptLabel,
   findCoding,
-  findCodingWithEnrichment,
+  findCodingByOrderOfPreference,
 } from "../fhir/codeable-concept";
 import { formatDateISOToLocal, formatStringToDate } from "../fhir/formatters";
 import { SYSTEM_CCS, SYSTEM_ICD10, SYSTEM_SNOMED } from "../fhir/system-urls";
@@ -79,20 +76,10 @@ export class ConditionModel {
   }
 
   get display(): string | undefined {
-    let codeSystem;
-
-    for (let i = 0; i < BEST_CODE_PREFERENCE_ORDER.length; i += 1) {
-      const code = BEST_CODE_PREFERENCE_ORDER[i];
-      console.log("code", code);
-      if (code.checkForEnrichment) {
-        codeSystem = findCodingWithEnrichment(code.system, this.resource.code);
-        // if (codeSystem) {
-        //   break;
-        // }
-      }
-      codeSystem = findCoding(code.system, this.resource.code);
-    }
-    return codeSystem?.display;
+    return (
+      findCodingByOrderOfPreference(this.resource.code)?.display ??
+      codeableConceptLabel(this.resource.code)
+    );
   }
 
   get encounter(): string | undefined {
