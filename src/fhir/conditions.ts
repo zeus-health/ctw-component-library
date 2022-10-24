@@ -1,4 +1,4 @@
-import { setAddConditionDefaults } from "@/components/content/forms/conditions-autocomplete";
+import { setAddConditionDefaults } from "@/components/content/forms/conditions";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
 import { ConditionModel } from "@/models/conditions";
 import {
