@@ -75,6 +75,14 @@ export class ConditionModel {
     return this.resource.code;
   }
 
+  get preferredCoding(): fhir4.Coding | undefined {
+    return findCodingByOrderOfPreference(this.resource.code);
+  }
+
+  get preferredSystem(): string | undefined {
+    return findCodingByOrderOfPreference(this.resource.code)?.system;
+  }
+
   get display(): string | undefined {
     return (
       findCodingByOrderOfPreference(this.resource.code)?.display ??

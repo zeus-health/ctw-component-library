@@ -11,9 +11,14 @@ export const getAddConditionData = ({
   {
     label: "Condition",
     field: "condition",
+    value: condition.display,
     readonly: false,
     render: (readonly: boolean | undefined, inputProps) => (
-      <ConditionsAutoComplete readonly={readonly} {...inputProps} />
+      <ConditionsAutoComplete
+        readonly={readonly}
+        {...inputProps}
+        defaultCoding={condition.preferredCoding}
+      />
     ),
   },
   ...sharedFields(condition),
