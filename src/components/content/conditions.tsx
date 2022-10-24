@@ -1,7 +1,6 @@
 import {
   conditionAddSchema,
   conditionEditSchema,
-  getAddConditionData,
   getEditingPatientConditionData,
 } from "@/components/content/forms/condition-schema";
 import {
@@ -28,7 +27,11 @@ import { ConditionHistoryDrawer } from "./conditions-history-drawer";
 import { ConditionsNoPatient } from "./conditions-no-patient";
 import { ConditionsTableBase } from "./conditions-table-base";
 import "./conditions.scss";
-import { createOrEditCondition } from "./forms/conditions";
+import { getAddConditionData } from "./forms/condition-schema";
+import {
+  createOrEditCondition,
+  setAddConditionDefaults,
+} from "./forms/conditions";
 import {
   DrawerFormWithFields,
   FormEntry,
@@ -75,7 +78,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     : EMPTY_MESSAGE_PROVIDER;
 
   const handleToggleChange = () => setIncludeInactive(!includeInactive);
-  const handleConditionEdit = (condition: ConditionModel) => {
+  const handleEditCondition = (condition: ConditionModel) => {
     if (patientResponse.data) {
       setDrawerIsOpen(true);
       setFormAction("Edit");
@@ -89,11 +92,18 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     setSelectedCondition(condition);
   };
 
-  const handleOtherProviderRecordsCondition = (condition: ConditionModel) => {
+  const handleAddOtherProviderCondition = (condition: ConditionModel) => {
+    const newCondition = condition.resource;
+    setAddConditionDefaults(newCondition);
+
     if (patientResponse.data) {
       setDrawerIsOpen(true);
       setFormAction("Add");
-      setCurrentlySelectedData(getAddConditionData({ condition }));
+      setCurrentlySelectedData(
+        getAddConditionData({
+          condition: new ConditionModel(newCondition),
+        })
+      );
     }
   };
 
@@ -224,7 +234,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               {
                 name: "Edit",
                 action: () => {
-                  handleConditionEdit(condition);
+                  handleEditCondition(condition);
                 },
               },
               {
@@ -264,7 +274,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               {
                 name: "Add",
                 action: () => {
-                  handleOtherProviderRecordsCondition(condition);
+                  handleAddOtherProviderCondition(condition);
                 },
               },
               {
