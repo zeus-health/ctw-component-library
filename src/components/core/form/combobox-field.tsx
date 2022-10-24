@@ -23,6 +23,14 @@ export const ComboboxField = <T,>({
 }: ComboboxFieldProps<T>) => {
   const [searchTerm, setSearchTerm] = useState(defaultSearchTerm || "");
   const [inputValue, setInputValue] = useState<unknown>({});
+  const inputState = defaultValue || inputValue;
+  // Check if inputState is an object to determine if we should JSON.stringify.
+  const inputValueParsed =
+    typeof inputState === "object" &&
+    !Array.isArray(inputState) &&
+    inputState !== null
+      ? JSON.stringify(inputState)
+      : inputState;
 
   // Delay handle search input so that we don't fire a bunch of events until the user has had time to type.
   const debouncedSearchInputChange = useMemo(() => {
@@ -53,11 +61,7 @@ export const ComboboxField = <T,>({
         placeholder="Type to search"
       />
 
-      <input
-        hidden
-        name={name}
-        value={JSON.stringify(defaultValue || inputValue)}
-      />
+      <input hidden name={name} value={inputValueParsed as string} />
       <Combobox.Options className="ctw-listbox ctw-max-h-60 ctw-overflow-auto ctw-rounded-md ctw-bg-white ctw-py-1 ctw-text-base ctw-shadow-lg ctw-ring-1 ctw-ring-black ctw-ring-opacity-5 focus:ctw-outline-none sm:ctw-text-sm">
         <ComboboxOptions options={options} query={searchTerm} />
       </Combobox.Options>
