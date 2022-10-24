@@ -1,3 +1,4 @@
+import { setAddConditionDefaults } from "@/components/content/forms/conditions";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
 import { ConditionModel } from "@/models/conditions";
 import {
@@ -16,8 +17,6 @@ import {
   searchLensRecords,
 } from "./search-helpers";
 import {
-  SYSTEM_CONDITION_CLINICAL,
-  SYSTEM_CONDITION_VERIFICATION_STATUS,
   SYSTEM_ICD10,
   SYSTEM_ICD10_CM,
   SYSTEM_ICD9,
@@ -74,27 +73,8 @@ export function getNewCondition(patientId: string) {
       type: "Patient",
       reference: `Patient/${patientId}`,
     },
-    clinicalStatus: {
-      coding: [
-        {
-          system: SYSTEM_CONDITION_CLINICAL,
-          code: "active",
-          display: "Active",
-        },
-      ],
-      text: "active",
-    },
-    verificationStatus: {
-      coding: [
-        {
-          system: SYSTEM_CONDITION_VERIFICATION_STATUS,
-          code: "confirmed",
-          display: "Confirmed",
-        },
-      ],
-      text: "confirmed",
-    },
   };
+  setAddConditionDefaults(newCondition);
 
   return newCondition;
 }

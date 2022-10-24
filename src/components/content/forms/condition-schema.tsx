@@ -101,8 +101,13 @@ const sharedSchema = {
     "remission",
     "resolved",
   ]),
-  onset: z.date({ required_error: "Conditions's onset is required." }),
-  abatement: z.date().optional(),
+  onset: z
+    .date({ required_error: "Condition's onset is required." })
+    .max(new Date(), { message: "Onset cannot be a future date." }),
+  abatement: z
+    .date()
+    .max(new Date(), { message: "Abatement cannot be a future date." })
+    .optional(),
   verificationStatus: z.enum([
     "unconfirmed",
     "provisional",
