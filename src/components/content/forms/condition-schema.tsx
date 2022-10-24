@@ -70,12 +70,12 @@ const sharedFields = (condition: ConditionModel) => [
   },
   {
     label: "Clinical Status",
-    value: levelTwotoOneMapping(condition.clinicalStatus),
+    value: levelTwoToOneMapping(condition.clinicalStatus),
     field: "clinicalStatus",
   },
   {
     label: "Verification Status",
-    value: levelTwotoOneMapping(condition.verificationStatus),
+    value: levelTwoToOneMapping(condition.verificationStatus),
     field: "verificationStatus",
   },
   {
@@ -137,7 +137,8 @@ export const conditionAddSchema = z.object({
   }),
 });
 
-function levelTwotoOneMapping(value: string): string {
+function levelTwoToOneMapping(value: string): string {
+  console.log("value", value);
   switch (value) {
     case "recurrence":
     case "relapse":
