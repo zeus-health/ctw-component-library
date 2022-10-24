@@ -22,7 +22,7 @@ export const ComboboxField = <T,>({
   readonly,
 }: ComboboxFieldProps<T>) => {
   const [searchTerm, setSearchTerm] = useState(defaultSearchTerm || "");
-  const [inputValue, setInputValue] = useState<unknown>({});
+  const [inputValue, setInputValue] = useState<unknown>();
   const inputState = defaultValue || inputValue;
   // Check if inputState is an object to determine if we should JSON.stringify.
   const inputValueParsed =

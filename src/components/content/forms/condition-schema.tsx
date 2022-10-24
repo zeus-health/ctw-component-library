@@ -32,8 +32,8 @@ export const getEditingPatientConditionData = ({
     hidden: true,
   },
   {
-    label: "coding",
-    field: "coding",
+    label: "condition",
+    field: "condition",
     hidden: true,
     render: (readonly, inputProps): JSX.Element => (
       <input
@@ -123,14 +123,7 @@ const sharedSchema = {
 
 export const conditionEditSchema = z.object({
   ...sharedSchema,
-  coding: z.unknown(),
-  condition: z
-    .object({
-      display: z.string(),
-      code: z.string(),
-      system: z.string(),
-    })
-    .optional(),
+  condition: z.unknown(),
 });
 
 export const conditionAddSchema = z.object({
