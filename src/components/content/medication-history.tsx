@@ -76,10 +76,6 @@ export function MedicationHistory({ rxNorm }: MedicationHistoryProps) {
     return <div>No history found.</div>;
   }
 
-  if (medications.length === 0) {
-    return <div>History failed to load.</div>;
-  }
-
   if (loading) {
     return (
       <div className="space-x-2">
@@ -89,6 +85,10 @@ export function MedicationHistory({ rxNorm }: MedicationHistoryProps) {
         <Spinner />
       </div>
     );
+  }
+
+  if (medications.length === 0) {
+    return <div>History failed to load.</div>;
   }
 
   return (

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import cx from "classnames";
 import { compact } from "lodash/fp";
 import type { TableColumn } from "@/components/core/table/table";
 import { Table } from "@/components/core/table/table";
@@ -70,7 +71,7 @@ export const MedicationsTableBase = ({
   ]) as TableColumn<MedicationStatementModel>[];
 
   return (
-    <div className={`ctw-table ${className}`.trim()}>
+    <div className={cx("ctw-table", className)}>
       <Table
         records={medicationStatements}
         columns={columns}
