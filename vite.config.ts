@@ -31,7 +31,7 @@ export default defineConfig({
     sourcemap: true,
   },
   server: {
-    // The host and port must match an allowed callback origin of the Auth0 app
+    // The host and port must match an allowed callback origin of the Auth0 app.
     host: "localhost",
     port: 3000,
     strictPort: true,

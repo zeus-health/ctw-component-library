@@ -1,17 +1,7 @@
-import { differenceInYears, parseISO } from "date-fns";
-import { cloneDeep, find, remove } from "lodash";
-import { errorResponse } from "@/utils/errors";
-import { getFhirClient, omitEmptyArrays } from "@/fhir/client";
-import { codeableConceptPredicate } from "@/fhir/codeable-concept";
-import {
-  dateToISO,
-  formatDateISOToLocal,
-  formatPhoneNumber,
-} from "@/fhir/formatters";
+import { find, remove } from "lodash";
 import { findReference } from "@/fhir/resource-helper";
 import {
   SYSTEM_MARITAL_STATUS,
-  SYSTEM_RELATIONSHIP,
   SYSTEM_ZUS_UNIVERSAL_ID,
 } from "@/fhir/system-urls";
 import type { ResourceMap } from "@/fhir/types";
@@ -30,10 +20,6 @@ export const MaritalStatuses = [
   { text: "Widowed", code: "W" },
 ] as const;
 
-export const MaritalStatusOptions = MaritalStatuses.map(
-  (status) => status.text
-);
-
 export class PatientModel {
   readonly resource: fhir4.Patient;
 
@@ -42,80 +28,6 @@ export class PatientModel {
   constructor(patient: fhir4.Patient, includedResources?: ResourceMap) {
     this.resource = patient;
     this.includedResources = includedResources;
-  }
-
-  get age(): number | undefined {
-    if (!this.resource.birthDate) return undefined;
-
-    const date = parseISO(this.resource.birthDate);
-    return differenceInYears(new Date(), date);
-  }
-
-  get deceased(): string {
-    if (this.resource.deceasedBoolean) {
-      return "Yes";
-    }
-
-    if (this.resource.deceasedDateTime) {
-      return formatDateISOToLocal(this.resource.deceasedDateTime) || "";
-    }
-
-    return "No";
-  }
-
-  get dob(): string | undefined {
-    return formatDateISOToLocal(this.resource.birthDate);
-  }
-
-  set dob(dob: Date | string | undefined) {
-    if (dob instanceof Date) {
-      this.resource.birthDate = dateToISO(dob);
-    } else {
-      this.resource.birthDate = dob;
-    }
-  }
-
-  get emergencyContact(): fhir4.PatientContact {
-    const contact = find(this.resource.contact || [], {
-      relationship: codeableConceptPredicate("C"),
-    });
-    return cloneDeep(contact) ?? {};
-  }
-
-  set emergencyContact(contact: fhir4.PatientContact | undefined) {
-    remove(this.resource.contact || [], {
-      relationship: codeableConceptPredicate("C"),
-    });
-
-    if (contact) {
-      // Make sure we have an address array.
-      if (!this.resource.contact) {
-        this.resource.contact = [];
-      }
-
-      // Setup our new emergency contact with the correct relationship.
-      const newContact = contact;
-      if (!newContact.relationship) {
-        newContact.relationship = [];
-      }
-
-      // Add Emergency Contact relationship if there isn't one already.
-      if (!find(newContact.relationship, codeableConceptPredicate("C"))) {
-        newContact.relationship.push({
-          text: "Emergency Contact",
-          coding: [
-            {
-              code: "C",
-              display: "Emergency Contact",
-              system: SYSTEM_RELATIONSHIP,
-            },
-          ],
-        });
-      }
-
-      // Add it to our contact array!
-      this.resource.contact.push(newContact);
-    }
   }
 
   get gender(): string | undefined {
@@ -184,41 +96,6 @@ export class PatientModel {
     );
   }
 
-  // Returns first home address or first address without "use" set.
-  // This way we return a home address if there is one, or another address
-  // but making sure not to return a work address here.
-  get homeAddress(): fhir4.Address | undefined {
-    // Clone the address so that consumers cannot modify our resource.
-    return cloneDeep(this.bestHomeAddress);
-  }
-
-  set homeAddress(address: fhir4.Address | undefined) {
-    // Make sure we have an address array.
-    if (!this.resource.address) {
-      this.resource.address = [];
-    }
-
-    if (!address) {
-      // Remove all of our possible addresses.
-      remove(this.resource.address, { use: "home" });
-      remove(this.resource.address, (addy) => !addy.use); // use is undefined
-    } else {
-      // Make sure all added addresses are set to home.
-      // This ensures bestHomeAddress will return this new one!
-      const newAddress: fhir4.Address = { use: "home", ...address };
-      const existingAddress = this.bestHomeAddress;
-      if (existingAddress) {
-        // Take special care to replace the address. This way
-        // we preserve the order of addresses (not sure how important this is).
-        const index = this.resource.address.indexOf(existingAddress);
-        this.resource.address.splice(index, 1, newAddress);
-      } else {
-        // Adding a completely new address, so set its use to home.
-        this.resource.address.push(newAddress);
-      }
-    }
-  }
-
   /*
     TELECOM STUFF
   */
@@ -262,33 +139,9 @@ export class PatientModel {
     this.setTelecom("email", undefined, email);
   }
 
-  getPhoneNumber(use?: fhir4.ContactPoint["use"]): string | undefined {
-    const predicate: fhir4.ContactPoint = { system: "phone" };
-    if (use) {
-      predicate.use = use;
-    }
-    const telecom = find(this.resource.telecom, predicate);
-    return formatPhoneNumber(telecom?.value);
-  }
-
-  setPhoneNumber(use?: fhir4.ContactPoint["use"], phoneNumber?: string) {
-    this.setTelecom("phone", use, phoneNumber);
-  }
-
-  // Gets first "phone" telecom.
-  get phoneNumber(): string | undefined {
-    return this.getPhoneNumber();
-  }
-
-  // Sets first "phone" telecom.
-  set phoneNumber(phoneNumber: string | undefined) {
-    this.setTelecom("phone", undefined, phoneNumber);
-  }
-
   /*
     NAME STUFF
   */
-
   // Returns the best name to use for this patient.
   // Priority is "official", then "usual", then first name provided.
   private get bestName(): fhir4.HumanName {
@@ -313,16 +166,6 @@ export class PatientModel {
     return undefined;
   }
 
-  set additionalNames(additionalNames: string | undefined) {
-    // First, remove all but the first given name.
-    this.bestName.given?.splice(1);
-    if (additionalNames) {
-      // Set our given names to start with our firstName, followed by
-      // all of the additional names, split by spaces.
-      this.bestName.given = [this.firstName, ...additionalNames.split(" ")];
-    }
-  }
-
   // Returns "First Last" which is similar to a reference display.
   get display(): string {
     return [this.firstName, this.lastName].filter((name) => name).join(" ");
@@ -330,14 +173,6 @@ export class PatientModel {
 
   get firstName(): string {
     return this.bestName.given?.[0] || "";
-  }
-
-  set firstName(firstName: string) {
-    if (this.bestName.given && this.bestName.given.length > 0) {
-      this.bestName.given[0] = firstName;
-    } else {
-      this.bestName.given = [firstName];
-    }
   }
 
   // Returns "Last, First" or just "First" or just "Last" or "" when
@@ -348,10 +183,6 @@ export class PatientModel {
 
   get lastName(): string | undefined {
     return this.bestName.family;
-  }
-
-  set lastName(lastName: string | undefined) {
-    this.bestName.family = lastName;
   }
 
   get nickname(): string | undefined {
