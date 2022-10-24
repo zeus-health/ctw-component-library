@@ -1,4 +1,7 @@
-import { CONDITION_CODE_SYSTEMS } from "@/fhir/conditions";
+import {
+  CONDITION_CODE_PREFERENCE_ORDER,
+  CONDITION_CODE_SYSTEMS,
+} from "@/fhir/conditions";
 import { findReference } from "@/fhir/resource-helper";
 import { ResourceMap } from "@/fhir/types";
 import { compact } from "lodash";
@@ -76,17 +79,18 @@ export class ConditionModel {
   }
 
   get preferredCoding(): fhir4.Coding | undefined {
-    return findCodingByOrderOfPreference(this.resource.code);
-  }
-
-  get preferredSystem(): string | undefined {
-    return findCodingByOrderOfPreference(this.resource.code)?.system;
+    return findCodingByOrderOfPreference(
+      CONDITION_CODE_PREFERENCE_ORDER,
+      this.resource.code
+    );
   }
 
   get display(): string | undefined {
     return (
-      findCodingByOrderOfPreference(this.resource.code)?.display ??
-      codeableConceptLabel(this.resource.code)
+      findCodingByOrderOfPreference(
+        CONDITION_CODE_PREFERENCE_ORDER,
+        this.resource.code
+      )?.display ?? codeableConceptLabel(this.resource.code)
     );
   }
 

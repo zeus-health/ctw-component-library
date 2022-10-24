@@ -17,7 +17,7 @@ export const getAddConditionData = ({
       <ConditionsAutoComplete
         readonly={readonly}
         {...inputProps}
-        defaultCoding={condition.preferredCoding}
+        defaultCoding={condition.preferredCoding ?? {}}
       />
     ),
   },

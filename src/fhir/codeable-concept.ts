@@ -3,7 +3,6 @@
 // E.g. find(concepts, codeableConceptPredicate("C")) will find the first
 
 import { find } from "lodash";
-import { BEST_CODE_PREFERENCE_ORDER } from "./conditions";
 import { SYSTEM_ENRICHMENT } from "./system-urls";
 
 // concept that has a code of "C".
@@ -34,24 +33,26 @@ export function findCodingWithEnrichment(
   });
 }
 
+export type CodePreference = { system: string; checkForEnrichment?: boolean };
+
 export const findCodingByOrderOfPreference = (
+  preferences: CodePreference[],
   concept: fhir4.CodeableConcept | undefined
 ): fhir4.Coding | undefined => {
-  let codeSystem;
-
-  for (let i = 0; i < BEST_CODE_PREFERENCE_ORDER.length; i += 1) {
-    const code = BEST_CODE_PREFERENCE_ORDER[i];
+  for (let i = 0; i < preferences.length; i += 1) {
+    const code = preferences[i];
     if (code.checkForEnrichment) {
-      codeSystem = findCodingWithEnrichment(code.system, concept);
-      if (codeSystem) {
-        break;
+      const coding = findCodingWithEnrichment(code.system, concept);
+      if (coding) {
+        return coding;
       }
-    }
-    codeSystem = findCoding(code.system, concept);
-    if (codeSystem) {
-      break;
+    } else {
+      const coding = findCoding(code.system, concept);
+      if (coding) {
+        return coding;
+      }
     }
   }
 
-  return codeSystem;
+  return undefined;
 };
