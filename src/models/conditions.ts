@@ -10,7 +10,7 @@ import { PatientModel } from "./patients";
 export class ConditionModel {
   public resource: fhir4.Condition;
 
-  readonly includedResources?: ResourceMap;
+  private includedResources?: ResourceMap;
 
   constructor(condition: fhir4.Condition, includedResources?: ResourceMap) {
     this.resource = condition;
