@@ -169,17 +169,3 @@ function mergeParams(
     Array.isArray(v) ? v.concat(v2) : undefined
   );
 }
-
-// Merges two sets of params into a single set,
-// taking special care to concat any arrays.
-// E.g. mergeParams({_tag: [1], foo: "foo"}, {_tag: [2], bar: "bar"})
-//   -> {_tag: [1, 2], foo: "foo", bar: "bar"}
-function mergeParams(
-  params: SearchParams | undefined,
-  params2: SearchParams
-): SearchParams {
-  return mergeWith(params, params2, (v, v2) =>
-    // Concat arrays otherwise return undefined to let mergeWith handle it.
-    Array.isArray(v) ? v.concat(v2) : undefined
-  );
-}

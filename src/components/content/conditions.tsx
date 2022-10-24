@@ -77,14 +77,15 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   };
 
   const handleAddOtherProviderCondition = (condition: ConditionModel) => {
+    const newCondition = condition.resource;
+    setAddConditionDefaults(newCondition);
+
     if (patientResponse.data) {
       setDrawerIsOpen(true);
       setFormAction("Add");
       setCurrentlySelectedData(
         getAddConditionFormEntries({
-          condition: new ConditionModel(
-            setAddConditionDefaults(condition.resource)
-          ),
+          condition: new ConditionModel(newCondition),
         })
       );
     }
