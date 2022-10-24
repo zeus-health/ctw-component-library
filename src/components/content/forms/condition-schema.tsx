@@ -137,7 +137,7 @@ export const conditionAddSchema = z.object({
   }),
 });
 
-export function levelTwotoOneMapping(value: string): string {
+function levelTwotoOneMapping(value: string): string {
   switch (value) {
     case "recurrence":
     case "relapse":
