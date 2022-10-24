@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.18.1
+
+### Patch Changes
+
+- b25b329: Fix bug where edit conditions wasn't always saving.
+
 ## 0.18.0
 
 ### Minor Changes
