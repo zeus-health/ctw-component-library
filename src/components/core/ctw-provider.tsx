@@ -8,6 +8,7 @@ import {
   ReactNode,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -19,6 +20,7 @@ import {
   CTWToken,
 } from "./ctw-context";
 import "./main.scss";
+import { version } from "../../../package.json";
 
 export type Env = "dev" | "sandbox" | "production";
 
@@ -35,9 +37,23 @@ type CTWProviderProps = {
   headers?: HeadersInit;
 } & (AuthTokenSpecified | AuthTokenURLSpecified);
 
+declare global {
+  interface Window {
+    CTWComponentLibrary: {
+      version: string;
+    };
+  }
+}
+
 function CTWProvider({ theme, children, ...ctwState }: CTWProviderProps) {
   const [token, setToken] = useState<CTWToken>();
   const ctwProviderRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    window.CTWComponentLibrary = {
+      version,
+    };
+  }, []);
 
   const handleAuth = useCallback(async () => {
     if (ctwState.authToken) {
