@@ -1,4 +1,3 @@
-import { setAddConditionDefaults } from "@/api/autocomplete-conditions";
 import {
   conditionAddSchema,
   conditionEditSchema,
@@ -24,6 +23,7 @@ import { ConditionsTableBase } from "./conditions-table-base";
 import "./conditions.scss";
 import { getAddConditionData } from "./forms/condition-schema";
 import { createOrEditCondition } from "./forms/conditions";
+import { setAddConditionDefaults } from "./forms/conditions-autocomplete";
 import {
   DrawerFormWithFields,
   FormEntry,
