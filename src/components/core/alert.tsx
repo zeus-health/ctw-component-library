@@ -1,32 +1,31 @@
 import { ExclamationIcon, XCircleIcon } from "@heroicons/react/solid";
-import { ReactNode, SVGProps } from "react";
+import cx from "classnames";
+import { ReactNode } from "react";
 
 export type AlertType = "caution" | "error";
 
-const AlertIconMap: {
-  [type in AlertType]: (props: SVGProps<SVGSVGElement>) => JSX.Element;
-} = {
-  caution: ExclamationIcon,
-  error: XCircleIcon,
-};
-
 export type AlertProps = {
   header: string;
-  children: ReactNode;
-  type: AlertType;
+  children?: ReactNode;
+  className?: string;
 };
 
-export const Alert = ({ header, children, type }: AlertProps) => {
-  const Icon = AlertIconMap[type];
-  return (
-    <div
-      className={`ctw-flex ctw-items-start ctw-space-x-2 ctw-text-left ctw-bg-${type}-bg ctw-p-4`}
-    >
-      <Icon className={`ctw-h-5 ctw-text-${type}-icon`} />
-      <div className="ctw-space-y-2">
-        <div className={`ctw-text-${type}-heading`}>{header}</div>
-        <div className={`ctw-text-${type}-message`}>{children}</div>
-      </div>
+export const ErrorAlert = ({ header, children, className }: AlertProps) => (
+  <div className={cx("ctw-alert-bg ctw-bg-error-bg", className)}>
+    <ExclamationIcon className="ctw-h-5 ctw-text-error-icon" />
+    <div className="ctw-space-y-2">
+      <div className="ctw-text-error-heading">{header}</div>
+      {children && <div className="ctw-text-error-message">{children}</div>}
     </div>
-  );
-};
+  </div>
+);
+
+export const CautionAlert = ({ header, children, className }: AlertProps) => (
+  <div className={cx("ctw-alert-bg ctw-bg-error-bg", className)}>
+    <XCircleIcon className="ctw-h-5 ctw-text-caution-icon" />
+    <div className="ctw-space-y-2">
+      <div className="ctw-text-caution-heading">{header}</div>
+      {children && <div className="ctw-text-caution-message">{children}</div>}
+    </div>
+  </div>
+);

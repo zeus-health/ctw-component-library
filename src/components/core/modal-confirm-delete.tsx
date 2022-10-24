@@ -1,26 +1,25 @@
-import { fhirErrorResponse, isFhirError } from "@/fhir/errors";
 import { Resource } from "fhir/r4";
 import { useState } from "react";
-import { Alert } from "./alert";
+import { ErrorAlert } from "./alert";
 import { useCTW } from "./ctw-provider";
 import { Modal, ModalProps } from "./modal";
 
 export type ModalConfirmDeleteProps = {
   resource: Resource;
-  message: string;
+  resourceName: string;
   onDelete: () => void;
   onClose: () => void;
 } & Omit<ModalProps, "title" | "children" | "onAfterClosed">;
 
 export const ModalConfirmDelete = ({
   resource,
-  message,
+  resourceName,
   onDelete,
   onClose,
   ...modalProps
 }: ModalConfirmDeleteProps) => {
   const { getRequestContext } = useCTW();
-  const [alert, setAlert] = useState<{ header: string; message: string }>();
+  const [alert, setAlert] = useState<string>();
 
   const onConfirm = async () => {
     const { fhirClient } = await getRequestContext();
@@ -34,40 +33,40 @@ export const ModalConfirmDelete = ({
         resourceType: resource.resourceType,
         id: resource.id,
       });
-      onClose();
       onDelete();
+      onClose();
     } catch (err) {
-      if (isFhirError(err)) {
-        const response = fhirErrorResponse("Failed to Remove", err);
-        setAlert({
-          header: `${response.status} ${response.title}`,
-          message: response.statusText,
-        });
-      } else if (err instanceof Error) {
-        setAlert({ header: err.name, message: err.message });
-      }
+      setAlert(`Something went wrong. Please try again.`);
+      throw err;
     }
   };
   return (
-    <Modal
-      title={`Remove ${resource.resourceType}`}
-      onAfterClosed={() => setAlert(undefined)}
-      {...modalProps}
-    >
-      <div className="ctw-flex ctw-h-full ctw-flex-col ctw-items-center ctw-overflow-y-auto">
-        {alert && (
-          <Alert header={alert.header} type="error">
-            <div className="ctw-max-w-sm ctw-truncate">{alert.message}</div>
-          </Alert>
-        )}
-        <p className="ctw-subtext ctw-max-w-md ctw-text-center">{message}</p>
+    <Modal onAfterClosed={() => setAlert(undefined)} {...modalProps}>
+      {alert && <ErrorAlert header={alert} />}
+      <div className="ctw-items-left ctw-flex ctw-h-full ctw-flex-col ctw-space-y-2 ctw-overflow-y-auto">
+        <span className="ctw-text-left ctw-text-lg ctw-font-medium ctw-text-content-black">
+          {`Remove this ${resource.resourceType.toLowerCase()}?`}
+        </span>
+        <span className="ctw-subtext ctw-max-w-sm ctw-text-left ctw-text-content-light">
+          This will remove{" "}
+          <span className="ctw-font-medium">{resourceName}</span> from this
+          patient&apos;s condition list.
+        </span>
       </div>
-      <div className="ctw-flex ctw-flex-col ctw-items-center ctw-space-y-4">
-        <button type="button" onClick={onConfirm} className="ctw-btn-warn">
-          Remove {resource.resourceType}
-        </button>
-        <button type="button" onClick={onClose} className="ctw-btn-clear">
+      <div className="ctw-flex ctw-w-full ctw-space-x-4">
+        <button
+          type="button"
+          onClick={onClose}
+          className="ctw-btn-default ctw-flex-1"
+        >
           Cancel
+        </button>
+        <button
+          type="button"
+          onClick={onConfirm}
+          className="ctw-btn-primary ctw-flex-1"
+        >
+          Remove
         </button>
       </div>
     </Modal>

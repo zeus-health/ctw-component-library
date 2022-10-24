@@ -298,8 +298,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       {selectedCondition && (
         <ModalConfirmDelete
           resource={selectedCondition}
-          message={`Please confirm that you want to remove the condition 
-          "${selectedCondition.display}" from this client's profile.`}
+          resourceName={selectedCondition.display || "unnamed condition"}
           onClose={() => setShowConfirmDelete(false)}
           isOpen={showConfirmDelete}
           onDelete={() => queryClient.invalidateQueries(["conditions"])}

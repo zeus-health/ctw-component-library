@@ -6,13 +6,11 @@ import { Fragment } from "react";
 export type ModalProps = {
   isOpen: boolean;
   onAfterClosed?: () => void; // sometimes we want to wait for the Transition to end
-  title: string;
   children: ReactNode;
   className?: string;
 };
 
 export const Modal = ({
-  title,
   isOpen,
   onAfterClosed,
   children,
@@ -54,14 +52,11 @@ export const Modal = ({
           >
             <Dialog.Panel
               className={cx(
-                "ctw-min-w-fit ctw-max-w-lg ctw-transform ctw-rounded-lg ctw-bg-white ctw-py-14 ctw-px-8 ctw-align-middle ctw-shadow-xl",
+                "ctw-min-w-fit ctw-max-w-lg ctw-transform ctw-rounded-lg ctw-bg-white ctw-py-10 ctw-px-10 ctw-align-middle ctw-shadow-xl",
                 className
               )}
             >
-              <div className="ctw-flex ctw-h-full ctw-flex-col ctw-space-y-4">
-                <Dialog.Title className="ctw-m-0 ctw-text-center ctw-text-2xl ctw-text-content-black">
-                  {title}
-                </Dialog.Title>
+              <div className="ctw-flex ctw-h-full ctw-flex-col ctw-space-y-6">
                 {children}
               </div>
             </Dialog.Panel>
