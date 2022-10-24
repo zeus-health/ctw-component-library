@@ -10,6 +10,10 @@ export type FormFieldProps = {
   lines?: number;
   defaultValue?: string;
   readonly?: boolean;
+  render?: (
+    readonly: boolean | undefined,
+    props: InputHTMLAttributes<HTMLInputElement>
+  ) => JSX.Element;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 export const FormField = ({
@@ -19,16 +23,22 @@ export const FormField = ({
   defaultValue,
   readonly,
   hidden,
+  render,
   ...inputProps
 }: FormFieldProps) => {
   // We display dates in MM/DD/YYYY format, but date input fields
   // expect it to be in YYYY-MM-DD format.
+
   const value =
     inputProps.type === "date"
-      ? formatDateLocalToISO(defaultValue as string)
+      ? formatDateLocalToISO(defaultValue)
       : defaultValue;
 
   const getFieldComponent = () => {
+    if (render) {
+      return render(readonly, { ...inputProps, defaultValue, hidden });
+    }
+
     if (options) {
       return (
         <select
@@ -69,6 +79,14 @@ export const FormField = ({
     );
   };
 
+  if (render && hidden) {
+    return render(readonly, {
+      ...inputProps,
+      defaultValue,
+      hidden,
+    });
+  }
+
   if (hidden) {
     return <input {...inputProps} defaultValue={value} hidden={hidden} />;
   }
@@ -81,7 +99,7 @@ export const FormField = ({
           <LockClosedIcon className="ctw-absolute ctw-right-3 ctw-top-1/2 ctw-h-4 ctw-w-4 ctw--translate-y-1/2 ctw-transform ctw-fill-content-lighter" />
         )}
         {error && (
-          <div className="ctw-pointer-events-none ctw-absolute ctw-inset-y-0 ctw-right-0 ctw-flex ctw-items-center ctw-pr-3">
+          <div className="ctw-pointer-events-none ctw-absolute ctw-inset-y-0 ctw-right-0 ctw-top-2 ctw-flex ctw-h-min ctw-items-center ctw-pr-3">
             <ExclamationCircleIcon
               className="ctw-h-5 ctw-w-5 ctw-text-error-main"
               aria-hidden="true"
