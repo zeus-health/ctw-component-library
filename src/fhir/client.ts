@@ -12,9 +12,7 @@ export function getFhirClient(
       ? `https://api.zusapi.com/fhir`
       : `https://api.${env}.zusapi.com/fhir`;
 
-  const customHeaders: HeadersInit = {
-    "User-Agent": "zus_ctw_component_library fhirclient",
-  };
+  const customHeaders: HeadersInit = {};
   if (builderId) {
     customHeaders["Zus-Account"] = builderId;
   }
