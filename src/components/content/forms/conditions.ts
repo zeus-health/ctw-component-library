@@ -15,6 +15,35 @@ import {
   QUERY_KEY_PATIENT_CONDITIONS,
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
+import { Condition } from "fhir/r4";
+
+// Sets any autofill values that apply when a user adds a condition, whether creating or confirming.
+export function setAddConditionDefaults(condition: Condition): void {
+  const addDefaults: Partial<Condition> = {
+    clinicalStatus: {
+      coding: [
+        {
+          system: SYSTEM_CONDITION_CLINICAL,
+          code: "active",
+          display: "Active",
+        },
+      ],
+      text: "active",
+    },
+    verificationStatus: {
+      coding: [
+        {
+          system: SYSTEM_CONDITION_VERIFICATION_STATUS,
+          code: "confirmed",
+          display: "Confirmed",
+        },
+      ],
+      text: "confirmed",
+    },
+  };
+
+  Object.assign(condition, addDefaults);
+}
 
 const setRecorderField = async (
   practitionerId: string,
@@ -45,7 +74,8 @@ export const createOrEditCondition = async (
   const requestContext = await getRequestContext();
   const practitionerId = claimsPractitionerId(requestContext.authToken);
 
-  // Some fields will need to be set as they are required.
+  // Defines the properties of the condition based on the form.
+  // The autofill values that apply to both edits and creates are here; including Practitioner, Recorder, Patient, and Recorded date.
   const fhirCondition: fhir4.Condition = {
     resourceType: "Condition",
     id: result.data.id,

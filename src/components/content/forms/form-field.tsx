@@ -48,7 +48,7 @@ export const FormField = ({
           defaultValue={value}
         >
           {options.map((option) => (
-            <option key={option} value={option}>
+            <option value={option} key={option}>
               {capitalize(option)}
             </option>
           ))}

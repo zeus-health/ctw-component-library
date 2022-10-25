@@ -1,10 +1,14 @@
 import { z } from "zod";
-import Client from "fhir-kit-client";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { isFhirError } from "@/fhir/errors";
 import { dateToISO } from "@/fhir/formatters";
 import { SYSTEM_RXNORM } from "@/fhir/system-urls";
+import {
+  QUERY_KEY_PATIENT,
+  QUERY_KEY_PATIENT_MEDICATIONS,
+  QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
+} from "@/utils/query-keys";
 import { MedicationStatementModel } from "@/models/medication-statement";
 import { getFormData } from "@/utils/form-helper";
 import { queryClient } from "@/utils/request";
@@ -30,6 +34,12 @@ export const medicationStatementSchema = z.object({
     "not-taken",
   ]),
 });
+
+const QUERY_KEYS = [
+  QUERY_KEY_PATIENT,
+  QUERY_KEY_PATIENT_MEDICATIONS,
+  QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
+];
 
 export const createMedicationStatement = async (
   data: FormData,
@@ -76,10 +86,9 @@ export const createMedicationStatement = async (
     result.success = false;
   }
 
-  // @todo replace these with constants
-  queryClient.invalidateQueries(["medications"]);
-  queryClient.invalidateQueries(["lens-medications"]);
-  queryClient.invalidateQueries(["patient-medications"]);
+  QUERY_KEYS.forEach((queryKey) => {
+    queryClient.invalidateQueries([queryKey]);
+  });
 
   return result;
 };
