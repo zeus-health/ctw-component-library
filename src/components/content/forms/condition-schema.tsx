@@ -63,12 +63,12 @@ const sharedFields = (condition: ConditionModel) => [
   },
   {
     label: "Clinical Status",
-    value: condition.clinicalStatus,
+    value: levelTwoToOneMapping(condition.clinicalStatus),
     field: "clinicalStatus",
   },
   {
     label: "Verification Status",
-    value: condition.verificationStatus,
+    value: levelTwoToOneMapping(condition.verificationStatus),
     field: "verificationStatus",
   },
   {
@@ -93,14 +93,7 @@ const sharedSchema = {
   subjectID: z.string({
     required_error: "Condition subjectID must be specified.",
   }),
-  clinicalStatus: z.enum([
-    "active",
-    "recurrence",
-    "relapse",
-    "inactive",
-    "remission",
-    "resolved",
-  ]),
+  clinicalStatus: z.enum(["active", "inactive"]),
   onset: z
     .date({ required_error: "Condition's onset is required." })
     .max(new Date(), { message: "Onset cannot be a future date." }),
@@ -110,8 +103,6 @@ const sharedSchema = {
     .optional(),
   verificationStatus: z.enum([
     "unconfirmed",
-    "provisional",
-    "differential",
     "confirmed",
     "refuted",
     "entered-in-error",
@@ -138,3 +129,19 @@ export const conditionAddSchema = z.object({
     }),
   }),
 });
+
+function levelTwoToOneMapping(value: string): string {
+  switch (value) {
+    case "recurrence":
+    case "relapse":
+      return "active";
+    case "remission":
+    case "resolved":
+      return "inactive";
+    case "provisional":
+    case "differential":
+      return "unconfirmed";
+    default:
+      return value;
+  }
+}
