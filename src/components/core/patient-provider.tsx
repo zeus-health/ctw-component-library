@@ -46,6 +46,12 @@ export function PatientProvider({
   systemURL,
   tags,
 }: PatientProviderProps) {
+  console.log({
+    patientUPID,
+    patientID,
+    systemURL,
+    tags
+  })
   const providerState = useMemo(
     () => ({
       patientID: patientUPID || patientID,

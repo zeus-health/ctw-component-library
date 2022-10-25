@@ -34,7 +34,7 @@ export class ConditionModel {
     if (this.resource.abatementPeriod) {
       return formatDateISOToLocal(this.resource.abatementPeriod.start);
     }
-
+``
     if (this.resource.abatementRange) {
       return formatDateISOToLocal(
         this.resource.abatementRange.low?.value?.toString()

@@ -7,7 +7,6 @@ import {
   SYSTEM_CONDITION_CLINICAL,
   SYSTEM_CONDITION_VERIFICATION_STATUS,
 } from "@/fhir/system-urls";
-import { ConditionModel } from "@/models/conditions";
 import { claimsPractitionerId } from "@/utils/auth";
 import { getFormData } from "@/utils/form-helper";
 import {
@@ -121,12 +120,10 @@ export const createOrEditCondition = async (
     note: result.data.note ? [{ text: result.data.note }] : undefined,
   };
 
-  const resourceModel = new ConditionModel(fhirCondition);
-
-  const response = await createOrEditFhirResource({
-    resourceModel,
-    fhirClient: requestContext.fhirClient,
-  });
+  const response = await createOrEditFhirResource(
+    fhirCondition,
+    requestContext.fhirClient
+  );
 
   if (isFhirError(response)) {
     result.success = false;

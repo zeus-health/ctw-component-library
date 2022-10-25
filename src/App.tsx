@@ -1,5 +1,4 @@
 import "./App.css";
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { Auth0Provider } from "@auth0/auth0-react";
 import { SecuredApp } from "./SecuredApp";
 import { Conditions } from "./components/content/conditions";
@@ -17,6 +16,7 @@ const {
   VITE_AUTH0_DOMAIN,
   VITE_AUTH0_CLIENT_ID,
   VITE_AUTH0_AUDIENCE,
+  VITE_AUTH0_CALLBACK_PATH,
 } = import.meta.env;
 
 const theme: Theme = {
@@ -89,8 +89,7 @@ function App() {
         domain={VITE_AUTH0_DOMAIN}
         clientId={VITE_AUTH0_CLIENT_ID}
         audience={VITE_AUTH0_AUDIENCE}
-        redirectUri={`${window.location.origin}/auth/callback`}
-        scope="openid profile email offline_access"
+        redirectUri={`${window.location.origin}${VITE_AUTH0_CALLBACK_PATH}`}
       >
         <SecuredApp AppComponent={DemoApp} />
       </Auth0Provider>
