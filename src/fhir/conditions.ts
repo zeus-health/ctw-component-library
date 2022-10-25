@@ -80,7 +80,7 @@ export function usePatientConditions(conditionFilters: ConditionFilters) {
           "Condition",
           requestContext,
           {
-            patientUPID: patient.UPID,
+            patientUPID: patient.UPID as string,
             ...flattenArrayFilters(conditionFilters),
           }
         );
@@ -104,7 +104,7 @@ export function useOtherProviderConditions() {
           "Condition",
           requestContext,
           {
-            patientUPID: patient.UPID,
+            patientUPID: patient.UPID as string,
           }
         );
         return filterAndSort(conditions);
@@ -129,7 +129,7 @@ export function useConditionHistory(condition?: ConditionModel) {
         );
 
         const searchParams: SearchParams = {
-          patientUPID: patient.UPID,
+          patientUPID: patient.UPID as string,
           _include: ["Condition:patient", "Condition:encounter"],
           "_include:iterate": "Patient:organization",
         };

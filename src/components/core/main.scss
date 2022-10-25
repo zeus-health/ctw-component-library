@@ -1,4 +1,4 @@
-/* 
+/*
   These styles are applied to the entire app.
   NOTE: This is the only file where we can use @apply from tailwind.
 */
@@ -17,6 +17,10 @@
   *[class^="ctw-"]:before,
   *[class^="ctw-"]:after {
     box-sizing: border-box;
+  }
+
+  .ctw-body-container {
+    @apply ctw-m-3 ctw-space-y-5 ctw-bg-bg-white;
   }
 
   .ctw-border-default {
@@ -69,6 +73,14 @@
     letter-spacing: 0.2rem;
   }
 
+  .ctw-title-container {
+    @apply ctw-flex ctw-items-center ctw-justify-between;
+  }
+
+  .ctw-heading-container {
+    @apply ctw-flex ctw-h-11 ctw-items-center ctw-justify-between ctw-bg-bg-light ctw-p-3;
+  }
+
   .ctw-link {
     @apply ctw-cursor-pointer ctw-text-xs ctw-font-medium ctw-text-primary-dark hover:ctw-text-primary-main;
   }
@@ -90,12 +102,26 @@
     @apply ctw-bg-divider-main;
   }
 
+  .ctw-stacked {
+    .ctw-body-container {
+      @apply ctw-m-0;
+    }
+
+    .ctw-title-container {
+      @apply ctw-m-3 ctw-mb-0;
+    }
+
+    .ctw-table {
+      @apply ctw-rounded-none ctw-border-x-0;
+    }
+  }
+
   .ctw-hyphens-auto {
     hyphens: auto;
   }
 
   input.ctw-error {
-    @apply ctw-border-error-main ctw-pr-10 ctw-text-error-dark focus:ctw-border-error-main focus:ctw-outline-none focus:ctw-ring-1 focus:ctw-ring-error-main;
+    @apply ctw-border-error-main ctw-pr-10 focus:ctw-border-error-main focus:ctw-outline-none focus:ctw-ring-1 focus:ctw-ring-error-main;
   }
 
   label.ctw-error {

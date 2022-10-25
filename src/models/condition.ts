@@ -5,9 +5,9 @@ import { compact, uniqWith } from "lodash";
 import {
   codeableConceptLabel,
   findCoding,
-  findCodingByOrderOfPreference,
   findCodingWithEnrichment,
-} from "../fhir/codeable-concept";
+  findCodingByOrderOfPreference,
+} from "@/fhir/codeable-concept";
 import { formatDateISOToLocal, formatStringToDate } from "../fhir/formatters";
 import { SYSTEM_CCS, SYSTEM_ICD10, SYSTEM_SNOMED } from "../fhir/system-urls";
 import { PatientModel } from "./patients";

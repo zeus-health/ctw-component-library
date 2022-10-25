@@ -10,6 +10,7 @@ type TableRowsProps<T extends MinRecordItem> = {
   columns: TableColumn<T>[];
   isLoading: boolean;
   emptyMessage: string | ReactElement;
+  handleRowClick?: (record: T) => void;
 };
 
 export const TableRows = <T extends MinRecordItem>({
@@ -17,6 +18,7 @@ export const TableRows = <T extends MinRecordItem>({
   columns,
   isLoading,
   emptyMessage,
+  handleRowClick,
 }: TableRowsProps<T>) => {
   if (isLoading) {
     return (
@@ -40,7 +42,12 @@ export const TableRows = <T extends MinRecordItem>({
   return (
     <>
       {records.map((record) => (
-        <tr key={record.id}>
+        <tr
+          key={record.id}
+          onClick={() => {
+            if (handleRowClick) handleRowClick(record);
+          }}
+        >
           {columns.map((column, index) => (
             <TableDataCell
               key={column.title ?? index}

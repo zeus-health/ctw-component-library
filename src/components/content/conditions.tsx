@@ -141,7 +141,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
 
       setConditionFilter(tempConditionFilters);
 
-      /* OtherProviderRecordsConditons depends patientRecordsConditions so that we can correctly filter out 
+      /* OtherProviderRecordsConditons depends patientRecordsConditions so that we can correctly filter out
          conditions that appear in patientRecordsConditions from OtherProviderRecordsConditons */
       if (patientRecordsResponse.data) {
         setPatientRecords(
@@ -191,11 +191,11 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     <div
       ref={containerRef}
       className={cx("ctw-conditions", className, {
-        "ctw-conditions-stacked": breakpoints.sm,
+        "ctw-stacked": breakpoints.sm,
       })}
     >
       {!readOnly && (
-        <div className="ctw-conditions-heading-container">
+        <div className="ctw-heading-container">
           <div className="ctw-title">Conditions</div>
           <button
             type="button"
@@ -206,9 +206,9 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           </button>
         </div>
       )}
-      <div className="ctw-conditions-body">
+      <div className="ctw-body-container">
         <div className="ctw-space-y-3">
-          <div className="ctw-conditions-title-container">
+          <div className="ctw-title-container">
             <div className="ctw-title">Patient Record</div>
             <ToggleControl
               onFormChange={handleToggleChange}
@@ -217,7 +217,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           </div>
 
           <ConditionsTableBase
-            className="ctw-conditions-table"
             stacked={breakpoints.sm}
             conditions={patientRecords}
             isLoading={patientRecordsResponse.isLoading}
@@ -256,7 +255,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         </div>
 
         <div className="ctw-space-y-3">
-          <div className="ctw-conditions-title-container">
+          <div className="ctw-title-container">
             <div className="ctw-title">Other Provider Records</div>
           </div>
 
