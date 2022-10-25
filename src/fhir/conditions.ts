@@ -131,7 +131,6 @@ export function useConditionHistory(condition?: ConditionModel) {
     [condition],
     async (requestContext, patient) => {
       if (!condition) return undefined;
-
       try {
         const tokens = condition.knownCodings.map(
           (coding) => `${coding.system}|${coding.code}`
@@ -166,7 +165,8 @@ export function useConditionHistory(condition?: ConditionModel) {
           `Failed fetching condition history information for patient: ${e}`
         );
       }
-    }
+    },
+    !!condition
   );
 }
 

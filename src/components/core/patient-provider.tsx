@@ -84,7 +84,8 @@ export function useQueryWithPatient<T>(
   query: (
     requestContext: CTWRequestContext,
     patient: PatientModel
-  ) => Promise<T>
+  ) => Promise<T>,
+  enabled = true
 ) {
   const { getRequestContext } = useCTW();
   const patientResponse = usePatient();
@@ -98,6 +99,6 @@ export function useQueryWithPatient<T>(
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return query(requestContext, patientResponse.data!);
     },
-    { enabled: !!patientResponse.data?.UPID }
+    { enabled: !!patientResponse.data?.UPID && enabled }
   );
 }

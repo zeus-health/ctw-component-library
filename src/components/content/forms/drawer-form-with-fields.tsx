@@ -81,7 +81,7 @@ export const DrawerFormWithFields = <T,>({
                   <FormField
                     {...inputProps(field, schema)}
                     lines={lines}
-                    key={`form-field-${label}`}
+                    key={label}
                     disabled={submitting}
                     readonly={readonly}
                     defaultValue={value}
