@@ -1,6 +1,6 @@
 import { Table, TableBaseProps, TableColumn } from "../core/table/table";
 
-import { ConditionModel } from "@/models/conditions";
+import { ConditionModel } from "@/models/condition";
 import { DotsHorizontalIcon } from "@heroicons/react/outline";
 import { DropdownMenu, MenuItems } from "../core/dropdown-menu";
 
@@ -26,19 +26,19 @@ export function ConditionsTableBase({
       minWidth: 320,
     },
     {
-      title: "Group",
+      title: "Category",
       dataIndex: "ccsGrouping",
       widthPercent: 25,
       minWidth: 192,
     },
     {
-      title: "Status",
+      title: "Latest Status",
       dataIndex: "clinicalStatus",
       widthPercent: 17.5,
       minWidth: 128,
     },
     {
-      title: "Recorded Date",
+      title: "Last Recorded",
       dataIndex: "recordedDate",
       widthPercent: 17.5,
       minWidth: 132,

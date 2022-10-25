@@ -90,11 +90,19 @@
     @apply ctw-bg-divider-main;
   }
 
+  .ctw-hyphens-auto {
+    hyphens: auto;
+  }
+
   input.ctw-error {
     @apply ctw-border-error-main ctw-pr-10 ctw-text-error-dark focus:ctw-border-error-main focus:ctw-outline-none focus:ctw-ring-1 focus:ctw-ring-error-main;
   }
 
   label.ctw-error {
     @apply ctw-text-error-main;
+  }
+
+  .ctw-alert-bg {
+    @apply ctw-flex ctw-items-start ctw-space-x-2 ctw-p-4 ctw-text-left;
   }
 }

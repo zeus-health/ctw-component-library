@@ -1,4 +1,4 @@
-import { ConditionModel } from "../../models/conditions";
+import { ConditionModel } from "../../models/condition";
 import { Drawer } from "../core/drawer";
 import { ConditionHistory } from "./conditions-history";
 

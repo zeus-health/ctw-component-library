@@ -1,6 +1,6 @@
 import { setAddConditionDefaults } from "@/components/content/forms/conditions";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
-import { ConditionModel } from "@/models/conditions";
+import { ConditionModel } from "@/models/condition";
 import {
   QUERY_KEY_CONDITION_HISTORY,
   QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
@@ -31,14 +31,6 @@ export const CONDITION_CODE_PREFERENCE_ORDER: CodePreference[] = [
   { system: SYSTEM_ICD10_CM },
   { system: SYSTEM_ICD9 },
   { system: SYSTEM_ICD9_CM },
-];
-
-export const CONDITION_CODE_SYSTEMS = [
-  SYSTEM_ICD9,
-  SYSTEM_ICD9_CM,
-  SYSTEM_ICD10,
-  SYSTEM_ICD10_CM,
-  SYSTEM_SNOMED,
 ];
 
 export type ClinicalStatus =
