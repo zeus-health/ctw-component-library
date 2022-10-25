@@ -8,6 +8,7 @@ import {
 } from "@/utils/query-keys";
 import { SearchParams } from "fhir-kit-client";
 import { sortBy } from "lodash";
+import { CodePreference } from "./codeable-concept";
 import {
   flattenArrayFilters,
   searchBuilderRecords,
@@ -21,6 +22,16 @@ import {
   SYSTEM_ICD9_CM,
   SYSTEM_SNOMED,
 } from "./system-urls";
+
+export const CONDITION_CODE_PREFERENCE_ORDER: CodePreference[] = [
+  { system: SYSTEM_SNOMED, checkForEnrichment: true },
+  { system: SYSTEM_ICD10, checkForEnrichment: true },
+  { system: SYSTEM_SNOMED },
+  { system: SYSTEM_ICD10 },
+  { system: SYSTEM_ICD10_CM },
+  { system: SYSTEM_ICD9 },
+  { system: SYSTEM_ICD9_CM },
+];
 
 export const CONDITION_CODE_SYSTEMS = [
   SYSTEM_ICD9,
@@ -120,7 +131,6 @@ export function useConditionHistory(condition?: ConditionModel) {
     [condition],
     async (requestContext, patient) => {
       if (!condition) return undefined;
-
       try {
         const tokens = condition.knownCodings.map(
           (coding) => `${coding.system}|${coding.code}`
@@ -155,7 +165,8 @@ export function useConditionHistory(condition?: ConditionModel) {
           `Failed fetching condition history information for patient: ${e}`
         );
       }
-    }
+    },
+    !!condition
   );
 }
 
