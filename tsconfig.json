@@ -23,5 +23,10 @@
     }
   },
   "include": ["src", "scripts"],
-  "exclude": ["src/main.tsx", "src/App.tsx", "src/SecuredApp.tsx", "src/error-boundary.tsx"]
+  "exclude": [
+    "src/main.tsx",
+    "src/App.tsx",
+    "src/SecuredApp.tsx",
+    "src/error-boundary.tsx"
+  ]
 }
