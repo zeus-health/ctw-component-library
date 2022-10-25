@@ -1,7 +1,6 @@
 import { getIncludedResources } from "@/fhir/bundle";
 import { useConditionHistory } from "@/fhir/conditions";
 import { ConditionModel } from "@/models/condition";
-import { Condition } from "fhir/r4";
 import { orderBy } from "lodash";
 import { useEffect, useState } from "react";
 import { CodingList } from "../core/coding-list";
@@ -78,7 +77,7 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
           historyResponse.data.bundle
         );
         const conditionModels = historyResponse.data.conditions.map(
-          (c: Condition) => new ConditionModel(c, includedResources)
+          (c) => new ConditionModel(c, includedResources)
         );
 
         const sortedConditions = orderBy(
