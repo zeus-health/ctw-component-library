@@ -1,7 +1,7 @@
 import { getIncludedResources } from "@/fhir/bundle";
 import { useConditionHistory } from "@/fhir/conditions";
 import { ConditionModel } from "@/models/conditions";
-import { orderBy } from "lodash";
+import { orderBy, uniqWith } from "lodash";
 import { useEffect, useState } from "react";
 import { CodingList } from "../core/coding-list";
 import { CollapsibleDataListProps } from "../core/collapsible-data-list";
@@ -80,16 +80,24 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
           (c) => new ConditionModel(c, includedResources)
         );
 
+        // We have to sort before deduping because uniqWith will prioritize records encountered first.
+        // If we find a match between a record with a date and without a date we want to use the record with a date.
         const sortedConditions = orderBy(
           conditionModels,
-          (c) => c.resource.recordedDate ?? "",
+          [(c) => c.resource.recordedDate ?? "", (c) => c.hasEnrichment],
           "desc"
         );
 
-        const conditionsFilteredWithDate = sortedConditions.filter(
+        const dedupedConditionModels = uniqWith(
+          sortedConditions,
+          (prev, next) =>
+            next.preferredCoding?.system === prev.preferredCoding?.system
+        );
+
+        const conditionsFilteredWithDate = dedupedConditionModels.filter(
           (c) => c.recordedDate
         );
-        const conditionsFilteredWithoutDate = sortedConditions.filter(
+        const conditionsFilteredWithoutDate = dedupedConditionModels.filter(
           (c) => !c.recordedDate
         );
 

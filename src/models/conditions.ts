@@ -1,5 +1,6 @@
 import {
   CONDITION_CODE_PREFERENCE_ORDER,
+  CONDITION_CODE_PREFERENCE_ORDER_ENRICHMENT,
   CONDITION_CODE_SYSTEMS,
 } from "@/fhir/conditions";
 import { findReference } from "@/fhir/resource-helper";
@@ -9,6 +10,7 @@ import {
   codeableConceptLabel,
   findCoding,
   findCodingByOrderOfPreference,
+  findCodingWithEnrichment,
 } from "../fhir/codeable-concept";
 import { formatDateISOToLocal, formatStringToDate } from "../fhir/formatters";
 import { SYSTEM_CCS, SYSTEM_ICD10, SYSTEM_SNOMED } from "../fhir/system-urls";
@@ -78,13 +80,6 @@ export class ConditionModel {
     return this.resource.code;
   }
 
-  get preferredCoding(): fhir4.Coding | undefined {
-    return findCodingByOrderOfPreference(
-      CONDITION_CODE_PREFERENCE_ORDER,
-      this.resource.code
-    );
-  }
-
   get display(): string | undefined {
     return (
       findCodingByOrderOfPreference(
@@ -116,6 +111,12 @@ export class ConditionModel {
 
   get icd10Display(): string | undefined {
     return findCoding(SYSTEM_ICD10, this.resource.code)?.display;
+  }
+
+  get hasEnrichment(): boolean {
+    return CONDITION_CODE_PREFERENCE_ORDER_ENRICHMENT.some((systemUrl) =>
+      findCodingWithEnrichment(systemUrl, this.resource.code)
+    );
   }
 
   get id(): string {
@@ -169,6 +170,20 @@ export class ConditionModel {
     }
 
     return undefined;
+  }
+
+  get preferredCoding(): fhir4.Coding | undefined {
+    return findCodingByOrderOfPreference(
+      CONDITION_CODE_PREFERENCE_ORDER,
+      this.resource.code
+    );
+  }
+
+  get preferredSystem(): string | undefined {
+    return findCodingByOrderOfPreference(
+      CONDITION_CODE_PREFERENCE_ORDER,
+      this.resource.code
+    )?.system;
   }
 
   get recordedDate(): string | undefined {
