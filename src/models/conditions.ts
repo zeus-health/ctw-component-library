@@ -179,13 +179,6 @@ export class ConditionModel {
     );
   }
 
-  get preferredSystem(): string | undefined {
-    return findCodingByOrderOfPreference(
-      CONDITION_CODE_PREFERENCE_ORDER,
-      this.resource.code
-    )?.system;
-  }
-
   get recordedDate(): string | undefined {
     return formatDateISOToLocal(this.resource.recordedDate);
   }
