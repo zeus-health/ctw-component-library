@@ -21,7 +21,7 @@ export const Pagination = ({
   const allShown = currentNumber === total;
 
   return (
-    <div className="ctw-flex ctw-items-center ctw-justify-between ctw-py-1 ctw-px-6">
+    <div className="ctw-pagination ctw-flex ctw-items-center ctw-justify-between ctw-py-1 ctw-px-6">
       <div className="ctw-text-gray-600 ctw-text-sm">
         Showing <span className="ctw-font-medium">{currentNumber}</span> of{" "}
         <span className="ctw-font-medium">{total}</span> results
