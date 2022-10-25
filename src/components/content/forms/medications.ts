@@ -77,7 +77,10 @@ export const createMedicationStatement = async (
 
   const resourceModel = new MedicationStatementModel(fhirMedicationStatement);
 
-  const response = await createOrEditFhirResource(resourceModel, fhirClient);
+  const response = await createOrEditFhirResource(
+    resourceModel.resource,
+    fhirClient
+  );
 
   if (isFhirError(response)) {
     result.success = false;
