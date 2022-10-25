@@ -1,5 +1,5 @@
 import { Combobox } from "@headlessui/react";
-import { debounce } from "lodash";
+import { debounce, isEmpty, isObject } from "lodash";
 import { ChangeEvent, useMemo, useState } from "react";
 
 export type ComboxboxFieldOption = { value: unknown; label: string };
@@ -22,15 +22,13 @@ export const ComboboxField = <T,>({
   readonly,
 }: ComboboxFieldProps<T>) => {
   const [searchTerm, setSearchTerm] = useState(defaultSearchTerm || "");
-  const [inputValue, setInputValue] = useState<unknown>();
-  const inputState = defaultValue || inputValue;
+  const [inputValue, setInputValue] = useState<unknown>({});
+  const inputState = isEmpty(inputValue) ? defaultValue : inputValue;
+
   // Check if inputState is an object to determine if we should JSON.stringify.
-  const inputValueParsed =
-    typeof inputState === "object" &&
-    !Array.isArray(inputState) &&
-    inputState !== null
-      ? JSON.stringify(inputState)
-      : inputState;
+  const inputValueParsed = isObject(inputState)
+    ? JSON.stringify(inputState)
+    : inputState;
 
   // Delay handle search input so that we don't fire a bunch of events until the user has had time to type.
   const debouncedSearchInputChange = useMemo(() => {
@@ -61,7 +59,7 @@ export const ComboboxField = <T,>({
         placeholder="Type to search"
       />
 
-      <input hidden name={name} value={inputValueParsed as string} />
+      <input hidden name={name} defaultValue={inputValueParsed as string} />
       <Combobox.Options className="ctw-listbox ctw-max-h-60 ctw-overflow-auto ctw-rounded-md ctw-bg-white ctw-py-1 ctw-text-base ctw-shadow-lg ctw-ring-1 ctw-ring-black ctw-ring-opacity-5 focus:ctw-outline-none sm:ctw-text-sm">
         <ComboboxOptions options={options} query={searchTerm} />
       </Combobox.Options>

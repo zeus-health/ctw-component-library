@@ -1,3 +1,4 @@
+import { setAddConditionDefaults } from "@/components/content/forms/conditions";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
 import { ConditionModel } from "@/models/conditions";
 import {
@@ -7,7 +8,7 @@ import {
 } from "@/utils/query-keys";
 import { SearchParams } from "fhir-kit-client";
 import { sortBy } from "lodash";
-
+import { CodePreference } from "./codeable-concept";
 import {
   flattenArrayFilters,
   searchBuilderRecords,
@@ -15,14 +16,22 @@ import {
   searchLensRecords,
 } from "./search-helpers";
 import {
-  SYSTEM_CONDITION_CLINICAL,
-  SYSTEM_CONDITION_VERIFICATION_STATUS,
   SYSTEM_ICD10,
   SYSTEM_ICD10_CM,
   SYSTEM_ICD9,
   SYSTEM_ICD9_CM,
   SYSTEM_SNOMED,
 } from "./system-urls";
+
+export const CONDITION_CODE_PREFERENCE_ORDER: CodePreference[] = [
+  { system: SYSTEM_SNOMED, checkForEnrichment: true },
+  { system: SYSTEM_ICD10, checkForEnrichment: true },
+  { system: SYSTEM_SNOMED },
+  { system: SYSTEM_ICD10 },
+  { system: SYSTEM_ICD10_CM },
+  { system: SYSTEM_ICD9 },
+  { system: SYSTEM_ICD9_CM },
+];
 
 export const CONDITION_CODE_SYSTEMS = [
   SYSTEM_ICD9,
@@ -63,27 +72,8 @@ export function getNewCondition(patientId: string) {
       type: "Patient",
       reference: `Patient/${patientId}`,
     },
-    clinicalStatus: {
-      coding: [
-        {
-          system: SYSTEM_CONDITION_CLINICAL,
-          code: "active",
-          display: "Active",
-        },
-      ],
-      text: "active",
-    },
-    verificationStatus: {
-      coding: [
-        {
-          system: SYSTEM_CONDITION_VERIFICATION_STATUS,
-          code: "confirmed",
-          display: "Confirmed",
-        },
-      ],
-      text: "confirmed",
-    },
   };
+  setAddConditionDefaults(newCondition);
 
   return newCondition;
 }

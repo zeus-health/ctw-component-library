@@ -1,8 +1,15 @@
-import { CONDITION_CODE_SYSTEMS } from "@/fhir/conditions";
+import {
+  CONDITION_CODE_PREFERENCE_ORDER,
+  CONDITION_CODE_SYSTEMS,
+} from "@/fhir/conditions";
 import { findReference } from "@/fhir/resource-helper";
 import { ResourceMap } from "@/fhir/types";
 import { compact } from "lodash";
-import { codeableConceptLabel, findCoding } from "../fhir/codeable-concept";
+import {
+  codeableConceptLabel,
+  findCoding,
+  findCodingByOrderOfPreference,
+} from "../fhir/codeable-concept";
 import { formatDateISOToLocal, formatStringToDate } from "../fhir/formatters";
 import { SYSTEM_CCS, SYSTEM_ICD10, SYSTEM_SNOMED } from "../fhir/system-urls";
 import { PatientModel } from "./patients";
@@ -71,8 +78,20 @@ export class ConditionModel {
     return this.resource.code;
   }
 
+  get preferredCoding(): fhir4.Coding | undefined {
+    return findCodingByOrderOfPreference(
+      CONDITION_CODE_PREFERENCE_ORDER,
+      this.resource.code
+    );
+  }
+
   get display(): string | undefined {
-    return codeableConceptLabel(this.resource.code);
+    return (
+      findCodingByOrderOfPreference(
+        CONDITION_CODE_PREFERENCE_ORDER,
+        this.resource.code
+      )?.display ?? codeableConceptLabel(this.resource.code)
+    );
   }
 
   get encounter(): string | undefined {
