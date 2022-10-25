@@ -1,14 +1,12 @@
-import {
-  CONDITION_CODE_PREFERENCE_ORDER,
-  CONDITION_CODE_SYSTEMS,
-} from "@/fhir/conditions";
+import { CONDITION_CODE_PREFERENCE_ORDER } from "@/fhir/conditions";
 import { findReference } from "@/fhir/resource-helper";
 import { ResourceMap } from "@/fhir/types";
-import { compact } from "lodash";
+import { compact, uniqWith } from "lodash";
 import {
   codeableConceptLabel,
   findCoding,
   findCodingByOrderOfPreference,
+  findCodingWithEnrichment,
 } from "../fhir/codeable-concept";
 import { formatDateISOToLocal, formatStringToDate } from "../fhir/formatters";
 import { SYSTEM_CCS, SYSTEM_ICD10, SYSTEM_SNOMED } from "../fhir/system-urls";
@@ -78,13 +76,6 @@ export class ConditionModel {
     return this.resource.code;
   }
 
-  get preferredCoding(): fhir4.Coding | undefined {
-    return findCodingByOrderOfPreference(
-      CONDITION_CODE_PREFERENCE_ORDER,
-      this.resource.code
-    );
-  }
-
   get display(): string | undefined {
     return (
       findCodingByOrderOfPreference(
@@ -123,11 +114,21 @@ export class ConditionModel {
   }
 
   get knownCodings(): fhir4.Coding[] {
-    return compact(
-      CONDITION_CODE_SYSTEMS.map((system) =>
-        findCoding(system, this.resource.code)
-      )
+    const codings = compact(
+      CONDITION_CODE_PREFERENCE_ORDER.map((code) => {
+        if (code.checkForEnrichment) {
+          return findCodingWithEnrichment(code.system, this.resource.code);
+        }
+        return findCoding(code.system, this.resource.code);
+      })
     );
+
+    // The order of the array matters here because that is how it determines which record to keep when dupes are found.
+    const dedupedBySystemCoding = uniqWith(
+      codings,
+      (prev, next) => prev.system === next.system
+    );
+    return dedupedBySystemCoding;
   }
 
   get notes(): string[] {
@@ -169,6 +170,13 @@ export class ConditionModel {
     }
 
     return undefined;
+  }
+
+  get preferredCoding(): fhir4.Coding | undefined {
+    return findCodingByOrderOfPreference(
+      CONDITION_CODE_PREFERENCE_ORDER,
+      this.resource.code
+    );
   }
 
   get recordedDate(): string | undefined {

@@ -23,7 +23,9 @@ export const TableDataCell = <T extends MinRecordItem>({
       key={column.title ?? index}
       className={cx(
         { "ctw-font-medium ctw-text-content-black": index === 0 },
-        column.className
+        column.className,
+        // Added ctw-break-words because AbdominalReallyLongWordThatShouldBReakButDoeskadjlkajflkajsf doesn't wrap correclty without it.
+        "ctw-hyphens-auto ctw-break-words"
       )}
     >
       {column.render ? column.render(record) : value}
