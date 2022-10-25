@@ -33,7 +33,9 @@ function setupData(condition: ConditionModel): CollapsibleDataListProps {
     },
     {
       label: "Code",
-      value: <CodingList codings={condition.knownCodings} />,
+      value: (
+        <CodingList codings={condition.knownCodingsWithEnrichmentPreference} />
+      ),
     },
     {
       label: "Onset Date",

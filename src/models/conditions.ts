@@ -4,11 +4,12 @@ import {
 } from "@/fhir/conditions";
 import { findReference } from "@/fhir/resource-helper";
 import { ResourceMap } from "@/fhir/types";
-import { compact } from "lodash";
+import { compact, uniqWith } from "lodash";
 import {
   codeableConceptLabel,
   findCoding,
   findCodingByOrderOfPreference,
+  findCodingWithEnrichment,
 } from "../fhir/codeable-concept";
 import { formatDateISOToLocal, formatStringToDate } from "../fhir/formatters";
 import { SYSTEM_CCS, SYSTEM_ICD10, SYSTEM_SNOMED } from "../fhir/system-urls";
@@ -113,6 +114,24 @@ export class ConditionModel {
 
   get id(): string {
     return this.resource.id || "";
+  }
+
+  get knownCodingsWithEnrichmentPreference(): fhir4.Coding[] {
+    const codings = compact(
+      CONDITION_CODE_PREFERENCE_ORDER.map((code) => {
+        if (code.checkForEnrichment) {
+          return findCodingWithEnrichment(code.system, this.resource.code);
+        }
+        return findCoding(code.system, this.resource.code);
+      })
+    );
+
+    // The order of the array matters here because that is how it determines which record to keep when dupes are found.
+    const dedupedBySystemCoding = uniqWith(
+      codings,
+      (prev, next) => prev.system === next.system
+    );
+    return dedupedBySystemCoding;
   }
 
   get knownCodings(): fhir4.Coding[] {
