@@ -60,6 +60,7 @@ export const DrawerForm = <T,>({
       <form
         className="ctw-flex ctw-h-full ctw-flex-col ctw-overflow-y-auto"
         onSubmit={onFormSubmit}
+        noValidate // Removes the browser tooltip functionality.
       >
         <Drawer.Body>{children(isSubmitting, errors)}</Drawer.Body>
         <Drawer.Footer>

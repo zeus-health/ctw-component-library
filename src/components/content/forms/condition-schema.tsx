@@ -11,9 +11,14 @@ export const getAddConditionData = ({
   {
     label: "Condition",
     field: "condition",
+    value: condition.display,
     readonly: false,
     render: (readonly: boolean | undefined, inputProps) => (
-      <ConditionsAutoComplete readonly={readonly} {...inputProps} />
+      <ConditionsAutoComplete
+        readonly={readonly}
+        {...inputProps}
+        defaultCoding={condition.preferredCoding ?? {}}
+      />
     ),
   },
   ...sharedFields(condition),
@@ -32,25 +37,13 @@ export const getEditingPatientConditionData = ({
     hidden: true,
   },
   {
-    label: "condition",
-    field: "condition",
-    hidden: true,
-    render: (readonly, inputProps): JSX.Element => (
-      <input
-        value={JSON.stringify(condition.codings)}
-        {...inputProps}
-        disabled={readonly}
-      />
-    ),
-  },
-  {
     label: "Condition",
     field: "condition",
     value: condition.display,
     readonly: true,
     render: (readonly: boolean | undefined, inputProps) => (
       <ConditionsAutoComplete
-        defaultCoding={condition.snomedCoding}
+        defaultCoding={condition.codings}
         readonly={readonly}
         {...inputProps}
       />
@@ -108,8 +101,13 @@ const sharedSchema = {
     "remission",
     "resolved",
   ]),
-  onset: z.date({ required_error: "Conditions's onset is required." }),
-  abatement: z.date().optional(),
+  onset: z
+    .date({ required_error: "Condition's onset is required." })
+    .max(new Date(), { message: "Onset cannot be a future date." }),
+  abatement: z
+    .date()
+    .max(new Date(), { message: "Abatement cannot be a future date." })
+    .optional(),
   verificationStatus: z.enum([
     "unconfirmed",
     "provisional",
