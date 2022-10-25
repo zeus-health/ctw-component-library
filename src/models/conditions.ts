@@ -113,24 +113,6 @@ export class ConditionModel {
     return this.resource.id || "";
   }
 
-  get knownCodingsWithEnrichmentPreference(): fhir4.Coding[] {
-    const codings = compact(
-      CONDITION_CODE_PREFERENCE_ORDER.map((code) => {
-        if (code.checkForEnrichment) {
-          return findCodingWithEnrichment(code.system, this.resource.code);
-        }
-        return findCoding(code.system, this.resource.code);
-      })
-    );
-
-    // The order of the array matters here because that is how it determines which record to keep when dupes are found.
-    const dedupedBySystemCoding = uniqWith(
-      codings,
-      (prev, next) => prev.system === next.system
-    );
-    return dedupedBySystemCoding;
-  }
-
   get knownCodings(): fhir4.Coding[] {
     const codings = compact(
       CONDITION_CODE_PREFERENCE_ORDER.map((code) => {
