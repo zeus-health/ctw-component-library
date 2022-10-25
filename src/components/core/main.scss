@@ -102,6 +102,7 @@
     @apply ctw-bg-divider-main;
   }
 
+<<<<<<< HEAD
   .ctw-stacked {
     .ctw-body-container {
       @apply ctw-m-0;
@@ -114,6 +115,10 @@
     .ctw-table {
       @apply ctw-rounded-none ctw-border-x-0;
     }
+=======
+  .ctw-hyphens-auto {
+    hyphens: auto;
+>>>>>>> main
   }
 
   input.ctw-error {
