@@ -101,4 +101,8 @@
   label.ctw-error {
     @apply ctw-text-error-main;
   }
+
+  .ctw-alert-bg {
+    @apply ctw-flex ctw-items-start ctw-space-x-2 ctw-p-4 ctw-text-left;
+  }
 }

@@ -1,6 +1,6 @@
 import { setAddConditionDefaults } from "@/components/content/forms/conditions";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
-import { ConditionModel } from "@/models/conditions";
+import { ConditionModel } from "@/models/condition";
 import {
   QUERY_KEY_CONDITION_HISTORY,
   QUERY_KEY_OTHER_PROVIDER_CONDITIONS,

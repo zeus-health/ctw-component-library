@@ -11,10 +11,16 @@ import {
   usePatientConditions,
 } from "@/fhir/conditions";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
-import { ConditionModel } from "@/models/conditions";
+import { ConditionModel } from "@/models/condition";
+import {
+  QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
+  QUERY_KEY_PATIENT_CONDITIONS,
+} from "@/utils/query-keys";
+import { queryClient } from "@/utils/request";
 import cx from "classnames";
 import { union } from "lodash";
 import { useEffect, useRef, useState } from "react";
+import { ModalConfirmDelete } from "../core/modal-confirm-delete";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionHistoryDrawer } from "./conditions-history-drawer";
@@ -46,6 +52,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [historyDrawerIsOpen, setHistoryDrawerIsOpen] = useState(false);
   const [patientRecords, setPatientRecords] = useState<ConditionModel[]>([]);
   const [otherProviderRecords, setOtherProviderRecords] = useState<
@@ -57,9 +64,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const [schema, setSchema] = useState<Zod.AnyZodObject>(conditionAddSchema);
   const [currentSelectedData, setCurrentlySelectedData] =
     useState<FormEntry[]>();
-  const [conditionForHistory, setConditionForHistory] =
-    useState<ConditionModel>();
-
+  const [selectedCondition, setSelectedCondition] = useState<ConditionModel>();
   const patientResponse = usePatient();
   const patientRecordsResponse = usePatientConditions(conditionFilter);
   const otherProviderRecordsResponse = useOtherProviderConditions();
@@ -80,6 +85,11 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       setSchema(conditionEditSchema);
       setCurrentlySelectedData(getEditingPatientConditionData({ condition }));
     }
+  };
+
+  const handleConditionDelete = (condition: ConditionModel) => {
+    setShowConfirmDelete(true);
+    setSelectedCondition(condition);
   };
 
   const handleAddOtherProviderCondition = (condition: ConditionModel) => {
@@ -231,7 +241,14 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
                 name: "View History",
                 action: () => {
                   setHistoryDrawerIsOpen(true);
-                  setConditionForHistory(condition);
+                  setSelectedCondition(condition);
+                },
+              },
+              {
+                name: "Delete",
+                className: "dangerous",
+                action: () => {
+                  handleConditionDelete(condition);
                 },
               },
             ]}
@@ -264,7 +281,14 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
                 name: "View History",
                 action: () => {
                   setHistoryDrawerIsOpen(true);
-                  setConditionForHistory(condition);
+                  setSelectedCondition(condition);
+                },
+              },
+              {
+                name: "Delete",
+                className: "dangerous",
+                action: () => {
+                  handleConditionDelete(condition);
                 },
               },
             ]}
@@ -287,8 +311,23 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       <ConditionHistoryDrawer
         isOpen={historyDrawerIsOpen}
         onClose={() => setHistoryDrawerIsOpen(false)}
-        condition={conditionForHistory}
+        condition={selectedCondition}
       />
+
+      {selectedCondition && (
+        <ModalConfirmDelete
+          resource={selectedCondition}
+          resourceName={selectedCondition.display || "unnamed condition"}
+          onClose={() => setShowConfirmDelete(false)}
+          isOpen={showConfirmDelete}
+          onDelete={() => {
+            queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]);
+            queryClient.invalidateQueries([
+              QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
+            ]);
+          }}
+        />
+      )}
     </div>
   );
 }

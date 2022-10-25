@@ -1,6 +1,6 @@
 import { getIncludedResources } from "@/fhir/bundle";
 import { useConditionHistory } from "@/fhir/conditions";
-import { ConditionModel } from "@/models/conditions";
+import { ConditionModel } from "@/models/condition";
 import { orderBy } from "lodash";
 import { useEffect, useState } from "react";
 import { CodingList } from "../core/coding-list";
