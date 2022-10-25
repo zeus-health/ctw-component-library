@@ -41,18 +41,7 @@ export const MedicationDrawer = ({
       <Drawer.Body>
         <div className="ctw-space-y-7">
           {medication && renderDrawerContentTop()}
-
-          {/* @todo: Refactor this to not use tabs (only show Overview) */}
-          <ButtonTabs tabs={["Overview", "History"]}>
-            <Tab.Panels>
-              <Tab.Panel>
-                <DataList title="Details" data={data} />
-              </Tab.Panel>
-              <Tab.Panel>
-                <MedicationHistory rxNorm={medication?.rxNorm} />
-              </Tab.Panel>
-            </Tab.Panels>
-          </ButtonTabs>
+          <DataList title="Details" data={data} />
         </div>
       </Drawer.Body>
       <Drawer.Footer>
