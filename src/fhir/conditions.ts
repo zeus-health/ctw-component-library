@@ -33,14 +33,6 @@ export const CONDITION_CODE_PREFERENCE_ORDER: CodePreference[] = [
   { system: SYSTEM_ICD9_CM },
 ];
 
-export const CONDITION_CODE_SYSTEMS = [
-  SYSTEM_ICD9,
-  SYSTEM_ICD9_CM,
-  SYSTEM_ICD10,
-  SYSTEM_ICD10_CM,
-  SYSTEM_SNOMED,
-];
-
 export type ClinicalStatus =
   | "active"
   | "recurrence"
