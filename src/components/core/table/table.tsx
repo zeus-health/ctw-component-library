@@ -53,10 +53,11 @@ export const Table = <T extends MinRecordItem>({
   const [showLeftShadow, setShowLeftShadow] = useState(false);
   const [showRightShadow, setShowRightShadow] = useState(false);
   const [displayedRecords, setDisplayedRecords] = useState<T[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     setDisplayedRecords(records.slice(0, DEFAULT_PAGE_SIZE));
+    setCount(DEFAULT_PAGE_SIZE);
   }, [records]);
 
   const updateShadows = () => {
@@ -69,25 +70,9 @@ export const Table = <T extends MinRecordItem>({
     }
   };
 
-  const getNextRecords = () => {
-    const newPageNumber = currentPage + 1;
-    const finishIdx = Math.min(
-      (newPageNumber + 1) * DEFAULT_PAGE_SIZE,
-      records.length - 1
-    );
-    setCurrentPage(newPageNumber);
-    setDisplayedRecords(records.slice(0, finishIdx));
-  };
-
-  const showAllRecords = () => {
-    const lastPageNumber = records.length / DEFAULT_PAGE_SIZE + 1;
-    setCurrentPage(lastPageNumber);
-    setDisplayedRecords(records);
-  };
-
-  const resetRecords = () => {
-    setCurrentPage(1);
-    setDisplayedRecords(records.slice(0, DEFAULT_PAGE_SIZE));
+  const changeCount = (amount: number) => {
+    setCount(amount);
+    setDisplayedRecords(records.slice(0, amount));
   };
 
   useEffect(() => {
@@ -138,12 +123,9 @@ export const Table = <T extends MinRecordItem>({
         </div>
       </div>
       <Pagination
-        currentPage={currentPage}
-        pageSize={DEFAULT_PAGE_SIZE}
         total={records.length}
-        onNext={getNextRecords}
-        onAll={showAllRecords}
-        onReset={resetRecords}
+        count={count}
+        changeCount={changeCount}
       />
     </>
   );
