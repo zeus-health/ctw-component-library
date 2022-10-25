@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.19.1
+
+### Patch Changes
+
+- d921eed: Fixed "add medication" request and removed tabs from the medications drawer
+
 ## 0.19.0
 
 ### Minor Changes
