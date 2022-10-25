@@ -5,7 +5,16 @@ module.exports = {
   extends: ["@kensho-technologies/eslint-config", "prettier"],
   // Ignore js files as we now have typescript parsing rules.
   // See https://stackoverflow.com/a/65063702 for more.
-  ignorePatterns: ["*.js", "*.cjs", "vite.config.ts", "vitest.*.ts"],
+  ignorePatterns: [
+    "*.js",
+    "*.cjs",
+    "vite.config.ts",
+    "vitest.*.ts",
+    "src/main.tsx",
+    "src/SecuredApp.tsx",
+    "src/App.tsx",
+    "src/error-boundary.tsx",
+  ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     project: ["./tsconfig.json"],
