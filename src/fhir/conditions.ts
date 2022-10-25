@@ -23,11 +23,6 @@ import {
   SYSTEM_SNOMED,
 } from "./system-urls";
 
-export const CONDITION_CODE_PREFERENCE_ORDER_ENRICHMENT = [
-  SYSTEM_SNOMED,
-  SYSTEM_ICD10,
-];
-
 export const CONDITION_CODE_PREFERENCE_ORDER: CodePreference[] = [
   { system: SYSTEM_SNOMED, checkForEnrichment: true },
   { system: SYSTEM_ICD10, checkForEnrichment: true },
