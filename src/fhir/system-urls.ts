@@ -7,6 +7,8 @@ export const SYSTEM_CONDITION_CLINICAL =
 export const SYSTEM_CONDITION_VERIFICATION_STATUS =
   "http://terminology.hl7.org/CodeSystem/condition-ver-status";
 
+export const SYSTEM_ENRICHMENT = "https://zusapi.com/terminology/enrichment";
+
 export const SYSTEM_ICD9 = "http://hl7.org/fhir/sid/icd-9";
 
 export const SYSTEM_ICD9_CM = "http://hl7.org/fhir/sid/icd-9-cm";
