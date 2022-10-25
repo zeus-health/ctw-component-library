@@ -23,8 +23,7 @@ export const TableDataCell = <T extends MinRecordItem>({
       key={column.title ?? index}
       className={cx(
         { "ctw-font-medium ctw-text-content-black": index === 0 },
-        column.className,
-        "break-all"
+        column.className
       )}
     >
       {column.render ? column.render(record) : value}
