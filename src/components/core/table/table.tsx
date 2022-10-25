@@ -52,13 +52,7 @@ export const Table = <T extends MinRecordItem>({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showLeftShadow, setShowLeftShadow] = useState(false);
   const [showRightShadow, setShowRightShadow] = useState(false);
-  const [displayedRecords, setDisplayedRecords] = useState<T[]>([]);
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    setDisplayedRecords(records.slice(0, DEFAULT_PAGE_SIZE));
-    setCount(DEFAULT_PAGE_SIZE);
-  }, [records]);
+  const [count, setCount] = useState(DEFAULT_PAGE_SIZE);
 
   const updateShadows = () => {
     const container = scrollContainerRef.current;
@@ -68,11 +62,6 @@ export const Table = <T extends MinRecordItem>({
       const rightSide = container.scrollLeft + container.clientWidth;
       setShowRightShadow(rightSide < table.clientWidth);
     }
-  };
-
-  const changeCount = (amount: number) => {
-    setCount(amount);
-    setDisplayedRecords(records.slice(0, amount));
   };
 
   useEffect(() => {
@@ -113,7 +102,7 @@ export const Table = <T extends MinRecordItem>({
 
             <tbody>
               <TableRows
-                records={displayedRecords}
+                records={records.slice(0, count)}
                 columns={columns}
                 isLoading={isLoading}
                 emptyMessage={message}
@@ -122,11 +111,7 @@ export const Table = <T extends MinRecordItem>({
           </table>
         </div>
       </div>
-      <Pagination
-        total={records.length}
-        count={count}
-        changeCount={changeCount}
-      />
+      <Pagination total={records.length} count={count} changeCount={setCount} />
     </>
   );
 };
