@@ -136,7 +136,7 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
       <div className="ctw-space-y-6">
         <div>
           <div className="ctw-text-2xl">
-            {condition.display} ({condition.icd10Code || condition.snomedCode})
+            {condition.display} ({condition.preferredCoding?.code})
           </div>
           <div className="ctw-text-sm">{condition.ccsGrouping}</div>
         </div>

@@ -276,6 +276,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         <DrawerFormWithFields
           patientID={patientResponse.data.id}
           title={`${formAction} Condition`}
+          formType={formAction}
           action={createOrEditCondition}
           data={currentSelectedData}
           schema={schema}

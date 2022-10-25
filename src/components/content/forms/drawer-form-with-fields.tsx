@@ -19,6 +19,7 @@ export type FormEntry = {
 
 export type DrawerFormWithFieldsProps<T> = {
   title: string;
+  formType?: string;
   data: FormEntry[] | undefined;
   schema: Zod.AnyZodObject;
   patientID: string;
@@ -28,6 +29,7 @@ export const DrawerFormWithFields = <T,>({
   title,
   data = [],
   schema,
+  formType,
   patientID,
   action,
   ...drawerFormProps
