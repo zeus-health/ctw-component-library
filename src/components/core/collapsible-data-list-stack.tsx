@@ -17,6 +17,8 @@ export const CollapsibleDataListStack = ({
 }: CollapsibleListProp) => {
   const [showAll, setShowAll] = useState(!limit || entries.length <= limit);
 
+  console.log("entries", entries);
+
   return (
     <div className="ctw-space-y-3">
       {entries.map((entry) => (
