@@ -18,6 +18,7 @@
     "dist"
   ],
   "scripts": {
+    "link": "npm link && cd ./node_modules/react && npm link && pwd && cd ../react-dom && npm link",
     "dev": "run-p dev:*",
     "dev:vite": "vite",
     "dev:tailwind": "npm run generate:theme-cjs",
