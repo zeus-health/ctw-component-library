@@ -83,7 +83,7 @@ export const Table = <T extends MinRecordItem>({
   const hasData = !isLoading && records.length > 0;
 
   return (
-    <>
+    <div className="ctw-space-y-4">
       <div
         className={cx(
           "ctw-table-container",
@@ -111,7 +111,13 @@ export const Table = <T extends MinRecordItem>({
           </table>
         </div>
       </div>
-      <Pagination total={records.length} count={count} changeCount={setCount} />
-    </>
+      {records.length > 0 && (
+        <Pagination
+          total={records.length}
+          count={count}
+          changeCount={setCount}
+        />
+      )}
+    </div>
   );
 };

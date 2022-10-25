@@ -10,7 +10,7 @@ export const Pagination = ({ total, count, changeCount }: PaginationProps) => {
   const allShown = count === total;
 
   return (
-    <div className="ctw-pagination ctw-flex ctw-items-center ctw-justify-between ctw-py-1 ctw-px-6">
+    <div className="ctw-pagination ctw-flex ctw-items-center ctw-justify-between ctw-px-6">
       <div className="ctw-text-gray-600 ctw-text-sm">
         Showing{" "}
         <span className="ctw-font-medium">{Math.min(count, total)}</span> of{" "}

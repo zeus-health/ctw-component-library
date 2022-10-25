@@ -28,7 +28,10 @@
     @apply ctw-rounded-none ctw-border-x-0;
   }
 
+  // When there's zero recoreds, we won't
+  // show pagination and so we'll get a double border
+  // unless we bump down by 1px.
   .ctw-conditions-not-reviewed {
-    @apply ctw-border-b-0;
+    @apply -ctw-mb-px;
   }
 }
