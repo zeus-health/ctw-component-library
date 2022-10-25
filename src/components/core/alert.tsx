@@ -12,7 +12,7 @@ export type AlertProps = {
 
 export const ErrorAlert = ({ header, children, className }: AlertProps) => (
   <div className={cx("ctw-alert-bg ctw-bg-error-bg", className)}>
-    <ExclamationIcon className="ctw-h-5 ctw-text-error-icon" />
+    <ExclamationIcon className="ctw-text-error-icon ctw-h-5" />
     <div className="ctw-space-y-2">
       <div className="ctw-text-error-heading">{header}</div>
       {children && <div className="ctw-text-error-message">{children}</div>}
@@ -21,7 +21,7 @@ export const ErrorAlert = ({ header, children, className }: AlertProps) => (
 );
 
 export const CautionAlert = ({ header, children, className }: AlertProps) => (
-  <div className={cx("ctw-alert-bg ctw-bg-error-bg", className)}>
+  <div className={cx("ctw-alert-bg ctw-bg-caution-bg", className)}>
     <XCircleIcon className="ctw-h-5 ctw-text-caution-icon" />
     <div className="ctw-space-y-2">
       <div className="ctw-text-caution-heading">{header}</div>
