@@ -3,7 +3,10 @@
 }
 
 .ctw-conditions.ctw-stacked {
+  // When there's zero records, we won't
+  // show pagination and so we'll get a double border
+  // unless we bump down by 1px.
   .ctw-conditions-not-reviewed {
-    @apply ctw-border-b-0;
+    @apply -ctw-mb-px;
   }
 }

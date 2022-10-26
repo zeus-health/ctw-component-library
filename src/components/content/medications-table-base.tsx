@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { compact } from "lodash/fp";
+import { Badge } from "@/components/core/badge";
 import type { TableColumn } from "@/components/core/table/table";
 import { Table } from "@/components/core/table/table";
 import type { MedicationStatementModel } from "@/models/medication-statement";
+import { compact } from "lodash/fp";
+import { useState } from "react";
 import { MedicationDrawer } from "./medication-drawer";
-import { Badge } from "@/components/core/badge";
 
 const LensStatusColumn = ({ status }: { status: string }) => {
   function statusToColor() {

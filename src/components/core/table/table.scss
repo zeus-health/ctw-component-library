@@ -73,6 +73,11 @@
       display: none;
     }
 
+    + .ctw-pagination {
+      flex-direction: column-reverse;
+      gap: 10px;
+    }
+
     table {
       colgroup {
         display: none;

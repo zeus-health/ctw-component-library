@@ -1,6 +1,6 @@
 {
   "name": "@zus-health/ctw-component-library",
-  "version": "0.18.1",
+  "version": "0.19.2",
   "type": "module",
   "main": "dist/index.cjs",
   "module": "dist/index.es.js",
@@ -18,7 +18,6 @@
     "dist"
   ],
   "scripts": {
-    "link": "npm link && cd ./node_modules/react && npm link && pwd && cd ../react-dom && npm link",
     "dev": "run-p dev:*",
     "dev:vite": "vite",
     "dev:tailwind": "npm run generate:theme-cjs",
