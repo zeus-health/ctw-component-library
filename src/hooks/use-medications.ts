@@ -1,17 +1,18 @@
-import { compact } from "lodash/fp";
-import { UseQueryResult } from "@tanstack/react-query";
-import {
-  QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
-  QUERY_KEY_PATIENT_MEDICATIONS,
-} from "@/utils/query-keys";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
+import type { MedicationBuilder } from "@/fhir/medications";
 import {
   getBuilderMedications,
   getPatientLensMedications,
 } from "@/fhir/medications";
-import type { MedicationBuilder } from "@/fhir/medications";
+import {
+  QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
+  QUERY_KEY_PATIENT_MEDICATIONS,
+} from "@/utils/query-keys";
+import { UseQueryResult } from "@tanstack/react-query";
+import { compact } from "lodash/fp";
 
-export function useQueryPatientBuilderMeds(
+// Gets patient medications for the builder, excluding meds where the information source is patient.
+export function useQueryGetPatientMedsForBuilder(
   statusParam = ""
 ): UseQueryResult<MedicationBuilder, unknown> {
   const queryKey = compact(["patient-medications", statusParam || null]).join(
@@ -21,7 +22,7 @@ export function useQueryPatientBuilderMeds(
     QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
     [
       {
-        informationSource: "Patient",
+        informationSourceNot: "Patient", // exclude medication statements where the patient is the information source
         ...(statusParam === "active" && { status: "active" }),
       },
     ],
@@ -29,7 +30,7 @@ export function useQueryPatientBuilderMeds(
   );
 }
 
-export function useQueryPatientLensMeds(): UseQueryResult<
+export function useQueryGetSummarizedPatientMedications(): UseQueryResult<
   MedicationBuilder,
   unknown
 > {
