@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.19.2
+
+### Patch Changes
+
+- 2be890a: Fixed pagination props and styling. Fixed a bug with pagination being wrong after editing records in the table.
+
 ## 0.19.1
 
 ### Patch Changes
