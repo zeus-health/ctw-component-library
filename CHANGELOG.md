@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 0.19.3
+
+### Patch Changes
+
+- 3ecd695: Update the default sort for conditions table to primarily be last recorded date and then the condition name.
+- ad7a358: Fixed styling on the <Table /> component so it once again handles responsiveness.
+
 ## 0.19.2
 
 ### Patch Changes
