@@ -34,6 +34,7 @@ import {
 } from "./forms/conditions";
 import {
   DrawerFormWithFields,
+  FormActionTypes,
   FormEntry,
 } from "./forms/drawer-form-with-fields";
 
@@ -55,11 +56,12 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [historyDrawerIsOpen, setHistoryDrawerIsOpen] = useState(false);
   const [patientRecords, setPatientRecords] = useState<ConditionModel[]>([]);
+  const [conditionHeader, setConditionHeader] = useState<ConditionModel>();
   const [otherProviderRecords, setOtherProviderRecords] = useState<
     ConditionModel[]
   >([]);
   const [includeInactive, setIncludeInactive] = useState(true);
-  const [formAction, setFormAction] = useState("");
+  const [formAction, setFormAction] = useState<FormActionTypes>("Add");
   const [conditionFilter, setConditionFilter] = useState<ConditionFilters>({});
   const [schema, setSchema] = useState<Zod.AnyZodObject>(conditionAddSchema);
   const [currentSelectedData, setCurrentlySelectedData] =
@@ -84,6 +86,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       setFormAction("Edit");
       setSchema(conditionEditSchema);
       setCurrentlySelectedData(getEditingPatientConditionData({ condition }));
+      setConditionHeader(condition);
     }
   };
 
@@ -300,6 +303,19 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           patientID={patientResponse.data.id}
           title={`${formAction} Condition`}
           formType={formAction}
+          header={
+            <div className="ctw-py-2">
+              <div>
+                <div className="ctw-text-2xl">
+                  {conditionHeader?.display} (
+                  {conditionHeader?.preferredCoding?.code})
+                </div>
+                <div className="ctw-text-sm">
+                  {conditionHeader?.ccsGrouping}
+                </div>
+              </div>
+            </div>
+          }
           action={createOrEditCondition}
           data={currentSelectedData}
           schema={schema}
