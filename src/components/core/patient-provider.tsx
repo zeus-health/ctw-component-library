@@ -65,7 +65,8 @@ export function PatientProvider({
 export function usePatient(): UseQueryResult<PatientModel, unknown> {
   const { getRequestContext } = useCTW();
   const { patientID, systemURL, tags } = useContext(CTWPatientContext);
-  const patientResponse = useQuery(
+
+  return useQuery(
     [QUERY_KEY_PATIENT, patientID, systemURL, tags],
     async () => {
       const requestContext = await getRequestContext();
@@ -75,16 +76,17 @@ export function usePatient(): UseQueryResult<PatientModel, unknown> {
     },
     { staleTime: PATIENT_STALE_TIME }
   );
-  return patientResponse;
 }
 
-export function useQueryWithPatient<T>(
+export function useQueryWithPatient<T, T2>(
   queryKey: string,
-  keys: unknown[],
+  keys: T2[],
   query: (
     requestContext: CTWRequestContext,
-    patient: PatientModel
-  ) => Promise<T>
+    patient: PatientModel,
+    keys?: T2[]
+  ) => Promise<T>,
+  enabled = true
 ) {
   const { getRequestContext } = useCTW();
   const patientResponse = usePatient();
@@ -96,8 +98,8 @@ export function useQueryWithPatient<T>(
       // Ignore eslint warning as we should always have a valid
       // patient thanks to the enabled check.
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      return query(requestContext, patientResponse.data!);
+      return query(requestContext, patientResponse.data!, keys);
     },
-    { enabled: !!patientResponse.data?.UPID }
+    { enabled: !!patientResponse.data?.UPID && enabled }
   );
 }

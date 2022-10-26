@@ -1,6 +1,6 @@
 import { setAddConditionDefaults } from "@/components/content/forms/conditions";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
-import { ConditionModel } from "@/models/conditions";
+import { ConditionModel } from "@/models/condition";
 import {
   QUERY_KEY_CONDITION_HISTORY,
   QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
@@ -31,14 +31,6 @@ export const CONDITION_CODE_PREFERENCE_ORDER: CodePreference[] = [
   { system: SYSTEM_ICD10_CM },
   { system: SYSTEM_ICD9 },
   { system: SYSTEM_ICD9_CM },
-];
-
-export const CONDITION_CODE_SYSTEMS = [
-  SYSTEM_ICD9,
-  SYSTEM_ICD9_CM,
-  SYSTEM_ICD10,
-  SYSTEM_ICD10_CM,
-  SYSTEM_SNOMED,
 ];
 
 export type ClinicalStatus =
@@ -88,7 +80,7 @@ export function usePatientConditions(conditionFilters: ConditionFilters) {
           "Condition",
           requestContext,
           {
-            patientUPID: patient.UPID,
+            patientUPID: patient.UPID as string,
             ...flattenArrayFilters(conditionFilters),
           }
         );
@@ -112,7 +104,7 @@ export function useOtherProviderConditions() {
           "Condition",
           requestContext,
           {
-            patientUPID: patient.UPID,
+            patientUPID: patient.UPID as string,
           }
         );
         return filterAndSort(conditions);
@@ -131,14 +123,13 @@ export function useConditionHistory(condition?: ConditionModel) {
     [condition],
     async (requestContext, patient) => {
       if (!condition) return undefined;
-
       try {
         const tokens = condition.knownCodings.map(
           (coding) => `${coding.system}|${coding.code}`
         );
 
         const searchParams: SearchParams = {
-          patientUPID: patient.UPID,
+          patientUPID: patient.UPID as string,
           _include: ["Condition:patient", "Condition:encounter"],
           "_include:iterate": "Patient:organization",
         };
@@ -166,7 +157,8 @@ export function useConditionHistory(condition?: ConditionModel) {
           `Failed fetching condition history information for patient: ${e}`
         );
       }
-    }
+    },
+    !!condition
   );
 }
 

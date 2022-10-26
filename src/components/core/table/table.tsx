@@ -32,6 +32,7 @@ export type TableProps<T extends MinRecordItem> = {
   message?: string | ReactElement;
   showTableHead?: boolean;
   stacked?: boolean;
+  handleRowClick?: (record: T) => void;
 };
 
 export type TableBaseProps<T extends MinRecordItem> = Omit<
@@ -47,6 +48,7 @@ export const Table = <T extends MinRecordItem>({
   message = "No records found",
   showTableHead = true,
   stacked,
+  handleRowClick,
 }: TableProps<T>) => {
   const tableRef = useRef<HTMLTableElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -87,6 +89,7 @@ export const Table = <T extends MinRecordItem>({
       <div
         className={cx(
           "ctw-table-container",
+          "ctw-table",
           {
             "ctw-table-stacked": stacked,
             "ctw-table-scroll-left-shadow": showLeftShadow,
@@ -103,6 +106,7 @@ export const Table = <T extends MinRecordItem>({
             <tbody>
               <TableRows
                 records={records.slice(0, count)}
+                handleRowClick={handleRowClick}
                 columns={columns}
                 isLoading={isLoading}
                 emptyMessage={message}

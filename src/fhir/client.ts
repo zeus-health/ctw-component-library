@@ -12,9 +12,7 @@ export function getFhirClient(
       ? `https://api.zusapi.com/fhir`
       : `https://api.${env}.zusapi.com/fhir`;
 
-  const customHeaders: HeadersInit = {
-    "User-Agent": "zus_ctw_component_library fhirclient",
-  };
+  const customHeaders: HeadersInit = {};
   if (builderId) {
     customHeaders["Zus-Account"] = builderId;
   }
@@ -29,7 +27,11 @@ export function getFhirClient(
 // Returns a new value with all empty arrays replaced with "undefined".
 // This fixes an issue where ODS will complain with:
 // "Array cannot be empty - the property should not be present if it has no values"
-export const omitEmptyArrays = (value: unknown): unknown => {
+export const omitEmptyArrays = <T>(value: T): T =>
+  // Cast because the function that finds and omits arrays produces an unknown.
+  omitEmptyArraysHelper(value) as T;
+
+const omitEmptyArraysHelper = (value: unknown): unknown => {
   if (Array.isArray(value)) {
     if (value.length === 0) {
       return undefined;

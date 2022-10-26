@@ -1,33 +1,23 @@
 import Client from "fhir-kit-client";
+import { Resource } from "fhir/r4";
 import { omitEmptyArrays } from "./client";
 import { isFhirError } from "./errors";
 
-export interface FhirResourceBase {
-  id: string | undefined;
-  resourceType: string;
-  resource: fhir4.Condition;
-}
-
-type CreateOrEditData<T extends FhirResourceBase> = {
-  resourceModel: T;
-  fhirClient: Client;
-};
-
-export async function createOrEditFhirResource<T extends FhirResourceBase>({
-  resourceModel,
-  fhirClient,
-}: CreateOrEditData<T>) {
+export async function createOrEditFhirResource(
+  resource: Resource,
+  fhirClient: Client
+) {
   try {
-    if (resourceModel.id) {
+    if (resource.id) {
       return await fhirClient.update({
-        resourceType: resourceModel.resourceType,
-        id: resourceModel.id,
-        body: omitEmptyArrays(resourceModel.resource) as typeof resourceModel,
+        resourceType: resource.resourceType,
+        id: resource.id,
+        body: omitEmptyArrays(resource),
       });
     }
     return await fhirClient.create({
-      resourceType: resourceModel.resourceType,
-      body: omitEmptyArrays(resourceModel.resource) as typeof resourceModel,
+      resourceType: resource.resourceType,
+      body: omitEmptyArrays(resource),
     });
   } catch (err) {
     if (isFhirError(err)) {
@@ -35,9 +25,7 @@ export async function createOrEditFhirResource<T extends FhirResourceBase>({
     }
 
     throw Error(
-      `Failed ${resourceModel.id ? "updating" : "creating"} ${
-        resourceModel.resourceType
-      }`
+      `Failed ${resource.id ? "updating" : "creating"} ${resource.resourceType}`
     );
   }
 }
