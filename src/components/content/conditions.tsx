@@ -23,6 +23,7 @@ import { useEffect, useRef, useState } from "react";
 import { ModalConfirmDelete } from "../core/modal-confirm-delete";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
+import { ConditionHeader } from "./condition-header";
 import { ConditionHistoryDrawer } from "./conditions-history-drawer";
 import { ConditionsNoPatient } from "./conditions-no-patient";
 import { ConditionsTableBase } from "./conditions-table-base";
@@ -56,7 +57,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [historyDrawerIsOpen, setHistoryDrawerIsOpen] = useState(false);
   const [patientRecords, setPatientRecords] = useState<ConditionModel[]>([]);
-  const [conditionHeader, setConditionHeader] = useState<ConditionModel>();
   const [otherProviderRecords, setOtherProviderRecords] = useState<
     ConditionModel[]
   >([]);
@@ -86,7 +86,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       setFormAction("Edit");
       setSchema(conditionEditSchema);
       setCurrentlySelectedData(getEditingPatientConditionData({ condition }));
-      setConditionHeader(condition);
+      setSelectedCondition(condition);
     }
   };
 
@@ -304,17 +304,9 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           title={`${formAction} Condition`}
           formType={formAction}
           header={
-            <div className="ctw-py-2">
-              <div>
-                <div className="ctw-text-2xl">
-                  {conditionHeader?.display} (
-                  {conditionHeader?.preferredCoding?.code})
-                </div>
-                <div className="ctw-text-sm">
-                  {conditionHeader?.ccsGrouping}
-                </div>
-              </div>
-            </div>
+            selectedCondition && (
+              <ConditionHeader condition={selectedCondition} />
+            )
           }
           action={createOrEditCondition}
           data={currentSelectedData}

@@ -49,9 +49,9 @@ export const DrawerFormWithFields = <T,>({
       {...drawerFormProps}
     >
       {(submitting, errors) => (
-        <div>
+        <div className="ctw-space-y-4">
           {formType === "Edit" && <div>{header}</div>}
-          <div className="ctw-space-y-6 ctw-py-4">
+          <div className="ctw-space-y-6">
             {data.map(
               ({ label, field, value, lines, readonly, hidden, render }) => {
                 const error = errors?.[field];
