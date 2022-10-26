@@ -20,7 +20,7 @@ export type FormEntry = {
 export type DrawerFormWithFieldsProps<T> = {
   title: string;
   header?: ReactNode;
-  formType: FormActionTypes;
+  formType?: FormActionTypes;
   data: FormEntry[] | undefined;
   schema: Zod.AnyZodObject;
   patientID: string;
