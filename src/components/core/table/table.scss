@@ -26,6 +26,13 @@
 .ctw-table-container {
   @apply ctw-relative ctw-overflow-hidden ctw-rounded-lg ctw-border ctw-border-solid ctw-border-divider-light;
 
+  &.ctw-table {
+    // The container displaying a table and the table it renders shouldn't both have "display: table" because that
+    // can break both the display at the container level and also the scroll functionality of any <table> nested
+    // inside the .ctw-table-container
+    display: inherit;
+  }
+
   .ctw-scrollbar {
     @apply ctw-overflow-x-auto;
   }
