@@ -19,7 +19,13 @@ import Zod, {
   ZodUnknown,
 } from "zod";
 
-export function parseParams(o: any, schema: any, key: string, value: any) {
+export function parseParams(
+  o: any,
+  schema: any,
+  key: string,
+  value: any,
+  refinements?: any
+) {
   // find actual shape definition for this key
   let shape = schema;
 
@@ -38,7 +44,13 @@ export function parseParams(o: any, schema: any, key: string, value: any) {
   if (key.includes(".")) {
     let [parentProp, ...rest] = key.split(".");
     o[parentProp] = o[parentProp] ?? {};
-    parseParams(o[parentProp], shape[parentProp], rest.join("."), value);
+    parseParams(
+      o[parentProp],
+      shape[parentProp],
+      rest.join("."),
+      value,
+      refinements
+    );
     return;
   }
   let isArray = false;
@@ -48,7 +60,7 @@ export function parseParams(o: any, schema: any, key: string, value: any) {
   }
   const def = shape[key];
   if (def) {
-    processDef(def, o, key, value as string);
+    processDef(def, o, key, value as string, refinements);
   }
 }
 
@@ -56,7 +68,8 @@ export function processDef(
   def: ZodTypeAny,
   o: any,
   key: string,
-  value: string
+  value: string,
+  refinements?: any[][]
 ) {
   let parsedValue: any;
   if (def instanceof ZodString || def instanceof ZodLiteral) {
@@ -89,6 +102,13 @@ export function processDef(
     return;
   } else if (def instanceof ZodObject) {
     const parsedJson = JSON.parse(value);
+    let toParse = def;
+    if (refinements) {
+      refinements.forEach(
+        (refinement) => (toParse = toParse.refine(...refinement))
+      );
+    }
+    const prased = toParse.parse(parsedJson);
     parsedValue = parsedJson;
     Object.entries(def.shape).forEach(([key, _]) => {
       if (!parsedValue[key]) {
@@ -115,7 +135,8 @@ export function isIterable(
 
 export function getParamsInternal<T>(
   params: URLSearchParams | FormData | Record<string, string | undefined>,
-  schema: any
+  schema: any,
+  refinements?: any
 ):
   | { success: true | false; data: T; errors: undefined }
   | { success: false; data: undefined; errors: { [key: string]: string } } {
@@ -136,7 +157,7 @@ export function getParamsInternal<T>(
     parseParams(o, schema, key, value);
   }
 
-  const result = schema.safeParse(o);
+  const result = schema.refine(refinements[0]).safeParse(o);
   if (result.success) {
     return { success: true, data: result.data as T, errors: undefined };
   }
@@ -169,10 +190,11 @@ export function getParamsInternal<T>(
 
 export async function getFormData<T extends ZodType<any, any, any>>(
   data: FormData,
-  schema: T
+  schema: T,
+  refinements?: any
 ) {
   type ParamsType = z.infer<T>;
-  return getParamsInternal<ParamsType>(data, schema);
+  return getParamsInternal<ParamsType>(data, schema, refinements);
 }
 
 function getOptions(

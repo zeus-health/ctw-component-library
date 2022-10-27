@@ -15,6 +15,7 @@ import {
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import { Condition } from "fhir/r4";
+import { conditionRefinements } from "./condition-schema";
 
 // Sets any autofill values that apply when a user adds a condition, whether creating or confirming.
 export function setAddConditionDefaults(condition: Condition): void {
@@ -64,7 +65,7 @@ export const createOrEditCondition = async (
   getRequestContext: () => Promise<CTWRequestContext>,
   schema: Zod.AnyZodObject
 ) => {
-  const result = await getFormData(data, schema);
+  const result = await getFormData(data, schema, conditionRefinements);
 
   if (!result.success) {
     return result;

@@ -130,6 +130,27 @@ export const conditionAddSchema = z.object({
   }),
 });
 
+export const conditionRefinements = [
+  [
+    (condition: any) =>
+      condition.abatement && condition.clinicalStatus === "active",
+    {
+      message: "Condition cannot be both active and abated.",
+      path: ["clinicalStatus", "abatement"],
+    },
+  ],
+  [
+    (condition: any) =>
+      condition.abatement &&
+      condition.onset &&
+      condition.abatement > condition.onset,
+    {
+      message: "Abatement cannot happen before onset.",
+      path: ["onset", "abatement"],
+    },
+  ],
+];
+
 function levelTwoToOneMapping(value: string): string {
   switch (value) {
     case "recurrence":
