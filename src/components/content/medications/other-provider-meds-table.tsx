@@ -21,36 +21,16 @@ export function OtherProviderMedsTable({
   const [medicationModels, setMedicationModels] = useState<
     MedicationStatementModel[]
   >([]);
-  const {
-    otherProviderMedications,
-    includedResources,
-    lensActiveRxNorms,
-    builderPatientRxNormStatuses,
-  } = useQueryAllPatientMedicationsByStatus(showInactive ? "all" : "active");
+  const { otherProviderMedications } = useQueryAllPatientMedicationsByStatus(
+    showInactive ? "all" : "active"
+  );
 
   useEffect(() => {
     if (!otherProviderMedications) return;
-
-    const medications = otherProviderMedications.map(
-      (medication) =>
-        new MedicationStatementModel(
-          medication,
-          includedResources,
-          lensActiveRxNorms,
-          builderPatientRxNormStatuses
-        )
+    setMedicationModels(
+      sort(otherProviderMedications, get(sortColumn), sortOrder)
     );
-
-    setMedicationModels(sort(medications, get(sortColumn), sortOrder));
-  }, [
-    builderPatientRxNormStatuses,
-    includedResources,
-    lensActiveRxNorms,
-    otherProviderMedications,
-    showInactive,
-    sortColumn,
-    sortOrder,
-  ]);
+  }, [otherProviderMedications, sortColumn, sortOrder]);
 
   return <MedicationsTableBase medicationStatements={medicationModels} />;
 }

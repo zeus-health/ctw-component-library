@@ -13,7 +13,7 @@ import {
 } from "@/utils/query-keys";
 import { getMergedIncludedResources } from "@/fhir/bundle";
 import { createPatientStatusMap, getRxNormCode } from "@/fhir/medication";
-import { ResourceMap } from "@/fhir/types";
+import { MedicationStatementModel } from "@/models/medication-statement";
 
 // Gets patient medications for the builder, excluding meds where the information source is patient.
 export function useQueryGetPatientMedsForBuilder(
@@ -44,13 +44,9 @@ export function useQueryGetSummarizedPatientMedications(): UseQueryResult<
 
 export function useQueryAllPatientMedicationsByStatus(statusParam = "all") {
   const [builderMedications, setBuilderMedications] =
-    useState<fhir4.MedicationStatement[]>();
+    useState<MedicationStatementModel[]>();
   const [otherProviderMedications, setOtherProviderMedications] =
-    useState<fhir4.MedicationStatement[]>();
-  const [includedResources, setIncludedResources] = useState<ResourceMap>({});
-  const [lensActiveRxNorms, setLensActiveRxNorms] = useState<string[]>([]);
-  const [builderPatientRxNormStatuses, setBuilderPatientRxNormStatuses] =
-    useState<Record<string, string>>({});
+    useState<MedicationStatementModel[]>();
 
   const medicationsForBuilderByStatusQuery =
     useQueryGetPatientMedsForBuilder(statusParam);
@@ -71,25 +67,25 @@ export function useQueryAllPatientMedicationsByStatus(statusParam = "all") {
         (med) => showAll || med.status === statusParam
       );
 
-      const included = getMergedIncludedResources([
+      const includedResources = getMergedIncludedResources([
         summarizedMedicationsQuery.data.bundle,
         allMedicationsForBuilderQuery.data.bundle,
       ]);
 
       const builderPatientRxNormStatusMap = createPatientStatusMap(
         allMedicationsForBuilder,
-        included
+        includedResources
       );
 
       const builderActiveRxNorms = compact(
         medicationsForBuilderByStatus
           .filter((m) => m.status === "active") // Track ONLY active builder meds.
-          .map((medication) => getRxNormCode(medication, included))
+          .map((medication) => getRxNormCode(medication, includedResources))
       );
 
-      const lensActiveRxNormList = compact(
+      const lensActiveRxNorms = compact(
         summarizedMedications.map((medication) =>
-          getRxNormCode(medication, included)
+          getRxNormCode(medication, includedResources)
         )
       );
 
@@ -97,15 +93,20 @@ export function useQueryAllPatientMedicationsByStatus(statusParam = "all") {
       summarizedMedications = summarizedMedications.filter(
         (medication) =>
           !builderActiveRxNorms.includes(
-            getRxNormCode(medication, included) ?? ""
+            getRxNormCode(medication, includedResources) ?? ""
           )
       );
 
-      setBuilderMedications(medicationsForBuilderByStatus);
-      setOtherProviderMedications(summarizedMedications);
-      setIncludedResources(included);
-      setLensActiveRxNorms(lensActiveRxNormList);
-      setBuilderPatientRxNormStatuses(builderPatientRxNormStatusMap);
+      const toModel = (medication: fhir4.MedicationStatement) =>
+        new MedicationStatementModel(
+          medication,
+          includedResources,
+          lensActiveRxNorms,
+          builderPatientRxNormStatusMap
+        );
+
+      setBuilderMedications(medicationsForBuilderByStatus.map(toModel));
+      setOtherProviderMedications(summarizedMedications.map(toModel));
     }
   }, [
     medicationsForBuilderByStatusQuery.data,
@@ -117,8 +118,5 @@ export function useQueryAllPatientMedicationsByStatus(statusParam = "all") {
   return {
     builderMedications,
     otherProviderMedications,
-    includedResources,
-    lensActiveRxNorms,
-    builderPatientRxNormStatuses,
   };
 }
