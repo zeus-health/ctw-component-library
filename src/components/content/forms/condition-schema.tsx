@@ -36,20 +36,6 @@ export const getEditingPatientConditionData = ({
     readonly: true,
     hidden: true,
   },
-  {
-    label: "Condition",
-    field: "condition",
-    value: condition.display,
-    readonly: true,
-    hidden: true,
-    render: (readonly: boolean | undefined, inputProps) => (
-      <ConditionsAutoComplete
-        defaultCoding={condition.codings}
-        readonly={readonly}
-        {...inputProps}
-      />
-    ),
-  },
 
   ...sharedFields(condition),
 ];

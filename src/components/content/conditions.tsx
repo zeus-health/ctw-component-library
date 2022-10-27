@@ -18,7 +18,7 @@ import {
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import cx from "classnames";
-import { union } from "lodash";
+import { curry, union } from "lodash";
 import { useEffect, useRef, useState } from "react";
 import { ModalConfirmDelete } from "../core/modal-confirm-delete";
 import { usePatient } from "../core/patient-provider";
@@ -308,7 +308,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               <ConditionHeader condition={selectedCondition} />
             )
           }
-          action={createOrEditCondition}
+          action={curry(createOrEditCondition)(selectedCondition)}
           data={currentSelectedData}
           schema={schema}
           isOpen={drawerIsOpen}
