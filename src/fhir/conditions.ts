@@ -166,7 +166,7 @@ function filterAndSort(conditions: fhir4.Condition[]) {
   return orderBy(
     conditions.filter((condition) => condition.asserter?.type !== "Patient"),
     [
-      (condition) => new ConditionModel(condition).recordedDate,
+      (condition) => new ConditionModel(condition).resource.recordedDate ?? "",
       (condition) => new ConditionModel(condition).display,
     ],
     ["desc"]
