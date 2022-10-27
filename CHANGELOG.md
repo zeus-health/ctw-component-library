@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.19.4
+
+### Patch Changes
+
+- ef8e767: Update the sort to sort by year first and move the records with no date to the bottom.
+
 ## 0.19.3
 
 ### Patch Changes
