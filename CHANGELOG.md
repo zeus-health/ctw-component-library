@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.19.5
+
+### Patch Changes
+
+- acc5077: Update the required fields display and read only content for the Edit/Add Condition forms.
+
 ## 0.19.4
 
 ### Patch Changes
