@@ -7,7 +7,7 @@ import { CodingList } from "../core/coding-list";
 import { CollapsibleDataListProps } from "../core/collapsible-data-list";
 import {
   CollapsibleDataListStack,
-  CollapsibleDataListStackEntries,
+  CollapsibleDataListStackEntries
 } from "../core/collapsible-data-list-stack";
 import { Spinner } from "../core/spinner";
 import { ConditionHeader } from "./condition-header";
@@ -137,21 +137,19 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
       <>
         <div className="ctw-space-y-6">
           <ConditionHeader condition={condition} />
-          <div>
-            <CollapsibleDataListStack
-              entries={conditionsWithDate}
-              limit={CONDITION_HISTORY_LIMIT}
-            />
-            {conditionsWithoutDate.length !== 0 && (
-              <div className="ctw-space-y-2">
-                <div className="ctw-font-medium">Records with no date:</div>
-                <CollapsibleDataListStack
-                  entries={conditionsWithoutDate}
-                  limit={CONDITION_HISTORY_LIMIT}
-                />
-              </div>
-            )}
-          </div>
+          <CollapsibleDataListStack
+            entries={conditionsWithDate}
+            limit={CONDITION_HISTORY_LIMIT}
+          />
+          {conditionsWithoutDate.length !== 0 && (
+            <div className="ctw-space-y-2">
+              <div className="ctw-font-medium">Records with no date:</div>
+              <CollapsibleDataListStack
+                entries={conditionsWithoutDate}
+                limit={CONDITION_HISTORY_LIMIT}
+              />
+            </div>
+          )}
         </div>
       </>
     );

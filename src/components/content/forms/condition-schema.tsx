@@ -41,6 +41,7 @@ export const getEditingPatientConditionData = ({
     field: "condition",
     value: condition.display,
     readonly: true,
+    hidden: true,
     render: (readonly: boolean | undefined, inputProps) => (
       <ConditionsAutoComplete
         defaultCoding={condition.codings}
