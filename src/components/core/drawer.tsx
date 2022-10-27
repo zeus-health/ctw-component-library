@@ -10,6 +10,7 @@ export type DrawerProps = {
   isOpen: boolean;
   onClose: () => void;
   onAfterClosed?: () => void;
+  disableCloseOnBlur?: boolean;
   title: string;
 };
 
@@ -20,6 +21,7 @@ export function Drawer({
   onClose,
   onAfterClosed,
   title,
+  disableCloseOnBlur = false,
 }: DrawerProps) {
   const transitionClasses =
     "ctw-transform ctw-transition ctw-ease-in-out ctw-duration-300";
@@ -30,7 +32,10 @@ export function Drawer({
         as="div"
         className={cx("ctw-relative ctw-z-[10000]", className)}
         onClose={() => {
-          /* do not close on esc or backdrop click  */
+          if (!disableCloseOnBlur) {
+            onClose();
+          }
+          /* otherwise do not close on esc or backdrop click  */
         }}
       >
         <Transition.Child
