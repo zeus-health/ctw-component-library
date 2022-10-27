@@ -114,7 +114,7 @@ export const createOrEditCondition = async (
     ...(result.data.abatement && {
       abatementDateTime: dateToISO(result.data.abatement),
     }),
-    onsetDateTime: dateToISO(result.data.onset),
+    onsetDateTime: dateToISO(result.data.onset ?? new Date()),
     recordedDate: dateToISO(new Date()),
     subject: { type: "Patient", reference: `Patient/${patientID}` },
     note: result.data.note ? [{ text: result.data.note }] : undefined,
