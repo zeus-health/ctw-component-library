@@ -7,7 +7,7 @@ import {
   QUERY_KEY_PATIENT_CONDITIONS,
 } from "@/utils/query-keys";
 import { SearchParams } from "fhir-kit-client";
-import { sortBy } from "lodash";
+import { orderBy } from "lodash";
 import { CodePreference } from "./codeable-concept";
 import {
   flattenArrayFilters,
@@ -163,10 +163,13 @@ export function useConditionHistory(condition?: ConditionModel) {
 }
 
 function filterAndSort(conditions: fhir4.Condition[]) {
-  return sortBy(
+  return orderBy(
     conditions.filter((condition) => condition.asserter?.type !== "Patient"),
-    (condition) => new ConditionModel(condition).ccsGrouping,
-    (condition) => new ConditionModel(condition).display
+    [
+      (condition) => new ConditionModel(condition).recordedDate,
+      (condition) => new ConditionModel(condition).display,
+    ],
+    ["desc"]
   );
 }
 
