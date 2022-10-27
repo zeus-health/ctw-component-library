@@ -19,13 +19,7 @@ import Zod, {
   ZodUnknown,
 } from "zod";
 
-export function parseParams(
-  o: any,
-  schema: any,
-  key: string,
-  value: any,
-  refinements?: any
-) {
+export function parseParams(o: any, schema: any, key: string, value: any) {
   // find actual shape definition for this key
   let shape = schema;
 
@@ -44,13 +38,7 @@ export function parseParams(
   if (key.includes(".")) {
     let [parentProp, ...rest] = key.split(".");
     o[parentProp] = o[parentProp] ?? {};
-    parseParams(
-      o[parentProp],
-      shape[parentProp],
-      rest.join("."),
-      value,
-      refinements
-    );
+    parseParams(o[parentProp], shape[parentProp], rest.join("."), value);
     return;
   }
   let isArray = false;
@@ -60,7 +48,7 @@ export function parseParams(
   }
   const def = shape[key];
   if (def) {
-    processDef(def, o, key, value as string, refinements);
+    processDef(def, o, key, value as string);
   }
 }
 
@@ -68,8 +56,7 @@ export function processDef(
   def: ZodTypeAny,
   o: any,
   key: string,
-  value: string,
-  refinements?: any[][]
+  value: string
 ) {
   let parsedValue: any;
   if (def instanceof ZodString || def instanceof ZodLiteral) {
@@ -102,13 +89,6 @@ export function processDef(
     return;
   } else if (def instanceof ZodObject) {
     const parsedJson = JSON.parse(value);
-    let toParse = def;
-    if (refinements) {
-      refinements.forEach(
-        (refinement) => (toParse = toParse.refine(...refinement))
-      );
-    }
-    const prased = toParse.parse(parsedJson);
     parsedValue = parsedJson;
     Object.entries(def.shape).forEach(([key, _]) => {
       if (!parsedValue[key]) {
@@ -157,7 +137,13 @@ export function getParamsInternal<T>(
     parseParams(o, schema, key, value);
   }
 
-  const result = schema.refine(refinements[0]).safeParse(o);
+  let toParse = schema;
+  if (refinements) {
+    refinements.forEach(
+      (refinement: any) => (toParse = toParse.refine(...refinement))
+    );
+  }
+  const result = toParse.safeParse(o);
   if (result.success) {
     return { success: true, data: result.data as T, errors: undefined };
   }
