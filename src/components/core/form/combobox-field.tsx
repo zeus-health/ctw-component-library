@@ -59,7 +59,7 @@ export const ComboboxField = <T,>({
         placeholder="Type to search"
       />
 
-      <input hidden name={name} value={inputValueParsed as string} />
+      <input hidden name={name} value={inputValueParsed as string} readOnly />
       <Combobox.Options className="ctw-listbox ctw-max-h-60 ctw-overflow-auto ctw-rounded-md ctw-bg-white ctw-py-1 ctw-text-base ctw-shadow-lg ctw-ring-1 ctw-ring-opacity-5 focus:ctw-outline-none sm:ctw-text-sm">
         <ComboboxOptions options={options} query={searchTerm} />
       </Combobox.Options>
