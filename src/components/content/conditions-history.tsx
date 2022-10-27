@@ -7,7 +7,7 @@ import { CodingList } from "../core/coding-list";
 import { CollapsibleDataListProps } from "../core/collapsible-data-list";
 import {
   CollapsibleDataListStack,
-  CollapsibleDataListStackEntries
+  CollapsibleDataListStackEntries,
 } from "../core/collapsible-data-list-stack";
 import { Spinner } from "../core/spinner";
 import { ConditionHeader } from "./condition-header";
