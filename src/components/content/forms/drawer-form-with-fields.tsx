@@ -20,7 +20,6 @@ export type FormEntry = {
 export type DrawerFormWithFieldsProps<T> = {
   title: string;
   header?: ReactNode;
-  formType?: FormActionTypes;
   data: FormEntry[] | undefined;
   schema: Zod.AnyZodObject;
   patientID: string;
@@ -31,7 +30,6 @@ export type FormActionTypes = "Edit" | "Add";
 export const DrawerFormWithFields = <T,>({
   title,
   header,
-  formType,
   data = [],
   schema,
   patientID,
@@ -50,7 +48,7 @@ export const DrawerFormWithFields = <T,>({
     >
       {(submitting, errors) => (
         <div className="ctw-space-y-4">
-          {formType === "Edit" && <div>{header}</div>}
+          {header}
           <div className="ctw-space-y-6">
             {data.map(
               ({ label, field, value, lines, readonly, hidden, render }) => {
@@ -80,7 +78,7 @@ export const DrawerFormWithFields = <T,>({
                     <div className="ctw-flex ctw-justify-between">
                       <label>{label}</label>
                       {inputProps(field)["aria-required"] && (
-                        <div className="ctw-flex-grow ctw-text-error-main">
+                        <div className="ctw-flex-grow ctw-text-icon-default">
                           *
                         </div>
                       )}

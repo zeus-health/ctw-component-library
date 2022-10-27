@@ -135,20 +135,24 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
 
     return (
       <>
-        <ConditionHeader condition={condition} />
-        <CollapsibleDataListStack
-          entries={conditionsWithDate}
-          limit={CONDITION_HISTORY_LIMIT}
-        />
-        {conditionsWithoutDate.length !== 0 && (
-          <div className="ctw-space-y-2">
-            <div className="ctw-font-medium">Records with no date:</div>
+        <div className="ctw-space-y-6">
+          <ConditionHeader condition={condition} />
+          <div>
             <CollapsibleDataListStack
-              entries={conditionsWithoutDate}
+              entries={conditionsWithDate}
               limit={CONDITION_HISTORY_LIMIT}
             />
+            {conditionsWithoutDate.length !== 0 && (
+              <div className="ctw-space-y-2">
+                <div className="ctw-font-medium">Records with no date:</div>
+                <CollapsibleDataListStack
+                  entries={conditionsWithoutDate}
+                  limit={CONDITION_HISTORY_LIMIT}
+                />
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </>
     );
   }

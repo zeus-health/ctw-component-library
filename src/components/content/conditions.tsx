@@ -302,8 +302,8 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         <DrawerFormWithFields
           patientID={patientResponse.data.id}
           title={`${formAction} Condition`}
-          formType={formAction}
           header={
+            formAction === "Edit" &&
             selectedCondition && (
               <ConditionHeader condition={selectedCondition} />
             )
