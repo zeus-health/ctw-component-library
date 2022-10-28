@@ -1,6 +1,4 @@
-import { Tab } from "@headlessui/react";
 import type { MedicationStatementModel } from "@/models/medication-statement";
-import { ButtonTabs } from "../core/button-tabs";
 import type { DataListEntry } from "../core/data-list";
 import { DataList, entryFromArray } from "../core/data-list";
 import type { DrawerProps } from "../core/drawer";
@@ -42,6 +40,9 @@ export const MedicationDrawer = ({
         <div className="ctw-space-y-7">
           {medication && renderDrawerContentTop()}
           <DataList title="Details" data={data} />
+          {medication?.rxNorm && (
+            <MedicationHistory rxNorm={medication?.rxNorm} />
+          )}
         </div>
       </Drawer.Body>
       <Drawer.Footer>

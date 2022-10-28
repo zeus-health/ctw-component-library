@@ -1,15 +1,19 @@
 import { CTWRequestContext } from "@/components/core/ctw-context";
+import { MedicationModel } from "@/models/medication";
 import { PatientModel } from "@/models/patients";
 import { errorResponse } from "@/utils/errors";
+import { sort } from "@/utils/sort";
 import type { FhirResource, MedicationStatement } from "fhir/r4";
 import { omit } from "lodash/fp";
-import { bundleToResourceMap } from "./bundle";
+import { bundleToResourceMap, getMergedIncludedResources } from "./bundle";
 import { getRxNormCode } from "./medication";
 import {
   searchBuilderRecords,
+  searchCommonRecords,
   searchLensRecords,
   SearchReturn,
 } from "./search-helpers";
+import { ResourceTypeString } from "./types";
 
 export type InformationSource =
   | "Patient"
@@ -119,4 +123,61 @@ export function filterMedicationsWithNoRxNorms(
 ) {
   const resourceMap = bundleToResourceMap(bundle);
   return medications.filter((m) => getRxNormCode(m, resourceMap) !== undefined);
+}
+
+export async function useMedicationHistory(
+  rxNorm: string,
+  patientUPID: string,
+  requestContext: CTWRequestContext
+) {
+  const [
+    medicationStatementResponse,
+    medicationAdministrationResponse,
+    medicationRequestResponse,
+    medicationDispenseResponse,
+  ] = await Promise.all([
+    searchWrapper("MedicationStatement", requestContext, patientUPID),
+    searchWrapper("MedicationAdministration", requestContext, patientUPID),
+    searchWrapper("MedicationRequest", requestContext, patientUPID),
+    searchWrapper("MedicationDispense", requestContext, patientUPID),
+  ]);
+
+  let medications = [
+    ...medicationStatementResponse.resources,
+    ...medicationAdministrationResponse.resources,
+    ...medicationRequestResponse.resources,
+    ...medicationDispenseResponse.resources,
+  ];
+
+  const includedResources = getMergedIncludedResources([
+    medicationStatementResponse.bundle,
+    medicationAdministrationResponse.bundle,
+    medicationRequestResponse.bundle,
+    medicationDispenseResponse.bundle,
+  ]);
+
+  medications = medications.filter(
+    (medication) => getRxNormCode(medication, includedResources) === rxNorm
+  );
+
+  medications = sort(
+    medications,
+    (medication) => new MedicationModel(medication).date ?? "",
+    "desc",
+    true
+  );
+
+  return { medications, includedResources };
+}
+
+function searchWrapper<T extends ResourceTypeString>(
+  resourceType: T,
+  requestContext: CTWRequestContext,
+  patientUPID: string
+): Promise<SearchReturn<T>> {
+  return searchCommonRecords(resourceType, requestContext, {
+    patientUPID,
+    _include: [`${resourceType}:patient`, `${resourceType}:medication`],
+    "_include:iterate": "Patient:organization",
+  });
 }

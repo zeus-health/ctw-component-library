@@ -1,72 +1,133 @@
-import { capitalize } from "lodash";
-import { useEffect, useState } from "react";
+import { usePatient } from "@/components/core/patient-provider";
+import { useMedicationHistory } from "@/fhir/medications";
 import { MedicationModel } from "@/models/medication";
+import { useEffect, useState } from "react";
 import {
-  CTWPatientContext,
-  usePatient,
-} from "@/components/core/patient-provider";
-import { DataListStack } from "../core/data-list-table";
+  CollapsibleDataListEntry,
+  CollapsibleDataListProps,
+} from "../core/collapsible-data-list";
+import { CollapsibleDataListStack } from "../core/collapsible-data-list-stack";
+import { useCTW } from "../core/ctw-provider";
 import { Spinner } from "../core/spinner";
-import type {
-  DataListStackEntries,
-  DataListStackEntry,
-} from "../core/data-list-table";
 
 const MEDICATION_HISTORY_LIMIT = 10;
 
 export type MedicationHistoryProps = {
-  rxNorm?: string;
+  rxNorm: string;
 };
 
 export function MedicationHistory({ rxNorm }: MedicationHistoryProps) {
   const patient = usePatient();
-  const [medications, setMedications] = useState<DataListStackEntries>([]);
+  const [medications, setMedications] = useState<CollapsibleDataListProps[]>(
+    []
+  );
   const [loading, setLoading] = useState(true);
 
   const patientUPID = patient.data?.UPID;
-  useEffect(() => {
-    // @todo need to reimplement this without fetcher
-    // if (fetcher.state === "idle" && !fetcher.data) {
-    //   fetcher.load(`/patients/${patientUPID}/medications/${rxNorm}`);
-    // }
-  }, [patientUPID, rxNorm]);
+  const { getRequestContext } = useCTW();
 
   useEffect(() => {
-    // @todo need to reimplement this without fetcher
-    // const result = fetcher.data;
-    // if (result && fetcher.state === "idle") {
-    //   const models = result.medications.map(
-    //     (medication) =>
-    //       new MedicationModel(medication, result.includedResources)
-    //   );
-    //   setMedications(models.map((model) => setupData(model)));
-    //   setLoading(false);
-    // }
+    (async () => {
+      const requestContext = await getRequestContext();
+      const res = await useMedicationHistory(
+        rxNorm,
+        patientUPID || "",
+        requestContext
+      );
+      const models = res.medications.map(
+        (medication) => new MedicationModel(medication, res.includedResources)
+      );
+      setMedications(models.map((model) => setupData(model)));
+      setLoading(false);
+    })();
   }, []);
 
-  function setupData(medication: MedicationModel): DataListStackEntry {
-    return {
+  function setupData(medication: MedicationModel): CollapsibleDataListProps {
+    const detailData: CollapsibleDataListEntry[] = [];
+
+    const titleMap: Record<string, string> = {
+      MedicationStatement: "Medication Reviewed",
+      MedicationRequest: "Presciption Ordered",
+      MedicationDispense: "Medication Filled",
+    };
+
+    const card: CollapsibleDataListProps = {
       id: medication.id,
-      data: [
-        {
-          label: "Event",
-          value: resourceTypeRename(medication.resourceType),
-        },
+      date: medication.date,
+      title: titleMap[medication.resourceType],
+      data: detailData,
+      // subTitle: "Placeholder subtitle",
+    };
+
+    if (medication.resourceType === "MedicationStatement") {
+      const resource = medication.resource as fhir4.MedicationStatement;
+      // TODO: informationSource is a reference, would be a good idea to have this
+      // included in the includedResources field
+      card.subTitle = resource.informationSource?.reference;
+      detailData.push(
         {
           label: "Status",
-          value: capitalize(medication.status),
+          value: medication.status,
         },
         {
-          label: "Date",
-          value: medication.dateLocal,
-        },
-        { label: "Dosage", value: medication.dosage },
-        {
-          label: "Organization",
-          value: medication.performer ?? medication.patient?.organization?.name,
-        },
-      ],
-    };
+          label: "Instructions",
+          value: medication.dosage,
+        }
+      );
+    } else if (medication.resourceType === "MedicationRequest") {
+      const resource = medication.resource as fhir4.MedicationRequest;
+
+      // TODO: convert prescriber reference into name, address, and telecom
+      const prescriber = resource.requester?.reference;
+      card.subTitle = prescriber;
+
+      const value = resource.dispenseRequest?.initialFill?.quantity?.value;
+      const unit = resource.dispenseRequest?.initialFill?.quantity?.unit;
+      detailData.push({ label: "Quantity", value: `${value} ${unit}` });
+
+      detailData.push({
+        label: "Refills",
+        value: resource.dispenseRequest?.numberOfRepeatsAllowed,
+      });
+
+      detailData.push({
+        label: "Instructions",
+        value: resource.dosageInstruction,
+      });
+
+      detailData.push({ label: "Prescriber", value: prescriber });
+
+      // TODO: convert into name, address, and telecom
+      detailData.push({
+        label: "Pharmacy",
+        value: resource.dispenseRequest?.performer?.reference,
+      });
+    } else if (medication.resourceType === "MedicationDispense") {
+      const resource = medication.resource as fhir4.MedicationDispense;
+
+      const value = resource?.quantity?.value;
+      const unit = resource?.quantity?.unit;
+      const quantity = `${value} ${unit}`;
+      // TODO: how to get the number of refills?
+      // medication dispense does not have numberOfRepeatsAllowed
+      card.subTitle = `${quantity}, 0 refills`;
+      detailData.push({ label: "Quantity", value: quantity });
+
+      detailData.push({
+        label: "Days supply",
+        value: `${resource.daysSupply?.value} days`,
+      });
+
+      detailData.push({ label: "Refills", value: "TODO" });
+
+      // TODO: convert to performer name, address, and telecom
+      detailData.push({
+        label: "Pharmacy",
+        value: resource.performer?.[0]?.actor?.reference,
+      });
+    }
+
+    return card;
   }
 
   if (!rxNorm) {
@@ -89,7 +150,10 @@ export function MedicationHistory({ rxNorm }: MedicationHistoryProps) {
   }
 
   return (
-    <DataListStack entries={medications} limit={MEDICATION_HISTORY_LIMIT} />
+    <CollapsibleDataListStack
+      entries={medications}
+      limit={MEDICATION_HISTORY_LIMIT}
+    />
   );
 }
 
