@@ -1,12 +1,10 @@
 import cx from "classnames";
 import { ReactElement, ReactNode, useEffect, useRef, useState } from "react";
-
 import { TableHead } from "./table-head";
 import { TableRows } from "./table-rows";
-import "./table.scss";
-
-import { DEFAULT_PAGE_SIZE, Pagination } from "../pagination/pagination";
+import { withPagination } from "@/components/core/pagination/pagination";
 import { TableColGroup } from "./table-colgroup";
+import "./table.scss";
 
 export interface MinRecordItem {
   id: string | number;
@@ -40,88 +38,82 @@ export type TableBaseProps<T extends MinRecordItem> = Omit<
   "records" | "columns"
 >;
 
-export const Table = <T extends MinRecordItem>({
-  className,
-  columns,
-  records,
-  isLoading = false,
-  message = "No records found",
-  showTableHead = true,
-  stacked,
-  handleRowClick,
-}: TableProps<T>) => {
-  const tableRef = useRef<HTMLTableElement>(null);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [showLeftShadow, setShowLeftShadow] = useState(false);
-  const [showRightShadow, setShowRightShadow] = useState(false);
-  const [count, setCount] = useState(DEFAULT_PAGE_SIZE);
+export const Table = withPagination(
+  <T extends MinRecordItem>({
+    className,
+    columns,
+    records,
+    isLoading = false,
+    message = "No records found",
+    showTableHead = true,
+    stacked,
+    handleRowClick,
+  }: TableProps<T>) => {
+    const tableRef = useRef<HTMLTableElement>(null);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const [showLeftShadow, setShowLeftShadow] = useState(false);
+    const [showRightShadow, setShowRightShadow] = useState(false);
 
-  const updateShadows = () => {
-    const container = scrollContainerRef.current;
-    const table = tableRef.current;
-    if (container && table) {
-      setShowLeftShadow(container.scrollLeft > 0);
-      const rightSide = container.scrollLeft + container.clientWidth;
-      setShowRightShadow(rightSide < table.clientWidth);
-    }
-  };
-
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-
-    // Update right away.
-    updateShadows();
-
-    // Update on scroll or resize events.
-    container?.addEventListener("scroll", updateShadows);
-    window.addEventListener("resize", updateShadows);
-
-    return () => {
-      container?.removeEventListener("scroll", updateShadows);
-      window.removeEventListener("resize", updateShadows);
+    const updateShadows = () => {
+      const container = scrollContainerRef.current;
+      const table = tableRef.current;
+      if (container && table) {
+        setShowLeftShadow(container.scrollLeft > 0);
+        const rightSide = container.scrollLeft + container.clientWidth;
+        setShowRightShadow(rightSide < table.clientWidth);
+      }
     };
-  }, [scrollContainerRef, isLoading]);
 
-  const hasData = !isLoading && records.length > 0;
+    useEffect(() => {
+      const container = scrollContainerRef.current;
 
-  return (
-    <div className="ctw-space-y-4">
-      <div
-        className={cx(
-          "ctw-table-container",
-          "ctw-table",
-          {
-            "ctw-table-stacked": stacked,
-            "ctw-table-scroll-left-shadow": showLeftShadow,
-            "ctw-table-scroll-right-shadow": showRightShadow,
-          },
-          className
-        )}
-      >
-        <div className="ctw-scrollbar" ref={scrollContainerRef}>
-          <table ref={tableRef}>
-            {hasData && <TableColGroup columns={columns} />}
-            {showTableHead && hasData && <TableHead columns={columns} />}
+      // Update right away.
+      updateShadows();
 
-            <tbody>
-              <TableRows
-                records={records.slice(0, count)}
-                handleRowClick={handleRowClick}
-                columns={columns}
-                isLoading={isLoading}
-                emptyMessage={message}
-              />
-            </tbody>
-          </table>
+      // Update on scroll or resize events.
+      container?.addEventListener("scroll", updateShadows);
+      window.addEventListener("resize", updateShadows);
+
+      return () => {
+        container?.removeEventListener("scroll", updateShadows);
+        window.removeEventListener("resize", updateShadows);
+      };
+    }, [scrollContainerRef, isLoading]);
+
+    const hasData = !isLoading && records.length > 0;
+
+    return (
+      <div className="ctw-space-y-4">
+        <div
+          className={cx(
+            "ctw-table-container",
+            "ctw-table",
+            {
+              "ctw-table-stacked": stacked,
+              "ctw-table-scroll-left-shadow": showLeftShadow,
+              "ctw-table-scroll-right-shadow": showRightShadow,
+            },
+            className
+          )}
+        >
+          <div className="ctw-scrollbar" ref={scrollContainerRef}>
+            <table ref={tableRef}>
+              {hasData && <TableColGroup columns={columns} />}
+              {showTableHead && hasData && <TableHead columns={columns} />}
+
+              <tbody>
+                <TableRows
+                  records={records}
+                  handleRowClick={handleRowClick}
+                  columns={columns}
+                  isLoading={isLoading}
+                  emptyMessage={message}
+                />
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-      {records.length > 0 && (
-        <Pagination
-          total={records.length}
-          count={count}
-          changeCount={setCount}
-        />
-      )}
-    </div>
-  );
-};
+    );
+  }
+);

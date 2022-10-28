@@ -1,11 +1,11 @@
-import { Auth0Provider } from "@auth0/auth0-react";
 import "./App.css";
+import { Auth0Provider } from "@auth0/auth0-react";
+import { SecuredApp } from "./SecuredApp";
 import { Conditions } from "./components/content/conditions";
 import { PatientMedications } from "./components/content/patient-medications";
 import { CTWProvider } from "./components/core/ctw-provider";
-import { PatientProvider } from "./components/core/patient-provider";
 import { ErrorBoundary } from "./error-boundary";
-import { SecuredApp } from "./SecuredApp";
+import { PatientProvider } from "./components/core/patient-provider";
 import { Theme } from "./styles/tailwind.theme";
 
 const {
@@ -44,7 +44,10 @@ const DemoApp = ({ accessToken = "" }) => (
     theme={theme}
     builderId={VITE_BUILDER_ID}
   >
-    <PatientProvider patientID={VITE_PATIENT_ID} systemURL={VITE_SYSTEM_URL}>
+    <PatientProvider
+      patientID={"d009a2ef-739f-4e66-a049-c4cb5c504de4"}
+      systemURL={VITE_SYSTEM_URL}
+    >
       <div className="App">
         <h1>CTW Component Library</h1>
 
