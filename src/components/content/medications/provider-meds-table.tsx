@@ -4,6 +4,7 @@ import { MedicationsTableBase } from "@/components/content/medications-table-bas
 import { useQueryAllPatientMedicationsByStatus } from "@/hooks/use-medications";
 import { MedicationStatementModel } from "@/models/medication-statement";
 import { sort } from "@/utils/sort";
+import { MedicationDrawer } from "@/components/content/medication-drawer";
 
 type ProviderMedsTableProps = {
   className?: string;
@@ -21,8 +22,16 @@ export function ProviderMedsTable({
   const [medicationModels, setMedicationModels] = useState<
     MedicationStatementModel[]
   >([]);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selectedMedication, setSelectedMedication] =
+    useState<MedicationStatementModel>();
   const { builderMedications, isLoading } =
     useQueryAllPatientMedicationsByStatus(showInactive ? "all" : "active");
+
+  function openMedicationDrawer(row: MedicationStatementModel) {
+    setSelectedMedication(row);
+    setDrawerOpen(true);
+  }
 
   useEffect(() => {
     if (!builderMedications) return;
@@ -30,9 +39,24 @@ export function ProviderMedsTable({
   }, [builderMedications, sortColumn, sortOrder]);
 
   return (
-    <MedicationsTableBase
-      medicationStatements={medicationModels}
-      isLoading={isLoading}
-    />
+    <>
+      <MedicationsTableBase
+        medicationStatements={medicationModels}
+        isLoading={isLoading}
+        rowActions={(medication) => [
+          {
+            name: "View History",
+            action: () => {
+              openMedicationDrawer(medication);
+            },
+          },
+        ]}
+      />
+      <MedicationDrawer
+        medication={selectedMedication}
+        isOpen={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      />
+    </>
   );
 }

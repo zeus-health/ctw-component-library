@@ -54,7 +54,7 @@ export function PatientMedications({
               onFormChange={() => setIncludeInactiveMeds(!includeInactiveMeds)}
               toggleProps={{
                 name: "status",
-                text: "Include Inactive Medications",
+                text: "Include Inactive",
               }}
             />
           </CTWBox.Title>
