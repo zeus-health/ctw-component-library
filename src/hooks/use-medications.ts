@@ -120,7 +120,20 @@ export function useQueryAllPatientMedicationsByStatus(statusParam = "all") {
     statusParam,
   ]);
 
+  const isLoading =
+    medicationsForBuilderByStatusQuery.isLoading ||
+    summarizedMedicationsQuery.isLoading;
+  const isFetching =
+    medicationsForBuilderByStatusQuery.isFetching ||
+    summarizedMedicationsQuery.isFetching;
+  const isError =
+    medicationsForBuilderByStatusQuery.isError ||
+    summarizedMedicationsQuery.isError;
+
   return {
+    isFetching,
+    isLoading,
+    isError,
     builderMedications,
     otherProviderMedications,
   };

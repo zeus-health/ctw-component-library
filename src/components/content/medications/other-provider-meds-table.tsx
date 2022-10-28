@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { MedicationsTableBase } from "@/components/content/medications-table-base";
 import { useQueryAllPatientMedicationsByStatus } from "@/hooks/use-medications";
 import { MedicationStatementModel } from "@/models/medication-statement";
+import { Loading } from "@/components/core/loading";
 import { sort } from "@/utils/sort";
 
 type OtherProviderMedsTableProps = {
@@ -21,9 +22,8 @@ export function OtherProviderMedsTable({
   const [medicationModels, setMedicationModels] = useState<
     MedicationStatementModel[]
   >([]);
-  const { otherProviderMedications } = useQueryAllPatientMedicationsByStatus(
-    showInactive ? "all" : "active"
-  );
+  const { otherProviderMedications, isLoading } =
+    useQueryAllPatientMedicationsByStatus(showInactive ? "all" : "active");
 
   useEffect(() => {
     if (!otherProviderMedications) return;
@@ -32,5 +32,8 @@ export function OtherProviderMedsTable({
     );
   }, [otherProviderMedications, sortColumn, sortOrder]);
 
+  if (isLoading) {
+    return <Loading message="Loading medication statements..." />;
+  }
   return <MedicationsTableBase medicationStatements={medicationModels} />;
 }
