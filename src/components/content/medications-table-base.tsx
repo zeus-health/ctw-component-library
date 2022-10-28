@@ -25,12 +25,14 @@ export type MedicationsTableBaseProps = {
   medicationStatements: MedicationStatementModel[];
   showLensStatus?: boolean;
   className?: string;
+  isLoading?: boolean;
 };
 
 export const MedicationsTableBase = ({
   className = "",
   medicationStatements,
   showLensStatus = false,
+  isLoading = false,
 }: MedicationsTableBaseProps) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedMedication, setSelectedMedication] =
@@ -76,6 +78,7 @@ export const MedicationsTableBase = ({
         columns={columns}
         message="There are no medications to display."
         handleRowClick={handleRowClick}
+        isLoading={isLoading}
       />
       <MedicationDrawer
         medication={selectedMedication}
