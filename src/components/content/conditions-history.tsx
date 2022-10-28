@@ -10,6 +10,7 @@ import {
   CollapsibleDataListStackEntries,
 } from "../core/collapsible-data-list-stack";
 import { Spinner } from "../core/spinner";
+import { ConditionHeader } from "./condition-header";
 
 const CONDITION_HISTORY_LIMIT = 10;
 
@@ -133,27 +134,24 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
     }
 
     return (
-      <div className="ctw-space-y-6">
-        <div>
-          <div className="ctw-text-2xl">
-            {condition.display} ({condition.icd10Code || condition.snomedCode})
-          </div>
-          <div className="ctw-text-sm">{condition.ccsGrouping}</div>
+      <>
+        <div className="ctw-space-y-6">
+          <ConditionHeader condition={condition} />
+          <CollapsibleDataListStack
+            entries={conditionsWithDate}
+            limit={CONDITION_HISTORY_LIMIT}
+          />
+          {conditionsWithoutDate.length !== 0 && (
+            <div className="ctw-space-y-2">
+              <div className="ctw-font-medium">Records with no date:</div>
+              <CollapsibleDataListStack
+                entries={conditionsWithoutDate}
+                limit={CONDITION_HISTORY_LIMIT}
+              />
+            </div>
+          )}
         </div>
-        <CollapsibleDataListStack
-          entries={conditionsWithDate}
-          limit={CONDITION_HISTORY_LIMIT}
-        />
-        {conditionsWithoutDate.length !== 0 && (
-          <div className="ctw-space-y-2">
-            <div className="ctw-font-medium">Records with no date:</div>
-            <CollapsibleDataListStack
-              entries={conditionsWithoutDate}
-              limit={CONDITION_HISTORY_LIMIT}
-            />
-          </div>
-        )}
-      </div>
+      </>
     );
   }
 

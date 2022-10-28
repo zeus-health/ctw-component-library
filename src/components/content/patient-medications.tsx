@@ -1,30 +1,30 @@
-import { format } from "date-fns";
-import { compact } from "lodash";
-import { useEffect, useContext, useRef, useState } from "react";
-import { MedicationsTableBase } from "@/components/content/medications-table-base";
 import {
   DrawerFormWithFields,
   FormEntry,
 } from "@/components/content/forms/drawer-form-with-fields";
+import { MedicationsTableBase } from "@/components/content/medications-table-base";
+import { ToggleControl } from "@/components/core/toggle-control";
+import { getMergedIncludedResources } from "@/fhir/bundle";
+import type { ClinicalStatus } from "@/fhir/medication";
+import { createPatientStatusMap, getRxNormCode } from "@/fhir/medication";
+import { useBreakpoints } from "@/hooks/use-breakpoints";
+import {
+  useQueryGetPatientMedsForBuilder,
+  useQueryGetSummarizedPatientMedications,
+} from "@/hooks/use-medications";
+import { MedicationStatementModel } from "@/models/medication-statement";
+import { getSortInfo, sort } from "@/utils/sort";
+import cx from "classnames";
+import { format } from "date-fns";
+import { compact } from "lodash";
+import { useContext, useEffect, useRef, useState } from "react";
+import { CTWPatientContext, usePatient } from "../core/patient-provider";
 import {
   createMedicationStatement,
   getMedicationFormData,
   medicationStatementSchema,
 } from "./forms/medications";
-import { MedicationStatementModel } from "@/models/medication-statement";
-import { CTWPatientContext, usePatient } from "../core/patient-provider";
-import { useBreakpoints } from "@/hooks/use-breakpoints";
-import { getMergedIncludedResources } from "@/fhir/bundle";
-import { createPatientStatusMap, getRxNormCode } from "@/fhir/medication";
-import type { ClinicalStatus } from "@/fhir/medication";
-import { getSortInfo, sort } from "@/utils/sort";
-import cx from "classnames";
 import "./patient-medications.scss";
-import { ToggleControl } from "@/components/core/toggle-control";
-import {
-  useQueryPatientLensMeds,
-  useQueryPatientBuilderMeds,
-} from "@/hooks/use-medications";
 
 type LoaderData = {
   builderPatientRxNormStatuses?: Record<string, string>;
@@ -85,45 +85,49 @@ export function PatientMedications({
     setCreateMedData(getMedicationFormData(newMedicationStatement));
   };
 
-  const medicationsResponse = useQueryPatientBuilderMeds(statusParam);
-  const lensActiveMedicationsResponse = useQueryPatientLensMeds();
-  const patientMedicationsResponse = useQueryPatientBuilderMeds();
+  const medicationsForBuilderByStatusQuery =
+    useQueryGetPatientMedsForBuilder(statusParam);
+  const summarizedMedicationsQuery = useQueryGetSummarizedPatientMedications();
+  const allMedicationsForBuilderQuery = useQueryGetPatientMedsForBuilder();
 
   useEffect(() => {
     if (
-      medicationsResponse.data?.bundle &&
-      lensActiveMedicationsResponse.data?.bundle &&
-      patientMedicationsResponse.data?.bundle
+      medicationsForBuilderByStatusQuery.data?.bundle &&
+      summarizedMedicationsQuery.data?.bundle &&
+      allMedicationsForBuilderQuery.data?.bundle
     ) {
-      let { medications } = medicationsResponse.data;
-      let lensMedications = lensActiveMedicationsResponse.data.medications;
-      const patientMedications = lensActiveMedicationsResponse.data.medications;
+      let { medications: medicationsForBuilderByStatus } =
+        medicationsForBuilderByStatusQuery.data;
+      let { medications: summarizedMedications } =
+        summarizedMedicationsQuery.data;
+      const { medications: allMedicationsForBuilder } =
+        allMedicationsForBuilderQuery.data;
 
       const includedResources = getMergedIncludedResources([
-        medicationsResponse.data.bundle,
-        lensActiveMedicationsResponse.data.bundle,
-        patientMedicationsResponse.data.bundle,
+        medicationsForBuilderByStatusQuery.data.bundle,
+        summarizedMedicationsQuery.data.bundle,
+        allMedicationsForBuilderQuery.data.bundle,
       ]);
 
       const builderPatientRxNormStatuses = createPatientStatusMap(
-        patientMedications,
+        allMedicationsForBuilder,
         includedResources
       );
 
       const builderActiveRxNorms = compact(
-        medications
+        medicationsForBuilderByStatus
           .filter((m) => m.status === "active") // Track ONLY active builder meds.
           .map((medication) => getRxNormCode(medication, includedResources))
       );
 
       const lensActiveRxNorms = compact(
-        lensMedications.map((medication) =>
+        summarizedMedications.map((medication) =>
           getRxNormCode(medication, includedResources)
         )
       );
 
       // Filter out any active medications that the builder already knows about.
-      lensMedications = lensMedications.filter(
+      summarizedMedications = summarizedMedications.filter(
         (medication) =>
           !builderActiveRxNorms.includes(
             getRxNormCode(medication, includedResources) ?? ""
@@ -138,8 +142,8 @@ export function PatientMedications({
         medsSort
       );
 
-      medications = sort(
-        medications,
+      medicationsForBuilderByStatus = sort(
+        medicationsForBuilderByStatus,
         (c) =>
           new MedicationStatementModel(
             c,
@@ -156,8 +160,8 @@ export function PatientMedications({
         sortOrder: otherProviderMedSortOrder = "asc",
       } = getSortInfo(MedicationStatementModel, otherProviderMedsSort);
 
-      lensMedications = sort(
-        lensMedications,
+      summarizedMedications = sort(
+        summarizedMedications,
         (c) =>
           new MedicationStatementModel(
             c,
@@ -171,7 +175,7 @@ export function PatientMedications({
 
       setLoaderState({
         builderPatientRxNormStatuses,
-        activeMedicationModels: medications.map(
+        activeMedicationModels: medicationsForBuilderByStatus.map(
           (medication) =>
             new MedicationStatementModel(
               medication,
@@ -180,7 +184,7 @@ export function PatientMedications({
               builderPatientRxNormStatuses
             )
         ),
-        otherProviderActiveMedicationModels: lensMedications.map(
+        otherProviderActiveMedicationModels: summarizedMedications.map(
           (medication) =>
             new MedicationStatementModel(
               medication,
@@ -192,9 +196,9 @@ export function PatientMedications({
       });
     }
   }, [
-    medicationsResponse.data,
-    lensActiveMedicationsResponse.data,
-    patientMedicationsResponse.data,
+    medicationsForBuilderByStatusQuery.data,
+    summarizedMedicationsQuery.data,
+    allMedicationsForBuilderQuery.data,
     includeInactiveMeds,
     otherProviderMedsSort,
     medsSort,

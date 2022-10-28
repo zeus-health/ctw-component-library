@@ -1,5 +1,30 @@
 # ctw-component-library
 
+## 0.19.5
+
+### Patch Changes
+
+- acc5077: Update the required fields display and read only content for the Edit/Add Condition forms.
+
+## 0.19.4
+
+### Patch Changes
+
+- ef8e767: Update the sort to sort by year first and move the records with no date to the bottom.
+
+## 0.19.3
+
+### Patch Changes
+
+- 3ecd695: Update the default sort for conditions table to primarily be last recorded date and then the condition name.
+- ad7a358: Fixed styling on the <Table /> component so it once again handles responsiveness.
+
+## 0.19.2
+
+### Patch Changes
+
+- 2be890a: Fixed pagination props and styling. Fixed a bug with pagination being wrong after editing records in the table.
+
 ## 0.19.1
 
 ### Patch Changes

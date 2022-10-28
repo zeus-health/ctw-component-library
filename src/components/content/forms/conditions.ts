@@ -7,6 +7,7 @@ import {
   SYSTEM_CONDITION_CLINICAL,
   SYSTEM_CONDITION_VERIFICATION_STATUS,
 } from "@/fhir/system-urls";
+import { ConditionModel } from "@/models/condition";
 import { claimsPractitionerId } from "@/utils/auth";
 import { getFormData } from "@/utils/form-helper";
 import {
@@ -59,6 +60,7 @@ const setRecorderField = async (
 };
 
 export const createOrEditCondition = async (
+  condition: ConditionModel | undefined,
   data: FormData,
   patientID: string,
   getRequestContext: () => Promise<CTWRequestContext>,
@@ -99,8 +101,8 @@ export const createOrEditCondition = async (
     },
     // Keep all existing codings when editing a condition
     code:
-      result.data.id && result.data.condition.coding
-        ? result.data.condition
+      result.data.id && condition
+        ? condition.codings
         : {
             coding: [
               {
@@ -114,7 +116,7 @@ export const createOrEditCondition = async (
     ...(result.data.abatement && {
       abatementDateTime: dateToISO(result.data.abatement),
     }),
-    onsetDateTime: dateToISO(result.data.onset),
+    onsetDateTime: dateToISO(result.data.onset ?? new Date()),
     recordedDate: dateToISO(new Date()),
     subject: { type: "Patient", reference: `Patient/${patientID}` },
     note: result.data.note ? [{ text: result.data.note }] : undefined,
