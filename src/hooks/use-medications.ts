@@ -42,6 +42,11 @@ export function useQueryGetSummarizedPatientMedications(): UseQueryResult<
   );
 }
 
+/**
+ * This hook provides all patient medication statements reconciled into two
+ * categories ("Builder Medications" and "Other Provider Medications"). This is
+ * useful when creating content such as the <PatientMedications /> component.
+ */
 export function useQueryAllPatientMedicationsByStatus(statusParam = "all") {
   const [builderMedications, setBuilderMedications] =
     useState<MedicationStatementModel[]>();
