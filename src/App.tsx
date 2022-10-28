@@ -1,12 +1,12 @@
-import "./App.css";
 import { Auth0Provider } from "@auth0/auth0-react";
-import { SecuredApp } from "./SecuredApp";
 import { Conditions } from "./components/content/conditions";
 import { PatientMedications } from "./components/content/patient-medications";
 import { CTWProvider } from "./components/core/ctw-provider";
-import { ErrorBoundary } from "./error-boundary";
 import { PatientProvider } from "./components/core/patient-provider";
+import { ErrorBoundary } from "./error-boundary";
+import { SecuredApp } from "./SecuredApp";
 import { Theme } from "./styles/tailwind.theme";
+import "./App.css";
 
 const {
   VITE_SYSTEM_URL,
