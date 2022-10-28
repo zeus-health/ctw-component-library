@@ -44,10 +44,7 @@ const DemoApp = ({ accessToken = "" }) => (
     theme={theme}
     builderId={VITE_BUILDER_ID}
   >
-    <PatientProvider
-      patientID={"d009a2ef-739f-4e66-a049-c4cb5c504de4"}
-      systemURL={VITE_SYSTEM_URL}
-    >
+    <PatientProvider patientID={VITE_PATIENT_ID} systemURL={VITE_SYSTEM_URL}>
       <div className="App">
         <h1>CTW Component Library</h1>
 
