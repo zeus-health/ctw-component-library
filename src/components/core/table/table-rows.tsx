@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
+import cx from "classnames";
 import { Spinner } from "../spinner";
-
 import type { MinRecordItem, TableColumn } from "./table";
 import { TableDataCell } from "./table-data-cell";
 import { TableFullLengthRow } from "./table-full-length-row";
@@ -43,6 +43,9 @@ export const TableRows = <T extends MinRecordItem>({
     <>
       {records.map((record) => (
         <tr
+          className={cx({
+            "ctw-cursor-pointer": typeof handleRowClick === "function",
+          })}
           key={record.id}
           onClick={() => {
             if (handleRowClick) handleRowClick(record);

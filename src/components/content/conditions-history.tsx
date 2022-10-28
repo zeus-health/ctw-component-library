@@ -5,11 +5,11 @@ import { orderBy } from "lodash";
 import { useEffect, useState } from "react";
 import { CodingList } from "../core/coding-list";
 import { CollapsibleDataListProps } from "../core/collapsible-data-list";
+import { Loading } from "@/components/core/loading";
 import {
   CollapsibleDataListStack,
   CollapsibleDataListStackEntries,
 } from "../core/collapsible-data-list-stack";
-import { Spinner } from "../core/spinner";
 import { ConditionHeader } from "./condition-header";
 
 const CONDITION_HISTORY_LIMIT = 10;
@@ -123,14 +123,7 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
       return <div>No history found.</div>;
     }
     if (loading) {
-      return (
-        <div className="ctw-space-x-2">
-          <span className="ctw-text-sm ctw-italic">
-            Loading condition history...
-          </span>
-          <Spinner />
-        </div>
-      );
+      return <Loading message="Loading condition history..." />;
     }
 
     return (
