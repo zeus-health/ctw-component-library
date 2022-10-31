@@ -54,5 +54,3 @@ export const LENS_EXTENSION_MEDICATION_DAYS_SUPPLY =
   "https://zusapi.com/lens/extension/medicationDaysSupply";
 export const LENS_EXTENSION_MEDICATION_REFILLS =
   "https://zusapi.com/lens/extension/medicationRefills";
-export const LENS_EXTENSION_MEDICATION_LAST_PRESCRIBER =
-  "https://zusapi.com/lens/extension/medicationLastPrescriber";

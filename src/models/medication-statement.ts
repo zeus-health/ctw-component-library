@@ -9,7 +9,6 @@ import {
   LENS_EXTENSION_MEDICATION_DAYS_SUPPLY,
   LENS_EXTENSION_MEDICATION_LAST_FILL_DATE,
   LENS_EXTENSION_MEDICATION_LAST_PRESCRIBED_DATE,
-  LENS_EXTENSION_MEDICATION_LAST_PRESCRIBER,
   LENS_EXTENSION_MEDICATION_QUANTITY,
   LENS_EXTENSION_MEDICATION_REFILLS,
 } from "@/fhir/system-urls";
@@ -176,12 +175,10 @@ export class MedicationStatementModel {
     )?.valueString;
   }
 
-  // TODO - need to make this show name, facility, telecom info...
-  get prescriber(): string | undefined {
-    return this.resource.extension?.find(
-      (x) => x.url === LENS_EXTENSION_MEDICATION_LAST_PRESCRIBER
-    )?.valueString;
-  }
+  // TODO - need to implement to complete CTW-480
+  // get prescriber(): string | undefined {
+  //   return undefined;
+  // }
 
   get lastPrescribedDate(): string | undefined {
     return formatDateISOToLocal(
