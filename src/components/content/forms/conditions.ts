@@ -135,14 +135,13 @@ export const createOrEditCondition = async (
     requestContext.fhirClient
   );
 
-  if (response instanceof Error) {
-    if (isFhirError(response) && isOperationOutcome(response.response.data)) {
-      requestErrors = new OperationOutcomeModel(response.response.data).issues
-        .filter((issue) => issue.severity !== "warning")
-        .map((issue) => issue.display);
-    } else {
-      requestErrors = [response.message];
-    }
+  if (isFhirError(response) && isOperationOutcome(response.response.data)) {
+    requestErrors = new OperationOutcomeModel(response.response.data).issues
+      .filter((issue) => issue.severity !== "warning")
+      .map((issue) => issue.display);
+    result.success = false;
+  } else if (response instanceof Error) {
+    requestErrors = [response.message];
     result.success = false;
   }
 
