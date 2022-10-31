@@ -1,4 +1,4 @@
-import { find, sortBy, get } from "lodash";
+import { find, get, sortBy } from "lodash";
 import { findReference } from "./resource-helper";
 import { SYSTEM_RXNORM } from "./system-urls";
 import type { ResourceMap } from "./types";

@@ -23,6 +23,7 @@ export type DrawerFormWithFieldsProps<T> = {
   data: FormEntry[] | undefined;
   schema: Zod.AnyZodObject;
   patientID: string;
+  labelsMap?: { [key: string]: Record<string, string> };
 } & Pick<DrawerFormProps<T>, "onClose" | "isOpen" | "action">;
 
 export type FormActionTypes = "Edit" | "Add";
@@ -34,6 +35,7 @@ export const DrawerFormWithFields = <T,>({
   schema,
   patientID,
   action,
+  labelsMap,
   ...drawerFormProps
 }: DrawerFormWithFieldsProps<T>) => {
   const inputProps = useFormInputProps(schema);
@@ -53,6 +55,7 @@ export const DrawerFormWithFields = <T,>({
             {data.map(
               ({ label, field, value, lines, readonly, hidden, render }) => {
                 const error = errors?.[field];
+                const labels = labelsMap && labelsMap[field];
 
                 if (hidden) {
                   return (
@@ -66,6 +69,7 @@ export const DrawerFormWithFields = <T,>({
                       error={error}
                       hidden={hidden}
                       render={render}
+                      labels={labels}
                     />
                   );
                 }
@@ -99,6 +103,7 @@ export const DrawerFormWithFields = <T,>({
                       error={error}
                       hidden={hidden}
                       render={render}
+                      labels={labels}
                     />
                   </div>
                 );

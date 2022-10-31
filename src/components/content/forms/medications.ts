@@ -1,17 +1,17 @@
-import { z } from "zod";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { isFhirError } from "@/fhir/errors";
 import { dateToISO } from "@/fhir/formatters";
 import { SYSTEM_RXNORM } from "@/fhir/system-urls";
-import {
-  QUERY_KEY_PATIENT,
-  QUERY_KEY_PATIENT_MEDICATIONS,
-  QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
-} from "@/utils/query-keys";
 import { MedicationStatementModel } from "@/models/medication-statement";
 import { getFormData } from "@/utils/form-helper";
+import {
+  QUERY_KEY_PATIENT,
+  QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
+  QUERY_KEY_PATIENT_MEDICATIONS,
+} from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
+import { z } from "zod";
 import type { FormEntry } from "./drawer-form-with-fields";
 
 export const medicationStatementSchema = z.object({
@@ -28,12 +28,24 @@ export const medicationStatementSchema = z.object({
     "completed",
     "entered-in-error",
     "intended",
-    "stopped",
-    "on-hold",
-    "unknown",
     "not-taken",
+    "on-hold",
+    "stopped",
+    "unknown",
   ]),
 });
+
+// Hardcoded sentence-cased display statuses for MedicationStatements.
+export const MedicationStatusLabelsMap = {
+  active: "Active",
+  completed: "Completed",
+  "entered-in-error": "Entered in error",
+  intended: "Intended",
+  "not-taken": "Not taken",
+  "on-hold": "On hold",
+  stopped: "Stopped",
+  unknown: "Unknown",
+};
 
 const QUERY_KEYS = [
   QUERY_KEY_PATIENT,

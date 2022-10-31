@@ -1,16 +1,14 @@
-import {
-  DrawerFormWithFields,
-  FormEntry,
-} from "@/components/content/forms/drawer-form-with-fields";
-import { ReactElement } from "react";
-import { usePatient } from "@/components/core/patient-provider";
+import { DrawerFormWithFields } from "@/components/content/forms/drawer-form-with-fields";
 import {
   createMedicationStatement,
   getMedicationFormData,
   medicationStatementSchema,
+  MedicationStatusLabelsMap,
 } from "@/components/content/forms/medications";
+import { usePatient } from "@/components/core/patient-provider";
 import { MedicationStatementModel } from "@/models/medication-statement";
 import { format } from "date-fns";
+import { ReactElement } from "react";
 
 type Props = {
   isOpen: boolean;
@@ -53,6 +51,7 @@ export const AddNewMedDrawer = ({ isOpen, handleOnClose, children }: Props) => {
         schema={medicationStatementSchema}
         isOpen={isOpen}
         onClose={() => handleOnClose()}
+        labelsMap={{ status: MedicationStatusLabelsMap }}
       />
     </>
   );

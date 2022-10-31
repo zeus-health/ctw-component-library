@@ -14,6 +14,7 @@ export type FormFieldProps = {
     readonly: boolean | undefined,
     props: InputHTMLAttributes<HTMLInputElement>
   ) => JSX.Element;
+  labels?: Record<string, string>;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 export const FormField = ({
@@ -24,6 +25,7 @@ export const FormField = ({
   readonly,
   hidden,
   render,
+  labels = {},
   ...inputProps
 }: FormFieldProps) => {
   // We display dates in MM/DD/YYYY format, but date input fields
@@ -47,11 +49,14 @@ export const FormField = ({
           disabled={inputProps.disabled}
           defaultValue={value}
         >
-          {options.map((option) => (
-            <option value={option} key={option}>
-              {capitalize(option)}
-            </option>
-          ))}
+          {options.map((option) => {
+            const val = labels[option] || option;
+            return (
+              <option value={val} key={option}>
+                {capitalize(val)}
+              </option>
+            );
+          })}
         </select>
       );
     }
