@@ -2,7 +2,6 @@ import { CTWRequestContext } from "@/components/core/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { isFhirError } from "@/fhir/errors";
 import { dateToISO } from "@/fhir/formatters";
-import { SYSTEM_RXNORM } from "@/fhir/system-urls";
 import { MedicationStatementModel } from "@/models/medication-statement";
 import { getFormData } from "@/utils/form-helper";
 import {
@@ -22,7 +21,6 @@ export const medicationStatementSchema = z.object({
   dateAsserted: z.date({ required_error: "Date asserted is required." }),
   note: z.string().optional(),
   display: z.string({ required_error: "Medication name is required." }),
-  rxNorm: z.string({ required_error: "Medication's RxNorm is required." }),
   status: z.enum([
     "active",
     "completed",
@@ -78,8 +76,6 @@ export const createMedicationStatement = async (
     medicationCodeableConcept: {
       coding: [
         {
-          system: SYSTEM_RXNORM,
-          code: result.data.rxNorm,
           display: result.data.display,
         },
       ],
@@ -113,6 +109,7 @@ export const getMedicationFormData = (
     value: medication.subjectID,
     field: "subjectID",
     readonly: true,
+    hidden: true,
   },
   {
     label: "Updated By",
@@ -135,11 +132,6 @@ export const getMedicationFormData = (
     label: "Medication",
     value: medication.display,
     field: "display",
-  },
-  {
-    label: "RxNorm",
-    value: medication.rxNorm,
-    field: "rxNorm",
   },
   {
     label: "Status",
