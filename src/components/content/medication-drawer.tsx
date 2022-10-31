@@ -1,11 +1,8 @@
-import { Tab } from "@headlessui/react";
 import type { MedicationStatementModel } from "@/models/medication-statement";
-import { ButtonTabs } from "../core/button-tabs";
 import type { DataListEntry } from "../core/data-list";
 import { DataList, entryFromArray } from "../core/data-list";
 import type { DrawerProps } from "../core/drawer";
 import { Drawer } from "../core/drawer";
-import { MedicationHistory } from "./medication-history";
 
 export type MedicationDrawerProps = {
   medication?: MedicationStatementModel;
@@ -17,7 +14,13 @@ function getDataEntriesFromMedicationStatement(
   return medication
     ? [
         { label: "Status", value: medication.status },
-        { label: "Dosage", value: medication.dosage },
+        { label: "Last Fill Date", value: medication.lastFillDate },
+        { label: "Quantity", value: medication.quantity },
+        { label: "Days Supply", value: medication.daysSupply },
+        { label: "Refills", value: medication.refills },
+        { label: "Instructions", value: medication.dosage },
+        { label: "Prescriber", value: undefined }, // TODO
+        { label: "Last Prescribed Date", value: medication.lastPrescribedDate },
         ...entryFromArray("Note", medication.notesDisplay),
       ]
     : [];
@@ -37,7 +40,7 @@ export const MedicationDrawer = ({
   }
 
   return (
-    <Drawer title="Medication" {...drawerProps}>
+    <Drawer title="Medication History" {...drawerProps}>
       <Drawer.Body>
         <div className="ctw-space-y-7">
           {medication && renderDrawerContentTop()}

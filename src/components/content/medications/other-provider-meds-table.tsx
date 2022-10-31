@@ -1,21 +1,18 @@
-import { get } from "lodash/fp";
-import { useEffect, useState } from "react";
+import { MedicationDrawer } from "@/components/content/medication-drawer";
 import { MedicationsTableBase } from "@/components/content/medications-table-base";
-import { useQueryAllPatientMedicationsByStatus } from "@/hooks/use-medications";
+import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { MedicationStatementModel } from "@/models/medication-statement";
 import { sort } from "@/utils/sort";
-import { MedicationDrawer } from "@/components/content/medication-drawer";
+import { get } from "lodash/fp";
+import { useEffect, useState } from "react";
 
 type OtherProviderMedsTableProps = {
   className?: string;
   sortColumn?: keyof MedicationStatementModel;
   sortOrder?: "asc" | "desc";
-  // should inactive meds be shown?
-  showInactive?: boolean;
 };
 
 export function OtherProviderMedsTable({
-  showInactive = false,
   sortOrder = "asc",
   sortColumn = "display",
 }: OtherProviderMedsTableProps) {
@@ -26,7 +23,7 @@ export function OtherProviderMedsTable({
   const [selectedMedication, setSelectedMedication] =
     useState<MedicationStatementModel>();
   const { otherProviderMedications, isLoading } =
-    useQueryAllPatientMedicationsByStatus(showInactive ? "all" : "active");
+    useQueryAllPatientMedications();
 
   function openMedicationDrawer(row: MedicationStatementModel) {
     setSelectedMedication(row);

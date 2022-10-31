@@ -1,12 +1,21 @@
-import type { Reference } from "fhir/r4";
 import { codeableConceptLabel } from "@/fhir/codeable-concept";
 import { dateToISO, formatDateISOToLocal } from "@/fhir/formatters";
 import {
+  getIdentifyingRxNormCode,
   getMedicationCodeableConcept,
-  getRxNormCode,
   patientStatus,
 } from "@/fhir/medication";
+import {
+  LENS_EXTENSION_MEDICATION_DAYS_SUPPLY,
+  LENS_EXTENSION_MEDICATION_LAST_FILL_DATE,
+  LENS_EXTENSION_MEDICATION_LAST_PRESCRIBED_DATE,
+  LENS_EXTENSION_MEDICATION_LAST_PRESCRIBER,
+  LENS_EXTENSION_MEDICATION_QUANTITY,
+  LENS_EXTENSION_MEDICATION_REFILLS,
+} from "@/fhir/system-urls";
 import type { ResourceMap } from "@/fhir/types";
+import type { Reference } from "fhir/r4";
+import { capitalize } from "lodash";
 
 export class MedicationStatementModel {
   readonly resourceType = "MedicationStatement";
@@ -21,14 +30,10 @@ export class MedicationStatementModel {
 
   constructor(
     medicationStatement: fhir4.MedicationStatement,
-    includedResources?: ResourceMap,
-    lensActiveRxNorms?: string[],
-    builderPatientRxNormStatus?: { [key: string]: string }
+    includedResources?: ResourceMap
   ) {
     this.resource = medicationStatement;
     this.includedResources = includedResources;
-    this.lensActiveRxNorms = lensActiveRxNorms;
-    this.builderPatientRxNormStatus = builderPatientRxNormStatus;
   }
 
   get basedOn(): string | undefined {
@@ -113,7 +118,7 @@ export class MedicationStatementModel {
   }
 
   get rxNorm(): string | undefined {
-    return getRxNormCode(this.resource, this.includedResources);
+    return getIdentifyingRxNormCode(this.resource, this.includedResources);
   }
 
   get reason(): string | undefined {
@@ -127,7 +132,7 @@ export class MedicationStatementModel {
   }
 
   get status(): string {
-    return this.resource.status;
+    return capitalize(this.resource.status);
   }
 
   get statusReason(): string | undefined {
@@ -141,5 +146,48 @@ export class MedicationStatementModel {
   get subjectID(): string {
     const [, subjectID] = this.resource.subject.reference?.split("/") || [];
     return subjectID || "";
+  }
+
+  // lens extensions
+
+  get lastFillDate(): string | undefined {
+    return formatDateISOToLocal(
+      this.resource.extension?.find(
+        (x) => x.url === LENS_EXTENSION_MEDICATION_LAST_FILL_DATE
+      )?.valueDateTime
+    );
+  }
+
+  get quantity(): string | undefined {
+    return this.resource.extension?.find(
+      (x) => x.url === LENS_EXTENSION_MEDICATION_QUANTITY
+    )?.valueString;
+  }
+
+  get daysSupply(): string | undefined {
+    return this.resource.extension?.find(
+      (x) => x.url === LENS_EXTENSION_MEDICATION_DAYS_SUPPLY
+    )?.valueString;
+  }
+
+  get refills(): string | undefined {
+    return this.resource.extension?.find(
+      (x) => x.url === LENS_EXTENSION_MEDICATION_REFILLS
+    )?.valueString;
+  }
+
+  // TODO - need to make this show name, facility, telecom info...
+  get prescriber(): string | undefined {
+    return this.resource.extension?.find(
+      (x) => x.url === LENS_EXTENSION_MEDICATION_LAST_PRESCRIBER
+    )?.valueString;
+  }
+
+  get lastPrescribedDate(): string | undefined {
+    return formatDateISOToLocal(
+      this.resource.extension?.find(
+        (x) => x.url === LENS_EXTENSION_MEDICATION_LAST_PRESCRIBED_DATE
+      )?.valueDateTime
+    );
   }
 }

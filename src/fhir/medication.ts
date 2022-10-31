@@ -1,6 +1,6 @@
-import { find, sortBy, get } from "lodash";
+import { get, sortBy } from "lodash";
 import { findReference } from "./resource-helper";
-import { SYSTEM_RXNORM } from "./system-urls";
+import { SYSTEM_ENRICHMENT, SYSTEM_RXNORM } from "./system-urls";
 import type { ResourceMap } from "./types";
 
 export type Medication =
@@ -50,7 +50,8 @@ export function getMedicationCodeableConcept(
   return medicationResource?.code;
 }
 
-export function getRxNormCode(
+// Returns the best RxNorm code for uniquely identifying a medication.
+export function getIdentifyingRxNormCode(
   medication: Medication,
   includedResources?: ResourceMap
 ): string | undefined {
@@ -59,9 +60,23 @@ export function getRxNormCode(
     includedResources
   );
 
-  return find(codeableConcept?.coding, {
-    system: SYSTEM_RXNORM,
-  })?.code;
+  const excludedExtensions = ["ActiveIngredient", "BrandName"];
+
+  return codeableConcept?.coding?.find(
+    (code) =>
+      // must be an RxNorm code
+      code.system === SYSTEM_RXNORM &&
+      // must have no extensions
+      (code.extension === undefined ||
+        // or the extensions must not contain
+        // any of the excluded extensions
+        !code.extension.some(
+          (e) =>
+            e.url === SYSTEM_ENRICHMENT &&
+            e.valueString &&
+            excludedExtensions.includes(e.valueString)
+        ))
+  )?.code;
 }
 
 // Returns the organization name of any performer for the medication.
@@ -115,7 +130,8 @@ export function createPatientStatusMap(
 
   const rxNormStatusMap: Record<string, string> = {};
   patientMedications.forEach((medication) => {
-    const rxNormCode = getRxNormCode(medication, includedResources) ?? "";
+    const rxNormCode =
+      getIdentifyingRxNormCode(medication, includedResources) ?? "";
     rxNormStatusMap[rxNormCode] = medication.status;
   });
 

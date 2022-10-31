@@ -17,6 +17,7 @@ const {
   VITE_AUTH0_CLIENT_ID,
   VITE_AUTH0_AUDIENCE,
   VITE_AUTH0_CALLBACK_PATH,
+  VITE_ENV,
 } = import.meta.env;
 
 const theme: Theme = {
@@ -39,7 +40,7 @@ const theme: Theme = {
 
 const DemoApp = ({ accessToken = "" }) => (
   <CTWProvider
-    env="dev"
+    env={VITE_ENV}
     authToken={accessToken}
     theme={theme}
     builderId={VITE_BUILDER_ID}
