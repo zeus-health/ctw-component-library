@@ -9,10 +9,20 @@ export type DrawerProps = {
   children: ReactNode;
   isOpen: boolean;
   onClose: () => void;
+  /** Called after drawer closing animation has ended. Use this for
+   * any cleanup that would affect the content displayed in the drawer.
+   */
   onAfterClosed?: () => void;
   title: string;
 };
 
+/**
+ * Drawer is a side-panel that slides in/out from the right.
+ * It has a title section at top and displays children below.
+ *
+ * `Drawer.Body` & `Drawer.Footer` can be used as children to create
+ * a scrollable body section with a fixed footer.
+ */
 export function Drawer({
   className,
   children,
@@ -93,22 +103,14 @@ export function Drawer({
   );
 }
 
-Drawer.Footer = function DialogFooter({
-  children,
-}: {
-  children: ReactNode;
-}): JSX.Element {
-  return (
-    <div className="ctw-border-default ctw-border-t ctw-px-6 ctw-py-4">
-      {children}
-    </div>
-  );
-};
+Drawer.Footer = ({ children }: { children: ReactNode }) => (
+  <div className="ctw-border-default ctw-border-t ctw-px-6 ctw-py-4">
+    {children}
+  </div>
+);
 
-Drawer.Body = function DialogBody({ children }: { children: ReactNode }) {
-  return (
-    <div className="ctw-flex ctw-h-full ctw-flex-col ctw-overflow-y-auto ctw-p-6">
-      {children}
-    </div>
-  );
-};
+Drawer.Body = ({ children }: { children: ReactNode }) => (
+  <div className="ctw-flex ctw-h-full ctw-flex-col ctw-overflow-y-auto ctw-p-6">
+    {children}
+  </div>
+);

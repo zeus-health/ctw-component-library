@@ -29,6 +29,7 @@ export type TableProps<T extends MinRecordItem> = {
   records: T[];
   columns: TableColumn<T>[];
   isLoading?: boolean;
+  /** Displayed when we have 0 records. */
   message?: string | ReactElement;
   showTableHead?: boolean;
   stacked?: boolean;
@@ -85,18 +86,16 @@ export const Table = <T extends MinRecordItem>({
   const hasData = !isLoading && records.length > 0;
 
   return (
-    <div className="ctw-space-y-4">
+    <div
+      className={cx("ctw-space-y-4", className, {
+        "ctw-table-stacked": stacked,
+      })}
+    >
       <div
-        className={cx(
-          "ctw-table-container",
-          "ctw-table",
-          {
-            "ctw-table-stacked": stacked,
-            "ctw-table-scroll-left-shadow": showLeftShadow,
-            "ctw-table-scroll-right-shadow": showRightShadow,
-          },
-          className
-        )}
+        className={cx("ctw-table-container", "ctw-table", {
+          "ctw-table-scroll-left-shadow": showLeftShadow,
+          "ctw-table-scroll-right-shadow": showRightShadow,
+        })}
       >
         <div className="ctw-scrollbar" ref={scrollContainerRef}>
           <table ref={tableRef}>
@@ -115,7 +114,7 @@ export const Table = <T extends MinRecordItem>({
           </table>
         </div>
       </div>
-      {records.length > 0 && (
+      {records.length > 0 && !isLoading && (
         <Pagination
           total={records.length}
           count={count}
