@@ -1,87 +1,64 @@
-import { Badge } from "@/components/core/badge";
-import type { TableColumn } from "@/components/core/table/table";
-import { Table } from "@/components/core/table/table";
+import { ReactNode, useRef } from "react";
+import { compact, isFunction } from "lodash/fp";
+import type { MinRecordItem, TableColumn } from "@/components/core/table/table";
+import { Table, TableBaseProps } from "@/components/core/table/table";
 import type { MedicationStatementModel } from "@/models/medication-statement";
-import { compact } from "lodash/fp";
-import { useState } from "react";
-import { MedicationDrawer } from "./medication-drawer";
+import { DropdownMenu, MenuItems } from "@/components/core/dropdown-menu";
+import { DotsHorizontalIcon } from "@heroicons/react/outline";
+import { useBreakpoints } from "@/hooks/use-breakpoints";
 
-const LensStatusColumn = ({ status }: { status: string }) => {
-  function statusToColor() {
-    switch (status.toLowerCase()) {
-      case "inactive":
-        return "caution";
-      case "active":
-        return "good";
-      default:
-        return "caution";
-    }
-  }
-
-  return <Badge color={statusToColor()} text={status} className="uppercase" />;
-};
-
-export type MedicationsTableBaseProps = {
+export type MedicationsTableBaseProps<T extends MinRecordItem> = {
   medicationStatements: MedicationStatementModel[];
-  showLensStatus?: boolean;
+  rowActions?: (condition: MedicationStatementModel) => MenuItems[];
+  hideMenu?: boolean;
   className?: string;
-};
+  children?: ReactNode;
+} & TableBaseProps<MedicationStatementModel>;
 
 export const MedicationsTableBase = ({
+  children,
   className = "",
+  rowActions,
+  hideMenu = false,
   medicationStatements,
-  showLensStatus = false,
-}: MedicationsTableBaseProps) => {
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [selectedMedication, setSelectedMedication] =
-    useState<MedicationStatementModel>();
-
-  function handleRowClick(row: MedicationStatementModel) {
-    setSelectedMedication(row);
-    setDrawerOpen(true);
-  }
+  ...tableProps
+}: MedicationsTableBaseProps<MedicationStatementModel>) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const breakpoints = useBreakpoints(containerRef);
 
   const columns = compact([
     {
       title: "Medication Name",
-      dataIndex: "display",
-      className: "w-[30%] min-w-[14rem]",
+      render: (medication: MedicationStatementModel) => (
+        <>
+          <div className="ctw-font-medium">{medication.display}</div>
+          <div className="ctw-font-light">{medication.dosage}</div>
+        </>
+      ),
     },
-    {
-      title: "Dosage",
-      dataIndex: "dosage",
-      className: "w-[30%] min-w-[20rem]",
-    },
-    {
-      title: "Status",
-      dataIndex: "status",
-      className: "w-[20%] min-w-[8rem]",
-    },
-    !showLensStatus
-      ? null
-      : {
-          title: "Lens Status",
-          dataIndex: "lensStatus",
-          className: "w-[20%] min-w-[9rem]",
-          render: (ms: MedicationStatementModel) => (
-            <LensStatusColumn status={ms.lensStatus} />
-          ),
-        },
   ]) as TableColumn<MedicationStatementModel>[];
 
+  if (!hideMenu && isFunction(rowActions)) {
+    columns.push({
+      className: "ctw-table-action-column",
+      render: (medication: MedicationStatementModel) => (
+        <DropdownMenu menuItems={rowActions(medication)}>
+          <DotsHorizontalIcon className="ctw-w-5" />
+        </DropdownMenu>
+      ),
+    });
+  }
+
   return (
-    <div className={className}>
+    <div className={className} ref={containerRef}>
       <Table
+        stacked={breakpoints.sm}
         records={medicationStatements}
         columns={columns}
         message="There are no medications to display."
-        handleRowClick={handleRowClick}
+        {...tableProps}
       />
-      <MedicationDrawer
-        medication={selectedMedication}
-        isOpen={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-      />
+      {children}
     </div>
   );
 };

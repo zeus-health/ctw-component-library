@@ -36,19 +36,6 @@ export const getEditingPatientConditionData = ({
     readonly: true,
     hidden: true,
   },
-  {
-    label: "Condition",
-    field: "condition",
-    value: condition.display,
-    readonly: true,
-    render: (readonly: boolean | undefined, inputProps) => (
-      <ConditionsAutoComplete
-        defaultCoding={condition.codings}
-        readonly={readonly}
-        {...inputProps}
-      />
-    ),
-  },
 
   ...sharedFields(condition),
 ];
@@ -95,8 +82,9 @@ const sharedSchema = {
   }),
   clinicalStatus: z.enum(["active", "inactive"]),
   onset: z
-    .date({ required_error: "Condition's onset is required." })
-    .max(new Date(), { message: "Onset cannot be a future date." }),
+    .date()
+    .max(new Date(), { message: "Onset cannot be a future date." })
+    .optional(),
   abatement: z
     .date()
     .max(new Date(), { message: "Abatement cannot be a future date." })

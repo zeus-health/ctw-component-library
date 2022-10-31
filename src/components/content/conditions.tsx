@@ -18,11 +18,12 @@ import {
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import cx from "classnames";
-import { union } from "lodash";
+import { curry, union } from "lodash";
 import { useEffect, useRef, useState } from "react";
 import { ModalConfirmDelete } from "../core/modal-confirm-delete";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
+import { ConditionHeader } from "./condition-header";
 import { ConditionHistoryDrawer } from "./conditions-history-drawer";
 import { ConditionsNoPatient } from "./conditions-no-patient";
 import { ConditionsTableBase } from "./conditions-table-base";
@@ -34,6 +35,7 @@ import {
 } from "./forms/conditions";
 import {
   DrawerFormWithFields,
+  FormActionTypes,
   FormEntry,
 } from "./forms/drawer-form-with-fields";
 
@@ -59,7 +61,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     ConditionModel[]
   >([]);
   const [includeInactive, setIncludeInactive] = useState(true);
-  const [formAction, setFormAction] = useState("");
+  const [formAction, setFormAction] = useState<FormActionTypes>("Add");
   const [conditionFilter, setConditionFilter] = useState<ConditionFilters>({});
   const [schema, setSchema] = useState<Zod.AnyZodObject>(conditionAddSchema);
   const [currentSelectedData, setCurrentlySelectedData] =
@@ -84,6 +86,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       setFormAction("Edit");
       setSchema(conditionEditSchema);
       setCurrentlySelectedData(getEditingPatientConditionData({ condition }));
+      setSelectedCondition(condition);
     }
   };
 
@@ -299,7 +302,13 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         <DrawerFormWithFields
           patientID={patientResponse.data.id}
           title={`${formAction} Condition`}
-          action={createOrEditCondition}
+          header={
+            formAction === "Edit" &&
+            selectedCondition && (
+              <ConditionHeader condition={selectedCondition} />
+            )
+          }
+          action={curry(createOrEditCondition)(selectedCondition)}
           data={currentSelectedData}
           schema={schema}
           isOpen={drawerIsOpen}

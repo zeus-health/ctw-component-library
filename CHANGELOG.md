@@ -1,5 +1,25 @@
 # ctw-component-library
 
+## 0.20.0
+
+### Minor Changes
+
+- 03bbc94: - Created <CTWBox.\* /> components.
+  - Refactored <PatientMedications/> component into smaller parts so it can be used as a whole component or the inner pieces could be used individually. (which wasn't the case before).
+  - Created <Loading /> component and adding loading message to medications tables.
+
+## 0.19.5
+
+### Patch Changes
+
+- acc5077: Update the required fields display and read only content for the Edit/Add Condition forms.
+
+## 0.19.4
+
+### Patch Changes
+
+- ef8e767: Update the sort to sort by year first and move the records with no date to the bottom.
+
 ## 0.19.3
 
 ### Patch Changes

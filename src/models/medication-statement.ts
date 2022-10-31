@@ -96,12 +96,6 @@ export class MedicationStatementModel {
     this.resource.informationSource = informationSource;
   }
 
-  get lensStatus(): string {
-    return this.lensActiveRxNorms?.includes(this.rxNorm ?? "")
-      ? "active"
-      : "inactive";
-  }
-
   get medicationReference(): string | undefined {
     return this.resource.medicationReference?.display;
   }
