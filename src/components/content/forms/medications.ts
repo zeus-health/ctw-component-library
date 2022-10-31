@@ -21,6 +21,7 @@ export const medicationStatementSchema = z.object({
   dateAsserted: z.date({ required_error: "Date asserted is required." }),
   note: z.string().optional(),
   display: z.string({ required_error: "Medication name is required." }),
+  dosage: z.string().optional(),
   status: z.enum([
     "active",
     "completed",
@@ -80,6 +81,11 @@ export const createMedicationStatement = async (
         },
       ],
     },
+    dosage: [
+      {
+        text: result.data.dosage,
+      },
+    ],
     note: result.data.note ? [{ text: result.data.note }] : undefined,
   };
 
@@ -132,6 +138,11 @@ export const getMedicationFormData = (
     label: "Medication",
     value: medication.display,
     field: "display",
+  },
+  {
+    label: "Dosage",
+    value: medication.dosage,
+    field: "dosage",
   },
   {
     label: "Status",
