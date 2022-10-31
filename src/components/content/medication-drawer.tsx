@@ -41,7 +41,7 @@ export const MedicationDrawer = ({
           {medication && renderDrawerContentTop()}
           <DataList title="Details" data={data} />
           {medication?.rxNorm && (
-            <MedicationHistory rxNorm={medication?.rxNorm} />
+            <MedicationHistory rxNorm={medication.rxNorm} />
           )}
         </div>
       </Drawer.Body>

@@ -14,6 +14,8 @@ import {
   SearchReturn,
 } from "./search-helpers";
 import { ResourceTypeString } from "./types";
+import { useQueryWithPatient } from "@/components/core/patient-provider";
+import { QUERY_KEY_MEDICATION_HISTORY } from "@/utils/query-keys";
 
 export type InformationSource =
   | "Patient"
@@ -125,49 +127,74 @@ export function filterMedicationsWithNoRxNorms(
   return medications.filter((m) => getRxNormCode(m, resourceMap) !== undefined);
 }
 
-export async function useMedicationHistory(
-  rxNorm: string,
-  patientUPID: string,
-  requestContext: CTWRequestContext
-) {
-  const [
-    medicationStatementResponse,
-    medicationAdministrationResponse,
-    medicationRequestResponse,
-    medicationDispenseResponse,
-  ] = await Promise.all([
-    searchWrapper("MedicationStatement", requestContext, patientUPID),
-    searchWrapper("MedicationAdministration", requestContext, patientUPID),
-    searchWrapper("MedicationRequest", requestContext, patientUPID),
-    searchWrapper("MedicationDispense", requestContext, patientUPID),
-  ]);
+export function useMedicationHistory(rxNorm: string) {
+  return useQueryWithPatient(
+    QUERY_KEY_MEDICATION_HISTORY,
+    [rxNorm],
+    async (requestContext, patient) => {
+      try {
+        const [
+          medicationStatementResponse,
+          medicationAdministrationResponse,
+          medicationRequestResponse,
+          medicationDispenseResponse,
+        ] = await Promise.all([
+          searchWrapper(
+            "MedicationStatement",
+            requestContext,
+            patient.UPID as string
+          ),
+          searchWrapper(
+            "MedicationAdministration",
+            requestContext,
+            patient.UPID as string
+          ),
+          searchWrapper(
+            "MedicationRequest",
+            requestContext,
+            patient.UPID as string
+          ),
+          searchWrapper(
+            "MedicationDispense",
+            requestContext,
+            patient.UPID as string
+          ),
+        ]);
 
-  let medications = [
-    ...medicationStatementResponse.resources,
-    ...medicationAdministrationResponse.resources,
-    ...medicationRequestResponse.resources,
-    ...medicationDispenseResponse.resources,
-  ];
+        let medications = [
+          ...medicationStatementResponse.resources,
+          ...medicationAdministrationResponse.resources,
+          ...medicationRequestResponse.resources,
+          ...medicationDispenseResponse.resources,
+        ];
 
-  const includedResources = getMergedIncludedResources([
-    medicationStatementResponse.bundle,
-    medicationAdministrationResponse.bundle,
-    medicationRequestResponse.bundle,
-    medicationDispenseResponse.bundle,
-  ]);
+        const includedResources = getMergedIncludedResources([
+          medicationStatementResponse.bundle,
+          medicationAdministrationResponse.bundle,
+          medicationRequestResponse.bundle,
+          medicationDispenseResponse.bundle,
+        ]);
 
-  medications = medications.filter(
-    (medication) => getRxNormCode(medication, includedResources) === rxNorm
+        medications = medications.filter(
+          (medication) =>
+            getRxNormCode(medication, includedResources) === rxNorm
+        );
+
+        medications = sort(
+          medications,
+          (medication) => new MedicationModel(medication).date ?? "",
+          "desc",
+          true
+        );
+
+        return { medications, includedResources };
+      } catch (e) {
+        throw new Error(
+          `Failed fetching medication history for rxnorm ${rxNorm}: ${e}`
+        );
+      }
+    }
   );
-
-  medications = sort(
-    medications,
-    (medication) => new MedicationModel(medication).date ?? "",
-    "desc",
-    true
-  );
-
-  return { medications, includedResources };
 }
 
 function searchWrapper<T extends ResourceTypeString>(
