@@ -40,6 +40,7 @@ module.exports = {
           "*.config.*",
           "*.env.*",
           "scripts/**/*",
+          "**/*.stories.*",
           "**/*.test.*",
           "test/**/*",
         ],

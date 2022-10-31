@@ -38,6 +38,7 @@ export const Basic: StoryObj<DrawerProps> = {
         <Drawer.Body>
           My Body
           {[...Array(20)].map((_, i) => (
+            // eslint-disable-next-line react/no-array-index-key
             <p key={i}>scrollable content {i}</p>
           ))}
         </Drawer.Body>

@@ -22,7 +22,7 @@ export default {
             <div className="ctw-text-error-main">
               I said <b>NO RECORDS</b> found!
             </div>
-            <div>I hope that's OK</div>
+            <div>I hope that is OK</div>
           </div>
         ),
       },
@@ -71,7 +71,7 @@ export const Basic: StoryObj<Props> = {
 };
 
 const manyRecords = [...records];
-for (let i = records.length + 1; i <= 35; i++) {
+for (let i = records.length + 1; i <= 35; i += 1) {
   manyRecords.push({ id: `${i}`, name: `${i} Record` });
 }
 export const Paging: StoryObj<Props> = {
