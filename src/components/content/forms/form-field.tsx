@@ -50,10 +50,10 @@ export const FormField = ({
           defaultValue={value}
         >
           {options.map((option) => {
-            const val = labels[option] || option;
+            const display = labels[option] || option;
             return (
-              <option value={val} key={option}>
-                {capitalize(val)}
+              <option value={option} key={option}>
+                {capitalize(display)}
               </option>
             );
           })}
