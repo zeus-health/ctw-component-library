@@ -26,19 +26,13 @@ export const MedicationDrawer = ({
   ...drawerProps
 }: MedicationDrawerProps) => {
   const data = getDataEntriesFromMedicationStatement(medication);
-  function renderDrawerContentTop() {
-    return (
-      <div className="ctw-flex ctw-justify-between ctw-space-x-8">
-        <span className="ctw-text-3xl">{medication?.display}</span>
-      </div>
-    );
-  }
-
   return (
-    <Drawer title="Medication" {...drawerProps}>
+    <Drawer title="Medication Details" {...drawerProps}>
       <Drawer.Body>
         <div className="ctw-space-y-7">
-          {medication && renderDrawerContentTop()}
+          <div className="ctw-flex ctw-justify-between ctw-space-x-8">
+            <span className="ctw-text-3xl">{medication?.display || ""}</span>
+          </div>
           <DataList title="Details" data={data} />
           {medication?.rxNorm && (
             <MedicationHistory rxNorm={medication.rxNorm} />

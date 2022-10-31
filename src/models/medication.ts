@@ -20,7 +20,7 @@ export class MedicationModel {
     return this.resource.id || "";
   }
 
-  get resourceType(): string {
+  get resourceType(): fhir4.FhirResource["resourceType"] {
     return this.resource.resourceType;
   }
 

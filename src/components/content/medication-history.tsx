@@ -22,56 +22,51 @@ export function MedicationHistory({ rxNorm }: MedicationHistoryProps) {
   useEffect(() => {
     if (medHistoryQuery.data) {
       const { medications, includedResources } = medHistoryQuery.data;
-      const histories = medications.map((med) =>
-        setupData(new MedicationModel(med, includedResources))
-      );
+      const histories = medications.map((med) => setupData(med));
       setEntries(histories);
     }
   }, [medHistoryQuery.data]);
 
   if (loading) {
-    return <Loading message="" />;
+    return (
+      <>
+        <h3>Medication History</h3>
+        <Loading message="" />
+      </>
+    );
   }
   if (!(rxNorm && entries.length)) {
-    return <div>No history available for this medication.</div>;
+    return (
+      <>
+        <h3>Medication History</h3>
+        <span>No history available for this medication.</span>
+      </>
+    );
   }
 
   return (
-    <CollapsibleDataListStack
-      entries={entries}
-      limit={MEDICATION_HISTORY_LIMIT}
-    />
+    <>
+      <h3>Medication History</h3>
+      <CollapsibleDataListStack
+        entries={entries}
+        limit={MEDICATION_HISTORY_LIMIT}
+      />
+    </>
   );
 }
 
-export function resourceTypeRename(name: string): string {
-  switch (name) {
-    case "MedicationStatement":
-      return "Usage Reported";
-    case "MedicationAdministration":
-      return "Administered";
-    case "MedicationDispense":
-      return "Filled";
-    case "MedicationRequest":
-      return "Prescribed";
-    default:
-      return name;
-  }
-}
+const titleMap: Map<fhir4.FhirResource["resourceType"], string> = new Map();
+titleMap.set("MedicationStatement", "Medication Reviewed");
+titleMap.set("MedicationRequest", "Prescription Ordered");
+titleMap.set("MedicationDispense", "Medication Filled");
 
 function setupData(medication: MedicationModel): CollapsibleDataListProps {
   const detailData: CollapsibleDataListEntry[] = [];
 
-  const titleMap: Record<string, string> = {
-    MedicationStatement: "Medication Reviewed",
-    MedicationRequest: "Presciption Ordered",
-    MedicationDispense: "Medication Filled",
-  };
-
   const card: CollapsibleDataListProps = {
     id: medication.id,
     date: medication.date,
-    title: titleMap[medication.resourceType],
+    title: titleMap.get(medication.resourceType),
     data: detailData,
     // subTitle: "Placeholder subtitle",
   };
@@ -98,9 +93,10 @@ function setupData(medication: MedicationModel): CollapsibleDataListProps {
     const prescriber = resource.requester?.reference;
     card.subTitle = prescriber;
 
-    const value = resource.dispenseRequest?.initialFill?.quantity?.value;
-    const unit = resource.dispenseRequest?.initialFill?.quantity?.unit;
-    detailData.push({ label: "Quantity", value: `${value} ${unit}` });
+    if (resource.dispenseRequest?.initialFill?.quantity) {
+      const { value, unit } = resource.dispenseRequest.initialFill.quantity;
+      detailData.push({ label: "Quantity", value: `${value} ${unit}` });
+    }
 
     detailData.push({
       label: "Refills",
@@ -114,34 +110,41 @@ function setupData(medication: MedicationModel): CollapsibleDataListProps {
 
     detailData.push({ label: "Prescriber", value: prescriber });
 
-    // TODO: convert into name, address, and telecom
-    detailData.push({
-      label: "Pharmacy",
-      value: resource.dispenseRequest?.performer?.reference,
-    });
+    const pharmacy = resource.dispenseRequest?.performer?.reference;
+    if (pharmacy) {
+      // TODO: convert into name, address, and telecom
+      detailData.push({
+        label: "Pharmacy",
+        value: pharmacy,
+      });
+    }
   } else if (medication.resourceType === "MedicationDispense") {
     const resource = medication.resource as fhir4.MedicationDispense;
 
-    const value = resource.quantity?.value;
-    const unit = resource.quantity?.unit;
-    const quantity = `${value} ${unit}`;
-    // TODO: how to get the number of refills?
-    // medication dispense does not have numberOfRepeatsAllowed
-    card.subTitle = `${quantity}, 0 refills`;
-    detailData.push({ label: "Quantity", value: quantity });
-
-    detailData.push({
-      label: "Days supply",
-      value: `${resource.daysSupply?.value} days`,
-    });
+    if (resource.quantity) {
+      const { value, unit } = resource.quantity;
+      const quantity = `${value} ${unit}`;
+      // TODO: how to get the number of refills?
+      // medication dispense does not have numberOfRepeatsAllowed
+      card.subTitle = `${quantity}, 0 refills`;
+      detailData.push({ label: "Quantity", value: quantity });
+    }
+    if (resource.daysSupply) {
+      detailData.push({
+        label: "Days supply",
+        value: `${resource.daysSupply.value} days`,
+      });
+    }
 
     detailData.push({ label: "Refills", value: "TODO" });
 
-    // TODO: convert to performer name, address, and telecom
-    detailData.push({
-      label: "Pharmacy",
-      value: resource.performer?.[0]?.actor.reference,
-    });
+    if (resource.performer?.[0]?.actor) {
+      // TODO: convert to performer name, address, and telecom
+      detailData.push({
+        label: "Pharmacy",
+        value: resource.performer[0].actor.reference,
+      });
+    }
   }
 
   return card;

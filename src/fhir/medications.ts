@@ -1,10 +1,10 @@
+import { getOr, omit } from "lodash/fp";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { MedicationModel } from "@/models/medication";
 import { PatientModel } from "@/models/patients";
 import { errorResponse } from "@/utils/errors";
 import { sort } from "@/utils/sort";
 import type { FhirResource, MedicationStatement } from "fhir/r4";
-import { omit } from "lodash/fp";
 import { bundleToResourceMap, getMergedIncludedResources } from "./bundle";
 import { getRxNormCode } from "./medication";
 import {
@@ -161,7 +161,7 @@ export function useMedicationHistory(rxNorm: string) {
           ),
         ]);
 
-        let medications = [
+        let medicationResources = [
           ...medicationStatementResponse.resources,
           ...medicationAdministrationResponse.resources,
           ...medicationRequestResponse.resources,
@@ -175,14 +175,16 @@ export function useMedicationHistory(rxNorm: string) {
           medicationDispenseResponse.bundle,
         ]);
 
-        medications = medications.filter(
+        medicationResources = medicationResources.filter(
           (medication) =>
             getRxNormCode(medication, includedResources) === rxNorm
         );
 
-        medications = sort(
-          medications,
-          (medication) => new MedicationModel(medication).date ?? "",
+        const medications = sort(
+          medicationResources.map(
+            (m) => new MedicationModel(m, includedResources)
+          ),
+          getOr("", "date"),
           "desc",
           true
         );
@@ -190,7 +192,7 @@ export function useMedicationHistory(rxNorm: string) {
         return { medications, includedResources };
       } catch (e) {
         throw new Error(
-          `Failed fetching medication history for rxnorm ${rxNorm}: ${e}`
+          `Failed fetching medication history for RxNorm ${rxNorm}: ${e}`
         );
       }
     }
