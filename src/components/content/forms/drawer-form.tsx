@@ -77,13 +77,11 @@ export const DrawerForm = <T,>({
             {errors?.requestErrors && (
               <ErrorAlert header="There was an error with your submission">
                 {errors.requestErrors.length === 1 ? (
-                  <span className="ctw-truncate">
-                    {errors.requestErrors[0]}
-                  </span>
+                  errors.requestErrors[0]
                 ) : (
                   <ul className="ctw-m-0 ctw-list-disc ctw-px-4">
                     {errors.requestErrors.map((error) => (
-                      <li className="ctw-truncate">{error}</li>
+                      <li>{error}</li>
                     ))}
                   </ul>
                 )}

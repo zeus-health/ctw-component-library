@@ -18,7 +18,6 @@ import {
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import { Condition } from "fhir/r4";
-import { conditionRefinement } from "./condition-schema";
 import { FormErrors } from "./drawer-form";
 import { ActionReturn } from "./types";
 
@@ -74,7 +73,7 @@ export const createOrEditCondition = async (
   formResult: ActionReturn<FormErrors>;
   requestErrors: string[] | undefined;
 }> => {
-  const result = await getFormData(data, schema, conditionRefinement);
+  const result = await getFormData(data, schema);
   let requestErrors: string[] = [];
 
   if (!result.success) {
