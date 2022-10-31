@@ -12,8 +12,8 @@ const baseMed: MedicationStatement = {
 
 const testRxNormCode = "12345";
 
-describe("splitSummarizedMedications", () => {
-  test("splits medications correctly", () => {
+describe("getIdentifyingRxNormCode", () => {
+  test("gets RxNorm code from codeable concept", () => {
     baseMed.medicationCodeableConcept = {
       coding: [
         {
