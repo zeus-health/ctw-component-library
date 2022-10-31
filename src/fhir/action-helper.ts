@@ -1,7 +1,6 @@
 import Client from "fhir-kit-client";
 import { Resource } from "fhir/r4";
 import { omitEmptyArrays } from "./client";
-import { isFhirError } from "./errors";
 
 export async function createOrEditFhirResource(
   resource: Resource,
@@ -16,16 +15,10 @@ export async function createOrEditFhirResource(
       });
     }
     return await fhirClient.create({
-      resourceType: resource.resourceType,
+      resourceType: "foo",
       body: omitEmptyArrays(resource),
     });
   } catch (err) {
-    if (isFhirError(err)) {
-      return err;
-    }
-
-    throw Error(
-      `Failed ${resource.id ? "updating" : "creating"} ${resource.resourceType}`
-    );
+    return err;
   }
 }

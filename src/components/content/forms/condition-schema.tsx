@@ -1,5 +1,5 @@
 import { ConditionModel } from "@/models/condition";
-import { z } from "zod";
+import Zod, { RefinementCtx, z } from "zod";
 import { ConditionsAutoComplete } from "./conditions-autocomplete";
 import type { FormEntry } from "./drawer-form-with-fields";
 
@@ -130,26 +130,29 @@ export const conditionAddSchema = z.object({
   }),
 });
 
-export const conditionRefinements = [
-  [
-    (condition: any) =>
-      condition.abatement && condition.clinicalStatus === "active",
-    {
-      message: "Condition cannot be both active and abated.",
-      path: ["clinicalStatus", "abatement"],
-    },
-  ],
-  [
-    (condition: any) =>
-      condition.abatement &&
-      condition.onset &&
-      condition.abatement > condition.onset,
-    {
+export const conditionRefinement = (
+  condition: ConditionModel,
+  ctx: RefinementCtx
+) => {
+  if (condition.abatement && condition.clinicalStatus === "active") {
+    ctx.addIssue({
+      code: Zod.ZodIssueCode.custom,
+      message: "Condition cannot be active if abated.",
+      path: ["clinicalStatus"],
+    });
+  }
+  if (
+    condition.abatement &&
+    condition.onset &&
+    condition.abatement < condition.onset
+  ) {
+    ctx.addIssue({
+      code: Zod.ZodIssueCode.custom,
       message: "Abatement cannot happen before onset.",
-      path: ["onset", "abatement"],
-    },
-  ],
-];
+      path: ["abatement"],
+    });
+  }
+};
 
 function levelTwoToOneMapping(value: string): string {
   switch (value) {

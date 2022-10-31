@@ -1,6 +1,9 @@
 /* eslint-disable */
 /* Disabling eslint because we got this code from the remix helper and ported over to work in a SPA env. */
+import { ActionReturn } from "@/components/content/forms/types";
+import { ConditionModel } from "@/models/condition";
 import Zod, {
+  RefinementCtx,
   z,
   ZodArray,
   ZodBoolean,
@@ -116,10 +119,8 @@ export function isIterable(
 export function getParamsInternal<T>(
   params: URLSearchParams | FormData | Record<string, string | undefined>,
   schema: any,
-  refinements?: any
-):
-  | { success: true | false; data: T; errors: undefined }
-  | { success: false; data: undefined; errors: { [key: string]: string } } {
+  refinement?: (condition: ConditionModel, ctx: RefinementCtx) => void
+): ActionReturn<T> {
   // @ts-ignore
   let o: any = {};
   let entries: [string, unknown][] = [];
@@ -138,10 +139,8 @@ export function getParamsInternal<T>(
   }
 
   let toParse = schema;
-  if (refinements) {
-    refinements.forEach(
-      (refinement: any) => (toParse = toParse.refine(...refinement))
-    );
+  if (refinement) {
+    toParse = toParse.superRefine(refinement);
   }
   const result = toParse.safeParse(o);
   if (result.success) {
@@ -177,10 +176,10 @@ export function getParamsInternal<T>(
 export async function getFormData<T extends ZodType<any, any, any>>(
   data: FormData,
   schema: T,
-  refinements?: any
+  refinement?: (condition: ConditionModel, ctx: RefinementCtx) => void
 ) {
   type ParamsType = z.infer<T>;
-  return getParamsInternal<ParamsType>(data, schema, refinements);
+  return getParamsInternal<ParamsType>(data, schema, refinement);
 }
 
 function getOptions(

@@ -42,7 +42,10 @@ export const FormField = ({
     if (options) {
       return (
         <select
-          className="ctw-listbox-button ctw-w-full"
+          className={cx(
+            { "ctw-error": error },
+            "ctw-listbox-button ctw-w-full"
+          )}
           name={inputProps.name || ""}
           disabled={inputProps.disabled}
           defaultValue={value}
@@ -93,6 +96,7 @@ export const FormField = ({
     return <input {...inputProps} defaultValue={value} hidden={hidden} />;
   }
 
+  // styling of the error icon before: ctw-pointer-events-none ctw-absolute ctw-inset-y-0 ctw-right-0 ctw-top-2 ctw-flex ctw-h-min ctw-items-center ctw-pr-3
   return (
     <>
       <div className="ctw-relative">
