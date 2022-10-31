@@ -1,4 +1,4 @@
-import { getOr, omit } from "lodash/fp";
+import { omit } from "lodash/fp";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { MedicationModel } from "@/models/medication";
 import { PatientModel } from "@/models/patients";
@@ -181,10 +181,8 @@ export function useMedicationHistory(rxNorm: string) {
         );
 
         const medications = sort(
-          medicationResources.map(
-            (m) => new MedicationModel(m, includedResources)
-          ),
-          getOr("", "date"),
+          medicationResources,
+          (m) => new MedicationModel(m).date,
           "desc",
           true
         );

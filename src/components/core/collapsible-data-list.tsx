@@ -60,7 +60,9 @@ const DetailSummary = ({
       <div className="ctw-flex ctw-space-x-3">
         {date && <div className="ctw-min-w-[5rem]">{date}</div>}
         <div>
-          <div className="ctw-text-primary-dark">{title}</div>
+          <div className="ctw-font-semibold ctw-text-content-black">
+            {title}
+          </div>
           <div className="ctw-text-content-light">{subTitle}</div>
         </div>
       </div>

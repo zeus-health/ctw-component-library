@@ -1,3 +1,4 @@
+import { compact } from "lodash/fp";
 import { useMedicationHistory } from "@/fhir/medications";
 import { MedicationModel } from "@/models/medication";
 import { useEffect, useState } from "react";
@@ -7,6 +8,9 @@ import {
 } from "@/components/core/collapsible-data-list";
 import { Loading } from "@/components/core/loading";
 import { CollapsibleDataListStack } from "@/components/core/collapsible-data-list-stack";
+import { MedicationStatementModel } from "@/models/medication-statement";
+import { Medication } from "@/fhir/medication";
+import { MedicationDispenseModel } from "@/models/medication-dispense";
 
 const MEDICATION_HISTORY_LIMIT = 10;
 
@@ -22,8 +26,7 @@ export function MedicationHistory({ rxNorm }: MedicationHistoryProps) {
   useEffect(() => {
     if (medHistoryQuery.data) {
       const { medications, includedResources } = medHistoryQuery.data;
-      const histories = medications.map((med) => setupData(med));
-      setEntries(histories);
+      setEntries(medications.map(setupData));
     }
   }, [medHistoryQuery.data]);
 
@@ -35,22 +38,18 @@ export function MedicationHistory({ rxNorm }: MedicationHistoryProps) {
       </>
     );
   }
-  if (!(rxNorm && entries.length)) {
-    return (
-      <>
-        <h3>Medication History</h3>
-        <span>No history available for this medication.</span>
-      </>
-    );
-  }
 
   return (
     <>
       <h3>Medication History</h3>
-      <CollapsibleDataListStack
-        entries={entries}
-        limit={MEDICATION_HISTORY_LIMIT}
-      />
+      {entries.length ? (
+        <CollapsibleDataListStack
+          entries={entries}
+          limit={MEDICATION_HISTORY_LIMIT}
+        />
+      ) : (
+        <span>No history available for this medication.</span>
+      )}
     </>
   );
 }
@@ -60,30 +59,29 @@ titleMap.set("MedicationStatement", "Medication Reviewed");
 titleMap.set("MedicationRequest", "Prescription Ordered");
 titleMap.set("MedicationDispense", "Medication Filled");
 
-function setupData(medication: MedicationModel): CollapsibleDataListProps {
+function setupData(med: Medication): CollapsibleDataListProps {
+  const medication = new MedicationModel(med);
   const detailData: CollapsibleDataListEntry[] = [];
-
   const card: CollapsibleDataListProps = {
     id: medication.id,
     date: medication.date,
     title: titleMap.get(medication.resourceType),
     data: detailData,
-    // subTitle: "Placeholder subtitle",
   };
 
   if (medication.resourceType === "MedicationStatement") {
     const resource = medication.resource as fhir4.MedicationStatement;
-    // TODO: informationSource is a reference, would be a good idea to have this
-    // included in the includedResources field
-    card.subTitle = resource.informationSource?.reference;
+    const medStatement = new MedicationStatementModel(resource);
+    card.subTitle = medStatement.informationSourceDisplay;
+
     detailData.push(
       {
         label: "Status",
-        value: medication.status,
+        value: medStatement.status,
       },
       {
         label: "Instructions",
-        value: medication.dosage,
+        value: medStatement.dosage,
       }
     );
   } else if (medication.resourceType === "MedicationRequest") {
@@ -100,7 +98,7 @@ function setupData(medication: MedicationModel): CollapsibleDataListProps {
 
     detailData.push({
       label: "Refills",
-      value: resource.dispenseRequest?.numberOfRepeatsAllowed,
+      value: resource.dispenseRequest?.numberOfRepeatsAllowed || "0",
     });
 
     detailData.push({
@@ -120,31 +118,36 @@ function setupData(medication: MedicationModel): CollapsibleDataListProps {
     }
   } else if (medication.resourceType === "MedicationDispense") {
     const resource = medication.resource as fhir4.MedicationDispense;
+    const medDispense = new MedicationDispenseModel(
+      resource,
+      medication.includedResources
+    );
 
-    if (resource.quantity) {
-      const { value, unit } = resource.quantity;
-      const quantity = `${value} ${unit}`;
-      // TODO: how to get the number of refills?
-      // medication dispense does not have numberOfRepeatsAllowed
-      card.subTitle = `${quantity}, 0 refills`;
-      detailData.push({ label: "Quantity", value: quantity });
-    }
-    if (resource.daysSupply) {
-      detailData.push({
-        label: "Days supply",
-        value: `${resource.daysSupply.value} days`,
-      });
-    }
+    const { quantityDisplay, refillsRemaining, supplied, performerDetails } =
+      medDispense;
 
-    detailData.push({ label: "Refills", value: "TODO" });
+    card.subTitle = compact([
+      quantityDisplay,
+      `${refillsRemaining} refills`,
+    ]).join(", ");
 
-    if (resource.performer?.[0]?.actor) {
-      // TODO: convert to performer name, address, and telecom
-      detailData.push({
-        label: "Pharmacy",
-        value: resource.performer[0].actor.reference,
-      });
-    }
+    detailData.push({ label: "Quantity", value: quantityDisplay });
+
+    detailData.push({
+      label: "Days supply",
+      value: `${supplied} days`,
+    });
+
+    detailData.push({ label: "Refills", value: medDispense.dosageInstruction });
+
+    detailData.push({
+      label: "Pharmacy",
+      value: [
+        performerDetails.name,
+        performerDetails.address,
+        `T: ${performerDetails.telecom}`,
+      ].join("\n"),
+    });
   }
 
   return card;

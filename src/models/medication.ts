@@ -25,7 +25,8 @@ export class MedicationModel {
   }
 
   get performer(): string | undefined {
-    return getPerformingOrganization(this.resource, this.includedResources);
+    return getPerformingOrganization(this.resource, this.includedResources)
+      ?.name;
   }
 
   get status(): string {
