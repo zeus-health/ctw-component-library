@@ -65,8 +65,8 @@ const records: Record[] = [
 
 export const Basic: StoryObj<Props> = {
   args: {
-    records: records,
-    columns: columns,
+    records,
+    columns,
   },
 };
 
@@ -77,7 +77,7 @@ for (let i = records.length + 1; i <= 35; i++) {
 export const Paging: StoryObj<Props> = {
   args: {
     records: manyRecords,
-    columns: columns,
+    columns,
   },
 };
 
