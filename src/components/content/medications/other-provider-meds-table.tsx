@@ -43,6 +43,7 @@ export function OtherProviderMedsTable({
   return (
     <>
       <MedicationsTableBase
+        className="ctw-space-y-4"
         medicationStatements={medicationModels}
         isLoading={isLoading}
         rowActions={(medication) => [
