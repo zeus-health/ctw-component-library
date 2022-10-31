@@ -32,6 +32,7 @@ export type TableProps<T extends MinRecordItem> = {
   message?: string | ReactElement;
   showTableHead?: boolean;
   stacked?: boolean;
+  handleRowClick?: (record: T) => void;
 };
 
 export type TableBaseProps<T extends MinRecordItem> = Omit<
@@ -47,17 +48,13 @@ export const Table = <T extends MinRecordItem>({
   message = "No records found",
   showTableHead = true,
   stacked,
+  handleRowClick,
 }: TableProps<T>) => {
   const tableRef = useRef<HTMLTableElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showLeftShadow, setShowLeftShadow] = useState(false);
   const [showRightShadow, setShowRightShadow] = useState(false);
-  const [displayedRecords, setDisplayedRecords] = useState<T[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-
-  useEffect(() => {
-    setDisplayedRecords(records.slice(0, DEFAULT_PAGE_SIZE));
-  }, [records]);
+  const [count, setCount] = useState(DEFAULT_PAGE_SIZE);
 
   const updateShadows = () => {
     const container = scrollContainerRef.current;
@@ -67,27 +64,6 @@ export const Table = <T extends MinRecordItem>({
       const rightSide = container.scrollLeft + container.clientWidth;
       setShowRightShadow(rightSide < table.clientWidth);
     }
-  };
-
-  const getNextRecords = () => {
-    const newPageNumber = currentPage + 1;
-    const finishIdx = Math.min(
-      (newPageNumber + 1) * DEFAULT_PAGE_SIZE,
-      records.length - 1
-    );
-    setCurrentPage(newPageNumber);
-    setDisplayedRecords(records.slice(0, finishIdx));
-  };
-
-  const showAllRecords = () => {
-    const lastPageNumber = records.length / DEFAULT_PAGE_SIZE + 1;
-    setCurrentPage(lastPageNumber);
-    setDisplayedRecords(records);
-  };
-
-  const resetRecords = () => {
-    setCurrentPage(1);
-    setDisplayedRecords(records.slice(0, DEFAULT_PAGE_SIZE));
   };
 
   useEffect(() => {
@@ -109,10 +85,11 @@ export const Table = <T extends MinRecordItem>({
   const hasData = !isLoading && records.length > 0;
 
   return (
-    <>
+    <div className="ctw-space-y-4">
       <div
         className={cx(
           "ctw-table-container",
+          "ctw-table",
           {
             "ctw-table-stacked": stacked,
             "ctw-table-scroll-left-shadow": showLeftShadow,
@@ -128,7 +105,8 @@ export const Table = <T extends MinRecordItem>({
 
             <tbody>
               <TableRows
-                records={displayedRecords}
+                records={records.slice(0, count)}
+                handleRowClick={handleRowClick}
                 columns={columns}
                 isLoading={isLoading}
                 emptyMessage={message}
@@ -137,14 +115,13 @@ export const Table = <T extends MinRecordItem>({
           </table>
         </div>
       </div>
-      <Pagination
-        currentPage={currentPage}
-        pageSize={DEFAULT_PAGE_SIZE}
-        total={records.length}
-        onNext={getNextRecords}
-        onAll={showAllRecords}
-        onReset={resetRecords}
-      />
-    </>
+      {records.length > 0 && (
+        <Pagination
+          total={records.length}
+          count={count}
+          changeCount={setCount}
+        />
+      )}
+    </div>
   );
 };

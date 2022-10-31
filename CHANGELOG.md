@@ -1,5 +1,63 @@
 # ctw-component-library
 
+## 0.20.0
+
+### Minor Changes
+
+- 03bbc94: - Created <CTWBox.\* /> components.
+  - Refactored <PatientMedications/> component into smaller parts so it can be used as a whole component or the inner pieces could be used individually. (which wasn't the case before).
+  - Created <Loading /> component and adding loading message to medications tables.
+
+## 0.19.5
+
+### Patch Changes
+
+- acc5077: Update the required fields display and read only content for the Edit/Add Condition forms.
+
+## 0.19.4
+
+### Patch Changes
+
+- ef8e767: Update the sort to sort by year first and move the records with no date to the bottom.
+
+## 0.19.3
+
+### Patch Changes
+
+- 3ecd695: Update the default sort for conditions table to primarily be last recorded date and then the condition name.
+- ad7a358: Fixed styling on the <Table /> component so it once again handles responsiveness.
+
+## 0.19.2
+
+### Patch Changes
+
+- 2be890a: Fixed pagination props and styling. Fixed a bug with pagination being wrong after editing records in the table.
+
+## 0.19.1
+
+### Patch Changes
+
+- d921eed: Fixed "add medication" request and removed tabs from the medications drawer
+
+## 0.19.0
+
+### Minor Changes
+
+- 9609302: Add way to display code based on order of preference by system, favoring enrichment. Fix bug around error message in condiiton not being descriptive.
+- fc3143b: Allow users to remove conditions from a patient's profile via the delete option from the dropdown menu. This will invoke a confirmation dialog to confirm the deletion of the FHIR resource.
+- e051dc9: Dedupe codes in history drawer by system, with enriched records being favored.
+
+### Patch Changes
+
+- f883412: Fix the bug that causes the Condition add/edit form to not recognize a selected condition name.
+- be8ce5b: Cleanup react specific errors from the console.
+- b4d462b: Update column header names for Patient Record and Other Provider Record tables.
+- cf61aa9: Sets verification status to active by default when user adds a condition from another provider, to match user intent.
+- bf1013e: Added a PatientMedications component which displays two tables, one with builder prescribed medications and another with all medications for a patient. Additionally there are two new hooks to support these components "useQueryPatientBuilderMeds" and "useQueryPatientLensMeds"
+- 1ec1eec: Update error handling to catch future date options and a couple visual style changes.
+- 04f91f1: Add word wrap to all cells in tables to avoid content spilling into other cells.
+- 7feddd3: Update verification and clinical status to map from level 2 codings to level 1 codings.
+
 ## 0.18.1
 
 ### Patch Changes

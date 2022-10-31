@@ -7,7 +7,7 @@ import {
   QUERY_KEY_PATIENT_CONDITIONS,
 } from "@/utils/query-keys";
 import { SearchParams } from "fhir-kit-client";
-import { sortBy } from "lodash";
+import { orderBy } from "lodash";
 import { CodePreference } from "./codeable-concept";
 import {
   flattenArrayFilters,
@@ -80,7 +80,7 @@ export function usePatientConditions(conditionFilters: ConditionFilters) {
           "Condition",
           requestContext,
           {
-            patientUPID: patient.UPID,
+            patientUPID: patient.UPID as string,
             ...flattenArrayFilters(conditionFilters),
           }
         );
@@ -104,7 +104,7 @@ export function useOtherProviderConditions() {
           "Condition",
           requestContext,
           {
-            patientUPID: patient.UPID,
+            patientUPID: patient.UPID as string,
           }
         );
         return filterAndSort(conditions);
@@ -129,7 +129,7 @@ export function useConditionHistory(condition?: ConditionModel) {
         );
 
         const searchParams: SearchParams = {
-          patientUPID: patient.UPID,
+          patientUPID: patient.UPID as string,
           _include: ["Condition:patient", "Condition:encounter"],
           "_include:iterate": "Patient:organization",
         };
@@ -163,10 +163,13 @@ export function useConditionHistory(condition?: ConditionModel) {
 }
 
 function filterAndSort(conditions: fhir4.Condition[]) {
-  return sortBy(
+  return orderBy(
     conditions.filter((condition) => condition.asserter?.type !== "Patient"),
-    (condition) => new ConditionModel(condition).ccsGrouping,
-    (condition) => new ConditionModel(condition).display
+    [
+      (condition) => new ConditionModel(condition).resource.recordedDate ?? "",
+      (condition) => new ConditionModel(condition).display,
+    ],
+    ["desc"]
   );
 }
 

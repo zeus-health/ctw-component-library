@@ -1,5 +1,5 @@
 import { useFormInputProps } from "@/utils/form-helper";
-import { InputHTMLAttributes } from "react";
+import { InputHTMLAttributes, ReactNode } from "react";
 import type { DrawerFormProps } from "./drawer-form";
 import { DrawerForm } from "./drawer-form";
 import { FormField } from "./form-field";
@@ -19,13 +19,17 @@ export type FormEntry = {
 
 export type DrawerFormWithFieldsProps<T> = {
   title: string;
+  header?: ReactNode;
   data: FormEntry[] | undefined;
   schema: Zod.AnyZodObject;
   patientID: string;
 } & Pick<DrawerFormProps<T>, "onClose" | "isOpen" | "action">;
 
+export type FormActionTypes = "Edit" | "Add";
+
 export const DrawerFormWithFields = <T,>({
   title,
+  header,
   data = [],
   schema,
   patientID,
@@ -43,56 +47,64 @@ export const DrawerFormWithFields = <T,>({
       {...drawerFormProps}
     >
       {(submitting, errors) => (
-        <div className="ctw-space-y-6">
-          {data.map(
-            ({ label, field, value, lines, readonly, hidden, render }) => {
-              const error = errors?.[field];
+        <div className="ctw-space-y-4">
+          {header}
+          <div className="ctw-space-y-6">
+            {data.map(
+              ({ label, field, value, lines, readonly, hidden, render }) => {
+                const error = errors?.[field];
 
-              if (hidden) {
+                if (hidden) {
+                  return (
+                    <FormField
+                      key={label}
+                      {...inputProps(field, schema)}
+                      lines={lines}
+                      disabled={submitting}
+                      readonly={readonly}
+                      defaultValue={value}
+                      error={error}
+                      hidden={hidden}
+                      render={render}
+                    />
+                  );
+                }
+
                 return (
-                  <FormField
+                  <div
                     key={label}
-                    {...inputProps(field, schema)}
-                    lines={lines}
-                    disabled={submitting}
-                    readonly={readonly}
-                    defaultValue={value}
-                    error={error}
-                    hidden={hidden}
-                    render={render}
-                  />
+                    className="ctw-space-y-1.5 ctw-text-sm ctw-font-medium ctw-text-content-black"
+                  >
+                    <div className="ctw-flex ctw-justify-between">
+                      <label>{label}</label>
+                      {inputProps(field)["aria-required"] && (
+                        <div className="ctw-flex-grow ctw-text-icon-default">
+                          *
+                        </div>
+                      )}
+                      {inputProps(field)["aria-required"] && (
+                        <span className="ctw-right-0 ctw-inline-block ctw-text-xs ctw-text-content-black">
+                          Required
+                        </span>
+                      )}
+                    </div>
+
+                    <FormField
+                      {...inputProps(field, schema)}
+                      lines={lines}
+                      key={label}
+                      disabled={submitting}
+                      readonly={readonly}
+                      defaultValue={value}
+                      error={error}
+                      hidden={hidden}
+                      render={render}
+                    />
+                  </div>
                 );
               }
-
-              return (
-                <div
-                  key={label}
-                  className="ctw-space-y-1.5 ctw-text-sm ctw-font-medium ctw-text-content-black"
-                >
-                  <div className="ctw-flex ctw-justify-between">
-                    <label>{label}</label>
-                    {!inputProps(field)["aria-required"] && (
-                      <span className="ctw-right-0 ctw-inline-block ctw-text-xs ctw-text-content-black">
-                        Optional
-                      </span>
-                    )}
-                  </div>
-
-                  <FormField
-                    {...inputProps(field, schema)}
-                    lines={lines}
-                    key={label}
-                    disabled={submitting}
-                    readonly={readonly}
-                    defaultValue={value}
-                    error={error}
-                    hidden={hidden}
-                    render={render}
-                  />
-                </div>
-              );
-            }
-          )}
+            )}
+          </div>
         </div>
       )}
     </DrawerForm>

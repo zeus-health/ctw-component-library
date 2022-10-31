@@ -92,12 +92,8 @@ export async function searchLensRecords<T extends ResourceTypeString>(
   requestContext: CTWRequestContext,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
-  const tagFilter = [
-    ...SUMMARY_TAGS,
-    `${SYSTEM_ZUS_OWNER}|builder/${requestContext.builderId}`,
-  ];
   const params = mergeParams(searchParams, {
-    _tag: tagFilter,
+    _tag: SUMMARY_TAGS,
   });
   return searchAllRecords(resourceType, requestContext, params);
 }

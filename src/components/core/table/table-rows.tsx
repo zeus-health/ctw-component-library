@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
+import cx from "classnames";
 import { Spinner } from "../spinner";
-
 import type { MinRecordItem, TableColumn } from "./table";
 import { TableDataCell } from "./table-data-cell";
 import { TableFullLengthRow } from "./table-full-length-row";
@@ -10,6 +10,7 @@ type TableRowsProps<T extends MinRecordItem> = {
   columns: TableColumn<T>[];
   isLoading: boolean;
   emptyMessage: string | ReactElement;
+  handleRowClick?: (record: T) => void;
 };
 
 export const TableRows = <T extends MinRecordItem>({
@@ -17,6 +18,7 @@ export const TableRows = <T extends MinRecordItem>({
   columns,
   isLoading,
   emptyMessage,
+  handleRowClick,
 }: TableRowsProps<T>) => {
   if (isLoading) {
     return (
@@ -40,7 +42,15 @@ export const TableRows = <T extends MinRecordItem>({
   return (
     <>
       {records.map((record) => (
-        <tr key={record.id}>
+        <tr
+          className={cx({
+            "ctw-cursor-pointer": typeof handleRowClick === "function",
+          })}
+          key={record.id}
+          onClick={() => {
+            if (handleRowClick) handleRowClick(record);
+          }}
+        >
           {columns.map((column, index) => (
             <TableDataCell
               key={column.title ?? index}
