@@ -104,7 +104,7 @@ export const createMedicationStatement = async (
     queryClient.invalidateQueries([queryKey]);
   });
 
-  return { formResult: result, requestErrors: requestErrors };
+  return { formResult: result, requestErrors };
 };
 
 export const getMedicationFormData = (
