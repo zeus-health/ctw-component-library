@@ -14,7 +14,6 @@ export type FormFieldProps = {
     readonly: boolean | undefined,
     props: InputHTMLAttributes<HTMLInputElement>
   ) => JSX.Element;
-  labels?: Record<string, string>;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 export const FormField = ({
