@@ -48,7 +48,11 @@ export function formatStringToDate(dateStr?: string): string | undefined {
 // Returns the ISO string (YYYY-MM-DD) for a given date.
 // We avoid using date-fn's format method to avoid timezone issues.
 export function dateToISO(date?: Date) {
-  if (date) return date.toISOString().split("T")[0];
+  if (date) {
+    return date.toISOString().split("T")[0];
+  }
+
+  return undefined;
 }
 
 // Takes a phone number of any format and returns it in 555-555-5555 format.
