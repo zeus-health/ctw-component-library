@@ -23,7 +23,6 @@ export type DrawerFormWithFieldsProps<T> = {
   data: FormEntry[] | undefined;
   schema: Zod.AnyZodObject;
   patientID: string;
-  labelsMap?: { [key: string]: Record<string, string> };
 } & Pick<DrawerFormProps<T>, "onClose" | "isOpen" | "action">;
 
 export type FormActionTypes = "Edit" | "Add";
