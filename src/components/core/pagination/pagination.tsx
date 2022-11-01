@@ -7,7 +7,7 @@ export type PaginationProps = {
 };
 
 export const Pagination = ({ total, count, changeCount }: PaginationProps) => {
-  const allShown = count === total || total === 0;
+  const allShown = count >= total || total === 0;
 
   return (
     <div className="ctw-pagination ctw-flex ctw-items-center ctw-justify-between ctw-px-6">

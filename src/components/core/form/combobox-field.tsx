@@ -6,6 +6,7 @@ export type ComboxboxFieldOption = { value: unknown; label: string };
 
 export type ComboboxFieldProps<T> = {
   options: ComboxboxFieldOption[];
+  isLoading: boolean;
   name: string;
   defaultValue: T;
   defaultSearchTerm: string;
@@ -15,6 +16,7 @@ export type ComboboxFieldProps<T> = {
 
 export const ComboboxField = <T,>({
   options,
+  isLoading,
   name,
   defaultSearchTerm,
   defaultValue,
@@ -54,6 +56,9 @@ export const ComboboxField = <T,>({
       <Combobox.Input
         className="ctw-listbox-input ctw-w-full"
         onChange={(e) => {
+          // Due to debounce, we have to persist the event.
+          // https://reactjs.org/docs/legacy-event-pooling.html
+          e.persist();
           debouncedSearchInputChange(e);
         }}
         placeholder="Type to search"
@@ -61,20 +66,33 @@ export const ComboboxField = <T,>({
 
       <input hidden name={name} value={inputValueParsed as string} readOnly />
       <Combobox.Options className="ctw-listbox ctw-max-h-60 ctw-overflow-auto ctw-rounded-md ctw-bg-white ctw-py-1 ctw-text-base ctw-shadow-lg ctw-ring-1 ctw-ring-opacity-5 focus:ctw-outline-none sm:ctw-text-sm">
-        <ComboboxOptions options={options} query={searchTerm} />
+        <ComboboxOptions
+          options={options}
+          query={searchTerm}
+          isLoading={isLoading}
+        />
       </Combobox.Options>
     </Combobox>
   );
 };
 
 type RenderCorrectOptionsProps = {
+  isLoading: boolean;
   options: ComboxboxFieldOption[];
   query: string;
 };
 
-const ComboboxOptions = ({ options, query }: RenderCorrectOptionsProps) => {
+const ComboboxOptions = ({
+  options,
+  query,
+  isLoading,
+}: RenderCorrectOptionsProps) => {
   if (query.length === 0) {
     return <ComboboxOption option={{ value: "", label: "Type to search" }} />;
+  }
+
+  if (isLoading) {
+    return <ComboboxOption option={{ value: "", label: "Loading..." }} />;
   }
 
   if (query.length < 2) {

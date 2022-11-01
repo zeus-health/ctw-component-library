@@ -130,6 +130,10 @@ export const createOrEditCondition = async (
     note: result.data.note ? [{ text: result.data.note }] : undefined,
   };
 
+  if (result.data.verificationStatus === "entered-in-error") {
+    fhirCondition.clinicalStatus = undefined;
+  }
+
   const response = await createOrEditFhirResource(
     fhirCondition,
     requestContext.fhirClient
