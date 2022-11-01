@@ -3,7 +3,6 @@ import {
   createMedicationStatement,
   getMedicationFormData,
   medicationStatementSchema,
-  MedicationStatusLabelsMap,
 } from "@/components/content/forms/medications";
 import { usePatient } from "@/components/core/patient-provider";
 import { MedicationStatementModel } from "@/models/medication-statement";
@@ -46,7 +45,6 @@ export const AddNewMedDrawer = ({ isOpen, handleOnClose, children }: Props) => {
         schema={medicationStatementSchema}
         isOpen={isOpen}
         onClose={() => handleOnClose()}
-        labelsMap={{ status: MedicationStatusLabelsMap }}
       />
     </>
   );
