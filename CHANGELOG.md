@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 0.20.1
+
+### Patch Changes
+
+- 393b17f: Fix condition autocomplete to work with proxied auth tokens.
+- 086caf8: Fix the condition form to let users set a condition's verification status to "entered-in-error".
+
 ## 0.20.0
 
 ### Minor Changes
