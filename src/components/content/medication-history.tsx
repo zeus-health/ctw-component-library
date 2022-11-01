@@ -89,6 +89,10 @@ function createMedicationDetailsCard(
     return createMedicationDispenseCard(medication);
   }
 
+  if (medication.resourceType === "MedicationAdministration") {
+    return createMedicationAdminCard(medication);
+  }
+
   throw new Error(
     `Unknown medication resource type "${medication.resourceType}"`
   );
@@ -158,5 +162,17 @@ function createMedicationDispenseCard(medication: MedicationModel) {
         ].join("\n"),
       },
     ],
+  };
+}
+
+function createMedicationAdminCard(medication: MedicationModel) {
+  const resource = medication.resource as fhir4.MedicationAdministration;
+
+  return {
+    id: medication.id,
+    date: format(new Date(medication.date || ""), "MM/dd/yyyy"),
+    hideEmpty: false,
+    title: "Medication Administered",
+    data: [],
   };
 }
