@@ -1,7 +1,6 @@
 import { compact } from "lodash/fp";
 import { getPerformingOrganization } from "@/fhir/medication";
 import type { ResourceMap } from "@/fhir/types";
-import { findReference } from "@/fhir/resource-helper";
 
 export class MedicationDispenseModel {
   readonly resource: fhir4.MedicationDispense;
@@ -31,7 +30,6 @@ export class MedicationDispenseModel {
   get performerDetails() {
     const { performer } = this;
     return {
-      foundPerformer: !!performer,
       name: performer?.name ?? "",
       address: performer?.address?.[0].text ?? "",
       telecom: performer?.telecom?.[0].value ?? "",
@@ -40,10 +38,6 @@ export class MedicationDispenseModel {
 
   get status(): string {
     return this.resource.status;
-  }
-
-  get dosageInstruction() {
-    return this.resource.dosageInstruction?.[0].text;
   }
 
   get quantityDisplay() {
@@ -57,19 +51,5 @@ export class MedicationDispenseModel {
       return "";
     }
     return `${value} ${unit}`;
-  }
-
-  // @todo it's possible we won't have med dispense requests and use an extension instead, but don't yet know what extension
-  get refillsRemaining(): number {
-    const list = Object.values(this.includedResources || {});
-
-    for (let i = 0; i < list.length; i += 1) {
-      const included = list[i];
-      if (included.resourceType === "MedicationDispenseRequest") {
-        const x = included as fhir4.MedicationRequestDispenseRequest;
-        return x.numberOfRepeatsAllowed || 0;
-      }
-    }
-    return 0;
   }
 }

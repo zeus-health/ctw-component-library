@@ -13,6 +13,12 @@ export type CollapsibleDataListProps = {
   title?: string;
   subTitle?: string;
   data: CollapsibleDataListEntry[];
+  hideEmpty?: boolean;
+};
+
+type DetailsProps = {
+  hideEmpty?: boolean;
+  data: CollapsibleDataListEntry[];
 };
 
 export const CollapsibleDataList = ({
@@ -21,6 +27,7 @@ export const CollapsibleDataList = ({
   title,
   subTitle,
   data,
+  hideEmpty,
 }: CollapsibleDataListProps) => {
   const [isDetailShown, setIsDetailShown] = useState(false);
 
@@ -33,7 +40,7 @@ export const CollapsibleDataList = ({
         isDetailShown={isDetailShown}
         setIsDetailShown={setIsDetailShown}
       />
-      {isDetailShown && <Details data={data} />}
+      {isDetailShown && <Details data={data} hideEmpty={hideEmpty} />}
     </div>
   );
 };
@@ -77,12 +84,14 @@ const DetailSummary = ({
   </button>
 );
 
-const Details = ({ data }: { data: CollapsibleDataListEntry[] }) => (
+const Details = ({ data, hideEmpty = true }: DetailsProps) => (
   <div className="ctw-rounded-lg ctw-bg-bg-lighter">
     <dl className="ctw-space-y-2 ctw-p-4">
-      <div className="ctw-text-sm ctw-text-content-light">Details</div>
+      <div className="ctw-text-sm ctw-uppercase ctw-text-content-light">
+        Details
+      </div>
       {data
-        .filter((d) => d.value || d.value === 0)
+        .filter((d) => !hideEmpty || d.value || d.value === 0)
         .map(({ label, value }) => (
           <div
             key={label}
