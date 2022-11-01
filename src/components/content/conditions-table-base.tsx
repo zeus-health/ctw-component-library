@@ -32,8 +32,16 @@ export function ConditionsTableBase({
       minWidth: 192,
     },
     {
-      title: "Latest Status",
-      dataIndex: "clinicalStatus",
+      title: "Status",
+      render: (row) => (
+        <div className="ctw-capitalize">
+          {row.clinicalStatus}
+          <br />
+          <span className="ctw-text-content-lighter">
+            {row.verificationStatus}
+          </span>
+        </div>
+      ),
       widthPercent: 17.5,
       minWidth: 128,
     },
