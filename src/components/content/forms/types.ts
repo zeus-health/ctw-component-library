@@ -1,3 +1,21 @@
 export type ActionReturn<T> =
   | { success: true | false; data: T; errors: undefined }
   | { success: false; data: undefined; errors: { [key: string]: string } };
+
+export type MedicationFormData = {
+  note?: string | undefined;
+  subjectID: string;
+  updatedBy: string;
+  dateAsserted: Date;
+  display: string;
+  rxNorm: string;
+  status:
+    | "active"
+    | "completed"
+    | "entered-in-error"
+    | "intended"
+    | "stopped"
+    | "on-hold"
+    | "unknown"
+    | "not-taken";
+};

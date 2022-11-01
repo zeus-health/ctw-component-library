@@ -15,7 +15,7 @@ import {
 import { queryClient } from "@/utils/request";
 import { z } from "zod";
 import type { FormEntry } from "./drawer-form-with-fields";
-import { ActionReturn } from "./types";
+import { ActionReturn, MedicationFormData } from "./types";
 
 export const medicationStatementSchema = z.object({
   subjectID: z.string({ required_error: "Patient must be specified." }),
@@ -49,7 +49,7 @@ export const createMedicationStatement = async (
   patientID: string,
   getRequestContext: () => Promise<CTWRequestContext>
 ): Promise<{
-  formResult: ActionReturn<any>;
+  formResult: ActionReturn<MedicationFormData>;
   requestErrors: string[] | undefined;
 }> => {
   const result = await getFormData(data, medicationStatementSchema);
