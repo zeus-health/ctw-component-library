@@ -178,7 +178,7 @@ export const filterConditionsWithConfirmedCodes = (
   confirmedCodes: fhir4.Coding[]
 ) =>
   target.filter((c) => {
-    const conditionModel: ConditionModel = new ConditionModel(c);
+    const conditionModel = new ConditionModel(c);
 
     return !confirmedCodes.some((code) =>
       conditionModel.knownCodings.some(

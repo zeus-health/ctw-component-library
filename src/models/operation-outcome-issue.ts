@@ -1,11 +1,5 @@
 import { codeableConceptLabel } from "@/fhir/codeable-concept";
 
-export type OperationOutcomeIssueSeverity =
-  | "error"
-  | "fatal"
-  | "warning"
-  | "information";
-
 export class OperationOutcomeIssueModel {
   public resource: fhir4.OperationOutcomeIssue;
 
@@ -21,7 +15,7 @@ export class OperationOutcomeIssueModel {
     );
   }
 
-  get severity(): OperationOutcomeIssueSeverity {
+  get severity(): fhir4.OperationOutcomeIssue["severity"] {
     return this.resource.severity;
   }
 }

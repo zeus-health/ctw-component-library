@@ -15,7 +15,7 @@ export async function createOrEditFhirResource(
       });
     }
     return await fhirClient.create({
-      resourceType: "foo",
+      resourceType: resource.resourceType,
       body: omitEmptyArrays(resource),
     });
   } catch (err) {
