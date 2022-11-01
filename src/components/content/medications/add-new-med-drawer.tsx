@@ -28,11 +28,6 @@ export const AddNewMedDrawer = ({ isOpen, handleOnClose, children }: Props) => {
         display: patient.data?.display,
       },
       dateAsserted: format(new Date(), "yyyy-MM-dd"),
-      informationSource: {
-        type: "Organization",
-        reference: `Organization/${patient.data?.organization?.id}`,
-        display: patient.data?.organization?.name,
-      },
     })
   );
 

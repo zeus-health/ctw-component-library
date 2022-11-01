@@ -1,7 +1,7 @@
 import { formatDateLocalToISO } from "@/fhir/formatters";
 import { ExclamationCircleIcon, LockClosedIcon } from "@heroicons/react/solid";
 import cx from "classnames";
-import { capitalize } from "lodash";
+import { startCase } from "lodash";
 import type { InputHTMLAttributes } from "react";
 
 export type FormFieldProps = {
@@ -25,7 +25,6 @@ export const FormField = ({
   readonly,
   hidden,
   render,
-  labels = {},
   ...inputProps
 }: FormFieldProps) => {
   // We display dates in MM/DD/YYYY format, but date input fields
@@ -49,14 +48,11 @@ export const FormField = ({
           disabled={inputProps.disabled}
           defaultValue={value}
         >
-          {options.map((option) => {
-            const display = labels[option] || option;
-            return (
-              <option value={option} key={option}>
-                {capitalize(display)}
-              </option>
-            );
-          })}
+          {options.map((option) => (
+            <option value={option} key={option}>
+              {startCase(option)}
+            </option>
+          ))}
         </select>
       );
     }
