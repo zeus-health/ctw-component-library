@@ -1,7 +1,7 @@
 import { formatDateLocalToISO } from "@/fhir/formatters";
 import { ExclamationCircleIcon, LockClosedIcon } from "@heroicons/react/solid";
 import cx from "classnames";
-import { capitalize } from "lodash";
+import { startCase } from "lodash";
 import type { InputHTMLAttributes } from "react";
 
 export type FormFieldProps = {
@@ -52,7 +52,7 @@ export const FormField = ({
         >
           {options.map((option) => (
             <option value={option} key={option}>
-              {capitalize(option)}
+              {startCase(option)}
             </option>
           ))}
         </select>
