@@ -1,4 +1,4 @@
-import { ExclamationIcon } from "@heroicons/react/solid";
+import { ExclamationCircleIcon, ExclamationIcon } from "@heroicons/react/solid";
 import cx from "classnames";
 import { ReactNode } from "react";
 
@@ -12,7 +12,7 @@ export type AlertProps = {
 
 export const ErrorAlert = ({ header, children, className }: AlertProps) => (
   <div className={cx("ctw-alert-bg ctw-rounded-md ctw-bg-error-bg", className)}>
-    <ExclamationIcon className="ctw-h-5 ctw-flex-none ctw-text-error-icon" />
+    <ExclamationCircleIcon className="ctw-h-5 ctw-flex-none ctw-text-error-icon" />
     <div className="ctw-space-y-2">
       <div className="ctw-font-medium ctw-text-error-heading">{header}</div>
       {children && <div className="ctw-text-error-message">{children}</div>}
