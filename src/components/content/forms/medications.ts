@@ -33,18 +33,6 @@ export const medicationStatementSchema = z.object({
   ]),
 });
 
-// Hardcoded sentence-cased display statuses for MedicationStatements.
-export const MedicationStatusLabelsMap = {
-  active: "Active",
-  completed: "Completed",
-  "entered-in-error": "Entered in error",
-  intended: "Intended",
-  "not-taken": "Not taken",
-  "on-hold": "On hold",
-  stopped: "Stopped",
-  unknown: "Unknown",
-};
-
 const QUERY_KEYS = [
   QUERY_KEY_PATIENT,
   QUERY_KEY_PATIENT_MEDICATIONS,
