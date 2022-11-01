@@ -4,11 +4,11 @@ export type ActionReturn<T> =
 
 export type MedicationFormData = {
   note?: string | undefined;
+  display?: string | undefined;
+  dosage?: string | undefined;
   subjectID: string;
-  updatedBy: string;
   dateAsserted: Date;
-  display: string;
-  rxNorm: string;
+  rxNormCode: string;
   status:
     | "active"
     | "completed"
