@@ -35,10 +35,10 @@ export function ConditionsTableBase({
       title: "Status",
       render: (condition) => (
         <div className="ctw-capitalize">
-          <p className="ctw-m-0">{condition.clinicalStatus}</p>
-          <p className="ctw-m-0 ctw-text-content-lighter">
-            {condition.verificationStatus}
-          </p>
+          <div className="ctw-text-content-black">
+            {condition.clinicalStatus}
+          </div>
+          <div>{condition.verificationStatus}</div>
         </div>
       ),
       widthPercent: 17.5,

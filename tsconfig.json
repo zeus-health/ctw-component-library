@@ -22,11 +22,5 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src", "scripts"],
-  "exclude": [
-    "src/main.tsx",
-    "src/App.tsx",
-    "src/SecuredApp.tsx",
-    "src/error-boundary.tsx"
-  ]
+  "include": ["src", "scripts"]
 }
