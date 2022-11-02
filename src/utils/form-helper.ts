@@ -17,10 +17,11 @@ import Zod, {
   ZodObject,
   ZodOptional,
   ZodString,
-  ZodType,
   ZodTypeAny,
   ZodUnknown,
 } from "zod";
+
+export type AnyZodSchema = Zod.AnyZodObject | ZodEffects<any, any, any>;
 
 export function parseParams(o: any, schema: any, key: string, value: any) {
   // find actual shape definition for this key
@@ -173,7 +174,7 @@ export function getParamsInternal<T>(
   return { success: false, data: undefined, errors };
 }
 
-export async function getFormData<T extends ZodType<any, any, any>>(
+export async function getFormData<T extends AnyZodSchema>(
   data: FormData,
   schema: T,
   refinement?: (condition: ConditionModel, ctx: RefinementCtx) => void
@@ -206,7 +207,9 @@ export type InputPropType = {
   options?: string[] | undefined;
 };
 
-export function useFormInputProps(schema: any, options: any = {}) {
+export function useFormInputProps(zodThing: AnyZodSchema, options: any = {}) {
+  const schema =
+    zodThing instanceof ZodEffects ? zodThing._def.schema : zodThing;
   const { shape } = schema;
   const defaultOptions = options;
   return function props(key: string, options: any = {}) {
