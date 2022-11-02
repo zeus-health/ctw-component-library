@@ -180,10 +180,14 @@ export class MedicationStatementModel {
       ?.valueUnsignedInt?.toString();
   }
 
-  // TODO - need to implement to complete CTW-480
-  // get prescriber(): string | undefined {
-  //   return undefined;
-  // }
+  // TODO - this should actually resolve the reference, not just use the display!
+  get lastPrescriber(): string | undefined {
+    return formatDateISOToLocal(
+      this.resource.extension?.find(
+        (x) => x.url === LENS_EXTENSION_MEDICATION_LAST_PRESCRIBED_DATE
+      )?.valueReference?.display
+    );
+  }
 
   get lastPrescribedDate(): string | undefined {
     return formatDateISOToLocal(

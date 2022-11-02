@@ -56,7 +56,7 @@ export const MedicationsTableBase = ({
           {medication.lastPrescribedDate && (
             <div>{medication.lastPrescribedDate}</div>
           )}
-          {/* TODO: add prescriber */}
+          {medication.lastPrescriber && <div>{medication.lastPrescriber}</div>}
         </>
       ),
     },

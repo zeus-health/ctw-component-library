@@ -19,8 +19,7 @@ function getDataEntriesFromMedicationStatement(
         { label: "Days Supply", value: medication.daysSupply },
         { label: "Refills", value: medication.refills },
         { label: "Instructions", value: medication.dosage },
-        // TODO - need to add this per designs but do not have details yet on how it will be stored
-        // { label: "Prescriber", value: undefined },
+        { label: "Prescriber", value: medication.lastPrescriber },
         { label: "Last Prescribed Date", value: medication.lastPrescribedDate },
         ...entryFromArray("Note", medication.notesDisplay),
       ]
