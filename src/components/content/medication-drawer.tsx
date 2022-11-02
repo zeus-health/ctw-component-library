@@ -34,9 +34,7 @@ export const MedicationDrawer = ({
             <span className="ctw-text-3xl">{medication?.display || ""}</span>
           </div>
           <DataList title="Details" data={data} />
-          {medication?.rxNorm && (
-            <MedicationHistory rxNorm={medication.rxNorm} />
-          )}
+          {medication?.rxNorm && <MedicationHistory medication={medication} />}
         </div>
       </Drawer.Body>
       <Drawer.Footer>

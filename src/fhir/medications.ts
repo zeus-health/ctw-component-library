@@ -1,4 +1,4 @@
-import { omit } from "lodash/fp";
+import { omit, map, pipe, compact, mapValues, groupBy, get } from "lodash/fp";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { MedicationModel } from "@/models/medication";
 import { PatientModel } from "@/models/patients";
@@ -8,8 +8,8 @@ import type { FhirResource, MedicationStatement } from "fhir/r4";
 import { bundleToResourceMap, getMergedIncludedResources } from "./bundle";
 import { getRxNormCode } from "./medication";
 import {
+  searchAllRecords,
   searchBuilderRecords,
-  searchCommonRecords,
   searchLensRecords,
   SearchReturn,
 } from "./search-helpers";
@@ -127,10 +127,16 @@ export function filterMedicationsWithNoRxNorms(
   return medications.filter((m) => getRxNormCode(m, resourceMap) !== undefined);
 }
 
-export function useMedicationHistory(rxNorm: string) {
+export function useMedicationHistory(medication: fhir4.MedicationStatement) {
+  const resources = pipe(
+    groupBy(get("type")),
+    mapValues(map(get("reference"))),
+    mapValues(map((x) => x.split("/").pop()))
+  )(medication.derivedFrom);
+
   return useQueryWithPatient(
     QUERY_KEY_MEDICATION_HISTORY,
-    [rxNorm],
+    [medication.id],
     async (requestContext, patient) => {
       try {
         const [
@@ -142,69 +148,71 @@ export function useMedicationHistory(rxNorm: string) {
           searchWrapper(
             "MedicationStatement",
             requestContext,
-            patient.UPID as string
+            resources.MedicationStatement
           ),
           searchWrapper(
             "MedicationAdministration",
             requestContext,
-            patient.UPID as string
+            resources.MedicationAdministration
           ),
           searchWrapper(
             "MedicationRequest",
             requestContext,
-            patient.UPID as string
+            resources.MedicationRequest
           ),
           searchWrapper(
             "MedicationDispense",
             requestContext,
-            patient.UPID as string
+            resources.MedicationDispense,
+            ["MedicationDispense:performer"]
           ),
         ]);
 
-        let medicationResources = [
+        const includedResources = getMergedIncludedResources(
+          compact([
+            medicationStatementResponse.bundle,
+            medicationAdministrationResponse.bundle,
+            medicationRequestResponse.bundle,
+            medicationDispenseResponse.bundle,
+          ])
+        );
+
+        const medicationResources = compact([
           ...medicationStatementResponse.resources,
           ...medicationAdministrationResponse.resources,
           ...medicationRequestResponse.resources,
           ...medicationDispenseResponse.resources,
-        ];
+        ]).map((m) => new MedicationModel(m, includedResources));
 
-        const includedResources = getMergedIncludedResources([
-          medicationStatementResponse.bundle,
-          medicationAdministrationResponse.bundle,
-          medicationRequestResponse.bundle,
-          medicationDispenseResponse.bundle,
-        ]);
-
-        medicationResources = medicationResources.filter(
-          (medication) =>
-            getRxNormCode(medication, includedResources) === rxNorm
-        );
-
-        const medications = sort(
-          medicationResources,
-          (m) => new MedicationModel(m).date,
-          "desc",
-          true
-        );
+        const medications = sort(medicationResources, "date", "desc", true);
 
         return { medications, includedResources };
       } catch (e) {
         throw new Error(
-          `Failed fetching medication history for RxNorm ${rxNorm}: ${e}`
+          `Failed fetching medication history for medication ${medication.id}: ${e}`
         );
       }
     }
   );
 }
 
+type NoopSearchResults = { resources: []; bundle: undefined };
 function searchWrapper<T extends ResourceTypeString>(
   resourceType: T,
   requestContext: CTWRequestContext,
-  patientUPID: string
-): Promise<SearchReturn<T>> {
-  return searchCommonRecords(resourceType, requestContext, {
-    patientUPID,
-    _include: [`${resourceType}:patient`, `${resourceType}:medication`],
-    "_include:iterate": "Patient:organization",
-  });
+  ids: string[] = [],
+  included: string[] = []
+): Promise<SearchReturn<T>> | NoopSearchResults {
+  if (ids.length > 0) {
+    return searchAllRecords(resourceType, requestContext, {
+      _id: ids.join(","),
+      _include: [
+        `${resourceType}:patient`,
+        `${resourceType}:medication`,
+        ...included,
+      ],
+      "_include:iterate": "Patient:organization",
+    });
+  }
+  return { resources: [], bundle: undefined };
 }

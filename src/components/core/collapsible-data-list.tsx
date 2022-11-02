@@ -1,6 +1,7 @@
 import { ChevronRightIcon } from "@heroicons/react/outline";
 import cx from "classnames";
 import { ReactNode, useState } from "react";
+import "./collapsible-data-list.scss";
 
 export type CollapsibleDataListEntry = {
   label: string;
@@ -32,7 +33,7 @@ export const CollapsibleDataList = ({
   const [isDetailShown, setIsDetailShown] = useState(false);
 
   return (
-    <div className="ctw-space-y-3">
+    <div className="ctw-collapsible-data-list ctw-space-y-1">
       <DetailSummary
         date={date}
         title={title}
@@ -63,7 +64,7 @@ const DetailSummary = ({
     onClick={() => setIsDetailShown(!isDetailShown)}
     className="ctw-w-full ctw-cursor-pointer ctw-border-none ctw-bg-transparent ctw-p-0 ctw-text-base ctw-outline-none"
   >
-    <div className="ctw-flex ctw-items-center ctw-justify-between ctw-rounded-lg ctw-bg-bg-lighter ctw-p-3 ctw-text-left">
+    <div className="ctw-flex ctw-items-center ctw-justify-between ctw-rounded-lg ctw-bg-bg-white ctw-p-3 ctw-text-left ctw-outline ctw-outline-bg-dark">
       <div className="ctw-flex ctw-space-x-3">
         {date && <div className="ctw-min-w-[5rem]">{date}</div>}
         <div>

@@ -12,12 +12,12 @@ import { format } from "date-fns";
 const MEDICATION_HISTORY_LIMIT = 10;
 
 export type MedicationHistoryProps = {
-  rxNorm: string;
+  medication: MedicationStatementModel;
 };
 
-export function MedicationHistory({ rxNorm }: MedicationHistoryProps) {
+export function MedicationHistory({ medication }: MedicationHistoryProps) {
   const [entries, setEntries] = useState<CollapsibleDataListProps[]>([]);
-  const medHistoryQuery = useMedicationHistory(rxNorm);
+  const medHistoryQuery = useMedicationHistory(medication.resource);
   const loading = medHistoryQuery.isLoading;
 
   useEffect(() => {
@@ -60,7 +60,8 @@ function createMedicationStatementCard(medication: MedicationModel) {
     id: medication.id,
     title: "Medication Reviewed",
     hideEmpty: false,
-    subTitle: medStatement.informationSourceDisplay,
+    // @todo Get the practitioners name
+    subTitle: "",
     data: [
       {
         label: "Status",
@@ -75,9 +76,8 @@ function createMedicationStatementCard(medication: MedicationModel) {
 }
 
 function createMedicationDetailsCard(
-  med: Medication
+  medication: MedicationModel
 ): CollapsibleDataListProps {
-  const medication = new MedicationModel(med);
   if (medication.resourceType === "MedicationStatement") {
     return createMedicationStatementCard(medication);
   }
@@ -100,11 +100,10 @@ function createMedicationDetailsCard(
 
 function createMedicationRequestCard(medication: MedicationModel) {
   const resource = medication.resource as fhir4.MedicationRequest;
-  // @todo: For prescriber & pharmacy tell ODS to include more info in request
   const prescriber = resource.requester?.display || "";
   const pharmacy = resource.dispenseRequest?.performer?.display || "";
 
-  const { numberOfRepeatsAllowed, initialFill } =
+  const { numberOfRepeatsAllowed = "", initialFill } =
     resource.dispenseRequest || {};
   const { value = "", unit = "" } = initialFill?.quantity || {};
 
@@ -118,7 +117,7 @@ function createMedicationRequestCard(medication: MedicationModel) {
       { label: "Quantity", value: [value, unit].join(" ") },
       {
         label: "Refills Allowed",
-        value: resource.dispenseRequest?.numberOfRepeatsAllowed || "",
+        value: numberOfRepeatsAllowed,
       },
       {
         label: "Instructions",
@@ -141,7 +140,7 @@ function createMedicationDispenseCard(medication: MedicationModel) {
   );
 
   const { quantityDisplay, supplied, performerDetails } = medDispense;
-
+  const { name, address, telecom } = performerDetails;
   return {
     date: format(new Date(medication.date || ""), "MM/dd/yyyy"),
     hideEmpty: false,
@@ -155,19 +154,19 @@ function createMedicationDispenseCard(medication: MedicationModel) {
       },
       {
         label: "Pharmacy",
-        value: [
-          performerDetails.name,
-          performerDetails.address,
-          performerDetails.telecom ? `T: ${performerDetails.telecom}` : "",
-        ].join("\n"),
+        value: (
+          <>
+            {name && <div>{name}</div>}
+            {address && <div>{address}</div>}
+            {telecom && <div>T: {telecom}</div>}
+          </>
+        ),
       },
     ],
   };
 }
 
 function createMedicationAdminCard(medication: MedicationModel) {
-  const resource = medication.resource as fhir4.MedicationAdministration;
-
   return {
     id: medication.id,
     date: format(new Date(medication.date || ""), "MM/dd/yyyy"),

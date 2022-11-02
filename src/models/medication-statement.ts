@@ -81,13 +81,6 @@ export class MedicationStatementModel {
     return this.resource.identifier?.[0]?.value;
   }
 
-  get informationSourceDisplay(): string {
-    const { informationSource } = this.resource;
-    return informationSource
-      ? `${informationSource.display}, ${informationSource.type}`
-      : "";
-  }
-
   get informationSource(): Reference | undefined {
     return this.resource.informationSource || undefined;
   }

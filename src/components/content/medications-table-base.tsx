@@ -29,7 +29,7 @@ export const MedicationsTableBase = ({
   const columns = compact([
     {
       title: "Medication Name",
-      render: (medication: MedicationStatementModel) => (
+      render: (medication) => (
         <>
           <div className="ctw-font-medium">{medication.display}</div>
           <div className="ctw-font-light">{medication.dosage}</div>
@@ -41,7 +41,7 @@ export const MedicationsTableBase = ({
   if (!hideMenu && isFunction(rowActions)) {
     columns.push({
       className: "ctw-table-action-column",
-      render: (medication: MedicationStatementModel) => (
+      render: (medication) => (
         <DropdownMenu menuItems={rowActions(medication)}>
           <DotsHorizontalIcon className="ctw-w-5" />
         </DropdownMenu>
