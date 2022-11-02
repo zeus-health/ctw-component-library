@@ -206,7 +206,9 @@ export type InputPropType = {
   options?: string[] | undefined;
 };
 
-export function useFormInputProps(schema: any, options: any = {}) {
+export function useFormInputProps(zodThing: any, options: any = {}) {
+  const schema =
+    zodThing instanceof ZodEffects ? zodThing._def.schema : zodThing;
   const { shape } = schema;
   const defaultOptions = options;
   return function props(key: string, options: any = {}) {

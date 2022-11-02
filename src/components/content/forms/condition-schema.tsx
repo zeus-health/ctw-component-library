@@ -80,7 +80,7 @@ const sharedSchema = {
   subjectID: z.string({
     required_error: "Condition subjectID must be specified.",
   }),
-  clinicalStatus: z.enum(["active", "inactive"]),
+  clinicalStatus: z.enum(["active", "inactive"]).superRefine((v, ctx) => {}),
   onset: z
     .date()
     .max(new Date(), { message: "Onset cannot be a future date." })
@@ -98,10 +98,30 @@ const sharedSchema = {
   note: z.string().optional(),
 };
 
-export const conditionEditSchema = z.object({
-  ...sharedSchema,
-  condition: z.unknown(),
-});
+export const conditionEditSchema = z
+  .object({
+    ...sharedSchema,
+  })
+  .superRefine((condition, refinementCtx) => {
+    if (condition.abatement && condition.clinicalStatus === "active") {
+      refinementCtx.addIssue({
+        code: Zod.ZodIssueCode.custom,
+        message: "Condition cannot be active if abated.",
+        path: ["clinicalStatus"],
+      });
+    }
+    if (
+      condition.abatement &&
+      condition.onset &&
+      condition.abatement < condition.onset
+    ) {
+      refinementCtx.addIssue({
+        code: Zod.ZodIssueCode.custom,
+        message: "Abatement cannot happen before onset.",
+        path: ["abatement"],
+      });
+    }
+  });
 
 export const conditionAddSchema = z.object({
   ...sharedSchema,
@@ -119,6 +139,30 @@ export const conditionAddSchema = z.object({
 });
 
 export const conditionRefinement = (
+  condition: ConditionModel,
+  ctx: RefinementCtx
+) => {
+  // if (condition.abatement && condition.clinicalStatus === "active") {
+  //   ctx.addIssue({
+  //     code: Zod.ZodIssueCode.custom,
+  //     message: "Condition cannot be active if abated.",
+  //     path: ["clinicalStatus"],
+  //   });
+  // }
+  // if (
+  //   condition.abatement &&
+  //   condition.onset &&
+  //   condition.abatement < condition.onset
+  // ) {
+  //   ctx.addIssue({
+  //     code: Zod.ZodIssueCode.custom,
+  //     message: "Abatement cannot happen before onset.",
+  //     path: ["abatement"],
+  //   });
+  // }
+};
+
+export const conditionRefinement2 = (
   condition: ConditionModel,
   ctx: RefinementCtx
 ) => {
