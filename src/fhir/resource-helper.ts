@@ -24,7 +24,7 @@ export function findReference<T extends ResourceTypeString>(
 
   if (
     includedResources &&
-    includedResources[reference].resourceType === resourceType
+    includedResources[reference]?.resourceType === resourceType
   ) {
     return includedResources[reference] as ResourceType<T>;
   }
