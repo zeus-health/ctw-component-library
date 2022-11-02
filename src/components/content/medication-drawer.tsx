@@ -15,7 +15,13 @@ function getDataEntriesFromMedicationStatement(
   return medication
     ? [
         { label: "Status", value: medication.status },
-        { label: "Dosage", value: medication.dosage },
+        { label: "Last Fill Date", value: medication.lastFillDate },
+        { label: "Quantity", value: medication.quantity },
+        { label: "Days Supply", value: medication.daysSupply },
+        { label: "Refills", value: medication.refills },
+        { label: "Instructions", value: medication.dosage },
+        { label: "Prescriber", value: medication.lastPrescriber },
+        { label: "Last Prescribed Date", value: medication.lastPrescribedDate },
         ...entryFromArray("Note", medication.notesDisplay),
       ]
     : [];
@@ -27,7 +33,7 @@ export const MedicationDrawer = ({
 }: MedicationDrawerProps) => {
   const data = getDataEntriesFromMedicationStatement(medication);
   return (
-    <Drawer title="Medication Details" {...drawerProps}>
+    <Drawer title="Medication History" {...drawerProps}>
       <Drawer.Body>
         <div className="ctw-space-y-7">
           <div className="ctw-flex ctw-justify-between ctw-space-x-8">

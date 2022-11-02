@@ -1,3 +1,4 @@
+import { Loading } from "@/components/core/loading";
 import { getIncludedResources } from "@/fhir/bundle";
 import { useConditionHistory } from "@/fhir/conditions";
 import { ConditionModel } from "@/models/condition";
@@ -5,17 +6,21 @@ import { orderBy } from "lodash";
 import { useEffect, useState } from "react";
 import { CodingList } from "../core/coding-list";
 import { CollapsibleDataListProps } from "../core/collapsible-data-list";
-import { Loading } from "@/components/core/loading";
 import {
   CollapsibleDataListStack,
   CollapsibleDataListStackEntries,
 } from "../core/collapsible-data-list-stack";
+import { NotesList } from "../core/notes-list";
 import { ConditionHeader } from "./condition-header";
 
 const CONDITION_HISTORY_LIMIT = 10;
 
 function setupData(condition: ConditionModel): CollapsibleDataListProps {
   const detailData = [
+    {
+      label: "Recorder",
+      value: condition.recorder,
+    },
     {
       label: "Clinical Status",
       value: condition.clinicalStatus,
@@ -31,6 +36,12 @@ function setupData(condition: ConditionModel): CollapsibleDataListProps {
     {
       label: "Category",
       value: condition.categories[0],
+    },
+    {
+      label: "Note",
+      value: condition.notes.length !== 0 && (
+        <NotesList notes={condition.notes} />
+      ),
     },
     {
       label: "Code",

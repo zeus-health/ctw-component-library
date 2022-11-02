@@ -6,16 +6,16 @@ import { errorResponse } from "@/utils/errors";
 import { sort } from "@/utils/sort";
 import type { FhirResource, MedicationStatement } from "fhir/r4";
 import { bundleToResourceMap, getMergedIncludedResources } from "./bundle";
-import { getRxNormCode } from "./medication";
+import { getIdentifyingRxNormCode } from "./medication";
 import {
   searchAllRecords,
   searchBuilderRecords,
   searchLensRecords,
   SearchReturn,
 } from "./search-helpers";
-import { ResourceTypeString } from "./types";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
 import { QUERY_KEY_MEDICATION_HISTORY } from "@/utils/query-keys";
+import { ResourceTypeString, ResourceMap } from "./types";
 
 export type InformationSource =
   | "Patient"
@@ -92,7 +92,7 @@ export async function getBuilderMedications(
 }
 
 /* Note when filtering the bundle may contain data that will no longer be in the returned medications. */
-export async function getPatientLensMedications(
+export async function getSummaryMedications(
   requestContext: CTWRequestContext,
   patient: PatientModel,
   keys = []
@@ -124,7 +124,36 @@ export function filterMedicationsWithNoRxNorms(
   bundle: FhirResource
 ) {
   const resourceMap = bundleToResourceMap(bundle);
-  return medications.filter((m) => getRxNormCode(m, resourceMap) !== undefined);
+  return medications.filter(
+    (m) => getIdentifyingRxNormCode(m, resourceMap) !== undefined
+  );
+}
+
+// Splits summarized medications into those that the builder already knows about ("Provider Medications")
+// and those that they do not know about ("Other Provider Medications").
+export function splitSummarizedMedications(
+  summarizedMedications: MedicationStatement[],
+  builderOwnedMedications: MedicationStatement[],
+  includedResources?: ResourceMap
+) {
+  const builderMedications: MedicationStatement[] = [];
+  const otherProviderMedications: MedicationStatement[] = [];
+  const splitData = summarizedMedications.reduce(
+    (sd, summaryMed) => {
+      sd[
+        builderOwnedMedications.some(
+          (builderMed) =>
+            getIdentifyingRxNormCode(builderMed, includedResources) ===
+            getIdentifyingRxNormCode(summaryMed, includedResources)
+        )
+          ? "builderMedications"
+          : "otherProviderMedications"
+      ].push(summaryMed);
+      return sd;
+    },
+    { builderMedications, otherProviderMedications }
+  );
+  return splitData;
 }
 
 export function useMedicationHistory(medication: fhir4.MedicationStatement) {

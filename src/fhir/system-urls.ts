@@ -43,15 +43,15 @@ export const SYSTEM_ZUS_UNIVERSAL_ID =
 export const SYSTEM_ZUS_UPI_RECORD_TYPE =
   "https://zusapi.com/fhir/tag/upi-record-type";
 export const SYSTEM_ZUS_USER_TYPE = "https://zusapi.com/user_type";
-export const SYSTEM_ZUS_MED_LAST_FILL_DATE =
+export const LENS_EXTENSION_MEDICATION_LAST_FILL_DATE =
   "https://zusapi.com/lens/extension/medicationLastFillDate";
-export const SYSTEM_ZUS_MED_LAST_PRESCRIBED_DATE =
+export const LENS_EXTENSION_MEDICATION_LAST_PRESCRIBED_DATE =
   "https://zusapi.com/lens/extension/medicationLastPrescribedDate";
-export const SYSTEM_ZUS_MED_QUANTITY =
+export const LENS_EXTENSION_MEDICATION_QUANTITY =
   "https://zusapi.com/lens/extension/medicationQuantity";
-export const SYSTEM_ZUS_MED_DAYS_SUPPLY =
+export const LENS_EXTENSION_MEDICATION_DAYS_SUPPLY =
   "https://zusapi.com/lens/extension/medicationDaysSupply";
-export const SYSTEM_ZUS_MED_REFILLS =
+export const LENS_EXTENSION_MEDICATION_REFILLS =
   "https://zusapi.com/lens/extension/medicationRefills";
-export const SYSTEM_ZUS_MED_PRESCRIBER =
+export const LENS_EXTENSION_MEDICATION_LAST_PRESCRIBER =
   "https://zusapi.com/lens/extension/medicationLastPrescriber";

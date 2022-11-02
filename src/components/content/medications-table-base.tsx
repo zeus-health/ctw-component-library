@@ -1,11 +1,11 @@
-import { ReactNode, useRef } from "react";
-import { compact, isFunction } from "lodash/fp";
+import { DropdownMenu, MenuItems } from "@/components/core/dropdown-menu";
 import type { MinRecordItem, TableColumn } from "@/components/core/table/table";
 import { Table, TableBaseProps } from "@/components/core/table/table";
-import type { MedicationStatementModel } from "@/models/medication-statement";
-import { DropdownMenu, MenuItems } from "@/components/core/dropdown-menu";
-import { DotsHorizontalIcon } from "@heroicons/react/outline";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
+import type { MedicationStatementModel } from "@/models/medication-statement";
+import { DotsHorizontalIcon } from "@heroicons/react/outline";
+import { compact, isFunction } from "lodash/fp";
+import { ReactNode, useRef } from "react";
 
 export type MedicationsTableBaseProps<T extends MinRecordItem> = {
   medicationStatements: MedicationStatementModel[];
@@ -33,6 +33,30 @@ export const MedicationsTableBase = ({
         <>
           <div className="ctw-font-medium">{medication.display}</div>
           <div className="ctw-font-light">{medication.dosage}</div>
+        </>
+      ),
+    },
+    {
+      title: "Dispensed",
+      render: (medication) => (
+        <>
+          {medication.quantity && <div>{medication.quantity}</div>}
+          {medication.refills && <div>{medication.refills} refills</div>}
+        </>
+      ),
+    },
+    {
+      title: "Last Filled",
+      dataIndex: "lastFillDate",
+    },
+    {
+      title: "Last Prescribed",
+      render: (medication) => (
+        <>
+          {medication.lastPrescribedDate && (
+            <div>{medication.lastPrescribedDate}</div>
+          )}
+          {medication.lastPrescriber && <div>{medication.lastPrescriber}</div>}
         </>
       ),
     },
