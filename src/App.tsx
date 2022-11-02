@@ -6,7 +6,6 @@ import { CTWProvider } from "./components/core/ctw-provider";
 import { PatientProvider } from "./components/core/patient-provider";
 import { ErrorBoundary } from "./error-boundary";
 import { SecuredApp } from "./SecuredApp";
-import { Theme } from "./styles/tailwind.theme";
 
 const {
   VITE_SYSTEM_URL,
@@ -20,29 +19,10 @@ const {
   VITE_ENV,
 } = import.meta.env;
 
-const theme: Theme = {
-  colors: {
-    primary: {
-      light: "#F2F6FD",
-      main: "#5C8EDC",
-      dark: "#3E6197",
-    },
-    content: {
-      black: "#1A2848",
-      light: "#4A4A4A",
-      lighter: "#999999",
-    },
-    bg: {
-      light: "#F1F1F1",
-    },
-  },
-};
-
 const DemoApp = ({ accessToken = "" }) => (
   <CTWProvider
     env={VITE_ENV}
     authToken={accessToken}
-    theme={theme}
     builderId={VITE_BUILDER_ID}
   >
     <PatientProvider patientID={VITE_PATIENT_ID} systemURL={VITE_SYSTEM_URL}>

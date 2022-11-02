@@ -1,5 +1,28 @@
 # ctw-component-library
 
+## 0.21.2
+
+### Patch Changes
+
+- e033e26: Add recorder and notes field to condition history.
+
+## 0.21.1
+
+### Patch Changes
+
+- cdf2037: Fixes the font color styling of the status column.
+- 3a1920e: Refactor onset date to only be set if provided and not set directly to today's date.
+
+## 0.21.0
+
+### Minor Changes
+
+- 42e05cc: Update the status column to show both clinical status and verification status.
+
+### Patch Changes
+
+- 6476f27: Updated display labels to use "start case" in FormField. Updates fields in add medication drawer.
+
 ## 0.20.1
 
 ### Patch Changes
