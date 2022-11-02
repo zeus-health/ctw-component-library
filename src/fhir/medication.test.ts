@@ -16,102 +16,112 @@ describe("getIdentifyingRxNormCode", () => {
   test("gets RxNorm code from codeable concept", () => {
     const testMed = {
       ...baseMed,
-      coding: [
-        {
-          code: testRxNormCode,
-          system: SYSTEM_RXNORM,
-        },
-      ],
+      medicationCodeableConcept: {
+        coding: [
+          {
+            code: testRxNormCode,
+            system: SYSTEM_RXNORM,
+          },
+        ],
+      },
     };
 
-    expect(getIdentifyingRxNormCode(baseMed)).toEqual(testRxNormCode);
+    expect(getIdentifyingRxNormCode(testMed)).toEqual(testRxNormCode);
   });
 
   test("returns undefined if no RxNorm code exists", () => {
     const testMed = {
       ...baseMed,
-      coding: [
-        {
-          code: "some other code",
-          system: "some other system",
-        },
-      ],
+      medicationCodeableConcept: {
+        coding: [
+          {
+            code: "some other code",
+            system: "some other system",
+          },
+        ],
+      },
     };
 
-    expect(getIdentifyingRxNormCode(baseMed)).toBeUndefined();
+    expect(getIdentifyingRxNormCode(testMed)).toBeUndefined();
   });
 
   test("ignores Active Ingredient codes", () => {
     const testMed = {
       ...baseMed,
-      coding: [
-        {
-          code: "some other code",
-          system: SYSTEM_RXNORM,
-          extension: [
-            {
-              url: SYSTEM_ENRICHMENT,
-              valueString: "ActiveIngredient",
-            },
-          ],
-        },
-      ],
+      medicationCodeableConcept: {
+        coding: [
+          {
+            code: "some other code",
+            system: SYSTEM_RXNORM,
+            extension: [
+              {
+                url: SYSTEM_ENRICHMENT,
+                valueString: "ActiveIngredient",
+              },
+            ],
+          },
+        ],
+      },
     };
 
-    expect(getIdentifyingRxNormCode(baseMed)).toBeUndefined();
+    expect(getIdentifyingRxNormCode(testMed)).toBeUndefined();
   });
 
   test("ignores Brand Name codes", () => {
     const testMed = {
       ...baseMed,
-      coding: [
-        {
-          code: "some other code",
-          system: SYSTEM_RXNORM,
-          extension: [
-            {
-              url: SYSTEM_ENRICHMENT,
-              valueString: "BrandName",
-            },
-          ],
-        },
-      ],
+      medicationCodeableConcept: {
+        coding: [
+          {
+            code: "some other code",
+            system: SYSTEM_RXNORM,
+            extension: [
+              {
+                url: SYSTEM_ENRICHMENT,
+                valueString: "BrandName",
+              },
+            ],
+          },
+        ],
+      },
     };
 
-    expect(getIdentifyingRxNormCode(baseMed)).toBeUndefined();
+    expect(getIdentifyingRxNormCode(testMed)).toBeUndefined();
   });
 
   test("chooses correct code when multiple exist", () => {
     const testMed = {
       ...baseMed,
-      coding: [
-        {
-          code: "some other code",
-          system: SYSTEM_RXNORM,
-          extension: [
-            {
-              url: SYSTEM_ENRICHMENT,
-              valueString: "BrandName",
-            },
-          ],
-        },
-        {
-          code: testRxNormCode,
-          system: SYSTEM_RXNORM,
-        },
-        {
-          code: "some other code",
-          system: SYSTEM_RXNORM,
-          extension: [
-            {
-              url: SYSTEM_ENRICHMENT,
-              valueString: "ActiveIngredient",
-            },
-          ],
-        },
-      ],
+      medicationCodeableConcept: {
+        coding: [
+          {
+            code: "some other code",
+            system: SYSTEM_RXNORM,
+            extension: [
+              {
+                url: SYSTEM_ENRICHMENT,
+                valueString: "BrandName",
+              },
+            ],
+          },
+          {
+            code: testRxNormCode,
+            system: SYSTEM_RXNORM,
+          },
+          {
+            code: "some other code",
+            system: SYSTEM_RXNORM,
+            extension: [
+              {
+                url: SYSTEM_ENRICHMENT,
+                valueString: "ActiveIngredient",
+              },
+            ],
+          },
+        ],
+      },
     };
 
-    expect(getIdentifyingRxNormCode(baseMed)).toEqual(testRxNormCode);
+    expect(getIdentifyingRxNormCode(testMed)).toEqual(testRxNormCode);
   });
 });
