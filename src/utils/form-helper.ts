@@ -1,9 +1,7 @@
 /* eslint-disable */
 /* Disabling eslint because we got this code from the remix helper and ported over to work in a SPA env. */
 import { ActionReturn } from "@/components/content/forms/types";
-import { ConditionModel } from "@/models/condition";
 import Zod, {
-  RefinementCtx,
   z,
   ZodArray,
   ZodBoolean,
@@ -119,8 +117,7 @@ export function isIterable(
 
 export function getParamsInternal<T>(
   params: URLSearchParams | FormData | Record<string, string | undefined>,
-  schema: any,
-  refinement?: (condition: ConditionModel, ctx: RefinementCtx) => void
+  schema: any
 ): ActionReturn<T> {
   // @ts-ignore
   let o: any = {};
@@ -140,9 +137,6 @@ export function getParamsInternal<T>(
   }
 
   let toParse = schema;
-  if (refinement) {
-    toParse = toParse.superRefine(refinement);
-  }
   const result = toParse.safeParse(o);
   if (result.success) {
     return { success: true, data: result.data as T, errors: undefined };
@@ -176,11 +170,10 @@ export function getParamsInternal<T>(
 
 export async function getFormData<T extends AnyZodSchema>(
   data: FormData,
-  schema: T,
-  refinement?: (condition: ConditionModel, ctx: RefinementCtx) => void
+  schema: T
 ) {
   type ParamsType = z.infer<T>;
-  return getParamsInternal<ParamsType>(data, schema, refinement);
+  return getParamsInternal<ParamsType>(data, schema);
 }
 
 function getOptions(
