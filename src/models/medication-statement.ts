@@ -158,21 +158,26 @@ export class MedicationStatementModel {
   }
 
   get quantity(): string | undefined {
-    return this.resource.extension?.find(
+    const quantity = this.resource.extension?.find(
       (x) => x.url === LENS_EXTENSION_MEDICATION_QUANTITY
-    )?.valueString;
+    )?.valueQuantity;
+
+    if (quantity) {
+      return `${quantity.value} ${quantity.unit || ""}`;
+    }
+    return undefined;
   }
 
   get daysSupply(): string | undefined {
-    return this.resource.extension?.find(
-      (x) => x.url === LENS_EXTENSION_MEDICATION_DAYS_SUPPLY
-    )?.valueString;
+    return this.resource.extension
+      ?.find((x) => x.url === LENS_EXTENSION_MEDICATION_DAYS_SUPPLY)
+      ?.valueQuantity?.value?.toString();
   }
 
   get refills(): string | undefined {
-    return this.resource.extension?.find(
-      (x) => x.url === LENS_EXTENSION_MEDICATION_REFILLS
-    )?.valueString;
+    return this.resource.extension
+      ?.find((x) => x.url === LENS_EXTENSION_MEDICATION_REFILLS)
+      ?.valueUnsignedInt?.toString();
   }
 
   // TODO - need to implement to complete CTW-480
