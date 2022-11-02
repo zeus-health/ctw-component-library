@@ -144,11 +144,9 @@ export function getParamsInternal<T>(
   const errors: any = {};
   const addError = (key: string, message: string) => {
     if (!errors.hasOwnProperty(key)) {
-      errors[key] = message;
+      errors[key] = [message];
     } else {
-      if (!Array.isArray(errors[key])) {
-        errors[key] = [errors[key]];
-      }
+      errors[key] = [...errors[key], message];
     }
   };
 

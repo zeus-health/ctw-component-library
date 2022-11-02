@@ -52,7 +52,7 @@ export const DrawerFormWithFields = <T,>({
           <div className="ctw-space-y-6">
             {data.map(
               ({ label, field, value, lines, readonly, hidden, render }) => {
-                const error = errors?.[field];
+                const fieldErrors = errors?.[field];
 
                 if (hidden) {
                   return (
@@ -63,7 +63,7 @@ export const DrawerFormWithFields = <T,>({
                       disabled={submitting}
                       readonly={readonly}
                       defaultValue={value}
-                      error={error}
+                      errors={fieldErrors}
                       hidden={hidden}
                       render={render}
                     />
@@ -96,7 +96,7 @@ export const DrawerFormWithFields = <T,>({
                       disabled={submitting}
                       readonly={readonly}
                       defaultValue={value}
-                      error={error}
+                      errors={fieldErrors}
                       hidden={hidden}
                       render={render}
                     />

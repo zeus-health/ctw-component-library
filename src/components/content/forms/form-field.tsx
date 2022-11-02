@@ -5,7 +5,7 @@ import { startCase } from "lodash";
 import type { InputHTMLAttributes } from "react";
 
 export type FormFieldProps = {
-  error?: string;
+  errors?: string[];
   options?: string[];
   lines?: number;
   defaultValue?: string;
@@ -17,7 +17,7 @@ export type FormFieldProps = {
 } & InputHTMLAttributes<HTMLInputElement>;
 
 export const FormField = ({
-  error,
+  errors,
   options,
   lines,
   defaultValue,
@@ -43,7 +43,7 @@ export const FormField = ({
       return (
         <select
           className={cx(
-            { "ctw-error": error },
+            { "ctw-error": errors },
             "ctw-listbox-button ctw-w-full"
           )}
           name={inputProps.name || ""}
@@ -63,7 +63,7 @@ export const FormField = ({
         <textarea
           rows={lines}
           className={cx(
-            { "ctw-error": error },
+            { "ctw-error": errors },
             "ctw-listbox-textarea ctw-w-full ctw-whitespace-pre-wrap"
           )}
           defaultValue={value}
@@ -77,7 +77,7 @@ export const FormField = ({
       <input
         {...inputProps}
         type={inputProps.type}
-        className={cx({ "ctw-error": error }, "ctw-listbox-input ctw-w-full")}
+        className={cx({ "ctw-error": errors }, "ctw-listbox-input ctw-w-full")}
         readOnly={readonly}
         defaultValue={value}
       />
@@ -103,7 +103,7 @@ export const FormField = ({
         {readonly && (
           <LockClosedIcon className="ctw-absolute ctw-right-3 ctw-top-1/2 ctw-h-4 ctw-w-4 ctw--translate-y-1/2 ctw-transform ctw-fill-content-lighter" />
         )}
-        {error && (
+        {errors && (
           <div className="ctw-pointer-events-none ctw-absolute ctw-inset-y-0 ctw-right-0 ctw-top-2 ctw-flex ctw-h-min ctw-items-center ctw-pr-3">
             <ExclamationCircleIcon
               className="ctw-h-5 ctw-w-5 ctw-text-error-main"
@@ -113,9 +113,11 @@ export const FormField = ({
         )}
       </div>
 
-      {error && (
+      {errors && (
         <div className="ctw-text-xs ctw-italic ctw-text-error-main">
-          {error}
+          {errors.length > 1
+            ? errors.map((error) => <div key={error}>&bull; {error}</div>)
+            : errors[0]}
         </div>
       )}
     </>

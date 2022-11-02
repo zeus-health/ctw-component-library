@@ -105,8 +105,8 @@ export const conditionRefinement = (
   if (condition.abatement && condition.clinicalStatus === "active") {
     ctx.addIssue({
       code: Zod.ZodIssueCode.custom,
-      message: "Condition cannot be active if abated.",
-      path: ["clinicalStatus"],
+      message: "Clinical status must be inactive.",
+      path: ["abatement"],
     });
   }
   if (
@@ -116,7 +116,7 @@ export const conditionRefinement = (
   ) {
     ctx.addIssue({
       code: Zod.ZodIssueCode.custom,
-      message: "Abatement cannot happen before onset.",
+      message: "Abatement date must be after onset date.",
       path: ["abatement"],
     });
   }

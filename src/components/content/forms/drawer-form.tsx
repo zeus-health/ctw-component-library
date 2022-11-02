@@ -8,7 +8,7 @@ import { Drawer } from "../../core/drawer";
 import { SaveButton } from "./save-button";
 import { ActionReturn } from "./types";
 
-export type FormErrors = Record<string, string>;
+export type FormErrors = Record<string, string[]>;
 
 export type DrawerFormProps<T> = {
   action: (
