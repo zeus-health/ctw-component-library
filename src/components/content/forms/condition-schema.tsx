@@ -75,7 +75,7 @@ const sharedFields = (condition: ConditionModel) => [
   },
 ];
 
-const sharedSchema = {
+const conditionSchema = z.object({
   id: z.string().optional(),
   subjectID: z.string({
     required_error: "Condition subjectID must be specified.",
@@ -96,74 +96,10 @@ const sharedSchema = {
     "entered-in-error",
   ]),
   note: z.string().optional(),
-};
-
-export const conditionEditSchema = z
-  .object({
-    ...sharedSchema,
-  })
-  .superRefine((condition, refinementCtx) => {
-    if (condition.abatement && condition.clinicalStatus === "active") {
-      refinementCtx.addIssue({
-        code: Zod.ZodIssueCode.custom,
-        message: "Condition cannot be active if abated.",
-        path: ["clinicalStatus"],
-      });
-    }
-    if (
-      condition.abatement &&
-      condition.onset &&
-      condition.abatement < condition.onset
-    ) {
-      refinementCtx.addIssue({
-        code: Zod.ZodIssueCode.custom,
-        message: "Abatement cannot happen before onset.",
-        path: ["abatement"],
-      });
-    }
-  });
-
-export const conditionAddSchema = z.object({
-  ...sharedSchema,
-  condition: z.object({
-    display: z.string({
-      required_error: "Please choose a condition.",
-    }),
-    code: z.string({
-      required_error: "Please choose a condition.",
-    }),
-    system: z.string({
-      required_error: "Please choose a condition.",
-    }),
-  }),
 });
 
 export const conditionRefinement = (
-  condition: ConditionModel,
-  ctx: RefinementCtx
-) => {
-  // if (condition.abatement && condition.clinicalStatus === "active") {
-  //   ctx.addIssue({
-  //     code: Zod.ZodIssueCode.custom,
-  //     message: "Condition cannot be active if abated.",
-  //     path: ["clinicalStatus"],
-  //   });
-  // }
-  // if (
-  //   condition.abatement &&
-  //   condition.onset &&
-  //   condition.abatement < condition.onset
-  // ) {
-  //   ctx.addIssue({
-  //     code: Zod.ZodIssueCode.custom,
-  //     message: "Abatement cannot happen before onset.",
-  //     path: ["abatement"],
-  //   });
-  // }
-};
-
-export const conditionRefinement2 = (
-  condition: ConditionModel,
+  condition: Zod.infer<typeof conditionSchema>,
   ctx: RefinementCtx
 ) => {
   if (condition.abatement && condition.clinicalStatus === "active") {
@@ -185,6 +121,28 @@ export const conditionRefinement2 = (
     });
   }
 };
+
+export const conditionEditSchema = conditionSchema.superRefine(
+  (condition, refinementCtx) => conditionRefinement(condition, refinementCtx)
+);
+
+export const conditionAddSchema = conditionSchema
+  .extend({
+    condition: z.object({
+      display: z.string({
+        required_error: "Please choose a condition.",
+      }),
+      code: z.string({
+        required_error: "Please choose a condition.",
+      }),
+      system: z.string({
+        required_error: "Please choose a condition.",
+      }),
+    }),
+  })
+  .superRefine((condition, refinementCtx) =>
+    conditionRefinement(condition, refinementCtx)
+  );
 
 function levelTwoToOneMapping(value: string): string {
   switch (value) {
