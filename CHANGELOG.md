@@ -1,5 +1,15 @@
 # ctw-component-library
 
+## 0.21.0
+
+### Minor Changes
+
+- 42e05cc: Update the status column to show both clinical status and verification status.
+
+### Patch Changes
+
+- 6476f27: Updated display labels to use "start case" in FormField. Updates fields in add medication drawer.
+
 ## 0.20.1
 
 ### Patch Changes
