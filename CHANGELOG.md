@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.21.2
+
+### Patch Changes
+
+- e033e26: Add recorder and notes field to condition history.
+
 ## 0.21.1
 
 ### Patch Changes
