@@ -14,7 +14,8 @@ const testRxNormCode = "12345";
 
 describe("getIdentifyingRxNormCode", () => {
   test("gets RxNorm code from codeable concept", () => {
-    baseMed.medicationCodeableConcept = {
+    const testMed = {
+      ...baseMed,
       coding: [
         {
           code: testRxNormCode,
@@ -27,7 +28,8 @@ describe("getIdentifyingRxNormCode", () => {
   });
 
   test("returns undefined if no RxNorm code exists", () => {
-    baseMed.medicationCodeableConcept = {
+    const testMed = {
+      ...baseMed,
       coding: [
         {
           code: "some other code",
@@ -40,7 +42,8 @@ describe("getIdentifyingRxNormCode", () => {
   });
 
   test("ignores Active Ingredient codes", () => {
-    baseMed.medicationCodeableConcept = {
+    const testMed = {
+      ...baseMed,
       coding: [
         {
           code: "some other code",
@@ -59,7 +62,8 @@ describe("getIdentifyingRxNormCode", () => {
   });
 
   test("ignores Brand Name codes", () => {
-    baseMed.medicationCodeableConcept = {
+    const testMed = {
+      ...baseMed,
       coding: [
         {
           code: "some other code",
@@ -78,7 +82,8 @@ describe("getIdentifyingRxNormCode", () => {
   });
 
   test("chooses correct code when multiple exist", () => {
-    baseMed.medicationCodeableConcept = {
+    const testMed = {
+      ...baseMed,
       coding: [
         {
           code: "some other code",

@@ -29,7 +29,7 @@ export const MedicationsTableBase = ({
   const columns = compact([
     {
       title: "Medication Name",
-      render: (medication: MedicationStatementModel) => (
+      render: (medication) => (
         <>
           <div className="ctw-font-medium">{medication.display}</div>
           <div className="ctw-font-light">{medication.dosage}</div>
@@ -38,7 +38,7 @@ export const MedicationsTableBase = ({
     },
     {
       title: "Dispensed",
-      render: (medication: MedicationStatementModel) => (
+      render: (medication) => (
         <>
           {medication.quantity && <div>{medication.quantity}</div>}
           {medication.refills && <div>{medication.refills} refills</div>}
@@ -51,7 +51,7 @@ export const MedicationsTableBase = ({
     },
     {
       title: "Last Prescribed",
-      render: (medication: MedicationStatementModel) => (
+      render: (medication) => (
         <>
           {medication.lastPrescribedDate && (
             <div>{medication.lastPrescribedDate}</div>

@@ -58,14 +58,16 @@ describe("splitSummarizedMedications", () => {
     const { builderMedications, otherProviderMedications } =
       splitSummarizedMedications(summarizedMeds, builderMeds);
 
-    expect(builderMedications.length).toBe(1);
-    expect(otherProviderMedications.length).toBe(1);
+    expect(builderMedications).toHaveLength(1);
+    expect(otherProviderMedications).toHaveLength(1);
 
-    expect(
-      builderMedications[0].medicationCodeableConcept?.coding?.[0].code
-    ).toBe("known");
-    expect(
-      otherProviderMedications[0].medicationCodeableConcept?.coding?.[0].code
-    ).toBe("unknown");
+    expect(builderMedications).toHaveProperty(
+      "0.medicationCodeableConcept.coding.0.code",
+      "known"
+    );
+    expect(otherProviderMedications).toHaveProperty(
+      "0.medicationCodeableConcept.coding.0.code",
+      "unknown"
+    );
   });
 });
