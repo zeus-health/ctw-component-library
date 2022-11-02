@@ -22,10 +22,13 @@ export const ConditionsAutoComplete = ({
   readonly,
   ...inputProps
 }: AutoCompleteComboboxProps) => {
-  const { authToken, env } = useCTW();
+  const { getRequestContext } = useCTW();
+  const [isLoading, setIsLoading] = useState(false);
   const [options, setOptions] = useState<ComboxboxFieldOption[]>();
 
   const handleSearchChange = async (query: string) => {
+    setIsLoading(true);
+    const { authToken, env } = await getRequestContext();
     const conditions = await getAutoCompleteConditions(authToken, env, query);
 
     if (conditions) {
@@ -36,18 +39,19 @@ export const ConditionsAutoComplete = ({
         })) as ComboxboxFieldOption[]
       );
     }
+
+    setIsLoading(false);
   };
 
   return (
-    <>
-      <ComboboxField
-        options={options || []}
-        name={`${inputProps.name}`}
-        defaultSearchTerm={inputProps.defaultValue as string}
-        readonly={readonly}
-        onSearchChange={handleSearchChange}
-        defaultValue={defaultCoding}
-      />
-    </>
+    <ComboboxField
+      options={options || []}
+      isLoading={isLoading}
+      name={`${inputProps.name}`}
+      defaultSearchTerm={inputProps.defaultValue as string}
+      readonly={readonly}
+      onSearchChange={handleSearchChange}
+      defaultValue={defaultCoding}
+    />
   );
 };

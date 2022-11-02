@@ -1,6 +1,6 @@
 {
   "name": "@zus-health/ctw-component-library",
-  "version": "0.20.0",
+  "version": "0.20.1",
   "type": "module",
   "main": "dist/index.cjs",
   "module": "dist/index.es.js",
@@ -32,7 +32,9 @@
     "preview": "vite preview",
     "test": "vitest",
     "typecheck": "tsc -b",
-    "release": "changeset publish"
+    "release": "changeset publish",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "prettier": {},
   "repository": {
@@ -47,6 +49,12 @@
     "@auth0/auth0-react": "^1.12.0",
     "@changesets/cli": "^2.24.3",
     "@kensho-technologies/eslint-config": "^23.1.1",
+    "@storybook/addon-essentials": "^7.0.0-alpha.43",
+    "@storybook/addon-interactions": "^7.0.0-alpha.43",
+    "@storybook/addon-links": "^7.0.0-alpha.43",
+    "@storybook/react": "^7.0.0-alpha.43",
+    "@storybook/react-vite": "^7.0.0-alpha.43",
+    "@storybook/testing-library": "^0.0.13",
     "@tailwindcss/line-clamp": "^0.4.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "12.1.5",
@@ -63,6 +71,7 @@
     "eslint": "^8.25.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-storybook": "^0.6.6",
     "jsdom": "^20.0.1",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.4.16",
@@ -72,6 +81,7 @@
     "react-dom": "^16.9.8",
     "rename-css-selectors": "^4.1.0",
     "sass": "^1.55.0",
+    "storybook": "^7.0.0-alpha.43",
     "tailwindcss": "^3.1.6",
     "tsc-alias": "^1.7.0",
     "typescript": "^4.7.4",
