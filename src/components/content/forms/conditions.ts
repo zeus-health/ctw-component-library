@@ -11,7 +11,7 @@ import {
 import { ConditionModel } from "@/models/condition";
 import { OperationOutcomeModel } from "@/models/operation-outcome";
 import { claimsPractitionerId } from "@/utils/auth";
-import { getFormData } from "@/utils/form-helper";
+import { AnyZodSchema, getFormData } from "@/utils/form-helper";
 import {
   QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
   QUERY_KEY_PATIENT_CONDITIONS,
@@ -69,7 +69,7 @@ export const createOrEditCondition = async (
   data: FormData,
   patientID: string,
   getRequestContext: () => Promise<CTWRequestContext>,
-  schema: Zod.AnyZodObject
+  schema: AnyZodSchema
 ): Promise<{
   formResult: ActionReturn<FormErrors>;
   requestErrors: string[] | undefined;

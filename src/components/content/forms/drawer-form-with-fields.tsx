@@ -1,4 +1,4 @@
-import { useFormInputProps } from "@/utils/form-helper";
+import { AnyZodSchema, useFormInputProps } from "@/utils/form-helper";
 import { InputHTMLAttributes, ReactNode } from "react";
 import type { DrawerFormProps } from "./drawer-form";
 import { DrawerForm } from "./drawer-form";
@@ -21,7 +21,7 @@ export type DrawerFormWithFieldsProps<T> = {
   title: string;
   header?: ReactNode;
   data: FormEntry[] | undefined;
-  schema: Zod.AnyZodObject;
+  schema: AnyZodSchema;
   patientID: string;
 } & Pick<DrawerFormProps<T>, "onClose" | "isOpen" | "action">;
 

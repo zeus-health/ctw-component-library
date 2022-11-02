@@ -17,7 +17,6 @@ import Zod, {
   ZodObject,
   ZodOptional,
   ZodString,
-  ZodType,
   ZodTypeAny,
   ZodUnknown,
 } from "zod";
@@ -175,7 +174,7 @@ export function getParamsInternal<T>(
   return { success: false, data: undefined, errors };
 }
 
-export async function getFormData<T extends ZodType<any, any, any>>(
+export async function getFormData<T extends AnyZodSchema>(
   data: FormData,
   schema: T,
   refinement?: (condition: ConditionModel, ctx: RefinementCtx) => void

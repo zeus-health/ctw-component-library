@@ -1,6 +1,7 @@
 import { ErrorAlert } from "@/components/core/alert";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { useCTW } from "@/components/core/ctw-provider";
+import { AnyZodSchema } from "@/utils/form-helper";
 import { ReactNode, useState } from "react";
 import type { DrawerProps } from "../../core/drawer";
 import { Drawer } from "../../core/drawer";
@@ -14,13 +15,13 @@ export type DrawerFormProps<T> = {
     data: FormData,
     patientID: string,
     getRequestContext: () => Promise<CTWRequestContext>,
-    schema: Zod.AnyZodObject
+    schema: AnyZodSchema
   ) => Promise<{
     formResult: ActionReturn<T>;
     requestErrors: string[] | undefined;
   }>;
   patientID: string;
-  schema: Zod.AnyZodObject;
+  schema: AnyZodSchema;
 
   children: (submitting: boolean, errors?: FormErrors) => ReactNode;
 } & Omit<DrawerProps, "children">;
