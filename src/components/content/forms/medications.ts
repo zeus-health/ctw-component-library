@@ -133,7 +133,7 @@ export const getMedicationFormData = (
     field: "rxNormCode",
   },
   {
-    label: "Status",
+    label: "Latest Status",
     value: medication.status,
     field: "status",
   },

@@ -10,12 +10,17 @@ import {
   CollapsibleDataListStack,
   CollapsibleDataListStackEntries,
 } from "../core/collapsible-data-list-stack";
+import { NotesList } from "../core/notes-list";
 import { ConditionHeader } from "./condition-header";
 
 const CONDITION_HISTORY_LIMIT = 10;
 
 function setupData(condition: ConditionModel): CollapsibleDataListProps {
   const detailData = [
+    {
+      label: "Recorder",
+      value: condition.recorder,
+    },
     {
       label: "Clinical Status",
       value: condition.clinicalStatus,
@@ -31,6 +36,12 @@ function setupData(condition: ConditionModel): CollapsibleDataListProps {
     {
       label: "Category",
       value: condition.categories[0],
+    },
+    {
+      label: "Note",
+      value: condition.notes.length !== 0 && (
+        <NotesList notes={condition.notes} />
+      ),
     },
     {
       label: "Code",
