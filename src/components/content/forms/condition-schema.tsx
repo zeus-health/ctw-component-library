@@ -80,7 +80,7 @@ const sharedSchema = {
   subjectID: z.string({
     required_error: "Condition subjectID must be specified.",
   }),
-  clinicalStatus: z.enum(["active", "inactive"]).superRefine((v, ctx) => {}),
+  clinicalStatus: z.enum(["active", "inactive"]),
   onset: z
     .date()
     .max(new Date(), { message: "Onset cannot be a future date." })
