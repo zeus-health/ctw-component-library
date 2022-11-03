@@ -1,6 +1,6 @@
-import { compact } from "lodash/fp";
 import { getPerformingOrganization } from "@/fhir/medication";
 import type { ResourceMap } from "@/fhir/types";
+import { compact } from "lodash/fp";
 
 export class MedicationDispenseModel {
   readonly resource: fhir4.MedicationDispense;
@@ -46,7 +46,7 @@ export class MedicationDispenseModel {
   }
 
   get supplied(): string {
-    const { value, unit = "day" } = this.resource.daysSupply || {};
+    const { value, unit = "days" } = this.resource.daysSupply || {};
     if (!value) {
       return "";
     }

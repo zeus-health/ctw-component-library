@@ -1,13 +1,12 @@
+import { CollapsibleDataListProps } from "@/components/core/collapsible-data-list";
+import { CollapsibleDataListStack } from "@/components/core/collapsible-data-list-stack";
+import { Loading } from "@/components/core/loading";
 import { useMedicationHistory } from "@/fhir/medications";
 import { MedicationModel } from "@/models/medication";
-import { useEffect, useState } from "react";
-import { CollapsibleDataListProps } from "@/components/core/collapsible-data-list";
-import { Loading } from "@/components/core/loading";
-import { CollapsibleDataListStack } from "@/components/core/collapsible-data-list-stack";
-import { MedicationStatementModel } from "@/models/medication-statement";
-import { Medication } from "@/fhir/medication";
 import { MedicationDispenseModel } from "@/models/medication-dispense";
+import { MedicationStatementModel } from "@/models/medication-statement";
 import { format } from "date-fns";
+import { useEffect, useState } from "react";
 
 const MEDICATION_HISTORY_LIMIT = 10;
 
@@ -121,7 +120,7 @@ function createMedicationRequestCard(medication: MedicationModel) {
       },
       {
         label: "Instructions",
-        value: resource.dosageInstruction,
+        value: medication.dosage,
       },
       { label: "Prescriber", value: prescriber },
       {
