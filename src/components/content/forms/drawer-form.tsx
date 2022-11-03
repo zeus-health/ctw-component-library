@@ -36,13 +36,13 @@ export const DrawerForm = <T,>({
 }: DrawerFormProps<T>) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<{
-    formErrors: FormErrors | undefined;
-    requestErrors: string[] | undefined;
+    formErrors?: FormErrors;
+    requestErrors?: string[];
   }>();
   const { getRequestContext } = useCTW();
 
   const reset = () => {
-    setErrors({ formErrors: undefined, requestErrors: undefined });
+    setErrors({});
     setIsSubmitting(false);
   };
 

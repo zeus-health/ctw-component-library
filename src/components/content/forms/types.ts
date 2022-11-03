@@ -9,13 +9,5 @@ export type MedicationFormData = {
   subjectID: string;
   dateAsserted: Date;
   rxNormCode: string;
-  status:
-    | "active"
-    | "completed"
-    | "entered-in-error"
-    | "intended"
-    | "stopped"
-    | "on-hold"
-    | "unknown"
-    | "not-taken";
+  status: fhir4.MedicationStatement["status"];
 };
