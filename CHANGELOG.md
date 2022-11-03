@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.23.0
+
+### Minor Changes
+
+- 483f8e8: Shows additional errors for condition forms that were not shown before, including ones associated with multiple fields and failures with the request or responses from the server.
+
 ## 0.22.2
 
 ### Patch Changes
