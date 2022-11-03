@@ -1,3 +1,14 @@
+import {
+  compact,
+  get,
+  groupBy,
+  map,
+  mapValues,
+  omit,
+  pipe,
+  split,
+  last,
+} from "lodash/fp";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
 import { MedicationModel } from "@/models/medication";
@@ -6,7 +17,6 @@ import { errorResponse } from "@/utils/errors";
 import { QUERY_KEY_MEDICATION_HISTORY } from "@/utils/query-keys";
 import { sort } from "@/utils/sort";
 import type { FhirResource, MedicationStatement, Reference } from "fhir/r4";
-import { compact, get, groupBy, map, mapValues, omit, pipe } from "lodash/fp";
 import { bundleToResourceMap, getMergedIncludedResources } from "./bundle";
 import { getIdentifyingRxNormCode } from "./medication";
 import {
@@ -15,8 +25,8 @@ import {
   searchLensRecords,
   SearchReturn,
 } from "./search-helpers";
-import { LENS_EXTENSION_AGGREGATED_FROM } from "./system-urls";
 import { ResourceMap, ResourceTypeString } from "./types";
+import { MedicationStatementModel } from "@/models/medication-statement";
 
 export type InformationSource =
   | "Patient"
@@ -158,22 +168,13 @@ export function splitSummarizedMedications(
 }
 
 export function useMedicationHistory(medication: fhir4.MedicationStatement) {
-  const aggregatedFromExtension = medication.extension?.find(
-    (x) => x.url === LENS_EXTENSION_AGGREGATED_FROM
-  );
-  let aggregatedFromReferences: fhir4.Reference[] | undefined;
-  if (aggregatedFromExtension) {
-    aggregatedFromReferences = aggregatedFromExtension.extension
-      ?.filter((x) => x.valueReference)
-      .map((x) => x.valueReference as Reference);
-  } else {
-    aggregatedFromReferences = medication.derivedFrom;
-  }
+  const aggregatedFromReferences = new MedicationStatementModel(medication)
+    .aggregatedFrom;
 
+  const getRefId = pipe(get("reference"), split("/"), last);
   const resources = pipe(
     groupBy(get("type")),
-    mapValues(map(get("reference"))),
-    mapValues(map((x) => x.split("/").pop()))
+    mapValues(map(getRefId))
   )(aggregatedFromReferences);
 
   return useQueryWithPatient(

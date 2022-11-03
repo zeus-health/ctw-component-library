@@ -1,3 +1,4 @@
+import { capitalize, find, get, compact } from "lodash/fp";
 import { codeableConceptLabel } from "@/fhir/codeable-concept";
 import { dateToISO, formatDateISOToLocal } from "@/fhir/formatters";
 import {
@@ -6,6 +7,7 @@ import {
   patientStatus,
 } from "@/fhir/medication";
 import {
+  LENS_EXTENSION_AGGREGATED_FROM,
   LENS_EXTENSION_MEDICATION_DAYS_SUPPLY,
   LENS_EXTENSION_MEDICATION_LAST_FILL_DATE,
   LENS_EXTENSION_MEDICATION_LAST_PRESCRIBED_DATE,
@@ -14,7 +16,6 @@ import {
 } from "@/fhir/system-urls";
 import type { ResourceMap } from "@/fhir/types";
 import type { Reference } from "fhir/r4";
-import { capitalize } from "lodash";
 
 export class MedicationStatementModel {
   readonly resourceType = "MedicationStatement";
@@ -61,6 +62,17 @@ export class MedicationStatementModel {
 
   get derivedFrom(): string[] {
     return this.resource.derivedFrom?.map(({ display }) => display || "") || [];
+  }
+
+  get aggregatedFrom(): Reference[] {
+    const extension = find(
+      { url: LENS_EXTENSION_AGGREGATED_FROM },
+      this.resource.extension
+    );
+    if (!extension?.extension) {
+      return compact(this.resource.derivedFrom);
+    }
+    return compact(extension.extension.map(get("valueReference")));
   }
 
   get display(): string {
