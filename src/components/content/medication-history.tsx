@@ -102,7 +102,7 @@ function createMedicationRequestCard(medication: MedicationModel) {
   const pharmacy = resource.dispenseRequest?.performer?.display || "";
 
   const { numberOfRepeatsAllowed = "", initialFill } =
-    resource.dispenseRequest || {};
+  resource.dispenseRequest || {};
   const { value = "", unit = "" } = initialFill?.quantity || {};
 
   return {
