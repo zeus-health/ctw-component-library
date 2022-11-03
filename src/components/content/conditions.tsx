@@ -12,6 +12,7 @@ import {
 } from "@/fhir/conditions";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { ConditionModel } from "@/models/condition";
+import { AnyZodSchema } from "@/utils/form-helper";
 import {
   QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
   QUERY_KEY_PATIENT_CONDITIONS,
@@ -63,7 +64,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const [includeInactive, setIncludeInactive] = useState(true);
   const [formAction, setFormAction] = useState<FormActionTypes>("Add");
   const [conditionFilter, setConditionFilter] = useState<ConditionFilters>({});
-  const [schema, setSchema] = useState<Zod.AnyZodObject>(conditionAddSchema);
+  const [schema, setSchema] = useState<AnyZodSchema>(conditionAddSchema);
   const [currentSelectedData, setCurrentlySelectedData] =
     useState<FormEntry[]>();
   const [selectedCondition, setSelectedCondition] = useState<ConditionModel>();

@@ -2,20 +2,24 @@ import { CTWRequestContext } from "@/components/core/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { isFhirError } from "@/fhir/errors";
 import { dateToISO } from "@/fhir/formatters";
+import { isOperationOutcome } from "@/fhir/operation-outcome";
 import { getPractitioner } from "@/fhir/practitioner";
 import {
   SYSTEM_CONDITION_CLINICAL,
   SYSTEM_CONDITION_VERIFICATION_STATUS,
 } from "@/fhir/system-urls";
 import { ConditionModel } from "@/models/condition";
+import { OperationOutcomeModel } from "@/models/operation-outcome";
 import { claimsPractitionerId } from "@/utils/auth";
-import { getFormData } from "@/utils/form-helper";
+import { AnyZodSchema, getFormData } from "@/utils/form-helper";
 import {
   QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
   QUERY_KEY_PATIENT_CONDITIONS,
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import { Condition } from "fhir/r4";
+import { FormErrors } from "./drawer-form";
+import { ActionReturn } from "./types";
 
 // Sets any autofill values that apply when a user adds a condition, whether creating or confirming.
 export function setAddConditionDefaults(condition: Condition): void {
@@ -64,12 +68,16 @@ export const createOrEditCondition = async (
   data: FormData,
   patientID: string,
   getRequestContext: () => Promise<CTWRequestContext>,
-  schema: Zod.AnyZodObject
-) => {
+  schema: AnyZodSchema
+): Promise<{
+  formResult: ActionReturn<FormErrors>;
+  requestErrors: string[] | undefined;
+}> => {
   const result = await getFormData(data, schema);
+  let requestErrors: string[] = [];
 
   if (!result.success) {
-    return result;
+    return { formResult: result, requestErrors: undefined };
   }
 
   const requestContext = await getRequestContext();
@@ -131,12 +139,18 @@ export const createOrEditCondition = async (
     requestContext.fhirClient
   );
 
-  if (isFhirError(response)) {
+  if (isFhirError(response) && isOperationOutcome(response.response.data)) {
+    requestErrors = new OperationOutcomeModel(response.response.data).issues
+      .filter((issue) => issue.severity !== "warning")
+      .map((issue) => issue.display);
+    result.success = false;
+  } else if (response instanceof Error) {
+    requestErrors = [response.message];
     result.success = false;
   }
 
   queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]);
   queryClient.invalidateQueries([QUERY_KEY_OTHER_PROVIDER_CONDITIONS]);
 
-  return result;
+  return { formResult: result, requestErrors };
 };
