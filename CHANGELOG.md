@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.22.2
+
+### Patch Changes
+
+- ce1d852: date-fn update
+
 ## 0.22.1
 
 ### Patch Changes
