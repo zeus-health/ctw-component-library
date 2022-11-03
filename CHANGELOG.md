@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 0.21.3
+
+### Patch Changes
+
+- 86f7794: Adding fields to medication details and updating logic for breaking out "other provider medications"
+
+## 0.21.2
+
+### Patch Changes
+
+- e033e26: Add recorder and notes field to condition history.
+
 ## 0.21.1
 
 ### Patch Changes

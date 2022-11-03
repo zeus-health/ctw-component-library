@@ -4,12 +4,13 @@ import { errorResponse } from "@/utils/errors";
 import type { FhirResource, MedicationStatement } from "fhir/r4";
 import { omit } from "lodash/fp";
 import { bundleToResourceMap } from "./bundle";
-import { getRxNormCode } from "./medication";
+import { getIdentifyingRxNormCode } from "./medication";
 import {
   searchBuilderRecords,
   searchLensRecords,
   SearchReturn,
 } from "./search-helpers";
+import { ResourceMap } from "./types";
 
 export type InformationSource =
   | "Patient"
@@ -86,7 +87,7 @@ export async function getBuilderMedications(
 }
 
 /* Note when filtering the bundle may contain data that will no longer be in the returned medications. */
-export async function getPatientLensMedications(
+export async function getSummaryMedications(
   requestContext: CTWRequestContext,
   patient: PatientModel,
   keys = []
@@ -118,5 +119,34 @@ export function filterMedicationsWithNoRxNorms(
   bundle: FhirResource
 ) {
   const resourceMap = bundleToResourceMap(bundle);
-  return medications.filter((m) => getRxNormCode(m, resourceMap) !== undefined);
+  return medications.filter(
+    (m) => getIdentifyingRxNormCode(m, resourceMap) !== undefined
+  );
+}
+
+// Splits summarized medications into those that the builder already knows about ("Provider Medications")
+// and those that they do not know about ("Other Provider Medications").
+export function splitSummarizedMedications(
+  summarizedMedications: MedicationStatement[],
+  builderOwnedMedications: MedicationStatement[],
+  includedResources?: ResourceMap
+) {
+  const builderMedications: MedicationStatement[] = [];
+  const otherProviderMedications: MedicationStatement[] = [];
+  const splitData = summarizedMedications.reduce(
+    (sd, summaryMed) => {
+      sd[
+        builderOwnedMedications.some(
+          (builderMed) =>
+            getIdentifyingRxNormCode(builderMed, includedResources) ===
+            getIdentifyingRxNormCode(summaryMed, includedResources)
+        )
+          ? "builderMedications"
+          : "otherProviderMedications"
+      ].push(summaryMed);
+      return sd;
+    },
+    { builderMedications, otherProviderMedications }
+  );
+  return splitData;
 }

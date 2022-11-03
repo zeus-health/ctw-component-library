@@ -16,10 +16,15 @@ const {
   VITE_AUTH0_CLIENT_ID,
   VITE_AUTH0_AUDIENCE,
   VITE_AUTH0_CALLBACK_PATH,
+  VITE_ENV,
 } = import.meta.env;
 
 const DemoApp = ({ accessToken = "" }) => (
-  <CTWProvider env="dev" authToken={accessToken} builderId={VITE_BUILDER_ID}>
+  <CTWProvider
+    env={VITE_ENV}
+    authToken={accessToken}
+    builderId={VITE_BUILDER_ID}
+  >
     <PatientProvider patientID={VITE_PATIENT_ID} systemURL={VITE_SYSTEM_URL}>
       <div className="App">
         <h1>CTW Component Library</h1>

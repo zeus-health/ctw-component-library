@@ -1,10 +1,10 @@
-import { get } from "lodash/fp";
-import { useEffect, useState } from "react";
+import { MedicationDrawer } from "@/components/content/medication-drawer";
 import { MedicationsTableBase } from "@/components/content/medications-table-base";
-import { useQueryAllPatientMedicationsByStatus } from "@/hooks/use-medications";
+import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { MedicationStatementModel } from "@/models/medication-statement";
 import { sort } from "@/utils/sort";
-import { MedicationDrawer } from "@/components/content/medication-drawer";
+import { get } from "lodash/fp";
+import { useEffect, useState } from "react";
 
 type ProviderMedsTableProps = {
   className?: string;
@@ -25,8 +25,7 @@ export function ProviderMedsTable({
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedMedication, setSelectedMedication] =
     useState<MedicationStatementModel>();
-  const { builderMedications, isLoading } =
-    useQueryAllPatientMedicationsByStatus(showInactive ? "all" : "active");
+  const { builderMedications, isLoading } = useQueryAllPatientMedications();
 
   function openMedicationDrawer(row: MedicationStatementModel) {
     setSelectedMedication(row);
@@ -35,8 +34,16 @@ export function ProviderMedsTable({
 
   useEffect(() => {
     if (!builderMedications) return;
-    setMedicationModels(sort(builderMedications, get(sortColumn), sortOrder));
-  }, [builderMedications, sortColumn, sortOrder]);
+    setMedicationModels(
+      sort(
+        showInactive
+          ? builderMedications
+          : builderMedications.filter((bm) => bm.status === "Active"),
+        get(sortColumn),
+        sortOrder
+      )
+    );
+  }, [builderMedications, sortColumn, sortOrder, showInactive]);
 
   return (
     <>
