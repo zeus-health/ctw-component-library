@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.22.1
+
+### Patch Changes
+
+- 4507cde: Update aggregated from extension system url from http to https
+
 ## 0.22.0
 
 ### Minor Changes
