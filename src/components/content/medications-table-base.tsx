@@ -65,7 +65,7 @@ export const MedicationsTableBase = ({
   if (!hideMenu && isFunction(rowActions)) {
     columns.push({
       className: "ctw-table-action-column",
-      render: (medication: MedicationStatementModel) => (
+      render: (medication) => (
         <DropdownMenu menuItems={rowActions(medication)}>
           <DotsHorizontalIcon className="ctw-w-5" />
         </DropdownMenu>

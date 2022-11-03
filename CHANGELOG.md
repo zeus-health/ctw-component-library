@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 0.22.1
+
+### Patch Changes
+
+- 4507cde: Update aggregated from extension system url from http to https
+
+## 0.22.0
+
+### Minor Changes
+
+- 848ed56: Refactors of the Medication history details
+
 ## 0.21.3
 
 ### Patch Changes

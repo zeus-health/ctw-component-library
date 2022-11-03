@@ -3,6 +3,7 @@ import type { DataListEntry } from "../core/data-list";
 import { DataList, entryFromArray } from "../core/data-list";
 import type { DrawerProps } from "../core/drawer";
 import { Drawer } from "../core/drawer";
+import { MedicationHistory } from "./medication-history";
 
 export type MedicationDrawerProps = {
   medication?: MedicationStatementModel;
@@ -31,20 +32,15 @@ export const MedicationDrawer = ({
   ...drawerProps
 }: MedicationDrawerProps) => {
   const data = getDataEntriesFromMedicationStatement(medication);
-  function renderDrawerContentTop() {
-    return (
-      <div className="ctw-flex ctw-justify-between ctw-space-x-8">
-        <span className="ctw-text-3xl">{medication?.display}</span>
-      </div>
-    );
-  }
-
   return (
     <Drawer title="Medication History" {...drawerProps}>
       <Drawer.Body>
         <div className="ctw-space-y-7">
-          {medication && renderDrawerContentTop()}
+          <div className="ctw-flex ctw-justify-between ctw-space-x-8">
+            <span className="ctw-text-3xl">{medication?.display || ""}</span>
+          </div>
           <DataList title="Details" data={data} />
+          {medication?.rxNorm && <MedicationHistory medication={medication} />}
         </div>
       </Drawer.Body>
       <Drawer.Footer>

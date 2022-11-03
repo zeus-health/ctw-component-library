@@ -27,6 +27,7 @@ export const CollapsibleDataListStack = ({
             title={entry.title}
             subTitle={entry.subTitle}
             data={entry.data}
+            hideEmpty={entry.hideEmpty}
           />
         </div>
       ))}

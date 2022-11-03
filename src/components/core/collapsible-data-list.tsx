@@ -1,6 +1,7 @@
 import { ChevronRightIcon } from "@heroicons/react/outline";
 import cx from "classnames";
 import { ReactNode, useState } from "react";
+import "./collapsible-data-list.scss";
 
 export type CollapsibleDataListEntry = {
   label: string;
@@ -13,6 +14,12 @@ export type CollapsibleDataListProps = {
   title?: string;
   subTitle?: string;
   data: CollapsibleDataListEntry[];
+  hideEmpty?: boolean;
+};
+
+type DetailsProps = {
+  hideEmpty?: boolean;
+  data: CollapsibleDataListEntry[];
 };
 
 export const CollapsibleDataList = ({
@@ -21,11 +28,12 @@ export const CollapsibleDataList = ({
   title,
   subTitle,
   data,
+  hideEmpty,
 }: CollapsibleDataListProps) => {
   const [isDetailShown, setIsDetailShown] = useState(false);
 
   return (
-    <div className="ctw-space-y-3">
+    <div className="ctw-collapsible-data-list ctw-space-y-1">
       <DetailSummary
         date={date}
         title={title}
@@ -33,7 +41,7 @@ export const CollapsibleDataList = ({
         isDetailShown={isDetailShown}
         setIsDetailShown={setIsDetailShown}
       />
-      {isDetailShown && <Details data={data} />}
+      {isDetailShown && <Details data={data} hideEmpty={hideEmpty} />}
     </div>
   );
 };
@@ -56,11 +64,13 @@ const DetailSummary = ({
     onClick={() => setIsDetailShown(!isDetailShown)}
     className="ctw-w-full ctw-cursor-pointer ctw-border-none ctw-bg-transparent ctw-p-0 ctw-text-base ctw-outline-none"
   >
-    <div className="ctw-flex ctw-items-center ctw-justify-between ctw-rounded-lg ctw-bg-bg-lighter ctw-p-3 ctw-text-left">
+    <div className="ctw-flex ctw-items-center ctw-justify-between ctw-rounded-lg ctw-bg-bg-white ctw-p-3 ctw-text-left ctw-outline ctw-outline-bg-dark">
       <div className="ctw-flex ctw-space-x-3">
         {date && <div className="ctw-min-w-[5rem]">{date}</div>}
         <div>
-          <div className="ctw-text-primary-dark">{title}</div>
+          <div className="ctw-font-semibold ctw-text-content-black">
+            {title}
+          </div>
           <div className="ctw-text-content-light">{subTitle}</div>
         </div>
       </div>
@@ -75,12 +85,14 @@ const DetailSummary = ({
   </button>
 );
 
-const Details = ({ data }: { data: CollapsibleDataListEntry[] }) => (
+const Details = ({ data, hideEmpty = true }: DetailsProps) => (
   <div className="ctw-rounded-lg ctw-bg-bg-lighter">
     <dl className="ctw-space-y-2 ctw-p-4">
-      <div className="ctw-text-sm ctw-text-content-light">Details</div>
+      <div className="ctw-text-sm ctw-uppercase ctw-text-content-light">
+        Details
+      </div>
       {data
-        .filter((d) => d.value || d.value === 0)
+        .filter((d) => !hideEmpty || d.value || d.value === 0)
         .map(({ label, value }) => (
           <div
             key={label}
