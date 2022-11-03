@@ -83,7 +83,7 @@ export function getIdentifyingRxNormCode(
 export function getPerformingOrganization(
   resource: Medication,
   includedResources?: ResourceMap
-): string | undefined {
+): fhir4.Organization | undefined {
   let reference;
 
   switch (resource.resourceType) {
@@ -108,7 +108,7 @@ export function getPerformingOrganization(
       resource.contained,
       includedResources,
       reference.reference
-    )?.name;
+    );
   }
 
   return undefined;

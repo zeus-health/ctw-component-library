@@ -1,16 +1,32 @@
+import {
+  compact,
+  get,
+  groupBy,
+  map,
+  mapValues,
+  omit,
+  pipe,
+  split,
+  last,
+} from "lodash/fp";
 import { CTWRequestContext } from "@/components/core/ctw-context";
+import { useQueryWithPatient } from "@/components/core/patient-provider";
+import { MedicationModel } from "@/models/medication";
 import { PatientModel } from "@/models/patients";
 import { errorResponse } from "@/utils/errors";
-import type { FhirResource, MedicationStatement } from "fhir/r4";
-import { omit } from "lodash/fp";
-import { bundleToResourceMap } from "./bundle";
+import { QUERY_KEY_MEDICATION_HISTORY } from "@/utils/query-keys";
+import { sort } from "@/utils/sort";
+import type { FhirResource, MedicationStatement, Reference } from "fhir/r4";
+import { bundleToResourceMap, getMergedIncludedResources } from "./bundle";
 import { getIdentifyingRxNormCode } from "./medication";
 import {
+  searchAllRecords,
   searchBuilderRecords,
   searchLensRecords,
   SearchReturn,
 } from "./search-helpers";
-import { ResourceMap } from "./types";
+import { ResourceMap, ResourceTypeString } from "./types";
+import { MedicationStatementModel } from "@/models/medication-statement";
 
 export type InformationSource =
   | "Patient"
@@ -149,4 +165,97 @@ export function splitSummarizedMedications(
     { builderMedications, otherProviderMedications }
   );
   return splitData;
+}
+
+export function useMedicationHistory(medication: fhir4.MedicationStatement) {
+  const aggregatedFromReferences = new MedicationStatementModel(medication)
+    .aggregatedFrom;
+
+  const getRefId = pipe(get("reference"), split("/"), last);
+  const resources = pipe(
+    groupBy(get("type")),
+    mapValues(map(getRefId))
+  )(aggregatedFromReferences);
+
+  return useQueryWithPatient(
+    QUERY_KEY_MEDICATION_HISTORY,
+    [medication.id],
+    async (requestContext, patient) => {
+      try {
+        const [
+          medicationStatementResponse,
+          medicationAdministrationResponse,
+          medicationRequestResponse,
+          medicationDispenseResponse,
+        ] = await Promise.all([
+          searchWrapper(
+            "MedicationStatement",
+            requestContext,
+            resources.MedicationStatement
+          ),
+          searchWrapper(
+            "MedicationAdministration",
+            requestContext,
+            resources.MedicationAdministration
+          ),
+          searchWrapper(
+            "MedicationRequest",
+            requestContext,
+            resources.MedicationRequest
+          ),
+          searchWrapper(
+            "MedicationDispense",
+            requestContext,
+            resources.MedicationDispense,
+            ["MedicationDispense:performer"]
+          ),
+        ]);
+
+        const includedResources = getMergedIncludedResources(
+          compact([
+            medicationStatementResponse.bundle,
+            medicationAdministrationResponse.bundle,
+            medicationRequestResponse.bundle,
+            medicationDispenseResponse.bundle,
+          ])
+        );
+
+        const medicationResources = compact([
+          ...medicationStatementResponse.resources,
+          ...medicationAdministrationResponse.resources,
+          ...medicationRequestResponse.resources,
+          ...medicationDispenseResponse.resources,
+        ]).map((m) => new MedicationModel(m, includedResources));
+
+        const medications = sort(medicationResources, "date", "desc", true);
+
+        return { medications, includedResources };
+      } catch (e) {
+        throw new Error(
+          `Failed fetching medication history for medication ${medication.id}: ${e}`
+        );
+      }
+    }
+  );
+}
+
+type NoopSearchResults = { resources: []; bundle: undefined };
+function searchWrapper<T extends ResourceTypeString>(
+  resourceType: T,
+  requestContext: CTWRequestContext,
+  ids: string[] = [],
+  included: string[] = []
+): Promise<SearchReturn<T>> | NoopSearchResults {
+  if (ids.length > 0) {
+    return searchAllRecords(resourceType, requestContext, {
+      _id: ids.join(","),
+      _include: [
+        `${resourceType}:patient`,
+        `${resourceType}:medication`,
+        ...included,
+      ],
+      "_include:iterate": "Patient:organization",
+    });
+  }
+  return { resources: [], bundle: undefined };
 }

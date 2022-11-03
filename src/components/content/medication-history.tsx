@@ -1,109 +1,176 @@
-import { capitalize } from "lodash";
-import { useEffect, useState } from "react";
+import { CollapsibleDataListProps } from "@/components/core/collapsible-data-list";
+import { CollapsibleDataListStack } from "@/components/core/collapsible-data-list-stack";
+import { Loading } from "@/components/core/loading";
+import { useMedicationHistory } from "@/fhir/medications";
 import { MedicationModel } from "@/models/medication";
-import {
-  CTWPatientContext,
-  usePatient,
-} from "@/components/core/patient-provider";
-import { DataListStack } from "../core/data-list-table";
-import { Spinner } from "../core/spinner";
-import type {
-  DataListStackEntries,
-  DataListStackEntry,
-} from "../core/data-list-table";
+import { MedicationDispenseModel } from "@/models/medication-dispense";
+import { MedicationStatementModel } from "@/models/medication-statement";
+import { format } from "date-fns";
+import { useEffect, useState } from "react";
 
 const MEDICATION_HISTORY_LIMIT = 10;
 
 export type MedicationHistoryProps = {
-  rxNorm?: string;
+  medication: MedicationStatementModel;
 };
 
-export function MedicationHistory({ rxNorm }: MedicationHistoryProps) {
-  const patient = usePatient();
-  const [medications, setMedications] = useState<DataListStackEntries>([]);
-  const [loading, setLoading] = useState(true);
-
-  const patientUPID = patient.data?.UPID;
-  useEffect(() => {
-    // @todo need to reimplement this without fetcher
-    // if (fetcher.state === "idle" && !fetcher.data) {
-    //   fetcher.load(`/patients/${patientUPID}/medications/${rxNorm}`);
-    // }
-  }, [patientUPID, rxNorm]);
+export function MedicationHistory({ medication }: MedicationHistoryProps) {
+  const [entries, setEntries] = useState<CollapsibleDataListProps[]>([]);
+  const medHistoryQuery = useMedicationHistory(medication.resource);
+  const loading = medHistoryQuery.isLoading;
 
   useEffect(() => {
-    // @todo need to reimplement this without fetcher
-    // const result = fetcher.data;
-    // if (result && fetcher.state === "idle") {
-    //   const models = result.medications.map(
-    //     (medication) =>
-    //       new MedicationModel(medication, result.includedResources)
-    //   );
-    //   setMedications(models.map((model) => setupData(model)));
-    //   setLoading(false);
-    // }
-  }, []);
-
-  function setupData(medication: MedicationModel): DataListStackEntry {
-    return {
-      id: medication.id,
-      data: [
-        {
-          label: "Event",
-          value: resourceTypeRename(medication.resourceType),
-        },
-        {
-          label: "Status",
-          value: capitalize(medication.status),
-        },
-        {
-          label: "Date",
-          value: medication.dateLocal,
-        },
-        { label: "Dosage", value: medication.dosage },
-        {
-          label: "Organization",
-          value: medication.performer ?? medication.patient?.organization?.name,
-        },
-      ],
-    };
-  }
-
-  if (!rxNorm) {
-    return <div>No history found.</div>;
-  }
+    if (medHistoryQuery.data) {
+      const { medications } = medHistoryQuery.data;
+      setEntries(medications.map(createMedicationDetailsCard));
+    }
+  }, [medHistoryQuery.data]);
 
   if (loading) {
     return (
-      <div className="space-x-2">
-        <span className="ctw-text-sm ctw-italic">
-          Loading medication history...
-        </span>
-        <Spinner />
-      </div>
+      <>
+        <h3>Medication History</h3>
+        <Loading message="" />
+      </>
     );
   }
 
-  if (medications.length === 0) {
-    return <div>History failed to load.</div>;
-  }
-
   return (
-    <DataListStack entries={medications} limit={MEDICATION_HISTORY_LIMIT} />
+    <>
+      <h3>Medication History</h3>
+      {entries.length ? (
+        <CollapsibleDataListStack
+          entries={entries}
+          limit={MEDICATION_HISTORY_LIMIT}
+        />
+      ) : (
+        <span>No history available for this medication.</span>
+      )}
+    </>
   );
 }
 
-export function resourceTypeRename(name: string): string {
-  switch (name) {
-    case "MedicationStatement":
-      return "Usage Reported";
-    case "MedicationAdministration":
-      return "Administered";
-    case "MedicationDispense":
-      return "Filled";
-    case "MedicationRequest":
-      return "Prescribed";
-    default:
-      return name;
+function createMedicationStatementCard(medication: MedicationModel) {
+  const resource = medication.resource as fhir4.MedicationStatement;
+  const medStatement = new MedicationStatementModel(resource);
+
+  return {
+    date: format(new Date(medication.dateLocal || ""), "MM/dd/yyyy"),
+    id: medication.id,
+    title: "Medication Reviewed",
+    hideEmpty: false,
+    // @todo Get the practitioners name
+    subTitle: "",
+    data: [
+      {
+        label: "Status",
+        value: medStatement.status,
+      },
+      {
+        label: "Instructions",
+        value: medStatement.dosage,
+      },
+    ],
+  };
+}
+
+function createMedicationDetailsCard(
+  medication: MedicationModel
+): CollapsibleDataListProps {
+  if (medication.resourceType === "MedicationStatement") {
+    return createMedicationStatementCard(medication);
   }
+  if (medication.resourceType === "MedicationRequest") {
+    return createMedicationRequestCard(medication);
+  }
+
+  if (medication.resourceType === "MedicationDispense") {
+    return createMedicationDispenseCard(medication);
+  }
+
+  if (medication.resourceType === "MedicationAdministration") {
+    return createMedicationAdminCard(medication);
+  }
+
+  throw new Error(
+    `Unknown medication resource type "${medication.resourceType}"`
+  );
+}
+
+function createMedicationRequestCard(medication: MedicationModel) {
+  const resource = medication.resource as fhir4.MedicationRequest;
+  const prescriber = resource.requester?.display || "";
+  const pharmacy = resource.dispenseRequest?.performer?.display || "";
+
+  const { numberOfRepeatsAllowed = "", initialFill } =
+    resource.dispenseRequest || {};
+  const { value = "", unit = "" } = initialFill?.quantity || {};
+
+  return {
+    date: format(new Date(medication.dateLocal || ""), "MM/dd/yyyy"),
+    id: medication.id,
+    title: "Prescription Ordered",
+    subTitle: prescriber,
+    hideEmpty: false,
+    data: [
+      { label: "Quantity", value: [value, unit].join(" ") },
+      {
+        label: "Refills Allowed",
+        value: numberOfRepeatsAllowed,
+      },
+      {
+        label: "Instructions",
+        value: medication.dosage,
+      },
+      { label: "Prescriber", value: prescriber },
+      {
+        label: "Pharmacy",
+        value: pharmacy,
+      },
+    ],
+  };
+}
+
+function createMedicationDispenseCard(medication: MedicationModel) {
+  const resource = medication.resource as fhir4.MedicationDispense;
+  const medDispense = new MedicationDispenseModel(
+    resource,
+    medication.includedResources
+  );
+
+  const { quantityDisplay, supplied, performerDetails } = medDispense;
+  const { name, address, telecom } = performerDetails;
+  return {
+    date: format(new Date(medication.dateLocal || ""), "MM/dd/yyyy"),
+    hideEmpty: false,
+    id: medication.id,
+    title: "Medication Filled",
+    data: [
+      { label: "Quantity", value: quantityDisplay },
+      {
+        label: "Days supply",
+        value: supplied,
+      },
+      {
+        label: "Pharmacy",
+        value: (
+          <>
+            {name && <div>{name}</div>}
+            {address && <div>{address}</div>}
+            {telecom && <div>T: {telecom}</div>}
+          </>
+        ),
+      },
+    ],
+  };
+}
+
+function createMedicationAdminCard(medication: MedicationModel) {
+  return {
+    id: medication.id,
+    date: format(new Date(medication.dateLocal || ""), "MM/dd/yyyy"),
+    hideEmpty: false,
+    title: "Medication Administered",
+    data: [],
+  };
 }
