@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.22.0
+
+### Minor Changes
+
+- 848ed56: Refactors of the Medication history details
+
 ## 0.21.3
 
 ### Patch Changes
