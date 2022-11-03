@@ -1,13 +1,16 @@
-import { DrawerFormWithFields } from "@/components/content/forms/drawer-form-with-fields";
+import {
+  DrawerFormWithFields,
+  FormEntry,
+} from "@/components/content/forms/drawer-form-with-fields";
 import {
   createMedicationStatement,
-  getMedicationFormData,
+  getAddMedicationData,
   medicationStatementSchema,
 } from "@/components/content/forms/medications";
 import { usePatient } from "@/components/core/patient-provider";
 import { MedicationStatementModel } from "@/models/medication-statement";
 import { format } from "date-fns";
-import { ReactElement } from "react";
+import { ReactElement, useEffect, useState } from "react";
 
 type Props = {
   isOpen: boolean;
@@ -17,18 +20,24 @@ type Props = {
 
 export const AddNewMedDrawer = ({ isOpen, handleOnClose, children }: Props) => {
   const patient = usePatient();
+  const [currentSelectedData, setCurrentlySelectedData] =
+    useState<FormEntry[]>();
 
-  const createMedData = getMedicationFormData(
-    new MedicationStatementModel({
-      resourceType: "MedicationStatement",
-      status: "active",
-      subject: {
-        reference: `Patient/${patient.data?.id}`,
-        display: patient.data?.display,
-      },
-      dateAsserted: format(new Date(), "yyyy-MM-dd"),
-    })
-  );
+  useEffect(() => {
+    const createMedData = getAddMedicationData({
+      medication: new MedicationStatementModel({
+        resourceType: "MedicationStatement",
+        status: "active",
+        subject: {
+          reference: `Patient/${patient.data?.id}`,
+          display: patient.data?.display,
+        },
+        dateAsserted: format(new Date(), "yyyy-MM-dd"),
+      }),
+    });
+
+    setCurrentlySelectedData(createMedData);
+  }, [patient.data?.display, patient.data?.id]);
 
   if (!patient.data?.UPID) {
     return null;
@@ -41,7 +50,7 @@ export const AddNewMedDrawer = ({ isOpen, handleOnClose, children }: Props) => {
         title="Add Medication"
         patientID={patient.data.UPID}
         action={createMedicationStatement}
-        data={createMedData}
+        data={currentSelectedData}
         schema={medicationStatementSchema}
         isOpen={isOpen}
         onClose={() => handleOnClose()}

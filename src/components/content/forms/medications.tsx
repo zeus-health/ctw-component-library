@@ -13,6 +13,28 @@ import {
 import { queryClient } from "@/utils/request";
 import { z } from "zod";
 import type { FormEntry } from "./drawer-form-with-fields";
+import { MedicationsAutoComplete } from "./medications-autocomplete";
+
+export const getAddMedicationData = ({
+  medication,
+}: {
+  medication: MedicationStatementModel;
+}): FormEntry[] => [
+  {
+    label: "Medication name",
+    field: "display",
+    value: medication.display,
+    readonly: false,
+    render: (readonly: boolean | undefined, inputProps) => (
+      <MedicationsAutoComplete
+        readonly={readonly}
+        {...inputProps}
+        defaultCoding={{}}
+      />
+    ),
+  },
+  ...getMedicationFormData(medication),
+];
 
 export const medicationStatementSchema = z.object({
   subjectID: z.string({ required_error: "Patient must be specified." }),
@@ -107,11 +129,6 @@ export const getMedicationFormData = (
     value: medication.dateAsserted,
     field: "dateAsserted",
     readonly: true,
-  },
-  {
-    label: "Medication Name",
-    value: medication.display,
-    field: "display",
   },
   {
     label: "RxNorm Code",
