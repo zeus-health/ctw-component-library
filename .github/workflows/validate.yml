@@ -95,4 +95,6 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: ⚡ Run vitest
-        run: npm run test
+        run:
+          - npm run build
+          - npm run test
