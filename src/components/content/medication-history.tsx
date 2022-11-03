@@ -55,7 +55,7 @@ function createMedicationStatementCard(medication: MedicationModel) {
   const medStatement = new MedicationStatementModel(resource);
 
   return {
-    date: format(new Date(medication.date || ""), "MM/dd/yyyy"),
+    date: format(new Date(medication.dateLocal || ""), "MM/dd/yyyy"),
     id: medication.id,
     title: "Medication Reviewed",
     hideEmpty: false,
@@ -107,7 +107,7 @@ function createMedicationRequestCard(medication: MedicationModel) {
   const { value = "", unit = "" } = initialFill?.quantity || {};
 
   return {
-    date: format(new Date(medication.date || ""), "MM/dd/yyyy"),
+    date: format(new Date(medication.dateLocal || ""), "MM/dd/yyyy"),
     id: medication.id,
     title: "Prescription Ordered",
     subTitle: prescriber,
@@ -141,7 +141,7 @@ function createMedicationDispenseCard(medication: MedicationModel) {
   const { quantityDisplay, supplied, performerDetails } = medDispense;
   const { name, address, telecom } = performerDetails;
   return {
-    date: format(new Date(medication.date || ""), "MM/dd/yyyy"),
+    date: format(new Date(medication.dateLocal || ""), "MM/dd/yyyy"),
     hideEmpty: false,
     id: medication.id,
     title: "Medication Filled",
@@ -168,7 +168,7 @@ function createMedicationDispenseCard(medication: MedicationModel) {
 function createMedicationAdminCard(medication: MedicationModel) {
   return {
     id: medication.id,
-    date: format(new Date(medication.date || ""), "MM/dd/yyyy"),
+    date: format(new Date(medication.dateLocal || ""), "MM/dd/yyyy"),
     hideEmpty: false,
     title: "Medication Administered",
     data: [],
