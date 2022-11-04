@@ -14,6 +14,7 @@ import {
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import { z } from "zod";
+import { DosageSelect } from "./dosages-select";
 import type { FormEntry } from "./drawer-form-with-fields";
 import { MedicationsAutoComplete } from "./medications-autocomplete";
 import { ActionReturn, MedicationFormData } from "./types";
@@ -41,7 +42,22 @@ export const getAddMedicationData = ({
       />
     ),
   },
-  ...getMedicationFormData(medication),
+  {
+    label: "Dosage",
+    value: medication.dosage,
+    field: "dosage",
+    readonly: false,
+    render: (readonly: boolean | undefined, inputProps) => (
+      <DosageSelect medName={medication.display} />
+    ),
+  },
+  {
+    label: "RxNorm Code",
+    value: medication.rxNorm,
+    field: "rxNormCode",
+    readonly: true,
+  },
+  ...sharedFields(medication),
 ];
 
 export const medicationStatementSchema = z.object({
@@ -133,7 +149,7 @@ export const createMedicationStatement = async (
   return { formResult: result, requestErrors };
 };
 
-export const getMedicationFormData = (
+export const sharedFields = (
   medication: MedicationStatementModel
 ): FormEntry[] => [
   {
@@ -150,19 +166,9 @@ export const getMedicationFormData = (
     readonly: true,
   },
   {
-    label: "RxNorm Code",
-    value: medication.rxNorm,
-    field: "rxNormCode",
-  },
-  {
     label: "Latest Status",
     value: medication.status,
     field: "status",
-  },
-  {
-    label: "Dosage",
-    value: medication.dosage,
-    field: "dosage",
   },
   {
     label: "New Note",

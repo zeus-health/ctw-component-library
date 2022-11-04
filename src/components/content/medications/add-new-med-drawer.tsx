@@ -39,20 +39,22 @@ export const AddNewMedDrawer = ({ isOpen, handleOnClose, children }: Props) => {
     const createMedData = getAddMedicationData({
       medication,
       onValueChange: (value) => {
-        console.log("hehe", value);
-        // const medicationCopy = {
-        //   ...medication,
-        //   rxNorm: value,
-        // } as MedicationStatementModel;
-        // setMedication(medicationCopy);
-        // setCurrentlySelectedData();
-
-        // TODO: fetch dosages and set RxNorm code
+        // TODO: value can be either medicationName (as used now)
+        // or an rxNorm (that should be differentiated and set appropriately)
+        const newMeds = new MedicationStatementModel({
+          ...medication.resource,
+          medicationCodeableConcept: {
+            text: value,
+          },
+        });
+        setMedication(newMeds);
+        // TODO: simplify that
+        setCurrentlySelectedData(getAddMedicationData({ medication: newMeds }));
       },
     });
 
     setCurrentlySelectedData(createMedData);
-  }, [patient.data?.display, patient.data?.id]);
+  }, [medication, patient.data]);
 
   if (!patient.data?.UPID) {
     return null;
