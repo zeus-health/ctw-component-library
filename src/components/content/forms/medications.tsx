@@ -50,9 +50,10 @@ export const getAddMedicationData = ({
     value: medication.dosage,
     field: "dosage",
     readonly: false,
-    render: (readonly: boolean | undefined, inputProps) => (
+    render: () => (
       <DosageSelect
         medName={medication.display}
+        name="dosage"
         onChange={onMedicationDosageChange}
       />
     ),

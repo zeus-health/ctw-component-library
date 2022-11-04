@@ -6,13 +6,17 @@ import {
 } from "../../../api/autocomplete-medications";
 import { FormField } from "./form-field";
 
+type DosageSelectProps = {
+  medName: string;
+  onChange?: (value: DosageItem) => void;
+  name: string;
+};
+
 export const DosageSelect = ({
   onChange,
   medName,
-}: {
-  medName: string;
-  onChange?: (value: DosageItem) => void;
-}) => {
+  name,
+}: DosageSelectProps) => {
   const { getRequestContext } = useCTW();
   const [isLoading, setIsLoading] = useState(false);
   const [options, setOptions] = useState<DosageItem[]>([]);
@@ -49,6 +53,7 @@ export const DosageSelect = ({
   return (
     <FormField
       options={["Select", ...(options?.map?.((item) => item.text) || [])]}
+      name={name}
       onValueChange={handleChange}
     />
   );
