@@ -1,5 +1,23 @@
 # ctw-component-library
 
+## 0.23.1
+
+### Patch Changes
+
+- 112a1c5: Don't error when a reference is not found. This can happen due to permissions and is not a sign of a problem.
+
+## 0.23.0
+
+### Minor Changes
+
+- 483f8e8: Shows additional errors for condition forms that were not shown before, including ones associated with multiple fields and failures with the request or responses from the server.
+
+## 0.22.2
+
+### Patch Changes
+
+- ce1d852: date-fn update
+
 ## 0.22.1
 
 ### Patch Changes

@@ -1,5 +1,5 @@
 import { ConditionModel } from "@/models/condition";
-import { z } from "zod";
+import Zod, { RefinementCtx, z } from "zod";
 import { ConditionsAutoComplete } from "./conditions-autocomplete";
 import type { FormEntry } from "./drawer-form-with-fields";
 
@@ -75,7 +75,7 @@ const sharedFields = (condition: ConditionModel) => [
   },
 ];
 
-const sharedSchema = {
+const conditionSchema = z.object({
   id: z.string().optional(),
   subjectID: z.string({
     required_error: "Condition subjectID must be specified.",
@@ -96,27 +96,53 @@ const sharedSchema = {
     "entered-in-error",
   ]),
   note: z.string().optional(),
+});
+
+export const conditionRefinement = (
+  condition: Zod.infer<typeof conditionSchema>,
+  ctx: RefinementCtx
+) => {
+  if (condition.abatement && condition.clinicalStatus === "active") {
+    ctx.addIssue({
+      code: Zod.ZodIssueCode.custom,
+      message: "Clinical status must be inactive.",
+      path: ["abatement"],
+    });
+  }
+  if (
+    condition.abatement &&
+    condition.onset &&
+    condition.abatement < condition.onset
+  ) {
+    ctx.addIssue({
+      code: Zod.ZodIssueCode.custom,
+      message: "Abatement date must be after onset date.",
+      path: ["abatement"],
+    });
+  }
 };
 
-export const conditionEditSchema = z.object({
-  ...sharedSchema,
-  condition: z.unknown(),
-});
+export const conditionEditSchema = conditionSchema.superRefine(
+  (condition, refinementCtx) => conditionRefinement(condition, refinementCtx)
+);
 
-export const conditionAddSchema = z.object({
-  ...sharedSchema,
-  condition: z.object({
-    display: z.string({
-      required_error: "Please choose a condition.",
+export const conditionAddSchema = conditionSchema
+  .extend({
+    condition: z.object({
+      display: z.string({
+        required_error: "Please choose a condition.",
+      }),
+      code: z.string({
+        required_error: "Please choose a condition.",
+      }),
+      system: z.string({
+        required_error: "Please choose a condition.",
+      }),
     }),
-    code: z.string({
-      required_error: "Please choose a condition.",
-    }),
-    system: z.string({
-      required_error: "Please choose a condition.",
-    }),
-  }),
-});
+  })
+  .superRefine((condition, refinementCtx) =>
+    conditionRefinement(condition, refinementCtx)
+  );
 
 function levelTwoToOneMapping(value: string): string {
   switch (value) {

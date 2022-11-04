@@ -41,11 +41,6 @@
     padding: 0;
   }
 
-  /* Make sure the floating dropdown get full-width of reference. */
-  .ctw-listbox-button + div {
-    width: 100%;
-  }
-
   .ctw-listbox-button:disabled,
   .ctw-listbox-textarea:disabled,
   .ctw-listbox-textarea:read-only,
@@ -120,6 +115,7 @@
     hyphens: auto;
   }
 
+  select.ctw-error,
   input.ctw-error {
     @apply ctw-border-error-main ctw-pr-10 focus:ctw-border-error-main focus:ctw-outline-none focus:ctw-ring-1 focus:ctw-ring-error-main;
   }
