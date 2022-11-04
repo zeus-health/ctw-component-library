@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.23.2
+
+### Patch Changes
+
+- b829a97: set the range for node engine to 16 - 19
+
 ## 0.23.1
 
 ### Patch Changes
