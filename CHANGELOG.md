@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.23.1
+
+### Patch Changes
+
+- 112a1c5: Don't error when a reference is not found. This can happen due to permissions and is not a sign of a problem.
+
 ## 0.23.0
 
 ### Minor Changes
