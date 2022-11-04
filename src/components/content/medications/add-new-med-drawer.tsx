@@ -23,17 +23,32 @@ export const AddNewMedDrawer = ({ isOpen, handleOnClose, children }: Props) => {
   const [currentSelectedData, setCurrentlySelectedData] =
     useState<FormEntry[]>();
 
+  const [medication, setMedication] = useState(
+    new MedicationStatementModel({
+      resourceType: "MedicationStatement",
+      status: "active",
+      subject: {
+        reference: `Patient/${patient.data?.id}`,
+        display: patient.data?.display,
+      },
+      dateAsserted: format(new Date(), "yyyy-MM-dd"),
+    })
+  );
+
   useEffect(() => {
     const createMedData = getAddMedicationData({
-      medication: new MedicationStatementModel({
-        resourceType: "MedicationStatement",
-        status: "active",
-        subject: {
-          reference: `Patient/${patient.data?.id}`,
-          display: patient.data?.display,
-        },
-        dateAsserted: format(new Date(), "yyyy-MM-dd"),
-      }),
+      medication,
+      onValueChange: (value) => {
+        console.log("hehe", value);
+        // const medicationCopy = {
+        //   ...medication,
+        //   rxNorm: value,
+        // } as MedicationStatementModel;
+        // setMedication(medicationCopy);
+        // setCurrentlySelectedData();
+
+        // TODO: fetch dosages and set RxNorm code
+      },
     });
 
     setCurrentlySelectedData(createMedData);
@@ -53,7 +68,7 @@ export const AddNewMedDrawer = ({ isOpen, handleOnClose, children }: Props) => {
         data={currentSelectedData}
         schema={medicationStatementSchema}
         isOpen={isOpen}
-        onClose={() => handleOnClose()}
+        onClose={handleOnClose}
       />
     </>
   );

@@ -11,10 +11,12 @@ export type MedicationsAutoCompleteOption = {
   display: string;
   code: string;
   system: string;
+  onValueChange?: (value: string) => void;
 };
 
 export const MedicationsAutoComplete = ({
   readonly,
+  onValueChange,
   ...inputProps
 }: AutoCompleteComboboxProps) => {
   const { getRequestContext } = useCTW();
@@ -47,6 +49,7 @@ export const MedicationsAutoComplete = ({
       readonly={readonly}
       onSearchChange={handleSearchChange}
       defaultValue={undefined}
+      onValueChange={onValueChange}
     />
   );
 };

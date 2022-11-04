@@ -12,6 +12,7 @@ export type ComboboxFieldProps<T> = {
   defaultSearchTerm: string;
   onSearchChange: (searchTerm: string) => void;
   readonly: boolean | undefined;
+  onValueChange?: (value: string) => void;
 };
 
 export const ComboboxField = <T,>({
@@ -22,6 +23,7 @@ export const ComboboxField = <T,>({
   defaultValue,
   onSearchChange,
   readonly,
+  onValueChange,
 }: ComboboxFieldProps<T>) => {
   const [searchTerm, setSearchTerm] = useState(defaultSearchTerm || "");
   const [inputValue, setInputValue] = useState<unknown>({});
@@ -48,6 +50,7 @@ export const ComboboxField = <T,>({
   const onSelectChange = (eventValue: string) => {
     const currentItem = options.filter((item) => item.label === eventValue)[0];
     setInputValue(currentItem.value);
+    onValueChange?.(currentItem.value as string);
     setSearchTerm(eventValue);
   };
 

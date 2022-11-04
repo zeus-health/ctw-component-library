@@ -9,6 +9,7 @@ import {
 export type AutoCompleteComboboxProps = {
   defaultCoding?: fhir4.Coding;
   readonly: boolean | undefined;
+  onValueChange?: (value: string) => void;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 export type ConditionsAutoCompleteOption = {

@@ -15,11 +15,15 @@ import { z } from "zod";
 import type { FormEntry } from "./drawer-form-with-fields";
 import { MedicationsAutoComplete } from "./medications-autocomplete";
 
+type GetAddMedicationDataProps = {
+  medication: MedicationStatementModel;
+  onValueChange?: (value: string) => void;
+};
+
 export const getAddMedicationData = ({
   medication,
-}: {
-  medication: MedicationStatementModel;
-}): FormEntry[] => [
+  onValueChange,
+}: GetAddMedicationDataProps): FormEntry[] => [
   {
     label: "Medication name",
     field: "display",
@@ -28,6 +32,7 @@ export const getAddMedicationData = ({
     render: (readonly: boolean | undefined, inputProps) => (
       <MedicationsAutoComplete
         readonly={readonly}
+        onValueChange={onValueChange}
         {...inputProps}
         defaultCoding={{}}
       />
