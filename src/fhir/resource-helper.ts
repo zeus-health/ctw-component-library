@@ -35,5 +35,8 @@ export function findReference<T extends ResourceTypeString>(
   // to find the reference and use it. The only reason why this
   // wouldn't work for an existing reference is if we forgot
   // to do a _include or _include:iterate!
-  throw new Error(`Cannot find referenced resource: ${reference}.`);
+  // NOTE: It's also possible that we cannot find a reference
+  // because user does not have permission to it. This can happen
+  // in CPR where user can see a resource but not one of its references.
+  return undefined;
 }
