@@ -43,12 +43,12 @@ export const DosageSelect = ({
 
   const handleChange = (value: string) => {
     const dosage = options.find((el) => el.text === value);
-    if (dosage && onChange) onChange(dosage);
+    if (dosage) onChange?.(dosage);
   };
 
   return (
     <FormField
-      options={options.map((item) => item.text)}
+      options={["Select", ...(options?.map?.((item) => item.text) || [])]}
       onValueChange={handleChange}
     />
   );
