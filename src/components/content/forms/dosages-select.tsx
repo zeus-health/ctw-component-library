@@ -1,22 +1,24 @@
 import { useCTW } from "@/components/core/ctw-provider";
 import { useEffect, useState } from "react";
-import { getAutoCompleteMedicationsDosage } from "../../../api/autocomplete-medications";
+import {
+  DosageItem,
+  getAutoCompleteMedicationsDosage,
+} from "../../../api/autocomplete-medications";
 import { FormField } from "./form-field";
 
 export const DosageSelect = ({
-  onValueChange,
+  onChange,
   medName,
 }: {
   medName: string;
-  onValueChange?: (value: string) => void;
+  onChange?: (value: DosageItem) => void;
 }) => {
   const { getRequestContext } = useCTW();
   const [isLoading, setIsLoading] = useState(false);
-  const [options, setOptions] = useState<string[]>([]);
+  const [options, setOptions] = useState<DosageItem[]>([]);
 
   useEffect(() => {
     if (!medName) {
-      setOptions([]);
       return;
     }
     setIsLoading(true);
@@ -29,7 +31,7 @@ export const DosageSelect = ({
         medName
       );
 
-      return dosages.map((item) => item.text);
+      return dosages;
     };
 
     fetchDosages().then((dosages) => {
@@ -39,5 +41,15 @@ export const DosageSelect = ({
     setIsLoading(false);
   }, [getRequestContext, medName]);
 
-  return <FormField options={options} />;
+  const handleChange = (value: string) => {
+    const dosage = options.find((el) => el.text === value);
+    if (dosage && onChange) onChange(dosage);
+  };
+
+  return (
+    <FormField
+      options={options.map((item) => item.text)}
+      onValueChange={handleChange}
+    />
+  );
 };

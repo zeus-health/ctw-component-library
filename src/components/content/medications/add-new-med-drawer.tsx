@@ -11,6 +11,8 @@ import { usePatient } from "@/components/core/patient-provider";
 import { MedicationStatementModel } from "@/models/medication-statement";
 import { format } from "date-fns";
 import { ReactElement, useEffect, useState } from "react";
+import { DosageItem } from "../../../api/autocomplete-medications";
+import { SYSTEM_RXNORM } from "../../../fhir/system-urls";
 
 type Props = {
   isOpen: boolean;
@@ -38,14 +40,40 @@ export const AddNewMedDrawer = ({ isOpen, handleOnClose, children }: Props) => {
   useEffect(() => {
     const createMedData = getAddMedicationData({
       medication,
-      onValueChange: (value) => {
-        // TODO: value can be either medicationName (as used now)
-        // or an rxNorm (that should be differentiated and set appropriately)
+      // TODO: could probably be differentiated inside one onValueChange
+      // instead of having two handlers for med name and code
+      onMedicationNameChange: (value) => {
         const newMeds = new MedicationStatementModel({
           ...medication.resource,
           medicationCodeableConcept: {
-            text: value,
+            coding: [
+              {
+                display: value,
+              },
+            ],
           },
+        });
+        setMedication(newMeds);
+        // TODO: simplify that
+        setCurrentlySelectedData(getAddMedicationData({ medication: newMeds }));
+      },
+      onMedicationDosageChange: (value: DosageItem) => {
+        const newMeds = new MedicationStatementModel({
+          ...medication.resource,
+          medicationCodeableConcept: {
+            coding: [
+              {
+                code: value.rxNormCode,
+                system: SYSTEM_RXNORM,
+                display: medication.display,
+              },
+            ],
+          },
+          dosage: [
+            {
+              text: value.text,
+            },
+          ],
         });
         setMedication(newMeds);
         // TODO: simplify that

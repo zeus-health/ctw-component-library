@@ -14,6 +14,7 @@ import {
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import { z } from "zod";
+import { DosageItem } from "../../../api/autocomplete-medications";
 import { DosageSelect } from "./dosages-select";
 import type { FormEntry } from "./drawer-form-with-fields";
 import { MedicationsAutoComplete } from "./medications-autocomplete";
@@ -21,12 +22,14 @@ import { ActionReturn, MedicationFormData } from "./types";
 
 type GetAddMedicationDataProps = {
   medication: MedicationStatementModel;
-  onValueChange?: (value: string) => void;
+  onMedicationNameChange?: (value: string) => void;
+  onMedicationDosageChange?: (value: DosageItem) => void;
 };
 
 export const getAddMedicationData = ({
   medication,
-  onValueChange,
+  onMedicationNameChange,
+  onMedicationDosageChange,
 }: GetAddMedicationDataProps): FormEntry[] => [
   {
     label: "Medication name",
@@ -36,7 +39,7 @@ export const getAddMedicationData = ({
     render: (readonly: boolean | undefined, inputProps) => (
       <MedicationsAutoComplete
         readonly={readonly}
-        onValueChange={onValueChange}
+        onValueChange={onMedicationNameChange}
         {...inputProps}
         defaultCoding={{}}
       />
@@ -48,7 +51,10 @@ export const getAddMedicationData = ({
     field: "dosage",
     readonly: false,
     render: (readonly: boolean | undefined, inputProps) => (
-      <DosageSelect medName={medication.display} />
+      <DosageSelect
+        medName={medication.display}
+        onChange={onMedicationDosageChange}
+      />
     ),
   },
   {
@@ -66,7 +72,7 @@ export const medicationStatementSchema = z.object({
   note: z.string().optional(),
   display: z.string().optional(),
   rxNormCode: z.string({ required_error: "RxNorm Code is required." }),
-  dosage: z.string().optional(),
+  dosage: z.string(),
   status: z.enum([
     "active",
     "completed",
