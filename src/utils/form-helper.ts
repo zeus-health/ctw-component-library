@@ -1,5 +1,6 @@
 /* eslint-disable */
 /* Disabling eslint because we got this code from the remix helper and ported over to work in a SPA env. */
+import { ActionReturn } from "@/components/content/forms/types";
 import Zod, {
   z,
   ZodArray,
@@ -14,10 +15,11 @@ import Zod, {
   ZodObject,
   ZodOptional,
   ZodString,
-  ZodType,
   ZodTypeAny,
   ZodUnknown,
 } from "zod";
+
+export type AnyZodSchema = Zod.AnyZodObject | ZodEffects<any, any, any>;
 
 export function parseParams(o: any, schema: any, key: string, value: any) {
   // find actual shape definition for this key
@@ -116,9 +118,7 @@ export function isIterable(
 export function getParamsInternal<T>(
   params: URLSearchParams | FormData | Record<string, string | undefined>,
   schema: any
-):
-  | { success: true | false; data: T; errors: undefined }
-  | { success: false; data: undefined; errors: { [key: string]: string } } {
+): ActionReturn<T> {
   // @ts-ignore
   let o: any = {};
   let entries: [string, unknown][] = [];
@@ -136,18 +136,17 @@ export function getParamsInternal<T>(
     parseParams(o, schema, key, value);
   }
 
-  const result = schema.safeParse(o);
+  let toParse = schema;
+  const result = toParse.safeParse(o);
   if (result.success) {
     return { success: true, data: result.data as T, errors: undefined };
   }
   const errors: any = {};
   const addError = (key: string, message: string) => {
     if (!errors.hasOwnProperty(key)) {
-      errors[key] = message;
+      errors[key] = [message];
     } else {
-      if (!Array.isArray(errors[key])) {
-        errors[key] = [errors[key]];
-      }
+      errors[key] = [...errors[key], message];
     }
   };
 
@@ -167,7 +166,7 @@ export function getParamsInternal<T>(
   return { success: false, data: undefined, errors };
 }
 
-export async function getFormData<T extends ZodType<any, any, any>>(
+export async function getFormData<T extends AnyZodSchema>(
   data: FormData,
   schema: T
 ) {
@@ -199,7 +198,9 @@ export type InputPropType = {
   options?: string[] | undefined;
 };
 
-export function useFormInputProps(schema: any, options: any = {}) {
+export function useFormInputProps(zodThing: AnyZodSchema, options: any = {}) {
+  const schema =
+    zodThing instanceof ZodEffects ? zodThing._def.schema : zodThing;
   const { shape } = schema;
   const defaultOptions = options;
   return function props(key: string, options: any = {}) {

@@ -20,12 +20,13 @@ export class MedicationModel {
     return this.resource.id || "";
   }
 
-  get resourceType(): string {
+  get resourceType(): fhir4.FhirResource["resourceType"] {
     return this.resource.resourceType;
   }
 
   get performer(): string | undefined {
-    return getPerformingOrganization(this.resource, this.includedResources);
+    return getPerformingOrganization(this.resource, this.includedResources)
+      ?.name;
   }
 
   get status(): string {
