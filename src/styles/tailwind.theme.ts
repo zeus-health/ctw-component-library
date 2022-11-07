@@ -67,6 +67,40 @@ export const TailwindTheme = {
   },
 };
 
+// Some post processing workflows (older versions of PostCSS) will
+// incorrectly remove tailwind's empty CSS variables.
+// To fix this, we manually apply them in CTWProvider.
+// See https://github.com/tailwindlabs/tailwindcss/issues/2889#issuecomment-734238826
+export const EmptyTailwindCSSVars: Record<string, string> = {
+  "--tw-pan-x": " ",
+  "--tw-pan-y": " ",
+  "--tw-pinch-zoom": " ",
+  "--tw-ordinal": " ",
+  "--tw-slashed-zero": " ",
+  "--tw-numeric-figure": " ",
+  "--tw-numeric-spacing": " ",
+  "--tw-numeric-fraction": " ",
+  "--tw-ring-inset": " ",
+  "--tw-blur": " ",
+  "--tw-brightness": " ",
+  "--tw-contrast": " ",
+  "--tw-grayscale": " ",
+  "--tw-hue-rotate": " ",
+  "--tw-invert": " ",
+  "--tw-saturate": " ",
+  "--tw-sepia": " ",
+  "--tw-drop-shadow": " ",
+  "--tw-backdrop-blur": " ",
+  "--tw-backdrop-brightness": " ",
+  "--tw-backdrop-contrast": " ",
+  "--tw-backdrop-grayscale": " ",
+  "--tw-backdrop-hue-rotate": " ",
+  "--tw-backdrop-invert": " ",
+  "--tw-backdrop-opacity": " ",
+  "--tw-backdrop-saturate": " ",
+  "--tw-backdrop-sepia": " ",
+};
+
 // Theme type is a nested partial
 export type ColorTheme = Subset<typeof TailwindTheme["colors"]>;
 export type Theme = {
