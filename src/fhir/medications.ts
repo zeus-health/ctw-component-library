@@ -1,22 +1,24 @@
+import { CTWRequestContext } from "@/components/core/ctw-context";
+import { useQueryWithPatient } from "@/components/core/patient-provider";
+import { MedicationModel } from "@/models/medication";
+import { MedicationStatementModel } from "@/models/medication-statement";
+import { PatientModel } from "@/models/patients";
+import { errorResponse } from "@/utils/errors";
+import { QUERY_KEY_MEDICATION_HISTORY } from "@/utils/query-keys";
+import { sort } from "@/utils/sort";
+import type { FhirResource, MedicationStatement } from "fhir/r4";
+import { uniqBy } from "lodash";
 import {
   compact,
   get,
   groupBy,
+  last,
   map,
   mapValues,
   omit,
   pipe,
   split,
-  last,
 } from "lodash/fp";
-import { CTWRequestContext } from "@/components/core/ctw-context";
-import { useQueryWithPatient } from "@/components/core/patient-provider";
-import { MedicationModel } from "@/models/medication";
-import { PatientModel } from "@/models/patients";
-import { errorResponse } from "@/utils/errors";
-import { QUERY_KEY_MEDICATION_HISTORY } from "@/utils/query-keys";
-import { sort } from "@/utils/sort";
-import type { FhirResource, MedicationStatement, Reference } from "fhir/r4";
 import { bundleToResourceMap, getMergedIncludedResources } from "./bundle";
 import { getIdentifyingRxNormCode } from "./medication";
 import {
@@ -26,7 +28,6 @@ import {
   SearchReturn,
 } from "./search-helpers";
 import { ResourceMap, ResourceTypeString } from "./types";
-import { MedicationStatementModel } from "@/models/medication-statement";
 
 export type InformationSource =
   | "Patient"
@@ -227,7 +228,12 @@ export function useMedicationHistory(medication: fhir4.MedicationStatement) {
           ...medicationDispenseResponse.resources,
         ]).map((m) => new MedicationModel(m, includedResources));
 
-        const medications = sort(medicationResources, "date", "desc", true);
+        const medications = sort(
+          uniqBy(medicationResources, "date"),
+          "date",
+          "desc",
+          true
+        );
 
         return { medications, includedResources };
       } catch (e) {
