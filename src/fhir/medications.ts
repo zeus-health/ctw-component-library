@@ -7,7 +7,7 @@ import { errorResponse } from "@/utils/errors";
 import { QUERY_KEY_MEDICATION_HISTORY } from "@/utils/query-keys";
 import { sort } from "@/utils/sort";
 import type { FhirResource, MedicationStatement } from "fhir/r4";
-import { uniqBy } from "lodash";
+import { uniqWith } from "lodash";
 import {
   compact,
   get,
@@ -229,7 +229,12 @@ export function useMedicationHistory(medication: fhir4.MedicationStatement) {
         ]).map((m) => new MedicationModel(m, includedResources));
 
         const medications = sort(
-          uniqBy(medicationResources, "date"),
+          uniqWith(
+            medicationResources,
+            (a, b) =>
+              a.date === b.date &&
+              a.resource.resourceType === b.resource.resourceType
+          ),
           "date",
           "desc",
           true
