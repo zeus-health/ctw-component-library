@@ -287,13 +287,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
                   setSelectedCondition(condition);
                 },
               },
-              {
-                name: "Delete",
-                className: "dangerous",
-                action: () => {
-                  handleConditionDelete(condition);
-                },
-              },
             ]}
           />
         </div>
