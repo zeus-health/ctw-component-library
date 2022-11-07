@@ -70,7 +70,7 @@ const sharedFields = (condition: ConditionModel) => [
   },
   {
     label: "Note",
-    value: condition.notes,
+    value: condition.notes as unknown as string,
     lines: 3,
     field: "note",
   },
