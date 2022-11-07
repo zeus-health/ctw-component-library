@@ -1,5 +1,13 @@
 # ctw-component-library
 
+## 0.23.3
+
+### Patch Changes
+
+- 1d5ba82: Exporting Drawer, models and some other core components
+- 7e0a205: Hide delete option in Other Patient Records.
+- e5170bd: If notes is pre-populated it will now show when editing a condition. Notes can only be resized vertically now.
+
 ## 0.23.2
 
 ### Patch Changes
