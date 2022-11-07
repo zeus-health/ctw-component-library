@@ -7,7 +7,7 @@ import { FormField } from "./form-field";
 export type FormEntry = {
   label: string;
   field: string;
-  value?: string;
+  value?: string | string[];
   lines?: number;
   readonly?: boolean;
   hidden?: boolean;
