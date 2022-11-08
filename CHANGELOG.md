@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 0.23.5
+
+### Patch Changes
+
+- b1fab2d: Fix a handful of CSS issues impacting importing of this component library. Additionally get conditions autocomplete options to float (absolute positioning) instead of pushing other content down when options are showed.
+- 92afd10: Filter entered-in-error for verfication status in condition history.
+
 ## 0.23.4
 
 ### Patch Changes
