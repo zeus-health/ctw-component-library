@@ -2,4 +2,4 @@
 "@zus-health/ctw-component-library": patch
 ---
 
-Capitalizing fields in details/history drawers
+Capitalize label and fields in detail and history drawers.
