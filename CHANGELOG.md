@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.23.4
+
+### Patch Changes
+
+- 811f08f: Adding de-duping logic for medication history
+
 ## 0.23.3
 
 ### Patch Changes
