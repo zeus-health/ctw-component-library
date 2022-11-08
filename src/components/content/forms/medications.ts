@@ -99,8 +99,8 @@ export const createMedicationStatement = async (
     result.success = false;
   }
 
-  QUERY_KEYS.forEach((queryKey) => {
-    queryClient.invalidateQueries([queryKey]);
+  QUERY_KEYS.forEach(async (queryKey) => {
+    await queryClient.invalidateQueries([queryKey]);
   });
 
   return { formResult: result, requestErrors };

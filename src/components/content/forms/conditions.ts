@@ -149,8 +149,8 @@ export const createOrEditCondition = async (
     result.success = false;
   }
 
-  queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]);
-  queryClient.invalidateQueries([QUERY_KEY_OTHER_PROVIDER_CONDITIONS]);
+  await queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]);
+  await queryClient.invalidateQueries([QUERY_KEY_OTHER_PROVIDER_CONDITIONS]);
 
   return { formResult: result, requestErrors };
 };
