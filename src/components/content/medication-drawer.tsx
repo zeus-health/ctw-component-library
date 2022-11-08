@@ -1,4 +1,5 @@
 import type { MedicationStatementModel } from "@/models/medication-statement";
+import { capitalize } from "lodash";
 import type { DataListEntry } from "../core/data-list";
 import { DataList, entryFromArray } from "../core/data-list";
 import type { DrawerProps } from "../core/drawer";
@@ -14,7 +15,7 @@ function getDataEntriesFromMedicationStatement(
 ): DataListEntry[] {
   return medication
     ? [
-        { label: "Status", value: medication.status },
+        { label: "Status", value: capitalize(medication.status) },
         { label: "Last Fill Date", value: medication.lastFillDate },
         { label: "Quantity", value: medication.quantity },
         { label: "Days Supply", value: medication.daysSupply },
