@@ -1,3 +1,4 @@
+import { isMouseEvent } from "@/utils/types";
 import { Combobox } from "@headlessui/react";
 import { debounce, isEmpty, isObject } from "lodash";
 import { ChangeEvent, useMemo, useState } from "react";
@@ -53,25 +54,45 @@ export const ComboboxField = <T,>({
 
   return (
     <Combobox onChange={onSelectChange} value={searchTerm} disabled={readonly}>
-      <Combobox.Input
-        className="ctw-listbox-input ctw-w-full"
-        onChange={(e) => {
-          // Due to debounce, we have to persist the event.
-          // https://reactjs.org/docs/legacy-event-pooling.html
-          e.persist();
-          debouncedSearchInputChange(e);
-        }}
-        placeholder="Type to search"
-      />
+      {({ open }) => (
+        <div>
+          <Combobox.Button
+            as="div"
+            onClick={(e: unknown) => {
+              if (open || searchTerm.length === 0) {
+                if (isMouseEvent(e)) {
+                  e.preventDefault();
+                }
+              }
+            }}
+          >
+            <Combobox.Input
+              className="ctw-listbox-input ctw-w-full"
+              onChange={(e) => {
+                // Due to debounce, we have to persist the event.
+                // https://reactjs.org/docs/legacy-event-pooling.html
+                e.persist();
+                debouncedSearchInputChange(e);
+              }}
+              placeholder="Type to search"
+            />
+          </Combobox.Button>
 
-      <input hidden name={name} value={inputValueParsed as string} readOnly />
-      <Combobox.Options className="ctw-listbox ctw-max-h-60 ctw-overflow-auto ctw-rounded-md ctw-bg-white ctw-py-1 ctw-text-base ctw-shadow-lg ctw-ring-1 ctw-ring-opacity-5 focus:ctw-outline-none sm:ctw-text-sm">
-        <ComboboxOptions
-          options={options}
-          query={searchTerm}
-          isLoading={isLoading}
-        />
-      </Combobox.Options>
+          <input
+            hidden
+            name={name}
+            value={inputValueParsed as string}
+            readOnly
+          />
+          <Combobox.Options className="ctw-listbox ctw-absolute ctw-z-10 ctw-m-0 ctw-mt-1 ctw-max-h-60 ctw-w-full ctw-list-none ctw-overflow-auto ctw-rounded-md ctw-bg-white ctw-p-0 ctw-py-1 ctw-text-base ctw-shadow-lg ctw-ring-1 ctw-ring-opacity-5 focus:ctw-outline-none sm:ctw-text-sm">
+            <ComboboxOptions
+              options={options}
+              query={searchTerm}
+              isLoading={isLoading}
+            />
+          </Combobox.Options>
+        </div>
+      )}
     </Combobox>
   );
 };

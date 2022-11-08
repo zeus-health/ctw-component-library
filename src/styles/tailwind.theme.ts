@@ -1,4 +1,10 @@
-import { Subset } from "../utils/typescript";
+// DO NOT IMPORT OUTSIDE THINGS WITHIN THIs FILE!
+// We compile this file and any imports will get compiled
+// to .js files which would then need to be cleaned up.
+
+type Subset<K> = {
+  [attr in keyof K]?: K[attr] extends object ? Subset<K[attr]> : K[attr];
+};
 
 export const CLASS_PREFIX = "ctw-";
 
@@ -65,6 +71,40 @@ export const TailwindTheme = {
       black: "#111827",
     },
   },
+};
+
+// Some post processing workflows (older versions of PostCSS) will
+// incorrectly remove tailwind's empty CSS variables.
+// To fix this, we manually apply them in CTWProvider.
+// See https://github.com/tailwindlabs/tailwindcss/issues/2889#issuecomment-734238826
+export const EmptyTailwindCSSVars: Record<string, string> = {
+  "--tw-pan-x": " ",
+  "--tw-pan-y": " ",
+  "--tw-pinch-zoom": " ",
+  "--tw-ordinal": " ",
+  "--tw-slashed-zero": " ",
+  "--tw-numeric-figure": " ",
+  "--tw-numeric-spacing": " ",
+  "--tw-numeric-fraction": " ",
+  "--tw-ring-inset": " ",
+  "--tw-blur": " ",
+  "--tw-brightness": " ",
+  "--tw-contrast": " ",
+  "--tw-grayscale": " ",
+  "--tw-hue-rotate": " ",
+  "--tw-invert": " ",
+  "--tw-saturate": " ",
+  "--tw-sepia": " ",
+  "--tw-drop-shadow": " ",
+  "--tw-backdrop-blur": " ",
+  "--tw-backdrop-brightness": " ",
+  "--tw-backdrop-contrast": " ",
+  "--tw-backdrop-grayscale": " ",
+  "--tw-backdrop-hue-rotate": " ",
+  "--tw-backdrop-invert": " ",
+  "--tw-backdrop-opacity": " ",
+  "--tw-backdrop-saturate": " ",
+  "--tw-backdrop-sepia": " ",
 };
 
 // Theme type is a nested partial

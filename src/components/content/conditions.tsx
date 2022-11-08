@@ -227,7 +227,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
             hideMenu={readOnly}
             message={
               <>
-                {patientRecordsMessage}
+                <div>{patientRecordsMessage}</div>
                 {!patientRecordsResponse.isError && (
                   <div className="ctw-my-5">{addConditionBtn}</div>
                 )}
