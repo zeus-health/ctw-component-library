@@ -98,12 +98,14 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
           "desc"
         );
 
-        const conditionsFilteredWithDate = sortedConditions.filter(
-          (c) => c.recordedDate
+        const filterEnteredinErrorConditions = sortedConditions.filter(
+          (c) => c.verificationStatus !== "entered-in-error"
         );
-        const conditionsFilteredWithoutDate = sortedConditions.filter(
-          (c) => !c.recordedDate
-        );
+
+        const conditionsFilteredWithDate =
+          filterEnteredinErrorConditions.filter((c) => c.recordedDate);
+        const conditionsFilteredWithoutDate =
+          filterEnteredinErrorConditions.filter((c) => !c.recordedDate);
 
         setConditionsWithDate(
           conditionsFilteredWithDate.map((model) => setupData(model))
