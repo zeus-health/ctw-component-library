@@ -20,6 +20,7 @@ import { queryClient } from "@/utils/request";
 import cx from "classnames";
 import { curry, union } from "lodash";
 import { useEffect, useRef, useState } from "react";
+import { useCTW } from "../core/ctw-provider";
 import { ModalConfirmDelete } from "../core/modal-confirm-delete";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
@@ -38,6 +39,7 @@ import {
   FormActionTypes,
   FormEntry,
 } from "./forms/drawer-form-with-fields";
+import { getLatestPatientRefreshHistoryMessage } from "./patient-history/patient-history";
 
 export type ConditionsProps = {
   className?: string;
@@ -70,6 +72,12 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const patientResponse = usePatient();
   const patientRecordsResponse = usePatientConditions(conditionFilter);
   const otherProviderRecordsResponse = useOtherProviderConditions();
+
+  //clinical history
+  const [requestRecordsClinicalHistory, setRequestRecordsClinicalHistory] =
+    useState(false);
+
+  const [clinicalHistoryExists, setClinicalHistoryExists] = useState(false);
 
   const patientRecordsMessage = patientRecordsResponse.isError
     ? ERROR_MSG
@@ -115,7 +123,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
 
     const newCondition = getNewCondition(patientResponse.data.id);
     setDrawerIsOpen(true);
-    setFormAction("Add");
     setSchema(conditionAddSchema);
     setCurrentlySelectedData(
       getAddConditionData({
@@ -133,6 +140,27 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       Add Condition
     </button>
   );
+
+  const handleClinicalHistory = async () => {
+    const { getRequestContext } = useCTW();
+    const requestContext = await getRequestContext();
+
+    const data = await getLatestPatientRefreshHistoryMessage(
+      requestContext,
+      patientResponse.data?.id as string,
+      ["done"]
+    );
+    console.log("data is", data);
+    if (data?.status === "done") {
+      setClinicalHistoryExists(true);
+    } else {
+      setDrawerIsOpen(true);
+      setClinicalHistoryExists(false);
+      setRequestRecordsClinicalHistory(true);
+    }
+  };
+
+  handleClinicalHistory();
 
   useEffect(() => {
     async function load() {
@@ -256,11 +284,22 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
             ]}
           />
         </div>
-
         <div className="ctw-space-y-3">
           <div className="ctw-title-container">
             <div className="ctw-title">Other Provider Records</div>
           </div>
+          {/* pass usestate and then set button inside */}
+          {/* <RetrievePatientHistory message="Retrieve patient clinical history" />
+              <div>
+                <button
+                  type="button"
+                  className="ctw-btn-clear ctw-link"
+                  onClick={handleClinicalHistory}
+                >
+                  Request Records
+                </button>
+              </div>
+            </RetrievePatientHistory> */}
 
           <ConditionsTableBase
             className="ctw-conditions-not-reviewed"
