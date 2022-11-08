@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 0.23.6
+
+### Patch Changes
+
+- 39b5746: Capitalize label and fields in detail and history drawers.
+- b20e69d: Fix delayed UX when adding condition.
+
 ## 0.23.5
 
 ### Patch Changes
