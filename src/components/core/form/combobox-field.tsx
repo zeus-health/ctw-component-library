@@ -1,4 +1,4 @@
-import { isMouseEvent } from "@/utils/typescript";
+import { isMouseEvent } from "@/utils/types";
 import { Combobox } from "@headlessui/react";
 import { debounce, isEmpty, isObject } from "lodash";
 import { ChangeEvent, useMemo, useState } from "react";

@@ -1,4 +1,10 @@
-import { Subset } from "../utils/typescript";
+// DO NOT IMPORT OUTSIDE THINGS WITHIN THIs FILE!
+// We compile this file and any imports will get compiled
+// to .js files which would then need to be cleaned up.
+
+type Subset<K> = {
+  [attr in keyof K]?: K[attr] extends object ? Subset<K[attr]> : K[attr];
+};
 
 export const CLASS_PREFIX = "ctw-";
 
