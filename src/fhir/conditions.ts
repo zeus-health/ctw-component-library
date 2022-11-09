@@ -11,7 +11,7 @@ import {
 import { SearchParams } from "fhir-kit-client";
 import { orderBy } from "lodash";
 import { CodePreference } from "./codeable-concept";
-import { dateToISO } from "./formatters";
+import { dateToISO, formatDateLocalToISO } from "./formatters";
 import { getPractitioner } from "./practitioner";
 import {
   flattenArrayFilters,
@@ -211,18 +211,15 @@ export const setRecorderField = async (
 export const getDeleteConditionFhirResource = async (
   resource: ConditionModel,
   patientID: string,
-  getRequestContext: () => Promise<CTWRequestContext>
+  requestContext: CTWRequestContext
 ) => {
-  const requestContext = await getRequestContext();
   const practitionerId = claimsPractitionerId(requestContext.authToken);
-
   return {
     resourceType: "Condition",
     id: resource.id,
     ...(practitionerId && {
       recorder: await setRecorderField(practitionerId, requestContext),
     }),
-    clinicalStatus: resource.clinicalStatus,
     verificationStatus: {
       coding: [
         {
@@ -233,7 +230,7 @@ export const getDeleteConditionFhirResource = async (
     },
     code: resource.codings,
     abatementDateTime: resource.abatement,
-    onsetDateTime: resource.onset,
+    onsetDateTime: formatDateLocalToISO(resource.onset),
     recordedDate: dateToISO(new Date()),
     subject: { type: "Patient", reference: `Patient/${patientID}` },
     note: resource.notes,

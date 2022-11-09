@@ -14,11 +14,6 @@ import {
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { ConditionModel } from "@/models/condition";
 import { AnyZodSchema } from "@/utils/form-helper";
-import {
-  QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
-  QUERY_KEY_PATIENT_CONDITIONS,
-} from "@/utils/query-keys";
-import { queryClient } from "@/utils/request";
 import cx from "classnames";
 import { curry, union } from "lodash";
 import { useEffect, useRef, useState } from "react";
@@ -27,6 +22,7 @@ import { ModalConfirmDelete } from "../core/modal-confirm-delete";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionHeader } from "./condition-header";
+import { onConditionDelete } from "./conditions-helper";
 import { ConditionHistoryDrawer } from "./conditions-history-drawer";
 import { ConditionsNoPatient } from "./conditions-no-patient";
 import { ConditionsTableBase } from "./conditions-table-base";
@@ -323,21 +319,19 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       {selectedCondition && patientResponse.data && (
         <ModalConfirmDelete
           resource={selectedCondition}
-          resourceToEdit={getDeleteConditionFhirResource(
-            selectedCondition,
-            patientResponse.data.id,
-            getRequestContext
-          )}
           resourceName={selectedCondition.display || "unnamed condition"}
           onClose={() => setShowConfirmDelete(false)}
           isOpen={showConfirmDelete}
           onDelete={async () => {
-            await Promise.all([
-              queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]),
-              queryClient.invalidateQueries([
-                QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
-              ]),
-            ]);
+            const requestContext = await getRequestContext();
+            await onConditionDelete(
+              await getDeleteConditionFhirResource(
+                selectedCondition,
+                patientResponse.data.id,
+                requestContext
+              ),
+              requestContext.fhirClient
+            );
           }}
         />
       )}

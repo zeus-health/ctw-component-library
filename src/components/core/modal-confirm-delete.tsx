@@ -1,48 +1,27 @@
-import { createOrEditFhirResource } from "@/fhir/action-helper";
-import { FhirResource, Resource } from "fhir/r4";
+import { Resource } from "fhir/r4";
 import { useState } from "react";
 import { ErrorAlert } from "./alert";
-import { useCTW } from "./ctw-provider";
 import { Modal, ModalProps } from "./modal";
 
 export type ModalConfirmDeleteProps = {
   resource: Resource;
-  resourceToEdit: Resource;
   resourceName: string;
-  onDelete: () => void;
+  onDelete: () => Promise<void>;
   onClose: () => void;
 } & Omit<ModalProps, "title" | "children" | "onAfterClosed">;
 
 export const ModalConfirmDelete = ({
   resource,
-  resourceToEdit,
   resourceName,
   onDelete,
   onClose,
   ...modalProps
 }: ModalConfirmDeleteProps) => {
-  const { getRequestContext } = useCTW();
   const [alert, setAlert] = useState<string>();
 
   const onConfirm = async () => {
-    const { fhirClient } = await getRequestContext();
     try {
-      if (!resource.id) {
-        throw new Error(
-          "Tried to edit a resource that hasn't been created yet."
-        );
-      }
-
-      const response = (await createOrEditFhirResource(
-        resourceToEdit,
-        fhirClient
-      )) as FhirResource;
-
-      if (!response.id) {
-        throw new Error(`Failed to edit resource with id of ${resource.id}`);
-      }
-
-      onDelete();
+      await onDelete();
       onClose();
     } catch (err) {
       setAlert(`Something went wrong. Please try again.`);
