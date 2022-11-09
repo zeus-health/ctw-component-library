@@ -140,6 +140,7 @@ export const conditionAddSchema = conditionSchema
         required_error: "Please choose a condition.",
       }),
     }),
+    verificationStatus: z.enum(["confirmed", "unconfirmed"]),
   })
   .superRefine((condition, refinementCtx) =>
     conditionRefinement(condition, refinementCtx)

@@ -8,7 +8,7 @@ import { Drawer } from "../../core/drawer";
 import { SaveButton } from "./save-button";
 import { ActionReturn } from "./types";
 
-export type FormErrors = Record<string, string[]>;
+export type FormErrors = Record<string, string | string[]>;
 
 export type DrawerFormProps<T> = {
   action: (
@@ -36,6 +36,7 @@ export const DrawerForm = <T,>({
 }: DrawerFormProps<T>) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<{
+    isInvalid?: boolean;
     formErrors?: FormErrors;
     requestErrors?: string[];
   }>();
@@ -50,6 +51,28 @@ export const DrawerForm = <T,>({
     event.preventDefault();
     setIsSubmitting(true);
     const form = event.target;
+
+    const formDataValidation = (event.target as HTMLElement).querySelectorAll(
+      "input"
+    );
+    const formDataValidationToArray = Array.from(formDataValidation);
+
+    const errorMessagesArray: { [key: string]: boolean } = {};
+
+    formDataValidationToArray.map((c) => {
+      errorMessagesArray[c.name] = c.checkValidity();
+    });
+
+    Object.entries(errorMessagesArray).forEach(([key, value]) => {
+      if (!value) {
+        setIsSubmitting(false);
+        setErrors({
+          isInvalid: true,
+        });
+        throw Error(`There is a problem with your field ${key}`);
+      }
+    });
+
     const data = new FormData(form as HTMLFormElement);
 
     const response = await action(data, patientID, getRequestContext, schema);
