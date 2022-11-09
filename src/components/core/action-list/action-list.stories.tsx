@@ -58,6 +58,15 @@ export const Empty: StoryObj<Props> = {
 
 export default {
   component: ActionList,
+  parameters: {
+    docs: {
+      description: {
+        component: `
+        \nDisplays a list of action items which reflect whether they are completed or not. List items marked "active" will show a (primary) colored border to the left and when hovered will present a button to take action. Use the "onAction" handler to mark items as "complete".
+        \nOptionally the opposite can be done for inactive items if an "onUndoAction" handler is passed in, but that is not a requirement.`,
+      },
+    },
+  },
   argTypes: {
     message: {
       defaultValue: "Default",
