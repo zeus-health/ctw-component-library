@@ -1,5 +1,19 @@
 # ctw-component-library
 
+## 0.23.7
+
+### Patch Changes
+
+- 25b3ec3: Clicking add condition from other provider records after clicking edit condition does not result in an error anymore.
+- a82ad95: Fixing issue with duplicates showing up in other provider records when common patient record is enabled
+
+## 0.23.6
+
+### Patch Changes
+
+- 39b5746: Capitalize label and fields in detail and history drawers.
+- b20e69d: Fix delayed UX when adding condition.
+
 ## 0.23.5
 
 ### Patch Changes
