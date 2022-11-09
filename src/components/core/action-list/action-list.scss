@@ -17,18 +17,16 @@
     // because we will use "after" to create colors on the left border, we need a transparent border here so content
     // will respect layout, as content would shift under the border of an absolutely positioned "after" element.
     border-left: 0.5rem solid transparent;
-    &:after {
+    &:before {
       border-left: 0.5rem solid theme("colors.icon.active");
       content: " ";
       position: absolute;
-      height: 100%;
-      width: 100%;
-      top: 0;
-      bottom: -10px;
+      top: -1px;
+      bottom: -1px;
       // Move left to sit over the transparent border on the list item
       left: -0.5rem;
     }
-    &:not(.active):after {
+    &:not(.active):before {
       border-left: 0.5rem solid theme("colors.divider.light");
     }
 
