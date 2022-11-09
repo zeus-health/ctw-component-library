@@ -1,6 +1,8 @@
 import { setAddConditionDefaults } from "@/components/content/forms/conditions";
+import { CTWRequestContext } from "@/components/core/ctw-context";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
 import { ConditionModel } from "@/models/condition";
+import { claimsPractitionerId } from "@/utils/auth";
 import {
   QUERY_KEY_CONDITION_HISTORY,
   QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
@@ -9,6 +11,8 @@ import {
 import { SearchParams } from "fhir-kit-client";
 import { orderBy } from "lodash";
 import { CodePreference } from "./codeable-concept";
+import { dateToISO } from "./formatters";
+import { getPractitioner } from "./practitioner";
 import {
   flattenArrayFilters,
   searchBuilderRecords,
@@ -190,19 +194,48 @@ export const filterConditionsWithConfirmedCodes = (
     );
   });
 
-export const getDeleteConditionFhirResource = (
+export const setRecorderField = async (
+  practitionerId: string,
+  requestContext: CTWRequestContext
+) => {
+  const practitioner = await getPractitioner(practitionerId, requestContext);
+  const display = practitioner.fullName;
+
+  return {
+    reference: `Practitioner/${practitionerId}`,
+    type: "Practitioner",
+    display,
+  };
+};
+
+export const getDeleteConditionFhirResource = async (
   resource: ConditionModel,
-  patientID: string
-) => ({
-  resourceType: "Condition",
-  id: resource.id,
-  verificationStatus: {
-    coding: [
-      {
-        system: SYSTEM_CONDITION_VERIFICATION_STATUS,
-        code: "entered-in-error",
-      },
-    ],
-  },
-  subject: { type: "Patient", reference: `Patient/${patientID}` },
-});
+  patientID: string,
+  getRequestContext: () => Promise<CTWRequestContext>
+) => {
+  const requestContext = await getRequestContext();
+  const practitionerId = claimsPractitionerId(requestContext.authToken);
+
+  return {
+    resourceType: "Condition",
+    id: resource.id,
+    ...(practitionerId && {
+      recorder: await setRecorderField(practitionerId, requestContext),
+    }),
+    clinicalStatus: resource.clinicalStatus,
+    verificationStatus: {
+      coding: [
+        {
+          system: SYSTEM_CONDITION_VERIFICATION_STATUS,
+          code: "entered-in-error",
+        },
+      ],
+    },
+    code: resource.codings,
+    abatementDateTime: resource.abatement,
+    onsetDateTime: resource.onset,
+    recordedDate: dateToISO(new Date()),
+    subject: { type: "Patient", reference: `Patient/${patientID}` },
+    note: resource.notes,
+  };
+};

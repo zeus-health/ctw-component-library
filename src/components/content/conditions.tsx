@@ -22,6 +22,7 @@ import { queryClient } from "@/utils/request";
 import cx from "classnames";
 import { curry, union } from "lodash";
 import { useEffect, useRef, useState } from "react";
+import { useCTW } from "../core/ctw-provider";
 import { ModalConfirmDelete } from "../core/modal-confirm-delete";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
@@ -72,6 +73,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const patientResponse = usePatient();
   const patientRecordsResponse = usePatientConditions(conditionFilter);
   const otherProviderRecordsResponse = useOtherProviderConditions();
+  const { getRequestContext } = useCTW();
 
   const patientRecordsMessage = patientRecordsResponse.isError
     ? ERROR_MSG
@@ -323,7 +325,8 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           resource={selectedCondition}
           resourceToEdit={getDeleteConditionFhirResource(
             selectedCondition,
-            patientResponse.data.id
+            patientResponse.data.id,
+            getRequestContext
           )}
           resourceName={selectedCondition.display || "unnamed condition"}
           onClose={() => setShowConfirmDelete(false)}
