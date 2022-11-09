@@ -10,7 +10,6 @@ import { SearchParams } from "fhir-kit-client";
 import { orderBy } from "lodash";
 import { CodePreference } from "./codeable-concept";
 import {
-  flattenArrayFilters,
   searchBuilderRecords,
   searchCommonRecords,
   searchLensRecords,
@@ -33,30 +32,6 @@ export const CONDITION_CODE_PREFERENCE_ORDER: CodePreference[] = [
   { system: SYSTEM_ICD9_CM },
 ];
 
-export type ClinicalStatus =
-  | "active"
-  | "recurrence"
-  | "relapse"
-  | "inactive"
-  | "remission"
-  | "resolved";
-
-export type ConditionFilters = {
-  "clinical-status"?: ClinicalStatus | ClinicalStatus[];
-};
-
-export type QueryKeyConditionHistory = [
-  string,
-  string,
-  ConditionModel | undefined
-];
-export type QueryKeyPatientConditions = [
-  string,
-  string | undefined,
-  ConditionFilters
-];
-export type QueryKeyOtherProviderConditions = [string, string | undefined];
-
 export function getNewCondition(patientId: string) {
   const newCondition: fhir4.Condition = {
     resourceType: "Condition",
@@ -70,10 +45,10 @@ export function getNewCondition(patientId: string) {
   return newCondition;
 }
 
-export function usePatientConditions(conditionFilters: ConditionFilters) {
+export function usePatientConditions() {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_CONDITIONS,
-    [conditionFilters],
+    [],
     async (requestContext, patient) => {
       try {
         const { resources: conditions } = await searchBuilderRecords(
@@ -81,7 +56,6 @@ export function usePatientConditions(conditionFilters: ConditionFilters) {
           requestContext,
           {
             patientUPID: patient.UPID as string,
-            ...flattenArrayFilters(conditionFilters),
           }
         );
         return filterAndSort(conditions);
@@ -172,19 +146,3 @@ function filterAndSort(conditions: fhir4.Condition[]) {
     ["desc"]
   );
 }
-
-export const filterConditionsWithConfirmedCodes = (
-  target: fhir4.Condition[],
-  confirmedCodes: fhir4.Coding[]
-) =>
-  target.filter((c) => {
-    const conditionModel = new ConditionModel(c);
-
-    return !confirmedCodes.some((code) =>
-      conditionModel.knownCodings.some(
-        (availableCode) =>
-          availableCode.code === code.code &&
-          availableCode.system === code.system
-      )
-    );
-  });
