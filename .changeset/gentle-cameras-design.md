@@ -2,4 +2,4 @@
 "@zus-health/ctw-component-library": minor
 ---
 
-Added new component <ActionList/>
+Add new component <ActionList/>
