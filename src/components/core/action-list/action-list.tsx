@@ -60,7 +60,7 @@ export const ActionListItem = <T extends MinActionItem>({
         undoable: isFunction(onUndoAction),
       }
     )}
-    onKeyDown={(evt) => {
+    onKeyDown={(event) => {
       // Visible, non-intercomplete elements with click handlers must have at least 1 keyboard listener
       if (evt.key === "Enter") {
         evt.currentTarget.click();
