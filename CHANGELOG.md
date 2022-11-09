@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 0.23.7
+
+### Patch Changes
+
+- 25b3ec3: Clicking add condition from other provider records after clicking edit condition does not result in an error anymore.
+- a82ad95: Fixing issue with duplicates showing up in other provider records when common patient record is enabled
+
 ## 0.23.6
 
 ### Patch Changes
