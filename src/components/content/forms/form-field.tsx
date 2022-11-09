@@ -5,7 +5,7 @@ import { startCase } from "lodash";
 import type { InputHTMLAttributes } from "react";
 
 export type FormFieldProps = {
-  errors?: string | string[];
+  errors?: string[];
   options?: string[];
   lines?: number;
   defaultValue?: string | string[];
@@ -116,9 +116,7 @@ export const FormField = ({
       {errors && (
         <div className="ctw-text-xs ctw-italic ctw-text-error-main">
           {errors.length > 1
-            ? (errors as string[]).map((error: string) => (
-                <div key={error}>&bull; {error}</div>
-              ))
+            ? errors.map((error) => <div key={error}>&bull; {error}</div>)
             : errors[0]}
         </div>
       )}
