@@ -1,15 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import {
   ActionList,
-  ActionListItem,
   ActionListProps,
-  ActionItemProps,
   MinActionItem,
 } from "@/components/core/action-list/action-list";
 
-type Item = MinActionItem;
-
-type Props = ActionListProps<Item>;
+type Props = ActionListProps<MinActionItem>;
 
 const item = (id = "", title = "", subtitle = "", complete = false) => ({
   id,
