@@ -1,0 +1,36 @@
+.ctw-action-list {
+  @apply ctw-border-solid ctw-border-divider-light;
+  list-style: none;
+  padding-left: 0; // no space between left side of list and list items
+  overflow: hidden; // so the left padding colored on items doesn't break border-radius
+
+  .ctw-action-list-item {
+    /* Inside auto layout */
+    margin: -1px 0;
+    width: 100%;
+
+    // Colors
+    background: theme("colors.white");
+    border: 1px solid theme("colors.divider.light");
+    border-left: 0.5rem solid theme("colors.icon.active");
+    &:not(.active) {
+      border-left: 0.5rem solid theme("colors.divider.light");
+    }
+
+    // Show button on hover if an action is available
+    &:hover:is(.active),
+    &:hover:is(.undoable) {
+      .ctw-action-list-item-action {
+        opacity: 1;
+      }
+    }
+
+    .ctw-action-list-item-action {
+      // hide button by default
+      opacity: 0;
+      button {
+        float: right;
+      }
+    }
+  }
+}

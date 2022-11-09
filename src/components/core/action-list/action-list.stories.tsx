@@ -1,0 +1,83 @@
+import type { Meta, StoryObj } from "@storybook/react";
+import {
+  ActionList,
+  ActionListItem,
+  ActionListProps,
+  ActionItemProps,
+  MinActionItem,
+} from "@/components/core/action-list/action-list";
+
+type Item = MinActionItem;
+
+type Props = ActionListProps<Item>;
+
+const item = (id = "", title = "", subtitle = "", complete = false) => ({
+  id,
+  title,
+  subtitle,
+  complete,
+});
+const items: MinActionItem[] = [
+  item(
+    "007",
+    "Miralax Oral Product",
+    "Dissolve 17g in 4–8oz liquid and drink once daily for up to 7 days."
+  ),
+  item(
+    "123",
+    "3 ML insulin glargine 100 UNT/ML Pen Injector [Lantus]",
+    "Inject 3 ML with enclosed pen injector every morning."
+  ),
+  item(
+    "insulin",
+    "3 ML insulin aspart protamine, human 70 UNT/ML / insulin aspart, human 30 UNT/ML Pen Injector [NovoLog Mix] ",
+    "Inject 3 ML before meals. Quantity: 90 days"
+  ),
+  item(
+    "next",
+    "triamcinolone acetonide 0.147 MG/ML Topical Spray",
+    "Apply to affected area as needed for eczema exacerbation.",
+    true
+  ),
+];
+
+export const Basic: StoryObj<Props> = {
+  args: {
+    items,
+  },
+};
+
+export const WithUndo: StoryObj<Props> = {
+  args: {
+    items,
+    onUndoAction: () => {},
+  },
+};
+
+export const Empty: StoryObj<Props> = {
+  args: {
+    items: [],
+  },
+};
+
+export default {
+  component: ActionList,
+  argTypes: {
+    message: {
+      defaultValue: "Default",
+      options: ["Default"],
+      mapping: {
+        Default: (
+          <div className="ctw-space-y-4">
+            <ActionList
+              items={items}
+              onAction={() => {}}
+              actionText="Take Action"
+              undoActionText="Undo Action"
+            />
+          </div>
+        ),
+      },
+    },
+  },
+} as Meta<Props>;
