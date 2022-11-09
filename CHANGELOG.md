@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.24.0
+
+### Minor Changes
+
+- da16b9c: Add new component <ActionList/>
+
 ## 0.23.7
 
 ### Patch Changes
