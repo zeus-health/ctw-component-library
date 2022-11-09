@@ -22,7 +22,7 @@ import { queryClient } from "@/utils/request";
 import cx from "classnames";
 import { curry, union } from "lodash";
 import { useEffect, useRef, useState } from "react";
-import { ModalConfirmEdit } from "../core/modal-confirm-delete";
+import { ModalConfirmDelete } from "../core/modal-confirm-delete";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionHeader } from "./condition-header";
@@ -319,7 +319,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       />
 
       {selectedCondition && patientResponse.data && (
-        <ModalConfirmEdit
+        <ModalConfirmDelete
           resource={selectedCondition}
           resourceToEdit={getDeleteConditionFhirResource(
             selectedCondition,

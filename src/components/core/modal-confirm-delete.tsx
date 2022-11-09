@@ -13,7 +13,7 @@ export type ModalConfirmDeleteProps = {
   onClose: () => void;
 } & Omit<ModalProps, "title" | "children" | "onAfterClosed">;
 
-export const ModalConfirmEdit = ({
+export const ModalConfirmDelete = ({
   resource,
   resourceToEdit,
   resourceName,
