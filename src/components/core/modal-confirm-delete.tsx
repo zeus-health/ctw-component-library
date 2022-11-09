@@ -1,6 +1,5 @@
 import { createOrEditFhirResource } from "@/fhir/action-helper";
-import { SYSTEM_CONDITION_VERIFICATION_STATUS } from "@/fhir/system-urls";
-import { Resource } from "fhir/r4";
+import { FhirResource, Resource } from "fhir/r4";
 import { useState } from "react";
 import { ErrorAlert } from "./alert";
 import { useCTW } from "./ctw-provider";
@@ -8,13 +7,15 @@ import { Modal, ModalProps } from "./modal";
 
 export type ModalConfirmDeleteProps = {
   resource: Resource;
+  resourceToEdit: Resource;
   resourceName: string;
   onDelete: () => void;
   onClose: () => void;
 } & Omit<ModalProps, "title" | "children" | "onAfterClosed">;
 
-export const ModalConfirmDelete = ({
+export const ModalConfirmEdit = ({
   resource,
+  resourceToEdit,
   resourceName,
   onDelete,
   onClose,
@@ -28,29 +29,18 @@ export const ModalConfirmDelete = ({
     try {
       if (!resource.id) {
         throw new Error(
-          "Tried to delete a resource that hasn't been created yet."
+          "Tried to edit a resource that hasn't been created yet."
         );
       }
-      const fhirCondition: fhir4.Condition = {
-        resourceType: "Condition",
-        id: resource.id,
-        verificationStatus: {
-          coding: [
-            {
-              system: SYSTEM_CONDITION_VERIFICATION_STATUS,
-              code: "Entered In Error",
-            },
-          ],
-        },
-        subject: { type: "Patient", reference: `Patient/${patientID}` },
-      };
 
-      const response = await createOrEditFhirResource(
-        fhirCondition,
+      const response = (await createOrEditFhirResource(
+        resourceToEdit,
         fhirClient
-      );
+      )) as FhirResource;
 
-      console.log("response", response);
+      if (!response.id) {
+        throw new Error(`Failed to edit resource with id of ${resource.id}`);
+      }
 
       onDelete();
       onClose();

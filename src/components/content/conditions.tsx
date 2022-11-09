@@ -6,6 +6,7 @@ import {
 import {
   ConditionFilters,
   filterConditionsWithConfirmedCodes,
+  getDeleteConditionFhirResource,
   getNewCondition,
   useOtherProviderConditions,
   usePatientConditions,
@@ -21,7 +22,7 @@ import { queryClient } from "@/utils/request";
 import cx from "classnames";
 import { curry, union } from "lodash";
 import { useEffect, useRef, useState } from "react";
-import { ModalConfirmDelete } from "../core/modal-confirm-delete";
+import { ModalConfirmEdit } from "../core/modal-confirm-delete";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionHeader } from "./condition-header";
@@ -317,17 +318,22 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         condition={selectedCondition}
       />
 
-      {selectedCondition && (
-        <ModalConfirmDelete
+      {selectedCondition && patientResponse.data && (
+        <ModalConfirmEdit
           resource={selectedCondition}
+          resourceToEdit={getDeleteConditionFhirResource(
+            selectedCondition,
+            patientResponse.data.id
+          )}
           resourceName={selectedCondition.display || "unnamed condition"}
           onClose={() => setShowConfirmDelete(false)}
           isOpen={showConfirmDelete}
           onDelete={async () => {
-            // TODO: make this use promise.all
-            await queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]);
-            await queryClient.invalidateQueries([
-              QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
+            await Promise.all([
+              queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]),
+              queryClient.invalidateQueries([
+                QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
+              ]),
             ]);
           }}
         />

@@ -16,6 +16,7 @@ import {
   searchLensRecords,
 } from "./search-helpers";
 import {
+  SYSTEM_CONDITION_VERIFICATION_STATUS,
   SYSTEM_ICD10,
   SYSTEM_ICD10_CM,
   SYSTEM_ICD9,
@@ -188,3 +189,20 @@ export const filterConditionsWithConfirmedCodes = (
       )
     );
   });
+
+export const getDeleteConditionFhirResource = (
+  resource: ConditionModel,
+  patientID: string
+) => ({
+  resourceType: "Condition",
+  id: resource.id,
+  verificationStatus: {
+    coding: [
+      {
+        system: SYSTEM_CONDITION_VERIFICATION_STATUS,
+        code: "entered-in-error",
+      },
+    ],
+  },
+  subject: { type: "Patient", reference: `Patient/${patientID}` },
+});
