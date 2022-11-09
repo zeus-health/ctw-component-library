@@ -62,8 +62,8 @@ export const ActionListItem = <T extends MinActionItem>({
     )}
     onKeyDown={(event) => {
       // Visible, non-intercomplete elements with click handlers must have at least 1 keyboard listener
-      if (evt.key === "Enter") {
-        evt.currentTarget.click();
+      if (event.key === "Enter") {
+        event.currentTarget.click();
       }
     }}
     onClick={() => onRowClick?.(item)}
@@ -77,8 +77,8 @@ export const ActionListItem = <T extends MinActionItem>({
         <button
           type="button"
           className="ctw-btn-primary"
-          onClick={(evt) => {
-            evt.stopPropagation();
+          onClick={(event) => {
+            event.stopPropagation();
             onAction(item);
           }}
         >
@@ -90,8 +90,8 @@ export const ActionListItem = <T extends MinActionItem>({
         <button
           type="button"
           className="ctw-btn-default"
-          onClick={(evt) => {
-            evt.stopPropagation();
+          onClick={(event) => {
+            event.stopPropagation();
             onUndoAction(item);
           }}
         >
