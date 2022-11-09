@@ -322,9 +322,10 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           resourceName={selectedCondition.display || "unnamed condition"}
           onClose={() => setShowConfirmDelete(false)}
           isOpen={showConfirmDelete}
-          onDelete={() => {
-            queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]);
-            queryClient.invalidateQueries([
+          onDelete={async () => {
+            // TODO: make this use promise.all
+            await queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]);
+            await queryClient.invalidateQueries([
               QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
             ]);
           }}

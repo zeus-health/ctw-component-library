@@ -1,3 +1,5 @@
+import { createOrEditFhirResource } from "@/fhir/action-helper";
+import { SYSTEM_CONDITION_VERIFICATION_STATUS } from "@/fhir/system-urls";
 import { Resource } from "fhir/r4";
 import { useState } from "react";
 import { ErrorAlert } from "./alert";
@@ -29,10 +31,27 @@ export const ModalConfirmDelete = ({
           "Tried to delete a resource that hasn't been created yet."
         );
       }
-      const response = await fhirClient.delete({
-        resourceType: resource.resourceType,
+      const fhirCondition: fhir4.Condition = {
+        resourceType: "Condition",
         id: resource.id,
-      });
+        verificationStatus: {
+          coding: [
+            {
+              system: SYSTEM_CONDITION_VERIFICATION_STATUS,
+              code: "Entered In Error",
+            },
+          ],
+        },
+        subject: { type: "Patient", reference: `Patient/${patientID}` },
+      };
+
+      const response = await createOrEditFhirResource(
+        fhirCondition,
+        fhirClient
+      );
+
+      console.log("response", response);
+
       onDelete();
       onClose();
     } catch (err) {
