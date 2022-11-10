@@ -55,7 +55,6 @@ export const ComboboxField = <T,>({
   const onSelectChange = (eventValue: string) => {
     const currentItem = options.filter((item) => item.label === eventValue)[0];
     setInputValue(currentItem.value);
-    setSearchTerm(eventValue);
   };
 
   return (
