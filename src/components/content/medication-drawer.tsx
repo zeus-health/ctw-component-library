@@ -48,7 +48,7 @@ export const MedicationDrawer = ({
         <div className="ctw-flex ctw-justify-end">
           <button
             type="button"
-            className="btn-primary"
+            className="ctw-btn-primary"
             onClick={drawerProps.onClose}
           >
             Close
