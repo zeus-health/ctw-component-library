@@ -61,6 +61,7 @@ export const DrawerForm = <T,>({
 
     formDataValidationToArray.map((c) => {
       errorMessagesArray[c.name] = c.checkValidity();
+      return errorMessagesArray;
     });
 
     Object.entries(errorMessagesArray).forEach(([key, value]) => {
