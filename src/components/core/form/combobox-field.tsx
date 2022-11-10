@@ -43,7 +43,7 @@ export const ComboboxField = <T,>({
       }
 
       // Skip if search term has not changed.
-      if (newSearchTerm !== searchTerm) {
+      if (newSearchTerm !== searchTerm && newSearchTerm !== displayedValue) {
         setInputValue({});
         setSearchTerm(newSearchTerm);
       }
