@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 0.24.2
+
+### Patch Changes
+
+- 2fc24ea: Fix issue with autocomplete.
+- e08b920: Fix autocomplete display value when making a selection.
+
 ## 0.24.1
 
 ### Patch Changes
