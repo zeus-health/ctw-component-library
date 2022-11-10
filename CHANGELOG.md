@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.24.6
+
+### Patch Changes
+
+- 856bbe0: Re-add display & system to condition schema.
+
 ## 0.24.5
 
 ### Patch Changes
