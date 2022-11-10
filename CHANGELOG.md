@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.24.1
+
+### Patch Changes
+
+- 06464a3: Attempting to fix weird autocomplete bug.
+
 ## 0.24.0
 
 ### Minor Changes
