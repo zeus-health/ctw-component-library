@@ -24,7 +24,6 @@ export const ComboboxField = <T,>({
   onSearchChange,
   readonly,
 }: ComboboxFieldProps<T>) => {
-  const [displayedValue, setDisplayedValue] = useState(defaultSearchTerm || "");
   const [searchTerm, setSearchTerm] = useState(defaultSearchTerm || "");
   const [inputValue, setInputValue] = useState<unknown>({});
   const inputState = isEmpty(inputValue) ? defaultValue : inputValue;
@@ -44,8 +43,10 @@ export const ComboboxField = <T,>({
 
       // Skip if search term has not changed.
       if (newSearchTerm !== searchTerm) {
-        setInputValue({});
         setSearchTerm(newSearchTerm);
+      }
+      if (options.filter((item) => item.label === newSearchTerm).length === 0) {
+        setInputValue({});
       }
     };
 
@@ -56,15 +57,11 @@ export const ComboboxField = <T,>({
   const onSelectChange = (eventValue: string) => {
     const currentItem = options.filter((item) => item.label === eventValue)[0];
     setInputValue(currentItem.value);
-    setDisplayedValue(eventValue);
+    setSearchTerm(eventValue);
   };
 
   return (
-    <Combobox
-      onChange={onSelectChange}
-      value={displayedValue}
-      disabled={readonly}
-    >
+    <Combobox onChange={onSelectChange} value={searchTerm} disabled={readonly}>
       {({ open }) => (
         <div>
           <Combobox.Button
