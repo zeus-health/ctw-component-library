@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.24.3
+
+### Patch Changes
+
+- 3f299b9: Another attempt to fix autocomplete.
+
 ## 0.24.2
 
 ### Patch Changes
