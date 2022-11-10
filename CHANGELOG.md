@@ -1,5 +1,62 @@
 # ctw-component-library
 
+## 0.24.6
+
+### Patch Changes
+
+- 856bbe0: Re-add display & system to condition schema.
+
+## 0.24.5
+
+### Patch Changes
+
+- 8331a8b: Change title in conditions history to category
+
+## 0.24.4
+
+### Patch Changes
+
+- 1c16fd0: Hotfix to fix autocomplete option not setting correctly.
+
+## 0.24.3
+
+### Patch Changes
+
+- 3f299b9: Another attempt to fix autocomplete.
+
+## 0.24.2
+
+### Patch Changes
+
+- 2fc24ea: Fix issue with autocomplete.
+- e08b920: Fix autocomplete display value when making a selection.
+
+## 0.24.1
+
+### Patch Changes
+
+- 06464a3: Attempting to fix weird autocomplete bug.
+
+## 0.24.0
+
+### Minor Changes
+
+- da16b9c: Add new component <ActionList/>
+
+## 0.23.7
+
+### Patch Changes
+
+- 25b3ec3: Clicking add condition from other provider records after clicking edit condition does not result in an error anymore.
+- a82ad95: Fixing issue with duplicates showing up in other provider records when common patient record is enabled
+
+## 0.23.6
+
+### Patch Changes
+
+- 39b5746: Capitalize label and fields in detail and history drawers.
+- b20e69d: Fix delayed UX when adding condition.
+
 ## 0.23.5
 
 ### Patch Changes

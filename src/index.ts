@@ -9,6 +9,7 @@ export * from "@/components/content/medication-history";
 export * from "@/components/content/medications-table-base";
 export * from "@/components/content/medication-drawer";
 // Core components
+export * from "@/components/core/action-list/action-list";
 export * from "@/components/core/alert";
 export * from "@/components/core/badge";
 export * as CTWBox from "@/components/core/ctw-box";

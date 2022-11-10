@@ -100,6 +100,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     setAddConditionDefaults(newCondition);
 
     if (patientResponse.data) {
+      setSchema(conditionAddSchema);
       setDrawerIsOpen(true);
       setFormAction("Add");
       setCurrentlySelectedData(
