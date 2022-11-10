@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.24.4
+
+### Patch Changes
+
+- 1c16fd0: Hotfix to fix autocomplete option not setting correctly.
+
 ## 0.24.3
 
 ### Patch Changes
