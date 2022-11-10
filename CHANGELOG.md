@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.24.5
+
+### Patch Changes
+
+- 8331a8b: Change title in conditions history to category
+
 ## 0.24.4
 
 ### Patch Changes
