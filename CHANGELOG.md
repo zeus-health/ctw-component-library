@@ -1,5 +1,95 @@
 # ctw-component-library
 
+## 0.24.7
+
+### Patch Changes
+
+- e70a512: Set the missing "ctw-" prefix on "ctw-btn-primary" class in medications drawer component
+
+## 0.24.6
+
+### Patch Changes
+
+- 856bbe0: Re-add display & system to condition schema.
+
+## 0.24.5
+
+### Patch Changes
+
+- 8331a8b: Change title in conditions history to category
+
+## 0.24.4
+
+### Patch Changes
+
+- 1c16fd0: Hotfix to fix autocomplete option not setting correctly.
+
+## 0.24.3
+
+### Patch Changes
+
+- 3f299b9: Another attempt to fix autocomplete.
+
+## 0.24.2
+
+### Patch Changes
+
+- 2fc24ea: Fix issue with autocomplete.
+- e08b920: Fix autocomplete display value when making a selection.
+
+## 0.24.1
+
+### Patch Changes
+
+- 06464a3: Attempting to fix weird autocomplete bug.
+
+## 0.24.0
+
+### Minor Changes
+
+- da16b9c: Add new component <ActionList/>
+
+## 0.23.7
+
+### Patch Changes
+
+- 25b3ec3: Clicking add condition from other provider records after clicking edit condition does not result in an error anymore.
+- a82ad95: Fixing issue with duplicates showing up in other provider records when common patient record is enabled
+
+## 0.23.6
+
+### Patch Changes
+
+- 39b5746: Capitalize label and fields in detail and history drawers.
+- b20e69d: Fix delayed UX when adding condition.
+
+## 0.23.5
+
+### Patch Changes
+
+- b1fab2d: Fix a handful of CSS issues impacting importing of this component library. Additionally get conditions autocomplete options to float (absolute positioning) instead of pushing other content down when options are showed.
+- 92afd10: Filter entered-in-error for verfication status in condition history.
+
+## 0.23.4
+
+### Patch Changes
+
+- 811f08f: Adding de-duping logic for medication history
+
+## 0.23.3
+
+### Patch Changes
+
+- 1d5ba82: Exporting Drawer, models and some other core components
+- 7e0a205: Hide delete option in Other Patient Records.
+- e5170bd: If notes is pre-populated it will now show when editing a condition. Notes can only be resized vertically now.
+
+## 0.23.2
+
+### Patch Changes
+
+- b829a97: set the range for node engine to 16 - 19
+
 ## 0.23.1
 
 ### Patch Changes

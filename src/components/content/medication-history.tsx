@@ -5,6 +5,7 @@ import { useMedicationHistory } from "@/fhir/medications";
 import { MedicationModel } from "@/models/medication";
 import { MedicationDispenseModel } from "@/models/medication-dispense";
 import { MedicationStatementModel } from "@/models/medication-statement";
+import { capitalize } from "lodash";
 import { useEffect, useState } from "react";
 
 const MEDICATION_HISTORY_LIMIT = 10;
@@ -63,7 +64,7 @@ function createMedicationStatementCard(medication: MedicationModel) {
     data: [
       {
         label: "Status",
-        value: medStatement.status,
+        value: capitalize(medStatement.status),
       },
       {
         label: "Instructions",

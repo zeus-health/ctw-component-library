@@ -8,7 +8,7 @@ export type FormFieldProps = {
   errors?: string[];
   options?: string[];
   lines?: number;
-  defaultValue?: string;
+  defaultValue?: string | string[];
   readonly?: boolean;
   render?: (
     readonly: boolean | undefined,
@@ -31,7 +31,7 @@ export const FormField = ({
 
   const value =
     inputProps.type === "date"
-      ? formatDateLocalToISO(defaultValue)
+      ? formatDateLocalToISO(defaultValue as string)
       : defaultValue;
 
   const getFieldComponent = () => {

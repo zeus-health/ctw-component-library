@@ -101,6 +101,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     setAddConditionDefaults(newCondition);
 
     if (patientResponse.data) {
+      setSchema(conditionAddSchema);
       setDrawerIsOpen(true);
       setFormAction("Add");
       setCurrentlySelectedData(
@@ -227,7 +228,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
             hideMenu={readOnly}
             message={
               <>
-                {patientRecordsMessage}
+                <div>{patientRecordsMessage}</div>
                 {!patientRecordsResponse.isError && (
                   <div className="ctw-my-5">{addConditionBtn}</div>
                 )}
@@ -285,13 +286,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
                 action: () => {
                   setHistoryDrawerIsOpen(true);
                   setSelectedCondition(condition);
-                },
-              },
-              {
-                name: "Delete",
-                className: "dangerous",
-                action: () => {
-                  handleConditionDelete(condition);
                 },
               },
             ]}
