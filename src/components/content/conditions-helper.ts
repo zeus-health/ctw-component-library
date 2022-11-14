@@ -1,7 +1,9 @@
 import { createOrEditFhirResource } from "@/fhir/action-helper";
+import { SYSTEM_CONDITION_VERIFICATION_STATUS } from "@/fhir/system-urls";
 import { QUERY_KEY_PATIENT_CONDITIONS } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import Client, { FhirResource } from "fhir-kit-client";
+import { cloneDeep } from "lodash";
 
 export const onConditionDelete = async (
   resource: fhir4.Condition,
@@ -11,19 +13,20 @@ export const onConditionDelete = async (
     throw new Error("Tried to edit a resource that hasn't been created yet.");
   }
 
-  const resourceToDelete = { ...resource };
+  const clonedResource = cloneDeep(resource);
 
-  if (
-    resourceToDelete.verificationStatus &&
-    resourceToDelete.verificationStatus.coding
-  ) {
-    resourceToDelete.verificationStatus.coding[0].code = "entered-in-error";
-    // We have to delete clinical status because it can't be present if verification is 'entered-in-error'
-    delete resourceToDelete.clinicalStatus;
-  }
+  clonedResource.verificationStatus = {
+    coding: [
+      {
+        code: "entered-in-error",
+        system: SYSTEM_CONDITION_VERIFICATION_STATUS,
+      },
+    ],
+  };
+  delete clonedResource.clinicalStatus;
 
   const response = (await createOrEditFhirResource(
-    resourceToDelete,
+    clonedResource,
     fhirClient
   )) as FhirResource;
 
