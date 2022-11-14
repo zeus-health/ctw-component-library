@@ -59,9 +59,9 @@ export const DrawerForm = <T,>({
 
     const inputErrors: InputError = {};
 
-    Object.entries(inputs).forEach(([_, value]) => {
-      if (!value.checkValidity()) {
-        inputErrors[value.name] = [`The value is not valid for ${value.name}`];
+    inputs.forEach((input) => {
+      if (!input.checkValidity()) {
+        inputErrors[input.name] = [`The value is not valid for ${input.name}`];
       }
     });
 
