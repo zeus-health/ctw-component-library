@@ -10,6 +10,7 @@ type Props = TableProps<Record>;
 
 export default {
   component: Table,
+  tags: ["docsPage"],
   argTypes: {
     message: {
       defaultValue: "Default",
