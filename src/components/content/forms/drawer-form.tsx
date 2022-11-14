@@ -9,6 +9,7 @@ import { SaveButton } from "./save-button";
 import { ActionReturn } from "./types";
 
 export type FormErrors = Record<string, string | string[]>;
+type inputErrors = Record<string, string[]>;
 
 export type DrawerFormProps<T> = {
   action: (
@@ -62,13 +63,21 @@ export const DrawerForm = <T,>({
       return errorMessagesArray;
     });
 
+    const inputerr: inputErrors = {};
+
     Object.entries(errorMessagesArray).forEach(([key, value]) => {
       if (!value) {
-        setIsSubmitting(false);
+        inputerr[key] = [`The value is not valid for ${key}`];
       }
-
-      console.log(errors);
     });
+
+    console.log("The error is: ", errors);
+    console.log("The inputerr is ", inputerr);
+
+    if (inputerr) {
+      setErrors({ formErrors: inputerr });
+      setIsSubmitting(false);
+    }
 
     const data = new FormData(form as HTMLFormElement);
 
