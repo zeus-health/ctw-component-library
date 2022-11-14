@@ -52,10 +52,9 @@ export const DrawerForm = <T,>({
     setIsSubmitting(true);
     const form = event.target;
 
-    const formDataValidation = (event.target as HTMLElement).querySelectorAll(
+    const inputs = Array.from((event.target as HTMLElement).querySelectorAll(
       "input"
-    );
-    const formDataValidationToArray = Array.from(formDataValidation);
+    ));
 
     const errorMessagesArray: { [key: string]: boolean } = {};
 
