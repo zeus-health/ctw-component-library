@@ -9,7 +9,7 @@ import { SaveButton } from "./save-button";
 import { ActionReturn } from "./types";
 
 export type FormErrors = Record<string, string | string[]>;
-type inputError = Record<string, string[]>;
+type InputError = Record<string, string[]>;
 
 export type DrawerFormProps<T> = {
   action: (
@@ -63,7 +63,7 @@ export const DrawerForm = <T,>({
       return errorMessagesArray;
     });
 
-    const inputErrors: inputError = {};
+    const inputErrors: InputError = {};
 
     Object.entries(errorMessagesArray).forEach(([key, value]) => {
       if (!value) {
