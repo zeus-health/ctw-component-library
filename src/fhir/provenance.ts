@@ -18,15 +18,23 @@ const ASSEMBLER_CODING = {
 };
 
 const CREATE_CODING = {
-  system: SYSTEM_PROVENANCE_ACTIVITY_TYPE,
-  code: "CREATE",
-  display: "create",
+  coding: [
+    {
+      system: SYSTEM_PROVENANCE_ACTIVITY_TYPE,
+      code: "CREATE",
+      display: "create",
+    },
+  ],
 };
 
 const UPDATE_CODING = {
-  system: SYSTEM_PROVENANCE_ACTIVITY_TYPE,
-  code: "UPDATE",
-  display: "revise",
+  coding: [
+    {
+      system: SYSTEM_PROVENANCE_ACTIVITY_TYPE,
+      code: "UPDATE",
+      display: "revise",
+    },
+  ],
 };
 
 export const createProvenance = async (
@@ -39,11 +47,14 @@ export const createProvenance = async (
   const builderName = claimsBuilderName(requestContext.authToken);
 
   let practitionerDisplay: string;
+  let practitionerReference: string | undefined;
   try {
     const practitioner = await getPractitioner(practitionerId, requestContext);
     practitionerDisplay = practitioner.fullName;
+    practitionerReference = `Practitioner/${practitionerId}`;
   } catch {
     practitionerDisplay = claimsAuthEmail(requestContext.authToken);
+    practitionerReference = undefined;
   }
 
   const provenance: Provenance = {
@@ -51,10 +62,7 @@ export const createProvenance = async (
     agent: [
       {
         who: {
-          reference:
-            practitionerId === ""
-              ? undefined
-              : `Practitioner/${practitionerId}`,
+          reference: practitionerReference,
           display: practitionerDisplay,
         },
         onBehalfOf: { display: builderName },
@@ -75,13 +83,9 @@ export const createProvenance = async (
     ],
   };
   if (type === "CREATE") {
-    provenance.activity = {
-      coding: [CREATE_CODING],
-    };
+    provenance.activity = CREATE_CODING;
   } else {
-    provenance.activity = {
-      coding: [UPDATE_CODING],
-    };
+    provenance.activity = UPDATE_CODING;
   }
   return fhirClient.create({
     resourceType: "Provenance",
