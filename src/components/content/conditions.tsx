@@ -6,7 +6,6 @@ import {
 import {
   ConditionFilters,
   filterConditionsWithConfirmedCodes,
-  getDeleteConditionFhirResource,
   getNewCondition,
   useOtherProviderConditions,
   usePatientConditions,
@@ -325,11 +324,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           onDelete={async () => {
             const requestContext = await getRequestContext();
             await onConditionDelete(
-              await getDeleteConditionFhirResource(
-                selectedCondition,
-                patientResponse.data.id,
-                requestContext
-              ),
+              selectedCondition.resource,
               requestContext.fhirClient
             );
           }}
