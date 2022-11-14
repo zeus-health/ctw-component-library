@@ -23,7 +23,7 @@ export const onConditionDelete = async (
   }
 
   const response = (await createOrEditFhirResource(
-    resource,
+    resourceToDelete,
     fhirClient
   )) as FhirResource;
 
