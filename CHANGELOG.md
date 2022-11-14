@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.24.7
+
+### Patch Changes
+
+- e70a512: Set the missing "ctw-" prefix on "ctw-btn-primary" class in medications drawer component
+
 ## 0.24.6
 
 ### Patch Changes

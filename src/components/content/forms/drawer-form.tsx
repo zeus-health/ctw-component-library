@@ -2,6 +2,7 @@ import { ErrorAlert } from "@/components/core/alert";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { useCTW } from "@/components/core/ctw-provider";
 import { AnyZodSchema } from "@/utils/form-helper";
+import { isEmpty } from "lodash";
 import { ReactNode, useState } from "react";
 import type { DrawerProps } from "../../core/drawer";
 import { Drawer } from "../../core/drawer";
@@ -9,6 +10,7 @@ import { SaveButton } from "./save-button";
 import { ActionReturn } from "./types";
 
 export type FormErrors = Record<string, string[]>;
+type InputError = Record<string, string[]>;
 
 export type DrawerFormProps<T> = {
   action: (
@@ -50,6 +52,25 @@ export const DrawerForm = <T,>({
     event.preventDefault();
     setIsSubmitting(true);
     const form = event.target;
+
+    const inputs = Array.from(
+      (event.target as HTMLElement).querySelectorAll("input")
+    );
+
+    const inputErrors: InputError = {};
+
+    inputs.forEach((input) => {
+      if (!input.checkValidity()) {
+        inputErrors[input.name] = [`The value is not valid for ${input.name}`];
+      }
+    });
+
+    if (!isEmpty(inputErrors)) {
+      setErrors({ formErrors: inputErrors });
+      setIsSubmitting(false);
+      return;
+    }
+
     const data = new FormData(form as HTMLFormElement);
 
     const response = await action(data, patientID, getRequestContext, schema);
