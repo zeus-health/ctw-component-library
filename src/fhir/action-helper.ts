@@ -17,7 +17,6 @@ export async function createOrEditFhirResource(
   requestContext: CTWRequestContext
 ) {
   const practitionerId = claimsPractitionerId(requestContext.authToken);
-  console.log(practitionerId);
   const builderName = claimsBuilderName(requestContext.authToken);
   const authEmail = claimsAuthEmail(requestContext.authToken);
   const { fhirClient } = requestContext;
@@ -87,7 +86,6 @@ export async function createOrEditFhirResource(
       resourceType: "Provenance",
       body: provenance,
     });
-    console.log(response);
   };
 
   try {
