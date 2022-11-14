@@ -1,5 +1,14 @@
 # ctw-component-library
 
+## 0.24.8
+
+### Patch Changes
+
+- a7d03b6: Filter out other provider records by any matching patient records that are newer, regardless of active/inactive status.
+- e3de88f: Adds provenance records when data is added or edited to track changes and add accountability.
+- c8ac26a: Delete functionality for validation status now edits to entered-in-error instead of deleting.
+- dca390e: Reduce number of options for verification status in add conditions and catch incomplete form field entries.
+
 ## 0.24.7
 
 ### Patch Changes
