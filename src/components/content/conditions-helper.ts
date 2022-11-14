@@ -23,6 +23,7 @@ export const onConditionDelete = async (
       },
     ],
   };
+  // We have to delete clinical status because it can't be present if verification is 'entered-in-error'
   delete clonedResource.clinicalStatus;
 
   const response = (await createOrEditFhirResource(
