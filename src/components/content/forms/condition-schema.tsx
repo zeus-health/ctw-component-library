@@ -130,15 +130,11 @@ export const conditionEditSchema = conditionSchema.superRefine(
 export const conditionAddSchema = conditionSchema
   .extend({
     condition: z.object({
-      display: z.string({
-        required_error: "Please choose a condition.",
-      }),
+      display: z.string(),
       code: z.string({
         required_error: "Please choose a condition.",
       }),
-      system: z.string({
-        required_error: "Please choose a condition.",
-      }),
+      system: z.string(),
     }),
     verificationStatus: z.enum(["confirmed", "unconfirmed"]),
   })

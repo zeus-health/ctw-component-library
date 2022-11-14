@@ -36,14 +36,22 @@ export const ComboboxField = <T,>({
   // Delay handle search input so that we don't fire a bunch of events until the user has had time to type.
   const debouncedSearchInputChange = useMemo(() => {
     const handleSearchInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-      if (e.target.value.length > 1) {
-        onSearchChange(e.target.value);
+      const newSearchTerm = e.target.value;
+      if (newSearchTerm.length > 1) {
+        onSearchChange(newSearchTerm);
       }
-      setInputValue({});
-      setSearchTerm(e.target.value);
+
+      // Skip if search term has not changed.
+      if (newSearchTerm !== searchTerm) {
+        setSearchTerm(newSearchTerm);
+      }
+      if (options.filter((item) => item.label === newSearchTerm).length === 0) {
+        setInputValue({});
+      }
     };
 
     return debounce(handleSearchInputChange, 300);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onSearchChange]);
 
   const onSelectChange = (eventValue: string) => {

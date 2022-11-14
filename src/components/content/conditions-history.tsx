@@ -2,7 +2,7 @@ import { Loading } from "@/components/core/loading";
 import { getIncludedResources } from "@/fhir/bundle";
 import { useConditionHistory } from "@/fhir/conditions";
 import { ConditionModel } from "@/models/condition";
-import { orderBy } from "lodash";
+import { capitalize, orderBy, startCase } from "lodash";
 import { useEffect, useState } from "react";
 import { CodingList } from "../core/coding-list";
 import { CollapsibleDataListProps } from "../core/collapsible-data-list";
@@ -23,11 +23,11 @@ function setupData(condition: ConditionModel): CollapsibleDataListProps {
     },
     {
       label: "Clinical Status",
-      value: condition.clinicalStatus,
+      value: capitalize(condition.clinicalStatus),
     },
     {
       label: "Verification Status",
-      value: condition.verificationStatus,
+      value: capitalize(condition.verificationStatus),
     },
     {
       label: "Recorded Date",
@@ -35,7 +35,7 @@ function setupData(condition: ConditionModel): CollapsibleDataListProps {
     },
     {
       label: "Category",
-      value: condition.categories[0],
+      value: startCase(condition.categories[0]),
     },
     {
       label: "Note",
@@ -64,7 +64,7 @@ function setupData(condition: ConditionModel): CollapsibleDataListProps {
   return {
     id: condition.id,
     date: condition.recordedDate,
-    title: condition.snomedDisplay || condition.icd10Display,
+    title: startCase(condition.categories[0]),
     subTitle: condition.patient?.organization?.name,
     data: detailData,
   };
