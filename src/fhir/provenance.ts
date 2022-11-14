@@ -54,7 +54,6 @@ export const createProvenance = async (
     practitionerReference = `Practitioner/${practitionerId}`;
   } catch {
     practitionerDisplay = claimsAuthEmail(requestContext.authToken);
-    practitionerReference = undefined;
   }
 
   const provenance: Provenance = {
