@@ -38,9 +38,11 @@ export const MedicationDrawer = ({
   return (
     <Drawer title={title} {...drawerProps}>
       <Drawer.Body>
-        <div className="ctw-space-y-7">
+        <div className="ctw-space-y-5">
           <div className="ctw-flex ctw-justify-between ctw-space-x-8">
-            <span className="ctw-text-3xl">{medication?.display || ""}</span>
+            <h3 className="ctw-m-0 ctw-text-3xl ctw-font-light">
+              {medication?.display || ""}
+            </h3>
           </div>
           <DataList title="Summary" data={data} />
           {medication?.rxNorm && <MedicationHistory medication={medication} />}

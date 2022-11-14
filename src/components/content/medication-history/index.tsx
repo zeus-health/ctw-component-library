@@ -33,7 +33,7 @@ export function MedicationHistory({
   if (loading) {
     return (
       <>
-        <h3>{title}</h3>
+        <h2 className="ctw-text-lg ctw-font-semibold">{title}</h2>
         <Loading message="" />
       </>
     );
@@ -41,7 +41,7 @@ export function MedicationHistory({
 
   return (
     <>
-      <h3>Medication History</h3>
+      <h2 className="ctw-text-lg ctw-font-semibold">Medication History</h2>
       {entries.length ? (
         <CollapsibleDataListStack
           entries={entries}

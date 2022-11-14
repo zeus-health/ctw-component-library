@@ -18,9 +18,9 @@ export function entryFromArray(label: string, array: string[]) {
 export function DataList({ title, data }: DataListProps) {
   return (
     <div className="ctw-space-y-4 ctw-rounded-lg ctw-bg-bg-lighter ctw-p-4">
-      <span className="ctw-text-sm ctw-uppercase ctw-text-content-light">
+      <h4 className="ctw-m-0 ctw-text-sm ctw-uppercase ctw-text-content-light">
         {title}
-      </span>
+      </h4>
       <dl className="ctw-space-y-3">
         {data.map(({ label, value = "" }, index) => (
           <div
