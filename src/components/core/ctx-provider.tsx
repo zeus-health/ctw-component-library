@@ -18,13 +18,13 @@ import {
   useRef,
   useState,
 } from "react";
-import { version } from "../../../../package.json";
+import { version } from "../../../package.json";
 import {
   CTWRequestContext,
   CTWState,
   CTWStateContext,
   CTWToken,
-} from "../ctw-context";
+} from "./ctw-context";
 import "../main.scss";
 
 export type Env = "dev" | "sandbox" | "production";

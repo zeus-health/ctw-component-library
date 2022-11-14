@@ -1,34 +1,4 @@
-import React, { ReactNode } from "react";
-import { CTWProvider, Env } from "@/components/core/ctw-provider";
-import { PatientProvider } from "@/components/core/patient-provider";
-
-export type MockCtwContextProps = {
-  env?: Env;
-  builderId?: string;
-  patientId?: string;
-  systemUrl?: string;
-  children: ReactNode;
-};
-
-export const MockCtwContext = (props: MockCtwContextProps) => {
-  const {
-    builderId = "12345",
-    patientId = "007",
-    systemUrl = "https://zusapi.com/fhir/identifier/universal-id",
-    env = "dev",
-    children,
-  } = props;
-
-  return (
-    <CTWProvider env={env} authToken="12345" builderId={builderId}>
-      <PatientProvider patientID={patientId} systemURL={systemUrl}>
-        {children}
-      </PatientProvider>
-    </CTWProvider>
-  );
-};
-
-MockCtwContext.mockedUser = {
+export default {
   resourceType: "Bundle",
   id: "c1db2d18-e0f2-420e-88d8-c0e32676e894",
   meta: {
@@ -38,20 +8,19 @@ MockCtwContext.mockedUser = {
   link: [
     {
       relation: "self",
-      url: "https://api.sandbox.zusapi.com/fhir/Patient?_count=1&_include=Patient%3Aorganization&_tag=https%3A%2F%2Fzusapi.com%2Faccesscontrol%2Fowner%7C&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fthirdparty%2Fsource%7Csurescripts&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fthirdparty%2Fsource%7Ccommonwell&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fthirdparty%2Fsource%7Celation&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Flens%7CActiveMedications&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Flens%7CChronicConditions&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fsummary%7CCommon&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Ffhir%2Ftag%2Fupi-record-type%7Cuniversal&identifier=https%3A%2F%2Fzusapi.com%2Ffhir%2Fidentifier%2Funiversal-id%7C007",
+      url: "https://api.dev.zusapi.com/fhir/Patient?_count=1&_include=Patient%3Aorganization&_tag=https%3A%2F%2Fzusapi.com%2Faccesscontrol%2Fowner%7C&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fthirdparty%2Fsource%7Csurescripts&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fthirdparty%2Fsource%7Ccommonwell&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fthirdparty%2Fsource%7Celation&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Flens%7CActiveMedications&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Flens%7CChronicConditions&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fsummary%7CCommon&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Ffhir%2Ftag%2Fupi-record-type%7Cuniversal&identifier=https%3A%2F%2Fzusapi.com%2Ffhir%2Fidentifier%2Funiversal-id%7C007",
     },
     {
       relation: "next",
-      url: "https://api.sandbox.zusapi.com/fhir/Patient?_count=1&_include=Patient%3Aorganization&_offset=1&_tag=https%3A%2F%2Fzusapi.com%2Faccesscontrol%2Fowner%7C&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fthirdparty%2Fsource%7Csurescripts&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fthirdparty%2Fsource%7Ccommonwell&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fthirdparty%2Fsource%7Celation&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Flens%7CActiveMedications&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Flens%7CChronicConditions&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fsummary%7CCommon&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Ffhir%2Ftag%2Fupi-record-type%7Cuniversal&identifier=https%3A%2F%2Fzusapi.com%2Ffhir%2Fidentifier%2Funiversal-id%7C007",
+      url: "https://api.dev.zusapi.com/fhir/Patient?_count=1&_include=Patient%3Aorganization&_offset=1&_tag=https%3A%2F%2Fzusapi.com%2Faccesscontrol%2Fowner%7C&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fthirdparty%2Fsource%7Csurescripts&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fthirdparty%2Fsource%7Ccommonwell&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fthirdparty%2Fsource%7Celation&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Flens%7CActiveMedications&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Flens%7CChronicConditions&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fsummary%7CCommon&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Ffhir%2Ftag%2Fupi-record-type%7Cuniversal&identifier=https%3A%2F%2Fzusapi.com%2Ffhir%2Fidentifier%2Funiversal-id%7C007",
     },
   ],
   entry: [
     {
-      fullUrl:
-        "https://api.sandbox.zusapi.com/fhir/Patient/4ac4b4c6-cbed-4d52-b37d-be8dc785ef9a",
+      fullUrl: "https://api.dev.zusapi.com/fhir/Patient/1234-007",
       resource: {
         resourceType: "Patient",
-        id: "4ac4b4c6-cbed-4d52-b37d-be8dc785ef9a",
+        id: "1234-007",
         meta: {
           extension: [
             {
