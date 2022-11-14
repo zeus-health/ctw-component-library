@@ -1,13 +1,13 @@
-import { CONDITION_CODE_PREFERENCE_ORDER } from "@/fhir/conditions";
-import { findReference } from "@/fhir/resource-helper";
-import { ResourceMap } from "@/fhir/types";
-import { compact, uniqWith } from "lodash";
 import {
   codeableConceptLabel,
   findCoding,
-  findCodingWithEnrichment,
   findCodingByOrderOfPreference,
+  findCodingWithEnrichment,
 } from "@/fhir/codeable-concept";
+import { CONDITION_CODE_PREFERENCE_ORDER } from "@/fhir/conditions";
+import { findReference } from "@/fhir/resource-helper";
+import { ResourceMap } from "@/fhir/types";
+import { compact, intersectionWith, uniqWith } from "lodash";
 import { formatDateISOToLocal, formatStringToDate } from "../fhir/formatters";
 import { SYSTEM_CCS, SYSTEM_ICD10, SYSTEM_SNOMED } from "../fhir/system-urls";
 import { PatientModel } from "./patients";
@@ -42,6 +42,10 @@ export class ConditionModel {
     }
 
     return this.resource.abatementString;
+  }
+
+  get active(): boolean {
+    return ["active", "recurrence", "relapse"].includes(this.clinicalStatus);
   }
 
   get asserter(): string | undefined {
@@ -129,6 +133,18 @@ export class ConditionModel {
       (prev, next) => prev.system === next.system
     );
     return dedupedBySystemCoding;
+  }
+
+  // Returns true if any of the known codings match between
+  // this condition and the passed in condition.
+  knownCodingsMatch(condition: ConditionModel): boolean {
+    return (
+      intersectionWith(
+        this.knownCodings,
+        condition.knownCodings,
+        (a, b) => a.code === b.code && a.system === b.system
+      ).length > 0
+    );
   }
 
   get notes(): string[] {
