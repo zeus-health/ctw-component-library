@@ -18,7 +18,7 @@ export const onConditionDelete = async (
     resourceToDelete.verificationStatus.coding
   ) {
     resourceToDelete.verificationStatus.coding[0].code = "entered-in-error";
-    // We have to delete clinical status because it may not be present if verification is 'entered-in-error'
+    // We have to delete clinical status because it can't be present if verification is 'entered-in-error'
     delete resourceToDelete.clinicalStatus;
   }
 
