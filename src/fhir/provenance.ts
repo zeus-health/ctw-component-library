@@ -46,7 +46,7 @@ export const createProvenance = async (
     practitionerDisplay = claimsAuthEmail(requestContext.authToken);
   }
 
-  let provenance: Provenance = {
+  const provenance: Provenance = {
     resourceType: "Provenance",
     agent: [
       {
@@ -83,7 +83,7 @@ export const createProvenance = async (
       coding: [UPDATE_CODING],
     };
   }
-  return await fhirClient.create({
+  return fhirClient.create({
     resourceType: "Provenance",
     body: provenance,
   });
