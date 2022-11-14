@@ -5,7 +5,6 @@ export * from "@/components/content/medications/add-new-med-drawer";
 export * from "@/components/content/medications/provider-meds-table";
 export * from "@/components/content/medications/other-provider-meds-table";
 export * from "@/components/content/patient-medications";
-export * from "@/components/content/medication-drawer";
 export * from "@/components/content/medication-history";
 export * from "@/components/content/medications-table-base";
 export * from "@/components/content/medication-drawer";
