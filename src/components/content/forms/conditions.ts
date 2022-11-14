@@ -136,7 +136,7 @@ export const createOrEditCondition = async (
 
   const response = await createOrEditFhirResource(
     fhirCondition,
-    requestContext.fhirClient
+    requestContext
   );
 
   if (isFhirError(response) && isOperationOutcome(response.response.data)) {

@@ -2,6 +2,7 @@ import { CTWRequestContext } from "@/components/core/ctw-context";
 import { claimsBuilderName, claimsPractitionerId } from "@/utils/auth";
 import { Provenance, Resource } from "fhir/r4";
 import { omitEmptyArrays } from "./client";
+import { isFhirError } from "./errors";
 import {
   SYSTEM_PROVENANCE_ACTIVITY_TYPE,
   SYSTEM_PROVENANCE_AGENT_TYPE,
@@ -38,7 +39,7 @@ export async function createOrEditFhirResource(
       recorded: new Date().toISOString(),
       target: [
         {
-          reference: `${resource.resourceType}${resource.id}`,
+          reference: `${resource.resourceType}/${resource.id}`,
           type: resource.resourceType,
         },
       ],
@@ -78,18 +79,24 @@ export async function createOrEditFhirResource(
 
   try {
     if (resource.id) {
-      createProvenance("UPDATE");
-      return await fhirClient.update({
+      const response = await fhirClient.update({
         resourceType: resource.resourceType,
         id: resource.id,
         body: omitEmptyArrays(resource),
       });
+      if (!isFhirError(response)) {
+        createProvenance("UPDATE");
+      }
+      return response;
     }
-    createProvenance("CREATE");
-    return await fhirClient.create({
+    const response = await fhirClient.create({
       resourceType: resource.resourceType,
       body: omitEmptyArrays(resource),
     });
+    if (!isFhirError(response)) {
+      createProvenance("CREATE");
+    }
+    return response;
   } catch (err) {
     return err;
   }
