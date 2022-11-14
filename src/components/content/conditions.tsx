@@ -11,18 +11,15 @@ import {
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { ConditionModel } from "@/models/condition";
 import { AnyZodSchema } from "@/utils/form-helper";
-import {
-  QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
-  QUERY_KEY_PATIENT_CONDITIONS,
-} from "@/utils/query-keys";
-import { queryClient } from "@/utils/request";
 import cx from "classnames";
 import { curry } from "lodash";
 import { useEffect, useRef, useState } from "react";
+import { useCTW } from "../core/ctw-provider";
 import { ModalConfirmDelete } from "../core/modal-confirm-delete";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionHeader } from "./condition-header";
+import { onConditionDelete } from "./conditions-helper";
 import { ConditionHistoryDrawer } from "./conditions-history-drawer";
 import { ConditionsNoPatient } from "./conditions-no-patient";
 import { ConditionsTableBase } from "./conditions-table-base";
@@ -69,6 +66,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const patientResponse = usePatient();
   const patientRecordsResponse = usePatientConditions();
   const otherProviderRecordsResponse = useOtherProviderConditions();
+  const { getRequestContext } = useCTW();
 
   const patientRecordsMessage = patientRecordsResponse.isError
     ? ERROR_MSG
@@ -301,17 +299,18 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         condition={selectedCondition}
       />
 
-      {selectedCondition && (
+      {selectedCondition && patientResponse.data && (
         <ModalConfirmDelete
           resource={selectedCondition}
           resourceName={selectedCondition.display || "unnamed condition"}
           onClose={() => setShowConfirmDelete(false)}
           isOpen={showConfirmDelete}
-          onDelete={() => {
-            queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]);
-            queryClient.invalidateQueries([
-              QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
-            ]);
+          onDelete={async () => {
+            const requestContext = await getRequestContext();
+            await onConditionDelete(
+              selectedCondition.resource,
+              requestContext.fhirClient
+            );
           }}
         />
       )}
