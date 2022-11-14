@@ -2,6 +2,7 @@ import { ErrorAlert } from "@/components/core/alert";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { useCTW } from "@/components/core/ctw-provider";
 import { AnyZodSchema } from "@/utils/form-helper";
+import { isEmpty } from "lodash";
 import { ReactNode, useState } from "react";
 import type { DrawerProps } from "../../core/drawer";
 import { Drawer } from "../../core/drawer";
@@ -56,22 +57,15 @@ export const DrawerForm = <T,>({
       (event.target as HTMLElement).querySelectorAll("input")
     );
 
-    const errorMessagesArray: { [key: string]: boolean } = {};
-
-    inputs.map((c) => {
-      errorMessagesArray[c.name] = c.checkValidity();
-      return errorMessagesArray;
-    });
-
     const inputErrors: InputError = {};
 
-    Object.entries(errorMessagesArray).forEach(([key, value]) => {
-      if (!value) {
-        inputErrors[key] = [`The value is not valid for ${key}`];
+    Object.entries(inputs).forEach(([_, value]) => {
+      if (!value.checkValidity()) {
+        inputErrors[value.name] = [`The value is not valid for ${value.name}`];
       }
     });
 
-    if (Object.keys(inputErrors).length) {
+    if (!isEmpty(inputErrors)) {
       setErrors({ formErrors: inputErrors });
       setIsSubmitting(false);
       return;
