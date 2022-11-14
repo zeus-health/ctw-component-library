@@ -12,7 +12,7 @@ export const AUTH_USER_TYPE = "https://zusapi.com/user_type";
 export const AUTH_PATIENT_ID = "https://zusapi.com/patient_id";
 export const AUTH_AUTHENTICATED_BY = "https://zusapi.com/authenticated_by";
 
-export type ZusJWT = {
+type ZusJWT = {
   [AUTH_BUILDER_ID]: string;
   [AUTH_BUILDER_NAME]: string;
   [AUTH_PRACTITIONER_ID]: string;
