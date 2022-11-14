@@ -25,7 +25,7 @@ import {
   CTWStateContext,
   CTWToken,
 } from "./ctw-context";
-import "../main.scss";
+import "./main.scss";
 
 export type Env = "dev" | "sandbox" | "production";
 
