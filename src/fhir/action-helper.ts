@@ -20,6 +20,7 @@ export async function createOrEditFhirResource(
   const builderName = claimsBuilderName(requestContext.authToken);
   const authEmail = claimsAuthEmail(requestContext.authToken);
   const { fhirClient } = requestContext;
+  const resourceModified = resource;
   const createProvenance = async (type: "CREATE" | "UPDATE") => {
     let provenance: Provenance = {
       resourceType: "Provenance",
@@ -27,7 +28,7 @@ export async function createOrEditFhirResource(
         {
           who: {
             reference:
-              practitionerId == ""
+              practitionerId === ""
                 ? undefined
                 : `Practitioner/${practitionerId}`,
             display: authEmail,
@@ -105,7 +106,7 @@ export async function createOrEditFhirResource(
       body: omitEmptyArrays(resource),
     });
     if (!isFhirError(response)) {
-      resource.id = response.id;
+      resourceModified.id = response.id;
       createProvenance("CREATE");
     }
     return response;
