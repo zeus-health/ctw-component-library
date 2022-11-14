@@ -1,8 +1,5 @@
 import { createOrEditFhirResource } from "@/fhir/action-helper";
-import {
-  QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
-  QUERY_KEY_PATIENT_CONDITIONS,
-} from "@/utils/query-keys";
+import { QUERY_KEY_OTHER_PROVIDER_CONDITIONS } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import Client, { FhirResource } from "fhir-kit-client";
 import { Resource } from "fhir/r4";
@@ -24,8 +21,5 @@ export const onConditionDelete = async (
     throw new Error(`Failed to edit resource with id of ${resource.id}`);
   }
 
-  await Promise.all([
-    queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]),
-    queryClient.invalidateQueries([QUERY_KEY_OTHER_PROVIDER_CONDITIONS]),
-  ]);
+  await queryClient.invalidateQueries([QUERY_KEY_OTHER_PROVIDER_CONDITIONS]);
 };

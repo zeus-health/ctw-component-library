@@ -12,7 +12,10 @@ import { ConditionModel } from "@/models/condition";
 import { OperationOutcomeModel } from "@/models/operation-outcome";
 import { claimsPractitionerId } from "@/utils/auth";
 import { AnyZodSchema, getFormData } from "@/utils/form-helper";
-import { QUERY_KEY_PATIENT_CONDITIONS } from "@/utils/query-keys";
+import {
+  QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
+  QUERY_KEY_PATIENT_CONDITIONS,
+} from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import { Condition } from "fhir/r4";
 import { FormErrors } from "./drawer-form";
@@ -131,7 +134,10 @@ export const createOrEditCondition = async (
     requestErrors = [response.message];
     result.success = false;
   }
-  await queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]);
+  await Promise.all([
+    queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]),
+    queryClient.invalidateQueries([QUERY_KEY_OTHER_PROVIDER_CONDITIONS]),
+  ]);
 
   return { formResult: result, requestErrors };
 };
