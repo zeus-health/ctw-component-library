@@ -13,7 +13,6 @@ export default {
   tags: ["docsPage"],
   argTypes: {
     message: {
-      defaultValue: "Default",
       options: ["Default", "String", "ReactElement"],
       mapping: {
         Default: undefined,
@@ -84,6 +83,7 @@ export const Paging: StoryObj<Props> = {
 
 export const Empty: StoryObj<Props> = {
   args: {
+    message: "Default",
     records: [],
     columns: [],
   },
