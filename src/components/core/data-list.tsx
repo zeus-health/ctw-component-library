@@ -30,7 +30,7 @@ export function DataList({ title, data }: DataListProps) {
             className="ctw-flex ctw-items-baseline ctw-space-x-4 ctw-text-content-black"
           >
             <dt className="ctw-w-1/3 ctw-flex-shrink-0 ctw-font-medium">
-              {label}:
+              {label}
             </dt>
             <dd className="ctw-flex-grow">{value}</dd>
           </div>
