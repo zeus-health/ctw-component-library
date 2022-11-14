@@ -1,11 +1,15 @@
-import type { Meta, StoryObj } from "@storybook/react";
 import {
   ActionList,
   ActionListProps,
   MinActionItem,
 } from "@/components/core/action-list/action-list";
+import type { Meta, StoryObj } from "@storybook/react";
 
 type Props = ActionListProps<MinActionItem>;
+
+export default {
+  component: ActionList,
+} as Meta<Props>;
 
 const item = (id = "", title = "", subtitle = "", complete = false) => ({
   id,
@@ -43,10 +47,12 @@ export const Basic: StoryObj<Props> = {
   },
 };
 
-export const WithUndo: StoryObj<Props> = {
+export const WithoutUndo: StoryObj<Props> = {
   args: {
     items,
-    onUndoAction: () => {},
+    // Storybook will automatically add action callbacks so we have
+    // to explictily set it to undefined.
+    onUndoAction: undefined,
   },
 };
 
@@ -55,34 +61,3 @@ export const Empty: StoryObj<Props> = {
     items: [],
   },
 };
-
-export default {
-  component: ActionList,
-  parameters: {
-    docs: {
-      description: {
-        component: `
-        \nDisplays a list of action items which reflect whether they are completed or not. List items marked "active" will show a (primary) colored border to the left and when hovered will present a button to take action. Use the "onAction" handler to mark items as "complete".
-        \nOptionally the opposite can be done for inactive items if an "onUndoAction" handler is passed in, but that is not a requirement.`,
-      },
-    },
-  },
-  argTypes: {
-    message: {
-      defaultValue: "Default",
-      options: ["Default"],
-      mapping: {
-        Default: (
-          <div className="ctw-space-y-4">
-            <ActionList
-              items={items}
-              onAction={() => {}}
-              actionText="Take Action"
-              undoActionText="Undo Action"
-            />
-          </div>
-        ),
-      },
-    },
-  },
-} as Meta<Props>;
