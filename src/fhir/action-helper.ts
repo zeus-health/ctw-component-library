@@ -1,5 +1,9 @@
 import { CTWRequestContext } from "@/components/core/ctw-context";
-import { claimsBuilderName, claimsPractitionerId } from "@/utils/auth";
+import {
+  claimsAuthEmail,
+  claimsBuilderName,
+  claimsPractitionerId,
+} from "@/utils/auth";
 import { Provenance, Resource } from "fhir/r4";
 import { omitEmptyArrays } from "./client";
 import { isFhirError } from "./errors";
@@ -13,14 +17,22 @@ export async function createOrEditFhirResource(
   requestContext: CTWRequestContext
 ) {
   const practitionerId = claimsPractitionerId(requestContext.authToken);
+  console.log(practitionerId);
   const builderName = claimsBuilderName(requestContext.authToken);
+  const authEmail = claimsAuthEmail(requestContext.authToken);
   const { fhirClient } = requestContext;
   const createProvenance = async (type: "CREATE" | "UPDATE") => {
     let provenance: Provenance = {
       resourceType: "Provenance",
       agent: [
         {
-          who: { reference: `Practitioner/${practitionerId}` },
+          who: {
+            reference:
+              practitionerId == ""
+                ? undefined
+                : `Practitioner/${practitionerId}`,
+            display: authEmail,
+          },
           onBehalfOf: { display: builderName },
         },
         {
@@ -71,10 +83,11 @@ export async function createOrEditFhirResource(
         },
       };
     }
-    await fhirClient.create({
+    const response = await fhirClient.create({
       resourceType: "Provenance",
       body: provenance,
     });
+    console.log(response);
   };
 
   try {
@@ -94,6 +107,7 @@ export async function createOrEditFhirResource(
       body: omitEmptyArrays(resource),
     });
     if (!isFhirError(response)) {
+      resource.id = response.id;
       createProvenance("CREATE");
     }
     return response;

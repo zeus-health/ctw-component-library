@@ -48,3 +48,7 @@ export function claimsBuilderName(authToken: string): string {
 export function claimsPractitionerId(authToken: string): string {
   return getClaims(authToken)[AUTH_PRACTITIONER_ID];
 }
+
+export function claimsAuthEmail(authToken: string): string {
+  return getClaims(authToken)[AUTH_EMAIL];
+}

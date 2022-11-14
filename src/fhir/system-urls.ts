@@ -23,7 +23,7 @@ export const SYSTEM_MARITAL_STATUS =
 export const SYSTEM_PRACTITIONER_ID = "https://zusapi.com/practitioner_id";
 
 export const SYSTEM_PROVENANCE_ACTIVITY_TYPE =
-  "http://hl7.org/fhir/ValueSet/provenance-activity-type";
+  "http://terminology.hl7.org/3.1.0/CodeSystem-v3-DataOperation.html";
 
 export const SYSTEM_PROVENANCE_AGENT_TYPE =
   "http://terminology.hl7.org/CodeSystem/provenance-participant-type";
