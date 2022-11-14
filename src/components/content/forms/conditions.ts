@@ -1,9 +1,9 @@
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
+import { setRecorderField } from "@/fhir/conditions";
 import { isFhirError } from "@/fhir/errors";
 import { dateToISO } from "@/fhir/formatters";
 import { isOperationOutcome } from "@/fhir/operation-outcome";
-import { getPractitioner } from "@/fhir/practitioner";
 import {
   SYSTEM_CONDITION_CLINICAL,
   SYSTEM_CONDITION_VERIFICATION_STATUS,
@@ -48,20 +48,6 @@ export function setAddConditionDefaults(condition: Condition): void {
 
   Object.assign(condition, addDefaults);
 }
-
-const setRecorderField = async (
-  practitionerId: string,
-  requestContext: CTWRequestContext
-) => {
-  const practitioner = await getPractitioner(practitionerId, requestContext);
-  const display = practitioner.fullName;
-
-  return {
-    reference: `Practitioner/${practitionerId}`,
-    type: "Practitioner",
-    display,
-  };
-};
 
 export const createOrEditCondition = async (
   condition: ConditionModel | undefined,
