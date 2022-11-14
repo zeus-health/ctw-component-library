@@ -36,7 +36,6 @@ export const DrawerForm = <T,>({
 }: DrawerFormProps<T>) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<{
-    isInvalid?: boolean;
     formErrors?: FormErrors;
     requestErrors?: string[];
   }>();
@@ -52,13 +51,13 @@ export const DrawerForm = <T,>({
     setIsSubmitting(true);
     const form = event.target;
 
-    const inputs = Array.from((event.target as HTMLElement).querySelectorAll(
-      "input"
-    ));
+    const inputs = Array.from(
+      (event.target as HTMLElement).querySelectorAll("input")
+    );
 
     const errorMessagesArray: { [key: string]: boolean } = {};
 
-    formDataValidationToArray.map((c) => {
+    inputs.map((c) => {
       errorMessagesArray[c.name] = c.checkValidity();
       return errorMessagesArray;
     });
@@ -66,11 +65,9 @@ export const DrawerForm = <T,>({
     Object.entries(errorMessagesArray).forEach(([key, value]) => {
       if (!value) {
         setIsSubmitting(false);
-        setErrors({
-          isInvalid: true,
-        });
-        throw Error(`There is a problem with your field ${key}`);
       }
+
+      console.log(errors);
     });
 
     const data = new FormData(form as HTMLFormElement);
