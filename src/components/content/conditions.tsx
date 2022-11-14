@@ -307,10 +307,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           isOpen={showConfirmDelete}
           onDelete={async () => {
             const requestContext = await getRequestContext();
-            await onConditionDelete(
-              selectedCondition.resource,
-              requestContext.fhirClient
-            );
+            await onConditionDelete(selectedCondition.resource, requestContext);
           }}
         />
       )}
