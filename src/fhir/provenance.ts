@@ -82,11 +82,7 @@ export const createProvenance = async (
       },
     ],
   };
-  if (type === "CREATE") {
-    provenance.activity = CREATE_CODING;
-  } else {
-    provenance.activity = UPDATE_CODING;
-  }
+  provenance.activity = type === "CREATE" ? CREATE_CODING : UPDATE_CODING;
   return fhirClient.create({
     resourceType: "Provenance",
     body: provenance,
