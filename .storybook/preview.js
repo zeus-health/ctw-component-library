@@ -7,7 +7,18 @@ import "../src/components/core/main.scss";
 // root/mockServiceWorker.js
 // This isn't true on github pages, so we have to tell it
 // where the file is with the prefix path of the repo name.
-let options = {};
+let options = {
+  onUnhandledRequest(req) {
+    if (req.url.hostname.includes("zusapi")) {
+      console.warn(
+        "[MSW] Warning: captured a request without a matching",
+        "request handler:\n\n",
+        req.method,
+        req.url.href
+      );
+    }
+  },
+};
 
 if (location.hostname === "zeus-health.github.io") {
   options.serviceWorker = {
