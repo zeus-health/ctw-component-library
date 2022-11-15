@@ -34,7 +34,7 @@ export default {
           patientID="007"
           systemURL="https://zusapi.com/fhir/identifier/universal-id"
         >
-          <MedicationHistory medication={medicationStatementModel} />
+          <Story args={args} />
         </PatientProvider>
       </CTWProvider>
     ),
