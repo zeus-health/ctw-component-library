@@ -5,6 +5,11 @@ module.exports = {
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
   ],
+  docs: {
+    source: {
+      excludeDecorators: true,
+    },
+  },
   framework: {
     name: "@storybook/react-vite",
     options: {},
