@@ -25,17 +25,40 @@ describe("Condition Helpers", () => {
       expect(filtered).toHaveLength(3);
     });
 
-    function getCondition(id: string) {
+    it("should filter out when there's a match and patient record is older BUT they have same status", () => {
+      const { others, patients } = setupConditions(
+        "2022-11-10",
+        "2022-11-09",
+        "active",
+        "active"
+      );
+      const filtered = filterOtherConditions(others, patients);
+      expect(filtered).toHaveLength(2);
+    });
+
+    function getCondition(
+      id: string,
+      status = "active",
+      recordedDate?: string,
+      code?: fhir4.Coding
+    ) {
       return new ConditionModel({
         id,
         resourceType: "Condition",
         subject: { display: "Sarah" },
+        clinicalStatus: { coding: [{ code: status }] },
+        recordedDate,
+        code: {
+          coding: code ? [code] : undefined,
+        },
       });
     }
 
     function setupConditions(
       otherRecordedDate?: string,
-      patientRecordedDate?: string
+      patientRecordedDate?: string,
+      otherStatus = "active",
+      patientStatus = "inactive"
     ) {
       const burntEarSnomed = {
         system: "http://snomed.info/sct",
@@ -43,17 +66,19 @@ describe("Condition Helpers", () => {
         display: "Burn of ear",
       };
 
-      const otherCondition = getCondition("other");
-      otherCondition.resource.code = {
-        coding: [burntEarSnomed],
-      };
-      otherCondition.resource.recordedDate = otherRecordedDate;
+      const otherCondition = getCondition(
+        "other",
+        otherStatus,
+        otherRecordedDate,
+        burntEarSnomed
+      );
 
-      const patientCondition = getCondition("patient");
-      patientCondition.resource.code = {
-        coding: [burntEarSnomed],
-      };
-      patientCondition.resource.recordedDate = patientRecordedDate;
+      const patientCondition = getCondition(
+        "patient",
+        patientStatus,
+        patientRecordedDate,
+        burntEarSnomed
+      );
 
       const others = [
         getCondition("other2"),

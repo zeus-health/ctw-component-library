@@ -2,7 +2,8 @@ import { ConditionModel } from "@/models";
 
 // Filter out other conditions where:
 //  1. There is an existing patient condition with a matching known code.
-//  2. The patient condition is more recent than the other condition.
+//  2. The other condition is older than the patient condition OR they
+//     have the same status.
 export const filterOtherConditions = (
   otherConditions: ConditionModel[],
   patientConditions: ConditionModel[]
@@ -12,11 +13,13 @@ export const filterOtherConditions = (
       !patientConditions.some((patientCondition) => {
         const otherRecordedDate = otherCondition.resource.recordedDate;
         const patientRecordedDate = patientCondition.resource.recordedDate;
+        const isMatch = otherCondition.knownCodingsMatch(patientCondition);
+        const isOlder =
+          !otherRecordedDate ||
+          (patientRecordedDate && otherRecordedDate <= patientRecordedDate);
+        const hasSameStatus =
+          otherCondition.clinicalStatus === patientCondition.clinicalStatus;
 
-        return (
-          otherCondition.knownCodingsMatch(patientCondition) &&
-          (!otherRecordedDate ||
-            (patientRecordedDate && otherRecordedDate <= patientRecordedDate))
-        );
+        return isMatch && (isOlder || hasSameStatus);
       })
   );
