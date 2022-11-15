@@ -4,5 +4,5 @@ export { MedicationDispenseModel } from "@/fhir/models/medication-dispense";
 export { MedicationStatementModel } from "@/fhir/models/medication-statement";
 export { OperationOutcomeModel } from "@/fhir/models/operation-outcome";
 export { OrganizationModel } from "@/fhir/models/organization";
-export { PatientModel } from "@/fhir/models/patients";
+export { PatientModel } from "@/fhir/models/patient";
 export { PractitionerModel } from "@/fhir/models/practitioner";

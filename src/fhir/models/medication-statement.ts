@@ -13,33 +13,12 @@ import {
   LENS_EXTENSION_MEDICATION_QUANTITY,
   LENS_EXTENSION_MEDICATION_REFILLS,
 } from "@/fhir/system-urls";
-import type { ResourceMap } from "@/fhir/types";
 import type { Reference } from "fhir/r4";
 import { capitalize, compact, find, get } from "lodash/fp";
+import { FHIRModel } from "./fhir-model";
 
-export class MedicationStatementModel {
-  readonly resourceType = "MedicationStatement";
-
-  public resource: fhir4.MedicationStatement;
-
-  readonly includedResources?: ResourceMap;
-
-  private lensActiveRxNorms?: string[];
-
+export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatement> {
   readonly builderPatientRxNormStatus?: Record<string, string>;
-
-  constructor(
-    medicationStatement: fhir4.MedicationStatement,
-    includedResources?: ResourceMap
-  ) {
-    this.resource = medicationStatement;
-    this.includedResources = includedResources;
-  }
-
-  toString() {
-    const modelName = this.constructor.name;
-    return `new ${modelName}(${JSON.stringify(this.resource, null, 2)}\n)`;
-  }
 
   get basedOn(): string | undefined {
     return this.resource.basedOn?.[0]?.type;
@@ -92,10 +71,6 @@ export class MedicationStatementModel {
 
   get effectiveStart(): string | undefined {
     return formatDateISOToLocal(this.resource.effectivePeriod?.start);
-  }
-
-  get id(): string {
-    return this.resource.id || "";
   }
 
   get identifier(): string | undefined {

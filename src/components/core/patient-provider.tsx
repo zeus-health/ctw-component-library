@@ -1,4 +1,4 @@
-import { PatientModel } from "@/fhir/models/patients";
+import { PatientModel } from "@/fhir/models/patient";
 import { getBuilderFhirPatient } from "@/fhir/patient-helper";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 import { Tag } from "@/fhir/types";

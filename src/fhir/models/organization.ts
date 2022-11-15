@@ -1,24 +1,7 @@
-import type { ResourceMap } from "../types";
+import { FHIRModel } from "./fhir-model";
 
-export class OrganizationModel {
-  private resource: fhir4.Organization;
-
-  private includedResources?: ResourceMap;
-
-  constructor(medication: fhir4.Organization, includedResources?: ResourceMap) {
-    this.resource = medication;
-    this.includedResources = includedResources;
-  }
-
-  get id(): string {
-    return this.resource.id || "";
-  }
-
+export class OrganizationModel extends FHIRModel<fhir4.Organization> {
   get name(): string | undefined {
     return this.resource.name;
-  }
-
-  get resourceType(): string {
-    return this.resource.resourceType;
   }
 }

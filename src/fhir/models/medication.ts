@@ -3,27 +3,10 @@ import { formatDateISOToLocal } from "@/fhir/formatters";
 import type { Medication } from "@/fhir/medication";
 import { getPerformingOrganization } from "@/fhir/medication";
 import { findReference } from "@/fhir/resource-helper";
-import type { ResourceMap } from "@/fhir/types";
-import { PatientModel } from "./patients";
+import { FHIRModel } from "./fhir-model";
+import { PatientModel } from "./patient";
 
-export class MedicationModel {
-  readonly resource: Medication;
-
-  readonly includedResources?: ResourceMap;
-
-  constructor(medication: Medication, includedResources?: ResourceMap) {
-    this.resource = medication;
-    this.includedResources = includedResources;
-  }
-
-  get id(): string {
-    return this.resource.id || "";
-  }
-
-  get resourceType(): fhir4.FhirResource["resourceType"] {
-    return this.resource.resourceType;
-  }
-
+export class MedicationModel extends FHIRModel<Medication> {
   get performer(): string | undefined {
     return getPerformingOrganization(this.resource, this.includedResources)
       ?.name;
