@@ -6,12 +6,6 @@ export default {
   },
   type: "searchset",
   total: 7,
-  link: [
-    {
-      relation: "self",
-      url: "https://api.sandbox.zusapi.com/fhir/MedicationDispense?_count=250&_id=d88a5a54-8a45-4027-ab9e-233e80fc8899%2C4c19932e-500f-4738-8600-54dec77f343d%2C99b5e53c-81b7-4aae-ab20-fe0b7ad7ce55%2Cfa20f4e2-8a10-4555-952c-07d622fdcb50%2C6b16e363-662e-401f-9f3f-5323f81f2149&_include=MedicationDispense%3Apatient&_include=MedicationDispense%3Amedication&_include=MedicationDispense%3Aperformer&_include%3Aiterate=Patient%3Aorganization",
-    },
-  ],
   entry: [
     {
       fullUrl:
@@ -40,8 +34,8 @@ export default {
             },
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/009204f2-5e4c-48da-99cc-6d5f6a99282d",
-              display: "Canvas Medical - Test Customer",
+              code: "builder/007",
+              display: "Storybook Medical - Test Customer",
             },
           ],
         },
@@ -155,8 +149,8 @@ export default {
             },
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/009204f2-5e4c-48da-99cc-6d5f6a99282d",
-              display: "Canvas Medical - Test Customer",
+              code: "builder/007",
+              display: "Storybook Medical - Test Customer",
             },
           ],
         },
@@ -270,8 +264,8 @@ export default {
             },
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/009204f2-5e4c-48da-99cc-6d5f6a99282d",
-              display: "Canvas Medical - Test Customer",
+              code: "builder/007",
+              display: "Storybook Medical - Test Customer",
             },
           ],
         },
@@ -385,8 +379,8 @@ export default {
             },
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/009204f2-5e4c-48da-99cc-6d5f6a99282d",
-              display: "Canvas Medical - Test Customer",
+              code: "builder/007",
+              display: "Storybook Medical - Test Customer",
             },
           ],
         },
@@ -500,8 +494,8 @@ export default {
             },
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/009204f2-5e4c-48da-99cc-6d5f6a99282d",
-              display: "Canvas Medical - Test Customer",
+              code: "builder/007",
+              display: "Storybook Medical - Test Customer",
             },
           ],
         },
@@ -617,8 +611,8 @@ export default {
             },
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/009204f2-5e4c-48da-99cc-6d5f6a99282d",
-              display: "Canvas Medical - Test Customer",
+              code: "builder/007",
+              display: "Storybook Medical - Test Customer",
             },
           ],
         },
@@ -684,8 +678,8 @@ export default {
           tag: [
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/009204f2-5e4c-48da-99cc-6d5f6a99282d",
-              display: "Canvas Medical - Test Customer",
+              code: "builder/007",
+              display: "Storybook Medical - Test Customer",
             },
           ],
         },

@@ -8,7 +8,7 @@ import { MedicationStatementModel } from "@/models";
 import { CTWProvider } from "@/components/core/ctw-provider";
 import { PatientProvider } from "@/components/core/patient-provider";
 import aggregatedFromMedicationStatement from "@/components/content/medication-history/mocks/aggregated-from-med-statement";
-import medicationStatement from "@/components/content/medication-history/mocks/medication-statement";
+import medicationStatement from "@/components/content/medication-history/mocks/medication-statements";
 import medicationRequest from "@/components/content/medication-history/mocks/medication-request";
 import medicationDispense from "@/components/content/medication-history/mocks/medication-dispense";
 import mockedUser from "@/components/content/medication-history/mocks/patient";

@@ -5,16 +5,6 @@ export default {
     lastUpdated: "2022-11-14T18:57:45.140+00:00",
   },
   type: "searchset",
-  link: [
-    {
-      relation: "self",
-      url: "https://api.dev.zusapi.com/fhir/Patient?_count=1&_include=Patient%3Aorganization&_tag=https%3A%2F%2Fzusapi.com%2Faccesscontrol%2Fowner%7C&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fthirdparty%2Fsource%7Csurescripts&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fthirdparty%2Fsource%7Ccommonwell&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fthirdparty%2Fsource%7Celation&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Flens%7CActiveMedications&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Flens%7CChronicConditions&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fsummary%7CCommon&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Ffhir%2Ftag%2Fupi-record-type%7Cuniversal&identifier=https%3A%2F%2Fzusapi.com%2Ffhir%2Fidentifier%2Funiversal-id%7C007",
-    },
-    {
-      relation: "next",
-      url: "https://api.dev.zusapi.com/fhir/Patient?_count=1&_include=Patient%3Aorganization&_offset=1&_tag=https%3A%2F%2Fzusapi.com%2Faccesscontrol%2Fowner%7C&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fthirdparty%2Fsource%7Csurescripts&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fthirdparty%2Fsource%7Ccommonwell&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fthirdparty%2Fsource%7Celation&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Flens%7CActiveMedications&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Flens%7CChronicConditions&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fsummary%7CCommon&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Ffhir%2Ftag%2Fupi-record-type%7Cuniversal&identifier=https%3A%2F%2Fzusapi.com%2Ffhir%2Fidentifier%2Funiversal-id%7C007",
-    },
-  ],
   entry: [
     {
       fullUrl: "https://api.dev.zusapi.com/fhir/Patient/1234-007",
@@ -40,14 +30,14 @@ export default {
           tag: [
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/009204f2-5e4c-48da-99cc-6d5f6a99282d",
-              display: "Canvas Medical - Test Customer",
+              code: "builder/007",
+              display: "Storybook Medical - Test Customer",
             },
           ],
         },
         identifier: [
           {
-            system: "https://canvasmedical.com/patient-id",
+            system: "https://Storybookmedical.com/patient-id",
             value: "12345",
           },
           {

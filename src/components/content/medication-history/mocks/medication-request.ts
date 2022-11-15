@@ -6,12 +6,6 @@ export default {
   },
   type: "searchset",
   total: 2,
-  link: [
-    {
-      relation: "self",
-      url: "https://api.sandbox.zusapi.com/fhir/MedicationRequest?_count=250&_id=6a16eba4-7d86-4e4a-8005-34367553ca05&_include=MedicationRequest%3Apatient&_include=MedicationRequest%3Amedication&_include%3Aiterate=Patient%3Aorganization",
-    },
-  ],
   entry: [
     {
       fullUrl:
@@ -40,8 +34,8 @@ export default {
             },
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/009204f2-5e4c-48da-99cc-6d5f6a99282d",
-              display: "Canvas Medical - Test Customer",
+              code: "builder/007",
+              display: "Storybook Medical - Test Customer",
             },
           ],
         },
@@ -172,8 +166,8 @@ export default {
             },
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/009204f2-5e4c-48da-99cc-6d5f6a99282d",
-              display: "Canvas Medical - Test Customer",
+              code: "builder/007",
+              display: "Storybook Medical - Test Customer",
             },
           ],
         },

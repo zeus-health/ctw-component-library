@@ -1,30 +1,20 @@
 export default {
   resourceType: "Bundle",
-  id: "be63733e-16d0-4d60-9c91-431c61b62630",
+  id: "be63733e",
   meta: {
     lastUpdated: "2022-11-14T19:07:22.958+00:00",
   },
   type: "searchset",
   total: 3,
-  link: [
-    {
-      relation: "self",
-      url: "https://api.sandbox.zusapi.com/fhir/MedicationStatement?_count=250&_id=0e1e097b-eed6-4c1f-b508-314f2fd8ee96&_include=MedicationStatement%3Apatient&_include=MedicationStatement%3Amedication&_include%3Aiterate=Patient%3Aorganization",
-    },
-  ],
   entry: [
     {
       fullUrl:
-        "https://api.sandbox.zusapi.com/fhir/MedicationStatement/0e1e097b-eed6-4c1f-b508-314f2fd8ee96",
+        "https://api.sandbox.zusapi.com/fhir/MedicationStatement/abcd-12345",
       resource: {
         resourceType: "MedicationStatement",
-        id: "0e1e097b-eed6-4c1f-b508-314f2fd8ee96",
+        id: "abcd-12345",
         meta: {
           extension: [
-            {
-              url: "https://zusapi.com/terminology/enrichment/sha256sum",
-              valueBase64Binary: "epixaZTVHuAeIf6niYDrfVV4pQV5q/HeQz2uHgQq/zo=",
-            },
             {
               url: "https://zusapi.com/created-at",
               valueInstant: "2022-11-08T15:03:20.252+00:00",
@@ -40,8 +30,8 @@ export default {
             },
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/009204f2-5e4c-48da-99cc-6d5f6a99282d",
-              display: "Canvas Medical - Test Customer",
+              code: "builder/12345",
+              display: "Storybook Medical - Test Customer",
             },
           ],
         },
@@ -154,8 +144,8 @@ export default {
             },
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/009204f2-5e4c-48da-99cc-6d5f6a99282d",
-              display: "Canvas Medical - Test Customer",
+              code: "builder/12345",
+              display: "Storybook Medical - Test Customer",
             },
           ],
         },
@@ -198,7 +188,7 @@ export default {
           },
         ],
         managingOrganization: {
-          reference: "Organization/93bb6f30-ca25-4ca3-bb22-acae1356d8b5",
+          reference: "Organization/abcd-12345-efghij",
         },
       },
       search: {
@@ -207,10 +197,10 @@ export default {
     },
     {
       fullUrl:
-        "https://api.sandbox.zusapi.com/fhir/Organization/93bb6f30-ca25-4ca3-bb22-acae1356d8b5",
+        "https://api.sandbox.zusapi.com/fhir/Organization/abcd-12345-efghij",
       resource: {
         resourceType: "Organization",
-        id: "93bb6f30-ca25-4ca3-bb22-acae1356d8b5",
+        id: "abcd-12345-efghij",
         meta: {
           extension: [
             {
@@ -224,8 +214,8 @@ export default {
           tag: [
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/009204f2-5e4c-48da-99cc-6d5f6a99282d",
-              display: "Canvas Medical - Test Customer",
+              code: "builder/12345",
+              display: "Storybook Medical - Test Customer",
             },
           ],
         },
