@@ -62,8 +62,7 @@ function createMedicationStatementCard(medication: MedicationModel) {
     id: medication.id,
     title: "Medication Reviewed",
     hideEmpty: false,
-    // @todo Get the practitioners name
-    subTitle: "",
+    subTitle: medStatement.informationSource?.display || "",
     data: [
       {
         label: "Status",
