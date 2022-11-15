@@ -19,12 +19,6 @@ const medicationStatementModel = new MedicationStatementModel(
   aggregatedFromMedicationStatement
 );
 
-export const Basic: StoryObj<Props> = {
-  args: {
-    medication: medicationStatementModel,
-  },
-};
-
 export default {
   component: MedicationHistory,
   decorators: [
@@ -59,3 +53,9 @@ export default {
     ],
   },
 } as Meta<Props>;
+
+export const Basic: StoryObj<Props> = {
+  args: {
+    medication: medicationStatementModel,
+  },
+};
