@@ -1,4 +1,4 @@
-export default {
+export const medicationStatement = {
   resourceType: "Bundle",
   id: "be63733e",
   meta: {

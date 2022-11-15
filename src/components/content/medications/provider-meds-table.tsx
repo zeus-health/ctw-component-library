@@ -1,12 +1,12 @@
+import { get, pipe, toLower } from "lodash/fp";
+import { useEffect, useState } from "react";
 import { MedicationDrawer } from "@/components/content/medication-drawer";
 import { MedicationsTableBase } from "@/components/content/medications-table-base";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { sort } from "@/utils/sort";
-import { get } from "lodash/fp";
-import { useEffect, useState } from "react";
 
-type ProviderMedsTableProps = {
+export type ProviderMedsTableProps = {
   className?: string;
   sortColumn?: keyof MedicationStatementModel;
   sortOrder?: "asc" | "desc";
@@ -14,6 +14,14 @@ type ProviderMedsTableProps = {
   showInactive?: boolean;
 };
 
+/**
+ * Displays a table of medications that are scoped to the CTWContext builder
+ * and patient. To show medications that aren't scoped to the builder, use the
+ * `OtherProviderMedsTable` instead.
+ *
+ * The table has a menu to the right side which will pull out the
+ * history for the medication listed in that row.
+ */
 export function ProviderMedsTable({
   showInactive = false,
   sortColumn = "display",
@@ -39,7 +47,7 @@ export function ProviderMedsTable({
         showInactive
           ? builderMedications
           : builderMedications.filter((bm) => bm.status === "Active"),
-        get(sortColumn),
+        pipe(get(sortColumn), toLower),
         sortOrder
       )
     );

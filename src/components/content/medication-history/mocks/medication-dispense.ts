@@ -1,4 +1,4 @@
-export default {
+export const medicationDispense = {
   resourceType: "Bundle",
   id: "3890b281-3943-4b3e-95d9-1dbb03317829",
   meta: {
@@ -32,7 +32,7 @@ export default {
             },
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/007",
+              code: "builder/12345",
               display: "Storybook Medical - Test Customer",
             },
           ],
@@ -145,7 +145,7 @@ export default {
             },
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/007",
+              code: "builder/12345",
               display: "Storybook Medical - Test Customer",
             },
           ],
@@ -258,7 +258,7 @@ export default {
             },
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/007",
+              code: "builder/12345",
               display: "Storybook Medical - Test Customer",
             },
           ],
@@ -371,7 +371,7 @@ export default {
             },
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/007",
+              code: "builder/12345",
               display: "Storybook Medical - Test Customer",
             },
           ],
@@ -484,7 +484,7 @@ export default {
             },
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/007",
+              code: "builder/12345",
               display: "Storybook Medical - Test Customer",
             },
           ],
@@ -599,7 +599,7 @@ export default {
             },
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/007",
+              code: "builder/12345",
               display: "Storybook Medical - Test Customer",
             },
           ],
@@ -664,7 +664,7 @@ export default {
           tag: [
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/007",
+              code: "builder/12345",
               display: "Storybook Medical - Test Customer",
             },
           ],

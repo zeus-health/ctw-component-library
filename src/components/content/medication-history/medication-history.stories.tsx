@@ -2,11 +2,11 @@ import {
   MedicationHistory,
   MedicationHistoryProps,
 } from "@/components/content/medication-history";
-import aggregatedFromMedicationStatement from "@/components/content/medication-history/mocks/aggregated-from-med-statement";
-import medicationDispense from "@/components/content/medication-history/mocks/medication-dispense";
-import medicationRequest from "@/components/content/medication-history/mocks/medication-request";
-import medicationStatement from "@/components/content/medication-history/mocks/medication-statements";
-import patient from "@/components/content/medication-history/mocks/patient";
+import { aggregatedFromMedStatement } from "@/components/content/medication-history/mocks/aggregated-from-med-statement";
+import { medicationDispense } from "@/components/content/medication-history/mocks/medication-dispense";
+import { medicationRequest } from "@/components/content/medication-history/mocks/medication-request";
+import { medicationStatement } from "@/components/content/medication-history/mocks/medication-statements";
+import { patient } from "@/components/content/medication-history/mocks/patient";
 import { CTWProvider } from "@/components/core/ctw-provider";
 import { PatientProvider } from "@/components/core/patient-provider";
 import { MedicationStatementModel } from "@/fhir/models";
@@ -17,10 +17,11 @@ import { rest } from "msw";
 type Props = MedicationHistoryProps;
 
 const medicationStatementModel = new MedicationStatementModel(
-  aggregatedFromMedicationStatement
+  aggregatedFromMedStatement
 );
 
 export default {
+  tags: ["docsPage"],
   component: MedicationHistory,
   tags: ["docsPage"],
   decorators: [
