@@ -1,18 +1,18 @@
-import { rest } from "msw";
-import type { Meta, StoryObj } from "@storybook/react";
 import {
   MedicationHistory,
   MedicationHistoryProps,
 } from "@/components/content/medication-history";
-import { MedicationStatementModel } from "@/models";
-import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
+import aggregatedFromMedicationStatement from "@/components/content/medication-history/mocks/aggregated-from-med-statement";
+import medicationDispense from "@/components/content/medication-history/mocks/medication-dispense";
+import medicationRequest from "@/components/content/medication-history/mocks/medication-request";
+import medicationStatement from "@/components/content/medication-history/mocks/medication-statements";
+import patient from "@/components/content/medication-history/mocks/patient";
 import { CTWProvider } from "@/components/core/ctw-provider";
 import { PatientProvider } from "@/components/core/patient-provider";
-import aggregatedFromMedicationStatement from "@/components/content/medication-history/mocks/aggregated-from-med-statement";
-import medicationStatement from "@/components/content/medication-history/mocks/medication-statements";
-import medicationRequest from "@/components/content/medication-history/mocks/medication-request";
-import medicationDispense from "@/components/content/medication-history/mocks/medication-dispense";
-import patient from "@/components/content/medication-history/mocks/patient";
+import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
+import { MedicationStatementModel } from "@/models";
+import type { Meta, StoryObj } from "@storybook/react";
+import { rest } from "msw";
 
 type Props = MedicationHistoryProps;
 
