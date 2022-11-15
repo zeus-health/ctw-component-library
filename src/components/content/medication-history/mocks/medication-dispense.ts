@@ -8,8 +8,6 @@ export default {
   total: 7,
   entry: [
     {
-      fullUrl:
-        "https://api.sandbox.zusapi.com/fhir/MedicationDispense/d88a5a54-8a45-4027-ab9e-233e80fc8899",
       resource: {
         resourceType: "MedicationDispense",
         id: "d88a5a54-8a45-4027-ab9e-233e80fc8899",
@@ -123,8 +121,6 @@ export default {
       },
     },
     {
-      fullUrl:
-        "https://api.sandbox.zusapi.com/fhir/MedicationDispense/6b16e363-662e-401f-9f3f-5323f81f2149",
       resource: {
         resourceType: "MedicationDispense",
         id: "6b16e363-662e-401f-9f3f-5323f81f2149",
@@ -238,8 +234,6 @@ export default {
       },
     },
     {
-      fullUrl:
-        "https://api.sandbox.zusapi.com/fhir/MedicationDispense/fa20f4e2-8a10-4555-952c-07d622fdcb50",
       resource: {
         resourceType: "MedicationDispense",
         id: "fa20f4e2-8a10-4555-952c-07d622fdcb50",
@@ -353,8 +347,6 @@ export default {
       },
     },
     {
-      fullUrl:
-        "https://api.sandbox.zusapi.com/fhir/MedicationDispense/99b5e53c-81b7-4aae-ab20-fe0b7ad7ce55",
       resource: {
         resourceType: "MedicationDispense",
         id: "99b5e53c-81b7-4aae-ab20-fe0b7ad7ce55",
@@ -468,8 +460,6 @@ export default {
       },
     },
     {
-      fullUrl:
-        "https://api.sandbox.zusapi.com/fhir/MedicationDispense/4c19932e-500f-4738-8600-54dec77f343d",
       resource: {
         resourceType: "MedicationDispense",
         id: "4c19932e-500f-4738-8600-54dec77f343d",
@@ -583,8 +573,6 @@ export default {
       },
     },
     {
-      fullUrl:
-        "https://api.sandbox.zusapi.com/fhir/Patient/88a0a417-c046-4dc8-b3dc-f1c1c2d3a1ce",
       resource: {
         resourceType: "Patient",
         id: "88a0a417-c046-4dc8-b3dc-f1c1c2d3a1ce",
@@ -660,8 +648,6 @@ export default {
       },
     },
     {
-      fullUrl:
-        "https://api.sandbox.zusapi.com/fhir/Organization/c40671c0-e0e6-4dcd-beb2-0188e1d6ee1c",
       resource: {
         resourceType: "Organization",
         id: "c40671c0-e0e6-4dcd-beb2-0188e1d6ee1c",

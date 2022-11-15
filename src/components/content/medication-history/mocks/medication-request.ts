@@ -8,8 +8,6 @@ export default {
   total: 2,
   entry: [
     {
-      fullUrl:
-        "https://api.sandbox.zusapi.com/fhir/MedicationRequest/6a16eba4-7d86-4e4a-8005-34367553ca05",
       resource: {
         resourceType: "MedicationRequest",
         id: "6a16eba4-7d86-4e4a-8005-34367553ca05",
@@ -138,8 +136,6 @@ export default {
       },
     },
     {
-      fullUrl:
-        "https://api.sandbox.zusapi.com/fhir/Patient/88a0a417-c046-4dc8-b3dc-f1c1c2d3a1ce",
       resource: {
         resourceType: "Patient",
         id: "88a0a417-c046-4dc8-b3dc-f1c1c2d3a1ce",

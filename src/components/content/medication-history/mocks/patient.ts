@@ -7,7 +7,6 @@ export default {
   type: "searchset",
   entry: [
     {
-      fullUrl: "https://api.dev.zusapi.com/fhir/Patient/1234-007",
       resource: {
         resourceType: "Patient",
         id: "1234-007",

@@ -8,8 +8,6 @@ export default {
   total: 3,
   entry: [
     {
-      fullUrl:
-        "https://api.sandbox.zusapi.com/fhir/MedicationStatement/abcd-12345",
       resource: {
         resourceType: "MedicationStatement",
         id: "abcd-12345",
@@ -116,8 +114,6 @@ export default {
       },
     },
     {
-      fullUrl:
-        "https://api.sandbox.zusapi.com/fhir/Patient/4b92e70f-8476-461b-8980-047e50aa2dab",
       resource: {
         resourceType: "Patient",
         id: "4b92e70f-8476-461b-8980-047e50aa2dab",
@@ -196,8 +192,6 @@ export default {
       },
     },
     {
-      fullUrl:
-        "https://api.sandbox.zusapi.com/fhir/Organization/abcd-12345-efghij",
       resource: {
         resourceType: "Organization",
         id: "abcd-12345-efghij",
