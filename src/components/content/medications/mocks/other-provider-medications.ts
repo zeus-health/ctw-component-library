@@ -1,4 +1,4 @@
-export default {
+export const otherProviderMedications = {
   resourceType: "Bundle",
   id: "37c381e4-2beb-4d39-92a3-94756b35973b",
   meta: {

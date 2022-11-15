@@ -7,11 +7,11 @@ import {
 import { SYSTEM_ZUS_UNIVERSAL_ID, SYSTEM_SUMMARY } from "@/fhir/system-urls";
 import { CTWProvider } from "@/components/core/ctw-provider";
 import { PatientProvider } from "@/components/core/patient-provider";
-import otherProviderMedications from "@/components/content/medications/mocks/other-provider-medications";
-import medicationStatement from "@/components/content/medication-history/mocks/medication-statements";
-import medicationRequest from "@/components/content/medication-history/mocks/medication-request";
-import medicationDispense from "@/components/content/medication-history/mocks/medication-dispense";
-import patient from "@/components/content/medication-history/mocks/patient";
+import { otherProviderMedications } from "@/components/content/medications/mocks/other-provider-medications";
+import { medicationStatement } from "@/components/content/medication-history/mocks/medication-statements";
+import { medicationRequest } from "@/components/content/medication-history/mocks/medication-request";
+import { medicationDispense } from "@/components/content/medication-history/mocks/medication-dispense";
+import { patient } from "@/components/content/medication-history/mocks/patient";
 
 type Props = OtherProviderMedsTableProps;
 

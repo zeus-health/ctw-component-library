@@ -1,4 +1,4 @@
-export default {
+export const patient = {
   resourceType: "Bundle",
   id: "c1db2d18-e0f2-420e-88d8-c0e32676e894",
   meta: {
