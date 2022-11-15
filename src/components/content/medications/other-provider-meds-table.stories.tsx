@@ -18,7 +18,6 @@ type Props = OtherProviderMedsTableProps;
 export default {
   tags: ["docsPage"],
   component: OtherProviderMedsTable,
-  title: "OtherProviderMedsTable",
   decorators: [
     (Story, { args }) => (
       <CTWProvider env="dev" authToken="12345" builderId="12345">
