@@ -12,12 +12,10 @@ const MEDICATION_HISTORY_LIMIT = 10;
 
 export type MedicationHistoryProps = {
   medication: MedicationStatementModel;
-  title?: string;
 };
 
 export function MedicationHistory({
   medication,
-  title = "Medication History",
 }: MedicationHistoryProps) {
   const [entries, setEntries] = useState<CollapsibleDataListProps[]>([]);
   const medHistoryQuery = useMedicationHistory(medication.resource);
@@ -33,7 +31,7 @@ export function MedicationHistory({
   if (loading) {
     return (
       <>
-        <h2 className="ctw-text-lg ctw-font-semibold">{title}</h2>
+        <h2 className="ctw-text-lg ctw-font-semibold">Medication History</h2>
         <Loading message="" />
       </>
     );
