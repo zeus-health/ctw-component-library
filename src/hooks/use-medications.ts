@@ -6,7 +6,7 @@ import {
   MedicationBuilder,
   splitSummarizedMedications,
 } from "@/fhir/medications";
-import { MedicationStatementModel } from "@/models/medication-statement";
+import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import {
   QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
   QUERY_KEY_PATIENT_MEDICATIONS,

@@ -1,6 +1,6 @@
 import { Table, TableBaseProps, TableColumn } from "../core/table/table";
 
-import { ConditionModel } from "@/models/condition";
+import { ConditionModel } from "@/fhir/models/condition";
 import { DotsHorizontalIcon } from "@heroicons/react/outline";
 import { DropdownMenu, MenuItems } from "../core/dropdown-menu";
 

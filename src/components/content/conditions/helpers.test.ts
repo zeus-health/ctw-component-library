@@ -1,4 +1,4 @@
-import { ConditionModel } from "@/models";
+import { ConditionModel } from "@/fhir/models";
 import { filterOtherConditions } from "./helpers";
 
 describe("Condition Helpers", () => {

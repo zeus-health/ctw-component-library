@@ -2,9 +2,9 @@ import { CollapsibleDataListProps } from "@/components/core/collapsible-data-lis
 import { CollapsibleDataListStack } from "@/components/core/collapsible-data-list-stack";
 import { Loading } from "@/components/core/loading";
 import { useMedicationHistory } from "@/fhir/medications";
-import { MedicationModel } from "@/models/medication";
-import { MedicationDispenseModel } from "@/models/medication-dispense";
-import { MedicationStatementModel } from "@/models/medication-statement";
+import { MedicationModel } from "@/fhir/models/medication";
+import { MedicationDispenseModel } from "@/fhir/models/medication-dispense";
+import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { capitalize } from "lodash";
 import { useEffect, useState } from "react";
 

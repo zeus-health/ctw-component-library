@@ -1,4 +1,4 @@
-import type { ResourceMap } from "../fhir/types";
+import type { ResourceMap } from "../types";
 
 export class OrganizationModel {
   private resource: fhir4.Organization;

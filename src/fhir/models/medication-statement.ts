@@ -1,4 +1,3 @@
-import { capitalize, find, get, compact } from "lodash/fp";
 import { codeableConceptLabel } from "@/fhir/codeable-concept";
 import { dateToISO, formatDateISOToLocal } from "@/fhir/formatters";
 import {
@@ -16,6 +15,7 @@ import {
 } from "@/fhir/system-urls";
 import type { ResourceMap } from "@/fhir/types";
 import type { Reference } from "fhir/r4";
+import { capitalize, compact, find, get } from "lodash/fp";
 
 export class MedicationStatementModel {
   readonly resourceType = "MedicationStatement";
@@ -34,6 +34,11 @@ export class MedicationStatementModel {
   ) {
     this.resource = medicationStatement;
     this.includedResources = includedResources;
+  }
+
+  toString() {
+    const modelName = this.constructor.name;
+    return `new ${modelName}(${JSON.stringify(this.resource, null, 2)}\n)`;
   }
 
   get basedOn(): string | undefined {
