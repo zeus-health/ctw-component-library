@@ -5,6 +5,7 @@ import {
   MedicationHistoryProps,
 } from "@/components/content/medication-history";
 import { MedicationStatementModel } from "@/models";
+import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 import { CTWProvider } from "@/components/core/ctw-provider";
 import { PatientProvider } from "@/components/core/patient-provider";
 import aggregatedFromMedicationStatement from "@/components/content/medication-history/mocks/aggregated-from-med-statement";
@@ -24,10 +25,7 @@ export default {
   decorators: [
     (Story, { args }) => (
       <CTWProvider env="dev" authToken="12345" builderId="12345">
-        <PatientProvider
-          patientID="007"
-          systemURL="https://zusapi.com/fhir/identifier/universal-id"
-        >
+        <PatientProvider patientID="007" systemURL={SYSTEM_ZUS_UNIVERSAL_ID}>
           <Story args={args} />
         </PatientProvider>
       </CTWProvider>
