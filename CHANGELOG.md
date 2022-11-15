@@ -1,5 +1,44 @@
 # ctw-component-library
 
+## 0.24.8
+
+### Patch Changes
+
+- a7d03b6: Filter out other provider records by any matching patient records that are newer, regardless of active/inactive status.
+- e3de88f: Adds provenance records when data is added or edited to track changes and add accountability.
+- c8ac26a: Delete functionality for validation status now edits to entered-in-error instead of deleting.
+- dca390e: Reduce number of options for verification status in add conditions and catch incomplete form field entries.
+
+## 0.24.7
+
+### Patch Changes
+
+- e70a512: Set the missing "ctw-" prefix on "ctw-btn-primary" class in medications drawer component
+
+## 0.24.6
+
+### Patch Changes
+
+- 856bbe0: Re-add display & system to condition schema.
+
+## 0.24.5
+
+### Patch Changes
+
+- 8331a8b: Change title in conditions history to category
+
+## 0.24.4
+
+### Patch Changes
+
+- 1c16fd0: Hotfix to fix autocomplete option not setting correctly.
+
+## 0.24.3
+
+### Patch Changes
+
+- 3f299b9: Another attempt to fix autocomplete.
+
 ## 0.24.2
 
 ### Patch Changes

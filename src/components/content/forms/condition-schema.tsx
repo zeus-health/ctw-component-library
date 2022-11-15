@@ -90,12 +90,6 @@ const conditionSchema = z.object({
     .date()
     .max(new Date(), { message: "Abatement cannot be a future date." })
     .optional(),
-  verificationStatus: z.enum([
-    "unconfirmed",
-    "confirmed",
-    "refuted",
-    "entered-in-error",
-  ]),
   note: z.string().optional(),
 });
 
@@ -123,17 +117,29 @@ export const conditionRefinement = (
   }
 };
 
-export const conditionEditSchema = conditionSchema.superRefine(
-  (condition, refinementCtx) => conditionRefinement(condition, refinementCtx)
-);
+export const conditionEditSchema = conditionSchema
+  .extend({
+    verificationStatus: z.enum([
+      "unconfirmed",
+      "confirmed",
+      "refuted",
+      "entered-in-error",
+    ]),
+  })
+  .superRefine((condition, refinementCtx) =>
+    conditionRefinement(condition, refinementCtx)
+  );
 
 export const conditionAddSchema = conditionSchema
   .extend({
     condition: z.object({
+      display: z.string(),
       code: z.string({
         required_error: "Please choose a condition.",
       }),
+      system: z.string(),
     }),
+    verificationStatus: z.enum(["confirmed", "unconfirmed"]),
   })
   .superRefine((condition, refinementCtx) =>
     conditionRefinement(condition, refinementCtx)

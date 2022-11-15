@@ -79,7 +79,11 @@ export const FormField = ({
         type={inputProps.type}
         className={cx({ "ctw-error": errors }, "ctw-listbox-input ctw-w-full")}
         readOnly={readonly}
-        defaultValue={value}
+        // Only set defaultValue prop if there is a value.
+        // This fixes an issue where partially filled dates
+        // would get reset when saving and showing errors as the defaultValue could
+        // be undefined and the input gets reset to that (empty).
+        {...(value ? { defaultValue: value } : {})}
       />
     );
   };

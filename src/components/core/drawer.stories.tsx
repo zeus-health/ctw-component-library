@@ -4,6 +4,7 @@ import { useState } from "react";
 
 export default {
   component: Drawer,
+  tags: ["docsPage"],
   // Setup a button to open drawer stories.
   decorators: [
     (Story, { args }) => {

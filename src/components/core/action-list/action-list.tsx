@@ -24,6 +24,15 @@ export type ActionListProps<T extends MinActionItem> = {
   items: T[];
 } & Omit<ActionItemProps<T>, "item">;
 
+/**
+ * Displays a list of action items which reflect whether they are
+ * completed or not. List items marked "active" will show a (primary)
+ * colored border to the left and when hovered will present a button
+ * to take action. Use the "onAction" handler to mark items as "complete".
+ *
+ * Optionally the opposite can be done for inactive items if an "onUndoAction"
+ * handler is passed in, but that is not a requirement.
+ */
 export const ActionList = <T extends MinActionItem>({
   items,
   className,
