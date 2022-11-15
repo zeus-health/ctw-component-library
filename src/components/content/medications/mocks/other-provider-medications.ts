@@ -6,16 +6,8 @@ export default {
   },
   type: "searchset",
   total: 5,
-  link: [
-    {
-      relation: "self",
-      url: "https://api.sandbox.zusapi.com/fhir/MedicationStatement?_count=250&_include=MedicationStatement%3Amedication&_tag=https%3A%2F%2Fzusapi.com%2Faccesscontrol%2Fowner%7C&_tag=https%3A%2F%2Fzusapi.com%2Fsummary%7CCommon&patient.identifier=https%3A%2F%2Fzusapi.com%2Ffhir%2Fidentifier%2Funiversal-id%7Cf5ba64c5-4f66-45cf-b07d-84ed828138e0",
-    },
-  ],
   entry: [
     {
-      fullUrl:
-        "https://api.sandbox.zusapi.com/fhir/MedicationStatement/edf55906-1563-42d3-80b0-aa1aa00f9db9",
       resource: {
         resourceType: "MedicationStatement",
         id: "edf55906-1563-42d3-80b0-aa1aa00f9db9",
@@ -40,8 +32,8 @@ export default {
             },
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/009204f2-5e4c-48da-99cc-6d5f6a99282d",
-              display: "Canvas Medical - Test Customer",
+              code: "builder/12345",
+              display: "Storybook Medical - Test Customer",
             },
             {
               system: "https://zusapi.com/lens/upid",
@@ -186,7 +178,7 @@ export default {
           text: "Miralax Oral Product",
         },
         subject: {
-          reference: "Patient/0790b2c2-b8ca-4697-a541-f4486c6e89f8",
+          reference: "Patient/007",
           type: "Patient",
         },
         dateAsserted: "2022-09-20",
@@ -201,8 +193,6 @@ export default {
       },
     },
     {
-      fullUrl:
-        "https://api.sandbox.zusapi.com/fhir/MedicationStatement/8dc0812d-9e32-408a-895e-9c44cbbaa9a5",
       resource: {
         resourceType: "MedicationStatement",
         id: "8dc0812d-9e32-408a-895e-9c44cbbaa9a5",
@@ -227,8 +217,8 @@ export default {
             },
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/009204f2-5e4c-48da-99cc-6d5f6a99282d",
-              display: "Canvas Medical - Test Customer",
+              code: "builder/12345",
+              display: "Storybook Medical - Test Customer",
             },
             {
               system: "https://zusapi.com/lens/upid",
@@ -387,7 +377,7 @@ export default {
           text: "3 ML insulin glargine 100 UNT/ML Pen Injector [Lantus]",
         },
         subject: {
-          reference: "Patient/0790b2c2-b8ca-4697-a541-f4486c6e89f8",
+          reference: "Patient/007",
           type: "Patient",
         },
         dateAsserted: "2022-11-07",
@@ -402,8 +392,6 @@ export default {
       },
     },
     {
-      fullUrl:
-        "https://api.sandbox.zusapi.com/fhir/MedicationStatement/9e5c1cc1-7f0e-4472-8e23-4f7a2c9ce752",
       resource: {
         resourceType: "MedicationStatement",
         id: "9e5c1cc1-7f0e-4472-8e23-4f7a2c9ce752",
@@ -428,8 +416,8 @@ export default {
             },
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/009204f2-5e4c-48da-99cc-6d5f6a99282d",
-              display: "Canvas Medical - Test Customer",
+              code: "builder/12345",
+              display: "Storybook Medical - Test Customer",
             },
             {
               system: "https://zusapi.com/lens/upid",
@@ -589,7 +577,7 @@ export default {
           text: "3 ML insulin aspart protamine, human 70 UNT/ML / insulin aspart, human 30 UNT/ML Pen Injector [NovoLog Mix]",
         },
         subject: {
-          reference: "Patient/0790b2c2-b8ca-4697-a541-f4486c6e89f8",
+          reference: "Patient/007",
           type: "Patient",
         },
         dateAsserted: "2022-11-07",
@@ -604,8 +592,6 @@ export default {
       },
     },
     {
-      fullUrl:
-        "https://api.sandbox.zusapi.com/fhir/MedicationStatement/aac783c9-fe72-462d-ac2f-0df59fb7f812",
       resource: {
         resourceType: "MedicationStatement",
         id: "aac783c9-fe72-462d-ac2f-0df59fb7f812",
@@ -626,8 +612,8 @@ export default {
             },
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/009204f2-5e4c-48da-99cc-6d5f6a99282d",
-              display: "Canvas Medical - Test Customer",
+              code: "builder/12345",
+              display: "Storybook Medical - Test Customer",
             },
             {
               system: "https://zusapi.com/lens/upid",
@@ -752,7 +738,7 @@ export default {
           text: "triamcinolone acetonide 0.147 MG/ML Topical Spray",
         },
         subject: {
-          reference: "Patient/0790b2c2-b8ca-4697-a541-f4486c6e89f8",
+          reference: "Patient/007",
           type: "Patient",
         },
         dateAsserted: "2022-04-05",
@@ -767,8 +753,6 @@ export default {
       },
     },
     {
-      fullUrl:
-        "https://api.sandbox.zusapi.com/fhir/MedicationStatement/3c596782-025f-41b7-88a0-6fc3de9fce90",
       resource: {
         resourceType: "MedicationStatement",
         id: "3c596782-025f-41b7-88a0-6fc3de9fce90",
@@ -793,8 +777,8 @@ export default {
             },
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/009204f2-5e4c-48da-99cc-6d5f6a99282d",
-              display: "Canvas Medical - Test Customer",
+              code: "builder/12345",
+              display: "Storybook Medical - Test Customer",
             },
             {
               system: "https://zusapi.com/lens/upid",
@@ -880,7 +864,7 @@ export default {
           text: "albuterol/ipratropium bromide 20/100 MCG/INHAL Metered Dose Inhalation Spray, 120 Actuations",
         },
         subject: {
-          reference: "Patient/0790b2c2-b8ca-4697-a541-f4486c6e89f8",
+          reference: "Patient/007",
           type: "Patient",
         },
         dosage: [
