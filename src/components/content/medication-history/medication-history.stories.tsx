@@ -21,7 +21,6 @@ const medicationStatementModel = new MedicationStatementModel(
 );
 
 export default {
-  tags: ["docsPage"],
   component: MedicationHistory,
   tags: ["docsPage"],
   decorators: [
