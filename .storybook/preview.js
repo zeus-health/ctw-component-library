@@ -3,7 +3,19 @@
 import { initialize, mswDecorator } from "msw-storybook-addon";
 import "../src/components/core/main.scss";
 
-initialize();
+// By default MSW assumes the service worker will be at
+// root/mockServiceWorker.js
+// This isn't true on github pages, so we have to tell it
+// where the file is with the prefix path of the repo name.
+let options = {};
+
+if (location.hostname === "zeus-health.github.io") {
+  options.serviceWorker = {
+    url: "/ctw-component-library/mockServiceWorker.js",
+  };
+}
+
+initialize(options);
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
