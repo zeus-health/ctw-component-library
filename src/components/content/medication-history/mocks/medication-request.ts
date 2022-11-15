@@ -32,7 +32,7 @@ export const medicationRequest = {
             },
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/007",
+              code: "builder/12345",
               display: "Storybook Medical - Test Customer",
             },
           ],
@@ -162,7 +162,7 @@ export const medicationRequest = {
             },
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/007",
+              code: "builder/12345",
               display: "Storybook Medical - Test Customer",
             },
           ],
