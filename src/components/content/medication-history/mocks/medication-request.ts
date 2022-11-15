@@ -1,4 +1,4 @@
-export default {
+export const medicationRequest = {
   resourceType: "Bundle",
   id: "1e2d41d5-ee2c-4535-97d1-1c75222c434a",
   meta: {
@@ -32,7 +32,7 @@ export default {
             },
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/007",
+              code: "builder/12345",
               display: "Storybook Medical - Test Customer",
             },
           ],
@@ -162,7 +162,7 @@ export default {
             },
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/007",
+              code: "builder/12345",
               display: "Storybook Medical - Test Customer",
             },
           ],

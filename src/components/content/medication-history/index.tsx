@@ -14,6 +14,9 @@ export type MedicationHistoryProps = {
   medication: MedicationStatementModel;
 };
 
+/**
+ * Displays the history of a medication
+ */
 export function MedicationHistory({ medication }: MedicationHistoryProps) {
   const [entries, setEntries] = useState<CollapsibleDataListProps[]>([]);
   const medHistoryQuery = useMedicationHistory(medication.resource);
