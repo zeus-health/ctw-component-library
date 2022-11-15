@@ -1,7 +1,7 @@
 // Always include our main styles to get tailwind and
 // anything else our components may depend on.
 import { initialize, mswDecorator } from "msw-storybook-addon";
-import "../src/components/core/main.scss";
+import "./preview.scss";
 
 // By default MSW assumes the service worker will be at
 // root/mockServiceWorker.js

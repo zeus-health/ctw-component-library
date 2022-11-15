@@ -21,7 +21,9 @@ const medicationStatementModel = new MedicationStatementModel(
 );
 
 export default {
+  tags: ["docsPage"],
   component: MedicationHistory,
+  title: "MedicationHistory",
   decorators: [
     (Story, { args }) => (
       <CTWProvider env="dev" authToken="12345" builderId="12345">

@@ -9,6 +9,7 @@ type Props = ActionListProps<MinActionItem>;
 
 export default {
   component: ActionList,
+  title: "ActionList",
   tags: ["docsPage"],
 } as Meta<Props>;
 
