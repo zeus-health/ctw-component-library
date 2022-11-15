@@ -1,7 +1,7 @@
 import { ConditionModel } from "@/models/condition";
 import Zod, { RefinementCtx, z } from "zod";
+import type { FormEntry } from "../../core/form/drawer-form-with-fields";
 import { ConditionsAutoComplete } from "./conditions-autocomplete";
-import type { FormEntry } from "./drawer-form-with-fields";
 
 export const getAddConditionData = ({
   condition,

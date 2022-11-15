@@ -1,9 +1,9 @@
-import { DrawerFormWithFields } from "@/components/content/forms/drawer-form-with-fields";
 import {
   createMedicationStatement,
   getMedicationFormData,
   medicationStatementSchema,
 } from "@/components/content/forms/medications";
+import { DrawerFormWithFields } from "@/components/core/form/drawer-form-with-fields";
 import { usePatient } from "@/components/core/patient-provider";
 import { MedicationStatementModel } from "@/models/medication-statement";
 import { format } from "date-fns";

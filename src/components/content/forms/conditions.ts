@@ -18,7 +18,7 @@ import {
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import { Condition } from "fhir/r4";
-import { FormErrors } from "./drawer-form";
+import { FormErrors } from "../../core/form/drawer-form";
 import { ActionReturn } from "./types";
 
 // Sets any autofill values that apply when a user adds a condition, whether creating or confirming.

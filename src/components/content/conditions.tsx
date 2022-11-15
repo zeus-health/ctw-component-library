@@ -15,6 +15,11 @@ import cx from "classnames";
 import { curry } from "lodash";
 import { useEffect, useRef, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
+import {
+  DrawerFormWithFields,
+  FormActionTypes,
+  FormEntry,
+} from "../core/form/drawer-form-with-fields";
 import { ModalConfirmDelete } from "../core/modal-confirm-delete";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
@@ -30,11 +35,6 @@ import {
   createOrEditCondition,
   setAddConditionDefaults,
 } from "./forms/conditions";
-import {
-  DrawerFormWithFields,
-  FormActionTypes,
-  FormEntry,
-} from "./forms/drawer-form-with-fields";
 
 export type ConditionsProps = {
   className?: string;
