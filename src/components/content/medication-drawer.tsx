@@ -8,7 +8,6 @@ import { MedicationHistory } from "./medication-history";
 
 export type MedicationDrawerProps = {
   medication?: MedicationStatementModel;
-  title?: string;
 } & Pick<DrawerProps, "isOpen" | "onClose">;
 
 function getDataEntriesFromMedicationStatement(
@@ -31,12 +30,11 @@ function getDataEntriesFromMedicationStatement(
 
 export const MedicationDrawer = ({
   medication,
-  title = "Medication Details",
   ...drawerProps
 }: MedicationDrawerProps) => {
   const data = getDataEntriesFromMedicationStatement(medication);
   return (
-    <Drawer title={title} {...drawerProps}>
+    <Drawer title="Medication Details" {...drawerProps}>
       <Drawer.Body>
         <div className="ctw-space-y-5">
           <div className="ctw-flex ctw-justify-between ctw-space-x-8">
