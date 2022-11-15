@@ -11,7 +11,7 @@ import aggregatedFromMedicationStatement from "@/components/content/medication-h
 import medicationStatement from "@/components/content/medication-history/mocks/medication-statements";
 import medicationRequest from "@/components/content/medication-history/mocks/medication-request";
 import medicationDispense from "@/components/content/medication-history/mocks/medication-dispense";
-import mockedUser from "@/components/content/medication-history/mocks/patient";
+import patient from "@/components/content/medication-history/mocks/patient";
 
 type Props = MedicationHistoryProps;
 
@@ -42,7 +42,7 @@ export default {
   parameters: {
     msw: [
       rest.get("https://api.dev.zusapi.com/fhir/Patient", (req, res, ctx) =>
-        res(ctx.status(200), ctx.json(mockedUser))
+        res(ctx.status(200), ctx.json(patient))
       ),
       rest.get(
         "https://api.dev.zusapi.com/fhir/MedicationStatement",
