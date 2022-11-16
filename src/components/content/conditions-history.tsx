@@ -1,9 +1,8 @@
 import { Loading } from "@/components/core/loading";
 import { getIncludedResources } from "@/fhir/bundle";
 import { useConditionHistory } from "@/fhir/conditions";
-import _, { capitalize, orderBy, startCase } from "lodash";
 import { ConditionModel } from "@/fhir/models/condition";
-import { capitalize, orderBy, startCase } from "lodash";
+import _, { capitalize, orderBy, startCase } from "lodash";
 import { useEffect, useState } from "react";
 import { CodingList } from "../core/coding-list";
 import { CollapsibleDataListProps } from "../core/collapsible-data-list";
