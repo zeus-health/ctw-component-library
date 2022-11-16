@@ -92,7 +92,7 @@ export const Table = <T extends MinRecordItem>({
       })}
     >
       <div
-        className={cx("ctw-table-container", "ctw-table", {
+        className={cx("ctw-table-container", {
           "ctw-table-scroll-left-shadow": showLeftShadow,
           "ctw-table-scroll-right-shadow": showRightShadow,
         })}
