@@ -31,7 +31,7 @@ export default {
     },
   },
   args: {
-    className: "Empty",
+    className: "Blank",
     readOnly: false,
   },
   decorators: [
