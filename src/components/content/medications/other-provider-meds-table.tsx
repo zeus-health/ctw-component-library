@@ -1,21 +1,25 @@
-import { get } from "lodash/fp";
+import { pipe, get, toLower } from "lodash/fp";
 import { useEffect, useState } from "react";
-import { MedicationsTableBase } from "@/components/content/medications-table-base";
-import { useQueryAllPatientMedicationsByStatus } from "@/hooks/use-medications";
-import { MedicationStatementModel } from "@/models/medication-statement";
-import { sort } from "@/utils/sort";
 import { MedicationDrawer } from "@/components/content/medication-drawer";
+import { MedicationsTableBase } from "@/components/content/medications-table-base";
+import { MedicationStatementModel } from "@/fhir/models/medication-statement";
+import { useQueryAllPatientMedications } from "@/hooks/use-medications";
+import { sort } from "@/utils/sort";
 
-type OtherProviderMedsTableProps = {
+export type OtherProviderMedsTableProps = {
   className?: string;
   sortColumn?: keyof MedicationStatementModel;
   sortOrder?: "asc" | "desc";
-  // should inactive meds be shown?
-  showInactive?: boolean;
 };
 
+/**
+ * Displays a table of medications that are not scoped to the current builder.
+ * This component displays the inverse results of `ProviderMedsTable`.
+ *
+ * The table has a menu to the right side which will pull out the
+ * history for the medication listed in that row.
+ */
 export function OtherProviderMedsTable({
-  showInactive = false,
   sortOrder = "asc",
   sortColumn = "display",
 }: OtherProviderMedsTableProps) {
@@ -26,7 +30,7 @@ export function OtherProviderMedsTable({
   const [selectedMedication, setSelectedMedication] =
     useState<MedicationStatementModel>();
   const { otherProviderMedications, isLoading } =
-    useQueryAllPatientMedicationsByStatus(showInactive ? "all" : "active");
+    useQueryAllPatientMedications();
 
   function openMedicationDrawer(row: MedicationStatementModel) {
     setSelectedMedication(row);
@@ -36,7 +40,7 @@ export function OtherProviderMedsTable({
   useEffect(() => {
     if (!otherProviderMedications) return;
     setMedicationModels(
-      sort(otherProviderMedications, get(sortColumn), sortOrder)
+      sort(otherProviderMedications, pipe(get(sortColumn), toLower), sortOrder)
     );
   }, [otherProviderMedications, sortColumn, sortOrder]);
 

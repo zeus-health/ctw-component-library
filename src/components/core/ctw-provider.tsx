@@ -1,5 +1,10 @@
 import { getFhirClient } from "@/fhir/client";
-import { DefaultTheme, mapToCSSVar, Theme } from "@/styles/tailwind.theme";
+import {
+  DefaultTheme,
+  EmptyTailwindCSSVars,
+  mapToCSSVar,
+  Theme,
+} from "@/styles/tailwind.theme";
 import { claimsBuilderId } from "@/utils/auth";
 import { queryClient } from "@/utils/request";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -55,6 +60,25 @@ function CTWProvider({ theme, children, ...ctwState }: CTWProviderProps) {
     };
   }, []);
 
+  // Manually apply our CSS theme string AND the
+  // fix for empty tailwind CSS vars.
+  // We have to apply this manually instead of `style={style}`
+  // as we want to use a string instead of an object where react would
+  // drop the empty variables!
+  useEffect(() => {
+    const styles = {
+      ...mapToCSSVar(theme?.colors || {}),
+      ...EmptyTailwindCSSVars,
+    };
+
+    // Convert our styles into a style string.
+    const style = Object.entries(styles)
+      .map(([key, value]) => `${key}:${value}`)
+      .join(";");
+
+    ctwProviderRef.current?.setAttribute("style", style);
+  }, [ctwProviderRef, theme]);
+
   const handleAuth = useCallback(async () => {
     if (ctwState.authToken) {
       return ctwState.authToken;
@@ -89,7 +113,7 @@ function CTWProvider({ theme, children, ...ctwState }: CTWProviderProps) {
   );
 
   return (
-    <div style={mapToCSSVar(theme?.colors || {})} ref={ctwProviderRef}>
+    <div ref={ctwProviderRef}>
       <CTWStateContext.Provider value={providerState}>
         <QueryClientProvider client={queryClient}>
           {children}

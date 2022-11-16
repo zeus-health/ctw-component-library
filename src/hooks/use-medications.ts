@@ -1,30 +1,29 @@
-import { compact } from "lodash/fp";
-import { useState, useEffect } from "react";
-import { UseQueryResult } from "@tanstack/react-query";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
-import type { MedicationBuilder } from "@/fhir/medications";
+import { getMergedIncludedResources } from "@/fhir/bundle";
 import {
   getBuilderMedications,
-  getPatientLensMedications,
+  getSummaryMedications,
+  MedicationBuilder,
+  splitSummarizedMedications,
 } from "@/fhir/medications";
+import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import {
   QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
   QUERY_KEY_PATIENT_MEDICATIONS,
 } from "@/utils/query-keys";
-import { getMergedIncludedResources } from "@/fhir/bundle";
-import { createPatientStatusMap, getRxNormCode } from "@/fhir/medication";
-import { MedicationStatementModel } from "@/models/medication-statement";
+import { UseQueryResult } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 
 // Gets patient medications for the builder, excluding meds where the information source is patient.
-export function useQueryGetPatientMedsForBuilder(
-  statusParam = ""
-): UseQueryResult<MedicationBuilder, unknown> {
+export function useQueryGetPatientMedsForBuilder(): UseQueryResult<
+  MedicationBuilder,
+  unknown
+> {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
     [
       {
         informationSourceNot: "Patient", // exclude medication statements where the patient is the information source
-        ...(statusParam === "active" && { status: "active" }),
       },
     ],
     getBuilderMedications
@@ -38,7 +37,7 @@ export function useQueryGetSummarizedPatientMedications(): UseQueryResult<
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_MEDICATIONS,
     [],
-    getPatientLensMedications
+    getSummaryMedications
   );
 }
 
@@ -47,88 +46,57 @@ export function useQueryGetSummarizedPatientMedications(): UseQueryResult<
  * categories ("Builder Medications" and "Other Provider Medications"). This is
  * useful when creating content such as the <PatientMedications /> component.
  */
-export function useQueryAllPatientMedicationsByStatus(statusParam = "all") {
+export function useQueryAllPatientMedications() {
   const [builderMedications, setBuilderMedications] =
     useState<MedicationStatementModel[]>();
   const [otherProviderMedications, setOtherProviderMedications] =
     useState<MedicationStatementModel[]>();
 
-  const medicationsForBuilderByStatusQuery =
-    useQueryGetPatientMedsForBuilder(statusParam);
   const summarizedMedicationsQuery = useQueryGetSummarizedPatientMedications();
-  const allMedicationsForBuilderQuery = useQueryGetPatientMedsForBuilder();
+  const builderMedicationsQuery = useQueryGetPatientMedsForBuilder();
 
   useEffect(() => {
     if (
       summarizedMedicationsQuery.data?.bundle &&
-      allMedicationsForBuilderQuery.data?.bundle
+      builderMedicationsQuery.data?.bundle
     ) {
-      const showAll = statusParam === "all";
-      let { medications: summarizedMedications } =
+      const { medications: summarizedMedications } =
         summarizedMedicationsQuery.data;
       const { medications: allMedicationsForBuilder } =
-        allMedicationsForBuilderQuery.data;
-      const medicationsForBuilderByStatus = allMedicationsForBuilder.filter(
-        (med) => showAll || med.status === statusParam
-      );
+        builderMedicationsQuery.data;
 
+      // Get included resources from both bundles so that we can reference them for contained medications.
       const includedResources = getMergedIncludedResources([
         summarizedMedicationsQuery.data.bundle,
-        allMedicationsForBuilderQuery.data.bundle,
+        builderMedicationsQuery.data.bundle,
       ]);
 
-      const builderPatientRxNormStatusMap = createPatientStatusMap(
+      // Split the summarized medications into those known to the builder and those that are new.
+      const splitData = splitSummarizedMedications(
+        summarizedMedications,
         allMedicationsForBuilder,
         includedResources
       );
 
-      const builderActiveRxNorms = compact(
-        medicationsForBuilderByStatus
-          .filter((m) => m.status === "active") // Track ONLY active builder meds.
-          .map((medication) => getRxNormCode(medication, includedResources))
-      );
-
-      const lensActiveRxNorms = compact(
-        summarizedMedications.map((medication) =>
-          getRxNormCode(medication, includedResources)
+      setBuilderMedications(
+        splitData.builderMedications.map(
+          (m) => new MedicationStatementModel(m, includedResources)
         )
       );
-
-      // Filter out any active medications that the builder already knows about.
-      summarizedMedications = summarizedMedications.filter(
-        (medication) =>
-          !builderActiveRxNorms.includes(
-            getRxNormCode(medication, includedResources) ?? ""
-          )
+      setOtherProviderMedications(
+        splitData.otherProviderMedications.map(
+          (m) => new MedicationStatementModel(m, includedResources)
+        )
       );
-
-      const toModel = (medication: fhir4.MedicationStatement) =>
-        new MedicationStatementModel(
-          medication,
-          includedResources,
-          lensActiveRxNorms,
-          builderPatientRxNormStatusMap
-        );
-
-      setBuilderMedications(medicationsForBuilderByStatus.map(toModel));
-      setOtherProviderMedications(summarizedMedications.map(toModel));
     }
-  }, [
-    medicationsForBuilderByStatusQuery.data,
-    summarizedMedicationsQuery.data,
-    allMedicationsForBuilderQuery.data,
-    statusParam,
-  ]);
+  }, [summarizedMedicationsQuery.data, builderMedicationsQuery.data]);
 
   const isLoading =
-    medicationsForBuilderByStatusQuery.isLoading ||
-    summarizedMedicationsQuery.isLoading;
+    builderMedicationsQuery.isLoading || summarizedMedicationsQuery.isLoading;
   const isFetching =
-    medicationsForBuilderByStatusQuery.isFetching ||
-    summarizedMedicationsQuery.isFetching;
+    builderMedicationsQuery.isFetching || summarizedMedicationsQuery.isFetching;
   const isError =
-    medicationsForBuilderByStatusQuery.isError ||
-    summarizedMedicationsQuery.isError;
+    builderMedicationsQuery.isError || summarizedMedicationsQuery.isError;
 
   return {
     isFetching,

@@ -1,15 +1,16 @@
+import { Loading } from "@/components/core/loading";
 import { getIncludedResources } from "@/fhir/bundle";
 import { useConditionHistory } from "@/fhir/conditions";
-import { ConditionModel } from "@/models/condition";
-import { orderBy } from "lodash";
+import { ConditionModel } from "@/fhir/models/condition";
+import { capitalize, orderBy, startCase } from "lodash";
 import { useEffect, useState } from "react";
 import { CodingList } from "../core/coding-list";
 import { CollapsibleDataListProps } from "../core/collapsible-data-list";
-import { Loading } from "@/components/core/loading";
 import {
   CollapsibleDataListStack,
   CollapsibleDataListStackEntries,
 } from "../core/collapsible-data-list-stack";
+import { NotesList } from "../core/notes-list";
 import { ConditionHeader } from "./condition-header";
 
 const CONDITION_HISTORY_LIMIT = 10;
@@ -17,12 +18,16 @@ const CONDITION_HISTORY_LIMIT = 10;
 function setupData(condition: ConditionModel): CollapsibleDataListProps {
   const detailData = [
     {
+      label: "Recorder",
+      value: condition.recorder,
+    },
+    {
       label: "Clinical Status",
-      value: condition.clinicalStatus,
+      value: capitalize(condition.clinicalStatus),
     },
     {
       label: "Verification Status",
-      value: condition.verificationStatus,
+      value: capitalize(condition.verificationStatus),
     },
     {
       label: "Recorded Date",
@@ -30,7 +35,13 @@ function setupData(condition: ConditionModel): CollapsibleDataListProps {
     },
     {
       label: "Category",
-      value: condition.categories[0],
+      value: startCase(condition.categories[0]),
+    },
+    {
+      label: "Note",
+      value: condition.notes.length !== 0 && (
+        <NotesList notes={condition.notes} />
+      ),
     },
     {
       label: "Code",
@@ -53,7 +64,7 @@ function setupData(condition: ConditionModel): CollapsibleDataListProps {
   return {
     id: condition.id,
     date: condition.recordedDate,
-    title: condition.snomedDisplay || condition.icd10Display,
+    title: startCase(condition.categories[0]),
     subTitle: condition.patient?.organization?.name,
     data: detailData,
   };
@@ -87,12 +98,14 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
           "desc"
         );
 
-        const conditionsFilteredWithDate = sortedConditions.filter(
-          (c) => c.recordedDate
+        const filterEnteredinErrorConditions = sortedConditions.filter(
+          (c) => c.verificationStatus !== "entered-in-error"
         );
-        const conditionsFilteredWithoutDate = sortedConditions.filter(
-          (c) => !c.recordedDate
-        );
+
+        const conditionsFilteredWithDate =
+          filterEnteredinErrorConditions.filter((c) => c.recordedDate);
+        const conditionsFilteredWithoutDate =
+          filterEnteredinErrorConditions.filter((c) => !c.recordedDate);
 
         setConditionsWithDate(
           conditionsFilteredWithDate.map((model) => setupData(model))

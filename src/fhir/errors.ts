@@ -1,4 +1,5 @@
-import { isOperationOutcome, listErrorIssues } from "./operation-outcome";
+import { OperationOutcomeModel } from "@/fhir/models/operation-outcome";
+import { isOperationOutcome } from "./operation-outcome";
 
 export type FhirError = {
   response: {
@@ -23,7 +24,7 @@ export const fhirErrorResponse = (title: string, e: FhirError) => {
   const { data, status } = e.response;
   let errorStr = "";
   if (isOperationOutcome(data)) {
-    errorStr = listErrorIssues(data);
+    errorStr = new OperationOutcomeModel(data).display;
   }
 
   return { title, status, statusText: errorStr };

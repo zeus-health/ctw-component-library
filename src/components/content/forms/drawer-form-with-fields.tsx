@@ -1,4 +1,4 @@
-import { useFormInputProps } from "@/utils/form-helper";
+import { AnyZodSchema, useFormInputProps } from "@/utils/form-helper";
 import { InputHTMLAttributes, ReactNode } from "react";
 import type { DrawerFormProps } from "./drawer-form";
 import { DrawerForm } from "./drawer-form";
@@ -7,7 +7,7 @@ import { FormField } from "./form-field";
 export type FormEntry = {
   label: string;
   field: string;
-  value?: string;
+  value?: string | string[];
   lines?: number;
   readonly?: boolean;
   hidden?: boolean;
@@ -21,7 +21,7 @@ export type DrawerFormWithFieldsProps<T> = {
   title: string;
   header?: ReactNode;
   data: FormEntry[] | undefined;
-  schema: Zod.AnyZodObject;
+  schema: AnyZodSchema;
   patientID: string;
 } & Pick<DrawerFormProps<T>, "onClose" | "isOpen" | "action">;
 
@@ -52,7 +52,7 @@ export const DrawerFormWithFields = <T,>({
           <div className="ctw-space-y-6">
             {data.map(
               ({ label, field, value, lines, readonly, hidden, render }) => {
-                const error = errors?.[field];
+                const fieldErrors = errors?.[field];
 
                 if (hidden) {
                   return (
@@ -63,7 +63,7 @@ export const DrawerFormWithFields = <T,>({
                       disabled={submitting}
                       readonly={readonly}
                       defaultValue={value}
-                      error={error}
+                      errors={fieldErrors}
                       hidden={hidden}
                       render={render}
                     />
@@ -96,7 +96,7 @@ export const DrawerFormWithFields = <T,>({
                       disabled={submitting}
                       readonly={readonly}
                       defaultValue={value}
-                      error={error}
+                      errors={fieldErrors}
                       hidden={hidden}
                       render={render}
                     />

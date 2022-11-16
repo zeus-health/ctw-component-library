@@ -1,27 +1,18 @@
-import { CONDITION_CODE_PREFERENCE_ORDER } from "@/fhir/conditions";
-import { findReference } from "@/fhir/resource-helper";
-import { ResourceMap } from "@/fhir/types";
-import { compact, uniqWith } from "lodash";
 import {
   codeableConceptLabel,
   findCoding,
-  findCodingWithEnrichment,
   findCodingByOrderOfPreference,
+  findCodingWithEnrichment,
 } from "@/fhir/codeable-concept";
-import { formatDateISOToLocal, formatStringToDate } from "../fhir/formatters";
-import { SYSTEM_CCS, SYSTEM_ICD10, SYSTEM_SNOMED } from "../fhir/system-urls";
-import { PatientModel } from "./patients";
+import { CONDITION_CODE_PREFERENCE_ORDER } from "@/fhir/conditions";
+import { findReference } from "@/fhir/resource-helper";
+import { compact, intersectionWith, uniqWith } from "lodash";
+import { formatDateISOToLocal, formatStringToDate } from "../formatters";
+import { SYSTEM_CCS, SYSTEM_ICD10, SYSTEM_SNOMED } from "../system-urls";
+import { FHIRModel } from "./fhir-model";
+import { PatientModel } from "./patient";
 
-export class ConditionModel {
-  public resource: fhir4.Condition;
-
-  private includedResources?: ResourceMap;
-
-  constructor(condition: fhir4.Condition, includedResources?: ResourceMap) {
-    this.resource = condition;
-    this.includedResources = includedResources;
-  }
-
+export class ConditionModel extends FHIRModel<fhir4.Condition> {
   get abatement(): string | undefined {
     if (this.resource.abatementAge) {
       return this.resource.abatementAge.value?.toString();
@@ -42,6 +33,10 @@ export class ConditionModel {
     }
 
     return this.resource.abatementString;
+  }
+
+  get active(): boolean {
+    return ["active", "recurrence", "relapse"].includes(this.clinicalStatus);
   }
 
   get asserter(): string | undefined {
@@ -109,10 +104,6 @@ export class ConditionModel {
     return findCoding(SYSTEM_ICD10, this.resource.code)?.display;
   }
 
-  get id(): string {
-    return this.resource.id || "";
-  }
-
   get knownCodings(): fhir4.Coding[] {
     const codings = compact(
       CONDITION_CODE_PREFERENCE_ORDER.map((code) => {
@@ -129,6 +120,18 @@ export class ConditionModel {
       (prev, next) => prev.system === next.system
     );
     return dedupedBySystemCoding;
+  }
+
+  // Returns true if any of the known codings match between
+  // this condition and the passed in condition.
+  knownCodingsMatch(condition: ConditionModel): boolean {
+    return (
+      intersectionWith(
+        this.knownCodings,
+        condition.knownCodings,
+        (a, b) => a.code === b.code && a.system === b.system
+      ).length > 0
+    );
   }
 
   get notes(): string[] {
@@ -224,10 +227,6 @@ export class ConditionModel {
   get subjectID(): string {
     const [, subjectID] = this.resource.subject.reference?.split("/") || [];
     return subjectID || "";
-  }
-
-  get resourceType(): string {
-    return this.resource.resourceType;
   }
 
   get verificationStatus(): string {

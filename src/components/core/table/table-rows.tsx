@@ -1,5 +1,5 @@
-import { ReactElement } from "react";
 import cx from "classnames";
+import { ReactElement } from "react";
 import { Spinner } from "../spinner";
 import type { MinRecordItem, TableColumn } from "./table";
 import { TableDataCell } from "./table-data-cell";
@@ -23,7 +23,7 @@ export const TableRows = <T extends MinRecordItem>({
   if (isLoading) {
     return (
       <TableFullLengthRow colSpan={columns.length}>
-        <div className="ctw-flex ctw-items-center ctw-justify-center ctw-space-x-2">
+        <div className="ctw-flex ctw-justify-center ctw-space-x-2">
           <span>Loading...</span>
           <Spinner />
         </div>

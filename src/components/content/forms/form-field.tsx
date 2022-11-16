@@ -5,10 +5,10 @@ import { startCase } from "lodash";
 import type { InputHTMLAttributes } from "react";
 
 export type FormFieldProps = {
-  error?: string;
+  errors?: string[];
   options?: string[];
   lines?: number;
-  defaultValue?: string;
+  defaultValue?: string | string[];
   readonly?: boolean;
   render?: (
     readonly: boolean | undefined,
@@ -17,7 +17,7 @@ export type FormFieldProps = {
 } & InputHTMLAttributes<HTMLInputElement>;
 
 export const FormField = ({
-  error,
+  errors,
   options,
   lines,
   defaultValue,
@@ -31,7 +31,7 @@ export const FormField = ({
 
   const value =
     inputProps.type === "date"
-      ? formatDateLocalToISO(defaultValue)
+      ? formatDateLocalToISO(defaultValue as string)
       : defaultValue;
 
   const getFieldComponent = () => {
@@ -42,7 +42,10 @@ export const FormField = ({
     if (options) {
       return (
         <select
-          className="ctw-listbox-button ctw-w-full"
+          className={cx(
+            { "ctw-error": errors },
+            "ctw-listbox-button ctw-w-full"
+          )}
           name={inputProps.name || ""}
           disabled={inputProps.disabled}
           defaultValue={value}
@@ -60,7 +63,7 @@ export const FormField = ({
         <textarea
           rows={lines}
           className={cx(
-            { "ctw-error": error },
+            { "ctw-error": errors },
             "ctw-listbox-textarea ctw-w-full ctw-whitespace-pre-wrap"
           )}
           defaultValue={value}
@@ -74,9 +77,13 @@ export const FormField = ({
       <input
         {...inputProps}
         type={inputProps.type}
-        className={cx({ "ctw-error": error }, "ctw-listbox-input ctw-w-full")}
+        className={cx({ "ctw-error": errors }, "ctw-listbox-input ctw-w-full")}
         readOnly={readonly}
-        defaultValue={value}
+        // Only set defaultValue prop if there is a value.
+        // This fixes an issue where partially filled dates
+        // would get reset when saving and showing errors as the defaultValue could
+        // be undefined and the input gets reset to that (empty).
+        {...(value ? { defaultValue: value } : {})}
       />
     );
   };
@@ -100,8 +107,8 @@ export const FormField = ({
         {readonly && (
           <LockClosedIcon className="ctw-absolute ctw-right-3 ctw-top-1/2 ctw-h-4 ctw-w-4 ctw--translate-y-1/2 ctw-transform ctw-fill-content-lighter" />
         )}
-        {error && (
-          <div className="ctw-pointer-events-none ctw-absolute ctw-inset-y-0 ctw-right-0 ctw-top-2 ctw-flex ctw-h-min ctw-items-center ctw-pr-3">
+        {errors && (
+          <div className="ctw-pointer-events-none ctw-absolute ctw-right-0 ctw-top-2 ctw-pr-4">
             <ExclamationCircleIcon
               className="ctw-h-5 ctw-w-5 ctw-text-error-main"
               aria-hidden="true"
@@ -110,9 +117,11 @@ export const FormField = ({
         )}
       </div>
 
-      {error && (
+      {errors && (
         <div className="ctw-text-xs ctw-italic ctw-text-error-main">
-          {error}
+          {errors.length > 1
+            ? errors.map((error) => <div key={error}>&bull; {error}</div>)
+            : errors[0]}
         </div>
       )}
     </>

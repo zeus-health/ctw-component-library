@@ -22,6 +22,12 @@ export const SYSTEM_MARITAL_STATUS =
 
 export const SYSTEM_PRACTITIONER_ID = "https://zusapi.com/practitioner_id";
 
+export const SYSTEM_PROVENANCE_ACTIVITY_TYPE =
+  "http://terminology.hl7.org/3.1.0/CodeSystem-v3-DataOperation.html";
+
+export const SYSTEM_PROVENANCE_AGENT_TYPE =
+  "http://terminology.hl7.org/CodeSystem/provenance-participant-type";
+
 export const SYSTEM_RELATIONSHIP =
   "http://terminology.hl7.org/CodeSystem/v2-0131";
 
@@ -43,3 +49,17 @@ export const SYSTEM_ZUS_UNIVERSAL_ID =
 export const SYSTEM_ZUS_UPI_RECORD_TYPE =
   "https://zusapi.com/fhir/tag/upi-record-type";
 export const SYSTEM_ZUS_USER_TYPE = "https://zusapi.com/user_type";
+export const LENS_EXTENSION_MEDICATION_LAST_FILL_DATE =
+  "https://zusapi.com/lens/extension/medicationLastFillDate";
+export const LENS_EXTENSION_MEDICATION_LAST_PRESCRIBED_DATE =
+  "https://zusapi.com/lens/extension/medicationLastPrescribedDate";
+export const LENS_EXTENSION_MEDICATION_QUANTITY =
+  "https://zusapi.com/lens/extension/medicationQuantity";
+export const LENS_EXTENSION_MEDICATION_DAYS_SUPPLY =
+  "https://zusapi.com/lens/extension/medicationDaysSupply";
+export const LENS_EXTENSION_MEDICATION_REFILLS =
+  "https://zusapi.com/lens/extension/medicationRefills";
+export const LENS_EXTENSION_MEDICATION_LAST_PRESCRIBER =
+  "https://zusapi.com/lens/extension/medicationLastPrescriber";
+export const LENS_EXTENSION_AGGREGATED_FROM =
+  "https://zusapi.com/lens/extension/aggregatedFrom";

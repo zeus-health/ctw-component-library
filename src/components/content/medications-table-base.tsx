@@ -1,11 +1,11 @@
-import { ReactNode, useRef } from "react";
-import { compact, isFunction } from "lodash/fp";
+import { DropdownMenu, MenuItems } from "@/components/core/dropdown-menu";
 import type { MinRecordItem, TableColumn } from "@/components/core/table/table";
 import { Table, TableBaseProps } from "@/components/core/table/table";
-import type { MedicationStatementModel } from "@/models/medication-statement";
-import { DropdownMenu, MenuItems } from "@/components/core/dropdown-menu";
-import { DotsHorizontalIcon } from "@heroicons/react/outline";
+import type { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
+import { DotsHorizontalIcon } from "@heroicons/react/outline";
+import { compact, isFunction } from "lodash/fp";
+import { ReactNode, useRef } from "react";
 
 export type MedicationsTableBaseProps<T extends MinRecordItem> = {
   medicationStatements: MedicationStatementModel[];
@@ -29,10 +29,34 @@ export const MedicationsTableBase = ({
   const columns = compact([
     {
       title: "Medication Name",
-      render: (medication: MedicationStatementModel) => (
+      render: (medication) => (
         <>
           <div className="ctw-font-medium">{medication.display}</div>
           <div className="ctw-font-light">{medication.dosage}</div>
+        </>
+      ),
+    },
+    {
+      title: "Dispensed",
+      render: (medication) => (
+        <>
+          {medication.quantity && <div>{medication.quantity}</div>}
+          {medication.refills && <div>{medication.refills} refills</div>}
+        </>
+      ),
+    },
+    {
+      title: "Last Filled",
+      dataIndex: "lastFillDate",
+    },
+    {
+      title: "Last Prescribed",
+      render: (medication) => (
+        <>
+          {medication.lastPrescribedDate && (
+            <div>{medication.lastPrescribedDate}</div>
+          )}
+          {medication.lastPrescriber && <div>{medication.lastPrescriber}</div>}
         </>
       ),
     },
@@ -41,7 +65,7 @@ export const MedicationsTableBase = ({
   if (!hideMenu && isFunction(rowActions)) {
     columns.push({
       className: "ctw-table-action-column",
-      render: (medication: MedicationStatementModel) => (
+      render: (medication) => (
         <DropdownMenu menuItems={rowActions(medication)}>
           <DotsHorizontalIcon className="ctw-w-5" />
         </DropdownMenu>

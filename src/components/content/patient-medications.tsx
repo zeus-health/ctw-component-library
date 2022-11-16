@@ -1,11 +1,11 @@
-import cx from "classnames";
-import { useState } from "react";
-import * as CTWBox from "@/components/core/ctw-box";
-import { ToggleControl } from "@/components/core/toggle-control";
-import type { ClinicalStatus } from "@/fhir/medication";
 import { AddNewMedDrawer } from "@/components/content/medications/add-new-med-drawer";
 import { OtherProviderMedsTable } from "@/components/content/medications/other-provider-meds-table";
 import { ProviderMedsTable } from "@/components/content/medications/provider-meds-table";
+import * as CTWBox from "@/components/core/ctw-box";
+import { ToggleControl } from "@/components/core/toggle-control";
+import type { ClinicalStatus } from "@/fhir/medication";
+import cx from "classnames";
+import { useState } from "react";
 import "./patient-medications.scss";
 
 type PatientMedicationsProps = {
@@ -64,7 +64,7 @@ export function PatientMedications({
 
       {showOtherProvidersMedsTable && (
         <CTWBox.Body title="Other Provider Records">
-          <OtherProviderMedsTable showInactive={includeInactiveMeds} />
+          <OtherProviderMedsTable />
         </CTWBox.Body>
       )}
     </CTWBox.StackedWrapper>

@@ -33,17 +33,7 @@
     @apply ctw-rounded-md ctw-border ctw-border-icon-light ctw-px-3 ctw-py-2 ctw-text-sm ctw-shadow-sm;
     border-style: solid;
     background-color: initial;
-  }
-
-  .ctw-listbox {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  /* Make sure the floating dropdown get full-width of reference. */
-  .ctw-listbox-button + div {
-    width: 100%;
+    resize: vertical;
   }
 
   .ctw-listbox-button:disabled,
@@ -120,6 +110,7 @@
     hyphens: auto;
   }
 
+  select.ctw-error,
   input.ctw-error {
     @apply ctw-border-error-main ctw-pr-10 focus:ctw-border-error-main focus:ctw-outline-none focus:ctw-ring-1 focus:ctw-ring-error-main;
   }

@@ -1,13 +1,12 @@
 import { Resource } from "fhir/r4";
 import { useState } from "react";
 import { ErrorAlert } from "./alert";
-import { useCTW } from "./ctw-provider";
 import { Modal, ModalProps } from "./modal";
 
 export type ModalConfirmDeleteProps = {
   resource: Resource;
   resourceName: string;
-  onDelete: () => void;
+  onDelete: () => Promise<void>;
   onClose: () => void;
 } & Omit<ModalProps, "title" | "children" | "onAfterClosed">;
 
@@ -18,22 +17,11 @@ export const ModalConfirmDelete = ({
   onClose,
   ...modalProps
 }: ModalConfirmDeleteProps) => {
-  const { getRequestContext } = useCTW();
   const [alert, setAlert] = useState<string>();
 
   const onConfirm = async () => {
-    const { fhirClient } = await getRequestContext();
     try {
-      if (!resource.id) {
-        throw new Error(
-          "Tried to delete a resource that hasn't been created yet."
-        );
-      }
-      const response = await fhirClient.delete({
-        resourceType: resource.resourceType,
-        id: resource.id,
-      });
-      onDelete();
+      await onDelete();
       onClose();
     } catch (err) {
       setAlert(`Something went wrong. Please try again.`);

@@ -1,22 +1,29 @@
+import { ErrorAlert } from "@/components/core/alert";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { useCTW } from "@/components/core/ctw-provider";
+import { AnyZodSchema } from "@/utils/form-helper";
+import { isEmpty } from "lodash";
 import { ReactNode, useState } from "react";
 import type { DrawerProps } from "../../core/drawer";
 import { Drawer } from "../../core/drawer";
 import { SaveButton } from "./save-button";
 import { ActionReturn } from "./types";
 
-export type FormErrors = Record<string, string>;
+export type FormErrors = Record<string, string[]>;
+type InputError = Record<string, string[]>;
 
 export type DrawerFormProps<T> = {
   action: (
     data: FormData,
     patientID: string,
     getRequestContext: () => Promise<CTWRequestContext>,
-    schema: Zod.AnyZodObject
-  ) => Promise<ActionReturn<T>>;
+    schema: AnyZodSchema
+  ) => Promise<{
+    formResult: ActionReturn<T>;
+    requestErrors: string[] | undefined;
+  }>;
   patientID: string;
-  schema: Zod.AnyZodObject;
+  schema: AnyZodSchema;
 
   children: (submitting: boolean, errors?: FormErrors) => ReactNode;
 } & Omit<DrawerProps, "children">;
@@ -30,7 +37,10 @@ export const DrawerForm = <T,>({
   ...drawerProps
 }: DrawerFormProps<T>) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState<FormErrors>();
+  const [errors, setErrors] = useState<{
+    formErrors?: FormErrors;
+    requestErrors?: string[];
+  }>();
   const { getRequestContext } = useCTW();
 
   const reset = () => {
@@ -42,12 +52,34 @@ export const DrawerForm = <T,>({
     event.preventDefault();
     setIsSubmitting(true);
     const form = event.target;
+
+    const inputs = Array.from(
+      (event.target as HTMLElement).querySelectorAll("input")
+    );
+
+    const inputErrors: InputError = {};
+
+    inputs.forEach((input) => {
+      if (!input.checkValidity()) {
+        inputErrors[input.name] = [`The value is not valid for ${input.name}`];
+      }
+    });
+
+    if (!isEmpty(inputErrors)) {
+      setErrors({ formErrors: inputErrors });
+      setIsSubmitting(false);
+      return;
+    }
+
     const data = new FormData(form as HTMLFormElement);
 
     const response = await action(data, patientID, getRequestContext, schema);
 
-    if (!response.success) {
-      setErrors(response.errors);
+    if (!response.formResult.success) {
+      setErrors({
+        formErrors: response.formResult.errors,
+        requestErrors: response.requestErrors,
+      });
       setIsSubmitting(false);
     } else {
       setIsSubmitting(false);
@@ -62,7 +94,24 @@ export const DrawerForm = <T,>({
         onSubmit={onFormSubmit}
         noValidate // Removes the browser tooltip functionality.
       >
-        <Drawer.Body>{children(isSubmitting, errors)}</Drawer.Body>
+        <Drawer.Body>
+          <div className="ctw-space-y-4">
+            {errors?.requestErrors && (
+              <ErrorAlert header="There was an error with your submission">
+                {errors.requestErrors.length === 1 ? (
+                  errors.requestErrors[0]
+                ) : (
+                  <ul className="ctw-m-0 ctw-list-disc ctw-px-4">
+                    {errors.requestErrors.map((error) => (
+                      <li>{error}</li>
+                    ))}
+                  </ul>
+                )}
+              </ErrorAlert>
+            )}
+            {children(isSubmitting, errors?.formErrors)}
+          </div>
+        </Drawer.Body>
         <Drawer.Footer>
           <div className="ctw-flex ctw-h-full ctw-justify-end ctw-space-x-3">
             <button type="button" className="ctw-btn-default" onClick={onClose}>

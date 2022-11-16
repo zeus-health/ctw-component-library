@@ -4,21 +4,15 @@ import {
   getEditingPatientConditionData,
 } from "@/components/content/forms/condition-schema";
 import {
-  ConditionFilters,
-  filterConditionsWithConfirmedCodes,
   getNewCondition,
   useOtherProviderConditions,
   usePatientConditions,
 } from "@/fhir/conditions";
+import { ConditionModel } from "@/fhir/models/condition";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
-import { ConditionModel } from "@/models/condition";
-import {
-  QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
-  QUERY_KEY_PATIENT_CONDITIONS,
-} from "@/utils/query-keys";
-import { queryClient } from "@/utils/request";
+import { AnyZodSchema } from "@/utils/form-helper";
 import cx from "classnames";
-import { curry, union } from "lodash";
+import { curry } from "lodash";
 import { useEffect, useRef, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
 import { ModalConfirmDelete } from "../core/modal-confirm-delete";
@@ -26,10 +20,12 @@ import { RetrievePatientHistory } from "../core/patient-history/patient-history-
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionHeader } from "./condition-header";
+import { onConditionDelete } from "./conditions-helper";
 import { ConditionHistoryDrawer } from "./conditions-history-drawer";
 import { ConditionsNoPatient } from "./conditions-no-patient";
 import { ConditionsTableBase } from "./conditions-table-base";
 import "./conditions.scss";
+import { filterOtherConditions } from "./conditions/helpers";
 import { getAddConditionData } from "./forms/condition-schema";
 import {
   createOrEditCondition,
@@ -63,16 +59,22 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const [otherProviderRecords, setOtherProviderRecords] = useState<
     ConditionModel[]
   >([]);
-  const [includeInactive, setIncludeInactive] = useState(true);
+  const [includeInactive, setIncludeInactive] = useState(false);
   const [formAction, setFormAction] = useState<FormActionTypes>("Add");
-  const [conditionFilter, setConditionFilter] = useState<ConditionFilters>({});
-  const [schema, setSchema] = useState<Zod.AnyZodObject>(conditionAddSchema);
+  const [schema, setSchema] = useState<AnyZodSchema>(conditionAddSchema);
   const [currentSelectedData, setCurrentlySelectedData] =
     useState<FormEntry[]>();
   const [selectedCondition, setSelectedCondition] = useState<ConditionModel>();
   const patientResponse = usePatient();
-  const patientRecordsResponse = usePatientConditions(conditionFilter);
+  const patientRecordsResponse = usePatientConditions();
   const otherProviderRecordsResponse = useOtherProviderConditions();
+  const { getRequestContext } = useCTW();
+
+  //clinical history
+  const [requestRecordsClinicalHistory, setRequestRecordsClinicalHistory] =
+    useState(false);
+
+  const [clinicalHistoryExists, setClinicalHistoryExists] = useState(false);
 
   //clinical history
   const [requestRecordsClinicalHistory, setRequestRecordsClinicalHistory] =
@@ -89,6 +91,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     : EMPTY_MESSAGE_PROVIDER;
 
   const handleToggleChange = () => setIncludeInactive(!includeInactive);
+
   const handleEditCondition = (condition: ConditionModel) => {
     if (patientResponse.data) {
       setDrawerIsOpen(true);
@@ -109,6 +112,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     setAddConditionDefaults(newCondition);
 
     if (patientResponse.data) {
+      setSchema(conditionAddSchema);
       setDrawerIsOpen(true);
       setFormAction("Add");
       setCurrentlySelectedData(
@@ -165,36 +169,21 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
 
   useEffect(() => {
     async function load() {
-      const tempConditionFilters: ConditionFilters = includeInactive
-        ? {
-            "clinical-status": ["active", "recurrence", "relapse"],
-          }
-        : {};
+      const patientConditions = patientRecordsResponse.data?.map(
+        (c) => new ConditionModel(c)
+      );
+      const otherConditions = otherProviderRecordsResponse.data?.map(
+        (c) => new ConditionModel(c)
+      );
 
-      setConditionFilter(tempConditionFilters);
-
-      /* OtherProviderRecordsConditons depends patientRecordsConditions so that we can correctly filter out
-         conditions that appear in patientRecordsConditions from OtherProviderRecordsConditons */
-      if (patientRecordsResponse.data) {
+      if (patientConditions) {
         setPatientRecords(
-          patientRecordsResponse.data.map((c) => new ConditionModel(c))
+          patientConditions.filter((c) => c.active || includeInactive)
         );
 
-        if (otherProviderRecordsResponse.data) {
-          const confirmedCodes = union(
-            ...patientRecordsResponse.data.map(
-              (c) => new ConditionModel(c).knownCodings
-            )
-          );
-
-          const OtherProviderRecordsFiltered =
-            filterConditionsWithConfirmedCodes(
-              otherProviderRecordsResponse.data,
-              confirmedCodes
-            );
-
+        if (otherConditions) {
           setOtherProviderRecords(
-            OtherProviderRecordsFiltered.map((c) => new ConditionModel(c))
+            filterOtherConditions(otherConditions, patientConditions)
           );
         } else {
           setOtherProviderRecords([]);
@@ -255,7 +244,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
             hideMenu={readOnly}
             message={
               <>
-                {patientRecordsMessage}
+                <div>{patientRecordsMessage}</div>
                 {!patientRecordsResponse.isError && (
                   <div className="ctw-my-5">{addConditionBtn}</div>
                 )}
@@ -361,17 +350,15 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         condition={selectedCondition}
       />
 
-      {selectedCondition && (
+      {selectedCondition && patientResponse.data && (
         <ModalConfirmDelete
           resource={selectedCondition}
           resourceName={selectedCondition.display || "unnamed condition"}
           onClose={() => setShowConfirmDelete(false)}
           isOpen={showConfirmDelete}
-          onDelete={() => {
-            queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]);
-            queryClient.invalidateQueries([
-              QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
-            ]);
+          onDelete={async () => {
+            const requestContext = await getRequestContext();
+            await onConditionDelete(selectedCondition.resource, requestContext);
           }}
         />
       )}

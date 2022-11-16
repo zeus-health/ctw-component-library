@@ -1,6 +1,6 @@
 import { Table, TableBaseProps, TableColumn } from "../core/table/table";
 
-import { ConditionModel } from "@/models/condition";
+import { ConditionModel } from "@/fhir/models/condition";
 import { DotsHorizontalIcon } from "@heroicons/react/outline";
 import { DropdownMenu, MenuItems } from "../core/dropdown-menu";
 
@@ -32,8 +32,15 @@ export function ConditionsTableBase({
       minWidth: 192,
     },
     {
-      title: "Latest Status",
-      dataIndex: "clinicalStatus",
+      title: "Status",
+      render: (condition) => (
+        <div className="ctw-capitalize">
+          <div className="ctw-text-content-black">
+            {condition.clinicalStatus}
+          </div>
+          <div>{condition.verificationStatus}</div>
+        </div>
+      ),
       widthPercent: 17.5,
       minWidth: 128,
     },

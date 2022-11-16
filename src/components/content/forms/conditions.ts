@@ -1,21 +1,25 @@
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
+import { setRecorderField } from "@/fhir/conditions";
 import { isFhirError } from "@/fhir/errors";
 import { dateToISO } from "@/fhir/formatters";
-import { getPractitioner } from "@/fhir/practitioner";
+import { ConditionModel } from "@/fhir/models/condition";
+import { OperationOutcomeModel } from "@/fhir/models/operation-outcome";
+import { isOperationOutcome } from "@/fhir/operation-outcome";
 import {
   SYSTEM_CONDITION_CLINICAL,
   SYSTEM_CONDITION_VERIFICATION_STATUS,
 } from "@/fhir/system-urls";
-import { ConditionModel } from "@/models/condition";
 import { claimsPractitionerId } from "@/utils/auth";
-import { getFormData } from "@/utils/form-helper";
+import { AnyZodSchema, getFormData } from "@/utils/form-helper";
 import {
   QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
   QUERY_KEY_PATIENT_CONDITIONS,
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import { Condition } from "fhir/r4";
+import { FormErrors } from "./drawer-form";
+import { ActionReturn } from "./types";
 
 // Sets any autofill values that apply when a user adds a condition, whether creating or confirming.
 export function setAddConditionDefaults(condition: Condition): void {
@@ -45,31 +49,21 @@ export function setAddConditionDefaults(condition: Condition): void {
   Object.assign(condition, addDefaults);
 }
 
-const setRecorderField = async (
-  practitionerId: string,
-  requestContext: CTWRequestContext
-) => {
-  const practitioner = await getPractitioner(practitionerId, requestContext);
-  const display = practitioner.fullName;
-
-  return {
-    reference: `Practitioner/${practitionerId}`,
-    type: "Practitioner",
-    display,
-  };
-};
-
 export const createOrEditCondition = async (
   condition: ConditionModel | undefined,
   data: FormData,
   patientID: string,
   getRequestContext: () => Promise<CTWRequestContext>,
-  schema: Zod.AnyZodObject
-) => {
+  schema: AnyZodSchema
+): Promise<{
+  formResult: ActionReturn<FormErrors>;
+  requestErrors: string[] | undefined;
+}> => {
   const result = await getFormData(data, schema);
+  let requestErrors: string[] = [];
 
   if (!result.success) {
-    return result;
+    return { formResult: result, requestErrors: undefined };
   }
 
   const requestContext = await getRequestContext();
@@ -116,7 +110,7 @@ export const createOrEditCondition = async (
     ...(result.data.abatement && {
       abatementDateTime: dateToISO(result.data.abatement),
     }),
-    onsetDateTime: dateToISO(result.data.onset ?? new Date()),
+    onsetDateTime: dateToISO(result.data.onset),
     recordedDate: dateToISO(new Date()),
     subject: { type: "Patient", reference: `Patient/${patientID}` },
     note: result.data.note ? [{ text: result.data.note }] : undefined,
@@ -128,15 +122,22 @@ export const createOrEditCondition = async (
 
   const response = await createOrEditFhirResource(
     fhirCondition,
-    requestContext.fhirClient
+    requestContext
   );
 
-  if (isFhirError(response)) {
+  if (isFhirError(response) && isOperationOutcome(response.response.data)) {
+    requestErrors = new OperationOutcomeModel(response.response.data).issues
+      .filter((issue) => issue.severity !== "warning")
+      .map((issue) => issue.display);
+    result.success = false;
+  } else if (response instanceof Error) {
+    requestErrors = [response.message];
     result.success = false;
   }
+  await Promise.all([
+    queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]),
+    queryClient.invalidateQueries([QUERY_KEY_OTHER_PROVIDER_CONDITIONS]),
+  ]);
 
-  queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]);
-  queryClient.invalidateQueries([QUERY_KEY_OTHER_PROVIDER_CONDITIONS]);
-
-  return result;
+  return { formResult: result, requestErrors };
 };

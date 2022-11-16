@@ -1,31 +1,38 @@
-import Client from "fhir-kit-client";
+import { CTWRequestContext } from "@/components/core/ctw-context";
 import { Resource } from "fhir/r4";
 import { omitEmptyArrays } from "./client";
 import { isFhirError } from "./errors";
+import { createProvenance } from "./provenance";
 
 export async function createOrEditFhirResource(
   resource: Resource,
-  fhirClient: Client
+  requestContext: CTWRequestContext
 ) {
+  const { fhirClient } = requestContext;
+  const resourceModified = resource;
+
   try {
     if (resource.id) {
-      return await fhirClient.update({
+      const response = await fhirClient.update({
         resourceType: resource.resourceType,
         id: resource.id,
         body: omitEmptyArrays(resource),
       });
+      if (!isFhirError(response)) {
+        createProvenance("UPDATE", resource, requestContext);
+      }
+      return response;
     }
-    return await fhirClient.create({
+    const response = await fhirClient.create({
       resourceType: resource.resourceType,
       body: omitEmptyArrays(resource),
     });
-  } catch (err) {
-    if (isFhirError(err)) {
-      return err;
+    if (!isFhirError(response)) {
+      resourceModified.id = response.id;
+      createProvenance("CREATE", resourceModified, requestContext);
     }
-
-    throw Error(
-      `Failed ${resource.id ? "updating" : "creating"} ${resource.resourceType}`
-    );
+    return response;
+  } catch (err) {
+    return err;
   }
 }
