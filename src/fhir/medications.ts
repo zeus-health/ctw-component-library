@@ -202,7 +202,8 @@ export function useMedicationHistory(medication: fhir4.MedicationStatement) {
           searchWrapper(
             "MedicationRequest",
             requestContext,
-            resources.MedicationRequest
+            resources.MedicationRequest,
+            ["MedicationRequest:requester"]
           ),
           searchWrapper(
             "MedicationDispense",

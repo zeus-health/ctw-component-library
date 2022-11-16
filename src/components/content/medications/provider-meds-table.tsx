@@ -67,11 +67,13 @@ export function ProviderMedsTable({
           },
         ]}
       />
-      <MedicationDrawer
-        medication={selectedMedication}
-        isOpen={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-      />
+      {selectedMedication && (
+        <MedicationDrawer
+          medication={selectedMedication}
+          isOpen={drawerOpen}
+          onClose={() => setDrawerOpen(false)}
+        />
+      )}
     </>
   );
 }

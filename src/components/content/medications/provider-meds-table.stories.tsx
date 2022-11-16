@@ -3,7 +3,7 @@ import {
   ProviderMedsTable,
   ProviderMedsTableProps,
 } from "@/components/content/medications/provider-meds-table";
-import { SYSTEM_ZUS_UNIVERSAL_ID, SYSTEM_SUMMARY } from "@/fhir/system-urls";
+import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 import { CTWProvider } from "@/components/core/ctw-provider";
 import { PatientProvider } from "@/components/core/patient-provider";
 import otherProviderMedsTableStories from "@/components/content/medications/other-provider-meds-table.stories";
