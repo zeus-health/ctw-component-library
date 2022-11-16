@@ -149,14 +149,12 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       patientResponse.data?.id as string,
       ["done"]
     );
-    console.log("data is", message);
     if (message.data[0].status === "done") {
       setClinicalHistoryExists(true);
     } else {
       setClinicalHistoryExists(false);
       setRequestRecordsClinicalHistory(true);
     }
-    console.log(clinicalHistoryExists);
   };
 
   handleClinicalHistory();
