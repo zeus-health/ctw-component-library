@@ -18,35 +18,37 @@ import {
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import { Condition } from "fhir/r4";
+import { cloneDeep } from "lodash";
 import { FormErrors } from "./drawer-form";
 import { ActionReturn } from "./types";
 
 // Sets any autofill values that apply when a user adds a condition, whether creating or confirming.
-export function setAddConditionDefaults(condition: Condition): void {
-  const addDefaults: Partial<Condition> = {
-    clinicalStatus: {
-      coding: [
-        {
-          system: SYSTEM_CONDITION_CLINICAL,
-          code: "active",
-          display: "Active",
-        },
-      ],
-      text: "active",
-    },
-    verificationStatus: {
-      coding: [
-        {
-          system: SYSTEM_CONDITION_VERIFICATION_STATUS,
-          code: "confirmed",
-          display: "Confirmed",
-        },
-      ],
-      text: "confirmed",
-    },
+export function getAddConditionWithDefaults(condition: Condition): Condition {
+  const newCondition = cloneDeep(condition);
+
+  newCondition.clinicalStatus = {
+    coding: [
+      {
+        system: SYSTEM_CONDITION_CLINICAL,
+        code: "active",
+        display: "Active",
+      },
+    ],
+    text: "active",
   };
 
-  Object.assign(condition, addDefaults);
+  newCondition.verificationStatus = {
+    coding: [
+      {
+        system: SYSTEM_CONDITION_VERIFICATION_STATUS,
+        code: "confirmed",
+        display: "Confirmed",
+      },
+    ],
+    text: "confirmed",
+  };
+
+  return newCondition;
 }
 
 export const createOrEditCondition = async (

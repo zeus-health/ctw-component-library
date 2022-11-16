@@ -28,7 +28,7 @@ import { filterOtherConditions } from "./conditions/helpers";
 import { getAddConditionData } from "./forms/condition-schema";
 import {
   createOrEditCondition,
-  setAddConditionDefaults,
+  getAddConditionWithDefaults,
 } from "./forms/conditions";
 import {
   DrawerFormWithFields,
@@ -94,8 +94,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   };
 
   const handleAddOtherProviderCondition = (condition: ConditionModel) => {
-    const newCondition = condition.resource;
-    setAddConditionDefaults(newCondition);
+    const newCondition = getAddConditionWithDefaults(condition.resource);
 
     if (patientResponse.data) {
       setSchema(conditionAddSchema);
@@ -211,7 +210,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
             message={
               <>
                 <div>{patientRecordsMessage}</div>
-                {!patientRecordsResponse.isError && (
+                {!patientRecordsResponse.isError && !readOnly && (
                   <div className="ctw-my-5">{addConditionBtn}</div>
                 )}
               </>
