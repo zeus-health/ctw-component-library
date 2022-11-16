@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 0.24.10
+
+### Patch Changes
+
+- 6b44387: Fix two minor condition bugs.
+- 1e95eee: Show unique condition history entries.
+
 ## 0.24.9
 
 ### Patch Changes
