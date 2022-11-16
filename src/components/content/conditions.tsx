@@ -23,7 +23,7 @@ import {
 import { ModalConfirmDelete } from "../core/modal-confirm-delete";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
-import { ConditionHeader } from "./condition-header";
+import { ConditionHeader, ConditionHeaderSummary } from "./condition-header";
 import { onConditionDelete } from "./conditions-helper";
 import { ConditionHistoryDrawer } from "./conditions-history-drawer";
 import { ConditionsNoPatient } from "./conditions-no-patient";
@@ -304,6 +304,12 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
 
       {patientResponse.data && (
         <PatientHistoryRequestDrawer
+          header={
+            <ConditionHeaderSummary>
+              Request patient clinical history from 70K+ providers across the
+              nation. No changes will be made to your patient record.
+            </ConditionHeaderSummary>
+          }
           patientID={patientResponse.data.id}
           isOpen={requestRecordsDrawerIsOpen}
           onClose={() => setRequestDrawerisOpen(false)}

@@ -9,7 +9,7 @@ import {
 
 type PatientHistoryRequestDrawer<T> = Pick<
   DrawerFormWithFieldsProps<T>,
-  "patientID" | "isOpen" | "action" | "onClose"
+  "patientID" | "isOpen" | "action" | "onClose" | "header"
 >;
 
 export class RequestData {
@@ -29,6 +29,7 @@ export class RequestData {
 export const PatientHistoryRequestDrawer = <T,>({
   patientID,
   action,
+  header,
   isOpen,
   onClose,
 }: PatientHistoryRequestDrawer<T>) => {
@@ -36,6 +37,7 @@ export const PatientHistoryRequestDrawer = <T,>({
   return (
     <DrawerFormWithFields
       patientID={patientID}
+      header={header}
       title="Request Drawer"
       action={action}
       data={getRequestData(new RequestData())}

@@ -3,6 +3,14 @@ import { z } from "zod";
 
 export const getRequestData = (data: unknown): FormEntry[] => [
   {
+    presentational: true,
+    render: (readonly: boolean | undefined, inputProps) => (
+      <div readOnly={readonly} {...inputProps}>
+        hello
+      </div>
+    ),
+  },
+  {
     label: "Practitioner Name",
     field: "name",
     value: "",

@@ -35,7 +35,10 @@ export const DrawerFormWithFields = <T,>({
   action,
   ...drawerFormProps
 }: DrawerFormWithFieldsProps<T>) => {
+  console.log("schema", schema);
+  console.log("data", data);
   const inputProps = useFormInputProps(schema);
+  console.log("inputProps", data);
 
   return (
     <DrawerForm
