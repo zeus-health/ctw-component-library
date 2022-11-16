@@ -1,8 +1,28 @@
 .ctw-conditions {
   @apply ctw-border ctw-border-solid ctw-border-divider-light ctw-bg-white;
+
+  .ctw-conditions-body-container {
+    @apply ctw-m-3 ctw-space-y-5 ctw-bg-bg-white;
+  }
+
+  .ctw-conditions-heading-container {
+    @apply ctw-flex ctw-h-11 ctw-items-center ctw-justify-between ctw-bg-bg-light ctw-p-3;
+  }
+
+  .ctw-conditions-title-container {
+    @apply ctw-flex ctw-items-center ctw-justify-between;
+  }
 }
 
-.ctw-conditions.ctw-stacked {
+.ctw-conditions.ctw-conditions-stacked {
+  .ctw-conditions-body-container {
+    @apply ctw-m-0;
+  }
+
+  .ctw-conditions-title-container {
+    @apply ctw-m-3 ctw-mb-0;
+  }
+
   // When there's zero records, we won't
   // show pagination and so we'll get a double border
   // unless we bump down by 1px.

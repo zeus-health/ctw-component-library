@@ -4,6 +4,7 @@ import { SYSTEM_SUMMARY, SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 import type { Meta, StoryObj } from "@storybook/react";
 import { rest } from "msw";
 import { Conditions, ConditionsProps } from "../conditions";
+import { emptyConditions } from "./mocks/empty-conditions";
 import { heartConditions } from "./mocks/forms-data-conditions-search";
 import { historyChronsDisease } from "./mocks/history-crohns-disease";
 import { historyDermatitis } from "./mocks/history-dermatitis";
@@ -19,6 +20,20 @@ type Props = ConditionsProps;
 export default {
   component: Conditions,
   tags: ["docsPage"],
+  argTypes: {
+    className: {
+      options: ["Blank", "Fixed Width"],
+      control: "select",
+      mapping: {
+        Blank: "",
+        "Fixed Width": "ctw-m-auto ctw-max-w-[600px]",
+      },
+    },
+  },
+  args: {
+    className: "Blank",
+    readOnly: false,
+  },
   decorators: [
     (Story, { args }) => (
       <CTWProvider env="dev" authToken="dummy-token" builderId="b123">
@@ -28,16 +43,23 @@ export default {
       </CTWProvider>
     ),
   ],
+} as Meta<Props>;
+
+const handlerPatient = rest.get(
+  "https://api.dev.zusapi.com/fhir/Patient",
+  (req, res, ctx) => res(ctx.delay(1000), ctx.status(200), ctx.json(patient))
+);
+
+const handlerConditionSearch = rest.get(
+  "https://api.dev.zusapi.com/forms-data/terminology/conditions",
+  (req, res, ctx) => res(ctx.status(200), ctx.json(heartConditions))
+);
+
+export const Basic: StoryObj<Props> = {
   parameters: {
     msw: [
-      rest.get("https://api.dev.zusapi.com/fhir/Patient", (req, res, ctx) =>
-        res(ctx.status(200), ctx.json(patient))
-      ),
-      // Mock condition autocomplete, using responses for "heart".
-      rest.get(
-        "https://api.dev.zusapi.com/forms-data/terminology/conditions",
-        (req, res, ctx) => res(ctx.status(200), ctx.json(heartConditions))
-      ),
+      handlerPatient,
+      handlerConditionSearch,
       rest.get("https://api.dev.zusapi.com/fhir/Condition", (req, res, ctx) => {
         const codeParam = req.url.searchParams.get("code");
 
@@ -69,6 +91,16 @@ export default {
       }),
     ],
   },
-} as Meta<Props>;
+};
 
-export const Basic: StoryObj<Props> = {};
+export const Empty: StoryObj<Props> = {
+  parameters: {
+    msw: [
+      handlerPatient,
+      handlerConditionSearch,
+      rest.get("https://api.dev.zusapi.com/fhir/Condition", (req, res, ctx) =>
+        res(ctx.status(200), ctx.json(emptyConditions))
+      ),
+    ],
+  },
+};

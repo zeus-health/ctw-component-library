@@ -26,13 +26,6 @@
 .ctw-table-container {
   @apply ctw-relative ctw-overflow-hidden ctw-rounded-lg ctw-border ctw-border-solid ctw-border-divider-light;
 
-  &.ctw-table {
-    // The container displaying a table and the table it renders shouldn't both have "display: table" because that
-    // can break both the display at the container level and also the scroll functionality of any <table> nested
-    // inside the .ctw-table-container
-    display: inherit;
-  }
-
   .ctw-scrollbar {
     @apply ctw-overflow-x-auto;
   }
@@ -61,6 +54,10 @@
 
         td {
           @apply ctw-whitespace-pre-wrap ctw-px-3 ctw-py-4 ctw-text-sm ctw-text-content-light;
+
+          &.ctw-table-full-length-row {
+            @apply ctw-flex ctw-flex-col ctw-items-center ctw-p-6 ctw-text-content-light;
+          }
         }
       }
     }
@@ -72,6 +69,10 @@
 }
 
 .ctw-table-stacked {
+  .ctw-table-container {
+    @apply ctw-rounded-none ctw-border-x-0;
+  }
+
   .ctw-scrollbar {
     @apply ctw-overflow-x-hidden;
   }
@@ -82,6 +83,7 @@
   }
 
   .ctw-pagination {
+    margin: 8px 0 !important;
     flex-direction: column-reverse;
     gap: 10px;
   }
@@ -99,7 +101,7 @@
       tr {
         @apply ctw-relative ctw-block ctw-p-3;
 
-        td {
+        td:not(.ctw-table-full-length-row) {
           @apply ctw-block ctw-w-full ctw-p-0 ctw-pr-7;
         }
       }
@@ -107,6 +109,7 @@
   }
 
   .ctw-table-action-column {
-    @apply ctw-absolute ctw-top-1 ctw-right-2 ctw-bg-transparent ctw-p-0;
+    @apply ctw-absolute ctw-top-1 ctw-right-2 ctw-bg-transparent;
+    padding-right: 0 !important;
   }
 }
