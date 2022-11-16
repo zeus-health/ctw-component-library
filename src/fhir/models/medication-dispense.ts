@@ -1,28 +1,8 @@
 import { getPerformingOrganization } from "@/fhir/medication";
-import type { ResourceMap } from "@/fhir/types";
 import { compact } from "lodash/fp";
+import { FHIRModel } from "./fhir-model";
 
-export class MedicationDispenseModel {
-  readonly resource: fhir4.MedicationDispense;
-
-  readonly includedResources?: ResourceMap;
-
-  constructor(
-    medicationDispense: fhir4.MedicationDispense,
-    includedResources?: ResourceMap
-  ) {
-    this.resource = medicationDispense;
-    this.includedResources = includedResources;
-  }
-
-  get id(): string {
-    return this.resource.id || "";
-  }
-
-  get resourceType(): "MedicationDispense" {
-    return this.resource.resourceType;
-  }
-
+export class MedicationDispenseModel extends FHIRModel<fhir4.MedicationDispense> {
   get performer(): fhir4.Organization | undefined {
     return getPerformingOrganization(this.resource, this.includedResources);
   }

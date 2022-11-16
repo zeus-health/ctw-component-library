@@ -30,6 +30,11 @@ initialize(options);
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
+  docs: {
+    source: {
+      excludeDecorators: true,
+    },
+  },
   controls: {
     matchers: {
       color: /(background|color)$/i,

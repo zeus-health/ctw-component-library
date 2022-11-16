@@ -2,8 +2,8 @@ import { pipe, get, toLower } from "lodash/fp";
 import { useEffect, useState } from "react";
 import { MedicationDrawer } from "@/components/content/medication-drawer";
 import { MedicationsTableBase } from "@/components/content/medications-table-base";
+import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
-import { MedicationStatementModel } from "@/models/medication-statement";
 import { sort } from "@/utils/sort";
 
 export type OtherProviderMedsTableProps = {

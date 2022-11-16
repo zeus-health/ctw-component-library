@@ -5,7 +5,7 @@ import {
 } from "@/components/content/forms/medications";
 import { DrawerFormWithFields } from "@/components/core/form/drawer-form-with-fields";
 import { usePatient } from "@/components/core/patient-provider";
-import { MedicationStatementModel } from "@/models/medication-statement";
+import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { format } from "date-fns";
 import { ReactElement } from "react";
 

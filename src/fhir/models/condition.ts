@@ -6,22 +6,13 @@ import {
 } from "@/fhir/codeable-concept";
 import { CONDITION_CODE_PREFERENCE_ORDER } from "@/fhir/conditions";
 import { findReference } from "@/fhir/resource-helper";
-import { ResourceMap } from "@/fhir/types";
 import { compact, intersectionWith, uniqWith } from "lodash";
-import { formatDateISOToLocal, formatStringToDate } from "../fhir/formatters";
-import { SYSTEM_CCS, SYSTEM_ICD10, SYSTEM_SNOMED } from "../fhir/system-urls";
-import { PatientModel } from "./patients";
+import { formatDateISOToLocal, formatStringToDate } from "../formatters";
+import { SYSTEM_CCS, SYSTEM_ICD10, SYSTEM_SNOMED } from "../system-urls";
+import { FHIRModel } from "./fhir-model";
+import { PatientModel } from "./patient";
 
-export class ConditionModel {
-  public resource: fhir4.Condition;
-
-  private includedResources?: ResourceMap;
-
-  constructor(condition: fhir4.Condition, includedResources?: ResourceMap) {
-    this.resource = condition;
-    this.includedResources = includedResources;
-  }
-
+export class ConditionModel extends FHIRModel<fhir4.Condition> {
   get abatement(): string | undefined {
     if (this.resource.abatementAge) {
       return this.resource.abatementAge.value?.toString();
@@ -111,10 +102,6 @@ export class ConditionModel {
 
   get icd10Display(): string | undefined {
     return findCoding(SYSTEM_ICD10, this.resource.code)?.display;
-  }
-
-  get id(): string {
-    return this.resource.id || "";
   }
 
   get knownCodings(): fhir4.Coding[] {
@@ -240,10 +227,6 @@ export class ConditionModel {
   get subjectID(): string {
     const [, subjectID] = this.resource.subject.reference?.split("/") || [];
     return subjectID || "";
-  }
-
-  get resourceType(): string {
-    return this.resource.resourceType;
   }
 
   get verificationStatus(): string {

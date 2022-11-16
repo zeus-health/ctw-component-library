@@ -1,8 +1,8 @@
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
-import { MedicationModel } from "@/models/medication";
-import { MedicationStatementModel } from "@/models/medication-statement";
-import { PatientModel } from "@/models/patients";
+import { MedicationModel } from "@/fhir/models/medication";
+import { MedicationStatementModel } from "@/fhir/models/medication-statement";
+import { PatientModel } from "@/fhir/models/patient";
 import { errorResponse } from "@/utils/errors";
 import { QUERY_KEY_MEDICATION_HISTORY } from "@/utils/query-keys";
 import { sort } from "@/utils/sort";
