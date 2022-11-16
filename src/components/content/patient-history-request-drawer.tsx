@@ -18,7 +18,7 @@ export class RequestData {
   }
 
   get dateOfBirth(): string {
-    return "this.resource.resourceType";
+    return "";
   }
 
   get npi(): string | undefined {
@@ -26,11 +26,15 @@ export class RequestData {
   }
 
   get role(): string {
-    return "this.resource.resourceType";
+    return "";
   }
 
   get gender(): string {
-    return "this.resource.resourceType";
+    return "";
+  }
+
+  get zipCode(): string {
+    return "";
   }
 }
 

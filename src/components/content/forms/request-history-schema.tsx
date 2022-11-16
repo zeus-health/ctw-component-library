@@ -3,9 +3,10 @@ import { z } from "zod";
 
 export const getRequestData = (data: unknown): FormEntry[] => [
   {
+    label: "treating-provider",
     presentational: true,
-    render: (readonly: boolean | undefined, inputProps) => (
-      <div className="ctw-font-medium" readOnly={readonly} {...inputProps}>
+    render: () => (
+      <div className="ctw-font-medium">
         Who is the treating provider for this patient?
       </div>
     ),
@@ -29,10 +30,11 @@ export const getRequestData = (data: unknown): FormEntry[] => [
     readonly: false,
   },
   {
+    label: "patient-information",
     presentational: true,
-    render: (readonly: boolean | undefined, inputProps) => (
+    render: () => (
       <div>
-        <div className="ctw-font-medium" readOnly={readonly} {...inputProps}>
+        <div className="ctw-font-medium">
           Is the patient information below correct and up-to-date?
         </div>
         <div>
@@ -43,18 +45,18 @@ export const getRequestData = (data: unknown): FormEntry[] => [
   },
   {
     label: "First Name",
-    field: "name",
+    field: "firstName",
     value: "",
     readonly: false,
   },
   {
     label: "Last Name",
-    field: "npi",
+    field: "lastName",
     value: "",
     readonly: false,
   },
   {
-    label: "Date Of Birth",
+    label: "Date of Birth",
     field: "dateOfBirth",
     value: "",
     readonly: false,
@@ -67,25 +69,25 @@ export const getRequestData = (data: unknown): FormEntry[] => [
   },
   {
     label: "Address",
-    field: "name",
+    field: "address",
     value: "",
     readonly: false,
   },
   {
     label: "City",
-    field: "name",
+    field: "city",
     value: "",
     readonly: false,
   },
   {
     label: "State",
-    field: "name",
+    field: "state",
     value: "",
     readonly: false,
   },
   {
     label: "Zip",
-    field: "name",
+    field: "zipCode",
     value: "",
     readonly: false,
   },
@@ -132,7 +134,7 @@ export const requestHistorySchema = z.object({
   state: z.string({
     required_error: "State must be specified.",
   }),
-  zip: z.string({
+  zipCode: z.string({
     required_error: "Zip code must be specified.",
   }),
   phone: z.string().optional(),

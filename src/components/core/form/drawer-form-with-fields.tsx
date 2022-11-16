@@ -3,19 +3,30 @@ import { AnyZodSchema, useFormInputProps } from "@/utils/form-helper";
 import { InputHTMLAttributes, ReactNode } from "react";
 import { DrawerForm, DrawerFormProps } from "./drawer-form";
 
-export type FormEntry = {
-  label: string;
-  field: string;
-  value?: string | string[];
-  lines?: number;
-  readonly?: boolean;
-  hidden?: boolean;
-  presentational?: boolean;
-  render?: (
-    readOnly: boolean | undefined,
-    inputProps: InputHTMLAttributes<HTMLInputElement>
-  ) => JSX.Element;
-};
+export type FormEntry =
+  | {
+      label: string;
+      field: string;
+      value?: string | string[];
+      lines?: number;
+      readonly?: boolean;
+      hidden?: boolean;
+      presentational?: never;
+      render?: (
+        readOnly: boolean | undefined,
+        inputProps: InputHTMLAttributes<HTMLInputElement>
+      ) => JSX.Element;
+    }
+  | {
+      presentational: boolean;
+      label: string;
+      field?: never;
+      value?: never;
+      lines?: never;
+      readonly?: never;
+      hidden?: never;
+      render: () => JSX.Element;
+    };
 
 export type DrawerFormWithFieldsProps<T> = {
   title: string;
@@ -36,10 +47,7 @@ export const DrawerFormWithFields = <T,>({
   action,
   ...drawerFormProps
 }: DrawerFormWithFieldsProps<T>) => {
-  console.log("schema", schema);
-  console.log("data", data);
   const inputProps = useFormInputProps(schema);
-  console.log("inputProps", data);
 
   return (
     <DrawerForm
@@ -64,8 +72,6 @@ export const DrawerFormWithFields = <T,>({
                 render,
                 presentational,
               }) => {
-                const fieldErrors = errors?.[field];
-
                 if (presentational) {
                   return (
                     <FormField
@@ -75,6 +81,9 @@ export const DrawerFormWithFields = <T,>({
                     />
                   );
                 }
+
+                // TODO: figure out why typescript thinks this can be undefined
+                const fieldErrors = errors?.[field];
 
                 if (hidden) {
                   return (
