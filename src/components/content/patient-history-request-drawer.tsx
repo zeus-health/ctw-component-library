@@ -12,7 +12,19 @@ type PatientHistoryRequestDrawer<T> = Pick<
   "patientID" | "isOpen" | "action" | "onClose"
 >;
 
-const requestData = { name: "", npi: "", role: "" };
+export class RequestData {
+  get name(): string {
+    return "";
+  }
+
+  get npi(): string | undefined {
+    return "";
+  }
+
+  get role(): string {
+    return "this.resource.resourceType";
+  }
+}
 
 export const PatientHistoryRequestDrawer = <T,>({
   patientID,
@@ -26,7 +38,7 @@ export const PatientHistoryRequestDrawer = <T,>({
       patientID={patientID}
       title="Request Drawer"
       action={action}
-      data={getRequestData(requestData)}
+      data={getRequestData(new RequestData())}
       schema={requestHistorySchema}
       isOpen={isOpen}
       onClose={() => onClose(false)}

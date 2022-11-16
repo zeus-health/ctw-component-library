@@ -23,7 +23,7 @@ export const getRequestData = (data: unknown): FormEntry[] => [
 ];
 
 export const requestHistorySchema = z.object({
-  practitionerName: z.string().optional(),
+  name: z.string().optional(),
   npi: z.string({
     required_error: "Condition subjectID must be specified.",
   }),
