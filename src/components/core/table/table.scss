@@ -61,6 +61,10 @@
 
         td {
           @apply ctw-whitespace-pre-wrap ctw-px-3 ctw-py-4 ctw-text-sm ctw-text-content-light;
+
+          &.ctw-table-full-length-row {
+            @apply ctw-flex ctw-flex-col ctw-items-center ctw-p-6 ctw-text-content-light;
+          }
         }
       }
     }
@@ -99,7 +103,7 @@
       tr {
         @apply ctw-relative ctw-block ctw-p-3;
 
-        td {
+        td:not(.ctw-table-full-length-row) {
           @apply ctw-block ctw-w-full ctw-p-0 ctw-pr-7;
         }
       }
