@@ -107,15 +107,8 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
           (record) => JSON.stringify(record.data)
         );
 
-        const conditionsDataFilteredWithDate = conditionsDataDeduped.filter(
-          (d) => d.date
-        );
-        const conditionsDataFilteredWithoutDate = conditionsDataDeduped.filter(
-          (d) => !d.date
-        );
-
-        setConditionsWithDate(conditionsDataFilteredWithDate);
-        setConditionsWithoutDate(conditionsDataFilteredWithoutDate);
+        setConditionsWithDate(conditionsDataDeduped.filter((d) => d.date));
+        setConditionsWithoutDate(conditionsDataDeduped.filter((d) => !d.date));
 
         setLoading(false);
       }
