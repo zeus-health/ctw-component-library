@@ -3,13 +3,13 @@ import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { setRecorderField } from "@/fhir/conditions";
 import { isFhirError } from "@/fhir/errors";
 import { dateToISO } from "@/fhir/formatters";
+import { ConditionModel } from "@/fhir/models/condition";
+import { OperationOutcomeModel } from "@/fhir/models/operation-outcome";
 import { isOperationOutcome } from "@/fhir/operation-outcome";
 import {
   SYSTEM_CONDITION_CLINICAL,
   SYSTEM_CONDITION_VERIFICATION_STATUS,
 } from "@/fhir/system-urls";
-import { ConditionModel } from "@/models/condition";
-import { OperationOutcomeModel } from "@/models/operation-outcome";
 import { claimsPractitionerId } from "@/utils/auth";
 import { AnyZodSchema, getFormData } from "@/utils/form-helper";
 import {

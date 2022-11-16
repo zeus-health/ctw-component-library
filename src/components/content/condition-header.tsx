@@ -1,4 +1,4 @@
-import { ConditionModel } from "@/models/condition";
+import { ConditionModel } from "@/fhir/models/condition";
 
 type ConditionHeaderProp = {
   condition: ConditionModel;

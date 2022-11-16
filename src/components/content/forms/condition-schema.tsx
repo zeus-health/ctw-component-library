@@ -1,4 +1,4 @@
-import { ConditionModel } from "@/models/condition";
+import { ConditionModel } from "@/fhir/models/condition";
 import Zod, { RefinementCtx, z } from "zod";
 import { ConditionsAutoComplete } from "./conditions-autocomplete";
 import type { FormEntry } from "./drawer-form-with-fields";

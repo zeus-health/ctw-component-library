@@ -1,7 +1,7 @@
 import { setAddConditionDefaults } from "@/components/content/forms/conditions";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
-import { ConditionModel } from "@/models/condition";
+import { ConditionModel } from "@/fhir/models/condition";
 import {
   QUERY_KEY_CONDITION_HISTORY,
   QUERY_KEY_OTHER_PROVIDER_CONDITIONS,

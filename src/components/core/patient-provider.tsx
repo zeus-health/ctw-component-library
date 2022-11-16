@@ -1,7 +1,7 @@
+import { PatientModel } from "@/fhir/models/patient";
 import { getBuilderFhirPatient } from "@/fhir/patient-helper";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 import { Tag } from "@/fhir/types";
-import { PatientModel } from "@/models/patients";
 import { QUERY_KEY_PATIENT } from "@/utils/query-keys";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { createContext, ReactNode, useContext, useMemo } from "react";

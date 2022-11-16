@@ -1,4 +1,4 @@
-import { ConditionModel } from "@/models";
+import { ConditionModel } from "@/fhir/models";
 
 // Filter out other conditions where:
 //  1. There is an existing patient condition with a matching known code.
