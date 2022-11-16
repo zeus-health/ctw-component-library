@@ -2,7 +2,7 @@ import { Loading } from "@/components/core/loading";
 import { getIncludedResources } from "@/fhir/bundle";
 import { useConditionHistory } from "@/fhir/conditions";
 import { ConditionModel } from "@/models/condition";
-import { capitalize, orderBy, startCase } from "lodash";
+import _, { capitalize, orderBy, startCase } from "lodash";
 import { useEffect, useState } from "react";
 import { CodingList } from "../core/coding-list";
 import { CollapsibleDataListProps } from "../core/collapsible-data-list";
@@ -107,13 +107,18 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
         const conditionsFilteredWithoutDate =
           filterEnteredinErrorConditions.filter((c) => !c.recordedDate);
 
-        setConditionsWithDate(
-          conditionsFilteredWithDate.map((model) => setupData(model))
+        const conditionsWithDateDedupedData = _.uniqBy(
+          conditionsFilteredWithDate.map((model) => setupData(model)),
+          (record) => record.data.map((data) => data.value?.toString()).join()
+        );
+        const conditionsWithoutDedupedDateData = _.uniqBy(
+          conditionsFilteredWithoutDate.map((model) => setupData(model)),
+          (record) => record.data.map((data) => data.value?.toString()).join()
         );
 
-        setConditionsWithoutDate(
-          conditionsFilteredWithoutDate.map((model) => setupData(model))
-        );
+        setConditionsWithDate(conditionsWithDateDedupedData);
+        setConditionsWithoutDate(conditionsWithoutDedupedDateData);
+
         setLoading(false);
       }
     }
