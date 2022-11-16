@@ -102,22 +102,20 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
           (c) => c.verificationStatus !== "entered-in-error"
         );
 
-        const conditionsFilteredWithDate =
-          filterEnteredinErrorConditions.filter((c) => c.recordedDate);
-        const conditionsFilteredWithoutDate =
-          filterEnteredinErrorConditions.filter((c) => !c.recordedDate);
-
-        const conditionsDataWithDateDeduped = _.uniqBy(
-          conditionsFilteredWithDate.map((model) => setupData(model)),
-          (record) => record.data.map((data) => data.value?.toString()).join()
-        );
-        const conditionsDataWithoutDedupedDate = _.uniqBy(
-          conditionsFilteredWithoutDate.map((model) => setupData(model)),
-          (record) => record.data.map((data) => data.value?.toString()).join()
+        const conditionsDataDeduped = _.uniqBy(
+          filterEnteredinErrorConditions.map((model) => setupData(model)),
+          (record) => JSON.stringify(record.data)
         );
 
-        setConditionsWithDate(conditionsDataWithDateDeduped);
-        setConditionsWithoutDate(conditionsDataWithoutDedupedDate);
+        const conditionsDataFilteredWithDate = conditionsDataDeduped.filter(
+          (d) => d.date
+        );
+        const conditionsDataFilteredWithoutDate = conditionsDataDeduped.filter(
+          (d) => !d.date
+        );
+
+        setConditionsWithDate(conditionsDataFilteredWithDate);
+        setConditionsWithoutDate(conditionsDataFilteredWithoutDate);
 
         setLoading(false);
       }
