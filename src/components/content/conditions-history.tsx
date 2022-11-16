@@ -107,17 +107,17 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
         const conditionsFilteredWithoutDate =
           filterEnteredinErrorConditions.filter((c) => !c.recordedDate);
 
-        const conditionsWithDateDedupedData = _.uniqBy(
+        const conditionsDataWithDateDeduped = _.uniqBy(
           conditionsFilteredWithDate.map((model) => setupData(model)),
           (record) => record.data.map((data) => data.value?.toString()).join()
         );
-        const conditionsWithoutDedupedDateData = _.uniqBy(
+        const conditionsDataWithoutDedupedDate = _.uniqBy(
           conditionsFilteredWithoutDate.map((model) => setupData(model)),
           (record) => record.data.map((data) => data.value?.toString()).join()
         );
 
-        setConditionsWithDate(conditionsWithDateDedupedData);
-        setConditionsWithoutDate(conditionsWithoutDedupedDateData);
+        setConditionsWithDate(conditionsDataWithDateDeduped);
+        setConditionsWithoutDate(conditionsDataWithoutDedupedDate);
 
         setLoading(false);
       }
