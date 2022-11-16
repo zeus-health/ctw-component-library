@@ -76,12 +76,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
 
   const [clinicalHistoryExists, setClinicalHistoryExists] = useState(false);
 
-  //clinical history
-  const [requestRecordsClinicalHistory, setRequestRecordsClinicalHistory] =
-    useState(false);
-
-  const [clinicalHistoryExists, setClinicalHistoryExists] = useState(false);
-
   const patientRecordsMessage = patientRecordsResponse.isError
     ? ERROR_MSG
     : EMPTY_MESSAGE_PATIENT_RECORD;
