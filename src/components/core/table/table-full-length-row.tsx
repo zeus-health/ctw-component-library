@@ -8,10 +8,7 @@ export const TableFullLengthRow = ({
   colSpan: number;
 }) => (
   <tr>
-    <td
-      className="ctw-flex ctw-flex-col ctw-items-center ctw-p-6 ctw-text-content-light"
-      colSpan={colSpan}
-    >
+    <td className="ctw-table-full-length-row" colSpan={colSpan}>
       {children}
     </td>
   </tr>
