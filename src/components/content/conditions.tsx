@@ -8,8 +8,8 @@ import {
   useOtherProviderConditions,
   usePatientConditions,
 } from "@/fhir/conditions";
+import { ConditionModel } from "@/fhir/models/condition";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
-import { ConditionModel } from "@/models/condition";
 import { AnyZodSchema } from "@/utils/form-helper";
 import cx from "classnames";
 import { curry } from "lodash";

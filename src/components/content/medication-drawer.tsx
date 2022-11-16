@@ -1,4 +1,4 @@
-import type { MedicationStatementModel } from "@/models/medication-statement";
+import type { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { capitalize } from "lodash";
 import type { DataListEntry } from "../core/data-list";
 import { DataList, entryFromArray } from "../core/data-list";

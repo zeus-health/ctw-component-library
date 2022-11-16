@@ -9,8 +9,8 @@ import { medicationStatement } from "@/components/content/medication-history/moc
 import { patient } from "@/components/content/medication-history/mocks/patient";
 import { CTWProvider } from "@/components/core/ctw-provider";
 import { PatientProvider } from "@/components/core/patient-provider";
+import { MedicationStatementModel } from "@/fhir/models";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
-import { MedicationStatementModel } from "@/models";
 import type { Meta, StoryObj } from "@storybook/react";
 import { rest } from "msw";
 
@@ -21,8 +21,8 @@ const medicationStatementModel = new MedicationStatementModel(
 );
 
 export default {
-  tags: ["docsPage"],
   component: MedicationHistory,
+  tags: ["docsPage"],
   decorators: [
     (Story, { args }) => (
       <CTWProvider env="dev" authToken="12345" builderId="12345">

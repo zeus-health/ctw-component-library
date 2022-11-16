@@ -1,10 +1,7 @@
-import { find, remove } from "lodash";
 import { findReference } from "@/fhir/resource-helper";
-import {
-  SYSTEM_MARITAL_STATUS,
-  SYSTEM_ZUS_UNIVERSAL_ID,
-} from "@/fhir/system-urls";
-import type { ResourceMap } from "@/fhir/types";
+import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
+import { find, remove } from "lodash";
+import { FHIRModel } from "./fhir-model";
 import { OrganizationModel } from "./organization";
 
 export const MaritalStatuses = [
@@ -20,22 +17,9 @@ export const MaritalStatuses = [
   { text: "Widowed", code: "W" },
 ] as const;
 
-export class PatientModel {
-  readonly resource: fhir4.Patient;
-
-  readonly includedResources?: ResourceMap;
-
-  constructor(patient: fhir4.Patient, includedResources?: ResourceMap) {
-    this.resource = patient;
-    this.includedResources = includedResources;
-  }
-
+export class PatientModel extends FHIRModel<fhir4.Patient> {
   get gender(): string | undefined {
     return this.resource.gender;
-  }
-
-  get id(): string {
-    return this.resource.id || "";
   }
 
   get maritalStatus(): string | undefined {
@@ -44,25 +28,6 @@ export class PatientModel {
     const code = this.resource.maritalStatus?.coding?.[0]?.code;
     const status = MaritalStatuses.find((s) => s.code === code);
     return status?.text;
-  }
-
-  set maritalStatus(statusText: string | undefined) {
-    // Look up our code via the text.
-    const code = MaritalStatuses.find((s) => s.text === statusText)?.code;
-    if (!code) {
-      this.resource.maritalStatus = undefined;
-    } else {
-      this.resource.maritalStatus = {
-        text: statusText,
-        coding: [
-          {
-            code,
-            display: statusText,
-            system: SYSTEM_MARITAL_STATUS,
-          },
-        ],
-      };
-    }
   }
 
   get organization(): OrganizationModel | undefined {
@@ -135,10 +100,6 @@ export class PatientModel {
     return find(this.resource.telecom, { system: "email" })?.value;
   }
 
-  set email(email: string | undefined) {
-    this.setTelecom("email", undefined, email);
-  }
-
   /*
     NAME STUFF
   */
@@ -190,43 +151,11 @@ export class PatientModel {
     return name?.given?.join(" ");
   }
 
-  set nickname(nickname: string | undefined) {
-    // Make sure we have a name array.
-    if (!this.resource.name) {
-      this.resource.name = [];
-    }
-
-    if (!nickname) {
-      // Remove any existing nicknames.
-      remove(this.resource.name, { use: "nickname" });
-    } else {
-      const existingNickname = find(this.resource.name, { use: "nickname" });
-      if (existingNickname) {
-        // Nickname already exists, so update the given name.
-        existingNickname.given = nickname.split(" ");
-      } else {
-        // Nickname does not yet exist, create it.
-        this.resource.name.push({
-          use: "nickname",
-          given: nickname.split(" "),
-        });
-      }
-    }
-  }
-
   get prefix(): string | undefined {
     return this.bestName.prefix?.join(" ");
   }
 
-  set prefix(prefix: string | undefined) {
-    this.bestName.prefix = prefix ? prefix.split(" ") : undefined;
-  }
-
   get suffix(): string | undefined {
     return this.bestName.suffix?.join(" ");
-  }
-
-  set suffix(suffix: string | undefined) {
-    this.bestName.suffix = suffix ? suffix.split(" ") : undefined;
   }
 }
