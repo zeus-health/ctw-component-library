@@ -22,6 +22,7 @@ import { curry, union } from "lodash";
 import { useEffect, useRef, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
 import { ModalConfirmDelete } from "../core/modal-confirm-delete";
+import { RetrievePatientHistory } from "../core/patient-history/patient-history-message";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionHeader } from "./condition-header";
@@ -145,19 +146,19 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     const { getRequestContext } = useCTW();
     const requestContext = await getRequestContext();
 
-    const data = await getLatestPatientRefreshHistoryMessage(
+    const message = getLatestPatientRefreshHistoryMessage(
       requestContext,
       patientResponse.data?.id as string,
       ["done"]
     );
-    console.log("data is", data);
-    if (data?.status === "done") {
+    console.log("data is", message);
+    if (message.data[0].status === "done") {
       setClinicalHistoryExists(true);
     } else {
-      setDrawerIsOpen(true);
       setClinicalHistoryExists(false);
       setRequestRecordsClinicalHistory(true);
     }
+    console.log(clinicalHistoryExists);
   };
 
   handleClinicalHistory();
@@ -288,52 +289,51 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           <div className="ctw-title-container">
             <div className="ctw-title">Other Provider Records</div>
           </div>
-          {/* pass usestate and then set button inside */}
-          {/* <RetrievePatientHistory message="Retrieve patient clinical history" />
-              <div>
-                <button
-                  type="button"
-                  className="ctw-btn-clear ctw-link"
-                  onClick={handleClinicalHistory}
-                >
-                  Request Records
-                </button>
-              </div>
-            </RetrievePatientHistory> */}
-
-          <ConditionsTableBase
-            className="ctw-conditions-not-reviewed"
-            stacked={breakpoints.sm}
-            conditions={otherProviderRecords}
-            isLoading={
-              otherProviderRecordsResponse.isLoading ||
-              patientRecordsResponse.isLoading
-            }
-            hideMenu={readOnly}
-            message={otherProviderRecordMessage}
-            rowActions={(condition) => [
-              {
-                name: "Add",
-                action: () => {
-                  handleAddOtherProviderCondition(condition);
+          {clinicalHistoryExists ? (
+            <ConditionsTableBase
+              className="ctw-conditions-not-reviewed"
+              stacked={breakpoints.sm}
+              conditions={otherProviderRecords}
+              isLoading={
+                otherProviderRecordsResponse.isLoading ||
+                patientRecordsResponse.isLoading
+              }
+              hideMenu={readOnly}
+              message={otherProviderRecordMessage}
+              rowActions={(condition) => [
+                {
+                  name: "Add",
+                  action: () => {
+                    handleAddOtherProviderCondition(condition);
+                  },
                 },
-              },
-              {
-                name: "View History",
-                action: () => {
-                  setHistoryDrawerIsOpen(true);
-                  setSelectedCondition(condition);
+                {
+                  name: "View History",
+                  action: () => {
+                    setHistoryDrawerIsOpen(true);
+                    setSelectedCondition(condition);
+                  },
                 },
-              },
-              {
-                name: "Delete",
-                className: "dangerous",
-                action: () => {
-                  handleConditionDelete(condition);
+                {
+                  name: "Delete",
+                  className: "dangerous",
+                  action: () => {
+                    handleConditionDelete(condition);
+                  },
                 },
-              },
-            ]}
-          />
+              ]}
+            />
+          ) : (
+            <RetrievePatientHistory message="Retrieve patient clinical history.">
+              <button
+                type="button"
+                className="ctw-btn-clear ctw-link"
+                onClick={handleClinicalHistory}
+              >
+                Request Records
+              </button>
+            </RetrievePatientHistory>
+          )}
         </div>
       </div>
 
