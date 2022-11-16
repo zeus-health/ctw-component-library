@@ -35,6 +35,7 @@ import {
   createOrEditCondition,
   setAddConditionDefaults,
 } from "./forms/conditions";
+import { PatientHistoryRequestDrawer } from "./patient-history-request-drawer";
 
 export type ConditionsProps = {
   className?: string;
@@ -53,6 +54,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [historyDrawerIsOpen, setHistoryDrawerIsOpen] = useState(false);
+  const [requestRecordsDrawerIsOpen, setRequestDrawerisOpen] = useState(false);
   const [patientRecords, setPatientRecords] = useState<ConditionModel[]>([]);
   const [otherProviderRecords, setOtherProviderRecords] = useState<
     ConditionModel[]
@@ -244,6 +246,13 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         <div className="ctw-space-y-3">
           <div className="ctw-title-container">
             <div className="ctw-title">Other Provider Records</div>
+            <button
+              type="button"
+              className="ctw-btn-clear ctw-link"
+              onClick={() => setRequestDrawerisOpen(true)}
+            >
+              Request Records
+            </button>
           </div>
 
           <ConditionsTableBase
@@ -290,6 +299,15 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           schema={schema}
           isOpen={drawerIsOpen}
           onClose={() => setDrawerIsOpen(false)}
+        />
+      )}
+
+      {patientResponse.data && (
+        <PatientHistoryRequestDrawer
+          patientID={patientResponse.data.id}
+          isOpen={requestRecordsDrawerIsOpen}
+          onClose={() => setRequestDrawerisOpen(false)}
+          action={() => console.log("hello")}
         />
       )}
 

@@ -1,8 +1,7 @@
+import { FormField } from "@/components/content/forms/form-field";
 import { AnyZodSchema, useFormInputProps } from "@/utils/form-helper";
 import { InputHTMLAttributes, ReactNode } from "react";
-import { FormField } from "../../content/forms/form-field";
-import type { DrawerFormProps } from "./drawer-form";
-import { DrawerForm } from "./drawer-form";
+import { DrawerForm, DrawerFormProps } from "./drawer-form";
 
 export type FormEntry = {
   label: string;
