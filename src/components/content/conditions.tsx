@@ -70,7 +70,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const otherProviderRecordsResponse = useOtherProviderConditions();
   const { getRequestContext } = useCTW();
 
-  //clinical history
   const [requestRecordsClinicalHistory, setRequestRecordsClinicalHistory] =
     useState(false);
 
