@@ -1,4 +1,4 @@
-import { setAddConditionDefaults } from "@/components/content/forms/conditions";
+import { getAddConditionWithDefaults } from "@/components/content/forms/conditions";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
 import { ConditionModel } from "@/fhir/models/condition";
@@ -42,9 +42,7 @@ export function getNewCondition(patientId: string) {
       reference: `Patient/${patientId}`,
     },
   };
-  setAddConditionDefaults(newCondition);
-
-  return newCondition;
+  return getAddConditionWithDefaults(newCondition);
 }
 
 export function usePatientConditions() {
