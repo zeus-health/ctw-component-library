@@ -23,7 +23,6 @@ export async function getPatientRefreshHistoryMessages(
       },
     });
     const result = await response.json();
-    console.log("result", result);
     return (
       Object.values(result.data) as RawPatientRefreshHistoryMessage[]
     ).map((entry: RawPatientRefreshHistoryMessage) => ({

@@ -141,7 +141,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   );
 
   const handleClinicalHistory = async () => {
-    const { getRequestContext } = useCTW();
     const requestContext = await getRequestContext();
 
     const message = getLatestPatientRefreshHistoryMessage(
