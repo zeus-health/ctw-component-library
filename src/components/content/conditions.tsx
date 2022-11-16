@@ -212,7 +212,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               <>
                 <div>{patientRecordsMessage}</div>
                 {!patientRecordsResponse.isError && !readOnly && (
-                  <div className="ctw-my-5">{addConditionBtn}</div>
+                  <div className="ctw-mt-5">{addConditionBtn}</div>
                 )}
               </>
             }
