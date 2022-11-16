@@ -17,11 +17,19 @@ export class RequestData {
     return "";
   }
 
+  get dateOfBirth(): string {
+    return "this.resource.resourceType";
+  }
+
   get npi(): string | undefined {
     return "";
   }
 
   get role(): string {
+    return "this.resource.resourceType";
+  }
+
+  get gender(): string {
     return "this.resource.resourceType";
   }
 }

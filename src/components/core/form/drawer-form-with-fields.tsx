@@ -10,6 +10,7 @@ export type FormEntry = {
   lines?: number;
   readonly?: boolean;
   hidden?: boolean;
+  presentational?: boolean;
   render?: (
     readOnly: boolean | undefined,
     inputProps: InputHTMLAttributes<HTMLInputElement>
@@ -53,8 +54,27 @@ export const DrawerFormWithFields = <T,>({
           {header}
           <div className="ctw-space-y-6">
             {data.map(
-              ({ label, field, value, lines, readonly, hidden, render }) => {
+              ({
+                label,
+                field,
+                value,
+                lines,
+                readonly,
+                hidden,
+                render,
+                presentational,
+              }) => {
                 const fieldErrors = errors?.[field];
+
+                if (presentational) {
+                  return (
+                    <FormField
+                      key={label}
+                      readonly={readonly}
+                      render={render}
+                    />
+                  );
+                }
 
                 if (hidden) {
                   return (
