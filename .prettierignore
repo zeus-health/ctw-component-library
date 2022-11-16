@@ -5,3 +5,4 @@ node_modules
 
 /src/styles/tailwind-gen.css
 tailwind-gen.theme.cjs
+public/mockServiceWorker.js

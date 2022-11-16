@@ -14,6 +14,9 @@ export type MedicationHistoryProps = {
   medication: MedicationStatementModel;
 };
 
+/**
+ * Displays the history of a medication
+ */
 export function MedicationHistory({ medication }: MedicationHistoryProps) {
   const [entries, setEntries] = useState<CollapsibleDataListProps[]>([]);
   const medHistoryQuery = useMedicationHistory(medication.resource);
@@ -29,7 +32,7 @@ export function MedicationHistory({ medication }: MedicationHistoryProps) {
   if (loading) {
     return (
       <>
-        <h3>Medication History</h3>
+        <h2 className="ctw-text-lg ctw-font-semibold">Medication History</h2>
         <Loading message="" />
       </>
     );
@@ -37,7 +40,7 @@ export function MedicationHistory({ medication }: MedicationHistoryProps) {
 
   return (
     <>
-      <h3>Medication History</h3>
+      <h2 className="ctw-text-lg ctw-font-semibold">Medication History</h2>
       {entries.length ? (
         <CollapsibleDataListStack
           entries={entries}
@@ -59,8 +62,7 @@ function createMedicationStatementCard(medication: MedicationModel) {
     id: medication.id,
     title: "Medication Reviewed",
     hideEmpty: false,
-    // @todo Get the practitioners name
-    subTitle: "",
+    subTitle: medStatement.informationSource?.display || "",
     data: [
       {
         label: "Status",
