@@ -52,7 +52,14 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const breakpoints = useBreakpoints(containerRef);
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
-  const [historyDrawerIsOpen, setHistoryDrawerIsOpen] = useState(false);
+  const [
+    otherProviderRecordHistoryDrawerIsOpen,
+    setOtherProviderRecordHistoryDrawerIsOpen,
+  ] = useState(false);
+  const [
+    patientRecordHistoryDrawerIsOpen,
+    setPatientRecordHistoryDrawerIsOpen,
+  ] = useState(false);
   const [patientRecords, setPatientRecords] = useState<ConditionModel[]>([]);
   const [otherProviderRecords, setOtherProviderRecords] = useState<
     ConditionModel[]
@@ -226,7 +233,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               {
                 name: "View History",
                 action: () => {
-                  setHistoryDrawerIsOpen(true);
+                  setPatientRecordHistoryDrawerIsOpen(true);
                   setSelectedCondition(condition);
                 },
               },
@@ -266,7 +273,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               {
                 name: "View History",
                 action: () => {
-                  setHistoryDrawerIsOpen(true);
+                  setOtherProviderRecordHistoryDrawerIsOpen(true);
                   setSelectedCondition(condition);
                 },
               },
@@ -293,9 +300,18 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         />
       )}
 
+      {selectedCondition && (
+        <ConditionHistoryDrawer
+          isOpen={patientRecordHistoryDrawerIsOpen}
+          onClose={() => setPatientRecordHistoryDrawerIsOpen(false)}
+          condition={selectedCondition}
+          onEdit={() => handleEditCondition(selectedCondition)}
+        />
+      )}
+
       <ConditionHistoryDrawer
-        isOpen={historyDrawerIsOpen}
-        onClose={() => setHistoryDrawerIsOpen(false)}
+        isOpen={otherProviderRecordHistoryDrawerIsOpen}
+        onClose={() => setOtherProviderRecordHistoryDrawerIsOpen(false)}
         condition={selectedCondition}
       />
 

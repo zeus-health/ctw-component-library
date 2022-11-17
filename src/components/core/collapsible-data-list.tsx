@@ -1,6 +1,9 @@
 import { ChevronRightIcon } from "@heroicons/react/outline";
+import { PencilIcon } from "@heroicons/react/solid";
+
 import cx from "classnames";
 import { ReactNode, useState } from "react";
+
 import "./collapsible-data-list.scss";
 
 export type CollapsibleDataListEntry = {
@@ -20,6 +23,8 @@ export type CollapsibleDataListProps = {
 type DetailsProps = {
   hideEmpty?: boolean;
   data: CollapsibleDataListEntry[];
+  readOnly?: boolean;
+  onEdit?: () => void;
 };
 
 export const CollapsibleDataList = ({
@@ -85,11 +90,26 @@ const DetailSummary = ({
   </button>
 );
 
-const Details = ({ data, hideEmpty = true }: DetailsProps) => (
+export const Details = ({
+  data,
+  hideEmpty = true,
+  readOnly = true,
+  onEdit,
+}: DetailsProps) => (
   <div className="ctw-rounded-lg ctw-bg-bg-lighter">
     <dl className="ctw-space-y-2 ctw-p-4">
-      <div className="ctw-text-sm ctw-uppercase ctw-text-content-light">
-        Details
+      <div className="ctw-flex ctw-justify-between ctw-text-sm ctw-uppercase ctw-text-content-light">
+        <div>Details</div>
+        {!readOnly && (
+          <button
+            type="button"
+            className="ctw-btn-default ctw-flex ctw-space-x-2 ctw-align-middle"
+            onClick={onEdit}
+          >
+            <PencilIcon className="ctw-h-4 ctw-w-4" />
+            <span>Update</span>
+          </button>
+        )}
       </div>
       {data
         .filter((d) => !hideEmpty || d.value || d.value === 0)

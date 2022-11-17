@@ -5,7 +5,10 @@ import { ConditionModel } from "@/fhir/models/condition";
 import { capitalize, isEqual, orderBy, startCase, uniqWith } from "lodash";
 import { useEffect, useState } from "react";
 import { CodingList } from "../core/coding-list";
-import { CollapsibleDataListProps } from "../core/collapsible-data-list";
+import {
+  CollapsibleDataListProps,
+  Details,
+} from "../core/collapsible-data-list";
 import {
   CollapsibleDataListStack,
   CollapsibleDataListStackEntries,
@@ -14,6 +17,25 @@ import { NotesList } from "../core/notes-list";
 import { ConditionHeader } from "./condition-header";
 
 const CONDITION_HISTORY_LIMIT = 10;
+
+const conditionData = (condition: ConditionModel) => [
+  { label: "Recorder", value: condition.recorder },
+  { label: "Recorded Date", value: condition.recordedDate },
+  // { label: "Provider Organization", value: condition.recordedDate },
+  { label: "Clinical Status", value: capitalize(condition.clinicalStatus) },
+  {
+    label: "Verification Status",
+    value: capitalize(condition.verificationStatus),
+  },
+  { label: "Onset Date", value: condition.onset },
+  { label: "Abatement Date", value: condition.abatement },
+  {
+    label: "Note",
+    value: condition.notes.length !== 0 && (
+      <NotesList notes={condition.notes} />
+    ),
+  },
+];
 
 function setupData(condition: ConditionModel): CollapsibleDataListProps {
   const detailData = [
@@ -70,7 +92,15 @@ function setupData(condition: ConditionModel): CollapsibleDataListProps {
   };
 }
 
-export function ConditionHistory({ condition }: { condition: ConditionModel }) {
+export function ConditionHistory({
+  condition,
+  onClose,
+  onEdit,
+}: {
+  condition: ConditionModel;
+  onClose: () => void;
+  onEdit?: () => void;
+}) {
   const [conditionsWithDate, setConditionsWithDate] =
     useState<CollapsibleDataListStackEntries>([]);
   const [conditionsWithoutDate, setConditionsWithoutDate] =
@@ -139,6 +169,17 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
       <>
         <div className="ctw-space-y-6">
           <ConditionHeader condition={condition} />
+          {onEdit && (
+            <Details
+              data={conditionData(condition)}
+              hideEmpty={false}
+              readOnly={!onEdit}
+              onEdit={() => {
+                onEdit();
+                onClose();
+              }}
+            />
+          )}
           <CollapsibleDataListStack
             entries={conditionsWithDate}
             limit={CONDITION_HISTORY_LIMIT}
