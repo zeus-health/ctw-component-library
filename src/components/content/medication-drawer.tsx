@@ -79,7 +79,7 @@ export const MedicationDrawer = ({
             </h3>
           </div>
           <DataList title="Summary" data={data} />
-          {medication.rxNorm && <MedicationHistory medication={medication} />}
+          <MedicationHistory medication={medication} />
         </div>
       </Drawer.Body>
       <Drawer.Footer>
