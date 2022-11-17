@@ -37,10 +37,10 @@ export const MedicationDrawer = ({
   medication,
   ...drawerProps
 }: MedicationDrawerProps) => {
-  const [lastPrescriber, setLastPrescriber] = useState<string | null>();
+  const [lastPrescriber, setLastPrescriber] = useState<string | undefined>();
   const data = getDataEntriesFromMedicationStatement(
     medication,
-    lastPrescriber || ""
+    lastPrescriber
   );
   const historyQuery = useMedicationHistory(medication?.resource);
 
@@ -48,21 +48,24 @@ export const MedicationDrawer = ({
     const { includedResources = {}, medications = [] } =
       historyQuery.data || {};
 
-    if (lastPrescriber === null && medications.length) {
+    if (lastPrescriber === undefined && medications.length) {
       const prescriber = pipe(
-        // 1. get underlying resources from the medication models
+        // 1. Get underlying resources from the medication models.
         map(get("resource")),
-        // 2. throw away any resources that are not MedicationRequests
+        // 2. Throw away any resources that are not MedicationRequests.
         filter(propEq("resourceType", "MedicationRequest")),
-        // 3. sort by the authored on date
+        // 3. Sort by the authored on date.
         sortBy((m) => Date.parse(m.authoredOn)),
-        // 4. take the last item from the list
+        // 4. If there are med dispense records, make them models.
+        map((mr) => new MedicationModel(mr, includedResources)),
+        // 5. Take the last (latest) from our filtered list.
         last,
-        // 5. get the prescriber from the medication model
-        (mr) => new MedicationModel(mr, includedResources).prescriber
+        // 6. Get the prescriber from the medication model.
+        get("prescriber")
       )(medications);
 
-      setLastPrescriber(prescriber);
+      // Fall back to a string, so we don't try to find prescriber again.
+      setLastPrescriber(prescriber || "");
     }
   }, [lastPrescriber, historyQuery.data, setLastPrescriber]);
 

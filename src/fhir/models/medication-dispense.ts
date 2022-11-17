@@ -1,15 +1,18 @@
 import { getPerformingOrganization } from "@/fhir/medication";
 import { compact } from "lodash/fp";
 import { FHIRModel } from "./fhir-model";
+import { findReference } from "@/fhir/resource-helper";
 
 export class MedicationDispenseModel extends FHIRModel<fhir4.MedicationDispense> {
   get includedPerformer(): fhir4.Resource | undefined {
-    const { includedResources = {} } = this;
     const reference = this.resource.performer?.[0]?.actor.reference;
-    if (reference && reference in includedResources) {
-      return includedResources[reference];
-    }
-    return undefined;
+
+    return findReference(
+      "Practitioner",
+      this.resource.contained,
+      this.includedResources,
+      reference
+    );
   }
 
   get performer(): fhir4.Organization | undefined {

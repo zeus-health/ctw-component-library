@@ -1,12 +1,15 @@
 import { FHIRModel } from "./fhir-model";
+import { findReference } from "@/fhir/resource-helper";
 
 export class MedicationRequestModel extends FHIRModel<fhir4.MedicationRequest> {
   get includedRequester(): fhir4.Resource | undefined {
-    const { includedResources = {} } = this;
-    const requesterReference = this.resource.requester?.reference;
-    if (requesterReference && requesterReference in includedResources) {
-      return includedResources[requesterReference];
-    }
-    return undefined;
+    const reference = this.resource.requester?.reference;
+
+    return findReference(
+      "Practitioner",
+      this.resource.contained,
+      this.includedResources,
+      reference
+    );
   }
 }

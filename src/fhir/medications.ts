@@ -251,7 +251,7 @@ export function useMedicationHistory(medication?: fhir4.MedicationStatement) {
         return { medications, includedResources };
       } catch (e) {
         throw new Error(
-          `Failed fetching medication history for medication ${medication.id}: ${e}`
+          `Failed fetching medication history for medication ${medication?.id}: ${e}`
         );
       }
     }
