@@ -68,6 +68,13 @@ export class MedicationModel extends FHIRModel<Medication> {
     return undefined;
   }
 
+  /**
+   * This accessor will try to get the prescriber for the underlying medication
+   * models resource. Depending on the type of fhir resource, it will delegate
+   * the work to a more specific fhir/model/*.ts class before simply grabbing
+   * the `display` property from an actor/performer/requester. If all else
+   * should fail, the accessor returns an empty string.
+   */
   get prescriber(): string {
     let prescriber: fhir4.Resource | undefined;
     let fallback: string | undefined;
