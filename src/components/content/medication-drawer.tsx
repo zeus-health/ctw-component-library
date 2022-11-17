@@ -7,7 +7,7 @@ import { Drawer } from "../core/drawer";
 import { MedicationHistory } from "./medication-history";
 import { useEffect, useState } from "react";
 import { useMedicationHistory } from "@/fhir/medications";
-import { map, get, set, filter, first, pipe, sortBy, propEq } from "lodash/fp";
+import { map, get, set, filter, last, pipe, sortBy, propEq } from "lodash/fp";
 import { MedicationModel } from "@/fhir/models";
 
 export type MedicationDrawerProps = {
@@ -47,10 +47,14 @@ export const MedicationDrawer = ({
       const { includedResources, medications } = medHistoryQuery.data;
 
       const medRequest = pipe(
+        // 1. get underlying resources from the medication models
         map(get("resource")),
+        // 2. throw away any resources that are not MedicationRequests
         filter(propEq("resourceType", "MedicationRequest")),
-        sortBy(get("authoredOn")),
-        first
+        // 3. sort by the authored on date
+        sortBy(m => Date.parse(m.authoredOn)),
+        // 4. take the last item from the list
+        last
       )(medications);
 
       const { prescriber } = new MedicationModel(medRequest, includedResources);
