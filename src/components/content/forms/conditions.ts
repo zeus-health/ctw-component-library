@@ -1,15 +1,15 @@
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
+import { setRecorderField } from "@/fhir/conditions";
 import { isFhirError } from "@/fhir/errors";
 import { dateToISO } from "@/fhir/formatters";
+import { ConditionModel } from "@/fhir/models/condition";
+import { OperationOutcomeModel } from "@/fhir/models/operation-outcome";
 import { isOperationOutcome } from "@/fhir/operation-outcome";
-import { getPractitioner } from "@/fhir/practitioner";
 import {
   SYSTEM_CONDITION_CLINICAL,
   SYSTEM_CONDITION_VERIFICATION_STATUS,
 } from "@/fhir/system-urls";
-import { ConditionModel } from "@/models/condition";
-import { OperationOutcomeModel } from "@/models/operation-outcome";
 import { claimsPractitionerId } from "@/utils/auth";
 import { AnyZodSchema, getFormData } from "@/utils/form-helper";
 import {
@@ -18,50 +18,38 @@ import {
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import { Condition } from "fhir/r4";
+import { cloneDeep } from "lodash";
 import { FormErrors } from "./drawer-form";
 import { ActionReturn } from "./types";
 
 // Sets any autofill values that apply when a user adds a condition, whether creating or confirming.
-export function setAddConditionDefaults(condition: Condition): void {
-  const addDefaults: Partial<Condition> = {
-    clinicalStatus: {
-      coding: [
-        {
-          system: SYSTEM_CONDITION_CLINICAL,
-          code: "active",
-          display: "Active",
-        },
-      ],
-      text: "active",
-    },
-    verificationStatus: {
-      coding: [
-        {
-          system: SYSTEM_CONDITION_VERIFICATION_STATUS,
-          code: "confirmed",
-          display: "Confirmed",
-        },
-      ],
-      text: "confirmed",
-    },
+export function getAddConditionWithDefaults(condition: Condition): Condition {
+  const newCondition = cloneDeep(condition);
+
+  newCondition.clinicalStatus = {
+    coding: [
+      {
+        system: SYSTEM_CONDITION_CLINICAL,
+        code: "active",
+        display: "Active",
+      },
+    ],
+    text: "active",
   };
 
-  Object.assign(condition, addDefaults);
+  newCondition.verificationStatus = {
+    coding: [
+      {
+        system: SYSTEM_CONDITION_VERIFICATION_STATUS,
+        code: "confirmed",
+        display: "Confirmed",
+      },
+    ],
+    text: "confirmed",
+  };
+
+  return newCondition;
 }
-
-const setRecorderField = async (
-  practitionerId: string,
-  requestContext: CTWRequestContext
-) => {
-  const practitioner = await getPractitioner(practitionerId, requestContext);
-  const display = practitioner.fullName;
-
-  return {
-    reference: `Practitioner/${practitionerId}`,
-    type: "Practitioner",
-    display,
-  };
-};
 
 export const createOrEditCondition = async (
   condition: ConditionModel | undefined,
@@ -136,7 +124,7 @@ export const createOrEditCondition = async (
 
   const response = await createOrEditFhirResource(
     fhirCondition,
-    requestContext.fhirClient
+    requestContext
   );
 
   if (isFhirError(response) && isOperationOutcome(response.response.data)) {

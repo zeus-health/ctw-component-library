@@ -1,4 +1,4 @@
-import { ConditionModel } from "@/models/condition";
+import { ConditionModel } from "@/fhir/models/condition";
 import Zod, { RefinementCtx, z } from "zod";
 import { ConditionsAutoComplete } from "./conditions-autocomplete";
 import type { FormEntry } from "./drawer-form-with-fields";
@@ -90,12 +90,6 @@ const conditionSchema = z.object({
     .date()
     .max(new Date(), { message: "Abatement cannot be a future date." })
     .optional(),
-  verificationStatus: z.enum([
-    "unconfirmed",
-    "confirmed",
-    "refuted",
-    "entered-in-error",
-  ]),
   note: z.string().optional(),
 });
 
@@ -123,9 +117,18 @@ export const conditionRefinement = (
   }
 };
 
-export const conditionEditSchema = conditionSchema.superRefine(
-  (condition, refinementCtx) => conditionRefinement(condition, refinementCtx)
-);
+export const conditionEditSchema = conditionSchema
+  .extend({
+    verificationStatus: z.enum([
+      "unconfirmed",
+      "confirmed",
+      "refuted",
+      "entered-in-error",
+    ]),
+  })
+  .superRefine((condition, refinementCtx) =>
+    conditionRefinement(condition, refinementCtx)
+  );
 
 export const conditionAddSchema = conditionSchema
   .extend({
@@ -133,7 +136,14 @@ export const conditionAddSchema = conditionSchema
       code: z.string({
         required_error: "Please choose a condition.",
       }),
+      // These are technically required but we mark them
+      // as optional to avoid duplicative error messages.
+      // The condition autocomplete will set us up so that
+      // all three of these values are set.
+      display: z.string().optional(),
+      system: z.string().optional(),
     }),
+    verificationStatus: z.enum(["confirmed", "unconfirmed"]),
   })
   .superRefine((condition, refinementCtx) =>
     conditionRefinement(condition, refinementCtx)

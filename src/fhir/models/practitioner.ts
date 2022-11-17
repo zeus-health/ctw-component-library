@@ -1,14 +1,6 @@
-export class PractitionerModel {
-  private resource: fhir4.Practitioner;
+import { FHIRModel } from "./fhir-model";
 
-  constructor(practitioner: fhir4.Practitioner) {
-    this.resource = practitioner;
-  }
-
-  get id(): string {
-    return this.resource.id || "";
-  }
-
+export class PractitionerModel extends FHIRModel<fhir4.Practitioner> {
   get fullName(): string {
     const firstEntryInName = this.resource.name?.[0];
     const givenName = firstEntryInName?.given?.length

@@ -1,8 +1,8 @@
 import { Loading } from "@/components/core/loading";
 import { getIncludedResources } from "@/fhir/bundle";
 import { useConditionHistory } from "@/fhir/conditions";
-import { ConditionModel } from "@/models/condition";
-import { capitalize, orderBy, startCase } from "lodash";
+import { ConditionModel } from "@/fhir/models/condition";
+import { capitalize, isEqual, orderBy, startCase, uniqWith } from "lodash";
 import { useEffect, useState } from "react";
 import { CodingList } from "../core/coding-list";
 import { CollapsibleDataListProps } from "../core/collapsible-data-list";
@@ -64,7 +64,7 @@ function setupData(condition: ConditionModel): CollapsibleDataListProps {
   return {
     id: condition.id,
     date: condition.recordedDate,
-    title: condition.snomedDisplay || condition.icd10Display,
+    title: startCase(condition.categories[0]),
     subTitle: condition.patient?.organization?.name,
     data: detailData,
   };
@@ -102,18 +102,14 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
           (c) => c.verificationStatus !== "entered-in-error"
         );
 
-        const conditionsFilteredWithDate =
-          filterEnteredinErrorConditions.filter((c) => c.recordedDate);
-        const conditionsFilteredWithoutDate =
-          filterEnteredinErrorConditions.filter((c) => !c.recordedDate);
-
-        setConditionsWithDate(
-          conditionsFilteredWithDate.map((model) => setupData(model))
+        const conditionsDataDeduped = uniqWith(
+          filterEnteredinErrorConditions.map((model) => setupData(model)),
+          (a, b) => isEqual(a.data, b.data)
         );
 
-        setConditionsWithoutDate(
-          conditionsFilteredWithoutDate.map((model) => setupData(model))
-        );
+        setConditionsWithDate(conditionsDataDeduped.filter((d) => d.date));
+        setConditionsWithoutDate(conditionsDataDeduped.filter((d) => !d.date));
+
         setLoading(false);
       }
     }

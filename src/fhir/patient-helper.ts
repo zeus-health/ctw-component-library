@@ -1,5 +1,5 @@
 import { CTWRequestContext } from "@/components/core/ctw-context";
-import { PatientModel } from "@/models/patients";
+import { PatientModel } from "@/fhir/models/patient";
 import { errorResponse } from "@/utils/errors";
 import { SearchParams } from "fhir-kit-client";
 import { getIncludedResources } from "./bundle";

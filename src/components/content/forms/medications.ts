@@ -2,10 +2,10 @@ import { CTWRequestContext } from "@/components/core/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { isFhirError } from "@/fhir/errors";
 import { dateToISO } from "@/fhir/formatters";
+import { MedicationStatementModel } from "@/fhir/models/medication-statement";
+import { OperationOutcomeModel } from "@/fhir/models/operation-outcome";
 import { isOperationOutcome } from "@/fhir/operation-outcome";
 import { SYSTEM_RXNORM } from "@/fhir/system-urls";
-import { MedicationStatementModel } from "@/models/medication-statement";
-import { OperationOutcomeModel } from "@/models/operation-outcome";
 import { getFormData } from "@/utils/form-helper";
 import {
   QUERY_KEY_PATIENT,
@@ -86,7 +86,7 @@ export const createMedicationStatement = async (
 
   const response = await createOrEditFhirResource(
     resourceModel.resource,
-    fhirClient
+    await getRequestContext()
   );
 
   if (isFhirError(response) && isOperationOutcome(response.response.data)) {

@@ -1,4 +1,4 @@
-import { OperationOutcomeModel } from "@/models/operation-outcome";
+import { OperationOutcomeModel } from "@/fhir/models/operation-outcome";
 import { isOperationOutcome } from "./operation-outcome";
 
 export type FhirError = {

@@ -1,4 +1,4 @@
-import type { MedicationStatementModel } from "@/models/medication-statement";
+import type { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { capitalize } from "lodash";
 import type { DataListEntry } from "../core/data-list";
 import { DataList, entryFromArray } from "../core/data-list";
@@ -34,13 +34,15 @@ export const MedicationDrawer = ({
 }: MedicationDrawerProps) => {
   const data = getDataEntriesFromMedicationStatement(medication);
   return (
-    <Drawer title="Medication History" {...drawerProps}>
+    <Drawer title="Medication Details" {...drawerProps}>
       <Drawer.Body>
-        <div className="ctw-space-y-7">
+        <div className="ctw-space-y-5">
           <div className="ctw-flex ctw-justify-between ctw-space-x-8">
-            <span className="ctw-text-3xl">{medication?.display || ""}</span>
+            <h3 className="ctw-m-0 ctw-text-3xl ctw-font-light">
+              {medication?.display || ""}
+            </h3>
           </div>
-          <DataList title="Details" data={data} />
+          <DataList title="Summary" data={data} />
           {medication?.rxNorm && <MedicationHistory medication={medication} />}
         </div>
       </Drawer.Body>
@@ -48,7 +50,7 @@ export const MedicationDrawer = ({
         <div className="ctw-flex ctw-justify-end">
           <button
             type="button"
-            className="btn-primary"
+            className="ctw-btn-default"
             onClick={drawerProps.onClose}
           >
             Close

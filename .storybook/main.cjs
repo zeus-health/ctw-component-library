@@ -12,4 +12,5 @@ module.exports = {
   core: {
     disableTelemetry: true,
   },
+  staticDirs: ["../public"],
 };
