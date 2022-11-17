@@ -75,7 +75,7 @@ export const MedicationDrawer = ({
         <div className="ctw-space-y-5">
           <div className="ctw-flex ctw-justify-between ctw-space-x-8">
             <h3 className="ctw-m-0 ctw-text-3xl ctw-font-light">
-              {medication?.display || ""}
+              {medication?.display}
             </h3>
           </div>
           <DataList title="Summary" data={data} />
