@@ -168,9 +168,10 @@ export function splitSummarizedMedications(
   return splitData;
 }
 
-export function useMedicationHistory(medication: fhir4.MedicationStatement) {
-  const aggregatedFromReferences = new MedicationStatementModel(medication)
-    .aggregatedFrom;
+export function useMedicationHistory(medication?: fhir4.MedicationStatement) {
+  const aggregatedFromReferences = !medication
+    ? []
+    : new MedicationStatementModel(medication).aggregatedFrom;
 
   const getRefId = pipe(get("reference"), split("/"), last);
   const resources = pipe(
@@ -180,9 +181,15 @@ export function useMedicationHistory(medication: fhir4.MedicationStatement) {
 
   return useQueryWithPatient(
     QUERY_KEY_MEDICATION_HISTORY,
-    [medication.id],
+    [medication?.id || "empty"],
     async (requestContext, patient) => {
       try {
+        if (!medication) {
+          return {
+            includedResources: {},
+            medications: [],
+          };
+        }
         const [
           medicationStatementResponse,
           medicationAdministrationResponse,
