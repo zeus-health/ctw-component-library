@@ -1,3 +1,6 @@
+import { getPatientHistoryMessages } from "@/api/patient-history";
+import { useEffect } from "react";
+import { useCTW } from "../core/ctw-provider";
 import {
   DrawerFormWithFields,
   DrawerFormWithFieldsProps,
@@ -12,6 +15,7 @@ type PatientHistoryRequestDrawer<T> = Pick<
   "patientID" | "isOpen" | "action" | "onClose" | "header"
 >;
 
+// TODO: Remove this
 export class RequestData {
   get name(): string {
     return "";
@@ -45,6 +49,20 @@ export const PatientHistoryRequestDrawer = <T,>({
   isOpen,
   onClose,
 }: PatientHistoryRequestDrawer<T>) => {
+  const { getRequestContext } = useCTW();
+
+  useEffect(() => {
+    async function fetchHistory() {
+      const requestContext = await getRequestContext();
+      const response = await getPatientHistoryMessages(
+        requestContext,
+        patientID
+      );
+      console.log("response", response);
+    }
+
+    fetchHistory();
+  }, []);
   console.log("placeholder");
   return (
     <DrawerFormWithFields
