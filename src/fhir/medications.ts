@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
 import { MedicationModel } from "@/fhir/models/medication";
@@ -10,6 +11,7 @@ import type { FhirResource, MedicationStatement } from "fhir/r4";
 import { uniqWith } from "lodash";
 import {
   compact,
+  filter,
   get,
   groupBy,
   last,
@@ -17,6 +19,8 @@ import {
   mapValues,
   omit,
   pipe,
+  propEq,
+  sortBy,
   split,
 } from "lodash/fp";
 import { bundleToResourceMap, getMergedIncludedResources } from "./bundle";
@@ -256,6 +260,46 @@ export function useMedicationHistory(medication?: fhir4.MedicationStatement) {
       }
     }
   );
+}
+
+/**
+ * Currently MedicationStatements don't have lens data with the lastPrescriber
+ * reliably populated. We are instead getting that information from the meds
+ * history and reusing the `useMedicationHistory` query to avoid making extra
+ * ODS requests (as the history ui and details ui are always together atm).
+ */
+export function useLastPrescriber(medication?: fhir4.MedicationStatement) {
+  const [lastPrescriber, setLastPrescriber] = useState<string | undefined>();
+  const [isLoading, setIsLoading] = useState(true);
+  const historyQuery = useMedicationHistory(medication);
+
+  useEffect(() => {
+    const { includedResources = {}, medications = [] } =
+      historyQuery.data || {};
+
+    if (lastPrescriber === undefined && medications.length) {
+      const prescriber = pipe(
+        // 1. Get underlying resources from the medication models.
+        map(get("resource")),
+        // 2. Throw away any resources that are not MedicationRequests.
+        filter(propEq("resourceType", "MedicationRequest")),
+        // 3. Sort by the authored on date.
+        sortBy((m) => Date.parse(m.authoredOn)),
+        // 4. If there are med dispense records, make them models.
+        map((mr) => new MedicationModel(mr, includedResources)),
+        // 5. Take the last (latest) from our filtered list.
+        last,
+        // 6. Get the prescriber from the medication model.
+        get("prescriber")
+      )(medications);
+
+      // Fall back to a string, so we don't try to find prescriber again.
+      setLastPrescriber(prescriber || "");
+      setIsLoading(false);
+    }
+  }, [lastPrescriber, historyQuery.data]);
+
+  return { isLoading, lastPrescriber };
 }
 
 type NoopSearchResults = { resources: []; bundle: undefined };
