@@ -6,7 +6,6 @@ import { findReference } from "@/fhir/resource-helper";
 import { FHIRModel } from "./fhir-model";
 import { PatientModel } from "./patient";
 import { MedicationRequestModel } from "@/fhir/models/medication-request";
-import { PractitionerModel } from "@/fhir/models/practitioner";
 import { MedicationDispenseModel } from "@/fhir/models/medication-dispense";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 
@@ -75,44 +74,23 @@ export class MedicationModel extends FHIRModel<Medication> {
    * the `display` property from an actor/performer/requester. If all else
    * should fail, the accessor returns an empty string.
    */
-  get prescriber(): string {
-    let prescriber: fhir4.Resource | undefined;
-    let fallback: string | undefined;
-
+  get prescriber(): string | undefined {
     switch (this.resource.resourceType) {
       case "MedicationStatement":
-        fallback = new MedicationStatementModel(
+        return new MedicationStatementModel(
           this.resource,
           this.includedResources
         ).lastPrescriber;
-        break;
       case "MedicationDispense":
-        prescriber = new MedicationDispenseModel(
+        return new MedicationDispenseModel(
           this.resource,
           this.includedResources
         ).includedPerformer;
-        fallback = this.resource.performer?.[0]?.actor.display;
-        break;
       case "MedicationRequest":
-        prescriber = new MedicationRequestModel(
-          this.resource,
-          this.includedResources
-        ).includedRequester;
-        fallback = this.resource.requester?.display;
-        break;
+        return new MedicationRequestModel(this.resource, this.includedResources)
+          .includedRequester;
       default:
-        break;
-    }
-
-    fallback = fallback || "";
-    switch (prescriber?.resourceType) {
-      case "Practitioner":
-        return (
-          new PractitionerModel(prescriber as fhir4.Practitioner).fullName ||
-          fallback
-        );
-      default:
-        return fallback;
+        return undefined;
     }
   }
 }
