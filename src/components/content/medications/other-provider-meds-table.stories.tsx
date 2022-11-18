@@ -56,6 +56,6 @@ export default {
 export const Basic: StoryObj<Props> = {
   args: {
     sortColumn: "display",
-    sortDir: "asc",
+    sortOrder: "asc",
   },
 };

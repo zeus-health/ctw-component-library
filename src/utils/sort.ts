@@ -1,3 +1,4 @@
+import { SortDir } from "@/components/core/table/table";
 import { isString, orderBy } from "lodash";
 import { get } from "lodash/fp";
 
@@ -22,9 +23,11 @@ export function getSortInfo<T>(model: Newable<T>, sortValue?: string | null) {
     return {};
   }
 
+  type NewType = SortDir;
+
   return {
     sortColumn: sortColumn as keyof T,
-    sortOrder: sortOrder as SortDir,
+    sortOrder: sortOrder as NewType,
   };
 }
 
