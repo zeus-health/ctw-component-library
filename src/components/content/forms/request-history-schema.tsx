@@ -1,7 +1,8 @@
 import { FormEntry } from "@/components/core/form/drawer-form-with-fields";
+import { PatientModel } from "@/fhir/models";
 import { z } from "zod";
 
-export const getRequestData = (data: unknown): FormEntry[] => [
+export const getRequestData = (patient: PatientModel): FormEntry[] => [
   {
     label: "treating-provider",
     presentational: true,
@@ -46,61 +47,61 @@ export const getRequestData = (data: unknown): FormEntry[] => [
   {
     label: "First Name",
     field: "firstName",
-    value: "",
+    value: patient.firstName,
     readonly: false,
   },
   {
     label: "Last Name",
     field: "lastName",
-    value: "",
+    value: patient.lastName,
     readonly: false,
   },
   {
     label: "Date of Birth",
     field: "dateOfBirth",
-    value: "",
+    value: patient.dob,
     readonly: false,
   },
   {
     label: "Gender",
     field: "gender",
-    value: "",
+    value: patient.gender,
     readonly: false,
   },
   {
     label: "Address",
     field: "address",
-    value: "",
+    value: patient.homeAddress?.line?.join(", "),
     readonly: false,
   },
   {
     label: "City",
     field: "city",
-    value: "",
+    value: patient.homeAddress?.city,
     readonly: false,
   },
   {
     label: "State",
     field: "state",
-    value: "",
+    value: patient.homeAddress?.state,
     readonly: false,
   },
   {
     label: "Zip",
     field: "zipCode",
-    value: "",
+    value: patient.homeAddress?.postalCode,
     readonly: false,
   },
   {
     label: "Phone",
     field: "phone",
-    value: "",
+    value: patient.phoneNumber,
     readonly: false,
   },
   {
     label: "Email",
     field: "email",
-    value: "",
+    value: patient.email,
     readonly: false,
   },
 ];
