@@ -1,12 +1,12 @@
 import cx from "classnames";
 import { ReactElement, ReactNode, useEffect, useRef, useState } from "react";
-
+import { DEFAULT_PAGE_SIZE, Pagination } from "../pagination/pagination";
+import { TableColGroup } from "./table-colgroup";
 import { TableHead } from "./table-head";
 import { TableRows } from "./table-rows";
 import "./table.scss";
 
-import { DEFAULT_PAGE_SIZE, Pagination } from "../pagination/pagination";
-import { TableColGroup } from "./table-colgroup";
+export type SortDir = "asc" | "desc";
 
 export interface MinRecordItem {
   id: string | number;
@@ -22,6 +22,7 @@ export type TableColumn<T extends MinRecordItem> = {
   className?: string;
   widthPercent?: number;
   minWidth?: number;
+  sortFn?: (a: T, b: T, dir: SortDir) => number;
 } & (DataIndexSpecified<T> | RenderSpecified<T>);
 
 export type TableProps<T extends MinRecordItem> = {
@@ -34,6 +35,8 @@ export type TableProps<T extends MinRecordItem> = {
   showTableHead?: boolean;
   stacked?: boolean;
   handleRowClick?: (record: T) => void;
+  sortColumn?: string;
+  sortOrder?: SortDir;
 };
 
 export type TableBaseProps<T extends MinRecordItem> = Omit<
@@ -49,6 +52,8 @@ export const Table = <T extends MinRecordItem>({
   message = "No records found",
   showTableHead = true,
   stacked,
+  sortColumn,
+  sortOrder,
   handleRowClick,
 }: TableProps<T>) => {
   const tableRef = useRef<HTMLTableElement>(null);
@@ -56,6 +61,16 @@ export const Table = <T extends MinRecordItem>({
   const [showLeftShadow, setShowLeftShadow] = useState(false);
   const [showRightShadow, setShowRightShadow] = useState(false);
   const [count, setCount] = useState(DEFAULT_PAGE_SIZE);
+  const [sortColumnState, setSortColumnState] = useState(sortColumn);
+  const [sortOrderState, setSortOrderState] = useState(sortOrder);
+
+  const sortFn = columns.find(
+    (column) => column.title === sortColumnState
+  )?.sortFn;
+  let sortedRecords = records;
+  if (sortFn && sortOrderState) {
+    sortedRecords = records.sort((a, b) => sortFn(a, b, sortOrderState));
+  }
 
   const updateShadows = () => {
     const container = scrollContainerRef.current;
@@ -64,6 +79,19 @@ export const Table = <T extends MinRecordItem>({
       setShowLeftShadow(container.scrollLeft > 0);
       const rightSide = container.scrollLeft + container.clientWidth;
       setShowRightShadow(rightSide < table.clientWidth);
+    }
+  };
+
+  const switchSort = (newSortColumn: string) => {
+    if (newSortColumn === sortColumnState) {
+      if (sortOrderState === "asc") {
+        setSortOrderState("desc");
+      } else {
+        setSortOrderState("asc");
+      }
+    } else {
+      setSortColumnState(newSortColumn);
+      setSortOrderState("asc");
     }
   };
 
@@ -100,11 +128,18 @@ export const Table = <T extends MinRecordItem>({
         <div className="ctw-scrollbar" ref={scrollContainerRef}>
           <table ref={tableRef}>
             {hasData && <TableColGroup columns={columns} />}
-            {showTableHead && hasData && <TableHead columns={columns} />}
+            {showTableHead && hasData && (
+              <TableHead
+                columns={columns}
+                sortColumn={sortColumnState}
+                sortOrder={sortOrderState}
+                onSort={switchSort}
+              />
+            )}
 
             <tbody>
               <TableRows
-                records={records.slice(0, count)}
+                records={sortedRecords.slice(0, count)}
                 handleRowClick={handleRowClick}
                 columns={columns}
                 isLoading={isLoading}

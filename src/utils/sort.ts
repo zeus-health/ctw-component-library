@@ -1,4 +1,4 @@
-import { orderBy, isString } from "lodash";
+import { isString, orderBy } from "lodash";
 import { get } from "lodash/fp";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -24,7 +24,7 @@ export function getSortInfo<T>(model: Newable<T>, sortValue?: string | null) {
 
   return {
     sortColumn: sortColumn as keyof T,
-    sortOrder: sortOrder as "asc" | "desc",
+    sortOrder: sortOrder as SortDir,
   };
 }
 
@@ -33,7 +33,7 @@ type GetValueFunction<T> = (c: T) => unknown;
 export function sort<T>(
   collection: T[],
   getValue: GetValueFunction<T> | string,
-  order: "asc" | "desc",
+  order: SortDir,
   isDate = false
 ) {
   const getValueFn = isString(getValue) ? get(getValue) : getValue;
@@ -44,7 +44,7 @@ export function sort<T>(
 function sortByDate<T>(
   collection: T[],
   getValue: GetValueFunction<T>,
-  order: "asc" | "desc"
+  order: SortDir
 ) {
   collection.sort((a, b) => {
     const aDate = getValue(a) as string | undefined;

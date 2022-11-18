@@ -1,8 +1,8 @@
-import { Table, TableBaseProps, TableColumn } from "../core/table/table";
-
 import { ConditionModel } from "@/fhir/models/condition";
 import { DotsHorizontalIcon } from "@heroicons/react/outline";
 import { DropdownMenu, MenuItems } from "../core/dropdown-menu";
+import { Table, TableBaseProps, TableColumn } from "../core/table/table";
+import { alphaSortBlankLast } from "../core/table/table-helpers";
 
 export type ConditionsTableBaseProps = {
   className?: string;
@@ -16,6 +16,8 @@ export function ConditionsTableBase({
   conditions,
   rowActions,
   hideMenu,
+  sortOrder = "asc",
+  sortColumn = "Category",
   ...tableProps
 }: ConditionsTableBaseProps) {
   const columns: TableColumn<ConditionModel>[] = [
@@ -24,12 +26,16 @@ export function ConditionsTableBase({
       dataIndex: "display",
       widthPercent: 40,
       minWidth: 320,
+      sortFn: (a, b, dir) => alphaSortBlankLast(a.display, b.display, dir),
     },
     {
       title: "Category",
       dataIndex: "ccsGrouping",
       widthPercent: 25,
       minWidth: 192,
+      sortFn: (a, b, dir) =>
+        alphaSortBlankLast(a.ccsGrouping, b.ccsGrouping, dir) +
+        0.1 * alphaSortBlankLast(a.display, b.display, "asc"),
     },
     {
       title: "Status",
@@ -68,6 +74,8 @@ export function ConditionsTableBase({
       className={className}
       records={conditions}
       columns={columns}
+      sortColumn={sortColumn}
+      sortOrder={sortOrder}
       {...tableProps}
     />
   );
