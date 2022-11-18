@@ -33,7 +33,7 @@ import { filterOtherConditions } from "./conditions/helpers";
 import { getAddConditionData } from "./forms/condition-schema";
 import {
   createOrEditCondition,
-  setAddConditionDefaults,
+  getAddConditionWithDefaults,
 } from "./forms/conditions";
 import { PatientHistoryRequestDrawer } from "./patient-history-request-drawer";
 
@@ -96,8 +96,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   };
 
   const handleAddOtherProviderCondition = (condition: ConditionModel) => {
-    const newCondition = condition.resource;
-    setAddConditionDefaults(newCondition);
+    const newCondition = getAddConditionWithDefaults(condition.resource);
 
     if (patientResponse.data) {
       setSchema(conditionAddSchema);
@@ -180,11 +179,11 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     <div
       ref={containerRef}
       className={cx("ctw-conditions", className, {
-        "ctw-stacked": breakpoints.sm,
+        "ctw-conditions-stacked": breakpoints.sm,
       })}
     >
       {!readOnly && (
-        <div className="ctw-heading-container">
+        <div className="ctw-conditions-heading-container">
           <div className="ctw-title">Conditions</div>
           <button
             type="button"
@@ -195,9 +194,10 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           </button>
         </div>
       )}
-      <div className="ctw-body-container">
+
+      <div className="ctw-conditions-body-container">
         <div className="ctw-space-y-3">
-          <div className="ctw-title-container">
+          <div className="ctw-conditions-title-container">
             <div className="ctw-title">Patient Record</div>
             <ToggleControl
               onFormChange={handleToggleChange}
@@ -213,8 +213,8 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
             message={
               <>
                 <div>{patientRecordsMessage}</div>
-                {!patientRecordsResponse.isError && (
-                  <div className="ctw-my-5">{addConditionBtn}</div>
+                {!patientRecordsResponse.isError && !readOnly && (
+                  <div className="ctw-mt-5">{addConditionBtn}</div>
                 )}
               </>
             }
@@ -244,7 +244,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         </div>
 
         <div className="ctw-space-y-3">
-          <div className="ctw-title-container">
+          <div className="ctw-conditions-title-container">
             <div className="ctw-title">Other Provider Records</div>
             <button
               type="button"

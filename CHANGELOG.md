@@ -1,5 +1,21 @@
 # ctw-component-library
 
+## 0.24.10
+
+### Patch Changes
+
+- 6b44387: Fix two minor condition bugs.
+- 1e95eee: Show unique condition history entries.
+
+## 0.24.9
+
+### Patch Changes
+
+- 8799a3b: Fix sorting on medications tables to be case-insensitive
+- 10b52be: Show medicationStatement.informationSource.display in medication reviewed card
+- 843a0c7: Filter out other provider conditions that have the same status as matching conditions in the patient record.
+- 19547c1: Minor style changes to the medication drawer and history texts. Added mocked requests to storybook
+
 ## 0.24.8
 
 ### Patch Changes

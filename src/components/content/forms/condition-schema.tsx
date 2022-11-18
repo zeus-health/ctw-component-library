@@ -133,11 +133,15 @@ export const conditionEditSchema = conditionSchema
 export const conditionAddSchema = conditionSchema
   .extend({
     condition: z.object({
-      display: z.string(),
       code: z.string({
         required_error: "Please choose a condition.",
       }),
-      system: z.string(),
+      // These are technically required but we mark them
+      // as optional to avoid duplicative error messages.
+      // The condition autocomplete will set us up so that
+      // all three of these values are set.
+      display: z.string().optional(),
+      system: z.string().optional(),
     }),
     verificationStatus: z.enum(["confirmed", "unconfirmed"]),
   })

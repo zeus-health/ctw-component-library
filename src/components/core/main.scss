@@ -33,6 +33,10 @@
     @apply ctw-rounded-md ctw-border ctw-border-icon-light ctw-px-3 ctw-py-2 ctw-text-sm ctw-shadow-sm;
     border-style: solid;
     background-color: initial;
+    resize: none;
+  }
+
+  .ctw-listbox-textarea {
     resize: vertical;
   }
 
@@ -99,10 +103,6 @@
 
     .ctw-title-container {
       @apply ctw-m-3 ctw-mb-0;
-    }
-
-    .ctw-table {
-      @apply ctw-rounded-none ctw-border-x-0;
     }
   }
 

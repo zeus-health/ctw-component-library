@@ -1,4 +1,5 @@
 import { CTWRequestContext } from "@/components/core/ctw-context";
+import { FormErrors } from "@/components/core/form/drawer-form";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { setRecorderField } from "@/fhir/conditions";
 import { isFhirError } from "@/fhir/errors";
@@ -18,35 +19,36 @@ import {
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import { Condition } from "fhir/r4";
-import { FormErrors } from "../../core/form/drawer-form";
+import { cloneDeep } from "lodash";
 import { ActionReturn } from "./types";
 
 // Sets any autofill values that apply when a user adds a condition, whether creating or confirming.
-export function setAddConditionDefaults(condition: Condition): void {
-  const addDefaults: Partial<Condition> = {
-    clinicalStatus: {
-      coding: [
-        {
-          system: SYSTEM_CONDITION_CLINICAL,
-          code: "active",
-          display: "Active",
-        },
-      ],
-      text: "active",
-    },
-    verificationStatus: {
-      coding: [
-        {
-          system: SYSTEM_CONDITION_VERIFICATION_STATUS,
-          code: "confirmed",
-          display: "Confirmed",
-        },
-      ],
-      text: "confirmed",
-    },
+export function getAddConditionWithDefaults(condition: Condition): Condition {
+  const newCondition = cloneDeep(condition);
+
+  newCondition.clinicalStatus = {
+    coding: [
+      {
+        system: SYSTEM_CONDITION_CLINICAL,
+        code: "active",
+        display: "Active",
+      },
+    ],
+    text: "active",
   };
 
-  Object.assign(condition, addDefaults);
+  newCondition.verificationStatus = {
+    coding: [
+      {
+        system: SYSTEM_CONDITION_VERIFICATION_STATUS,
+        code: "confirmed",
+        display: "Confirmed",
+      },
+    ],
+    text: "confirmed",
+  };
+
+  return newCondition;
 }
 
 export const createOrEditCondition = async (
