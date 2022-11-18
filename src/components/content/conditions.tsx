@@ -16,7 +16,7 @@ import { curry } from "lodash";
 import { useEffect, useRef, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
 import { ModalConfirmDelete } from "../core/modal-confirm-delete";
-import { RetrievePatientHistory } from "../core/patient-history/patient-history-message";
+import { PatientHistoryMessage } from "../core/patient-history/patient-history-message";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionHeader } from "./condition-header";
@@ -142,20 +142,18 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const handleClinicalHistory = async () => {
     const requestContext = await getRequestContext();
 
-    const message = getLatestPatientRefreshHistoryMessage(
+    const message = await getLatestPatientRefreshHistoryMessage(
       requestContext,
       patientResponse.data?.id as string,
       ["done"]
     );
-    if (message.data[0].status === "done") {
+    if (message?.status === "done") {
       setClinicalHistoryExists(true);
     } else {
       setClinicalHistoryExists(false);
       setRequestRecordsClinicalHistory(true);
     }
   };
-
-  handleClinicalHistory();
 
   useEffect(() => {
     async function load() {
@@ -186,6 +184,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       }
     }
     load();
+    handleClinicalHistory();
   }, [
     includeInactive,
     patientResponse.data,
@@ -303,15 +302,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               ]}
             />
           ) : (
-            <RetrievePatientHistory message="Retrieve patient clinical history.">
-              <button
-                type="button"
-                className="ctw-btn-clear ctw-link"
-                onClick={handleClinicalHistory}
-              >
-                Request Records
-              </button>
-            </RetrievePatientHistory>
+            <PatientHistoryMessage message="Retrieve patient clinical history." />
           )}
         </div>
       </div>
