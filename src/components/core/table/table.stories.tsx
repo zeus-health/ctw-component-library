@@ -41,7 +41,7 @@ const columns: TableColumn<Record>[] = [
     title: "Name",
     dataIndex: "name",
     className: "ctw-w-[20%]",
-    sortFn: (a, b) => alphaSortBlankLast(a.name, b.name),
+    sortFn: (a, b, dir) => alphaSortBlankLast(a.name, b.name, dir),
   },
   {
     title: "With Render",
