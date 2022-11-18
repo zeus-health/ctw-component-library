@@ -5,6 +5,9 @@ import { getPerformingOrganization } from "@/fhir/medication";
 import { findReference } from "@/fhir/resource-helper";
 import { FHIRModel } from "./fhir-model";
 import { PatientModel } from "./patient";
+import { MedicationRequestModel } from "@/fhir/models/medication-request";
+import { MedicationDispenseModel } from "@/fhir/models/medication-dispense";
+import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 
 export class MedicationModel extends FHIRModel<Medication> {
   get performer(): string | undefined {
@@ -62,5 +65,32 @@ export class MedicationModel extends FHIRModel<Medication> {
     }
 
     return undefined;
+  }
+
+  /**
+   * This accessor will try to get the prescriber for the underlying medication
+   * models resource. Depending on the type of fhir resource, it will delegate
+   * the work to a more specific fhir/model/*.ts class before simply grabbing
+   * the `display` property from an actor/performer/requester. If all else
+   * should fail, the accessor returns an empty string.
+   */
+  get prescriber(): string | undefined {
+    switch (this.resource.resourceType) {
+      case "MedicationStatement":
+        return new MedicationStatementModel(
+          this.resource,
+          this.includedResources
+        ).lastPrescriber;
+      case "MedicationDispense":
+        return new MedicationDispenseModel(
+          this.resource,
+          this.includedResources
+        ).includedPerformer;
+      case "MedicationRequest":
+        return new MedicationRequestModel(this.resource, this.includedResources)
+          .includedRequester;
+      default:
+        return undefined;
+    }
   }
 }
