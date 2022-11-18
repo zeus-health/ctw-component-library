@@ -1,4 +1,5 @@
 import { getPatientHistoryMessages } from "@/api/patient-history";
+import { PatientModel } from "@/fhir/models";
 import { useEffect } from "react";
 import { useCTW } from "../core/ctw-provider";
 import {
@@ -12,38 +13,11 @@ import {
 
 type PatientHistoryRequestDrawer<T> = Pick<
   DrawerFormWithFieldsProps<T>,
-  "patientID" | "isOpen" | "action" | "onClose" | "header"
->;
-
-// TODO: Remove this
-export class RequestData {
-  get name(): string {
-    return "";
-  }
-
-  get dateOfBirth(): string {
-    return "";
-  }
-
-  get npi(): string | undefined {
-    return "";
-  }
-
-  get role(): string {
-    return "";
-  }
-
-  get gender(): string {
-    return "";
-  }
-
-  get zipCode(): string {
-    return "";
-  }
-}
+  "isOpen" | "action" | "onClose" | "header"
+> & { patient: PatientModel };
 
 export const PatientHistoryRequestDrawer = <T,>({
-  patientID,
+  patient,
   action,
   header,
   isOpen,
@@ -56,24 +30,23 @@ export const PatientHistoryRequestDrawer = <T,>({
       const requestContext = await getRequestContext();
       const response = await getPatientHistoryMessages(
         requestContext,
-        patientID
+        patient.id
       );
-      console.log("response", response);
     }
 
-    fetchHistory();
+    // fetchHistory();
   }, []);
-  console.log("placeholder");
+
   return (
     <DrawerFormWithFields
-      patientID={patientID}
+      patientID={patient.id}
       header={header}
       title="Request Drawer"
       action={action}
-      data={getRequestData(new RequestData())}
+      data={getRequestData(patient)}
       schema={requestHistorySchema}
       isOpen={isOpen}
-      onClose={() => onClose(false)}
+      onClose={() => onClose()}
     />
   );
 };
