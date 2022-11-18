@@ -5,10 +5,8 @@ import { ConditionModel } from "@/fhir/models/condition";
 import { capitalize, isEqual, orderBy, startCase, uniqWith } from "lodash";
 import { useEffect, useState } from "react";
 import { CodingList } from "../core/coding-list";
-import {
-  CollapsibleDataListProps,
-  Details,
-} from "../core/collapsible-data-list";
+import { CollapsibleDataListProps } from "../core/collapsible-data-list";
+import { Details } from "../core/collapsible-data-list-details";
 import {
   CollapsibleDataListStack,
   CollapsibleDataListStackEntries,
@@ -21,7 +19,10 @@ const CONDITION_HISTORY_LIMIT = 10;
 const conditionData = (condition: ConditionModel) => [
   { label: "Recorder", value: condition.recorder },
   { label: "Recorded Date", value: condition.recordedDate },
-  // { label: "Provider Organization", value: condition.recordedDate },
+  {
+    label: "Provider Organization",
+    value: condition.patient?.organization?.name,
+  },
   { label: "Clinical Status", value: capitalize(condition.clinicalStatus) },
   {
     label: "Verification Status",
@@ -151,7 +152,7 @@ export function ConditionHistory({
       setConditionsWithoutDate([]);
       setLoading(true);
     };
-  }, [condition, historyResponse.data]);
+  }, [condition, historyResponse.data, onEdit]);
 
   function conditionHistoryDisplay() {
     if (
@@ -175,8 +176,8 @@ export function ConditionHistory({
               hideEmpty={false}
               readOnly={!onEdit}
               onEdit={() => {
-                onEdit();
                 onClose();
+                onEdit();
               }}
             />
           )}

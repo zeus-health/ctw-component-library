@@ -52,14 +52,8 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const breakpoints = useBreakpoints(containerRef);
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
-  const [
-    otherProviderRecordHistoryDrawerIsOpen,
-    setOtherProviderRecordHistoryDrawerIsOpen,
-  ] = useState(false);
-  const [
-    patientRecordHistoryDrawerIsOpen,
-    setPatientRecordHistoryDrawerIsOpen,
-  ] = useState(false);
+
+  const [historyDrawerIsOpen, setHistoryDrawerIsOpen] = useState(false);
   const [patientRecords, setPatientRecords] = useState<ConditionModel[]>([]);
   const [otherProviderRecords, setOtherProviderRecords] = useState<
     ConditionModel[]
@@ -83,6 +77,15 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     ? ERROR_MSG
     : EMPTY_MESSAGE_PROVIDER;
 
+  const shouldHistoryDrawerBeReadOnly = () => {
+    if (
+      selectedCondition &&
+      patientRecords.some((record) => record.id === selectedCondition.id)
+    ) {
+      return () => handleEditCondition(selectedCondition);
+    }
+    return undefined;
+  };
   const handleToggleChange = () => setIncludeInactive(!includeInactive);
 
   const handleEditCondition = (condition: ConditionModel) => {
@@ -233,7 +236,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               {
                 name: "View History",
                 action: () => {
-                  setPatientRecordHistoryDrawerIsOpen(true);
+                  setHistoryDrawerIsOpen(true);
                   setSelectedCondition(condition);
                 },
               },
@@ -273,7 +276,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               {
                 name: "View History",
                 action: () => {
-                  setOtherProviderRecordHistoryDrawerIsOpen(true);
+                  setHistoryDrawerIsOpen(true);
                   setSelectedCondition(condition);
                 },
               },
@@ -300,19 +303,11 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         />
       )}
 
-      {selectedCondition && (
-        <ConditionHistoryDrawer
-          isOpen={patientRecordHistoryDrawerIsOpen}
-          onClose={() => setPatientRecordHistoryDrawerIsOpen(false)}
-          condition={selectedCondition}
-          onEdit={() => handleEditCondition(selectedCondition)}
-        />
-      )}
-
       <ConditionHistoryDrawer
-        isOpen={otherProviderRecordHistoryDrawerIsOpen}
-        onClose={() => setOtherProviderRecordHistoryDrawerIsOpen(false)}
+        isOpen={historyDrawerIsOpen}
+        onClose={() => setHistoryDrawerIsOpen(false)}
         condition={selectedCondition}
+        onEdit={shouldHistoryDrawerBeReadOnly()}
       />
 
       {selectedCondition && patientResponse.data && (
