@@ -173,7 +173,6 @@ export function ConditionHistory({
           {onEdit && (
             <Details
               data={conditionData(condition)}
-              hideEmpty={false}
               readOnly={!onEdit}
               onEdit={() => {
                 onClose();
