@@ -1,5 +1,4 @@
 import { ConditionModel } from "@/fhir/models/condition";
-import { ReactNode } from "react";
 
 type ConditionHeaderProp = {
   condition: ConditionModel;
@@ -13,9 +12,3 @@ export const ConditionHeader = ({ condition }: ConditionHeaderProp) => (
     <div className="ctw-text-sm">{condition.ccsGrouping}</div>
   </div>
 );
-
-export const ConditionHeaderSummary = ({
-  children,
-}: {
-  children: ReactNode;
-}) => <div className="ctw-pt-0 ctw-text-base">{children}</div>;
