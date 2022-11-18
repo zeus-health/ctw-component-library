@@ -1,6 +1,7 @@
 import { findReference } from "@/fhir/resource-helper";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
-import { find, remove } from "lodash";
+import { cloneDeep, find, remove } from "lodash";
+import { formatDateISOToLocal, formatPhoneNumber } from "../formatters";
 import { FHIRModel } from "./fhir-model";
 import { OrganizationModel } from "./organization";
 
@@ -18,6 +19,10 @@ export const MaritalStatuses = [
 ] as const;
 
 export class PatientModel extends FHIRModel<fhir4.Patient> {
+  get dob(): string | undefined {
+    return formatDateISOToLocal(this.resource.birthDate);
+  }
+
   get gender(): string | undefined {
     return this.resource.gender;
   }
@@ -48,17 +53,6 @@ export class PatientModel extends FHIRModel<fhir4.Patient> {
   get UPID(): string | undefined {
     return find(this.resource.identifier, { system: SYSTEM_ZUS_UNIVERSAL_ID })
       ?.value;
-  }
-
-  /*
-    ADDRESS STUFF
-  */
-
-  private get bestHomeAddress(): fhir4.Address | undefined {
-    return (
-      find(this.resource.address, { use: "home" }) ||
-      find(this.resource.address, (address) => !address.use) // use is undefined
-    );
   }
 
   /*
@@ -96,8 +90,77 @@ export class PatientModel extends FHIRModel<fhir4.Patient> {
     }
   }
 
+  getPhoneNumber(use?: fhir4.ContactPoint["use"]): string | undefined {
+    const predicate: fhir4.ContactPoint = { system: "phone" };
+    if (use) {
+      predicate.use = use;
+    }
+    const telecom = find(this.resource.telecom, predicate);
+    return formatPhoneNumber(telecom?.value);
+  }
+
+  setPhoneNumber(use?: fhir4.ContactPoint["use"], phoneNumber?: string) {
+    this.setTelecom("phone", use, phoneNumber);
+  }
+
+  // Gets first "phone" telecom.
+  get phoneNumber(): string | undefined {
+    return this.getPhoneNumber();
+  }
+
+  // Sets first "phone" telecom.
+  set phoneNumber(phoneNumber: string | undefined) {
+    this.setTelecom("phone", undefined, phoneNumber);
+  }
+
   get email(): string | undefined {
     return find(this.resource.telecom, { system: "email" })?.value;
+  }
+
+  /*
+    ADDRESS STUFF
+  */
+
+  private get bestHomeAddress(): fhir4.Address | undefined {
+    return (
+      find(this.resource.address, { use: "home" }) ||
+      find(this.resource.address, (address) => !address.use) // use is undefined
+    );
+  }
+
+  // Returns first home address or first address without "use" set.
+  // This way we return a home address if there is one, or another address
+  // but making sure not to return a work address here.
+  get homeAddress(): fhir4.Address | undefined {
+    // Clone the address so that consumers cannot modify our resource.
+    return cloneDeep(this.bestHomeAddress);
+  }
+
+  set homeAddress(address: fhir4.Address | undefined) {
+    // Make sure we have an address array.
+    if (!this.resource.address) {
+      this.resource.address = [];
+    }
+
+    if (!address) {
+      // Remove all of our possible addresses.
+      remove(this.resource.address, { use: "home" });
+      remove(this.resource.address, (addy) => !addy.use); // use is undefined
+    } else {
+      // Make sure all added addresses are set to home.
+      // This ensures bestHomeAddress will return this new one!
+      const newAddress: fhir4.Address = { use: "home", ...address };
+      const existingAddress = this.bestHomeAddress;
+      if (existingAddress) {
+        // Take special care to replace the address. This way
+        // we preserve the order of addresses (not sure how important this is).
+        const index = this.resource.address.indexOf(existingAddress);
+        this.resource.address.splice(index, 1, newAddress);
+      } else {
+        // Adding a completely new address, so set its use to home.
+        this.resource.address.push(newAddress);
+      }
+    }
   }
 
   /*
