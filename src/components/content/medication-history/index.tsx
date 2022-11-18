@@ -1,3 +1,4 @@
+import { capitalize, compact } from "lodash";
 import { CollapsibleDataListProps } from "@/components/core/collapsible-data-list";
 import { CollapsibleDataListStack } from "@/components/core/collapsible-data-list-stack";
 import { Loading } from "@/components/core/loading";
@@ -5,7 +6,6 @@ import { useMedicationHistory } from "@/fhir/medications";
 import { MedicationModel } from "@/fhir/models/medication";
 import { MedicationDispenseModel } from "@/fhir/models/medication-dispense";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
-import { capitalize } from "lodash";
 import { useEffect, useState } from "react";
 
 const MEDICATION_HISTORY_LIMIT = 10;
@@ -142,11 +142,16 @@ function createMedicationDispenseCard(medication: MedicationModel) {
 
   const { quantityDisplay, supplied, performerDetails } = medDispense;
   const { name, address, telecom } = performerDetails;
+
   return {
     date: medication.dateLocal,
     hideEmpty: false,
     id: medication.id,
     title: "Medication Filled",
+    subTitle: compact([
+      quantityDisplay || null,
+      supplied ? `Supplied for ${supplied}`: null
+    ]).join(", "),
     data: [
       { label: "Quantity", value: quantityDisplay },
       {
