@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
-import { FunctionComponent, ReactElement, useEffect, useState } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 
 type SecuredAppProps = {
   AppComponent: FunctionComponent<{ accessToken: string }>;

@@ -101,7 +101,7 @@ function createMedicationDetailsCard(
 
 function createMedicationRequestCard(medication: MedicationModel) {
   const resource = medication.resource as fhir4.MedicationRequest;
-  const prescriber = resource.requester?.display || "";
+  const { prescriber } = medication;
   const pharmacy = resource.dispenseRequest?.performer?.display || "";
 
   const { numberOfRepeatsAllowed = "", initialFill } =
