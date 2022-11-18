@@ -1,5 +1,13 @@
 # ctw-component-library
 
+## 0.24.11
+
+### Patch Changes
+
+- fd5fb9c: Medication details searches through includedResources to find the latest prescriber of a medication.
+- bf5caf1: Remove resize handle on date input elements.
+- 0d92471: Fix a few minor style bugs with stacked conditions.
+
 ## 0.24.10
 
 ### Patch Changes
