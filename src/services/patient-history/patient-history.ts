@@ -21,6 +21,8 @@ export async function getPatientRefreshHistoryMessages(
       },
     });
     const result = await response.json();
+
+    /*eslint no-underscore-dangle: ["error", { "allow": ["_updatedAt, _createdAt"] }]*/
     return Object.values(result.data) as PatientRefreshHistoryMessage[];
   } catch (err) {
     throw errorResponse(

@@ -148,7 +148,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       ["done"]
     );
     if (message?.status === "done") {
-      // setClinicalHistoryExists(true);
+      setClinicalHistoryExists(true);
     } else {
       setClinicalHistoryExists(false);
       setRequestRecordsClinicalHistory(true);
