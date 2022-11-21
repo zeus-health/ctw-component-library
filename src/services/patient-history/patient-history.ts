@@ -22,7 +22,7 @@ export async function getPatientRefreshHistoryMessages(
     });
     const result = await response.json();
 
-    /* eslint no-underscore-dangle: "error" */
+    /* eslint no-underscore-dangle: 0 */
     return Object.values(result.data) as PatientRefreshHistoryMessage[];
   } catch (err) {
     throw errorResponse(
