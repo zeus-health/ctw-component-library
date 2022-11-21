@@ -1,5 +1,12 @@
 import { Drawer, DrawerProps } from "@/components/core/drawer";
+import { sleep } from "@/utils/misc";
+import { expect } from "@storybook/jest";
 import { Meta, StoryObj } from "@storybook/react";
+import {
+  userEvent,
+  waitForElementToBeRemoved,
+  within,
+} from "@storybook/testing-library";
 import { useState } from "react";
 
 export default {
@@ -10,7 +17,7 @@ export default {
     (Story, { args }) => {
       const [drawerIsOpen, setDrawerIsOpen] = useState(false);
       return (
-        <div>
+        <div id="headlessui-portal-root">
           <button
             type="button"
             className="ctw-btn-primary"
@@ -46,5 +53,26 @@ export const Basic: StoryObj<DrawerProps> = {
         <Drawer.Footer>My Footer</Drawer.Footer>
       </>
     ),
+  },
+};
+
+export const Test: StoryObj<DrawerProps> = {
+  ...Basic,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Verify drawer doesn't show right away.
+    expect(canvas.queryByText(/my title/i)).toBeNull();
+
+    // Open drawer and verify our three areas appear.
+    userEvent.click(canvas.getByRole("button"));
+    expect(canvas.getByText(/my title/i)).toBeInTheDocument();
+    expect(canvas.getByText(/scrollable content 0/i)).toBeInTheDocument();
+    expect(canvas.getByText(/my footer/i)).toBeInTheDocument();
+    await sleep(750); // Let it sit open for a bit.
+
+    // Close drawer and verify things are hiddne.
+    userEvent.click(canvas.getByLabelText("close"));
+    waitForElementToBeRemoved(canvas.queryByText(/my title/i));
   },
 };
