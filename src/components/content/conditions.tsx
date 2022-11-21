@@ -10,13 +10,13 @@ import {
 } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models/condition";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
+import { getLatestPatientRefreshHistoryMessage } from "@/services/patient-history/patient-history";
 import { AnyZodSchema } from "@/utils/form-helper";
 import cx from "classnames";
 import { curry } from "lodash";
 import { useEffect, useRef, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
 import { ModalConfirmDelete } from "../core/modal-confirm-delete";
-import { PatientHistoryMessage } from "../core/patient-history/patient-history-message";
 import { usePatient } from "../core/patient-provider";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionHeader } from "./condition-header";
@@ -36,7 +36,7 @@ import {
   FormActionTypes,
   FormEntry,
 } from "./forms/drawer-form-with-fields";
-import { getLatestPatientRefreshHistoryMessage } from "./patient-history/patient-history";
+import { PatientHistoryMessage } from "./patient-history/patient-history-message";
 
 export type ConditionsProps = {
   className?: string;
@@ -148,7 +148,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       ["done"]
     );
     if (message?.status === "done") {
-      setClinicalHistoryExists(true);
+      // setClinicalHistoryExists(true);
     } else {
       setClinicalHistoryExists(false);
       setRequestRecordsClinicalHistory(true);
