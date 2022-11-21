@@ -23,11 +23,9 @@ export function getSortInfo<T>(model: Newable<T>, sortValue?: string | null) {
     return {};
   }
 
-  type NewType = SortDir;
-
   return {
     sortColumn: sortColumn as keyof T,
-    sortOrder: sortOrder as NewType,
+    sortOrder,
   };
 }
 
