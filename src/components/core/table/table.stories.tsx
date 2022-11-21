@@ -1,6 +1,6 @@
-import { Table, TableColumn, TableProps } from "@/components/core/table/table";
 import type { Meta, StoryObj } from "@storybook/react";
-import { alphaSortBlankLast } from "./table-helpers";
+import { Table, TableProps } from "./table";
+import { TableColumn } from "./table-helpers";
 
 type Record = {
   id: string;
@@ -41,7 +41,7 @@ const columns: TableColumn<Record>[] = [
     title: "Name",
     dataIndex: "name",
     className: "ctw-w-[20%]",
-    sortFn: (a, b, dir) => alphaSortBlankLast(a.name, b.name, dir),
+    sortIndex: "name",
   },
   {
     title: "With Render",

@@ -17,7 +17,7 @@ import { useEffect, useRef, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
 import { ModalConfirmDelete } from "../core/modal-confirm-delete";
 import { usePatient } from "../core/patient-provider";
-import { TableSort } from "../core/table/table";
+import { TableSort } from "../core/table/sort-helpers";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionHeader } from "./condition-header";
 import { onConditionDelete } from "./conditions-helper";

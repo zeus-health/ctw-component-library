@@ -1,31 +1,16 @@
 import cx from "classnames";
-import { ReactElement, ReactNode, useEffect, useRef, useState } from "react";
+import { ReactElement, useEffect, useRef, useState } from "react";
 import { DEFAULT_PAGE_SIZE, Pagination } from "../pagination/pagination";
 import { TableColGroup } from "./table-colgroup";
 import { TableHead } from "./table-head";
+import {
+  MinRecordItem,
+  sortRecords,
+  TableColumn,
+  TableSort,
+} from "./table-helpers";
 import { TableRows } from "./table-rows";
 import "./table.scss";
-
-export type SortDir = "asc" | "desc";
-
-export type TableSort = { columnTitle: string; dir: SortDir };
-
-export interface MinRecordItem {
-  id: string | number;
-}
-
-type DataIndexSpecified<T> = { dataIndex: keyof T; render?: never };
-type RenderSpecified<T> = { dataIndex?: never; render: (row: T) => ReactNode };
-
-// A table column has an optional title
-// and then either a dataIndex or a render method but not both.
-export type TableColumn<T extends MinRecordItem> = {
-  title?: string;
-  className?: string;
-  widthPercent?: number;
-  minWidth?: number;
-  sortFn?: (a: T, b: T, dir: SortDir) => number;
-} & (DataIndexSpecified<T> | RenderSpecified<T>);
 
 export type TableProps<T extends MinRecordItem> = {
   className?: string;
@@ -64,13 +49,7 @@ export const Table = <T extends MinRecordItem>({
   const [showRightShadow, setShowRightShadow] = useState(false);
   const [count, setCount] = useState(DEFAULT_PAGE_SIZE);
 
-  const sortFn = columns.find(
-    (column) => column.title === sort?.columnTitle
-  )?.sortFn;
-  let sortedRecords = records;
-  if (sortFn && sort) {
-    sortedRecords = records.sort((a, b) => sortFn(a, b, sort.dir));
-  }
+  const sortedRecords = sortRecords(records, columns, sort);
 
   const updateShadows = () => {
     const container = scrollContainerRef.current;
