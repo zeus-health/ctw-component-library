@@ -220,7 +220,7 @@ export function useMedicationHistory(medication?: fhir4.MedicationStatement) {
             "MedicationDispense",
             requestContext,
             resources.MedicationDispense,
-            ["MedicationDispense:performer"]
+            ["MedicationDispense:performer", "MedicationDispense:prescription"]
           ),
         ]);
 
