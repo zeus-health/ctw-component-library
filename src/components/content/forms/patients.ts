@@ -20,6 +20,7 @@ export const editPatient = async (
   if (!result.success) {
     return { formResult: result, requestErrors: undefined };
   }
+  console.log("result", result);
 
   const requestContext = await getRequestContext();
 
@@ -44,7 +45,7 @@ export const editPatient = async (
         line: [result.data.address],
         city: result.data.city,
         state: result.data.state,
-        postalCode: result.data.postalCode,
+        postalCode: result.data.zipCode,
       },
     ],
   };
