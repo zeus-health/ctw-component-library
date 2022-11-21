@@ -33,7 +33,7 @@ type ZusJWT = {
   scope: string;
 };
 
-function getClaims(authToken: string): ZusJWT {
+export function getClaims(authToken: string): ZusJWT {
   return jwt_decode(authToken);
 }
 

@@ -1,25 +1,31 @@
 import { CTWRequestContext } from "@/components/core/ctw-context";
+import { claimsBuilderId, claimsBuilderName } from "@/utils/auth";
 import { getZusApiBaseUrl } from "./urls";
 
-export const getPatientHistoryMessages = async (
+export const schedulePatientHistory = async (
   requestContext: CTWRequestContext,
-  patientID: string
+  patientID: string,
+  resultData: { npi: string; role: string; name: string }
 ) => {
   const endpointUrl = `${getZusApiBaseUrl(
     requestContext.env
-  )}/patient-history/messages?patient_id=${patientID}`;
+  )}/patient-history/patient/${patientID}/refresh`;
 
   try {
     const response = await fetch(endpointUrl, {
+      method: "POST",
       headers: {
         Authorization: `Bearer ${requestContext.authToken}`,
-        "practitioner-npi": "1245319599",
-        "practitioner-role": "Test Provider",
+        "practitioner-npi": resultData.npi,
+        "practitioner-role": resultData.role,
+        "practitioner-name": resultData.name,
+        "organziation-id": claimsBuilderId(requestContext.authToken),
+        "organziation-name": claimsBuilderName(requestContext.authToken),
       },
     });
-    const result = await response.json();
-    console.log("result", result);
+    const data = await response.json();
+    // TODO: handle error from server
   } catch (e) {
-    console.log("e", e);
+    throw Error(`Error scheduling patient history job with id of ${patientID}`);
   }
 };

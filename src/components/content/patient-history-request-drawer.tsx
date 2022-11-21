@@ -1,7 +1,4 @@
-import { getPatientHistoryMessages } from "@/api/patient-history";
 import { PatientModel } from "@/fhir/models";
-import { useEffect } from "react";
-import { useCTW } from "../core/ctw-provider";
 import {
   DrawerFormWithFields,
   DrawerFormWithFieldsProps,
@@ -22,31 +19,15 @@ export const PatientHistoryRequestDrawer = <T,>({
   header,
   isOpen,
   onClose,
-}: PatientHistoryRequestDrawer<T>) => {
-  const { getRequestContext } = useCTW();
-
-  useEffect(() => {
-    async function fetchHistory() {
-      const requestContext = await getRequestContext();
-      const response = await getPatientHistoryMessages(
-        requestContext,
-        patient.id
-      );
-    }
-
-    // fetchHistory();
-  }, []);
-
-  return (
-    <DrawerFormWithFields
-      patientID={patient.id}
-      header={header}
-      title="Request Drawer"
-      action={action}
-      data={getRequestData(patient)}
-      schema={requestHistorySchema}
-      isOpen={isOpen}
-      onClose={() => onClose()}
-    />
-  );
-};
+}: PatientHistoryRequestDrawer<T>) => (
+  <DrawerFormWithFields
+    patientID={patient.id}
+    header={header}
+    title="Request Drawer"
+    action={action}
+    data={getRequestData(patient)}
+    schema={requestHistorySchema}
+    isOpen={isOpen}
+    onClose={() => onClose()}
+  />
+);

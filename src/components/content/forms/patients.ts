@@ -1,3 +1,4 @@
+import { schedulePatientHistory } from "@/api/patient-history";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { isFhirError } from "@/fhir/errors";
@@ -60,6 +61,10 @@ export const editPatient = async (
   } else if (response instanceof Error) {
     requestErrors = [response.message];
     result.success = false;
+  }
+
+  if (result.success) {
+    await schedulePatientHistory(requestContext, patientID, result.data);
   }
 
   // TODO: do we need to invalidate any queries? Probably patient queries
