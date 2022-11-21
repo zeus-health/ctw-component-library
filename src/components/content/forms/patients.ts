@@ -20,7 +20,6 @@ export const editPatient = async (
   if (!result.success) {
     return { formResult: result, requestErrors: undefined };
   }
-  console.log("result", result);
 
   const requestContext = await getRequestContext();
 

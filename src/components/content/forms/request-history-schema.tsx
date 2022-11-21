@@ -5,7 +5,6 @@ import { z } from "zod";
 export const getRequestData = (patient: PatientModel): FormEntry[] => [
   {
     label: "treating-provider",
-    presentational: true,
     render: () => (
       <div className="ctw-font-medium">
         Who is the treating provider for this patient?
@@ -32,7 +31,6 @@ export const getRequestData = (patient: PatientModel): FormEntry[] => [
   },
   {
     label: "patient-information",
-    presentational: true,
     render: () => (
       <div>
         <div className="ctw-font-medium">

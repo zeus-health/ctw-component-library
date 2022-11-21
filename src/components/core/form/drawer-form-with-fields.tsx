@@ -3,30 +3,30 @@ import { AnyZodSchema, useFormInputProps } from "@/utils/form-helper";
 import { InputHTMLAttributes, ReactNode } from "react";
 import { DrawerForm, DrawerFormProps } from "./drawer-form";
 
-export type FormEntry =
-  | {
-      label: string;
-      field: string;
-      value?: string | string[];
-      lines?: number;
-      readonly?: boolean;
-      hidden?: boolean;
-      presentational?: never;
-      render?: (
-        readOnly: boolean | undefined,
-        inputProps: InputHTMLAttributes<HTMLInputElement>
-      ) => JSX.Element;
-    }
-  | {
-      presentational: boolean;
-      label: string;
-      field?: never;
-      value?: never;
-      lines?: never;
-      readonly?: never;
-      hidden?: never;
-      render: () => JSX.Element;
-    };
+export type FormFieldType = {
+  label: string;
+  field: string;
+  value?: string | string[];
+  lines?: number;
+  readonly?: boolean;
+  hidden?: boolean;
+  render?: (
+    readOnly: boolean | undefined,
+    inputProps: InputHTMLAttributes<HTMLInputElement>
+  ) => JSX.Element;
+};
+
+export type FormContentType = {
+  field?: never;
+  value?: never;
+  lines?: never;
+  readonly?: never;
+  hidden?: never;
+  render: () => JSX.Element;
+  label: string;
+};
+
+export type FormEntry = FormFieldType | FormContentType;
 
 export type DrawerFormWithFieldsProps<T> = {
   title: string;
@@ -62,17 +62,8 @@ export const DrawerFormWithFields = <T,>({
           {header}
           <div className="ctw-space-y-6">
             {data.map(
-              ({
-                label,
-                field,
-                value,
-                lines,
-                readonly,
-                hidden,
-                render,
-                presentational,
-              }) => {
-                if (presentational) {
+              ({ label, field, value, lines, readonly, hidden, render }) => {
+                if (!field) {
                   return (
                     <FormField
                       key={label}
@@ -82,7 +73,6 @@ export const DrawerFormWithFields = <T,>({
                   );
                 }
 
-                // TODO: figure out why typescript thinks this can be undefined
                 const fieldErrors = errors?.[field];
 
                 if (hidden) {
