@@ -1,9 +1,9 @@
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/outline";
 import cx from "classnames";
-import type { MinRecordItem, SortDir, TableColumn } from "./table";
+import type { MinRecordItem, SortDir, TableColumn, TableSort } from "./table";
 
 type SortChevronProps = {
-  sortOrder?: "desc" | "asc";
+  sortOrder?: SortDir;
 };
 
 const SortChevron = ({ sortOrder }: SortChevronProps) => {
@@ -20,7 +20,7 @@ const SortChevron = ({ sortOrder }: SortChevronProps) => {
         <ChevronDownIcon
           className={cx(
             sharedClasses,
-            "ctw-opacity-40 group-hover:ctw-opacity-70"
+            "ctw-opacity-0 group-hover:ctw-opacity-100"
           )}
         />
       );
@@ -29,36 +29,41 @@ const SortChevron = ({ sortOrder }: SortChevronProps) => {
 
 export type TableHeadProps<T extends MinRecordItem> = {
   columns: TableColumn<T>[];
-  sortColumn?: string;
+  sort?: TableSort;
   onSort?: (sortColumn: string) => void;
-  sortOrder?: SortDir;
 };
 
 export const TableHead = <T extends MinRecordItem>({
   columns,
-  sortColumn,
-  sortOrder,
+  sort,
   onSort,
-}: TableHeadProps<T>) => (
-  <thead>
-    <tr>
-      {columns.map((column, index) => (
-        <th
-          className={cx("ctw-group", column.sortFn && "ctw-cursor-pointer")}
-          key={column.title ?? index}
-          scope="col"
-          onClick={() => column.sortFn && onSort && onSort(column.title || "")}
-        >
-          <div className="ctw-flex ctw-items-center ctw-space-x-2">
-            <div>{column.title}</div>
-            {column.sortFn && (
-              <SortChevron
-                sortOrder={sortColumn === column.title ? sortOrder : undefined}
-              />
-            )}
-          </div>
-        </th>
-      ))}
-    </tr>
-  </thead>
-);
+}: TableHeadProps<T>) => {
+  console.log("TableHead", sort);
+  return (
+    <thead>
+      <tr>
+        {columns.map((column, index) => (
+          <th
+            className={cx("ctw-group", column.sortFn && "ctw-cursor-pointer")}
+            key={column.title ?? index}
+            scope="col"
+            onClick={() =>
+              column.sortFn && onSort && onSort(column.title || "")
+            }
+          >
+            <div className="ctw-flex ctw-items-center ctw-space-x-2">
+              <div>{column.title}</div>
+              {column.sortFn && (
+                <SortChevron
+                  sortOrder={
+                    sort?.columnTitle === column.title ? sort?.dir : undefined
+                  }
+                />
+              )}
+            </div>
+          </th>
+        ))}
+      </tr>
+    </thead>
+  );
+};

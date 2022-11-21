@@ -8,6 +8,8 @@ import "./table.scss";
 
 export type SortDir = "asc" | "desc";
 
+export type TableSort = { columnTitle: string; dir: SortDir };
+
 export interface MinRecordItem {
   id: string | number;
 }
@@ -35,8 +37,8 @@ export type TableProps<T extends MinRecordItem> = {
   showTableHead?: boolean;
   stacked?: boolean;
   handleRowClick?: (record: T) => void;
-  sortColumn?: string;
-  sortOrder?: SortDir;
+  sort?: TableSort;
+  onSort?: (sort: TableSort) => void;
 };
 
 export type TableBaseProps<T extends MinRecordItem> = Omit<
@@ -52,8 +54,8 @@ export const Table = <T extends MinRecordItem>({
   message = "No records found",
   showTableHead = true,
   stacked,
-  sortColumn,
-  sortOrder,
+  sort,
+  onSort,
   handleRowClick,
 }: TableProps<T>) => {
   const tableRef = useRef<HTMLTableElement>(null);
@@ -61,15 +63,13 @@ export const Table = <T extends MinRecordItem>({
   const [showLeftShadow, setShowLeftShadow] = useState(false);
   const [showRightShadow, setShowRightShadow] = useState(false);
   const [count, setCount] = useState(DEFAULT_PAGE_SIZE);
-  const [sortColumnState, setSortColumnState] = useState(sortColumn);
-  const [sortOrderState, setSortOrderState] = useState(sortOrder);
 
   const sortFn = columns.find(
-    (column) => column.title === sortColumnState
+    (column) => column.title === sort?.columnTitle
   )?.sortFn;
   let sortedRecords = records;
-  if (sortFn && sortOrderState) {
-    sortedRecords = records.sort((a, b) => sortFn(a, b, sortOrderState));
+  if (sortFn && sort) {
+    sortedRecords = records.sort((a, b) => sortFn(a, b, sort.dir));
   }
 
   const updateShadows = () => {
@@ -83,16 +83,14 @@ export const Table = <T extends MinRecordItem>({
   };
 
   const switchSort = (newSortColumn: string) => {
-    if (newSortColumn === sortColumnState) {
-      if (sortOrderState === "asc") {
-        setSortOrderState("desc");
-      } else {
-        setSortOrderState("asc");
-      }
-    } else {
-      setSortColumnState(newSortColumn);
-      setSortOrderState("asc");
+    const newState: TableSort = {
+      columnTitle: newSortColumn,
+      dir: "asc",
+    };
+    if (newSortColumn === sort?.columnTitle) {
+      newState.dir = sort.dir === "asc" ? "desc" : "asc";
     }
+    if (onSort) onSort(newState);
   };
 
   useEffect(() => {
@@ -129,12 +127,7 @@ export const Table = <T extends MinRecordItem>({
           <table ref={tableRef}>
             {hasData && <TableColGroup columns={columns} />}
             {showTableHead && hasData && (
-              <TableHead
-                columns={columns}
-                sortColumn={sortColumnState}
-                sortOrder={sortOrderState}
-                onSort={switchSort}
-              />
+              <TableHead columns={columns} sort={sort} onSort={switchSort} />
             )}
 
             <tbody>

@@ -16,8 +16,8 @@ export function ConditionsTableBase({
   conditions,
   rowActions,
   hideMenu,
-  sortOrder = "asc",
-  sortColumn = "Category",
+  sort = { columnTitle: "Category", dir: "asc" },
+  onSort,
   ...tableProps
 }: ConditionsTableBaseProps) {
   const columns: TableColumn<ConditionModel>[] = [
@@ -74,8 +74,8 @@ export function ConditionsTableBase({
       className={className}
       records={conditions}
       columns={columns}
-      sortColumn={sortColumn}
-      sortOrder={sortOrder}
+      sort={sort}
+      onSort={onSort}
       {...tableProps}
     />
   );
