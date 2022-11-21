@@ -37,33 +37,28 @@ export const TableHead = <T extends MinRecordItem>({
   columns,
   sort,
   onSort,
-}: TableHeadProps<T>) => {
-  console.log("TableHead", sort);
-  return (
-    <thead>
-      <tr>
-        {columns.map((column, index) => (
-          <th
-            className={cx("ctw-group", column.sortFn && "ctw-cursor-pointer")}
-            key={column.title ?? index}
-            scope="col"
-            onClick={() =>
-              column.sortFn && onSort && onSort(column.title || "")
-            }
-          >
-            <div className="ctw-flex ctw-items-center ctw-space-x-2">
-              <div>{column.title}</div>
-              {column.sortFn && (
-                <SortChevron
-                  sortOrder={
-                    sort?.columnTitle === column.title ? sort?.dir : undefined
-                  }
-                />
-              )}
-            </div>
-          </th>
-        ))}
-      </tr>
-    </thead>
-  );
-};
+}: TableHeadProps<T>) => (
+  <thead>
+    <tr>
+      {columns.map((column, index) => (
+        <th
+          className={cx("ctw-group", column.sortFn && "ctw-cursor-pointer")}
+          key={column.title ?? index}
+          scope="col"
+          onClick={() => column.sortFn && onSort && onSort(column.title || "")}
+        >
+          <div className="ctw-flex ctw-items-center ctw-space-x-2">
+            <div>{column.title}</div>
+            {column.sortFn && (
+              <SortChevron
+                sortOrder={
+                  sort?.columnTitle === column.title ? sort?.dir : undefined
+                }
+              />
+            )}
+          </div>
+        </th>
+      ))}
+    </tr>
+  </thead>
+);
