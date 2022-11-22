@@ -30,7 +30,7 @@ export const editPatient = async (
   const managingOrganization = patient.organization?.id;
   if (!managingOrganization) {
     throw Error(
-      `Managing organization not found with id of ${patient.organization?.id} and is needed in patient perform patient scheduling.`
+      `Managing organization not found with id of ${patient.organization?.id} and is needed in order to perform patient scheduling.`
     );
   }
 
