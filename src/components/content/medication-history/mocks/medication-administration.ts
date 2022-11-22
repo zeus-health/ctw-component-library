@@ -37,7 +37,7 @@ export const medicationAdministration = {
         extension: [
           {
             url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "57ddcfa9-6df8-4d00-a86d-c63c0faad93f",
+            valueString: "57ddcfa9",
           },
         ],
         status: "completed",
@@ -86,7 +86,7 @@ export const medicationAdministration = {
           ],
         },
         subject: {
-          reference: "Patient/976954a4-2fb6-43cf-a360-1a6383d259c7",
+          reference: "Patient/007",
           type: "Patient",
         },
         effectivePeriod: {
@@ -110,7 +110,7 @@ export const medicationAdministration = {
     {
       resource: {
         resourceType: "Patient",
-        id: "976954a4-2fb6-43cf-a360-1a6383d259c7",
+        id: "976954a4",
         meta: {
           extension: [
             {
@@ -142,7 +142,7 @@ export const medicationAdministration = {
         identifier: [
           {
             system: "https://zusapi.com/fhir/identifier/universal-id",
-            value: "57ddcfa9-6df8-4d00-a86d-c63c0faad93f",
+            value: "57ddcfa9",
           },
         ],
         name: [
