@@ -153,9 +153,6 @@ export function splitMedications(
   builderOwnedMedications: MedicationStatement[],
   includedResources?: ResourceMap
 ) {
-  console.log("activeMeds", activeMedications.length);
-  console.log("builderOwnedMeds", builderOwnedMedications.length);
-
   // Get active medications where there does not exist a matching builder owned record.
   const otherProviderMedications = activeMedications.filter(
     (activeMed) =>
@@ -166,8 +163,6 @@ export function splitMedications(
       )
   );
 
-  console.log("otherProviderMeds", otherProviderMedications.length);
-
   // Get builder owned medications where there does not exist an active medication.
   const builderMedications = builderOwnedMedications.filter(
     (builderMed) =>
@@ -177,8 +172,6 @@ export function splitMedications(
           getIdentifyingRxNormCode(builderMed, includedResources)
       )
   );
-
-  console.log("builderMedsWithoutMatch", builderMedications.length);
 
   // Get builder owned medications that line up with an active medication.
   // Take the active medication but modify it to use the builder's display properties.
@@ -198,8 +191,6 @@ export function splitMedications(
       if (mergedMed.dosage && builderMed.dosage) {
         mergedMed.dosage[0].text = builderMed.dosage[0].text;
       }
-      console.log("builderMedWithHistory");
-      console.log(mergedMed);
       builderMedications.push(mergedMed);
     }
   });
