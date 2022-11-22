@@ -1,5 +1,24 @@
 # ctw-component-library
 
+## 0.25.0
+
+### Minor Changes
+
+- f10ac5c: Updated medications components to use active medications lens.
+
+### Patch Changes
+
+- 837bf8e: MedicationStatement.lastPrescriber more resilant. This will try to resolve the prescriber name based on a reference from lastPrescriber lens and falling back to the display on the reference if the actual reference cannot be resolved.
+- 76efc20: Medication history now supports MedicationAdminstration details.
+
+## 0.24.11
+
+### Patch Changes
+
+- fd5fb9c: Medication details searches through includedResources to find the latest prescriber of a medication.
+- bf5caf1: Remove resize handle on date input elements.
+- 0d92471: Fix a few minor style bugs with stacked conditions.
+
 ## 0.24.10
 
 ### Patch Changes
