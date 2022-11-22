@@ -5,6 +5,7 @@ import {
 import { aggregatedFromMedStatement } from "@/components/content/medication-history/mocks/aggregated-from-med-statement";
 import { medicationDispense } from "@/components/content/medication-history/mocks/medication-dispense";
 import { medicationRequest } from "@/components/content/medication-history/mocks/medication-request";
+import { medicationAdministration } from "@/components/content/medication-history/mocks/medication-administration";
 import { medicationStatement } from "@/components/content/medication-history/mocks/medication-statements";
 import { patient } from "@/components/content/medication-history/mocks/patient";
 import { CTWProvider } from "@/components/core/ctw-provider";
@@ -48,6 +49,11 @@ export default {
       rest.get(
         "https://api.dev.zusapi.com/fhir/MedicationDispense",
         (req, res, ctx) => res(ctx.status(200), ctx.json(medicationDispense))
+      ),
+      rest.get(
+        "https://api.dev.zusapi.com/fhir/MedicationAdministration",
+        (req, res, ctx) =>
+          res(ctx.status(200), ctx.json(medicationAdministration))
       ),
     ],
   },

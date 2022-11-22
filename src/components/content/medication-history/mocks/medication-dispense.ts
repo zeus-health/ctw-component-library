@@ -1,9 +1,6 @@
 export const medicationDispense = {
   resourceType: "Bundle",
-  id: "3890b281-3943-4b3e-95d9-1dbb03317829",
-  meta: {
-    lastUpdated: "2022-11-14T19:07:22.968+00:00",
-  },
+  id: "3890b281",
   type: "searchset",
   total: 7,
   entry: [

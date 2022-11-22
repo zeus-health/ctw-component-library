@@ -1,7 +1,7 @@
 import { Auth0Provider } from "@auth0/auth0-react";
 import "./App.css";
 import { Conditions } from "./components/content/conditions";
-import { PatientMedications } from "./components/content/patient-medications";
+import { PatientMedications } from "./components/content/medications/patient-medications";
 import { CTWProvider } from "./components/core/ctw-provider";
 import { PatientProvider } from "./components/core/patient-provider";
 import { ErrorBoundary } from "./error-boundary";

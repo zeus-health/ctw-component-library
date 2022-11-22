@@ -8,7 +8,7 @@ import cx from "classnames";
 import { useState } from "react";
 import "./patient-medications.scss";
 
-type PatientMedicationsProps = {
+export type PatientMedicationsProps = {
   className?: string;
   status?: ClinicalStatus;
   // should we render the Zus confirmed meds component (default true)?
