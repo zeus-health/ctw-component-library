@@ -175,24 +175,20 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
     if (!reference?.type || !reference.reference) {
       return undefined;
     }
-    try {
-      const resource = findReference(
-        reference.type as "Practitioner" | "Organization",
-        this.resource.contained,
-        this.includedResources,
-        reference.reference
-      );
-      if (resource?.name) {
-        if (typeof resource.name === "string") {
-          return resource.name;
-        }
-        const { family, given = [] } = resource.name[0];
-        return compact([family, given[0]]).join(", ");
+    const resource = findReference(
+      reference.type as "Practitioner" | "Organization",
+      this.resource.contained,
+      this.includedResources,
+      reference.reference
+    );
+    if (resource?.name) {
+      if (typeof resource.name === "string") {
+        return resource.name;
       }
-      return reference.display;
-    } catch {
-      return reference.display;
+      const { family, given = [] } = resource.name[0];
+      return compact([family, given[0]]).join(", ");
     }
+    return reference.display;
   }
 
   get lastPrescribedDate(): string | undefined {
