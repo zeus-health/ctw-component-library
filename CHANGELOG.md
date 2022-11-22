@@ -1,5 +1,15 @@
 # ctw-component-library
 
+## 0.26.0
+
+### Minor Changes
+
+- b3dceb5: Conditions are sortable by name and group in ascending and descending order.
+
+### Patch Changes
+
+- 0137b01: Updated date logic for med dispenses and med requests"
+
 ## 0.25.0
 
 ### Minor Changes
