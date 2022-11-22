@@ -119,6 +119,7 @@ export async function getActiveMedications(
     const response = await searchLensRecords(
       "MedicationStatement",
       requestContext,
+      "ActiveMedications",
       {
         patientUPID: patient.UPID as string,
         _include: "MedicationStatement:medication",
