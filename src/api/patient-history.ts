@@ -1,6 +1,12 @@
 import { CTWRequestContext } from "@/components/core/ctw-context";
-import { claimsBuilderId, claimsBuilderName } from "@/utils/auth";
 import { getZusApiBaseUrl } from "./urls";
+
+export type PatientHistoryResponseError = {
+  // TODO: Can code be a list of status codes? Do we have that type defined anywhere.
+  code: number;
+  title: string;
+  details: string;
+};
 
 export const schedulePatientHistory = async (
   requestContext: CTWRequestContext,
@@ -9,7 +15,7 @@ export const schedulePatientHistory = async (
 ) => {
   const endpointUrl = `${getZusApiBaseUrl(
     requestContext.env
-  )}/patient-history/patient/${patientID}/refresh`;
+  )}/patient-history/patient/${patientID}/refresh?reset=1`;
 
   try {
     const response = await fetch(endpointUrl, {
@@ -17,14 +23,11 @@ export const schedulePatientHistory = async (
       headers: {
         Authorization: `Bearer ${requestContext.authToken}`,
         "practitioner-npi": resultData.npi,
-        "practitioner-role": resultData.role,
+        "practitioner-role": resultData.role.toLocaleLowerCase(),
         "practitioner-name": resultData.name,
-        "organziation-id": claimsBuilderId(requestContext.authToken),
-        "organziation-name": claimsBuilderName(requestContext.authToken),
       },
     });
-    const data = await response.json();
-    // TODO: handle error from server
+    return await response.json();
   } catch (e) {
     throw Error(`Error scheduling patient history job with id of ${patientID}`);
   }

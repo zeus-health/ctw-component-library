@@ -19,6 +19,14 @@ export const MaritalStatuses = [
 ] as const;
 
 export class PatientModel extends FHIRModel<fhir4.Patient> {
+  get active(): boolean | undefined {
+    return this.resource.active;
+  }
+
+  get contact(): fhir4.PatientContact[] | undefined {
+    return this.resource.contact;
+  }
+
   get dob(): string | undefined {
     return formatDateISOToLocal(this.resource.birthDate);
   }
