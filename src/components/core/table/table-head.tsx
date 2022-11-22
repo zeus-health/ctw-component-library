@@ -1,11 +1,7 @@
+import { SortDir } from "@/utils/sort";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/outline";
 import cx from "classnames";
-import {
-  MinRecordItem,
-  SortDir,
-  TableColumn,
-  TableSort,
-} from "./table-helpers";
+import { MinRecordItem, TableColumn, TableSort } from "./table-helpers";
 
 type SortChevronProps = {
   sortOrder?: SortDir;

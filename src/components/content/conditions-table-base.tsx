@@ -1,8 +1,9 @@
 import { ConditionModel } from "@/fhir/models/condition";
+import { alphaSortBlankLast } from "@/utils/sort";
 import { DotsHorizontalIcon } from "@heroicons/react/outline";
 import { DropdownMenu, MenuItems } from "../core/dropdown-menu";
 import { Table, TableBaseProps } from "../core/table/table";
-import { alphaSortBlankLast, TableColumn } from "../core/table/table-helpers";
+import { TableColumn } from "../core/table/table-helpers";
 
 export type ConditionsTableBaseProps = {
   className?: string;
