@@ -67,7 +67,6 @@ export const editPatient = async (
 
   const response = await createOrEditFhirResource(fhirPatient, requestContext);
 
-  // TODO: abstract this as it is used in various places now
   if (isFhirError(response) && isOperationOutcome(response.response.data)) {
     requestErrors = new OperationOutcomeModel(response.response.data).issues
       .filter((issue) => issue.severity !== "warning")
