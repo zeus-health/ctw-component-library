@@ -8,6 +8,7 @@ import { PatientModel } from "./patient";
 import { MedicationRequestModel } from "@/fhir/models/medication-request";
 import { MedicationDispenseModel } from "@/fhir/models/medication-dispense";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
+import { MedicationAdministrationModel } from "@/fhir/models/medication-administration";
 
 export class MedicationModel extends FHIRModel<Medication> {
   get performer(): string | undefined {
@@ -24,7 +25,10 @@ export class MedicationModel extends FHIRModel<Medication> {
       case "MedicationStatement":
         return this.resource.dosage?.[0]?.text;
       case "MedicationAdministration":
-        return this.resource.dosage?.text;
+        return new MedicationAdministrationModel(
+          this.resource,
+          this.includedResources
+        ).dosageDisplay;
       case "MedicationDispense":
       case "MedicationRequest":
         return codeableConceptLabel(this.resource.dosageInstruction?.[0]);
