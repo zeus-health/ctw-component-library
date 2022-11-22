@@ -29,7 +29,6 @@ export async function createOrEditFhirResource(
     });
     if (!isFhirError(response)) {
       resourceModified.id = response.id;
-      console.log(createProvenance("CREATE", resourceModified, requestContext));
     }
     return response;
   } catch (err) {
