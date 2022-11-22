@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
 import { MedicationModel } from "@/fhir/models/medication";
@@ -23,6 +22,7 @@ import {
   sortBy,
   split,
 } from "lodash/fp";
+import { useEffect, useState } from "react";
 import { bundleToResourceMap, getMergedIncludedResources } from "./bundle";
 import { getIdentifyingRxNormCode } from "./medication";
 import {

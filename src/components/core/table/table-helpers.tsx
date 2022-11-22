@@ -1,8 +1,11 @@
+import { alphaSortBlankLast, SortDir } from "@/utils/sort";
 import { ReactNode } from "react";
 
 export interface MinRecordItem {
   id: string | number;
 }
+
+export type TableSort = { columnTitle: string; dir: SortDir };
 
 type DataIndexSpecified<T> = { dataIndex: keyof T; render?: never };
 type RenderSpecified<T> = { dataIndex?: never; render: (row: T) => ReactNode };
@@ -45,26 +48,3 @@ export function sortRecords<T extends MinRecordItem>(
   }
   return records;
 }
-
-export type SortDir = "asc" | "desc";
-
-export type TableSort = { columnTitle: string; dir: SortDir };
-
-export const alphaSortBlankLast = (
-  a: string | undefined,
-  b: string | undefined,
-  dir: SortDir
-) => {
-  const aIsBlank = !a || a === "";
-  const bIsBlank = !b || b === "";
-  if (aIsBlank && bIsBlank) {
-    return 0;
-  }
-  if (aIsBlank) {
-    return 1;
-  }
-  if (bIsBlank) {
-    return -1;
-  }
-  return dir === "asc" ? a.localeCompare(b) : b.localeCompare(a);
-};
