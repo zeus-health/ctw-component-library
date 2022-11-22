@@ -108,7 +108,7 @@ export async function getBuilderMedications(
 }
 
 /* Note when filtering the bundle may contain data that will no longer be in the returned medications. */
-export async function getSummaryMedications(
+export async function getActiveMedications(
   requestContext: CTWRequestContext,
   patient: PatientModel,
   keys = []
@@ -119,6 +119,7 @@ export async function getSummaryMedications(
     const response = await searchLensRecords(
       "MedicationStatement",
       requestContext,
+      "ActiveMedications",
       {
         patientUPID: patient.UPID as string,
         _include: "MedicationStatement:medication",
