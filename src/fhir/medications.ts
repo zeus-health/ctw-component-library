@@ -153,18 +153,23 @@ export function splitMedications(
   builderOwnedMedications: MedicationStatement[],
   includedResources?: ResourceMap
 ) {
+  console.log("activeMeds", activeMedications.length);
+  console.log("builderOwnedMeds", builderOwnedMedications.length);
+
   // Get active medications where there does not exist a matching builder owned record.
   const otherProviderMedications = activeMedications.filter(
     (activeMed) =>
       !builderOwnedMedications.some(
         (builderMed) =>
-          getIdentifyingRxNormCode(activeMed, includedResources) ===
-          getIdentifyingRxNormCode(builderMed, includedResources)
+          getIdentifyingRxNormCode(builderMed, includedResources) ===
+          getIdentifyingRxNormCode(activeMed, includedResources)
       )
   );
 
+  console.log("otherProviderMeds", otherProviderMedications.length);
+
   // Get builder owned medications where there does not exist an active medication.
-  let builderMedications = builderOwnedMedications.filter(
+  const builderMedications = builderOwnedMedications.filter(
     (builderMed) =>
       !activeMedications.some(
         (activeMed) =>
@@ -173,9 +178,11 @@ export function splitMedications(
       )
   );
 
+  console.log("builderMedsWithoutMatch", builderMedications.length);
+
   // Get builder owned medications that line up with an active medication.
   // Take the active medication but modify it to use the builder's display properties.
-  builderOwnedMedications.map((builderMed) => {
+  builderOwnedMedications.forEach((builderMed) => {
     const mergedMed = clone(
       activeMedications.find(
         (activeMed) =>
@@ -183,14 +190,18 @@ export function splitMedications(
           getIdentifyingRxNormCode(builderMed, includedResources)
       )
     );
-    if (mergedMed?.medicationCodeableConcept) {
-      mergedMed.medicationCodeableConcept.text =
-        builderMed.medicationCodeableConcept?.text;
+    if (mergedMed) {
+      if (mergedMed.medicationCodeableConcept) {
+        mergedMed.medicationCodeableConcept.text =
+          builderMed.medicationCodeableConcept?.text;
+      }
+      if (mergedMed.dosage && builderMed.dosage) {
+        mergedMed.dosage[0].text = builderMed.dosage[0].text;
+      }
+      console.log("builderMedWithHistory");
+      console.log(mergedMed);
+      builderMedications.push(mergedMed);
     }
-    if (mergedMed?.dosage && builderMed.dosage) {
-      mergedMed.dosage[0].text = builderMed.dosage[0].text;
-    }
-    return builderMed;
   });
 
   return { builderMedications, otherProviderMedications };

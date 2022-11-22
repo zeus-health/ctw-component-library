@@ -4,7 +4,7 @@ import { SYSTEM_RXNORM } from "./system-urls";
 
 describe("splitSummarizedMedications", () => {
   test("splits medications correctly", () => {
-    const summarizedMeds: MedicationStatement[] = [
+    const lensMeds: MedicationStatement[] = [
       {
         resourceType: "MedicationStatement",
         status: "active",
@@ -18,7 +18,13 @@ describe("splitSummarizedMedications", () => {
               code: "known",
             },
           ],
+          text: "lens med display",
         },
+        dosage: [
+          {
+            text: "lens dosage display",
+          },
+        ],
       },
       {
         resourceType: "MedicationStatement",
@@ -51,12 +57,18 @@ describe("splitSummarizedMedications", () => {
               code: "known",
             },
           ],
+          text: "builder med display",
         },
+        dosage: [
+          {
+            text: "builder dosage display",
+          },
+        ],
       },
     ];
 
     const { builderMedications, otherProviderMedications } = splitMedications(
-      summarizedMeds,
+      lensMeds,
       builderMeds
     );
 
@@ -66,6 +78,14 @@ describe("splitSummarizedMedications", () => {
     expect(builderMedications).toHaveProperty(
       "0.medicationCodeableConcept.coding.0.code",
       "known"
+    );
+    expect(builderMedications).toHaveProperty(
+      "0.medicationCodeableConcept.text",
+      "builder med display"
+    );
+    expect(builderMedications).toHaveProperty(
+      "0.dosage.0.text",
+      "builder dosage display"
     );
     expect(otherProviderMedications).toHaveProperty(
       "0.medicationCodeableConcept.coding.0.code",
