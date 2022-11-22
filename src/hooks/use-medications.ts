@@ -1,8 +1,8 @@
 import { useQueryWithPatient } from "@/components/core/patient-provider";
 import { getMergedIncludedResources } from "@/fhir/bundle";
 import {
+  getActiveMedications,
   getBuilderMedications,
-  getSummaryMedications,
   MedicationBuilder,
   splitSummarizedMedications,
 } from "@/fhir/medications";
@@ -37,7 +37,7 @@ export function useQueryGetSummarizedPatientMedications(): UseQueryResult<
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_MEDICATIONS,
     [],
-    getSummaryMedications
+    getActiveMedications
   );
 }
 

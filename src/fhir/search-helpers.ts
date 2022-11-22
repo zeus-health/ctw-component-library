@@ -86,8 +86,24 @@ export async function searchBuilderRecords<T extends ResourceTypeString>(
   return searchAllRecords(resourceType, requestContext, params);
 }
 
-// Like searchAllRecords, but filters down to only the lens.
+// Like searchAllRecords, but filters down to lens records.
 export async function searchLensRecords<T extends ResourceTypeString>(
+  resourceType: T,
+  requestContext: CTWRequestContext,
+  searchParams?: SearchParams
+): Promise<SearchReturn<T>> {
+  const tagFilter = [
+    ...LENS_TAGS,
+    `${SYSTEM_ZUS_OWNER}|builder/${requestContext.builderId}`,
+  ];
+  const params = mergeParams(searchParams, {
+    _tag: tagFilter,
+  });
+  return searchAllRecords(resourceType, requestContext, params);
+}
+
+// Like searchAllRecords, but filters down to only summary records.
+export async function searchSummaryRecords<T extends ResourceTypeString>(
   resourceType: T,
   requestContext: CTWRequestContext,
   searchParams?: SearchParams
