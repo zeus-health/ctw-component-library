@@ -40,6 +40,9 @@ export class MedicationDispenseModel extends FHIRModel<fhir4.MedicationDispense>
 
   get quantityDisplay() {
     const { value, unit } = this.resource.quantity || {};
+    if (value && !unit) {
+      return `${value} units`;
+    }
     return compact([value, unit]).join(" ");
   }
 
