@@ -4,7 +4,7 @@ import {
   getBuilderMedications,
   getSummaryMedications,
   MedicationBuilder,
-  splitSummarizedMedications,
+  splitMedications,
 } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import {
@@ -72,7 +72,7 @@ export function useQueryAllPatientMedications() {
       ]);
 
       // Split the summarized medications into those known to the builder and those that are new.
-      const splitData = splitSummarizedMedications(
+      const splitData = splitMedications(
         summarizedMedications,
         allMedicationsForBuilder,
         includedResources

@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
 import { MedicationModel } from "@/fhir/models/medication";
@@ -8,7 +7,7 @@ import { errorResponse } from "@/utils/errors";
 import { QUERY_KEY_MEDICATION_HISTORY } from "@/utils/query-keys";
 import { sort } from "@/utils/sort";
 import type { FhirResource, MedicationStatement } from "fhir/r4";
-import { uniqWith } from "lodash";
+import { clone, uniqWith } from "lodash";
 import {
   compact,
   filter,
@@ -23,6 +22,7 @@ import {
   sortBy,
   split,
 } from "lodash/fp";
+import { useEffect, useState } from "react";
 import { bundleToResourceMap, getMergedIncludedResources } from "./bundle";
 import { getIdentifyingRxNormCode } from "./medication";
 import {
@@ -145,31 +145,54 @@ export function filterMedicationsWithNoRxNorms(
   );
 }
 
-// Splits summarized medications into those that the builder already knows about ("Provider Medications")
+// Splits medications into those that the builder already knows about ("Provider Medications")
 // and those that they do not know about ("Other Provider Medications").
-export function splitSummarizedMedications(
-  summarizedMedications: MedicationStatement[],
+export function splitMedications(
+  activeMedications: MedicationStatement[],
   builderOwnedMedications: MedicationStatement[],
   includedResources?: ResourceMap
 ) {
-  const builderMedications: MedicationStatement[] = [];
-  const otherProviderMedications: MedicationStatement[] = [];
-  const splitData = summarizedMedications.reduce(
-    (sd, summaryMed) => {
-      sd[
-        builderOwnedMedications.some(
-          (builderMed) =>
-            getIdentifyingRxNormCode(builderMed, includedResources) ===
-            getIdentifyingRxNormCode(summaryMed, includedResources)
-        )
-          ? "builderMedications"
-          : "otherProviderMedications"
-      ].push(summaryMed);
-      return sd;
-    },
-    { builderMedications, otherProviderMedications }
+  // Get active medications where there does not exist a matching builder owned record.
+  const otherProviderMedications = activeMedications.filter(
+    (activeMed) =>
+      !builderOwnedMedications.some(
+        (builderMed) =>
+          getIdentifyingRxNormCode(activeMed, includedResources) ===
+          getIdentifyingRxNormCode(builderMed, includedResources)
+      )
   );
-  return splitData;
+
+  // Get builder owned medications where there does not exist an active medication.
+  let builderMedications = builderOwnedMedications.filter(
+    (builderMed) =>
+      !activeMedications.some(
+        (activeMed) =>
+          getIdentifyingRxNormCode(activeMed, includedResources) ===
+          getIdentifyingRxNormCode(builderMed, includedResources)
+      )
+  );
+
+  // Get builder owned medications that line up with an active medication.
+  // Take the active medication but modify it to use the builder's display properties.
+  builderOwnedMedications.map((builderMed) => {
+    const mergedMed = clone(
+      activeMedications.find(
+        (activeMed) =>
+          getIdentifyingRxNormCode(activeMed, includedResources) ===
+          getIdentifyingRxNormCode(builderMed, includedResources)
+      )
+    );
+    if (mergedMed?.medicationCodeableConcept) {
+      mergedMed.medicationCodeableConcept.text =
+        builderMed.medicationCodeableConcept?.text;
+    }
+    if (mergedMed?.dosage && builderMed.dosage) {
+      mergedMed.dosage[0].text = builderMed.dosage[0].text;
+    }
+    return builderMed;
+  });
+
+  return { builderMedications, otherProviderMedications };
 }
 
 export function useMedicationHistory(medication?: fhir4.MedicationStatement) {

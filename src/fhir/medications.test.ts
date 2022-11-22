@@ -1,5 +1,5 @@
 import { MedicationStatement } from "fhir/r4";
-import { splitSummarizedMedications } from "./medications";
+import { splitMedications } from "./medications";
 import { SYSTEM_RXNORM } from "./system-urls";
 
 describe("splitSummarizedMedications", () => {
@@ -55,8 +55,10 @@ describe("splitSummarizedMedications", () => {
       },
     ];
 
-    const { builderMedications, otherProviderMedications } =
-      splitSummarizedMedications(summarizedMeds, builderMeds);
+    const { builderMedications, otherProviderMedications } = splitMedications(
+      summarizedMeds,
+      builderMeds
+    );
 
     expect(builderMedications).toHaveLength(1);
     expect(otherProviderMedications).toHaveLength(1);
