@@ -2,13 +2,13 @@ import { codeableConceptLabel } from "@/fhir/codeable-concept";
 import { formatDateISOToLocal } from "@/fhir/formatters";
 import type { Medication } from "@/fhir/medication";
 import { getPerformingOrganization } from "@/fhir/medication";
+import { MedicationAdministrationModel } from "@/fhir/models/medication-administration";
+import { MedicationDispenseModel } from "@/fhir/models/medication-dispense";
+import { MedicationRequestModel } from "@/fhir/models/medication-request";
+import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { findReference } from "@/fhir/resource-helper";
 import { FHIRModel } from "./fhir-model";
 import { PatientModel } from "./patient";
-import { MedicationRequestModel } from "@/fhir/models/medication-request";
-import { MedicationDispenseModel } from "@/fhir/models/medication-dispense";
-import { MedicationStatementModel } from "@/fhir/models/medication-statement";
-import { MedicationAdministrationModel } from "@/fhir/models/medication-administration";
 
 export class MedicationModel extends FHIRModel<Medication> {
   get performer(): string | undefined {
@@ -44,9 +44,13 @@ export class MedicationModel extends FHIRModel<Medication> {
       case "MedicationAdministration":
         return this.resource.effectivePeriod?.start;
       case "MedicationDispense":
-        return this.resource.whenHandedOver;
+        return this.resource.whenHandedOver ?? this.resource.whenPrepared;
       case "MedicationRequest":
-        return this.resource.authoredOn;
+        return (
+          this.resource.authoredOn ??
+          this.resource.dosageInstruction?.[0].timing?.repeat?.boundsPeriod
+            ?.start
+        );
       default:
         return "";
     }
