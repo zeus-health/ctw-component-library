@@ -6,7 +6,9 @@ module.exports = {
     "@storybook/addon-interactions",
   ],
   features: {
-    interactionsDebugger: true, // Enable playback controls.
+    // Disabling debugger for now as it currently doesn't
+    // really work.
+    interactionsDebugger: false,
   },
   framework: {
     name: "@storybook/react-vite",

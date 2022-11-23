@@ -3,7 +3,7 @@
 //     condition in other and therefor it is filtered out.
 //  2. Inactive Crohn's disease which is recorded earlier
 //     than the one in other and therefor it is NOT filtered out.
-export const patientConditions = {
+export const patientConditions: fhir4.Bundle = {
   resourceType: "Bundle",
   id: "f958f3e3-e585-4845-b666-6bf1a6914087",
   meta: {

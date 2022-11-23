@@ -34,7 +34,11 @@ type ZusJWT = {
 };
 
 function getClaims(authToken: string): ZusJWT {
-  return jwt_decode(authToken);
+  try {
+    return jwt_decode(authToken);
+  } catch {
+    return {} as ZusJWT;
+  }
 }
 
 export function claimsBuilderId(authToken: string): string {

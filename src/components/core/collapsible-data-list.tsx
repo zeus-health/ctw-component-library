@@ -61,6 +61,7 @@ const DetailSummary = ({
 }) => (
   <button
     type="button"
+    aria-label="details"
     onClick={() => setIsDetailShown(!isDetailShown)}
     className="ctw-w-full ctw-cursor-pointer ctw-border-none ctw-bg-transparent ctw-p-0 ctw-text-base ctw-outline-none"
   >

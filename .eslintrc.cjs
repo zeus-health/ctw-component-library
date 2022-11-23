@@ -41,6 +41,7 @@ module.exports = {
           "*.env.*",
           "scripts/**/*",
           "**/*.stories.*",
+          "**/story-helpers/**/*",
           "**/*.test.*",
           "test/**/*",
         ],
