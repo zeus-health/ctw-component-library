@@ -1,3 +1,5 @@
+import type { Reference } from "fhir/r4";
+import { capitalize, compact, find, get } from "lodash/fp";
 import { codeableConceptLabel } from "@/fhir/codeable-concept";
 import { dateToISO, formatDateISOToLocal } from "@/fhir/formatters";
 import {
@@ -10,12 +12,12 @@ import {
   LENS_EXTENSION_MEDICATION_DAYS_SUPPLY,
   LENS_EXTENSION_MEDICATION_LAST_FILL_DATE,
   LENS_EXTENSION_MEDICATION_LAST_PRESCRIBED_DATE,
+  LENS_EXTENSION_MEDICATION_LAST_PRESCRIBER,
   LENS_EXTENSION_MEDICATION_QUANTITY,
   LENS_EXTENSION_MEDICATION_REFILLS,
 } from "@/fhir/system-urls";
-import type { Reference } from "fhir/r4";
-import { capitalize, compact, find, get } from "lodash/fp";
 import { FHIRModel } from "./fhir-model";
+import { findReference } from "@/fhir/resource-helper";
 
 export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatement> {
   readonly builderPatientRxNormStatus?: Record<string, string>;
@@ -165,13 +167,28 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
       ?.valueUnsignedInt?.toString();
   }
 
-  // TODO - this should actually resolve the reference, not just use the display!
   get lastPrescriber(): string | undefined {
-    return formatDateISOToLocal(
-      this.resource.extension?.find(
-        (x) => x.url === LENS_EXTENSION_MEDICATION_LAST_PRESCRIBED_DATE
-      )?.valueReference?.display
+    const reference = this.resource.extension?.find(
+      (x) => x.url === LENS_EXTENSION_MEDICATION_LAST_PRESCRIBER
+    )?.valueReference;
+
+    if (!reference?.type || !reference.reference) {
+      return undefined;
+    }
+    const resource = findReference(
+      reference.type as "Practitioner" | "Organization",
+      this.resource.contained,
+      this.includedResources,
+      reference.reference
     );
+    if (resource?.name) {
+      if (typeof resource.name === "string") {
+        return resource.name;
+      }
+      const { family, given = [] } = resource.name[0];
+      return compact([family, given[0]]).join(", ");
+    }
+    return reference.display;
   }
 
   get lastPrescribedDate(): string | undefined {

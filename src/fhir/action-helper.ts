@@ -19,7 +19,7 @@ export async function createOrEditFhirResource(
         body: omitEmptyArrays(resource),
       });
       if (!isFhirError(response)) {
-        createProvenance("UPDATE", resource, requestContext);
+        createProvenance("UPDATE", response, requestContext);
       }
       return response;
     }
@@ -29,7 +29,6 @@ export async function createOrEditFhirResource(
     });
     if (!isFhirError(response)) {
       resourceModified.id = response.id;
-      createProvenance("CREATE", resourceModified, requestContext);
     }
     return response;
   } catch (err) {

@@ -10,6 +10,7 @@ import type { FhirResource, MedicationStatement } from "fhir/r4";
 import { uniqWith } from "lodash";
 import {
   compact,
+  filter,
   get,
   groupBy,
   last,
@@ -17,8 +18,11 @@ import {
   mapValues,
   omit,
   pipe,
+  propEq,
+  sortBy,
   split,
 } from "lodash/fp";
+import { useEffect, useState } from "react";
 import { bundleToResourceMap, getMergedIncludedResources } from "./bundle";
 import { getIdentifyingRxNormCode } from "./medication";
 import {
@@ -104,7 +108,7 @@ export async function getBuilderMedications(
 }
 
 /* Note when filtering the bundle may contain data that will no longer be in the returned medications. */
-export async function getSummaryMedications(
+export async function getActiveMedications(
   requestContext: CTWRequestContext,
   patient: PatientModel,
   keys = []
@@ -115,6 +119,7 @@ export async function getSummaryMedications(
     const response = await searchLensRecords(
       "MedicationStatement",
       requestContext,
+      "ActiveMedications",
       {
         patientUPID: patient.UPID as string,
         _include: "MedicationStatement:medication",
@@ -168,9 +173,10 @@ export function splitSummarizedMedications(
   return splitData;
 }
 
-export function useMedicationHistory(medication: fhir4.MedicationStatement) {
-  const aggregatedFromReferences = new MedicationStatementModel(medication)
-    .aggregatedFrom;
+export function useMedicationHistory(medication?: fhir4.MedicationStatement) {
+  const aggregatedFromReferences = !medication
+    ? []
+    : new MedicationStatementModel(medication).aggregatedFrom;
 
   const getRefId = pipe(get("reference"), split("/"), last);
   const resources = pipe(
@@ -180,9 +186,15 @@ export function useMedicationHistory(medication: fhir4.MedicationStatement) {
 
   return useQueryWithPatient(
     QUERY_KEY_MEDICATION_HISTORY,
-    [medication.id],
+    [medication?.id || "empty"],
     async (requestContext, patient) => {
       try {
+        if (!medication) {
+          return {
+            includedResources: {},
+            medications: [],
+          };
+        }
         const [
           medicationStatementResponse,
           medicationAdministrationResponse,
@@ -202,13 +214,14 @@ export function useMedicationHistory(medication: fhir4.MedicationStatement) {
           searchWrapper(
             "MedicationRequest",
             requestContext,
-            resources.MedicationRequest
+            resources.MedicationRequest,
+            ["MedicationRequest:requester"]
           ),
           searchWrapper(
             "MedicationDispense",
             requestContext,
             resources.MedicationDispense,
-            ["MedicationDispense:performer"]
+            ["MedicationDispense:performer", "MedicationDispense:prescription"]
           ),
         ]);
 
@@ -243,11 +256,51 @@ export function useMedicationHistory(medication: fhir4.MedicationStatement) {
         return { medications, includedResources };
       } catch (e) {
         throw new Error(
-          `Failed fetching medication history for medication ${medication.id}: ${e}`
+          `Failed fetching medication history for medication ${medication?.id}: ${e}`
         );
       }
     }
   );
+}
+
+/**
+ * Currently MedicationStatements don't have lens data with the lastPrescriber
+ * reliably populated. We are instead getting that information from the meds
+ * history and reusing the `useMedicationHistory` query to avoid making extra
+ * ODS requests (as the history ui and details ui are always together atm).
+ */
+export function useLastPrescriber(medication?: fhir4.MedicationStatement) {
+  const [lastPrescriber, setLastPrescriber] = useState<string | undefined>();
+  const [isLoading, setIsLoading] = useState(true);
+  const historyQuery = useMedicationHistory(medication);
+
+  useEffect(() => {
+    const { includedResources = {}, medications = [] } =
+      historyQuery.data || {};
+
+    if (lastPrescriber === undefined && medications.length) {
+      const prescriber = pipe(
+        // 1. Get underlying resources from the medication models.
+        map(get("resource")),
+        // 2. Throw away any resources that are not MedicationRequests.
+        filter(propEq("resourceType", "MedicationRequest")),
+        // 3. Sort by the authored on date.
+        sortBy((m) => Date.parse(m.authoredOn)),
+        // 4. If there are med dispense records, make them models.
+        map((mr) => new MedicationModel(mr, includedResources)),
+        // 5. Take the last (latest) from our filtered list.
+        last,
+        // 6. Get the prescriber from the medication model.
+        get("prescriber")
+      )(medications);
+
+      // Fall back to a string, so we don't try to find prescriber again.
+      setLastPrescriber(prescriber || "");
+      setIsLoading(false);
+    }
+  }, [lastPrescriber, historyQuery.data]);
+
+  return { isLoading, lastPrescriber };
 }
 
 type NoopSearchResults = { resources: []; bundle: undefined };

@@ -5,13 +5,16 @@ import { DataList, entryFromArray } from "../core/data-list";
 import type { DrawerProps } from "../core/drawer";
 import { Drawer } from "../core/drawer";
 import { MedicationHistory } from "./medication-history";
+import { useLastPrescriber } from "@/fhir/medications";
+import { Loading } from "@/components/core/loading";
 
 export type MedicationDrawerProps = {
   medication?: MedicationStatementModel;
 } & Pick<DrawerProps, "isOpen" | "onClose">;
 
 function getDataEntriesFromMedicationStatement(
-  medication?: MedicationStatementModel
+  medication?: MedicationStatementModel,
+  lastPrescriber?: string
 ): DataListEntry[] {
   return medication
     ? [
@@ -21,7 +24,7 @@ function getDataEntriesFromMedicationStatement(
         { label: "Days Supply", value: medication.daysSupply },
         { label: "Refills", value: medication.refills },
         { label: "Instructions", value: medication.dosage },
-        { label: "Prescriber", value: medication.lastPrescriber },
+        { label: "Prescriber", value: lastPrescriber },
         { label: "Last Prescribed Date", value: medication.lastPrescribedDate },
         ...entryFromArray("Note", medication.notesDisplay),
       ]
@@ -32,18 +35,23 @@ export const MedicationDrawer = ({
   medication,
   ...drawerProps
 }: MedicationDrawerProps) => {
-  const data = getDataEntriesFromMedicationStatement(medication);
+  const { lastPrescriber, isLoading } = useLastPrescriber(medication?.resource);
+  const data = getDataEntriesFromMedicationStatement(
+    medication,
+    lastPrescriber
+  );
   return (
     <Drawer title="Medication Details" {...drawerProps}>
       <Drawer.Body>
         <div className="ctw-space-y-5">
           <div className="ctw-flex ctw-justify-between ctw-space-x-8">
             <h3 className="ctw-m-0 ctw-text-3xl ctw-font-light">
-              {medication?.display || ""}
+              {medication?.display}
             </h3>
           </div>
-          <DataList title="Summary" data={data} />
-          {medication?.rxNorm && <MedicationHistory medication={medication} />}
+          {isLoading && <Loading />}
+          {!isLoading && <DataList title="Summary" data={data} />}
+          {medication && <MedicationHistory medication={medication} />}
         </div>
       </Drawer.Body>
       <Drawer.Footer>

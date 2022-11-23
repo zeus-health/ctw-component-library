@@ -14,7 +14,7 @@ import { getPractitioner } from "./practitioner";
 import {
   searchBuilderRecords,
   searchCommonRecords,
-  searchLensRecords,
+  searchSummaryRecords,
 } from "./search-helpers";
 import {
   SYSTEM_ICD10,
@@ -74,7 +74,7 @@ export function useOtherProviderConditions() {
     [],
     async (requestContext, patient) => {
       try {
-        const { resources: conditions } = await searchLensRecords(
+        const { resources: conditions } = await searchSummaryRecords(
           "Condition",
           requestContext,
           {
