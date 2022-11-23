@@ -1,6 +1,7 @@
 import { expect } from "@storybook/jest";
 import {
   userEvent,
+  waitFor,
   waitForElementToBeRemoved,
   within,
 } from "@storybook/testing-library";
@@ -21,17 +22,25 @@ export function conditionTable(
     userEvent.click(canvas.getByRole("menuitem", { name: menuItem }));
   }
 
-  // Add 1 to account for header row.
   function getRow(row: number) {
-    return within(table.queryAllByRole("row")[row + 1]);
+    const tbody = table.getAllByRole("rowgroup")[1];
+    return within(within(tbody).queryAllByRole("row")[row]);
   }
 
   return {
     table,
-    tableEl,
-    toHaveRowCount: (count: number) => {
-      // We add 1 here to account for header row.
-      expect(table.queryAllByRole("row")).toHaveLength(count + 1);
+    // We use waitFor here as there is a race condition
+    // when switching between tests, where the new
+    // mocked data has yet to update.
+    toHaveRowCount: async (count: number) => {
+      const tbody = table.getAllByRole("rowgroup")[1];
+      if (count === 0) {
+        await waitFor(() => expect(tbody).toBeFalsy());
+      } else {
+        await waitFor(() =>
+          expect(within(tbody).queryAllByRole("row")).toHaveLength(count)
+        );
+      }
     },
     toHaveRowWithText: (row: number, text: string | RegExp) => {
       getRow(row).getByText(text);

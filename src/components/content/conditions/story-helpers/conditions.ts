@@ -7,8 +7,9 @@ export async function conditionsObject(canvasElement: HTMLElement) {
   const patientRecord = conditionTable(canvasElement, tables[0]);
   const otherProvider = conditionTable(canvasElement, tables[1]);
 
-  // Wait for loading to finish, we should have the condition column header.
-  await patientRecord.table.findByText("active");
+  // Wait for loading to finish, we should have an active condition in each table.
+  await patientRecord.table.findAllByText("active");
+  await otherProvider.table.findAllByText("active");
 
   return {
     addCondition: () =>
