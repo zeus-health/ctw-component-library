@@ -26,7 +26,9 @@ module.exports = {
   rules: {
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-unnecessary-condition": "error",
+    "@typescript-eslint/no-floating-promises": ["error", { ignoreVoid: true }],
     "@typescript-eslint/no-use-before-define": "off",
+    "no-void": ["error", { allowAsStatement: true }],
     curly: "error",
     "import/extensions": "off",
     "import/order": "off",

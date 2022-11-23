@@ -73,6 +73,6 @@ export const Test: StoryObj<DrawerProps> = {
 
     // Close drawer and verify things are hiddne.
     userEvent.click(canvas.getByLabelText("close"));
-    waitForElementToBeRemoved(canvas.queryByText(/my title/i));
+    await waitForElementToBeRemoved(canvas.queryByText(/my title/i));
   },
 };

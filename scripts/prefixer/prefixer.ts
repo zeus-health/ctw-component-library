@@ -26,7 +26,7 @@ async function prefixFile(fp: string) {
   writeFileSync(fp, replaced, "utf-8");
 }
 
-main();
+void main();
 
 export {};
 
