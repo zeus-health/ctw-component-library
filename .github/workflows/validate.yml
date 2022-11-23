@@ -118,9 +118,6 @@ jobs:
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
 
-      - name: Build Storybook
-        run: npm run build-storybook
-
       - name: Storybook Tests
         run: |
           npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
