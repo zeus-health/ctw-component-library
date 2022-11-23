@@ -120,7 +120,7 @@ export const medicationDispense = {
     {
       resource: {
         resourceType: "MedicationDispense",
-        id: "6b16e363-662e-401f-9f3f-5323f81f2149",
+        id: "6b16e363",
         meta: {
           extension: [
             {
@@ -233,7 +233,7 @@ export const medicationDispense = {
     {
       resource: {
         resourceType: "MedicationDispense",
-        id: "fa20f4e2-8a10-4555-952c-07d622fdcb50",
+        id: "fa20f4e2",
         meta: {
           extension: [
             {
@@ -346,7 +346,7 @@ export const medicationDispense = {
     {
       resource: {
         resourceType: "MedicationDispense",
-        id: "99b5e53c-81b7-4aae-ab20-fe0b7ad7ce55",
+        id: "99b5e53c",
         meta: {
           extension: [
             {
@@ -459,7 +459,7 @@ export const medicationDispense = {
     {
       resource: {
         resourceType: "MedicationDispense",
-        id: "4c19932e-500f-4738-8600-54dec77f343d",
+        id: "4c19932e",
         meta: {
           extension: [
             {
@@ -572,7 +572,7 @@ export const medicationDispense = {
     {
       resource: {
         resourceType: "Patient",
-        id: "88a0a417-c046-4dc8-b3dc-f1c1c2d3a1ce",
+        id: "88a0a417",
         meta: {
           extension: [
             {
@@ -647,7 +647,7 @@ export const medicationDispense = {
     {
       resource: {
         resourceType: "Organization",
-        id: "c40671c0-e0e6-4dcd-beb2-0188e1d6ee1c",
+        id: "c40671c0",
         meta: {
           extension: [
             {

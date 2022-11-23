@@ -135,7 +135,7 @@ export const medicationRequest = {
     {
       resource: {
         resourceType: "Patient",
-        id: "88a0a417-c046-4dc8-b3dc-f1c1c2d3a1ce",
+        id: "88a0a417",
         meta: {
           extension: [
             {

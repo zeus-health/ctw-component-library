@@ -113,7 +113,7 @@ export const medicationStatement = {
     {
       resource: {
         resourceType: "Patient",
-        id: "4b92e70f-8476-461b-8980-047e50aa2dab",
+        id: "4b92e70f",
         meta: {
           extension: [
             {
@@ -191,7 +191,7 @@ export const medicationStatement = {
     {
       resource: {
         resourceType: "Organization",
-        id: "abcd-12345-efghij",
+        id: "abcd",
         meta: {
           extension: [
             {

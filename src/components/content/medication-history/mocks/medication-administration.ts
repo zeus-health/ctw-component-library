@@ -188,7 +188,7 @@ export const medicationAdministration = {
     {
       resource: {
         resourceType: "Organization",
-        id: "af0276b9-9a91-4a34-871e-6ac2115fae17",
+        id: "af0276b9",
         meta: {
           extension: [
             {
