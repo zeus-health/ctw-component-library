@@ -40,7 +40,9 @@ export class MedicationModel extends FHIRModel<Medication> {
   get date(): string | undefined {
     switch (this.resource.resourceType) {
       case "MedicationStatement":
-        return this.resource.dateAsserted;
+        return (
+          this.resource.dateAsserted ?? this.resource.effectivePeriod?.start
+        );
       case "MedicationAdministration":
         return this.resource.effectivePeriod?.start;
       case "MedicationDispense":
