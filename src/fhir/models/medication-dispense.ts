@@ -1,5 +1,4 @@
 import { getPerformingOrganization } from "@/fhir/medication";
-import { compact } from "lodash/fp";
 import { FHIRModel } from "./fhir-model";
 import { findReference } from "@/fhir/resource-helper";
 import { PractitionerModel } from "@/fhir/models/practitioner";
@@ -39,16 +38,16 @@ export class MedicationDispenseModel extends FHIRModel<fhir4.MedicationDispense>
   }
 
   get quantityDisplay() {
-    const { value, unit } = this.resource.quantity || {};
-    if (value && !unit) {
-      return `${value} units`;
+    const { value = "", unit = "units" } = this.resource.quantity || {};
+    if (value === "") {
+      return "";
     }
-    return compact([value, unit]).join(" ");
+    return `${value} ${unit}`;
   }
 
-  get supplied(): string {
-    const { value, unit = "days" } = this.resource.daysSupply || {};
-    if (!value) {
+  get supplied() {
+    const { value = "", unit = "days" } = this.resource.daysSupply || {};
+    if (value === "") {
       return "";
     }
     return `${value} ${unit}`;
