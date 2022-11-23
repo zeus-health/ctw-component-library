@@ -1,39 +1,14 @@
-import { orderBy, isString } from "lodash";
+import { isString, orderBy } from "lodash";
 import { get } from "lodash/fp";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Newable<T> = new (...args: any[]) => T;
-
-export function getSortInfo<T>(model: Newable<T>, sortValue?: string | null) {
-  if (!sortValue) {
-    return {};
-  }
-  const [sortColumn, sortOrder] = sortValue.split(" ");
-
-  if (!sortColumn || !sortOrder) {
-    return {};
-  }
-
-  if (!["asc", "desc"].includes(sortOrder)) {
-    return {};
-  }
-
-  if (!Object.getOwnPropertyNames(model.prototype).includes(sortColumn)) {
-    return {};
-  }
-
-  return {
-    sortColumn: sortColumn as keyof T,
-    sortOrder: sortOrder as "asc" | "desc",
-  };
-}
+export type SortDir = "asc" | "desc";
 
 type GetValueFunction<T> = (c: T) => unknown;
 
 export function sort<T>(
   collection: T[],
   getValue: GetValueFunction<T> | string,
-  order: "asc" | "desc",
+  order: SortDir,
   isDate = false
 ) {
   const getValueFn = isString(getValue) ? get(getValue) : getValue;
@@ -70,3 +45,22 @@ function sortByDate<T>(
   });
   return collection;
 }
+
+export const alphaSortBlankLast = (
+  a: string | undefined,
+  b: string | undefined,
+  dir: SortDir
+) => {
+  const aIsBlank = !a || a === "";
+  const bIsBlank = !b || b === "";
+  if (aIsBlank && bIsBlank) {
+    return 0;
+  }
+  if (aIsBlank) {
+    return 1;
+  }
+  if (bIsBlank) {
+    return -1;
+  }
+  return dir === "asc" ? a.localeCompare(b) : b.localeCompare(a);
+};

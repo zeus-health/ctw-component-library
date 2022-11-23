@@ -1,4 +1,4 @@
-import type { MinRecordItem, TableColumn } from "./table";
+import { MinRecordItem, TableColumn } from "./table-helpers";
 
 export type TableColGroupProps<T extends MinRecordItem> = {
   columns: TableColumn<T>[];
