@@ -15,6 +15,7 @@ module.exports = {
     options: {},
   },
   core: {
+    channelOptions: { allowFunction: false, maxDepth: 10 },
     disableTelemetry: true,
   },
   staticDirs: ["../public"],
