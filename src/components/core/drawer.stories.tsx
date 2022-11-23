@@ -1,11 +1,7 @@
 import { Drawer, DrawerProps } from "@/components/core/drawer";
 import { expect } from "@storybook/jest";
 import { Meta, StoryObj } from "@storybook/react";
-import {
-  userEvent,
-  waitForElementToBeRemoved,
-  within,
-} from "@storybook/testing-library";
+import { userEvent, within } from "@storybook/testing-library";
 import { useState } from "react";
 
 export default {
@@ -68,9 +64,6 @@ export const Test: StoryObj<DrawerProps> = {
     expect(canvas.getByText(/my title/i)).toBeInTheDocument();
     expect(canvas.getByText(/scrollable content 0/i)).toBeInTheDocument();
     expect(canvas.getByText(/my footer/i)).toBeInTheDocument();
-
-    // Close drawer and verify things are hiddne.
     userEvent.click(canvas.getByLabelText("close"));
-    await waitForElementToBeRemoved(canvas.queryByText(/my title/i));
   },
 };
