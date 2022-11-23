@@ -1,5 +1,4 @@
 import { Drawer, DrawerProps } from "@/components/core/drawer";
-import { sleep } from "@/utils/misc";
 import { expect } from "@storybook/jest";
 import { Meta, StoryObj } from "@storybook/react";
 import {
@@ -69,7 +68,6 @@ export const Test: StoryObj<DrawerProps> = {
     expect(canvas.getByText(/my title/i)).toBeInTheDocument();
     expect(canvas.getByText(/scrollable content 0/i)).toBeInTheDocument();
     expect(canvas.getByText(/my footer/i)).toBeInTheDocument();
-    await sleep(750); // Let it sit open for a bit.
 
     // Close drawer and verify things are hiddne.
     userEvent.click(canvas.getByLabelText("close"));
