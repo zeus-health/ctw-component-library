@@ -12,7 +12,7 @@ export async function conditionsObject(canvasElement: HTMLElement) {
   await otherProvider.table.findAllByText("active");
 
   return {
-    addCondition: () =>
+    clickAddCondition: () =>
       userEvent.click(canvas.getByRole("button", { name: "+ Add Condition" })),
 
     toggleInactive: () =>

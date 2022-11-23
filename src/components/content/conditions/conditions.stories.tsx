@@ -59,7 +59,7 @@ export const TestAdd: StoryObj<Props> = {
     const conditions = await conditionsObject(canvasElement);
     await conditions.patientRecord.toHaveRowCount(1);
     const newCondition = "Heart failure (disorder)";
-    conditions.addCondition();
+    conditions.clickAddCondition();
     const conditionForm = conditionFormDrawer(canvasElement);
     conditionForm.conditionSearch("heart");
     await conditionForm.selectCondition(newCondition);
