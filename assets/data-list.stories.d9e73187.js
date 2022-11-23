@@ -1,2 +1,0 @@
-import{D as a}from"./data-list.04a18267.js";import"./index.768dbde9.js";import"./iframe.0dba12bf.js";const o={component:a,tags:["docsPage"]},s={args:{title:"data list title",data:[{label:"String value",value:"hello world"},{label:"Array value",value:["One","two","3"]},{label:"Undefined value",value:void 0}]}},i=["Basic"];export{s as Basic,i as __namedExportsOrder,o as default};
-//# sourceMappingURL=data-list.stories.d9e73187.js.map
