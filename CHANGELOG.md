@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.26.1
+
+### Patch Changes
+
+- 845ee67: Provenance now saves which historical version of a resource resulted from an operation, for more thorough tracking of changes.
+
 ## 0.26.0
 
 ### Minor Changes
