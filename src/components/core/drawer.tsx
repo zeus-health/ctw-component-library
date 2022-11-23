@@ -84,6 +84,7 @@ export function Drawer({
                       <div className="ctw-ml-3 ctw-flex ctw-h-7 ctw-items-center">
                         <button
                           type="button"
+                          aria-label="close"
                           onClick={onClose}
                           className="ctw-btn-clear"
                         >

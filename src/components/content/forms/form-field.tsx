@@ -14,7 +14,7 @@ export type FormFieldProps = {
     readonly: boolean | undefined,
     props: InputHTMLAttributes<HTMLInputElement>
   ) => JSX.Element;
-} & InputHTMLAttributes<HTMLInputElement>;
+} & InputHTMLAttributes<HTMLInputElement> & { name: string };
 
 export const FormField = ({
   errors,
@@ -46,7 +46,8 @@ export const FormField = ({
             { "ctw-error": errors },
             "ctw-listbox-button ctw-w-full"
           )}
-          name={inputProps.name || ""}
+          name={inputProps.name}
+          id={inputProps.name}
           disabled={inputProps.disabled}
           defaultValue={value}
         >
@@ -69,13 +70,15 @@ export const FormField = ({
           defaultValue={value}
           disabled={inputProps.disabled}
           readOnly={readonly}
-          name={inputProps.name || ""}
+          name={inputProps.name}
+          id={inputProps.name}
         />
       );
     }
     return (
       <input
         {...inputProps}
+        id={inputProps.name}
         type={inputProps.type}
         className={cx({ "ctw-error": errors }, "ctw-listbox-input ctw-w-full")}
         readOnly={readonly}

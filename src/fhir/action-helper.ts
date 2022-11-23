@@ -19,7 +19,7 @@ export async function createOrEditFhirResource(
         body: omitEmptyArrays(resource),
       });
       if (!isFhirError(response)) {
-        createProvenance("UPDATE", response, requestContext);
+        await createProvenance("UPDATE", response, requestContext);
       }
       return response;
     }
