@@ -37,18 +37,18 @@ export class MedicationDispenseModel extends FHIRModel<fhir4.MedicationDispense>
     return this.resource.status;
   }
 
-  get quantityDisplay() {
+  get quantityDisplay(): string | undefined {
     const { value = "", unit = "units" } = this.resource.quantity || {};
     if (value === "") {
-      return "";
+      return undefined;
     }
     return `${value} ${unit}`;
   }
 
-  get supplied() {
+  get supplied(): string | undefined {
     const { value = "", unit = "days" } = this.resource.daysSupply || {};
     if (value === "") {
-      return "";
+      return undefined;
     }
     return `${value} ${unit}`;
   }

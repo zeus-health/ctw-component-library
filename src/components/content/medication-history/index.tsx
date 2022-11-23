@@ -150,7 +150,7 @@ function createMedicationDispenseCard(medication: MedicationModel) {
     id: medication.id,
     title: "Medication Filled",
     subtitle: compact([
-      quantityDisplay || null,
+      quantityDisplay,
       supplied ? `${supplied} supplied` : null,
     ]).join(", "),
     data: [
