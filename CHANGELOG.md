@@ -1,5 +1,15 @@
 # ctw-component-library
 
+## 0.28.0
+
+### Minor Changes
+
+- 73417ac: Add ability to edit conditions from the history drawer and show condition information in the history drawer.
+
+### Patch Changes
+
+- c2ed272: Do not increment the version number by 1 in provenance and instead use the version id of the response.
+
 ## 0.27.0
 
 ### Minor Changes
