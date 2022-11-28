@@ -1,4 +1,4 @@
-export const otherConditions = {
+export const otherConditions: fhir4.Bundle = {
   resourceType: "Bundle",
   id: "f958f3e3-e585-4845-b666-6bf1a6914087",
   meta: {

@@ -17,6 +17,7 @@ import { useEffect, useRef, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
 import { ModalConfirmDelete } from "../core/modal-confirm-delete";
 import { usePatient } from "../core/patient-provider";
+import { TableSort } from "../core/table/table-helpers";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionHeader } from "./condition-header";
 import { onConditionDelete } from "./conditions-helper";
@@ -67,6 +68,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const patientRecordsResponse = usePatientConditions();
   const otherProviderRecordsResponse = useOtherProviderConditions();
   const { getRequestContext } = useCTW();
+  const [sort, setSort] = useState<TableSort>();
 
   const patientRecordsMessage = patientRecordsResponse.isError
     ? ERROR_MSG
@@ -160,7 +162,8 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         setOtherProviderRecords([]);
       }
     }
-    load();
+
+    void load();
   }, [
     includeInactive,
     patientResponse.data,
@@ -208,6 +211,8 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
             conditions={patientRecords}
             isLoading={patientRecordsResponse.isLoading}
             hideMenu={readOnly}
+            sort={sort}
+            onSort={(newSort) => setSort(newSort)}
             message={
               <>
                 <div>{patientRecordsMessage}</div>
@@ -250,6 +255,8 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
             className="ctw-conditions-not-reviewed"
             stacked={breakpoints.sm}
             conditions={otherProviderRecords}
+            sort={sort}
+            onSort={(newSort) => setSort(newSort)}
             isLoading={
               otherProviderRecordsResponse.isLoading ||
               patientRecordsResponse.isLoading
