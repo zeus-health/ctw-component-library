@@ -35,7 +35,7 @@ import {
   createOrEditCondition,
   getAddConditionWithDefaults,
 } from "./forms/conditions";
-import { editPatient } from "./forms/patients";
+import { editPatientAndScheduleHistory } from "./forms/patients";
 import { PatientHistoryRequestDrawer } from "./patient-history-request-drawer";
 
 export type ConditionsProps = {
@@ -314,7 +314,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           patient={patientResponse.data}
           isOpen={requestRecordsDrawerIsOpen}
           onClose={() => setRequestDrawerisOpen(false)}
-          action={curry(editPatient)(patientResponse.data)}
+          action={curry(editPatientAndScheduleHistory)(patientResponse.data)}
         />
       )}
 

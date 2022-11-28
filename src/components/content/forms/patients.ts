@@ -27,12 +27,6 @@ export const editPatient = async (
   }
 
   const requestContext = await getRequestContext();
-  const managingOrganization = patient.organization?.id;
-  if (!managingOrganization) {
-    throw Error(
-      `Managing organization not found with id of ${patient.organization?.id} and is needed in order to perform patient scheduling.`
-    );
-  }
 
   const fhirPatient: fhir4.Patient = {
     resourceType: "Patient",
@@ -61,7 +55,7 @@ export const editPatient = async (
     ],
     contact: patient.contact,
     managingOrganization: {
-      reference: `Organization/${managingOrganization}`,
+      reference: `Organization/${patient.organization?.id}`,
     },
   };
 
@@ -75,6 +69,36 @@ export const editPatient = async (
   } else if (response instanceof Error) {
     requestErrors = [response.message];
     result.success = false;
+  }
+
+  await queryClient.invalidateQueries([QUERY_KEY_PATIENT]);
+
+  return { formResult: result, requestErrors };
+};
+
+export const editPatientAndScheduleHistory = async (
+  patient: PatientModel,
+  data: FormData,
+  patientID: string,
+  getRequestContext: () => Promise<CTWRequestContext>,
+  schema: AnyZodSchema
+) => {
+  const editPatientResponse = await editPatient(
+    patient,
+    data,
+    patientID,
+    getRequestContext,
+    schema
+  );
+
+  const result = editPatientResponse.formResult;
+  let { requestErrors } = editPatientResponse;
+
+  const requestContext = await getRequestContext();
+  if (!patient.organization?.id) {
+    throw Error(
+      `Managing organization not found with id of ${patient.organization?.id} and is needed in order to perform patient scheduling.`
+    );
   }
 
   if (result.success) {
@@ -92,8 +116,6 @@ export const editPatient = async (
       result.success = false;
     }
   }
-
-  await queryClient.invalidateQueries([QUERY_KEY_PATIENT]);
 
   return { formResult: result, requestErrors };
 };
