@@ -51,11 +51,10 @@ export async function hasFetchedPatientHistory(
       : previous
   );
   // There is a bug with the API that will be reworked in 2 weeks. Leaving as is for now.
-  if (latestMessage?.status === "done" && latestMessage?._errors.length > 0) {
+  if (latestMessage.status === "done" && latestMessage._errors.length > 0) {
     return false;
-  } else if (latestMessage?.status === "done") {
+  } else if (latestMessage.status === "done") {
     return true;
-  } else {
-    return false;
   }
+  return false;
 }
