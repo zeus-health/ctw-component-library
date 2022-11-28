@@ -7,7 +7,7 @@ import { errorResponse } from "@/utils/errors";
 import { QUERY_KEY_MEDICATION_HISTORY } from "@/utils/query-keys";
 import { sort } from "@/utils/sort";
 import type { FhirResource, MedicationStatement } from "fhir/r4";
-import { clone, uniqWith } from "lodash";
+import { cloneDeep, uniqWith } from "lodash";
 import {
   compact,
   filter,
@@ -176,7 +176,7 @@ export function splitMedications(
   // Get builder owned medications that line up with an active medication.
   // Take the active medication but modify it to use the builder's display properties.
   builderOwnedMedications.forEach((builderMed) => {
-    const mergedMed = clone(
+    const mergedMed = cloneDeep(
       activeMedications.find(
         (activeMed) =>
           getIdentifyingRxNormCode(activeMed, includedResources) ===
