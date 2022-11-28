@@ -1,28 +1,16 @@
 import cx from "classnames";
-import { ReactElement, ReactNode, useEffect, useRef, useState } from "react";
-
-import { TableHead } from "./table-head";
-import { TableRows } from "./table-rows";
-import "./table.scss";
-
+import { ReactElement, useEffect, useRef, useState } from "react";
 import { DEFAULT_PAGE_SIZE, Pagination } from "../pagination/pagination";
 import { TableColGroup } from "./table-colgroup";
-
-export interface MinRecordItem {
-  id: string | number;
-}
-
-type DataIndexSpecified<T> = { dataIndex: keyof T; render?: never };
-type RenderSpecified<T> = { dataIndex?: never; render: (row: T) => ReactNode };
-
-// A table column has an optional title
-// and then either a dataIndex or a render method but not both.
-export type TableColumn<T extends MinRecordItem> = {
-  title?: string;
-  className?: string;
-  widthPercent?: number;
-  minWidth?: number;
-} & (DataIndexSpecified<T> | RenderSpecified<T>);
+import { TableHead } from "./table-head";
+import {
+  MinRecordItem,
+  sortRecords,
+  TableColumn,
+  TableSort,
+} from "./table-helpers";
+import { TableRows } from "./table-rows";
+import "./table.scss";
 
 export type TableProps<T extends MinRecordItem> = {
   className?: string;
@@ -34,6 +22,8 @@ export type TableProps<T extends MinRecordItem> = {
   showTableHead?: boolean;
   stacked?: boolean;
   handleRowClick?: (record: T) => void;
+  sort?: TableSort;
+  onSort?: (sort: TableSort) => void;
 };
 
 export type TableBaseProps<T extends MinRecordItem> = Omit<
@@ -49,6 +39,8 @@ export const Table = <T extends MinRecordItem>({
   message = "No records found",
   showTableHead = true,
   stacked,
+  sort,
+  onSort,
   handleRowClick,
 }: TableProps<T>) => {
   const tableRef = useRef<HTMLTableElement>(null);
@@ -56,6 +48,8 @@ export const Table = <T extends MinRecordItem>({
   const [showLeftShadow, setShowLeftShadow] = useState(false);
   const [showRightShadow, setShowRightShadow] = useState(false);
   const [count, setCount] = useState(DEFAULT_PAGE_SIZE);
+
+  const sortedRecords = sortRecords(records, columns, sort);
 
   const updateShadows = () => {
     const container = scrollContainerRef.current;
@@ -65,6 +59,17 @@ export const Table = <T extends MinRecordItem>({
       const rightSide = container.scrollLeft + container.clientWidth;
       setShowRightShadow(rightSide < table.clientWidth);
     }
+  };
+
+  const switchSort = (newSortColumn: string) => {
+    const newState: TableSort = {
+      columnTitle: newSortColumn,
+      dir: "asc",
+    };
+    if (newSortColumn === sort?.columnTitle) {
+      newState.dir = sort.dir === "asc" ? "desc" : "asc";
+    }
+    if (onSort) onSort(newState);
   };
 
   useEffect(() => {
@@ -92,7 +97,7 @@ export const Table = <T extends MinRecordItem>({
       })}
     >
       <div
-        className={cx("ctw-table-container", "ctw-table", {
+        className={cx("ctw-table-container", {
           "ctw-table-scroll-left-shadow": showLeftShadow,
           "ctw-table-scroll-right-shadow": showRightShadow,
         })}
@@ -100,11 +105,13 @@ export const Table = <T extends MinRecordItem>({
         <div className="ctw-scrollbar" ref={scrollContainerRef}>
           <table ref={tableRef}>
             {hasData && <TableColGroup columns={columns} />}
-            {showTableHead && hasData && <TableHead columns={columns} />}
+            {showTableHead && hasData && (
+              <TableHead columns={columns} sort={sort} onSort={switchSort} />
+            )}
 
             <tbody>
               <TableRows
-                records={records.slice(0, count)}
+                records={sortedRecords.slice(0, count)}
                 handleRowClick={handleRowClick}
                 columns={columns}
                 isLoading={isLoading}

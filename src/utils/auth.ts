@@ -34,21 +34,25 @@ type ZusJWT = {
 };
 
 function getClaims(authToken: string): ZusJWT {
-  return jwt_decode(authToken);
+  try {
+    return jwt_decode(authToken);
+  } catch {
+    return {} as ZusJWT;
+  }
 }
 
-export function claimsBuilderId(authToken: string): string {
+export function claimsBuilderId(authToken: string): string | undefined {
   return getClaims(authToken)[AUTH_BUILDER_ID];
 }
 
-export function claimsBuilderName(authToken: string): string {
+export function claimsBuilderName(authToken: string): string | undefined {
   return getClaims(authToken)[AUTH_BUILDER_NAME];
 }
 
-export function claimsPractitionerId(authToken: string): string {
+export function claimsPractitionerId(authToken: string): string | undefined {
   return getClaims(authToken)[AUTH_PRACTITIONER_ID];
 }
 
-export function claimsAuthEmail(authToken: string): string {
+export function claimsAuthEmail(authToken: string): string | undefined {
   return getClaims(authToken)[AUTH_EMAIL];
 }

@@ -1,4 +1,4 @@
-import { setAddConditionDefaults } from "@/components/content/forms/conditions";
+import { getAddConditionWithDefaults } from "@/components/content/forms/conditions";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
 import { ConditionModel } from "@/fhir/models/condition";
@@ -14,7 +14,7 @@ import { getPractitioner } from "./practitioner";
 import {
   searchBuilderRecords,
   searchCommonRecords,
-  searchLensRecords,
+  searchSummaryRecords,
 } from "./search-helpers";
 import {
   SYSTEM_ICD10,
@@ -42,9 +42,7 @@ export function getNewCondition(patientId: string) {
       reference: `Patient/${patientId}`,
     },
   };
-  setAddConditionDefaults(newCondition);
-
-  return newCondition;
+  return getAddConditionWithDefaults(newCondition);
 }
 
 export function usePatientConditions() {
@@ -76,7 +74,7 @@ export function useOtherProviderConditions() {
     [],
     async (requestContext, patient) => {
       try {
-        const { resources: conditions } = await searchLensRecords(
+        const { resources: conditions } = await searchSummaryRecords(
           "Condition",
           requestContext,
           {

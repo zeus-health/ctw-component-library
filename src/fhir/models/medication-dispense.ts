@@ -1,8 +1,25 @@
 import { getPerformingOrganization } from "@/fhir/medication";
-import { compact } from "lodash/fp";
+import { PractitionerModel } from "@/fhir/models/practitioner";
+import { findReference } from "@/fhir/resource-helper";
 import { FHIRModel } from "./fhir-model";
 
 export class MedicationDispenseModel extends FHIRModel<fhir4.MedicationDispense> {
+  get includedPerformer(): string | undefined {
+    const reference = this.resource.performer?.[0]?.actor.reference;
+
+    const practitioner = findReference(
+      "Practitioner",
+      this.resource.contained,
+      this.includedResources,
+      reference
+    );
+
+    if (practitioner) {
+      return new PractitionerModel(practitioner).fullName;
+    }
+    return this.resource.performer?.[0]?.actor.display;
+  }
+
   get performer(): fhir4.Organization | undefined {
     return getPerformingOrganization(this.resource, this.includedResources);
   }
@@ -20,16 +37,13 @@ export class MedicationDispenseModel extends FHIRModel<fhir4.MedicationDispense>
     return this.resource.status;
   }
 
-  get quantityDisplay() {
-    const { value, unit } = this.resource.quantity || {};
-    return compact([value, unit]).join(" ");
+  get quantityDisplay(): string | undefined {
+    const { value, unit = "units" } = this.resource.quantity || {};
+    return value ? `${value} ${unit}` : undefined;
   }
 
-  get supplied(): string {
+  get supplied(): string | undefined {
     const { value, unit = "days" } = this.resource.daysSupply || {};
-    if (!value) {
-      return "";
-    }
-    return `${value} ${unit}`;
+    return value ? `${value} ${unit}` : undefined;
   }
 }

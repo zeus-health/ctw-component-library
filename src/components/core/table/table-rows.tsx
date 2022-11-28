@@ -1,9 +1,9 @@
 import cx from "classnames";
 import { ReactElement } from "react";
 import { Spinner } from "../spinner";
-import type { MinRecordItem, TableColumn } from "./table";
 import { TableDataCell } from "./table-data-cell";
 import { TableFullLengthRow } from "./table-full-length-row";
+import { MinRecordItem, TableColumn } from "./table-helpers";
 
 type TableRowsProps<T extends MinRecordItem> = {
   records: T[];

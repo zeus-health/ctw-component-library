@@ -1,6 +1,6 @@
 export const aggregatedFromMedStatement = {
   resourceType: "MedicationStatement",
-  id: "8dc0812d-9e32-408a-895e-9c44cbbaa9a5",
+  id: "8dc0812d",
   extension: [
     {
       url: "https://zusapi.com/lens/extension/aggregatedFrom",

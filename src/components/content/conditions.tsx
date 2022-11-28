@@ -16,8 +16,14 @@ import cx from "classnames";
 import { curry } from "lodash";
 import { useEffect, useRef, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
+import {
+  DrawerFormWithFields,
+  FormActionTypes,
+  FormEntry,
+} from "../core/form/drawer-form-with-fields";
 import { ModalConfirmDelete } from "../core/modal-confirm-delete";
 import { usePatient } from "../core/patient-provider";
+import { TableSort } from "../core/table/table-helpers";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionHeader } from "./condition-header";
 import { onConditionDelete } from "./conditions-helper";
@@ -29,13 +35,10 @@ import { filterOtherConditions } from "./conditions/helpers";
 import { getAddConditionData } from "./forms/condition-schema";
 import {
   createOrEditCondition,
-  setAddConditionDefaults,
+  getAddConditionWithDefaults,
 } from "./forms/conditions";
-import {
-  DrawerFormWithFields,
-  FormActionTypes,
-  FormEntry,
-} from "./forms/drawer-form-with-fields";
+import { editPatientAndScheduleHistory } from "./forms/patients";
+import { PatientHistoryRequestDrawer } from "./patient-history-request-drawer";
 import { PatientHistoryMessage } from "./patient-history/patient-history-message";
 
 export type ConditionsProps = {
@@ -55,6 +58,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [historyDrawerIsOpen, setHistoryDrawerIsOpen] = useState(false);
+  const [requestRecordsDrawerIsOpen, setRequestDrawerisOpen] = useState(false);
   const [patientRecords, setPatientRecords] = useState<ConditionModel[]>([]);
   const [otherProviderRecords, setOtherProviderRecords] = useState<
     ConditionModel[]
@@ -69,6 +73,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const patientRecordsResponse = usePatientConditions();
   const otherProviderRecordsResponse = useOtherProviderConditions();
   const { getRequestContext } = useCTW();
+  const [sort, setSort] = useState<TableSort>();
 
   const [requestRecordsClinicalHistory, setRequestRecordsClinicalHistory] =
     useState(false);
@@ -101,8 +106,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   };
 
   const handleAddOtherProviderCondition = (condition: ConditionModel) => {
-    const newCondition = condition.resource;
-    setAddConditionDefaults(newCondition);
+    const newCondition = getAddConditionWithDefaults(condition.resource);
 
     if (patientResponse.data) {
       setSchema(conditionAddSchema);
@@ -201,11 +205,11 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     <div
       ref={containerRef}
       className={cx("ctw-conditions", className, {
-        "ctw-stacked": breakpoints.sm,
+        "ctw-conditions-stacked": breakpoints.sm,
       })}
     >
       {!readOnly && (
-        <div className="ctw-heading-container">
+        <div className="ctw-conditions-heading-container">
           <div className="ctw-title">Conditions</div>
           <button
             type="button"
@@ -216,9 +220,10 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           </button>
         </div>
       )}
-      <div className="ctw-body-container">
+
+      <div className="ctw-conditions-body-container">
         <div className="ctw-space-y-3">
-          <div className="ctw-title-container">
+          <div className="ctw-conditions-title-container">
             <div className="ctw-title">Patient Record</div>
             <ToggleControl
               onFormChange={handleToggleChange}
@@ -231,11 +236,13 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
             conditions={patientRecords}
             isLoading={patientRecordsResponse.isLoading}
             hideMenu={readOnly}
+            sort={sort}
+            onSort={(newSort) => setSort(newSort)}
             message={
               <>
                 <div>{patientRecordsMessage}</div>
-                {!patientRecordsResponse.isError && (
-                  <div className="ctw-my-5">{addConditionBtn}</div>
+                {!patientRecordsResponse.isError && !readOnly && (
+                  <div className="ctw-mt-5">{addConditionBtn}</div>
                 )}
               </>
             }
@@ -264,8 +271,15 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           />
         </div>
         <div className="ctw-space-y-3">
-          <div className="ctw-title-container">
+          <div className="ctw-conditions-title-container">
             <div className="ctw-title">Other Provider Records</div>
+            <button
+              type="button"
+              className="ctw-btn-clear ctw-link"
+              onClick={() => setRequestDrawerisOpen(true)}
+            >
+              Request Records
+            </button>
           </div>
           {clinicalHistoryExists ? (
             <ConditionsTableBase
@@ -322,6 +336,21 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           schema={schema}
           isOpen={drawerIsOpen}
           onClose={() => setDrawerIsOpen(false)}
+        />
+      )}
+
+      {patientResponse.data && (
+        <PatientHistoryRequestDrawer
+          header={
+            <div className="ctw-pt-0 ctw-text-base">
+              Request patient clinical history from 70K+ providers across the
+              nation. No changes will be made to your patient record.
+            </div>
+          }
+          patient={patientResponse.data}
+          isOpen={requestRecordsDrawerIsOpen}
+          onClose={() => setRequestDrawerisOpen(false)}
+          action={curry(editPatientAndScheduleHistory)(patientResponse.data)}
         />
       )}
 

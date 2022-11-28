@@ -1,7 +1,24 @@
 // Always include our main styles to get tailwind and
 // anything else our components may depend on.
+import { queryClient } from "@/utils/request";
+import {
+  ArgsTable,
+  Description,
+  Primary,
+  PRIMARY_STORY,
+  Subtitle,
+  Title,
+} from "@storybook/addon-docs";
 import { initialize, mswDecorator } from "msw-storybook-addon";
 import "./preview.scss";
+
+// Disable caching in react query. This way mock data responses
+// won't persist across stories and multiple requests.
+queryClient.setDefaultOptions({
+  queries: {
+    staleTime: 0,
+  },
+});
 
 // By default MSW assumes the service worker will be at
 // root/mockServiceWorker.js
@@ -34,6 +51,15 @@ export const parameters = {
     source: {
       excludeDecorators: true,
     },
+    page: () => (
+      <>
+        <Title />
+        <Subtitle />
+        <Description />
+        <Primary />
+        <ArgsTable story={PRIMARY_STORY} />
+      </>
+    ),
   },
   controls: {
     matchers: {

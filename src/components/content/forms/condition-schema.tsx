@@ -1,7 +1,7 @@
 import { ConditionModel } from "@/fhir/models/condition";
 import Zod, { RefinementCtx, z } from "zod";
+import type { FormEntry } from "../../core/form/drawer-form-with-fields";
 import { ConditionsAutoComplete } from "./conditions-autocomplete";
-import type { FormEntry } from "./drawer-form-with-fields";
 
 export const getAddConditionData = ({
   condition,
@@ -133,11 +133,15 @@ export const conditionEditSchema = conditionSchema
 export const conditionAddSchema = conditionSchema
   .extend({
     condition: z.object({
-      display: z.string(),
       code: z.string({
         required_error: "Please choose a condition.",
       }),
-      system: z.string(),
+      // These are technically required but we mark them
+      // as optional to avoid duplicative error messages.
+      // The condition autocomplete will set us up so that
+      // all three of these values are set.
+      display: z.string().optional(),
+      system: z.string().optional(),
     }),
     verificationStatus: z.enum(["confirmed", "unconfirmed"]),
   })

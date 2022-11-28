@@ -1,5 +1,64 @@
 # ctw-component-library
 
+## 0.27.0
+
+### Minor Changes
+
+- 51b1b6e: Add patient history request drawer. The patient history request drawer allows users to request patient history and edit demographic information for a patient.
+
+### Patch Changes
+
+- 764a920: Do not show the sorting chevron on hover if a column is unsortable.
+
+## 0.26.2
+
+### Patch Changes
+
+- 6a4d497: Fix issue where if a condition had verification status of entered-in-error in patient record it would not show up in other conditions.
+- 1ae68a2: Add storybook tests and a few accessibility tweaks. Fix bug with refetching medications after a create.
+
+## 0.26.1
+
+### Patch Changes
+
+- 845ee67: Provenance now saves which historical version of a resource resulted from an operation, for more thorough tracking of changes.
+
+## 0.26.0
+
+### Minor Changes
+
+- b3dceb5: Conditions are sortable by name and group in ascending and descending order.
+
+### Patch Changes
+
+- 0137b01: Updated date logic for med dispenses and med requests"
+
+## 0.25.0
+
+### Minor Changes
+
+- f10ac5c: Updated medications components to use active medications lens.
+
+### Patch Changes
+
+- 837bf8e: MedicationStatement.lastPrescriber more resilant. This will try to resolve the prescriber name based on a reference from lastPrescriber lens and falling back to the display on the reference if the actual reference cannot be resolved.
+- 76efc20: Medication history now supports MedicationAdminstration details.
+
+## 0.24.11
+
+### Patch Changes
+
+- fd5fb9c: Medication details searches through includedResources to find the latest prescriber of a medication.
+- bf5caf1: Remove resize handle on date input elements.
+- 0d92471: Fix a few minor style bugs with stacked conditions.
+
+## 0.24.10
+
+### Patch Changes
+
+- 6b44387: Fix two minor condition bugs.
+- 1e95eee: Show unique condition history entries.
+
 ## 0.24.9
 
 ### Patch Changes

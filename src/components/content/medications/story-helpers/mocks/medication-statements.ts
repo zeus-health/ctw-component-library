@@ -1,34 +1,27 @@
-export const medicationRequest = {
+export const medicationStatement = {
   resourceType: "Bundle",
-  id: "1e2d41d5-ee2c-4535-97d1-1c75222c434a",
-  meta: {
-    lastUpdated: "2022-11-14T19:07:22.952+00:00",
-  },
+  id: "be63733e",
   type: "searchset",
-  total: 2,
+  total: 3,
   entry: [
     {
       resource: {
-        resourceType: "MedicationRequest",
-        id: "6a16eba4-7d86-4e4a-8005-34367553ca05",
+        resourceType: "MedicationStatement",
+        id: "abcd-12345",
         meta: {
           extension: [
             {
-              url: "https://zusapi.com/terminology/enrichment/sha256sum",
-              valueBase64Binary: "epixaZTVHuAeIf6niYDrfVV4pQV5q/HeQz2uHgQq/zo=",
-            },
-            {
               url: "https://zusapi.com/created-at",
-              valueInstant: "2022-11-08T15:03:15.075+00:00",
+              valueInstant: "2022-11-08T15:03:20.252+00:00",
             },
           ],
           versionId: "2",
-          lastUpdated: "2022-11-08T15:03:15.346+00:00",
-          source: "#72e10f1a346fe95a",
+          lastUpdated: "2022-11-08T15:03:20.341+00:00",
+          source: "#e22fb32b790ccefa",
           tag: [
             {
               system: "https://zusapi.com/thirdparty/source",
-              code: "surescripts",
+              code: "commonwell",
             },
             {
               system: "https://zusapi.com/accesscontrol/owner",
@@ -44,7 +37,6 @@ export const medicationRequest = {
           },
         ],
         status: "active",
-        intent: "order",
         medicationCodeableConcept: {
           coding: [
             {
@@ -94,42 +86,25 @@ export const medicationRequest = {
           ],
         },
         subject: {
-          reference: "Patient/88a0a417-c046-4dc8-b3dc-f1c1c2d3a1ce",
+          reference: "Patient/4b92e70f-8476-461b-8980-047e50aa2dab",
           type: "Patient",
         },
-        encounter: {
-          reference: "Encounter/cd147f46-3b9a-4f71-b23c-c451b93b4620",
+        context: {
+          reference: "Encounter/1a547d9a-8a31-48e4-a53e-6f9a0e96b25d",
           type: "Encounter",
           display: "Office visit 30 min, Sally McCann",
         },
-        authoredOn: "2021-08-01",
-        requester: {
+        dateAsserted: "2022-08-29",
+        informationSource: {
           reference: "Practitioner/6c7f3ad6-6849-4dd8-9cd6-6c16865cfdd8",
           type: "Practitioner",
           display: "Sally McCann",
         },
-        recorder: {
-          reference: "Practitioner/6c7f3ad6-6849-4dd8-9cd6-6c16865cfdd8",
-          type: "Practitioner",
-          display: "Sally McCann",
-        },
-        dosageInstruction: [
+        dosage: [
           {
             text: "Inject 3 ML with enclosed pen injector every morning. ",
           },
         ],
-        dispenseRequest: {
-          numberOfRepeatsAllowed: 4,
-          quantity: {
-            value: 90,
-            unit: "days",
-          },
-          performer: {
-            reference: "Organization/c40671c0-e0e6-4dcd-beb2-0188e1d6ee1c",
-            type: "Organization",
-            display: "Longs Drug Stores California LLC",
-          },
-        },
       },
       search: {
         mode: "match",
@@ -138,17 +113,17 @@ export const medicationRequest = {
     {
       resource: {
         resourceType: "Patient",
-        id: "88a0a417-c046-4dc8-b3dc-f1c1c2d3a1ce",
+        id: "4b92e70f",
         meta: {
           extension: [
             {
               url: "https://zusapi.com/created-at",
-              valueInstant: "2022-11-08T15:02:24.281+00:00",
+              valueInstant: "2022-11-08T15:02:19.434+00:00",
             },
           ],
           versionId: "2",
-          lastUpdated: "2022-11-08T15:02:24.707+00:00",
-          source: "#4173062084810e76",
+          lastUpdated: "2022-11-08T15:02:20.204+00:00",
+          source: "#7b1503c2b2558700",
           security: [
             {
               system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
@@ -158,7 +133,7 @@ export const medicationRequest = {
           tag: [
             {
               system: "https://zusapi.com/thirdparty/source",
-              code: "surescripts",
+              code: "commonwell",
             },
             {
               system: "https://zusapi.com/accesscontrol/owner",
@@ -205,6 +180,37 @@ export const medicationRequest = {
             postalCode: "89106-4119",
           },
         ],
+        managingOrganization: {
+          reference: "Organization/abcd-12345-efghij",
+        },
+      },
+      search: {
+        mode: "include",
+      },
+    },
+    {
+      resource: {
+        resourceType: "Organization",
+        id: "abcd",
+        meta: {
+          extension: [
+            {
+              url: "https://zusapi.com/created-at",
+              valueInstant: "2022-11-08T15:02:12.231+00:00",
+            },
+          ],
+          versionId: "1",
+          lastUpdated: "2022-11-08T15:02:12.239+00:00",
+          source: "#PBAb44ovUWIiO2TB",
+          tag: [
+            {
+              system: "https://zusapi.com/accesscontrol/owner",
+              code: "builder/12345",
+              display: "Storybook Medical - Test Customer",
+            },
+          ],
+        },
+        name: "Northway Pediatrics",
       },
       search: {
         mode: "include",

@@ -14,12 +14,15 @@ export const filterOtherConditions = (
         const otherRecordedDate = otherCondition.resource.recordedDate;
         const patientRecordedDate = patientCondition.resource.recordedDate;
         const isMatch = otherCondition.knownCodingsMatch(patientCondition);
+        const isEnteredInError =
+          patientCondition.verificationStatus === "entered-in-error";
+
         const isOlder =
           !otherRecordedDate ||
           (patientRecordedDate && otherRecordedDate <= patientRecordedDate);
         const hasSameStatus =
           otherCondition.clinicalStatus === patientCondition.clinicalStatus;
 
-        return isMatch && (isOlder || hasSameStatus);
+        return isMatch && !isEnteredInError && (isOlder || hasSameStatus);
       })
   );
