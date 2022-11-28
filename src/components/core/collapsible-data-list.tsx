@@ -12,7 +12,7 @@ export type CollapsibleDataListProps = {
   id: string;
   date?: string;
   title?: string;
-  subTitle?: string;
+  subtitle?: string;
   data: CollapsibleDataListEntry[];
   hideEmpty?: boolean;
 };
@@ -26,7 +26,7 @@ export const CollapsibleDataList = ({
   id,
   date,
   title,
-  subTitle,
+  subtitle,
   data,
   hideEmpty,
 }: CollapsibleDataListProps) => {
@@ -37,7 +37,7 @@ export const CollapsibleDataList = ({
       <DetailSummary
         date={date}
         title={title}
-        subTitle={subTitle}
+        subtitle={subtitle}
         isDetailShown={isDetailShown}
         setIsDetailShown={setIsDetailShown}
       />
@@ -49,18 +49,19 @@ export const CollapsibleDataList = ({
 const DetailSummary = ({
   date,
   title,
-  subTitle,
+  subtitle,
   isDetailShown,
   setIsDetailShown,
 }: {
   date?: string;
   title?: string;
-  subTitle?: string;
+  subtitle?: string;
   isDetailShown: boolean;
   setIsDetailShown: React.Dispatch<React.SetStateAction<boolean>>;
 }) => (
   <button
     type="button"
+    aria-label="details"
     onClick={() => setIsDetailShown(!isDetailShown)}
     className="ctw-w-full ctw-cursor-pointer ctw-border-none ctw-bg-transparent ctw-p-0 ctw-text-base ctw-outline-none"
   >
@@ -71,7 +72,7 @@ const DetailSummary = ({
           <div className="ctw-font-semibold ctw-text-content-black">
             {title}
           </div>
-          <div className="ctw-text-content-light">{subTitle}</div>
+          <div className="ctw-text-content-light">{subtitle}</div>
         </div>
       </div>
       <div className="ctw-justify-right ctw-flex">

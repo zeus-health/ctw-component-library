@@ -1,4 +1,4 @@
-export const emptyConditions = {
+export const emptyConditions: fhir4.Bundle = {
   resourceType: "Bundle",
   id: "eacb4f45-4e83-45db-9114-7d3e05eb1fb3",
   meta: {
@@ -6,4 +6,5 @@ export const emptyConditions = {
   },
   type: "searchset",
   total: 0,
+  entry: [],
 };

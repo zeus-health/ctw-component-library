@@ -1,7 +1,6 @@
 import cx from "classnames";
 import { ReactNode } from "react";
-
-import type { MinRecordItem, TableColumn } from "./table";
+import { MinRecordItem, TableColumn } from "./table-helpers";
 
 type TableColumnProps<T extends MinRecordItem> = {
   column: TableColumn<T>;

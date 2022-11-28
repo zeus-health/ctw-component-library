@@ -1,15 +1,15 @@
-import { pipe, get, toLower } from "lodash/fp";
-import { useEffect, useState } from "react";
 import { MedicationDrawer } from "@/components/content/medication-drawer";
 import { MedicationsTableBase } from "@/components/content/medications-table-base";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
-import { sort } from "@/utils/sort";
+import { sort, SortDir } from "@/utils/sort";
+import { get, pipe, toLower } from "lodash/fp";
+import { useEffect, useState } from "react";
 
 export type OtherProviderMedsTableProps = {
   className?: string;
   sortColumn?: keyof MedicationStatementModel;
-  sortOrder?: "asc" | "desc";
+  sortOrder?: SortDir;
 };
 
 /**

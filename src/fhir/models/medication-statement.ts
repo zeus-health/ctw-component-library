@@ -17,6 +17,7 @@ import {
   LENS_EXTENSION_MEDICATION_REFILLS,
 } from "@/fhir/system-urls";
 import { FHIRModel } from "./fhir-model";
+import { findReference } from "@/fhir/resource-helper";
 
 export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatement> {
   readonly builderPatientRxNormStatus?: Record<string, string>;
@@ -167,11 +168,27 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
   }
 
   get lastPrescriber(): string | undefined {
-    const value = this.resource.extension?.find(
+    const reference = this.resource.extension?.find(
       (x) => x.url === LENS_EXTENSION_MEDICATION_LAST_PRESCRIBER
-    )?.valueString;
+    )?.valueReference;
 
-    return value && value !== "NO-VALUE" ? value : undefined;
+    if (!reference?.type || !reference.reference) {
+      return undefined;
+    }
+    const resource = findReference(
+      reference.type as "Practitioner" | "Organization",
+      this.resource.contained,
+      this.includedResources,
+      reference.reference
+    );
+    if (resource?.name) {
+      if (typeof resource.name === "string") {
+        return resource.name;
+      }
+      const { family, given = [] } = resource.name[0];
+      return compact([family, given[0]]).join(", ");
+    }
+    return reference.display;
   }
 
   get lastPrescribedDate(): string | undefined {

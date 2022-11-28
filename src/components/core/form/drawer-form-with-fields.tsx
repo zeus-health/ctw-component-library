@@ -91,27 +91,30 @@ export const DrawerFormWithFields = <T,>({
                   );
                 }
 
+                const props = inputProps(field, schema);
+                const required = props["aria-required"];
+
                 return (
                   <div
                     key={label}
                     className="ctw-space-y-1.5 ctw-text-sm ctw-font-medium ctw-text-content-black"
                   >
                     <div className="ctw-flex ctw-justify-between">
-                      <label>{label}</label>
-                      {inputProps(field)["aria-required"] && (
-                        <div className="ctw-flex-grow ctw-text-icon-default">
-                          *
-                        </div>
-                      )}
-                      {inputProps(field)["aria-required"] && (
-                        <span className="ctw-right-0 ctw-inline-block ctw-text-xs ctw-text-content-black">
-                          Required
-                        </span>
+                      <label htmlFor={props.name}>{label}</label>
+                      {required && (
+                        <>
+                          <div className="ctw-flex-grow ctw-text-icon-default">
+                            *
+                          </div>
+                          <span className="ctw-right-0 ctw-inline-block ctw-text-xs ctw-text-content-black">
+                            Required
+                          </span>
+                        </>
                       )}
                     </div>
 
                     <FormField
-                      {...inputProps(field, schema)}
+                      {...props}
                       lines={lines}
                       key={label}
                       disabled={submitting}

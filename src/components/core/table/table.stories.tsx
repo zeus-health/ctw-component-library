@@ -1,5 +1,6 @@
-import { Table, TableColumn, TableProps } from "@/components/core/table/table";
 import type { Meta, StoryObj } from "@storybook/react";
+import { Table, TableProps } from "./table";
+import { TableColumn } from "./table-helpers";
 
 type Record = {
   id: string;
@@ -40,6 +41,7 @@ const columns: TableColumn<Record>[] = [
     title: "Name",
     dataIndex: "name",
     className: "ctw-w-[20%]",
+    sortIndex: "name",
   },
   {
     title: "With Render",

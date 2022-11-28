@@ -65,7 +65,7 @@ function setupData(condition: ConditionModel): CollapsibleDataListProps {
     id: condition.id,
     date: condition.recordedDate,
     title: startCase(condition.categories[0]),
-    subTitle: condition.patient?.organization?.name,
+    subtitle: condition.patient?.organization?.name,
     data: detailData,
   };
 }
@@ -114,7 +114,7 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
       }
     }
 
-    load();
+    void load();
 
     return function cleanup() {
       setConditionsWithDate([]);

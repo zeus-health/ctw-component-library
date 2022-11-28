@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
 import { MedicationModel } from "@/fhir/models/medication";
@@ -23,6 +22,7 @@ import {
   sortBy,
   split,
 } from "lodash/fp";
+import { useEffect, useState } from "react";
 import { bundleToResourceMap, getMergedIncludedResources } from "./bundle";
 import { getIdentifyingRxNormCode } from "./medication";
 import {
@@ -108,7 +108,7 @@ export async function getBuilderMedications(
 }
 
 /* Note when filtering the bundle may contain data that will no longer be in the returned medications. */
-export async function getSummaryMedications(
+export async function getActiveMedications(
   requestContext: CTWRequestContext,
   patient: PatientModel,
   keys = []
@@ -119,6 +119,7 @@ export async function getSummaryMedications(
     const response = await searchLensRecords(
       "MedicationStatement",
       requestContext,
+      "ActiveMedications",
       {
         patientUPID: patient.UPID as string,
         _include: "MedicationStatement:medication",
@@ -220,7 +221,7 @@ export function useMedicationHistory(medication?: fhir4.MedicationStatement) {
             "MedicationDispense",
             requestContext,
             resources.MedicationDispense,
-            ["MedicationDispense:performer"]
+            ["MedicationDispense:performer", "MedicationDispense:prescription"]
           ),
         ]);
 
