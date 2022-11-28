@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 0.26.2
+
+### Patch Changes
+
+- 6a4d497: Fix issue where if a condition had verification status of entered-in-error in patient record it would not show up in other conditions.
+- 1ae68a2: Add storybook tests and a few accessibility tweaks. Fix bug with refetching medications after a create.
+
 ## 0.26.1
 
 ### Patch Changes
