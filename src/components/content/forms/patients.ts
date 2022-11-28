@@ -4,10 +4,9 @@ import {
 } from "@/api/patient-history";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
-import { isFhirError } from "@/fhir/errors";
 import { dateToISO } from "@/fhir/formatters";
-import { OperationOutcomeModel, PatientModel } from "@/fhir/models";
-import { isOperationOutcome } from "@/fhir/operation-outcome";
+import { PatientModel } from "@/fhir/models";
+import { getFormStatusErrors } from "@/utils/errors";
 import { AnyZodSchema, getFormData } from "@/utils/form-helper";
 import { QUERY_KEY_PATIENT } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
@@ -60,16 +59,9 @@ export const editPatient = async (
   };
 
   const response = await createOrEditFhirResource(fhirPatient, requestContext);
-
-  if (isFhirError(response) && isOperationOutcome(response.response.data)) {
-    requestErrors = new OperationOutcomeModel(response.response.data).issues
-      .filter((issue) => issue.severity !== "warning")
-      .map((issue) => issue.display);
-    result.success = false;
-  } else if (response instanceof Error) {
-    requestErrors = [response.message];
-    result.success = false;
-  }
+  const statusErrors = getFormStatusErrors(requestErrors, result, response);
+  requestErrors = statusErrors.errors;
+  result.success = statusErrors.resultIsSuccess;
 
   await queryClient.invalidateQueries([QUERY_KEY_PATIENT]);
 
