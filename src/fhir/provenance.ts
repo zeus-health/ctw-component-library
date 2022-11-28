@@ -44,7 +44,7 @@ export const createProvenance = async (
 ) => {
   const { fhirClient } = requestContext;
   const builderName = claimsBuilderName(requestContext.authToken);
-  const versionId = parseInt(resource.meta?.versionId || "0", 10) + 1;
+  const versionId = parseInt(resource.meta?.versionId || "0", 10);
 
   const practitionerId = claimsPractitionerId(requestContext.authToken);
   let practitionerReference: Reference = {};
