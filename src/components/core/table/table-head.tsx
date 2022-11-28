@@ -57,11 +57,13 @@ export const TableHead = <T extends MinRecordItem>({
         >
           <div className="ctw-flex ctw-items-center ctw-space-x-2">
             <div>{column.title}</div>
-            <SortChevron
-              sortOrder={
-                sort?.columnTitle === column.title ? sort?.dir : undefined
-              }
-            />
+            {(column.sortFnOverride || column.sortIndex) && (
+              <SortChevron
+                sortOrder={
+                  sort?.columnTitle === column.title ? sort?.dir : undefined
+                }
+              />
+            )}
           </div>
         </th>
       ))}

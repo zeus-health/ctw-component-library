@@ -100,9 +100,9 @@ export const createMedicationStatement = async (
   }
 
   await Promise.all(
-    QUERY_KEYS.map(async (queryKey) => {
-      queryClient.invalidateQueries([queryKey]);
-    })
+    QUERY_KEYS.map(async (queryKey) =>
+      queryClient.invalidateQueries([queryKey])
+    )
   );
 
   return { formResult: result, requestErrors };

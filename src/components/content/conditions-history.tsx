@@ -114,7 +114,7 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
       }
     }
 
-    load();
+    void load();
 
     return function cleanup() {
       setConditionsWithDate([]);

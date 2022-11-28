@@ -162,7 +162,8 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         setOtherProviderRecords([]);
       }
     }
-    load();
+
+    void load();
   }, [
     includeInactive,
     patientResponse.data,

@@ -1,3 +1,4 @@
+import { capitalize, compact } from "lodash";
 import { CollapsibleDataListProps } from "@/components/core/collapsible-data-list";
 import { CollapsibleDataListStack } from "@/components/core/collapsible-data-list-stack";
 import { Loading } from "@/components/core/loading";
@@ -5,9 +6,9 @@ import { useMedicationHistory } from "@/fhir/medications";
 import { MedicationModel } from "@/fhir/models/medication";
 import { MedicationDispenseModel } from "@/fhir/models/medication-dispense";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
-import { capitalize, compact } from "lodash";
 import { useEffect, useState } from "react";
 import { MedicationAdministrationModel } from "@/fhir/models/medication-administration";
+import { MedicationRequestModel } from "@/fhir/models/medication-request";
 
 const MEDICATION_HISTORY_LIMIT = 10;
 
@@ -103,8 +104,10 @@ function createMedicationDetailsCard(
 function createMedicationRequestCard(medication: MedicationModel) {
   const resource = medication.resource as fhir4.MedicationRequest;
   const { prescriber } = medication;
-  const pharmacy = resource.dispenseRequest?.performer?.display || "";
-
+  const { name, address, telecom } = new MedicationRequestModel(
+    resource,
+    medication.includedResources
+  ).pharmacy;
   const { numberOfRepeatsAllowed = "", initialFill } =
     resource.dispenseRequest || {};
   const { value = "", unit = "" } = initialFill?.quantity || {};
@@ -128,7 +131,13 @@ function createMedicationRequestCard(medication: MedicationModel) {
       { label: "Prescriber", value: prescriber },
       {
         label: "Pharmacy",
-        value: pharmacy,
+        value: (
+          <>
+            {name && <div>{name}</div>}
+            {address && <div>{address}</div>}
+            {telecom && <div>T: {telecom}</div>}
+          </>
+        ),
       },
     ],
   };
@@ -143,11 +152,16 @@ function createMedicationDispenseCard(medication: MedicationModel) {
 
   const { quantityDisplay, supplied, performerDetails } = medDispense;
   const { name, address, telecom } = performerDetails;
+
   return {
     date: medication.dateLocal,
     hideEmpty: false,
     id: medication.id,
     title: "Medication Filled",
+    subtitle: compact([
+      quantityDisplay,
+      supplied ? `${supplied} supplied` : null,
+    ]).join(", "),
     data: [
       { label: "Quantity", value: quantityDisplay },
       {

@@ -4,7 +4,7 @@ import {
   claimsBuilderName,
   claimsPractitionerId,
 } from "@/utils/auth";
-import { Provenance, Resource } from "fhir/r4";
+import { Provenance, Reference, Resource } from "fhir/r4";
 import { getPractitioner } from "./practitioner";
 import {
   SYSTEM_PROVENANCE_ACTIVITY_TYPE,
@@ -43,27 +43,28 @@ export const createProvenance = async (
   requestContext: CTWRequestContext
 ) => {
   const { fhirClient } = requestContext;
-  const practitionerId = claimsPractitionerId(requestContext.authToken);
   const builderName = claimsBuilderName(requestContext.authToken);
+  const versionId = parseInt(resource.meta?.versionId || "0", 10) + 1;
 
-  let practitionerDisplay: string;
-  let practitionerReference: string | undefined;
-  try {
+  const practitionerId = claimsPractitionerId(requestContext.authToken);
+  let practitionerReference: Reference = {};
+  if (practitionerId) {
     const practitioner = await getPractitioner(practitionerId, requestContext);
-    practitionerDisplay = practitioner.fullName;
-    practitionerReference = `Practitioner/${practitionerId}`;
-  } catch {
-    practitionerDisplay = claimsAuthEmail(requestContext.authToken);
+    practitionerReference = {
+      reference: `Practitioner/${practitionerId}`,
+      display: practitioner.fullName,
+    };
+  } else {
+    practitionerReference = {
+      display: claimsAuthEmail(requestContext.authToken),
+    };
   }
 
   const provenance: Provenance = {
     resourceType: "Provenance",
     agent: [
       {
-        who: {
-          reference: practitionerReference,
-          display: practitionerDisplay,
-        },
+        who: practitionerReference,
         onBehalfOf: { display: builderName },
       },
       {
@@ -76,7 +77,7 @@ export const createProvenance = async (
     recorded: new Date().toISOString(),
     target: [
       {
-        reference: `${resource.resourceType}/${resource.id}`,
+        reference: `${resource.resourceType}/${resource.id}/_history/${versionId}`,
         type: resource.resourceType,
       },
     ],

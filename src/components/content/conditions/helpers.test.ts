@@ -1,4 +1,8 @@
 import { ConditionModel } from "@/fhir/models";
+import {
+  SYSTEM_CONDITION_VERIFICATION_STATUS,
+  SYSTEM_SNOMED,
+} from "@/fhir/system-urls";
 import { filterOtherConditions } from "./helpers";
 
 describe("Condition Helpers", () => {
@@ -36,11 +40,24 @@ describe("Condition Helpers", () => {
       expect(filtered).toHaveLength(2);
     });
 
+    it("if there is an entered-in-error condition in patient record it should still show up in other conditions", () => {
+      const { others, patients } = setupConditions(
+        "2022-11-10",
+        "2022-11-09",
+        "active",
+        "active",
+        "entered-in-error"
+      );
+      const filtered = filterOtherConditions(others, patients);
+      expect(filtered).toHaveLength(3);
+    });
+
     function getCondition(
       id: string,
       status = "active",
       recordedDate?: string,
-      code?: fhir4.Coding
+      code?: fhir4.Coding,
+      verificationStatus = "confirmed"
     ) {
       return new ConditionModel({
         id,
@@ -51,6 +68,14 @@ describe("Condition Helpers", () => {
         code: {
           coding: code ? [code] : undefined,
         },
+        verificationStatus: {
+          coding: [
+            {
+              system: SYSTEM_CONDITION_VERIFICATION_STATUS,
+              code: verificationStatus,
+            },
+          ],
+        },
       });
     }
 
@@ -58,12 +83,19 @@ describe("Condition Helpers", () => {
       otherRecordedDate?: string,
       patientRecordedDate?: string,
       otherStatus = "active",
-      patientStatus = "inactive"
+      patientStatus = "inactive",
+      verificationStatus = "confirmed"
     ) {
       const burntEarSnomed = {
-        system: "http://snomed.info/sct",
+        system: SYSTEM_SNOMED,
         code: "39065001",
         display: "Burn of ear",
+      };
+
+      const diabetesSnomed = {
+        system: SYSTEM_SNOMED,
+        code: "73211009",
+        display: "Diebetes mellitus",
       };
 
       const otherCondition = getCondition(
@@ -84,11 +116,25 @@ describe("Condition Helpers", () => {
         getCondition("other2"),
         otherCondition,
         getCondition("other3"),
+        getCondition(
+          "entered-in-error-other",
+          "active",
+          otherRecordedDate,
+          diabetesSnomed
+        ),
       ];
+
       const patients = [
         getCondition("patient2"),
         patientCondition,
         getCondition("patient3"),
+        getCondition(
+          "entered-in-error-patient",
+          "active",
+          otherRecordedDate,
+          diabetesSnomed,
+          verificationStatus
+        ),
       ];
       return { others, patients };
     }
