@@ -1,5 +1,15 @@
 # ctw-component-library
 
+## 0.27.0
+
+### Minor Changes
+
+- 51b1b6e: Add patient history request drawer. The patient history request drawer allows users to request patient history and edit demographic information for a patient.
+
+### Patch Changes
+
+- 764a920: Do not show the sorting chevron on hover if a column is unsortable.
+
 ## 0.26.2
 
 ### Patch Changes
