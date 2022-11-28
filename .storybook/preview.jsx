@@ -1,6 +1,14 @@
 // Always include our main styles to get tailwind and
 // anything else our components may depend on.
 import { queryClient } from "@/utils/request";
+import {
+  ArgsTable,
+  Description,
+  Primary,
+  PRIMARY_STORY,
+  Subtitle,
+  Title,
+} from "@storybook/addon-docs";
 import { initialize, mswDecorator } from "msw-storybook-addon";
 import "./preview.scss";
 
@@ -43,6 +51,15 @@ export const parameters = {
     source: {
       excludeDecorators: true,
     },
+    page: () => (
+      <>
+        <Title />
+        <Subtitle />
+        <Description />
+        <Primary />
+        <ArgsTable story={PRIMARY_STORY} />
+      </>
+    ),
   },
   controls: {
     matchers: {

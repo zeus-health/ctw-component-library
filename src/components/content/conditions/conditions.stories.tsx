@@ -1,19 +1,16 @@
 import { CTWProvider } from "@/components/core/ctw-provider";
 import { PatientProvider } from "@/components/core/patient-provider";
-import { SYSTEM_SUMMARY, SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
+import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
+import { expect } from "@storybook/jest";
 import type { Meta, StoryObj } from "@storybook/react";
-import { rest } from "msw";
+import { userEvent, within } from "@storybook/testing-library";
 import { Conditions, ConditionsProps } from "../conditions";
-import { emptyConditions } from "./mocks/empty-conditions";
-import { heartConditions } from "./mocks/forms-data-conditions-search";
-import { historyChronsDisease } from "./mocks/history-crohns-disease";
-import { historyDermatitis } from "./mocks/history-dermatitis";
-import { historyGeneralizedAnxiety } from "./mocks/history-generalized-anxiety";
-import { historyIronDeficiency } from "./mocks/history-iron-deficiency";
-import { historyOralContraception } from "./mocks/history-oral-contraception";
-import { otherConditions } from "./mocks/other-conditions";
-import { patient } from "./mocks/patient";
-import { patientConditions } from "./mocks/patient-conditions";
+import { conditionFormDrawer } from "./story-helpers/condition-form-drawer";
+import { conditionsObject } from "./story-helpers/conditions";
+import { emptyConditions } from "./story-helpers/mocks/empty-conditions";
+import { otherConditions } from "./story-helpers/mocks/other-conditions";
+import { patientConditions } from "./story-helpers/mocks/patient-conditions";
+import { setupConditionMocks } from "./story-helpers/mocks/requests";
 
 type Props = ConditionsProps;
 
@@ -45,62 +42,90 @@ export default {
   ],
 } as Meta<Props>;
 
-const handlerPatient = rest.get(
-  "https://api.dev.zusapi.com/fhir/Patient",
-  (req, res, ctx) => res(ctx.delay(1000), ctx.status(200), ctx.json(patient))
-);
-
-const handlerConditionSearch = rest.get(
-  "https://api.dev.zusapi.com/forms-data/terminology/conditions",
-  (req, res, ctx) => res(ctx.status(200), ctx.json(heartConditions))
-);
-
 export const Basic: StoryObj<Props> = {
-  parameters: {
-    msw: [
-      handlerPatient,
-      handlerConditionSearch,
-      rest.get("https://api.dev.zusapi.com/fhir/Condition", (req, res, ctx) => {
-        const codeParam = req.url.searchParams.get("code");
-
-        // Search by code is used for condition history.
-        if (codeParam) {
-          const histories = {
-            "34000006": historyChronsDisease,
-            "4979002": historyDermatitis,
-            "21897009": historyGeneralizedAnxiety,
-            "35240004": historyIronDeficiency,
-            "5935008": historyOralContraception,
-          };
-
-          const historyMatch = Object.entries(histories).find((entry) =>
-            codeParam.includes(entry[0])
-          );
-          if (historyMatch) {
-            return res(ctx.status(200), ctx.json(historyMatch[1]));
-          }
-        }
-
-        // Search for either patient or other provider conditions.
-        const tagParam = req.url.searchParams.get("_tag");
-        const other = tagParam === `${SYSTEM_SUMMARY}|Common`;
-        return res(
-          ctx.status(200),
-          ctx.json(other ? otherConditions : patientConditions)
-        );
-      }),
-    ],
-  },
+  ...setupConditionMocks({ otherConditions, patientConditions }),
 };
 
 export const Empty: StoryObj<Props> = {
-  parameters: {
-    msw: [
-      handlerPatient,
-      handlerConditionSearch,
-      rest.get("https://api.dev.zusapi.com/fhir/Condition", (req, res, ctx) =>
-        res(ctx.status(200), ctx.json(emptyConditions))
-      ),
-    ],
+  ...setupConditionMocks({
+    otherConditions: emptyConditions,
+    patientConditions: emptyConditions,
+  }),
+};
+
+export const TestAdd: StoryObj<Props> = {
+  ...Basic,
+  play: async ({ canvasElement }) => {
+    const conditions = await conditionsObject(canvasElement);
+    await conditions.patientRecord.toHaveRowCount(1);
+    const newCondition = "Heart failure (disorder)";
+    conditions.clickAddCondition();
+    const conditionForm = conditionFormDrawer(canvasElement);
+    conditionForm.conditionSearch("heart");
+    await conditionForm.selectCondition(newCondition);
+    conditionForm.onset("2020-02-14");
+    await conditionForm.save();
+    await conditions.patientRecord.toHaveRowCount(2);
+    expect(
+      await conditions.patientRecord.table.findByText(newCondition)
+    ).toBeTruthy();
+  },
+};
+
+export const TestAddOther: StoryObj<Props> = {
+  ...Basic,
+  play: async ({ canvasElement }) => {
+    const conditions = await conditionsObject(canvasElement);
+    await conditions.patientRecord.toHaveRowCount(1);
+    await conditions.otherProvider.add(2);
+    const conditionForm = conditionFormDrawer(canvasElement);
+    await conditionForm.save();
+    await conditions.patientRecord.toHaveRowCount(2);
+    expect(
+      await conditions.patientRecord.table.findByText(/oral contraception/i)
+    ).toBeTruthy();
+  },
+};
+
+export const TestEdit: StoryObj<Props> = {
+  ...Basic,
+  play: async ({ canvasElement }) => {
+    const conditions = await conditionsObject(canvasElement);
+    await conditions.patientRecord.edit(0);
+    const conditionForm = conditionFormDrawer(canvasElement);
+    conditionForm.verificationStatus("Confirmed");
+    conditionForm.note("hello world");
+    await conditionForm.save();
+    conditions.patientRecord.toHaveRowWithText(0, /confirmed/i);
+  },
+};
+
+export const TestDelete: StoryObj<Props> = {
+  ...Basic,
+  play: async ({ canvasElement }) => {
+    const conditions = await conditionsObject(canvasElement);
+    await conditions.patientRecord.toHaveRowCount(1);
+    await conditions.patientRecord.delete(0);
+    await conditions.patientRecord.toHaveRowCount(0);
+    conditions.toggleInactive();
+    await conditions.patientRecord.toHaveRowCount(2);
+    conditions.patientRecord.toHaveRowWithText(0, /entered-in-error/i);
+    conditions.toggleInactive();
+    await conditions.patientRecord.toHaveRowCount(0);
+  },
+};
+
+export const TestViewHistory: StoryObj<Props> = {
+  ...Basic,
+  play: async ({ canvasElement }) => {
+    const conditions = await conditionsObject(canvasElement);
+    await conditions.patientRecord.viewHistory(0);
+    const canvas = within(canvasElement);
+    const drawer = within(canvas.getByRole("dialog"));
+    expect(
+      await drawer.findByText(/generalized anxiety disorder/i)
+    ).toBeTruthy();
+    expect(drawer.getAllByRole("button", { name: /details/i })).toHaveLength(3);
+    userEvent.click(drawer.getAllByRole("button", { name: /close/i })[0]);
   },
 };

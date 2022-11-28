@@ -1,4 +1,8 @@
+import { ActionReturn } from "@/components/content/forms/types";
 import { FhirError, fhirErrorResponse, isFhirError } from "@/fhir/errors";
+import { isOperationOutcome } from "@/fhir/operation-outcome";
+import { cloneDeep } from "lodash";
+import { OperationOutcomeModel } from "..";
 
 export function isError(error: unknown): error is Error {
   if (typeof error === "object" && error !== null) {
@@ -26,4 +30,24 @@ export const errorResponse = (
   }
 
   return { title };
+};
+
+export const getFormStatusErrors = (
+  errors: string[],
+  data: ActionReturn<unknown>,
+  response: unknown
+) => {
+  let requestErrors = errors;
+  const result = cloneDeep(data);
+
+  if (isFhirError(response) && isOperationOutcome(response.response.data)) {
+    requestErrors = new OperationOutcomeModel(response.response.data).issues
+      .filter((issue) => issue.severity !== "warning")
+      .map((issue) => issue.display);
+    result.success = false;
+  } else if (response instanceof Error) {
+    requestErrors = [response.message];
+    result.success = false;
+  }
+  return { errors, resultIsSuccess: result.success };
 };

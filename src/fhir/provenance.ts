@@ -48,7 +48,7 @@ export const createProvenance = async (
 
   const practitionerId = claimsPractitionerId(requestContext.authToken);
   let practitionerReference: Reference = {};
-  if (practitionerId !== "") {
+  if (practitionerId) {
     const practitioner = await getPractitioner(practitionerId, requestContext);
     practitionerReference = {
       reference: `Practitioner/${practitionerId}`,

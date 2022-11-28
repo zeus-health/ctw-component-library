@@ -1,6 +1,7 @@
 import { findReference } from "@/fhir/resource-helper";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
-import { find, remove } from "lodash";
+import { cloneDeep, find } from "lodash";
+import { formatDateISOToLocal, formatPhoneNumber } from "../formatters";
 import { FHIRModel } from "./fhir-model";
 import { OrganizationModel } from "./organization";
 
@@ -18,6 +19,18 @@ export const MaritalStatuses = [
 ] as const;
 
 export class PatientModel extends FHIRModel<fhir4.Patient> {
+  get active(): boolean | undefined {
+    return this.resource.active;
+  }
+
+  get contact(): fhir4.PatientContact[] | undefined {
+    return this.resource.contact;
+  }
+
+  get dob(): string | undefined {
+    return formatDateISOToLocal(this.resource.birthDate);
+  }
+
   get gender(): string | undefined {
     return this.resource.gender;
   }
@@ -50,6 +63,24 @@ export class PatientModel extends FHIRModel<fhir4.Patient> {
       ?.value;
   }
 
+  getPhoneNumber(use?: fhir4.ContactPoint["use"]): string | undefined {
+    const predicate: fhir4.ContactPoint = { system: "phone" };
+    if (use) {
+      predicate.use = use;
+    }
+    const telecom = find(this.resource.telecom, predicate);
+    return formatPhoneNumber(telecom?.value);
+  }
+
+  // Gets first "phone" telecom.
+  get phoneNumber(): string | undefined {
+    return this.getPhoneNumber();
+  }
+
+  get email(): string | undefined {
+    return find(this.resource.telecom, { system: "email" })?.value;
+  }
+
   /*
     ADDRESS STUFF
   */
@@ -61,43 +92,12 @@ export class PatientModel extends FHIRModel<fhir4.Patient> {
     );
   }
 
-  /*
-    TELECOM STUFF
-  */
-  private setTelecom(
-    system: fhir4.ContactPoint["system"],
-    use?: fhir4.ContactPoint["use"],
-    value?: string
-  ) {
-    const predicate: fhir4.ContactPoint = { system };
-    if (use) {
-      predicate.use = use;
-    }
-
-    // Make sure we have a telecom array.
-    if (!this.resource.telecom) {
-      this.resource.telecom = [];
-    }
-
-    if (value) {
-      const telecom = find(this.resource.telecom, predicate);
-      if (telecom) {
-        telecom.value = value;
-      } else {
-        this.resource.telecom.push({
-          system,
-          use,
-          value,
-        });
-      }
-    } else {
-      // Remove all telecoms that match!
-      remove(this.resource.telecom, predicate);
-    }
-  }
-
-  get email(): string | undefined {
-    return find(this.resource.telecom, { system: "email" })?.value;
+  // Returns first home address or first address without "use" set.
+  // This way we return a home address if there is one, or another address
+  // but making sure not to return a work address here.
+  get homeAddress(): fhir4.Address | undefined {
+    // Clone the address so that consumers cannot modify our resource.
+    return cloneDeep(this.bestHomeAddress);
   }
 
   /*

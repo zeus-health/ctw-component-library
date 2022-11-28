@@ -1,5 +1,22 @@
 # ctw-component-library
 
+## 0.27.0
+
+### Minor Changes
+
+- 51b1b6e: Add patient history request drawer. The patient history request drawer allows users to request patient history and edit demographic information for a patient.
+
+### Patch Changes
+
+- 764a920: Do not show the sorting chevron on hover if a column is unsortable.
+
+## 0.26.2
+
+### Patch Changes
+
+- 6a4d497: Fix issue where if a condition had verification status of entered-in-error in patient record it would not show up in other conditions.
+- 1ae68a2: Add storybook tests and a few accessibility tweaks. Fix bug with refetching medications after a create.
+
 ## 0.26.1
 
 ### Patch Changes

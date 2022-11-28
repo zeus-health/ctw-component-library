@@ -1,7 +1,7 @@
 import { Auth0Provider } from "@auth0/auth0-react";
 import "./App.css";
 import { Conditions } from "./components/content/conditions";
-import { PatientMedications } from "./components/content/patient-medications";
+import { PatientMedications } from "./components/content/medications/patient-medications";
 import { CTWProvider } from "./components/core/ctw-provider";
 import { PatientProvider } from "./components/core/patient-provider";
 import { ErrorBoundary } from "./error-boundary";
@@ -10,7 +10,7 @@ import { SecuredApp } from "./SecuredApp";
 const {
   VITE_SYSTEM_URL,
   VITE_AUTH_TOKEN,
-  VITE_UPID,
+  VITE_PATIENT_ID,
   VITE_BUILDER_ID,
   VITE_AUTH0_DOMAIN,
   VITE_AUTH0_CLIENT_ID,
@@ -25,7 +25,7 @@ const DemoApp = ({ accessToken = "" }) => (
     authToken={accessToken}
     builderId={VITE_BUILDER_ID}
   >
-    <PatientProvider patientID={VITE_UPID} systemURL={VITE_SYSTEM_URL}>
+    <PatientProvider patientID={VITE_PATIENT_ID} systemURL={VITE_SYSTEM_URL}>
       <div className="App">
         <h1>CTW Component Library</h1>
 

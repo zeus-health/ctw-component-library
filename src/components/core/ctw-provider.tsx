@@ -141,7 +141,7 @@ function useCTW() {
     const requestContext: CTWRequestContext = {
       env: context.env,
       authToken,
-      builderId: context.builderId ?? claimsBuilderId(authToken),
+      builderId: context.builderId ?? claimsBuilderId(authToken) ?? "",
       fhirClient: getFhirClient(context.env, authToken, context.builderId),
     };
     return requestContext;

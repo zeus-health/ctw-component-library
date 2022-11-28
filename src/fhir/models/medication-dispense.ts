@@ -1,8 +1,7 @@
 import { getPerformingOrganization } from "@/fhir/medication";
-import { compact } from "lodash/fp";
-import { FHIRModel } from "./fhir-model";
-import { findReference } from "@/fhir/resource-helper";
 import { PractitionerModel } from "@/fhir/models/practitioner";
+import { findReference } from "@/fhir/resource-helper";
+import { FHIRModel } from "./fhir-model";
 
 export class MedicationDispenseModel extends FHIRModel<fhir4.MedicationDispense> {
   get includedPerformer(): string | undefined {
@@ -38,16 +37,13 @@ export class MedicationDispenseModel extends FHIRModel<fhir4.MedicationDispense>
     return this.resource.status;
   }
 
-  get quantityDisplay() {
-    const { value, unit } = this.resource.quantity || {};
-    return compact([value, unit]).join(" ");
+  get quantityDisplay(): string | undefined {
+    const { value, unit = "units" } = this.resource.quantity || {};
+    return value ? `${value} ${unit}` : undefined;
   }
 
-  get supplied(): string {
+  get supplied(): string | undefined {
     const { value, unit = "days" } = this.resource.daysSupply || {};
-    if (!value) {
-      return "";
-    }
-    return `${value} ${unit}`;
+    return value ? `${value} ${unit}` : undefined;
   }
 }
