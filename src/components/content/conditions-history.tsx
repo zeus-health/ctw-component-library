@@ -140,7 +140,6 @@ export function ConditionHistory({
 
         setConditionsWithDate(conditionsDataDeduped.filter((d) => d.date));
         setConditionsWithoutDate(conditionsDataDeduped.filter((d) => !d.date));
-
         setLoading(false);
       }
     }
@@ -176,7 +175,10 @@ export function ConditionHistory({
               readOnly={!onEdit}
               onEdit={() => {
                 onClose();
-                onEdit();
+                // TODO: Clean this up when headless ui supports multiple drawers  https://github.com/tailwindlabs/headlessui/discussions/1564.
+                // We setTimeout here because we need to wait till condition history drawer closes.
+                // This fixes a bug where having multiple drawers causes headless ui useScrollLock to become out of sync, which causes overlay: hidden incorrectly persist on the html element.
+                setTimeout(onEdit, 400);
               }}
             />
           )}

@@ -86,6 +86,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     }
     return undefined;
   };
+
   const handleToggleChange = () => setIncludeInactive(!includeInactive);
 
   const handleEditCondition = (condition: ConditionModel) => {
