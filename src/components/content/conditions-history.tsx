@@ -6,6 +6,7 @@ import { capitalize, isEqual, orderBy, startCase, uniqWith } from "lodash";
 import { useEffect, useState } from "react";
 import { CodingList } from "../core/coding-list";
 import { CollapsibleDataListProps } from "../core/collapsible-data-list";
+import { Details } from "../core/collapsible-data-list-details";
 import {
   CollapsibleDataListStack,
   CollapsibleDataListStackEntries,
@@ -14,6 +15,28 @@ import { NotesList } from "../core/notes-list";
 import { ConditionHeader } from "./condition-header";
 
 const CONDITION_HISTORY_LIMIT = 10;
+
+const conditionData = (condition: ConditionModel) => [
+  { label: "Recorder", value: condition.recorder },
+  { label: "Recorded Date", value: condition.recordedDate },
+  {
+    label: "Provider Organization",
+    value: condition.patient?.organization?.name,
+  },
+  { label: "Clinical Status", value: capitalize(condition.clinicalStatus) },
+  {
+    label: "Verification Status",
+    value: capitalize(condition.verificationStatus),
+  },
+  { label: "Onset Date", value: condition.onset },
+  { label: "Abatement Date", value: condition.abatement },
+  {
+    label: "Note",
+    value: condition.notes.length !== 0 && (
+      <NotesList notes={condition.notes} />
+    ),
+  },
+];
 
 function setupData(condition: ConditionModel): CollapsibleDataListProps {
   const detailData = [
@@ -70,7 +93,15 @@ function setupData(condition: ConditionModel): CollapsibleDataListProps {
   };
 }
 
-export function ConditionHistory({ condition }: { condition: ConditionModel }) {
+export function ConditionHistory({
+  condition,
+  onClose,
+  onEdit,
+}: {
+  condition: ConditionModel;
+  onClose: () => void;
+  onEdit?: () => void;
+}) {
   const [conditionsWithDate, setConditionsWithDate] =
     useState<CollapsibleDataListStackEntries>([]);
   const [conditionsWithoutDate, setConditionsWithoutDate] =
@@ -109,7 +140,6 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
 
         setConditionsWithDate(conditionsDataDeduped.filter((d) => d.date));
         setConditionsWithoutDate(conditionsDataDeduped.filter((d) => !d.date));
-
         setLoading(false);
       }
     }
@@ -121,7 +151,7 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
       setConditionsWithoutDate([]);
       setLoading(true);
     };
-  }, [condition, historyResponse.data]);
+  }, [condition, historyResponse.data, onEdit]);
 
   function conditionHistoryDisplay() {
     if (
@@ -139,6 +169,19 @@ export function ConditionHistory({ condition }: { condition: ConditionModel }) {
       <>
         <div className="ctw-space-y-6">
           <ConditionHeader condition={condition} />
+          {onEdit && (
+            <Details
+              data={conditionData(condition)}
+              readOnly={!onEdit}
+              onEdit={() => {
+                onClose();
+                // TODO: Clean this up when headless ui supports multiple drawers  https://github.com/tailwindlabs/headlessui/discussions/1564.
+                // We setTimeout here because we need to wait till condition history drawer closes.
+                // This fixes a bug where having multiple drawers causes headless ui useScrollLock to become out of sync, which causes overlay: hidden incorrectly persist on the html element.
+                setTimeout(onEdit, 400);
+              }}
+            />
+          )}
           <CollapsibleDataListStack
             entries={conditionsWithDate}
             limit={CONDITION_HISTORY_LIMIT}
