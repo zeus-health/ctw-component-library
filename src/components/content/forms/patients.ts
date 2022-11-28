@@ -87,11 +87,6 @@ export const editPatientAndScheduleHistory = async (
   let { requestErrors } = editPatientResponse;
 
   const requestContext = await getRequestContext();
-  if (!patient.organization?.id) {
-    throw Error(
-      `Managing organization not found with id of ${patient.organization?.id} and is needed in order to perform patient scheduling.`
-    );
-  }
 
   if (result.success) {
     const patientHistoryResponse = await schedulePatientHistory(
