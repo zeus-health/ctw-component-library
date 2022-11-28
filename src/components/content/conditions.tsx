@@ -151,12 +151,13 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       patientResponse.data?.id as string,
       ["done"]
     );
-    if (patientHistoryFetched) {
-      setClinicalHistoryExists(true);
-    } else {
+
+    if (!patientHistoryFetched) {
       setClinicalHistoryExists(false);
       setRequestRecordsClinicalHistory(true);
     }
+
+    setClinicalHistoryExists(true);
   };
 
   useEffect(() => {
@@ -187,8 +188,8 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         setOtherProviderRecords([]);
       }
     }
-    load();
-    handleClinicalHistory();
+    void load();
+    void handleClinicalHistory();
   }, [
     includeInactive,
     patientResponse.data,

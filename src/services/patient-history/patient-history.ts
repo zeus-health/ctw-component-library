@@ -20,6 +20,7 @@ export async function getPatientRefreshHistoryMessages(
     });
     const result = await response.json();
 
+    /* eslint no-underscore-dangle: 0 */
     return Object.values(result.data) as PatientRefreshHistoryMessage[];
   } catch (err) {
     throw errorResponse(
@@ -33,7 +34,7 @@ export async function hasFetchedPatientHistory(
   requestContext: CTWRequestContext,
   patientID: string,
   statuses: string[]
-): Promise<Boolean> {
+): Promise<boolean> {
   const messages = await getPatientRefreshHistoryMessages(
     requestContext,
     patientID
@@ -50,7 +51,7 @@ export async function hasFetchedPatientHistory(
       : previous
   );
   // There is a bug with the API that will be reworked in 2 weeks. Leaving as is for now.
-  if (latestMessage?.status === "done" && latestMessage?._errors) {
+  if (latestMessage?.status === "done" && latestMessage?._errors.length > 0) {
     return false;
   } else if (latestMessage?.status === "done") {
     return true;
