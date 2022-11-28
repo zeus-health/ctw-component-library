@@ -1,12 +1,12 @@
-import type { Meta, StoryObj } from "@storybook/react";
 import {
   ProviderMedsTable,
   ProviderMedsTableProps,
 } from "@/components/content/medications/provider-meds-table";
-import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 import { CTWProvider } from "@/components/core/ctw-provider";
 import { PatientProvider } from "@/components/core/patient-provider";
-import otherProviderMedsTableStories from "./other-provider-meds-table.stories";
+import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
+import type { Meta, StoryObj } from "@storybook/react";
+import { setupMedicationMocks } from "./story-helpers/mocks/requests";
 
 type Props = ProviderMedsTableProps;
 
@@ -15,14 +15,14 @@ export default {
   component: ProviderMedsTable,
   decorators: [
     (Story, { args }) => (
-      <CTWProvider env="dev" authToken="eyh.12345" builderId="12345">
+      <CTWProvider env="dev" authToken="12345" builderId="12345">
         <PatientProvider patientID="007" systemURL={SYSTEM_ZUS_UNIVERSAL_ID}>
           <Story args={args} />
         </PatientProvider>
       </CTWProvider>
     ),
   ],
-  parameters: otherProviderMedsTableStories.parameters,
+  ...setupMedicationMocks(),
 } as Meta<Props>;
 
 export const Basic: StoryObj<Props> = {
