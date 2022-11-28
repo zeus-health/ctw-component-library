@@ -69,6 +69,7 @@ export const DrawerFormWithFields = <T,>({
                       key={label}
                       readonly={readonly}
                       render={render}
+                      name={label}
                     />
                   );
                 }
