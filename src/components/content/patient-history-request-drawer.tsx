@@ -23,11 +23,11 @@ export const PatientHistoryRequestDrawer = <T,>({
   <DrawerFormWithFields
     patientID={patient.id}
     header={header}
-    title="Request Drawer"
+    title="Request Records"
     action={action}
     data={getRequestData(patient)}
     schema={requestHistorySchema}
     isOpen={isOpen}
-    onClose={() => onClose()}
+    onClose={onClose}
   />
 );
