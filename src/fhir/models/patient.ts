@@ -1,6 +1,6 @@
 import { findReference } from "@/fhir/resource-helper";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
-import { cloneDeep, find, remove } from "lodash";
+import { cloneDeep, find } from "lodash";
 import { formatDateISOToLocal, formatPhoneNumber } from "../formatters";
 import { FHIRModel } from "./fhir-model";
 import { OrganizationModel } from "./organization";
@@ -63,41 +63,6 @@ export class PatientModel extends FHIRModel<fhir4.Patient> {
       ?.value;
   }
 
-  /*
-    TELECOM STUFF
-  */
-  private setTelecom(
-    system: fhir4.ContactPoint["system"],
-    use?: fhir4.ContactPoint["use"],
-    value?: string
-  ) {
-    const predicate: fhir4.ContactPoint = { system };
-    if (use) {
-      predicate.use = use;
-    }
-
-    // Make sure we have a telecom array.
-    if (!this.resource.telecom) {
-      this.resource.telecom = [];
-    }
-
-    if (value) {
-      const telecom = find(this.resource.telecom, predicate);
-      if (telecom) {
-        telecom.value = value;
-      } else {
-        this.resource.telecom.push({
-          system,
-          use,
-          value,
-        });
-      }
-    } else {
-      // Remove all telecoms that match!
-      remove(this.resource.telecom, predicate);
-    }
-  }
-
   getPhoneNumber(use?: fhir4.ContactPoint["use"]): string | undefined {
     const predicate: fhir4.ContactPoint = { system: "phone" };
     if (use) {
@@ -107,18 +72,9 @@ export class PatientModel extends FHIRModel<fhir4.Patient> {
     return formatPhoneNumber(telecom?.value);
   }
 
-  setPhoneNumber(use?: fhir4.ContactPoint["use"], phoneNumber?: string) {
-    this.setTelecom("phone", use, phoneNumber);
-  }
-
   // Gets first "phone" telecom.
   get phoneNumber(): string | undefined {
     return this.getPhoneNumber();
-  }
-
-  // Sets first "phone" telecom.
-  set phoneNumber(phoneNumber: string | undefined) {
-    this.setTelecom("phone", undefined, phoneNumber);
   }
 
   get email(): string | undefined {
@@ -142,33 +98,6 @@ export class PatientModel extends FHIRModel<fhir4.Patient> {
   get homeAddress(): fhir4.Address | undefined {
     // Clone the address so that consumers cannot modify our resource.
     return cloneDeep(this.bestHomeAddress);
-  }
-
-  set homeAddress(address: fhir4.Address | undefined) {
-    // Make sure we have an address array.
-    if (!this.resource.address) {
-      this.resource.address = [];
-    }
-
-    if (!address) {
-      // Remove all of our possible addresses.
-      remove(this.resource.address, { use: "home" });
-      remove(this.resource.address, (addy) => !addy.use); // use is undefined
-    } else {
-      // Make sure all added addresses are set to home.
-      // This ensures bestHomeAddress will return this new one!
-      const newAddress: fhir4.Address = { use: "home", ...address };
-      const existingAddress = this.bestHomeAddress;
-      if (existingAddress) {
-        // Take special care to replace the address. This way
-        // we preserve the order of addresses (not sure how important this is).
-        const index = this.resource.address.indexOf(existingAddress);
-        this.resource.address.splice(index, 1, newAddress);
-      } else {
-        // Adding a completely new address, so set its use to home.
-        this.resource.address.push(newAddress);
-      }
-    }
   }
 
   /*
