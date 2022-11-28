@@ -1,10 +1,9 @@
+import { FormField } from "@/components/content/forms/form-field";
 import { AnyZodSchema, useFormInputProps } from "@/utils/form-helper";
 import { InputHTMLAttributes, ReactNode } from "react";
-import type { DrawerFormProps } from "./drawer-form";
-import { DrawerForm } from "./drawer-form";
-import { FormField } from "./form-field";
+import { DrawerForm, DrawerFormProps } from "./drawer-form";
 
-export type FormEntry = {
+export type FormFieldType = {
   label: string;
   field: string;
   value?: string | string[];
@@ -16,6 +15,18 @@ export type FormEntry = {
     inputProps: InputHTMLAttributes<HTMLInputElement>
   ) => JSX.Element;
 };
+
+export type FormContentType = {
+  field?: never;
+  value?: never;
+  lines?: never;
+  readonly?: never;
+  hidden?: never;
+  render: () => JSX.Element;
+  label: string;
+};
+
+export type FormEntry = FormFieldType | FormContentType;
 
 export type DrawerFormWithFieldsProps<T> = {
   title: string;
@@ -52,6 +63,17 @@ export const DrawerFormWithFields = <T,>({
           <div className="ctw-space-y-6">
             {data.map(
               ({ label, field, value, lines, readonly, hidden, render }) => {
+                if (!field) {
+                  return (
+                    <FormField
+                      key={label}
+                      readonly={readonly}
+                      render={render}
+                      name={label}
+                    />
+                  );
+                }
+
                 const fieldErrors = errors?.[field];
 
                 if (hidden) {
@@ -70,27 +92,30 @@ export const DrawerFormWithFields = <T,>({
                   );
                 }
 
+                const props = inputProps(field, schema);
+                const required = props["aria-required"];
+
                 return (
                   <div
                     key={label}
                     className="ctw-space-y-1.5 ctw-text-sm ctw-font-medium ctw-text-content-black"
                   >
                     <div className="ctw-flex ctw-justify-between">
-                      <label>{label}</label>
-                      {inputProps(field)["aria-required"] && (
-                        <div className="ctw-flex-grow ctw-text-icon-default">
-                          *
-                        </div>
-                      )}
-                      {inputProps(field)["aria-required"] && (
-                        <span className="ctw-right-0 ctw-inline-block ctw-text-xs ctw-text-content-black">
-                          Required
-                        </span>
+                      <label htmlFor={props.name}>{label}</label>
+                      {required && (
+                        <>
+                          <div className="ctw-flex-grow ctw-text-icon-default">
+                            *
+                          </div>
+                          <span className="ctw-right-0 ctw-inline-block ctw-text-xs ctw-text-content-black">
+                            Required
+                          </span>
+                        </>
                       )}
                     </div>
 
                     <FormField
-                      {...inputProps(field, schema)}
+                      {...props}
                       lines={lines}
                       key={label}
                       disabled={submitting}

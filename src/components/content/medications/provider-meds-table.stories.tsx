@@ -1,12 +1,12 @@
-import type { Meta, StoryObj } from "@storybook/react";
 import {
   ProviderMedsTable,
   ProviderMedsTableProps,
 } from "@/components/content/medications/provider-meds-table";
-import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 import { CTWProvider } from "@/components/core/ctw-provider";
 import { PatientProvider } from "@/components/core/patient-provider";
-import otherProviderMedsTableStories from "@/components/content/medications/other-provider-meds-table.stories";
+import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
+import type { Meta, StoryObj } from "@storybook/react";
+import { setupMedicationMocks } from "./story-helpers/mocks/requests";
 
 type Props = ProviderMedsTableProps;
 
@@ -22,7 +22,7 @@ export default {
       </CTWProvider>
     ),
   ],
-  parameters: otherProviderMedsTableStories.parameters,
+  ...setupMedicationMocks(),
 } as Meta<Props>;
 
 export const Basic: StoryObj<Props> = {

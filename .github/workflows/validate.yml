@@ -99,3 +99,30 @@ jobs:
 
       - name: ⚡ Run vitest
         run: npm run test
+
+  storybook-tests:
+    name: Storybook Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛑 Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.1
+
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v3
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.14.2
+
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
+
+      - name: Build Storybook
+        run: npm run build-storybook
+
+      - name: Storybook Tests
+        run: |
+          npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
+            "npx http-server storybook-static --port 6006 --silent" \
+            "npx wait-on tcp:6006 && npm run test-storybook"

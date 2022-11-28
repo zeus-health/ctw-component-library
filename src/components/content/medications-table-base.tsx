@@ -1,11 +1,11 @@
 import { DropdownMenu, MenuItems } from "@/components/core/dropdown-menu";
-import type { MinRecordItem, TableColumn } from "@/components/core/table/table";
 import { Table, TableBaseProps } from "@/components/core/table/table";
 import type { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { DotsHorizontalIcon } from "@heroicons/react/outline";
 import { compact, isFunction } from "lodash/fp";
 import { ReactNode, useRef } from "react";
+import { MinRecordItem, TableColumn } from "../core/table/table-helpers";
 
 export type MedicationsTableBaseProps<T extends MinRecordItem> = {
   medicationStatements: MedicationStatementModel[];
