@@ -14,7 +14,7 @@ import {
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import { z } from "zod";
-import type { FormEntry } from "./drawer-form-with-fields";
+import type { FormEntry } from "../../core/form/drawer-form-with-fields";
 import { ActionReturn, MedicationFormData } from "./types";
 
 export const medicationStatementSchema = z.object({

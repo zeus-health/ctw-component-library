@@ -15,6 +15,11 @@ import cx from "classnames";
 import { curry } from "lodash";
 import { useEffect, useRef, useState } from "react";
 import { useCTW } from "../core/ctw-provider";
+import {
+  DrawerFormWithFields,
+  FormActionTypes,
+  FormEntry,
+} from "../core/form/drawer-form-with-fields";
 import { ModalConfirmDelete } from "../core/modal-confirm-delete";
 import { usePatient } from "../core/patient-provider";
 import { TableSort } from "../core/table/table-helpers";
@@ -31,11 +36,8 @@ import {
   createOrEditCondition,
   getAddConditionWithDefaults,
 } from "./forms/conditions";
-import {
-  DrawerFormWithFields,
-  FormActionTypes,
-  FormEntry,
-} from "./forms/drawer-form-with-fields";
+import { editPatientAndScheduleHistory } from "./forms/patients";
+import { PatientHistoryRequestDrawer } from "./patient-history-request-drawer";
 
 export type ConditionsProps = {
   className?: string;
@@ -54,6 +56,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [historyDrawerIsOpen, setHistoryDrawerIsOpen] = useState(false);
+  const [requestRecordsDrawerIsOpen, setRequestDrawerisOpen] = useState(false);
   const [patientRecords, setPatientRecords] = useState<ConditionModel[]>([]);
   const [otherProviderRecords, setOtherProviderRecords] = useState<
     ConditionModel[]
@@ -249,6 +252,13 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         <div className="ctw-space-y-3">
           <div className="ctw-conditions-title-container">
             <div className="ctw-title">Other Provider Records</div>
+            <button
+              type="button"
+              className="ctw-btn-clear ctw-link"
+              onClick={() => setRequestDrawerisOpen(true)}
+            >
+              Request Records
+            </button>
           </div>
 
           <ConditionsTableBase
@@ -297,6 +307,21 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           schema={schema}
           isOpen={drawerIsOpen}
           onClose={() => setDrawerIsOpen(false)}
+        />
+      )}
+
+      {patientResponse.data && (
+        <PatientHistoryRequestDrawer
+          header={
+            <div className="ctw-pt-0 ctw-text-base">
+              Request patient clinical history from 70K+ providers across the
+              nation. No changes will be made to your patient record.
+            </div>
+          }
+          patient={patientResponse.data}
+          isOpen={requestRecordsDrawerIsOpen}
+          onClose={() => setRequestDrawerisOpen(false)}
+          action={curry(editPatientAndScheduleHistory)(patientResponse.data)}
         />
       )}
 

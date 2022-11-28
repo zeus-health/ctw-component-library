@@ -1,4 +1,5 @@
 import { CTWRequestContext } from "@/components/core/ctw-context";
+import { FormErrors } from "@/components/core/form/drawer-form";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { setRecorderField } from "@/fhir/conditions";
 import { isFhirError } from "@/fhir/errors";
@@ -19,7 +20,6 @@ import {
 import { queryClient } from "@/utils/request";
 import { Condition } from "fhir/r4";
 import { cloneDeep } from "lodash";
-import { FormErrors } from "./drawer-form";
 import { ActionReturn } from "./types";
 
 // Sets any autofill values that apply when a user adds a condition, whether creating or confirming.

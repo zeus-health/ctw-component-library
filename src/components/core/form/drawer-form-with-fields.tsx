@@ -1,10 +1,9 @@
+import { FormField } from "@/components/content/forms/form-field";
 import { AnyZodSchema, useFormInputProps } from "@/utils/form-helper";
 import { InputHTMLAttributes, ReactNode } from "react";
-import type { DrawerFormProps } from "./drawer-form";
-import { DrawerForm } from "./drawer-form";
-import { FormField } from "./form-field";
+import { DrawerForm, DrawerFormProps } from "./drawer-form";
 
-export type FormEntry = {
+export type FormFieldType = {
   label: string;
   field: string;
   value?: string | string[];
@@ -16,6 +15,18 @@ export type FormEntry = {
     inputProps: InputHTMLAttributes<HTMLInputElement>
   ) => JSX.Element;
 };
+
+export type FormContentType = {
+  field?: never;
+  value?: never;
+  lines?: never;
+  readonly?: never;
+  hidden?: never;
+  render: () => JSX.Element;
+  label: string;
+};
+
+export type FormEntry = FormFieldType | FormContentType;
 
 export type DrawerFormWithFieldsProps<T> = {
   title: string;
@@ -52,6 +63,17 @@ export const DrawerFormWithFields = <T,>({
           <div className="ctw-space-y-6">
             {data.map(
               ({ label, field, value, lines, readonly, hidden, render }) => {
+                if (!field) {
+                  return (
+                    <FormField
+                      key={label}
+                      readonly={readonly}
+                      render={render}
+                      name={label}
+                    />
+                  );
+                }
+
                 const fieldErrors = errors?.[field];
 
                 if (hidden) {
