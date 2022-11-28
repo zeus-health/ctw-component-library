@@ -1,18 +1,24 @@
-import {
-  ProviderMedsTable,
-  ProviderMedsTableProps,
-} from "@/components/content/medications/provider-meds-table";
+import { aggregatedFromMedStatement } from "@/components/content/medications/story-helpers/mocks/aggregated-from-med-statement";
 import { CTWProvider } from "@/components/core/ctw-provider";
 import { PatientProvider } from "@/components/core/patient-provider";
+import { MedicationStatementModel } from "@/fhir/models";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 import type { Meta, StoryObj } from "@storybook/react";
+import {
+  MedicationHistory,
+  MedicationHistoryProps,
+} from "./medication-history";
 import { setupMedicationMocks } from "./story-helpers/mocks/requests";
 
-type Props = ProviderMedsTableProps;
+type Props = MedicationHistoryProps;
+
+const medicationStatementModel = new MedicationStatementModel(
+  aggregatedFromMedStatement
+);
 
 export default {
+  component: MedicationHistory,
   tags: ["docsPage"],
-  component: ProviderMedsTable,
   decorators: [
     (Story, { args }) => (
       <CTWProvider env="dev" authToken="12345" builderId="12345">
@@ -27,7 +33,6 @@ export default {
 
 export const Basic: StoryObj<Props> = {
   args: {
-    sortColumn: "display",
-    sortOrder: "asc",
+    medication: medicationStatementModel,
   },
 };

@@ -1,26 +1,27 @@
-export const medicationStatement = {
+export const medicationAdministration = {
   resourceType: "Bundle",
-  id: "be63733e",
-  meta: {
-    lastUpdated: "2022-11-14T19:07:22.958+00:00",
-  },
+  id: "e23143d2",
   type: "searchset",
   total: 3,
   entry: [
     {
       resource: {
-        resourceType: "MedicationStatement",
-        id: "abcd-12345",
+        resourceType: "MedicationAdministration",
+        id: "d7571c17-1e36-4c38-8149-e30ee3b18481",
         meta: {
           extension: [
             {
+              url: "https://zusapi.com/terminology/enrichment/sha256sum",
+              valueBase64Binary: "QpOAfH5cGwbtNc6rbx+7OW2gBaNqUpZjKFW5H10aaDQ=",
+            },
+            {
               url: "https://zusapi.com/created-at",
-              valueInstant: "2022-11-08T15:03:20.252+00:00",
+              valueInstant: "2022-11-21T18:21:42.877+00:00",
             },
           ],
           versionId: "2",
-          lastUpdated: "2022-11-08T15:03:20.341+00:00",
-          source: "#e22fb32b790ccefa",
+          lastUpdated: "2022-11-21T18:21:43.037+00:00",
+          source: "#5b771d76a2028e1c",
           tag: [
             {
               system: "https://zusapi.com/thirdparty/source",
@@ -36,19 +37,15 @@ export const medicationStatement = {
         extension: [
           {
             url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "f5ba64c5-4f66-45cf-b07d-84ed828138e0",
+            valueString: "57ddcfa9",
           },
         ],
-        status: "active",
+        status: "completed",
         medicationCodeableConcept: {
           coding: [
             {
               system: "http://www.nlm.nih.gov/research/umls/rxnorm",
-              code: "847232",
-            },
-            {
-              system: "http://hl7.org/fhir/sid/ndc",
-              code: "00088502000",
+              code: "2179744",
             },
             {
               extension: [
@@ -58,8 +55,8 @@ export const medicationStatement = {
                 },
               ],
               system: "http://www.nlm.nih.gov/research/umls/rxnorm",
-              code: "274783",
-              display: "insulin glargine",
+              code: "253182",
+              display: "insulin, regular, human",
               userSelected: false,
             },
             {
@@ -69,9 +66,9 @@ export const medicationStatement = {
                   valueString: "BrandName",
                 },
               ],
-              system: "http://www.nlm.nih.gov/research/umls/rxnorm",
-              code: "261551",
-              display: "Lantus",
+              system: "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
+              code: "UNK",
+              display: "unknown",
               userSelected: false,
             },
             {
@@ -82,32 +79,29 @@ export const medicationStatement = {
                 },
               ],
               system: "http://www.nlm.nih.gov/research/umls/rxnorm",
-              code: "847230",
-              display: "3 ML insulin glargine 100 UNT/ML Pen Injector",
+              code: "2179744",
+              display: "100 ML insulin, regular, human 1 UNT/ML Injection",
               userSelected: false,
             },
           ],
         },
         subject: {
-          reference: "Patient/4b92e70f-8476-461b-8980-047e50aa2dab",
+          reference: "Patient/007",
           type: "Patient",
         },
-        context: {
-          reference: "Encounter/1a547d9a-8a31-48e4-a53e-6f9a0e96b25d",
-          type: "Encounter",
-          display: "Office visit 30 min, Sally McCann",
+        effectivePeriod: {
+          start: "2022-06-11T03:15:00+00:00",
+          end: "2022-06-11T03:15:00+00:00",
         },
-        dateAsserted: "2022-08-29",
-        informationSource: {
-          reference: "Practitioner/6c7f3ad6-6849-4dd8-9cd6-6c16865cfdd8",
-          type: "Practitioner",
-          display: "Sally McCann",
-        },
-        dosage: [
-          {
-            text: "Inject 3 ML with enclosed pen injector every morning. ",
+        dosage: {
+          route: {
+            text: "Intramuscular",
           },
-        ],
+          dose: {
+            value: 100,
+            unit: "ml",
+          },
+        },
       },
       search: {
         mode: "match",
@@ -116,17 +110,17 @@ export const medicationStatement = {
     {
       resource: {
         resourceType: "Patient",
-        id: "4b92e70f-8476-461b-8980-047e50aa2dab",
+        id: "976954a4",
         meta: {
           extension: [
             {
               url: "https://zusapi.com/created-at",
-              valueInstant: "2022-11-08T15:02:19.434+00:00",
+              valueInstant: "2022-11-21T18:21:42.532+00:00",
             },
           ],
           versionId: "2",
-          lastUpdated: "2022-11-08T15:02:20.204+00:00",
-          source: "#7b1503c2b2558700",
+          lastUpdated: "2022-11-21T18:21:42.735+00:00",
+          source: "#68bb7ed53a5b0f5d",
           security: [
             {
               system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
@@ -148,7 +142,7 @@ export const medicationStatement = {
         identifier: [
           {
             system: "https://zusapi.com/fhir/identifier/universal-id",
-            value: "f5ba64c5-4f66-45cf-b07d-84ed828138e0",
+            value: "57ddcfa9",
           },
         ],
         name: [
@@ -164,27 +158,27 @@ export const medicationStatement = {
           },
           {
             system: "phone",
-            value: "555-739-0835",
+            value: "555-951-2842",
             use: "home",
           },
           {
             system: "phone",
-            value: "555-737-8967",
+            value: "555-861-6875",
             use: "mobile",
           },
         ],
         gender: "male",
-        birthDate: "2010-08-16",
+        birthDate: "2007-12-13",
         address: [
           {
-            line: ["83 SHADOW LN"],
+            line: ["121 SHADOW LN"],
             city: "LAS VEGAS",
             state: "NV",
             postalCode: "89106-4119",
           },
         ],
         managingOrganization: {
-          reference: "Organization/abcd-12345-efghij",
+          reference: "Organization/af0276b9-9a91-4a34-871e-6ac2115fae17",
         },
       },
       search: {
@@ -194,17 +188,17 @@ export const medicationStatement = {
     {
       resource: {
         resourceType: "Organization",
-        id: "abcd-12345-efghij",
+        id: "af0276b9",
         meta: {
           extension: [
             {
               url: "https://zusapi.com/created-at",
-              valueInstant: "2022-11-08T15:02:12.231+00:00",
+              valueInstant: "2022-11-21T18:21:37.320+00:00",
             },
           ],
           versionId: "1",
-          lastUpdated: "2022-11-08T15:02:12.239+00:00",
-          source: "#PBAb44ovUWIiO2TB",
+          lastUpdated: "2022-11-21T18:21:37.321+00:00",
+          source: "#XgOPpWgfRvpfdykH",
           tag: [
             {
               system: "https://zusapi.com/accesscontrol/owner",
@@ -213,7 +207,7 @@ export const medicationStatement = {
             },
           ],
         },
-        name: "Northway Pediatrics",
+        name: "Endo Health",
       },
       search: {
         mode: "include",

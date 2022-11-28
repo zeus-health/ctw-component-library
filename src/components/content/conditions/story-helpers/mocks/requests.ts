@@ -34,37 +34,37 @@ export function setupConditionMocks({
 
     parameters: {
       msw: [
-        mockRequestPatientGet,
-        mockRequestConditionSearch,
-        mockRequestProvenancePost,
-        mockRequestConditionGet,
-        mockRequestConditionPost,
-        mockRequestConditionPut,
+        mockPatientGet,
+        mockConditionSearch,
+        mockProvenancePost,
+        mockConditionGet,
+        mockConditionPost,
+        mockConditionPut,
       ],
     },
   };
 }
 
-const mockRequestPatientGet = rest.get(
+const mockPatientGet = rest.get(
   "https://api.dev.zusapi.com/fhir/Patient",
   // Add ctx.delay(750), delay to show loading, we set this to 750ms to be
   // less than the default testing-library timeout of 1000ms.
   (req, res, ctx) => res(ctx.delay(750), ctx.status(200), ctx.json(patient))
 );
 
-const mockRequestProvenancePost = rest.post(
+const mockProvenancePost = rest.post(
   "https://api.dev.zusapi.com/fhir/Provenance",
   (req, res, ctx) => res(ctx.status(200))
 );
 
-const mockRequestConditionSearch = rest.get(
+const mockConditionSearch = rest.get(
   "https://api.dev.zusapi.com/forms-data/terminology/conditions",
   (req, res, ctx) => res(ctx.status(200), ctx.json(heartConditions))
 );
 
 // Mocked post will add the new condition to the
 // patient conditions bundle.
-const mockRequestConditionPost = rest.post(
+const mockConditionPost = rest.post(
   "https://api.dev.zusapi.com/fhir/Condition",
   async (req, res, ctx) => {
     const newCondition = await req.json();
@@ -80,7 +80,7 @@ const mockRequestConditionPost = rest.post(
 
 // Mocked put will modify the condition in the
 // patient conditions bundle.
-const mockRequestConditionPut = rest.put(
+const mockConditionPut = rest.put(
   "https://api.dev.zusapi.com/fhir/Condition/:conditionId",
   async (req, res, ctx) => {
     const condition: fhir4.Condition = await req.json();
@@ -98,7 +98,7 @@ const mockRequestConditionPut = rest.put(
 //  1. History conditions based on code search param.
 //  2. Other provider conditions.
 //  3. Patient conditions.
-const mockRequestConditionGet = rest.get(
+const mockConditionGet = rest.get(
   "https://api.dev.zusapi.com/fhir/Condition",
   (req, res, ctx) => {
     const codeParam = req.url.searchParams.get("code");
