@@ -10,7 +10,7 @@ import {
 } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models/condition";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
-import { getLatestPatientRefreshHistoryMessage } from "@/services/patient-history/patient-history";
+import { hasFetchedPatientHistory } from "@/services/patient-history/patient-history";
 import { AnyZodSchema } from "@/utils/form-helper";
 import cx from "classnames";
 import { curry } from "lodash";
@@ -142,12 +142,12 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const handleClinicalHistory = async () => {
     const requestContext = await getRequestContext();
 
-    const message = await getLatestPatientRefreshHistoryMessage(
+    const patientHistoryFetched = await hasFetchedPatientHistory(
       requestContext,
       patientResponse.data?.id as string,
       ["done"]
     );
-    if (message?.status === "done") {
+    if (patientHistoryFetched) {
       setClinicalHistoryExists(true);
     } else {
       setClinicalHistoryExists(false);
@@ -302,7 +302,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               ]}
             />
           ) : (
-            <PatientHistoryMessage message="Retrieve patient clinical history." />
+            <PatientHistoryMessage />
           )}
         </div>
       </div>

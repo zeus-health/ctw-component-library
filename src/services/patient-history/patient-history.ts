@@ -16,13 +16,10 @@ export async function getPatientRefreshHistoryMessages(
     const response = await fetch(endpointUrl, {
       headers: {
         Authorization: `Bearer ${requestContext.authToken}`,
-        "practitioner-npi": "1245319599",
-        "practitioner-role": "Test Provider",
       },
     });
     const result = await response.json();
 
-    /* eslint no-underscore-dangle: 0 */
     return Object.values(result.data) as PatientRefreshHistoryMessage[];
   } catch (err) {
     throw errorResponse(
@@ -32,23 +29,32 @@ export async function getPatientRefreshHistoryMessages(
   }
 }
 
-export async function getLatestPatientRefreshHistoryMessage(
+export async function hasFetchedPatientHistory(
   requestContext: CTWRequestContext,
   patientID: string,
   statuses: string[]
-) {
+): Promise<Boolean> {
   const messages = await getPatientRefreshHistoryMessages(
     requestContext,
     patientID
   );
+
   if (messages.length === 0) {
-    return null;
+    return false;
   }
 
-  return messages.reduce((previous, current) =>
+  const latestMessage = messages.reduce((previous, current) =>
     parseISO(current._updatedAt) > parseISO(previous._updatedAt) &&
     statuses.includes(current.status)
       ? current
       : previous
   );
+  // There is a bug with the API that will be reworked in 2 weeks. Leaving as is for now.
+  if (latestMessage?.status === "done" && latestMessage?._errors) {
+    return false;
+  } else if (latestMessage?.status === "done") {
+    return true;
+  } else {
+    return false;
+  }
 }

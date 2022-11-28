@@ -4,6 +4,7 @@ export type PatientRefreshHistoryMessage = {
   initialData: {
     patientId: string;
   };
+  _errors: string[];
   _createdAt: string;
   _updatedAt: string;
 };
