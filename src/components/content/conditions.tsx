@@ -58,7 +58,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [historyDrawerIsOpen, setHistoryDrawerIsOpen] = useState(false);
-  const [requestRecordsDrawerIsOpen, setRequestDrawerisOpen] = useState(false);
+  const [requestRecordsDrawerIsOpen, setRequestDrawerIsOpen] = useState(false);
   const [patientRecords, setPatientRecords] = useState<ConditionModel[]>([]);
   const [otherProviderRecords, setOtherProviderRecords] = useState<
     ConditionModel[]
@@ -140,17 +140,17 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     </button>
   );
 
-  const handleClinicalHistory = async () => {
+  const handleClinicalHistory = async (patientID: string) => {
     const requestContext = await getRequestContext();
 
     const patientHistoryFetched = await hasFetchedPatientHistory(
       requestContext,
-      patientResponse.data?.id as string
+      patientID
     );
 
     if (patientHistoryFetched) {
       setClinicalHistoryExists(true);
-      setRequestDrawerisOpen(false);
+      setRequestDrawerIsOpen(false);
     } else {
       setClinicalHistoryExists(false);
     }
@@ -186,7 +186,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     }
     void load();
     if (patientResponse.data?.id) {
-      void handleClinicalHistory();
+      void handleClinicalHistory(patientResponse.data.id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -277,7 +277,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               <button
                 type="button"
                 className="ctw-btn-clear ctw-link"
-                onClick={() => setRequestDrawerisOpen(true)}
+                onClick={() => setRequestDrawerIsOpen(true)}
               >
                 Request Records
               </button>
@@ -319,7 +319,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
             />
           ) : (
             <PatientHistoryMessage
-              onClick={() => setRequestDrawerisOpen(true)}
+              onClick={() => setRequestDrawerIsOpen(true)}
             />
           )}
         </div>
@@ -353,7 +353,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           }
           patient={patientResponse.data}
           isOpen={requestRecordsDrawerIsOpen}
-          onClose={() => setRequestDrawerisOpen(false)}
+          onClose={() => setRequestDrawerIsOpen(false)}
           action={curry(editPatientAndScheduleHistory)(patientResponse.data)}
         />
       )}
