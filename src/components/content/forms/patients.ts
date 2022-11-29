@@ -53,9 +53,11 @@ export const editPatient = async (
       },
     ],
     contact: patient.contact,
-    managingOrganization: {
-      reference: `Organization/${patient.organization?.id}`,
-    },
+    ...(patient.organization?.id && {
+      managingOrganization: {
+        reference: `Organization/${patient.organization.id}`,
+      },
+    }),
   };
 
   const response = await createOrEditFhirResource(fhirPatient, requestContext);
