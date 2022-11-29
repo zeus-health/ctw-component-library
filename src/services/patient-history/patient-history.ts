@@ -33,7 +33,7 @@ export async function getPatientRefreshHistoryMessages(
 export async function hasFetchedPatientHistory(
   requestContext: CTWRequestContext,
   patientID: string,
-  statuses: string[]
+  status: string
 ): Promise<boolean> {
   const messages = await getPatientRefreshHistoryMessages(
     requestContext,
@@ -46,7 +46,7 @@ export async function hasFetchedPatientHistory(
 
   const latestMessage = messages.reduce((previous, current) =>
     parseISO(current._updatedAt) > parseISO(previous._updatedAt) &&
-    statuses.includes(current.status)
+    status === current.status
       ? current
       : previous
   );

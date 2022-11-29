@@ -146,7 +146,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     const patientHistoryFetched = await hasFetchedPatientHistory(
       requestContext,
       patientResponse.data?.id as string,
-      ["done"]
+      "done"
     );
 
     if (patientHistoryFetched) {
@@ -319,15 +319,9 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               ]}
             />
           ) : (
-            <PatientHistoryMessage>
-              <button
-                type="button"
-                className="ctw-btn-clear ctw-link"
-                onClick={() => setRequestDrawerisOpen(true)}
-              >
-                Request Records
-              </button>
-            </PatientHistoryMessage>
+            <PatientHistoryMessage
+              onClick={() => setRequestDrawerisOpen(true)}
+            />
           )}
         </div>
       </div>
