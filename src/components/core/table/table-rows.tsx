@@ -20,6 +20,7 @@ export const TableRows = <T extends MinRecordItem>({
   emptyMessage,
   handleRowClick,
 }: TableRowsProps<T>) => {
+  console.log("TableRows", records);
   if (isLoading) {
     return (
       <TableFullLengthRow colSpan={columns.length}>

@@ -1,4 +1,4 @@
-import { alphaSortBlankLast, SortDir } from "@/utils/sort";
+import { localeCompareBlankLast, SortDir } from "@/utils/sort";
 import { ReactNode } from "react";
 
 export interface MinRecordItem {
@@ -17,8 +17,7 @@ export type TableColumn<T extends MinRecordItem> = {
   className?: string;
   widthPercent?: number;
   minWidth?: number;
-  sortIndex?: keyof T;
-  sortFnOverride?: (a: T, b: T, dir: SortDir) => number;
+  sortIndices?: (keyof T)[];
 } & (DataIndexSpecified<T> | RenderSpecified<T>);
 
 export function sortRecords<T extends MinRecordItem>(
@@ -30,21 +29,32 @@ export function sortRecords<T extends MinRecordItem>(
     (column) => column.title === sort?.columnTitle
   );
   // If there is a sort applied to a column, then sort the records.
-  if (sort && sortColumn) {
-    // May be given a function, or just a property to be sorted by alphanumerically.
-    const sortFn =
-      sortColumn.sortFnOverride ||
-      (sortColumn.sortIndex &&
-        ((a, b, dir) =>
-          // Cast because sortIndex is a property of a and b.
-          alphaSortBlankLast(
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (a as any)[sortColumn.sortIndex],
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (b as any)[sortColumn.sortIndex],
-            dir
-          )));
-    if (sortFn) return records.sort((a, b) => sortFn(a, b, sort.dir));
+  if (sort && sortColumn?.sortIndices) {
+    return sortByCols(records, sortColumn.sortIndices, sort.dir);
   }
   return records;
+}
+
+function sortByCols<T>(records: T[], indices: (keyof T)[], dir: SortDir) {
+  return records.sort((a, b) => {
+    let firstCompare = a;
+    let secondCompare = b;
+    if (dir === "desc") {
+      firstCompare = b;
+      secondCompare = a;
+    }
+    let compareTotal = 0;
+    for (let i = 0; i < indices.length; i += 1) {
+      compareTotal +=
+        localeCompareBlankLast(
+          // Cast as any because we know we can index using indices, which are all keys.
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (firstCompare[indices[i]] as any).toString(),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (secondCompare[indices[i]] as any).toString()
+        ) *
+        0.1 ** i;
+    }
+    return compareTotal;
+  });
 }

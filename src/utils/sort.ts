@@ -46,10 +46,9 @@ function sortByDate<T>(
   return collection;
 }
 
-export const alphaSortBlankLast = (
+export const localeCompareBlankLast = (
   a: string | undefined,
-  b: string | undefined,
-  dir: SortDir
+  b: string | undefined
 ) => {
   const aIsBlank = !a || a === "";
   const bIsBlank = !b || b === "";
@@ -62,5 +61,5 @@ export const alphaSortBlankLast = (
   if (bIsBlank) {
     return -1;
   }
-  return dir === "asc" ? a.localeCompare(b) : b.localeCompare(a);
+  return a.localeCompare(b);
 };

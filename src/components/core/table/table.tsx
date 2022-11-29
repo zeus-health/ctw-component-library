@@ -50,6 +50,7 @@ export const Table = <T extends MinRecordItem>({
   const [count, setCount] = useState(DEFAULT_PAGE_SIZE);
 
   const sortedRecords = sortRecords(records, columns, sort);
+  console.log("Result of sortRecords(...)", sortedRecords);
 
   const updateShadows = () => {
     const container = scrollContainerRef.current;
