@@ -14,7 +14,6 @@ import { queryClient } from "@/utils/request";
 export const editPatient = async (
   patient: PatientModel,
   data: FormData,
-  patientID: string,
   getRequestContext: () => Promise<CTWRequestContext>,
   schema: AnyZodSchema
 ) => {
@@ -29,7 +28,7 @@ export const editPatient = async (
 
   const fhirPatient: fhir4.Patient = {
     resourceType: "Patient",
-    id: patientID,
+    id: patient.id,
     active: patient.active,
     name: [{ family: result.data.lastName, given: [result.data.firstName] }],
     gender: result.data.gender,
@@ -71,14 +70,12 @@ export const editPatient = async (
 export const editPatientAndScheduleHistory = async (
   patient: PatientModel,
   data: FormData,
-  patientID: string,
   getRequestContext: () => Promise<CTWRequestContext>,
   schema: AnyZodSchema
 ) => {
   const editPatientResponse = await editPatient(
     patient,
     data,
-    patientID,
     getRequestContext,
     schema
   );
@@ -91,7 +88,7 @@ export const editPatientAndScheduleHistory = async (
   if (result.success) {
     const patientHistoryResponse = await schedulePatientHistory(
       requestContext,
-      patientID,
+      patient.id,
       result.data
     );
     if ("errors" in patientHistoryResponse) {

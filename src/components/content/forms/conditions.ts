@@ -53,8 +53,8 @@ export function getAddConditionWithDefaults(condition: Condition): Condition {
 
 export const createOrEditCondition = async (
   condition: ConditionModel | undefined,
-  data: FormData,
   patientID: string,
+  data: FormData,
   getRequestContext: () => Promise<CTWRequestContext>,
   schema: AnyZodSchema
 ): Promise<{

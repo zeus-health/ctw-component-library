@@ -305,7 +305,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
 
       {patientResponse.data && (
         <DrawerFormWithFields
-          patientID={patientResponse.data.id}
           title={`${formAction} Condition`}
           header={
             formAction === "Edit" &&
@@ -313,7 +312,10 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               <ConditionHeader condition={selectedCondition} />
             )
           }
-          action={curry(createOrEditCondition)(selectedCondition)}
+          action={curry(createOrEditCondition)(
+            selectedCondition,
+            patientResponse.data.id
+          )}
           data={currentSelectedData}
           schema={schema}
           isOpen={drawerIsOpen}

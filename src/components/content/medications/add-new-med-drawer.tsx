@@ -39,7 +39,6 @@ export const AddNewMedDrawer = ({ isOpen, handleOnClose, children }: Props) => {
       {children}
       <DrawerFormWithFields
         title="Add Medication"
-        patientID={patient.data.UPID}
         action={createMedicationStatement}
         data={createMedData}
         schema={medicationStatementSchema}
