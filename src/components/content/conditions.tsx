@@ -92,8 +92,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     return undefined;
   };
 
-  const handleToggleChange = () => setIncludeInactive(!includeInactive);
-
   const handleEditCondition = (condition: ConditionModel) => {
     if (patientResponse.data) {
       setDrawerIsOpen(true);
@@ -215,7 +213,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           <div className="ctw-conditions-title-container">
             <div className="ctw-title">Patient Record</div>
             <ToggleControl
-              onFormChange={handleToggleChange}
+              onFormChange={() => setIncludeInactive(!includeInactive)}
               toggleProps={{ name: "conditions", text: "Include Inactive" }}
             />
           </div>

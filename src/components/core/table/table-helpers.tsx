@@ -39,12 +39,14 @@ function sortByCols<T>(records: T[], indices: (keyof T)[], dir: SortDir) {
   return records.sort((a, b) => {
     let firstCompare = a;
     let secondCompare = b;
-    if (dir === "desc") {
-      firstCompare = b;
-      secondCompare = a;
-    }
+
     let compareTotal = 0;
     for (let i = 0; i < indices.length; i += 1) {
+      // Sort the primary index reversely if descending.
+      if (i === 0 && dir === "desc") {
+        firstCompare = b;
+        secondCompare = a;
+      }
       compareTotal +=
         localeCompareBlankLast(
           // Cast as any because we know we can index using indices, which are all keys.
@@ -53,6 +55,7 @@ function sortByCols<T>(records: T[], indices: (keyof T)[], dir: SortDir) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (secondCompare[indices[i]] as any).toString()
         ) *
+        // The math below allows secondary, tertiary etc. sort indices.
         0.1 ** i;
     }
     return compareTotal;

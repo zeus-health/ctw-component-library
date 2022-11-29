@@ -146,7 +146,7 @@ export const patientConditions: fhir4.Bundle = {
     {
       resource: {
         resourceType: "Condition",
-        id: "faf183db-2623-44f5-943d-2318afbb51a7",
+        id: "faf183db-2623-44f5-943d-2318afbb51a6",
         meta: {
           extension: [
             {

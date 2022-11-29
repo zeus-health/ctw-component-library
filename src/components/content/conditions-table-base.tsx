@@ -47,7 +47,7 @@ export function ConditionsTableBase({
       ),
       widthPercent: 17.5,
       minWidth: 128,
-      sortIndices: ["active", "display"],
+      sortIndices: ["active", "recorded"],
     },
     {
       title: "Last Recorded",
