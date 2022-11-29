@@ -1,7 +1,7 @@
+import { compact } from "lodash/fp";
 import { FHIRModel } from "./fhir-model";
 import { findReference } from "@/fhir/resource-helper";
 import { PractitionerModel } from "@/fhir/models/practitioner";
-import { compact } from "lodash/fp";
 
 export class MedicationRequestModel extends FHIRModel<fhir4.MedicationRequest> {
   get includedRequester() {

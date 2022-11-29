@@ -1,7 +1,7 @@
-import { isMouseEvent } from "@/utils/types";
 import { Combobox } from "@headlessui/react";
 import { debounce, isEmpty, isObject } from "lodash";
 import { ChangeEvent, useMemo, useState } from "react";
+import { isMouseEvent } from "@/utils/types";
 
 export type ComboxboxFieldOption = { value: unknown; label: string };
 

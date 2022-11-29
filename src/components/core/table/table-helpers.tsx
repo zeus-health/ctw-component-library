@@ -1,5 +1,5 @@
-import { alphaSortBlankLast, SortDir } from "@/utils/sort";
 import { ReactNode } from "react";
+import { alphaSortBlankLast, SortDir } from "@/utils/sort";
 
 export interface MinRecordItem {
   id: string | number;

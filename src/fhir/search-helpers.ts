@@ -1,4 +1,3 @@
-import { CTWRequestContext } from "@/components/core/ctw-context";
 import { SearchParams } from "fhir-kit-client";
 import { mapValues, mergeWith } from "lodash";
 
@@ -12,6 +11,7 @@ import {
   SYSTEM_ZUS_UPI_RECORD_TYPE,
 } from "./system-urls";
 import { ResourceType, ResourceTypeString } from "./types";
+import { CTWRequestContext } from "@/components/core/ctw-context";
 
 const MAX_COUNT = 250;
 

@@ -1,4 +1,3 @@
-import { SYSTEM_SUMMARY } from "@/fhir/system-urls";
 import { cloneDeep } from "lodash";
 import { rest } from "msw";
 import { ComponentType, createElement } from "react";
@@ -10,6 +9,7 @@ import { historyGeneralizedAnxiety } from "./history-generalized-anxiety";
 import { historyIronDeficiency } from "./history-iron-deficiency";
 import { historyOralContraception } from "./history-oral-contraception";
 import { patient } from "./patient";
+import { SYSTEM_SUMMARY } from "@/fhir/system-urls";
 
 let patientConditionsCache: fhir4.Bundle;
 let otherConditionsCache: fhir4.Bundle;

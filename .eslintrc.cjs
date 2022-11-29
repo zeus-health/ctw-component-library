@@ -31,7 +31,12 @@ module.exports = {
     "no-void": ["error", { allowAsStatement: true }],
     curly: "error",
     "import/extensions": "off",
-    "import/order": "off",
+    "import/order": [
+      "error",
+      {
+        groups: ["builtin", "external", "parent", "sibling", "index"],
+      },
+    ],
     "import/no-unresolved": "off",
     "import/prefer-default-export": "off",
     "import/no-extraneous-dependencies": [

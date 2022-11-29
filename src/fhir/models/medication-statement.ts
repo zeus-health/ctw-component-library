@@ -1,5 +1,6 @@
 import type { Reference } from "fhir/r4";
 import { capitalize, compact, find, get } from "lodash/fp";
+import { FHIRModel } from "./fhir-model";
 import { codeableConceptLabel } from "@/fhir/codeable-concept";
 import { dateToISO, formatDateISOToLocal } from "@/fhir/formatters";
 import {
@@ -16,7 +17,6 @@ import {
   LENS_EXTENSION_MEDICATION_QUANTITY,
   LENS_EXTENSION_MEDICATION_REFILLS,
 } from "@/fhir/system-urls";
-import { FHIRModel } from "./fhir-model";
 import { findReference } from "@/fhir/resource-helper";
 
 export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatement> {

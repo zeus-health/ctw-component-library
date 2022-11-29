@@ -1,6 +1,6 @@
+import { searchBuilderRecords } from "./search-helpers";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { PractitionerModel } from "@/fhir/models/practitioner";
-import { searchBuilderRecords } from "./search-helpers";
 
 export const getPractitioner = async (
   practitionerId: string,

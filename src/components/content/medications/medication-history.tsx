@@ -1,4 +1,5 @@
 import { capitalize, compact } from "lodash";
+import { useEffect, useState } from "react";
 import { CollapsibleDataListProps } from "@/components/core/collapsible-data-list";
 import { CollapsibleDataListStack } from "@/components/core/collapsible-data-list-stack";
 import { Loading } from "@/components/core/loading";
@@ -6,7 +7,6 @@ import { useMedicationHistory } from "@/fhir/medications";
 import { MedicationModel } from "@/fhir/models/medication";
 import { MedicationDispenseModel } from "@/fhir/models/medication-dispense";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
-import { useEffect, useState } from "react";
 import { MedicationAdministrationModel } from "@/fhir/models/medication-administration";
 import { MedicationRequestModel } from "@/fhir/models/medication-request";
 

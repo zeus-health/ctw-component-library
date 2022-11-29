@@ -1,3 +1,5 @@
+import { FHIRModel } from "./fhir-model";
+import { PatientModel } from "./patient";
 import { codeableConceptLabel } from "@/fhir/codeable-concept";
 import { formatDateISOToLocal } from "@/fhir/formatters";
 import type { Medication } from "@/fhir/medication";
@@ -7,8 +9,6 @@ import { MedicationDispenseModel } from "@/fhir/models/medication-dispense";
 import { MedicationRequestModel } from "@/fhir/models/medication-request";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { findReference } from "@/fhir/resource-helper";
-import { FHIRModel } from "./fhir-model";
-import { PatientModel } from "./patient";
 
 export class MedicationModel extends FHIRModel<Medication> {
   get performer(): string | undefined {

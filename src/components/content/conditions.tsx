@@ -1,16 +1,3 @@
-import {
-  conditionAddSchema,
-  conditionEditSchema,
-  getEditingPatientConditionData,
-} from "@/components/content/forms/condition-schema";
-import {
-  getNewCondition,
-  useOtherProviderConditions,
-  usePatientConditions,
-} from "@/fhir/conditions";
-import { ConditionModel } from "@/fhir/models/condition";
-import { useBreakpoints } from "@/hooks/use-breakpoints";
-import { AnyZodSchema } from "@/utils/form-helper";
 import cx from "classnames";
 import { curry } from "lodash";
 import { useEffect, useRef, useState } from "react";
@@ -38,6 +25,19 @@ import {
 } from "./forms/conditions";
 import { editPatientAndScheduleHistory } from "./forms/patients";
 import { PatientHistoryRequestDrawer } from "./patient-history-request-drawer";
+import {
+  conditionAddSchema,
+  conditionEditSchema,
+  getEditingPatientConditionData,
+} from "@/components/content/forms/condition-schema";
+import {
+  getNewCondition,
+  useOtherProviderConditions,
+  usePatientConditions,
+} from "@/fhir/conditions";
+import { ConditionModel } from "@/fhir/models/condition";
+import { AnyZodSchema } from "@/utils/form-helper";
+import { useBreakpoints } from "@/hooks/use-breakpoints";
 
 export type ConditionsProps = {
   className?: string;
