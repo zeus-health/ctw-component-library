@@ -1,8 +1,10 @@
-import { userEvent, within } from "@storybook/testing-library";
+import { expect } from "@storybook/jest";
+import { userEvent, waitFor, within } from "@storybook/testing-library";
 import { conditionTable } from "./condition-table";
 
 export async function conditionsObject(canvasElement: HTMLElement) {
   const canvas = within(canvasElement);
+  await waitFor(() => expect(canvas.queryAllByRole("table")).toHaveLength(2));
   const tables = canvas.queryAllByRole("table");
   const patientRecord = conditionTable(canvasElement, tables[0]);
   const otherProvider = conditionTable(canvasElement, tables[1]);
