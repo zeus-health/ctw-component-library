@@ -33,7 +33,5 @@ export async function getBuilderFhirPatient(
     );
   }
 
-  console.log("patients", patients);
-
   return new PatientModel(patients[0], getIncludedResources(bundle));
 }
