@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.28.1
+
+### Patch Changes
+
+- 162a65b: Conditionally add managing organization when editing a patient.
+
 ## 0.28.0
 
 ### Minor Changes
