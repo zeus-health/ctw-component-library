@@ -145,8 +145,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
 
     const patientHistoryFetched = await hasFetchedPatientHistory(
       requestContext,
-      patientResponse.data?.id as string,
-      "done"
+      patientResponse.data?.id as string
     );
 
     if (patientHistoryFetched) {
