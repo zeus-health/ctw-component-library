@@ -14,14 +14,12 @@ type InputError = Record<string, string[]>;
 export type DrawerFormProps<T> = {
   action: (
     data: FormData,
-    patientID: string,
     getRequestContext: () => Promise<CTWRequestContext>,
     schema: AnyZodSchema
   ) => Promise<{
     formResult: ActionReturn<T>;
     requestErrors: string[] | undefined;
   }>;
-  patientID: string;
   schema: AnyZodSchema;
 
   children: (submitting: boolean, errors?: FormErrors) => ReactNode;
@@ -31,7 +29,6 @@ export const DrawerForm = <T,>({
   action,
   onClose,
   children,
-  patientID,
   schema,
   ...drawerProps
 }: DrawerFormProps<T>) => {
@@ -72,7 +69,7 @@ export const DrawerForm = <T,>({
 
     const data = new FormData(form as HTMLFormElement);
 
-    const response = await action(data, patientID, getRequestContext, schema);
+    const response = await action(data, getRequestContext, schema);
 
     if (!response.formResult.success) {
       setErrors({
