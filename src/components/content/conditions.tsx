@@ -186,7 +186,9 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       }
     }
     void load();
-    void handleClinicalHistory();
+    if (patientResponse.data?.id) {
+      void handleClinicalHistory();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     includeInactive,
