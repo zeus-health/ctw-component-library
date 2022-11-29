@@ -1,7 +1,7 @@
 export const patientHistoryMessage = {
   data: {
     0: {
-      status: "in_progress",
+      status: "done",
       messageUuid: "41da155d-f10e-4402-b076-652546610e6e",
       initialData: {
         patientId: "260db817-62e7-4429-986d-86126cb8c6b7",
