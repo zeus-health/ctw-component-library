@@ -10,7 +10,7 @@ export async function getPatientRefreshHistoryMessages(
 ) {
   const endpointUrl = `${getZusApiBaseUrl(
     requestContext.env
-  )}/patient-history/messages?patient_id=${patientID}`;
+  )}/patient-history/messages?patient-id=${patientID}`;
 
   try {
     const response = await fetch(endpointUrl, {
@@ -50,10 +50,12 @@ export async function hasFetchedPatientHistory(
       ? current
       : previous
   );
+
   // There is a bug with the API that will be reworked in 2 weeks. Leaving as is for now.
   if (latestMessage.status === "done" && latestMessage._errors.length > 0) {
-    return false;
-  } else if (latestMessage.status === "done") {
+    return true; // Set to false.
+  }
+  if (latestMessage.status === "done") {
     return true;
   }
   return false;

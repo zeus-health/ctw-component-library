@@ -152,12 +152,13 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       ["done"]
     );
 
-    if (!patientHistoryFetched) {
+    if (patientHistoryFetched) {
+      setClinicalHistoryExists(true);
+      setRequestRecordsClinicalHistory(false);
+    } else {
       setClinicalHistoryExists(false);
       setRequestRecordsClinicalHistory(true);
     }
-
-    setClinicalHistoryExists(true);
   };
 
   useEffect(() => {
@@ -190,6 +191,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     }
     void load();
     void handleClinicalHistory();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     includeInactive,
     patientResponse.data,
