@@ -75,9 +75,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const { getRequestContext } = useCTW();
   const [sort, setSort] = useState<TableSort>();
 
-  const [requestRecordsClinicalHistory, setRequestRecordsClinicalHistory] =
-    useState(false);
-
   const [clinicalHistoryExists, setClinicalHistoryExists] = useState(false);
 
   const patientRecordsMessage = patientRecordsResponse.isError
@@ -154,10 +151,9 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
 
     if (patientHistoryFetched) {
       setClinicalHistoryExists(true);
-      setRequestRecordsClinicalHistory(false);
+      setRequestDrawerisOpen(false);
     } else {
       setClinicalHistoryExists(false);
-      setRequestRecordsClinicalHistory(true);
     }
   };
 
@@ -276,13 +272,15 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         <div className="ctw-space-y-3">
           <div className="ctw-conditions-title-container">
             <div className="ctw-title">Other Provider Records</div>
-            <button
-              type="button"
-              className="ctw-btn-clear ctw-link"
-              onClick={() => setRequestDrawerisOpen(true)}
-            >
-              Request Records
-            </button>
+            {clinicalHistoryExists && (
+              <button
+                type="button"
+                className="ctw-btn-clear ctw-link"
+                onClick={() => setRequestDrawerisOpen(true)}
+              >
+                Request Records
+              </button>
+            )}
           </div>
           {clinicalHistoryExists ? (
             <ConditionsTableBase
@@ -319,7 +317,15 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               ]}
             />
           ) : (
-            <PatientHistoryMessage />
+            <PatientHistoryMessage>
+              <button
+                type="button"
+                className="ctw-btn-clear ctw-link"
+                onClick={() => setRequestDrawerisOpen(true)}
+              >
+                Request Records
+              </button>
+            </PatientHistoryMessage>
           )}
         </div>
       </div>
