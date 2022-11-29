@@ -42,6 +42,7 @@ import { PatientHistoryRequestDrawer } from "./patient-history-request-drawer";
 export type ConditionsProps = {
   className?: string;
   readOnly?: boolean;
+  onPatientSave?: () => Promise<void>;
 };
 
 const EMPTY_MESSAGE_PATIENT_RECORD =
@@ -50,7 +51,11 @@ const EMPTY_MESSAGE_PROVIDER = "There are no conditions available.";
 const ERROR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
 
-export function Conditions({ className, readOnly = false }: ConditionsProps) {
+export function Conditions({
+  className,
+  readOnly = false,
+  onPatientSave,
+}: ConditionsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
