@@ -10,6 +10,7 @@ import {
 } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models/condition";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
+import { hasFetchedPatientHistory } from "@/services/patient-history/patient-history";
 import { AnyZodSchema } from "@/utils/form-helper";
 import cx from "classnames";
 import { curry } from "lodash";
@@ -38,6 +39,7 @@ import {
 } from "./forms/conditions";
 import { editPatientAndScheduleHistory } from "./forms/patients";
 import { PatientHistoryRequestDrawer } from "./patient-history-request-drawer";
+import { PatientHistoryMessage } from "./patient-history/patient-history-message";
 
 export type ConditionsProps = {
   className?: string;
@@ -57,7 +59,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
 
   const [historyDrawerIsOpen, setHistoryDrawerIsOpen] = useState(false);
-  const [requestRecordsDrawerIsOpen, setRequestDrawerisOpen] = useState(false);
+  const [requestRecordsDrawerIsOpen, setRequestDrawerIsOpen] = useState(false);
   const [patientRecords, setPatientRecords] = useState<ConditionModel[]>([]);
   const [otherProviderRecords, setOtherProviderRecords] = useState<
     ConditionModel[]
@@ -73,6 +75,8 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const otherProviderRecordsResponse = useOtherProviderConditions();
   const { getRequestContext } = useCTW();
   const [sort, setSort] = useState<TableSort>();
+
+  const [clinicalHistoryExists, setClinicalHistoryExists] = useState(false);
 
   const patientRecordsMessage = patientRecordsResponse.isError
     ? ERROR_MSG
@@ -129,7 +133,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
 
     const newCondition = getNewCondition(patientResponse.data.id);
     setDrawerIsOpen(true);
-    setFormAction("Add");
     setSchema(conditionAddSchema);
     setCurrentlySelectedData(
       getAddConditionData({
@@ -147,6 +150,22 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       Add Condition
     </button>
   );
+
+  const handleClinicalHistory = async (patientID: string) => {
+    const requestContext = await getRequestContext();
+
+    const patientHistoryFetched = await hasFetchedPatientHistory(
+      requestContext,
+      patientID
+    );
+
+    if (patientHistoryFetched) {
+      setClinicalHistoryExists(true);
+      setRequestDrawerIsOpen(false);
+    } else {
+      setClinicalHistoryExists(false);
+    }
+  };
 
   useEffect(() => {
     async function load() {
@@ -176,8 +195,11 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         setOtherProviderRecords([]);
       }
     }
-
     void load();
+    if (patientResponse.data?.id) {
+      void handleClinicalHistory(patientResponse.data.id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     includeInactive,
     patientResponse.data,
@@ -259,47 +281,58 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
             ]}
           />
         </div>
-
         <div className="ctw-space-y-3">
           <div className="ctw-conditions-title-container">
             <div className="ctw-title">Other Provider Records</div>
-            <button
-              type="button"
-              className="ctw-btn-clear ctw-link"
-              onClick={() => setRequestDrawerisOpen(true)}
-            >
-              Request Records
-            </button>
+            {clinicalHistoryExists && (
+              <button
+                type="button"
+                className="ctw-btn-clear ctw-link"
+                onClick={() => setRequestDrawerIsOpen(true)}
+              >
+                Request Records
+              </button>
+            )}
           </div>
-
-          <ConditionsTableBase
-            className="ctw-conditions-not-reviewed"
-            stacked={breakpoints.sm}
-            conditions={otherProviderRecords}
-            sort={sort}
-            onSort={(newSort) => setSort(newSort)}
-            isLoading={
-              otherProviderRecordsResponse.isLoading ||
-              patientRecordsResponse.isLoading
-            }
-            hideMenu={readOnly}
-            message={otherProviderRecordMessage}
-            rowActions={(condition) => [
-              {
-                name: "Add",
-                action: () => {
-                  handleAddOtherProviderCondition(condition);
+          {clinicalHistoryExists ? (
+            <ConditionsTableBase
+              className="ctw-conditions-not-reviewed"
+              stacked={breakpoints.sm}
+              conditions={otherProviderRecords}
+              isLoading={
+                otherProviderRecordsResponse.isLoading ||
+                patientRecordsResponse.isLoading
+              }
+              hideMenu={readOnly}
+              message={otherProviderRecordMessage}
+              rowActions={(condition) => [
+                {
+                  name: "Add",
+                  action: () => {
+                    handleAddOtherProviderCondition(condition);
+                  },
                 },
-              },
-              {
-                name: "View History",
-                action: () => {
-                  setHistoryDrawerIsOpen(true);
-                  setSelectedCondition(condition);
+                {
+                  name: "View History",
+                  action: () => {
+                    setHistoryDrawerIsOpen(true);
+                    setSelectedCondition(condition);
+                  },
                 },
-              },
-            ]}
-          />
+                {
+                  name: "Delete",
+                  className: "dangerous",
+                  action: () => {
+                    handleConditionDelete(condition);
+                  },
+                },
+              ]}
+            />
+          ) : (
+            <PatientHistoryMessage
+              onClick={() => setRequestDrawerIsOpen(true)}
+            />
+          )}
         </div>
       </div>
 
@@ -331,7 +364,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           }
           patient={patientResponse.data}
           isOpen={requestRecordsDrawerIsOpen}
-          onClose={() => setRequestDrawerisOpen(false)}
+          onClose={() => setRequestDrawerIsOpen(false)}
           action={curry(editPatientAndScheduleHistory)(patientResponse.data)}
         />
       )}
