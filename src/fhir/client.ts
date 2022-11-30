@@ -1,5 +1,4 @@
 import Client from "fhir-kit-client";
-
 import { Env } from "@/components/core/ctw-provider";
 
 export function getFhirClient(

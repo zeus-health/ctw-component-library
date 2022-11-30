@@ -8,6 +8,7 @@ import {
   getMedicationCodeableConcept,
   patientStatus,
 } from "@/fhir/medication";
+import { findReference } from "@/fhir/resource-helper";
 import {
   LENS_EXTENSION_AGGREGATED_FROM,
   LENS_EXTENSION_MEDICATION_DAYS_SUPPLY,
@@ -17,7 +18,6 @@ import {
   LENS_EXTENSION_MEDICATION_QUANTITY,
   LENS_EXTENSION_MEDICATION_REFILLS,
 } from "@/fhir/system-urls";
-import { findReference } from "@/fhir/resource-helper";
 
 export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatement> {
   readonly builderPatientRxNormStatus?: Record<string, string>;

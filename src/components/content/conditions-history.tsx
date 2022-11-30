@@ -9,10 +9,10 @@ import {
 } from "../core/collapsible-data-list-stack";
 import { NotesList } from "../core/notes-list";
 import { ConditionHeader } from "./condition-header";
-import { ConditionModel } from "@/fhir/models/condition";
-import { useConditionHistory } from "@/fhir/conditions";
-import { getIncludedResources } from "@/fhir/bundle";
 import { Loading } from "@/components/core/loading";
+import { getIncludedResources } from "@/fhir/bundle";
+import { useConditionHistory } from "@/fhir/conditions";
+import { ConditionModel } from "@/fhir/models/condition";
 
 const CONDITION_HISTORY_LIMIT = 10;
 

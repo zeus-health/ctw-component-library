@@ -1,12 +1,12 @@
-import { capitalize } from "lodash";
 import type { DataListEntry } from "../core/data-list";
-import { DataList, entryFromArray } from "../core/data-list";
 import type { DrawerProps } from "../core/drawer";
+import type { MedicationStatementModel } from "@/fhir/models/medication-statement";
+import { capitalize } from "lodash";
+import { DataList, entryFromArray } from "../core/data-list";
 import { Drawer } from "../core/drawer";
 import { MedicationHistory } from "./medications/medication-history";
-import type { MedicationStatementModel } from "@/fhir/models/medication-statement";
-import { useLastPrescriber } from "@/fhir/medications";
 import { Loading } from "@/components/core/loading";
+import { useLastPrescriber } from "@/fhir/medications";
 
 export type MedicationDrawerProps = {
   medication?: MedicationStatementModel;

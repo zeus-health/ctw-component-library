@@ -5,10 +5,10 @@ import { CollapsibleDataListStack } from "@/components/core/collapsible-data-lis
 import { Loading } from "@/components/core/loading";
 import { useMedicationHistory } from "@/fhir/medications";
 import { MedicationModel } from "@/fhir/models/medication";
-import { MedicationDispenseModel } from "@/fhir/models/medication-dispense";
-import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { MedicationAdministrationModel } from "@/fhir/models/medication-administration";
+import { MedicationDispenseModel } from "@/fhir/models/medication-dispense";
 import { MedicationRequestModel } from "@/fhir/models/medication-request";
+import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 
 const MEDICATION_HISTORY_LIMIT = 10;
 

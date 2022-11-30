@@ -34,7 +34,25 @@ module.exports = {
     "import/order": [
       "error",
       {
-        groups: ["builtin", "external", "parent", "sibling", "index"],
+        alphabetize: {
+          caseInsensitive: true,
+          order: "asc",
+        },
+        groups: [
+          ["builtin", "external", "object", "type"],
+          ["internal", "parent", "sibling", "index"],
+        ],
+        "newlines-between": "never",
+      },
+    ],
+    "sort-imports": [
+      "error",
+      {
+        allowSeparatedGroups: true,
+        ignoreCase: true,
+        ignoreDeclarationSort: true,
+        ignoreMemberSort: false,
+        memberSyntaxSortOrder: ["none", "all", "multiple", "single"],
       },
     ],
     "import/no-unresolved": "off",

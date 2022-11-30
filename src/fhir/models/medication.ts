@@ -1,8 +1,8 @@
+import type { Medication } from "@/fhir/medication";
 import { FHIRModel } from "./fhir-model";
 import { PatientModel } from "./patient";
 import { codeableConceptLabel } from "@/fhir/codeable-concept";
 import { formatDateISOToLocal } from "@/fhir/formatters";
-import type { Medication } from "@/fhir/medication";
 import { getPerformingOrganization } from "@/fhir/medication";
 import { MedicationAdministrationModel } from "@/fhir/models/medication-administration";
 import { MedicationDispenseModel } from "@/fhir/models/medication-dispense";

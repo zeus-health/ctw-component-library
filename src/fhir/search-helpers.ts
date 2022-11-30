@@ -1,6 +1,5 @@
 import { SearchParams } from "fhir-kit-client";
 import { mapValues, mergeWith } from "lodash";
-
 import { getResources } from "./bundle";
 import {
   SYSTEM_SUMMARY,

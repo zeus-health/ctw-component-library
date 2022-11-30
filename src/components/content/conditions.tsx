@@ -26,10 +26,6 @@ import {
 import { editPatientAndScheduleHistory } from "./forms/patients";
 import { PatientHistoryRequestDrawer } from "./patient-history-request-drawer";
 import { PatientHistoryMessage } from "./patient-history/patient-history-message";
-import { AnyZodSchema } from "@/utils/form-helper";
-import { hasFetchedPatientHistory } from "@/services/patient-history/patient-history";
-import { useBreakpoints } from "@/hooks/use-breakpoints";
-import { ConditionModel } from "@/fhir/models/condition";
 import {
   conditionAddSchema,
   conditionEditSchema,
@@ -40,6 +36,10 @@ import {
   useOtherProviderConditions,
   usePatientConditions,
 } from "@/fhir/conditions";
+import { ConditionModel } from "@/fhir/models/condition";
+import { useBreakpoints } from "@/hooks/use-breakpoints";
+import { hasFetchedPatientHistory } from "@/services/patient-history/patient-history";
+import { AnyZodSchema } from "@/utils/form-helper";
 
 export type ConditionsProps = {
   className?: string;
