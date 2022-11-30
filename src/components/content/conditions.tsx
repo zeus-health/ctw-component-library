@@ -366,7 +366,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           patient={patientResponse.data}
           isOpen={requestRecordsDrawerIsOpen}
           onClose={() => setRequestDrawerIsOpen(false)}
-          // action={curry(editPatientAndScheduleHistory)(patientResponse.data)}
         />
       )}
 
