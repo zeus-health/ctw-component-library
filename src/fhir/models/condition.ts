@@ -1,3 +1,8 @@
+import { compact, intersectionWith, uniqWith } from "lodash";
+import { formatDateISOToLocal, formatStringToDate } from "../formatters";
+import { SYSTEM_CCS, SYSTEM_ICD10, SYSTEM_SNOMED } from "../system-urls";
+import { FHIRModel } from "./fhir-model";
+import { PatientModel } from "./patient";
 import {
   codeableConceptLabel,
   findCoding,
@@ -6,11 +11,6 @@ import {
 } from "@/fhir/codeable-concept";
 import { CONDITION_CODE_PREFERENCE_ORDER } from "@/fhir/conditions";
 import { findReference } from "@/fhir/resource-helper";
-import { compact, intersectionWith, uniqWith } from "lodash";
-import { formatDateISOToLocal, formatStringToDate } from "../formatters";
-import { SYSTEM_CCS, SYSTEM_ICD10, SYSTEM_SNOMED } from "../system-urls";
-import { FHIRModel } from "./fhir-model";
-import { PatientModel } from "./patient";
 
 export class ConditionModel extends FHIRModel<fhir4.Condition> {
   get abatement(): string | undefined {

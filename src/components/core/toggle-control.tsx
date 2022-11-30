@@ -1,5 +1,4 @@
 import { FormEvent } from "react";
-
 import { Toggle, ToggleProps } from "./toggle";
 
 export type ToggleControlProps = {

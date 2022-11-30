@@ -1,4 +1,3 @@
-import { PatientModel } from "@/fhir/models";
 import {
   DrawerFormWithFields,
   DrawerFormWithFieldsProps,
@@ -7,6 +6,7 @@ import {
   getRequestData,
   requestHistorySchema,
 } from "./forms/request-history-schema";
+import { PatientModel } from "@/fhir/models";
 
 type PatientHistoryRequestDrawer<T> = Pick<
   DrawerFormWithFieldsProps<T>,

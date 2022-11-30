@@ -1,5 +1,5 @@
-import { useState } from "react";
 import type { DataListEntry } from "./data-list";
+import { useState } from "react";
 
 export type DataListStackEntry = { id: string; data: DataListEntry[] };
 export type DataListStackEntries = DataListStackEntry[];

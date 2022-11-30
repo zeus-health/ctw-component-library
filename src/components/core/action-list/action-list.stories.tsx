@@ -1,9 +1,9 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import {
   ActionList,
   ActionListProps,
   MinActionItem,
 } from "@/components/core/action-list/action-list";
-import type { Meta, StoryObj } from "@storybook/react";
 
 type Props = ActionListProps<MinActionItem>;
 
