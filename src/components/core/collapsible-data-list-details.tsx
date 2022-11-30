@@ -1,5 +1,5 @@
-import { PencilIcon } from "@heroicons/react/solid";
 import type { CollapsibleDataListEntry } from "./collapsible-data-list";
+import { PencilIcon } from "@heroicons/react/solid";
 
 type DetailsProps = {
   hideEmpty?: boolean;

@@ -1,12 +1,3 @@
-import { getFhirClient } from "@/fhir/client";
-import {
-  DefaultTheme,
-  EmptyTailwindCSSVars,
-  mapToCSSVar,
-  Theme,
-} from "@/styles/tailwind.theme";
-import { claimsBuilderId } from "@/utils/auth";
-import { queryClient } from "@/utils/request";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { merge } from "lodash";
 import {
@@ -25,6 +16,15 @@ import {
   CTWStateContext,
   CTWToken,
 } from "./ctw-context";
+import { getFhirClient } from "@/fhir/client";
+import {
+  DefaultTheme,
+  EmptyTailwindCSSVars,
+  mapToCSSVar,
+  Theme,
+} from "@/styles/tailwind.theme";
+import { claimsBuilderId } from "@/utils/auth";
+import { queryClient } from "@/utils/request";
 import "./main.scss";
 
 export type Env = "dev" | "sandbox" | "production";

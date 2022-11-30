@@ -1,10 +1,10 @@
-import { getAutoCompleteConditions } from "@/api/autocomplete-conditions";
-import { useCTW } from "@/components/core/ctw-provider";
 import { InputHTMLAttributes, useState } from "react";
 import {
   ComboboxField,
   ComboxboxFieldOption,
 } from "../../core/form/combobox-field";
+import { getAutoCompleteConditions } from "@/api/autocomplete-conditions";
+import { useCTW } from "@/components/core/ctw-provider";
 
 export type AutoCompleteComboboxProps = {
   defaultCoding?: fhir4.Coding;

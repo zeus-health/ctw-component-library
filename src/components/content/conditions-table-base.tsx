@@ -1,8 +1,8 @@
-import { ConditionModel } from "@/fhir/models/condition";
 import { DotsHorizontalIcon } from "@heroicons/react/outline";
 import { DropdownMenu, MenuItems } from "../core/dropdown-menu";
 import { Table, TableBaseProps } from "../core/table/table";
 import { TableColumn } from "../core/table/table-helpers";
+import { ConditionModel } from "@/fhir/models/condition";
 
 export type ConditionsTableBaseProps = {
   className?: string;

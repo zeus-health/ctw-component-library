@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+import { ReactElement } from "react";
 import {
   createMedicationStatement,
   getMedicationFormData,
@@ -6,8 +8,6 @@ import {
 import { DrawerFormWithFields } from "@/components/core/form/drawer-form-with-fields";
 import { usePatient } from "@/components/core/patient-provider";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
-import { format } from "date-fns";
-import { ReactElement } from "react";
 
 type Props = {
   isOpen: boolean;
@@ -39,7 +39,6 @@ export const AddNewMedDrawer = ({ isOpen, handleOnClose, children }: Props) => {
       {children}
       <DrawerFormWithFields
         title="Add Medication"
-        patientID={patient.data.UPID}
         action={createMedicationStatement}
         data={createMedData}
         schema={medicationStatementSchema}

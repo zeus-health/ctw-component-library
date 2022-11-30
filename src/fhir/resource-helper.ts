@@ -1,5 +1,5 @@
-import { find } from "lodash";
 import type { ResourceMap, ResourceType, ResourceTypeString } from "./types";
+import { find } from "lodash";
 
 // Returns the referenced resource if there is one.
 // Checks both the contained resources AND any included resources map.

@@ -1,3 +1,5 @@
+import { UseQueryResult } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
 import { getMergedIncludedResources } from "@/fhir/bundle";
 import {
@@ -11,8 +13,6 @@ import {
   QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
   QUERY_KEY_PATIENT_MEDICATIONS,
 } from "@/utils/query-keys";
-import { UseQueryResult } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
 
 // Gets patient medications for the builder, excluding meds where the information source is patient.
 export function useQueryGetPatientMedsForBuilder(): UseQueryResult<

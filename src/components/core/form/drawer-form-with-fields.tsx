@@ -1,7 +1,7 @@
-import { FormField } from "@/components/content/forms/form-field";
-import { AnyZodSchema, useFormInputProps } from "@/utils/form-helper";
 import { InputHTMLAttributes, ReactNode } from "react";
 import { DrawerForm, DrawerFormProps } from "./drawer-form";
+import { FormField } from "@/components/content/forms/form-field";
+import { AnyZodSchema, useFormInputProps } from "@/utils/form-helper";
 
 export type FormFieldType = {
   label: string;
@@ -33,7 +33,6 @@ export type DrawerFormWithFieldsProps<T> = {
   header?: ReactNode;
   data: FormEntry[] | undefined;
   schema: AnyZodSchema;
-  patientID: string;
 } & Pick<DrawerFormProps<T>, "onClose" | "isOpen" | "action">;
 
 export type FormActionTypes = "Edit" | "Add";
@@ -43,7 +42,6 @@ export const DrawerFormWithFields = <T,>({
   header,
   data = [],
   schema,
-  patientID,
   action,
   ...drawerFormProps
 }: DrawerFormWithFieldsProps<T>) => {
@@ -51,7 +49,6 @@ export const DrawerFormWithFields = <T,>({
 
   return (
     <DrawerForm
-      patientID={patientID}
       title={title}
       action={action}
       schema={schema}

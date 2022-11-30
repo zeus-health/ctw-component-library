@@ -31,7 +31,30 @@ module.exports = {
     "no-void": ["error", { allowAsStatement: true }],
     curly: "error",
     "import/extensions": "off",
-    "import/order": "off",
+    "import/order": [
+      "error",
+      {
+        alphabetize: {
+          caseInsensitive: true,
+          order: "asc",
+        },
+        groups: [
+          ["builtin", "external", "object", "type"],
+          ["internal", "parent", "sibling", "index"],
+        ],
+        "newlines-between": "never",
+      },
+    ],
+    "sort-imports": [
+      "error",
+      {
+        allowSeparatedGroups: true,
+        ignoreCase: true,
+        ignoreDeclarationSort: true,
+        ignoreMemberSort: false,
+        memberSyntaxSortOrder: ["none", "all", "multiple", "single"],
+      },
+    ],
     "import/no-unresolved": "off",
     "import/prefer-default-export": "off",
     "import/no-extraneous-dependencies": [

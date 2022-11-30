@@ -1,4 +1,3 @@
-import { PatientModel } from "@/fhir/models";
 import {
   DrawerFormWithFields,
   DrawerFormWithFieldsProps,
@@ -7,6 +6,7 @@ import {
   getRequestData,
   requestHistorySchema,
 } from "./forms/request-history-schema";
+import { PatientModel } from "@/fhir/models";
 
 type PatientHistoryRequestDrawer<T> = Pick<
   DrawerFormWithFieldsProps<T>,
@@ -21,7 +21,6 @@ export const PatientHistoryRequestDrawer = <T,>({
   onClose,
 }: PatientHistoryRequestDrawer<T>) => (
   <DrawerFormWithFields
-    patientID={patient.id}
     header={header}
     title="Request Records"
     action={action}

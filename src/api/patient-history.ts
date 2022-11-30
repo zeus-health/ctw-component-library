@@ -1,5 +1,5 @@
-import { CTWRequestContext } from "@/components/core/ctw-context";
 import { getZusApiBaseUrl } from "./urls";
+import { CTWRequestContext } from "@/components/core/ctw-context";
 
 export type PatientHistoryResponseError = {
   // TODO: Can code be a list of status codes? Do we have that type defined anywhere.

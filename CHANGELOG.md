@@ -1,5 +1,18 @@
 # ctw-component-library
 
+## 0.28.2
+
+### Patch Changes
+
+- bd7df29: Remove patientID prop from generic drawer components.
+- 74d991a: The title header atop Drawers (medications, conditions or otherwise) now has a full width bottom border. This is a border between fixed content and scrolling content so it makes more sense that the divider spans the full width of the drawer.
+
+## 0.28.1
+
+### Patch Changes
+
+- 162a65b: Conditionally add managing organization when editing a patient.
+
 ## 0.28.0
 
 ### Minor Changes

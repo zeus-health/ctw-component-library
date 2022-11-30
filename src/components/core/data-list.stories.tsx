@@ -1,5 +1,5 @@
-import { DataList, DataListProps } from "@/components/core/data-list";
 import type { Meta, StoryObj } from "@storybook/react";
+import { DataList, DataListProps } from "@/components/core/data-list";
 
 export default {
   component: DataList,

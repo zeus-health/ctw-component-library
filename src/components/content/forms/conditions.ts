@@ -1,3 +1,6 @@
+import { Condition } from "fhir/r4";
+import { cloneDeep } from "lodash";
+import { ActionReturn } from "./types";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { FormErrors } from "@/components/core/form/drawer-form";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
@@ -18,9 +21,6 @@ import {
   QUERY_KEY_PATIENT_CONDITIONS,
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
-import { Condition } from "fhir/r4";
-import { cloneDeep } from "lodash";
-import { ActionReturn } from "./types";
 
 // Sets any autofill values that apply when a user adds a condition, whether creating or confirming.
 export function getAddConditionWithDefaults(condition: Condition): Condition {
@@ -53,8 +53,8 @@ export function getAddConditionWithDefaults(condition: Condition): Condition {
 
 export const createOrEditCondition = async (
   condition: ConditionModel | undefined,
-  data: FormData,
   patientID: string,
+  data: FormData,
   getRequestContext: () => Promise<CTWRequestContext>,
   schema: AnyZodSchema
 ): Promise<{

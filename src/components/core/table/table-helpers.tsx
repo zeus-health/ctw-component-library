@@ -1,5 +1,5 @@
-import { localeCompareBlankLast, SortDir } from "@/utils/sort";
 import { ReactNode } from "react";
+import { localeCompareBlankLast, SortDir } from "@/utils/sort";
 
 export interface MinRecordItem {
   id: string | number;
