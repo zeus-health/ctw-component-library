@@ -77,7 +77,7 @@ export function Drawer({
               >
                 <Dialog.Panel className="ctw-pointer-events-auto ctw-w-screen ctw-max-w-xl">
                   <div className="ctw-flex ctw-h-full ctw-flex-col ctw-bg-white ctw-shadow-xl">
-                    <div className="ctw-px-6 ctw-flex ctw-h-14 ctw-flex-shrink-0 ctw-items-center ctw-justify-between ctw-border-0 ctw-border-b ctw-border-solid ctw-border-content-lighter">
+                    <div className="ctw-flex ctw-h-14 ctw-flex-shrink-0 ctw-items-center ctw-justify-between ctw-border-0 ctw-border-b ctw-border-solid ctw-border-content-lighter ctw-px-6">
                       <Dialog.Title className="ctw-text-lg ctw-font-semibold ctw-uppercase ctw-text-content-black">
                         {title}
                       </Dialog.Title>
