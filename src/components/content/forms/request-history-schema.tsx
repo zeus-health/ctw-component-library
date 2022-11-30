@@ -30,6 +30,26 @@ export const getRequestData = (patient: PatientModel): FormEntry[] => [
     readonly: false,
   },
   {
+    label: "patient-scheduling",
+    render: () => (
+      <div>
+        <div className="ctw-font-medium">
+          When would you like clinical history to be retrieved?
+        </div>
+      </div>
+    ),
+  },
+  {
+    label: "patient-history-now",
+    render: () => (
+      <div>
+        <div className="ctw-font-medium">
+          Data may take up to 24 hours to fully arrive.
+        </div>
+      </div>
+    ),
+  },
+  {
     label: "patient-information",
     render: () => (
       <div>
