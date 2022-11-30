@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.28.3
+
+### Patch Changes
+
+- 4087c00: ActionList onAction and actionText props are now optional. Added classname ctw-drawer-title to the Drawers h2 tag.
+
 ## 0.28.2
 
 ### Patch Changes
