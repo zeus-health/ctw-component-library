@@ -1,3 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
+import { setupMedicationMocks } from "./story-helpers/mocks/requests";
 import {
   ProviderMedsTable,
   ProviderMedsTableProps,
@@ -5,8 +7,6 @@ import {
 import { CTWProvider } from "@/components/core/ctw-provider";
 import { PatientProvider } from "@/components/core/patient-provider";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
-import type { Meta, StoryObj } from "@storybook/react";
-import { setupMedicationMocks } from "./story-helpers/mocks/requests";
 
 type Props = ProviderMedsTableProps;
 

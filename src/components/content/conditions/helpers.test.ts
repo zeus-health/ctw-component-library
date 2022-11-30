@@ -1,9 +1,9 @@
+import { filterOtherConditions } from "./helpers";
 import { ConditionModel } from "@/fhir/models";
 import {
   SYSTEM_CONDITION_VERIFICATION_STATUS,
   SYSTEM_SNOMED,
 } from "@/fhir/system-urls";
-import { filterOtherConditions } from "./helpers";
 
 describe("Condition Helpers", () => {
   describe("filterOtherConditions", () => {

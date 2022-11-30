@@ -1,10 +1,10 @@
+import { FhirResource } from "fhir-kit-client";
+import { cloneDeep } from "lodash";
+import { CTWRequestContext } from "../core/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { SYSTEM_CONDITION_VERIFICATION_STATUS } from "@/fhir/system-urls";
 import { QUERY_KEY_PATIENT_CONDITIONS } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
-import { FhirResource } from "fhir-kit-client";
-import { cloneDeep } from "lodash";
-import { CTWRequestContext } from "../core/ctw-context";
 
 export const onConditionDelete = async (
   resource: fhir4.Condition,
