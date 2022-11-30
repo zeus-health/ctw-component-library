@@ -44,7 +44,6 @@ const QUERY_KEYS = [
 
 export const createMedicationStatement = async (
   data: FormData,
-  patientId: string,
   getRequestContext: () => Promise<CTWRequestContext>
 ): Promise<{
   formResult: ActionReturn<MedicationFormData>;

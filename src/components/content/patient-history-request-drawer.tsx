@@ -21,7 +21,6 @@ export const PatientHistoryRequestDrawer = <T,>({
   onClose,
 }: PatientHistoryRequestDrawer<T>) => (
   <DrawerFormWithFields
-    patientID={patient.id}
     header={header}
     title="Request Records"
     action={action}

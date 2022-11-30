@@ -9,6 +9,7 @@ import { historyGeneralizedAnxiety } from "./history-generalized-anxiety";
 import { historyIronDeficiency } from "./history-iron-deficiency";
 import { historyOralContraception } from "./history-oral-contraception";
 import { patient } from "./patient";
+import { patientHistoryMessage } from "./patient-history-message";
 import { SYSTEM_SUMMARY } from "@/fhir/system-urls";
 
 let patientConditionsCache: fhir4.Bundle;
@@ -40,6 +41,7 @@ export function setupConditionMocks({
         mockConditionGet,
         mockConditionPost,
         mockConditionPut,
+        mockPatientHistoryGet,
       ],
     },
   };
@@ -50,6 +52,11 @@ const mockPatientGet = rest.get(
   // Add ctx.delay(750), delay to show loading, we set this to 750ms to be
   // less than the default testing-library timeout of 1000ms.
   (req, res, ctx) => res(ctx.delay(750), ctx.status(200), ctx.json(patient))
+);
+
+const mockPatientHistoryGet = rest.get(
+  "https://api.dev.zusapi.com/patient-history/messages",
+  (req, res, ctx) => res(ctx.status(200), ctx.json(patientHistoryMessage))
 );
 
 const mockProvenancePost = rest.post(
