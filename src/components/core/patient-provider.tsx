@@ -27,11 +27,19 @@ type ProviderState = {
   patientID: string;
   systemURL: string;
   tags?: Tag[];
+  onPatientSave?: () => Promise<{
+    formResult: {
+      success: boolean;
+      data: { npi: string; role: string; name: string };
+    };
+    requestErrors: unknown;
+  }>;
 };
 
 type PatientProviderProps = {
   children: ReactNode;
   tags?: Tag[];
+  onPatientSave?: () => Promise<unknown>;
 } & (ThirdPartyID | PatientUPIDSpecified);
 
 export const CTWPatientContext = createContext<ProviderState>({
@@ -45,14 +53,16 @@ export function PatientProvider({
   patientID,
   systemURL,
   tags,
+  onPatientSave,
 }: PatientProviderProps) {
   const providerState = useMemo(
     () => ({
       patientID: patientUPID || patientID,
       systemURL: patientUPID ? SYSTEM_ZUS_UNIVERSAL_ID : systemURL,
       tags,
+      onPatientSave,
     }),
-    [patientID, patientUPID, systemURL, tags]
+    [patientID, patientUPID, systemURL, tags, onPatientSave]
   );
 
   return (

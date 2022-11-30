@@ -37,14 +37,12 @@ import {
   createOrEditCondition,
   getAddConditionWithDefaults,
 } from "./forms/conditions";
-import { editPatientAndScheduleHistory } from "./forms/patients";
 import { PatientHistoryRequestDrawer } from "./patient-history-request-drawer";
 import { PatientHistoryMessage } from "./patient-history/patient-history-message";
 
 export type ConditionsProps = {
   className?: string;
   readOnly?: boolean;
-  onPatientSave?: () => Promise<void>;
 };
 
 const EMPTY_MESSAGE_PATIENT_RECORD =
@@ -53,11 +51,7 @@ const EMPTY_MESSAGE_PROVIDER = "There are no conditions available.";
 const ERROR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
 
-export function Conditions({
-  className,
-  readOnly = false,
-  onPatientSave,
-}: ConditionsProps) {
+export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
@@ -372,7 +366,7 @@ export function Conditions({
           patient={patientResponse.data}
           isOpen={requestRecordsDrawerIsOpen}
           onClose={() => setRequestDrawerIsOpen(false)}
-          action={curry(editPatientAndScheduleHistory)(patientResponse.data)}
+          // action={curry(editPatientAndScheduleHistory)(patientResponse.data)}
         />
       )}
 
