@@ -1,3 +1,5 @@
+import { Condition } from "fhir/r4";
+import { cloneDeep } from "lodash";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { setRecorderField } from "@/fhir/conditions";
@@ -13,8 +15,6 @@ import {
   QUERY_KEY_PATIENT_CONDITIONS,
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
-import { Condition } from "fhir/r4";
-import { cloneDeep } from "lodash";
 
 // Sets any autofill values that apply when a user adds a condition, whether creating or confirming.
 export function getAddConditionWithDefaults(condition: Condition): Condition {

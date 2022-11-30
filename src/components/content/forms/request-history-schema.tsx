@@ -1,6 +1,6 @@
+import { z } from "zod";
 import { FormEntry } from "@/components/core/form/drawer-form-with-fields";
 import { PatientModel } from "@/fhir/models";
-import { z } from "zod";
 
 export const getRequestData = (patient: PatientModel): FormEntry[] => [
   {

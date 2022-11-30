@@ -1,8 +1,8 @@
+import { cloneDeep } from "lodash";
+import { OperationOutcomeModel } from "..";
 import { ActionReturn } from "@/components/content/forms/types";
 import { FhirError, fhirErrorResponse, isFhirError } from "@/fhir/errors";
 import { isOperationOutcome } from "@/fhir/operation-outcome";
-import { cloneDeep } from "lodash";
-import { OperationOutcomeModel } from "..";
 
 export function isError(error: unknown): error is Error {
   if (typeof error === "object" && error !== null) {

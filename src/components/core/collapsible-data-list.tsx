@@ -1,5 +1,4 @@
 import { ChevronRightIcon } from "@heroicons/react/outline";
-
 import cx from "classnames";
 import { ReactNode, useState } from "react";
 import { Details } from "./collapsible-data-list-details";

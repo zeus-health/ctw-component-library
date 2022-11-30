@@ -1,7 +1,7 @@
+import { FHIRModel } from "./fhir-model";
 import { getPerformingOrganization } from "@/fhir/medication";
 import { PractitionerModel } from "@/fhir/models/practitioner";
 import { findReference } from "@/fhir/resource-helper";
-import { FHIRModel } from "./fhir-model";
 
 export class MedicationDispenseModel extends FHIRModel<fhir4.MedicationDispense> {
   get includedPerformer(): string | undefined {

@@ -1,9 +1,9 @@
-import { useCTW } from "@/components/core/ctw-provider";
-import { defaultBreakpoints } from "@/styles/tailwind.theme";
 import useResizeObserver from "@react-hook/resize-observer";
 import { mapValues } from "lodash";
 import { RefObject, useState } from "react";
 import { useIsomorphicLayoutEffect } from "./use-isomorphic-layout-effect";
+import { useCTW } from "@/components/core/ctw-provider";
+import { defaultBreakpoints } from "@/styles/tailwind.theme";
 
 type BreakpointKeys = keyof typeof defaultBreakpoints;
 export type Breakpoints = Record<BreakpointKeys, boolean>;

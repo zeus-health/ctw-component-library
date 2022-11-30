@@ -1,11 +1,3 @@
-import {
-  PatientHistoryResponseError,
-  schedulePatientHistory,
-} from "@/api/patient-history";
-import { isFhirError } from "@/fhir/errors";
-import { PatientModel } from "@/fhir/models";
-import { AnyZodSchema } from "@/utils/form-helper";
-import { result } from "lodash";
 import { useContext } from "react";
 import { CTWRequestContext } from "../core/ctw-context";
 import {
@@ -18,6 +10,12 @@ import {
   getRequestData,
   requestHistorySchema,
 } from "./forms/request-history-schema";
+import {
+  PatientHistoryResponseError,
+  schedulePatientHistory,
+} from "@/api/patient-history";
+import { isFhirError } from "@/fhir/errors";
+import { PatientModel } from "@/fhir/models";
 
 type PatientHistoryRequestDrawer<T> = Pick<
   DrawerFormWithFieldsProps<T>,
