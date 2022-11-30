@@ -1,28 +1,17 @@
-import {
-  PatientHistoryResponseError,
-  schedulePatientHistory,
-} from "@/api/patient-history";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { dateToISO } from "@/fhir/formatters";
 import { PatientModel } from "@/fhir/models";
-import { getFormStatusErrors } from "@/utils/errors";
-import { AnyZodSchema, getFormData } from "@/utils/form-helper";
 import { QUERY_KEY_PATIENT } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
+import { cloneDeep } from "lodash";
 
 export const editPatient = async (
   patient: PatientModel,
-  data: FormData,
-  getRequestContext: () => Promise<CTWRequestContext>,
-  schema: AnyZodSchema
+  formValidation: { success: boolean; data: any; errors: undefined },
+  getRequestContext: () => Promise<CTWRequestContext>
 ) => {
-  const result = await getFormData(data, schema);
-  let requestErrors: string[] = [];
-
-  if (!result.success) {
-    return { formResult: result, requestErrors: undefined };
-  }
+  const result = cloneDeep(formValidation);
 
   const requestContext = await getRequestContext();
 
@@ -60,48 +49,8 @@ export const editPatient = async (
   };
 
   const response = await createOrEditFhirResource(fhirPatient, requestContext);
-  const statusErrors = getFormStatusErrors(requestErrors, result, response);
-  requestErrors = statusErrors.errors;
-  result.success = statusErrors.resultIsSuccess;
 
   await queryClient.invalidateQueries([QUERY_KEY_PATIENT]);
 
-  return { formResult: result, requestErrors };
-};
-
-export const editPatientAndScheduleHistory = async (
-  patient: PatientModel,
-  data: FormData,
-  getRequestContext: () => Promise<CTWRequestContext>,
-  schema: AnyZodSchema
-) => {
-  const editPatientResponse = await editPatient(
-    patient,
-    data,
-    getRequestContext,
-    schema
-  );
-
-  const result = editPatientResponse.formResult;
-  let { requestErrors } = editPatientResponse;
-
-  const requestContext = await getRequestContext();
-
-  if (result.success) {
-    const patientHistoryResponse = await schedulePatientHistory(
-      requestContext,
-      patient.id,
-      result.data
-    );
-    if ("errors" in patientHistoryResponse) {
-      requestErrors = [
-        patientHistoryResponse.errors.map(
-          (err: PatientHistoryResponseError) => err.details
-        ),
-      ];
-      result.success = false;
-    }
-  }
-
-  return { formResult: result, requestErrors };
+  return response;
 };

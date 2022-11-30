@@ -1,10 +1,7 @@
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
-import { isFhirError } from "@/fhir/errors";
 import { dateToISO } from "@/fhir/formatters";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
-import { OperationOutcomeModel } from "@/fhir/models/operation-outcome";
-import { isOperationOutcome } from "@/fhir/operation-outcome";
 import { SYSTEM_RXNORM } from "@/fhir/system-urls";
 import { getFormData } from "@/utils/form-helper";
 import {
@@ -15,7 +12,6 @@ import {
 import { queryClient } from "@/utils/request";
 import { z } from "zod";
 import type { FormEntry } from "../../core/form/drawer-form-with-fields";
-import { ActionReturn, MedicationFormData } from "./types";
 
 export const medicationStatementSchema = z.object({
   subjectID: z.string({ required_error: "Patient must be specified." }),
@@ -45,12 +41,8 @@ const QUERY_KEYS = [
 export const createMedicationStatement = async (
   data: FormData,
   getRequestContext: () => Promise<CTWRequestContext>
-): Promise<{
-  formResult: ActionReturn<MedicationFormData>;
-  requestErrors: string[] | undefined;
-}> => {
+): Promise<unknown> => {
   const result = await getFormData(data, medicationStatementSchema);
-  let requestErrors: string[] = [];
 
   if (!result.success) {
     return { formResult: result, requestErrors: undefined };
@@ -88,23 +80,13 @@ export const createMedicationStatement = async (
     await getRequestContext()
   );
 
-  if (isFhirError(response) && isOperationOutcome(response.response.data)) {
-    requestErrors = new OperationOutcomeModel(response.response.data).issues
-      .filter((issue) => issue.severity !== "warning")
-      .map((issue) => issue.display);
-    result.success = false;
-  } else if (response instanceof Error) {
-    requestErrors = [response.message];
-    result.success = false;
-  }
-
   await Promise.all(
     QUERY_KEYS.map(async (queryKey) =>
       queryClient.invalidateQueries([queryKey])
     )
   );
 
-  return { formResult: result, requestErrors };
+  return response;
 };
 
 export const getMedicationFormData = (

@@ -1,9 +1,9 @@
 import { SaveButton } from "@/components/content/forms/save-button";
-import { ActionReturn } from "@/components/content/forms/types";
 import { ErrorAlert } from "@/components/core/alert";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { useCTW } from "@/components/core/ctw-provider";
-import { AnyZodSchema } from "@/utils/form-helper";
+import { getFormResponseErrors } from "@/utils/errors";
+import { AnyZodSchema, getFormData } from "@/utils/form-helper";
 import { isEmpty } from "lodash";
 import { ReactNode, useState } from "react";
 import { Drawer, DrawerProps } from "../drawer";
@@ -13,13 +13,9 @@ type InputError = Record<string, string[]>;
 
 export type DrawerFormProps<T> = {
   action: (
-    data: FormData,
-    getRequestContext: () => Promise<CTWRequestContext>,
-    schema: AnyZodSchema
-  ) => Promise<{
-    formResult: ActionReturn<T>;
-    requestErrors: string[] | undefined;
-  }>;
+    data: { success: boolean; data: any; errors: undefined },
+    getRequestContext: () => Promise<CTWRequestContext>
+  ) => Promise<unknown>;
   schema: AnyZodSchema;
 
   children: (submitting: boolean, errors?: FormErrors) => ReactNode;
@@ -69,12 +65,25 @@ export const DrawerForm = <T,>({
 
     const data = new FormData(form as HTMLFormElement);
 
-    const response = await action(data, getRequestContext, schema);
-
-    if (!response.formResult.success) {
+    // Validation that occurs before the request.
+    const formValidation = await getFormData(data, schema);
+    if (!formValidation.success) {
       setErrors({
-        formErrors: response.formResult.errors,
-        requestErrors: response.requestErrors,
+        formErrors: formValidation.errors,
+        requestErrors: undefined,
+      });
+      setIsSubmitting(false);
+      return;
+    }
+    const response = await action(formValidation, getRequestContext);
+    const { requestErrors, responseIsSuccess } =
+      getFormResponseErrors(response);
+
+    // Setting any errors from the response to the form.
+    if (!responseIsSuccess) {
+      setErrors({
+        formErrors: undefined,
+        requestErrors,
       });
       setIsSubmitting(false);
     } else {
