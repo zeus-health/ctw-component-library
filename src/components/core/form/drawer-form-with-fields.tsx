@@ -1,5 +1,5 @@
 import { isArray } from "lodash";
-import { InputHTMLAttributes, ReactNode } from "react";
+import { Fragment, InputHTMLAttributes, ReactNode } from "react";
 import { DrawerForm, DrawerFormProps, FormErrors } from "./drawer-form";
 import { FormField } from "@/components/content/forms/form-field";
 import { FormFieldLabel } from "@/components/content/forms/form-field-label";
@@ -142,12 +142,14 @@ const FormFieldEntries = ({
   return (
     <div className="ctw-flex ctw-space-x-3">
       {recordList.map((record) => (
-        <FormFieldEntry
-          entry={record}
-          props={inputProps(record.field, schema)}
-          submitting={submitting}
-          errors={errors}
-        />
+        <Fragment key={record.label}>
+          <FormFieldEntry
+            entry={record}
+            props={inputProps(record.field, schema)}
+            submitting={submitting}
+            errors={errors}
+          />
+        </Fragment>
       ))}
     </div>
   );
