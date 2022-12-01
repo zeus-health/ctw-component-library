@@ -1,14 +1,35 @@
+import { cloneDeep } from "lodash";
+import { ActionReturn } from "./types";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { dateToISO } from "@/fhir/formatters";
 import { PatientModel } from "@/fhir/models";
 import { QUERY_KEY_PATIENT } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
-import { cloneDeep } from "lodash";
+
+export type EditPatientFormData = {
+  lastName: string;
+  firstName: string;
+  gender: fhir4.Patient["gender"];
+  dateOfBirth: Date;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+};
+
+type OmitMatch<T extends { data: unknown }> = Omit<T, "data"> &
+  EditPatientFormData;
 
 export const editPatient = async (
   patient: PatientModel,
-  formValidation: { success: boolean; data: any; errors: undefined },
+  formValidation: {
+    success: boolean;
+    data: OmitMatch<ActionReturn<unknown>>;
+    errors: undefined;
+  },
   getRequestContext: () => Promise<CTWRequestContext>
 ) => {
   const result = cloneDeep(formValidation);
