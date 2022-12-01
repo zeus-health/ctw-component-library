@@ -42,7 +42,7 @@ export const PatientHistoryRequestDrawer = <T,>({
   const { onPatientSave } = useContext(CTWPatientContext);
 
   const onPatientSaveAndScheduleHistory = async (
-    formValidation: {
+    formResult: {
       success: boolean;
       data: OmitMatch<ActionReturn<unknown>>;
       errors: undefined;
@@ -51,11 +51,11 @@ export const PatientHistoryRequestDrawer = <T,>({
   ) => {
     let onPatientSaveResponse;
     if (onPatientSave) {
-      onPatientSaveResponse = await onPatientSave(formValidation.data);
+      onPatientSaveResponse = await onPatientSave(formResult.data);
     } else {
       onPatientSaveResponse = await editPatient(
         patient,
-        formValidation,
+        formResult,
         getRequestContext
       );
     }
@@ -70,7 +70,7 @@ export const PatientHistoryRequestDrawer = <T,>({
     const patientHistoryResponse = await schedulePatientHistory(
       requestContext,
       patient.id,
-      formValidation.data
+      formResult.data
     );
 
     if ("errors" in patientHistoryResponse) {

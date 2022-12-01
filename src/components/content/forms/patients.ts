@@ -25,14 +25,14 @@ type OmitMatch<T extends { data: unknown }> = Omit<T, "data"> &
 
 export const editPatient = async (
   patient: PatientModel,
-  formValidation: {
+  formResult: {
     success: boolean;
     data: OmitMatch<ActionReturn<unknown>>;
     errors: undefined;
   },
   getRequestContext: () => Promise<CTWRequestContext>
 ) => {
-  const result = cloneDeep(formValidation);
+  const result = cloneDeep(formResult);
 
   const requestContext = await getRequestContext();
 

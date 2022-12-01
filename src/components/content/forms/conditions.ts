@@ -62,14 +62,14 @@ type OmitMatch<T extends { data: unknown }> = Omit<T, "data"> &
 export const createOrEditCondition = async (
   condition: ConditionModel | undefined,
   patientID: string,
-  formValidation: {
+  formResult: {
     success: boolean;
     data: OmitMatch<ActionReturn<unknown>>;
     errors: undefined;
   },
   getRequestContext: () => Promise<CTWRequestContext>
 ): Promise<unknown> => {
-  const result = cloneDeep(formValidation);
+  const result = cloneDeep(formResult);
 
   const requestContext = await getRequestContext();
   const practitionerId = claimsPractitionerId(requestContext.authToken);

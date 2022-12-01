@@ -66,16 +66,16 @@ export const DrawerForm = <T,>({
     const data = new FormData(form as HTMLFormElement);
 
     // Validation that occurs before the request.
-    const formValidation = await getFormData(data, schema);
-    if (!formValidation.success) {
+    const formResult = await getFormData(data, schema);
+    if (!formResult.success) {
       setErrors({
-        formErrors: formValidation.errors,
+        formErrors: formResult.errors,
         requestErrors: undefined,
       });
       setIsSubmitting(false);
       return;
     }
-    const response = await action(formValidation, getRequestContext);
+    const response = await action(formResult, getRequestContext);
     const { requestErrors, responseIsSuccess } =
       getFormResponseErrors(response);
 
