@@ -63,3 +63,5 @@ export const LENS_EXTENSION_MEDICATION_LAST_PRESCRIBER =
   "https://zusapi.com/lens/extension/medicationLastPrescriber";
 export const LENS_EXTENSION_AGGREGATED_FROM =
   "https://zusapi.com/lens/extension/aggregatedFrom";
+export const CTW_EXTENSION_LENS_AGGREGATED_FROM =
+  "https://zusapi.com/ctw-component-library/extension/lensAggregatedFrom";
