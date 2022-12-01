@@ -1,5 +1,6 @@
-import { Condition } from "fhir/r4";
+import { CodeSystem, Condition } from "fhir/r4";
 import { cloneDeep } from "lodash";
+import { ActionReturn } from "./types";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { setRecorderField } from "@/fhir/conditions";
@@ -45,10 +46,27 @@ export function getAddConditionWithDefaults(condition: Condition): Condition {
   return newCondition;
 }
 
+export type CreateOrEditConditionFormData = {
+  id?: string;
+  clinicalStatus: string;
+  verificationStatus: string;
+  condition: fhir4.Coding;
+  abatement?: Date;
+  onset: Date;
+  note?: string;
+};
+
+type OmitMatch<T extends { data: unknown }> = Omit<T, "data"> &
+  CreateOrEditConditionFormData;
+
 export const createOrEditCondition = async (
   condition: ConditionModel | undefined,
   patientID: string,
-  formValidation: { success: boolean; data: any; errors: undefined },
+  formValidation: {
+    success: boolean;
+    data: OmitMatch<ActionReturn<unknown>>;
+    errors: undefined;
+  },
   getRequestContext: () => Promise<CTWRequestContext>
 ): Promise<unknown> => {
   const result = cloneDeep(formValidation);
