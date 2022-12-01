@@ -51,7 +51,7 @@ export const PatientHistoryRequestDrawer = <T,>({
   ) => {
     let onPatientSaveResponse;
     if (onPatientSave) {
-      onPatientSaveResponse = await onPatientSave();
+      onPatientSaveResponse = await onPatientSave(formValidation.data);
     } else {
       onPatientSaveResponse = await editPatient(
         patient,

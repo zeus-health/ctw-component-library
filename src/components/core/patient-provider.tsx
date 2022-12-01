@@ -27,7 +27,7 @@ type ProviderState = {
   patientID: string;
   systemURL: string;
   tags?: Tag[];
-  onPatientSave?: () => Promise<{
+  onPatientSave?: (data: unknown) => Promise<{
     formResult: {
       success: boolean;
       data: { npi: string; role: string; name: string };
