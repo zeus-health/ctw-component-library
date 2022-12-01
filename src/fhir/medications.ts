@@ -173,8 +173,7 @@ export function splitMedications(
       )
   );
 
-  // Get builder owned medications that line up with an active medication.
-  // Take the builder medication but add in some info from the lens resources.
+  // Get builder owned medications and splash in some data from lens meds if available.
   const builderMedications = builderOwnedMedications.map((m) => {
     const activeMed = activeMedications.find(
       (a) =>
@@ -186,6 +185,7 @@ export function splitMedications(
       return m;
     }
 
+    // If we did find an active med then copy the builder med and add in the lens extensions.
     const builderMed = cloneDeep(m);
 
     if (!builderMed.extension) {
@@ -209,6 +209,8 @@ export function splitMedications(
       activeMed.extension?.find((x) => x.url === LENS_EXTENSION_AGGREGATED_FROM)
     );
     if (medHistory) {
+      // To avoid confusion about the lens extension (since "aggregated from" doesn't really
+      // make sense on this builder record), use a different extension URL.
       medHistory.url = CTW_EXTENSION_LENS_AGGREGATED_FROM;
       builderMed.extension?.push(medHistory);
     }
