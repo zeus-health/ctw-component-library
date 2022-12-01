@@ -188,9 +188,6 @@ export function splitMedications(
     // If we did find an active med then copy the builder med and add in the lens extensions.
     const builderMed = cloneDeep(m);
 
-    if (!builderMed.extension) {
-      builderMed.extension = [];
-    }
 
     const LENS_MEDICATION_EXTENSIONS = [
       LENS_EXTENSION_MEDICATION_LAST_FILL_DATE,
