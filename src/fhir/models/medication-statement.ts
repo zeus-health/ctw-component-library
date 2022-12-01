@@ -8,6 +8,7 @@ import {
   patientStatus,
 } from "@/fhir/medication";
 import {
+  CTW_EXTENSION_LENS_AGGREGATED_FROM,
   LENS_EXTENSION_AGGREGATED_FROM,
   LENS_EXTENSION_MEDICATION_DAYS_SUPPLY,
   LENS_EXTENSION_MEDICATION_LAST_FILL_DATE,
@@ -52,7 +53,9 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
 
   get aggregatedFrom(): Reference[] {
     const extension = find(
-      { url: LENS_EXTENSION_AGGREGATED_FROM },
+      (x) =>
+        x.url === LENS_EXTENSION_AGGREGATED_FROM ||
+        x.url === CTW_EXTENSION_LENS_AGGREGATED_FROM,
       this.resource.extension
     );
     if (!extension?.extension) {

@@ -31,6 +31,16 @@ import {
   searchLensRecords,
   SearchReturn,
 } from "./search-helpers";
+import {
+  LENS_EXTENSION_MEDICATION_LAST_FILL_DATE,
+  LENS_EXTENSION_MEDICATION_LAST_PRESCRIBED_DATE,
+  LENS_EXTENSION_MEDICATION_QUANTITY,
+  LENS_EXTENSION_MEDICATION_DAYS_SUPPLY,
+  LENS_EXTENSION_MEDICATION_REFILLS,
+  LENS_EXTENSION_MEDICATION_LAST_PRESCRIBER,
+  LENS_EXTENSION_AGGREGATED_FROM,
+  CTW_EXTENSION_LENS_AGGREGATED_FROM,
+} from "./system-urls";
 import { ResourceMap, ResourceTypeString } from "./types";
 
 export type InformationSource =
@@ -163,36 +173,47 @@ export function splitMedications(
       )
   );
 
-  // Get builder owned medications where there does not exist an active medication.
-  const builderMedications = builderOwnedMedications.filter(
-    (builderMed) =>
-      !activeMedications.some(
-        (activeMed) =>
-          getIdentifyingRxNormCode(activeMed, includedResources) ===
-          getIdentifyingRxNormCode(builderMed, includedResources)
-      )
-  );
-
   // Get builder owned medications that line up with an active medication.
-  // Take the active medication but modify it to use the builder's display properties.
-  builderOwnedMedications.forEach((builderMed) => {
-    const mergedMed = cloneDeep(
-      activeMedications.find(
-        (activeMed) =>
-          getIdentifyingRxNormCode(activeMed, includedResources) ===
-          getIdentifyingRxNormCode(builderMed, includedResources)
-      )
+  // Take the builder medication but add in some info from the lens resources.
+  const builderMedications = builderOwnedMedications.map((m) => {
+    const activeMed = activeMedications.find(
+      (a) =>
+        getIdentifyingRxNormCode(a, includedResources) ===
+        getIdentifyingRxNormCode(m, includedResources)
     );
-    if (mergedMed) {
-      if (mergedMed.medicationCodeableConcept) {
-        mergedMed.medicationCodeableConcept.text =
-          builderMed.medicationCodeableConcept?.text;
-      }
-      if (mergedMed.dosage && builderMed.dosage) {
-        mergedMed.dosage[0].text = builderMed.dosage[0].text;
-      }
-      builderMedications.push(mergedMed);
+
+    if (!activeMed) {
+      return m;
     }
+
+    const builderMed = cloneDeep(m);
+
+    if (!builderMed.extension) {
+      builderMed.extension = [];
+    }
+
+    const LENS_MEDICATION_EXTENSIONS = [
+      LENS_EXTENSION_MEDICATION_LAST_FILL_DATE,
+      LENS_EXTENSION_MEDICATION_LAST_PRESCRIBED_DATE,
+      LENS_EXTENSION_MEDICATION_QUANTITY,
+      LENS_EXTENSION_MEDICATION_DAYS_SUPPLY,
+      LENS_EXTENSION_MEDICATION_REFILLS,
+      LENS_EXTENSION_MEDICATION_LAST_PRESCRIBER,
+    ];
+
+    builderMed.extension = activeMed.extension?.filter((x) =>
+      LENS_MEDICATION_EXTENSIONS.includes(x.url)
+    );
+
+    const medHistory = cloneDeep(
+      activeMed.extension?.find((x) => x.url === LENS_EXTENSION_AGGREGATED_FROM)
+    );
+    if (medHistory) {
+      medHistory.url = CTW_EXTENSION_LENS_AGGREGATED_FROM;
+      builderMed.extension?.push(medHistory);
+    }
+
+    return builderMed;
   });
 
   return { builderMedications, otherProviderMedications };
