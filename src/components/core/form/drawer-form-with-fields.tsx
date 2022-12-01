@@ -3,7 +3,11 @@ import { InputHTMLAttributes, ReactNode } from "react";
 import { DrawerForm, DrawerFormProps, FormErrors } from "./drawer-form";
 import { FormField } from "@/components/content/forms/form-field";
 import { FormFieldLabel } from "@/components/content/forms/form-field-label";
-import { AnyZodSchema, useFormInputProps } from "@/utils/form-helper";
+import {
+  AnyZodSchema,
+  InputPropType,
+  useFormInputProps,
+} from "@/utils/form-helper";
 
 export type FormFieldType = {
   label: string;
@@ -60,11 +64,11 @@ export const DrawerFormWithFields = <T,>({
         <div className="ctw-space-y-4">
           {header}
           <div className="ctw-space-y-6">
-            {data.map((record) => {
-              if (isArray(record)) {
+            {data.map((entry) => {
+              if (isArray(entry)) {
                 return (
-                  <FormFieldEntry
-                    recordList={record}
+                  <FormFieldEntries
+                    recordList={entry}
                     errors={errors}
                     submitting={submitting}
                     schema={schema}
@@ -73,7 +77,7 @@ export const DrawerFormWithFields = <T,>({
               }
 
               const { label, field, value, lines, readonly, hidden, render } =
-                record;
+                entry;
 
               if (!field) {
                 return (
@@ -86,7 +90,6 @@ export const DrawerFormWithFields = <T,>({
                 );
               }
 
-              const fieldErrors = errors?.[field];
               const props = inputProps(field, schema);
 
               if (hidden) {
@@ -98,7 +101,7 @@ export const DrawerFormWithFields = <T,>({
                     disabled={submitting}
                     readonly={readonly}
                     defaultValue={value}
-                    errors={fieldErrors}
+                    errors={errors?.[field]}
                     hidden={hidden}
                     render={render}
                   />
@@ -106,27 +109,12 @@ export const DrawerFormWithFields = <T,>({
               }
 
               return (
-                <div
-                  key={label}
-                  className="ctw-space-y-1.5 ctw-text-sm ctw-font-medium ctw-text-content-black"
-                >
-                  <FormFieldLabel
-                    label={label}
-                    name={props.name}
-                    required={props["aria-required"]}
-                  />
-                  <FormField
-                    {...props}
-                    key={label}
-                    lines={lines}
-                    disabled={submitting}
-                    readonly={readonly}
-                    defaultValue={value}
-                    errors={fieldErrors}
-                    hidden={hidden}
-                    render={render}
-                  />
-                </div>
+                <FormFieldEntry
+                  entry={entry}
+                  errors={errors}
+                  props={props}
+                  submitting={submitting}
+                />
               );
             })}
           </div>
@@ -136,51 +124,72 @@ export const DrawerFormWithFields = <T,>({
   );
 };
 
-export type FormFieldEntry = {
+export type FormFieldEntries = {
   recordList: FormFieldType[];
   errors: FormErrors | undefined;
   submitting: boolean;
   schema: AnyZodSchema;
 };
 
-const FormFieldEntry = ({
+const FormFieldEntries = ({
   recordList,
   errors,
   submitting,
   schema,
-}: FormFieldEntry) => {
+}: FormFieldEntries) => {
   const inputProps = useFormInputProps(schema);
 
   return (
     <div className="ctw-flex ctw-space-x-3">
-      {recordList.map((record) => {
-        const { label, value, field, lines, readonly, hidden, render } = record;
-        const fieldErrors = errors?.[field];
-        const props = inputProps(field, schema);
+      {recordList.map((record) => (
+        <FormFieldEntry
+          entry={record}
+          props={inputProps(record.field, schema)}
+          submitting={submitting}
+          errors={errors}
+        />
+      ))}
+    </div>
+  );
+};
 
-        return (
-          <div
-            className="ctw-flex ctw-grow ctw-basis-0 ctw-flex-col ctw-space-y-1"
-            key={label}
-          >
-            <FormFieldLabel
-              label={label}
-              name={props.name}
-              required={props["aria-required"]}
-            />
-            <FormField
-              {...props}
-              lines={lines}
-              disabled={submitting}
-              readonly={readonly}
-              defaultValue={value}
-              errors={fieldErrors}
-              hidden={hidden}
-              render={render}
-            />
-          </div>
-        );
-      })}
+export type FormFieldEntry = {
+  entry: FormFieldType;
+  errors: FormErrors | undefined;
+  props: InputPropType;
+  submitting: boolean;
+};
+
+const FormFieldEntry = ({
+  entry,
+  errors,
+  props,
+  submitting,
+}: FormFieldEntry) => {
+  const { label, value, field, lines, readonly, hidden, render } = entry;
+  const fieldErrors = errors?.[field];
+
+  return (
+    <div
+      key={label}
+      className="ctw-flex ctw-grow ctw-basis-0 ctw-flex-col ctw-space-y-1.5 ctw-text-sm ctw-font-medium ctw-text-content-black"
+    >
+      <FormFieldLabel
+        label={label}
+        name={props.name}
+        required={props["aria-required"]}
+      />
+      <FormField
+        {...props}
+        key={label}
+        lines={lines}
+        disabled={submitting}
+        readonly={readonly}
+        defaultValue={value}
+        errors={fieldErrors}
+        hidden={hidden}
+        render={render}
+      />
     </div>
   );
 };
