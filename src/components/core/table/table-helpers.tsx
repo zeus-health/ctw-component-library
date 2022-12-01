@@ -49,11 +49,8 @@ function sortByCols<T>(records: T[], indices: (keyof T)[], dir: SortDir) {
       }
       compareTotal +=
         localeCompareBlankLast(
-          // Cast as any because we know we can index using indices, which are all keys.
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (firstCompare[indices[i]] as any).toString(),
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (secondCompare[indices[i]] as any).toString()
+          `${firstCompare[indices[i]]}`,
+          `${secondCompare[indices[i]]}`
         ) *
         // The math below allows secondary, tertiary etc. sort indices.
         0.1 ** i;
