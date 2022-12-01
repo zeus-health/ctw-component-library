@@ -1,6 +1,8 @@
+import { isArray } from "lodash";
 import { InputHTMLAttributes, ReactNode } from "react";
-import { DrawerForm, DrawerFormProps } from "./drawer-form";
+import { DrawerForm, DrawerFormProps, FormErrors } from "./drawer-form";
 import { FormField } from "@/components/content/forms/form-field";
+import { FormFieldLabel } from "@/components/content/forms/form-field-label";
 import { AnyZodSchema, useFormInputProps } from "@/utils/form-helper";
 
 export type FormFieldType = {
@@ -26,7 +28,7 @@ export type FormContentType = {
   label: string;
 };
 
-export type FormEntry = FormFieldType | FormContentType;
+export type FormEntry = FormFieldType | FormContentType | FormFieldType[];
 
 export type DrawerFormWithFieldsProps<T> = {
   title: string;
@@ -58,77 +60,127 @@ export const DrawerFormWithFields = <T,>({
         <div className="ctw-space-y-4">
           {header}
           <div className="ctw-space-y-6">
-            {data.map(
-              ({ label, field, value, lines, readonly, hidden, render }) => {
-                if (!field) {
-                  return (
-                    <FormField
-                      key={label}
-                      readonly={readonly}
-                      render={render}
-                      name={label}
-                    />
-                  );
-                }
-
-                const fieldErrors = errors?.[field];
-
-                if (hidden) {
-                  return (
-                    <FormField
-                      key={label}
-                      {...inputProps(field, schema)}
-                      lines={lines}
-                      disabled={submitting}
-                      readonly={readonly}
-                      defaultValue={value}
-                      errors={fieldErrors}
-                      hidden={hidden}
-                      render={render}
-                    />
-                  );
-                }
-
-                const props = inputProps(field, schema);
-                const required = props["aria-required"];
-
+            {data.map((record) => {
+              if (isArray(record)) {
                 return (
-                  <div
-                    key={label}
-                    className="ctw-space-y-1.5 ctw-text-sm ctw-font-medium ctw-text-content-black"
-                  >
-                    <div className="ctw-flex ctw-justify-between">
-                      <label htmlFor={props.name}>{label}</label>
-                      {required && (
-                        <>
-                          <div className="ctw-flex-grow ctw-text-icon-default">
-                            *
-                          </div>
-                          <span className="ctw-right-0 ctw-inline-block ctw-text-xs ctw-text-content-black">
-                            Required
-                          </span>
-                        </>
-                      )}
-                    </div>
-
-                    <FormField
-                      {...props}
-                      lines={lines}
-                      key={label}
-                      disabled={submitting}
-                      readonly={readonly}
-                      defaultValue={value}
-                      errors={fieldErrors}
-                      hidden={hidden}
-                      render={render}
-                    />
-                  </div>
+                  <FormFieldEntry
+                    recordList={record}
+                    errors={errors}
+                    submitting={submitting}
+                    schema={schema}
+                  />
                 );
               }
-            )}
+
+              const { label, field, value, lines, readonly, hidden, render } =
+                record;
+
+              if (!field) {
+                return (
+                  <FormField
+                    key={label}
+                    readonly={readonly}
+                    render={render}
+                    name={label}
+                  />
+                );
+              }
+
+              const fieldErrors = errors?.[field];
+              const props = inputProps(field, schema);
+
+              if (hidden) {
+                return (
+                  <FormField
+                    {...props}
+                    key={label}
+                    lines={lines}
+                    disabled={submitting}
+                    readonly={readonly}
+                    defaultValue={value}
+                    errors={fieldErrors}
+                    hidden={hidden}
+                    render={render}
+                  />
+                );
+              }
+
+              return (
+                <div
+                  key={label}
+                  className="ctw-space-y-1.5 ctw-text-sm ctw-font-medium ctw-text-content-black"
+                >
+                  <FormFieldLabel
+                    label={label}
+                    name={props.name}
+                    required={props["aria-required"]}
+                  />
+                  <FormField
+                    {...props}
+                    key={label}
+                    lines={lines}
+                    disabled={submitting}
+                    readonly={readonly}
+                    defaultValue={value}
+                    errors={fieldErrors}
+                    hidden={hidden}
+                    render={render}
+                  />
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
     </DrawerForm>
+  );
+};
+
+export type FormFieldEntry = {
+  recordList: FormFieldType[];
+  errors: FormErrors | undefined;
+  submitting: boolean;
+  schema: AnyZodSchema;
+};
+
+const FormFieldEntry = ({
+  recordList,
+  errors,
+  submitting,
+  schema,
+}: FormFieldEntry) => {
+  const inputProps = useFormInputProps(schema);
+
+  return (
+    <div className="ctw-flex ctw-space-x-3">
+      {recordList.map((record) => {
+        const { label, value, field, lines, readonly, hidden, render } = record;
+        const fieldErrors = errors?.[field];
+        const props = inputProps(field, schema);
+
+        return (
+          <div
+            className="ctw-flex ctw-grow ctw-basis-0 ctw-flex-col ctw-space-y-1"
+            key={label}
+          >
+            <FormFieldLabel
+              label={label}
+              name={props.name}
+              required={props["aria-required"]}
+            />
+            <FormField
+              {...props}
+              lines={lines}
+              disabled={submitting}
+              readonly={readonly}
+              defaultValue={value}
+              errors={fieldErrors}
+              hidden={hidden}
+              render={render}
+            />
+          </div>
+        );
+      })}
+    </div>
   );
 };
