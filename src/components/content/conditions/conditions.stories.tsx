@@ -57,7 +57,7 @@ export const TestAdd: StoryObj<Props> = {
   ...Basic,
   play: async ({ canvasElement }) => {
     const conditions = await conditionsObject(canvasElement);
-    await conditions.patientRecord.toHaveRowCount(1);
+    await conditions.patientRecord.toHaveRowCount(2);
     const newCondition = "Heart failure (disorder)";
     conditions.clickAddCondition();
     const conditionForm = conditionFormDrawer(canvasElement);
@@ -65,7 +65,7 @@ export const TestAdd: StoryObj<Props> = {
     await conditionForm.selectCondition(newCondition);
     conditionForm.onset("2020-02-14");
     await conditionForm.save();
-    await conditions.patientRecord.toHaveRowCount(2);
+    await conditions.patientRecord.toHaveRowCount(3);
     expect(
       await conditions.patientRecord.table.findByText(newCondition)
     ).toBeTruthy();
