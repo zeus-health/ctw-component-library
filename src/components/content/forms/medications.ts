@@ -1,11 +1,12 @@
 import type { FormEntry } from "../../core/form/drawer-form-with-fields";
+import { cloneDeep } from "lodash";
 import { z } from "zod";
+import { ActionReturn } from "./types";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { dateToISO } from "@/fhir/formatters";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { SYSTEM_RXNORM } from "@/fhir/system-urls";
-import { getFormData } from "@/utils/form-helper";
 import {
   QUERY_KEY_PATIENT,
   QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
@@ -38,15 +39,28 @@ const QUERY_KEYS = [
   QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
 ];
 
+export type CreateMedicationStatementFormData = {
+  status: fhir4.MedicationStatement["status"];
+  dateAsserted: Date;
+  subjectID: string;
+  display: string;
+  rxNormCode: string;
+  dosage: string;
+  note?: string;
+};
+
+type OmitMatch<T extends { data: unknown }> = Omit<T, "data"> &
+  CreateMedicationStatementFormData;
+
 export const createMedicationStatement = async (
-  data: FormData,
+  formValidation: {
+    success: boolean;
+    data: OmitMatch<ActionReturn<unknown>>;
+    errors: undefined;
+  },
   getRequestContext: () => Promise<CTWRequestContext>
 ): Promise<unknown> => {
-  const result = await getFormData(data, medicationStatementSchema);
-
-  if (!result.success) {
-    return { formResult: result, requestErrors: undefined };
-  }
+  const result = cloneDeep(formValidation);
 
   const { fhirClient } = await getRequestContext();
 
