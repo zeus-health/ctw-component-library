@@ -12,9 +12,6 @@ export const FormFieldLabel = ({
     {required && (
       <>
         <div className="ctw-flex-grow ctw-text-icon-default">*</div>
-        <span className="ctw-right-0 ctw-inline-block ctw-text-xs ctw-text-content-black">
-          Required
-        </span>
       </>
     )}
   </div>
