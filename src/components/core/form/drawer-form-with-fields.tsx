@@ -64,7 +64,7 @@ export const DrawerFormWithFields = <T,>({
         <div className="ctw-space-y-4">
           {header}
           <div className="ctw-space-y-6">
-            {data.map((entry) => {
+            {data.map((entry, idx) => {
               if (isArray(entry)) {
                 return (
                   <FormFieldEntries
@@ -72,6 +72,7 @@ export const DrawerFormWithFields = <T,>({
                     errors={errors}
                     submitting={submitting}
                     schema={schema}
+                    key={entry[0].label}
                   />
                 );
               }
@@ -110,6 +111,7 @@ export const DrawerFormWithFields = <T,>({
 
               return (
                 <FormFieldEntry
+                  key={entry.label}
                   entry={entry}
                   errors={errors}
                   props={props}
