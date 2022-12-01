@@ -37,23 +37,21 @@ export function sortRecords<T extends MinRecordItem>(
 
 function sortByCols<T>(records: T[], indices: (keyof T)[], dir: SortDir) {
   return records.sort((a, b) => {
-    let firstCompare = a;
-    let secondCompare = b;
-
     let compareTotal = 0;
     for (let i = 0; i < indices.length; i += 1) {
-      // Sort the primary index reversely if descending.
-      if (i === 0 && dir === "desc") {
-        firstCompare = b;
-        secondCompare = a;
-      }
-      compareTotal +=
-        localeCompareBlankLast(
-          `${firstCompare[indices[i]]}`,
-          `${secondCompare[indices[i]]}`
-        ) *
+      let compareChange =
+        localeCompareBlankLast(`${a[indices[i]]}`, `${b[indices[i]]}`, "asc") *
         // The math below allows secondary, tertiary etc. sort indices.
         0.1 ** i;
+      // Sort the primary index reversely if descending.
+      if (i === 0 && dir === "desc") {
+        compareChange = localeCompareBlankLast(
+          a[indices[i]],
+          b[indices[i]],
+          "desc"
+        );
+      }
+      compareTotal += compareChange;
     }
     return compareTotal;
   });

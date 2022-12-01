@@ -47,11 +47,14 @@ function sortByDate<T>(
 }
 
 export const localeCompareBlankLast = (
-  a: string | undefined,
-  b: string | undefined
+  a: unknown,
+  b: unknown,
+  dir: SortDir
 ) => {
-  const aIsBlank = !a || a === "";
-  const bIsBlank = !b || b === "";
+  const aString = a ? `${a}` : "";
+  const bString = b ? `${b}` : "";
+  const aIsBlank = aString === "";
+  const bIsBlank = bString === "";
   if (aIsBlank && bIsBlank) {
     return 0;
   }
@@ -61,5 +64,7 @@ export const localeCompareBlankLast = (
   if (bIsBlank) {
     return -1;
   }
-  return a.localeCompare(b);
+  return dir === "asc"
+    ? aString.localeCompare(bString)
+    : bString.localeCompare(aString);
 };
