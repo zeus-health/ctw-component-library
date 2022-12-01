@@ -77,7 +77,7 @@ export const TestAddOther: StoryObj<Props> = {
   play: async ({ canvasElement }) => {
     const conditions = await conditionsObject(canvasElement);
     await conditions.patientRecord.toHaveRowCount(2);
-    await conditions.otherProvider.add(0);
+    await conditions.otherProvider.add(3);
     const conditionForm = conditionFormDrawer(canvasElement);
     await conditionForm.save();
     await conditions.patientRecord.toHaveRowCount(3);
@@ -119,7 +119,7 @@ export const TestViewHistory: StoryObj<Props> = {
   ...Basic,
   play: async ({ canvasElement }) => {
     const conditions = await conditionsObject(canvasElement);
-    await conditions.patientRecord.viewHistory(1);
+    await conditions.patientRecord.viewHistory(0);
     const canvas = within(canvasElement);
     const drawer = within(canvas.getByRole("dialog"));
     expect(
