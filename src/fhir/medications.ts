@@ -1,5 +1,5 @@
 import type { FhirResource, MedicationStatement } from "fhir/r4";
-import { uniqWith } from "lodash";
+import { cloneDeep, uniqWith } from "lodash";
 import {
   compact,
   filter,
@@ -23,6 +23,16 @@ import {
   searchLensRecords,
   SearchReturn,
 } from "./search-helpers";
+import {
+  CTW_EXTENSION_LENS_AGGREGATED_FROM,
+  LENS_EXTENSION_AGGREGATED_FROM,
+  LENS_EXTENSION_MEDICATION_DAYS_SUPPLY,
+  LENS_EXTENSION_MEDICATION_LAST_FILL_DATE,
+  LENS_EXTENSION_MEDICATION_LAST_PRESCRIBED_DATE,
+  LENS_EXTENSION_MEDICATION_LAST_PRESCRIBER,
+  LENS_EXTENSION_MEDICATION_QUANTITY,
+  LENS_EXTENSION_MEDICATION_REFILLS,
+} from "./system-urls";
 import { ResourceMap, ResourceTypeString } from "./types";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
@@ -146,31 +156,65 @@ export function filterMedicationsWithNoRxNorms(
   );
 }
 
-// Splits summarized medications into those that the builder already knows about ("Provider Medications")
+// Splits medications into those that the builder already knows about ("Provider Medications")
 // and those that they do not know about ("Other Provider Medications").
-export function splitSummarizedMedications(
-  summarizedMedications: MedicationStatement[],
+export function splitMedications(
+  activeMedications: MedicationStatement[],
   builderOwnedMedications: MedicationStatement[],
   includedResources?: ResourceMap
 ) {
-  const builderMedications: MedicationStatement[] = [];
-  const otherProviderMedications: MedicationStatement[] = [];
-  const splitData = summarizedMedications.reduce(
-    (sd, summaryMed) => {
-      sd[
-        builderOwnedMedications.some(
-          (builderMed) =>
-            getIdentifyingRxNormCode(builderMed, includedResources) ===
-            getIdentifyingRxNormCode(summaryMed, includedResources)
-        )
-          ? "builderMedications"
-          : "otherProviderMedications"
-      ].push(summaryMed);
-      return sd;
-    },
-    { builderMedications, otherProviderMedications }
+  // Get active medications where there does not exist a matching builder owned record.
+  const otherProviderMedications = activeMedications.filter(
+    (activeMed) =>
+      !builderOwnedMedications.some(
+        (builderMed) =>
+          getIdentifyingRxNormCode(builderMed, includedResources) ===
+          getIdentifyingRxNormCode(activeMed, includedResources)
+      )
   );
-  return splitData;
+
+  // Get builder owned medications and splash in some data from lens meds if available.
+  const builderMedications = builderOwnedMedications.map((m) => {
+    const activeMed = activeMedications.find(
+      (a) =>
+        getIdentifyingRxNormCode(a, includedResources) ===
+        getIdentifyingRxNormCode(m, includedResources)
+    );
+
+    if (!activeMed) {
+      return m;
+    }
+
+    // If we did find an active med then copy the builder med and add in the lens extensions.
+    const builderMed = cloneDeep(m);
+
+    const LENS_MEDICATION_EXTENSIONS = [
+      LENS_EXTENSION_MEDICATION_LAST_FILL_DATE,
+      LENS_EXTENSION_MEDICATION_LAST_PRESCRIBED_DATE,
+      LENS_EXTENSION_MEDICATION_QUANTITY,
+      LENS_EXTENSION_MEDICATION_DAYS_SUPPLY,
+      LENS_EXTENSION_MEDICATION_REFILLS,
+      LENS_EXTENSION_MEDICATION_LAST_PRESCRIBER,
+    ];
+
+    builderMed.extension = activeMed.extension?.filter((x) =>
+      LENS_MEDICATION_EXTENSIONS.includes(x.url)
+    );
+
+    const medHistory = cloneDeep(
+      activeMed.extension?.find((x) => x.url === LENS_EXTENSION_AGGREGATED_FROM)
+    );
+    if (medHistory) {
+      // To avoid confusion about the lens extension (since "aggregated from" doesn't really
+      // make sense on this builder record), use a different extension URL.
+      medHistory.url = CTW_EXTENSION_LENS_AGGREGATED_FROM;
+      builderMed.extension?.push(medHistory);
+    }
+
+    return builderMed;
+  });
+
+  return { builderMedications, otherProviderMedications };
 }
 
 export function useMedicationHistory(medication?: fhir4.MedicationStatement) {

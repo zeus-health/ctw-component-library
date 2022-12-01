@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 0.28.4
+
+### Patch Changes
+
+- fd4bdb6: Fix bug where capital "Active" conditions were not showing up in the active conditions view. We now correctly filter based on the "code" and proper "system" of the clinicalStatus codings.
+- 6e8e663: Show other provider records if patient history messages exists, otherwise show empty state with request records button.
+
 ## 0.28.3
 
 ### Patch Changes

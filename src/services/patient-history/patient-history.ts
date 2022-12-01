@@ -42,17 +42,6 @@ export async function hasFetchedPatientHistory(
   if (messages.length === 0) {
     return false;
   }
-
-  const latestMessage = messages.reduce((previous, current) =>
-    parseISO(current._updatedAt) > parseISO(previous._updatedAt) &&
-    current.status === "done"
-      ? current
-      : previous
-  );
-
-  if (latestMessage.status === "done") {
-    return true;
-  }
-
-  return false;
+  // This is the case for messages.length > 0 which is the current workaround.
+  return true;
 }
