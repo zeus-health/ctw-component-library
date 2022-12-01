@@ -12,9 +12,9 @@ export type MinActionItem = {
 export type ActionItemProps<T extends MinActionItem> = {
   className?: string;
   item: T;
-  onAction: (i: T) => void;
+  onAction?: (i: T) => void;
   onRowClick?: (i: T) => void;
-  actionText: string;
+  actionText?: string;
   activeClassName?: string;
   onUndoAction?: (i: T) => void;
   undoActionText?: string;
@@ -53,7 +53,7 @@ export const ActionList = <T extends MinActionItem>({
 export const ActionListItem = <T extends MinActionItem>({
   item,
   onRowClick,
-  onAction,
+  onAction = () => {},
   actionText = "Mark Complete",
   undoActionText = "Undo",
   onUndoAction,
