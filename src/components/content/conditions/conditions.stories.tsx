@@ -76,11 +76,11 @@ export const TestAddOther: StoryObj<Props> = {
   ...Basic,
   play: async ({ canvasElement }) => {
     const conditions = await conditionsObject(canvasElement);
-    await conditions.patientRecord.toHaveRowCount(1);
-    await conditions.otherProvider.add(2);
+    await conditions.patientRecord.toHaveRowCount(2);
+    await conditions.otherProvider.add(0);
     const conditionForm = conditionFormDrawer(canvasElement);
     await conditionForm.save();
-    await conditions.patientRecord.toHaveRowCount(2);
+    await conditions.patientRecord.toHaveRowCount(3);
     expect(
       await conditions.patientRecord.table.findByText(/oral contraception/i)
     ).toBeTruthy();
@@ -104,14 +104,14 @@ export const TestDelete: StoryObj<Props> = {
   ...Basic,
   play: async ({ canvasElement }) => {
     const conditions = await conditionsObject(canvasElement);
-    await conditions.patientRecord.toHaveRowCount(1);
-    await conditions.patientRecord.delete(0);
-    await conditions.patientRecord.toHaveRowCount(0);
-    conditions.toggleInactive();
     await conditions.patientRecord.toHaveRowCount(2);
+    await conditions.patientRecord.delete(0);
+    await conditions.patientRecord.toHaveRowCount(1);
+    conditions.toggleInactive();
+    await conditions.patientRecord.toHaveRowCount(3);
     conditions.patientRecord.toHaveRowWithText(0, /entered-in-error/i);
     conditions.toggleInactive();
-    await conditions.patientRecord.toHaveRowCount(0);
+    await conditions.patientRecord.toHaveRowCount(1);
   },
 };
 
