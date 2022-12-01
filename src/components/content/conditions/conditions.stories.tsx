@@ -119,7 +119,7 @@ export const TestViewHistory: StoryObj<Props> = {
   ...Basic,
   play: async ({ canvasElement }) => {
     const conditions = await conditionsObject(canvasElement);
-    await conditions.patientRecord.viewHistory(0);
+    await conditions.patientRecord.viewHistory(1);
     const canvas = within(canvasElement);
     const drawer = within(canvas.getByRole("dialog"));
     expect(
