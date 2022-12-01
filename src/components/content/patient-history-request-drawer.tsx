@@ -5,11 +5,12 @@ import {
   DrawerFormWithFieldsProps,
 } from "../core/form/drawer-form-with-fields";
 import { CTWPatientContext } from "../core/patient-provider";
-import { editPatient } from "./forms/patients";
+import { editPatient, EditPatientFormData } from "./forms/patients";
 import {
   getRequestData,
   requestHistorySchema,
 } from "./forms/request-history-schema";
+import { ActionReturn } from "./forms/types";
 import {
   PatientHistoryResponseError,
   schedulePatientHistory,
@@ -22,6 +23,16 @@ type PatientHistoryRequestDrawer<T> = Pick<
   "isOpen" | "onClose" | "header"
 > & { patient: PatientModel };
 
+export type ScheduleHistoryFormData = {
+  npi: string;
+  role: string;
+  name: string;
+};
+
+type OmitMatch<T extends { data: unknown }> = Omit<T, "data"> &
+  EditPatientFormData &
+  ScheduleHistoryFormData;
+
 export const PatientHistoryRequestDrawer = <T,>({
   patient,
   header,
@@ -31,7 +42,11 @@ export const PatientHistoryRequestDrawer = <T,>({
   const { onPatientSave } = useContext(CTWPatientContext);
 
   const onPatientSaveAndScheduleHistory = async (
-    formValidation: { success: boolean; data: any; errors: undefined },
+    formValidation: {
+      success: boolean;
+      data: OmitMatch<ActionReturn<unknown>>;
+      errors: undefined;
+    },
     getRequestContext: () => Promise<CTWRequestContext>
   ) => {
     let onPatientSaveResponse;
