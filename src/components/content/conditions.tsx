@@ -75,7 +75,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const { getRequestContext } = useCTW();
   const [sort, setSort] = useState<TableSort>();
 
-  const [clinicalHistoryExists, setClinicalHistoryExists] = useState(false);
+  const [clinicalHistoryExists, setClinicalHistoryExists] = useState<boolean>();
 
   const patientRecordsMessage = patientRecordsResponse.isError
     ? ERROR_MSG
@@ -158,12 +158,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       patientID
     );
 
-    if (patientHistoryFetched) {
-      setClinicalHistoryExists(true);
-      setRequestDrawerIsOpen(false);
-    } else {
-      setClinicalHistoryExists(false);
-    }
+    setClinicalHistoryExists(patientHistoryFetched);
   };
 
   useEffect(() => {
@@ -195,7 +190,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       }
     }
     void load();
-    if (patientResponse.data?.id) {
+    if (patientResponse.data?.id && clinicalHistoryExists === undefined) {
       void handleClinicalHistory(patientResponse.data.id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -365,7 +360,10 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           }
           patient={patientResponse.data}
           isOpen={requestRecordsDrawerIsOpen}
-          onClose={() => setRequestDrawerIsOpen(false)}
+          onClose={() => {
+            console.warn("This was called. close");
+            setRequestDrawerIsOpen(false);
+          }}
         />
       )}
 
