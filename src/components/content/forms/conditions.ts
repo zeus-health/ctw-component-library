@@ -1,21 +1,16 @@
-import { Condition } from "fhir/r4";
+import { CodeSystem, Condition } from "fhir/r4";
 import { cloneDeep } from "lodash";
 import { ActionReturn } from "./types";
 import { CTWRequestContext } from "@/components/core/ctw-context";
-import { FormErrors } from "@/components/core/form/drawer-form";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { setRecorderField } from "@/fhir/conditions";
-import { isFhirError } from "@/fhir/errors";
 import { dateToISO } from "@/fhir/formatters";
 import { ConditionModel } from "@/fhir/models/condition";
-import { OperationOutcomeModel } from "@/fhir/models/operation-outcome";
-import { isOperationOutcome } from "@/fhir/operation-outcome";
 import {
   SYSTEM_CONDITION_CLINICAL,
   SYSTEM_CONDITION_VERIFICATION_STATUS,
 } from "@/fhir/system-urls";
 import { claimsPractitionerId } from "@/utils/auth";
-import { AnyZodSchema, getFormData } from "@/utils/form-helper";
 import {
   QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
   QUERY_KEY_PATIENT_CONDITIONS,
@@ -51,23 +46,22 @@ export function getAddConditionWithDefaults(condition: Condition): Condition {
   return newCondition;
 }
 
+export type CreateOrEditConditionFormData = {
+  id?: string;
+  clinicalStatus: string;
+  verificationStatus: string;
+  condition: fhir4.Coding;
+  abatement?: Date;
+  onset: Date;
+  note?: string;
+};
+
 export const createOrEditCondition = async (
   condition: ConditionModel | undefined,
   patientID: string,
-  data: FormData,
-  getRequestContext: () => Promise<CTWRequestContext>,
-  schema: AnyZodSchema
-): Promise<{
-  formResult: ActionReturn<FormErrors>;
-  requestErrors: string[] | undefined;
-}> => {
-  const result = await getFormData(data, schema);
-  let requestErrors: string[] = [];
-
-  if (!result.success) {
-    return { formResult: result, requestErrors: undefined };
-  }
-
+  data: CreateOrEditConditionFormData,
+  getRequestContext: () => Promise<CTWRequestContext>
+): Promise<unknown> => {
   const requestContext = await getRequestContext();
   const practitionerId = claimsPractitionerId(requestContext.authToken);
 
@@ -75,7 +69,7 @@ export const createOrEditCondition = async (
   // The autofill values that apply to both edits and creates are here; including Practitioner, Recorder, Patient, and Recorded date.
   const fhirCondition: fhir4.Condition = {
     resourceType: "Condition",
-    id: result.data.id,
+    id: data.id,
     ...(practitionerId && {
       recorder: await setRecorderField(practitionerId, requestContext),
     }),
@@ -83,7 +77,7 @@ export const createOrEditCondition = async (
       coding: [
         {
           system: SYSTEM_CONDITION_CLINICAL,
-          code: result.data.clinicalStatus,
+          code: data.clinicalStatus,
         },
       ],
     },
@@ -91,34 +85,34 @@ export const createOrEditCondition = async (
       coding: [
         {
           system: SYSTEM_CONDITION_VERIFICATION_STATUS,
-          code: result.data.verificationStatus,
+          code: data.verificationStatus,
         },
       ],
     },
     // Keep all existing codings when editing a condition
     code:
-      result.data.id && condition
+      data.id && condition
         ? condition.codings
         : {
             coding: [
               {
-                system: result.data.condition.system,
-                code: result.data.condition.code,
-                display: result.data.condition.display,
+                system: data.condition.system,
+                code: data.condition.code,
+                display: data.condition.display,
               },
             ],
-            text: result.data.condition.display,
+            text: data.condition.display,
           },
-    ...(result.data.abatement && {
-      abatementDateTime: dateToISO(result.data.abatement),
+    ...(data.abatement && {
+      abatementDateTime: dateToISO(data.abatement),
     }),
-    onsetDateTime: dateToISO(result.data.onset),
+    onsetDateTime: dateToISO(data.onset),
     recordedDate: dateToISO(new Date()),
     subject: { type: "Patient", reference: `Patient/${patientID}` },
-    note: result.data.note ? [{ text: result.data.note }] : undefined,
+    note: data.note ? [{ text: data.note }] : undefined,
   };
 
-  if (result.data.verificationStatus === "entered-in-error") {
+  if (data.verificationStatus === "entered-in-error") {
     fhirCondition.clinicalStatus = undefined;
   }
 
@@ -127,19 +121,10 @@ export const createOrEditCondition = async (
     requestContext
   );
 
-  if (isFhirError(response) && isOperationOutcome(response.response.data)) {
-    requestErrors = new OperationOutcomeModel(response.response.data).issues
-      .filter((issue) => issue.severity !== "warning")
-      .map((issue) => issue.display);
-    result.success = false;
-  } else if (response instanceof Error) {
-    requestErrors = [response.message];
-    result.success = false;
-  }
   await Promise.all([
     queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]),
     queryClient.invalidateQueries([QUERY_KEY_OTHER_PROVIDER_CONDITIONS]),
   ]);
 
-  return { formResult: result, requestErrors };
+  return response;
 };

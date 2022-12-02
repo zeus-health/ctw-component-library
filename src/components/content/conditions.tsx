@@ -23,7 +23,6 @@ import {
   createOrEditCondition,
   getAddConditionWithDefaults,
 } from "./forms/conditions";
-import { editPatientAndScheduleHistory } from "./forms/patients";
 import { PatientHistoryRequestDrawer } from "./patient-history-request-drawer";
 import { PatientHistoryMessage } from "./patient-history/patient-history-message";
 import {
@@ -159,12 +158,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       patientID
     );
 
-    if (patientHistoryFetched) {
-      setClinicalHistoryExists(true);
-      setRequestDrawerIsOpen(false);
-    } else {
-      setClinicalHistoryExists(false);
-    }
+    setClinicalHistoryExists(patientHistoryFetched);
   };
 
   useEffect(() => {
@@ -196,10 +190,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       }
     }
     void load();
-    if (patientResponse.data?.id) {
-      void handleClinicalHistory(patientResponse.data.id);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     includeInactive,
     patientResponse.data,
@@ -207,6 +197,13 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     otherProviderRecordsResponse.data,
     patientRecordsResponse.error,
   ]);
+
+  useEffect(() => {
+    if (patientResponse.data?.id) {
+      void handleClinicalHistory(patientResponse.data.id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [patientResponse.data?.id]);
 
   if (patientResponse.isError) {
     return <ConditionsNoPatient className={className} />;
@@ -367,7 +364,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           patient={patientResponse.data}
           isOpen={requestRecordsDrawerIsOpen}
           onClose={() => setRequestDrawerIsOpen(false)}
-          action={curry(editPatientAndScheduleHistory)(patientResponse.data)}
         />
       )}
 
