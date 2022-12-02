@@ -4,8 +4,8 @@ import {
   DrawerFormWithFields,
   DrawerFormWithFieldsProps,
 } from "../core/form/drawer-form-with-fields";
-import { CTWPatientContext } from "../core/patient-provider";
-import { editPatient, EditPatientFormData } from "./forms/patients";
+import { useHandlePatientSave } from "../core/patient-provider";
+import { EditPatientFormData } from "./forms/patients";
 import {
   getRequestData,
   requestHistorySchema,
@@ -39,7 +39,7 @@ export const PatientHistoryRequestDrawer = <T,>({
   isOpen,
   onClose,
 }: PatientHistoryRequestDrawer<T>) => {
-  const { onPatientSave } = useContext(CTWPatientContext);
+  const onPatientSave = useHandlePatientSave(patient);
 
   const onPatientSaveAndScheduleHistory = async (
     formResult: {
@@ -49,16 +49,7 @@ export const PatientHistoryRequestDrawer = <T,>({
     },
     getRequestContext: () => Promise<CTWRequestContext>
   ) => {
-    let onPatientSaveResponse;
-    if (onPatientSave) {
-      onPatientSaveResponse = await onPatientSave(formResult.data);
-    } else {
-      onPatientSaveResponse = await editPatient(
-        patient,
-        formResult,
-        getRequestContext
-      );
-    }
+    const onPatientSaveResponse = await onPatientSave(formResult);
 
     // TODO: How do we want to handle errors from responses that arent defined by us?
     if (isFhirError(onPatientSaveResponse)) {

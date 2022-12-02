@@ -1,6 +1,12 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { curry } from "lodash";
-import { createContext, ReactNode, useContext, useMemo } from "react";
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useMemo,
+} from "react";
+import { editPatient } from "../content/forms/patients";
 import { CTWRequestContext } from "./ctw-context";
 import { useCTW } from "./ctw-provider";
 import { PatientModel } from "@/fhir/models/patient";
@@ -40,7 +46,7 @@ type ProviderState = {
 type PatientProviderProps = {
   children: ReactNode;
   tags?: Tag[];
-  onPatientSave?: () => Promise<unknown>;
+  onPatientSave?: (data: unknown) => Promise<unknown>;
 } & (ThirdPartyID | PatientUPIDSpecified);
 
 export const CTWPatientContext = createContext<ProviderState>({
@@ -87,6 +93,24 @@ export function usePatient(): UseQueryResult<PatientModel, unknown> {
     },
     { staleTime: PATIENT_STALE_TIME }
   );
+}
+
+export function useHandlePatientSave(patient: PatientModel) {
+  const { getRequestContext } = useCTW();
+  const { onPatientSave } = useContext(CTWPatientContext);
+
+  const handleSave = useCallback(
+    async (data) => {
+      if (typeof onPatientSave === "function") {
+        return onPatientSave(data);
+      }
+
+      return editPatient(patient, data, getRequestContext);
+    },
+    [onPatientSave, patient, getRequestContext]
+  );
+
+  return handleSave;
 }
 
 export function useQueryWithPatient<T, T2>(
