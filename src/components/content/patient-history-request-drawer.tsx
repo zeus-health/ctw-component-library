@@ -15,6 +15,7 @@ import {
   schedulePatientHistory,
 } from "@/api/patient-history";
 import { PatientModel } from "@/fhir/models";
+import { getFormResponseErrors } from "@/utils/errors";
 
 type PatientHistoryRequestDrawer<T> = Pick<
   DrawerFormWithFieldsProps<T>,
@@ -42,6 +43,11 @@ export const PatientHistoryRequestDrawer = <T,>({
     try {
       await onPatientSave(data);
     } catch (e) {
+      const { requestErrors, responseIsSuccess } = getFormResponseErrors(e);
+      if (!responseIsSuccess) {
+        return new Error(requestErrors.join(","));
+      }
+
       return new Error("Failed to save patient data.");
     }
 
