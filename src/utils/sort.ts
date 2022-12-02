@@ -45,26 +45,3 @@ function sortByDate<T>(
   });
   return collection;
 }
-
-export const localeCompareBlankLast = (
-  a: unknown,
-  b: unknown,
-  dir: SortDir
-) => {
-  const aString = a ? `${a}` : "";
-  const bString = b ? `${b}` : "";
-  const aIsBlank = aString === "";
-  const bIsBlank = bString === "";
-  if (aIsBlank && bIsBlank) {
-    return 0;
-  }
-  if (aIsBlank) {
-    return 1;
-  }
-  if (bIsBlank) {
-    return -1;
-  }
-  return dir === "asc"
-    ? aString.localeCompare(bString)
-    : bString.localeCompare(aString);
-};

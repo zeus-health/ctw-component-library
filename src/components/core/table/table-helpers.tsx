@@ -1,5 +1,6 @@
+import { get, iteratee, ListIteratee, Many, orderBy } from "lodash";
 import { ReactNode } from "react";
-import { localeCompareBlankLast, SortDir } from "@/utils/sort";
+import { SortDir } from "@/utils/sort";
 
 export interface MinRecordItem {
   id: string | number;
@@ -30,29 +31,31 @@ export function sortRecords<T extends MinRecordItem>(
   );
   // If there is a sort applied to a column, then sort the records.
   if (sort && sortColumn?.sortIndices) {
-    return sortByCols(records, sortColumn.sortIndices, sort.dir);
+    return sortByIndex(records, sortColumn.sortIndices, sort.dir);
   }
   return records;
 }
 
-function sortByCols<T>(records: T[], indices: (keyof T)[], dir: SortDir) {
-  return records.sort((a, b) => {
-    let compareTotal = 0;
-    for (let i = 0; i < indices.length; i += 1) {
-      let compareChange =
-        localeCompareBlankLast(`${a[indices[i]]}`, `${b[indices[i]]}`, "asc") *
-        // The math below allows secondary, tertiary etc. sort indices.
-        0.1 ** i;
-      // Sort the primary index reversely if descending.
-      if (i === 0 && dir === "desc") {
-        compareChange = localeCompareBlankLast(
-          a[indices[i]],
-          b[indices[i]],
-          "desc"
-        );
-      }
-      compareTotal += compareChange;
-    }
-    return compareTotal;
+export function sortByIndex<T>(
+  records: T[],
+  indices: (keyof Partial<T>)[],
+  dir: SortDir
+) {
+  // Disabling @typescript-eslint/no-unnecessary-condition since the index may not exist.
+  // For the first sort index, sort in the way the user selected.
+  let iteratees: ListIteratee<T>[] = [
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    (o) => (o[indices[0]] && dir === "asc" ? "a" : "b"),
+    indices[0],
+  ];
+  // For remaining indices, just sort in asccending.
+  indices.slice(1, indices.length).forEach((index) => {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    iteratees = [...iteratees, (o) => (o[index] ? "a" : "b"), index];
   });
+
+  return orderBy(records, iteratees, [
+    dir,
+    ...Array(indices.length).fill("asc"),
+  ]);
 }
