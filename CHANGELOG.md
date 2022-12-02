@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.29.1
+
+### Patch Changes
+
+- 86bc233: Add onPatientSave to PatientProvider that allows users of the library to override default onPatientSave functionality.
+
 ## 0.29.0
 
 ### Minor Changes
