@@ -150,6 +150,9 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     </button>
   );
 
+  const shouldShowClinicalHistory =
+    clinicalHistoryExists || otherProviderRecordsResponse.data?.length;
+
   const checkClinicalHistory = async (patientID: string) => {
     const requestContext = await getRequestContext();
 
@@ -280,18 +283,17 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         <div className="ctw-space-y-3">
           <div className="ctw-conditions-title-container">
             <div className="ctw-title">Other Provider Records</div>
-            {clinicalHistoryExists ||
-              (otherProviderRecordsResponse.data?.length && (
-                <button
-                  type="button"
-                  className="ctw-btn-clear ctw-link"
-                  onClick={() => setRequestDrawerIsOpen(true)}
-                >
-                  Request Records
-                </button>
-              ))}
+            {shouldShowClinicalHistory && (
+              <button
+                type="button"
+                className="ctw-btn-clear ctw-link"
+                onClick={() => setRequestDrawerIsOpen(true)}
+              >
+                Request Records
+              </button>
+            )}
           </div>
-          {clinicalHistoryExists ? (
+          {shouldShowClinicalHistory ? (
             <ConditionsTableBase
               className="ctw-conditions-not-reviewed"
               stacked={breakpoints.sm}
