@@ -56,10 +56,8 @@ The `PatientProvider` component provides patient details needed by other compone
 An example onPatientSave function could be as follows:
 
 ```
-const onPatientSave = async (data) => {
-  /* Logic to send data to data
-   data here is of type PatientFormData
-
+const onPatientSave = async (data: PatientFormData) => {
+/*
   type PatientFormData = {
     lastName: string;
     firstName: string;
@@ -74,7 +72,7 @@ const onPatientSave = async (data) => {
 };
 */
 
-// Do whatever you want with data
+// Do whatever you want with data (eg, send to server)
 
   return response
 }
