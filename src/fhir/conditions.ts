@@ -1,7 +1,6 @@
 import { SearchParams } from "fhir-kit-client";
 import { orderBy } from "lodash";
 import { CodePreference } from "./codeable-concept";
-import { getPractitioner } from "./practitioner";
 import {
   searchBuilderRecords,
   searchCommonRecords,
@@ -15,7 +14,6 @@ import {
   SYSTEM_SNOMED,
 } from "./system-urls";
 import { getAddConditionWithDefaults } from "@/components/content/forms/conditions";
-import { CTWRequestContext } from "@/components/core/ctw-context";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
 import { ConditionModel } from "@/fhir/models/condition";
 import {
@@ -146,17 +144,3 @@ function filterAndSort(conditions: fhir4.Condition[]) {
     ["desc"]
   );
 }
-
-export const setRecorderField = async (
-  practitionerId: string,
-  requestContext: CTWRequestContext
-) => {
-  const practitioner = await getPractitioner(practitionerId, requestContext);
-  const display = practitioner.fullName;
-
-  return {
-    reference: `Practitioner/${practitionerId}`,
-    type: "Practitioner",
-    display,
-  };
-};

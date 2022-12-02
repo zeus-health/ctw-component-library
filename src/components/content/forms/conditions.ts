@@ -4,17 +4,16 @@ import { ActionReturn } from "./types";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { FormErrors } from "@/components/core/form/drawer-form";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
-import { setRecorderField } from "@/fhir/conditions";
 import { isFhirError } from "@/fhir/errors";
 import { dateToISO } from "@/fhir/formatters";
 import { ConditionModel } from "@/fhir/models/condition";
 import { OperationOutcomeModel } from "@/fhir/models/operation-outcome";
 import { isOperationOutcome } from "@/fhir/operation-outcome";
+import { getUsersPractitionerReference } from "@/fhir/practitioner";
 import {
   SYSTEM_CONDITION_CLINICAL,
   SYSTEM_CONDITION_VERIFICATION_STATUS,
 } from "@/fhir/system-urls";
-import { claimsPractitionerId } from "@/utils/auth";
 import { AnyZodSchema, getFormData } from "@/utils/form-helper";
 import {
   QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
@@ -69,16 +68,13 @@ export const createOrEditCondition = async (
   }
 
   const requestContext = await getRequestContext();
-  const practitionerId = claimsPractitionerId(requestContext.authToken);
 
   // Defines the properties of the condition based on the form.
   // The autofill values that apply to both edits and creates are here; including Practitioner, Recorder, Patient, and Recorded date.
   const fhirCondition: fhir4.Condition = {
     resourceType: "Condition",
     id: result.data.id,
-    ...(practitionerId && {
-      recorder: await setRecorderField(practitionerId, requestContext),
-    }),
+    recorder: await getUsersPractitionerReference(requestContext),
     clinicalStatus: {
       coding: [
         {
