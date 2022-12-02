@@ -361,7 +361,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           patient={patientResponse.data}
           isOpen={requestRecordsDrawerIsOpen}
           onClose={() => {
-            console.warn("This was called. close");
             setRequestDrawerIsOpen(false);
           }}
         />
