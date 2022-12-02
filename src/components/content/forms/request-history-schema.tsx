@@ -17,18 +17,20 @@ export const getRequestData = (patient: PatientModel): FormEntry[] => [
     value: "",
     readonly: false,
   },
-  {
-    label: "NPI",
-    field: "npi",
-    value: "",
-    readonly: false,
-  },
-  {
-    label: "Role",
-    field: "role",
-    value: "",
-    readonly: false,
-  },
+  [
+    {
+      label: "NPI",
+      field: "npi",
+      value: "",
+      readonly: false,
+    },
+    {
+      label: "Role",
+      field: "role",
+      value: "",
+      readonly: false,
+    },
+  ],
   {
     label: "patient-information",
     render: () => (
@@ -54,18 +56,20 @@ export const getRequestData = (patient: PatientModel): FormEntry[] => [
     value: patient.lastName,
     readonly: false,
   },
-  {
-    label: "Date of Birth",
-    field: "dateOfBirth",
-    value: patient.dob,
-    readonly: false,
-  },
-  {
-    label: "Gender",
-    field: "gender",
-    value: patient.gender,
-    readonly: false,
-  },
+  [
+    {
+      label: "Date of Birth",
+      field: "dateOfBirth",
+      value: patient.dob,
+      readonly: false,
+    },
+    {
+      label: "Gender",
+      field: "gender",
+      value: patient.gender,
+      readonly: false,
+    },
+  ],
   {
     label: "Address",
     field: "address",
@@ -78,18 +82,20 @@ export const getRequestData = (patient: PatientModel): FormEntry[] => [
     value: patient.homeAddress?.city,
     readonly: false,
   },
-  {
-    label: "State",
-    field: "state",
-    value: patient.homeAddress?.state,
-    readonly: false,
-  },
-  {
-    label: "Zip",
-    field: "zipCode",
-    value: patient.homeAddress?.postalCode,
-    readonly: false,
-  },
+  [
+    {
+      label: "State",
+      field: "state",
+      value: patient.homeAddress?.state,
+      readonly: false,
+    },
+    {
+      label: "Zip",
+      field: "zipCode",
+      value: patient.homeAddress?.postalCode,
+      readonly: false,
+    },
+  ],
   {
     label: "Phone",
     field: "phone",
