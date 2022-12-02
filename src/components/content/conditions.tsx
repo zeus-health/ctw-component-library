@@ -150,7 +150,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     </button>
   );
 
-  const shouldShowClinicalHistory =
+  const shouldShowClinicalHistoryArea =
     clinicalHistoryExists || otherProviderRecordsResponse.data?.length;
 
   const checkClinicalHistory = async (patientID: string) => {
@@ -283,7 +283,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         <div className="ctw-space-y-3">
           <div className="ctw-conditions-title-container">
             <div className="ctw-title">Other Provider Records</div>
-            {shouldShowClinicalHistory && (
+            {shouldShowClinicalHistoryArea && (
               <button
                 type="button"
                 className="ctw-btn-clear ctw-link"
@@ -293,7 +293,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               </button>
             )}
           </div>
-          {shouldShowClinicalHistory ? (
+          {shouldShowClinicalHistoryArea ? (
             <ConditionsTableBase
               className="ctw-conditions-not-reviewed"
               stacked={breakpoints.sm}
