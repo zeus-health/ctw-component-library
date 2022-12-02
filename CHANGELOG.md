@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.29.0
+
+### Minor Changes
+
+- e59c99f: Add ability to include multiple elements in one row in forms.
+
 ## 0.28.5
 
 ### Patch Changes
