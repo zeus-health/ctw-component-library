@@ -6,7 +6,7 @@ import {
   useContext,
   useMemo,
 } from "react";
-import { editPatient } from "../content/forms/patients";
+import { editPatient, PatientFormData } from "../content/forms/patients";
 import { CTWRequestContext } from "./ctw-context";
 import { useCTW } from "./ctw-provider";
 import { PatientModel } from "@/fhir/models/patient";
@@ -34,19 +34,13 @@ type ProviderState = {
   patientID: string;
   systemURL: string;
   tags?: Tag[];
-  onPatientSave?: (data: unknown) => Promise<{
-    formResult: {
-      success: boolean;
-      data: { npi: string; role: string; name: string };
-    };
-    requestErrors: unknown;
-  }>;
+  onPatientSave?: (data: PatientFormData) => Promise<void>;
 };
 
 type PatientProviderProps = {
   children: ReactNode;
   tags?: Tag[];
-  onPatientSave?: (data: unknown) => Promise<unknown>;
+  onPatientSave?: (data: PatientFormData) => Promise<void>;
 } & (ThirdPartyID | PatientUPIDSpecified);
 
 export const CTWPatientContext = createContext<ProviderState>({
