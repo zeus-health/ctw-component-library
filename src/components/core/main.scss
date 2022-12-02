@@ -34,10 +34,12 @@
     border-style: solid;
     background-color: initial;
     resize: none;
+    height: 2.25rem;
   }
 
   .ctw-listbox-textarea {
     resize: vertical;
+    height: unset;
   }
 
   .ctw-listbox-button:disabled,

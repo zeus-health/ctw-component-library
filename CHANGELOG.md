@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 0.29.0
+
+### Minor Changes
+
+- e59c99f: Add ability to include multiple elements in one row in forms.
+
+## 0.28.5
+
+### Patch Changes
+
+- 209c427: Modified logic for displaying "Confirmed Medications" so that the display name for builder-owned resources is preferred over the display name of the corresponding lens resource and so that builder-owned medications are still displayed even if there is any lens latency.
+
 ## 0.28.4
 
 ### Patch Changes
