@@ -75,7 +75,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const { getRequestContext } = useCTW();
   const [sort, setSort] = useState<TableSort>();
 
-  const [clinicalHistoryExists, setClinicalHistoryExists] = useState(false);
+  const [clinicalHistoryExists, setClinicalHistoryExists] = useState<boolean>();
 
   const patientRecordsMessage = patientRecordsResponse.isError
     ? ERROR_MSG
@@ -190,6 +190,11 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       }
     }
     void load();
+    if (patientResponse.data?.id && clinicalHistoryExists === undefined) {
+      void handleClinicalHistory(patientResponse.data.id);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     includeInactive,
     patientResponse.data,
@@ -197,13 +202,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     otherProviderRecordsResponse.data,
     patientRecordsResponse.error,
   ]);
-
-  useEffect(() => {
-    if (patientResponse.data?.id) {
-      void handleClinicalHistory(patientResponse.data.id);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [patientResponse.data?.id]);
 
   if (patientResponse.isError) {
     return <ConditionsNoPatient className={className} />;
