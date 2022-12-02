@@ -13,7 +13,7 @@ type InputError = Record<string, string[]>;
 
 export type DrawerFormProps<T> = {
   action: (
-    data: { success: boolean; data: T; errors: undefined },
+    data: T,
     getRequestContext: () => Promise<CTWRequestContext>
   ) => Promise<unknown>;
   schema: AnyZodSchema;
@@ -75,7 +75,7 @@ export const DrawerForm = <T,>({
       setIsSubmitting(false);
       return;
     }
-    const response = await action(formResult, getRequestContext);
+    const response = await action(formResult.data, getRequestContext);
     const { requestErrors, responseIsSuccess } =
       getFormResponseErrors(response);
 

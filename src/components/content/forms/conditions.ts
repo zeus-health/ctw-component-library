@@ -59,15 +59,9 @@ export type CreateOrEditConditionFormData = {
 export const createOrEditCondition = async (
   condition: ConditionModel | undefined,
   patientID: string,
-  formResult: {
-    success: boolean;
-    data: CreateOrEditConditionFormData;
-    errors: undefined;
-  },
+  data: CreateOrEditConditionFormData,
   getRequestContext: () => Promise<CTWRequestContext>
 ): Promise<unknown> => {
-  const result = cloneDeep(formResult);
-
   const requestContext = await getRequestContext();
   const practitionerId = claimsPractitionerId(requestContext.authToken);
 
@@ -75,7 +69,7 @@ export const createOrEditCondition = async (
   // The autofill values that apply to both edits and creates are here; including Practitioner, Recorder, Patient, and Recorded date.
   const fhirCondition: fhir4.Condition = {
     resourceType: "Condition",
-    id: result.data.id,
+    id: data.id,
     ...(practitionerId && {
       recorder: await setRecorderField(practitionerId, requestContext),
     }),
@@ -83,7 +77,7 @@ export const createOrEditCondition = async (
       coding: [
         {
           system: SYSTEM_CONDITION_CLINICAL,
-          code: result.data.clinicalStatus,
+          code: data.clinicalStatus,
         },
       ],
     },
@@ -91,34 +85,34 @@ export const createOrEditCondition = async (
       coding: [
         {
           system: SYSTEM_CONDITION_VERIFICATION_STATUS,
-          code: result.data.verificationStatus,
+          code: data.verificationStatus,
         },
       ],
     },
     // Keep all existing codings when editing a condition
     code:
-      result.data.id && condition
+      data.id && condition
         ? condition.codings
         : {
             coding: [
               {
-                system: result.data.condition.system,
-                code: result.data.condition.code,
-                display: result.data.condition.display,
+                system: data.condition.system,
+                code: data.condition.code,
+                display: data.condition.display,
               },
             ],
-            text: result.data.condition.display,
+            text: data.condition.display,
           },
-    ...(result.data.abatement && {
-      abatementDateTime: dateToISO(result.data.abatement),
+    ...(data.abatement && {
+      abatementDateTime: dateToISO(data.abatement),
     }),
-    onsetDateTime: dateToISO(result.data.onset),
+    onsetDateTime: dateToISO(data.onset),
     recordedDate: dateToISO(new Date()),
     subject: { type: "Patient", reference: `Patient/${patientID}` },
-    note: result.data.note ? [{ text: result.data.note }] : undefined,
+    note: data.note ? [{ text: data.note }] : undefined,
   };
 
-  if (result.data.verificationStatus === "entered-in-error") {
+  if (data.verificationStatus === "entered-in-error") {
     fhirCondition.clinicalStatus = undefined;
   }
 

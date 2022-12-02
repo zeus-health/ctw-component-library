@@ -50,38 +50,32 @@ export type CreateMedicationStatementFormData = {
 };
 
 export const createMedicationStatement = async (
-  formResult: {
-    success: boolean;
-    data: CreateMedicationStatementFormData;
-    errors: undefined;
-  },
+  data: CreateMedicationStatementFormData,
   getRequestContext: () => Promise<CTWRequestContext>
 ): Promise<unknown> => {
-  const result = cloneDeep(formResult);
-
   const { fhirClient } = await getRequestContext();
 
   // Some fields will need to be set as they are required.
   const fhirMedicationStatement: fhir4.MedicationStatement = {
     resourceType: "MedicationStatement",
-    status: result.data.status,
-    dateAsserted: dateToISO(result.data.dateAsserted),
-    subject: { type: "Patient", reference: `Patient/${result.data.subjectID}` },
+    status: data.status,
+    dateAsserted: dateToISO(data.dateAsserted),
+    subject: { type: "Patient", reference: `Patient/${data.subjectID}` },
     medicationCodeableConcept: {
-      text: result.data.display,
+      text: data.display,
       coding: [
         {
           system: SYSTEM_RXNORM,
-          code: result.data.rxNormCode,
+          code: data.rxNormCode,
         },
       ],
     },
     dosage: [
       {
-        text: result.data.dosage,
+        text: data.dosage,
       },
     ],
-    note: result.data.note ? [{ text: result.data.note }] : undefined,
+    note: data.note ? [{ text: data.note }] : undefined,
   };
 
   const resourceModel = new MedicationStatementModel(fhirMedicationStatement);

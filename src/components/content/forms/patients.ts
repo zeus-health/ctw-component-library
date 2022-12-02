@@ -22,40 +22,34 @@ export type PatientFormData = {
 
 export const editPatient = async (
   patient: PatientModel,
-  formResult: {
-    success: boolean;
-    data: PatientFormData;
-    errors: undefined;
-  },
+  data: PatientFormData,
   getRequestContext: () => Promise<CTWRequestContext>
 ) => {
-  const result = cloneDeep(formResult);
-
   const requestContext = await getRequestContext();
 
   const fhirPatient: fhir4.Patient = {
     resourceType: "Patient",
     id: patient.id,
     active: patient.active,
-    name: [{ family: result.data.lastName, given: [result.data.firstName] }],
-    gender: result.data.gender,
-    birthDate: dateToISO(result.data.dateOfBirth),
+    name: [{ family: data.lastName, given: [data.firstName] }],
+    gender: data.gender,
+    birthDate: dateToISO(data.dateOfBirth),
     telecom: [
       {
         system: "email",
-        value: result.data.email,
+        value: data.email,
       },
       {
         system: "phone",
-        value: result.data.phone,
+        value: data.phone,
       },
     ],
     address: [
       {
-        line: [result.data.address],
-        city: result.data.city,
-        state: result.data.state,
-        postalCode: result.data.zipCode,
+        line: [data.address],
+        city: data.city,
+        state: data.state,
+        postalCode: data.zipCode,
       },
     ],
     contact: patient.contact,

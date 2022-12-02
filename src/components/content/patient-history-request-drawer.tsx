@@ -14,7 +14,6 @@ import {
   PatientHistoryResponseError,
   schedulePatientHistory,
 } from "@/api/patient-history";
-import { isFhirError } from "@/fhir/errors";
 import { PatientModel } from "@/fhir/models";
 
 type PatientHistoryRequestDrawer<T> = Pick<
@@ -37,26 +36,20 @@ export const PatientHistoryRequestDrawer = <T,>({
   const onPatientSave = useHandlePatientSave(patient);
 
   const onPatientSaveAndScheduleHistory = async (
-    formResult: {
-      success: boolean;
-      data: PatientFormData & ScheduleHistoryFormData;
-      errors: undefined;
-    },
+    data: PatientFormData & ScheduleHistoryFormData,
     getRequestContext: () => Promise<CTWRequestContext>
   ) => {
-    const onPatientSaveResponse = await onPatientSave(formResult);
-
-    // TODO: How do we want to handle errors from responses that arent defined by us?
-    if (isFhirError(onPatientSaveResponse)) {
-      // Return early to show the form errors of failed patient save
-      return onPatientSaveResponse;
+    try {
+      await onPatientSave(data);
+    } catch (e) {
+      return new Error("Failed to save patient data.");
     }
 
     const requestContext = await getRequestContext();
     const patientHistoryResponse = await schedulePatientHistory(
       requestContext,
       patient.id,
-      formResult.data
+      data
     );
 
     if ("errors" in patientHistoryResponse) {

@@ -58,13 +58,20 @@ An example onPatientSave function could be as follows:
 ```
 const onPatientSave = async (data) => {
   /* Logic to send data to data
-   data here is of type formResult
+   data here is of type PatientFormData
 
-    formResult: {
-    success: boolean;
-    data: OmitMatch<ActionReturn<unknown>>;
-    errors: undefined;
-}
+  type PatientFormData = {
+    lastName: string;
+    firstName: string;
+    gender: fhir4.Patient["gender"];
+    dateOfBirth: Date;
+    email: string;
+    phone: string;
+    address: string;
+    city: string;
+    state: string;
+    zipCode: string;
+};
 */
 
 // Do whatever you want with data
