@@ -5,12 +5,11 @@ import {
   DrawerFormWithFieldsProps,
 } from "../core/form/drawer-form-with-fields";
 import { useHandlePatientSave } from "../core/patient-provider";
-import { EditPatientFormData } from "./forms/patients";
+import { PatientFormData } from "./forms/patients";
 import {
   getRequestData,
   requestHistorySchema,
 } from "./forms/request-history-schema";
-import { ActionReturn } from "./forms/types";
 import {
   PatientHistoryResponseError,
   schedulePatientHistory,
@@ -29,10 +28,6 @@ export type ScheduleHistoryFormData = {
   name: string;
 };
 
-type OmitMatch<T extends { data: unknown }> = Omit<T, "data"> &
-  EditPatientFormData &
-  ScheduleHistoryFormData;
-
 export const PatientHistoryRequestDrawer = <T,>({
   patient,
   header,
@@ -44,7 +39,7 @@ export const PatientHistoryRequestDrawer = <T,>({
   const onPatientSaveAndScheduleHistory = async (
     formResult: {
       success: boolean;
-      data: OmitMatch<ActionReturn<unknown>>;
+      data: PatientFormData & ScheduleHistoryFormData;
       errors: undefined;
     },
     getRequestContext: () => Promise<CTWRequestContext>

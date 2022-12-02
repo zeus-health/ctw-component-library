@@ -99,9 +99,9 @@ export function useHandlePatientSave(patient: PatientModel) {
   const { getRequestContext } = useCTW();
   const { onPatientSave } = useContext(CTWPatientContext);
 
-  const handleSave = useCallback(
+  return useCallback(
     async (data) => {
-      if (typeof onPatientSave === "function") {
+      if (onPatientSave) {
         return onPatientSave(data);
       }
 
@@ -109,8 +109,6 @@ export function useHandlePatientSave(patient: PatientModel) {
     },
     [onPatientSave, patient, getRequestContext]
   );
-
-  return handleSave;
 }
 
 export function useQueryWithPatient<T, T2>(

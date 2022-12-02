@@ -7,7 +7,7 @@ import { PatientModel } from "@/fhir/models";
 import { QUERY_KEY_PATIENT } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 
-export type EditPatientFormData = {
+export type PatientFormData = {
   lastName: string;
   firstName: string;
   gender: fhir4.Patient["gender"];
@@ -20,14 +20,11 @@ export type EditPatientFormData = {
   zipCode: string;
 };
 
-type OmitMatch<T extends { data: unknown }> = Omit<T, "data"> &
-  EditPatientFormData;
-
 export const editPatient = async (
   patient: PatientModel,
   formResult: {
     success: boolean;
-    data: OmitMatch<ActionReturn<unknown>>;
+    data: PatientFormData;
     errors: undefined;
   },
   getRequestContext: () => Promise<CTWRequestContext>

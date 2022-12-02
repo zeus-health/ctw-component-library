@@ -49,13 +49,10 @@ export type CreateMedicationStatementFormData = {
   note?: string;
 };
 
-type OmitMatch<T extends { data: unknown }> = Omit<T, "data"> &
-  CreateMedicationStatementFormData;
-
 export const createMedicationStatement = async (
   formResult: {
     success: boolean;
-    data: OmitMatch<ActionReturn<unknown>>;
+    data: CreateMedicationStatementFormData;
     errors: undefined;
   },
   getRequestContext: () => Promise<CTWRequestContext>

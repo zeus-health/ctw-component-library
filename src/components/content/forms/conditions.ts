@@ -56,15 +56,12 @@ export type CreateOrEditConditionFormData = {
   note?: string;
 };
 
-type OmitMatch<T extends { data: unknown }> = Omit<T, "data"> &
-  CreateOrEditConditionFormData;
-
 export const createOrEditCondition = async (
   condition: ConditionModel | undefined,
   patientID: string,
   formResult: {
     success: boolean;
-    data: OmitMatch<ActionReturn<unknown>>;
+    data: CreateOrEditConditionFormData;
     errors: undefined;
   },
   getRequestContext: () => Promise<CTWRequestContext>
