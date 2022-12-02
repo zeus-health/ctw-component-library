@@ -51,7 +51,7 @@ The `PatientProvider` component provides patient details needed by other compone
 
 1. Add `<PatientProvider>` wrapper at a high level within your patient portal (or wherever you have selected down to a single patient).
 2. Pass in identifier information for this patient via `patientID` and `systemURL`.
-3. `<PatientProvider>` also has an onPatientSave prop which can be used to override the behavior when saving patient information. onPatientSave should be an async function.
+3. `<PatientProvider>` also has an `onPatientSave` prop which can be used to override the behavior when saving patient information. `onPatientSave` should be an async function.
 
 An example onPatientSave function could be as follows:
 
