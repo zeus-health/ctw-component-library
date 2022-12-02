@@ -75,8 +75,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const { getRequestContext } = useCTW();
   const [sort, setSort] = useState<TableSort>();
 
-  const [clinicalHistoryExists, setClinicalHistoryExists] =
-    useState<boolean>(false);
+  const [clinicalHistoryExists, setClinicalHistoryExists] = useState(false);
 
   const patientRecordsMessage = patientRecordsResponse.isError
     ? ERROR_MSG
