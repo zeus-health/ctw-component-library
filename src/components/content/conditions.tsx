@@ -200,6 +200,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     patientResponse.data,
     patientRecordsResponse.data,
     otherProviderRecordsResponse.data,
+    clinicalHistoryExists,
     patientRecordsResponse.error,
   ]);
 
