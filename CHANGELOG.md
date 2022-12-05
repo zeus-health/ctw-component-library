@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.29.2
+
+### Patch Changes
+
+- 263a97d: Change logic around showing empty "request records" box in other providers to only show if `clinicalHistoryExists` OR patient has no other provider records.
+
 ## 0.29.1
 
 ### Patch Changes
