@@ -1,12 +1,14 @@
 import { get, iteratee, ListIteratee, Many, orderBy } from "lodash";
 import { ReactNode } from "react";
 import { SortDir } from "@/utils/sort";
+import { isEmptyValue } from "@/utils/types";
 
 export interface MinRecordItem {
   id: string | number;
 }
 
 export type TableSort = { columnTitle: string; dir: SortDir };
+export type IndexSort<T> = { index: keyof T; dir?: SortDir };
 
 type DataIndexSpecified<T> = { dataIndex: keyof T; render?: never };
 type RenderSpecified<T> = { dataIndex?: never; render: (row: T) => ReactNode };
@@ -18,7 +20,7 @@ export type TableColumn<T extends MinRecordItem> = {
   className?: string;
   widthPercent?: number;
   minWidth?: number;
-  sortIndices?: (keyof T)[];
+  sortIndices?: IndexSort<T>[];
 } & (DataIndexSpecified<T> | RenderSpecified<T>);
 
 export function sortRecords<T extends MinRecordItem>(
@@ -31,33 +33,23 @@ export function sortRecords<T extends MinRecordItem>(
   );
   // If there is a sort applied to a column, then sort the records.
   if (sort && sortColumn?.sortIndices) {
-    return sortByIndex(records, sortColumn.sortIndices, sort.dir);
+    // Unless the direction of the sort index is overriden, set it to the user's sort selection.
+    sortColumn.sortIndices = sortColumn.sortIndices.map((indexSort) =>
+      indexSort.dir ? indexSort : { index: indexSort.index, dir: sort.dir }
+    );
+    return sortByIndices(records, sortColumn.sortIndices);
   }
   return records;
 }
 
-// Sorts records based on 1 or more indices.
-export function sortByIndex<T>(
-  records: T[],
-  indices: (keyof T)[],
-  dir: SortDir
-) {
+export function sortByIndices<T>(records: T[], indexSorts: IndexSort<T>[]) {
   // Makes a list of iteratees, where each index iteratee is preceded by an iteratee that ensures blanks go last.
-  // First index is in the direction set by the user. Rest are ascending.
   let iteratees: ListIteratee<T>[] = [];
   let orders: SortDir[] = [];
-  indices.forEach((sortIndex, i) => {
-    if (i === 0) {
-      // Sort first index in user-chosen direction. Disable ESLint, index may not exist.
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      iteratees = [(o) => o[sortIndex] === undefined, sortIndex];
-      orders = orders.concat(["asc", dir]);
-    } else {
-      // Sort other indices ascending. Disable ESlint, index may not exist.
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      iteratees = [...iteratees, (o) => o[sortIndex] === undefined, sortIndex];
-      orders = orders.concat(["asc", "asc"]);
-    }
+  indexSorts.forEach((indexSort) => {
+    const { index, dir } = indexSort;
+    iteratees = iteratees.concat([(o) => isEmptyValue(o[index]), index]);
+    orders = orders.concat(["asc", dir || "asc"]);
   });
 
   return orderBy(records, iteratees, orders);

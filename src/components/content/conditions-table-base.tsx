@@ -26,14 +26,14 @@ export function ConditionsTableBase({
       dataIndex: "display",
       widthPercent: 40,
       minWidth: 320,
-      sortIndices: ["display", "ccsGrouping"],
+      sortIndices: [{ index: "display" }, { index: "recorded", dir: "desc" }],
     },
     {
       title: "Category",
       dataIndex: "ccsGrouping",
       widthPercent: 25,
       minWidth: 192,
-      sortIndices: ["ccsGrouping", "display"],
+      sortIndices: [{ index: "ccsGrouping" }, { index: "display", dir: "asc" }],
     },
     {
       title: "Status",
@@ -47,14 +47,14 @@ export function ConditionsTableBase({
       ),
       widthPercent: 17.5,
       minWidth: 128,
-      sortIndices: ["active", "recorded"],
+      sortIndices: [{ index: "active" }, { index: "recorded", dir: "asc" }],
     },
     {
       title: "Last Recorded",
       dataIndex: "recordedDate",
       widthPercent: 17.5,
       minWidth: 132,
-      sortIndices: ["recorded", "display"],
+      sortIndices: [{ index: "recorded" }, { index: "display", dir: "asc" }],
     },
   ];
 
