@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Checkbox } from "@/components/core/checkbox";
 import { FormEntry } from "@/components/core/form/drawer-form-with-fields";
 import { PatientModel } from "@/fhir/models";
 
@@ -108,6 +109,17 @@ export const getRequestData = (patient: PatientModel): FormEntry[] => [
     value: patient.email,
     readonly: false,
   },
+  {
+    label: "consent",
+    render: () => (
+      <Checkbox
+        name="consent"
+        text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam
+    ultrices, sem a cursus sodales, arcu nulla bibendum lorem, quis tempus
+    turpis magna nec felis."
+      />
+    ),
+  },
 ];
 
 export const requestHistorySchema = z.object({
@@ -144,4 +156,5 @@ export const requestHistorySchema = z.object({
   }),
   phone: z.string().optional(),
   email: z.string().optional(),
+  consent: z.string().optional(),
 });

@@ -29,6 +29,7 @@ export type ScheduleHistoryFormData = {
   npi: string;
   role: string;
   name: string;
+  consent: string;
 };
 
 export const PatientHistoryRequestDrawer = <T,>({
