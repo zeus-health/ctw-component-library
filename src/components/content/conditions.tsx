@@ -150,7 +150,10 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     </button>
   );
 
-  const handleClinicalHistory = async (patientID: string) => {
+  const shouldShowClinicalHistoryArea =
+    clinicalHistoryExists || otherProviderRecordsResponse.data?.length;
+
+  const checkClinicalHistory = async (patientID: string) => {
     const requestContext = await getRequestContext();
 
     const patientHistoryFetched = await hasFetchedPatientHistory(
@@ -191,7 +194,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     }
     void load();
     if (patientResponse.data?.id && clinicalHistoryExists === undefined) {
-      void handleClinicalHistory(patientResponse.data.id);
+      void checkClinicalHistory(patientResponse.data.id);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -200,6 +203,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     patientResponse.data,
     patientRecordsResponse.data,
     otherProviderRecordsResponse.data,
+    clinicalHistoryExists,
     patientRecordsResponse.error,
   ]);
 
@@ -279,7 +283,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         <div className="ctw-space-y-3">
           <div className="ctw-conditions-title-container">
             <div className="ctw-title">Other Provider Records</div>
-            {clinicalHistoryExists && (
+            {shouldShowClinicalHistoryArea && (
               <button
                 type="button"
                 className="ctw-btn-clear ctw-link"
@@ -289,7 +293,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               </button>
             )}
           </div>
-          {clinicalHistoryExists ? (
+          {shouldShowClinicalHistoryArea ? (
             <ConditionsTableBase
               className="ctw-conditions-not-reviewed"
               stacked={breakpoints.sm}
@@ -362,6 +366,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           patient={patientResponse.data}
           isOpen={requestRecordsDrawerIsOpen}
           onClose={() => setRequestDrawerIsOpen(false)}
+          setClinicalHistoryExists={setClinicalHistoryExists}
         />
       )}
 
