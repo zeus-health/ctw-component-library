@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.29.3
+
+### Patch Changes
+
+- 78526f1: Add consent to patient history schedule request.
+
 ## 0.29.2
 
 ### Patch Changes

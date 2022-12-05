@@ -3,7 +3,6 @@ import { DropdownMenu, MenuItems } from "../core/dropdown-menu";
 import { Table, TableBaseProps } from "../core/table/table";
 import { TableColumn } from "../core/table/table-helpers";
 import { ConditionModel } from "@/fhir/models/condition";
-import { alphaSortBlankLast } from "@/utils/sort";
 
 export type ConditionsTableBaseProps = {
   className?: string;
@@ -17,7 +16,7 @@ export function ConditionsTableBase({
   conditions,
   rowActions,
   hideMenu,
-  sort = { columnTitle: "Category", dir: "asc" },
+  sort = { columnTitle: "Last Recorded", dir: "desc" },
   onSort,
   ...tableProps
 }: ConditionsTableBaseProps) {
@@ -27,18 +26,14 @@ export function ConditionsTableBase({
       dataIndex: "display",
       widthPercent: 40,
       minWidth: 320,
-      sortIndex: "display",
+      sortIndices: [{ index: "display" }, { index: "recorded", dir: "desc" }],
     },
     {
       title: "Category",
       dataIndex: "ccsGrouping",
       widthPercent: 25,
       minWidth: 192,
-      sortFnOverride: (a, b, dir) =>
-        alphaSortBlankLast(a.ccsGrouping, b.ccsGrouping, dir) +
-        // The sort comparator returns a number value.
-        // The 0.1 multiplier lets us sort by display secondarily.
-        0.1 * alphaSortBlankLast(a.display, b.display, "asc"),
+      sortIndices: [{ index: "ccsGrouping" }, { index: "display", dir: "asc" }],
     },
     {
       title: "Status",
@@ -52,12 +47,14 @@ export function ConditionsTableBase({
       ),
       widthPercent: 17.5,
       minWidth: 128,
+      sortIndices: [{ index: "active" }, { index: "recorded", dir: "asc" }],
     },
     {
       title: "Last Recorded",
       dataIndex: "recordedDate",
       widthPercent: 17.5,
       minWidth: 132,
+      sortIndices: [{ index: "recorded" }, { index: "display", dir: "asc" }],
     },
   ];
 
