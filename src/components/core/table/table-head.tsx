@@ -13,12 +13,12 @@ const SortChevron = ({ sortOrder }: SortChevronProps) => {
 
   switch (sortOrder) {
     case "desc":
-      return <ChevronUpIcon className={activeClasses} />;
-    case "asc":
       return <ChevronDownIcon className={activeClasses} />;
+    case "asc":
+      return <ChevronUpIcon className={activeClasses} />;
     default:
       return (
-        <ChevronDownIcon
+        <ChevronUpIcon
           className={cx(
             sharedClasses,
             "ctw-opacity-0 group-hover:ctw-opacity-100"
@@ -45,19 +45,17 @@ export const TableHead = <T extends MinRecordItem>({
         <th
           className={cx(
             "ctw-group",
-            (column.sortFnOverride || column.sortIndex) && "ctw-cursor-pointer"
+            column.sortIndices && "ctw-cursor-pointer"
           )}
           key={column.title ?? index}
           scope="col"
           onClick={() =>
-            (column.sortFnOverride || column.sortIndex) &&
-            onSort &&
-            onSort(column.title || "")
+            column.sortIndices && onSort && onSort(column.title || "")
           }
         >
           <div className="ctw-flex ctw-items-center ctw-space-x-2">
             <div>{column.title}</div>
-            {(column.sortFnOverride || column.sortIndex) && (
+            {column.sortIndices && (
               <SortChevron
                 sortOrder={
                   sort?.columnTitle === column.title ? sort?.dir : undefined
