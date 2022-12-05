@@ -19,10 +19,10 @@ describe("Sort by Indices", () => {
   });
   test("Sort in descending order.", () => {
     expect(sortByIndex(tests, ["one", "two"], "desc")).toEqual([
-      noThree, // [A, B, _]
-      noTwo, // [A, _, C]
       sameOneDiffTwo1, // [same, A, _]
       sameOneDiffTwo2, // [same, B, _]
+      noThree, // [A, B, _]
+      noTwo, // [A, _, C]
       noOne, // [_, B, C]
     ]);
   });

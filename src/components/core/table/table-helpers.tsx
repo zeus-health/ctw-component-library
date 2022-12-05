@@ -42,28 +42,23 @@ export function sortByIndex<T>(
   indices: (keyof T)[],
   dir: SortDir
 ) {
-  // Generates a value that only looks at whether the value at a given index is blank or not.
-  // Keeps blanks last by making them true (higher value) when ascending, false (lower value) when descending.
-  const getIterateeBlanksLast = (o: T, index: keyof T, indexDir: SortDir) =>
-    // ESLint disabled as the index may not exist on this object.
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    (dir === "asc" && !o[index]) || (dir === "desc" && o[index]);
-
   // Makes a list of iteratees, where each index iteratee is preceded by an iteratee that ensures blanks go last.
+  // First index is in the direction set by the user. Rest are ascending.
   let iteratees: ListIteratee<T>[] = [];
+  let orders: SortDir[] = [];
   indices.forEach((sortIndex, i) => {
-    // Sorting for the first index is in the given direction.
     if (i === 0) {
-      iteratees = [(o) => getIterateeBlanksLast(o, sortIndex, dir), sortIndex];
+      // Sort first index in user-chosen direction. Disable ESLint, index may not exist.
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      iteratees = [(o) => o[sortIndex] === undefined, sortIndex];
+      orders = orders.concat(["asc", dir]);
     } else {
-      // Sorting for other indices is ascending.
-      iteratees = [
-        ...iteratees,
-        (o) => getIterateeBlanksLast(o, sortIndex, "asc"),
-        sortIndex,
-      ];
+      // Sort other indices ascending. Disable ESlint, index may not exist.
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      iteratees = [...iteratees, (o) => o[sortIndex] === undefined, sortIndex];
+      orders = orders.concat(["asc", "asc"]);
     }
   });
 
-  return orderBy(records, iteratees);
+  return orderBy(records, iteratees, orders);
 }
