@@ -91,6 +91,7 @@ export const TestEdit: StoryObj<Props> = {
   ...Basic,
   play: async ({ canvasElement }) => {
     const conditions = await conditionsObject(canvasElement);
+    await conditions.patientRecord.toHaveRowCount(2);
     await conditions.patientRecord.edit(0);
     const conditionForm = conditionFormDrawer(canvasElement);
     conditionForm.verificationStatus("Confirmed");
@@ -119,6 +120,7 @@ export const TestViewHistory: StoryObj<Props> = {
   ...Basic,
   play: async ({ canvasElement }) => {
     const conditions = await conditionsObject(canvasElement);
+    await conditions.patientRecord.toHaveRowCount(2);
     await conditions.patientRecord.viewHistory(0);
     const canvas = within(canvasElement);
     const drawer = within(canvas.getByRole("dialog"));
