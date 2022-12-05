@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { Dispatch, SetStateAction, useContext } from "react";
 import { CTWRequestContext } from "../core/ctw-context";
 import {
   DrawerFormWithFields,
@@ -20,7 +20,10 @@ import { getFormResponseErrors } from "@/utils/errors";
 type PatientHistoryRequestDrawer<T> = Pick<
   DrawerFormWithFieldsProps<T>,
   "isOpen" | "onClose" | "header"
-> & { patient: PatientModel };
+> & {
+  patient: PatientModel;
+  setClinicalHistoryExists: Dispatch<SetStateAction<boolean | undefined>>;
+};
 
 export type ScheduleHistoryFormData = {
   npi: string;
@@ -33,6 +36,7 @@ export const PatientHistoryRequestDrawer = <T,>({
   header,
   isOpen,
   onClose,
+  setClinicalHistoryExists,
 }: PatientHistoryRequestDrawer<T>) => {
   const onPatientSave = useHandlePatientSave(patient);
 
@@ -66,6 +70,9 @@ export const PatientHistoryRequestDrawer = <T,>({
       ];
       return new Error(requestErrors.join(","));
     }
+
+    // patientHistoryResponse has succeeded at this point and should remove empty request history state.
+    setClinicalHistoryExists(true);
 
     return patientHistoryResponse;
   };
