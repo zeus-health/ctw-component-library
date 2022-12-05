@@ -31,6 +31,7 @@ import {
   conditionEditSchema,
   getEditingPatientConditionData,
 } from "@/components/content/forms/condition-schema";
+import { recordProfileAction } from "@/fhir/basic";
 import {
   getNewCondition,
   useOtherProviderConditions,
@@ -40,6 +41,8 @@ import { ConditionModel } from "@/fhir/models/condition";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { hasFetchedPatientHistory } from "@/services/patient-history/patient-history";
 import { AnyZodSchema } from "@/utils/form-helper";
+import { QUERY_KEY_OTHER_PROVIDER_CONDITIONS } from "@/utils/query-keys";
+import { queryClient } from "@/utils/request";
 
 export type ConditionsProps = {
   className?: string;
@@ -113,6 +116,25 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     setSelectedCondition(condition);
   };
 
+  const handleToggleArchive = async (condition: ConditionModel) => {
+    const requestContext = await getRequestContext();
+    const existingBasic =
+      condition.getBasicResourceByAction("archive") ||
+      condition.getBasicResourceByAction("unarchive");
+    const profileAction = condition.isArchived ? "unarchive" : "archive";
+
+    await recordProfileAction(
+      existingBasic,
+      condition,
+      requestContext,
+      profileAction
+    );
+
+    // Refresh our data (this is really just needed to update
+    // otherProviderRecord state).
+    await queryClient.invalidateQueries([QUERY_KEY_OTHER_PROVIDER_CONDITIONS]);
+  };
+
   const handleAddOtherProviderCondition = (condition: ConditionModel) => {
     const newCondition = getAddConditionWithDefaults(condition.resource);
 
@@ -169,12 +191,8 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
 
   useEffect(() => {
     async function load() {
-      const patientConditions = patientRecordsResponse.data?.map(
-        (c) => new ConditionModel(c)
-      );
-      const otherConditions = otherProviderRecordsResponse.data?.map(
-        (c) => new ConditionModel(c)
-      );
+      const patientConditions = patientRecordsResponse.data;
+      const otherConditions = otherProviderRecordsResponse.data;
 
       if (patientConditions) {
         setPatientRecords(
@@ -183,7 +201,11 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
 
         if (otherConditions) {
           setOtherProviderRecords(
-            filterOtherConditions(otherConditions, patientConditions)
+            filterOtherConditions(
+              otherConditions,
+              patientConditions,
+              includeInactive
+            )
           );
         } else {
           setOtherProviderRecords([]);
@@ -260,13 +282,13 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
             rowActions={(condition) => [
               {
                 name: "Edit",
-                action: () => {
+                action: async () => {
                   handleEditCondition(condition);
                 },
               },
               {
                 name: "View History",
-                action: () => {
+                action: async () => {
                   setHistoryDrawerIsOpen(true);
                   setSelectedCondition(condition);
                 },
@@ -274,7 +296,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               {
                 name: "Delete",
                 className: "dangerous",
-                action: () => {
+                action: async () => {
                   handleConditionDelete(condition);
                 },
               },
@@ -308,22 +330,21 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               rowActions={(condition) => [
                 {
                   name: "Add",
-                  action: () => {
+                  action: async () => {
                     handleAddOtherProviderCondition(condition);
                   },
                 },
                 {
                   name: "View History",
-                  action: () => {
+                  action: async () => {
                     setHistoryDrawerIsOpen(true);
                     setSelectedCondition(condition);
                   },
                 },
                 {
-                  name: "Delete",
-                  className: "dangerous",
-                  action: () => {
-                    handleConditionDelete(condition);
+                  name: condition.isArchived ? "Un-Archive" : "Archive",
+                  action: async () => {
+                    await handleToggleArchive(condition);
                   },
                 },
               ]}

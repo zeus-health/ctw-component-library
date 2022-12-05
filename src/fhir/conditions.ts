@@ -1,5 +1,6 @@
 import { SearchParams } from "fhir-kit-client";
 import { orderBy } from "lodash";
+import { getIncludedBasics } from "./bundle";
 import { CodePreference } from "./codeable-concept";
 import {
   searchBuilderRecords,
@@ -49,14 +50,14 @@ export function usePatientConditions() {
     [],
     async (requestContext, patient) => {
       try {
-        const { resources: conditions } = await searchBuilderRecords(
+        const { bundle, resources: conditions } = await searchBuilderRecords(
           "Condition",
           requestContext,
           {
             patientUPID: patient.UPID as string,
           }
         );
-        return filterAndSort(conditions);
+        return filterAndSort(setupConditionModels(conditions, bundle));
       } catch (e) {
         throw new Error(
           `Failed fetching condition information for patient: ${e}`
@@ -72,14 +73,15 @@ export function useOtherProviderConditions() {
     [],
     async (requestContext, patient) => {
       try {
-        const { resources: conditions } = await searchSummaryRecords(
+        const { bundle, resources: conditions } = await searchSummaryRecords(
           "Condition",
           requestContext,
           {
+            _revinclude: "Basic:subject",
             patientUPID: patient.UPID as string,
           }
         );
-        return filterAndSort(conditions);
+        return filterAndSort(setupConditionModels(conditions, bundle));
       } catch (e) {
         throw new Error(
           `Failed fetching condition information for patient: ${e}`
@@ -134,12 +136,24 @@ export function useConditionHistory(condition?: ConditionModel) {
   );
 }
 
-function filterAndSort(conditions: fhir4.Condition[]) {
+function setupConditionModels(
+  conditionResources: fhir4.Condition[],
+  bundle: fhir4.Bundle
+): ConditionModel[] {
+  const basicsMap = getIncludedBasics(bundle);
+  return conditionResources.map(
+    (c) => new ConditionModel(c, undefined, basicsMap[c.id ?? ""])
+  );
+}
+
+function filterAndSort(conditions: ConditionModel[]): ConditionModel[] {
   return orderBy(
-    conditions.filter((condition) => condition.asserter?.type !== "Patient"),
+    conditions.filter(
+      (condition) => condition.resource.asserter?.type !== "Patient"
+    ),
     [
-      (condition) => new ConditionModel(condition).resource.recordedDate ?? "",
-      (condition) => new ConditionModel(condition).display,
+      (condition) => condition.resource.recordedDate ?? "",
+      (condition) => condition.display,
     ],
     ["desc"]
   );

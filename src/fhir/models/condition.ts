@@ -50,6 +50,10 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
       : false;
   }
 
+  get isArchived(): boolean {
+    return this.getBasicResourceByAction("archive") !== undefined;
+  }
+
   get asserter(): string | undefined {
     return this.resource.asserter?.display;
   }
