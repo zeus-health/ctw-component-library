@@ -1,5 +1,29 @@
 # ctw-component-library
 
+## 0.29.2
+
+### Patch Changes
+
+- 263a97d: Change logic around showing empty "request records" box in other providers to only show if `clinicalHistoryExists` OR patient has no other provider records.
+
+## 0.29.1
+
+### Patch Changes
+
+- 86bc233: Add onPatientSave to PatientProvider that allows users of the library to override default onPatientSave functionality.
+
+## 0.29.0
+
+### Minor Changes
+
+- e59c99f: Add ability to include multiple elements in one row in forms.
+
+## 0.28.5
+
+### Patch Changes
+
+- 209c427: Modified logic for displaying "Confirmed Medications" so that the display name for builder-owned resources is preferred over the display name of the corresponding lens resource and so that builder-owned medications are still displayed even if there is any lens latency.
+
 ## 0.28.4
 
 ### Patch Changes
