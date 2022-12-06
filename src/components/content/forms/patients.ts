@@ -31,7 +31,7 @@ export const editPatient = async (
     resourceType: "Patient",
     id: patient.id,
     active: patient.active,
-    name: [{ family: data.lastName, given: [data.firstName] }],
+    name: [{ use: "official", family: data.lastName, given: [data.firstName] }],
     gender: data.gender,
     birthDate: dateToISO(data.dateOfBirth),
     telecom: [
