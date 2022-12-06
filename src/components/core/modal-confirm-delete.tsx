@@ -2,6 +2,7 @@ import { Resource } from "fhir/r4";
 import { useState } from "react";
 import { ErrorAlert } from "./alert";
 import { Modal, ModalProps } from "./modal";
+import { Spinner } from "./spinner";
 
 export type ModalConfirmDeleteProps = {
   resource: Resource;
@@ -18,16 +19,21 @@ export const ModalConfirmDelete = ({
   ...modalProps
 }: ModalConfirmDeleteProps) => {
   const [alert, setAlert] = useState<string>();
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const onConfirm = async () => {
     try {
+      setIsDeleting(true);
       await onDelete();
+      setIsDeleting(false);
       onClose();
     } catch (err) {
+      setIsDeleting(false);
       setAlert(`Something went wrong. Please try again.`);
       throw err;
     }
   };
+
   return (
     <Modal onAfterClosed={() => setAlert(undefined)} {...modalProps}>
       {alert && <ErrorAlert header={alert} />}
@@ -51,10 +57,12 @@ export const ModalConfirmDelete = ({
         </button>
         <button
           type="button"
+          disabled={isDeleting}
           onClick={onConfirm}
-          className="ctw-btn-primary ctw-flex-1"
+          className="ctw-btn-primary ctw-save-button ctw-flex-1"
         >
-          Remove
+          {isDeleting ? "Removing..." : "Remove"}
+          {isDeleting && <Spinner className="ctw-ml-2 ctw-text-white" />}
         </button>
       </div>
     </Modal>

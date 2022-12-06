@@ -1,23 +1,32 @@
 import { Menu } from "@headlessui/react";
 import * as RadixDropdownMenu from "@radix-ui/react-dropdown-menu";
 import cx from "classnames";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { useCTW } from "./ctw-provider";
 import "./dropdown-menu.scss";
+import { Loading } from "./loading";
 
-export type MenuItems = {
+export type MenuItem = {
   name: string;
-  action: () => void;
+  action: () => Promise<void>;
   className?: string;
 };
 
 export type DropdownMenuProps = {
   children: ReactNode;
-  menuItems: MenuItems[];
+  menuItems: MenuItem[];
 };
 
 export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
   const { ctwProviderRef } = useCTW();
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Wrap our menuItem's action so that we set loading
+  async function handleClick(menuItem: MenuItem) {
+    setIsLoading(true);
+    await menuItem.action();
+    setIsLoading(false);
+  }
 
   return (
     <Menu>
@@ -26,7 +35,8 @@ export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
           className="ctw-btn-clear ctw-link"
           aria-label="dropdown"
         >
-          {children}
+          {isLoading && <Loading message="" />}
+          {!isLoading && children}
         </RadixDropdownMenu.Trigger>
 
         <RadixDropdownMenu.Portal container={ctwProviderRef.current}>
@@ -45,7 +55,7 @@ export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
 
             {menuItems.map((menuItem) => (
               <RadixDropdownMenu.Item
-                onClick={menuItem.action}
+                onClick={() => handleClick(menuItem)}
                 key={menuItem.name}
                 className={cx(menuItem.className, "ctw-dropdown-menu-item")}
               >

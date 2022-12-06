@@ -1,15 +1,11 @@
-import { Provenance, Reference, Resource } from "fhir/r4";
-import { getPractitioner } from "./practitioner";
+import { Provenance, Resource } from "fhir/r4";
+import { getUsersPractitionerReference } from "./practitioner";
 import {
   SYSTEM_PROVENANCE_ACTIVITY_TYPE,
   SYSTEM_PROVENANCE_AGENT_TYPE,
 } from "./system-urls";
 import { CTWRequestContext } from "@/components/core/ctw-context";
-import {
-  claimsAuthEmail,
-  claimsBuilderName,
-  claimsPractitionerId,
-} from "@/utils/auth";
+import { claimsBuilderName } from "@/utils/auth";
 
 const ASSEMBLER_CODING = {
   system: SYSTEM_PROVENANCE_AGENT_TYPE,
@@ -46,25 +42,11 @@ export const createProvenance = async (
   const builderName = claimsBuilderName(requestContext.authToken);
   const versionId = parseInt(resource.meta?.versionId || "0", 10);
 
-  const practitionerId = claimsPractitionerId(requestContext.authToken);
-  let practitionerReference: Reference = {};
-  if (practitionerId) {
-    const practitioner = await getPractitioner(practitionerId, requestContext);
-    practitionerReference = {
-      reference: `Practitioner/${practitionerId}`,
-      display: practitioner.fullName,
-    };
-  } else {
-    practitionerReference = {
-      display: claimsAuthEmail(requestContext.authToken),
-    };
-  }
-
   const provenance: Provenance = {
     resourceType: "Provenance",
     agent: [
       {
-        who: practitionerReference,
+        who: await getUsersPractitionerReference(requestContext),
         onBehalfOf: { display: builderName },
       },
       {

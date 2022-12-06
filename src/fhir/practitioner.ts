@@ -1,6 +1,8 @@
+import { Reference } from "fhir/r4";
 import { searchBuilderRecords } from "./search-helpers";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { PractitionerModel } from "@/fhir/models/practitioner";
+import { claimsAuthEmail, claimsPractitionerId } from "@/utils/auth";
 
 export const getPractitioner = async (
   practitionerId: string,
@@ -29,3 +31,25 @@ export const getPractitioner = async (
 
   return new PractitionerModel(practitioners[0]);
 };
+
+// Returns a reference for the user's practitioner by looking
+// up the practitioner from the user's claims data.
+// If the user does not have an associated practitioner, then we
+// use their email address as the display in the reference.
+export async function getUsersPractitionerReference(
+  requestContext: CTWRequestContext
+): Promise<Reference> {
+  const practitionerId = claimsPractitionerId(requestContext.authToken);
+  if (practitionerId) {
+    const practitioner = await getPractitioner(practitionerId, requestContext);
+    return {
+      reference: `Practitioner/${practitionerId}`,
+      type: "Practitioner",
+      display: practitioner.fullName,
+    };
+  }
+
+  return {
+    display: claimsAuthEmail(requestContext.authToken),
+  };
+}
