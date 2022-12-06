@@ -33,7 +33,14 @@ export async function recordProfileAction<T extends fhir4.Resource>(
     const tags = filter(existingBasic.meta?.tag, {
       system: SYSTEM_ZUS_PROFILE_ACTION,
     });
-    await deleteMetaTags(existingBasic, requestContext, tags);
+
+    try {
+      await deleteMetaTags(existingBasic, requestContext, tags);
+    } catch (e) {
+      throw new Error(
+        `There was an error setting ${profileAction} for a resource.`
+      );
+    }
   }
 
   const basic: fhir4.Basic = {
