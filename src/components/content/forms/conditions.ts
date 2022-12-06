@@ -1,16 +1,14 @@
-import { CodeSystem, Condition } from "fhir/r4";
+import { Condition } from "fhir/r4";
 import { cloneDeep } from "lodash";
-import { ActionReturn } from "./types";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
-import { setRecorderField } from "@/fhir/conditions";
 import { dateToISO } from "@/fhir/formatters";
 import { ConditionModel } from "@/fhir/models/condition";
+import { getUsersPractitionerReference } from "@/fhir/practitioner";
 import {
   SYSTEM_CONDITION_CLINICAL,
   SYSTEM_CONDITION_VERIFICATION_STATUS,
 } from "@/fhir/system-urls";
-import { claimsPractitionerId } from "@/utils/auth";
 import {
   QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
   QUERY_KEY_PATIENT_CONDITIONS,
@@ -63,16 +61,13 @@ export const createOrEditCondition = async (
   getRequestContext: () => Promise<CTWRequestContext>
 ): Promise<unknown> => {
   const requestContext = await getRequestContext();
-  const practitionerId = claimsPractitionerId(requestContext.authToken);
 
   // Defines the properties of the condition based on the form.
   // The autofill values that apply to both edits and creates are here; including Practitioner, Recorder, Patient, and Recorded date.
   const fhirCondition: fhir4.Condition = {
     resourceType: "Condition",
     id: data.id,
-    ...(practitionerId && {
-      recorder: await setRecorderField(practitionerId, requestContext),
-    }),
+    recorder: await getUsersPractitionerReference(requestContext),
     clinicalStatus: {
       coding: [
         {

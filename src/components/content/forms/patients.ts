@@ -1,12 +1,6 @@
 import { OpPatch } from "fhir-kit-client/types/externals";
-import { cloneDeep } from "lodash";
-import { d } from "msw/lib/SetupApi-75fbec12";
-import { ActionReturn } from "./types";
 import { CTWRequestContext } from "@/components/core/ctw-context";
-import {
-  createOrEditFhirResource,
-  patchFhirResource,
-} from "@/fhir/action-helper";
+import { patchFhirResource } from "@/fhir/action-helper";
 import { dateToISO } from "@/fhir/formatters";
 import { PatientModel } from "@/fhir/models";
 import { QUERY_KEY_PATIENT } from "@/utils/query-keys";

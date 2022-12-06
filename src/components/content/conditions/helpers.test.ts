@@ -9,7 +9,7 @@ describe("Condition Helpers", () => {
   describe("filterOtherConditions", () => {
     it("should filter out when there's a match and other record has no date", () => {
       const { others, patients } = setupConditions();
-      const filtered = filterOtherConditions(others, patients);
+      const filtered = filterOtherConditions(others, patients, false);
       expect(filtered).toHaveLength(2);
       expect(filtered[0].id).toEqual("other2");
       expect(filtered[1].id).toEqual("other3");
@@ -17,7 +17,7 @@ describe("Condition Helpers", () => {
 
     it("should filter out when there's a match and patient record is newer", () => {
       const { others, patients } = setupConditions("2022-11-09", "2022-11-10");
-      const filtered = filterOtherConditions(others, patients);
+      const filtered = filterOtherConditions(others, patients, false);
       expect(filtered).toHaveLength(2);
       expect(filtered[0].id).toEqual("other2");
       expect(filtered[1].id).toEqual("other3");
@@ -25,7 +25,7 @@ describe("Condition Helpers", () => {
 
     it("should NOT filter out when there's a match and patient record is older", () => {
       const { others, patients } = setupConditions("2022-11-10", "2022-11-09");
-      const filtered = filterOtherConditions(others, patients);
+      const filtered = filterOtherConditions(others, patients, false);
       expect(filtered).toHaveLength(3);
     });
 
@@ -36,7 +36,7 @@ describe("Condition Helpers", () => {
         "active",
         "active"
       );
-      const filtered = filterOtherConditions(others, patients);
+      const filtered = filterOtherConditions(others, patients, false);
       expect(filtered).toHaveLength(2);
     });
 
@@ -48,7 +48,7 @@ describe("Condition Helpers", () => {
         "active",
         "entered-in-error"
       );
-      const filtered = filterOtherConditions(others, patients);
+      const filtered = filterOtherConditions(others, patients, false);
       expect(filtered).toHaveLength(3);
     });
 

@@ -1,5 +1,23 @@
 # ctw-component-library
 
+## 0.29.6
+
+### Patch Changes
+
+- 3c30570: Add ability to archive other provider records.
+
+## 0.29.5
+
+### Patch Changes
+
+- 54347e8: Add use official when updating a patient.
+
+## 0.29.4
+
+### Patch Changes
+
+- 8e49707: Condition sorting now allows all columns to be sortable. Sort primarily defaults to be by last recorded date and condition name.
+
 ## 0.29.3
 
 ### Patch Changes

@@ -51,7 +51,7 @@
   }
 
   .ctw-save-button:disabled {
-    @apply ctw-cursor-not-allowed ctw-opacity-70;
+    @apply ctw-pointer-events-none ctw-flex ctw-items-center ctw-justify-center ctw-opacity-70;
   }
 
   div.error .ctw-listbox-button {

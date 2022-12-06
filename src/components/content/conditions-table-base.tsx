@@ -1,5 +1,5 @@
 import { DotsHorizontalIcon } from "@heroicons/react/outline";
-import { DropdownMenu, MenuItems } from "../core/dropdown-menu";
+import { DropdownMenu, MenuItem } from "../core/dropdown-menu";
 import { Table, TableBaseProps } from "../core/table/table";
 import { TableColumn } from "../core/table/table-helpers";
 import { ConditionModel } from "@/fhir/models/condition";
@@ -7,7 +7,7 @@ import { ConditionModel } from "@/fhir/models/condition";
 export type ConditionsTableBaseProps = {
   className?: string;
   conditions: ConditionModel[];
-  rowActions: (condition: ConditionModel) => MenuItems[];
+  rowActions: (condition: ConditionModel) => MenuItem[];
   hideMenu: boolean;
 } & TableBaseProps<ConditionModel>;
 
@@ -42,7 +42,9 @@ export function ConditionsTableBase({
           <div className="ctw-text-content-black">
             {condition.clinicalStatus}
           </div>
-          <div>{condition.verificationStatus}</div>
+          <div>
+            {condition.isArchived ? "Archived" : condition.verificationStatus}
+          </div>
         </div>
       ),
       widthPercent: 17.5,

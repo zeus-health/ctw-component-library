@@ -52,7 +52,7 @@ export function OtherProviderMedsTable({
         rowActions={(medication) => [
           {
             name: "View History",
-            action: () => {
+            action: async () => {
               openMedicationDrawer(medication);
             },
           },

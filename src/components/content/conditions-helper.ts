@@ -10,7 +10,6 @@ export const onConditionDelete = async (
   resource: fhir4.Condition,
   requestContext: CTWRequestContext
 ) => {
-  const client = requestContext.fhirClient;
   if (!resource.id) {
     throw new Error("Tried to edit a resource that hasn't been created yet.");
   }
