@@ -11,13 +11,11 @@ export type PatientHistoryResponseError = {
 export const schedulePatientHistory = async (
   requestContext: CTWRequestContext,
   patientID: string,
-  resultData: { npi: string; role: string; name: string; consent: string }
+  resultData: { npi: string; role: string; name: string }
 ) => {
-  const consent = +(resultData.consent === "true");
-
   const endpointUrl = `${getZusApiBaseUrl(
     requestContext.env
-  )}/patient-history/patient/${patientID}/refresh?consent=${consent}&refresh=1`;
+  )}/patient-history/patient/${patientID}/refresh?consent=1&refresh=1`;
 
   try {
     const response = await fetch(endpointUrl, {
