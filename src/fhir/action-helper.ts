@@ -3,7 +3,7 @@ import { Resource } from "fhir/r4";
 import { omitEmptyArrays } from "./client";
 import { isFhirError } from "./errors";
 import { createProvenance } from "./provenance";
-import { ResourceType, ResourceTypeString } from "./types";
+import { ResourceTypeString } from "./types";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 
 export async function createOrEditFhirResource(
