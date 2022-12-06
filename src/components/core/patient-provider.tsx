@@ -1,5 +1,12 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { createContext, ReactNode, useContext, useMemo } from "react";
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useMemo,
+} from "react";
+import { editPatient, PatientFormData } from "../content/forms/patients";
 import { CTWRequestContext } from "./ctw-context";
 import { useCTW } from "./ctw-provider";
 import { PatientModel } from "@/fhir/models/patient";
@@ -27,11 +34,13 @@ type ProviderState = {
   patientID: string;
   systemURL: string;
   tags?: Tag[];
+  onPatientSave?: (data: PatientFormData) => Promise<void>;
 };
 
 type PatientProviderProps = {
   children: ReactNode;
   tags?: Tag[];
+  onPatientSave?: (data: PatientFormData) => Promise<void>;
 } & (ThirdPartyID | PatientUPIDSpecified);
 
 export const CTWPatientContext = createContext<ProviderState>({
@@ -45,14 +54,16 @@ export function PatientProvider({
   patientID,
   systemURL,
   tags,
+  onPatientSave,
 }: PatientProviderProps) {
   const providerState = useMemo(
     () => ({
       patientID: patientUPID || patientID,
       systemURL: patientUPID ? SYSTEM_ZUS_UNIVERSAL_ID : systemURL,
       tags,
+      onPatientSave,
     }),
-    [patientID, patientUPID, systemURL, tags]
+    [patientID, patientUPID, systemURL, tags, onPatientSave]
   );
 
   return (
@@ -75,6 +86,22 @@ export function usePatient(): UseQueryResult<PatientModel, unknown> {
       });
     },
     { staleTime: PATIENT_STALE_TIME }
+  );
+}
+
+export function useHandlePatientSave(patient: PatientModel) {
+  const { getRequestContext } = useCTW();
+  const { onPatientSave } = useContext(CTWPatientContext);
+
+  return useCallback(
+    async (data) => {
+      if (onPatientSave) {
+        return onPatientSave(data);
+      }
+
+      return editPatient(patient, data, getRequestContext);
+    },
+    [onPatientSave, patient, getRequestContext]
   );
 }
 

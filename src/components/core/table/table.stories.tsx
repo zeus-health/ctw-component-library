@@ -41,7 +41,7 @@ const columns: TableColumn<Record>[] = [
     title: "Name",
     dataIndex: "name",
     className: "ctw-w-[20%]",
-    sortIndex: "name",
+    sortIndices: [{ index: "name" }],
   },
   {
     title: "With Render",

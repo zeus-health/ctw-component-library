@@ -1,15 +1,12 @@
 import type { FormEntry } from "../../core/form/drawer-form-with-fields";
+import { cloneDeep } from "lodash";
 import { z } from "zod";
-import { ActionReturn, MedicationFormData } from "./types";
+import { ActionReturn } from "./types";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
-import { isFhirError } from "@/fhir/errors";
 import { dateToISO } from "@/fhir/formatters";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
-import { OperationOutcomeModel } from "@/fhir/models/operation-outcome";
-import { isOperationOutcome } from "@/fhir/operation-outcome";
 import { SYSTEM_RXNORM } from "@/fhir/system-urls";
-import { getFormData } from "@/utils/form-helper";
 import {
   QUERY_KEY_PATIENT,
   QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
@@ -42,43 +39,43 @@ const QUERY_KEYS = [
   QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
 ];
 
+export type CreateMedicationStatementFormData = {
+  status: fhir4.MedicationStatement["status"];
+  dateAsserted: Date;
+  subjectID: string;
+  display: string;
+  rxNormCode: string;
+  dosage: string;
+  note?: string;
+};
+
 export const createMedicationStatement = async (
-  data: FormData,
+  data: CreateMedicationStatementFormData,
   getRequestContext: () => Promise<CTWRequestContext>
-): Promise<{
-  formResult: ActionReturn<MedicationFormData>;
-  requestErrors: string[] | undefined;
-}> => {
-  const result = await getFormData(data, medicationStatementSchema);
-  let requestErrors: string[] = [];
-
-  if (!result.success) {
-    return { formResult: result, requestErrors: undefined };
-  }
-
+): Promise<unknown> => {
   const { fhirClient } = await getRequestContext();
 
   // Some fields will need to be set as they are required.
   const fhirMedicationStatement: fhir4.MedicationStatement = {
     resourceType: "MedicationStatement",
-    status: result.data.status,
-    dateAsserted: dateToISO(result.data.dateAsserted),
-    subject: { type: "Patient", reference: `Patient/${result.data.subjectID}` },
+    status: data.status,
+    dateAsserted: dateToISO(data.dateAsserted),
+    subject: { type: "Patient", reference: `Patient/${data.subjectID}` },
     medicationCodeableConcept: {
-      text: result.data.display,
+      text: data.display,
       coding: [
         {
           system: SYSTEM_RXNORM,
-          code: result.data.rxNormCode,
+          code: data.rxNormCode,
         },
       ],
     },
     dosage: [
       {
-        text: result.data.dosage,
+        text: data.dosage,
       },
     ],
-    note: result.data.note ? [{ text: result.data.note }] : undefined,
+    note: data.note ? [{ text: data.note }] : undefined,
   };
 
   const resourceModel = new MedicationStatementModel(fhirMedicationStatement);
@@ -88,23 +85,13 @@ export const createMedicationStatement = async (
     await getRequestContext()
   );
 
-  if (isFhirError(response) && isOperationOutcome(response.response.data)) {
-    requestErrors = new OperationOutcomeModel(response.response.data).issues
-      .filter((issue) => issue.severity !== "warning")
-      .map((issue) => issue.display);
-    result.success = false;
-  } else if (response instanceof Error) {
-    requestErrors = [response.message];
-    result.success = false;
-  }
-
   await Promise.all(
     QUERY_KEYS.map(async (queryKey) =>
       queryClient.invalidateQueries([queryKey])
     )
   );
 
-  return { formResult: result, requestErrors };
+  return response;
 };
 
 export const getMedicationFormData = (

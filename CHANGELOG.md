@@ -1,5 +1,29 @@
 # ctw-component-library
 
+## 0.29.4
+
+### Patch Changes
+
+- 8e49707: Condition sorting now allows all columns to be sortable. Sort primarily defaults to be by last recorded date and condition name.
+
+## 0.29.3
+
+### Patch Changes
+
+- 78526f1: Add consent to patient history schedule request.
+
+## 0.29.2
+
+### Patch Changes
+
+- 263a97d: Change logic around showing empty "request records" box in other providers to only show if `clinicalHistoryExists` OR patient has no other provider records.
+
+## 0.29.1
+
+### Patch Changes
+
+- 86bc233: Add onPatientSave to PatientProvider that allows users of the library to override default onPatientSave functionality.
+
 ## 0.29.0
 
 ### Minor Changes
