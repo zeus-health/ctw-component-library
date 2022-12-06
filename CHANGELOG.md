@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.29.6
+
+### Patch Changes
+
+- 3c30570: Add ability to archive other provider records.
+
 ## 0.29.5
 
 ### Patch Changes
