@@ -149,7 +149,9 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   );
 
   const shouldShowClinicalHistoryArea =
-    clinicalHistoryExists || otherProviderRecordsResponse.data?.length;
+    clinicalHistoryExists ||
+    (otherProviderRecordsResponse.data &&
+      otherProviderRecordsResponse.data.length > 0);
 
   const checkClinicalHistory = async (patientID: string) => {
     const requestContext = await getRequestContext();
