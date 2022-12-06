@@ -19,16 +19,16 @@ export const ModalConfirmDelete = ({
   ...modalProps
 }: ModalConfirmDeleteProps) => {
   const [alert, setAlert] = useState<string>();
-  const [deleting, setDeleting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const onConfirm = async () => {
     try {
-      setDeleting(true);
+      setIsDeleting(true);
       await onDelete();
-      setDeleting(false);
+      setIsDeleting(false);
       onClose();
     } catch (err) {
-      setDeleting(false);
+      setIsDeleting(false);
       setAlert(`Something went wrong. Please try again.`);
       throw err;
     }
@@ -57,12 +57,12 @@ export const ModalConfirmDelete = ({
         </button>
         <button
           type="button"
-          disabled={deleting}
+          disabled={isDeleting}
           onClick={onConfirm}
           className="ctw-btn-primary ctw-save-button ctw-flex-1"
         >
-          {deleting ? "Removing..." : "Remove"}
-          {deleting && <Spinner className="ctw-ml-2 ctw-text-white" />}
+          {isDeleting ? "Removing..." : "Remove"}
+          {isDeleting && <Spinner className="ctw-ml-2 ctw-text-white" />}
         </button>
       </div>
     </Modal>
