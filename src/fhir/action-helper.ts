@@ -1,7 +1,9 @@
+import { OpPatch } from "fhir-kit-client/types/externals";
 import { Resource } from "fhir/r4";
 import { omitEmptyArrays } from "./client";
 import { isFhirError } from "./errors";
 import { createProvenance } from "./provenance";
+import { ResourceType, ResourceTypeString } from "./types";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 
 export async function createOrEditFhirResource(
@@ -29,6 +31,29 @@ export async function createOrEditFhirResource(
     });
     if (!isFhirError(response)) {
       resourceModified.id = response.id;
+    }
+    return response;
+  } catch (err) {
+    return err;
+  }
+}
+
+export async function patchFhirResource(
+  resourceType: ResourceTypeString,
+  id: string,
+  JSONPatch: OpPatch[],
+  requestContext: CTWRequestContext
+) {
+  const { fhirClient } = requestContext;
+
+  try {
+    const response = await fhirClient.patch({
+      resourceType,
+      id,
+      JSONPatch,
+    });
+    if (!isFhirError(response)) {
+      await createProvenance("UPDATE", response, requestContext);
     }
     return response;
   } catch (err) {

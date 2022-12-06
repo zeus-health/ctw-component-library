@@ -1,7 +1,12 @@
+import { OpPatch } from "fhir-kit-client/types/externals";
 import { cloneDeep } from "lodash";
+import { d } from "msw/lib/SetupApi-75fbec12";
 import { ActionReturn } from "./types";
 import { CTWRequestContext } from "@/components/core/ctw-context";
-import { createOrEditFhirResource } from "@/fhir/action-helper";
+import {
+  createOrEditFhirResource,
+  patchFhirResource,
+} from "@/fhir/action-helper";
 import { dateToISO } from "@/fhir/formatters";
 import { PatientModel } from "@/fhir/models";
 import { QUERY_KEY_PATIENT } from "@/utils/query-keys";
@@ -27,40 +32,97 @@ export const editPatient = async (
 ) => {
   const requestContext = await getRequestContext();
 
-  const fhirPatient: fhir4.Patient = {
-    resourceType: "Patient",
-    id: patient.id,
-    active: patient.active,
-    name: [{ use: "official", family: data.lastName, given: [data.firstName] }],
-    gender: data.gender,
-    birthDate: dateToISO(data.dateOfBirth),
-    telecom: [
-      {
-        system: "email",
-        value: data.email,
-      },
-      {
-        system: "phone",
-        value: data.phone,
-      },
-    ],
-    address: [
-      {
-        line: [data.address],
-        city: data.city,
-        state: data.state,
-        postalCode: data.zipCode,
-      },
-    ],
-    contact: patient.contact,
-    ...(patient.organization?.id && {
-      managingOrganization: {
-        reference: `Organization/${patient.organization.id}`,
-      },
-    }),
-  };
+  const fhirPatientReplace: OpPatch[] = [
+    {
+      op: "replace",
+      path: "/address/0/postalCode",
+      value: data.zipCode,
+    },
+    {
+      op: "replace",
+      path: "/address/0/state",
+      value: data.state,
+    },
+    {
+      op: "replace",
+      path: "/address/0/city",
+      value: data.city,
+    },
+    {
+      op: "replace",
+      path: "/address/0/line/0",
+      value: data.address,
+    },
+    {
+      op: "replace",
+      path: "/birthDate",
+      value: dateToISO(data.dateOfBirth),
+    },
+    {
+      op: "replace",
+      path: "/gender",
+      value: data.gender,
+    },
+    {
+      op: "replace",
+      path: "/telecom/1/value",
+      value: data.phone,
+    },
+    {
+      op: "replace",
+      path: "/telecom/0/value",
+      value: data.email,
+    },
+    {
+      op: "replace",
+      path: "/name/0/given/0",
+      value: data.firstName,
+    },
+    {
+      op: "replace",
+      path: "/name/0/family",
+      value: data.lastName,
+    },
+  ];
 
-  const response = await createOrEditFhirResource(fhirPatient, requestContext);
+  // const fhirPatient: fhir4.Patient = {
+  //   resourceType: "Patient",
+  //   id: patient.id,
+  //   name: [{ use: "official", family: data.lastName, given: [data.firstName] }],
+  //   gender: data.gender,
+  //   birthDate: dateToISO(data.dateOfBirth),
+  //   telecom: [
+  //     {
+  //       system: "email",
+  //       value: data.email,
+  //     },
+  //     {
+  //       system: "phone",
+  //       value: data.phone,
+  //     },
+  //   ],
+  //   address: [
+  //     {
+  //       line: [data.address],
+  //       city: data.city,
+  //       state: data.state,
+  //       postalCode: data.zipCode,
+  //     },
+  //   ],
+  //   contact: patient.contact,
+  //   ...(patient.organization?.id && {
+  //     managingOrganization: {
+  //       reference: `Organization/${patient.organization.id}`,
+  //     },
+  //   }),
+  // };
+
+  const response = await patchFhirResource(
+    "Patient",
+    patient.id,
+    fhirPatientReplace,
+    requestContext
+  );
 
   await queryClient.invalidateQueries([QUERY_KEY_PATIENT]);
 
