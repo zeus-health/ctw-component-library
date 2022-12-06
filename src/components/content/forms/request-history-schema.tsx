@@ -144,5 +144,4 @@ export const requestHistorySchema = z.object({
   }),
   phone: z.string().optional(),
   email: z.string().optional(),
-  consent: z.string().optional(),
 });
