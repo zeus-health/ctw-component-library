@@ -85,38 +85,6 @@ export const editPatient = async (
     },
   ];
 
-  // const fhirPatient: fhir4.Patient = {
-  //   resourceType: "Patient",
-  //   id: patient.id,
-  //   name: [{ use: "official", family: data.lastName, given: [data.firstName] }],
-  //   gender: data.gender,
-  //   birthDate: dateToISO(data.dateOfBirth),
-  //   telecom: [
-  //     {
-  //       system: "email",
-  //       value: data.email,
-  //     },
-  //     {
-  //       system: "phone",
-  //       value: data.phone,
-  //     },
-  //   ],
-  //   address: [
-  //     {
-  //       line: [data.address],
-  //       city: data.city,
-  //       state: data.state,
-  //       postalCode: data.zipCode,
-  //     },
-  //   ],
-  //   contact: patient.contact,
-  //   ...(patient.organization?.id && {
-  //     managingOrganization: {
-  //       reference: `Organization/${patient.organization.id}`,
-  //     },
-  //   }),
-  // };
-
   const response = await patchFhirResource(
     "Patient",
     patient.id,
