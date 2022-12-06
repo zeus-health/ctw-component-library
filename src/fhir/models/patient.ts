@@ -58,6 +58,10 @@ export class PatientModel extends FHIRModel<fhir4.Patient> {
     return undefined;
   }
 
+  get use(): fhir4.HumanName["use"] | undefined {
+    return this.bestName.use;
+  }
+
   get UPID(): string | undefined {
     return find(this.resource.identifier, { system: SYSTEM_ZUS_UNIVERSAL_ID })
       ?.value;
