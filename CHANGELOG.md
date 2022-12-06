@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.29.4
+
+### Patch Changes
+
+- 8e49707: Condition sorting now allows all columns to be sortable. Sort primarily defaults to be by last recorded date and condition name.
+
 ## 0.29.3
 
 ### Patch Changes
