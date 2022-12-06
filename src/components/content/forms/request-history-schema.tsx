@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Checkbox } from "@/components/core/checkbox";
+import { ConsentField } from "@/components/core/consent-field";
 import { FormEntry } from "@/components/core/form/drawer-form-with-fields";
 import { PatientModel } from "@/fhir/models";
 
@@ -112,7 +112,7 @@ export const getRequestData = (patient: PatientModel): FormEntry[] => [
   {
     label: "consent",
     render: () => (
-      <Checkbox
+      <ConsentField
         name="consent"
         text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam
     ultrices, sem a cursus sodales, arcu nulla bibendum lorem, quis tempus

@@ -69,7 +69,6 @@ const onPatientSave = async (data: PatientFormData) => {
     city: string;
     state: string;
     zipCode: string;
-    consent: string;
 };
 */
 

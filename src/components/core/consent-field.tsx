@@ -1,11 +1,11 @@
 import { useState } from "react";
 
-export type CheckboxProps = {
+export type ConsentFieldProps = {
   name: string;
   text: string;
 };
 
-export function Checkbox({ name, text }: CheckboxProps) {
+export function ConsentField({ name, text }: ConsentFieldProps) {
   const [enabled, setEnabled] = useState(true);
 
   return (
