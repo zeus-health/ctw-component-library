@@ -56,12 +56,12 @@ export const PatientHistoryRequestDrawer = <T,>({
       return new Error("Failed to save patient data.");
     }
 
-    // const requestContext = await getRequestContext();
-    // const patientHistoryResponse = await schedulePatientHistory(
-    //   requestContext,
-    //   patient.id,
-    //   data
-    // );
+    const requestContext = await getRequestContext();
+    const patientHistoryResponse = await schedulePatientHistory(
+      requestContext,
+      patient.id,
+      data
+    );
 
     if ("errors" in patientHistoryResponse) {
       const requestErrors = [
