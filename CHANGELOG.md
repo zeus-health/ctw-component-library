@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.29.5
+
+### Patch Changes
+
+- 54347e8: Add use official when updating a patient.
+
 ## 0.29.4
 
 ### Patch Changes
