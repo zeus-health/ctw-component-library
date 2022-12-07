@@ -57,7 +57,7 @@ export const TestAdd: StoryObj<Props> = {
   ...Basic,
   play: async ({ canvasElement }) => {
     const conditions = await conditionsObject(canvasElement);
-    await conditions.patientRecord.toHaveRowCount(1);
+    await conditions.patientRecord.toHaveRowCount(2);
     const newCondition = "Heart failure (disorder)";
     conditions.clickAddCondition();
     const conditionForm = conditionFormDrawer(canvasElement);
@@ -65,7 +65,7 @@ export const TestAdd: StoryObj<Props> = {
     await conditionForm.selectCondition(newCondition);
     conditionForm.onset("2020-02-14");
     await conditionForm.save();
-    await conditions.patientRecord.toHaveRowCount(2);
+    await conditions.patientRecord.toHaveRowCount(3);
     expect(
       await conditions.patientRecord.table.findByText(newCondition)
     ).toBeTruthy();
@@ -76,11 +76,11 @@ export const TestAddOther: StoryObj<Props> = {
   ...Basic,
   play: async ({ canvasElement }) => {
     const conditions = await conditionsObject(canvasElement);
-    await conditions.patientRecord.toHaveRowCount(1);
-    await conditions.otherProvider.add(2);
+    await conditions.patientRecord.toHaveRowCount(2);
+    await conditions.otherProvider.add(3);
     const conditionForm = conditionFormDrawer(canvasElement);
     await conditionForm.save();
-    await conditions.patientRecord.toHaveRowCount(2);
+    await conditions.patientRecord.toHaveRowCount(3);
     expect(
       await conditions.patientRecord.table.findByText(/oral contraception/i)
     ).toBeTruthy();
@@ -91,6 +91,7 @@ export const TestEdit: StoryObj<Props> = {
   ...Basic,
   play: async ({ canvasElement }) => {
     const conditions = await conditionsObject(canvasElement);
+    await conditions.patientRecord.toHaveRowCount(2);
     await conditions.patientRecord.edit(0);
     const conditionForm = conditionFormDrawer(canvasElement);
     conditionForm.verificationStatus("Confirmed");
@@ -104,14 +105,14 @@ export const TestDelete: StoryObj<Props> = {
   ...Basic,
   play: async ({ canvasElement }) => {
     const conditions = await conditionsObject(canvasElement);
-    await conditions.patientRecord.toHaveRowCount(1);
-    await conditions.patientRecord.delete(0);
-    await conditions.patientRecord.toHaveRowCount(0);
-    conditions.toggleInactive();
     await conditions.patientRecord.toHaveRowCount(2);
+    await conditions.patientRecord.delete(0);
+    await conditions.patientRecord.toHaveRowCount(1);
+    conditions.toggleInactive();
+    await conditions.patientRecord.toHaveRowCount(3);
     conditions.patientRecord.toHaveRowWithText(0, /entered-in-error/i);
     conditions.toggleInactive();
-    await conditions.patientRecord.toHaveRowCount(0);
+    await conditions.patientRecord.toHaveRowCount(1);
   },
 };
 
@@ -119,6 +120,7 @@ export const TestViewHistory: StoryObj<Props> = {
   ...Basic,
   play: async ({ canvasElement }) => {
     const conditions = await conditionsObject(canvasElement);
+    await conditions.patientRecord.toHaveRowCount(2);
     await conditions.patientRecord.viewHistory(0);
     const canvas = within(canvasElement);
     const drawer = within(canvas.getByRole("dialog"));

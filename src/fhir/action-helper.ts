@@ -35,3 +35,49 @@ export async function createOrEditFhirResource(
     return err;
   }
 }
+
+export async function deleteMetaTags(
+  resource: Resource,
+  requestContext: CTWRequestContext,
+  tag: fhir4.Coding[]
+) {
+  const post = {
+    resourceType: "Parameters",
+    parameter: [
+      {
+        name: "meta",
+        valueMeta: {
+          tag,
+        },
+      },
+    ],
+  };
+
+  const { fhirClient } = requestContext;
+  await fhirClient.request(
+    `${resource.resourceType}/${resource.id}/$meta-delete`,
+    {
+      method: "POST",
+      body: JSON.stringify(post),
+      options: { headers: { "content-type": "application/json" } },
+    }
+  );
+}
+
+export async function deleteFhirResource(
+  resource: Resource,
+  requestContext: CTWRequestContext
+) {
+  const { fhirClient } = requestContext;
+
+  if (!resource.id) {
+    throw new Error(`Tried to delete a resource that hasn't been created yet.`);
+  }
+
+  await fhirClient.request(
+    `${resource.resourceType}/${resource.id}?_cascade=delete`,
+    {
+      method: "DELETE",
+    }
+  );
+}

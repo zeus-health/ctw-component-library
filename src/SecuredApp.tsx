@@ -9,6 +9,7 @@ type SecuredAppProps = {
 const SecuredAppComponent = ({ AppComponent }: SecuredAppProps) => {
   const { getAccessTokenSilently, logout } = useAuth0();
   const [authToken, setAuthToken] = useState("");
+  const returnTo = new URL("login", window.location.origin).toString();
 
   useEffect(() => {
     const getToken = async () => {
@@ -21,7 +22,7 @@ const SecuredAppComponent = ({ AppComponent }: SecuredAppProps) => {
     <>
       <button
         type="button"
-        onClick={() => logout({ returnTo: window.location.origin })}
+        onClick={() => logout({ returnTo })}
         className="ctw-w-full ctw-cursor-pointer ctw-bg-transparent ctw-p-0 ctw-text-base ctw-outline-none"
       >
         Log Out

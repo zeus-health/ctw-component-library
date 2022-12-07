@@ -1,5 +1,60 @@
 # ctw-component-library
 
+## 0.29.6
+
+### Patch Changes
+
+- 3c30570: Add ability to archive other provider records.
+
+## 0.29.5
+
+### Patch Changes
+
+- 54347e8: Add use official when updating a patient.
+
+## 0.29.4
+
+### Patch Changes
+
+- 8e49707: Condition sorting now allows all columns to be sortable. Sort primarily defaults to be by last recorded date and condition name.
+
+## 0.29.3
+
+### Patch Changes
+
+- 78526f1: Add consent to patient history schedule request.
+
+## 0.29.2
+
+### Patch Changes
+
+- 263a97d: Change logic around showing empty "request records" box in other providers to only show if `clinicalHistoryExists` OR patient has no other provider records.
+
+## 0.29.1
+
+### Patch Changes
+
+- 86bc233: Add onPatientSave to PatientProvider that allows users of the library to override default onPatientSave functionality.
+
+## 0.29.0
+
+### Minor Changes
+
+- e59c99f: Add ability to include multiple elements in one row in forms.
+
+## 0.28.5
+
+### Patch Changes
+
+- 209c427: Modified logic for displaying "Confirmed Medications" so that the display name for builder-owned resources is preferred over the display name of the corresponding lens resource and so that builder-owned medications are still displayed even if there is any lens latency.
+
+## 0.28.4
+
+### Patch Changes
+
+- fd4bdb6: Fix bug where capital "Active" conditions were not showing up in the active conditions view. We now correctly filter based on the "code" and proper "system" of the clinicalStatus codings.
+- 6e8e663: Show other provider records if patient history messages exists, otherwise show empty state with request records button.
+
 ## 0.28.3
 
 ### Patch Changes

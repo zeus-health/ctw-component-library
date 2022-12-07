@@ -34,10 +34,12 @@
     border-style: solid;
     background-color: initial;
     resize: none;
+    height: 2.25rem;
   }
 
   .ctw-listbox-textarea {
     resize: vertical;
+    height: unset;
   }
 
   .ctw-listbox-button:disabled,
@@ -49,7 +51,7 @@
   }
 
   .ctw-save-button:disabled {
-    @apply ctw-cursor-not-allowed ctw-opacity-70;
+    @apply ctw-pointer-events-none ctw-flex ctw-items-center ctw-justify-center ctw-opacity-70;
   }
 
   div.error .ctw-listbox-button {

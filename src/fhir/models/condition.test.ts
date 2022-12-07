@@ -1,4 +1,5 @@
 import { clone } from "lodash";
+import { SYSTEM_CONDITION_CLINICAL } from "../system-urls";
 import { ConditionModel } from "./condition";
 
 describe("FHIR Model: Condition", () => {
@@ -7,12 +8,31 @@ describe("FHIR Model: Condition", () => {
       const condition = getCondition();
 
       ["active", "recurrence", "relapse"].forEach((status) => {
-        condition.resource.clinicalStatus = { coding: [{ code: status }] };
+        condition.resource.clinicalStatus = {
+          coding: [{ code: status, system: SYSTEM_CONDITION_CLINICAL }],
+        };
         expect(condition.active).toBeTruthy();
       });
 
+      // Should find the right condition by system
+      condition.resource.clinicalStatus = {
+        text: "Active",
+        coding: [
+          { code: "foobar" },
+          {
+            code: "active",
+            display: "Active",
+            system: SYSTEM_CONDITION_CLINICAL,
+          },
+          { code: "inactive" },
+        ],
+      };
+      expect(condition.active).toBeTruthy();
+
       ["inactive", "remission", "resolved"].forEach((status) => {
-        condition.resource.clinicalStatus = { coding: [{ code: status }] };
+        condition.resource.clinicalStatus = {
+          coding: [{ code: status, system: SYSTEM_CONDITION_CLINICAL }],
+        };
         expect(condition.active).toBeFalsy();
       });
     });

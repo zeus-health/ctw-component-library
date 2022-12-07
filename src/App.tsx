@@ -46,18 +46,6 @@ const DemoApp = ({ accessToken = "" }) => (
             <PatientMedications />
           </ErrorBoundary>
         </div>
-
-        <div className="ctw-space-y-5">
-          <h3>
-            Patient Meds <small>(no add button or confirmed meds)</small>
-          </h3>
-          <ErrorBoundary>
-            <PatientMedications
-              showConfirmedMedsTable={false}
-              readOnly={false}
-            />
-          </ErrorBoundary>
-        </div>
       </div>
     </PatientProvider>
   </CTWProvider>

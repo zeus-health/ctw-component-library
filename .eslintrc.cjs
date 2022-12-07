@@ -7,6 +7,7 @@ module.exports = {
     "prettier",
     "plugin:storybook/recommended",
   ],
+  plugins: ["unused-imports"],
   // Ignore js files as we now have typescript parsing rules.
   // See https://stackoverflow.com/a/65063702 for more.
   ignorePatterns: [
@@ -31,6 +32,7 @@ module.exports = {
     "no-void": ["error", { allowAsStatement: true }],
     curly: "error",
     "import/extensions": "off",
+    "unused-imports/no-unused-imports": "error",
     "import/order": [
       "error",
       {

@@ -1,14 +1,3 @@
-import {
-  conditionAddSchema,
-  conditionEditSchema,
-  getEditingPatientConditionData,
-} from "@/components/content/forms/condition-schema";
-import {
-  getNewCondition,
-  useOtherProviderConditions,
-  usePatientConditions,
-} from "@/fhir/conditions";
-import { ConditionModel } from "@/fhir/models/condition";
 import cx from "classnames";
 import { curry } from "lodash";
 import { useEffect, useRef, useState } from "react";
@@ -34,12 +23,25 @@ import {
   createOrEditCondition,
   getAddConditionWithDefaults,
 } from "./forms/conditions";
-import { editPatientAndScheduleHistory } from "./forms/patients";
 import { PatientHistoryRequestDrawer } from "./patient-history-request-drawer";
 import { PatientHistoryMessage } from "./patient-history/patient-history-message";
+import {
+  conditionAddSchema,
+  conditionEditSchema,
+  getEditingPatientConditionData,
+} from "@/components/content/forms/condition-schema";
+import { recordProfileAction } from "@/fhir/basic";
+import {
+  getNewCondition,
+  useOtherProviderConditions,
+  usePatientConditions,
+} from "@/fhir/conditions";
+import { ConditionModel } from "@/fhir/models/condition";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { hasFetchedPatientHistory } from "@/services/patient-history/patient-history";
 import { AnyZodSchema } from "@/utils/form-helper";
+import { QUERY_KEY_OTHER_PROVIDER_CONDITIONS } from "@/utils/query-keys";
+import { queryClient } from "@/utils/request";
 
 export type ConditionsProps = {
   className?: string;
@@ -76,7 +78,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const { getRequestContext } = useCTW();
   const [sort, setSort] = useState<TableSort>();
 
-  const [clinicalHistoryExists, setClinicalHistoryExists] = useState(false);
+  const [clinicalHistoryExists, setClinicalHistoryExists] = useState<boolean>();
 
   const patientRecordsMessage = patientRecordsResponse.isError
     ? ERROR_MSG
@@ -96,8 +98,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     return undefined;
   };
 
-  const handleToggleChange = () => setIncludeInactive(!includeInactive);
-
   const handleEditCondition = (condition: ConditionModel) => {
     if (patientResponse.data) {
       setDrawerIsOpen(true);
@@ -111,6 +111,25 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const handleConditionDelete = (condition: ConditionModel) => {
     setShowConfirmDelete(true);
     setSelectedCondition(condition);
+  };
+
+  const handleToggleArchive = async (condition: ConditionModel) => {
+    const requestContext = await getRequestContext();
+    const existingBasic =
+      condition.getBasicResourceByAction("archive") ||
+      condition.getBasicResourceByAction("unarchive");
+    const profileAction = condition.isArchived ? "unarchive" : "archive";
+
+    await recordProfileAction(
+      existingBasic,
+      condition,
+      requestContext,
+      profileAction
+    );
+
+    // Refresh our data (this is really just needed to update
+    // otherProviderRecord state).
+    await queryClient.invalidateQueries([QUERY_KEY_OTHER_PROVIDER_CONDITIONS]);
   };
 
   const handleAddOtherProviderCondition = (condition: ConditionModel) => {
@@ -151,7 +170,12 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
     </button>
   );
 
-  const handleClinicalHistory = async (patientID: string) => {
+  const shouldShowClinicalHistoryArea =
+    clinicalHistoryExists ||
+    (otherProviderRecordsResponse.data &&
+      otherProviderRecordsResponse.data.length > 0);
+
+  const checkClinicalHistory = async (patientID: string) => {
     const requestContext = await getRequestContext();
 
     const patientHistoryFetched = await hasFetchedPatientHistory(
@@ -159,22 +183,13 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       patientID
     );
 
-    if (patientHistoryFetched) {
-      setClinicalHistoryExists(true);
-      setRequestDrawerIsOpen(false);
-    } else {
-      setClinicalHistoryExists(false);
-    }
+    setClinicalHistoryExists(patientHistoryFetched);
   };
 
   useEffect(() => {
     async function load() {
-      const patientConditions = patientRecordsResponse.data?.map(
-        (c) => new ConditionModel(c)
-      );
-      const otherConditions = otherProviderRecordsResponse.data?.map(
-        (c) => new ConditionModel(c)
-      );
+      const patientConditions = patientRecordsResponse.data;
+      const otherConditions = otherProviderRecordsResponse.data;
 
       if (patientConditions) {
         setPatientRecords(
@@ -183,7 +198,11 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
 
         if (otherConditions) {
           setOtherProviderRecords(
-            filterOtherConditions(otherConditions, patientConditions)
+            filterOtherConditions(
+              otherConditions,
+              patientConditions,
+              includeInactive
+            )
           );
         } else {
           setOtherProviderRecords([]);
@@ -196,15 +215,17 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       }
     }
     void load();
-    if (patientResponse.data?.id) {
-      void handleClinicalHistory(patientResponse.data.id);
+    if (patientResponse.data?.id && clinicalHistoryExists === undefined) {
+      void checkClinicalHistory(patientResponse.data.id);
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     includeInactive,
     patientResponse.data,
     patientRecordsResponse.data,
     otherProviderRecordsResponse.data,
+    clinicalHistoryExists,
     patientRecordsResponse.error,
   ]);
 
@@ -237,7 +258,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           <div className="ctw-conditions-title-container">
             <div className="ctw-title">Patient Record</div>
             <ToggleControl
-              onFormChange={handleToggleChange}
+              onFormChange={() => setIncludeInactive(!includeInactive)}
               toggleProps={{ name: "conditions", text: "Include Inactive" }}
             />
           </div>
@@ -260,13 +281,13 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
             rowActions={(condition) => [
               {
                 name: "Edit",
-                action: () => {
+                action: async () => {
                   handleEditCondition(condition);
                 },
               },
               {
                 name: "View History",
-                action: () => {
+                action: async () => {
                   setHistoryDrawerIsOpen(true);
                   setSelectedCondition(condition);
                 },
@@ -274,7 +295,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               {
                 name: "Delete",
                 className: "dangerous",
-                action: () => {
+                action: async () => {
                   handleConditionDelete(condition);
                 },
               },
@@ -284,7 +305,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         <div className="ctw-space-y-3">
           <div className="ctw-conditions-title-container">
             <div className="ctw-title">Other Provider Records</div>
-            {clinicalHistoryExists && (
+            {shouldShowClinicalHistoryArea && (
               <button
                 type="button"
                 className="ctw-btn-clear ctw-link"
@@ -294,7 +315,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               </button>
             )}
           </div>
-          {clinicalHistoryExists ? (
+          {shouldShowClinicalHistoryArea ? (
             <ConditionsTableBase
               className="ctw-conditions-not-reviewed"
               stacked={breakpoints.sm}
@@ -308,22 +329,21 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               rowActions={(condition) => [
                 {
                   name: "Add",
-                  action: () => {
+                  action: async () => {
                     handleAddOtherProviderCondition(condition);
                   },
                 },
                 {
                   name: "View History",
-                  action: () => {
+                  action: async () => {
                     setHistoryDrawerIsOpen(true);
                     setSelectedCondition(condition);
                   },
                 },
                 {
-                  name: "Delete",
-                  className: "dangerous",
-                  action: () => {
-                    handleConditionDelete(condition);
+                  name: condition.isArchived ? "Un-Archive" : "Archive",
+                  action: async () => {
+                    await handleToggleArchive(condition);
                   },
                 },
               ]}
@@ -367,7 +387,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           patient={patientResponse.data}
           isOpen={requestRecordsDrawerIsOpen}
           onClose={() => setRequestDrawerIsOpen(false)}
-          action={curry(editPatientAndScheduleHistory)(patientResponse.data)}
+          setClinicalHistoryExists={setClinicalHistoryExists}
         />
       )}
 

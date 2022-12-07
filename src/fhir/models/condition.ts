@@ -1,6 +1,11 @@
-import { compact, intersectionWith, uniqWith } from "lodash";
+import { compact, find, intersectionWith, uniqWith } from "lodash";
 import { formatDateISOToLocal, formatStringToDate } from "../formatters";
-import { SYSTEM_CCS, SYSTEM_ICD10, SYSTEM_SNOMED } from "../system-urls";
+import {
+  SYSTEM_CCS,
+  SYSTEM_CONDITION_CLINICAL,
+  SYSTEM_ICD10,
+  SYSTEM_SNOMED,
+} from "../system-urls";
 import { FHIRModel } from "./fhir-model";
 import { PatientModel } from "./patient";
 import {
@@ -36,7 +41,17 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
   }
 
   get active(): boolean {
-    return ["active", "recurrence", "relapse"].includes(this.clinicalStatus);
+    const coding = find(this.resource.clinicalStatus?.coding, {
+      system: SYSTEM_CONDITION_CLINICAL,
+    });
+
+    return coding?.code
+      ? ["active", "recurrence", "relapse"].includes(coding.code)
+      : false;
+  }
+
+  get isArchived(): boolean {
+    return this.getBasicResourceByAction("archive") !== undefined;
   }
 
   get asserter(): string | undefined {

@@ -1,11 +1,14 @@
+import { ListIteratee, orderBy } from "lodash";
 import { ReactNode } from "react";
-import { alphaSortBlankLast, SortDir } from "@/utils/sort";
+import { SortDir } from "@/utils/sort";
+import { isEmptyValue } from "@/utils/types";
 
 export interface MinRecordItem {
   id: string | number;
 }
 
 export type TableSort = { columnTitle: string; dir: SortDir };
+export type IndexSort<T> = { index: keyof T; dir?: SortDir };
 
 type DataIndexSpecified<T> = { dataIndex: keyof T; render?: never };
 type RenderSpecified<T> = { dataIndex?: never; render: (row: T) => ReactNode };
@@ -17,8 +20,7 @@ export type TableColumn<T extends MinRecordItem> = {
   className?: string;
   widthPercent?: number;
   minWidth?: number;
-  sortIndex?: keyof T;
-  sortFnOverride?: (a: T, b: T, dir: SortDir) => number;
+  sortIndices?: IndexSort<T>[];
 } & (DataIndexSpecified<T> | RenderSpecified<T>);
 
 export function sortRecords<T extends MinRecordItem>(
@@ -30,21 +32,25 @@ export function sortRecords<T extends MinRecordItem>(
     (column) => column.title === sort?.columnTitle
   );
   // If there is a sort applied to a column, then sort the records.
-  if (sort && sortColumn) {
-    // May be given a function, or just a property to be sorted by alphanumerically.
-    const sortFn =
-      sortColumn.sortFnOverride ||
-      (sortColumn.sortIndex &&
-        ((a, b, dir) =>
-          // Cast because sortIndex is a property of a and b.
-          alphaSortBlankLast(
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (a as any)[sortColumn.sortIndex],
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (b as any)[sortColumn.sortIndex],
-            dir
-          )));
-    if (sortFn) return records.sort((a, b) => sortFn(a, b, sort.dir));
+  if (sort && sortColumn?.sortIndices) {
+    // Unless the direction of the sort index is overriden, set it to the user's sort selection.
+    sortColumn.sortIndices = sortColumn.sortIndices.map((indexSort) =>
+      indexSort.dir ? indexSort : { index: indexSort.index, dir: sort.dir }
+    );
+    return sortByIndices(records, sortColumn.sortIndices);
   }
   return records;
+}
+
+export function sortByIndices<T>(records: T[], indexSorts: IndexSort<T>[]) {
+  // Makes a list of iteratees, where each index iteratee is preceded by an iteratee that ensures blanks go last.
+  let iteratees: ListIteratee<T>[] = [];
+  let orders: SortDir[] = [];
+  indexSorts.forEach((indexSort) => {
+    const { index, dir } = indexSort;
+    iteratees = iteratees.concat([(o) => isEmptyValue(o[index]), index]);
+    orders = orders.concat(["asc", dir || "asc"]);
+  });
+
+  return orderBy(records, iteratees, orders);
 }
