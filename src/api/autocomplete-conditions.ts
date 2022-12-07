@@ -1,6 +1,6 @@
-import { ctwFetch } from "@/utils/request";
 import { Env } from "..";
 import { getFormsConditionsUrl } from "./urls";
+import { ctwFetch } from "@/utils/request";
 
 export const getAutoCompleteConditions = async (
   authToken: string,
