@@ -1,10 +1,10 @@
+import { cloneDeep } from "lodash";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { dateToISO } from "@/fhir/formatters";
 import { PatientModel } from "@/fhir/models";
 import { QUERY_KEY_PATIENT } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
-import { cloneDeep } from "lodash";
 
 export type PatientFormData = {
   lastName: string;
@@ -25,7 +25,7 @@ export const editPatient = async (
   getRequestContext: () => Promise<CTWRequestContext>
 ) => {
   const requestContext = await getRequestContext();
-  let fhirPatient = cloneDeep(patient.resource);
+  const fhirPatient = cloneDeep(patient.resource);
 
   fhirPatient.gender = data.gender;
   fhirPatient.birthDate = dateToISO(data.dateOfBirth);
