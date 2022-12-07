@@ -23,6 +23,22 @@ import {
   QUERY_KEY_PATIENT_CONDITIONS,
 } from "@/utils/query-keys";
 
+export type VerificationStatus =
+  | "unconfirmed"
+  | "provisional"
+  | "differential"
+  | "confirmed"
+  | "refuted"
+  | "entered-in-error";
+
+export type ClinicalStatus =
+  | "active"
+  | "recurrence"
+  | "relapse"
+  | "inactive"
+  | "remission"
+  | "resolved";
+
 export const CONDITION_CODE_PREFERENCE_ORDER: CodePreference[] = [
   { system: SYSTEM_SNOMED, checkForEnrichment: true },
   { system: SYSTEM_ICD10, checkForEnrichment: true },

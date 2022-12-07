@@ -1,8 +1,10 @@
 import { compact, find, intersectionWith, uniqWith } from "lodash";
 import { formatDateISOToLocal, formatStringToDate } from "../formatters";
+import { CCSChapterName } from "../mappings/ccs-chapter-names";
 import {
   SYSTEM_CCS,
   SYSTEM_CONDITION_CLINICAL,
+  SYSTEM_CONDITION_VERIFICATION_STATUS,
   SYSTEM_ICD10,
   SYSTEM_SNOMED,
 } from "../system-urls";
@@ -14,7 +16,11 @@ import {
   findCodingByOrderOfPreference,
   findCodingWithEnrichment,
 } from "@/fhir/codeable-concept";
-import { CONDITION_CODE_PREFERENCE_ORDER } from "@/fhir/conditions";
+import {
+  ClinicalStatus,
+  CONDITION_CODE_PREFERENCE_ORDER,
+  VerificationStatus,
+} from "@/fhir/conditions";
 import { findReference } from "@/fhir/resource-helper";
 
 export class ConditionModel extends FHIRModel<fhir4.Condition> {
@@ -74,12 +80,28 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
     );
   }
 
+  get ccsChapter(): string | undefined {
+    const code = this.ccsChapterCode;
+    if (!code) return undefined;
+    return CCSChapterName[code]?.shortName;
+  }
+
+  get ccsChapterCode(): string | undefined {
+    return findCoding(SYSTEM_CCS, this.resource.code)?.code?.slice(0, 3);
+  }
+
   get ccsGrouping(): string | undefined {
-    return findCoding(SYSTEM_CCS, this.resource.code)?.display;
+    return findCoding(SYSTEM_CCS, this.resource.code)?.code;
   }
 
   get clinicalStatus(): string {
     return codeableConceptLabel(this.resource.clinicalStatus);
+  }
+
+  get clinicalStatusCode(): ClinicalStatus | undefined {
+    return find(this.resource.clinicalStatus?.coding, {
+      system: SYSTEM_CONDITION_CLINICAL,
+    })?.code as ClinicalStatus | undefined;
   }
 
   get codings(): fhir4.CodeableConcept | undefined {
@@ -239,6 +261,46 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
     );
   }
 
+  get status(): string {
+    function byClinicalStatus(code: ClinicalStatus | undefined) {
+      switch (code) {
+        case "active":
+        case "recurrence":
+        case "relapse":
+          return "Active";
+        case "inactive":
+        case "remission":
+        case "resolved":
+          return "Inactive";
+        default:
+          return "Unknown";
+      }
+    }
+
+    // What to show if lens or summary resource.
+    if (this.isSummaryResource) {
+      if (this.isArchived) {
+        return "Dismissed";
+      }
+
+      return byClinicalStatus(this.clinicalStatusCode);
+    }
+
+    // What to show if patient record resource.
+    switch (this.verificationStatusCode) {
+      case "confirmed":
+        return byClinicalStatus(this.clinicalStatusCode);
+      case "unconfirmed":
+        return "Pending";
+      case "refuted":
+        return "Refuted";
+      case "entered-in-error":
+        return "Entered in Error";
+      default:
+        return "Unknown";
+    }
+  }
+
   get subjectID(): string {
     const [, subjectID] = this.resource.subject.reference?.split("/") || [];
     return subjectID || "";
@@ -246,5 +308,11 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
 
   get verificationStatus(): string {
     return codeableConceptLabel(this.resource.verificationStatus);
+  }
+
+  get verificationStatusCode(): VerificationStatus | undefined {
+    return find(this.resource.verificationStatus?.coding, {
+      system: SYSTEM_CONDITION_VERIFICATION_STATUS,
+    })?.code as VerificationStatus | undefined;
   }
 }

@@ -1,10 +1,11 @@
 import { ConditionModel } from "@/fhir/models";
 
 // Filter out other conditions where:
-//  1. There is an existing patient condition with a matching known code.
-//  2. The other condition is older than the patient condition OR they
+//  1. Condition is archived and includeArchived is false.
+//  2. CCS Category code starts with FAC or XXX.
+//  3. There is an existing patient condition with a matching known code.
+//     AND The other condition is older than the patient condition OR they
 //     have the same status.
-//  3. Condition is archived and includeArchived is false.
 export const filterOtherConditions = (
   otherConditions: ConditionModel[],
   patientConditions: ConditionModel[],
@@ -12,6 +13,10 @@ export const filterOtherConditions = (
 ): ConditionModel[] =>
   otherConditions.filter((otherCondition) => {
     if (otherCondition.isArchived && !includeArchived) return false;
+
+    if (["FAC", "XXX"].includes(otherCondition.ccsChapterCode ?? "")) {
+      return false;
+    }
 
     return !patientConditions.some((patientCondition) => {
       const otherRecordedDate = otherCondition.resource.recordedDate;

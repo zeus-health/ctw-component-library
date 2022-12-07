@@ -556,7 +556,7 @@ export const otherConditions: fhir4.Bundle = {
             {
               system:
                 "http://terminology.hl7.org/CodeSystem/condition-clinical",
-              code: "active",
+              code: "inactive",
             },
           ],
         },
