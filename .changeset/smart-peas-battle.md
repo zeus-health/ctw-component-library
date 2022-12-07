@@ -2,4 +2,4 @@
 "@zus-health/ctw-component-library": patch
 ---
 
-Use PATCH instead of PUT for patient updates.
+Edit patient resource directly to avoid losing patient information.
