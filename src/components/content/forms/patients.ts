@@ -6,8 +6,6 @@ import { QUERY_KEY_PATIENT } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import { cloneDeep } from "lodash";
 
-import { ContactPoint } from "fhir/r4";
-
 export type PatientFormData = {
   lastName: string;
   firstName: string;
@@ -49,7 +47,7 @@ export const editPatient = async (
     },
   ];
 
-  const telecom: ContactPoint[] = [];
+  const telecom: fhir4.ContactPoint[] = [];
 
   if (data.phone) {
     telecom.push({ system: "phone", value: data.phone });
