@@ -14,10 +14,12 @@ import {
   SYSTEM_ICD9_CM,
   SYSTEM_SNOMED,
 } from "./system-urls";
+import { getZusApiBaseUrl } from "@/api/urls";
 import { getAddConditionWithDefaults } from "@/components/content/forms/conditions";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
 import { ConditionModel } from "@/fhir/models/condition";
+import { errorResponse } from "@/utils/errors";
 import {
   QUERY_KEY_CONDITION_HISTORY,
   QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
@@ -160,3 +162,36 @@ export const setRecorderField = async (
     display,
   };
 };
+
+export async function getDocument(
+  requestContext: CTWRequestContext,
+  patientID: string
+) {
+  // Call to Document Reference to see if Binary exists. If it exists, use it to obtain the binary document and return that.
+  const endpointDocumentRefUrl = `${getZusApiBaseUrl(
+    requestContext.env
+  )}/DocumentReference?patient.identifer=${patientID}`;
+
+  try {
+    const bundle = await fetch(endpointDocumentRefUrl, {
+      headers: {
+        Authorization: `Bearer ${requestContext.authToken}`,
+      },
+    });
+
+    const documents = await bundle.json();
+
+    // const binaryID = find();
+
+    // const endpointBinaryUrl = `${getZusApiBaseUrl(
+    //   requestContext.env
+    // )}/${binaryID}`;
+
+    // const bundleID = await fetch();
+
+    console.log(documents);
+    return documents;
+  } catch (err) {
+    throw errorResponse("Failed fetching binary document", err);
+  }
+}

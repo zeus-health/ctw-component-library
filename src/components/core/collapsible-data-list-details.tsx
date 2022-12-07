@@ -11,8 +11,14 @@ type DetailsProps = {
 export const Details = ({ data, hideEmpty = true, onEdit }: DetailsProps) => (
   <div className="ctw-rounded-lg ctw-bg-bg-lighter">
     <dl className="ctw-space-y-2 ctw-p-4">
-      <div className="ctw-flex ctw-justify-between ctw-text-sm ctw-uppercase ctw-text-content-light">
+      <div className="ctw-flex ctw-space-x-2 ctw-text-sm ctw-uppercase ctw-text-content-light">
         <div>Details</div>
+        <button
+          type="button"
+          className="ctw-btn-default ctw-flex ctw-align-middle"
+        >
+          Source Document
+        </button>
         {onEdit && (
           <button
             type="button"

@@ -7,11 +7,13 @@ import {
   CollapsibleDataListStack,
   CollapsibleDataListStackEntries,
 } from "../core/collapsible-data-list-stack";
+import { CTWRequestContext } from "../core/ctw-context";
+import { useCTW } from "../core/ctw-provider";
 import { NotesList } from "../core/notes-list";
 import { ConditionHeader } from "./condition-header";
 import { Loading } from "@/components/core/loading";
 import { getIncludedResources } from "@/fhir/bundle";
-import { useConditionHistory } from "@/fhir/conditions";
+import { getDocument, useConditionHistory } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models/condition";
 
 const CONDITION_HISTORY_LIMIT = 10;
@@ -97,10 +99,12 @@ export function ConditionHistory({
   condition,
   onClose,
   onEdit,
+  patientID,
 }: {
   condition: ConditionModel;
   onClose: () => void;
   onEdit?: () => void;
+  patientID: string;
 }) {
   const [conditionsWithDate, setConditionsWithDate] =
     useState<CollapsibleDataListStackEntries>([]);
@@ -110,6 +114,9 @@ export function ConditionHistory({
   const [conditionForSearch, setConditionForSearch] =
     useState<ConditionModel>();
   const historyResponse = useConditionHistory(conditionForSearch);
+  const { getRequestContext } = useCTW();
+
+  const [isBinaryDocument, setIsBinaryDocument] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -143,6 +150,17 @@ export function ConditionHistory({
         setLoading(false);
       }
     }
+    async function loadDocument() {
+      const requestContext = await getRequestContext();
+      const documents = await getDocument(requestContext, patientID);
+      console.log(documents);
+
+      if (documents.length > 0) {
+        setIsBinaryDocument(true);
+      }
+    }
+
+    void loadDocument();
 
     void load();
 

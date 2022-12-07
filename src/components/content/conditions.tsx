@@ -1,3 +1,14 @@
+import {
+  conditionAddSchema,
+  conditionEditSchema,
+  getEditingPatientConditionData,
+} from "@/components/content/forms/condition-schema";
+import {
+  getNewCondition,
+  useOtherProviderConditions,
+  usePatientConditions,
+} from "@/fhir/conditions";
+import { ConditionModel } from "@/fhir/models/condition";
 import cx from "classnames";
 import { curry } from "lodash";
 import { useEffect, useRef, useState } from "react";
@@ -26,17 +37,6 @@ import {
 import { editPatientAndScheduleHistory } from "./forms/patients";
 import { PatientHistoryRequestDrawer } from "./patient-history-request-drawer";
 import { PatientHistoryMessage } from "./patient-history/patient-history-message";
-import {
-  conditionAddSchema,
-  conditionEditSchema,
-  getEditingPatientConditionData,
-} from "@/components/content/forms/condition-schema";
-import {
-  getNewCondition,
-  useOtherProviderConditions,
-  usePatientConditions,
-} from "@/fhir/conditions";
-import { ConditionModel } from "@/fhir/models/condition";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { hasFetchedPatientHistory } from "@/services/patient-history/patient-history";
 import { AnyZodSchema } from "@/utils/form-helper";
@@ -376,6 +376,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         onClose={() => setHistoryDrawerIsOpen(false)}
         condition={selectedCondition}
         onEdit={shouldHistoryDrawerBeReadOnly()}
+        patientID={patientResponse.data?.id ?? ""}
       />
 
       {selectedCondition && patientResponse.data && (

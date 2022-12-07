@@ -1,4 +1,5 @@
 import { ConditionModel } from "../../fhir/models/condition";
+import { CTWRequestContext } from "../core/ctw-context";
 import { Drawer } from "../core/drawer";
 import { ConditionHistory } from "./conditions-history";
 
@@ -8,6 +9,7 @@ export type ConditionHistoryDrawerProps = {
   isOpen: boolean;
   onClose: () => void;
   onEdit?: () => void;
+  patientID: string;
 };
 
 export function ConditionHistoryDrawer({
@@ -16,6 +18,7 @@ export function ConditionHistoryDrawer({
   isOpen,
   onClose,
   onEdit,
+  patientID,
 }: ConditionHistoryDrawerProps) {
   const title = "Condition History";
 
@@ -32,6 +35,7 @@ export function ConditionHistoryDrawer({
             condition={condition}
             onClose={onClose}
             onEdit={onEdit}
+            patientID={patientID}
           />
         )}
       </Drawer.Body>
