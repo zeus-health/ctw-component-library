@@ -38,29 +38,6 @@ export async function createOrEditFhirResource(
   }
 }
 
-export async function patchFhirResource(
-  resourceType: ResourceTypeString,
-  id: string,
-  JSONPatch: OpPatch[],
-  requestContext: CTWRequestContext
-) {
-  const { fhirClient } = requestContext;
-
-  try {
-    const response = await fhirClient.patch({
-      resourceType,
-      id,
-      JSONPatch,
-    });
-    if (!isFhirError(response)) {
-      await createProvenance("UPDATE", response, requestContext);
-    }
-    return response;
-  } catch (err) {
-    return err;
-  }
-}
-
 export async function deleteMetaTags(
   resource: Resource,
   requestContext: CTWRequestContext,
