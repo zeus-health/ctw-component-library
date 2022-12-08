@@ -221,8 +221,10 @@ export async function getDocument(
     });
 
     const xml = await response.text();
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(xml, "text/xml");
 
-    return xml;
+    return xmlDoc;
   } catch (err) {
     throw errorResponse("Failed fetching binary document", err);
   }

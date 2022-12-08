@@ -15,6 +15,8 @@ import { Loading } from "@/components/core/loading";
 import { getIncludedResources } from "@/fhir/bundle";
 import { getDocument, useConditionHistory } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models/condition";
+import { CcdaViewer } from "./CCDA/ccda_viewer";
+import { CCDAModal } from "../core/modal-ccda";
 
 const CONDITION_HISTORY_LIMIT = 10;
 
@@ -117,6 +119,7 @@ export function ConditionHistory({
   const { getRequestContext } = useCTW();
 
   const [isBinaryDocument, setIsBinaryDocument] = useState(false);
+  let xmlDocument: Document;
 
   useEffect(() => {
     async function load() {
@@ -152,12 +155,12 @@ export function ConditionHistory({
     }
     async function loadDocument() {
       const requestContext = await getRequestContext();
-      const documents = await getDocument(requestContext, patientID);
-      console.log(documents);
+      xmlDocument = await getDocument(requestContext, patientID);
 
-      if (documents.length > 0) {
+      if (xmlDocument) {
         setIsBinaryDocument(true);
       }
+      console.log(isBinaryDocument);
     }
 
     void loadDocument();
@@ -198,6 +201,7 @@ export function ConditionHistory({
                 // This fixes a bug where having multiple drawers causes headless ui useScrollLock to become out of sync, which causes overlay: hidden incorrectly persist on the html element.
                 setTimeout(onEdit, 400);
               }}
+              document={document}
             />
           )}
           <CollapsibleDataListStack
