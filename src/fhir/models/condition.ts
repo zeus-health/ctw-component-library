@@ -91,7 +91,7 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
   }
 
   get ccsGrouping(): string | undefined {
-    return findCoding(SYSTEM_CCS, this.resource.code)?.code;
+    return findCoding(SYSTEM_CCS, this.resource.code)?.display;
   }
 
   get clinicalStatus(): string {
