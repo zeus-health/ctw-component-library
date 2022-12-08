@@ -1,21 +1,26 @@
 import cx from "classnames";
 import { FilterCollection } from "./patient-conditions-filters";
 import { Badge } from "@/components/core/badge";
+import { ConditionModel } from "@/fhir/models";
 
 export type PatientConditionsHeaderProps = {
   collection: FilterCollection;
-  otherCount: number;
+  otherConditions: ConditionModel[];
   onCollectionChange: (collection: FilterCollection) => void;
 };
 
 export function PatientConditionsHeader({
   collection,
-  otherCount,
+  otherConditions,
   onCollectionChange,
 }: PatientConditionsHeaderProps) {
   function activeClass(collection2: FilterCollection) {
     return collection === collection2 ? "ctw-btn-primary" : "ctw-btn-default";
   }
+
+  const activeCount = otherConditions.filter(
+    (condition) => condition.status === "Active"
+  ).length;
 
   return (
     <div className="ctw-flex ctw-items-center ctw-justify-between ctw-py-5 ctw-px-4">
@@ -36,7 +41,7 @@ export function PatientConditionsHeader({
           onClick={() => onCollectionChange("other")}
         >
           <span>Other Provider Records</span>
-          <Badge text={`${otherCount}`} color="gray" />
+          <Badge text={`${activeCount}`} color="gray" />
         </button>
       </div>
     </div>

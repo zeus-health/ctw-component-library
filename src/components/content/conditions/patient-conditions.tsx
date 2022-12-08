@@ -1,11 +1,8 @@
-import { cloneDeep, merge } from "lodash";
-import { useState } from "react";
 import { filterOtherConditions } from "./helpers";
 import { PatientConditionsActions } from "./patient-conditions-actions";
 import { patientConditionsColumns } from "./patient-conditions-columns";
-import { Filters } from "./patient-conditions-filters";
+import { useConditionFilters } from "./patient-conditions-filters";
 import { PatientConditionsHeader } from "./patient-conditions-header";
-import { usePatient } from "@/components/core/patient-provider";
 import { Table } from "@/components/core/table/table";
 import {
   useOtherProviderConditions,
@@ -18,50 +15,32 @@ export type PatientConditionsProps = {
 };
 
 export function PatientConditions(props: PatientConditionsProps) {
-  // Local state
-  const [filters, setFilters] = useState<Filters>({
-    collection: "patient",
-    showHistoric: false,
-  });
+  // State.
+  const { filters, updateFilters, applyFilters } = useConditionFilters();
 
-  // Data fetching
-  const patientResponse = usePatient();
-  const patientRecordsResponse = usePatientConditions();
-  const otherProviderRecordsResponse = useOtherProviderConditions();
+  // Data fetching.
+  const patientConditionsQuery = usePatientConditions();
+  const otherConditionsQuery = useOtherProviderConditions();
 
   function isLoading() {
-    const isLoadingPatient =
-      patientResponse.isLoading || patientRecordsResponse.isLoading;
-    const isLoadingOther =
-      isLoadingPatient || otherProviderRecordsResponse.isLoading;
+    const isLoadingPatient = patientConditionsQuery.isLoading;
+    const isLoadingOther = isLoadingPatient || otherConditionsQuery.isLoading;
     return filters.collection === "patient" ? isLoadingPatient : isLoadingOther;
   }
 
-  // Grab either the patient or other conditions collection.
-  const patientConditions = patientRecordsResponse.data ?? [];
+  // Get our conditions.
+  const patientConditions = patientConditionsQuery.data ?? [];
   const otherConditions = filterOtherConditions(
-    otherProviderRecordsResponse.data ?? [],
+    otherConditionsQuery.data ?? [],
     patientConditions,
-    false
+    true
   );
-  let conditions =
-    filters.collection === "patient" ? patientConditions : otherConditions;
-
-  // Apply filtering.
-  conditions = conditions.filter((c) => {
-    if (filters.showHistoric) return true;
-
-    return ["Active", "Pending"].includes(c.status);
-  });
-
-  function updateFilters(newFilters: Partial<Filters>) {
-    setFilters(merge(cloneDeep(filters), newFilters));
-  }
+  const conditions = applyFilters(patientConditions, otherConditions);
 
   return (
     <div className="ctw-border ctw-border-solid ctw-border-divider-light">
       <PatientConditionsHeader
-        otherCount={otherConditions.length}
+        otherConditions={otherConditions}
         collection={filters.collection}
         onCollectionChange={(collection) => updateFilters({ collection })}
       />
@@ -70,7 +49,6 @@ export function PatientConditions(props: PatientConditionsProps) {
           updateFilters({ showHistoric: !filters.showHistoric })
         }
       />
-
       <Table
         className="-ctw-mx-px !ctw-rounded-none"
         showTableHead={false}
