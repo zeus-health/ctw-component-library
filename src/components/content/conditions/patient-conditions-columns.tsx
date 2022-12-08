@@ -59,15 +59,21 @@ export const patientConditionsColumns: TableColumn<ConditionModel>[] = [
   {
     widthPercent: 30,
     minWidth: 132,
-    render: (condition) => (
-      <div>
-        {condition.isSummaryResource ? (
-          <div>Earliest known onset date: {condition.onset}</div>
-        ) : (
-          <div>Onset date: {condition.onset}</div>
-        )}
-        <div className="ctw-line-clamp-3">{condition.notes.join(" ")}</div>
-      </div>
-    ),
+    render: (condition) => {
+      const onsetText = condition.isSummaryResource
+        ? "Earliest known onset date:"
+        : "Onset date:";
+
+      return (
+        <div>
+          {condition.onset && (
+            <div>
+              {onsetText} {condition.onset}
+            </div>
+          )}
+          <div className="ctw-line-clamp-3">{condition.notes.join(" ")}</div>
+        </div>
+      );
+    },
   },
 ];
