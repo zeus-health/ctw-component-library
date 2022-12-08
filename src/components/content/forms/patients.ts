@@ -1,3 +1,4 @@
+import { cloneDeep } from "lodash";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { dateToISO } from "@/fhir/formatters";
@@ -24,45 +25,39 @@ export const editPatient = async (
   getRequestContext: () => Promise<CTWRequestContext>
 ) => {
   const requestContext = await getRequestContext();
+  const fhirPatient = cloneDeep(patient.resource);
 
-  const fhirPatient: fhir4.Patient = {
-    resourceType: "Patient",
-    id: patient.id,
-    active: patient.active,
-    name: [
-      {
-        family: data.lastName,
-        given: [data.firstName],
-        use: patient.use ?? "official",
-      },
-    ],
-    gender: data.gender,
-    birthDate: dateToISO(data.dateOfBirth),
-    telecom: [
-      {
-        system: "email",
-        value: data.email,
-      },
-      {
-        system: "phone",
-        value: data.phone,
-      },
-    ],
-    address: [
-      {
-        line: [data.address],
-        city: data.city,
-        state: data.state,
-        postalCode: data.zipCode,
-      },
-    ],
-    contact: patient.contact,
-    ...(patient.organization?.id && {
-      managingOrganization: {
-        reference: `Organization/${patient.organization.id}`,
-      },
-    }),
-  };
+  fhirPatient.gender = data.gender;
+  fhirPatient.birthDate = dateToISO(data.dateOfBirth);
+
+  fhirPatient.name = [
+    {
+      use: "official",
+      family: data.lastName,
+      given: [data.firstName],
+    },
+  ];
+
+  fhirPatient.address = [
+    {
+      line: [data.address],
+      city: data.city,
+      state: data.state,
+      postalCode: data.zipCode,
+    },
+  ];
+
+  const telecom: fhir4.ContactPoint[] = [];
+
+  if (data.phone) {
+    telecom.push({ system: "phone", value: data.phone });
+  }
+
+  if (data.email) {
+    telecom.push({ system: "email", value: data.email });
+  }
+
+  fhirPatient.telecom = telecom;
 
   const response = await createOrEditFhirResource(fhirPatient, requestContext);
 

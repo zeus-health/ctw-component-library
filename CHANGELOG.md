@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.29.7
+
+### Patch Changes
+
+- 7079391: Edit patient resource directly to avoid losing patient information.
+
 ## 0.29.6
 
 ### Patch Changes

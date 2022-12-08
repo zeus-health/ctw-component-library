@@ -15,7 +15,7 @@ export const schedulePatientHistory = async (
 ) => {
   const endpointUrl = `${getZusApiBaseUrl(
     requestContext.env
-  )}/patient-history/patient/${patientID}/refresh?consent=1&refresh=1`;
+  )}/patient-history/patient/${patientID}/refresh?consent=1`;
 
   try {
     const response = await fetch(endpointUrl, {
