@@ -396,7 +396,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         onClose={() => setHistoryDrawerIsOpen(false)}
         condition={selectedCondition}
         onEdit={shouldHistoryDrawerBeReadOnly()}
-        patientID={patientResponse.data?.id ?? ""}
+        patientID={patientResponse.data?.UPID ?? ""}
       />
 
       {selectedCondition && patientResponse.data && (

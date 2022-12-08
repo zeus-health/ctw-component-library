@@ -1,5 +1,5 @@
 import { SearchParams } from "fhir-kit-client";
-import { orderBy } from "lodash";
+import { find, orderBy, sortBy } from "lodash";
 import { getIncludedBasics } from "./bundle";
 import { CodePreference } from "./codeable-concept";
 import {
@@ -26,6 +26,8 @@ import {
 } from "@/utils/query-keys";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { getPractitioner } from "./practitioner";
+import { date } from "zod";
+import { sort } from "@/utils/sort";
 
 export const CONDITION_CODE_PREFERENCE_ORDER: CodePreference[] = [
   { system: SYSTEM_SNOMED, checkForEnrichment: true },
@@ -184,7 +186,7 @@ export async function getDocument(
   // Call to Document Reference to see if Binary exists. If it exists, use it to obtain the binary document and return that.
   const endpointDocumentRefUrl = `${getZusApiBaseUrl(
     requestContext.env
-  )}/DocumentReference?patient.identifer=${patientID}`;
+  )}/fhir/DocumentReference?patient.identifier=${patientID}`;
 
   try {
     const bundle = await fetch(endpointDocumentRefUrl, {
@@ -195,16 +197,32 @@ export async function getDocument(
 
     const documents = await bundle.json();
 
-    // const binaryID = find();
+    const sortedDocumentsByDate = sort(
+      documents.entry,
+      (d: any) => d.resource.date,
+      "desc"
+    );
 
-    // const endpointBinaryUrl = `${getZusApiBaseUrl(
-    //   requestContext.env
-    // )}/${binaryID}`;
+    const documentReference = find(
+      sortedDocumentsByDate,
+      (d) => d.resource.content[0].attachment
+    );
 
-    // const bundleID = await fetch();
+    const binaryID = documentReference.resource.content[0].attachment.url;
 
-    console.log(documents);
-    return documents;
+    const endpointBinaryUrl = `${getZusApiBaseUrl(
+      requestContext.env
+    )}/fhir/${binaryID}`;
+
+    const response = await fetch(endpointBinaryUrl, {
+      headers: {
+        Authorization: `Bearer ${requestContext.authToken}`,
+      },
+    });
+
+    const xml = await response.text();
+
+    return xml;
   } catch (err) {
     throw errorResponse("Failed fetching binary document", err);
   }
