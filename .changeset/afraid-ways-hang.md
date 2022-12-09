@@ -2,4 +2,4 @@
 "@zus-health/ctw-component-library": patch
 ---
 
-Actions will now catch unhandled erorrs.
+Actions will now catch unhandled errors.
