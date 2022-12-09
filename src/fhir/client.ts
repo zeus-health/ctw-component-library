@@ -1,6 +1,5 @@
 import Client from "fhir-kit-client";
 import { Env } from "@/components/core/ctw-provider";
-import { CTW_REQUEST_HEADER } from "@/utils/request";
 
 export function getFhirClient(
   env: Env,
@@ -12,7 +11,7 @@ export function getFhirClient(
       ? `https://api.zusapi.com/fhir`
       : `https://api.${env}.zusapi.com/fhir`;
 
-  const customHeaders: HeadersInit = CTW_REQUEST_HEADER;
+  const customHeaders: HeadersInit = {};
   if (builderId) {
     customHeaders["Zus-Account"] = builderId;
   }

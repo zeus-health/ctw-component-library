@@ -1,6 +1,5 @@
 import { getZusApiBaseUrl } from "./urls";
 import { CTWRequestContext } from "@/components/core/ctw-context";
-import { ctwFetch } from "@/utils/request";
 
 export type PatientHistoryResponseError = {
   // TODO: Can code be a list of status codes? Do we have that type defined anywhere.
@@ -19,7 +18,7 @@ export const schedulePatientHistory = async (
   )}/patient-history/patient/${patientID}/refresh?consent=1`;
 
   try {
-    const response = await ctwFetch(endpointUrl, {
+    const response = await fetch(endpointUrl, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${requestContext.authToken}`,

@@ -1,13 +1,12 @@
 import { Env } from "..";
 import { getFormsConditionsUrl } from "./urls";
-import { ctwFetch } from "@/utils/request";
 
 export const getAutoCompleteConditions = async (
   authToken: string,
   env: Env,
   searchTerm: string
 ) => {
-  const response = await ctwFetch(
+  const response = await fetch(
     `${getFormsConditionsUrl(env)}?display=${searchTerm}`,
     {
       headers: { Authorization: `Bearer ${authToken}` },
