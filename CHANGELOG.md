@@ -1,5 +1,15 @@
 # ctw-component-library
 
+## 0.30.0
+
+### Minor Changes
+
+- 0c2c349: Create a newly redesigned conditions component.
+
+### Patch Changes
+
+- 7f81bfc: Adds a header to outgoing requests indicating the component library as the source.
+
 ## 0.29.7
 
 ### Patch Changes
