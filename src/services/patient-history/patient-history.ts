@@ -2,7 +2,6 @@ import { PatientRefreshHistoryMessage } from "./patient-history-types";
 import { getZusApiBaseUrl } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { errorResponse } from "@/utils/errors";
-import { ctwFetch } from "@/utils/request";
 
 export async function getPatientRefreshHistoryMessages(
   requestContext: CTWRequestContext,
@@ -13,7 +12,7 @@ export async function getPatientRefreshHistoryMessages(
   )}/patient-history/messages?patient-id=${patientID}`;
 
   try {
-    const response = await ctwFetch(endpointUrl, {
+    const response = await fetch(endpointUrl, {
       headers: {
         Authorization: `Bearer ${requestContext.authToken}`,
       },

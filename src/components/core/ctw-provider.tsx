@@ -24,7 +24,7 @@ import {
   Theme,
 } from "@/styles/tailwind.theme";
 import { claimsBuilderId } from "@/utils/auth";
-import { ctwFetch, queryClient } from "@/utils/request";
+import { queryClient } from "@/utils/request";
 import "./main.scss";
 
 export type Env = "dev" | "sandbox" | "production";
@@ -39,7 +39,7 @@ type CTWProviderProps = {
   env: Env;
   builderId?: string;
   theme?: Theme;
-  headers?: Record<string, string>;
+  headers?: HeadersInit;
 } & (AuthTokenSpecified | AuthTokenURLSpecified);
 
 declare global {
@@ -157,10 +157,10 @@ function useCTW() {
 async function checkOrRefreshAuth(
   token: CTWToken | undefined,
   url: CTWState["authTokenURL"],
-  headers?: Record<string, string>
+  headers?: HeadersInit
 ): Promise<CTWToken> {
   if (!token || Date.now() >= token.expiresAt + EXPIRY_PADDING_MS) {
-    const response = await ctwFetch(url as string, {
+    const response = await fetch(url as string, {
       headers,
     });
     const newToken = await response.json();
