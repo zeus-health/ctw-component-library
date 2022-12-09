@@ -49,7 +49,11 @@ export function ConditionsTableBase({
       ),
       widthPercent: 17.5,
       minWidth: 128,
-      sortIndices: [{ index: "active" }, { index: "recorded", dir: "asc" }],
+      sortIndices: [
+        { index: "clinicalStatus" },
+        { index: "verificationStatus" },
+        { index: "recorded", dir: "asc" },
+      ],
     },
     {
       title: "Last Recorded",
