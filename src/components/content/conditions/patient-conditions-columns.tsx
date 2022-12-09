@@ -20,23 +20,21 @@ export const patientConditionsColumns: TableColumn<ConditionModel>[] = [
     minWidth: 320,
     render: (condition) => (
       <div>
-        <div className="ctw-text-base ctw-text-content-black">
-          {condition.display}
-        </div>
-        <div className="ctw-font-normal">{condition.ccsChapter}</div>
+        <div className="ctw-pc-title">{condition.display}</div>
+        <div className="ctw-pc-chapter">{condition.ccsChapter}</div>
       </div>
     ),
   },
   {
     render: (condition) => (
-      <div className="ctw-flex ctw-space-x-2">
-        <div className={cx("ctw-text-base", statusToColor(condition.status))}>
+      <div className="ctw-pc-status-container">
+        <div
+          className={cx("ctw-pc-status-dot", statusToColor(condition.status))}
+        >
           &bull;
         </div>
-        <div>
-          <div className="ctw-text-base ctw-capitalize ctw-text-content-black">
-            {condition.status}
-          </div>
+        <div className="ctw-pc-status-and-extra">
+          <div className="ctw-pc-status">{condition.status}</div>
 
           {condition.isSummaryResource ? (
             <div>
@@ -61,17 +59,17 @@ export const patientConditionsColumns: TableColumn<ConditionModel>[] = [
     minWidth: 132,
     render: (condition) => {
       const onsetText = condition.isSummaryResource
-        ? "Earliest known onset date:"
-        : "Onset date:";
+        ? "Earliest known onset:"
+        : "Onset:";
 
       return (
-        <div>
+        <div className="ctw-pc-onset-notes">
           {condition.onset && (
             <div>
               {onsetText} {condition.onset}
             </div>
           )}
-          <div className="ctw-line-clamp-3">{condition.notes.join(" ")}</div>
+          <div className="ctw-pc-notes">{condition.notes.join(" ")}</div>
         </div>
       );
     },

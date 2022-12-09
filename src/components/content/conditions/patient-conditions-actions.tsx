@@ -13,10 +13,12 @@ import { getNewCondition } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models";
 
 export type PatientConditionsActionsProps = {
+  hideAdd: boolean;
   onToggleShowHistoric: () => void;
 };
 
 export function PatientConditionsActions({
+  hideAdd,
   onToggleShowHistoric,
 }: PatientConditionsActionsProps) {
   const patientResponse = usePatient();
@@ -36,13 +38,15 @@ export function PatientConditionsActions({
         text="Show Historic"
         onChange={onToggleShowHistoric}
       />
-      <button
-        type="button"
-        className="ctw-btn-icon"
-        onClick={() => setIsAddDrawerOpen(true)}
-      >
-        <PlusIcon className="ctw-h-4 ctw-w-4" />
-      </button>
+      {!hideAdd && (
+        <button
+          type="button"
+          className="ctw-btn-icon"
+          onClick={() => setIsAddDrawerOpen(true)}
+        >
+          <PlusIcon className="ctw-h-4 ctw-w-4" />
+        </button>
+      )}
 
       <DrawerFormWithFields
         title="Add Condition"
