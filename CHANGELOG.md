@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 0.30.1
+
+### Patch Changes
+
+- d6a684e: Actions will now catch unhandled errors.
+- 9811178: Revert the additional header to avoid a CORS error.
+
 ## 0.30.0
 
 ### Minor Changes
