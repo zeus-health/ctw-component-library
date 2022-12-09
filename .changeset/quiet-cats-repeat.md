@@ -2,4 +2,4 @@
 "@zus-health/ctw-component-library": patch
 ---
 
-Re-add header changes.
+Remove header indicating source of requests.
