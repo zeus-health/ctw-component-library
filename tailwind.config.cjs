@@ -1,4 +1,3 @@
-const lineClampPlugin = require("@tailwindcss/line-clamp");
 const defaultTheme = require("tailwindcss/defaultTheme");
 const {
   TailwindTheme,
@@ -42,7 +41,6 @@ module.exports = {
   theme: {
     ...addCSSVarReference(TailwindTheme),
   },
-  plugin: [lineClampPlugin],
   extend: {
     fontFamily: {
       sans: [...defaultTheme.fontFamily.sans],
