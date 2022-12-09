@@ -75,9 +75,23 @@ export const DrawerForm = <T,>({
       setIsSubmitting(false);
       return;
     }
-    const response = await action(formResult.data, getRequestContext);
-    const { requestErrors, responseIsSuccess } =
-      getFormResponseErrors(response);
+
+    let response;
+    let responseIsSuccess;
+    let requestErrors;
+    try {
+      response = await action(formResult.data, getRequestContext);
+    } catch (e) {
+      console.warn(e);
+      responseIsSuccess = false;
+      requestErrors = [];
+    }
+
+    if (response) {
+      const formResponseErrors = getFormResponseErrors(response);
+      responseIsSuccess = formResponseErrors.responseIsSuccess;
+      requestErrors = formResponseErrors.requestErrors;
+    }
 
     // Setting any errors from the response to the form.
     if (!responseIsSuccess) {
