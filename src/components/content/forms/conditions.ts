@@ -42,6 +42,18 @@ export function getAddConditionWithDefaults(condition: Condition): Condition {
     text: "confirmed",
   };
 
+  newCondition.category = [
+    {
+      coding: [
+        {
+          system: SYSTEM_CONDITION_CATEGORY,
+          code: "problem-list-item",
+          display: "Problem List Item",
+        },
+      ],
+    },
+  ];
+
   return newCondition;
 }
 
@@ -64,7 +76,7 @@ export const createOrEditCondition = async (
   const requestContext = await getRequestContext();
 
   // Defines the properties of the condition based on the form.
-  // The autofill values that apply to both edits and creates are here; including Practitioner, Recorder, Patient, Recorded date, and Category.
+  // The autofill values that apply to both edits and creates are here; including Practitioner, Recorder, Patient, and Recorded date.
   const fhirCondition: fhir4.Condition = {
     resourceType: "Condition",
     id: data.id,
@@ -85,17 +97,6 @@ export const createOrEditCondition = async (
         },
       ],
     },
-    category: [
-      {
-        coding: [
-          {
-            system: SYSTEM_CONDITION_CATEGORY,
-            code: "problem-list-item",
-            display: "Problem List Item",
-          },
-        ],
-      },
-    ],
     // Keep all existing codings when editing a condition
     code:
       data.id && condition
