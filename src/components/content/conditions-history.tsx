@@ -7,16 +7,18 @@ import {
   CollapsibleDataListStack,
   CollapsibleDataListStackEntries,
 } from "../core/collapsible-data-list-stack";
-import { CTWRequestContext } from "../core/ctw-context";
 import { useCTW } from "../core/ctw-provider";
+import { CCDAModal } from "../core/modal-ccda";
 import { NotesList } from "../core/notes-list";
 import { ConditionHeader } from "./condition-header";
 import { Loading } from "@/components/core/loading";
 import { getIncludedResources } from "@/fhir/bundle";
-import { getDocument, useConditionHistory } from "@/fhir/conditions";
+import {
+  BinaryDocumentData,
+  getBinary,
+  useConditionHistory,
+} from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models/condition";
-import { CcdaViewer } from "./CCDA/ccda_viewer";
-import { CCDAModal } from "../core/modal-ccda";
 
 const CONDITION_HISTORY_LIMIT = 10;
 
@@ -119,7 +121,7 @@ export function ConditionHistory({
   const { getRequestContext } = useCTW();
 
   const [isBinaryDocument, setIsBinaryDocument] = useState(false);
-  let xmlDocument: Document;
+  const [rawBinary, setRawBinary] = useState<BinaryDocumentData>();
 
   useEffect(() => {
     async function load() {
@@ -155,10 +157,11 @@ export function ConditionHistory({
     }
     async function loadDocument() {
       const requestContext = await getRequestContext();
-      xmlDocument = await getDocument(requestContext, patientID);
+      const binary = await getBinary(requestContext, patientID);
 
-      if (xmlDocument) {
+      if (binary.xmlData) {
         setIsBinaryDocument(true);
+        setRawBinary(binary);
       }
       console.log(isBinaryDocument);
     }
@@ -172,7 +175,14 @@ export function ConditionHistory({
       setConditionsWithoutDate([]);
       setLoading(true);
     };
-  }, [condition, historyResponse.data, onEdit]);
+  }, [
+    condition,
+    getRequestContext,
+    historyResponse.data,
+    isBinaryDocument,
+    onEdit,
+    patientID,
+  ]);
 
   function conditionHistoryDisplay() {
     if (
@@ -188,6 +198,14 @@ export function ConditionHistory({
 
     return (
       <>
+        {isBinaryDocument && (
+          <CCDAModal
+            isOpen
+            rawBinary={rawBinary}
+            xmlExists={isBinaryDocument}
+            onClose={onClose}
+          />
+        )}
         <div className="ctw-space-y-6">
           <ConditionHeader condition={condition} />
           {onEdit && (
@@ -201,12 +219,13 @@ export function ConditionHistory({
                 // This fixes a bug where having multiple drawers causes headless ui useScrollLock to become out of sync, which causes overlay: hidden incorrectly persist on the html element.
                 setTimeout(onEdit, 400);
               }}
-              document={document}
+              isBinaryDocument={isBinaryDocument}
             />
           )}
           <CollapsibleDataListStack
             entries={conditionsWithDate}
             limit={CONDITION_HISTORY_LIMIT}
+            xmlDocumentExists={isBinaryDocument}
           />
           {conditionsWithoutDate.length !== 0 && (
             <div className="ctw-space-y-2">
@@ -214,6 +233,7 @@ export function ConditionHistory({
               <CollapsibleDataListStack
                 entries={conditionsWithoutDate}
                 limit={CONDITION_HISTORY_LIMIT}
+                xmlDocumentExists={isBinaryDocument}
               />
             </div>
           )}

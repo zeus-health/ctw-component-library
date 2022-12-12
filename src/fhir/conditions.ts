@@ -1,7 +1,8 @@
 import { SearchParams } from "fhir-kit-client";
-import { find, orderBy, sortBy } from "lodash";
+import { find, orderBy } from "lodash";
 import { getIncludedBasics } from "./bundle";
 import { CodePreference } from "./codeable-concept";
+import { getPractitioner } from "./practitioner";
 import {
   searchBuilderRecords,
   searchCommonRecords,
@@ -16,6 +17,7 @@ import {
 } from "./system-urls";
 import { getZusApiBaseUrl } from "@/api/urls";
 import { getAddConditionWithDefaults } from "@/components/content/forms/conditions";
+import { CTWRequestContext } from "@/components/core/ctw-context";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
 import { ConditionModel } from "@/fhir/models/condition";
 import { errorResponse } from "@/utils/errors";
@@ -24,9 +26,6 @@ import {
   QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
   QUERY_KEY_PATIENT_CONDITIONS,
 } from "@/utils/query-keys";
-import { CTWRequestContext } from "@/components/core/ctw-context";
-import { getPractitioner } from "./practitioner";
-import { date } from "zod";
 import { sort } from "@/utils/sort";
 
 export const CONDITION_CODE_PREFERENCE_ORDER: CodePreference[] = [
@@ -179,10 +178,15 @@ export const setRecorderField = async (
   };
 };
 
-export async function getDocument(
+export type BinaryDocumentData = {
+  xmlBinary: fhir4.Binary;
+  xmlData: string | undefined;
+};
+
+export async function getBinary(
   requestContext: CTWRequestContext,
   patientID: string
-) {
+): Promise<BinaryDocumentData> {
   // Call to Document Reference to see if Binary exists. If it exists, use it to obtain the binary document and return that.
   const endpointDocumentRefUrl = `${getZusApiBaseUrl(
     requestContext.env
@@ -217,15 +221,17 @@ export async function getDocument(
     const response = await fetch(endpointBinaryUrl, {
       headers: {
         Authorization: `Bearer ${requestContext.authToken}`,
+        accept: "application/json",
+        "Content-Type": "application/json+fhir",
       },
     });
 
-    const xml = await response.text();
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(xml, "text/xml");
-
-    return xmlDoc;
+    const xmlBinary = (await response.json()) as fhir4.Binary;
+    const xmlData = xmlBinary.data;
+    return { xmlBinary, xmlData };
   } catch (err) {
     throw errorResponse("Failed fetching binary document", err);
   }
 }
+
+// editors active tabs google to limit tab in vscode

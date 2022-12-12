@@ -42,7 +42,6 @@ import { hasFetchedPatientHistory } from "@/services/patient-history/patient-his
 import { AnyZodSchema } from "@/utils/form-helper";
 import { QUERY_KEY_OTHER_PROVIDER_CONDITIONS } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
-import { CCDAModal } from "../core/modal-ccda";
 
 export type ConditionsProps = {
   className?: string;
@@ -80,6 +79,8 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const [sort, setSort] = useState<TableSort>();
 
   const [clinicalHistoryExists, setClinicalHistoryExists] = useState<boolean>();
+
+  const [documentExists, setDocumentExists] = useState<Document>();
 
   const patientRecordsMessage = patientRecordsResponse.isError
     ? ERROR_MSG
@@ -399,8 +400,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         onEdit={shouldHistoryDrawerBeReadOnly()}
         patientID={patientResponse.data?.UPID ?? ""}
       />
-
-      <CCDAModal />
 
       {selectedCondition && patientResponse.data && (
         <ModalConfirmDelete

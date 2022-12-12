@@ -1,5 +1,4 @@
 import { ConditionModel } from "../../fhir/models/condition";
-import { CTWRequestContext } from "../core/ctw-context";
 import { Drawer } from "../core/drawer";
 import { ConditionHistory } from "./conditions-history";
 
