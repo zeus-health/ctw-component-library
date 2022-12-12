@@ -1,6 +1,6 @@
 {
   "name": "@zus-health/ctw-component-library",
-  "version": "0.29.7",
+  "version": "0.30.1",
   "type": "module",
   "engines": {
     "node": ">=16 <19"
@@ -62,7 +62,6 @@
     "@storybook/react-vite": "^7.0.0-alpha.49",
     "@storybook/test-runner": "^0.9.0",
     "@storybook/testing-library": "^0.0.13",
-    "@tailwindcss/line-clamp": "^0.4.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "12.1.5",
     "@testing-library/user-event": "^14.4.3",

@@ -1,5 +1,22 @@
 # ctw-component-library
 
+## 0.30.1
+
+### Patch Changes
+
+- d6a684e: Actions will now catch unhandled errors.
+- 9811178: Revert the additional header to avoid a CORS error.
+
+## 0.30.0
+
+### Minor Changes
+
+- 0c2c349: Create a newly redesigned conditions component.
+
+### Patch Changes
+
+- 7f81bfc: Adds a header to outgoing requests indicating the component library as the source.
+
 ## 0.29.7
 
 ### Patch Changes

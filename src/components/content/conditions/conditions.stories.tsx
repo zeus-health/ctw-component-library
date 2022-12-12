@@ -77,12 +77,12 @@ export const TestAddOther: StoryObj<Props> = {
   play: async ({ canvasElement }) => {
     const conditions = await conditionsObject(canvasElement);
     await conditions.patientRecord.toHaveRowCount(2);
-    await conditions.otherProvider.add(3);
+    await conditions.otherProvider.add(2);
     const conditionForm = conditionFormDrawer(canvasElement);
     await conditionForm.save();
     await conditions.patientRecord.toHaveRowCount(3);
     expect(
-      await conditions.patientRecord.table.findByText(/oral contraception/i)
+      await conditions.patientRecord.table.findByText(/iron deficiency/i)
     ).toBeTruthy();
   },
 };
