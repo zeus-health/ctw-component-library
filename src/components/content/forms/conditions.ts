@@ -6,6 +6,7 @@ import { dateToISO } from "@/fhir/formatters";
 import { ConditionModel } from "@/fhir/models/condition";
 import { getUsersPractitionerReference } from "@/fhir/practitioner";
 import {
+  SYSTEM_CONDITION_CATEGORY,
   SYSTEM_CONDITION_CLINICAL,
   SYSTEM_CONDITION_VERIFICATION_STATUS,
 } from "@/fhir/system-urls";
@@ -63,7 +64,7 @@ export const createOrEditCondition = async (
   const requestContext = await getRequestContext();
 
   // Defines the properties of the condition based on the form.
-  // The autofill values that apply to both edits and creates are here; including Practitioner, Recorder, Patient, and Recorded date.
+  // The autofill values that apply to both edits and creates are here; including Practitioner, Recorder, Patient, Recorded date, and Category.
   const fhirCondition: fhir4.Condition = {
     resourceType: "Condition",
     id: data.id,
@@ -84,6 +85,17 @@ export const createOrEditCondition = async (
         },
       ],
     },
+    category: [
+      {
+        coding: [
+          {
+            system: SYSTEM_CONDITION_CATEGORY,
+            code: "problem-list-item",
+            display: "Problem List Item",
+          },
+        ],
+      },
+    ],
     // Keep all existing codings when editing a condition
     code:
       data.id && condition
