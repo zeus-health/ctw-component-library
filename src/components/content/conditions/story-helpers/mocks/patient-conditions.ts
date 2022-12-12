@@ -45,6 +45,15 @@ export const patientConditions: fhir4.Bundle = {
             valueString: "u12345",
           },
         ],
+        verificationStatus: {
+          coding: [
+            {
+              system:
+                "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              code: "confirmed",
+            },
+          ],
+        },
         clinicalStatus: {
           coding: [
             {
@@ -137,7 +146,11 @@ export const patientConditions: fhir4.Bundle = {
         onsetPeriod: {
           start: "2022-09-17",
         },
+        note: [{ text: "This is note 1." }, { text: "This is note 2." }],
         recordedDate: "2022-09-18",
+        recorder: {
+          display: "Carlos Mendoza",
+        },
       },
       search: {
         mode: "match",
@@ -175,6 +188,15 @@ export const patientConditions: fhir4.Bundle = {
             valueString: "u12345",
           },
         ],
+        verificationStatus: {
+          coding: [
+            {
+              system:
+                "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              code: "unconfirmed",
+            },
+          ],
+        },
         clinicalStatus: {
           coding: [
             {
@@ -250,6 +272,11 @@ export const patientConditions: fhir4.Bundle = {
         onsetPeriod: {
           start: "2022-09-17",
         },
+        note: [
+          {
+            text: "Patient presents with a lot of stress. Current medications don't seem to help. And this is a long dummy note to test things.",
+          },
+        ],
         recordedDate: "2022-09-18",
       },
       search: {
@@ -288,6 +315,15 @@ export const patientConditions: fhir4.Bundle = {
             valueString: "u12345",
           },
         ],
+        verificationStatus: {
+          coding: [
+            {
+              system:
+                "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              code: "confirmed",
+            },
+          ],
+        },
         clinicalStatus: {
           coding: [
             {

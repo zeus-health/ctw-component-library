@@ -1,5 +1,32 @@
 # ctw-component-library
 
+## 0.30.2
+
+### Patch Changes
+
+- beab220: Fix the conditions other providers table so that the table headers also sort, and fix the sorting order of status to match what is displayed.
+- f85a962: Re-add header that indicates the source of outgoing requests.
+- fc726fc: Add label "History" to history records.
+- 512c20f: Automatically categorizes new conditions as problem list items.
+- f85a962: Remove header indicating source of requests.
+
+## 0.30.1
+
+### Patch Changes
+
+- d6a684e: Actions will now catch unhandled errors.
+- 9811178: Revert the additional header to avoid a CORS error.
+
+## 0.30.0
+
+### Minor Changes
+
+- 0c2c349: Create a newly redesigned conditions component.
+
+### Patch Changes
+
+- 7f81bfc: Adds a header to outgoing requests indicating the component library as the source.
+
 ## 0.29.7
 
 ### Patch Changes
