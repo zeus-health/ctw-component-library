@@ -52,6 +52,7 @@
   "devDependencies": {
     "@auth0/auth0-react": "^1.12.0",
     "@changesets/cli": "^2.24.3",
+    "@faker-js/faker": "^7.6.0",
     "@kensho-technologies/eslint-config": "^23.1.1",
     "@storybook/addon-docs": "^7.0.0-alpha.49",
     "@storybook/addon-essentials": "^7.0.0-alpha.49",
