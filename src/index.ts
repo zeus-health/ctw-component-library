@@ -8,10 +8,13 @@ export * from "@/components/content/medications/medication-history";
 export * from "@/components/content/medications/other-provider-meds-table";
 export * from "@/components/content/medications/patient-medications";
 export * from "@/components/content/medications/provider-meds-table";
+export * from "@/components/content/patients/patients-table";
 // Core components
 export * from "@/components/core/action-list/action-list";
 export * from "@/components/core/alert";
 export * from "@/components/core/badge";
+export * from "@/components/core/pagination/pagination";
+export * from "@/components/core/pagination/pagination-list";
 export * as CTWBox from "@/components/core/ctw-box";
 // Zus Providers and Hooks
 export * from "@/components/core/ctw-provider";

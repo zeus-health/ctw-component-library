@@ -82,7 +82,6 @@ export const DrawerForm = <T,>({
     try {
       response = await action(formResult.data, getRequestContext);
     } catch (e) {
-      console.warn(e);
       responseIsSuccess = false;
       requestErrors = [];
     }

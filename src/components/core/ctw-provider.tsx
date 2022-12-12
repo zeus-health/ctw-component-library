@@ -1,4 +1,4 @@
-import { QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider, useQuery } from "@tanstack/react-query";
 import { merge } from "lodash";
 import {
   ReactNode,
@@ -152,6 +152,27 @@ function useCTW() {
     theme: context.theme as Required<Theme>,
     ctwProviderRef: context.ctwProviderRef,
   };
+}
+
+export function useQueryWithCTW<T, T2>(
+  queryKey: string,
+  keys: T2[],
+  query: (requestContext: CTWRequestContext, keys?: T2[]) => Promise<T>,
+  enabled = true
+) {
+  const { getRequestContext } = useCTW();
+
+  return useQuery(
+    [queryKey, ...keys],
+    async () => {
+      const requestContext = await getRequestContext();
+      // Ignore eslint warning as we should always have a valid
+      // patient thanks to the enabled check.
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      return query(requestContext, keys);
+    },
+    { enabled }
+  );
 }
 
 async function checkOrRefreshAuth(

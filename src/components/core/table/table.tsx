@@ -1,6 +1,9 @@
 import cx from "classnames";
-import { ReactElement, useEffect, useRef, useState } from "react";
-import { DEFAULT_PAGE_SIZE, Pagination } from "../pagination/pagination";
+import { ReactElement, ReactNode, useEffect, useRef, useState } from "react";
+import {
+  DEFAULT_PAGE_SIZE,
+  PaginationList,
+} from "../pagination/pagination-list";
 import { TableColGroup } from "./table-colgroup";
 import { TableHead } from "./table-head";
 import {
@@ -13,7 +16,7 @@ import { TableRows } from "./table-rows";
 import "./table.scss";
 
 export type TableProps<T extends MinRecordItem> = {
-  className?: string;
+  className?: cx.Argument;
   records: T[];
   columns: TableColumn<T>[];
   isLoading?: boolean;
@@ -24,6 +27,8 @@ export type TableProps<T extends MinRecordItem> = {
   handleRowClick?: (record: T) => void;
   sort?: TableSort;
   onSort?: (sort: TableSort) => void;
+  hidePagination?: boolean;
+  children?: ReactNode;
 };
 
 export type TableBaseProps<T extends MinRecordItem> = Omit<
@@ -42,6 +47,8 @@ export const Table = <T extends MinRecordItem>({
   sort,
   onSort,
   handleRowClick,
+  hidePagination = false,
+  children,
 }: TableProps<T>) => {
   const tableRef = useRef<HTMLTableElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -121,13 +128,14 @@ export const Table = <T extends MinRecordItem>({
           </table>
         </div>
       </div>
-      {records.length > 0 && !isLoading && (
-        <Pagination
+      {!hidePagination && records.length > 0 && !isLoading && (
+        <PaginationList
           total={records.length}
           count={count}
           changeCount={setCount}
         />
       )}
+      {children}
     </div>
   );
 };

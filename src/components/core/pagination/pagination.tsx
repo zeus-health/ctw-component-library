@@ -1,56 +1,129 @@
-export const DEFAULT_PAGE_SIZE = 10;
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
+import cx from "classnames";
+import { uniq } from "lodash";
+import type { ReactNode } from "react";
+import { Fragment } from "react";
+import "./pagination.scss";
 
 export type PaginationProps = {
+  currentPage: number;
+  pageSize: number;
+  setCurrentPage: (n: number) => void;
   total: number;
-  count: number;
-  changeCount: (amount: number) => void;
 };
 
-export const Pagination = ({ total, count, changeCount }: PaginationProps) => {
-  const allShown = count >= total || total === 0;
-  const hasPages = total > DEFAULT_PAGE_SIZE;
+export const Pagination = ({
+  currentPage,
+  pageSize,
+  setCurrentPage,
+  total,
+}: PaginationProps) => {
+  const start = Math.min(total, (currentPage - 1) * pageSize + 1);
+  const finish = Math.min(currentPage * pageSize, total);
+  const pageCount = Math.ceil(total / pageSize);
+  const prevPage = Math.max(currentPage - 1, 1);
+  const nextPage = Math.min(currentPage + 1, pageCount);
+
+  // Always show the first page link and the last.
+  let pagesToShow = [1, pageCount];
+  // Always show currentPage and one before and after.
+  pagesToShow.push(currentPage - 1, currentPage, currentPage + 1);
+  // Dedupe, sort and filter away any pages that are out of range.
+  pagesToShow = uniq(
+    pagesToShow
+      .sort((a, b) => a - b)
+      .filter((page) => page >= 1 && page <= pageCount)
+  );
 
   return (
-    <div className="ctw-pagination ctw-flex ctw-items-center ctw-justify-between ctw-px-6">
+    <div className="ctw-flex ctw-justify-between ctw-py-3 ctw-px-6">
       <div className="ctw-text-gray-600 ctw-text-sm">
-        Showing{" "}
-        <span className="ctw-font-medium">{Math.min(count, total)}</span> of{" "}
+        Showing <span className="ctw-font-medium">{start}</span> to{" "}
+        <span className="ctw-font-medium">{finish}</span> of{" "}
         <span className="ctw-font-medium">{total}</span> results
       </div>
 
-      {(!allShown || hasPages) && (
-        <div className="ctw-flex ctw-h-full ctw-justify-end ctw-space-x-3">
-          {!allShown && total > DEFAULT_PAGE_SIZE * 2 && (
-            <button
-              type="button"
-              className="ctw-btn-default"
-              onClick={() => changeCount(count + DEFAULT_PAGE_SIZE)}
+      {pageCount > 1 && (
+        <div>
+          <nav className="ctw-pagination-nav" aria-label="Pagination">
+            <Page
+              page={prevPage}
+              setCurrentPage={setCurrentPage}
+              className="ctw-pagination-group-start ctw-hover:ctw-bg-gray-50"
             >
-              Show More
-            </button>
-          )}
+              <span className="ctw-sr-only">Previous</span>
+              <ChevronLeftIcon className="ctw-h-5 ctw-w-5" aria-hidden="true" />
+            </Page>
 
-          {!allShown && (
-            <button
-              type="button"
-              className="ctw-btn-primary ctw-w-28 ctw-whitespace-nowrap"
-              onClick={() => changeCount(total)}
-            >
-              Show All
-            </button>
-          )}
+            {pagesToShow.map((page, index) => {
+              const prev = pagesToShow[index - 1] ?? 0;
+              const pagesSkipped = page - prev - 1;
 
-          {allShown && hasPages && (
-            <button
-              type="button"
-              className="ctw-btn-primary ctw-w-28 ctw-whitespace-nowrap"
-              onClick={() => changeCount(DEFAULT_PAGE_SIZE)}
+              return (
+                <Fragment key={page}>
+                  {pagesSkipped > 1 && (
+                    <span className="ctw-pagination-ellipsis">...</span>
+                  )}
+                  {pagesSkipped === 1 && (
+                    <Page
+                      page={page - 1}
+                      setCurrentPage={setCurrentPage}
+                      currentPage={currentPage}
+                    />
+                  )}
+
+                  <Page
+                    setCurrentPage={setCurrentPage}
+                    page={page}
+                    currentPage={currentPage}
+                  />
+                </Fragment>
+              );
+            })}
+
+            <Page
+              page={nextPage}
+              setCurrentPage={setCurrentPage}
+              currentPage={currentPage}
+              className="ctw-pagination-group-end"
             >
-              Reset
-            </button>
-          )}
+              <span className="ctw-sr-only">Next</span>
+              <ChevronRightIcon
+                className="ctw-h-5 ctw-w-5"
+                aria-hidden="true"
+              />
+            </Page>
+          </nav>
         </div>
       )}
     </div>
   );
 };
+
+type PageProps = {
+  children?: ReactNode;
+  className?: cx.Argument;
+  currentPage?: number;
+  page: number;
+  setCurrentPage: (n: number) => void;
+};
+
+const Page = ({
+  setCurrentPage,
+  page,
+  currentPage,
+  children,
+  className,
+}: PageProps) => (
+  <button
+    type="button"
+    onClick={() => setCurrentPage(page)}
+    className={cx(
+      className,
+      "ctw-pagination-page-btn",
+      page === currentPage ? "active" : ""
+    )}
+  >
+    {children || page}
+  </button>
+);

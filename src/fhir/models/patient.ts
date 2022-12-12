@@ -1,3 +1,4 @@
+import { differenceInYears, parseISO } from "date-fns";
 import { cloneDeep, find } from "lodash";
 import { formatDateISOToLocal, formatPhoneNumber } from "../formatters";
 import { FHIRModel } from "./fhir-model";
@@ -29,6 +30,13 @@ export class PatientModel extends FHIRModel<fhir4.Patient> {
 
   get dob(): string | undefined {
     return formatDateISOToLocal(this.resource.birthDate);
+  }
+
+  get age(): number | undefined {
+    if (!this.resource.birthDate) return undefined;
+
+    const date = parseISO(this.resource.birthDate);
+    return differenceInYears(new Date(), date);
   }
 
   get gender(): string | undefined {

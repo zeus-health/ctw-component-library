@@ -1,0 +1,25 @@
+.ctw-patients-table {
+  @apply ctw-border ctw-border-solid ctw-border-divider-light ctw-bg-white;
+  .ctw-patients-table-email {
+    @apply ctw-text-content-black;
+  }
+  .ctw-patients-table-phone {
+    @apply ctw-text-content-light;
+  }
+  .ctw-patients-table-search {
+    @apply ctw-listbox-button ctw-bg-bg-white ctw-py-2 ctw-pl-10 ctw-pr-3;
+  }
+}
+
+.ctw-patients-table.ctw-patients-table-stacked {
+  .ctw-body-container {
+    @apply ctw-m-0;
+  }
+}
+
+.ctw-search-icon-wrapper {
+  @apply ctw-pointer-events-none ctw-absolute ctw-inset-y-0 ctw-left-0 ctw-flex ctw-items-center ctw-pl-3;
+  .ctw-search-icon {
+    @apply ctw-h-5 ctw-w-5 ctw-text-content-lighter;
+  }
+}
