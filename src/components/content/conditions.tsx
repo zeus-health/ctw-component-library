@@ -320,6 +320,8 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               className="ctw-conditions-not-reviewed"
               stacked={breakpoints.sm}
               conditions={otherProviderRecords}
+              sort={sort}
+              onSort={(newSort) => setSort(newSort)}
               isLoading={
                 otherProviderRecordsResponse.isLoading ||
                 patientRecordsResponse.isLoading
