@@ -52,7 +52,7 @@ export function ConditionsTableBase({
       sortIndices: [
         { index: "clinicalStatus" },
         { index: "verificationStatus" },
-        { index: "recorded", dir: "asc" },
+        { index: "recorded", dir: "desc" },
       ],
     },
     {
