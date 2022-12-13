@@ -19,7 +19,7 @@ export const schedulePatientHistory = async (
   )}/patient-history/patient/${patientID}/refresh?consent=1`;
 
   try {
-    const response = await ctwFetch(endpointUrl, {
+    const response = await ctwFetch(endpointUrl, requestContext.builderId, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${requestContext.authToken}`,

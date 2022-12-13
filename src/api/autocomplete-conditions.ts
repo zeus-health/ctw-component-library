@@ -1,14 +1,17 @@
 import { Env } from "..";
 import { getFormsConditionsUrl } from "./urls";
+import { CTWRequestContext } from "@/components/core/ctw-context";
 import { ctwFetch } from "@/utils/request";
 
 export const getAutoCompleteConditions = async (
-  authToken: string,
+  requestContext: CTWRequestContext,
   env: Env,
   searchTerm: string
 ) => {
+  const { authToken, builderId } = requestContext;
   const response = await ctwFetch(
     `${getFormsConditionsUrl(env)}?display=${searchTerm}`,
+    builderId,
     {
       headers: { Authorization: `Bearer ${authToken}` },
     }

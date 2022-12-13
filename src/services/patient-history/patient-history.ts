@@ -13,7 +13,7 @@ export async function getPatientRefreshHistoryMessages(
   )}/patient-history/messages?patient-id=${patientID}`;
 
   try {
-    const response = await ctwFetch(endpointUrl, {
+    const response = await ctwFetch(endpointUrl, requestContext.builderId, {
       headers: {
         Authorization: `Bearer ${requestContext.authToken}`,
       },
