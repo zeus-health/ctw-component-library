@@ -14,7 +14,7 @@ export const getAutoCompleteConditions = async (
     {
       headers: {
         Authorization: `Bearer ${authToken}`,
-        "Zus-Account": builderId,
+        ...(builderId && { "Zus-Account": builderId }),
       },
     }
   );
