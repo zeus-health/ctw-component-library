@@ -2,6 +2,7 @@ import { Grid, makeStyles, Switch } from "@material-ui/core";
 import { Viewer, Worker } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { DOMParser } from "@xmldom/xmldom";
+import { Buffer } from "buffer";
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import ReactJson from "react-json-view";
 import useIsomorphicLayoutEffect from "use-isomorphic-layout-effect";
@@ -46,7 +47,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const xmlTypes = ["/xml", "/xhtml+xml"];
+const xmlTypes = ["/xml", "/xhtml+xml", "application/xml"];
 
 const isSpecificContentType = (extensions: string[], contentType: string) =>
   extensions.some((extension) => contentType.includes(extension));
@@ -64,7 +65,7 @@ const File = ({ contentType, data }: FileProps) => {
     if (isSpecificContentType(xmlTypes, contentType)) {
       setTextAreaHeight(textArea.current?.scrollHeight || 5000);
     } // fallback value
-  }, [data]);
+  }, [data, contentType]);
 
   if (isSpecificContentType(xmlTypes, contentType)) {
     return (
@@ -74,10 +75,13 @@ const File = ({ contentType, data }: FileProps) => {
         disabled
         ref={textArea}
         style={{ height: `${textAreaHeight}px` }}
-        defaultValue={new XmlBeautify().beautify(atob(data), {
-          indent: "  ",
-          useSelfClosingElement: true,
-        })}
+        defaultValue={new XmlBeautify().beautify(
+          Buffer.from(data, "base64").toString("utf8"),
+          {
+            indent: "  ",
+            useSelfClosingElement: true,
+          }
+        )}
       />
     );
   }
@@ -98,7 +102,7 @@ const File = ({ contentType, data }: FileProps) => {
   if (isSpecificContentType(["/fhir+json", "/json"], contentType)) {
     return (
       <ReactJson
-        src={JSON.parse(atob(data))}
+        src={JSON.parse(Buffer.from(data, "base64").toString("utf8"))}
         style={{ margin: 30, width: "50vw" }}
         // @ts-ignore https://github.com/mac-s-g/react-json-view/pull/348
         displayArrayKey={false}
@@ -116,17 +120,19 @@ const File = ({ contentType, data }: FileProps) => {
     );
   }
 
-  return <span>{atob(data)}</span>;
+  return <span>{Buffer.from(data, "base64").toString("utf8")}</span>;
 };
 
 interface Base64BinaryFieldProps {
   value: string;
   record: fhir4.Binary;
+  contentType: string;
 }
 
 export const Base64BinaryField = ({
   value,
   record,
+  contentType,
 }: Base64BinaryFieldProps) => {
   const [decoded, setDecoded] = useState(true);
   const [parsedCCDA, setParsedCCDA] = useState(false);
@@ -142,19 +148,22 @@ export const Base64BinaryField = ({
       (isParsedAction ? setParsedCCDA : setDecoded)(event.target.checked);
 
   const ccdaDoc = useMemo(() => {
-    if (!isSpecificContentType(xmlTypes, record.contentType)) return undefined;
+    if (!isSpecificContentType(xmlTypes, contentType)) return undefined;
 
     const xmlDocument = new DOMParser({
       locator: {},
       errorHandler: (_) => null,
-    }).parseFromString(atob(value), record.contentType);
+    }).parseFromString(
+      Buffer.from(value, "base64").toString("utf8"),
+      contentType
+    );
 
     if (xpath.select1("//*[name()='patientRole']", xmlDocument)) {
       return xmlDocument;
     }
 
     return undefined;
-  }, [record.contentType, value]);
+  }, [contentType, value]);
 
   const actions = [
     {

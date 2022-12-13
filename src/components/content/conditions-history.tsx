@@ -198,7 +198,7 @@ export function ConditionHistory({
 
     return (
       <>
-        {isBinaryDocument && (
+        {isBinaryDocument && rawBinary && (
           <CCDAModal
             isOpen
             rawBinary={rawBinary}

@@ -26,7 +26,7 @@ export const CCDAModal = ({
 
   console.log(rawBinary.xmlData);
 
-  console.log(rawBinary.xmlBinary);
+  console.log("ContentType", rawBinary.xmlBinary.contentType);
 
   return (
     <Modal {...modalProps}>
@@ -35,6 +35,7 @@ export const CCDAModal = ({
           <Base64BinaryField
             record={rawBinary.xmlBinary}
             value={rawBinary.xmlData}
+            contentType={rawBinary.xmlBinary.contentType}
           />
           <div className="ctw-ml-3 ctw-flex ctw-h-7 ctw-items-center">
             <button
