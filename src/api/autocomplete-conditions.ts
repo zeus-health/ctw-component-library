@@ -11,9 +11,11 @@ export const getAutoCompleteConditions = async (
   const { authToken, builderId } = requestContext;
   const response = await ctwFetch(
     `${getFormsConditionsUrl(env)}?display=${searchTerm}`,
-    builderId,
     {
-      headers: { Authorization: `Bearer ${authToken}` },
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        "zus-account": builderId,
+      },
     }
   );
   const data = await response.json();

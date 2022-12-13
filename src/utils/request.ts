@@ -17,12 +17,10 @@ export type CTWRequestInit = {
 
 export function ctwFetch(
   input: RequestInfo | URL,
-  builderId: string,
   init?: CTWRequestInit
 ): Promise<Response> {
   const headers = init?.headers || {};
   headers["Zus-Request-Source"] = "component-library";
-  headers["Zus-Account"] = builderId;
 
   const newInit: CTWRequestInit = init || {};
   newInit.headers = headers;

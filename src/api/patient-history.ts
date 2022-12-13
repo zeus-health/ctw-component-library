@@ -19,13 +19,14 @@ export const schedulePatientHistory = async (
   )}/patient-history/patient/${patientID}/refresh?consent=1`;
 
   try {
-    const response = await ctwFetch(endpointUrl, requestContext.builderId, {
+    const response = await ctwFetch(endpointUrl, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${requestContext.authToken}`,
         "practitioner-npi": resultData.npi,
         "practitioner-role": resultData.role.toLocaleLowerCase(),
         "practitioner-name": resultData.name,
+        "zus-account": requestContext.builderId,
       },
     });
     return await response.json();
