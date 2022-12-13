@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.30.3
+
+### Patch Changes
+
+- 63e3cd0: Add error message at bottom of drawer in addition to top of drawer.
+
 ## 0.30.2
 
 ### Patch Changes
