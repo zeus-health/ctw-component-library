@@ -10,7 +10,7 @@ import { useBreakpoints } from "@/hooks/use-breakpoints";
 export type MedicationsTableBaseProps<T extends MinRecordItem> = {
   medicationStatements: MedicationStatementModel[];
   rowActions?: (condition: MedicationStatementModel) => MenuItem[];
-  hideMenu?: boolean;
+  readOnly?: boolean;
   className?: string;
   children?: ReactNode;
 } & TableBaseProps<MedicationStatementModel>;
@@ -19,7 +19,7 @@ export const MedicationsTableBase = ({
   children,
   className = "",
   rowActions,
-  hideMenu = false,
+  readOnly = false,
   medicationStatements,
   ...tableProps
 }: MedicationsTableBaseProps<MedicationStatementModel>) => {
@@ -62,7 +62,7 @@ export const MedicationsTableBase = ({
     },
   ]) as TableColumn<MedicationStatementModel>[];
 
-  if (!hideMenu && isFunction(rowActions)) {
+  if (!readOnly && isFunction(rowActions)) {
     columns.push({
       className: "ctw-table-action-column",
       render: (medication) => (

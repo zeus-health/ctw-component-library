@@ -267,7 +267,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
             stacked={breakpoints.sm}
             conditions={patientRecords}
             isLoading={patientRecordsResponse.isLoading}
-            hideMenu={readOnly}
+            readOnly={readOnly}
             sort={sort}
             onSort={(newSort) => setSort(newSort)}
             message={
@@ -326,7 +326,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
                 otherProviderRecordsResponse.isLoading ||
                 patientRecordsResponse.isLoading
               }
-              hideMenu={readOnly}
+              readOnly={readOnly}
               message={otherProviderRecordMessage}
               rowActions={(condition) => [
                 {

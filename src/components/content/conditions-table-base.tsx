@@ -8,14 +8,14 @@ export type ConditionsTableBaseProps = {
   className?: string;
   conditions: ConditionModel[];
   rowActions: (condition: ConditionModel) => MenuItem[];
-  hideMenu: boolean;
+  readOnly: boolean;
 } & TableBaseProps<ConditionModel>;
 
 export function ConditionsTableBase({
   className,
   conditions,
   rowActions,
-  hideMenu,
+  readOnly,
   sort = { columnTitle: "Last Recorded", dir: "desc" },
   onSort,
   ...tableProps
@@ -64,7 +64,7 @@ export function ConditionsTableBase({
     },
   ];
 
-  if (!hideMenu) {
+  if (!readOnly) {
     columns.push({
       className: "ctw-table-action-column",
       render: (condition: ConditionModel) => (
