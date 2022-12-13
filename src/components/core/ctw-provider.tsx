@@ -166,9 +166,6 @@ export function useQueryWithCTW<T, T2>(
     [queryKey, ...keys],
     async () => {
       const requestContext = await getRequestContext();
-      // Ignore eslint warning as we should always have a valid
-      // patient thanks to the enabled check.
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return query(requestContext, keys);
     },
     { enabled }

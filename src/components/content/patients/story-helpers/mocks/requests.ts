@@ -2,14 +2,14 @@ import { faker } from "@faker-js/faker";
 import { chunk, toLower } from "lodash/fp";
 import { rest } from "msw";
 
-// Get the same results everytime
-faker.seed(99);
+const FAKER_SEED = 0; // Value not important, just ensures consistent mocks.
+faker.seed(FAKER_SEED);
 
 const EARLIEST_DATE = new Date("2020-11-11");
 const LATEST_DATE = new Date();
 const BUILDER_UUID = faker.datatype.uuid();
 const SOURCE_IDS = Array.from({ length: 5 }).map(createMockSourceId);
-const PHONE_NUMBER_FORMATS = ["!## 555 #####!", "!1-555-####!", "!555-####!"];
+const PHONE_NUMBER_FORMATS = ["!# 555 ####!", "!1-555-####!", "!555-####!"];
 
 export function setupPatientsTableMocks(total: number) {
   const patients = Array.from({ length: total }).map(
