@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.30.4
+
+### Patch Changes
+
+- dba5946: Adds builder identification to all requests to Zus services.
+
 ## 0.30.3
 
 ### Patch Changes
