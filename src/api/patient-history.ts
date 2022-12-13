@@ -26,6 +26,9 @@ export const schedulePatientHistory = async (
         "practitioner-npi": resultData.npi,
         "practitioner-role": resultData.role.toLocaleLowerCase(),
         "practitioner-name": resultData.name,
+        ...(requestContext.builderId && {
+          "Zus-Account": requestContext.builderId,
+        }),
       },
     });
     return await response.json();
