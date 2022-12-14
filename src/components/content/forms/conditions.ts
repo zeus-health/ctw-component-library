@@ -6,6 +6,7 @@ import { dateToISO } from "@/fhir/formatters";
 import { ConditionModel } from "@/fhir/models/condition";
 import { getUsersPractitionerReference } from "@/fhir/practitioner";
 import {
+  SYSTEM_CONDITION_CATEGORY,
   SYSTEM_CONDITION_CLINICAL,
   SYSTEM_CONDITION_VERIFICATION_STATUS,
 } from "@/fhir/system-urls";
@@ -40,6 +41,18 @@ export function getAddConditionWithDefaults(condition: Condition): Condition {
     ],
     text: "confirmed",
   };
+
+  newCondition.category = [
+    {
+      coding: [
+        {
+          system: SYSTEM_CONDITION_CATEGORY,
+          code: "problem-list-item",
+          display: "Problem List Item",
+        },
+      ],
+    },
+  ];
 
   return newCondition;
 }
