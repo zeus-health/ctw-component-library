@@ -58,7 +58,7 @@ function setupData(condition: ConditionModel): CollapsibleDataListProps {
     },
     {
       label: "Category",
-      value: startCase(condition.categories[0]),
+      value: startCase(condition.categoryDisplay[0]),
     },
     {
       label: "Note",
@@ -87,7 +87,7 @@ function setupData(condition: ConditionModel): CollapsibleDataListProps {
   return {
     id: condition.id,
     date: condition.recordedDate,
-    title: startCase(condition.categories[0]),
+    title: startCase(condition.categoryDisplay[0]),
     subtitle: condition.patient?.organization?.name,
     data: detailData,
   };
