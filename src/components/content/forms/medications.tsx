@@ -11,13 +11,22 @@ import {
   QUERY_KEY_PATIENT_MEDICATIONS,
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
+import { MedicationsAutoComplete } from "./medications-autocomplete";
 
 export const medicationStatementSchema = z.object({
   subjectID: z.string({ required_error: "Patient must be specified." }),
   dateAsserted: z.date({ required_error: "Date asserted is required." }),
-  note: z.string().optional(),
-  display: z.string().optional(),
-  rxNormCode: z.string({ required_error: "RxNorm Code is required." }),
+  medication: z.object({
+    code: z.string({
+      required_error: "Please choose a medication.",
+    }),
+    // These are technically required but we mark them
+    // as optional to avoid duplicative error messages.
+    // The condition autocomplete will set us up so that
+    // all three of these values are set.
+    display: z.string().optional(),
+    system: z.string().optional(),
+  }),
   dosage: z.string().optional(),
   status: z.enum([
     "active",
@@ -41,8 +50,7 @@ export type CreateMedicationStatementFormData = {
   status: fhir4.MedicationStatement["status"];
   dateAsserted: Date;
   subjectID: string;
-  display: string;
-  rxNormCode: string;
+  medication: { display: string; code: string };
   dosage: string;
   note?: string;
 };
@@ -51,8 +59,6 @@ export const createMedicationStatement = async (
   data: CreateMedicationStatementFormData,
   getRequestContext: () => Promise<CTWRequestContext>
 ): Promise<unknown> => {
-  const { fhirClient } = await getRequestContext();
-
   // Some fields will need to be set as they are required.
   const fhirMedicationStatement: fhir4.MedicationStatement = {
     resourceType: "MedicationStatement",
@@ -60,11 +66,11 @@ export const createMedicationStatement = async (
     dateAsserted: dateToISO(data.dateAsserted),
     subject: { type: "Patient", reference: `Patient/${data.subjectID}` },
     medicationCodeableConcept: {
-      text: data.display,
+      text: data.medication.display,
       coding: [
         {
           system: SYSTEM_RXNORM,
-          code: data.rxNormCode,
+          code: data.medication.code,
         },
       ],
     },
@@ -73,7 +79,6 @@ export const createMedicationStatement = async (
         text: data.dosage,
       },
     ],
-    note: data.note ? [{ text: data.note }] : undefined,
   };
 
   const resourceModel = new MedicationStatementModel(fhirMedicationStatement);
@@ -109,14 +114,17 @@ export const getMedicationFormData = (
     readonly: true,
   },
   {
-    label: "Medication Name",
+    label: "Medication",
+    field: "medication",
     value: medication.display,
-    field: "display",
-  },
-  {
-    label: "RxNorm Code",
-    value: medication.rxNorm,
-    field: "rxNormCode",
+    readonly: false,
+    render: (readonly: boolean | undefined, inputProps) => (
+      <MedicationsAutoComplete
+        readonly={readonly}
+        {...inputProps}
+        defaultCoding={{}}
+      />
+    ),
   },
   {
     label: "Latest Status",
@@ -124,13 +132,8 @@ export const getMedicationFormData = (
     field: "status",
   },
   {
-    label: "Dosage",
+    label: "Instructions",
     value: medication.dosage,
     field: "dosage",
-  },
-  {
-    label: "New Note",
-    lines: 3,
-    field: "note",
   },
 ];
