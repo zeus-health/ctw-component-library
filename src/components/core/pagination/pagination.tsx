@@ -4,9 +4,11 @@ import { uniq } from "lodash";
 import type { ReactNode } from "react";
 import { Fragment } from "react";
 import "./pagination.scss";
+import { Loading } from "@/components/core/loading";
 
 export type PaginationProps = {
   currentPage: number;
+  isLoading?: boolean;
   pageSize: number;
   setCurrentPage: (n: number) => void;
   total: number;
@@ -14,6 +16,7 @@ export type PaginationProps = {
 
 export const Pagination = ({
   currentPage,
+  isLoading = false,
   pageSize,
   setCurrentPage,
   total,
@@ -38,9 +41,15 @@ export const Pagination = ({
   return (
     <div className="ctw-flex ctw-justify-between ctw-py-3 ctw-px-6">
       <div className="ctw-text-gray-600 ctw-text-sm">
-        Showing <span className="ctw-font-medium">{start}</span> to{" "}
-        <span className="ctw-font-medium">{finish}</span> of{" "}
-        <span className="ctw-font-medium">{total}</span> results
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <>
+            <span className="ctw-font-medium">{start}</span> to{" "}
+            <span className="ctw-font-medium">{finish}</span> of{" "}
+            <span className="ctw-font-medium">{total}</span> results
+          </>
+        )}
       </div>
 
       {pageCount > 1 && (
@@ -50,6 +59,7 @@ export const Pagination = ({
               page={prevPage}
               setCurrentPage={setCurrentPage}
               className="ctw-pagination-group-start ctw-hover:ctw-bg-gray-50"
+              disabled={currentPage === 1}
             >
               <span className="ctw-sr-only">Previous</span>
               <ChevronLeftIcon className="ctw-h-5 ctw-w-5" aria-hidden="true" />
@@ -84,8 +94,8 @@ export const Pagination = ({
             <Page
               page={nextPage}
               setCurrentPage={setCurrentPage}
-              currentPage={currentPage}
               className="ctw-pagination-group-end"
+              disabled={currentPage === pageCount}
             >
               <span className="ctw-sr-only">Next</span>
               <ChevronRightIcon
@@ -103,6 +113,7 @@ export const Pagination = ({
 type PageProps = {
   children?: ReactNode;
   className?: cx.Argument;
+  disabled?: boolean;
   currentPage?: number;
   page: number;
   setCurrentPage: (n: number) => void;
@@ -114,16 +125,17 @@ const Page = ({
   currentPage,
   children,
   className,
-}: PageProps) => (
-  <button
-    type="button"
-    onClick={() => setCurrentPage(page)}
-    className={cx(
-      className,
-      "ctw-pagination-page-btn",
-      page === currentPage ? "active" : ""
-    )}
-  >
-    {children || page}
-  </button>
-);
+  disabled = false,
+}: PageProps) => {
+  const active = page === currentPage;
+  return (
+    <button
+      type="button"
+      disabled={disabled}
+      onClick={() => setCurrentPage(page)}
+      className={cx(className, "ctw-pagination-page-btn", { active, disabled })}
+    >
+      {children || page}
+    </button>
+  );
+};

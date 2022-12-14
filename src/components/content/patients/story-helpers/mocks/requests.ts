@@ -2,14 +2,13 @@ import { faker } from "@faker-js/faker";
 import { chunk, toLower } from "lodash/fp";
 import { rest } from "msw";
 
-const FAKER_SEED = 0; // Value not important, just ensures consistent mocks.
+const FAKER_SEED = 1; // Any positive number, ensures consistent mocks.
 faker.seed(FAKER_SEED);
 
 const EARLIEST_DATE = new Date("2020-11-11");
 const LATEST_DATE = new Date();
 const BUILDER_UUID = faker.datatype.uuid();
 const SOURCE_IDS = Array.from({ length: 5 }).map(createMockSourceId);
-const PHONE_NUMBER_FORMATS = ["!# 555 ####!", "!1-555-####!", "!555-####!"];
 
 export function setupPatientsTableMocks(total: number) {
   const patients = Array.from({ length: total }).map(
@@ -37,7 +36,7 @@ export function setupPatientsTableMocks(total: number) {
             const entries = chunks[offset] || [];
 
             return res(
-              ctx.delay(300),
+              ctx.delay(2000),
               ctx.status(200),
               ctx.json(
                 createMockPatientBundle(
@@ -135,7 +134,11 @@ function createMockPatientBundleEntry(): fhir4.BundleEntry<fhir4.Patient> {
         {
           system: "phone",
           value: faker.phone.number(
-            faker.helpers.arrayElement(PHONE_NUMBER_FORMATS)
+            faker.helpers.arrayElement([
+              "!# 555 ####!",
+              "!1-555-####!",
+              "!555-####!",
+            ])
           ),
           use: faker.helpers.arrayElement(["home", "work", "mobile"]),
         },

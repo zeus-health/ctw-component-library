@@ -6,14 +6,16 @@
 }
 .ctw-pagination-ellipsis {
   @apply ctw-relative ctw-inline-flex ctw-items-center ctw-border ctw-border-b ctw-border-solid ctw-border-content-light ctw-bg-white ctw-px-4 ctw-py-2 ctw-text-sm ctw-font-medium ctw-text-content-light;
-  // ctw-border-style-solid ctw-inline-flex ctw-cursor-pointer ctw-items-center ctw-border ctw-px-4 ctw-py-2 ctw-text-sm ctw-font-medium ctw-relative ctw-rounded-l-md ctw-bg-white ctw-px-2 ctw-text-content-lighter
 }
-.ctw-pagination-page-btn {
-  @apply ctw-relative ctw-inline-flex ctw-cursor-pointer ctw-items-center ctw-border ctw-border-b ctw-border-solid ctw-border-content-light ctw-bg-white ctw-px-4 ctw-py-2 ctw-px-2 ctw-text-sm ctw-font-medium ctw-text-content-lighter ctw-text-content-light;
-  // ctw-relative ctw-inline-flex ctw-items-center ctw-inline-flex ctw-items-center ctw-border ctw-bg-white ctw-px-2 ctw-py-2 ctw-text-sm ctw-font-medium ctw-text-content-lighter;
 
-  &:hover {
-    @apply ctw-bg-bg-dark;
+.ctw-pagination-page-btn {
+  @apply ctw-relative ctw-inline-flex ctw-items-center ctw-border ctw-border-b ctw-border-solid ctw-border-content-light ctw-bg-white ctw-px-4 ctw-py-2 ctw-px-2 ctw-text-sm ctw-font-medium ctw-text-content-lighter ctw-text-content-light;
+
+  &:not(.disabled):not(.active) {
+    @apply ctw-cursor-pointer;
+    &:hover {
+      @apply ctw-bg-bg-dark;
+    }
   }
   &.ctw-pagination-group-end {
     @apply ctw-rounded-r-md;
