@@ -1,5 +1,6 @@
 import type { FormEntry } from "../../core/form/drawer-form-with-fields";
 import { z } from "zod";
+import { MedicationsAutoComplete } from "./medications-autocomplete";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { dateToISO } from "@/fhir/formatters";
@@ -11,7 +12,6 @@ import {
   QUERY_KEY_PATIENT_MEDICATIONS,
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
-import { MedicationsAutoComplete } from "./medications-autocomplete";
 
 export const medicationStatementSchema = z.object({
   subjectID: z.string({ required_error: "Patient must be specified." }),
