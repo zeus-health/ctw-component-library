@@ -2,6 +2,7 @@ import { get, pipe, toLower } from "lodash/fp";
 import { useEffect, useState } from "react";
 import { MedicationDrawer } from "@/components/content/medication-drawer";
 import { MedicationsTableBase } from "@/components/content/medications-table-base";
+import { AddNewMedDrawer } from "@/components/content/medications/add-new-med-drawer";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { sort, SortDir } from "@/utils/sort";
@@ -26,7 +27,8 @@ export function OtherProviderMedsTable({
   const [medicationModels, setMedicationModels] = useState<
     MedicationStatementModel[]
   >([]);
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [medDrawerOpen, setMedicationDrawerOpen] = useState(false);
+  const [addNewMedDrawerOpen, setAddNewMedDrawerOpen] = useState(false);
   const [selectedMedication, setSelectedMedication] =
     useState<MedicationStatementModel>();
   const { otherProviderMedications, isLoading } =
@@ -34,7 +36,12 @@ export function OtherProviderMedsTable({
 
   function openMedicationDrawer(row: MedicationStatementModel) {
     setSelectedMedication(row);
-    setDrawerOpen(true);
+    setMedicationDrawerOpen(true);
+  }
+
+  function openAddNewMedicationDrawer(row: MedicationStatementModel) {
+    setSelectedMedication(row);
+    setAddNewMedDrawerOpen(true);
   }
 
   useEffect(() => {
@@ -56,12 +63,23 @@ export function OtherProviderMedsTable({
               openMedicationDrawer(medication);
             },
           },
+          {
+            name: "Add to Record",
+            action: async () => {
+              openAddNewMedicationDrawer(medication);
+            },
+          },
         ]}
       />
       <MedicationDrawer
         medication={selectedMedication}
-        isOpen={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
+        isOpen={medDrawerOpen}
+        onClose={() => setMedicationDrawerOpen(false)}
+      />
+      <AddNewMedDrawer
+        medication={selectedMedication?.resource}
+        isOpen={addNewMedDrawerOpen}
+        handleOnClose={() => setAddNewMedDrawerOpen(false)}
       />
     </>
   );
