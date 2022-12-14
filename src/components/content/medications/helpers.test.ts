@@ -9,8 +9,8 @@ describe("Medication Helpers", () => {
       // puts the medication models in order by datetime.
       const datesInOrder = [
         "2022-09-23 10:00:00",
-        "2022-09-28 10:00:00",
         "2022-09-28 11:00:00",
+        "2022-09-28 12:00:00",
         "2022-10-03 10:00:00",
         "2022-10-03 17:00:00",
         "2022-11-20 18:00:00",
@@ -56,14 +56,14 @@ describe("Medication Helpers", () => {
           "2022-08-12 10:00:00",
           medicationA
         ),
-        // The request for medicationB is also out of order on same day
+        // The request/dispense for medicationB happen at exact same time.
         createDummyMedication(
-          "MedicationRequest",
-          "2022-08-12 19:00:00",
+          "MedicationDispense",
+          "2022-08-12 08:00:00",
           medicationB
         ),
         createDummyMedication(
-          "MedicationDispense",
+          "MedicationRequest",
           "2022-08-12 08:00:00",
           medicationB
         ),
@@ -71,54 +71,81 @@ describe("Medication Helpers", () => {
       ];
 
       const sorted = sortMedHistory(medications);
-      expect(sorted.map(pick(["resourceType", "date"]))).toEqual([
-        { resourceType: "MedicationStatement", date: "2022-08-12 19:00:00" },
-        { resourceType: "MedicationDispense", date: "2022-08-12 08:00:00" },
-        { resourceType: "MedicationRequest", date: "2022-08-12 19:00:00" },
-        { resourceType: "MedicationDispense", date: "2022-08-12 10:00:00" },
-        { resourceType: "MedicationRequest", date: "2022-08-12 20:00:00" },
+      expect(
+        sorted.map(
+          pick(["resourceType", "date", "resource.medicationCodeableConcept"])
+        )
+      ).toEqual([
+        {
+          resourceType: "MedicationStatement",
+          date: "2022-08-12 19:00:00",
+          resource: { medicationCodeableConcept: { coding: [] } },
+        },
+        {
+          resourceType: "MedicationDispense",
+          date: "2022-08-12 10:00:00",
+          resource: {
+            medicationCodeableConcept: {
+              coding: medicationA,
+            },
+          },
+        },
+        {
+          resourceType: "MedicationRequest",
+          date: "2022-08-12 20:00:00",
+          resource: {
+            medicationCodeableConcept: {
+              coding: medicationA,
+            },
+          },
+        },
+        {
+          resourceType: "MedicationDispense",
+          date: "2022-08-12 08:00:00",
+          resource: {
+            medicationCodeableConcept: {
+              coding: medicationB,
+            },
+          },
+        },
+        {
+          resourceType: "MedicationRequest",
+          date: "2022-08-12 08:00:00",
+          resource: {
+            medicationCodeableConcept: {
+              coding: medicationB,
+            },
+          },
+        },
       ]);
     });
-  });
 
-  it("should not reorder request/dispense from different days", () => {
-    // This test has out of order dispense then request, but we don't expect it
-    // to reorder them because they happen different dates. We likely won't see
-    // this happen, it's more to test the logic of the function.
-    const medicationA = [{ code: "123", system: "example.com" }];
-    const medicationB = [{ code: "456", system: "example.com" }];
-    const medications: MedicationModel[] = [
-      // The request for medicationA was recorded 10 hours after dispense
-      createDummyMedication(
-        "MedicationRequest",
-        "2022-08-12 20:00:00",
-        medicationA
-      ),
-      createDummyMedication(
-        "MedicationDispense",
-        "2022-08-11 10:00:00",
-        medicationA
-      ),
-      // The request for medicationB is also out of order on same day
-      createDummyMedication(
-        "MedicationRequest",
-        "2022-08-12 19:00:00",
-        medicationB
-      ),
-      createDummyMedication(
-        "MedicationDispense",
-        "2022-08-11 08:00:00",
-        medicationB
-      ),
-    ];
+    it("should not reorder request/dispense from different days", () => {
+      // This test has out of order dispense then request, but we don't expect it
+      // to reorder them because they happen different dates. We likely won't see
+      // this happen, it's more to test the logic of the function.
+      const medicationA = [{ code: "123", system: "example.com" }];
+      const medicationB = [{ code: "456", system: "example.com" }];
+      const medications: MedicationModel[] = [
+        // The request for medicationA was recorded a day before dispense
+        createDummyMedication(
+          "MedicationRequest",
+          "2022-09-12 20:00:00",
+          medicationA
+        ),
+        createDummyMedication(
+          "MedicationDispense",
+          "2022-09-11 20:00:00",
+          medicationA
+        ),
+      ];
 
-    const sorted = sortMedHistory(medications);
-    expect(sorted.map(pick(["resourceType", "date"]))).toEqual([
-      { resourceType: "MedicationRequest", date: "2022-08-12 19:00:00" },
-      { resourceType: "MedicationRequest", date: "2022-08-12 20:00:00" },
-      { resourceType: "MedicationDispense", date: "2022-08-11 08:00:00" },
-      { resourceType: "MedicationDispense", date: "2022-08-11 10:00:00" },
-    ]);
+      const sorted = sortMedHistory(medications);
+      expect(sorted.map(pick(["resourceType", "date"]))).toEqual([
+        { resourceType: "MedicationRequest", date: "2022-09-12 20:00:00" },
+        { resourceType: "MedicationDispense", date: "2022-09-11 20:00:00" },
+      ]);
+    });
   });
 });
 
@@ -153,6 +180,7 @@ function createDummyMedication(
         effectivePeriod: {
           start: date,
         },
+        medicationCodeableConcept: { coding },
       });
     case "MedicationStatement":
       return new MedicationModel({
@@ -160,6 +188,7 @@ function createDummyMedication(
         status: "active",
         subject: {},
         dateAsserted: date,
+        medicationCodeableConcept: { coding },
       });
     default:
       throw new Error(`Unrecognized Medication type ${resourceType}`);
