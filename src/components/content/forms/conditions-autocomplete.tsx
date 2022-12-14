@@ -28,8 +28,12 @@ export const ConditionsAutoComplete = ({
 
   const handleSearchChange = async (query: string) => {
     setIsLoading(true);
-    const { authToken, env } = await getRequestContext();
-    const conditions = await getAutoCompleteConditions(authToken, env, query);
+    const requestContext = await getRequestContext();
+    const conditions = await getAutoCompleteConditions(
+      requestContext,
+      requestContext.env,
+      query
+    );
 
     if (conditions) {
       setOptions(
