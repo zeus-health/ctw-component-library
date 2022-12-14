@@ -11,6 +11,7 @@ type TableRowsProps<T extends MinRecordItem> = {
   isLoading: boolean;
   emptyMessage: string | ReactElement;
   handleRowClick?: (record: T) => void;
+  rowSibling?: (record: T) => ReactElement;
 };
 
 export const TableRows = <T extends MinRecordItem>({
@@ -18,6 +19,7 @@ export const TableRows = <T extends MinRecordItem>({
   columns,
   isLoading,
   emptyMessage,
+  rowSibling,
   handleRowClick,
 }: TableRowsProps<T>) => {
   if (isLoading) {
@@ -43,12 +45,15 @@ export const TableRows = <T extends MinRecordItem>({
     <>
       {records.map((record) => (
         <tr
-          className={cx({
+          className={cx("ctw-group", {
             "ctw-cursor-pointer": typeof handleRowClick === "function",
           })}
           key={record.id}
-          onClick={() => {
-            if (handleRowClick) handleRowClick(record);
+          onClick={(event) => {
+            if (event.target.nodeName === "BUTTON") {
+              event.preventDefault();
+              event.stopPropagation();
+            } else if (handleRowClick) handleRowClick(record);
           }}
         >
           {columns.map((column, index) => (
@@ -59,6 +64,7 @@ export const TableRows = <T extends MinRecordItem>({
               index={index}
             />
           ))}
+          {rowSibling && rowSibling(record)}
         </tr>
       ))}
     </>

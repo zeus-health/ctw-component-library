@@ -278,18 +278,15 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
                 )}
               </>
             }
+            onRowClick={async (condition) => {
+              setHistoryDrawerIsOpen(true);
+              setSelectedCondition(condition);
+            }}
             rowActions={(condition) => [
               {
                 name: "Edit",
                 action: async () => {
                   handleEditCondition(condition);
-                },
-              },
-              {
-                name: "View History",
-                action: async () => {
-                  setHistoryDrawerIsOpen(true);
-                  setSelectedCondition(condition);
                 },
               },
               {
@@ -328,18 +325,15 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               }
               readOnly={readOnly}
               message={otherProviderRecordMessage}
+              onRowClick={async (condition) => {
+                setHistoryDrawerIsOpen(true);
+                setSelectedCondition(condition);
+              }}
               rowActions={(condition) => [
                 {
                   name: "Add",
                   action: async () => {
                     handleAddOtherProviderCondition(condition);
-                  },
-                },
-                {
-                  name: "View History",
-                  action: async () => {
-                    setHistoryDrawerIsOpen(true);
-                    setSelectedCondition(condition);
                   },
                 },
                 {

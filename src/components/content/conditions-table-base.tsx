@@ -1,5 +1,5 @@
-import { DotsHorizontalIcon } from "@heroicons/react/outline";
-import { DropdownMenu, MenuItem } from "../core/dropdown-menu";
+import { ReactElement } from "react";
+import { MenuItem } from "../core/dropdown-menu";
 import { Table, TableBaseProps } from "../core/table/table";
 import { TableColumn } from "../core/table/table-helpers";
 import { ConditionModel } from "@/fhir/models/condition";
@@ -7,6 +7,7 @@ import { ConditionModel } from "@/fhir/models/condition";
 export type ConditionsTableBaseProps = {
   className?: string;
   conditions: ConditionModel[];
+  onRowClick?: (condition: ConditionModel) => Promise<void>;
   rowActions: (condition: ConditionModel) => MenuItem[];
   readOnly: boolean;
 } & TableBaseProps<ConditionModel>;
@@ -14,6 +15,7 @@ export type ConditionsTableBaseProps = {
 export function ConditionsTableBase({
   className,
   conditions,
+  onRowClick,
   rowActions,
   readOnly,
   sort = { columnTitle: "Last Recorded", dir: "desc" },
@@ -64,22 +66,32 @@ export function ConditionsTableBase({
     },
   ];
 
+  let rowSibling: (condition: ConditionModel) => ReactElement = (condition) => (
+    <></>
+  );
   if (!readOnly) {
-    columns.push({
-      className: "ctw-table-action-column",
-      render: (condition: ConditionModel) => (
-        <DropdownMenu menuItems={rowActions(condition)}>
-          <DotsHorizontalIcon className="ctw-w-5" />
-        </DropdownMenu>
-      ),
-    });
+    rowSibling = (condition: ConditionModel) => (
+      <div className="ctw-invisible ctw-absolute ctw-right-0 ctw-space-x-2 ctw-px-4 group-hover:ctw-visible">
+        {rowActions(condition).map((rowAction) => (
+          <button
+            type="button"
+            className="ctw-btn-primary ctw-z-50"
+            onClick={rowAction.action}
+          >
+            {rowAction.name}
+          </button>
+        ))}
+      </div>
+    );
   }
 
   return (
     <Table
       className={className}
       records={conditions}
+      onRowClick={onRowClick}
       columns={columns}
+      rowSibling={rowSibling}
       sort={sort}
       onSort={onSort}
       {...tableProps}

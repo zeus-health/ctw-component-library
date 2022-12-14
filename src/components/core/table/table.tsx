@@ -21,7 +21,8 @@ export type TableProps<T extends MinRecordItem> = {
   message?: string | ReactElement;
   showTableHead?: boolean;
   stacked?: boolean;
-  handleRowClick?: (record: T) => void;
+  onRowClick?: (record: T) => void;
+  rowSibling?: (record: T) => ReactElement;
   sort?: TableSort;
   onSort?: (sort: TableSort) => void;
 };
@@ -39,9 +40,10 @@ export const Table = <T extends MinRecordItem>({
   message = "No records found",
   showTableHead = true,
   stacked,
+  rowSibling,
   sort,
   onSort,
-  handleRowClick,
+  onRowClick,
 }: TableProps<T>) => {
   const tableRef = useRef<HTMLTableElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -112,10 +114,11 @@ export const Table = <T extends MinRecordItem>({
             <tbody>
               <TableRows
                 records={sortedRecords.slice(0, count)}
-                handleRowClick={handleRowClick}
+                handleRowClick={onRowClick}
                 columns={columns}
                 isLoading={isLoading}
                 emptyMessage={message}
+                rowSibling={rowSibling}
               />
             </tbody>
           </table>
