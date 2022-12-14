@@ -8,7 +8,7 @@
     @apply ctw-text-content-light;
   }
   &-search {
-    @apply ctw-listbox-button ctw-bg-bg-white ctw-py-2 ctw-pl-10 ctw-pr-3;
+    @apply ctw-rounded-md ctw-border ctw-border-solid ctw-border-icon-light ctw-bg-bg-white ctw-px-3 ctw-py-2 ctw-pl-10 ctw-pr-3 ctw-text-sm ctw-shadow-sm;
   }
 }
 
