@@ -132,11 +132,25 @@ export const DrawerForm = <T,>({
           </div>
         </Drawer.Body>
         <Drawer.Footer>
-          <div className="ctw-flex ctw-h-full ctw-justify-end ctw-space-x-3">
-            <button type="button" className="ctw-btn-default" onClick={onClose}>
-              Cancel
-            </button>
-            <SaveButton submitting={isSubmitting} />
+          <div className="ctw-flex ctw-items-center ctw-justify-between">
+            <>
+              {errors?.requestErrors && (
+                <div className="ctw-text-sm ctw-font-medium ctw-text-error-heading">
+                  There was an error with your submission
+                </div>
+              )}
+            </>
+
+            <div className="ctw-ml-auto ctw-flex ctw-h-full ctw-space-x-3 ctw-justify-self-end">
+              <button
+                type="button"
+                className="ctw-btn-default"
+                onClick={onClose}
+              >
+                Cancel
+              </button>
+              <SaveButton submitting={isSubmitting} />
+            </div>
           </div>
         </Drawer.Footer>
       </form>
