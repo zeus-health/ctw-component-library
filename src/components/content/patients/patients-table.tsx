@@ -151,22 +151,6 @@ type PatientNameColumnProps = {
   patient: PatientModel;
 };
 
-/**
- * This component uses the `usePatientsList` hook to query Zus ODS. If devs
- * preferred to write their own similar component, they should utilize the
- * `usePatientsList` function as it is easy, provides caching and error
- * handling.
- * ```
- *   const queryResponse = usePatientsList(pageSize, currentPageNumber);
- *   const { isError, isFetching, data = {} } = queryResponse;
- * ```
- * Using `queryResponse.data?.patients` and `queryResponse.data?.total` you
- * would have up to a page worth of patients and know that the total number of
- * all patients matching the query equals `total`. Note that `queryResponse`
- * will take a third optional argument (string) which filters the list by
- * patients who partially match the string in a part of their full name. The
- * `total` and caching both take this filter string into account automatically.
- */
 const PatientNameColumn = ({ patient }: PatientNameColumnProps) => (
   <div className="ctw-flex ctw-items-center">
     <div className="ctw-ml-4">
