@@ -11,12 +11,6 @@ export type AutoCompleteComboboxProps = {
   readonly: boolean | undefined;
 } & InputHTMLAttributes<HTMLInputElement>;
 
-export type ConditionsAutoCompleteOption = {
-  display: string;
-  code: string;
-  system: string;
-};
-
 export const ConditionsAutoComplete = ({
   defaultCoding,
   readonly,
