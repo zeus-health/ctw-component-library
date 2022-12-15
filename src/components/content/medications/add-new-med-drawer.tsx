@@ -1,13 +1,13 @@
 import { format } from "date-fns";
 import { ReactElement } from "react";
-import {
-  createMedicationStatement,
-  getMedicationFormData,
-  medicationStatementSchema,
-} from "@/components/content/forms/medications";
+import { createMedicationStatement } from "@/components/content/forms/actions/medications";
 import { DrawerFormWithFields } from "@/components/core/form/drawer-form-with-fields";
 import { usePatient } from "@/components/core/patient-provider";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
+import {
+  getMedicationFormData,
+  medicationStatementSchema,
+} from "../forms/schemas/medication-schema";
 
 type Props = {
   isOpen: boolean;
