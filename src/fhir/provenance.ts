@@ -7,13 +7,13 @@ import {
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { claimsBuilderName } from "@/utils/auth";
 
-const ASSEMBLER_CODING = {
+export const ASSEMBLER_CODING = {
   system: SYSTEM_PROVENANCE_AGENT_TYPE,
   code: "assembler",
   display: "Assembler",
 };
 
-const CREATE_CODING = {
+export const CREATE_CODING = {
   coding: [
     {
       system: SYSTEM_PROVENANCE_ACTIVITY_TYPE,
@@ -23,7 +23,7 @@ const CREATE_CODING = {
   ],
 };
 
-const UPDATE_CODING = {
+export const UPDATE_CODING = {
   coding: [
     {
       system: SYSTEM_PROVENANCE_ACTIVITY_TYPE,

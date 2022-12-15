@@ -1,8 +1,16 @@
-import { Resource } from "fhir/r4";
+import { FhirResource, Resource } from "fhir/r4";
+import { v4 as uuidv4 } from "uuid";
 import { omitEmptyArrays } from "./client";
 import { isFhirError } from "./errors";
-import { createProvenance } from "./provenance";
+import {
+  ASSEMBLER_CODING,
+  CREATE_CODING,
+  createProvenance,
+  UPDATE_CODING,
+} from "./provenance";
 import { CTWRequestContext } from "@/components/core/ctw-context";
+import { getUsersPractitionerReference } from "@/fhir/practitioner";
+import { claimsBuilderName } from "@/utils/auth";
 
 export async function createOrEditFhirResource(
   resource: Resource,
@@ -34,6 +42,69 @@ export async function createOrEditFhirResource(
   } catch (err) {
     return err;
   }
+}
+
+export async function createOrEditFhirResourceWithProvenance(
+  resource: FhirResource,
+  requestContext: CTWRequestContext
+) {
+  const { fhirClient } = requestContext;
+  const builderName = claimsBuilderName(requestContext.authToken);
+  const type = resource.id ? "UPDATE" : "CREATE";
+  const resourceId = resource.id || uuidv4();
+  const provenanceFullUrl = uuidv4();
+
+  const bundle: fhir4.Bundle = {
+    resourceType: "Bundle",
+    type: "transaction",
+    entry: [
+      {
+        request: {
+          method: type === "CREATE" ? "POST" : "PATCH",
+          url: resource.resourceType,
+        },
+        fullUrl: resourceId,
+        resource,
+      },
+      {
+        request: {
+          method: type === "CREATE" ? "POST" : "PATCH",
+          url: "Provenance",
+        },
+        fullUrl: provenanceFullUrl,
+        resource: {
+          resourceType: "Provenance",
+          activity: type === "CREATE" ? CREATE_CODING : UPDATE_CODING,
+          agent: [
+            {
+              who: await getUsersPractitionerReference(requestContext),
+              onBehalfOf: { display: builderName },
+            },
+            {
+              type: {
+                coding: [ASSEMBLER_CODING],
+              },
+              who: { display: "Zus Health" },
+            },
+          ],
+          recorded: new Date().toISOString(),
+          target: [
+            {
+              reference: `${resource.resourceType}/${resourceId}`,
+              type: resource.resourceType,
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  return fhirClient.transaction({
+    body: omitEmptyArrays({
+      ...bundle,
+      type: "transaction",
+    }),
+  });
 }
 
 export async function deleteMetaTags(
