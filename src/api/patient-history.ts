@@ -26,8 +26,8 @@ export const schedulePatientHistory = async (
         "practitioner-npi": resultData.npi,
         "practitioner-role": resultData.role.toLocaleLowerCase(),
         "practitioner-name": resultData.name,
-        ...(requestContext.builderId && {
-          "Zus-Account": requestContext.builderId,
+        ...(requestContext.contextBuilderId && {
+          "Zus-Account": requestContext.contextBuilderId,
         }),
       },
     });

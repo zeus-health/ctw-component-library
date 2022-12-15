@@ -22,8 +22,8 @@ export const MedicationsAutoComplete = ({
 
   const handleSearchChange = async (query: string) => {
     setIsLoading(true);
-    const { authToken, env } = await getRequestContext();
-    const medications = await getAutoCompleteMedications(authToken, env, query);
+    const requestContext = await getRequestContext();
+    const medications = await getAutoCompleteMedications(requestContext, query);
 
     if (medications) {
       setOptions(
