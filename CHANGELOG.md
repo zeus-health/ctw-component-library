@@ -1,5 +1,15 @@
 # ctw-component-library
 
+## 0.31.0
+
+### Minor Changes
+
+- 2abe043: Add medications autocomplete component and remove note field from add medication.
+
+### Patch Changes
+
+- f7f2fe9: Fix issue where builderId is passed in even when logged in as non-super user.
+
 ## 0.30.4
 
 ### Patch Changes
