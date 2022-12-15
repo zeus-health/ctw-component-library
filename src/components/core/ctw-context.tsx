@@ -28,6 +28,7 @@ export type CTWRequestContext = {
   env: Env;
   authToken: string;
   builderId: string;
+  contextBuilderId: string | undefined;
   fhirClient: Client;
 };
 
