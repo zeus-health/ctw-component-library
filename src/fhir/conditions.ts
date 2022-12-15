@@ -1,5 +1,5 @@
 import { SearchParams } from "fhir-kit-client";
-import { find, orderBy } from "lodash";
+import { orderBy } from "lodash";
 import { getIncludedBasics } from "./bundle";
 import { CodePreference } from "./codeable-concept";
 import { getPractitioner } from "./practitioner";
@@ -17,16 +17,15 @@ import {
 } from "./system-urls";
 import { getZusApiBaseUrl } from "@/api/urls";
 import { getAddConditionWithDefaults } from "@/components/content/forms/conditions";
+import { CollapsibleDataListProps } from "@/components/core/collapsible-data-list";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
 import { ConditionModel } from "@/fhir/models/condition";
-import { errorResponse } from "@/utils/errors";
 import {
   QUERY_KEY_CONDITION_HISTORY,
   QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
   QUERY_KEY_PATIENT_CONDITIONS,
 } from "@/utils/query-keys";
-import { sort } from "@/utils/sort";
 
 export const CONDITION_CODE_PREFERENCE_ORDER: CodePreference[] = [
   { system: SYSTEM_SNOMED, checkForEnrichment: true },
@@ -179,59 +178,76 @@ export const setRecorderField = async (
 };
 
 export type BinaryDocumentData = {
-  xmlBinary: fhir4.Binary;
+  xmlBinary: fhir4.Binary | undefined;
   xmlData: string | undefined;
+  isBinary: boolean;
 };
 
 export async function getBinary(
   requestContext: CTWRequestContext,
-  patientID: string
-): Promise<BinaryDocumentData> {
-  // Call to Document Reference to see if Binary exists. If it exists, use it to obtain the binary document and return that.
-  const endpointDocumentRefUrl = `${getZusApiBaseUrl(
-    requestContext.env
-  )}/fhir/DocumentReference?patient.identifier=${patientID}`;
+  conditionsData?: CollapsibleDataListProps[]
+): Promise<BinaryDocumentData[]> {
+  // Call to Provenance for the conditionID to see if Binary exists. If it exists, use it to obtain the binary document and return that.
 
-  try {
-    const bundle = await fetch(endpointDocumentRefUrl, {
-      headers: {
-        Authorization: `Bearer ${requestContext.authToken}`,
+  let documents: BinaryDocumentData;
+  let binaryObjects: BinaryDocumentData[];
+
+  if (!conditionsData) {
+    return [
+      {
+        xmlBinary: undefined,
+        xmlData: undefined,
+        isBinary: false,
       },
-    });
-
-    const documents = await bundle.json();
-
-    const sortedDocumentsByDate = sort(
-      documents.entry,
-      (d: any) => d.resource.date,
-      "desc"
-    );
-
-    const documentReference = find(
-      sortedDocumentsByDate,
-      (d) => d.resource.content[0].attachment
-    );
-
-    const binaryID = documentReference.resource.content[0].attachment.url;
-
-    const endpointBinaryUrl = `${getZusApiBaseUrl(
-      requestContext.env
-    )}/fhir/${binaryID}`;
-
-    const response = await fetch(endpointBinaryUrl, {
-      headers: {
-        Authorization: `Bearer ${requestContext.authToken}`,
-        accept: "application/json",
-        "Content-Type": "application/json+fhir",
-      },
-    });
-
-    const xmlBinary = (await response.json()) as fhir4.Binary;
-    const xmlData = xmlBinary.data;
-    return { xmlBinary, xmlData };
-  } catch (err) {
-    throw errorResponse("Failed fetching binary document", err);
+    ];
   }
-}
 
-// editors active tabs google to limit tab in vscode
+  conditionsData.forEach(async (condition) => {
+    const endpointConditionsUrl = `${getZusApiBaseUrl(
+      requestContext.env
+    )}/fhir/Provenance?target=Condition/${condition.id}`;
+    const bundle = await fetch(endpointConditionsUrl, {
+      headers: {
+        Authorization: `Bearer ${requestContext.authToken}`,
+      },
+    });
+    const conditionsJSON = await bundle.json();
+
+    // console.log(
+    //   "conditionsJSON",
+    //   conditionsJSON.entry[0].resource.entity[0].what.reference
+    // );
+
+    // The role should be of source otherwise can't be trusted to be provide the correct and truthy binary.
+    let documentBinary: fhir4.Binary | undefined;
+    if (conditionsJSON.entry[0].resource.entity[0].role === "source") {
+      const binaryID =
+        conditionsJSON.entry[0].resource.entity[0].what.reference;
+
+      console.log("binaryID for this instance is", binaryID);
+
+      const endpointBinaryUrl = `${getZusApiBaseUrl(
+        requestContext.env
+      )}/fhir/${binaryID}`;
+
+      const response = await fetch(endpointBinaryUrl, {
+        headers: {
+          Authorization: `Bearer ${requestContext.authToken}`,
+          accept: "application/json",
+          "Content-Type": "application/json+fhir",
+        },
+      });
+      documentBinary = await response.json();
+    }
+
+    documents = {
+      xmlBinary: documentBinary || undefined,
+      xmlData: documentBinary?.data,
+      isBinary: documentBinary?.data !== undefined,
+    };
+    console.log("The documents are: ", documents);
+    binaryObjects.push(documents);
+  });
+
+  return binaryObjects;
+}

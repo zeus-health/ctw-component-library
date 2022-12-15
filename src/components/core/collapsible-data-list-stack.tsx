@@ -18,7 +18,7 @@ export const CollapsibleDataListStack = ({
   xmlDocumentExists,
 }: CollapsibleListProp) => {
   const [showAll, setShowAll] = useState(!limit || entries.length <= limit);
-
+  console.log("condition entries", entries);
   return (
     <div className="ctw-space-y-3">
       {entries.map((entry) => (

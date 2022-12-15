@@ -80,8 +80,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
 
   const [clinicalHistoryExists, setClinicalHistoryExists] = useState<boolean>();
 
-  const [documentExists, setDocumentExists] = useState<Document>();
-
   const patientRecordsMessage = patientRecordsResponse.isError
     ? ERROR_MSG
     : EMPTY_MESSAGE_PATIENT_RECORD;
@@ -398,7 +396,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         onClose={() => setHistoryDrawerIsOpen(false)}
         condition={selectedCondition}
         onEdit={shouldHistoryDrawerBeReadOnly()}
-        patientID={patientResponse.data?.UPID ?? ""}
       />
 
       {selectedCondition && patientResponse.data && (

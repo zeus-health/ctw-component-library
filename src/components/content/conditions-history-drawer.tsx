@@ -8,7 +8,6 @@ export type ConditionHistoryDrawerProps = {
   isOpen: boolean;
   onClose: () => void;
   onEdit?: () => void;
-  patientID: string;
 };
 
 export function ConditionHistoryDrawer({
@@ -17,7 +16,6 @@ export function ConditionHistoryDrawer({
   isOpen,
   onClose,
   onEdit,
-  patientID,
 }: ConditionHistoryDrawerProps) {
   const title = "Condition History";
 
@@ -34,7 +32,6 @@ export function ConditionHistoryDrawer({
             condition={condition}
             onClose={onClose}
             onEdit={onEdit}
-            patientID={patientID}
           />
         )}
       </Drawer.Body>

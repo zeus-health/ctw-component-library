@@ -103,12 +103,10 @@ export function ConditionHistory({
   condition,
   onClose,
   onEdit,
-  patientID,
 }: {
   condition: ConditionModel;
   onClose: () => void;
   onEdit?: () => void;
-  patientID: string;
 }) {
   const [conditionsWithDate, setConditionsWithDate] =
     useState<CollapsibleDataListStackEntries>([]);
@@ -124,6 +122,7 @@ export function ConditionHistory({
   const [rawBinary, setRawBinary] = useState<BinaryDocumentData>();
 
   useEffect(() => {
+    let conditionsDataDeduped: CollapsibleDataListProps[];
     async function load() {
       setConditionForSearch(condition);
 
@@ -145,7 +144,7 @@ export function ConditionHistory({
           (c) => c.verificationStatus !== "entered-in-error"
         );
 
-        const conditionsDataDeduped = uniqWith(
+        conditionsDataDeduped = uniqWith(
           filterEnteredinErrorConditions.map((model) => setupData(model)),
           (a, b) => isEqual(a.data, b.data)
         );
@@ -157,13 +156,13 @@ export function ConditionHistory({
     }
     async function loadDocument() {
       const requestContext = await getRequestContext();
-      const binary = await getBinary(requestContext, patientID);
+      const binaryDocs = await getBinary(requestContext, conditionsDataDeduped);
 
-      if (binary.xmlData) {
+      if (binaryDocs[0].xmlData) {
         setIsBinaryDocument(true);
-        setRawBinary(binary);
+        setRawBinary(binaryDocs[0]);
       }
-      console.log(isBinaryDocument);
+      console.log("isBinaryDocument", isBinaryDocument);
     }
 
     void loadDocument();
@@ -181,7 +180,6 @@ export function ConditionHistory({
     historyResponse.data,
     isBinaryDocument,
     onEdit,
-    patientID,
   ]);
 
   function conditionHistoryDisplay() {
@@ -200,7 +198,7 @@ export function ConditionHistory({
       <>
         {isBinaryDocument && rawBinary && (
           <CCDAModal
-            isOpen
+            isOpen={false}
             rawBinary={rawBinary}
             xmlExists={isBinaryDocument}
             onClose={onClose}
