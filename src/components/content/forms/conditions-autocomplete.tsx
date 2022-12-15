@@ -23,11 +23,7 @@ export const ConditionsAutoComplete = ({
   const handleSearchChange = async (query: string) => {
     setIsLoading(true);
     const requestContext = await getRequestContext();
-    const conditions = await getAutoCompleteConditions(
-      requestContext,
-      requestContext.env,
-      query
-    );
+    const conditions = await getAutoCompleteConditions(requestContext, query);
 
     if (conditions) {
       setOptions(
