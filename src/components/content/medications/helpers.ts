@@ -39,6 +39,9 @@ const getDateTimeValue = (medication: MedicationModel) => {
  * - Recombine the sorted resources.
  */
 export const sortMedHistory = (resources: MedicationModel[]) => {
+  if (resources.length === 0) {
+    return resources;
+  }
   const createTuples = (medication: MedicationModel, index: number) => [
     medication,
     medication.resourceType,
