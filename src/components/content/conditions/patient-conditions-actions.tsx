@@ -1,11 +1,11 @@
 import { PlusIcon } from "@heroicons/react/outline";
 import { curry } from "lodash";
 import { useState } from "react";
+import { createOrEditCondition } from "../forms/actions/conditions";
 import {
   conditionAddSchema,
   getAddConditionData,
 } from "../forms/schemas/condition-schema";
-import { createOrEditCondition } from "../forms/actions/conditions";
 import { DrawerFormWithFields } from "@/components/core/form/drawer-form-with-fields";
 import { usePatient } from "@/components/core/patient-provider";
 import { Toggle } from "@/components/core/toggle";

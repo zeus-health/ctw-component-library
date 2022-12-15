@@ -1,7 +1,7 @@
-import { FormEntry } from "@/components/core/form/drawer-form-with-fields";
-import { MedicationStatementModel } from "@/fhir/models";
 import { z } from "zod";
 import { MedicationsAutoComplete } from "../medications-autocomplete";
+import { FormEntry } from "@/components/core/form/drawer-form-with-fields";
+import { MedicationStatementModel } from "@/fhir/models";
 
 export const getMedicationFormData = (
   medication: MedicationStatementModel
