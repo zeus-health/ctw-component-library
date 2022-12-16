@@ -7,11 +7,19 @@ import {
   CollapsibleDataListStack,
   CollapsibleDataListStackEntries,
 } from "../core/collapsible-data-list-stack";
+import { useCTW } from "../core/ctw-provider";
+import { CCDAModal } from "../core/modal-ccda";
 import { NotesList } from "../core/notes-list";
+import { DocumentButton } from "./CCDA/documentButton";
 import { ConditionHeader } from "./condition-header";
 import { Loading } from "@/components/core/loading";
 import { getIncludedResources } from "@/fhir/bundle";
-import { useConditionHistory } from "@/fhir/conditions";
+import {
+  BinaryDocumentData,
+  getBinary,
+  SourceDocumentMap,
+  useConditionHistory,
+} from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models/condition";
 
 const CONDITION_HISTORY_LIMIT = 10;
@@ -107,10 +115,23 @@ export function ConditionHistory({
   const [conditionsWithoutDate, setConditionsWithoutDate] =
     useState<CollapsibleDataListStackEntries>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingSourceDocument, setLoadingSourceDocument] = useState(true);
   const [conditionForSearch, setConditionForSearch] =
     useState<ConditionModel>();
   const historyResponse = useConditionHistory(conditionForSearch);
+  const { getRequestContext } = useCTW();
 
+  const [
+    isBinaryDocumentForOriginalEntry,
+    setIsBinaryDocumentForOriginalEntry,
+  ] = useState(false);
+  const [rawBinary, setRawBinary] = useState<BinaryDocumentData>();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [idMap, setIDMap] = useState<SourceDocumentMap>(new Map());
+  // Create a map that links conditionID and then use that ID to map to conditions without dates and conditions with Dates.
+  // Then you finally need to map those into 2 separate arrays and then pass those into the functions.
   useEffect(() => {
     async function load() {
       setConditionForSearch(condition);
@@ -141,6 +162,29 @@ export function ConditionHistory({
         setConditionsWithDate(conditionsDataDeduped.filter((d) => d.date));
         setConditionsWithoutDate(conditionsDataDeduped.filter((d) => !d.date));
         setLoading(false);
+
+        // Binary Doc stuff
+        const requestContext = await getRequestContext();
+
+        const turnConditiontoDataList = setupData(condition);
+        const allConditionsWithOriginal = [
+          turnConditiontoDataList,
+          ...conditionsDataDeduped,
+        ];
+
+        const binaryDocs = await getBinary(
+          requestContext,
+          allConditionsWithOriginal
+        );
+
+        setIDMap(binaryDocs);
+
+        if (binaryDocs.get(condition.id)?.isBinary) {
+          setIsBinaryDocumentForOriginalEntry(true);
+          setRawBinary(binaryDocs.get(condition.id));
+        }
+
+        setLoadingSourceDocument(false);
       }
     }
 
@@ -150,8 +194,15 @@ export function ConditionHistory({
       setConditionsWithDate([]);
       setConditionsWithoutDate([]);
       setLoading(true);
+      setLoadingSourceDocument(true);
     };
-  }, [condition, historyResponse.data, onEdit]);
+  }, [
+    condition,
+    getRequestContext,
+    historyResponse.data,
+    isBinaryDocumentForOriginalEntry,
+    onEdit,
+  ]);
 
   function conditionHistoryDisplay() {
     if (
@@ -167,6 +218,13 @@ export function ConditionHistory({
 
     return (
       <>
+        {isBinaryDocumentForOriginalEntry && rawBinary && (
+          <CCDAModal
+            isOpen={isModalOpen}
+            rawBinary={rawBinary}
+            onClose={() => setIsModalOpen(false)}
+          />
+        )}
         <div className="ctw-space-y-6">
           <ConditionHeader condition={condition} />
           {onEdit && (
@@ -180,17 +238,49 @@ export function ConditionHistory({
                 // This fixes a bug where having multiple drawers causes headless ui useScrollLock to become out of sync, which causes overlay: hidden incorrectly persist on the html element.
                 setTimeout(onEdit, 400);
               }}
-            />
+            >
+              {isBinaryDocumentForOriginalEntry && (
+                <DocumentButton onClick={() => setIsModalOpen(true)} />
+              )}
+            </Details>
           )}
           <CollapsibleDataListStack
-            entries={conditionsWithDate}
+            entries={conditionsWithDate.map((entry) => ({
+              ...entry,
+              children: (
+                <>
+                  {idMap.get(entry.id) && idMap.get(entry.id)?.isBinary && (
+                    <DocumentButton
+                      onClick={() => {
+                        setIsModalOpen(true);
+                        setRawBinary(idMap.get(entry.id));
+                      }}
+                    />
+                  )}
+                </>
+              ),
+            }))}
             limit={CONDITION_HISTORY_LIMIT}
           />
           {conditionsWithoutDate.length !== 0 && (
             <div className="ctw-space-y-2">
               <div className="ctw-font-medium">Records with no date:</div>
               <CollapsibleDataListStack
-                entries={conditionsWithoutDate}
+                entries={conditionsWithoutDate.map((entry) => ({
+                  ...entry,
+                  children: (
+                    <>
+                      {idMap.get(entry.id) && idMap.get(entry.id)?.isBinary && (
+                        <DocumentButton
+                          onClick={() => {
+                            setIsModalOpen(true);
+                            setRawBinary(idMap.get(entry.id));
+                          }}
+                        />
+                      )}
+                    </>
+                  ),
+                }))}
                 limit={CONDITION_HISTORY_LIMIT}
               />
             </div>

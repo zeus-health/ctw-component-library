@@ -16,7 +16,6 @@ export const CollapsibleDataListStack = ({
   limit,
 }: CollapsibleListProp) => {
   const [showAll, setShowAll] = useState(!limit || entries.length <= limit);
-
   return (
     <div className="ctw-space-y-3">
       <div className="ctw-text-base ctw-font-medium ctw-uppercase ctw-text-content-light">
@@ -31,7 +30,9 @@ export const CollapsibleDataListStack = ({
             subtitle={entry.subtitle}
             data={entry.data}
             hideEmpty={entry.hideEmpty}
-          />
+          >
+            {entry.children}
+          </CollapsibleDataList>
         </div>
       ))}
       {!showAll && (
