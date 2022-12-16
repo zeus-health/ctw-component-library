@@ -7,34 +7,28 @@ import { BinaryDocumentData } from "@/fhir/conditions";
 export type CCDAModalProps = {
   rawBinary: BinaryDocumentData;
   onClose: () => void;
-  xmlExists: boolean;
 } & Omit<ModalProps, "title" | "children" | "onAfterClosed">;
 
 export const CCDAModal = ({
   rawBinary,
   onClose,
-  xmlExists,
   ...modalProps
 }: CCDAModalProps) => {
   const [isXMLData, setIsXMLData] = useState(false);
 
   useEffect(() => {
-    if (xmlExists) {
+    if (rawBinary.isBinary) {
       setIsXMLData(true);
     }
-  }, [isXMLData, xmlExists]);
-
-  console.log(rawBinary.xmlData);
-
-  console.log("ContentType", rawBinary.xmlBinary.contentType);
+  }, [isXMLData, rawBinary.isBinary]);
 
   return (
     <Modal {...modalProps}>
-      {isXMLData && rawBinary.xmlData && (
+      {isXMLData && rawBinary.xmlBinary?.data && rawBinary.xmlBinary.data && (
         <div className="ctw-flex ctw-w-full ctw-space-x-4">
           <Base64BinaryField
             record={rawBinary.xmlBinary}
-            value={rawBinary.xmlData}
+            value={rawBinary.xmlBinary.data}
             contentType={rawBinary.xmlBinary.contentType}
           />
           <div className="ctw-ml-3 ctw-flex ctw-h-7 ctw-items-center">

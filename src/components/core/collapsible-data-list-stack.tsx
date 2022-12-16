@@ -9,13 +9,11 @@ export type CollapsibleDataListStackEntries = CollapsibleDataListProps[];
 export type CollapsibleListProp = {
   entries: CollapsibleDataListStackEntries;
   limit?: number;
-  xmlDocumentExists?: boolean;
 };
 
 export const CollapsibleDataListStack = ({
   entries,
   limit,
-  xmlDocumentExists,
 }: CollapsibleListProp) => {
   const [showAll, setShowAll] = useState(!limit || entries.length <= limit);
   console.log("condition entries", entries);
@@ -30,7 +28,6 @@ export const CollapsibleDataListStack = ({
             subtitle={entry.subtitle}
             data={entry.data}
             hideEmpty={entry.hideEmpty}
-            xmlDocumentExists={xmlDocumentExists}
           />
         </div>
       ))}

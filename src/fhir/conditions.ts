@@ -177,77 +177,97 @@ export const setRecorderField = async (
   };
 };
 
+export type SourceDocumentMap = Record<string, BinaryDocumentData>;
+
 export type BinaryDocumentData = {
   xmlBinary: fhir4.Binary | undefined;
-  xmlData: string | undefined;
   isBinary: boolean;
 };
 
 export async function getBinary(
   requestContext: CTWRequestContext,
   conditionsData?: CollapsibleDataListProps[]
-): Promise<BinaryDocumentData[]> {
+): Promise<SourceDocumentMap> {
   // Call to Provenance for the conditionID to see if Binary exists. If it exists, use it to obtain the binary document and return that.
 
-  let documents: BinaryDocumentData;
-  let binaryObjects: BinaryDocumentData[];
+  console.log("ConditionsData when entering getBinary", conditionsData);
 
+  const binaryObjects: Record<string, BinaryDocumentData> = {
+    "": { xmlBinary: undefined, isBinary: false },
+  };
+
+  // No conditions in the history drawer.
   if (!conditionsData) {
-    return [
-      {
-        xmlBinary: undefined,
-        xmlData: undefined,
-        isBinary: false,
-      },
-    ];
+    return binaryObjects;
   }
 
-  conditionsData.forEach(async (condition) => {
-    const endpointConditionsUrl = `${getZusApiBaseUrl(
-      requestContext.env
-    )}/fhir/Provenance?target=Condition/${condition.id}`;
-    const bundle = await fetch(endpointConditionsUrl, {
-      headers: {
-        Authorization: `Bearer ${requestContext.authToken}`,
-      },
-    });
-    const conditionsJSON = await bundle.json();
-
-    // console.log(
-    //   "conditionsJSON",
-    //   conditionsJSON.entry[0].resource.entity[0].what.reference
-    // );
-
-    // The role should be of source otherwise can't be trusted to be provide the correct and truthy binary.
-    let documentBinary: fhir4.Binary | undefined;
-    if (conditionsJSON.entry[0].resource.entity[0].role === "source") {
-      const binaryID =
-        conditionsJSON.entry[0].resource.entity[0].what.reference;
-
-      console.log("binaryID for this instance is", binaryID);
-
-      const endpointBinaryUrl = `${getZusApiBaseUrl(
+  await Promise.all(
+    conditionsData.map(async (condition) => {
+      const endpointConditionsUrl = `${getZusApiBaseUrl(
         requestContext.env
-      )}/fhir/${binaryID}`;
-
-      const response = await fetch(endpointBinaryUrl, {
+      )}/fhir/Provenance?target=Condition/${condition.id}`;
+      const bundle = await fetch(endpointConditionsUrl, {
         headers: {
           Authorization: `Bearer ${requestContext.authToken}`,
-          accept: "application/json",
-          "Content-Type": "application/json+fhir",
         },
       });
-      documentBinary = await response.json();
-    }
+      const conditionsJSON = await bundle.json();
 
-    documents = {
-      xmlBinary: documentBinary || undefined,
-      xmlData: documentBinary?.data,
-      isBinary: documentBinary?.data !== undefined,
-    };
-    console.log("The documents are: ", documents);
-    binaryObjects.push(documents);
-  });
+      // console.log(
+      //   "conditionsJSON",
+      //   conditionsJSON.entry[0].resource.entity[0].what.reference
+      // );
+
+      // The role should be of source otherwise can't be trusted to be provide the correct and truthy binary.
+      let documentBinary: fhir4.Binary | undefined;
+      if (conditionsJSON.entry) {
+        if (conditionsJSON.entry[0].resource.entity[0].role === "source") {
+          const binaryID =
+            conditionsJSON.entry[0].resource.entity[0].what.reference;
+
+          // console.log("binaryID for this instance is", binaryID);
+
+          const endpointBinaryUrl = `${getZusApiBaseUrl(
+            requestContext.env
+          )}/fhir/${binaryID}`;
+
+          const response = await fetch(endpointBinaryUrl, {
+            headers: {
+              Authorization: `Bearer ${requestContext.authToken}`,
+              accept: "application/json",
+              "Content-Type": "application/json+fhir",
+            },
+          });
+          documentBinary = await response.json();
+        }
+      }
+
+      const documents = {
+        xmlBinary: documentBinary || undefined,
+        isBinary: documentBinary?.data !== undefined,
+      } as BinaryDocumentData;
+      console.log("The documents are: ", documents);
+      binaryObjects[condition.id] = documents;
+    })
+  );
+
+  console.log("binaryObjects", binaryObjects);
 
   return binaryObjects;
 }
+
+// export function sourceDocumentsToAssociatedConditions(
+//   conditionsWithDate: CollapsibleDataListStackEntries,
+//   conditionsWithoutDate: CollapsibleDataListStackEntries,
+//   binaryDocs: SourceDocumentMap
+// ): {
+//   binaryDocsForConditionsWithDate: SourceDocumentMap;
+//   binaryDocsForConditionsWithoutDate: BinaryDocumentData[] | undefined;
+// };
+// console.log("Hi");
+// {
+//   return {
+//     binaryDocsForConditionsWithDate: [binaryDocs[""]],
+//     binaryDocsForConditionsWithoutDate: [binaryDocs[""]],
+//   };
+// }

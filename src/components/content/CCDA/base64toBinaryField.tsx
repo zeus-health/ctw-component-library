@@ -135,7 +135,7 @@ export const Base64BinaryField = ({
   contentType,
 }: Base64BinaryFieldProps) => {
   const [decoded, setDecoded] = useState(true);
-  const [parsedCCDA, setParsedCCDA] = useState(false);
+  const [parsedCCDA, setParsedCCDA] = useState(true);
   const classes = useStyles();
 
   useEffect(() => {
@@ -167,13 +167,6 @@ export const Base64BinaryField = ({
 
   const actions = [
     {
-      label: "Decoded",
-      value: decoded,
-      event: handleChange(false),
-      disabled: false,
-      display: true,
-    },
-    {
       label: "Parsed",
       value: parsedCCDA,
       event: handleChange(true),
@@ -185,8 +178,6 @@ export const Base64BinaryField = ({
 
   const getContent = () => {
     if (ccdaDocument) return <CcdaViewer document={ccdaDocument} />;
-
-    if (decoded) return <File contentType={record.contentType} data={value} />;
 
     return <div className={classes.base64BinaryText}>{value}</div>;
   };
