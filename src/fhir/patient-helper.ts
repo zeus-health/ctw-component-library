@@ -48,11 +48,13 @@ export async function getBuilderPatientsList(
   paginationOptions: (number | string | undefined)[] = []
 ): Promise<GetPatientsTableResults> {
   const [pageSize, pageOffset, searchNameValue] = paginationOptions;
+  const offset =
+    parseInt(`${pageOffset ?? "0"}`, 10) * parseInt(`${pageSize ?? "1"}`, 10);
 
   const searchParams = pickBy({
     _count: pageSize,
     _total: "accurate",
-    _offset: pageOffset,
+    _offset: offset,
     name: searchNameValue,
   }) as SearchParams;
 

@@ -8,7 +8,7 @@ import { CTWProvider } from "@/components/core/ctw-provider";
 
 type Props = PatientsTableProps;
 
-const MOCKED_PATIENT_COUNT = 82;
+const MOCKED_PATIENT_COUNT = 17;
 
 export default {
   tags: ["docsPage"],
