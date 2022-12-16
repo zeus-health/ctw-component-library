@@ -7,3 +7,6 @@ export const getZusApiBaseUrl = (env: Env) =>
 
 export const getFormsConditionsUrl = (env: Env) =>
   `${getZusApiBaseUrl(env)}/forms-data/terminology/conditions`;
+
+export const getFormsMedicationsUrl = (env: Env) =>
+  `${getZusApiBaseUrl(env)}/forms-data/terminology/dosages`;

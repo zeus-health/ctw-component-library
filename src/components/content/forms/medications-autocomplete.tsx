@@ -3,7 +3,7 @@ import {
   ComboboxField,
   ComboxboxFieldOption,
 } from "../../core/form/combobox-field";
-import { getAutoCompleteConditions } from "@/api/autocomplete-conditions";
+import { getAutoCompleteMedications } from "@/api/autocomplete-medications";
 import { useCTW } from "@/components/core/ctw-provider";
 
 export type AutoCompleteComboboxProps = {
@@ -11,7 +11,7 @@ export type AutoCompleteComboboxProps = {
   readonly: boolean | undefined;
 } & InputHTMLAttributes<HTMLInputElement>;
 
-export const ConditionsAutoComplete = ({
+export const MedicationsAutoComplete = ({
   defaultCoding,
   readonly,
   ...inputProps
@@ -23,11 +23,11 @@ export const ConditionsAutoComplete = ({
   const handleSearchChange = async (query: string) => {
     setIsLoading(true);
     const requestContext = await getRequestContext();
-    const conditions = await getAutoCompleteConditions(requestContext, query);
+    const medications = await getAutoCompleteMedications(requestContext, query);
 
-    if (conditions) {
+    if (medications) {
       setOptions(
-        conditions.map((item: fhir4.Coding) => ({
+        medications.map((item: fhir4.Coding) => ({
           value: item,
           label: item.display,
         })) as ComboxboxFieldOption[]

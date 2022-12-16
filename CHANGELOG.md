@@ -1,5 +1,27 @@
 # ctw-component-library
 
+## 0.31.2
+
+### Patch Changes
+
+- ad8fe61: Fix bug where medications couldnt be added without dosage.
+
+## 0.31.1
+
+### Patch Changes
+
+- 223e5f4: Automatically categorizes new conditions as problem list item.
+
+## 0.31.0
+
+### Minor Changes
+
+- 2abe043: Add medications autocomplete component and remove note field from add medication.
+
+### Patch Changes
+
+- f7f2fe9: Fix issue where builderId is passed in even when logged in as non-super user.
+
 ## 0.30.4
 
 ### Patch Changes
