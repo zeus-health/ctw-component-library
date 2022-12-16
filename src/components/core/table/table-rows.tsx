@@ -19,7 +19,6 @@ export const TableRows = <T extends MinRecordItem>({
   columns,
   isLoading,
   emptyMessage,
-  rowSibling,
   handleRowClick,
 }: TableRowsProps<T>) => {
   if (isLoading) {
@@ -50,7 +49,8 @@ export const TableRows = <T extends MinRecordItem>({
           })}
           key={record.id}
           onClick={(event) => {
-            if (event.target.nodeName === "BUTTON") {
+            // Cast because the event target is always a Node.
+            if ((event.target as Node).nodeName === "BUTTON") {
               event.preventDefault();
               event.stopPropagation();
             } else if (handleRowClick) handleRowClick(record);
@@ -64,7 +64,6 @@ export const TableRows = <T extends MinRecordItem>({
               index={index}
             />
           ))}
-          {rowSibling && rowSibling(record)}
         </tr>
       ))}
     </>

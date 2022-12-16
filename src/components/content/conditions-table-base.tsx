@@ -1,4 +1,3 @@
-import { ReactElement } from "react";
 import { MenuItem } from "../core/dropdown-menu";
 import { Table, TableBaseProps } from "../core/table/table";
 import { TableColumn } from "../core/table/table-helpers";
@@ -66,23 +65,24 @@ export function ConditionsTableBase({
     },
   ];
 
-  let rowSibling: (condition: ConditionModel) => ReactElement = (condition) => (
-    <></>
-  );
   if (!readOnly) {
-    rowSibling = (condition: ConditionModel) => (
-      <div className="ctw-invisible ctw-absolute ctw-right-0 ctw-space-x-2 ctw-px-4 group-hover:ctw-visible">
-        {rowActions(condition).map((rowAction) => (
-          <button
-            type="button"
-            className="ctw-btn-primary ctw-z-50"
-            onClick={rowAction.action}
-          >
-            {rowAction.name}
-          </button>
-        ))}
-      </div>
-    );
+    columns.push({
+      className: "ctw-table-action-column",
+      render: (condition: ConditionModel) => (
+        <div className="ctw-invisible ctw-absolute ctw-right-0 ctw-space-x-2 ctw-px-4 group-hover:ctw-visible">
+          {rowActions(condition).map((rowAction) => (
+            <button
+              key={rowAction.name}
+              type="button"
+              className="ctw-btn-primary ctw-z-50"
+              onClick={rowAction.action}
+            >
+              {rowAction.name}
+            </button>
+          ))}
+        </div>
+      ),
+    });
   }
 
   return (
@@ -91,7 +91,6 @@ export function ConditionsTableBase({
       records={conditions}
       onRowClick={onRowClick}
       columns={columns}
-      rowSibling={rowSibling}
       sort={sort}
       onSort={onSort}
       {...tableProps}
