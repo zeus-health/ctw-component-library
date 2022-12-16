@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.31.2
+
+### Patch Changes
+
+- ad8fe61: Fix bug where medications couldnt be added without dosage.
+
 ## 0.31.1
 
 ### Patch Changes
