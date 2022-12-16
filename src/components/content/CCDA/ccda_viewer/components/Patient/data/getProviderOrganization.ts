@@ -13,6 +13,7 @@ export const getProviderOrganization = (patientRole: Document): GeneralInfo => {
     patientRole
   ) as Document;
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const finalProvider = providerOrganization || custodian;
 
   const ids = (xpath.select("*[name()='id']", finalProvider) as Document[])

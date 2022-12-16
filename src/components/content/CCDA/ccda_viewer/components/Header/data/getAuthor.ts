@@ -25,7 +25,9 @@ export const getAuthor = (
 
     let name = "";
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (personName) name = getHumanName(personName);
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     else if (deviceName) {
       const manufacturerModelName = String(
         xpath.select1("string(*[name()='manufacturerModelName'])", deviceName)

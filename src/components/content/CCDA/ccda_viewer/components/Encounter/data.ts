@@ -1,7 +1,7 @@
 import xpath from "xpath";
-import { getEncounter } from "../Header/data/getEncounter";
 import { getId } from "../../helpers";
 import { LabelValueType } from "../../types";
+import { getEncounter } from "../Header/data/getEncounter";
 
 export const getEncounterData = (document: Document) => {
   const encompassingEncounter = xpath.select1(
@@ -9,6 +9,7 @@ export const getEncounterData = (document: Document) => {
     document
   ) as Document;
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!encompassingEncounter) return undefined;
 
   const encounter = getEncounter(document) as LabelValueType[];

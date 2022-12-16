@@ -1,7 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 import React from "react";
-import { TableInfo } from "../../types";
 import { useCommonStyles } from "../../helpers/commonStyles";
+import { TableInfo } from "../../types";
 
 type TdProps = {
   tuple: [TableInfo, TableInfo];
@@ -20,14 +20,15 @@ export const TupleRow = ({ tuple, indexKey }: TdProps): JSX.Element | null => {
         if (
           (index === 0 && !tuple[1].value) ||
           (index === 1 && !tuple[0].value)
-        )
+        ) {
           colSpan = 3;
+        }
 
         return (
           <React.Fragment
             key={`${tuple[0].label}-${tuple[0].value}-${index}-${indexKey}-${
-              tuple?.[1]?.label || ""
-            }-${tuple?.[1]?.value}`}
+              tuple[1].label || ""
+            }-${tuple[1].value}`}
           >
             <td className={commonClasses.td1}>
               {singleData.label.replace(/:/g, "")}

@@ -1,5 +1,5 @@
-import { Table } from "../Table/Table";
 import { DocumentOnlyProps } from "../../types";
+import { Table } from "../Table/Table";
 import { getDataEntererData } from "./data";
 
 export const DataEnterer = ({ document }: DocumentOnlyProps) => {

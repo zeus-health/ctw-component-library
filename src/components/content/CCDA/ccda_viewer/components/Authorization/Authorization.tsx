@@ -1,11 +1,12 @@
 import { isEmpty } from "lodash";
-import { Table } from "../Table/Table";
 import { DocumentOnlyProps } from "../../types";
+import { Table } from "../Table/Table";
 import { getAuthorizationData } from "./data";
 
 export const Authorization = ({ document }: DocumentOnlyProps) => {
   const authorizations = getAuthorizationData(document);
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!authorizations || isEmpty(authorizations)) return null;
 
   const finalData = authorizations.flatMap((authorization) => [

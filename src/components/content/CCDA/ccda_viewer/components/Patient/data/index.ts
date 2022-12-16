@@ -1,7 +1,7 @@
 import { camelCase, isEmpty } from "lodash";
 import xpath from "xpath";
-import { getPatient as getPatientDataFromHeader } from "../../Header/data/getPatient";
 import { getContactDetails } from "../../../helpers";
+import { getPatient as getPatientDataFromHeader } from "../../Header/data/getPatient";
 import { getBirthPlace } from "./getBirthPlace";
 import { getEthnicity } from "./getEthnicity";
 import { getGuardian } from "./getGuardian";
@@ -17,14 +17,18 @@ export const getPatientData = (document: Document) => {
     document
   ) as Document[];
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!patientRoles || isEmpty(patientRoles)) return undefined;
 
   const dataFromHeader = getPatientDataFromHeader(document);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const patients: any = Object.entries(dataFromHeader).reduce(
     (result, [key, value]) => ({
       ...result,
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       [key]: value?.reduce(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (valueAsObject: any, data: { label: string; value: string }) => ({
           ...valueAsObject,
           [camelCase(data.label)]: data.value,

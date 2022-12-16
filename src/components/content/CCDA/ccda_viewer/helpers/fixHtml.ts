@@ -4,13 +4,14 @@ const replaceInXML = (
   xmlString: string,
   toReplace: string | string[],
   toReplaceWith: string,
-  escape: boolean = true
+  escape = true
 ): string => {
-  if (isArray(toReplace))
+  if (isArray(toReplace)) {
     return toReplace.reduce(
       (acc, val) => replaceInXML(acc, val, toReplaceWith),
       xmlString
     );
+  }
 
   const modify: (_: string) => string = escape ? escapeRegExp : identity;
   return xmlString.replace(new RegExp(modify(toReplace), "g"), toReplaceWith);

@@ -1,11 +1,12 @@
 import { isEmpty } from "lodash";
-import { Table } from "../Table/Table";
 import { DocumentOnlyProps } from "../../types";
+import { Table } from "../Table/Table";
 import { getInFulfillmentOfData } from "./data";
 
 export const InFulfillmentOf = ({ document }: DocumentOnlyProps) => {
   const inFulfillmentOfs = getInFulfillmentOfData(document);
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!inFulfillmentOfs || isEmpty(inFulfillmentOfs)) return null;
 
   const finalData = inFulfillmentOfs.flatMap((inFulfillmentOf) => [

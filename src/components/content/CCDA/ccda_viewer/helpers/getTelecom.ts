@@ -26,6 +26,7 @@ export const contactPointTelecomMap: Record<string, string> = {
 };
 
 export const getTelecom = (telecom: Document | Document[]): string => {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!telecom) return "";
 
   const parser = (telecomXml: Document) => {

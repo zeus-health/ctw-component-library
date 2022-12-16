@@ -21,6 +21,7 @@ const humanNameUseMap: Record<string, string> = {
 };
 
 export const getHumanName = (name: Document | Document[]): string => {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!name) return "";
 
   const parser = (nameXml: Document) => {

@@ -10,6 +10,7 @@ export const getDataEntererData = (
     document
   ) as Document;
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!dataEnterer) return undefined;
 
   const assignedPerson = xpath.select1(

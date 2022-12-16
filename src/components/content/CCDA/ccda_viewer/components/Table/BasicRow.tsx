@@ -1,7 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 import React from "react";
-import { TableInfo } from "../../types";
 import { useCommonStyles } from "../../helpers/commonStyles";
+import { TableInfo } from "../../types";
 
 type TdProps = {
   dataChunk: TableInfo[];
@@ -15,8 +15,9 @@ export const BasicRow = ({
 }: TdProps): JSX.Element | null => {
   const commonClasses = useCommonStyles();
 
-  if (!dataChunk[0].value && !dataChunk[1]?.value && !dataChunk[2]?.value)
+  if (!dataChunk[0].value && !dataChunk[1]?.value && !dataChunk[2]?.value) {
     return null;
+  }
 
   let last: TableInfo | null = null;
   let newDataChunk = dataChunk;
@@ -36,15 +37,16 @@ export const BasicRow = ({
               (!newDataChunk[index + 1] || !newDataChunk[index + 1].value)) ||
             (index === 1 &&
               (!newDataChunk[index - 1] || !newDataChunk[index - 1].value))
-          )
+          ) {
             colSpan = 3;
+          }
 
           return (
             <React.Fragment
               key={`${newDataChunk[0].label}-${String(
                 newDataChunk[0].value
-              )}-${index}-${indexKey}-${newDataChunk?.[1]?.label || ""}-${
-                newDataChunk?.[1]?.value || ""
+              )}-${index}-${indexKey}-${newDataChunk[1]?.label || ""}-${
+                newDataChunk[1]?.value || ""
               }`}
             >
               <td

@@ -4,7 +4,7 @@ import { isFinite } from "lodash";
  * Estimates the index of the timezone sign counting from the end of the string and the type of the sign itself ("-" or "+")
  *
  *
- * @param date - Raw date from C-CDA
+ * @param date Raw date from C-CDA
  * @returns Index of the timezone signs from the end and sign timezone itself
  *
  */
@@ -15,9 +15,10 @@ const getIndexFromEnd = (
   const plusSign = rawDate.lastIndexOf("+");
   const minusSign = rawDate.lastIndexOf("-");
 
-  if (plusSign > 0)
+  if (plusSign > 0) {
     // need to subtract 1 to count the array from the end from 0 index
     return { index: rawDate.length - plusSign - 1, timezoneSign: "+" };
+  }
 
   if (minusSign > 0) {
     // check if "-" sign is for timezone, it is needed to correctly parse such date 2013-02-2209
@@ -25,9 +26,10 @@ const getIndexFromEnd = (
     if (
       isFinite(Number(signOnThreePlacesLeft)) ||
       signOnThreePlacesLeft === "T" // needed to correctly parse such date 2013-02-22T09-05:00
-    )
+    ) {
       // need to subtract 1 to count the array from the end from 0 index
       return { index: rawDate.length - minusSign - 1, timezoneSign: "-" };
+    }
 
     return { index: -1 };
   }
@@ -38,7 +40,7 @@ const getIndexFromEnd = (
  * Checks if fragment of the date is valid.
  *
  *
- * @param fragment - Fragment of the date (year, month, day, hour, minute, second)
+ * @param fragment Fragment of the date (year, month, day, hour, minute, second)
  * @returns True if valid, otherwise false
  *
  */
@@ -101,7 +103,7 @@ const constructISOString = ({
  * Convert a raw date from C-CDA to ISOString.
  *
  *
- * @param rawDate - Raw date from C-CDA
+ * @param rawDate Raw date from C-CDA
  * @returns Date in ISOString format
  *
  */

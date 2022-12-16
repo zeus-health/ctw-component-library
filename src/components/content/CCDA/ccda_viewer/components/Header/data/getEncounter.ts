@@ -10,6 +10,7 @@ export const getEncounter = (
     document
   ) as Document;
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!encompassingEncounter) return undefined;
 
   const id = getId(

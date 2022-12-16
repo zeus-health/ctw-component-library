@@ -10,6 +10,7 @@ export const getCustodianData = (
     document
   ) as Document;
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!representedCustodianOrganization) return undefined;
 
   const name = String(

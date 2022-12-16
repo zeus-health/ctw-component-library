@@ -1,8 +1,8 @@
 import { isArray } from "lodash";
 import xpath from "xpath";
+import { ModifiedAddress } from "../types";
 import { displayForAddress } from "./displayForAddress";
 import { parseMany } from "./parseMany";
-import { ModifiedAddress } from "../types";
 
 export const addressUseMap: Record<string, string> = {
   BAD: "bad",
@@ -19,6 +19,7 @@ export const addressUseMap: Record<string, string> = {
 };
 
 export const getAddress = (address: Document | Document[]): string => {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!address) return "";
 
   const parser = (addressXml: Document) => {
@@ -28,7 +29,7 @@ export const getAddress = (address: Document | Document[]): string => {
       line: parseMany<string>(
         (l) => String(xpath.select("string(text())", l)),
         xpath.select("*[name()='streetAddressLine']", addressXml) as Document[]
-      )?.filter(Boolean),
+      ).filter(Boolean),
       city: String(xpath.select("string(*[name()='city'])", addressXml)),
       state: String(xpath.select("string(*[name()='state'])", addressXml)),
       postalCode: String(

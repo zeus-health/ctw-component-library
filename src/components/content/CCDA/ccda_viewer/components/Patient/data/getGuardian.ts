@@ -1,8 +1,8 @@
 import { isEmpty } from "lodash";
 import xpath from "xpath";
-import { getGuardian as getGuardianFromHeader } from "../../Header/data/getGuardian";
 import { getContactDetails } from "../../../helpers";
 import { GeneralInfo, LabelValueType } from "../../../types";
+import { getGuardian as getGuardianFromHeader } from "../../Header/data/getGuardian";
 
 export const getGuardian = (
   patientRole: Document
@@ -12,6 +12,7 @@ export const getGuardian = (
     document
   ) as Document[];
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!guardians || isEmpty(guardians)) return undefined;
 
   const guardianNames = getGuardianFromHeader(patientRole) as LabelValueType[];

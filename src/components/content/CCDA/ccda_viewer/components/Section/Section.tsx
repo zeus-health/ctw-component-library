@@ -2,8 +2,8 @@
 import { makeStyles } from "@material-ui/core";
 import DOMPurify from "dompurify";
 import { useState } from "react";
-import { SectionType } from "../../types";
 import { fixHtml } from "../../helpers";
+import { SectionType } from "../../types";
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -45,6 +45,7 @@ export const Section = ({
   const classes = useStyles();
   const [isOpen, setIsOpen] = useState(true);
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!humanReadable) return null;
 
   const handleClick = () => setIsOpen(!isOpen);

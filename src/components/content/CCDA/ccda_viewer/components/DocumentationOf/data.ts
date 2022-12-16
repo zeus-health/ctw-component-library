@@ -1,12 +1,12 @@
 import { get, isEmpty } from "lodash";
 import xpath from "xpath";
-import { getDocumentationOf as getDocumentationOfDataFromHeader } from "../Header/data/getDocumentationOf";
 import { getContactDetails } from "../../helpers";
 import {
   ExtendedGeneralInfo,
   isGeneralInfoExist,
   LabelValueType,
 } from "../../types";
+import { getDocumentationOf as getDocumentationOfDataFromHeader } from "../Header/data/getDocumentationOf";
 
 export const getDocumentationOfData = (
   document: Document

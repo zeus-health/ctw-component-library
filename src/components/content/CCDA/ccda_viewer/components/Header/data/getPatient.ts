@@ -100,8 +100,8 @@ export const getPatient = (
   return map(result, (res) => [res.patient, res.guardian]).reduce(
     (acc, val, index) => ({
       ...acc,
-      [`patient${index + 1}`]: val?.[0],
-      [`guardian${index + 1}`]: val?.[1],
+      [`patient${index + 1}`]: val[0],
+      [`guardian${index + 1}`]: val[1],
     }),
     {}
   );

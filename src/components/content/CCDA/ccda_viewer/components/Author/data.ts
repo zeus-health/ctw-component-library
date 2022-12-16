@@ -1,8 +1,8 @@
 import { isEmpty } from "lodash";
 import xpath from "xpath";
-import { getAuthor as getAuthorDataFromHeader } from "../Header/data/getAuthor";
 import { getContactDetails } from "../../helpers";
 import { GeneralInfoWithOrg, LabelValueType } from "../../types";
+import { getAuthor as getAuthorDataFromHeader } from "../Header/data/getAuthor";
 
 export const getAuthorData = (
   document: Document
@@ -44,6 +44,7 @@ export const getAuthorData = (
       },
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (representedOrganization) {
       const organizationContactDetails = getContactDetails(
         xpath.select("*[name()='addr']", representedOrganization) as Document[],

@@ -15,6 +15,7 @@ export const getLegalAuthenticatorData = (
     document
   ) as Document;
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!legalAuthenticator) return undefined;
 
   const assignedEntity = xpath.select1(

@@ -28,6 +28,7 @@ export const Header = ({ document }: DocumentOnlyProps): JSX.Element => {
       <table className={commonClasses.table}>
         <tbody>
           {map(labelTypeData, (arrayOfData: LabelValueType[], key: string) => {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             if (!arrayOfData) return null;
 
             const filteredData = arrayOfData.filter((data) => data.value);

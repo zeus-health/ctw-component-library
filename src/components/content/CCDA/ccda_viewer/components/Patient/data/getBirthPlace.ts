@@ -7,6 +7,7 @@ export const getBirthPlace = (patient: Document): string => {
     patient
   ) as Document;
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!birthPlace) return "";
 
   return getAddress(birthPlace);

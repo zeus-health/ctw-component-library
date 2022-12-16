@@ -1,6 +1,6 @@
 import { isEmpty } from "lodash";
-import { Table } from "../Table/Table";
 import { DocumentOnlyProps } from "../../types";
+import { Table } from "../Table/Table";
 import { getInformantData } from "./data";
 
 export const Informant = ({ document }: DocumentOnlyProps) => {

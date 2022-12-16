@@ -24,6 +24,7 @@ export const getInformationRecipientData = (
       intendedRecipient
     ) as Document;
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (informationRecipient) {
       const informationRecipientName = getHumanName(
         xpath.select1("*[name()='name']", informationRecipient) as Document
@@ -62,6 +63,7 @@ export const getInformationRecipientData = (
       },
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (receivedOrganization) {
       const receivedOrganizationName = String(
         xpath.select1("string(*[name()='name']/node())", receivedOrganization)

@@ -1,5 +1,4 @@
 import xpath from "xpath";
-
 import { formatDate, getId, parseToISOString } from "../../helpers";
 
 const confidentialityCodeMap: Record<string, string> = {

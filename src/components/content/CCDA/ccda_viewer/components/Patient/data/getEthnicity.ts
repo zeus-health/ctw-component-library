@@ -7,8 +7,10 @@ export const getEthnicity = (patient: Document): string => {
     patient
   ) as Document;
 
-  if (ethnicGroup)
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (ethnicGroup) {
     return String(xpath.select1("string(@displayName)", ethnicGroup));
+  }
 
   const detailedEthnicGroup = xpath.select(
     "*[name()='sdtc:ethnicGroupCode']",

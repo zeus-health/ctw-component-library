@@ -24,6 +24,7 @@ export const getAuthenticatorData = (
         authenticator
       ) as Document;
 
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!assignedEntity) return undefined;
 
       const assignedPerson = xpath.select1(

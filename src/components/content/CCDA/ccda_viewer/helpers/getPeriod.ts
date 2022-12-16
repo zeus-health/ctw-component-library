@@ -4,6 +4,7 @@ import xpath from "xpath";
 import { parseToISOString } from "./parseToISOString";
 
 export const getPeriod = (xmlData: Document): Period => {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!xmlData) return {};
 
   const low = String(xpath.select1("string(*[name()='low']/@value)", xmlData));
@@ -13,15 +14,17 @@ export const getPeriod = (xmlData: Document): Period => {
 
   if (!low && !high) return {};
 
-  if (low && !high)
+  if (low && !high) {
     return {
       start: parseToISOString(low),
     };
+  }
 
-  if (!low && high)
+  if (!low && high) {
     return {
       end: parseToISOString(high),
     };
+  }
 
   let start = parseToISOString(low);
   let end = parseToISOString(high);

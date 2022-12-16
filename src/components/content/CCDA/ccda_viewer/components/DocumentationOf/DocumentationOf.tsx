@@ -1,6 +1,6 @@
 import { isEmpty } from "lodash";
-import { Table } from "../Table/Table";
 import { DocumentOnlyProps } from "../../types";
+import { Table } from "../Table/Table";
 import { getDocumentationOfData } from "./data";
 
 export const DocumentationOf = ({ document }: DocumentOnlyProps) => {

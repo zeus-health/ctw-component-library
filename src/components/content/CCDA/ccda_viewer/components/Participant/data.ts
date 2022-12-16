@@ -20,6 +20,7 @@ export const getParticipantData = (
         participant
       ) as Document;
 
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (associatedEntity) {
         const associatedPerson = xpath.select1(
           "*[name()='associatedPerson']",
