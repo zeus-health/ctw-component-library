@@ -3,6 +3,8 @@ import {
   MedicationHistory,
   MedicationHistoryProps,
 } from "./medication-history";
+import { otherProviderMedications } from "./story-helpers/mocks/other-provider-medications";
+import { providerMedications } from "./story-helpers/mocks/provider-medications";
 import { setupMedicationMocks } from "./story-helpers/mocks/requests";
 import { aggregatedFromMedStatement } from "@/components/content/medications/story-helpers/mocks/aggregated-from-med-statement";
 import { CTWProvider } from "@/components/core/ctw-provider";
@@ -28,11 +30,11 @@ export default {
       </CTWProvider>
     ),
   ],
-  ...setupMedicationMocks(),
 } as Meta<Props>;
 
 export const Basic: StoryObj<Props> = {
   args: {
     medication: medicationStatementModel,
   },
+  ...setupMedicationMocks({ providerMedications, otherProviderMedications }),
 };

@@ -1,4 +1,5 @@
 import type { FormEntry } from "../../core/form/drawer-form-with-fields";
+import { format } from "date-fns";
 import { z } from "zod";
 import { MedicationsAutoComplete } from "./medications-autocomplete";
 import { CTWRequestContext } from "@/components/core/ctw-context";
@@ -111,7 +112,7 @@ export const getMedicationFormData = (
   },
   {
     label: "Date Asserted",
-    value: medication.dateAsserted,
+    value: medication.dateAsserted ?? format(new Date(), "P"),
     field: "dateAsserted",
     readonly: true,
   },
@@ -124,7 +125,7 @@ export const getMedicationFormData = (
       <MedicationsAutoComplete
         readonly={readonly}
         {...inputProps}
-        defaultCoding={{}}
+        defaultCoding={medication.rxNormCoding ?? {}}
       />
     ),
   },
