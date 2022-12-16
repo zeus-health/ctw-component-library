@@ -1,14 +1,13 @@
-import { getFormsConditionsUrl } from "./urls";
+import { getFormsMedicationsUrl } from "./urls";
 import { CTWRequestContext } from "@/components/core/ctw-context";
-import { ctwFetch } from "@/utils/request";
 
-export const getAutoCompleteConditions = async (
+export const getAutoCompleteMedications = async (
   requestContext: CTWRequestContext,
   searchTerm: string
 ) => {
   const { authToken, contextBuilderId } = requestContext;
-  const response = await ctwFetch(
-    `${getFormsConditionsUrl(requestContext.env)}?display=${searchTerm}`,
+  const response = await fetch(
+    `${getFormsMedicationsUrl(requestContext.env)}?display=${searchTerm}`,
     {
       headers: {
         Authorization: `Bearer ${authToken}`,
@@ -17,5 +16,5 @@ export const getAutoCompleteConditions = async (
     }
   );
   const data = await response.json();
-  return data.conditionsList;
+  return data.data;
 };

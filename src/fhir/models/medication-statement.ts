@@ -5,6 +5,7 @@ import { codeableConceptLabel } from "@/fhir/codeable-concept";
 import { dateToISO, formatDateISOToLocal } from "@/fhir/formatters";
 import {
   getIdentifyingRxNormCode,
+  getIdentifyingRxNormCoding,
   getMedicationCodeableConcept,
   patientStatus,
 } from "@/fhir/medication";
@@ -68,6 +69,10 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
     return codeableConceptLabel(
       getMedicationCodeableConcept(this.resource, this.includedResources)
     );
+  }
+
+  get rxNormCoding() {
+    return getIdentifyingRxNormCoding(this.resource, this.includedResources);
   }
 
   get dosage(): string | undefined {

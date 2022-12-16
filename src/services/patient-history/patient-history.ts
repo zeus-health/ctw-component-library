@@ -16,6 +16,9 @@ export async function getPatientRefreshHistoryMessages(
     const response = await ctwFetch(endpointUrl, {
       headers: {
         Authorization: `Bearer ${requestContext.authToken}`,
+        ...(requestContext.contextBuilderId && {
+          "Zus-Account": requestContext.contextBuilderId,
+        }),
       },
     });
     const result = await response.json();
