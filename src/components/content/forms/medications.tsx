@@ -74,11 +74,13 @@ export const createMedicationStatement = async (
         },
       ],
     },
-    dosage: [
-      {
-        text: data.dosage,
-      },
-    ],
+    ...(data.dosage && {
+      dosage: [
+        {
+          text: data.dosage,
+        },
+      ],
+    }),
   };
 
   const resourceModel = new MedicationStatementModel(fhirMedicationStatement);
