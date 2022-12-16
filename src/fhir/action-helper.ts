@@ -6,7 +6,6 @@ import {
   ASSEMBLER_CODING,
   CREATE_CODING,
   createProvenance,
-  UPDATE_CODING,
 } from "./provenance";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { getUsersPractitionerReference } from "@/fhir/practitioner";
@@ -44,13 +43,12 @@ export async function createOrEditFhirResource(
   }
 }
 
-export async function createOrEditFhirResourceWithProvenance(
+export async function createFhirResourceWithProvenance(
   resource: FhirResource,
   requestContext: CTWRequestContext
 ) {
   const { fhirClient } = requestContext;
   const builderName = claimsBuilderName(requestContext.authToken);
-  const type = resource.id ? "UPDATE" : "CREATE";
   const resourceId = resource.id || uuidv4();
   const provenanceFullUrl = uuidv4();
 
@@ -60,7 +58,7 @@ export async function createOrEditFhirResourceWithProvenance(
     entry: [
       {
         request: {
-          method: type === "CREATE" ? "POST" : "PATCH",
+          method: "POST",
           url: resource.resourceType,
         },
         fullUrl: resourceId,
@@ -68,13 +66,13 @@ export async function createOrEditFhirResourceWithProvenance(
       },
       {
         request: {
-          method: type === "CREATE" ? "POST" : "PATCH",
+          method: "POST",
           url: "Provenance",
         },
         fullUrl: provenanceFullUrl,
         resource: {
           resourceType: "Provenance",
-          activity: type === "CREATE" ? CREATE_CODING : UPDATE_CODING,
+          activity: CREATE_CODING,
           agent: [
             {
               who: await getUsersPractitionerReference(requestContext),
