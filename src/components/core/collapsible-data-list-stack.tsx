@@ -16,7 +16,6 @@ export const CollapsibleDataListStack = ({
   limit,
 }: CollapsibleListProp) => {
   const [showAll, setShowAll] = useState(!limit || entries.length <= limit);
-  console.log("condition entries", entries);
   return (
     <div className="ctw-space-y-3">
       {entries.map((entry) => (
@@ -28,7 +27,9 @@ export const CollapsibleDataListStack = ({
             subtitle={entry.subtitle}
             data={entry.data}
             hideEmpty={entry.hideEmpty}
-          />
+          >
+            {entry.children}
+          </CollapsibleDataList>
         </div>
       ))}
       {!showAll && (

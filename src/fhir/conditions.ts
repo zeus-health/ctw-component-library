@@ -177,7 +177,7 @@ export const setRecorderField = async (
   };
 };
 
-export type SourceDocumentMap = Record<string, BinaryDocumentData>;
+export type SourceDocumentMap = Map<string, BinaryDocumentData>;
 
 export type BinaryDocumentData = {
   xmlBinary: fhir4.Binary | undefined;
@@ -192,9 +192,7 @@ export async function getBinary(
 
   console.log("ConditionsData when entering getBinary", conditionsData);
 
-  const binaryObjects: Record<string, BinaryDocumentData> = {
-    "": { xmlBinary: undefined, isBinary: false },
-  };
+  const binaryObjects: Map<string, BinaryDocumentData> = new Map();
 
   // No conditions in the history drawer.
   if (!conditionsData) {
@@ -213,19 +211,12 @@ export async function getBinary(
       });
       const conditionsJSON = await bundle.json();
 
-      // console.log(
-      //   "conditionsJSON",
-      //   conditionsJSON.entry[0].resource.entity[0].what.reference
-      // );
-
       // The role should be of source otherwise can't be trusted to be provide the correct and truthy binary.
       let documentBinary: fhir4.Binary | undefined;
       if (conditionsJSON.entry) {
         if (conditionsJSON.entry[0].resource.entity[0].role === "source") {
           const binaryID =
             conditionsJSON.entry[0].resource.entity[0].what.reference;
-
-          // console.log("binaryID for this instance is", binaryID);
 
           const endpointBinaryUrl = `${getZusApiBaseUrl(
             requestContext.env
@@ -246,28 +237,9 @@ export async function getBinary(
         xmlBinary: documentBinary || undefined,
         isBinary: documentBinary?.data !== undefined,
       } as BinaryDocumentData;
-      console.log("The documents are: ", documents);
-      binaryObjects[condition.id] = documents;
+      binaryObjects.set(condition.id, documents);
     })
   );
 
-  console.log("binaryObjects", binaryObjects);
-
   return binaryObjects;
 }
-
-// export function sourceDocumentsToAssociatedConditions(
-//   conditionsWithDate: CollapsibleDataListStackEntries,
-//   conditionsWithoutDate: CollapsibleDataListStackEntries,
-//   binaryDocs: SourceDocumentMap
-// ): {
-//   binaryDocsForConditionsWithDate: SourceDocumentMap;
-//   binaryDocsForConditionsWithoutDate: BinaryDocumentData[] | undefined;
-// };
-// console.log("Hi");
-// {
-//   return {
-//     binaryDocsForConditionsWithDate: [binaryDocs[""]],
-//     binaryDocsForConditionsWithoutDate: [binaryDocs[""]],
-//   };
-// }

@@ -16,6 +16,7 @@ import { getIncludedResources } from "@/fhir/bundle";
 import {
   BinaryDocumentData,
   getBinary,
+  SourceDocumentMap,
   useConditionHistory,
 } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models/condition";
@@ -126,11 +127,11 @@ export function ConditionHistory({
   const [rawBinary, setRawBinary] = useState<BinaryDocumentData>();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [idMap, setIDMap] = useState<SourceDocumentMap>(new Map());
   // Create a map that links conditionID and then use that ID to map to conditions without dates and conditions with Dates.
   // Then you finally need to map those into 2 separate arrays and then pass those into the functions.
   useEffect(() => {
-    let conditionsDataDeduped: CollapsibleDataListProps[];
-    let filterEnteredinErrorConditions: ConditionModel[];
     async function load() {
       setConditionForSearch(condition);
 
@@ -148,11 +149,11 @@ export function ConditionHistory({
           "desc"
         );
 
-        filterEnteredinErrorConditions = sortedConditions.filter(
+        const filterEnteredinErrorConditions = sortedConditions.filter(
           (c) => c.verificationStatus !== "entered-in-error"
         );
 
-        conditionsDataDeduped = uniqWith(
+        const conditionsDataDeduped = uniqWith(
           filterEnteredinErrorConditions.map((model) => setupData(model)),
           (a, b) => isEqual(a.data, b.data)
         );
@@ -160,32 +161,33 @@ export function ConditionHistory({
         setConditionsWithDate(conditionsDataDeduped.filter((d) => d.date));
         setConditionsWithoutDate(conditionsDataDeduped.filter((d) => !d.date));
         setLoading(false);
+
+        // Binary Doc stuff
+        const requestContext = await getRequestContext();
+
+        const turnConditiontoDataList = setupData(condition);
+        const allConditionsWithOriginal = [
+          turnConditiontoDataList,
+          ...conditionsDataDeduped,
+        ];
+
+        const binaryDocs = await getBinary(
+          requestContext,
+          allConditionsWithOriginal
+        );
+
+        setIDMap(binaryDocs);
+
+        console.log("map", binaryDocs);
+
+        if (binaryDocs.get(condition.id)?.isBinary) {
+          setIsBinaryDocumentForOriginalEntry(true);
+          setRawBinary(binaryDocs.get(condition.id));
+        }
+
+        setLoadingSourceDocument(false);
       }
     }
-    async function loadDocument() {
-      const requestContext = await getRequestContext();
-
-      const turnConditiontoDataList = setupData(condition);
-
-      const binaryDocs = await getBinary(requestContext, conditionsDataDeduped);
-
-      console.log("see the conditions", condition);
-
-      console.log("BinaryDocs to see if we can map to condition", binaryDocs);
-
-      if (binaryDocs["8e0e20ce-0b07-4312-a66c-988a041fad21"].isBinary) {
-        setIsBinaryDocumentForOriginalEntry(true);
-        setRawBinary(binaryDocs["8e0e20ce-0b07-4312-a66c-988a041fad21"]);
-      }
-
-      console.log(
-        "isBinaryDocumentForOriginalEntry",
-        isBinaryDocumentForOriginalEntry
-      );
-      setLoadingSourceDocument(false);
-    }
-
-    void loadDocument();
 
     void load();
 
@@ -258,14 +260,66 @@ export function ConditionHistory({
             </Details>
           )}
           <CollapsibleDataListStack
-            entries={conditionsWithDate}
+            entries={conditionsWithDate.map((entry) => ({
+              ...entry,
+              children: (
+                <>
+                  {idMap.get(entry.id) && (
+                    <button
+                      type="button"
+                      className="ctw-btn-default ctw-flex ctw-space-x-2 ctw-align-middle"
+                      onClick={() => {
+                        setIsModalOpen(true);
+                        setRawBinary(idMap.get(entry.id));
+                      }}
+                    >
+                      <div> Source Document</div>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 512 512"
+                        height={12}
+                        className="ctw-mt-1"
+                      >
+                        <path d="M352 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h50.7L297.4 169.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V160c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H352zM214.6 297.4c-12.5-12.5-32.8-12.5-45.3 0L64 402.7V352c0-17.7-14.3-32-32-32s-32 14.3-32 32V480c0 17.7 14.3 32 32 32H160c17.7 0 32-14.3 32-32s-14.3-32-32-32H109.3L214.6 342.6c12.5-12.5 12.5-32.8 0-45.3z" />
+                      </svg>
+                    </button>
+                  )}
+                </>
+              ),
+            }))}
             limit={CONDITION_HISTORY_LIMIT}
           />
           {conditionsWithoutDate.length !== 0 && (
             <div className="ctw-space-y-2">
               <div className="ctw-font-medium">Records with no date:</div>
               <CollapsibleDataListStack
-                entries={conditionsWithoutDate}
+                entries={conditionsWithoutDate.map((entry) => ({
+                  ...entry,
+                  children: (
+                    <>
+                      {idMap.get(entry.id) && (
+                        <button
+                          type="button"
+                          className="ctw-btn-default ctw-flex ctw-space-x-2 ctw-align-middle"
+                          onClick={() => {
+                            setIsModalOpen(true);
+                            setRawBinary(idMap.get(entry.id));
+                          }}
+                        >
+                          <div> Source Document</div>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 512 512"
+                            height={12}
+                            className="ctw-mt-1"
+                          >
+                            <path d="M352 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h50.7L297.4 169.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V160c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H352zM214.6 297.4c-12.5-12.5-32.8-12.5-45.3 0L64 402.7V352c0-17.7-14.3-32-32-32s-32 14.3-32 32V480c0 17.7 14.3 32 32 32H160c17.7 0 32-14.3 32-32s-14.3-32-32-32H109.3L214.6 342.6c12.5-12.5 12.5-32.8 0-45.3z" />
+                          </svg>
+                        </button>
+                      )}
+                    </>
+                  ),
+                }))}
                 limit={CONDITION_HISTORY_LIMIT}
               />
             </div>
