@@ -190,8 +190,6 @@ export async function getBinary(
 ): Promise<SourceDocumentMap> {
   // Call to Provenance for the conditionID to see if Binary exists. If it exists, use it to obtain the binary document and return that.
 
-  console.log("ConditionsData when entering getBinary", conditionsData);
-
   const binaryObjects: Map<string, BinaryDocumentData> = new Map();
 
   // No conditions in the history drawer.

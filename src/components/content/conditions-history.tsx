@@ -178,8 +178,6 @@ export function ConditionHistory({
 
         setIDMap(binaryDocs);
 
-        console.log("map", binaryDocs);
-
         if (binaryDocs.get(condition.id)?.isBinary) {
           setIsBinaryDocumentForOriginalEntry(true);
           setRawBinary(binaryDocs.get(condition.id));
