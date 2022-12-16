@@ -124,7 +124,7 @@ export const getMedicationFormData = (
       <MedicationsAutoComplete
         readonly={readonly}
         {...inputProps}
-        defaultCoding={{}}
+        defaultCoding={medication.rxNormCoding ?? {}}
       />
     ),
   },
