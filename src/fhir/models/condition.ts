@@ -107,10 +107,6 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
     );
   }
 
-  get identifier(): string {
-    return this.resource.identifier;
-  }
-
   get icd10Code(): string | undefined {
     return findCoding(SYSTEM_ICD10, this.resource.code)?.code;
   }
