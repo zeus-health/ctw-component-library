@@ -42,18 +42,6 @@ export function getAddConditionWithDefaults(condition: Condition): Condition {
     text: "confirmed",
   };
 
-  newCondition.category = [
-    {
-      coding: [
-        {
-          system: SYSTEM_CONDITION_CATEGORY,
-          code: "problem-list-item",
-          display: "Problem List Item",
-        },
-      ],
-    },
-  ];
-
   return newCondition;
 }
 
@@ -97,7 +85,22 @@ export const createOrEditCondition = async (
         },
       ],
     },
-    // Keep all existing codings when editing a condition
+    // Set category to problem list when creating a condition.
+    category:
+      data.id && condition
+        ? condition.resource.category
+        : [
+            {
+              coding: [
+                {
+                  system: SYSTEM_CONDITION_CATEGORY,
+                  code: "problem-list-item",
+                  display: "Problem List Item",
+                },
+              ],
+            },
+          ],
+    // Keep all existing codings when editing a condition.
     code:
       data.id && condition
         ? condition.codings
