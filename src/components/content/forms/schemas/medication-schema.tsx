@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { z } from "zod";
 import { MedicationsAutoComplete } from "../medications-autocomplete";
 import { FormEntry } from "@/components/core/form/drawer-form-with-fields";
@@ -15,7 +16,7 @@ export const getMedicationFormData = (
   },
   {
     label: "Date Asserted",
-    value: medication.dateAsserted,
+    value: medication.dateAsserted ?? format(new Date(), "P"),
     field: "dateAsserted",
     readonly: true,
   },
@@ -28,7 +29,7 @@ export const getMedicationFormData = (
       <MedicationsAutoComplete
         readonly={readonly}
         {...inputProps}
-        defaultCoding={{}}
+        defaultCoding={medication.rxNormCoding ?? {}}
       />
     ),
   },

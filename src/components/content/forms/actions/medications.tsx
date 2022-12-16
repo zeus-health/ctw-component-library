@@ -1,5 +1,5 @@
 import { CTWRequestContext } from "@/components/core/ctw-context";
-import { createOrEditFhirResource } from "@/fhir/action-helper";
+import { createFhirResourceWithProvenance } from "@/fhir/action-helper";
 import { dateToISO } from "@/fhir/formatters";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { SYSTEM_RXNORM } from "@/fhir/system-urls";
@@ -44,16 +44,18 @@ export const createMedicationStatement = async (
         },
       ],
     },
-    dosage: [
-      {
-        text: data.dosage,
-      },
-    ],
+    ...(data.dosage && {
+      dosage: [
+        {
+          text: data.dosage,
+        },
+      ],
+    }),
   };
 
   const resourceModel = new MedicationStatementModel(fhirMedicationStatement);
 
-  const response = await createOrEditFhirResource(
+  const response = await createFhirResourceWithProvenance(
     resourceModel.resource,
     await getRequestContext()
   );
