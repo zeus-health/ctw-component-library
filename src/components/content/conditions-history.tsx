@@ -264,7 +264,7 @@ export function ConditionHistory({
               ...entry,
               children: (
                 <>
-                  {idMap.get(entry.id) && (
+                  {idMap.get(entry.id) && idMap.get(entry.id)?.isBinary && (
                     <button
                       type="button"
                       className="ctw-btn-default ctw-flex ctw-space-x-2 ctw-align-middle"
@@ -297,7 +297,7 @@ export function ConditionHistory({
                   ...entry,
                   children: (
                     <>
-                      {idMap.get(entry.id) && (
+                      {idMap.get(entry.id) && idMap.get(entry.id)?.isBinary && (
                         <button
                           type="button"
                           className="ctw-btn-default ctw-flex ctw-space-x-2 ctw-align-middle"

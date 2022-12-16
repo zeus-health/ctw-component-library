@@ -214,22 +214,24 @@ export async function getBinary(
       // The role should be of source otherwise can't be trusted to be provide the correct and truthy binary.
       let documentBinary: fhir4.Binary | undefined;
       if (conditionsJSON.entry) {
-        if (conditionsJSON.entry[0].resource.entity[0].role === "source") {
-          const binaryID =
-            conditionsJSON.entry[0].resource.entity[0].what.reference;
+        if (conditionsJSON.entry[0].resource.entity) {
+          if (conditionsJSON.entry[0].resource.entity[0].role === "source") {
+            const binaryID =
+              conditionsJSON.entry[0].resource.entity[0].what.reference;
 
-          const endpointBinaryUrl = `${getZusApiBaseUrl(
-            requestContext.env
-          )}/fhir/${binaryID}`;
+            const endpointBinaryUrl = `${getZusApiBaseUrl(
+              requestContext.env
+            )}/fhir/${binaryID}`;
 
-          const response = await fetch(endpointBinaryUrl, {
-            headers: {
-              Authorization: `Bearer ${requestContext.authToken}`,
-              accept: "application/json",
-              "Content-Type": "application/json+fhir",
-            },
-          });
-          documentBinary = await response.json();
+            const response = await fetch(endpointBinaryUrl, {
+              headers: {
+                Authorization: `Bearer ${requestContext.authToken}`,
+                accept: "application/json",
+                "Content-Type": "application/json+fhir",
+              },
+            });
+            documentBinary = await response.json();
+          }
         }
       }
 
