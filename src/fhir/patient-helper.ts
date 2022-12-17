@@ -1,4 +1,5 @@
 import { SearchParams } from "fhir-kit-client";
+import { pickBy } from "lodash";
 import { getIncludedResources } from "./bundle";
 import { searchBuilderRecords } from "./search-helpers";
 import { CTWRequestContext } from "@/components/core/ctw-context";
@@ -34,4 +35,42 @@ export async function getBuilderFhirPatient(
   }
 
   return new PatientModel(patients[0], getIncludedResources(bundle));
+}
+
+type GetPatientsTableResults = {
+  patients: PatientModel[];
+  searchParams: SearchParams;
+  total: number;
+};
+
+export async function getBuilderPatientsList(
+  requestContext: CTWRequestContext,
+  paginationOptions: (number | string | undefined)[] = []
+): Promise<GetPatientsTableResults> {
+  const [pageSize, pageOffset, searchNameValue] = paginationOptions;
+  const offset =
+    parseInt(`${pageOffset ?? "0"}`, 10) * parseInt(`${pageSize ?? "1"}`, 10);
+
+  const searchParams = pickBy({
+    _count: pageSize,
+    _total: "accurate",
+    _offset: offset,
+    name: searchNameValue,
+  }) as SearchParams;
+
+  try {
+    const { total, resources } = await searchBuilderRecords(
+      "Patient",
+      requestContext,
+      searchParams
+    );
+
+    return {
+      searchParams,
+      patients: resources.map((patient) => new PatientModel(patient)),
+      total,
+    };
+  } catch (e) {
+    throw errorResponse("Failed fetching patients", e);
+  }
 }
