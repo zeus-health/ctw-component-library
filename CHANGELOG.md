@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 0.32.0
+
+### Minor Changes
+
+- e00310c: Created an "Add to Record" button in the hamburger menu of <OtherProviderMedsTable/>
+- 9d13865: <PatientsTable /> and <Pagination /> components added. Previous pagination component which didn't feature lazy loading and paging backwards is now named <PaginationList />
+
 ## 0.31.2
 
 ### Patch Changes
