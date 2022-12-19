@@ -104,7 +104,7 @@ export async function getBuilderMedications(
       "MedicationStatement",
       requestContext,
       {
-        patientUPID: patient.UPID as string,
+        patientUPID: patient.UPID,
         _include: "MedicationStatement:medication",
         ...omitClientFilters(searchFilters),
       }
@@ -132,7 +132,7 @@ export async function getActiveMedications(
       requestContext,
       "ActiveMedications",
       {
-        patientUPID: patient.UPID as string,
+        patientUPID: patient.UPID,
         _include: "MedicationStatement:medication",
         ...omitClientFilters(searchFilters),
       }
@@ -369,7 +369,10 @@ function searchWrapper<T extends ResourceTypeString>(
         ...included,
       ],
       "_include:iterate": "Patient:organization",
-      "patient.identifier": `${SYSTEM_ZUS_UNIVERSAL_ID}|${patientUPID}`, // UPID required as a query param to engage "CPR mode" and provide access to other builder's data
+      // UPID required as a query param to engage "CPR mode" and provide access to other builder's data.
+      // TODO: However, the CPR query will not run correctly if the Zus-Account header is set, thus
+      // this is incompatible with our current builder selector.
+      "patient.identifier": `${SYSTEM_ZUS_UNIVERSAL_ID}|${patientUPID}`,
     });
   }
   return { resources: [], bundle: undefined };

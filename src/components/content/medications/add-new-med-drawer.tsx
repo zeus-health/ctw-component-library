@@ -39,10 +39,6 @@ export const AddNewMedDrawer = ({
     )
   );
 
-  if (!patient.data?.UPID) {
-    return null;
-  }
-
   return (
     <>
       {children}
