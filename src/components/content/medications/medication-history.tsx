@@ -1,5 +1,6 @@
 import { capitalize, compact } from "lodash";
 import { useEffect, useState } from "react";
+import { sortMedHistory } from "./helpers";
 import { CollapsibleDataListProps } from "@/components/core/collapsible-data-list";
 import { CollapsibleDataListStack } from "@/components/core/collapsible-data-list-stack";
 import { Loading } from "@/components/core/loading";
@@ -27,7 +28,7 @@ export function MedicationHistory({ medication }: MedicationHistoryProps) {
   useEffect(() => {
     if (medHistoryQuery.data) {
       const { medications } = medHistoryQuery.data;
-      setEntries(medications.map(createMedicationDetailsCard));
+      setEntries(sortMedHistory(medications).map(createMedicationDetailsCard));
     }
   }, [medHistoryQuery.data]);
 
