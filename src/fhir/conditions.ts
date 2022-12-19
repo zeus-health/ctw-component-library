@@ -70,7 +70,7 @@ export function usePatientConditions() {
           "Condition",
           requestContext,
           {
-            patientUPID: patient.UPID as string,
+            patientUPID: patient.UPID,
           }
         );
         return filterAndSort(setupConditionModels(conditions, bundle));
@@ -94,7 +94,7 @@ export function useOtherProviderConditions() {
           requestContext,
           {
             _revinclude: "Basic:subject",
-            patientUPID: patient.UPID as string,
+            patientUPID: patient.UPID,
           }
         );
         return filterAndSort(setupConditionModels(conditions, bundle));
@@ -119,7 +119,7 @@ export function useConditionHistory(condition?: ConditionModel) {
         );
 
         const searchParams: SearchParams = {
-          patientUPID: patient.UPID as string,
+          patientUPID: patient.UPID,
           _include: ["Condition:patient", "Condition:encounter"],
           "_include:iterate": "Patient:organization",
         };

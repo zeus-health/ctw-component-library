@@ -70,9 +70,16 @@ export class PatientModel extends FHIRModel<fhir4.Patient> {
     return this.bestName.use;
   }
 
-  get UPID(): string | undefined {
-    return find(this.resource.identifier, { system: SYSTEM_ZUS_UNIVERSAL_ID })
-      ?.value;
+  get UPID(): string {
+    const upid = find(this.resource.identifier, {
+      system: SYSTEM_ZUS_UNIVERSAL_ID,
+    })?.value;
+    if (!upid) {
+      throw Error(
+        `Patient with ID ${this.resource.identifier} does not have a UPID`
+      );
+    }
+    return upid;
   }
 
   getPhoneNumber(use?: fhir4.ContactPoint["use"]): string | undefined {

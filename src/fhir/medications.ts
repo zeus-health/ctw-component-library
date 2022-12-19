@@ -32,6 +32,7 @@ import {
   LENS_EXTENSION_MEDICATION_LAST_PRESCRIBER,
   LENS_EXTENSION_MEDICATION_QUANTITY,
   LENS_EXTENSION_MEDICATION_REFILLS,
+  SYSTEM_ZUS_UNIVERSAL_ID,
 } from "./system-urls";
 import { ResourceMap, ResourceTypeString } from "./types";
 import { CTWRequestContext } from "@/components/core/ctw-context";
@@ -103,7 +104,7 @@ export async function getBuilderMedications(
       "MedicationStatement",
       requestContext,
       {
-        patientUPID: patient.UPID as string,
+        patientUPID: patient.UPID,
         _include: "MedicationStatement:medication",
         ...omitClientFilters(searchFilters),
       }
@@ -131,7 +132,7 @@ export async function getActiveMedications(
       requestContext,
       "ActiveMedications",
       {
-        patientUPID: patient.UPID as string,
+        patientUPID: patient.UPID,
         _include: "MedicationStatement:medication",
         ...omitClientFilters(searchFilters),
       }
@@ -248,22 +249,26 @@ export function useMedicationHistory(medication?: fhir4.MedicationStatement) {
           searchWrapper(
             "MedicationStatement",
             requestContext,
+            patient.UPID,
             resources.MedicationStatement
           ),
           searchWrapper(
             "MedicationAdministration",
             requestContext,
+            patient.UPID,
             resources.MedicationAdministration
           ),
           searchWrapper(
             "MedicationRequest",
             requestContext,
+            patient.UPID,
             resources.MedicationRequest,
             ["MedicationRequest:requester"]
           ),
           searchWrapper(
             "MedicationDispense",
             requestContext,
+            patient.UPID,
             resources.MedicationDispense,
             ["MedicationDispense:performer", "MedicationDispense:prescription"]
           ),
@@ -351,6 +356,7 @@ type NoopSearchResults = { resources: []; bundle: undefined };
 function searchWrapper<T extends ResourceTypeString>(
   resourceType: T,
   requestContext: CTWRequestContext,
+  patientUPID: string,
   ids: string[] = [],
   included: string[] = []
 ): Promise<SearchReturn<T>> | NoopSearchResults {
@@ -363,6 +369,10 @@ function searchWrapper<T extends ResourceTypeString>(
         ...included,
       ],
       "_include:iterate": "Patient:organization",
+      // UPID required as a query param to engage "CPR mode" and provide access to other builder's data.
+      // TODO: However, the CPR query will not run correctly if the Zus-Account header is set, thus
+      // this is incompatible with our current builder selector.
+      "patient.identifier": `${SYSTEM_ZUS_UNIVERSAL_ID}|${patientUPID}`,
     });
   }
   return { resources: [], bundle: undefined };
