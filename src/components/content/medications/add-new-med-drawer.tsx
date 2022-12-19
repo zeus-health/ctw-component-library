@@ -2,10 +2,10 @@ import { format } from "date-fns";
 import type { MedicationStatement } from "fhir/r4";
 import { ReactElement } from "react";
 import {
-  createMedicationStatement,
   getMedicationFormData,
   medicationStatementSchema,
-} from "@/components/content/forms/medications";
+} from "../forms/schemas/medication-schema";
+import { createMedicationStatement } from "@/components/content/forms/actions/medications";
 import { DrawerFormWithFields } from "@/components/core/form/drawer-form-with-fields";
 import { usePatient } from "@/components/core/patient-provider";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";

@@ -14,7 +14,7 @@ import {
   SYSTEM_ICD9_CM,
   SYSTEM_SNOMED,
 } from "./system-urls";
-import { getAddConditionWithDefaults } from "@/components/content/forms/conditions";
+import { getAddConditionWithDefaults } from "@/components/content/forms/actions/conditions";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
 import { ConditionModel } from "@/fhir/models/condition";
 import {

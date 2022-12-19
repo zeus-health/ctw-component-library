@@ -5,11 +5,11 @@ import {
   DrawerFormWithFieldsProps,
 } from "../core/form/drawer-form-with-fields";
 import { useHandlePatientSave } from "../core/patient-provider";
-import { PatientFormData } from "./forms/patients";
+import { PatientFormData } from "./forms/actions/patients";
 import {
   getRequestData,
   requestHistorySchema,
-} from "./forms/request-history-schema";
+} from "./forms/schemas/request-history-schema";
 import {
   PatientHistoryResponseError,
   schedulePatientHistory,

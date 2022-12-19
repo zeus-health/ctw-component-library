@@ -18,18 +18,18 @@ import { ConditionsNoPatient } from "./conditions-no-patient";
 import { ConditionsTableBase } from "./conditions-table-base";
 import "./conditions.scss";
 import { filterOtherConditions } from "./conditions/helpers";
-import { getAddConditionData } from "./forms/condition-schema";
 import {
   createOrEditCondition,
   getAddConditionWithDefaults,
-} from "./forms/conditions";
+} from "./forms/actions/conditions";
+import { getAddConditionData } from "./forms/schemas/condition-schema";
 import { PatientHistoryRequestDrawer } from "./patient-history-request-drawer";
 import { PatientHistoryMessage } from "./patient-history/patient-history-message";
 import {
   conditionAddSchema,
   conditionEditSchema,
   getEditingPatientConditionData,
-} from "@/components/content/forms/condition-schema";
+} from "@/components/content/forms/schemas/condition-schema";
 import { recordProfileAction } from "@/fhir/basic";
 import {
   getNewCondition,
