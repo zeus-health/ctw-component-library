@@ -369,7 +369,7 @@ function searchWrapper<T extends ResourceTypeString>(
         ...included,
       ],
       "_include:iterate": "Patient:organization",
-      "patient.identifier": `${SYSTEM_ZUS_UNIVERSAL_ID}|patientUPID`, //UPID required as a query param to engage "CPR mode" and provide access to other builder's data
+      "patient.identifier": `${SYSTEM_ZUS_UNIVERSAL_ID}|${patientUPID}`, //UPID required as a query param to engage "CPR mode" and provide access to other builder's data
     });
   }
   return { resources: [], bundle: undefined };
