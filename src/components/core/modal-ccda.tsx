@@ -24,7 +24,7 @@ export const CCDAModal = ({
 
   return (
     <Modal {...modalProps}>
-      {isXMLData && rawBinary.xmlBinary?.data && rawBinary.xmlBinary.data && (
+      {isXMLData && rawBinary.xmlBinary?.data && (
         <div className="ctw-flex ctw-w-full ctw-space-x-4">
           <Base64BinaryField
             record={rawBinary.xmlBinary}

@@ -133,6 +133,7 @@ export function ConditionHistory({
   // Create a map that links conditionID and then use that ID to map to conditions without dates and conditions with Dates.
   // Then you finally need to map those into 2 separate arrays and then pass those into the functions.
   useEffect(() => {
+    let conditionsDataDeduped: CollapsibleDataListProps[];
     async function load() {
       setConditionForSearch(condition);
 
@@ -154,7 +155,7 @@ export function ConditionHistory({
           (c) => c.verificationStatus !== "entered-in-error"
         );
 
-        const conditionsDataDeduped = uniqWith(
+        conditionsDataDeduped = uniqWith(
           filterEnteredinErrorConditions.map((model) => setupData(model)),
           (a, b) => isEqual(a.data, b.data)
         );
@@ -162,33 +163,27 @@ export function ConditionHistory({
         setConditionsWithDate(conditionsDataDeduped.filter((d) => d.date));
         setConditionsWithoutDate(conditionsDataDeduped.filter((d) => !d.date));
         setLoading(false);
-
-        // Binary Doc stuff
-        const requestContext = await getRequestContext();
-
-        const turnConditiontoDataList = setupData(condition);
-        const allConditionsWithOriginal = [
-          turnConditiontoDataList,
-          ...conditionsDataDeduped,
-        ];
-
-        const binaryDocs = await getBinary(
-          requestContext,
-          allConditionsWithOriginal
-        );
-
-        setIDMap(binaryDocs);
-
-        if (binaryDocs.get(condition.id)?.isBinary) {
-          setIsBinaryDocumentForOriginalEntry(true);
-          setRawBinary(binaryDocs.get(condition.id));
-        }
-
-        setLoadingSourceDocument(false);
       }
     }
 
+    async function loadDocument() {
+      const requestContext = await getRequestContext();
+
+      const binaryDocs = await getBinary(requestContext, conditionsDataDeduped);
+
+      setIDMap(binaryDocs);
+
+      if (binaryDocs.get(condition.id)?.isBinary) {
+        setIsBinaryDocumentForOriginalEntry(true);
+        setRawBinary(binaryDocs.get(condition.id));
+      }
+
+      setLoadingSourceDocument(false);
+    }
+
     void load();
+
+    void loadDocument();
 
     return function cleanup() {
       setConditionsWithDate([]);
@@ -238,11 +233,7 @@ export function ConditionHistory({
                 // This fixes a bug where having multiple drawers causes headless ui useScrollLock to become out of sync, which causes overlay: hidden incorrectly persist on the html element.
                 setTimeout(onEdit, 400);
               }}
-            >
-              {isBinaryDocumentForOriginalEntry && (
-                <DocumentButton onClick={() => setIsModalOpen(true)} />
-              )}
-            </Details>
+            />
           )}
           <CollapsibleDataListStack
             entries={conditionsWithDate.map((entry) => ({
