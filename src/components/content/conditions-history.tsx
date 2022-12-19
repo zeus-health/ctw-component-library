@@ -121,10 +121,7 @@ export function ConditionHistory({
   const historyResponse = useConditionHistory(conditionForSearch);
   const { getRequestContext } = useCTW();
 
-  const [
-    isBinaryDocumentForOriginalEntry,
-    setIsBinaryDocumentForOriginalEntry,
-  ] = useState(false);
+  const [isBinaryDocument, setIsBinaryDocument] = useState(false);
   const [rawBinary, setRawBinary] = useState<BinaryDocumentData>();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -167,14 +164,18 @@ export function ConditionHistory({
     }
 
     async function loadDocument() {
+      // Binary Doc stuff
       const requestContext = await getRequestContext();
 
-      const binaryDocs = await getBinary(requestContext, conditionsDataDeduped);
+      const currentCondition = setupData(condition);
+      const allConditions = [currentCondition, ...conditionsDataDeduped];
+
+      const binaryDocs = await getBinary(requestContext, allConditions);
 
       setIDMap(binaryDocs);
 
       if (binaryDocs.get(condition.id)?.isBinary) {
-        setIsBinaryDocumentForOriginalEntry(true);
+        setIsBinaryDocument(true);
         setRawBinary(binaryDocs.get(condition.id));
       }
 
@@ -195,7 +196,7 @@ export function ConditionHistory({
     condition,
     getRequestContext,
     historyResponse.data,
-    isBinaryDocumentForOriginalEntry,
+    isBinaryDocument,
     onEdit,
   ]);
 
@@ -213,7 +214,7 @@ export function ConditionHistory({
 
     return (
       <>
-        {isBinaryDocumentForOriginalEntry && rawBinary && (
+        {isBinaryDocument && rawBinary && (
           <CCDAModal
             isOpen={isModalOpen}
             rawBinary={rawBinary}
