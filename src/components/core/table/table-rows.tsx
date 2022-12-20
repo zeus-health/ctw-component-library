@@ -11,6 +11,7 @@ type TableRowsProps<T extends MinRecordItem> = {
   isLoading: boolean;
   emptyMessage: string | ReactElement;
   handleRowClick?: (record: T) => void;
+  rowActions?: (record: T) => JSX.Element;
 };
 
 export const TableRows = <T extends MinRecordItem>({
@@ -19,6 +20,7 @@ export const TableRows = <T extends MinRecordItem>({
   isLoading,
   emptyMessage,
   handleRowClick,
+  rowActions,
 }: TableRowsProps<T>) => {
   if (isLoading) {
     return (
@@ -43,11 +45,16 @@ export const TableRows = <T extends MinRecordItem>({
     <>
       {records.map((record) => (
         <tr
-          className={cx({
+          className={cx("ctw-group ctw-relative hover:ctw-bg-bg-lighter", {
             "ctw-cursor-pointer": typeof handleRowClick === "function",
           })}
           key={record.id}
-          onClick={() => {
+          onClick={(event) => {
+            const { target } = event;
+            if (target instanceof HTMLElement && target.nodeName === "BUTTON") {
+              event.stopPropagation();
+              return;
+            }
             if (handleRowClick) handleRowClick(record);
           }}
         >
@@ -59,6 +66,11 @@ export const TableRows = <T extends MinRecordItem>({
               index={index}
             />
           ))}
+          {rowActions && (
+            <td className="ctw-action-hover ctw-invisible ctw-absolute ctw-right-0 ctw-flex ctw-h-full ctw-items-center ctw-space-x-2 ctw-px-4 group-hover:ctw-visible">
+              {rowActions(record)}
+            </td>
+          )}
         </tr>
       ))}
     </>
