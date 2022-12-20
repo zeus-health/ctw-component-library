@@ -9,6 +9,5 @@ export { getHumanName } from "./getHumanName";
 export { getId } from "./getId";
 export { getPeriod } from "./getPeriod";
 export { getTelecom } from "./getTelecom";
-export { parseMany } from "./parseMany";
 export { parseToISOString } from "./parseToISOString";
 export { fixHtml } from "./fixHtml";

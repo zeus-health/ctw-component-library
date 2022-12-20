@@ -1,8 +1,7 @@
-import { isArray } from "lodash";
+import { isArray, map } from "lodash";
 import xpath from "xpath";
 import { ModifiedAddress } from "../types";
 import { displayForAddress } from "./displayForAddress";
-import { parseMany } from "./parseMany";
 
 export const addressUseMap: Record<string, string> = {
   BAD: "bad",
@@ -27,9 +26,9 @@ export const getAddress = (
     const use = String(xpath.select1("string(@use)", addressXml));
 
     const addr: ModifiedAddress = {
-      line: parseMany<string>(
-        (l) => String(xpath.select("string(text())", l)),
-        xpath.select("*[name()='streetAddressLine']", addressXml) as Document[]
+      line: map(
+        xpath.select("*[name()='streetAddressLine']", addressXml) as Document[],
+        (l) => String(xpath.select("string(text())", l))
       ).filter(Boolean),
       city: String(xpath.select("string(*[name()='city'])", addressXml)),
       state: String(xpath.select("string(*[name()='state'])", addressXml)),

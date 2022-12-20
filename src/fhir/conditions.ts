@@ -2,7 +2,6 @@ import { SearchParams } from "fhir-kit-client";
 import { orderBy } from "lodash";
 import { getIncludedBasics } from "./bundle";
 import { CodePreference } from "./codeable-concept";
-import { getPractitioner } from "./practitioner";
 import {
   searchBuilderRecords,
   searchCommonRecords,
@@ -162,20 +161,6 @@ function filterAndSort(conditions: ConditionModel[]): ConditionModel[] {
     ["desc"]
   );
 }
-
-export const setRecorderField = async (
-  practitionerId: string,
-  requestContext: CTWRequestContext
-) => {
-  const practitioner = await getPractitioner(practitionerId, requestContext);
-  const display = practitioner.fullName;
-
-  return {
-    reference: `Practitioner/${practitionerId}`,
-    type: "Practitioner",
-    display,
-  };
-};
 
 export type SourceDocumentMap = Map<string, BinaryDocumentData>;
 

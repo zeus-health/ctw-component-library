@@ -1,8 +1,7 @@
-import { isArray } from "lodash";
+import { isArray, map } from "lodash";
 import xpath from "xpath";
 import { ModifiedHumanName } from "../types";
 import { displayForName } from "./displayForName";
-import { parseMany } from "./parseMany";
 
 const humanNameUseMap: Record<string, string> = {
   A: "Artist/Stage",
@@ -27,20 +26,20 @@ export const getHumanName = (name: Document | Document[]): string => {
   const parser = (nameXml: Document) => {
     const patientParsedName: ModifiedHumanName = {
       use: humanNameUseMap[String(xpath.select("string(@use)", nameXml))],
-      given: parseMany<string>(
-        (n) => String(xpath.select1("string(text())", n)),
-        xpath.select("(*[name()='given'])", nameXml) as Document[]
+      given: map(
+        xpath.select("(*[name()='given'])", nameXml) as Document[],
+        (n) => String(xpath.select1("string(text())", n))
       ),
       family: String(
         xpath.select1("string(*[name()='family']/text())", nameXml)
       ),
-      prefix: parseMany<string>(
-        (n) => String(xpath.select1("string(text())", n)),
-        xpath.select("(*[name()='prefix'])", nameXml) as Document[]
+      prefix: map(
+        xpath.select("(*[name()='prefix'])", nameXml) as Document[],
+        (n) => String(xpath.select1("string(text())", n))
       ),
-      suffix: parseMany<string>(
-        (n) => String(xpath.select1("string(text())", n)),
-        xpath.select("(*[name()='suffix'])", nameXml) as Document[]
+      suffix: map(
+        xpath.select("(*[name()='suffix'])", nameXml) as Document[],
+        (n) => String(xpath.select1("string(text())", n))
       ),
     };
     return displayForName(patientParsedName);
