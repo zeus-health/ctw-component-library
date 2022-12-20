@@ -1,9 +1,9 @@
 /* eslint-disable react/no-array-index-key */
 import { chunk, isArray, partition } from "lodash";
-import { useCommonStyles } from "../../helpers/commonStyles";
 import { TableInfo } from "../../types";
 import { BasicRow } from "./BasicRow";
 import { TupleRow } from "./TupleRow";
+import "../../../styles.scss";
 
 type TableProps = {
   data: (TableInfo | [TableInfo, TableInfo])[];
@@ -11,8 +11,6 @@ type TableProps = {
 };
 
 export const Table = ({ data, chunkSize = 2 }: TableProps): JSX.Element => {
-  const commonClasses = useCommonStyles();
-
   const [normalEntries, tupleEntries] = partition(data, (d) => !isArray(d)) as [
     TableInfo[],
     [TableInfo, TableInfo][]
@@ -21,7 +19,7 @@ export const Table = ({ data, chunkSize = 2 }: TableProps): JSX.Element => {
   const entries = chunk(normalEntries, chunkSize);
 
   return (
-    <table className={commonClasses.table}>
+    <table className="ctw-ccda-common-table">
       <tbody>
         {entries.map((dataChunk: TableInfo[], index) => (
           <BasicRow

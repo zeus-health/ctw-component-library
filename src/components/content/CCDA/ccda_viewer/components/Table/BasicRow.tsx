@@ -1,7 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 import React from "react";
-import { useCommonStyles } from "../../helpers/commonStyles";
 import { TableInfo } from "../../types";
+import "../../../styles.scss";
 
 type TdProps = {
   dataChunk: TableInfo[];
@@ -13,8 +13,6 @@ export const BasicRow = ({
   indexKey,
   chunkSize,
 }: TdProps): JSX.Element | null => {
-  const commonClasses = useCommonStyles();
-
   if (!dataChunk[0].value && !dataChunk[1]?.value && !dataChunk[2]?.value) {
     return null;
   }
@@ -50,13 +48,13 @@ export const BasicRow = ({
               }`}
             >
               <td
-                className={commonClasses.td1}
+                className="ctw-ccda-common-td1"
                 rowSpan={last && last.value && index === 0 ? 2 : 1}
               >
                 {singleData.label.replace(/:/g, "")}
               </td>
               <td
-                className={commonClasses.td2}
+                className="ctw-ccda-common-td2"
                 colSpan={colSpan}
                 rowSpan={last && last.value && index === 0 ? 2 : 1}
               >
@@ -68,8 +66,10 @@ export const BasicRow = ({
       </tr>
       {last && last.value && (
         <tr>
-          <td className={commonClasses.td1}>{last.label.replace(/:/g, "")}</td>
-          <td className={commonClasses.td2}>{last.value}</td>
+          <td className="ctw-ccda-common-td1">
+            {last.label.replace(/:/g, "")}
+          </td>
+          <td className="ctw-ccda-common-td2">{last.value}</td>
         </tr>
       )}
     </>

@@ -1,15 +1,13 @@
 /* eslint-disable react/no-array-index-key */
 import React from "react";
-import { useCommonStyles } from "../../helpers/commonStyles";
 import { TableInfo } from "../../types";
+import "../../../styles.scss";
 
 type TdProps = {
   tuple: [TableInfo, TableInfo];
   indexKey: number;
 };
 export const TupleRow = ({ tuple, indexKey }: TdProps): JSX.Element | null => {
-  const commonClasses = useCommonStyles();
-
   if (!tuple[0].value && !tuple[1].value) return null;
 
   return (
@@ -30,10 +28,10 @@ export const TupleRow = ({ tuple, indexKey }: TdProps): JSX.Element | null => {
               tuple[1].label || ""
             }-${tuple[1].value}`}
           >
-            <td className={commonClasses.td1}>
+            <td className="ctw-ccda-common-td1">
               {singleData.label.replace(/:/g, "")}
             </td>
-            <td className={commonClasses.td2} colSpan={colSpan}>
+            <td className="ctw-ccda-common-td2" colSpan={colSpan}>
               {singleData.value}
             </td>
           </React.Fragment>

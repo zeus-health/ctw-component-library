@@ -1,4 +1,4 @@
-import { Grid, makeStyles, Switch } from "@material-ui/core";
+import { Grid, Switch } from "@material-ui/core";
 import { Viewer, Worker } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { DOMParser } from "@xmldom/xmldom";
@@ -10,42 +10,7 @@ import XmlBeautify from "xml-beautify";
 import xpath from "xpath";
 import { base64toBlob } from "./base64toBlob";
 import { CcdaViewer } from "./ccda_viewer";
-
-const useStyles = makeStyles(() => ({
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    width: "100%",
-  },
-  base64BinaryText: {
-    // width - sidebarWidth - marginLeft - marginRight - paddingLeft - paddingRight - additionalPixels
-    width: "calc(100vw - 200px - 24px - 24px - 16px - 16px - 2px)",
-    overflowWrap: "break-word",
-  },
-  pdfWrapper: {
-    width: "calc(100vw - 200px - 24px - 24px - 16px - 16px - 2px)",
-  },
-  switchContainer: {
-    display: "flex",
-    alignItems: "center",
-  },
-  switchWrapper: {
-    marginLeft: "32px",
-    marginTop: "-36px",
-    width: "fit-content",
-  },
-  switchLabel: {
-    fontSize: "0.85rem",
-  },
-  xmlWrapper: {
-    width: "calc(100vw - 200px - 24px - 24px - 16px - 16px - 2px)",
-    border: "none",
-    outline: "none",
-    backgroundColor: "white",
-    color: "black",
-    resize: "none",
-  },
-}));
+import "./styles.scss";
 
 const xmlTypes = ["/xml", "/xhtml+xml", "application/xml"];
 
@@ -59,7 +24,6 @@ interface FileProps {
 const File = ({ contentType, data }: FileProps) => {
   const [textAreaHeight, setTextAreaHeight] = useState<number>(0);
   const textArea = useRef<HTMLTextAreaElement>(null);
-  const classes = useStyles();
 
   useIsomorphicLayoutEffect(() => {
     if (isSpecificContentType(xmlTypes, contentType)) {
@@ -71,7 +35,7 @@ const File = ({ contentType, data }: FileProps) => {
     return (
       // textarea is needed to prettify xml
       <textarea
-        className={classes.xmlWrapper}
+        className="ctw-ccda-xml-wrapper"
         disabled
         ref={textArea}
         style={{ height: `${textAreaHeight}px` }}
@@ -92,7 +56,7 @@ const File = ({ contentType, data }: FileProps) => {
     return (
       // https://react-pdf-viewer.dev/docs/basic-usage/
       <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.14.305/build/pdf.worker.min.js">
-        <div className={classes.pdfWrapper}>
+        <div className="ctw-ccda-pdf-wrapper">
           <Viewer fileUrl={url} />
         </div>
       </Worker>
@@ -136,7 +100,6 @@ export const Base64BinaryField = ({
 }: Base64BinaryFieldProps) => {
   const [decoded, setDecoded] = useState(true);
   const [parsedCCDA, setParsedCCDA] = useState(true);
-  const classes = useStyles();
 
   useEffect(() => {
     if (!decoded) setParsedCCDA(false);
@@ -179,11 +142,11 @@ export const Base64BinaryField = ({
   const getContent = () => {
     if (ccdaDocument) return <CcdaViewer document={ccdaDocument} />;
 
-    return <div className={classes.base64BinaryText}>{value}</div>;
+    return <div className="ctw-ccda-base64-binary-text">{value}</div>;
   };
   return (
-    <div className={classes.container}>
-      <div className={classes.switchContainer}>
+    <div className="ctw-ccda-container">
+      <div className="ctw-ccda-switch-container">
         {actions.map(
           (action) =>
             action.display && (
@@ -192,7 +155,7 @@ export const Base64BinaryField = ({
                 component="label"
                 container
                 alignItems="center"
-                className={classes.switchWrapper}
+                className="ctw-cda-switch-wrapper"
               >
                 <Grid item>
                   <Switch
@@ -201,7 +164,7 @@ export const Base64BinaryField = ({
                     disabled={action.disabled}
                   />
                 </Grid>
-                <Grid item className={classes.switchLabel}>
+                <Grid item className="ctw-ccda-switch-label">
                   {action.label}
                 </Grid>
               </Grid>

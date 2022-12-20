@@ -1,4 +1,3 @@
-export { useCommonStyles } from "./commonStyles";
 export { displayForAddress } from "./displayForAddress";
 export { displayForName } from "./displayForName";
 export { displayForTelecom } from "./displayForTelecom";

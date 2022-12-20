@@ -1,19 +1,11 @@
-import { makeStyles } from "@material-ui/core";
+import cx from "classnames";
 import xpath from "xpath";
 import { DocumentDetails } from "./components/DocumentDetails";
 import { Header } from "./components/Header/Header";
 import { Section } from "./components/Section/Section";
 import { DocumentOnlyProps, SectionType } from "./types";
 
-const useStyles = makeStyles(() => ({
-  container: {
-    width: "calc(100vw - 200px - 24px - 24px - 16px - 16px - 2px)",
-  },
-}));
-
 export const CcdaViewer = ({ document }: DocumentOnlyProps): JSX.Element => {
-  const classes = useStyles();
-
   const sections = xpath.select(
     "//*[name()='component']/*[name()='section']",
     document
@@ -34,7 +26,11 @@ export const CcdaViewer = ({ document }: DocumentOnlyProps): JSX.Element => {
   });
 
   return (
-    <div className={classes.container}>
+    <div
+      className={cx({
+        width: "calc(100vw - 200px - 24px - 24px - 16px - 16px - 2px)",
+      })}
+    >
       <Header document={document} />
       <DocumentDetails document={document} />
       {texts.map(({ title, humanReadable, code }) => (
