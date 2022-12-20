@@ -45,22 +45,24 @@ export const EditDeleteConditionHoverActions = (
     <button
       type="button"
       className="ctw-btn-default"
-      onClick={() =>
+      onClick={(event) => {
+        event.stopPropagation();
         handleConditionDelete(
           condition,
           setSelectedCondition,
           setShowConfirmDelete
-        )
-      }
+        );
+      }}
     >
       Remove
     </button>
     <button
       type="button"
       className="ctw-btn-primary"
-      onClick={() =>
-        handleEditCondition(condition, setSelectedCondition, updateFormProps)
-      }
+      onClick={(event) => {
+        event.stopPropagation();
+        handleEditCondition(condition, setSelectedCondition, updateFormProps);
+      }}
     >
       Edit
     </button>

@@ -45,16 +45,23 @@ export const TableRows = <T extends MinRecordItem>({
     <>
       {records.map((record) => (
         <tr
-          className={cx("ctw-group ctw-relative hover:ctw-bg-bg-lighter", {
-            "ctw-cursor-pointer": typeof handleRowClick === "function",
-          })}
+          className={cx(
+            "ctw-group ctw-relative ctw-z-10 hover:ctw-bg-bg-lighter",
+            {
+              "ctw-cursor-pointer": typeof handleRowClick === "function",
+            }
+          )}
           key={record.id}
           onClick={(event) => {
             const { target } = event;
-            if (target instanceof HTMLElement && target.nodeName === "BUTTON") {
-              event.stopPropagation();
+            // This is for the use case where we do not want have the onRowClick called in areas near the button as that will cause confusion to the user
+            if (
+              target instanceof HTMLElement &&
+              target.querySelectorAll("button").length
+            ) {
               return;
             }
+
             if (handleRowClick) handleRowClick(record);
           }}
         >
@@ -67,7 +74,7 @@ export const TableRows = <T extends MinRecordItem>({
             />
           ))}
           {rowActions && (
-            <td className="ctw-action-hover ctw-invisible ctw-absolute ctw-right-0 ctw-flex ctw-h-full ctw-items-center ctw-space-x-2 ctw-px-4 group-hover:ctw-visible">
+            <td className="ctw-action-hover ctw-invisible ctw-absolute ctw-right-0 ctw-z-20 ctw-flex ctw-h-full ctw-items-center ctw-space-x-2 ctw-px-4 group-hover:ctw-visible">
               {rowActions(record)}
             </td>
           )}
