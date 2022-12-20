@@ -278,7 +278,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
                 )}
               </>
             }
-            rowActions={(condition) => [
+            rowMenuActions={(condition) => [
               {
                 name: "Edit",
                 action: async () => {
@@ -328,7 +328,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               }
               hideMenu={readOnly}
               message={otherProviderRecordMessage}
-              rowActions={(condition) => [
+              rowMenuActions={(condition) => [
                 {
                   name: "Add",
                   action: async () => {
