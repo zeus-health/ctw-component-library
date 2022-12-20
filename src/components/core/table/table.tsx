@@ -25,6 +25,7 @@ export type TableProps<T extends MinRecordItem> = {
   showTableHead?: boolean;
   stacked?: boolean;
   handleRowClick?: (record: T) => void;
+  rowActions?: (record: T) => JSX.Element;
   sort?: TableSort;
   onSort?: (sort: TableSort) => void;
   hidePagination?: boolean;
@@ -47,6 +48,7 @@ export const Table = <T extends MinRecordItem>({
   sort,
   onSort,
   handleRowClick,
+  rowActions,
   hidePagination = false,
   children,
 }: TableProps<T>) => {
@@ -120,6 +122,7 @@ export const Table = <T extends MinRecordItem>({
               <TableRows
                 records={sortedRecords.slice(0, count)}
                 handleRowClick={handleRowClick}
+                rowActions={rowActions}
                 columns={columns}
                 isLoading={isLoading}
                 emptyMessage={message}
