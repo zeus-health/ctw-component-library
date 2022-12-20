@@ -18,8 +18,9 @@ export const addressUseMap: Record<string, string> = {
   CONF: "confidential",
 };
 
-export const getAddress = (address: Document | Document[]): string => {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+export const getAddress = (
+  address: Document | Document[] | undefined
+): string => {
   if (!address) return "";
 
   const parser = (addressXml: Document) => {

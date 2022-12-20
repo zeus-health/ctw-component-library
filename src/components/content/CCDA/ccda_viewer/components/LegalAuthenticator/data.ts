@@ -13,9 +13,8 @@ export const getLegalAuthenticatorData = (
   const legalAuthenticator = xpath.select1(
     "*[name()='ClinicalDocument']/*[name()='legalAuthenticator']",
     document
-  ) as Document;
+  ) as Document | undefined;
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!legalAuthenticator) return undefined;
 
   const assignedEntity = xpath.select1(

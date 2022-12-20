@@ -17,14 +17,13 @@ export const getInformationRecipientData = (
     const informationRecipient = xpath.select1(
       "*[name()='informationRecipient']",
       intendedRecipient
-    ) as Document;
+    ) as Document | undefined;
 
     const receivedOrganization = xpath.select1(
       "*[name()='receivedOrganization']",
       intendedRecipient
-    ) as Document;
+    ) as Document | undefined;
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (informationRecipient) {
       const informationRecipientName = getHumanName(
         xpath.select1("*[name()='name']", informationRecipient) as Document
@@ -63,7 +62,6 @@ export const getInformationRecipientData = (
       },
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (receivedOrganization) {
       const receivedOrganizationName = String(
         xpath.select1("string(*[name()='name']/node())", receivedOrganization)

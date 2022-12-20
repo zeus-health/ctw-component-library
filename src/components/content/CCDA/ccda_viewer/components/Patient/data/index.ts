@@ -12,12 +12,10 @@ import { getRace } from "./getRace";
 import { getReligion } from "./getReligion";
 
 export const getPatientData = (document: Document) => {
-  const patientRoles = xpath.select(
-    "//*[name()='patientRole']",
-    document
-  ) as Document[];
+  const patientRoles = xpath.select("//*[name()='patientRole']", document) as
+    | Document[]
+    | undefined;
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!patientRoles || isEmpty(patientRoles)) return undefined;
 
   const dataFromHeader = getPatientDataFromHeader(document);
@@ -26,7 +24,6 @@ export const getPatientData = (document: Document) => {
   const patients: any = Object.entries(dataFromHeader).reduce(
     (result, [key, value]) => ({
       ...result,
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       [key]: value?.reduce(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (valueAsObject: any, data: { label: string; value: string }) => ({

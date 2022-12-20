@@ -45,6 +45,7 @@ export const Section = ({
   const classes = useStyles();
   const [isOpen, setIsOpen] = useState(true);
 
+  // TODO - remove eslint
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!humanReadable) return null;
 

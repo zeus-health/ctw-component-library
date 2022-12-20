@@ -33,7 +33,7 @@ export const getAuthorData = (
     const representedOrganization = xpath.select1(
       "*[name()='representedOrganization']",
       assignedAuthor
-    ) as Document;
+    ) as Document | undefined;
 
     const result: GeneralInfoWithOrg = {
       name: authors[`author${index + 1}`][0].value,
@@ -44,7 +44,6 @@ export const getAuthorData = (
       },
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (representedOrganization) {
       const organizationContactDetails = getContactDetails(
         xpath.select("*[name()='addr']", representedOrganization) as Document[],

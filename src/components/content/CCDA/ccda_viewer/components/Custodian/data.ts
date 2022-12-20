@@ -8,9 +8,8 @@ export const getCustodianData = (
   const representedCustodianOrganization = xpath.select1(
     "*[name()='ClinicalDocument']/*[name()='custodian']/*[name()='assignedCustodian']/*[name()='representedCustodianOrganization']",
     document
-  ) as Document;
+  ) as Document | undefined;
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!representedCustodianOrganization) return undefined;
 
   const name = String(

@@ -8,9 +8,8 @@ export const getDataEntererData = (
   const dataEnterer = xpath.select1(
     "*[name()='ClinicalDocument']/*[name()='dataEnterer']/*[name()='assignedEntity']",
     document
-  ) as Document;
+  ) as Document | undefined;
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!dataEnterer) return undefined;
 
   const assignedPerson = xpath.select1(

@@ -17,17 +17,15 @@ export const getAuthor = (
     const personName = xpath.select1(
       "*[name()='assignedAuthor']/*[name()='assignedPerson']/*[name()='name']",
       author
-    ) as Document;
+    ) as Document | undefined;
     const deviceName = xpath.select1(
       "*[name()='assignedAuthor']/*[name()='assignedAuthoringDevice']",
       author
-    ) as Document;
+    ) as Document | undefined;
 
     let name = "";
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (personName) name = getHumanName(personName);
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     else if (deviceName) {
       const manufacturerModelName = String(
         xpath.select1("string(*[name()='manufacturerModelName'])", deviceName)

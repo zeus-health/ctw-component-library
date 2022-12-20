@@ -27,28 +27,30 @@ export const Header = ({ document }: DocumentOnlyProps): JSX.Element => {
       <h2 className={classes.title}>{title}</h2>
       <table className={commonClasses.table}>
         <tbody>
-          {map(labelTypeData, (arrayOfData: LabelValueType[], key: string) => {
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-            if (!arrayOfData) return null;
+          {map(
+            labelTypeData,
+            (arrayOfData: LabelValueType[] | undefined, key: string) => {
+              if (!arrayOfData) return null;
 
-            const filteredData = arrayOfData.filter((data) => data.value);
-            if (isEmpty(filteredData)) return null;
-            return (
-              <tr key={key}>
-                <td className={commonClasses.td1}>
-                  {startCase(key.replace(/\d/g, ""))}
-                </td>
-                <td className={commonClasses.td2}>
-                  {filteredData.map((data: LabelValueType, index) => (
-                    <span key={`${key}-${index}`}>
-                      {data.label && <b>{data.label} </b>}
-                      {data.value}
-                    </span>
-                  ))}
-                </td>
-              </tr>
-            );
-          })}
+              const filteredData = arrayOfData.filter((data) => data.value);
+              if (isEmpty(filteredData)) return null;
+              return (
+                <tr key={key}>
+                  <td className={commonClasses.td1}>
+                    {startCase(key.replace(/\d/g, ""))}
+                  </td>
+                  <td className={commonClasses.td2}>
+                    {filteredData.map((data: LabelValueType, index) => (
+                      <span key={`${key}-${index}`}>
+                        {data.label && <b>{data.label} </b>}
+                        {data.value}
+                      </span>
+                    ))}
+                  </td>
+                </tr>
+              );
+            }
+          )}
         </tbody>
       </table>
     </div>

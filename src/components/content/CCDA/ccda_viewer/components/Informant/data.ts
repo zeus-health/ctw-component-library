@@ -18,9 +18,8 @@ export const getInformantData = (
       const assignedEntity = xpath.select1(
         "*[name()='assignedEntity']",
         informant
-      ) as Document;
+      ) as Document | undefined;
 
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (assignedEntity) {
         const assignedPerson = xpath.select1(
           "*[name()='assignedPerson']",
@@ -42,9 +41,8 @@ export const getInformantData = (
       const relatedEntity = xpath.select1(
         "*[name()='relatedEntity']",
         informant
-      ) as Document;
+      ) as Document | undefined;
 
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (relatedEntity) {
         const relatedPerson = xpath.select1(
           "*[name()='relatedPerson']",

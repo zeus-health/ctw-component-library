@@ -10,9 +10,8 @@ export const getGuardian = (
   const guardians = xpath.select(
     "//*[name()='patientRole']/*[name()='patient']/*[name()='guardian']",
     document
-  ) as Document[];
+  ) as Document[] | undefined;
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!guardians || isEmpty(guardians)) return undefined;
 
   const guardianNames = getGuardianFromHeader(patientRole) as LabelValueType[];

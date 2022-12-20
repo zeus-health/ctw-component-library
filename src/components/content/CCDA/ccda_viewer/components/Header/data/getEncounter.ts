@@ -8,9 +8,8 @@ export const getEncounter = (
   const encompassingEncounter = xpath.select1(
     "*[name()='ClinicalDocument']/*[name()='componentOf']/*[name()='encompassingEncounter']",
     document
-  ) as Document;
+  ) as Document | undefined;
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!encompassingEncounter) return undefined;
 
   const id = getId(

@@ -7,7 +7,7 @@ import { getGuardian } from "./getGuardian";
 
 export const getPatient = (
   document: Document
-): Record<string, LabelValueType[]> => {
+): Record<string, LabelValueType[] | undefined> => {
   const patientRoles = xpath.select(
     "*[name()='ClinicalDocument']/*[name()='recordTarget']/*[name()='patientRole']",
     document

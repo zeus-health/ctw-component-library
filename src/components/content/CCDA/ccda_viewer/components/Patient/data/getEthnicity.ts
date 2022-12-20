@@ -2,12 +2,10 @@ import { isEmpty } from "lodash";
 import xpath from "xpath";
 
 export const getEthnicity = (patient: Document): string => {
-  const ethnicGroup = xpath.select1(
-    "*[name()='ethnicGroupCode']",
-    patient
-  ) as Document;
+  const ethnicGroup = xpath.select1("*[name()='ethnicGroupCode']", patient) as
+    | Document
+    | undefined;
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (ethnicGroup) {
     return String(xpath.select1("string(@displayName)", ethnicGroup));
   }
