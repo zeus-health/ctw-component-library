@@ -55,7 +55,7 @@ export const patientConditionsColumns: TableColumn<ConditionModel>[] = [
     minWidth: 128,
   },
   {
-    widthPercent: 30,
+    widthPercent: 40,
     minWidth: 132,
     render: (condition) => {
       const onsetText = condition.isSummaryResource
