@@ -153,13 +153,12 @@ export const Base64BinaryField = ({
                   <Toggle
                     inputProps={{
                       value: action.label,
-                      defaultChecked: action.value,
                       checked: action.value,
-                      onChange: action.event,
                       disabled: action.disabled,
                     }}
                     name={action.label}
                     text={action.label}
+                    onChange={action.event}
                   />
                 </span>
               </div>

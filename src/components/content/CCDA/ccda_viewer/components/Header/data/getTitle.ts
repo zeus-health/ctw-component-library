@@ -1,5 +1,5 @@
 import xpath from "xpath";
-import { formatDate, parseToISOString } from "../../../helpers";
+import { ccdaDatetimeToISO, displayDateTimeasString } from "@/fhir/formatters";
 
 export const getTitle = (document: Document): string => {
   const title = String(
@@ -9,7 +9,7 @@ export const getTitle = (document: Document): string => {
     )
   );
 
-  const effectiveTime = parseToISOString(
+  const effectiveTime = ccdaDatetimeToISO(
     String(
       xpath.select1(
         "string(*[name()='ClinicalDocument']/*[name()='effectiveTime']/@value)",
@@ -18,7 +18,5 @@ export const getTitle = (document: Document): string => {
     )
   );
 
-  const date = formatDate(effectiveTime);
-
-  return `${title} (${date})`;
+  return `${title} (${displayDateTimeasString(effectiveTime)})`;
 };

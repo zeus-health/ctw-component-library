@@ -1,7 +1,8 @@
 import { isEmpty } from "lodash";
 import xpath from "xpath";
-import { formatDate, getHumanName, getPeriod } from "../../../helpers";
+import { getHumanName, getPeriod } from "../../../helpers";
 import { LabelValueType } from "../../../types";
+import { ccdaDatetimeToISO, displayDateTimeasString } from "@/fhir/formatters";
 
 export const getDocumentationOf = (
   document: Document
@@ -35,8 +36,14 @@ export const getDocumentationOf = (
         label: "Date/Time:",
         value:
           period.start || period.end
-            ? `from ${formatDate(period.start) || "unknown"} to ${
-                formatDate(period.end) || "unknown"
+            ? `from ${
+                period.start
+                  ? displayDateTimeasString(ccdaDatetimeToISO(period.start))
+                  : "unknown"
+              } to ${
+                period.end
+                  ? displayDateTimeasString(ccdaDatetimeToISO(period.end))
+                  : "unknown"
               }`
             : "",
       },

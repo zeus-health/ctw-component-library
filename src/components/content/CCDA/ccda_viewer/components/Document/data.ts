@@ -1,5 +1,6 @@
 import xpath from "xpath";
-import { formatDate, getId, parseToISOString } from "../../helpers";
+import { getId } from "../../helpers";
+import { ccdaDatetimeToISO, displayDateTimeasString } from "@/fhir/formatters";
 
 const confidentialityCodeMap: Record<string, string> = {
   N: "normal",
@@ -15,16 +16,18 @@ export const getDocumentData = (document: Document) => {
     ) as Document
   );
 
-  const effectiveTimeValue = parseToISOString(
-    String(
-      xpath.select1(
-        "string(*[name()='ClinicalDocument']/*[name()='effectiveTime']/@value)",
-        document
+  const effectiveTimeValue = displayDateTimeasString(
+    ccdaDatetimeToISO(
+      String(
+        xpath.select1(
+          "string(*[name()='ClinicalDocument']/*[name()='effectiveTime']/@value)",
+          document
+        )
       )
     )
   );
 
-  const createdOn = formatDate(effectiveTimeValue);
+  const createdOn = effectiveTimeValue;
 
   const version = String(
     xpath.select1(

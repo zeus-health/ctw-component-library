@@ -1,6 +1,7 @@
 import xpath from "xpath";
-import { formatDate, getId, getPeriod } from "../../../helpers";
+import { getId, getPeriod } from "../../../helpers";
 import { LabelValueType } from "../../../types";
+import { ccdaDatetimeToISO, displayDateTimeasString } from "@/fhir/formatters";
 
 export const getEncounter = (
   document: Document
@@ -40,8 +41,14 @@ export const getEncounter = (
       label: "Date/Time:",
       value:
         period.start || period.end
-          ? `from ${formatDate(period.start) || "unknown"} to ${
-              formatDate(period.end) || "unknown"
+          ? `from ${
+              period.start
+                ? displayDateTimeasString(ccdaDatetimeToISO(period.start))
+                : "unknown"
+            } to ${
+              period.end
+                ? displayDateTimeasString(ccdaDatetimeToISO(period.end))
+                : "unknown"
             }`
           : "",
     },

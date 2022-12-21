@@ -12,10 +12,9 @@ export type ToggleProps = {
     | {
         value: string;
         checked: boolean;
-        onChange: (event: ChangeEvent<HTMLInputElement>) => void;
         disabled: boolean;
       };
-  onChange?: () => void;
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 };
 
 export const Toggle = ({ name, text, onChange, inputProps }: ToggleProps) => (
@@ -26,8 +25,8 @@ export const Toggle = ({ name, text, onChange, inputProps }: ToggleProps) => (
         className="ctw-relative ctw-block ctw-h-6 ctw-cursor-pointer ctw-overflow-hidden ctw-rounded-full ctw-bg-divider-light"
       >
         <input
-          {...inputProps}
           onChange={onChange}
+          {...inputProps}
           type="checkbox"
           name={name}
           id={name}

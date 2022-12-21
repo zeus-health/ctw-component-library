@@ -1,11 +1,8 @@
 import { isEmpty } from "lodash";
 import xpath from "xpath";
-import {
-  getContactDetails,
-  getHumanName,
-  parseToISOString,
-} from "../../helpers";
+import { getContactDetails, getHumanName } from "../../helpers";
 import { ExtendedGeneralInfo, isExtendedGeneralInfoExist } from "../../types";
+import { ccdaDatetimeToISO, displayDateTimeasString } from "@/fhir/formatters";
 
 export const getAuthenticatorData = (
   document: Document
@@ -40,8 +37,12 @@ export const getAuthenticatorData = (
         xpath.select("*[name()='telecom']", assignedEntity) as Document[]
       );
 
-      const time = parseToISOString(
-        String(xpath.select1("string(*[name()='time']/@value)", authenticator))
+      const time = displayDateTimeasString(
+        ccdaDatetimeToISO(
+          String(
+            xpath.select1("string(*[name()='time']/@value)", authenticator)
+          )
+        )
       );
 
       return { name, contactDetails, time };
