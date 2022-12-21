@@ -1,4 +1,5 @@
 import cx from "classnames";
+import { isFunction } from "lodash";
 import { ReactElement } from "react";
 import { Spinner } from "../spinner";
 import { TableDataCell } from "./table-data-cell";
@@ -48,7 +49,7 @@ export const TableRows = <T extends MinRecordItem>({
           className={cx(
             "ctw-group ctw-relative ctw-z-10 hover:ctw-bg-bg-lighter",
             {
-              "ctw-cursor-pointer": typeof handleRowClick === "function",
+              "ctw-cursor-pointer": isFunction(handleRowClick),
             }
           )}
           key={record.id}
