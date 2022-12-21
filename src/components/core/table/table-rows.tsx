@@ -54,7 +54,7 @@ export const TableRows = <T extends MinRecordItem>({
           )}
           key={record.id}
           onClick={({ target }) => {
-            // This is for the case where a user clicks area near the button (but not on), we do not want have the onRowClick handler trigger as that will cause confusion to the user
+            // This is for the case where a user clicks area near the button (but not on), we do not want have the onRowClick handler trigger as that will cause confusion to the user.
             if (
               target instanceof HTMLElement &&
               target.querySelectorAll("button").length
