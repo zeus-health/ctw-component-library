@@ -16,7 +16,7 @@ const {
   VITE_AUTH0_CLIENT_ID,
   VITE_AUTH0_AUDIENCE,
   VITE_AUTH0_CALLBACK_PATH,
-  VITE_ENV = "sandbox",
+  VITE_ENV = "dev",
 } = import.meta.env;
 
 const DemoApp = ({ accessToken = "" }) => (
