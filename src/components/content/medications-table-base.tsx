@@ -46,6 +46,25 @@ export const MedicationsTableBase = ({
       ),
     },
     {
+      title: "Status",
+      render: (medication) => (
+        <div className="ctw-capitalize">
+          <div className="ctw-text-content-black">
+            {medication.clinicalStatus}
+          </div>
+          <div>
+            {medication.status}
+          </div>
+        </div>
+      ),
+      widthPercent: 17.5,
+      minWidth: 128,
+      sortIndices: [
+        { index: "status" },
+        { index: "dateAsserted", dir: "desc" },
+      ],
+    },
+    {
       title: "Last Filled",
       dataIndex: "lastFillDate",
     },
