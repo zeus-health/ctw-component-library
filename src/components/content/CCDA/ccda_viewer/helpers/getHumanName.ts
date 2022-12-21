@@ -19,8 +19,7 @@ const humanNameUseMap: Record<string, string> = {
   SYL: "Syllabic",
 };
 
-export const getHumanName = (name: Document | Document[]): string => {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+export const getHumanName = (name?: Document | Document[]): string => {
   if (!name) return "";
 
   const parser = (nameXml: Document) => {
