@@ -10,7 +10,7 @@ import {
 import { useCTW } from "../core/ctw-provider";
 import { CCDAModal } from "../core/modal-ccda";
 import { NotesList } from "../core/notes-list";
-import { DocumentButton } from "./CCDA/documentButton";
+import { RenderDocumentButton } from "./CCDA/render-document-button";
 import { ConditionHeader } from "./condition-header";
 import { Loading } from "@/components/core/loading";
 import { getIncludedResources } from "@/fhir/bundle";
@@ -240,16 +240,12 @@ export function ConditionHistory({
             entries={conditionsWithDate.map((entry) => ({
               ...entry,
               documentButton: (
-                <>
-                  {idMap.get(entry.id) && idMap.get(entry.id)?.isBinary && (
-                    <DocumentButton
-                      onClick={() => {
-                        setIsModalOpen(true);
-                        setRawBinary(idMap.get(entry.id));
-                      }}
-                    />
-                  )}
-                </>
+                <RenderDocumentButton
+                  idMap={idMap}
+                  entry={entry}
+                  setIsModalOpen={setIsModalOpen}
+                  setRawBinary={setRawBinary}
+                />
               ),
             }))}
             limit={CONDITION_HISTORY_LIMIT}
@@ -260,17 +256,13 @@ export function ConditionHistory({
               <CollapsibleDataListStack
                 entries={conditionsWithoutDate.map((entry) => ({
                   ...entry,
-                  children: (
-                    <>
-                      {idMap.get(entry.id) && idMap.get(entry.id)?.isBinary && (
-                        <DocumentButton
-                          onClick={() => {
-                            setIsModalOpen(true);
-                            setRawBinary(idMap.get(entry.id));
-                          }}
-                        />
-                      )}
-                    </>
+                  documentButton: (
+                    <RenderDocumentButton
+                      idMap={idMap}
+                      entry={entry}
+                      setIsModalOpen={setIsModalOpen}
+                      setRawBinary={setRawBinary}
+                    />
                   ),
                 }))}
                 limit={CONDITION_HISTORY_LIMIT}
