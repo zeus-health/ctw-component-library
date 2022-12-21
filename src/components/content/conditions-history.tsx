@@ -130,7 +130,7 @@ export function ConditionHistory({
   // Create a map that links conditionID and then use that ID to map to conditions without dates and conditions with Dates.
   // Then you finally need to map those into 2 separate arrays and then pass those into the functions.
   useEffect(() => {
-    let conditionsDataDeduped: CollapsibleDataListProps[];
+    let conditionsDataDeduped: CollapsibleDataListProps[] = [];
     async function load() {
       setConditionForSearch(condition);
 

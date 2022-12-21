@@ -4,13 +4,17 @@ import "./toggle.scss";
 export type ToggleProps = {
   name: string;
   text: string;
-  inputRest?: {
-    value: string;
-    defaultChecked: boolean;
-    checked?: boolean;
-    onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-    disabled?: boolean;
-  };
+  inputRest?:
+    | {
+        value: string;
+        defaultChecked: boolean;
+      }
+    | {
+        value: string;
+        checked: boolean;
+        onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+        disabled: boolean;
+      };
 };
 
 export const Toggle = ({ name, text, inputRest }: ToggleProps) => (
