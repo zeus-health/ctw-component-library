@@ -17,8 +17,8 @@ import { patientConditionsColumns } from "./patient-conditions-columns";
 import { useConditionFilters } from "./patient-conditions-filters";
 import { PatientConditionsHeader } from "./patient-conditions-header";
 import {
+  createHandleEditCondition,
   handleOpeningHistoryDrawer,
-  shouldHistoryDrawerBeReadOnly,
 } from "./patient-conditions-history";
 import { EditDeleteConditionHoverActions } from "./patient-conditions-menu-actions";
 import { useCTW } from "@/components/core/ctw-provider";
@@ -154,7 +154,7 @@ export function PatientConditions({
         isOpen={historyDrawerIsOpen}
         onClose={() => setHistoryDrawerIsOpen(false)}
         condition={selectedCondition}
-        onEdit={shouldHistoryDrawerBeReadOnly({
+        onEdit={createHandleEditCondition({
           data: selectedCondition,
           patientRecords: patientConditions,
           handleEditCondition,

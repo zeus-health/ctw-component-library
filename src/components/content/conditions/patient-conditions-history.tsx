@@ -7,7 +7,7 @@ type HistoryDrawerReadOnlyCheck = {
   handleEditCondition: (data: ConditionModel) => void;
 };
 
-export const shouldHistoryDrawerBeReadOnly = ({
+export const createHandleEditCondition = ({
   data,
   patientRecords,
   handleEditCondition,
