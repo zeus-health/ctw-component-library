@@ -1,4 +1,4 @@
-export const providerMedications = {
+export const providerMedications: fhir4.Bundle = {
   resourceType: "Bundle",
   id: "0b13191b",
   meta: {

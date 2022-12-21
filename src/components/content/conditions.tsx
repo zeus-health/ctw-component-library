@@ -18,18 +18,18 @@ import { ConditionsNoPatient } from "./conditions-no-patient";
 import { ConditionsTableBase } from "./conditions-table-base";
 import "./conditions.scss";
 import { filterOtherConditions } from "./conditions/helpers";
-import { getAddConditionData } from "./forms/condition-schema";
 import {
   createOrEditCondition,
   getAddConditionWithDefaults,
-} from "./forms/conditions";
+} from "./forms/actions/conditions";
+import { getAddConditionData } from "./forms/schemas/condition-schema";
 import { PatientHistoryRequestDrawer } from "./patient-history-request-drawer";
 import { PatientHistoryMessage } from "./patient-history/patient-history-message";
 import {
   conditionAddSchema,
   conditionEditSchema,
   getEditingPatientConditionData,
-} from "@/components/content/forms/condition-schema";
+} from "@/components/content/forms/schemas/condition-schema";
 import { recordProfileAction } from "@/fhir/basic";
 import {
   getNewCondition,
@@ -278,7 +278,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
                 )}
               </>
             }
-            rowActions={(condition) => [
+            rowMenuActions={(condition) => [
               {
                 name: "Edit",
                 action: async () => {
@@ -320,13 +320,15 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               className="ctw-conditions-not-reviewed"
               stacked={breakpoints.sm}
               conditions={otherProviderRecords}
+              sort={sort}
+              onSort={(newSort) => setSort(newSort)}
               isLoading={
                 otherProviderRecordsResponse.isLoading ||
                 patientRecordsResponse.isLoading
               }
               hideMenu={readOnly}
               message={otherProviderRecordMessage}
-              rowActions={(condition) => [
+              rowMenuActions={(condition) => [
                 {
                   name: "Add",
                   action: async () => {

@@ -1,6 +1,9 @@
 import cx from "classnames";
-import { ReactElement, useEffect, useRef, useState } from "react";
-import { DEFAULT_PAGE_SIZE, Pagination } from "../pagination/pagination";
+import { ReactElement, ReactNode, useEffect, useRef, useState } from "react";
+import {
+  DEFAULT_PAGE_SIZE,
+  PaginationList,
+} from "../pagination/pagination-list";
 import { TableColGroup } from "./table-colgroup";
 import { TableHead } from "./table-head";
 import {
@@ -13,7 +16,7 @@ import { TableRows } from "./table-rows";
 import "./table.scss";
 
 export type TableProps<T extends MinRecordItem> = {
-  className?: string;
+  className?: cx.Argument;
   records: T[];
   columns: TableColumn<T>[];
   isLoading?: boolean;
@@ -22,8 +25,11 @@ export type TableProps<T extends MinRecordItem> = {
   showTableHead?: boolean;
   stacked?: boolean;
   handleRowClick?: (record: T) => void;
+  rowActions?: (record: T) => JSX.Element;
   sort?: TableSort;
   onSort?: (sort: TableSort) => void;
+  hidePagination?: boolean;
+  children?: ReactNode;
 };
 
 export type TableBaseProps<T extends MinRecordItem> = Omit<
@@ -42,6 +48,9 @@ export const Table = <T extends MinRecordItem>({
   sort,
   onSort,
   handleRowClick,
+  rowActions,
+  hidePagination = false,
+  children,
 }: TableProps<T>) => {
   const tableRef = useRef<HTMLTableElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -92,12 +101,12 @@ export const Table = <T extends MinRecordItem>({
 
   return (
     <div
-      className={cx("ctw-space-y-4", className, {
+      className={cx("ctw-space-y-4", {
         "ctw-table-stacked": stacked,
       })}
     >
       <div
-        className={cx("ctw-table-container", {
+        className={cx("ctw-table-container", className, {
           "ctw-table-scroll-left-shadow": showLeftShadow,
           "ctw-table-scroll-right-shadow": showRightShadow,
         })}
@@ -113,6 +122,7 @@ export const Table = <T extends MinRecordItem>({
               <TableRows
                 records={sortedRecords.slice(0, count)}
                 handleRowClick={handleRowClick}
+                rowActions={rowActions}
                 columns={columns}
                 isLoading={isLoading}
                 emptyMessage={message}
@@ -121,13 +131,14 @@ export const Table = <T extends MinRecordItem>({
           </table>
         </div>
       </div>
-      {records.length > 0 && !isLoading && (
-        <Pagination
+      {!hidePagination && records.length > 0 && !isLoading && (
+        <PaginationList
           total={records.length}
           count={count}
           changeCount={setCount}
         />
       )}
+      {children}
     </div>
   );
 };

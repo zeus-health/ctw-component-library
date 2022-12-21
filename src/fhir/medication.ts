@@ -55,6 +55,16 @@ export function getIdentifyingRxNormCode(
   medication: Medication,
   includedResources?: ResourceMap
 ): string | undefined {
+  return getIdentifyingRxNormCoding(medication, includedResources)?.code;
+}
+
+/**
+ * Gets the CodeableConcept.Coding for the pass in medication.
+ */
+export function getIdentifyingRxNormCoding(
+  medication: Medication,
+  includedResources?: ResourceMap
+): fhir4.Coding | undefined {
   const codeableConcept = getMedicationCodeableConcept(
     medication,
     includedResources
@@ -76,7 +86,7 @@ export function getIdentifyingRxNormCode(
             e.valueString &&
             excludedExtensions.includes(e.valueString)
         ))
-  )?.code;
+  );
 }
 
 // Returns the organization name of any performer for the medication.

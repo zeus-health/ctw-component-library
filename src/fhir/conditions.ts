@@ -15,7 +15,7 @@ import {
   SYSTEM_SNOMED,
 } from "./system-urls";
 import { getZusApiBaseUrl } from "@/api/urls";
-import { getAddConditionWithDefaults } from "@/components/content/forms/conditions";
+import { getAddConditionWithDefaults } from "@/components/content/forms/actions/conditions";
 import { CollapsibleDataListProps } from "@/components/core/collapsible-data-list";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
@@ -25,6 +25,22 @@ import {
   QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
   QUERY_KEY_PATIENT_CONDITIONS,
 } from "@/utils/query-keys";
+
+export type VerificationStatus =
+  | "unconfirmed"
+  | "provisional"
+  | "differential"
+  | "confirmed"
+  | "refuted"
+  | "entered-in-error";
+
+export type ClinicalStatus =
+  | "active"
+  | "recurrence"
+  | "relapse"
+  | "inactive"
+  | "remission"
+  | "resolved";
 
 export const CONDITION_CODE_PREFERENCE_ORDER: CodePreference[] = [
   { system: SYSTEM_SNOMED, checkForEnrichment: true },
@@ -57,7 +73,7 @@ export function usePatientConditions() {
           "Condition",
           requestContext,
           {
-            patientUPID: patient.UPID as string,
+            patientUPID: patient.UPID,
           }
         );
         return filterAndSort(setupConditionModels(conditions, bundle));
@@ -81,7 +97,7 @@ export function useOtherProviderConditions() {
           requestContext,
           {
             _revinclude: "Basic:subject",
-            patientUPID: patient.UPID as string,
+            patientUPID: patient.UPID,
           }
         );
         return filterAndSort(setupConditionModels(conditions, bundle));
@@ -106,7 +122,7 @@ export function useConditionHistory(condition?: ConditionModel) {
         );
 
         const searchParams: SearchParams = {
-          patientUPID: patient.UPID as string,
+          patientUPID: patient.UPID,
           _include: ["Condition:patient", "Condition:encounter"],
           "_include:iterate": "Patient:organization",
         };

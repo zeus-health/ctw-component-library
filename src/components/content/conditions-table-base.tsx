@@ -7,14 +7,14 @@ import { ConditionModel } from "@/fhir/models/condition";
 export type ConditionsTableBaseProps = {
   className?: string;
   conditions: ConditionModel[];
-  rowActions: (condition: ConditionModel) => MenuItem[];
+  rowMenuActions: (condition: ConditionModel) => MenuItem[];
   hideMenu: boolean;
 } & TableBaseProps<ConditionModel>;
 
 export function ConditionsTableBase({
   className,
   conditions,
-  rowActions,
+  rowMenuActions,
   hideMenu,
   sort = { columnTitle: "Last Recorded", dir: "desc" },
   onSort,
@@ -49,7 +49,11 @@ export function ConditionsTableBase({
       ),
       widthPercent: 17.5,
       minWidth: 128,
-      sortIndices: [{ index: "active" }, { index: "recorded", dir: "asc" }],
+      sortIndices: [
+        { index: "clinicalStatus" },
+        { index: "verificationStatus" },
+        { index: "recorded", dir: "desc" },
+      ],
     },
     {
       title: "Last Recorded",
@@ -64,7 +68,7 @@ export function ConditionsTableBase({
     columns.push({
       className: "ctw-table-action-column",
       render: (condition: ConditionModel) => (
-        <DropdownMenu menuItems={rowActions(condition)}>
+        <DropdownMenu menuItems={rowMenuActions(condition)}>
           <DotsHorizontalIcon className="ctw-w-5" />
         </DropdownMenu>
       ),

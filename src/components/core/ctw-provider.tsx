@@ -1,4 +1,4 @@
-import { QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider, useQuery } from "@tanstack/react-query";
 import { merge } from "lodash";
 import {
   ReactNode,
@@ -24,7 +24,7 @@ import {
   Theme,
 } from "@/styles/tailwind.theme";
 import { claimsBuilderId } from "@/utils/auth";
-import { queryClient } from "@/utils/request";
+import { ctwFetch, queryClient } from "@/utils/request";
 import "./main.scss";
 
 export type Env = "dev" | "sandbox" | "production";
@@ -39,7 +39,7 @@ type CTWProviderProps = {
   env: Env;
   builderId?: string;
   theme?: Theme;
-  headers?: HeadersInit;
+  headers?: Record<string, string>;
 } & (AuthTokenSpecified | AuthTokenURLSpecified);
 
 declare global {
@@ -142,6 +142,7 @@ function useCTW() {
       env: context.env,
       authToken,
       builderId: context.builderId ?? claimsBuilderId(authToken) ?? "",
+      contextBuilderId: context.builderId,
       fhirClient: getFhirClient(context.env, authToken, context.builderId),
     };
     return requestContext;
@@ -154,13 +155,31 @@ function useCTW() {
   };
 }
 
+export function useQueryWithCTW<T, T2>(
+  queryKey: string,
+  keys: T2[],
+  query: (requestContext: CTWRequestContext, keys?: T2[]) => Promise<T>,
+  enabled = true
+) {
+  const { getRequestContext } = useCTW();
+
+  return useQuery(
+    [queryKey, ...keys],
+    async () => {
+      const requestContext = await getRequestContext();
+      return query(requestContext, keys);
+    },
+    { enabled }
+  );
+}
+
 async function checkOrRefreshAuth(
   token: CTWToken | undefined,
   url: CTWState["authTokenURL"],
-  headers?: HeadersInit
+  headers?: Record<string, string>
 ): Promise<CTWToken> {
   if (!token || Date.now() >= token.expiresAt + EXPIRY_PADDING_MS) {
-    const response = await fetch(url as string, {
+    const response = await ctwFetch(url as string, {
       headers,
     });
     const newToken = await response.json();

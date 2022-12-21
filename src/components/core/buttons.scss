@@ -15,6 +15,11 @@
   @apply ctw-btn ctw-border-0 ctw-bg-primary-main ctw-text-white hover:ctw-bg-primary-dark;
 }
 
+.ctw-btn-icon {
+  @apply ctw-btn-primary;
+  @apply ctw-flex ctw-items-center ctw-justify-center ctw-rounded-full ctw-p-2;
+}
+
 .ctw-btn-group button {
   @apply ctw-rounded-none;
   margin-left: -1px; /* Counteract button borders. */

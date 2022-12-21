@@ -11,12 +11,6 @@ export type AutoCompleteComboboxProps = {
   readonly: boolean | undefined;
 } & InputHTMLAttributes<HTMLInputElement>;
 
-export type ConditionsAutoCompleteOption = {
-  display: string;
-  code: string;
-  system: string;
-};
-
 export const ConditionsAutoComplete = ({
   defaultCoding,
   readonly,
@@ -28,8 +22,8 @@ export const ConditionsAutoComplete = ({
 
   const handleSearchChange = async (query: string) => {
     setIsLoading(true);
-    const { authToken, env } = await getRequestContext();
-    const conditions = await getAutoCompleteConditions(authToken, env, query);
+    const requestContext = await getRequestContext();
+    const conditions = await getAutoCompleteConditions(requestContext, query);
 
     if (conditions) {
       setOptions(

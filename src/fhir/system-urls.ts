@@ -1,6 +1,7 @@
 // HL7 / FHIR
 
 export const SYSTEM_BASIC_RESOURCE_TYPE = `http://terminology.hl7.org/CodeSystem/basic-resource-type`;
+export const SYSTEM_CONDITION_CATEGORY = `http://terminology.hl7.org/CodeSystem/condition-category`;
 export const SYSTEM_CONDITION_CLINICAL =
   "http://terminology.hl7.org/CodeSystem/condition-clinical";
 export const SYSTEM_CONDITION_VERIFICATION_STATUS =

@@ -6,6 +6,7 @@ import { dateToISO } from "@/fhir/formatters";
 import { ConditionModel } from "@/fhir/models/condition";
 import { getUsersPractitionerReference } from "@/fhir/practitioner";
 import {
+  SYSTEM_CONDITION_CATEGORY,
   SYSTEM_CONDITION_CLINICAL,
   SYSTEM_CONDITION_VERIFICATION_STATUS,
 } from "@/fhir/system-urls";
@@ -84,7 +85,22 @@ export const createOrEditCondition = async (
         },
       ],
     },
-    // Keep all existing codings when editing a condition
+    // Set category to problem list when creating a condition.
+    category:
+      data.id && condition
+        ? condition.resource.category
+        : [
+            {
+              coding: [
+                {
+                  system: SYSTEM_CONDITION_CATEGORY,
+                  code: "problem-list-item",
+                  display: "Problem List Item",
+                },
+              ],
+            },
+          ],
+    // Keep all existing codings when editing a condition.
     code:
       data.id && condition
         ? condition.codings

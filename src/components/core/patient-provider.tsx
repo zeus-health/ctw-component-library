@@ -6,7 +6,10 @@ import {
   useContext,
   useMemo,
 } from "react";
-import { editPatient, PatientFormData } from "../content/forms/patients";
+import {
+  editPatient,
+  PatientFormData,
+} from "../content/forms/actions/patients";
 import { CTWRequestContext } from "./ctw-context";
 import { useCTW } from "./ctw-provider";
 import { PatientModel } from "@/fhir/models/patient";

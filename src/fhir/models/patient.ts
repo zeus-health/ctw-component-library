@@ -1,3 +1,4 @@
+import { differenceInYears, parseISO } from "date-fns";
 import { cloneDeep, find } from "lodash";
 import { formatDateISOToLocal, formatPhoneNumber } from "../formatters";
 import { FHIRModel } from "./fhir-model";
@@ -31,6 +32,13 @@ export class PatientModel extends FHIRModel<fhir4.Patient> {
     return formatDateISOToLocal(this.resource.birthDate);
   }
 
+  get age(): number | undefined {
+    if (!this.resource.birthDate) return undefined;
+
+    const date = parseISO(this.resource.birthDate);
+    return differenceInYears(new Date(), date);
+  }
+
   get gender(): string | undefined {
     return this.resource.gender;
   }
@@ -62,9 +70,16 @@ export class PatientModel extends FHIRModel<fhir4.Patient> {
     return this.bestName.use;
   }
 
-  get UPID(): string | undefined {
-    return find(this.resource.identifier, { system: SYSTEM_ZUS_UNIVERSAL_ID })
-      ?.value;
+  get UPID(): string {
+    const upid = find(this.resource.identifier, {
+      system: SYSTEM_ZUS_UNIVERSAL_ID,
+    })?.value;
+    if (!upid) {
+      throw Error(
+        `Patient with ID ${this.resource.identifier} does not have a UPID`
+      );
+    }
+    return upid;
   }
 
   getPhoneNumber(use?: fhir4.ContactPoint["use"]): string | undefined {

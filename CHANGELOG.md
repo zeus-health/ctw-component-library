@@ -1,5 +1,92 @@
 # ctw-component-library
 
+## 0.33.0
+
+### Minor Changes
+
+- 13c80ac: Add hover actions in conditons 2.0.
+
+## 0.32.1
+
+### Patch Changes
+
+- 4357de1: Code cleanup.
+- 71d4eae: Adding patient UPID to queries for medication data that may span builders, this triggers "CPR mode" in ODS.
+
+## 0.32.0
+
+### Minor Changes
+
+- e00310c: Created an "Add to Record" button in the hamburger menu of <OtherProviderMedsTable/>
+- 9d13865: <PatientsTable /> and <Pagination /> components added. Previous pagination component which didn't feature lazy loading and paging backwards is now named <PaginationList />
+
+## 0.31.2
+
+### Patch Changes
+
+- ad8fe61: Fix bug where medications couldnt be added without dosage.
+
+## 0.31.1
+
+### Patch Changes
+
+- 223e5f4: Automatically categorizes new conditions as problem list item.
+
+## 0.31.0
+
+### Minor Changes
+
+- 2abe043: Add medications autocomplete component and remove note field from add medication.
+
+### Patch Changes
+
+- f7f2fe9: Fix issue where builderId is passed in even when logged in as non-super user.
+
+## 0.30.4
+
+### Patch Changes
+
+- dba5946: Adds builder identification to all requests to Zus services.
+
+## 0.30.3
+
+### Patch Changes
+
+- 63e3cd0: Add error message at bottom of drawer in addition to top of drawer.
+
+## 0.30.2
+
+### Patch Changes
+
+- beab220: Fix the conditions other providers table so that the table headers also sort, and fix the sorting order of status to match what is displayed.
+- f85a962: Re-add header that indicates the source of outgoing requests.
+- fc726fc: Add label "History" to history records.
+- 512c20f: Automatically categorizes new conditions as problem list items.
+- f85a962: Remove header indicating source of requests.
+
+## 0.30.1
+
+### Patch Changes
+
+- d6a684e: Actions will now catch unhandled errors.
+- 9811178: Revert the additional header to avoid a CORS error.
+
+## 0.30.0
+
+### Minor Changes
+
+- 0c2c349: Create a newly redesigned conditions component.
+
+### Patch Changes
+
+- 7f81bfc: Adds a header to outgoing requests indicating the component library as the source.
+
+## 0.29.7
+
+### Patch Changes
+
+- 7079391: Edit patient resource directly to avoid losing patient information.
+
 ## 0.29.6
 
 ### Patch Changes
