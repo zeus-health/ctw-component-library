@@ -239,7 +239,7 @@ export function ConditionHistory({
           <CollapsibleDataListStack
             entries={conditionsWithDate.map((entry) => ({
               ...entry,
-              children: (
+              documentButton: (
                 <>
                   {idMap.get(entry.id) && idMap.get(entry.id)?.isBinary && (
                     <DocumentButton

@@ -17,7 +17,7 @@ export type CollapsibleDataListProps = {
   subtitle?: string;
   data: CollapsibleDataListEntry[];
   hideEmpty?: boolean;
-  children?: ReactNode;
+  documentButton?: ReactNode;
 };
 
 export const CollapsibleDataList = ({
@@ -27,7 +27,7 @@ export const CollapsibleDataList = ({
   subtitle,
   data,
   hideEmpty,
-  children,
+  documentButton,
 }: CollapsibleDataListProps) => {
   const [isDetailShown, setIsDetailShown] = useState(false);
 
@@ -41,9 +41,11 @@ export const CollapsibleDataList = ({
         setIsDetailShown={setIsDetailShown}
       />
       {isDetailShown && (
-        <Details data={data} hideEmpty={hideEmpty}>
-          {children}
-        </Details>
+        <Details
+          data={data}
+          hideEmpty={hideEmpty}
+          documentButton={documentButton}
+        />
       )}
     </div>
   );

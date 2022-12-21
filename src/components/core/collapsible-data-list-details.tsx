@@ -7,21 +7,21 @@ type DetailsProps = {
   data: CollapsibleDataListEntry[];
   readOnly?: boolean;
   onEdit?: () => void;
-  children?: ReactNode;
+  documentButton?: ReactNode;
 };
 
 export const Details = ({
   data,
   hideEmpty = true,
   onEdit,
-  children,
+  documentButton,
 }: DetailsProps) => (
   <div className="ctw-rounded-lg ctw-bg-bg-lighter">
     <dl className="ctw-space-y-2 ctw-p-4">
       <div className="ctw-flex ctw-justify-between ctw-space-x-2 ctw-text-sm ctw-uppercase ctw-text-content-light">
         <div className="ctw-title-container">Details</div>
         <div className="ctw-flex">
-          {children}
+          {documentButton}
           {onEdit && (
             <button
               type="button"
