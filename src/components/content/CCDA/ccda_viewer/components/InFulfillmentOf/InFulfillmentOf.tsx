@@ -6,8 +6,7 @@ import { getInFulfillmentOfData } from "./data";
 export const InFulfillmentOf = ({ document }: DocumentOnlyProps) => {
   const inFulfillmentOfs = getInFulfillmentOfData(document);
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (!inFulfillmentOfs || isEmpty(inFulfillmentOfs)) return null;
+  if (isEmpty(inFulfillmentOfs)) return null;
 
   const finalData = inFulfillmentOfs.flatMap((inFulfillmentOf) => [
     {
