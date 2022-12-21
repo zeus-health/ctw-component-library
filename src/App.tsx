@@ -6,6 +6,7 @@ import { CTWProvider } from "./components/core/ctw-provider";
 import { PatientProvider } from "./components/core/patient-provider";
 import { ErrorBoundary } from "./error-boundary";
 import { SecuredApp } from "./SecuredApp";
+import { PatientConditions } from "./components/content/conditions/patient-conditions";
 
 const {
   VITE_SYSTEM_URL,
@@ -35,6 +36,15 @@ const DemoApp = ({ accessToken = "" }) => (
           </h3>
           <ErrorBoundary>
             <Conditions />
+          </ErrorBoundary>
+        </div>
+
+        <div className="ctw-space-y-5 ctw-bg-white">
+          <h3>
+            Patient Conditions 2.0 <small>(default)</small>
+          </h3>
+          <ErrorBoundary>
+            <PatientConditions />
           </ErrorBoundary>
         </div>
 
