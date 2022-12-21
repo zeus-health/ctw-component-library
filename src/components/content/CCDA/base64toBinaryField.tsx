@@ -151,7 +151,7 @@ export const Base64BinaryField = ({
               <div key={action.label} className="ctw-cda-switch-wrapper">
                 <span className="ctw-flex">
                   <Toggle
-                    inputRest={{
+                    inputProps={{
                       value: action.label,
                       defaultChecked: action.value,
                       checked: action.value,
