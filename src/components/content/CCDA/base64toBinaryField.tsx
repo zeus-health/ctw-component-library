@@ -1,4 +1,3 @@
-import { Grid, Switch } from "@material-ui/core";
 import { Viewer, Worker } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { DOMParser } from "@xmldom/xmldom";
@@ -11,6 +10,7 @@ import xpath from "xpath";
 import { base64toBlob } from "./base64toBlob";
 import { CcdaViewer } from "./ccda_viewer";
 import "./styles.scss";
+import { Toggle } from "@/components/core/toggle";
 
 const xmlTypes = ["/xml", "/xhtml+xml", "application/xml"];
 
@@ -105,10 +105,8 @@ export const Base64BinaryField = ({
     if (!decoded) setParsedCCDA(false);
   }, [decoded]);
 
-  const handleChange =
-    (isParsedAction: boolean) =>
-    (event: ChangeEvent<HTMLInputElement>): void =>
-      (isParsedAction ? setParsedCCDA : setDecoded)(event.target.checked);
+  const handleChange = (event: ChangeEvent<HTMLInputElement>): void =>
+    setParsedCCDA(event.target.checked);
 
   const ccdaDoc = useMemo(() => {
     if (!isSpecificContentType(xmlTypes, contentType)) return undefined;
@@ -132,7 +130,7 @@ export const Base64BinaryField = ({
     {
       label: "Parsed",
       value: parsedCCDA,
-      event: handleChange(true),
+      event: handleChange,
       disabled: !decoded,
       display: Boolean(ccdaDoc),
     },
@@ -150,24 +148,21 @@ export const Base64BinaryField = ({
         {actions.map(
           (action) =>
             action.display && (
-              <Grid
-                key={action.label}
-                component="label"
-                container
-                alignItems="center"
-                className="ctw-cda-switch-wrapper"
-              >
-                <Grid item>
-                  <Switch
-                    checked={action.value}
-                    onChange={action.event}
-                    disabled={action.disabled}
+              <div key={action.label} className="ctw-cda-switch-wrapper">
+                <span className="ctw-flex">
+                  <Toggle
+                    inputRest={{
+                      value: action.label,
+                      defaultChecked: action.value,
+                      checked: action.value,
+                      onChange: action.event,
+                      disabled: action.disabled,
+                    }}
+                    name={action.label}
+                    text={action.label}
                   />
-                </Grid>
-                <Grid item className="ctw-ccda-switch-label">
-                  {action.label}
-                </Grid>
-              </Grid>
+                </span>
+              </div>
             )
         )}
       </div>
