@@ -3,8 +3,7 @@ import { Period } from "fhir/r4";
 import xpath from "xpath";
 import { ccdaDatetimeToISO, displayDateTimeasString } from "@/fhir/formatters";
 
-export const getPeriod = (xmlData: Document): Period => {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+export const getPeriod = (xmlData?: Document): Period => {
   if (!xmlData) return {};
 
   const low = String(xpath.select1("string(*[name()='low']/@value)", xmlData));
