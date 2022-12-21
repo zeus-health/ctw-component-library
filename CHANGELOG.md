@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.33.0
+
+### Minor Changes
+
+- 13c80ac: Add hover actions in conditons 2.0.
+
 ## 0.32.1
 
 ### Patch Changes
