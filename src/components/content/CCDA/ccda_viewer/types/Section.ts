@@ -1,5 +1,5 @@
 type SectionType = {
-  humanReadable: Document;
+  humanReadable?: Document;
   title: string;
   code: string;
 };
