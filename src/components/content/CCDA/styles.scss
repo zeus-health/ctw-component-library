@@ -1,122 +1,122 @@
 .ctw-ccda-base64-binary-text {
-      width: calc(100vw - 200px - 24px - 24px - 16px - 16px - 2px);
-      overflow-wrap: break-word;
+  width: calc(100vw - 200px - 24px - 24px - 16px - 16px - 2px);
+  overflow-wrap: break-word;
 }
 
 .ctw-ccda-container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-  }
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
 
-  .ctw-ccda-switch-container {
-      display: "flex";
-      align-items: center;
-  }
+.ctw-ccda-switch-container {
+  display: "flex";
+  align-items: center;
+}
 
-  .ctw-ccda-switch-wrapper {
-    margin-left: 32px;
-    margin-top: -36px;
-    width: fit-content;
-  }
+.ctw-ccda-switch-wrapper {
+  margin-left: 32px;
+  margin-top: -36px;
+  width: fit-content;
+}
 
-  .ctw-ccda-xml-wrapper { 
-      width: calc(100vw - 200px - 24px - 24px - 16px - 16px - 2px);
-      border: none;
-      outline: none;
-      background-color: white;
-      color: black;
-      resize: none;
-  }
+.ctw-ccda-xml-wrapper {
+  width: calc(100vw - 200px - 24px - 24px - 16px - 16px - 2px);
+  border: none;
+  outline: none;
+  background-color: white;
+  color: black;
+  resize: none;
+}
 
-  .ctw-ccda-switch-label {
-    font-size: .85rem;
-  }
+.ctw-ccda-switch-label {
+  font-size: 0.85rem;
+}
 
-  .ctw-ccda-pdf-wrapper { 
-    width: calc(100vw - 200px - 24px - 24px - 16px - 16px - 2px);
-  }
+.ctw-ccda-pdf-wrapper {
+  width: calc(100vw - 200px - 24px - 24px - 16px - 16px - 2px);
+}
 
-  .ctw-ccda-document-details {
+.ctw-ccda-document-details {
+  margin-top: 15px;
+  border-top: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  & table {
     margin-top: 15px;
-    border-top: 1px solid black;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    & table{
-         margin-top: 15px;
-    }
   }
+}
 
-  .ctw-ccda-header-container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-  }
+.ctw-ccda-header-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
 
-  .ctw-ccda-header-title { 
-    align-self: center;
-  }
+.ctw-ccda-header-title {
+  align-self: center;
+}
 
-  .ctw-ccda-common-table {
+.ctw-ccda-common-table {
+  border: 1px solid black;
+  & td {
     border: 1px solid black;
-    & td {
-      border: 1px solid black;
-    }
   }
+}
 
-  .ctw-ccda-common-td1 {
-    background: #d3d3d3;
-    width: 15%;
-    padding: 0 5px;
-    font-weight: bold;
-    vertical-align: top;
-  }
+.ctw-ccda-common-td1 {
+  background: #d3d3d3;
+  width: 15%;
+  padding: 0 5px;
+  font-weight: bold;
+  vertical-align: top;
+}
 
-  .ctw-ccda-common-td2 {
-    background: #f2f2f2;
-    vertical-align: top;
-    width: 35%;
-    white-space: pre-wrap;
-    padding: 0 5px;
-    & span {
-      margin-right: 10px;
-    }
-    & b {
-      margin-right: 3px;
-    }
-  }
-  
-  .ctw-ccda-section-container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .ctw-ccda-section-header-wrapper {
-    display: flex;
-    align-items: center;
-  }
-
-  .ctw-ccda-section-arrow { 
+.ctw-ccda-common-td2 {
+  background: #f2f2f2;
+  vertical-align: top;
+  width: 35%;
+  white-space: pre-wrap;
+  padding: 0 5px;
+  & span {
     margin-right: 10px;
-    cursor: pointer;
-    background-color: transparent;
-    outline: none;
-    border: none;
   }
-  
-  .ctw-ccda-section-wrapper {
-    & table {
-        width: 100%;
-        & > thead {
-          background: #d3d3d3;
-        }
-        & > tbody {
-          background: #f2f2f2;
-        }
-        & td {
-          padding: 0 5px;
-        }
-      }
+  & b {
+    margin-right: 3px;
   }
+}
+
+.ctw-ccda-section-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.ctw-ccda-section-header-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.ctw-ccda-section-arrow {
+  margin-right: 10px;
+  cursor: pointer;
+  background-color: transparent;
+  outline: none;
+  border: none;
+}
+
+.ctw-ccda-section-wrapper {
+  & table {
+    width: 100%;
+    & > thead {
+      background: #d3d3d3;
+    }
+    & > tbody {
+      background: #f2f2f2;
+    }
+    & td {
+      padding: 0 5px;
+    }
+  }
+}
