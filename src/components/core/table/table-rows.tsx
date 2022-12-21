@@ -46,12 +46,10 @@ export const TableRows = <T extends MinRecordItem>({
     <>
       {records.map((record) => (
         <tr
-          className={cx(
-            "ctw-group ctw-relative ctw-z-10 hover:ctw-bg-bg-lighter",
-            {
-              "ctw-cursor-pointer": isFunction(handleRowClick),
-            }
-          )}
+          className={cx("ctw-group ctw-relative", {
+            "ctw-z-10 ctw-cursor-pointer  hover:ctw-bg-bg-lighter":
+              isFunction(handleRowClick),
+          })}
           key={record.id}
           onClick={({ target }) => {
             // This is for the case where a user clicks area near the button (but not on), we do not want have the onRowClick handler trigger as that will cause confusion to the user.

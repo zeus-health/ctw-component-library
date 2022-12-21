@@ -49,15 +49,11 @@ const sharedFields = (condition: ConditionModel) => [
     hidden: true,
   },
   {
-    label: "Clinical Status",
-    value: levelTwoToOneMapping(condition.clinicalStatus),
-    field: "clinicalStatus",
+    label: "Status",
+    value: levelTwoToOneMapping(condition.status),
+    field: "status",
   },
-  {
-    label: "Verification Status",
-    value: levelTwoToOneMapping(condition.verificationStatus),
-    field: "verificationStatus",
-  },
+
   {
     label: "Onset",
     value: condition.onset,
@@ -81,7 +77,13 @@ const conditionSchema = z.object({
   subjectID: z.string({
     required_error: "Condition subjectID must be specified.",
   }),
-  clinicalStatus: z.enum(["active", "inactive"]),
+  status: z.enum([
+    "Active",
+    "Pending",
+    "Inactive",
+    "Refuted",
+    "Entered In Error",
+  ]),
   onset: z
     .date()
     .max(new Date(), { message: "Onset cannot be a future date." })
@@ -97,13 +99,6 @@ export const conditionRefinement = (
   condition: Zod.infer<typeof conditionSchema>,
   ctx: RefinementCtx
 ) => {
-  if (condition.abatement && condition.clinicalStatus === "active") {
-    ctx.addIssue({
-      code: Zod.ZodIssueCode.custom,
-      message: "Clinical status must be inactive.",
-      path: ["abatement"],
-    });
-  }
   if (
     condition.abatement &&
     condition.onset &&
@@ -117,18 +112,9 @@ export const conditionRefinement = (
   }
 };
 
-export const conditionEditSchema = conditionSchema
-  .extend({
-    verificationStatus: z.enum([
-      "unconfirmed",
-      "confirmed",
-      "refuted",
-      "entered-in-error",
-    ]),
-  })
-  .superRefine((condition, refinementCtx) =>
-    conditionRefinement(condition, refinementCtx)
-  );
+export const conditionEditSchema = conditionSchema.superRefine(
+  (condition, refinementCtx) => conditionRefinement(condition, refinementCtx)
+);
 
 export const conditionAddSchema = conditionSchema
   .extend({
