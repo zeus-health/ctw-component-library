@@ -13,7 +13,7 @@ export function conditionFormDrawer(canvasElement: HTMLElement) {
       userEvent.type(drawer.getByPlaceholderText("Type to search"), search),
     selectCondition: async (name: string) =>
       userEvent.click(await drawer.findByRole("option", { name })),
-    clinicalStatus: (status: string) =>
+    status: (status: string) =>
       userEvent.selectOptions(drawer.getByLabelText("Status"), status),
 
     onset: (date: string) =>
