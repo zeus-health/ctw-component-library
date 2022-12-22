@@ -197,7 +197,6 @@ export function ConditionHistory({
     getRequestContext,
     historyResponse.data,
     isBinaryDocument,
-    rawBinary,
     onEdit,
   ]);
 
