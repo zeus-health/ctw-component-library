@@ -164,7 +164,7 @@ export function ConditionHistory({
     }
 
     async function loadDocument() {
-      // Binary Doc stuff
+      // Binary Document
       const requestContext = await getRequestContext();
 
       const currentCondition = setupData(condition);
@@ -197,6 +197,7 @@ export function ConditionHistory({
     getRequestContext,
     historyResponse.data,
     isBinaryDocument,
+    rawBinary,
     onEdit,
   ]);
 
