@@ -7,11 +7,19 @@ import {
   CollapsibleDataListStack,
   CollapsibleDataListStackEntries,
 } from "../core/collapsible-data-list-stack";
+import { useCTW } from "../core/ctw-provider";
+import { CCDAModal } from "../core/modal-ccda";
 import { NotesList } from "../core/notes-list";
+import { RenderDocumentButton } from "./CCDA/render-document-button";
 import { ConditionHeader } from "./condition-header";
 import { Loading } from "@/components/core/loading";
 import { getIncludedResources } from "@/fhir/bundle";
-import { useConditionHistory } from "@/fhir/conditions";
+import {
+  BinaryDocumentData,
+  getBinary,
+  SourceDocumentMap,
+  useConditionHistory,
+} from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models/condition";
 
 const CONDITION_HISTORY_LIMIT = 10;
@@ -107,11 +115,22 @@ export function ConditionHistory({
   const [conditionsWithoutDate, setConditionsWithoutDate] =
     useState<CollapsibleDataListStackEntries>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingSourceDocument, setLoadingSourceDocument] = useState(true);
   const [conditionForSearch, setConditionForSearch] =
     useState<ConditionModel>();
   const historyResponse = useConditionHistory(conditionForSearch);
+  const { getRequestContext } = useCTW();
 
+  const [isBinaryDocument, setIsBinaryDocument] = useState(false);
+  const [rawBinary, setRawBinary] = useState<BinaryDocumentData>();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [idMap, setIDMap] = useState<SourceDocumentMap>(new Map());
+  // Create a map that links conditionID and then use that ID to map to conditions without dates and conditions with Dates.
+  // Then you finally need to map those into 2 separate arrays and then pass those into the functions.
   useEffect(() => {
+    let conditionsDataDeduped: CollapsibleDataListProps[] = [];
     async function load() {
       setConditionForSearch(condition);
 
@@ -133,7 +152,7 @@ export function ConditionHistory({
           (c) => c.verificationStatus !== "entered-in-error"
         );
 
-        const conditionsDataDeduped = uniqWith(
+        conditionsDataDeduped = uniqWith(
           filterEnteredinErrorConditions.map((model) => setupData(model)),
           (a, b) => isEqual(a.data, b.data)
         );
@@ -144,14 +163,42 @@ export function ConditionHistory({
       }
     }
 
+    async function loadDocument() {
+      // Binary Doc stuff
+      const requestContext = await getRequestContext();
+
+      const currentCondition = setupData(condition);
+      const allConditions = [currentCondition, ...conditionsDataDeduped];
+
+      const binaryDocs = await getBinary(requestContext, allConditions);
+
+      setIDMap(binaryDocs);
+
+      if (binaryDocs.get(condition.id)?.isBinary) {
+        setIsBinaryDocument(true);
+        setRawBinary(binaryDocs.get(condition.id));
+      }
+
+      setLoadingSourceDocument(false);
+    }
+
     void load();
+
+    void loadDocument();
 
     return function cleanup() {
       setConditionsWithDate([]);
       setConditionsWithoutDate([]);
       setLoading(true);
+      setLoadingSourceDocument(true);
     };
-  }, [condition, historyResponse.data, onEdit]);
+  }, [
+    condition,
+    getRequestContext,
+    historyResponse.data,
+    isBinaryDocument,
+    onEdit,
+  ]);
 
   function conditionHistoryDisplay() {
     if (
@@ -167,6 +214,13 @@ export function ConditionHistory({
 
     return (
       <>
+        {isBinaryDocument && rawBinary && (
+          <CCDAModal
+            isOpen={isModalOpen}
+            rawBinary={rawBinary}
+            onClose={() => setIsModalOpen(false)}
+          />
+        )}
         <div className="ctw-space-y-6">
           <ConditionHeader condition={condition} />
           {onEdit && (
@@ -183,14 +237,34 @@ export function ConditionHistory({
             />
           )}
           <CollapsibleDataListStack
-            entries={conditionsWithDate}
+            entries={conditionsWithDate.map((entry) => ({
+              ...entry,
+              documentButton: (
+                <RenderDocumentButton
+                  idMap={idMap}
+                  entry={entry}
+                  setIsModalOpen={setIsModalOpen}
+                  setRawBinary={setRawBinary}
+                />
+              ),
+            }))}
             limit={CONDITION_HISTORY_LIMIT}
           />
           {conditionsWithoutDate.length !== 0 && (
             <div className="ctw-space-y-2">
               <div className="ctw-font-medium">Records with no date:</div>
               <CollapsibleDataListStack
-                entries={conditionsWithoutDate}
+                entries={conditionsWithoutDate.map((entry) => ({
+                  ...entry,
+                  documentButton: (
+                    <RenderDocumentButton
+                      idMap={idMap}
+                      entry={entry}
+                      setIsModalOpen={setIsModalOpen}
+                      setRawBinary={setRawBinary}
+                    />
+                  ),
+                }))}
                 limit={CONDITION_HISTORY_LIMIT}
               />
             </div>
