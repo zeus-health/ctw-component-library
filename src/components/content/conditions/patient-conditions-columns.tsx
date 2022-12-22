@@ -20,7 +20,9 @@ export const patientConditionsColumns: TableColumn<ConditionModel>[] = [
     minWidth: 320,
     render: (condition) => (
       <div>
-        <div className="ctw-pc-title">{condition.display}</div>
+        <div className="ctw-pc-title group-hover:ctw-underline">
+          {condition.display}
+        </div>
         <div className="ctw-pc-chapter">{condition.ccsChapter}</div>
       </div>
     ),
