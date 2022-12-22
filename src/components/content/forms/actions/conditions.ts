@@ -64,9 +64,7 @@ const getClincalAndVerificationStatus = (status: ConditionStatus) => {
       },
       ...(clinicalStatus && {
         clinicalStatus: {
-          codiing: [
-            { system: SYSTEM_CONDITION_CLINICAL, code: clinicalStatus },
-          ],
+          coding: [{ system: SYSTEM_CONDITION_CLINICAL, code: clinicalStatus }],
         },
       }),
     },
