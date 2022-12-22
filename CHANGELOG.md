@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.34.0
+
+### Minor Changes
+
+- be72b6a: Add CCDA document viewer to conditions in condition history that have these binary documents.
+
 ## 0.33.0
 
 ### Minor Changes
