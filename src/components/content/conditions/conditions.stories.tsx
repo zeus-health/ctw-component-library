@@ -94,7 +94,6 @@ export const TestEdit: StoryObj<Props> = {
     await conditions.patientRecord.toHaveRowCount(2);
     await conditions.patientRecord.edit(0);
     const conditionForm = conditionFormDrawer(canvasElement);
-    conditionForm.verificationStatus("Confirmed");
     conditionForm.note("hello world");
     await conditionForm.save();
     conditions.patientRecord.toHaveRowWithText(0, /confirmed/i);
