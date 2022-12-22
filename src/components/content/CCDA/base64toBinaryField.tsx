@@ -3,7 +3,7 @@ import "@react-pdf-viewer/core/lib/styles/index.css";
 import { DOMParser } from "@xmldom/xmldom";
 import { Buffer } from "buffer";
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
-import ReactJson from "react-json-view";
+import ReactJson from "react-extreme-json-view";
 import useIsomorphicLayoutEffect from "use-isomorphic-layout-effect";
 import XmlBeautify from "xml-beautify";
 import xpath from "xpath";
