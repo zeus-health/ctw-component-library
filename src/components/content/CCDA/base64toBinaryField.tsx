@@ -3,13 +3,13 @@ import "@react-pdf-viewer/core/lib/styles/index.css";
 import { DOMParser } from "@xmldom/xmldom";
 import { Buffer } from "buffer";
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
-import ReactJson from "react-json-view";
 import useIsomorphicLayoutEffect from "use-isomorphic-layout-effect";
 import XmlBeautify from "xml-beautify";
 import xpath from "xpath";
 import { base64toBlob } from "./base64toBlob";
 import { CcdaViewer } from "./ccda_viewer";
 import "./styles.scss";
+import { reactJSONViewer } from "./reactViewer";
 import { Toggle } from "@/components/core/toggle";
 
 const xmlTypes = ["/xml", "/xhtml+xml", "application/xml"];
@@ -64,6 +64,7 @@ const File = ({ contentType, data }: FileProps) => {
   }
 
   if (isSpecificContentType(["/fhir+json", "/json"], contentType)) {
+    const ReactJson = reactJSONViewer();
     return (
       <ReactJson
         src={JSON.parse(Buffer.from(data, "base64").toString("utf8"))}
