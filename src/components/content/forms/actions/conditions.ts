@@ -1,5 +1,6 @@
 import { Condition } from "fhir/r4";
-import { cloneDeep } from "lodash";
+import { cloneDeep, isUndefined, omitBy } from "lodash";
+import { ConditionStatus } from "../types";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { dateToISO } from "@/fhir/formatters";
@@ -20,39 +21,57 @@ import { queryClient } from "@/utils/request";
 export function getAddConditionWithDefaults(condition: Condition): Condition {
   const newCondition = cloneDeep(condition);
 
-  newCondition.clinicalStatus = {
-    coding: [
-      {
-        system: SYSTEM_CONDITION_CLINICAL,
-        code: "active",
-        display: "Active",
-      },
-    ],
-    text: "active",
-  };
-
-  newCondition.verificationStatus = {
-    coding: [
-      {
-        system: SYSTEM_CONDITION_VERIFICATION_STATUS,
-        code: "confirmed",
-        display: "Confirmed",
-      },
-    ],
-    text: "confirmed",
-  };
-
   return newCondition;
 }
 
-export type CreateOrEditConditionFormData = {
-  id?: string;
-  clinicalStatus: string;
-  verificationStatus: string;
-  condition: fhir4.Coding;
-  abatement?: Date;
-  onset: Date;
-  note?: string;
+const getClincalAndVerificationStatus = (status: ConditionStatus) => {
+  let verificationStatus = "";
+  let clinicalStatus = "";
+
+  switch (status) {
+    case "Active":
+      verificationStatus = "confirmed";
+      clinicalStatus = "active";
+      break;
+    case "Inactive":
+      verificationStatus = "confirmed";
+      clinicalStatus = "inactive";
+      break;
+    case "Pending":
+      verificationStatus = "unconfirmed";
+      clinicalStatus = "active";
+      break;
+    case "Refuted":
+      verificationStatus = "refuted";
+      clinicalStatus = "inactive";
+      break;
+    case "Entered In Error":
+      verificationStatus = "entered-in-error";
+      break;
+    default:
+      throw Error("status is should be of type ConditionStatus");
+  }
+
+  return omitBy(
+    {
+      verificationStatus: {
+        coding: [
+          {
+            system: SYSTEM_CONDITION_VERIFICATION_STATUS,
+            code: verificationStatus,
+          },
+        ],
+      },
+      ...(clinicalStatus && {
+        clinicalStatus: {
+          codiing: [
+            { system: SYSTEM_CONDITION_CLINICAL, code: clinicalStatus },
+          ],
+        },
+      }),
+    },
+    isUndefined
+  );
 };
 
 export const createOrEditCondition = async (
@@ -69,22 +88,7 @@ export const createOrEditCondition = async (
     resourceType: "Condition",
     id: data.id,
     recorder: await getUsersPractitionerReference(requestContext),
-    clinicalStatus: {
-      coding: [
-        {
-          system: SYSTEM_CONDITION_CLINICAL,
-          code: data.clinicalStatus,
-        },
-      ],
-    },
-    verificationStatus: {
-      coding: [
-        {
-          system: SYSTEM_CONDITION_VERIFICATION_STATUS,
-          code: data.verificationStatus,
-        },
-      ],
-    },
+    ...getClincalAndVerificationStatus(data.status),
     // Set category to problem list when creating a condition.
     category:
       data.id && condition
@@ -123,10 +127,6 @@ export const createOrEditCondition = async (
     note: data.note ? [{ text: data.note }] : undefined,
   };
 
-  if (data.verificationStatus === "entered-in-error") {
-    fhirCondition.clinicalStatus = undefined;
-  }
-
   const response = await createOrEditFhirResource(
     fhirCondition,
     requestContext
@@ -138,4 +138,13 @@ export const createOrEditCondition = async (
   ]);
 
   return response;
+};
+
+export type CreateOrEditConditionFormData = {
+  id?: string;
+  status: ConditionStatus;
+  condition: fhir4.Coding;
+  abatement?: Date;
+  onset: Date;
+  note?: string;
 };
