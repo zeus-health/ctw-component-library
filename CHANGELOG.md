@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.34.1
+
+### Patch Changes
+
+- 5dec6e1: Fix react-json-view library to be compatible
+
 ## 0.34.0
 
 ### Minor Changes
