@@ -10,15 +10,15 @@
       window.LOGLEVEL = 'info';
       window.FRAMEWORK_OPTIONS = {};
       window.CHANNEL_OPTIONS = {};
-      window.FEATURES = {"postcss":true,"warnOnLegacyHierarchySeparator":true,"buildStoriesJson":false,"storyStoreV7":true,"breakingChangesV7":true,"interactionsDebugger":false,"babelModeV7":true,"argTypeTargetsV7":true};
+      window.FEATURES = {"warnOnLegacyHierarchySeparator":true,"buildStoriesJson":false,"storyStoreV7":true,"breakingChangesV7":true,"interactionsDebugger":false,"argTypeTargetsV7":true};
       window.STORIES = [{"titlePrefix":"","directory":"./src","files":"**/*.stories.@(js|jsx|ts|tsx|mdx)","importPathMatcher":"^\\.[\\\\/](?:src(?:\\/(?!\\.)(?:(?:(?!(?:^|\\/)\\.).)*?)\\/|\\/|$)(?!\\.)(?=.)[^/]*?\\.stories\\.(js|jsx|ts|tsx|mdx))$"}];
       window.DOCS_OPTIONS = {"enabled":true,"defaultName":"Docs","docsPage":true};
       window.SERVER_CHANNEL_URL = undefined;
-
+      
       // We do this so that "module && module.hot" etc. in Storybook source code
       // doesn't fail (it will simply be disabled)
       window.module = undefined;
-    </script>
+      </script>
     <base target="_parent" />
 
 <style>
@@ -372,7 +372,7 @@
   window.global = window;
 </script>
 
-    <script type="module" crossorigin src="./assets/iframe.b227197b.js"></script>
+    <script type="module" crossorigin src="./assets/iframe.15670ce6.js"></script>
   </head>
   <body>
     <div class="sb-preparing-story sb-wrapper">
@@ -465,6 +465,7 @@
 
     <div id="storybook-root"></div>
     <div id="storybook-docs"></div>
+    
     
   </body>
 </html>

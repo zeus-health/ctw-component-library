@@ -1,0 +1,2 @@
+import{S as s}from"./spinner.51ecf2bb.js";import"./index.9f56b196.js";import"./_commonjsHelpers.712cc82f.js";import"./index.d3b8680b.js";const c={component:s,tags:["docsPage"]},r={};var o;r.parameters={...r.parameters,storySource:{source:"{}",...(o=r.parameters)==null?void 0:o.storySource}};const m=["Basic"];export{r as Basic,m as __namedExportsOrder,c as default};
+//# sourceMappingURL=spinner.stories.e8c1a854.js.map
