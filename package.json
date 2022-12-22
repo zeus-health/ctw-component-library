@@ -115,7 +115,7 @@
     "fhir-kit-client": "^1.9.1",
     "jwt-decode": "^3.1.2",
     "lodash": "^4.17.21",
-    "react-extreme-json-view": "^1.24.0",
+    "react-json-view": "^1.21.3",
     "use-isomorphic-layout-effect": "^1.1.2",
     "uuid": "^9.0.0",
     "xml-beautify": "^1.2.3",
@@ -124,5 +124,11 @@
   },
   "msw": {
     "workerDirectory": "public"
+  },
+  "overrides": {
+    "react-json-view": {
+      "react": "^16.9.0 || ^17 || ^18",
+      "react-dom": "^16.9.0 || ^17 || ^18"
+    }
   }
 }
