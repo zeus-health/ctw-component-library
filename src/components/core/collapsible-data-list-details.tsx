@@ -1,28 +1,38 @@
 import type { CollapsibleDataListEntry } from "./collapsible-data-list";
 import { PencilIcon } from "@heroicons/react/solid";
+import { ReactNode } from "react";
 
 type DetailsProps = {
   hideEmpty?: boolean;
   data: CollapsibleDataListEntry[];
   readOnly?: boolean;
   onEdit?: () => void;
+  documentButton?: ReactNode;
 };
 
-export const Details = ({ data, hideEmpty = true, onEdit }: DetailsProps) => (
+export const Details = ({
+  data,
+  hideEmpty = true,
+  onEdit,
+  documentButton,
+}: DetailsProps) => (
   <div className="ctw-rounded-lg ctw-bg-bg-lighter">
     <dl className="ctw-space-y-2 ctw-p-4">
-      <div className="ctw-flex ctw-justify-between ctw-text-sm ctw-uppercase ctw-text-content-light">
-        <div>Details</div>
-        {onEdit && (
-          <button
-            type="button"
-            className="ctw-btn-default ctw-flex ctw-space-x-2 ctw-align-middle"
-            onClick={onEdit}
-          >
-            <PencilIcon className="ctw-h-4 ctw-w-4" />
-            <span>Update</span>
-          </button>
-        )}
+      <div className="ctw-flex ctw-justify-between ctw-space-x-2 ctw-text-sm ctw-uppercase ctw-text-content-light">
+        <div className="ctw-title-container">Details</div>
+        <div className="ctw-flex">
+          {documentButton}
+          {onEdit && (
+            <button
+              type="button"
+              className="ctw-btn-default ctw-flex ctw-space-x-2 ctw-align-middle"
+              onClick={onEdit}
+            >
+              <PencilIcon className="ctw-h-4 ctw-w-4" />
+              <span>Update</span>
+            </button>
+          )}
+        </div>
       </div>
       {data
         .filter((d) => !hideEmpty || d.value || d.value === 0)
