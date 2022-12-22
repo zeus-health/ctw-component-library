@@ -50,7 +50,7 @@ const sharedFields = (condition: ConditionModel) => [
   },
   {
     label: "Status",
-    value: condition.status,
+    value: condition.status === "Unknown" ? "Select One" : condition.status,
     field: "status",
   },
 

@@ -40,6 +40,10 @@ export const FormField = ({
     }
 
     if (options) {
+      const optionsWithDefaults = !options.includes(defaultValue as string)
+        ? ["Select One", ...options]
+        : options;
+
       return (
         <select
           className={cx(
@@ -51,7 +55,7 @@ export const FormField = ({
           disabled={inputProps.disabled}
           defaultValue={value}
         >
-          {options.map((option) => (
+          {optionsWithDefaults.map((option) => (
             <option value={option} key={option}>
               {startCase(option)}
             </option>
