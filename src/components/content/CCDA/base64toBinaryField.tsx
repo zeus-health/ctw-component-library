@@ -1,4 +1,3 @@
-import "@react-pdf-viewer/core/lib/styles/index.css";
 import { DOMParser } from "@xmldom/xmldom";
 import { Buffer } from "buffer";
 import { ChangeEvent, useMemo, useState } from "react";
