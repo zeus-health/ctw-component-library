@@ -1,7 +1,7 @@
 import { isBefore, isEqual } from "date-fns";
 import { Period } from "fhir/r4";
 import xpath from "xpath";
-import { parseToISOString } from "./parsetoISOString";
+import { parseToISOString } from "./parseToISOString";
 
 export const getPeriod = (xmlData?: Document): Period => {
   if (!xmlData) return {};

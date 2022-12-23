@@ -9,4 +9,4 @@ export { getPeriod } from "./getPeriod";
 export { getTelecom } from "./getTelecom";
 export { fixHtml } from "./fixHtml";
 export { formatDate } from "./formatDate";
-export { parseToISOString } from "./parsetoISOString";
+export { parseToISOString } from "./parseToISOString";
