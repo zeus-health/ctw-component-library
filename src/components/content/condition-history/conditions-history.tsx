@@ -30,13 +30,11 @@ export type ConditionHistoryProps = {
 };
 
 export type BinaryDocument = {
-  isBinaryDocument: boolean;
   isModalOpen: boolean;
   rawBinary: BinaryDocumentData | undefined;
 };
 
 const DEFAULT_BINARY_DATA = {
-  isBinaryDocument: false,
   isModalOpen: false,
   rawBinary: undefined,
 };
@@ -62,8 +60,6 @@ export function ConditionHistory({
     DEFAULT_BINARY_DATA
   );
 
-  // Create a map that links conditionID and then use that ID to map to conditions without dates and conditions with Dates.
-  // Then you finally need to map those into 2 separate arrays and then pass those into the functions.
   const [idMap, setIDMap] = useState<SourceDocumentMap>(new Map());
 
   // Fetching
@@ -113,7 +109,6 @@ export function ConditionHistory({
 
       if (binaryDocs.get(condition.id)?.isBinary) {
         updateBinaryDocumentState({
-          isBinaryDocument: true,
           rawBinary: binaryDocs.get(condition.id),
         });
       }
@@ -143,14 +138,13 @@ export function ConditionHistory({
 
     return (
       <>
-        {binaryDocumentState.isBinaryDocument &&
-          binaryDocumentState.rawBinary && (
-            <CCDAModal
-              isOpen={binaryDocumentState.isModalOpen}
-              rawBinary={binaryDocumentState.rawBinary}
-              onClose={() => updateBinaryDocumentState({ isModalOpen: false })}
-            />
-          )}
+        {binaryDocumentState.rawBinary && (
+          <CCDAModal
+            isOpen={binaryDocumentState.isModalOpen}
+            rawBinary={binaryDocumentState.rawBinary}
+            onClose={() => updateBinaryDocumentState({ isModalOpen: false })}
+          />
+        )}
         <div className="ctw-space-y-6">
           <ConditionHeader condition={condition} />
           {onEdit && (
