@@ -58,7 +58,6 @@ const mockMedicationStatementGet = rest.get(
 const mockMedicationStatementPost = rest.post(
   "https://api.dev.zusapi.com/fhir",
   async (req, res, ctx) => {
-    const delayMs = 500;
     const findMedStatementInBundleFn = find({
       resource: { resourceType: "MedicationStatement" },
     });
@@ -77,7 +76,7 @@ const mockMedicationStatementPost = rest.post(
     });
     patientProviderMedsCache.total = patientProviderMedsCache.entry?.length;
 
-    return res(ctx.delay(delayMs), ctx.status(200), ctx.json(newMedication));
+    return res(ctx.delay(500), ctx.status(200), ctx.json(newMedication));
   }
 );
 
