@@ -1,4 +1,4 @@
-import { isEqual, orderBy, startCase, uniqWith } from "lodash";
+import { isEqual, orderBy, uniqWith } from "lodash";
 import { useEffect, useReducer, useState } from "react";
 import { CollapsibleDataListProps } from "../../core/collapsible-data-list";
 import { Details } from "../../core/collapsible-data-list-details";
