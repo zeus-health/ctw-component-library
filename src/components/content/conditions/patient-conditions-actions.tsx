@@ -1,16 +1,26 @@
+import type { ConditionFormData } from "./patient-conditions";
 import { PlusIcon } from "@heroicons/react/outline";
 import { curry } from "lodash";
-import { useState } from "react";
-import { createOrEditCondition } from "../forms/actions/conditions";
+import { Dispatch, SetStateAction, useState } from "react";
+import {
+  createOrEditCondition,
+  getAddConditionWithDefaults,
+} from "../forms/actions/conditions";
 import {
   conditionAddSchema,
+  conditionEditSchema,
   getAddConditionData,
+  getEditingPatientConditionData,
 } from "../forms/schemas/condition-schema";
+import { CTWRequestContext } from "@/components/core/ctw-context";
 import { DrawerFormWithFields } from "@/components/core/form/drawer-form-with-fields";
 import { usePatient } from "@/components/core/patient-provider";
 import { Toggle } from "@/components/core/toggle";
+import { recordProfileAction } from "@/fhir/basic";
 import { getNewCondition } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models";
+import { QUERY_KEY_OTHER_PROVIDER_CONDITIONS } from "@/utils/query-keys";
+import { queryClient } from "@/utils/request";
 
 export type PatientConditionsActionsProps = {
   hideAdd: boolean;
@@ -59,3 +69,67 @@ export function PatientConditionsActions({
     </div>
   );
 }
+
+export const handleAddOtherProviderCondition = (
+  condition: ConditionModel,
+  updateFormProps: React.Dispatch<Partial<ConditionFormData>>
+) => {
+  const newCondition = getAddConditionWithDefaults(condition.resource);
+  updateFormProps({
+    drawerIsOpen: true,
+    actionType: "Add",
+    schema: conditionAddSchema,
+    data: getAddConditionData({
+      condition: new ConditionModel(newCondition),
+    }),
+  });
+};
+
+export const handleEditCondition = (
+  condition: ConditionModel,
+  setSelectedCondition: React.Dispatch<
+    React.SetStateAction<ConditionModel | undefined>
+  >,
+  updateFormProps: React.Dispatch<Partial<ConditionFormData>>
+) => {
+  updateFormProps({
+    drawerIsOpen: true,
+    actionType: "Edit",
+    schema: conditionEditSchema,
+    data: getEditingPatientConditionData({ condition }),
+  });
+  setSelectedCondition(condition);
+};
+
+export const handleConditionDelete = (
+  condition: ConditionModel,
+  setSelectedCondition: React.Dispatch<
+    React.SetStateAction<ConditionModel | undefined>
+  >,
+  setShowConfirmDelete: Dispatch<SetStateAction<boolean>>
+) => {
+  setShowConfirmDelete(true);
+  setSelectedCondition(condition);
+};
+
+export const handleToggleArchive = async (
+  condition: ConditionModel,
+  getRequestContext: () => Promise<CTWRequestContext>
+) => {
+  const requestContext = await getRequestContext();
+  const existingBasic =
+    condition.getBasicResourceByAction("archive") ||
+    condition.getBasicResourceByAction("unarchive");
+  const profileAction = condition.isArchived ? "unarchive" : "archive";
+
+  await recordProfileAction(
+    existingBasic,
+    condition,
+    requestContext,
+    profileAction
+  );
+
+  // Refresh our data (this is really just needed to update
+  // otherProviderRecord state).
+  await queryClient.invalidateQueries([QUERY_KEY_OTHER_PROVIDER_CONDITIONS]);
+};

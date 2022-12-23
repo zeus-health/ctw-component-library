@@ -20,7 +20,7 @@ import {
   createHandleEditCondition,
   handleOpeningHistoryDrawer,
 } from "./patient-conditions-history";
-import { EditDeleteConditionHoverActions } from "./patient-conditions-menu-actions";
+import { handleActionForRecordType } from "./patient-conditions-menu-actions";
 import { useCTW } from "@/components/core/ctw-provider";
 import {
   DrawerFormWithFields,
@@ -135,11 +135,13 @@ export function PatientConditions({
         isLoading={isLoading()}
         records={conditions}
         rowActions={(record: ConditionModel) =>
-          EditDeleteConditionHoverActions(
+          handleActionForRecordType(
+            filters.collection,
             record,
             setSelectedCondition,
             updateFormProps,
-            setShowConfirmDelete
+            setShowConfirmDelete,
+            getRequestContext
           )
         }
         columns={patientConditionsColumns}
