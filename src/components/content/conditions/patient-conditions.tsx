@@ -3,8 +3,8 @@ import "./patient-conditions.scss";
 import { curry } from "lodash";
 import { useReducer, useRef, useState } from "react";
 import { ConditionHeader } from "../condition-header";
+import { ConditionHistoryDrawer } from "../condition-history/conditions-history-drawer";
 import { onConditionDelete } from "../conditions-helper";
-import { ConditionHistoryDrawer } from "../conditions-history-drawer";
 import { createOrEditCondition } from "../forms/actions/conditions";
 import {
   conditionAddSchema,
@@ -49,6 +49,12 @@ export type ConditionFormData = {
   drawerIsOpen: boolean;
 };
 
+const DEFAULT_FORM_PROPS = {
+  schema: conditionAddSchema,
+  actionType: "Add",
+  data: undefined,
+  drawerIsOpen: false,
+};
 export function PatientConditions({
   className,
   readOnly = false,
@@ -67,12 +73,7 @@ export function PatientConditions({
       ...data,
       ...partialData,
     }),
-    {
-      schema: conditionAddSchema,
-      actionType: "Add",
-      data: undefined,
-      drawerIsOpen: false,
-    }
+    DEFAULT_FORM_PROPS
   );
 
   // Data fetching.
