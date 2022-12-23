@@ -1,6 +1,5 @@
-import { capitalize, isEqual, orderBy, startCase, uniqWith } from "lodash";
+import { isEqual, orderBy, startCase, uniqWith } from "lodash";
 import { useEffect, useReducer, useState } from "react";
-import { CodingList } from "../../core/coding-list";
 import { CollapsibleDataListProps } from "../../core/collapsible-data-list";
 import { Details } from "../../core/collapsible-data-list-details";
 import {
@@ -9,7 +8,6 @@ import {
 } from "../../core/collapsible-data-list-stack";
 import { useCTW } from "../../core/ctw-provider";
 import { CCDAModal } from "../../core/modal-ccda";
-import { NotesList } from "../../core/notes-list";
 import { RenderDocumentButton } from "../CCDA/render-document-button";
 import { ConditionHeader } from "../condition-header";
 import { Loading } from "@/components/core/loading";
