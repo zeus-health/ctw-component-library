@@ -13,13 +13,9 @@ export function conditionFormDrawer(canvasElement: HTMLElement) {
       userEvent.type(drawer.getByPlaceholderText("Type to search"), search),
     selectCondition: async (name: string) =>
       userEvent.click(await drawer.findByRole("option", { name })),
-    clinicalStatus: (status: string) =>
-      userEvent.selectOptions(drawer.getByLabelText("Clinical Status"), status),
-    verificationStatus: (status: string) =>
-      userEvent.selectOptions(
-        drawer.getByLabelText("Verification Status"),
-        status
-      ),
+    status: (status: string) =>
+      userEvent.selectOptions(drawer.getByLabelText("Status"), status),
+
     onset: (date: string) =>
       userEvent.type(drawer.getByLabelText("Onset"), date),
     abatement: (date: string) =>

@@ -63,6 +63,7 @@ export const TestAdd: StoryObj<Props> = {
     const conditionForm = conditionFormDrawer(canvasElement);
     conditionForm.conditionSearch("heart");
     await conditionForm.selectCondition(newCondition);
+    conditionForm.status("Active");
     conditionForm.onset("2020-02-14");
     await conditionForm.save();
     await conditions.patientRecord.toHaveRowCount(3);
@@ -94,7 +95,6 @@ export const TestEdit: StoryObj<Props> = {
     await conditions.patientRecord.toHaveRowCount(2);
     await conditions.patientRecord.edit(0);
     const conditionForm = conditionFormDrawer(canvasElement);
-    conditionForm.verificationStatus("Confirmed");
     conditionForm.note("hello world");
     await conditionForm.save();
     conditions.patientRecord.toHaveRowWithText(0, /confirmed/i);
