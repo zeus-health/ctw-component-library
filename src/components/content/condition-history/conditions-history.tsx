@@ -10,6 +10,7 @@ import { useCTW } from "../../core/ctw-provider";
 import { CCDAModal } from "../../core/modal-ccda";
 import { RenderDocumentButton } from "../CCDA/render-document-button";
 import { ConditionHeader } from "../condition-header";
+import { conditionData, setupData } from "./condition-history-schema";
 import { Loading } from "@/components/core/loading";
 import { getIncludedResources } from "@/fhir/bundle";
 import {
@@ -19,7 +20,6 @@ import {
   useConditionHistory,
 } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models/condition";
-import { setupData, conditionData } from "./condition-history-schema";
 
 const CONDITION_HISTORY_LIMIT = 10;
 
