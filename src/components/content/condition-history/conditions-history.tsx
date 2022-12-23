@@ -1,17 +1,17 @@
 import { capitalize, isEqual, orderBy, startCase, uniqWith } from "lodash";
-import { useEffect, useState } from "react";
-import { CodingList } from "../core/coding-list";
-import { CollapsibleDataListProps } from "../core/collapsible-data-list";
-import { Details } from "../core/collapsible-data-list-details";
+import { useEffect, useReducer, useState } from "react";
+import { CodingList } from "../../core/coding-list";
+import { CollapsibleDataListProps } from "../../core/collapsible-data-list";
+import { Details } from "../../core/collapsible-data-list-details";
 import {
   CollapsibleDataListStack,
   CollapsibleDataListStackEntries,
-} from "../core/collapsible-data-list-stack";
-import { useCTW } from "../core/ctw-provider";
-import { CCDAModal } from "../core/modal-ccda";
-import { NotesList } from "../core/notes-list";
-import { RenderDocumentButton } from "./CCDA/render-document-button";
-import { ConditionHeader } from "./condition-header";
+} from "../../core/collapsible-data-list-stack";
+import { useCTW } from "../../core/ctw-provider";
+import { CCDAModal } from "../../core/modal-ccda";
+import { NotesList } from "../../core/notes-list";
+import { RenderDocumentButton } from "../CCDA/render-document-button";
+import { ConditionHeader } from "../condition-header";
 import { Loading } from "@/components/core/loading";
 import { getIncludedResources } from "@/fhir/bundle";
 import {
@@ -21,119 +21,60 @@ import {
   useConditionHistory,
 } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models/condition";
+import { setupData, conditionData } from "./condition-history-schema";
 
 const CONDITION_HISTORY_LIMIT = 10;
 
-const conditionData = (condition: ConditionModel) => [
-  { label: "Recorder", value: condition.recorder },
-  { label: "Recorded Date", value: condition.recordedDate },
-  {
-    label: "Provider Organization",
-    value: condition.patient?.organization?.name,
-  },
-  { label: "Clinical Status", value: capitalize(condition.clinicalStatus) },
-  {
-    label: "Verification Status",
-    value: capitalize(condition.verificationStatus),
-  },
-  { label: "Onset Date", value: condition.onset },
-  { label: "Abatement Date", value: condition.abatement },
-  {
-    label: "Note",
-    value: condition.notes.length !== 0 && (
-      <NotesList notes={condition.notes} />
-    ),
-  },
-];
+export type ConditionHistoryProps = {
+  condition: ConditionModel;
+  onClose: () => void;
+  onEdit?: () => void;
+};
 
-function setupData(condition: ConditionModel): CollapsibleDataListProps {
-  const detailData = [
-    {
-      label: "Recorder",
-      value: condition.recorder,
-    },
-    {
-      label: "Clinical Status",
-      value: capitalize(condition.clinicalStatus),
-    },
-    {
-      label: "Verification Status",
-      value: capitalize(condition.verificationStatus),
-    },
-    {
-      label: "Recorded Date",
-      value: condition.recordedDate,
-    },
-    {
-      label: "Category",
-      value: startCase(condition.categories[0]),
-    },
-    {
-      label: "Note",
-      value: condition.notes.length !== 0 && (
-        <NotesList notes={condition.notes} />
-      ),
-    },
-    {
-      label: "Code",
-      value: <CodingList codings={condition.knownCodings} />,
-    },
-    {
-      label: "Onset Date",
-      value: condition.onset,
-    },
-    {
-      label: "Abatement Date",
-      value: condition.abatement,
-    },
-    {
-      label: "Encounter",
-      value: condition.encounter,
-    },
-  ];
+export type BinaryDocument = {
+  isBinaryDocument: boolean;
+  isModalOpen: boolean;
+  rawBinary: BinaryDocumentData | undefined;
+};
 
-  return {
-    id: condition.id,
-    date: condition.recordedDate,
-    title: startCase(condition.categories[0]),
-    subtitle: condition.patient?.organization?.name,
-    data: detailData,
-  };
-}
+const DEFAULT_BINARY_DATA = {
+  isBinaryDocument: false,
+  isModalOpen: false,
+  rawBinary: undefined,
+};
 
 export function ConditionHistory({
   condition,
   onClose,
   onEdit,
-}: {
-  condition: ConditionModel;
-  onClose: () => void;
-  onEdit?: () => void;
-}) {
+}: ConditionHistoryProps) {
+  // State
   const [conditionsWithDate, setConditionsWithDate] =
     useState<CollapsibleDataListStackEntries>([]);
   const [conditionsWithoutDate, setConditionsWithoutDate] =
     useState<CollapsibleDataListStackEntries>([]);
   const [loading, setLoading] = useState(true);
-  const [loadingSourceDocument, setLoadingSourceDocument] = useState(true);
-  const [conditionForSearch, setConditionForSearch] =
-    useState<ConditionModel>();
-  const historyResponse = useConditionHistory(conditionForSearch);
-  const { getRequestContext } = useCTW();
 
-  const [isBinaryDocument, setIsBinaryDocument] = useState(false);
-  const [rawBinary, setRawBinary] = useState<BinaryDocumentData>();
+  // Reducers
+  const [binaryDocumentState, updateBinaryDocumentState] = useReducer(
+    (data: BinaryDocument, partialData: Partial<BinaryDocument>) => ({
+      ...data,
+      ...partialData,
+    }),
+    DEFAULT_BINARY_DATA
+  );
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const [idMap, setIDMap] = useState<SourceDocumentMap>(new Map());
   // Create a map that links conditionID and then use that ID to map to conditions without dates and conditions with Dates.
   // Then you finally need to map those into 2 separate arrays and then pass those into the functions.
+  const [idMap, setIDMap] = useState<SourceDocumentMap>(new Map());
+
+  // Fetching
+  const { getRequestContext } = useCTW();
+  const historyResponse = useConditionHistory(condition);
+
   useEffect(() => {
     let conditionsDataDeduped: CollapsibleDataListProps[] = [];
     async function load() {
-      setConditionForSearch(condition);
-
       if (historyResponse.data) {
         const includedResources = getIncludedResources(
           historyResponse.data.bundle
@@ -166,39 +107,29 @@ export function ConditionHistory({
     async function loadDocument() {
       // Binary Document
       const requestContext = await getRequestContext();
-
       const currentCondition = setupData(condition);
       const allConditions = [currentCondition, ...conditionsDataDeduped];
-
       const binaryDocs = await getBinary(requestContext, allConditions);
 
       setIDMap(binaryDocs);
 
       if (binaryDocs.get(condition.id)?.isBinary) {
-        setIsBinaryDocument(true);
-        setRawBinary(binaryDocs.get(condition.id));
+        updateBinaryDocumentState({
+          isBinaryDocument: true,
+          rawBinary: binaryDocs.get(condition.id),
+        });
       }
-
-      setLoadingSourceDocument(false);
     }
 
     void load();
-
     void loadDocument();
 
     return function cleanup() {
       setConditionsWithDate([]);
       setConditionsWithoutDate([]);
       setLoading(true);
-      setLoadingSourceDocument(true);
     };
-  }, [
-    condition,
-    getRequestContext,
-    historyResponse.data,
-    isBinaryDocument,
-    onEdit,
-  ]);
+  }, [condition, getRequestContext, historyResponse.data, onEdit]);
 
   function conditionHistoryDisplay() {
     if (
@@ -214,13 +145,14 @@ export function ConditionHistory({
 
     return (
       <>
-        {isBinaryDocument && rawBinary && (
-          <CCDAModal
-            isOpen={isModalOpen}
-            rawBinary={rawBinary}
-            onClose={() => setIsModalOpen(false)}
-          />
-        )}
+        {binaryDocumentState.isBinaryDocument &&
+          binaryDocumentState.rawBinary && (
+            <CCDAModal
+              isOpen={binaryDocumentState.isModalOpen}
+              rawBinary={binaryDocumentState.rawBinary}
+              onClose={() => updateBinaryDocumentState({ isModalOpen: false })}
+            />
+          )}
         <div className="ctw-space-y-6">
           <ConditionHeader condition={condition} />
           {onEdit && (
@@ -243,8 +175,7 @@ export function ConditionHistory({
                 <RenderDocumentButton
                   idMap={idMap}
                   entry={entry}
-                  setIsModalOpen={setIsModalOpen}
-                  setRawBinary={setRawBinary}
+                  updateBinaryDocumentState={updateBinaryDocumentState}
                 />
               ),
             }))}
@@ -260,8 +191,7 @@ export function ConditionHistory({
                     <RenderDocumentButton
                       idMap={idMap}
                       entry={entry}
-                      setIsModalOpen={setIsModalOpen}
-                      setRawBinary={setRawBinary}
+                      updateBinaryDocumentState={updateBinaryDocumentState}
                     />
                   ),
                 }))}

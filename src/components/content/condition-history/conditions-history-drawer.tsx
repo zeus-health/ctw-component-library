@@ -1,5 +1,5 @@
-import { ConditionModel } from "../../fhir/models/condition";
-import { Drawer } from "../core/drawer";
+import { ConditionModel } from "../../../fhir/models/condition";
+import { Drawer } from "../../core/drawer";
 import { ConditionHistory } from "./conditions-history";
 
 export type ConditionHistoryDrawerProps = {
