@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.36.2
+
+### Patch Changes
+
+- e610ced: Revert date changes to custom date functions.
+
 ## 0.36.1
 
 ### Patch Changes
