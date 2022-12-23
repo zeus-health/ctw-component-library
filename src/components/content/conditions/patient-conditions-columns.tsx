@@ -20,7 +20,9 @@ export const patientConditionsColumns: TableColumn<ConditionModel>[] = [
     minWidth: 320,
     render: (condition) => (
       <div>
-        <div className="ctw-pc-title">{condition.display}</div>
+        <div className="ctw-pc-title group-hover:ctw-underline">
+          {condition.display}
+        </div>
         <div className="ctw-pc-chapter">{condition.ccsChapter}</div>
       </div>
     ),
@@ -55,7 +57,7 @@ export const patientConditionsColumns: TableColumn<ConditionModel>[] = [
     minWidth: 128,
   },
   {
-    widthPercent: 30,
+    widthPercent: 40,
     minWidth: 132,
     render: (condition) => {
       const onsetText = condition.isSummaryResource

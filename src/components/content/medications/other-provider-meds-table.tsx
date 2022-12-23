@@ -56,7 +56,7 @@ export function OtherProviderMedsTable({
       <MedicationsTableBase
         medicationStatements={medicationModels}
         isLoading={isLoading}
-        rowActions={(medication) => [
+        rowMenuActions={(medication) => [
           {
             name: "View History",
             action: async () => {

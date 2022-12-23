@@ -1,5 +1,44 @@
 # ctw-component-library
 
+## 0.36.0
+
+### Minor Changes
+
+- 9eff6c1: Now displaying medications without an RxNorm code in builder medications list.
+
+### Patch Changes
+
+- f73a54c: Remove `react-pdf-viewer` and `react-json-view` to fix server rendering issues.
+
+## 0.35.0
+
+### Minor Changes
+
+- 58b80c0: Update edit/add conditions panel to automatically fill in verification and clinical status based on the status value in the dropdown.
+- e6c12ec: Add hover actions for other provider conditions.
+
+### Patch Changes
+
+- 2f07125: Simplify condition history component.
+
+## 0.34.1
+
+### Patch Changes
+
+- 5dec6e1: Fix react-json-view library to be compatible
+
+## 0.34.0
+
+### Minor Changes
+
+- be72b6a: Add CCDA document viewer to conditions in condition history that have these binary documents.
+
+## 0.33.0
+
+### Minor Changes
+
+- 13c80ac: Add hover actions in conditons 2.0.
+
 ## 0.32.1
 
 ### Patch Changes

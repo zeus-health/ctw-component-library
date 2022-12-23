@@ -51,6 +51,11 @@ export const FormField = ({
           disabled={inputProps.disabled}
           defaultValue={value}
         >
+          {!options.includes(defaultValue as string) && (
+            <option value={defaultValue} disabled>
+              Select one
+            </option>
+          )}
           {options.map((option) => (
             <option value={option} key={option}>
               {startCase(option)}

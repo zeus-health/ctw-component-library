@@ -1,10 +1,20 @@
+import { ChangeEvent } from "react";
 import "./toggle.scss";
 
 export type ToggleProps = {
   name: string;
   text: string;
-  onChange?: () => void;
-  inputProps?: { value: string; defaultChecked: boolean };
+  inputProps?:
+    | {
+        value: string;
+        defaultChecked: boolean;
+      }
+    | {
+        value: string;
+        checked: boolean;
+        disabled: boolean;
+      };
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 };
 
 export const Toggle = ({ name, text, onChange, inputProps }: ToggleProps) => (
@@ -15,8 +25,8 @@ export const Toggle = ({ name, text, onChange, inputProps }: ToggleProps) => (
         className="ctw-relative ctw-block ctw-h-6 ctw-cursor-pointer ctw-overflow-hidden ctw-rounded-full ctw-bg-divider-light"
       >
         <input
-          {...inputProps}
           onChange={onChange}
+          {...inputProps}
           type="checkbox"
           name={name}
           id={name}

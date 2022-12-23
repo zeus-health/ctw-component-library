@@ -9,6 +9,6 @@ export const ConditionHeader = ({ condition }: ConditionHeaderProp) => (
     <div className="ctw-text-2xl">
       {condition.display} ({condition.preferredCoding?.code})
     </div>
-    <div className="ctw-text-sm">{condition.ccsGrouping}</div>
+    <div className="ctw-text-sm">{condition.ccsChapter}</div>
   </div>
 );

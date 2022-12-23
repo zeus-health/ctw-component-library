@@ -66,12 +66,12 @@ const omitClientFilters = omit(["informationSourceNot", "informationSource"]);
 
 function applySearchFiltersToResponse(
   response: SearchReturn<"MedicationStatement">,
-  searchFilters: MedicationFilter = {}
+  searchFilters: MedicationFilter = {},
+  removeMedsWithNoRxNorm = false
 ) {
-  let medications = filterMedicationsWithNoRxNorms(
-    response.resources,
-    response.bundle
-  );
+  let medications = removeMedsWithNoRxNorm
+    ? filterMedicationsWithNoRxNorms(response.resources, response.bundle)
+    : response.resources;
 
   if (searchFilters.informationSource) {
     medications = medications.filter(
@@ -110,7 +110,11 @@ export async function getBuilderMedications(
       }
     );
 
-    const medications = applySearchFiltersToResponse(response, searchFilters);
+    const medications = applySearchFiltersToResponse(
+      response,
+      searchFilters,
+      false
+    );
 
     return { bundle: response.bundle, medications };
   } catch (e) {
@@ -118,7 +122,8 @@ export async function getBuilderMedications(
   }
 }
 
-/* Note when filtering the bundle may contain data that will no longer be in the returned medications. */
+/* Note when filtering the bundle may contain data that will no longer 
+be in the returned medications, such as medications with no RxNorm code. */
 export async function getActiveMedications(
   requestContext: CTWRequestContext,
   patient: PatientModel,
@@ -138,7 +143,11 @@ export async function getActiveMedications(
       }
     );
 
-    const medications = applySearchFiltersToResponse(response, searchFilters);
+    const medications = applySearchFiltersToResponse(
+      response,
+      searchFilters,
+      true
+    );
 
     return { bundle: response.bundle, medications };
   } catch (e) {

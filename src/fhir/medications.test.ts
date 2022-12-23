@@ -1,5 +1,8 @@
 import { MedicationStatement } from "fhir/r4";
-import { splitMedications } from "./medications";
+import {
+  filterMedicationsWithNoRxNorms,
+  splitMedications,
+} from "./medications";
 import { SYSTEM_RXNORM } from "./system-urls";
 
 describe("splitSummarizedMedications", () => {
@@ -90,6 +93,54 @@ describe("splitSummarizedMedications", () => {
     expect(otherProviderMedications).toHaveProperty(
       "0.medicationCodeableConcept.coding.0.code",
       "unknown"
+    );
+  });
+});
+
+describe("filterMedicationsWithNoRxNorms", () => {
+  test("removes medications with no RxNorm", () => {
+    const inputMeds: MedicationStatement[] = [
+      {
+        resourceType: "MedicationStatement",
+        status: "active",
+        subject: {
+          reference: "Test",
+        },
+        medicationCodeableConcept: {
+          coding: [
+            {
+              system: SYSTEM_RXNORM,
+              code: "rxnorm-code",
+            },
+          ],
+        },
+      },
+      {
+        resourceType: "MedicationStatement",
+        status: "active",
+        subject: {
+          reference: "Test",
+        },
+        medicationCodeableConcept: {
+          coding: [
+            {
+              system: "not-rxnorm",
+              code: "not-rxnorm",
+            },
+          ],
+        },
+      },
+    ];
+
+    const bundle: fhir4.Bundle = { type: "document", resourceType: "Bundle" };
+
+    const filteredMeds = filterMedicationsWithNoRxNorms(inputMeds, bundle);
+
+    expect(filteredMeds).toHaveLength(1);
+
+    expect(filteredMeds).toHaveProperty(
+      "0.medicationCodeableConcept.coding.0.code",
+      "rxnorm-code"
     );
   });
 });

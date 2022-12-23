@@ -65,14 +65,10 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
     return compact(extension.extension.map(get("valueReference")));
   }
 
-  get display(): string {
+  get display() {
     return codeableConceptLabel(
       getMedicationCodeableConcept(this.resource, this.includedResources)
     );
-  }
-
-  get rxNormCoding() {
-    return getIdentifyingRxNormCoding(this.resource, this.includedResources);
   }
 
   get dosage(): string | undefined {
@@ -113,6 +109,21 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
 
   get rxNorm(): string | undefined {
     return getIdentifyingRxNormCode(this.resource, this.includedResources);
+  }
+
+  /**
+   * Get RxNorm coding with "display" defaulting to this Med-Statement label.
+   */
+  get rxNormCodeableConcept() {
+    const coding = getIdentifyingRxNormCoding(
+      this.resource,
+      this.includedResources
+    );
+
+    return {
+      ...(coding ?? {}),
+      display: coding?.display ?? this.display,
+    };
   }
 
   get reason(): string | undefined {

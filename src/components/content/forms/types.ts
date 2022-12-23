@@ -11,3 +11,10 @@ export type MedicationFormData = {
   rxNormCode: string;
   status: fhir4.MedicationStatement["status"];
 };
+
+export type ConditionStatus =
+  | "Active"
+  | "Inactive"
+  | "Pending"
+  | "Refuted"
+  | "Entered In Error";

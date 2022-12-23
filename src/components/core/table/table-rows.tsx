@@ -1,4 +1,5 @@
 import cx from "classnames";
+import { isFunction } from "lodash";
 import { ReactElement } from "react";
 import { Spinner } from "../spinner";
 import { TableDataCell } from "./table-data-cell";
@@ -11,6 +12,7 @@ type TableRowsProps<T extends MinRecordItem> = {
   isLoading: boolean;
   emptyMessage: string | ReactElement;
   handleRowClick?: (record: T) => void;
+  rowActions?: (record: T) => JSX.Element;
 };
 
 export const TableRows = <T extends MinRecordItem>({
@@ -19,6 +21,7 @@ export const TableRows = <T extends MinRecordItem>({
   isLoading,
   emptyMessage,
   handleRowClick,
+  rowActions,
 }: TableRowsProps<T>) => {
   if (isLoading) {
     return (
@@ -43,11 +46,20 @@ export const TableRows = <T extends MinRecordItem>({
     <>
       {records.map((record) => (
         <tr
-          className={cx({
-            "ctw-cursor-pointer": typeof handleRowClick === "function",
+          className={cx("ctw-group ctw-relative", {
+            "ctw-z-10 ctw-cursor-pointer  hover:ctw-bg-bg-lighter":
+              isFunction(handleRowClick),
           })}
           key={record.id}
-          onClick={() => {
+          onClick={({ target }) => {
+            // This is for the case where a user clicks area near the button (but not on), we do not want have the onRowClick handler trigger as that will cause confusion to the user.
+            if (
+              target instanceof HTMLElement &&
+              target.querySelectorAll("button").length
+            ) {
+              return;
+            }
+
             if (handleRowClick) handleRowClick(record);
           }}
         >
@@ -59,6 +71,11 @@ export const TableRows = <T extends MinRecordItem>({
               index={index}
             />
           ))}
+          {rowActions && (
+            <td className="ctw-action-hover ctw-invisible ctw-absolute ctw-right-0 ctw-z-20 ctw-flex ctw-h-full ctw-items-center ctw-space-x-2 ctw-px-4 group-hover:ctw-visible">
+              {rowActions(record)}
+            </td>
+          )}
         </tr>
       ))}
     </>

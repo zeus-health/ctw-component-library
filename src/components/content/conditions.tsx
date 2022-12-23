@@ -12,8 +12,8 @@ import { usePatient } from "../core/patient-provider";
 import { TableSort } from "../core/table/table-helpers";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionHeader } from "./condition-header";
+import { ConditionHistoryDrawer } from "./condition-history/conditions-history-drawer";
 import { onConditionDelete } from "./conditions-helper";
-import { ConditionHistoryDrawer } from "./conditions-history-drawer";
 import { ConditionsNoPatient } from "./conditions-no-patient";
 import { ConditionsTableBase } from "./conditions-table-base";
 import "./conditions.scss";
@@ -278,7 +278,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
                 )}
               </>
             }
-            rowActions={(condition) => [
+            rowMenuActions={(condition) => [
               {
                 name: "Edit",
                 action: async () => {
@@ -328,7 +328,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               }
               hideMenu={readOnly}
               message={otherProviderRecordMessage}
-              rowActions={(condition) => [
+              rowMenuActions={(condition) => [
                 {
                   name: "Add",
                   action: async () => {

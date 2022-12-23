@@ -19,7 +19,8 @@ export const Modal = ({
   <Transition appear show={isOpen} as={Fragment}>
     <Dialog
       as="div"
-      className="ctw-relative ctw-z-10"
+      // change to ctw-z-modal and ctw-z-drawer in main.scss (and make sure the value of z is modal > drawer)
+      className="ctw-relative ctw-z-[10100]"
       onClose={
         () => {} /* Do not close on esc or backdrop click. A method for the user to close the modal should be passed as a child.  */
       }

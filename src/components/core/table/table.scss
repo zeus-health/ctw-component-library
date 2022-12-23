@@ -14,6 +14,10 @@
   );
 }
 
+.ctw-action-hover {
+  background: linear-gradient(90deg, #f9fafb00 0%, #f9fafb 4.17%);
+}
+
 .ctw-table-scroll-right-shadow::after {
   right: 0;
 }
