@@ -2,4 +2,4 @@
 "@zus-health/ctw-component-library": patch
 ---
 
-Remove pdf libraries to fix up an import issue.
+Remove `react-pdf-viewer` and `react-json-view` to fix server rendering issues. 
