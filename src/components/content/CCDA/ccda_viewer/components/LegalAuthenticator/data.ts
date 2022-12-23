@@ -1,7 +1,11 @@
 import xpath from "xpath";
-import { getContactDetails, getHumanName } from "../../helpers";
+import {
+  formatDate,
+  getContactDetails,
+  getHumanName,
+  parseToISOString,
+} from "../../helpers";
 import { ExtendedGeneralInfo } from "../../types";
-import { ccdaDatetimeToISO, displayDateTimeasString } from "@/fhir/formatters";
 
 export const getLegalAuthenticatorData = (
   document: Document
@@ -32,8 +36,8 @@ export const getLegalAuthenticatorData = (
     xpath.select("*[name()='telecom']", assignedEntity) as Document[]
   );
 
-  const time = displayDateTimeasString(
-    ccdaDatetimeToISO(
+  const time = formatDate(
+    parseToISOString(
       String(
         xpath.select1("string(*[name()='time']/@value)", legalAuthenticator)
       )
