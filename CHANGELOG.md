@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 0.36.1
+
+### Patch Changes
+
+- b9696f1: When adding medication to record from the other provider table:
+
+  - Asserted Date will now be set as the current date rather than the original medication statement date asserted.
+  - The display text is now also properly set on the medication resources `medicationCodeableConcept` value.
+  - When using "Add to Record" button from Storybook, the mocked response is now intercepting `POST /fhir` rather than `/fhir/MedicationStatement` to reflect that medication statements from this form are now created in a Bundle-transaction.
+
+- a25be80: Fix viewing the source document for other provider record conditions.
+
 ## 0.36.0
 
 ### Minor Changes
