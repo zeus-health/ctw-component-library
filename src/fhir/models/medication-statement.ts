@@ -112,8 +112,7 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
   }
 
   /**
-   * Shakes out non-rxNorm and enriched codings. Get medicationCodeableConcept
-   * with only the medication label and the rxNorm coding.
+   * Get RxNorm coding with "display" defaulting to this Med-Statement label.
    */
   get rxNormCodeableConcept() {
     const coding = getIdentifyingRxNormCoding(
@@ -123,7 +122,7 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
 
     return {
       ...(coding ?? {}),
-      display: this.display,
+      display: coding?.display ?? this.display,
     };
   }
 
