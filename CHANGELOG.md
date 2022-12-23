@@ -1,5 +1,16 @@
 # ctw-component-library
 
+## 0.35.0
+
+### Minor Changes
+
+- 58b80c0: Update edit/add conditions panel to automatically fill in verification and clinical status based on the status value in the dropdown.
+- e6c12ec: Add hover actions for other provider conditions.
+
+### Patch Changes
+
+- 2f07125: Simplify condition history component.
+
 ## 0.34.1
 
 ### Patch Changes
