@@ -1,5 +1,15 @@
 # ctw-component-library
 
+## 0.36.0
+
+### Minor Changes
+
+- 9eff6c1: Now displaying medications without an RxNorm code in builder medications list.
+
+### Patch Changes
+
+- f73a54c: Remove `react-pdf-viewer` and `react-json-view` to fix server rendering issues.
+
 ## 0.35.0
 
 ### Minor Changes
