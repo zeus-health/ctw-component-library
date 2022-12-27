@@ -1,10 +1,9 @@
 import { differenceInYears, format, isValid } from "date-fns";
 import { map } from "lodash";
 import xpath from "xpath";
-import { getHumanName, getId } from "../../../helpers";
+import { getHumanName, getId, parseToISOString } from "../../../helpers";
 import { LabelValueType } from "../../../types";
 import { getGuardian } from "./getGuardian";
-import { ccdaDatetimeToISO } from "@/fhir/formatters";
 
 export const getPatient = (
   document: Document
@@ -43,20 +42,22 @@ export const getPatient = (
         )
       );
 
-      const birthTime =
-        ccdaDatetimeToISO(
+      const birthTime = new Date(
+        parseToISOString(
           String(xpath.select1("string(*[name()='birthTime']/@value)", patient))
-        ) || new Date();
+        )
+      );
 
-      const deceasedTime =
-        ccdaDatetimeToISO(
+      const deceasedTime = new Date(
+        parseToISOString(
           String(
             xpath.select1(
               "string(*[name()='sdtc:deceasedTime']/@value)",
               patient
             )
           )
-        ) || new Date();
+        )
+      );
 
       const deceasedInd =
         String(

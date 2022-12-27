@@ -69,20 +69,3 @@ export function formatPhoneNumber(phoneNumber?: string): string | undefined {
   // This would happen if we didn't have the expected 10 digits.
   return match ? `${match[1]}-${match[2]}-${match[3]}` : phoneNumber;
 }
-// C-CDA date to ISO Date
-export function ccdaDatetimeToISO(date: string): Date | undefined {
-  if (!date) return undefined;
-  return parseISO(`${date.substring(0, 8)} ${date.substring(8)}`);
-}
-// Takes ISO Date and converts to string date.
-export function displayDateTimeasString(date: Date | undefined): string {
-  if (!date) return "";
-  try {
-    return format(new Date(date), "MMMM dd, yyyy HH:mm:ss").replace(
-      "00:00:00",
-      ""
-    );
-  } catch {
-    return "";
-  }
-}
