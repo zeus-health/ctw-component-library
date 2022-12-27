@@ -32,6 +32,7 @@ export function setupMedicationMocks({
         mockMedicationRequestGet,
         mockMedicationDispenseGet,
         mockMedicationAdministrationGet,
+        mockBasicPost,
       ],
     },
   };
@@ -93,4 +94,23 @@ const mockMedicationDispenseGet = rest.get(
 const mockMedicationAdministrationGet = rest.get(
   "https://api.dev.zusapi.com/fhir/MedicationAdministration",
   (req, res, ctx) => res(ctx.status(200), ctx.json(medicationAdministration))
+);
+
+// Mock the creation of a Basic resource and add the dismissed/retained medication to the correct
+// mocked cache.
+const mockBasicPost = rest.post(
+  "https://api.dev.zusapi.com/fhir/Basic",
+  async (req, res, ctx) => {
+    const newBasicResource = await req.json();
+    newBasicResource.search = { mode: "include" };
+    newBasicResource.id = uuidv4();
+    patientOtherProviderMedsCache.entry?.push({
+      resource: newBasicResource,
+      search: { mode: "include" },
+    });
+
+    patientOtherProviderMedsCache.total =
+      patientOtherProviderMedsCache.entry?.length || 0;
+    return res(ctx.status(200), ctx.json(newBasicResource));
+  }
 );

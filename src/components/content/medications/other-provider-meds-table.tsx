@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { MedicationDrawer } from "@/components/content/medication-drawer";
 import { MedicationsTableBase } from "@/components/content/medications-table-base";
 import { AddNewMedDrawer } from "@/components/content/medications/add-new-med-drawer";
+import { handleToggleDismissal } from "@/components/content/medications/medication-actions";
+import { useCTW } from "@/components/core/ctw-provider";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { sort, SortDir } from "@/utils/sort";
@@ -24,19 +26,20 @@ export function OtherProviderMedsTable({
   sortOrder = "asc",
   sortColumn = "display",
 }: OtherProviderMedsTableProps) {
+  const { getRequestContext } = useCTW();
   const [medicationModels, setMedicationModels] = useState<
     MedicationStatementModel[]
   >([]);
-  const [medDrawerOpen, setMedicationDrawerOpen] = useState(false);
+  const [historyDrawerOpen, setHistoryDrawerOpen] = useState(false);
   const [addNewMedDrawerOpen, setAddNewMedDrawerOpen] = useState(false);
   const [selectedMedication, setSelectedMedication] =
     useState<MedicationStatementModel>();
   const { otherProviderMedications, isLoading } =
     useQueryAllPatientMedications();
 
-  function openMedicationDrawer(row: MedicationStatementModel) {
+  function openHistoryDrawer(row: MedicationStatementModel) {
     setSelectedMedication(row);
-    setMedicationDrawerOpen(true);
+    setHistoryDrawerOpen(true);
   }
 
   function openAddNewMedicationDrawer(row: MedicationStatementModel) {
@@ -60,7 +63,7 @@ export function OtherProviderMedsTable({
           {
             name: "View History",
             action: async () => {
-              openMedicationDrawer(medication);
+              openHistoryDrawer(medication);
             },
           },
           {
@@ -69,12 +72,20 @@ export function OtherProviderMedsTable({
               openAddNewMedicationDrawer(medication);
             },
           },
+          {
+            // Dismissed records might not be included in table, but if they
+            // are included, we should be able to un-dismiss (retain) them.
+            name: medication.isDismissed ? "Retain Record" : "Dismiss Record",
+            action: async () => {
+              await handleToggleDismissal(medication, getRequestContext);
+            },
+          },
         ]}
       />
       <MedicationDrawer
         medication={selectedMedication}
-        isOpen={medDrawerOpen}
-        onClose={() => setMedicationDrawerOpen(false)}
+        isOpen={historyDrawerOpen}
+        onClose={() => setHistoryDrawerOpen(false)}
       />
       <AddNewMedDrawer
         medication={selectedMedication?.resource}

@@ -1,22 +1,22 @@
 import { UseQueryResult } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
-import { getMergedIncludedResources } from "@/fhir/bundle";
+import { getIncludedBasics, getMergedIncludedResources } from "@/fhir/bundle";
 import {
   getActiveMedications,
   getBuilderMedications,
-  MedicationBuilder,
+  MedicationResults,
   splitMedications,
 } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import {
+  QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
   QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
-  QUERY_KEY_PATIENT_MEDICATIONS,
 } from "@/utils/query-keys";
 
 // Gets patient medications for the builder, excluding meds where the information source is patient.
 export function useQueryGetPatientMedsForBuilder(): UseQueryResult<
-  MedicationBuilder,
+  MedicationResults,
   unknown
 > {
   return useQueryWithPatient(
@@ -31,12 +31,16 @@ export function useQueryGetPatientMedsForBuilder(): UseQueryResult<
 }
 
 export function useQueryGetSummarizedPatientMedications(): UseQueryResult<
-  MedicationBuilder,
+  MedicationResults,
   unknown
 > {
   return useQueryWithPatient(
-    QUERY_KEY_PATIENT_MEDICATIONS,
-    [],
+    QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
+    [
+      {
+        _revinclude: "Basic:subject",
+      },
+    ],
     getActiveMedications
   );
 }
@@ -51,6 +55,10 @@ export function useQueryAllPatientMedications() {
     useState<MedicationStatementModel[]>();
   const [otherProviderMedications, setOtherProviderMedications] =
     useState<MedicationStatementModel[]>();
+  const [
+    dismissedOtherProviderMedications,
+    setDismissedOtherProviderMedications,
+  ] = useState<MedicationStatementModel[]>();
 
   const summarizedMedicationsQuery = useQueryGetSummarizedPatientMedications();
   const builderMedicationsQuery = useQueryGetPatientMedsForBuilder();
@@ -60,33 +68,42 @@ export function useQueryAllPatientMedications() {
       summarizedMedicationsQuery.data?.bundle &&
       builderMedicationsQuery.data?.bundle
     ) {
-      const { medications: summarizedMedications } =
+      const { medications: summarizedMedications, bundle: summarizedBundle } =
         summarizedMedicationsQuery.data;
       const { medications: allMedicationsForBuilder } =
         builderMedicationsQuery.data;
 
+      const basicsMap = getIncludedBasics(summarizedBundle);
       // Get included resources from both bundles so that we can reference them for contained medications.
       const includedResources = getMergedIncludedResources([
         summarizedMedicationsQuery.data.bundle,
         builderMedicationsQuery.data.bundle,
       ]);
 
-      // Split the summarized medications into those known to the builder and those that are new.
+      // Split the summarized medications into those known to the builder, unknown and historical/dismissed.
       const splitData = splitMedications(
-        summarizedMedications,
-        allMedicationsForBuilder,
-        includedResources
+        summarizedMedications.map(
+          (m) =>
+            new MedicationStatementModel(
+              m,
+              includedResources,
+              basicsMap.get(m.id ?? "")
+            )
+        ),
+        allMedicationsForBuilder.map(
+          (m) =>
+            new MedicationStatementModel(
+              m,
+              includedResources,
+              basicsMap.get(m.id ?? "")
+            )
+        )
       );
 
-      setBuilderMedications(
-        splitData.builderMedications.map(
-          (m) => new MedicationStatementModel(m, includedResources)
-        )
-      );
-      setOtherProviderMedications(
-        splitData.otherProviderMedications.map(
-          (m) => new MedicationStatementModel(m, includedResources)
-        )
+      setBuilderMedications(splitData.builderMedications);
+      setOtherProviderMedications(splitData.otherProviderMedications);
+      setDismissedOtherProviderMedications(
+        splitData.dismissedOtherProviderMedications
       );
     }
   }, [summarizedMedicationsQuery.data, builderMedicationsQuery.data]);
@@ -104,5 +121,6 @@ export function useQueryAllPatientMedications() {
     isError,
     builderMedications,
     otherProviderMedications,
+    dismissedOtherProviderMedications,
   };
 }

@@ -4,15 +4,15 @@ import { dateToISO } from "@/fhir/formatters";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { SYSTEM_RXNORM } from "@/fhir/system-urls";
 import {
+  QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
   QUERY_KEY_PATIENT,
   QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
-  QUERY_KEY_PATIENT_MEDICATIONS,
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 
 const QUERY_KEYS = [
   QUERY_KEY_PATIENT,
-  QUERY_KEY_PATIENT_MEDICATIONS,
+  QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
   QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
 ];
 

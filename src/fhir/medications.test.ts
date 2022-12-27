@@ -4,11 +4,12 @@ import {
   splitMedications,
 } from "./medications";
 import { SYSTEM_RXNORM } from "./system-urls";
+import { MedicationStatementModel } from "@/fhir/models";
 
 describe("splitSummarizedMedications", () => {
   test("splits medications correctly", () => {
-    const lensMeds: MedicationStatement[] = [
-      {
+    const lensMeds = [
+      new MedicationStatementModel({
         resourceType: "MedicationStatement",
         status: "active",
         subject: {
@@ -28,8 +29,8 @@ describe("splitSummarizedMedications", () => {
             text: "lens dosage display",
           },
         ],
-      },
-      {
+      }),
+      new MedicationStatementModel({
         resourceType: "MedicationStatement",
         status: "active",
         subject: {
@@ -43,11 +44,11 @@ describe("splitSummarizedMedications", () => {
             },
           ],
         },
-      },
+      }),
     ];
 
-    const builderMeds: MedicationStatement[] = [
-      {
+    const builderMeds = [
+      new MedicationStatementModel({
         resourceType: "MedicationStatement",
         status: "active",
         subject: {
@@ -67,7 +68,7 @@ describe("splitSummarizedMedications", () => {
             text: "builder dosage display",
           },
         ],
-      },
+      }),
     ];
 
     const { builderMedications, otherProviderMedications } = splitMedications(
@@ -79,19 +80,19 @@ describe("splitSummarizedMedications", () => {
     expect(otherProviderMedications).toHaveLength(1);
 
     expect(builderMedications).toHaveProperty(
-      "0.medicationCodeableConcept.coding.0.code",
+      "0.resource.medicationCodeableConcept.coding.0.code",
       "known"
     );
     expect(builderMedications).toHaveProperty(
-      "0.medicationCodeableConcept.text",
+      "0.resource.medicationCodeableConcept.text",
       "builder med display"
     );
     expect(builderMedications).toHaveProperty(
-      "0.dosage.0.text",
+      "0.resource.dosage.0.text",
       "builder dosage display"
     );
     expect(otherProviderMedications).toHaveProperty(
-      "0.medicationCodeableConcept.coding.0.code",
+      "0.resource.medicationCodeableConcept.coding.0.code",
       "unknown"
     );
   });
