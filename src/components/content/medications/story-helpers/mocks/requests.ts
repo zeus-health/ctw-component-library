@@ -96,8 +96,7 @@ const mockMedicationAdministrationGet = rest.get(
   (req, res, ctx) => res(ctx.status(200), ctx.json(medicationAdministration))
 );
 
-// Mock the creation of a Basic resource and add the dismissed/retained medication to the correct
-// mocked cache.
+// Mock the creation of a Basic resource for a dismissed med and add to cache.
 const mockBasicPost = rest.post(
   "https://api.dev.zusapi.com/fhir/Basic",
   async (req, res, ctx) => {

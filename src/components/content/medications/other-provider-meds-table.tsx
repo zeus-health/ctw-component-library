@@ -1,9 +1,9 @@
-import { get, pipe, toLower } from "lodash/fp";
+import { compact, get, pipe, toLower } from "lodash/fp";
 import { useEffect, useState } from "react";
 import { MedicationDrawer } from "@/components/content/medication-drawer";
 import { MedicationsTableBase } from "@/components/content/medications-table-base";
 import { AddNewMedDrawer } from "@/components/content/medications/add-new-med-drawer";
-import { handleToggleDismissal } from "@/components/content/medications/medication-actions";
+import { handleMedicationDismissal } from "@/components/content/medications/medication-actions";
 import { useCTW } from "@/components/core/ctw-provider";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
@@ -59,28 +59,33 @@ export function OtherProviderMedsTable({
       <MedicationsTableBase
         medicationStatements={medicationModels}
         isLoading={isLoading}
-        rowMenuActions={(medication) => [
-          {
-            name: "View History",
-            action: async () => {
-              openHistoryDrawer(medication);
+        rowMenuActions={(medication) =>
+          compact([
+            {
+              name: "View History",
+              action: async () => {
+                openHistoryDrawer(medication);
+              },
             },
-          },
-          {
-            name: "Add to Record",
-            action: async () => {
-              openAddNewMedicationDrawer(medication);
+            {
+              name: "Add to Record",
+              action: async () => {
+                openAddNewMedicationDrawer(medication);
+              },
             },
-          },
-          {
-            // Dismissed records might not be included in table, but if they
-            // are included, we should be able to un-dismiss (retain) them.
-            name: medication.isDismissed ? "Retain Record" : "Dismiss Record",
-            action: async () => {
-              await handleToggleDismissal(medication, getRequestContext);
-            },
-          },
-        ]}
+            !medication.isDismissed
+              ? null
+              : {
+                  name: "Dismiss Record",
+                  action: async () => {
+                    await handleMedicationDismissal(
+                      medication,
+                      getRequestContext
+                    );
+                  },
+                },
+          ])
+        }
       />
       <MedicationDrawer
         medication={selectedMedication}
