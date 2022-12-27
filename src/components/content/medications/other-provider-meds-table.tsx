@@ -76,7 +76,7 @@ export function OtherProviderMedsTable({
             medication.isDismissed
               ? null
               : {
-                  name: "Dismiss Record",
+                  name: "Dismiss",
                   action: async () => {
                     await handleMedicationDismissal(
                       medication,
@@ -91,6 +91,9 @@ export function OtherProviderMedsTable({
         medication={selectedMedication}
         isOpen={historyDrawerOpen}
         onClose={() => setHistoryDrawerOpen(false)}
+        onDismissal={(medication: MedicationStatementModel) =>
+          handleMedicationDismissal(medication, getRequestContext)
+        }
       />
       <AddNewMedDrawer
         medication={selectedMedication?.resource}

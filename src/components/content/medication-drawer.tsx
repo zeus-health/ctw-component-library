@@ -1,6 +1,7 @@
 import type { DataListEntry } from "../core/data-list";
 import type { DrawerProps } from "../core/drawer";
 import type { MedicationStatementModel } from "@/fhir/models/medication-statement";
+import { isFunction } from "lodash/fp";
 import { DataList, entryFromArray } from "../core/data-list";
 import { Drawer } from "../core/drawer";
 import { MedicationHistory } from "./medications/medication-history";
@@ -9,6 +10,7 @@ import { useLastPrescriber } from "@/fhir/medications";
 
 export type MedicationDrawerProps = {
   medication?: MedicationStatementModel;
+  onDismissal?: (m: MedicationStatementModel) => void;
 } & Pick<DrawerProps, "isOpen" | "onClose">;
 
 function getDataEntriesFromMedicationStatement(
@@ -32,6 +34,7 @@ function getDataEntriesFromMedicationStatement(
 
 export const MedicationDrawer = ({
   medication,
+  onDismissal,
   ...drawerProps
 }: MedicationDrawerProps) => {
   const { lastPrescriber, isLoading } = useLastPrescriber(medication?.resource);
@@ -55,6 +58,15 @@ export const MedicationDrawer = ({
       </Drawer.Body>
       <Drawer.Footer>
         <div className="ctw-flex ctw-justify-end">
+          {isFunction(onDismissal) && (
+            <button
+              type="button"
+              className="ctw-btn-clear"
+              onClick={onDismissal}
+            >
+              Dismiss
+            </button>
+          )}
           <button
             type="button"
             className="ctw-btn-default"
