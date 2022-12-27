@@ -1,7 +1,6 @@
 import type { DataListEntry } from "../core/data-list";
 import type { DrawerProps } from "../core/drawer";
 import type { MedicationStatementModel } from "@/fhir/models/medication-statement";
-import { capitalize } from "lodash";
 import { DataList, entryFromArray } from "../core/data-list";
 import { Drawer } from "../core/drawer";
 import { MedicationHistory } from "./medications/medication-history";
@@ -18,7 +17,7 @@ function getDataEntriesFromMedicationStatement(
 ): DataListEntry[] {
   return medication
     ? [
-        { label: "Status", value: capitalize(medication.status) },
+        { label: "Status", value: medication.status },
         { label: "Last Fill Date", value: medication.lastFillDate },
         { label: "Quantity", value: medication.quantity },
         { label: "Days Supply", value: medication.daysSupply },

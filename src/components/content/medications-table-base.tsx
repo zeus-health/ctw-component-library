@@ -49,7 +49,9 @@ export const MedicationsTableBase = ({
       title: "Status",
       render: (medication) => (
         <div className="ctw-capitalize">
-          <div className="ctw-text-content-black">{medication.status}</div>
+          <div className="ctw-text-content-black">
+            {medication.clinicalStatus}
+          </div>
           {medication.isDismissed && (
             <div className="ctw-font-light">Dismissed</div>
           )}
