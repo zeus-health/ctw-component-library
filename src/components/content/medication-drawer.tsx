@@ -57,12 +57,15 @@ export const MedicationDrawer = ({
         </div>
       </Drawer.Body>
       <Drawer.Footer>
-        <div className="ctw-flex ctw-justify-end">
+        <div className="ctw-flex ctw-justify-end ctw-space-x-2">
           {isFunction(onDismissal) && (
             <button
               type="button"
-              className="ctw-btn-clear"
-              onClick={onDismissal}
+              className="ctw-btn-primary"
+              onClick={() => {
+                onDismissal(medication);
+                drawerProps.onClose();
+              }}
             >
               Dismiss
             </button>
