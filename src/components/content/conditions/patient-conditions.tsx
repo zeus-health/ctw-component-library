@@ -1,16 +1,12 @@
 import cx from "classnames";
 import "./patient-conditions.scss";
-import { useRef, useState } from "react";
-import { ConditionHistoryDrawer } from "../condition-history/conditions-history-drawer";
+import { useRef } from "react";
+import { useConditionHistory } from "../condition-history/conditions-history-drawer";
 import { filterOtherConditions } from "./helpers";
 import { PatientConditionsActions } from "./patient-conditions-actions";
 import { patientConditionsColumns } from "./patient-conditions-columns";
 import { useConditionFilters } from "./patient-conditions-filters";
 import { PatientConditionsHeader } from "./patient-conditions-header";
-import {
-  createHandleEditCondition,
-  handleOpeningHistoryDrawer,
-} from "./patient-conditions-history";
 import {
   OtherProviderConditionHoverActions,
   PatientConditionHoverActions,
@@ -21,7 +17,6 @@ import {
   useOtherProviderConditions,
   usePatientConditions,
 } from "@/fhir/conditions";
-import { ConditionModel } from "@/fhir/models";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { AnyZodSchema } from "@/utils/form-helper";
 
@@ -45,8 +40,9 @@ export function PatientConditions({
   const { filters, updateFilters, applyFilters } = useConditionFilters();
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
-  const [historyDrawerIsOpen, setHistoryDrawerIsOpen] = useState(false);
-  const [selectedCondition, setSelectedCondition] = useState<ConditionModel>();
+
+  // Drawer helpers.
+  const showConditionHistory = useConditionHistory();
 
   // Data fetching.
   const patientConditionsQuery = usePatientConditions();
@@ -97,27 +93,12 @@ export function PatientConditions({
             : OtherProviderConditionHoverActions
         }
         columns={patientConditionsColumns}
-        handleRowClick={(data: ConditionModel) =>
-          handleOpeningHistoryDrawer(
-            setHistoryDrawerIsOpen,
-            setSelectedCondition,
-            data
-          )
+        handleRowClick={(condition) =>
+          showConditionHistory({
+            condition,
+            readOnly: readOnly || condition.isSummaryResource,
+          })
         }
-      />
-
-      <ConditionHistoryDrawer
-        isOpen={historyDrawerIsOpen}
-        onClose={() => setHistoryDrawerIsOpen(false)}
-        condition={selectedCondition}
-        // TODO
-        // This is wrong. Need to only pass in handleEditCondition when showing
-        // builder records (not other).
-        onEdit={createHandleEditCondition({
-          data: selectedCondition,
-          patientRecords: patientConditions,
-          handleEditCondition: () => {},
-        })}
       />
     </div>
   );

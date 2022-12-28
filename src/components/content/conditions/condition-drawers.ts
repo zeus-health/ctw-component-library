@@ -10,12 +10,12 @@ import {
   getEditingPatientConditionData,
 } from "../forms/schemas/condition-schema";
 import { usePatient } from "@/components/core/patient-provider";
-import { useDrawer } from "@/components/core/providers/drawer-provider";
+import { useDrawerFormWithFields } from "@/components/core/providers/drawer-form-with-fields-provider";
 import { getNewCondition } from "@/fhir/conditions";
 import { ConditionModel } from "@/index";
 
 export function useAddConditionForm() {
-  const { showFormDrawer } = useDrawer();
+  const { showFormDrawer } = useDrawerFormWithFields();
   const patientResponse = usePatient();
   const patientId = patientResponse.data?.id ?? "";
 
@@ -35,7 +35,7 @@ export function useAddConditionForm() {
 }
 
 export function useEditConditionForm() {
-  const { showFormDrawer } = useDrawer();
+  const { showFormDrawer } = useDrawerFormWithFields();
   const patientResponse = usePatient();
   const patientId = patientResponse.data?.id ?? "";
 

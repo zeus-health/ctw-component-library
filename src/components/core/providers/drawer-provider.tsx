@@ -1,59 +1,61 @@
 import { createContext, ReactNode, useContext, useMemo, useState } from "react";
-import { z } from "zod";
-import {
-  DrawerFormWithFields,
-  DrawerFormWithFieldsProps,
-} from "../form/drawer-form-with-fields";
+import { Drawer } from "../drawer";
 
-export type ShowFormDrawerProps<T> = Omit<
-  DrawerFormWithFieldsProps<T>,
-  "isOpen" | "onClose"
->;
-
-type DrawerState = {
-  showFormDrawer: <T>(props: ShowFormDrawerProps<T>) => void;
+type OpenDrawerProps = {
+  drawerChild: (props: { onClose: () => void }) => JSX.Element;
+  title: string;
+  className?: string;
 };
 
-const DrawerContext = createContext<DrawerState | undefined>(undefined);
+type State = {
+  openDrawer: (props: OpenDrawerProps) => void;
+};
 
-interface DrawerProviderProps {
+const Context = createContext<State | undefined>(undefined);
+
+interface ProviderProps {
   children: ReactNode;
 }
 
-export function DrawerProvider({ children }: DrawerProviderProps) {
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [formProps, setFormProps] = useState<unknown>(undefined);
+export function DrawerProvider({ children }: ProviderProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [drawerProps, setProps] = useState<OpenDrawerProps>({
+    // eslint-disable-next-line react/no-unstable-nested-components
+    drawerChild: (props) => <div />,
+    title: "",
+  });
 
-  const drawerState = useMemo(
+  const state = useMemo(
     () => ({
-      showFormDrawer: <T,>(props: ShowFormDrawerProps<T>) => {
-        setFormProps(props);
-        setIsFormOpen(true);
+      openDrawer: (props: OpenDrawerProps) => {
+        console.log("open the drawer", props);
+        setProps(props);
+        setIsOpen(true);
       },
     }),
     []
   );
 
   return (
-    <DrawerContext.Provider value={drawerState}>
-      <DrawerFormWithFields
-        // This is a dummy prop that will get overwritten by formProps.
-        schema={z.object({})}
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        {...(formProps as any)}
-        isOpen={isFormOpen}
-        onClose={() => setIsFormOpen(false)}
-      />
+    <Context.Provider value={state}>
+      <Drawer
+        className={drawerProps.className}
+        title={drawerProps.title}
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+      >
+        {drawerProps.drawerChild({ onClose: () => setIsOpen(false) })}
+      </Drawer>
       {children}
-    </DrawerContext.Provider>
+    </Context.Provider>
   );
 }
 
-export const useDrawer = (): DrawerState => {
-  const context = useContext(DrawerContext);
+export const useDrawer = (): State => {
+  const context = useContext(Context);
 
   if (!context) {
-    throw new Error("useDrawer must be used within a DrawerProvider");
+    throw new Error("useOpenDrawer must be used within a DrawerProvider");
   }
 
   return context;

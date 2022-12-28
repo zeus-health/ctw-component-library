@@ -12,7 +12,7 @@ import { usePatient } from "../core/patient-provider";
 import { TableSort } from "../core/table/table-helpers";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionHeader } from "./condition-header";
-import { ConditionHistoryDrawer } from "./condition-history/conditions-history-drawer";
+import { useConditionHistory } from "./condition-history/conditions-history-drawer";
 import { onConditionDelete, toggleArchive } from "./conditions-helper";
 import { ConditionsNoPatient } from "./conditions-no-patient";
 import { ConditionsTableBase } from "./conditions-table-base";
@@ -57,7 +57,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
 
-  const [historyDrawerIsOpen, setHistoryDrawerIsOpen] = useState(false);
+  const showConditionHistory = useConditionHistory();
   const [requestRecordsDrawerIsOpen, setRequestDrawerIsOpen] = useState(false);
   const [patientRecords, setPatientRecords] = useState<ConditionModel[]>([]);
   const [otherProviderRecords, setOtherProviderRecords] = useState<
@@ -84,16 +84,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const otherProviderRecordMessage = otherProviderRecordsResponse.isError
     ? ERROR_MSG
     : EMPTY_MESSAGE_PROVIDER;
-
-  const shouldHistoryDrawerBeReadOnly = () => {
-    if (
-      selectedCondition &&
-      patientRecords.some((record) => record.id === selectedCondition.id)
-    ) {
-      return () => handleEditCondition(selectedCondition);
-    }
-    return undefined;
-  };
 
   const handleEditCondition = (condition: ConditionModel) => {
     if (patientResponse.data) {
@@ -266,8 +256,10 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
               {
                 name: "View History",
                 action: async () => {
-                  setHistoryDrawerIsOpen(true);
-                  setSelectedCondition(condition);
+                  showConditionHistory({
+                    condition,
+                    readOnly,
+                  });
                 },
               },
               {
@@ -316,8 +308,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
                 {
                   name: "View History",
                   action: async () => {
-                    setHistoryDrawerIsOpen(true);
-                    setSelectedCondition(condition);
+                    showConditionHistory({ condition });
                   },
                 },
                 {
@@ -371,13 +362,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           setClinicalHistoryExists={setClinicalHistoryExists}
         />
       )}
-
-      <ConditionHistoryDrawer
-        isOpen={historyDrawerIsOpen}
-        onClose={() => setHistoryDrawerIsOpen(false)}
-        condition={selectedCondition}
-        onEdit={shouldHistoryDrawerBeReadOnly()}
-      />
 
       {selectedCondition && patientResponse.data && (
         <ModalConfirmDelete
