@@ -1,5 +1,5 @@
 import { isEqual, orderBy, uniqWith } from "lodash";
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useState } from "react";
 import { CollapsibleDataListProps } from "../../core/collapsible-data-list";
 import { Details } from "../../core/collapsible-data-list-details";
 import {
@@ -51,15 +51,8 @@ export function ConditionHistory({
     useState<CollapsibleDataListStackEntries>([]);
   const [loading, setLoading] = useState(true);
   const [loadingDocument, setLoadingDocument] = useState(true);
-
-  // Reducers
-  const [binaryDocumentState, updateBinaryDocumentState] = useReducer(
-    (data: BinaryDocument, partialData: Partial<BinaryDocument>) => ({
-      ...data,
-      ...partialData,
-    }),
-    DEFAULT_BINARY_DATA
-  );
+  const [binaryDocumentState, setBinaryDocumentState] =
+    useState<BinaryDocument>(DEFAULT_BINARY_DATA);
 
   const [idMap, setIDMap] = useState<SourceDocumentMap>(new Map());
 
@@ -110,9 +103,10 @@ export function ConditionHistory({
       setIDMap(binaryDocs);
 
       if (binaryDocs.get(condition.id)?.isBinary) {
-        updateBinaryDocumentState({
+        setBinaryDocumentState((prevState) => ({
+          ...prevState,
           rawBinary: binaryDocs.get(condition.id),
-        });
+        }));
       }
     }
 
@@ -145,7 +139,12 @@ export function ConditionHistory({
           <CCDAModal
             isOpen={binaryDocumentState.isModalOpen}
             rawBinary={binaryDocumentState.rawBinary}
-            onClose={() => updateBinaryDocumentState({ isModalOpen: false })}
+            onClose={() =>
+              setBinaryDocumentState((prevState) => ({
+                ...prevState,
+                isModalOpen: false,
+              }))
+            }
           />
         )}
         <div className="ctw-space-y-6">
@@ -170,7 +169,7 @@ export function ConditionHistory({
                 <RenderDocumentButton
                   idMap={idMap}
                   entry={entry}
-                  updateBinaryDocumentState={updateBinaryDocumentState}
+                  setBinaryDocumentState={setBinaryDocumentState}
                   loadingDocument={loadingDocument}
                 />
               ),
@@ -187,7 +186,7 @@ export function ConditionHistory({
                     <RenderDocumentButton
                       idMap={idMap}
                       entry={entry}
-                      updateBinaryDocumentState={updateBinaryDocumentState}
+                      setBinaryDocumentState={setBinaryDocumentState}
                       loadingDocument={loadingDocument}
                     />
                   ),

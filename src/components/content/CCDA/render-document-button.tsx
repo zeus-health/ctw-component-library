@@ -7,14 +7,14 @@ import { SourceDocumentMap } from "@/fhir/conditions";
 export type RenderDocumentButtonProps = {
   idMap: SourceDocumentMap;
   entry: CollapsibleDataListProps;
-  updateBinaryDocumentState: React.Dispatch<Partial<BinaryDocument>>;
+  setBinaryDocumentState: React.Dispatch<React.SetStateAction<BinaryDocument>>;
   loadingDocument: boolean;
 };
 
 export const RenderDocumentButton = ({
   idMap,
   entry,
-  updateBinaryDocumentState,
+  setBinaryDocumentState,
   loadingDocument,
 }: RenderDocumentButtonProps) => {
   if (loadingDocument) {
@@ -26,7 +26,7 @@ export const RenderDocumentButton = ({
       {idMap.get(entry.id) && idMap.get(entry.id)?.isBinary && (
         <DocumentButton
           onClick={() => {
-            updateBinaryDocumentState({
+            setBinaryDocumentState({
               isModalOpen: true,
               rawBinary: idMap.get(entry.id),
             });
