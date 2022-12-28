@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../.storybook/manager.js"],
-  "sourcesContent": ["const CSS_TO_HIDE_TESTS_IN_SIDEBAR = `\n*[id*=\"test\"] {\n  display: none !important;\n}\n`;\n\n// Don't show tests when on github.\nif (location.hostname === \"zeus-health.github.io\") {\n  const head = document.head || document.getElementsByTagName(\"head\")[0];\n  const style = document.createElement(\"style\");\n  head.appendChild(style);\n  style.appendChild(document.createTextNode(CSS_TO_HIDE_TESTS_IN_SIDEBAR));\n}\n"],
-  "mappings": ";AAAA,IAAMA,EAA+B;AAAA;AAAA;AAAA;AAAA,EAOrC,GAAI,SAAS,WAAa,wBAAyB,CACjD,IAAMC,EAAO,SAAS,MAAQ,SAAS,qBAAqB,MAAM,EAAE,GAC9DC,EAAQ,SAAS,cAAc,OAAO,EAC5CD,EAAK,YAAYC,CAAK,EACtBA,EAAM,YAAY,SAAS,eAAeF,CAA4B,CAAC,CACzE",
-  "names": ["CSS_TO_HIDE_TESTS_IN_SIDEBAR", "head", "style"]
-}
