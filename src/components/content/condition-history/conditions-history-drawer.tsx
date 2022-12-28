@@ -17,12 +17,10 @@ export function ConditionHistoryDrawer({
   onClose,
   onEdit,
 }: ConditionHistoryDrawerProps) {
-  const title = "Condition History";
-
   return (
     <Drawer
       className={className}
-      title={title}
+      title="Condition History"
       isOpen={isOpen}
       onClose={onClose}
     >

@@ -79,7 +79,7 @@ export const MedicationsTableBase = ({
         stacked={breakpoints.sm}
         records={medicationStatements}
         columns={columns}
-        message="There are no medications to display."
+        emptyMessage="There are no medications to display."
         {...tableProps}
       />
       {children}

@@ -13,7 +13,7 @@ import { TableSort } from "../core/table/table-helpers";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionHeader } from "./condition-header";
 import { ConditionHistoryDrawer } from "./condition-history/conditions-history-drawer";
-import { onConditionDelete } from "./conditions-helper";
+import { onConditionDelete, toggleArchive } from "./conditions-helper";
 import { ConditionsNoPatient } from "./conditions-no-patient";
 import { ConditionsTableBase } from "./conditions-table-base";
 import "./conditions.scss";
@@ -30,7 +30,6 @@ import {
   conditionEditSchema,
   getEditingPatientConditionData,
 } from "@/components/content/forms/schemas/condition-schema";
-import { recordProfileAction } from "@/fhir/basic";
 import {
   getNewCondition,
   useOtherProviderConditions,
@@ -40,8 +39,6 @@ import { ConditionModel } from "@/fhir/models/condition";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { hasFetchedPatientHistory } from "@/services/patient-history/patient-history";
 import { AnyZodSchema } from "@/utils/form-helper";
-import { QUERY_KEY_OTHER_PROVIDER_CONDITIONS } from "@/utils/query-keys";
-import { queryClient } from "@/utils/request";
 
 export type ConditionsProps = {
   className?: string;
@@ -111,25 +108,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const handleConditionDelete = (condition: ConditionModel) => {
     setShowConfirmDelete(true);
     setSelectedCondition(condition);
-  };
-
-  const handleToggleArchive = async (condition: ConditionModel) => {
-    const requestContext = await getRequestContext();
-    const existingBasic =
-      condition.getBasicResourceByAction("archive") ||
-      condition.getBasicResourceByAction("unarchive");
-    const profileAction = condition.isArchived ? "unarchive" : "archive";
-
-    await recordProfileAction(
-      existingBasic,
-      condition,
-      requestContext,
-      profileAction
-    );
-
-    // Refresh our data (this is really just needed to update
-    // otherProviderRecord state).
-    await queryClient.invalidateQueries([QUERY_KEY_OTHER_PROVIDER_CONDITIONS]);
   };
 
   const handleAddOtherProviderCondition = (condition: ConditionModel) => {
@@ -270,7 +248,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
             hideMenu={readOnly}
             sort={sort}
             onSort={(newSort) => setSort(newSort)}
-            message={
+            emptyMessage={
               <>
                 <div>{patientRecordsMessage}</div>
                 {!patientRecordsResponse.isError && !readOnly && (
@@ -327,7 +305,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
                 patientRecordsResponse.isLoading
               }
               hideMenu={readOnly}
-              message={otherProviderRecordMessage}
+              emptyMessage={otherProviderRecordMessage}
               rowMenuActions={(condition) => [
                 {
                   name: "Add",
@@ -345,7 +323,8 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
                 {
                   name: condition.isArchived ? "Un-Archive" : "Archive",
                   action: async () => {
-                    await handleToggleArchive(condition);
+                    const requestContext = await getRequestContext();
+                    await toggleArchive(condition, requestContext);
                   },
                 },
               ]}

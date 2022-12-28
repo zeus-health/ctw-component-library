@@ -16,6 +16,8 @@ import {
   CTWStateContext,
   CTWToken,
 } from "./ctw-context";
+import { ConfirmDeleteProvider } from "./providers/confirm-delete-provider";
+import { DrawerProvider } from "./providers/drawer-provider";
 import { getFhirClient } from "@/fhir/client";
 import {
   DefaultTheme,
@@ -115,9 +117,13 @@ function CTWProvider({ theme, children, ...ctwState }: CTWProviderProps) {
   return (
     <div ref={ctwProviderRef}>
       <CTWStateContext.Provider value={providerState}>
-        <QueryClientProvider client={queryClient}>
-          {children}
-        </QueryClientProvider>
+        <DrawerProvider>
+          <ConfirmDeleteProvider>
+            <QueryClientProvider client={queryClient}>
+              {children}
+            </QueryClientProvider>
+          </ConfirmDeleteProvider>
+        </DrawerProvider>
       </CTWStateContext.Provider>
 
       {/* Workaround for https://github.com/tailwindlabs/headlessui/discussions/666 */}
