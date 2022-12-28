@@ -13,6 +13,7 @@ type DetailsProps = {
 export const Details = ({
   data,
   hideEmpty = true,
+  readOnly = true,
   onEdit,
   documentButton,
 }: DetailsProps) => (
@@ -22,7 +23,7 @@ export const Details = ({
         <div className="ctw-title-container">Details</div>
         <div className="ctw-flex">
           {documentButton}
-          {onEdit && (
+          {!readOnly && (
             <button
               type="button"
               className="ctw-btn-default ctw-flex ctw-space-x-2 ctw-align-middle"

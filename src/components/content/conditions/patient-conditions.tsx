@@ -62,6 +62,10 @@ export function PatientConditions({
     true
   );
   const conditions = applyFilters(patientConditions, otherConditions);
+  const RowActions =
+    filters.collection === "patient"
+      ? PatientConditionHoverActions
+      : OtherProviderConditionHoverActions;
 
   return (
     <div
@@ -87,11 +91,7 @@ export function PatientConditions({
         showTableHead={false}
         isLoading={isLoading()}
         records={conditions}
-        RowActions={
-          filters.collection === "patient"
-            ? PatientConditionHoverActions
-            : OtherProviderConditionHoverActions
-        }
+        RowActions={readOnly ? undefined : RowActions}
         columns={patientConditionsColumns}
         handleRowClick={(condition) =>
           showConditionHistory({
