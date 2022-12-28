@@ -1,13 +1,11 @@
 import xpath from "xpath";
-import { getId } from "../../helpers";
-import { ccdaDatetimeToISO, displayDateTimeasString } from "@/fhir/formatters";
+import { formatDate, getId, parseToISOString } from "../../helpers";
 
 const confidentialityCodeMap: Record<string, string> = {
   N: "normal",
   R: "restricted",
   V: "very restricted",
 };
-
 export const getDocumentData = (document: Document) => {
   const id = getId(
     xpath.select1(
@@ -16,18 +14,16 @@ export const getDocumentData = (document: Document) => {
     ) as Document
   );
 
-  const effectiveTimeValue = displayDateTimeasString(
-    ccdaDatetimeToISO(
-      String(
-        xpath.select1(
-          "string(*[name()='ClinicalDocument']/*[name()='effectiveTime']/@value)",
-          document
-        )
+  const effectiveTimeValue = parseToISOString(
+    String(
+      xpath.select1(
+        "string(*[name()='ClinicalDocument']/*[name()='effectiveTime']/@value)",
+        document
       )
     )
   );
 
-  const createdOn = effectiveTimeValue;
+  const createdOn = formatDate(effectiveTimeValue);
 
   const version = String(
     xpath.select1(
@@ -35,14 +31,12 @@ export const getDocumentData = (document: Document) => {
       document
     )
   );
-
   const setId = getId(
     xpath.select1(
       "*[name()='ClinicalDocument']/*[name()='setId']",
       document
     ) as Document
   );
-
   const confidentialityCode =
     confidentialityCodeMap[
       String(
@@ -52,21 +46,18 @@ export const getDocumentData = (document: Document) => {
         )
       )
     ];
-
   const code = String(
     xpath.select1(
       "string(*[name()='ClinicalDocument']/*[name()='code']/@displayName)",
       document
     )
   );
-
   const languageCode = String(
     xpath.select1(
       "string(*[name()='ClinicalDocument']/*[name()='languageCode']/@code)",
       document
     )
   );
-
   return {
     id,
     createdOn,

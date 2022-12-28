@@ -16,7 +16,7 @@ export const getMedicationFormData = (
   },
   {
     label: "Date Asserted",
-    value: medication.dateAsserted ?? format(new Date(), "P"),
+    value: format(new Date(), "P"),
     field: "dateAsserted",
     readonly: true,
   },
@@ -29,7 +29,7 @@ export const getMedicationFormData = (
       <MedicationsAutoComplete
         readonly={readonly}
         {...inputProps}
-        defaultCoding={medication.rxNormCoding ?? {}}
+        defaultCoding={medication.rxNormCodeableConcept}
       />
     ),
   },

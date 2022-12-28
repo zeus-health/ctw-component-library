@@ -1,4 +1,5 @@
-import { cloneDeep } from "lodash";
+import { MedicationStatement } from "fhir/r4";
+import { cloneDeep, find } from "lodash/fp";
 import { rest } from "msw";
 import { ComponentType, createElement } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -53,18 +54,29 @@ const mockMedicationStatementGet = rest.get(
   }
 );
 
-// Mocked post will add the new medication
+// Mocked post will add the new medication to patientProviderMedsCache
 const mockMedicationStatementPost = rest.post(
-  "https://api.dev.zusapi.com/fhir/MedicationStatement",
+  "https://api.dev.zusapi.com/fhir",
   async (req, res, ctx) => {
-    const newMedication = await req.json();
+    const findMedStatementInBundleFn = find({
+      resource: { resourceType: "MedicationStatement" },
+    });
+    const bundle = await req.json();
+    const newMedication = findMedStatementInBundleFn(bundle.entry)?.resource as
+      | MedicationStatement
+      | undefined;
+    if (!newMedication) {
+      return res(ctx.status(400));
+    }
+
     newMedication.id = uuidv4();
     patientProviderMedsCache.entry?.push({
       resource: newMedication,
       search: { mode: "match" },
     });
     patientProviderMedsCache.total = patientProviderMedsCache.entry?.length;
-    return res(ctx.status(200), ctx.json(newMedication));
+
+    return res(ctx.delay(500), ctx.status(200), ctx.json(newMedication));
   }
 );
 

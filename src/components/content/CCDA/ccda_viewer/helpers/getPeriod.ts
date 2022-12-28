@@ -1,7 +1,7 @@
 import { isBefore, isEqual } from "date-fns";
 import { Period } from "fhir/r4";
 import xpath from "xpath";
-import { ccdaDatetimeToISO, displayDateTimeasString } from "@/fhir/formatters";
+import { parseToISOString } from "./parseToISOString";
 
 export const getPeriod = (xmlData?: Document): Period => {
   if (!xmlData) return {};
@@ -15,23 +15,23 @@ export const getPeriod = (xmlData?: Document): Period => {
 
   if (low && !high) {
     return {
-      start: displayDateTimeasString(ccdaDatetimeToISO(low)),
+      start: parseToISOString(low),
     };
   }
 
   if (!low && high) {
     return {
-      end: displayDateTimeasString(ccdaDatetimeToISO(high)),
+      end: parseToISOString(high),
     };
   }
 
-  let start = displayDateTimeasString(ccdaDatetimeToISO(low));
-  let end = displayDateTimeasString(ccdaDatetimeToISO(high));
+  let start = parseToISOString(low);
+  let end = parseToISOString(high);
 
   // it indicates that at least on of the dates has minutes so both have to be parsed to iso string
   if (start.includes("T") || end.includes("T")) {
-    start = displayDateTimeasString(ccdaDatetimeToISO(start));
-    end = displayDateTimeasString(ccdaDatetimeToISO(end));
+    start = parseToISOString(start);
+    end = parseToISOString(end);
   }
 
   if (
