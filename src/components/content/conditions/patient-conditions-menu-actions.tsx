@@ -13,23 +13,25 @@ export const PatientConditionHoverActions = ({
 
   return (
     <div className="ctw-flex ctw-space-x-2">
-      <button
-        type="button"
-        className="ctw-btn-default"
-        onClick={(event) => {
-          event.stopPropagation();
-          confirmDelete({
-            resource: record.resource,
-            resourceName: record.display ?? "unnamed condition",
-            onDelete: async () => {
-              const requestContext = await getRequestContext();
-              await onConditionDelete(record.resource, requestContext);
-            },
-          });
-        }}
-      >
-        Remove
-      </button>
+      {!record.isDeleted && (
+        <button
+          type="button"
+          className="ctw-btn-default"
+          onClick={(event) => {
+            event.stopPropagation();
+            confirmDelete({
+              resource: record.resource,
+              resourceName: record.display ?? "unnamed condition",
+              onDelete: async () => {
+                const requestContext = await getRequestContext();
+                await onConditionDelete(record.resource, requestContext);
+              },
+            });
+          }}
+        >
+          Remove
+        </button>
+      )}
 
       <button
         type="button"
