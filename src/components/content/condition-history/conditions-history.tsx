@@ -50,6 +50,7 @@ export function ConditionHistory({
   const [conditionsWithoutDate, setConditionsWithoutDate] =
     useState<CollapsibleDataListStackEntries>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingDocument, setLoadingDocument] = useState(true);
 
   // Reducers
   const [binaryDocumentState, updateBinaryDocumentState] = useReducer(
@@ -95,6 +96,7 @@ export function ConditionHistory({
         setConditionsWithDate(conditionsDataDeduped.filter((d) => d.date));
         setConditionsWithoutDate(conditionsDataDeduped.filter((d) => !d.date));
         setLoading(false);
+        setLoadingDocument(false);
       }
     }
 
@@ -121,6 +123,7 @@ export function ConditionHistory({
       setConditionsWithDate([]);
       setConditionsWithoutDate([]);
       setLoading(true);
+      setLoadingDocument(true);
     };
   }, [condition, getRequestContext, historyResponse.data, onEdit]);
 
@@ -168,6 +171,7 @@ export function ConditionHistory({
                   idMap={idMap}
                   entry={entry}
                   updateBinaryDocumentState={updateBinaryDocumentState}
+                  loadingDocument={loadingDocument}
                 />
               ),
             }))}
@@ -184,6 +188,7 @@ export function ConditionHistory({
                       idMap={idMap}
                       entry={entry}
                       updateBinaryDocumentState={updateBinaryDocumentState}
+                      loadingDocument={loadingDocument}
                     />
                   ),
                 }))}
