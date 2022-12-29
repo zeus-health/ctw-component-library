@@ -18,7 +18,7 @@ export type CollapsibleDataListProps = {
   data: CollapsibleDataListEntry[];
   hideEmpty?: boolean;
   documentButton?: ReactNode;
-  hasBinaryDocument?: boolean;
+  binaryId?: string;
 };
 
 export const CollapsibleDataList = ({
@@ -29,7 +29,7 @@ export const CollapsibleDataList = ({
   data,
   hideEmpty,
   documentButton,
-  hasBinaryDocument,
+  binaryId,
 }: CollapsibleDataListProps) => {
   const [isDetailShown, setIsDetailShown] = useState(false);
 
@@ -47,6 +47,7 @@ export const CollapsibleDataList = ({
           data={data}
           hideEmpty={hideEmpty}
           documentButton={documentButton}
+          binaryId={binaryId}
         />
       )}
     </div>

@@ -1,4 +1,4 @@
-import { isEqual, orderBy, uniqWith } from "lodash";
+import { find, isEqual, orderBy, uniqWith } from "lodash";
 import { useEffect, useReducer, useState } from "react";
 import { CollapsibleDataListProps } from "../../core/collapsible-data-list";
 import { Details } from "../../core/collapsible-data-list-details";
@@ -8,15 +8,14 @@ import {
 } from "../../core/collapsible-data-list-stack";
 import { useCTW } from "../../core/ctw-provider";
 import { CCDAModal } from "../../core/modal-ccda";
-import { RenderDocumentButton } from "../CCDA/render-document-button";
+import { DocumentButton } from "../CCDA/document-button";
 import { ConditionHeader } from "../condition-header";
 import { conditionData, setupData } from "./condition-history-schema";
 import { Loading } from "@/components/core/loading";
 import { getIncludedResources } from "@/fhir/bundle";
 import {
-  BinaryDocumentData,
-  getBinary,
-  SourceDocumentMap,
+  getBinaryDocument,
+  getProvenanceForConditions,
   useConditionHistory,
 } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models/condition";
@@ -31,7 +30,7 @@ export type ConditionHistoryProps = {
 
 export type BinaryDocument = {
   isModalOpen: boolean;
-  rawBinary: BinaryDocumentData | undefined;
+  rawBinary: fhir4.Binary | undefined;
 };
 
 const DEFAULT_BINARY_DATA = {
@@ -60,11 +59,19 @@ export function ConditionHistory({
     DEFAULT_BINARY_DATA
   );
 
-  const [idMap, setIDMap] = useState<SourceDocumentMap>(new Map());
-
   // Fetching
   const { getRequestContext } = useCTW();
   const historyResponse = useConditionHistory(condition);
+
+  // Handlers
+  const handleDocumentButtonOnClick = async (binaryId: string) => {
+    const requestContext = await getRequestContext();
+    const binaryDocument = await getBinaryDocument(requestContext, binaryId);
+    updateBinaryDocumentState({
+      isModalOpen: true,
+      rawBinary: binaryDocument,
+    });
+  };
 
   useEffect(() => {
     let conditionsDataDeduped: CollapsibleDataListProps[] = [];
@@ -88,11 +95,45 @@ export function ConditionHistory({
           (c) => c.verificationStatus !== "entered-in-error"
         );
 
-        console.log("conditionsDataDeduped", conditionsDataDeduped);
-
         conditionsDataDeduped = uniqWith(
           filterEnteredinErrorConditions.map((model) => setupData(model)),
           (a, b) => isEqual(a.data, b.data)
+        );
+
+        const provenanceBundles = await loadDocument();
+
+        let binaryId: string;
+        conditionsDataDeduped = conditionsDataDeduped.map(
+          (dedupdedCondition) => {
+            provenanceBundles.forEach((bundle) => {
+              if (bundle.entry) {
+                const link = find(bundle.link, { relation: "self" });
+                const decodedUrl = decodeURIComponent(link.url).split("/");
+                const conditionId = decodedUrl[decodedUrl.length - 1];
+
+                bundle.entry.forEach((provenance) => {
+                  // The role should be of source otherwise can't be trusted to be provide the correct and truthy binary.
+                  const hasDocument =
+                    provenance.resource.entity?.[0].role === "source";
+                  const idMatch = conditionId === dedupdedCondition.id;
+
+                  if (hasDocument && idMatch) {
+                    binaryId = provenance.resource.entity[0].what.reference;
+                  }
+                });
+                return conditionId === dedupdedCondition.id;
+              }
+
+              return undefined;
+            });
+
+            return {
+              ...dedupdedCondition,
+              ...(binaryId && {
+                binaryId,
+              }),
+            };
+          }
         );
 
         setConditionsWithDate(conditionsDataDeduped.filter((d) => d.date));
@@ -106,19 +147,16 @@ export function ConditionHistory({
       const requestContext = await getRequestContext();
       const currentCondition = setupData(condition);
       const allConditions = [currentCondition, ...conditionsDataDeduped];
-      const binaryDocs = await getBinary(requestContext, allConditions);
+      const binaryDocs = await getProvenanceForConditions(
+        requestContext,
+        allConditions
+      );
 
-      setIDMap(binaryDocs);
-
-      if (binaryDocs.get(condition.id)?.isBinary) {
-        updateBinaryDocumentState({
-          rawBinary: binaryDocs.get(condition.id),
-        });
-      }
+      return binaryDocs;
     }
 
     void load();
-    void loadDocument();
+    // void loadDocument();
 
     return function cleanup() {
       setConditionsWithDate([]);
@@ -167,11 +205,15 @@ export function ConditionHistory({
             entries={conditionsWithDate.map((entry) => ({
               ...entry,
               documentButton: (
-                <RenderDocumentButton
-                  idMap={idMap}
-                  entry={entry}
-                  updateBinaryDocumentState={updateBinaryDocumentState}
-                />
+                <>
+                  {entry.binaryId && (
+                    <DocumentButton
+                      onClick={() =>
+                        handleDocumentButtonOnClick(entry.binaryId as string)
+                      }
+                    />
+                  )}
+                </>
               ),
             }))}
             limit={CONDITION_HISTORY_LIMIT}
@@ -183,11 +225,17 @@ export function ConditionHistory({
                 entries={conditionsWithoutDate.map((entry) => ({
                   ...entry,
                   documentButton: (
-                    <RenderDocumentButton
-                      idMap={idMap}
-                      entry={entry}
-                      updateBinaryDocumentState={updateBinaryDocumentState}
-                    />
+                    <>
+                      {entry.binaryId && (
+                        <DocumentButton
+                          onClick={() =>
+                            handleDocumentButtonOnClick(
+                              entry.binaryId as string
+                            )
+                          }
+                        />
+                      )}
+                    </>
                   ),
                 }))}
                 limit={CONDITION_HISTORY_LIMIT}

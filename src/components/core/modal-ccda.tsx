@@ -2,10 +2,9 @@ import { XIcon } from "@heroicons/react/outline";
 import { useEffect, useState } from "react";
 import { Base64BinaryField } from "../content/CCDA/base64toBinaryField";
 import { Modal, ModalProps } from "./modal";
-import { BinaryDocumentData } from "@/fhir/conditions";
 
 export type CCDAModalProps = {
-  rawBinary: BinaryDocumentData;
+  rawBinary: fhir4.Binary | undefined;
   onClose: () => void;
 } & Omit<ModalProps, "title" | "children" | "onAfterClosed">;
 
@@ -17,18 +16,18 @@ export const CCDAModal = ({
   const [isXMLData, setIsXMLData] = useState(false);
 
   useEffect(() => {
-    if (rawBinary.isBinary) {
+    if (rawBinary?.data) {
       setIsXMLData(true);
     }
-  }, [isXMLData, rawBinary.isBinary]);
+  }, [isXMLData, rawBinary]);
 
   return (
     <Modal {...modalProps}>
-      {isXMLData && rawBinary.xmlBinary?.data && (
+      {isXMLData && rawBinary?.data && (
         <div className="ctw-flex ctw-w-full ctw-space-x-4">
           <Base64BinaryField
-            value={rawBinary.xmlBinary.data}
-            contentType={rawBinary.xmlBinary.contentType}
+            value={rawBinary.data}
+            contentType={rawBinary.contentType}
           />
           <div className="ctw-ml-3 ctw-flex ctw-h-7 ctw-items-center">
             <button

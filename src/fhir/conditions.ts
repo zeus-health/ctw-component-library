@@ -14,7 +14,7 @@ import {
   SYSTEM_ICD9_CM,
   SYSTEM_SNOMED,
 } from "./system-urls";
-import { getZusApiBaseUrl } from "@/api/urls";
+import { getZusApiBaseUrl, getZusApiBaseUrl } from "@/api/urls";
 import { getAddConditionWithDefaults } from "@/components/content/forms/actions/conditions";
 import { CollapsibleDataListProps } from "@/components/core/collapsible-data-list";
 import { CTWRequestContext } from "@/components/core/ctw-context";
@@ -183,25 +183,25 @@ export function useConditionHistory(condition?: ConditionModel) {
           searchParams
         );
 
-        const historyResponse = await getConditionVersionHistory(
-          requestContext,
-          searchParams
-        );
+        // const historyResponse = await getConditionVersionHistory(
+        //   requestContext,
+        //   searchParams
+        // );
 
-        const conditionVersions = [];
-        historyResponse.entry.forEach((bundleEntry) => {
-          const { resource } = bundleEntry;
-          if (resource) {
-            conditionVersions.push(...resource.entry);
-          }
-        });
+        // const conditionVersions = [];
+        // historyResponse.entry.forEach((bundleEntry) => {
+        //   const { resource } = bundleEntry;
+        //   if (resource) {
+        //     conditionVersions.push(...resource.entry);
+        //   }
+        // });
 
-        const combinedConditions = conditions.concat(
-          ...conditionVersions.map((r) => r.resource)
-        );
+        // const combinedConditions = conditions.concat(
+        //   ...conditionVersions.map((r) => r.resource)
+        // );
 
         return {
-          conditions: combinedConditions,
+          conditions,
           bundle,
         };
       } catch (e) {
@@ -237,27 +237,33 @@ function filterAndSort(conditions: ConditionModel[]): ConditionModel[] {
   );
 }
 
-export type SourceDocumentMap = Map<string, BinaryDocumentData>;
-
 export type BinaryDocumentData = {
   xmlBinary: fhir4.Binary | undefined;
   isBinary: boolean;
 };
 
-export async function getBinary(
+export async function getBinaryDocument(
   requestContext: CTWRequestContext,
-  conditionsData?: CollapsibleDataListProps[]
-): Promise<SourceDocumentMap> {
-  // Call to Provenance for the conditionID to see if Binary exists. If it exists, use it to obtain the binary document and return that.
+  binaryId: string
+) {
+  const { env, authToken } = requestContext;
+  const endpointBinaryUrl = `${getZusApiBaseUrl(env)}/fhir/${binaryId}`;
 
-  const binaryObjects: Map<string, BinaryDocumentData> = new Map();
+  const response = await fetch(endpointBinaryUrl, {
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+      accept: "application/json",
+      "Content-Type": "application/json+fhir",
+    },
+  });
+  return response.json();
+}
 
-  // No conditions in the history drawer.
-  if (!conditionsData) {
-    return binaryObjects;
-  }
-
-  await Promise.all(
+export async function getProvenanceForConditions(
+  requestContext: CTWRequestContext,
+  conditionsData: CollapsibleDataListProps[]
+) {
+  const data = await Promise.all(
     conditionsData.map(async (condition) => {
       const endpointConditionsUrl = `${getZusApiBaseUrl(
         requestContext.env
@@ -267,33 +273,9 @@ export async function getBinary(
           Authorization: `Bearer ${requestContext.authToken}`,
         },
       });
-      const conditionsJSON = await bundle.json();
-
-      // The role should be of source otherwise can't be trusted to be provide the correct and truthy binary.
-      let documentBinary: fhir4.Binary | undefined;
-      if (conditionsJSON.entry?.[0].resource.entity?.[0].role === "source") {
-        const binaryID =
-          conditionsJSON.entry[0].resource.entity[0].what.reference;
-        const endpointBinaryUrl = `${getZusApiBaseUrl(
-          requestContext.env
-        )}/fhir/${binaryID}`;
-        const response = await fetch(endpointBinaryUrl, {
-          headers: {
-            Authorization: `Bearer ${requestContext.authToken}`,
-            accept: "application/json",
-            "Content-Type": "application/json+fhir",
-          },
-        });
-        documentBinary = await response.json();
-      }
-
-      const documents = {
-        xmlBinary: documentBinary || undefined,
-        isBinary: documentBinary?.data !== undefined,
-      } as BinaryDocumentData;
-      binaryObjects.set(condition.id, documents);
+      return bundle.json();
     })
   );
 
-  return binaryObjects;
+  return data;
 }
