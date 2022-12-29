@@ -17,7 +17,6 @@ import {
   CTWToken,
 } from "./ctw-context";
 import { ConfirmDeleteProvider } from "./providers/confirm-delete-provider";
-import { DrawerFormWithFieldsProvider } from "./providers/drawer-form-with-fields-provider";
 import { DrawerProvider } from "./providers/drawer-provider";
 import { getFhirClient } from "@/fhir/client";
 import {
@@ -119,11 +118,9 @@ function CTWProvider({ theme, children, ...ctwState }: CTWProviderProps) {
     <div ref={ctwProviderRef}>
       <CTWStateContext.Provider value={providerState}>
         <QueryClientProvider client={queryClient}>
-          <DrawerFormWithFieldsProvider>
-            <ConfirmDeleteProvider>
-              <DrawerProvider>{children}</DrawerProvider>
-            </ConfirmDeleteProvider>
-          </DrawerFormWithFieldsProvider>
+          <ConfirmDeleteProvider>
+            <DrawerProvider>{children}</DrawerProvider>
+          </ConfirmDeleteProvider>
         </QueryClientProvider>
       </CTWStateContext.Provider>
 

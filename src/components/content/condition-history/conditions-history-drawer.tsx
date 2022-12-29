@@ -4,41 +4,51 @@ import { useEditConditionForm } from "../conditions/condition-drawers";
 import { ConditionHistory } from "./conditions-history";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
 
-type Props = {
-  condition: ConditionModel;
-  readOnly: boolean;
-};
-
 export function useConditionHistory() {
   const { openDrawer } = useDrawer();
   const showEditConditionForm = useEditConditionForm();
 
-  return ({ condition, readOnly }: Props) => {
+  return ({
+    condition,
+    readOnly,
+  }: {
+    condition: ConditionModel;
+    readOnly: boolean;
+  }) => {
     openDrawer({
-      title: "Condition History",
-      drawerChild: (props) =>
-        ConditionHistoryDrawer({
-          condition,
-          onEdit: readOnly ? undefined : () => showEditConditionForm(condition),
-          ...props,
-        }),
+      component: (props) => (
+        <ConditionHistoryDrawer
+          condition={condition}
+          onEdit={readOnly ? undefined : () => showEditConditionForm(condition)}
+          {...props}
+        />
+      ),
     });
   };
 }
 
-type ConditionHistoryDrawerProps = {
+export type ConditionHistoryDrawerProps = {
+  className?: string;
   condition: ConditionModel;
+  isOpen: boolean;
   onClose: () => void;
   onEdit?: () => void;
 };
 
-function ConditionHistoryDrawer({
+export function ConditionHistoryDrawer({
+  className,
   condition,
+  isOpen,
   onClose,
   onEdit,
 }: ConditionHistoryDrawerProps) {
   return (
-    <>
+    <Drawer
+      className={className}
+      title="Condition History"
+      isOpen={isOpen}
+      onClose={onClose}
+    >
       <Drawer.Body>
         <ConditionHistory
           condition={condition}
@@ -57,6 +67,6 @@ function ConditionHistoryDrawer({
           </button>
         </div>
       </Drawer.Footer>
-    </>
+    </Drawer>
   );
 }

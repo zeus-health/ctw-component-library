@@ -1,10 +1,11 @@
 import { createContext, ReactNode, useContext, useMemo, useState } from "react";
-import { Drawer } from "../drawer";
+import { DrawerProps } from "../drawer";
 
 type OpenDrawerProps = {
-  drawerChild: (props: { onClose: () => void }) => JSX.Element;
-  title: string;
-  className?: string;
+  component: ({
+    isOpen,
+    onClose,
+  }: Pick<DrawerProps, "isOpen" | "onClose">) => JSX.Element;
 };
 
 type State = {
@@ -25,15 +26,21 @@ export function DrawerProvider({ children }: ProviderProps) {
   const [drawerProps, setProps] = useState<OpenDrawerProps>({
     // Create some dummy initial props for the drawer. These will get
     // overwritten when openDrawer() is used.
-    drawerChild: dummyChild,
-    title: "",
+    component: dummyChild,
   });
 
   const state = useMemo(
     () => ({
       openDrawer: (props: OpenDrawerProps) => {
         setProps(props);
-        setIsOpen(true);
+
+        // Ensure isOpen starts as false and then async set it to true.
+        // This ensures the drawer is added first before isOpen is set to
+        // true which fixes an issue around initial opening animation/transition.
+        setIsOpen(false);
+        setTimeout(() => {
+          setIsOpen(true);
+        });
       },
     }),
     []
@@ -41,14 +48,10 @@ export function DrawerProvider({ children }: ProviderProps) {
 
   return (
     <Context.Provider value={state}>
-      <Drawer
-        className={drawerProps.className}
-        title={drawerProps.title}
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-      >
-        {drawerProps.drawerChild({ onClose: () => setIsOpen(false) })}
-      </Drawer>
+      {drawerProps.component({
+        isOpen,
+        onClose: () => setIsOpen(false),
+      })}
       {children}
     </Context.Provider>
   );
