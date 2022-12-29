@@ -145,18 +145,15 @@ export function ConditionHistory({
     async function loadDocument() {
       // Binary Document
       const requestContext = await getRequestContext();
-      const currentCondition = setupData(condition);
-      const allConditions = [currentCondition, ...conditionsDataDeduped];
-      const binaryDocs = await getProvenanceForConditions(
-        requestContext,
-        allConditions
-      );
+      const binaryDocs = await getProvenanceForConditions(requestContext, [
+        setupData(condition),
+        ...conditionsDataDeduped,
+      ]);
 
       return binaryDocs;
     }
 
     void load();
-    // void loadDocument();
 
     return function cleanup() {
       setConditionsWithDate([]);
