@@ -73,7 +73,7 @@ export function OtherProviderMedsTable({
                 openAddNewMedicationDrawer(medication);
               },
             },
-            medication.isDismissed
+            medication.isArchived
               ? null
               : {
                   name: "Dismiss",

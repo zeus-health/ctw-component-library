@@ -136,16 +136,16 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
     return this.resource.reasonReference;
   }
 
-  get isDismissed(): boolean {
-    return !!this.getBasicResourceByAction("dismiss");
-  }
-
-  get clinicalStatus() {
-    return this.resource.status;
+  get isArchived(): boolean {
+    return !!this.getBasicResourceByAction("archive");
   }
 
   get status() {
-    if (this.isDismissed) {
+    return this.resource.status;
+  }
+
+  get displayStatus() {
+    if (this.isArchived) {
       return "Dismissed";
     }
     return capitalize(this.resource.status);

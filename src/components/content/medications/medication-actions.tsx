@@ -9,13 +9,13 @@ export const handleMedicationDismissal = async (
   getRequestContext: () => Promise<CTWRequestContext>
 ) => {
   const requestContext = await getRequestContext();
-  const existingBasic = medication.getBasicResourceByAction("dismiss");
+  const existingBasic = medication.getBasicResourceByAction("archive");
 
   await recordProfileAction(
     existingBasic,
     medication,
     requestContext,
-    "dismiss"
+    "archive"
   );
 
   // Invalidate related queries

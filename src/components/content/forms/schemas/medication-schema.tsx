@@ -35,7 +35,7 @@ export const getMedicationFormData = (
   },
   {
     label: "Latest Status",
-    value: medication.clinicalStatus,
+    value: medication.status,
     field: "status",
   },
   {

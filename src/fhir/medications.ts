@@ -168,8 +168,8 @@ export function filterMedicationsWithNoRxNorms(
 }
 
 // Splits medications into those that the builder already knows about ("Provider Medications"),
-// those that they do not know about ("Other Provider Medications") and those they didn't know
-// about originally abd then dismissed ("Dismissed Other Provider Medications").
+// those that they do not know about ("Other Provider Medications"), and those they didn't know
+// about originally and then dismissed ("Dismissed Other Provider Medications").
 export function splitMedications(
   activeMedications: MedicationStatementModel[],
   builderOwnedMedications: MedicationStatementModel[]
@@ -178,7 +178,7 @@ export function splitMedications(
   const otherProviderMedications = activeMedications.filter(
     (activeMed) =>
       !(
-        activeMed.isDismissed ||
+        activeMed.isArchived ||
         builderOwnedMedications.some(
           (builderMed) => builderMed.rxNorm === activeMed.rxNorm
         )
@@ -229,7 +229,7 @@ export function splitMedications(
     );
   });
   const dismissedOtherProviderMedications = otherProviderMedications.filter(
-    (m) => m.isDismissed
+    (m) => m.isArchived
   );
   return {
     builderMedications,

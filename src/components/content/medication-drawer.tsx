@@ -19,7 +19,7 @@ function getDataEntriesFromMedicationStatement(
 ): DataListEntry[] {
   return medication
     ? [
-        { label: "Status", value: medication.status },
+        { label: "Status", value: medication.displayStatus },
         { label: "Last Fill Date", value: medication.lastFillDate },
         { label: "Quantity", value: medication.quantity },
         { label: "Days Supply", value: medication.daysSupply },
