@@ -1,15 +1,17 @@
-import { onConditionDelete, toggleArchive } from "../conditions-helper";
-import { useAddConditionForm, useEditConditionForm } from "./condition-drawers";
-import { useConfirmDelete } from "@/components/core/providers/confirm-delete-provider";
+import { toggleArchive } from "../conditions-helper";
+import {
+  useAddConditionForm,
+  useConfirmDeleteCondition,
+  useEditConditionForm,
+} from "./condition-hooks";
 import { ConditionModel } from "@/fhir/models";
 import { RowActionsProps, useCTW } from "@/index";
 
 export const PatientConditionHoverActions = ({
   record,
 }: RowActionsProps<ConditionModel>) => {
-  const { getRequestContext } = useCTW();
   const showEditConditionForm = useEditConditionForm();
-  const { confirmDelete } = useConfirmDelete();
+  const confirmDelete = useConfirmDeleteCondition();
 
   return (
     <div className="ctw-flex ctw-space-x-2">
@@ -19,14 +21,7 @@ export const PatientConditionHoverActions = ({
           className="ctw-btn-default"
           onClick={(event) => {
             event.stopPropagation();
-            confirmDelete({
-              resource: record.resource,
-              resourceName: record.display ?? "unnamed condition",
-              onDelete: async () => {
-                const requestContext = await getRequestContext();
-                await onConditionDelete(record.resource, requestContext);
-              },
-            });
+            confirmDelete(record);
           }}
         >
           Remove

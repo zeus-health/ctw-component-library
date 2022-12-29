@@ -1,5 +1,5 @@
 import { PlusIcon } from "@heroicons/react/outline";
-import { useAddConditionForm } from "./condition-drawers";
+import { useAddConditionForm } from "./condition-hooks";
 import { Toggle } from "@/components/core/toggle";
 
 export type PatientConditionsActionsProps = {

@@ -1,6 +1,6 @@
 import { ConditionModel } from "../../../fhir/models/condition";
 import { Drawer } from "../../core/drawer";
-import { useEditConditionForm } from "../conditions/condition-drawers";
+import { useEditConditionForm } from "../conditions/condition-hooks";
 import { ConditionHistory } from "./conditions-history";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
 

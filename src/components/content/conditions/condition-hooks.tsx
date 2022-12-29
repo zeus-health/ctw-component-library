@@ -1,4 +1,5 @@
 import { curry } from "lodash";
+import { onConditionDelete } from "../conditions-helper";
 import {
   createOrEditCondition,
   getAddConditionWithDefaults,
@@ -10,10 +11,12 @@ import {
   getEditingPatientConditionData,
 } from "../forms/schemas/condition-schema";
 import { DrawerFormWithFields } from "@/components/core/form/drawer-form-with-fields";
+import { ModalConfirmDelete } from "@/components/core/modal-confirm-delete";
 import { usePatient } from "@/components/core/patient-provider";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
+import { useModal } from "@/components/core/providers/modal-provider";
 import { getNewCondition } from "@/fhir/conditions";
-import { ConditionModel } from "@/index";
+import { ConditionModel, useCTW } from "@/index";
 
 export function useAddConditionForm() {
   const { openDrawer } = useDrawer();
@@ -54,6 +57,27 @@ export function useEditConditionForm() {
           schema={conditionEditSchema}
           action={curry(createOrEditCondition)(condition, patientId)}
           data={getEditingPatientConditionData({ condition })}
+          {...props}
+        />
+      ),
+    });
+  };
+}
+
+export function useConfirmDeleteCondition() {
+  const { openModal } = useModal();
+  const { getRequestContext } = useCTW();
+
+  return (condition: ConditionModel) => {
+    openModal({
+      component: (props) => (
+        <ModalConfirmDelete
+          resource={condition.resource}
+          resourceName={condition.display ?? "unnamed condition"}
+          onDelete={async () => {
+            const requestContext = await getRequestContext();
+            await onConditionDelete(condition.resource, requestContext);
+          }}
           {...props}
         />
       ),
