@@ -299,7 +299,7 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
       case "refuted":
         return "Refuted";
       case "entered-in-error":
-        return "Entered in Error";
+        return "Entered In Error";
       default:
         return "Unknown";
     }
