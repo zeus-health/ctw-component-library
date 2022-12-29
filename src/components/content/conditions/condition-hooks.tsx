@@ -17,6 +17,7 @@ import { useDrawer } from "@/components/core/providers/drawer-provider";
 import { useModal } from "@/components/core/providers/modal-provider";
 import { getNewCondition } from "@/fhir/conditions";
 import { ConditionModel, useCTW } from "@/index";
+import { ConditionHeader } from "../condition-header";
 
 export function useAddConditionForm() {
   const { openDrawer } = useDrawer();
@@ -54,6 +55,7 @@ export function useEditConditionForm() {
       component: (props) => (
         <DrawerFormWithFields
           title="Edit Condition"
+          header={<ConditionHeader condition={condition} />}
           schema={conditionEditSchema}
           action={curry(createOrEditCondition)(condition, patientId)}
           data={getEditingPatientConditionData({ condition })}
