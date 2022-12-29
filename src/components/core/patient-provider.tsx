@@ -12,6 +12,8 @@ import {
 } from "../content/forms/actions/patients";
 import { CTWRequestContext } from "./ctw-context";
 import { useCTW } from "./ctw-provider";
+import { DrawerProvider } from "./providers/drawer-provider";
+import { ModalProvider } from "./providers/modal-provider";
 import { PatientModel } from "@/fhir/models/patient";
 import { getBuilderFhirPatient } from "@/fhir/patient-helper";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
@@ -46,10 +48,9 @@ type PatientProviderProps = {
   onPatientSave?: (data: PatientFormData) => Promise<void>;
 } & (ThirdPartyID | PatientUPIDSpecified);
 
-export const CTWPatientContext = createContext<ProviderState>({
-  patientID: "",
-  systemURL: "",
-});
+export const CTWPatientContext = createContext<ProviderState | undefined>(
+  undefined
+);
 
 export function PatientProvider({
   children,
@@ -71,14 +72,23 @@ export function PatientProvider({
 
   return (
     <CTWPatientContext.Provider value={providerState as ProviderState}>
-      {children}
+      <ModalProvider>
+        <DrawerProvider>{children}</DrawerProvider>
+      </ModalProvider>
     </CTWPatientContext.Provider>
   );
 }
 
 export function usePatient(): UseQueryResult<PatientModel, unknown> {
   const { getRequestContext } = useCTW();
-  const { patientID, systemURL, tags } = useContext(CTWPatientContext);
+
+  const context = useContext(CTWPatientContext);
+
+  if (!context) {
+    throw new Error("usePatient must be used within a PatientProvider");
+  }
+
+  const { patientID, systemURL, tags } = context;
 
   return useQuery(
     [QUERY_KEY_PATIENT, patientID, systemURL, tags],
@@ -94,7 +104,13 @@ export function usePatient(): UseQueryResult<PatientModel, unknown> {
 
 export function useHandlePatientSave(patient: PatientModel) {
   const { getRequestContext } = useCTW();
-  const { onPatientSave } = useContext(CTWPatientContext);
+  const context = useContext(CTWPatientContext);
+
+  if (!context) {
+    throw new Error("usePatient must be used within a PatientProvider");
+  }
+
+  const { onPatientSave } = context;
 
   return useCallback(
     async (data) => {

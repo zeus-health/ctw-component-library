@@ -24,7 +24,7 @@ export function getAddConditionWithDefaults(condition: Condition): Condition {
   return newCondition;
 }
 
-const getClincalAndVerificationStatus = (status: ConditionStatus) => {
+export const getClincalAndVerificationStatus = (status: ConditionStatus) => {
   let verificationStatus = "";
   let clinicalStatus = "";
 

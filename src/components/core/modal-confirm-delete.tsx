@@ -34,17 +34,19 @@ export const ModalConfirmDelete = ({
     }
   };
 
+  const resourceType = resource.resourceType.toLowerCase();
+
   return (
     <Modal onAfterClosed={() => setAlert(undefined)} {...modalProps}>
       {alert && <ErrorAlert header={alert} />}
       <div className="ctw-items-left ctw-flex ctw-h-full ctw-flex-col ctw-space-y-2 ctw-overflow-y-auto">
         <span className="ctw-text-left ctw-text-lg ctw-font-medium ctw-text-content-black">
-          {`Remove this ${resource.resourceType.toLowerCase()}?`}
+          {`Remove this ${resourceType}?`}
         </span>
         <span className="ctw-subtext ctw-max-w-sm ctw-text-left ctw-text-content-light">
           This will remove{" "}
           <span className="ctw-font-medium">{resourceName}</span> from this
-          patient&apos;s condition list.
+          patient&apos;s {resourceType} list.
         </span>
       </div>
       <div className="ctw-flex ctw-w-full ctw-space-x-4">

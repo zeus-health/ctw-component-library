@@ -1,6 +1,6 @@
 import { expect } from "@storybook/jest";
 import type { Meta, StoryObj } from "@storybook/react";
-import { userEvent, within } from "@storybook/testing-library";
+import { userEvent, waitFor, within } from "@storybook/testing-library";
 import { Conditions, ConditionsProps } from "../conditions";
 import { conditionFormDrawer } from "./story-helpers/condition-form-drawer";
 import { conditionsObject } from "./story-helpers/conditions";
@@ -123,6 +123,9 @@ export const TestViewHistory: StoryObj<Props> = {
     await conditions.patientRecord.toHaveRowCount(2);
     await conditions.patientRecord.viewHistory(0);
     const canvas = within(canvasElement);
+    await waitFor(() =>
+      expect(canvas.queryAllByRole("dialog")).toHaveLength(1)
+    );
     const drawer = within(canvas.getByRole("dialog"));
     expect(
       await drawer.findByText(/generalized anxiety disorder/i)
