@@ -131,3 +131,20 @@ export const TestViewHistory: StoryObj<Props> = {
     userEvent.click(drawer.getAllByRole("button", { name: /close/i })[0]);
   },
 };
+
+export const TestViewCDADocument: StoryObj<Props> = {
+  ...Basic,
+  play: async ({ canvasElement }) => {
+    const conditions = await conditionsObject(canvasElement);
+    await conditions.patientRecord.toHaveRowCount(2);
+    await conditions.patientRecord.viewHistory(0);
+    const canvas = within(canvasElement);
+    const drawer = within(canvas.getByRole("dialog"));
+    expect(
+      await drawer.findByText(/generalized anxiety disorder/i)
+    ).toBeTruthy();
+    // expect(
+    //   await drawer.findByText(/generalized anxiety disorder/i)
+    // ).toBeTruthy();
+  },
+};

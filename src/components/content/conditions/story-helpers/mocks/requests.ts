@@ -2,6 +2,8 @@ import { cloneDeep } from "lodash";
 import { rest } from "msw";
 import { ComponentType, createElement } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { conditionBinary } from "./condition-binary";
+import { provenanaceConditionHistory } from "./condition-history-provenance-ccda";
 import { heartConditions } from "./forms-data-conditions-search";
 import { historyChronsDisease } from "./history-crohns-disease";
 import { historyDermatitis } from "./history-dermatitis";
@@ -42,6 +44,8 @@ export function setupConditionMocks({
         mockConditionPost,
         mockConditionPut,
         mockPatientHistoryGet,
+        mockConditionHistoryBinaryDocument,
+        mockConditionHistoryProvenanceForCondition,
         mockConditionsBasic,
       ],
     },
@@ -63,6 +67,16 @@ const mockPatientHistoryGet = rest.get(
 const mockProvenancePost = rest.post(
   "https://api.dev.zusapi.com/fhir/Provenance",
   (req, res, ctx) => res(ctx.status(200))
+);
+
+const mockConditionHistoryBinaryDocument = rest.get(
+  "https://api.dev.zusapi.com/fhir/Binary",
+  (req, res, ctx) => res(ctx.status(200), ctx.json(conditionBinary))
+);
+
+const mockConditionHistoryProvenanceForCondition = rest.get(
+  "https://api.dev.zusapi.com/fhir/Provenance?target=Condition",
+  (req, res, ctx) => res(ctx.status(200), ctx.json(provenanaceConditionHistory))
 );
 
 const mockConditionSearch = rest.get(

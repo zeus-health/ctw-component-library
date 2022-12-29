@@ -4,7 +4,6 @@ import { ChangeEvent, useMemo, useState } from "react";
 import xpath from "xpath";
 import { CcdaViewer } from "./ccda_viewer";
 import "./styles.scss";
-import { Toggle } from "@/components/core/toggle";
 
 const xmlTypes = ["/xml", "/xhtml+xml", "application/xml"];
 
@@ -49,7 +48,6 @@ export const Base64BinaryField = ({
       label: "Parsed",
       value: parsedCCDA,
       event: handleChange,
-      disabled: !decoded,
       display: Boolean(ccdaDoc),
     },
   ];
@@ -67,18 +65,7 @@ export const Base64BinaryField = ({
           (action) =>
             action.display && (
               <div key={action.label} className="ctw-cda-switch-wrapper">
-                <span className="ctw-flex">
-                  <Toggle
-                    inputProps={{
-                      value: action.label,
-                      checked: action.value,
-                      disabled: action.disabled,
-                    }}
-                    name={action.label}
-                    text={action.label}
-                    onChange={action.event}
-                  />
-                </span>
+                <span className="ctw-flex" />
               </div>
             )
         )}
