@@ -110,6 +110,44 @@ export function useOtherProviderConditions() {
   );
 }
 
+export const getConditionVersionHistory = async (
+  requestContext: CTWRequestContext,
+  searchParams: SearchParams
+) => {
+  const response = await searchBuilderRecords(
+    "Condition",
+    requestContext,
+    searchParams
+  );
+
+  const builderIds = response.resources.map(
+    (resource) => resource.id
+  ) as string[];
+
+  const historyRequestTemplate = (id: string) => ({
+    request: {
+      method: "GET",
+      url: `/Condition/${id}/_history`,
+    },
+  });
+
+  const bundle: fhir4.Bundle = {
+    resourceType: "Bundle",
+    id: "bundle-history-conditions",
+    type: "batch",
+    entry: builderIds.map((id) =>
+      historyRequestTemplate(id)
+    ) as fhir4.BundleEntry<fhir4.FhirResource>[],
+  };
+
+  return requestContext.fhirClient.batch({
+    body: {
+      ...bundle,
+      type: "batch",
+    },
+  });
+};
+
 export function useConditionHistory(condition?: ConditionModel) {
   return useQueryWithPatient(
     QUERY_KEY_CONDITION_HISTORY,
@@ -125,6 +163,7 @@ export function useConditionHistory(condition?: ConditionModel) {
           patientUPID: patient.UPID,
           _include: ["Condition:patient", "Condition:encounter"],
           "_include:iterate": "Patient:organization",
+          // _revinclude: "Provenance:target",
         };
 
         // If we have any known codings, then do an OR search.
@@ -144,7 +183,27 @@ export function useConditionHistory(condition?: ConditionModel) {
           searchParams
         );
 
-        return { conditions, bundle };
+        const historyResponse = await getConditionVersionHistory(
+          requestContext,
+          searchParams
+        );
+
+        const conditionVersions = [];
+        historyResponse.entry.forEach((bundleEntry) => {
+          const { resource } = bundleEntry;
+          if (resource) {
+            conditionVersions.push(...resource.entry);
+          }
+        });
+
+        const combinedConditions = conditions.concat(
+          ...conditionVersions.map((r) => r.resource)
+        );
+
+        return {
+          conditions: combinedConditions,
+          bundle,
+        };
       } catch (e) {
         throw new Error(
           `Failed fetching condition history information for patient: ${e}`

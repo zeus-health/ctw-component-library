@@ -77,6 +77,7 @@ export function ConditionHistory({
         const includedResources = getIncludedResources(
           historyResponse.data.bundle
         );
+
         const conditionModels = historyResponse.data.conditions.map(
           (c) => new ConditionModel(c, includedResources)
         );
@@ -90,6 +91,8 @@ export function ConditionHistory({
         const filterEnteredinErrorConditions = sortedConditions.filter(
           (c) => c.verificationStatus !== "entered-in-error"
         );
+
+        console.log("conditionsDataDeduped", conditionsDataDeduped);
 
         conditionsDataDeduped = uniqWith(
           filterEnteredinErrorConditions.map((model) => setupData(model)),

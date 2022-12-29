@@ -262,6 +262,9 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
   }
 
   get status(): string {
+    // console.log("id", this.id);
+    // console.log("clinical", this.clinicalStatus);
+    // console.log("verification", this.verificationStatus);
     function byClinicalStatus(code: ClinicalStatus | undefined) {
       switch (code) {
         case "active":
