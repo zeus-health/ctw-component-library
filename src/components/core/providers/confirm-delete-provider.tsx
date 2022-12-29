@@ -21,7 +21,13 @@ interface ProviderProps {
 
 export function ConfirmDeleteProvider({ children }: ProviderProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [modalProps, setModalProps] = useState<ConfirmDeleteProps>();
+  const [modalProps, setModalProps] = useState<ConfirmDeleteProps>({
+    // Create some dummy initial props for the modal. These will get
+    // overwritten when confirmDelete() is used.
+    resource: { resourceType: "Dummy" },
+    onDelete: async () => {},
+    resourceName: "",
+  });
 
   const state = useMemo(
     () => ({
@@ -36,11 +42,6 @@ export function ConfirmDeleteProvider({ children }: ProviderProps) {
   return (
     <Context.Provider value={state}>
       <ModalConfirmDelete
-        // These are dummy props that should get overwritten by modalProps
-        // when really used.
-        resource={{ resourceType: "Basic" }}
-        resourceName=""
-        onDelete={async () => {}}
         {...modalProps}
         onClose={() => setIsOpen(false)}
         isOpen={isOpen}

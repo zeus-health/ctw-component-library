@@ -17,18 +17,21 @@ interface ProviderProps {
   children: ReactNode;
 }
 
+// Define this outside of the rendered component to avoid eslint error.
+const dummyChild = (_props: unknown) => <div />;
+
 export function DrawerProvider({ children }: ProviderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [drawerProps, setProps] = useState<OpenDrawerProps>({
-    // eslint-disable-next-line react/no-unstable-nested-components
-    drawerChild: (props) => <div />,
+    // Create some dummy initial props for the drawer. These will get
+    // overwritten when openDrawer() is used.
+    drawerChild: dummyChild,
     title: "",
   });
 
   const state = useMemo(
     () => ({
       openDrawer: (props: OpenDrawerProps) => {
-        console.log("open the drawer", props);
         setProps(props);
         setIsOpen(true);
       },
@@ -55,7 +58,7 @@ export const useDrawer = (): State => {
   const context = useContext(Context);
 
   if (!context) {
-    throw new Error("useOpenDrawer must be used within a DrawerProvider");
+    throw new Error("useDrawer must be used within a DrawerProvider");
   }
 
   return context;

@@ -23,14 +23,21 @@ interface DrawerProviderProps {
 export function DrawerFormWithFieldsProvider({
   children,
 }: DrawerProviderProps) {
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [formProps, setFormProps] = useState<unknown>(undefined);
+  const [isOpen, setIsOpen] = useState(false);
+  const [formProps, setFormProps] = useState<ShowFormDrawerProps<unknown>>({
+    // Create some dummy initial props for the drawer. These will get
+    // overwritten when showFormDrawer() is used.
+    data: [],
+    action: async () => {},
+    title: "",
+    schema: z.object({}),
+  });
 
   const drawerState = useMemo(
     () => ({
       showFormDrawer: <T,>(props: ShowFormDrawerProps<T>) => {
-        setFormProps(props);
-        setIsFormOpen(true);
+        setFormProps(props as ShowFormDrawerProps<unknown>);
+        setIsOpen(true);
       },
     }),
     []
@@ -39,12 +46,9 @@ export function DrawerFormWithFieldsProvider({
   return (
     <DrawerContext.Provider value={drawerState}>
       <DrawerFormWithFields
-        // This is a dummy prop that will get overwritten by formProps.
-        schema={z.object({})}
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        {...(formProps as any)}
-        isOpen={isFormOpen}
-        onClose={() => setIsFormOpen(false)}
+        {...formProps}
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
       />
       {children}
     </DrawerContext.Provider>
@@ -55,7 +59,9 @@ export const useDrawerFormWithFields = (): DrawerState => {
   const context = useContext(DrawerContext);
 
   if (!context) {
-    throw new Error("useDrawer must be used within a DrawerProvider");
+    throw new Error(
+      "useDrawerFormWithFields must be used within a DrawerFormWithFieldsProvider"
+    );
   }
 
   return context;
