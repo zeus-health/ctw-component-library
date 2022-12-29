@@ -15,7 +15,10 @@ import {
   SYSTEM_SNOMED,
 } from "./system-urls";
 import { getZusApiBaseUrl } from "@/api/urls";
-import { getAddConditionWithDefaults } from "@/components/content/forms/actions/conditions";
+import {
+  getAddConditionWithDefaults,
+  getClincalAndVerificationStatus,
+} from "@/components/content/forms/actions/conditions";
 import { CollapsibleDataListProps } from "@/components/core/collapsible-data-list";
 import { CTWRequestContext } from "@/components/core/ctw-context";
 import { useQueryWithPatient } from "@/components/core/patient-provider";
@@ -59,6 +62,7 @@ export function getNewCondition(patientId: string) {
       type: "Patient",
       reference: `Patient/${patientId}`,
     },
+    ...getClincalAndVerificationStatus("Active"),
   };
   return getAddConditionWithDefaults(newCondition);
 }

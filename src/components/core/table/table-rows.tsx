@@ -1,18 +1,18 @@
 import cx from "classnames";
 import { isFunction } from "lodash";
-import { ReactElement } from "react";
+import { ComponentType, ReactElement } from "react";
 import { Spinner } from "../spinner";
 import { TableDataCell } from "./table-data-cell";
 import { TableFullLengthRow } from "./table-full-length-row";
 import { MinRecordItem, TableColumn } from "./table-helpers";
 
-type TableRowsProps<T extends MinRecordItem> = {
+export type TableRowsProps<T extends MinRecordItem> = {
   records: T[];
   columns: TableColumn<T>[];
   isLoading: boolean;
   emptyMessage: string | ReactElement;
   handleRowClick?: (record: T) => void;
-  rowActions?: (record: T) => JSX.Element;
+  RowActions?: ComponentType<{ record: T }>;
 };
 
 export const TableRows = <T extends MinRecordItem>({
@@ -21,7 +21,7 @@ export const TableRows = <T extends MinRecordItem>({
   isLoading,
   emptyMessage,
   handleRowClick,
-  rowActions,
+  RowActions,
 }: TableRowsProps<T>) => {
   if (isLoading) {
     return (
@@ -72,9 +72,9 @@ export const TableRows = <T extends MinRecordItem>({
               index={index}
             />
           ))}
-          {rowActions && (
+          {RowActions && (
             <td className="ctw-table-row-actions group-hover:ctw-visible">
-              {rowActions(record)}
+              <RowActions record={record} />
             </td>
           )}
         </tr>

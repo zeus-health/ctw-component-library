@@ -141,6 +141,10 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
     return findCoding(SYSTEM_ICD10, this.resource.code)?.display;
   }
 
+  get isDeleted(): boolean {
+    return this.verificationStatusCode === "entered-in-error";
+  }
+
   get knownCodings(): fhir4.Coding[] {
     const codings = compact(
       CONDITION_CODE_PREFERENCE_ORDER.map((code) => {
@@ -295,7 +299,7 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
       case "refuted":
         return "Refuted";
       case "entered-in-error":
-        return "Entered in Error";
+        return "Entered In Error";
       default:
         return "Unknown";
     }
