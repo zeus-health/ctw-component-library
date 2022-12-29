@@ -308,7 +308,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
                 {
                   name: "View History",
                   action: async () => {
-                    showConditionHistory({ condition });
+                    showConditionHistory({ condition, readOnly: true });
                   },
                 },
                 {
