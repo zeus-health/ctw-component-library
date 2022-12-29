@@ -46,8 +46,9 @@ export const TableRows = <T extends MinRecordItem>({
     <>
       {records.map((record) => (
         <tr
-          className={cx("ctw-group ctw-relative", {
-            "ctw-z-10 ctw-cursor-pointer  hover:ctw-bg-bg-lighter":
+          // ctw-mx-px fixes bug where side borders disappear on hover when stacked.
+          className={cx("ctw-group ctw-relative ctw-mx-px", {
+            "ctw-z-10 ctw-cursor-pointer hover:ctw-bg-bg-lighter":
               isFunction(handleRowClick),
           })}
           key={record.id}
@@ -72,7 +73,7 @@ export const TableRows = <T extends MinRecordItem>({
             />
           ))}
           {rowActions && (
-            <td className="ctw-action-hover ctw-invisible ctw-absolute ctw-right-0 ctw-z-20 ctw-flex ctw-h-full ctw-items-center ctw-space-x-2 ctw-px-4 group-hover:ctw-visible">
+            <td className="ctw-table-row-actions group-hover:ctw-visible">
               {rowActions(record)}
             </td>
           )}

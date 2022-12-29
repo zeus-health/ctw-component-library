@@ -1,8 +1,7 @@
 import { isEmpty } from "lodash";
 import xpath from "xpath";
-import { getHumanName } from "../../../helpers";
+import { getHumanName, parseToISOString } from "../../../helpers";
 import { LabelValueType } from "../../../types";
-import { ccdaDatetimeToISO, displayDateTimeasString } from "@/fhir/formatters";
 
 export const getAuthor = (
   document: Document
@@ -44,10 +43,8 @@ export const getAuthor = (
       )
     );
 
-    const authoredOn = displayDateTimeasString(
-      ccdaDatetimeToISO(
-        String(xpath.select1("string(*[name()='time'])", author))
-      )
+    const authoredOn = parseToISOString(
+      String(xpath.select1("string(*[name()='time'])", author))
     );
 
     return [
