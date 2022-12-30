@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { PatientFormData } from "../content/forms/actions/patients";
+import { PatientFormData } from "../../content/forms/actions/patients";
 import { Tag } from "@/fhir/types";
 
 export type PatientState = {

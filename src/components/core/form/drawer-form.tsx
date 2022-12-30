@@ -3,8 +3,8 @@ import { ReactNode, useState } from "react";
 import { Drawer, DrawerProps } from "../drawer";
 import { SaveButton } from "@/components/content/forms/save-button";
 import { ErrorAlert } from "@/components/core/alert";
-import { CTWRequestContext } from "@/components/core/ctw-context";
-import { useCTW } from "@/components/core/ctw-provider";
+import { useCTW } from "@/components/core/providers/ctw-provider";
+import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { getFormResponseErrors } from "@/utils/errors";
 import { AnyZodSchema, getFormData } from "@/utils/form-helper";
 

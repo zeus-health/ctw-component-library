@@ -3,12 +3,12 @@ import { ReactNode, useCallback, useContext, useMemo } from "react";
 import {
   editPatient,
   PatientFormData,
-} from "../content/forms/actions/patients";
+} from "../../content/forms/actions/patients";
 import { CTWRequestContext } from "./ctw-context";
 import { useCTW } from "./ctw-provider";
+import { DrawerProvider } from "./drawer-provider";
+import { ModalProvider } from "./modal-provider";
 import { PatientContext, PatientState } from "./patient-context";
-import { DrawerProvider } from "./providers/drawer-provider";
-import { ModalProvider } from "./providers/modal-provider";
 import { PatientModel } from "@/fhir/models/patient";
 import { getBuilderFhirPatient } from "@/fhir/patient-helper";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";

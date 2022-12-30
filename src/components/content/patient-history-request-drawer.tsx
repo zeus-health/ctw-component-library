@@ -1,10 +1,10 @@
 import { Dispatch, SetStateAction } from "react";
-import { CTWRequestContext } from "../core/ctw-context";
+import { CTWRequestContext } from "../core/providers/ctw-context";
 import {
   DrawerFormWithFields,
   DrawerFormWithFieldsProps,
 } from "../core/form/drawer-form-with-fields";
-import { useHandlePatientSave } from "../core/patient-provider";
+import { useHandlePatientSave } from "../core/providers/patient-provider";
 import { PatientFormData } from "./forms/actions/patients";
 import {
   getRequestData,

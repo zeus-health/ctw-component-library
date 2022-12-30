@@ -7,7 +7,7 @@ import {
 } from "../forms/schemas/medication-schema";
 import { createMedicationStatement } from "@/components/content/forms/actions/medications";
 import { DrawerFormWithFields } from "@/components/core/form/drawer-form-with-fields";
-import { usePatient } from "@/components/core/patient-provider";
+import { usePatient } from "@/components/core/providers/patient-provider";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 
 type Props = {

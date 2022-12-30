@@ -6,7 +6,7 @@ import cx from "classnames";
 import { debounce } from "lodash";
 import { useCallback, useEffect, useState } from "react";
 import * as CTWBox from "@/components/core/ctw-box";
-import { useQueryWithCTW } from "@/components/core/ctw-provider";
+import { useQueryWithCTW } from "@/components/core/providers/ctw-provider";
 import { Pagination } from "@/components/core/pagination/pagination";
 import { Table } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
