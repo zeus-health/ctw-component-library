@@ -13,9 +13,9 @@ import {
 } from "../forms/schemas/condition-schema";
 import { DrawerFormWithFields } from "@/components/core/form/drawer-form-with-fields";
 import { ModalConfirmDelete } from "@/components/core/modal-confirm-delete";
-import { usePatient } from "@/components/core/providers/patient-provider";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
 import { useModal } from "@/components/core/providers/modal-provider";
+import { usePatient } from "@/components/core/providers/patient-provider";
 import { getNewCondition } from "@/fhir/conditions";
 import { ConditionModel, useCTW } from "@/index";
 
