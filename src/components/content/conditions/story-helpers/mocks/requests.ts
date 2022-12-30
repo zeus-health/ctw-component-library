@@ -10,6 +10,7 @@ import { historyIronDeficiency } from "./history-iron-deficiency";
 import { historyOralContraception } from "./history-oral-contraception";
 import { patient } from "./patient";
 import { patientHistoryMessage } from "./patient-history-message";
+import { ProvenanceCondition } from "./provencanceCondition";
 import { SYSTEM_SUMMARY } from "@/fhir/system-urls";
 
 let patientConditionsCache: fhir4.Bundle;
@@ -43,6 +44,8 @@ export function setupConditionMocks({
         mockConditionPut,
         mockPatientHistoryGet,
         mockConditionsBasic,
+        mockConditionBundle,
+        mockConditionProvenance,
       ],
     },
   };
@@ -155,5 +158,46 @@ const mockConditionsBasic = rest.post(
 
     otherConditionsCache.total = otherConditionsCache.entry?.length;
     return res(ctx.status(200), ctx.json(newBasicResource));
+  }
+);
+
+const mockConditionProvenance = rest.get(
+  "https://api.dev.zusapi.com/fhir/Provenance?target=Condition/:Condition",
+  async (req, res, ctx) => res(ctx.status(200), ctx.json(ProvenanceCondition))
+);
+
+// Mocked post will add the new condition to the
+// patient conditions bundle.
+const mockConditionBundle = rest.post(
+  "https://api.dev.zusapi.com/fhir",
+  async (req, res, ctx) => {
+    const codeParam = req.url.searchParams.get("code");
+
+    // Search by code is used for condition history.
+    if (codeParam) {
+      const histories = {
+        "34000006": historyChronsDisease,
+        "4979002": historyDermatitis,
+        "21897009": historyGeneralizedAnxiety,
+        "35240004": historyIronDeficiency,
+        "5935008": historyOralContraception,
+      };
+
+      const historyMatch = Object.entries(histories).find((entry) =>
+        codeParam.includes(entry[0])
+      );
+      if (historyMatch) {
+        return res(ctx.status(200), ctx.json(historyMatch[1]));
+      }
+      return res(ctx.status(200), ctx.json([]));
+    }
+
+    // Search for either patient or other provider conditions.
+    const tagParam = req.url.searchParams.get("_tag");
+    const other = tagParam === `${SYSTEM_SUMMARY}|Common`;
+    return res(
+      ctx.status(200),
+      ctx.json(other ? otherConditionsCache : patientConditionsCache)
+    );
   }
 );
