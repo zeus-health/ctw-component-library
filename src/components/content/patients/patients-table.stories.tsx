@@ -4,7 +4,7 @@ import {
   PatientsTable,
   PatientsTableProps,
 } from "@/components/content/patients/patients-table";
-import { CTWProvider } from "@/components/core/ctw-provider";
+import { CTWProvider } from "@/components/core/providers/ctw-provider";
 
 type Props = PatientsTableProps;
 

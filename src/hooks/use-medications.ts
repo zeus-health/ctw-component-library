@@ -1,6 +1,6 @@
 import { UseQueryResult } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { useQueryWithPatient } from "@/components/core/patient-provider";
+import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { getMergedIncludedResources } from "@/fhir/bundle";
 import {
   getActiveMedications,

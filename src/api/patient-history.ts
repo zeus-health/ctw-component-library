@@ -1,5 +1,5 @@
 import { getZusApiBaseUrl } from "./urls";
-import { CTWRequestContext } from "@/components/core/ctw-context";
+import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { ctwFetch } from "@/utils/request";
 
 export type PatientHistoryResponseError = {

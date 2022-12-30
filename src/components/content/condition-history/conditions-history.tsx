@@ -6,8 +6,8 @@ import {
   CollapsibleDataListStack,
   CollapsibleDataListStackEntries,
 } from "../../core/collapsible-data-list-stack";
-import { useCTW } from "../../core/ctw-provider";
 import { CCDAModal } from "../../core/modal-ccda";
+import { useCTW } from "../../core/providers/ctw-provider";
 import { RenderDocumentButton } from "../CCDA/render-document-button";
 import { ConditionHeader } from "../condition-header";
 import { conditionData, setupData } from "./condition-history-schema";

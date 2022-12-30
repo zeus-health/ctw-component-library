@@ -10,7 +10,7 @@ import {
   SYSTEM_ZUS_UPI_RECORD_TYPE,
 } from "./system-urls";
 import { ResourceType, ResourceTypeString } from "./types";
-import { CTWRequestContext } from "@/components/core/ctw-context";
+import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 
 const MAX_COUNT = 250;
 

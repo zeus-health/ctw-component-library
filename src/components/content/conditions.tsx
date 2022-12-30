@@ -1,14 +1,14 @@
 import cx from "classnames";
 import { curry } from "lodash";
 import { useEffect, useRef, useState } from "react";
-import { useCTW } from "../core/ctw-provider";
 import {
   DrawerFormWithFields,
   FormActionTypes,
   FormEntry,
 } from "../core/form/drawer-form-with-fields";
 import { ModalConfirmDelete } from "../core/modal-confirm-delete";
-import { usePatient } from "../core/patient-provider";
+import { useCTW } from "../core/providers/ctw-provider";
+import { usePatient } from "../core/providers/patient-provider";
 import { TableSort } from "../core/table/table-helpers";
 import { ToggleControl } from "../core/toggle-control";
 import { ConditionHeader } from "./condition-header";

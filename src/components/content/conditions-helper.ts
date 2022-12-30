@@ -1,6 +1,6 @@
 import { FhirResource } from "fhir-kit-client";
 import { cloneDeep } from "lodash";
-import { CTWRequestContext } from "../core/ctw-context";
+import { CTWRequestContext } from "../core/providers/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { recordProfileAction } from "@/fhir/basic";
 import { ConditionModel } from "@/fhir/models";

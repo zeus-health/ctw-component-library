@@ -7,7 +7,7 @@ import {
   CREATE_CODING,
   createProvenance,
 } from "./provenance";
-import { CTWRequestContext } from "@/components/core/ctw-context";
+import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { getUsersPractitionerReference } from "@/fhir/practitioner";
 import { claimsBuilderName } from "@/utils/auth";
 

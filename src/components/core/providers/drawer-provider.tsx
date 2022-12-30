@@ -1,18 +1,5 @@
-import { createContext, ReactNode, useContext, useMemo, useState } from "react";
-import { DrawerProps } from "../drawer";
-
-type OpenDrawerProps = {
-  component: ({
-    isOpen,
-    onClose,
-  }: Pick<DrawerProps, "isOpen" | "onClose">) => JSX.Element;
-};
-
-type State = {
-  openDrawer: (props: OpenDrawerProps) => void;
-};
-
-const Context = createContext<State | undefined>(undefined);
+import { ReactNode, useContext, useMemo, useState } from "react";
+import { DrawerContext, DrawerState, OpenDrawerProps } from "./drawer-context";
 
 interface ProviderProps {
   children: ReactNode;
@@ -47,18 +34,18 @@ export function DrawerProvider({ children }: ProviderProps) {
   );
 
   return (
-    <Context.Provider value={state}>
+    <DrawerContext.Provider value={state}>
       {drawerProps.component({
         isOpen,
         onClose: () => setIsOpen(false),
       })}
       {children}
-    </Context.Provider>
+    </DrawerContext.Provider>
   );
 }
 
-export const useDrawer = (): State => {
-  const context = useContext(Context);
+export const useDrawer = (): DrawerState => {
+  const context = useContext(DrawerContext);
 
   if (!context) {
     throw new Error("useDrawer must be used within a DrawerProvider");
