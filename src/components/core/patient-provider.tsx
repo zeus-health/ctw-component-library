@@ -1,17 +1,12 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import {
-  createContext,
-  ReactNode,
-  useCallback,
-  useContext,
-  useMemo,
-} from "react";
+import { ReactNode, useCallback, useContext, useMemo } from "react";
 import {
   editPatient,
   PatientFormData,
 } from "../content/forms/actions/patients";
 import { CTWRequestContext } from "./ctw-context";
 import { useCTW } from "./ctw-provider";
+import { PatientContext, PatientState } from "./patient-context";
 import { DrawerProvider } from "./providers/drawer-provider";
 import { ModalProvider } from "./providers/modal-provider";
 import { PatientModel } from "@/fhir/models/patient";
@@ -35,22 +30,11 @@ type PatientUPIDSpecified = {
   systemURL?: never;
 };
 
-type ProviderState = {
-  patientID: string;
-  systemURL: string;
-  tags?: Tag[];
-  onPatientSave?: (data: PatientFormData) => Promise<void>;
-};
-
 type PatientProviderProps = {
   children: ReactNode;
   tags?: Tag[];
   onPatientSave?: (data: PatientFormData) => Promise<void>;
 } & (ThirdPartyID | PatientUPIDSpecified);
-
-export const CTWPatientContext = createContext<ProviderState | undefined>(
-  undefined
-);
 
 export function PatientProvider({
   children,
@@ -71,18 +55,18 @@ export function PatientProvider({
   );
 
   return (
-    <CTWPatientContext.Provider value={providerState as ProviderState}>
+    <PatientContext.Provider value={providerState as PatientState}>
       <ModalProvider>
         <DrawerProvider>{children}</DrawerProvider>
       </ModalProvider>
-    </CTWPatientContext.Provider>
+    </PatientContext.Provider>
   );
 }
 
 export function usePatient(): UseQueryResult<PatientModel, unknown> {
   const { getRequestContext } = useCTW();
 
-  const context = useContext(CTWPatientContext);
+  const context = useContext(PatientContext);
 
   if (!context) {
     throw new Error("usePatient must be used within a PatientProvider");
@@ -104,7 +88,7 @@ export function usePatient(): UseQueryResult<PatientModel, unknown> {
 
 export function useHandlePatientSave(patient: PatientModel) {
   const { getRequestContext } = useCTW();
-  const context = useContext(CTWPatientContext);
+  const context = useContext(PatientContext);
 
   if (!context) {
     throw new Error("usePatient must be used within a PatientProvider");
