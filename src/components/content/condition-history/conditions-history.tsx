@@ -101,7 +101,11 @@ export function ConditionHistory({
           (a, b) => isEqual(a.data, b.data)
         );
 
-        const provenanceBundles = await loadDocument();
+        const requestContext = await getRequestContext();
+        const provenanceBundles = await getProvenanceForConditions(
+          requestContext,
+          [setupData(condition), ...conditionsDataDeduped]
+        );
 
         let binaryId;
         conditionsDataDeduped = conditionsDataDeduped.map(
@@ -121,17 +125,6 @@ export function ConditionHistory({
         setConditionsWithoutDate(conditionsDataDeduped.filter((d) => !d.date));
         setLoading(false);
       }
-    }
-
-    async function loadDocument() {
-      // Binary Document
-      const requestContext = await getRequestContext();
-      const binaryDocs = await getProvenanceForConditions(requestContext, [
-        setupData(condition),
-        ...conditionsDataDeduped,
-      ]);
-
-      return binaryDocs as fhir4.Bundle[];
     }
 
     void load();
