@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 0.36.3
+
+### Patch Changes
+
+- c590ef9: Handful of bug fixes for future conditions 2.0 component + some code cleanups.
+- a792a47: Fix condition 2.0 hover button styles to work better when table is stacked.
+
 ## 0.36.2
 
 ### Patch Changes
