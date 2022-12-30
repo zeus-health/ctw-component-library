@@ -1,26 +1,11 @@
-import { createContext, ReactNode, useContext, useMemo, useState } from "react";
+import { ReactNode, useContext, useMemo, useState } from "react";
+import { ModalContext, ModalState, OpenModalProps } from "./modal-context";
 
 // NOTE: This is basically identical to DrawerProvider.
 // We use a seperate provider for modals for two reasons:
 //  1. Allows us to have both a drawer and a modal open at
 //     the same time via the providers.
 //  2. Allows modals and drawer interfaces to diverge a bit if needed.
-
-type OpenModalProps = {
-  component: ({
-    isOpen,
-    onClose,
-  }: {
-    isOpen: boolean;
-    onClose: () => void;
-  }) => JSX.Element;
-};
-
-type State = {
-  openModal: (props: OpenModalProps) => void;
-};
-
-const Context = createContext<State | undefined>(undefined);
 
 interface ProviderProps {
   children: ReactNode;
@@ -55,18 +40,18 @@ export function ModalProvider({ children }: ProviderProps) {
   );
 
   return (
-    <Context.Provider value={state}>
+    <ModalContext.Provider value={state}>
       {modalProps.component({
         isOpen,
         onClose: () => setIsOpen(false),
       })}
       {children}
-    </Context.Provider>
+    </ModalContext.Provider>
   );
 }
 
-export const useModal = (): State => {
-  const context = useContext(Context);
+export const useModal = (): ModalState => {
+  const context = useContext(ModalContext);
 
   if (!context) {
     throw new Error("useModal must be used within a ModalProvider");

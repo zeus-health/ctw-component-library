@@ -1,6 +1,6 @@
 import { PatientRefreshHistoryMessage } from "./patient-history-types";
 import { getZusApiBaseUrl } from "@/api/urls";
-import { CTWRequestContext } from "@/components/core/ctw-context";
+import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { errorResponse } from "@/utils/errors";
 import { ctwFetch } from "@/utils/request";
 

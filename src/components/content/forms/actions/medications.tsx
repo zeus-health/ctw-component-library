@@ -1,4 +1,4 @@
-import { CTWRequestContext } from "@/components/core/ctw-context";
+import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { createFhirResourceWithProvenance } from "@/fhir/action-helper";
 import { dateToISO } from "@/fhir/formatters";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";

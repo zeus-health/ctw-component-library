@@ -20,8 +20,8 @@ import {
   getClincalAndVerificationStatus,
 } from "@/components/content/forms/actions/conditions";
 import { CollapsibleDataListProps } from "@/components/core/collapsible-data-list";
-import { CTWRequestContext } from "@/components/core/ctw-context";
-import { useQueryWithPatient } from "@/components/core/patient-provider";
+import { CTWRequestContext } from "@/components/core/providers/ctw-context";
+import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { ConditionModel } from "@/fhir/models/condition";
 import {
   QUERY_KEY_CONDITION_HISTORY,

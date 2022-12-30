@@ -8,7 +8,7 @@ import {
   SYSTEM_BASIC_RESOURCE_TYPE,
   SYSTEM_ZUS_PROFILE_ACTION,
 } from "./system-urls";
-import { CTWRequestContext } from "@/components/core/ctw-context";
+import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 
 export async function recordProfileAction<T extends fhir4.Resource>(
   existingBasic: Basic | undefined,

@@ -35,8 +35,8 @@ import {
   SYSTEM_ZUS_UNIVERSAL_ID,
 } from "./system-urls";
 import { ResourceMap, ResourceTypeString } from "./types";
-import { CTWRequestContext } from "@/components/core/ctw-context";
-import { useQueryWithPatient } from "@/components/core/patient-provider";
+import { CTWRequestContext } from "@/components/core/providers/ctw-context";
+import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { MedicationModel } from "@/fhir/models/medication";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { PatientModel } from "@/fhir/models/patient";

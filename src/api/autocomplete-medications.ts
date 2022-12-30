@@ -1,5 +1,5 @@
 import { getFormsMedicationsUrl } from "./urls";
-import { CTWRequestContext } from "@/components/core/ctw-context";
+import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 
 export const getAutoCompleteMedications = async (
   requestContext: CTWRequestContext,

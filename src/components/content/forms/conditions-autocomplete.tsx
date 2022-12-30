@@ -4,7 +4,7 @@ import {
   ComboxboxFieldOption,
 } from "../../core/form/combobox-field";
 import { getAutoCompleteConditions } from "@/api/autocomplete-conditions";
-import { useCTW } from "@/components/core/ctw-provider";
+import { useCTW } from "@/components/core/providers/ctw-provider";
 
 export type AutoCompleteComboboxProps = {
   defaultCoding?: fhir4.Coding;
