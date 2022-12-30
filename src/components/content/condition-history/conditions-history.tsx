@@ -1,4 +1,4 @@
-import { find, isEqual, orderBy, uniqWith } from "lodash";
+import { isEqual, orderBy, uniqWith } from "lodash";
 import { useEffect, useReducer, useState } from "react";
 import { CollapsibleDataListProps } from "../../core/collapsible-data-list";
 import { Details } from "../../core/collapsible-data-list-details";
@@ -15,6 +15,7 @@ import { Loading } from "@/components/core/loading";
 import { getIncludedResources } from "@/fhir/bundle";
 import {
   getBinaryDocument,
+  getBinaryId,
   getProvenanceForConditions,
   useConditionHistory,
 } from "@/fhir/conditions";
@@ -102,30 +103,10 @@ export function ConditionHistory({
 
         const provenanceBundles = await loadDocument();
 
-        let binaryId: string;
+        let binaryId;
         conditionsDataDeduped = conditionsDataDeduped.map(
           (dedupdedCondition) => {
-            provenanceBundles.forEach((bundle) => {
-              if (bundle.entry) {
-                const link = find(bundle.link, { relation: "self" });
-                const decodedUrl = decodeURIComponent(link.url).split("/");
-                const conditionId = decodedUrl[decodedUrl.length - 1];
-
-                bundle.entry.forEach((provenance) => {
-                  // The role should be of source otherwise can't be trusted to be provide the correct and truthy binary.
-                  const hasDocument =
-                    provenance.resource.entity?.[0].role === "source";
-                  const idMatch = conditionId === dedupdedCondition.id;
-
-                  if (hasDocument && idMatch) {
-                    binaryId = provenance.resource.entity[0].what.reference;
-                  }
-                });
-                return conditionId === dedupdedCondition.id;
-              }
-
-              return undefined;
-            });
+            binaryId = getBinaryId(provenanceBundles, dedupdedCondition.id);
 
             return {
               ...dedupdedCondition,
@@ -150,7 +131,7 @@ export function ConditionHistory({
         ...conditionsDataDeduped,
       ]);
 
-      return binaryDocs;
+      return binaryDocs as fhir4.Bundle[];
     }
 
     void load();
