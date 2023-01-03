@@ -1,5 +1,6 @@
 // HL7 / FHIR
 
+export const SYSTEM_ACT_CODE = "urn:oid:2.16.840.1.113883.5.4";
 export const SYSTEM_BASIC_RESOURCE_TYPE = `http://terminology.hl7.org/CodeSystem/basic-resource-type`;
 export const SYSTEM_CONDITION_CATEGORY = `http://terminology.hl7.org/CodeSystem/condition-category`;
 export const SYSTEM_CONDITION_CLINICAL =
