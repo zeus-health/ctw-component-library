@@ -165,7 +165,7 @@ export function ConditionHistory({
   );
 }
 
-export type HistoryRecordsProps = {
+type HistoryRecordsProps = {
   conditionsWithDate: CollapsibleDataListStackEntries;
   conditionsWithoutDate: CollapsibleDataListStackEntries;
   historyIsLoading: boolean;
