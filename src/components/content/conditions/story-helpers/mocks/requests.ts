@@ -43,6 +43,7 @@ export function setupConditionMocks({
         mockConditionPut,
         mockPatientHistoryGet,
         mockConditionsBasic,
+        mockConditionsBasicPut,
       ],
     },
   };
@@ -140,8 +141,6 @@ const mockConditionGet = rest.get(
   }
 );
 
-// Mocked post will add the new condition to the
-// patient conditions bundle.
 const mockConditionsBasic = rest.post(
   "https://api.dev.zusapi.com/fhir/Basic",
   async (req, res, ctx) => {
@@ -155,5 +154,19 @@ const mockConditionsBasic = rest.post(
 
     otherConditionsCache.total = otherConditionsCache.entry?.length;
     return res(ctx.status(200), ctx.json(newBasicResource));
+  }
+);
+
+const mockConditionsBasicPut = rest.put(
+  "https://api.dev.zusapi.com/fhir/Basic/:basicId",
+  async (req, res, ctx) => {
+    const basic = await req.json();
+    const index = otherConditionsCache.entry?.findIndex(
+      (entry) => entry.resource?.id === basic.id
+    );
+    if (index !== undefined && otherConditionsCache.entry?.[index]) {
+      otherConditionsCache.entry[index].resource = basic;
+    }
+    return res(ctx.status(200), ctx.json(basic));
   }
 );
