@@ -8,15 +8,15 @@ import {
 } from "../../core/collapsible-data-list-stack";
 import { CCDAModal } from "../../core/modal-ccda";
 import { useCTW } from "../../core/providers/ctw-provider";
-import { RenderDocumentButton } from "../CCDA/render-document-button";
+import { DocumentButton } from "../CCDA/document-button";
 import { ConditionHeader } from "../condition-header";
 import { conditionData, setupData } from "./condition-history-schema";
 import { Loading } from "@/components/core/loading";
 import { getIncludedResources } from "@/fhir/bundle";
 import {
-  BinaryDocumentData,
-  getBinary,
-  SourceDocumentMap,
+  getBinaryDocument,
+  getBinaryId,
+  getProvenanceForConditions,
   useConditionHistory,
 } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models/condition";
@@ -31,7 +31,7 @@ export type ConditionHistoryProps = {
 
 export type BinaryDocument = {
   isModalOpen: boolean;
-  rawBinary: BinaryDocumentData | undefined;
+  rawBinary: fhir4.Binary | undefined;
 };
 
 const DEFAULT_BINARY_DATA = {
@@ -60,11 +60,19 @@ export function ConditionHistory({
     DEFAULT_BINARY_DATA
   );
 
-  const [idMap, setIDMap] = useState<SourceDocumentMap>(new Map());
-
   // Fetching
   const { getRequestContext } = useCTW();
   const historyResponse = useConditionHistory(condition);
+
+  // Handlers
+  const handleDocumentButtonOnClick = async (binaryId: string) => {
+    const requestContext = await getRequestContext();
+    const binaryDocument = await getBinaryDocument(requestContext, binaryId);
+    updateBinaryDocumentState({
+      isModalOpen: true,
+      rawBinary: binaryDocument,
+    });
+  };
 
   useEffect(() => {
     let conditionsDataDeduped: CollapsibleDataListProps[] = [];
@@ -73,6 +81,7 @@ export function ConditionHistory({
         const includedResources = getIncludedResources(
           historyResponse.data.bundle
         );
+
         const conditionModels = historyResponse.data.conditions.map(
           (c) => new ConditionModel(c, includedResources)
         );
@@ -92,30 +101,33 @@ export function ConditionHistory({
           (a, b) => isEqual(a.data, b.data)
         );
 
+        const requestContext = await getRequestContext();
+        const provenanceBundles = await getProvenanceForConditions(
+          requestContext,
+          [setupData(condition), ...conditionsDataDeduped]
+        );
+
+        let binaryId;
+        conditionsDataDeduped = conditionsDataDeduped.map(
+          (dedupdedCondition) => {
+            binaryId = getBinaryId(provenanceBundles, dedupdedCondition.id);
+
+            return {
+              ...dedupdedCondition,
+              ...(binaryId && {
+                binaryId,
+              }),
+            };
+          }
+        );
+
         setConditionsWithDate(conditionsDataDeduped.filter((d) => d.date));
         setConditionsWithoutDate(conditionsDataDeduped.filter((d) => !d.date));
         setLoading(false);
       }
     }
 
-    async function loadDocument() {
-      // Binary Document
-      const requestContext = await getRequestContext();
-      const currentCondition = setupData(condition);
-      const allConditions = [currentCondition, ...conditionsDataDeduped];
-      const binaryDocs = await getBinary(requestContext, allConditions);
-
-      setIDMap(binaryDocs);
-
-      if (binaryDocs.get(condition.id)?.isBinary) {
-        updateBinaryDocumentState({
-          rawBinary: binaryDocs.get(condition.id),
-        });
-      }
-    }
-
     void load();
-    void loadDocument();
 
     return function cleanup() {
       setConditionsWithDate([]);
@@ -159,11 +171,15 @@ export function ConditionHistory({
             entries={conditionsWithDate.map((entry) => ({
               ...entry,
               documentButton: (
-                <RenderDocumentButton
-                  idMap={idMap}
-                  entry={entry}
-                  updateBinaryDocumentState={updateBinaryDocumentState}
-                />
+                <>
+                  {entry.binaryId && (
+                    <DocumentButton
+                      onClick={() =>
+                        handleDocumentButtonOnClick(entry.binaryId as string)
+                      }
+                    />
+                  )}
+                </>
               ),
             }))}
             limit={CONDITION_HISTORY_LIMIT}
@@ -175,11 +191,17 @@ export function ConditionHistory({
                 entries={conditionsWithoutDate.map((entry) => ({
                   ...entry,
                   documentButton: (
-                    <RenderDocumentButton
-                      idMap={idMap}
-                      entry={entry}
-                      updateBinaryDocumentState={updateBinaryDocumentState}
-                    />
+                    <>
+                      {entry.binaryId && (
+                        <DocumentButton
+                          onClick={() =>
+                            handleDocumentButtonOnClick(
+                              entry.binaryId as string
+                            )
+                          }
+                        />
+                      )}
+                    </>
                   ),
                 }))}
                 limit={CONDITION_HISTORY_LIMIT}
