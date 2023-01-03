@@ -11,14 +11,13 @@ export const getMedicationFormData = (
     label: "Subject",
     value: medication.subjectID,
     field: "subjectID",
-    readonly: true,
     hidden: true,
   },
   {
     label: "Date Asserted",
     value: format(new Date(), "P"),
     field: "dateAsserted",
-    readonly: true,
+    hidden: true,
   },
   {
     label: "Medication",
