@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 0.37.0
+
+### Minor Changes
+
+- 6abda51: Support audit trail in condition history. Only fetch binary document when clicking on the source document button.
+
+### Patch Changes
+
+- 395501b: Fix how archive/unarchive actions are recorded. We still use a FHIR Basic resource, but we now use a code instead of a meta.tag.
+- e462acc: Fix logic for Pending case in verification status.
+- ad761f9: Fix bug where details are not showing when there are not history records present.
+
 ## 0.36.4
 
 ### Patch Changes
