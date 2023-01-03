@@ -172,7 +172,6 @@ export function useConditionHistory(condition?: ConditionModel) {
           patientUPID: patient.UPID,
           _include: ["Condition:patient", "Condition:encounter"],
           "_include:iterate": "Patient:organization",
-          // _revinclude: "Provenance:target",
         };
 
         // If we have any known codings, then do an OR search.
@@ -192,19 +191,21 @@ export function useConditionHistory(condition?: ConditionModel) {
           searchParams
         );
 
-        const versionHistoryBundle = (await getConditionVersionHistory(
+        const versionHistoryBundle = await getConditionVersionHistory(
           requestContext,
           searchParams
-        )) as fhir4.Bundle | undefined;
+        );
 
         const conditionVersions: fhir4.BundleEntry[] = [];
         if (versionHistoryBundle && versionHistoryBundle.entry) {
-          versionHistoryBundle.entry.forEach((bundleEntry) => {
-            const { resource } = bundleEntry;
-            if (resource?.resourceType === "Bundle" && resource.entry) {
-              conditionVersions.push(...resource.entry);
+          versionHistoryBundle.entry.forEach(
+            (bundleEntry: fhir4.BundleEntry) => {
+              const { resource } = bundleEntry;
+              if (resource?.resourceType === "Bundle" && resource.entry) {
+                conditionVersions.push(...resource.entry);
+              }
             }
-          });
+          );
         }
 
         const combinedConditions = conditions.concat(
