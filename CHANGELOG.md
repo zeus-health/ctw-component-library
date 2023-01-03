@@ -1,5 +1,19 @@
 # ctw-component-library
 
+## 0.36.4
+
+### Patch Changes
+
+- 2832c31: Rename Archive button to Dismiss. Rename Un-Archive button to Restore.
+- 6b02042: Made the date field "hidden" on the Add Medication form. Additionally added toLower to the status field or it doesn't match a status value
+
+## 0.36.3
+
+### Patch Changes
+
+- c590ef9: Handful of bug fixes for future conditions 2.0 component + some code cleanups.
+- a792a47: Fix condition 2.0 hover button styles to work better when table is stacked.
+
 ## 0.36.2
 
 ### Patch Changes

@@ -58,7 +58,7 @@ export const OtherProviderConditionHoverActions = ({
           await toggleArchive(record, await getRequestContext());
         }}
       >
-        {record.isArchived ? "Un-Archive" : "Archive"}
+        {record.isArchived ? "Restore" : "Dismiss"}
       </button>
 
       <button
