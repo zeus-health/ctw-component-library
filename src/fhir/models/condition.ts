@@ -295,6 +295,8 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
       case "confirmed":
         return byClinicalStatus(this.clinicalStatusCode);
       case "unconfirmed":
+      case "provisional":
+      case "differential":
         return "Pending";
       case "refuted":
         return "Refuted";
