@@ -130,7 +130,11 @@ export const TestViewHistory: StoryObj<Props> = {
     expect(
       await drawer.findByText(/generalized anxiety disorder/i)
     ).toBeTruthy();
-    expect(drawer.getAllByRole("button", { name: /details/i })).toHaveLength(3);
+    await waitFor(() =>
+      expect(drawer.getAllByRole("button", { name: /details/i })).toHaveLength(
+        3
+      )
+    );
     userEvent.click(drawer.getAllByRole("button", { name: /close/i })[0]);
   },
 };

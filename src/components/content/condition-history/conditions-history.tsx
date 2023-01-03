@@ -49,7 +49,7 @@ export function ConditionHistory({
     useState<CollapsibleDataListStackEntries>([]);
   const [conditionsWithoutDate, setConditionsWithoutDate] =
     useState<CollapsibleDataListStackEntries>([]);
-  const [loading, setLoading] = useState(true);
+  const [isHistoryLoading, setIsHistoryLoading] = useState(true);
 
   // Reducers
   const [binaryDocumentState, updateBinaryDocumentState] = useReducer(
@@ -123,7 +123,7 @@ export function ConditionHistory({
 
         setConditionsWithDate(conditionsDataDeduped.filter((d) => d.date));
         setConditionsWithoutDate(conditionsDataDeduped.filter((d) => !d.date));
-        setLoading(false);
+        setIsHistoryLoading(false);
       }
     }
 
@@ -132,86 +132,101 @@ export function ConditionHistory({
     return function cleanup() {
       setConditionsWithDate([]);
       setConditionsWithoutDate([]);
-      setLoading(true);
+      setIsHistoryLoading(true);
     };
   }, [condition, getRequestContext, historyResponse.data, onEdit]);
 
-  function conditionHistoryDisplay() {
-    if (
-      conditionsWithDate.length === 0 &&
-      conditionsWithoutDate.length === 0 &&
-      !loading
-    ) {
-      return <div>No history found.</div>;
-    }
-    if (loading) {
-      return <Loading message="Loading condition history..." />;
-    }
+  return (
+    <>
+      <CCDAModal
+        isOpen={binaryDocumentState.isModalOpen}
+        rawBinary={binaryDocumentState.rawBinary}
+        onClose={() => updateBinaryDocumentState({ isModalOpen: false })}
+      />
 
-    return (
-      <>
-        {binaryDocumentState.rawBinary && (
-          <CCDAModal
-            isOpen={binaryDocumentState.isModalOpen}
-            rawBinary={binaryDocumentState.rawBinary}
-            onClose={() => updateBinaryDocumentState({ isModalOpen: false })}
-          />
-        )}
-        <div className="ctw-space-y-6">
-          <ConditionHeader condition={condition} />
-          <Details
-            data={conditionData(condition)}
-            readOnly={!onEdit}
-            onEdit={() => {
-              onClose();
-              onEdit?.();
-            }}
-          />
+      <div className="ctw-space-y-6">
+        <ConditionHeader condition={condition} />
+        <Details
+          data={conditionData(condition)}
+          readOnly={!onEdit}
+          onEdit={() => {
+            onClose();
+            onEdit?.();
+          }}
+        />
+        <HistoryRecords
+          conditionsWithDate={conditionsWithDate}
+          conditionsWithoutDate={conditionsWithoutDate}
+          historyIsLoading={isHistoryLoading}
+          handleDocumentButtonOnClick={handleDocumentButtonOnClick}
+        />
+      </div>
+    </>
+  );
+}
+
+type HistoryRecordsProps = {
+  conditionsWithDate: CollapsibleDataListStackEntries;
+  conditionsWithoutDate: CollapsibleDataListStackEntries;
+  historyIsLoading: boolean;
+  handleDocumentButtonOnClick: (binaryId: string) => Promise<void>;
+};
+
+const HistoryRecords = ({
+  conditionsWithDate,
+  conditionsWithoutDate,
+  historyIsLoading,
+  handleDocumentButtonOnClick,
+}: HistoryRecordsProps) => {
+  if (
+    conditionsWithDate.length === 0 &&
+    conditionsWithoutDate.length === 0 &&
+    !historyIsLoading
+  ) {
+    return <div>No history found.</div>;
+  }
+  if (historyIsLoading) {
+    return <Loading message="Loading condition history..." />;
+  }
+
+  return (
+    <>
+      <CollapsibleDataListStack
+        entries={conditionsWithDate.map((entry) => ({
+          ...entry,
+          documentButton: renderDocumentButton(
+            entry.binaryId,
+            handleDocumentButtonOnClick
+          ),
+        }))}
+        limit={CONDITION_HISTORY_LIMIT}
+      />
+      {conditionsWithoutDate.length !== 0 && (
+        <div className="ctw-space-y-2">
+          <div className="ctw-font-medium">Records with no date:</div>
           <CollapsibleDataListStack
-            entries={conditionsWithDate.map((entry) => ({
+            entries={conditionsWithoutDate.map((entry) => ({
               ...entry,
-              documentButton: (
-                <>
-                  {entry.binaryId && (
-                    <DocumentButton
-                      onClick={() =>
-                        handleDocumentButtonOnClick(entry.binaryId as string)
-                      }
-                    />
-                  )}
-                </>
+              documentButton: renderDocumentButton(
+                entry.binaryId,
+                handleDocumentButtonOnClick
               ),
             }))}
             limit={CONDITION_HISTORY_LIMIT}
           />
-          {conditionsWithoutDate.length !== 0 && (
-            <div className="ctw-space-y-2">
-              <div className="ctw-font-medium">Records with no date:</div>
-              <CollapsibleDataListStack
-                entries={conditionsWithoutDate.map((entry) => ({
-                  ...entry,
-                  documentButton: (
-                    <>
-                      {entry.binaryId && (
-                        <DocumentButton
-                          onClick={() =>
-                            handleDocumentButtonOnClick(
-                              entry.binaryId as string
-                            )
-                          }
-                        />
-                      )}
-                    </>
-                  ),
-                }))}
-                limit={CONDITION_HISTORY_LIMIT}
-              />
-            </div>
-          )}
         </div>
-      </>
-    );
-  }
+      )}
+    </>
+  );
+};
 
-  return conditionHistoryDisplay();
-}
+const renderDocumentButton = (
+  binaryId: string | undefined,
+  handleDocumentButtonOnClick: (binaryId: string) => Promise<void>
+) => (
+  <>
+    {binaryId && (
+      <DocumentButton onClick={() => handleDocumentButtonOnClick(binaryId)} />
+    )}
+  </>
+);
