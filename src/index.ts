@@ -1,6 +1,8 @@
 // Content components
 export * from "@/components/content/conditions";
+export * from "@/components/content/conditions/patient-conditions";
 export * from "@/components/content/conditions-table-base";
+export * from "@/components/content/timeline/patient-timeline";
 export * from "@/components/content/medication-drawer";
 export * from "@/components/content/medications-table-base";
 export * from "@/components/content/medications/add-new-med-drawer";

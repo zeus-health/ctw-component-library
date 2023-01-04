@@ -31,12 +31,15 @@ export const patientConditionsColumns: TableColumn<ConditionModel>[] = [
     render: (condition) => (
       <div className="ctw-pc-status-container">
         <div
-          className={cx("ctw-pc-status-dot", statusToColor(condition.status))}
+          className={cx(
+            "ctw-pc-status-dot",
+            statusToColor(condition.displayStatus)
+          )}
         >
           &bull;
         </div>
         <div className="ctw-pc-status-and-extra">
-          <div className="ctw-pc-status">{condition.status}</div>
+          <div className="ctw-pc-status">{condition.displayStatus}</div>
 
           {condition.isSummaryResource ? (
             <div>

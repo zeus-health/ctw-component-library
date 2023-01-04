@@ -1,8 +1,10 @@
-import { get, pipe, toLower } from "lodash/fp";
+import { compact, get, pipe, toLower } from "lodash/fp";
 import { useEffect, useState } from "react";
 import { MedicationDrawer } from "@/components/content/medication-drawer";
 import { MedicationsTableBase } from "@/components/content/medications-table-base";
 import { AddNewMedDrawer } from "@/components/content/medications/add-new-med-drawer";
+import { handleMedicationDismissal } from "@/components/content/medications/medication-actions";
+import { useCTW } from "@/components/core/providers/ctw-provider";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { sort, SortDir } from "@/utils/sort";
@@ -24,19 +26,20 @@ export function OtherProviderMedsTable({
   sortOrder = "asc",
   sortColumn = "display",
 }: OtherProviderMedsTableProps) {
+  const { getRequestContext } = useCTW();
   const [medicationModels, setMedicationModels] = useState<
     MedicationStatementModel[]
   >([]);
-  const [medDrawerOpen, setMedicationDrawerOpen] = useState(false);
+  const [historyDrawerOpen, setHistoryDrawerOpen] = useState(false);
   const [addNewMedDrawerOpen, setAddNewMedDrawerOpen] = useState(false);
   const [selectedMedication, setSelectedMedication] =
     useState<MedicationStatementModel>();
   const { otherProviderMedications, isLoading } =
     useQueryAllPatientMedications();
 
-  function openMedicationDrawer(row: MedicationStatementModel) {
+  function openHistoryDrawer(row: MedicationStatementModel) {
     setSelectedMedication(row);
-    setMedicationDrawerOpen(true);
+    setHistoryDrawerOpen(true);
   }
 
   function openAddNewMedicationDrawer(row: MedicationStatementModel) {
@@ -56,25 +59,41 @@ export function OtherProviderMedsTable({
       <MedicationsTableBase
         medicationStatements={medicationModels}
         isLoading={isLoading}
-        rowMenuActions={(medication) => [
-          {
-            name: "View History",
-            action: async () => {
-              openMedicationDrawer(medication);
+        rowMenuActions={(medication) =>
+          compact([
+            {
+              name: "View History",
+              action: async () => {
+                openHistoryDrawer(medication);
+              },
             },
-          },
-          {
-            name: "Add to Record",
-            action: async () => {
-              openAddNewMedicationDrawer(medication);
+            {
+              name: "Add to Record",
+              action: async () => {
+                openAddNewMedicationDrawer(medication);
+              },
             },
-          },
-        ]}
+            medication.isArchived
+              ? null
+              : {
+                  name: "Dismiss",
+                  action: async () => {
+                    await handleMedicationDismissal(
+                      medication,
+                      getRequestContext
+                    );
+                  },
+                },
+          ])
+        }
       />
       <MedicationDrawer
         medication={selectedMedication}
-        isOpen={medDrawerOpen}
-        onClose={() => setMedicationDrawerOpen(false)}
+        isOpen={historyDrawerOpen}
+        onClose={() => setHistoryDrawerOpen(false)}
+        onDismissal={async (medication: MedicationStatementModel) => {
+          await handleMedicationDismissal(medication, getRequestContext);
+        }}
       />
       <AddNewMedDrawer
         medication={selectedMedication?.resource}
