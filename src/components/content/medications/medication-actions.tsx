@@ -1,5 +1,5 @@
 import type { MedicationStatementModel } from "@/fhir/models";
-import { CTWRequestContext } from "@/components/core/ctw-context";
+import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { recordProfileAction } from "@/fhir/basic";
 import { QUERY_KEY_OTHER_PROVIDER_MEDICATIONS } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
