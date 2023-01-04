@@ -4,7 +4,7 @@ import { MedicationDrawer } from "@/components/content/medication-drawer";
 import { MedicationsTableBase } from "@/components/content/medications-table-base";
 import { AddNewMedDrawer } from "@/components/content/medications/add-new-med-drawer";
 import { handleMedicationDismissal } from "@/components/content/medications/medication-actions";
-import { useCTW } from "@/components/core/ctw-provider";
+import { useCTW } from "@/components/core/providers/ctw-provider";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { sort, SortDir } from "@/utils/sort";
