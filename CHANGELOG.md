@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.37.1
+
+### Patch Changes
+
+- 696dc1a: Add work around for CJS compile issue.
+
 ## 0.37.0
 
 ### Minor Changes
