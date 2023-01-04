@@ -19,6 +19,8 @@ const THIRD_PARTY_TAGS = [
   `${SYSTEM_ZUS_THIRD_PARTY}|surescripts`,
   `${SYSTEM_ZUS_THIRD_PARTY}|commonwell`,
   `${SYSTEM_ZUS_THIRD_PARTY}|elation`,
+  `${SYSTEM_ZUS_THIRD_PARTY}|collective-medical`,
+  `${SYSTEM_ZUS_THIRD_PARTY}|quest-connector`,
 ];
 
 // Enumerating ALL of the lens tags.
