@@ -33,6 +33,6 @@ function setupEncounterModels(
 ): EncounterModel[] {
   const basicsMap = getIncludedBasics(bundle);
   return resources.map(
-    (c) => new EncounterModel(c, undefined, basicsMap[c.id ?? ""])
+    (c) => new EncounterModel(c, undefined, basicsMap.get(c.id ?? ""))
   );
 }
