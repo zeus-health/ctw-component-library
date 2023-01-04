@@ -108,8 +108,14 @@ export const FormField = ({
   }
 
   if (hidden) {
-    return <input
-      data-testid={`form-field-${inputProps.name}`} {...inputProps} defaultValue={value} hidden={hidden} />;
+    return (
+      <input
+        data-testid={`form-field-${inputProps.name}`}
+        {...inputProps}
+        defaultValue={value}
+        hidden={hidden}
+      />
+    );
   }
 
   return (

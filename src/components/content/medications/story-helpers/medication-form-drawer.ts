@@ -1,7 +1,4 @@
-import {
-  userEvent,
-  within,
-} from "@storybook/testing-library";
+import { userEvent, within } from "@storybook/testing-library";
 
 export function medicationFormDrawer(canvasElement: HTMLElement) {
   const canvas = within(canvasElement);
@@ -14,7 +11,8 @@ export function medicationFormDrawer(canvasElement: HTMLElement) {
       userEvent.click(await drawer.findByRole("option", { name })),
     status: (status: string) =>
       userEvent.selectOptions(drawer.getByTestId("form-field-status"), status),
-    instructions: (instructions: string) => userEvent.type(drawer.getByLabelText("Instructions"), instructions),
+    instructions: (instructions: string) =>
+      userEvent.type(drawer.getByLabelText("Instructions"), instructions),
     cancel: () =>
       userEvent.click(drawer.getByRole("button", { name: "Cancel" })),
     save: async () => {

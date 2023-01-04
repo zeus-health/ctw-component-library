@@ -1,9 +1,5 @@
 import { expect } from "@storybook/jest";
-import {
-  userEvent,
-  waitFor,
-  within,
-} from "@storybook/testing-library";
+import { userEvent, waitFor, within } from "@storybook/testing-library";
 
 export async function medicationsTables(canvasElement: HTMLElement) {
   const canvas = within(canvasElement);
@@ -27,7 +23,9 @@ export function singleMedicationsTable(
   async function clickInMenu(row: number, menuItem: string) {
     userEvent.click(getRow(row).getByRole("button", { name: /dropdown/i }));
     await within(canvasElement).findAllByRole("menuitem");
-    userEvent.click(within(canvasElement).getByRole("menuitem", { name: menuItem }));
+    userEvent.click(
+      within(canvasElement).getByRole("menuitem", { name: menuItem })
+    );
   }
 
   function getRow(row: number) {
@@ -48,14 +46,19 @@ export function singleMedicationsTable(
       } else {
         await waitFor(() => {
           const tbody = within(tableEl).getAllByRole("rowgroup")[1];
-          expect(within(tbody).queryAllByRole("row")).toHaveLength(count)
+          expect(within(tbody).queryAllByRole("row")).toHaveLength(count);
         });
       }
     },
-    toHaveRowWithText: (row: number, text: string | RegExp) => getRow(row).getByText(text),
+    toHaveRowWithText: (row: number, text: string | RegExp) =>
+      getRow(row).getByText(text),
     toHaveAnyRowWithText: async (text: string | RegExp) => {
       const tbody = await within(tableEl).getAllByRole("rowgroup")[1];
-      expect(within(tbody).getAllByRole("row").some(next => !!within(next).queryByText(text))).toBeTruthy();
+      expect(
+        within(tbody)
+          .getAllByRole("row")
+          .some((next) => !!within(next).queryByText(text))
+      ).toBeTruthy();
     },
     addToRecord: (row: number) => clickInMenu(row, "Add to Record"),
   };

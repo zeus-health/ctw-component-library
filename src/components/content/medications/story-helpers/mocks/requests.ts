@@ -101,10 +101,15 @@ const mockTerminologyDosageGet = rest.get(
   "https://api.dev.zusapi.com/forms-data/terminology/dosages",
   (req, res, ctx) => {
     const search = req.url.searchParams.get("display") ?? "";
-    const results = searchDosagesALB.filter(item => item.display.indexOf(search) !== -1)
-    return res(ctx.status(200), ctx.json({
-      total: results.length,
-      data: results
-    }))
+    const results = searchDosagesALB.filter(
+      (item) => item.display.indexOf(search) !== -1
+    );
+    return res(
+      ctx.status(200),
+      ctx.json({
+        total: results.length,
+        data: results,
+      })
+    );
   }
 );

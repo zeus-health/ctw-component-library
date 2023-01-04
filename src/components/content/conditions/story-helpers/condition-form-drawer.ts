@@ -20,7 +20,8 @@ export function conditionFormDrawer(canvasElement: HTMLElement) {
       userEvent.type(drawer.getByTestId("form-field-onset"), date),
     abatement: (date: string) =>
       userEvent.type(drawer.getByTestId("form-field-abatement"), date),
-    note: (note: string) => userEvent.type(drawer.getByTestId("form-field-note"), note),
+    note: (note: string) =>
+      userEvent.type(drawer.getByTestId("form-field-note"), note),
 
     cancel: () =>
       userEvent.click(drawer.getByRole("button", { name: "Cancel" })),

@@ -1,4 +1,4 @@
-import { expect } from '@storybook/jest';
+import { expect } from "@storybook/jest";
 import type { Meta, StoryObj } from "@storybook/react";
 import { setupMedicationMocks } from "./story-helpers/mocks/requests";
 import {
@@ -45,7 +45,9 @@ export const TestAddNewMed: StoryObj<Props> = {
     addMedicationForm.search("alb");
     await addMedicationForm.selectMedication(newMedication);
     addMedicationForm.status("Active");
-    addMedicationForm.instructions("Take 2.3 every 3.14 hours, if dose is missed spin around 4.5 times");
+    addMedicationForm.instructions(
+      "Take 2.3 every 3.14 hours, if dose is missed spin around 4.5 times"
+    );
     await addMedicationForm.save();
     await medications.patientRecord.toHaveRowCount(2);
     expect(
@@ -60,7 +62,8 @@ export const TestAddToRecord: StoryObj<Props> = {
     const medications = await medicationsTables(canvasElement);
     await medications.patientRecord.toHaveRowCount(1);
     await medications.otherProvider.toHaveRowCount(4);
-    let medicationName = "3 ML insulin aspart protamine, human 70 UNT/ML / insulin aspart, human 30 UNT/ML Pen Injector [NovoLog Mix]";
+    let medicationName =
+      "3 ML insulin aspart protamine, human 70 UNT/ML / insulin aspart, human 30 UNT/ML Pen Injector [NovoLog Mix]";
     medications.otherProvider.toHaveRowWithText(0, medicationName);
     await medications.otherProvider.addToRecord(0);
     await medicationFormDrawer(canvasElement).save();
@@ -70,7 +73,7 @@ export const TestAddToRecord: StoryObj<Props> = {
 
     await delay(1000);
     medicationName = "3 ML insulin glargine 100 UNT/ML Pen Injector [Lantus]";
-    // Add another row to record
+    // Test adding a second medication from other provider records.
     medications.otherProvider.toHaveRowWithText(0, medicationName);
     await medications.otherProvider.addToRecord(0);
     await medicationFormDrawer(canvasElement).save();
