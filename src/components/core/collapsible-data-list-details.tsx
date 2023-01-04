@@ -8,21 +8,24 @@ type DetailsProps = {
   readOnly?: boolean;
   onEdit?: () => void;
   documentButton?: ReactNode;
+  binaryId?: string;
 };
 
 export const Details = ({
   data,
   hideEmpty = true,
+  readOnly = true,
   onEdit,
   documentButton,
+  binaryId,
 }: DetailsProps) => (
   <div className="ctw-rounded-lg ctw-bg-bg-lighter">
     <dl className="ctw-space-y-2 ctw-p-4">
       <div className="ctw-flex ctw-justify-between ctw-space-x-2 ctw-text-sm ctw-uppercase ctw-text-content-light">
         <div className="ctw-title-container">Details</div>
         <div className="ctw-flex">
-          {documentButton}
-          {onEdit && (
+          {binaryId && documentButton}
+          {!readOnly && (
             <button
               type="button"
               className="ctw-btn-default ctw-flex ctw-space-x-2 ctw-align-middle"

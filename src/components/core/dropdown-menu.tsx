@@ -2,9 +2,9 @@ import { Menu } from "@headlessui/react";
 import * as RadixDropdownMenu from "@radix-ui/react-dropdown-menu";
 import cx from "classnames";
 import { ReactNode, useState } from "react";
-import { useCTW } from "./ctw-provider";
-import "./dropdown-menu.scss";
 import { Loading } from "./loading";
+import { useCTW } from "./providers/ctw-provider";
+import "./dropdown-menu.scss";
 
 export type MenuItem = {
   name: string;

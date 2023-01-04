@@ -1,7 +1,7 @@
 import { Condition } from "fhir/r4";
 import { cloneDeep, isUndefined, omitBy } from "lodash";
 import { ConditionStatus } from "../types";
-import { CTWRequestContext } from "@/components/core/ctw-context";
+import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { dateToISO } from "@/fhir/formatters";
 import { ConditionModel } from "@/fhir/models/condition";
@@ -24,7 +24,7 @@ export function getAddConditionWithDefaults(condition: Condition): Condition {
   return newCondition;
 }
 
-const getClincalAndVerificationStatus = (status: ConditionStatus) => {
+export const getClincalAndVerificationStatus = (status: ConditionStatus) => {
   let verificationStatus = "";
   let clinicalStatus = "";
 

@@ -4,7 +4,7 @@ import {
   SYSTEM_PROVENANCE_ACTIVITY_TYPE,
   SYSTEM_PROVENANCE_AGENT_TYPE,
 } from "./system-urls";
-import { CTWRequestContext } from "@/components/core/ctw-context";
+import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { claimsBuilderName } from "@/utils/auth";
 
 export const ASSEMBLER_CODING = {

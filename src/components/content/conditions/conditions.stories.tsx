@@ -1,6 +1,6 @@
 import { expect } from "@storybook/jest";
 import type { Meta, StoryObj } from "@storybook/react";
-import { userEvent, within } from "@storybook/testing-library";
+import { userEvent, waitFor, within } from "@storybook/testing-library";
 import { Conditions, ConditionsProps } from "../conditions";
 import { conditionFormDrawer } from "./story-helpers/condition-form-drawer";
 import { conditionsObject } from "./story-helpers/conditions";
@@ -8,8 +8,8 @@ import { emptyConditions } from "./story-helpers/mocks/empty-conditions";
 import { otherConditions } from "./story-helpers/mocks/other-conditions";
 import { patientConditions } from "./story-helpers/mocks/patient-conditions";
 import { setupConditionMocks } from "./story-helpers/mocks/requests";
-import { CTWProvider } from "@/components/core/ctw-provider";
-import { PatientProvider } from "@/components/core/patient-provider";
+import { CTWProvider } from "@/components/core/providers/ctw-provider";
+import { PatientProvider } from "@/components/core/providers/patient-provider";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 
 type Props = ConditionsProps;
@@ -110,7 +110,7 @@ export const TestDelete: StoryObj<Props> = {
     await conditions.patientRecord.toHaveRowCount(1);
     conditions.toggleInactive();
     await conditions.patientRecord.toHaveRowCount(3);
-    conditions.patientRecord.toHaveRowWithText(0, /entered-in-error/i);
+    conditions.patientRecord.toHaveRowWithText(1, /entered-in-error/i);
     conditions.toggleInactive();
     await conditions.patientRecord.toHaveRowCount(1);
   },
@@ -123,11 +123,18 @@ export const TestViewHistory: StoryObj<Props> = {
     await conditions.patientRecord.toHaveRowCount(2);
     await conditions.patientRecord.viewHistory(0);
     const canvas = within(canvasElement);
+    await waitFor(() =>
+      expect(canvas.queryAllByRole("dialog")).toHaveLength(1)
+    );
     const drawer = within(canvas.getByRole("dialog"));
     expect(
       await drawer.findByText(/generalized anxiety disorder/i)
     ).toBeTruthy();
-    expect(drawer.getAllByRole("button", { name: /details/i })).toHaveLength(3);
+    await waitFor(() =>
+      expect(drawer.getAllByRole("button", { name: /details/i })).toHaveLength(
+        3
+      )
+    );
     userEvent.click(drawer.getAllByRole("button", { name: /close/i })[0]);
   },
 };

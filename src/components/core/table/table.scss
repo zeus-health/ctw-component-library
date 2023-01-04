@@ -70,6 +70,10 @@
   .ctw-table-action-column {
     @apply ctw-w-12 ctw-py-4 ctw-text-right;
   }
+
+  .ctw-table-row-actions {
+    @apply ctw-action-hover ctw-invisible ctw-absolute ctw-top-0 ctw-right-0 ctw-z-20 ctw-flex ctw-h-full ctw-items-center ctw-space-x-2 ctw-px-4;
+  }
 }
 
 .ctw-table-stacked {
@@ -105,8 +109,12 @@
       tr {
         @apply ctw-relative ctw-block ctw-p-3;
 
-        td:not(.ctw-table-full-length-row) {
+        td:not(.ctw-table-full-length-row):not(.ctw-table-row-actions) {
           @apply ctw-block ctw-w-full ctw-p-0 ctw-pr-7;
+        }
+
+        td.ctw-table-row-actions {
+          height: inherit;
         }
       }
     }

@@ -12,8 +12,10 @@ import {
   TableColumn,
   TableSort,
 } from "./table-helpers";
-import { TableRows } from "./table-rows";
+import { TableRows, TableRowsProps } from "./table-rows";
 import "./table.scss";
+
+export type RowActionsProps<T extends MinRecordItem> = { record: T };
 
 export type TableProps<T extends MinRecordItem> = {
   className?: cx.Argument;
@@ -21,16 +23,14 @@ export type TableProps<T extends MinRecordItem> = {
   columns: TableColumn<T>[];
   isLoading?: boolean;
   /** Displayed when we have 0 records. */
-  message?: string | ReactElement;
+  emptyMessage?: string | ReactElement;
   showTableHead?: boolean;
   stacked?: boolean;
-  handleRowClick?: (record: T) => void;
-  rowActions?: (record: T) => JSX.Element;
   sort?: TableSort;
   onSort?: (sort: TableSort) => void;
   hidePagination?: boolean;
   children?: ReactNode;
-};
+} & Pick<TableRowsProps<T>, "handleRowClick" | "RowActions">;
 
 export type TableBaseProps<T extends MinRecordItem> = Omit<
   TableProps<T>,
@@ -42,13 +42,13 @@ export const Table = <T extends MinRecordItem>({
   columns,
   records,
   isLoading = false,
-  message = "No records found",
+  emptyMessage: message = "No records found",
   showTableHead = true,
   stacked,
   sort,
   onSort,
   handleRowClick,
-  rowActions,
+  RowActions,
   hidePagination = false,
   children,
 }: TableProps<T>) => {
@@ -122,7 +122,7 @@ export const Table = <T extends MinRecordItem>({
               <TableRows
                 records={sortedRecords.slice(0, count)}
                 handleRowClick={handleRowClick}
-                rowActions={rowActions}
+                RowActions={RowActions}
                 columns={columns}
                 isLoading={isLoading}
                 emptyMessage={message}
