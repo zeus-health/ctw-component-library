@@ -234,7 +234,7 @@ function setupConditionModels(
 ): ConditionModel[] {
   const basicsMap = getIncludedBasics(bundle);
   return conditionResources.map(
-    (c) => new ConditionModel(c, undefined, basicsMap[c.id ?? ""])
+    (c) => new ConditionModel(c, undefined, basicsMap.get(c.id ?? ""))
   );
 }
 
