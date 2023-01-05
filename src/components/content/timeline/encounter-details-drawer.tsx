@@ -56,7 +56,12 @@ export const encounterData = (encounter: EncounterModel) => [
   { label: "Period Start", value: encounter.periodStart },
   { label: "Period End", value: encounter.periodEnd },
   { label: "Status", value: capitalize(encounter.status) },
-  { label: "Type", value: <CodingList codings={encounter.typeCodings} /> },
+  {
+    label: "Type",
+    value: encounter.typeCodings.length ? (
+      <CodingList codings={encounter.typeCodings} />
+    ) : undefined,
+  },
   { label: "Location", value: encounter.location },
   { label: "Participants", value: encounter.participants },
   { label: "Reason", value: encounter.reason },
