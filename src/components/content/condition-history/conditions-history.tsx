@@ -1,5 +1,5 @@
 import { isEqual, orderBy, uniqWith } from "lodash";
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useState } from "react";
 import { CollapsibleDataListProps } from "../../core/collapsible-data-list";
 import { Details } from "../../core/collapsible-data-list-details";
 import {
@@ -52,13 +52,16 @@ export function ConditionHistory({
   const [isHistoryLoading, setIsHistoryLoading] = useState(true);
 
   // Reducers
-  const [binaryDocumentState, updateBinaryDocumentState] = useReducer(
-    (data: BinaryDocument, partialData: Partial<BinaryDocument>) => ({
-      ...data,
-      ...partialData,
-    }),
-    DEFAULT_BINARY_DATA
-  );
+  // const [binaryDocumentState, updateBinaryDocumentState] = useReducer(
+  //   (data: BinaryDocument, partialData: Partial<BinaryDocument>) => ({
+  //     ...data,
+  //     ...partialData,
+  //   }),
+  //   DEFAULT_BINARY_DATA
+  // );
+
+  const [binaryDocumentState, setBinaryDocumentState] =
+    useState<BinaryDocument>(DEFAULT_BINARY_DATA);
 
   // Fetching
   const { getRequestContext } = useCTW();
@@ -68,7 +71,7 @@ export function ConditionHistory({
   const handleDocumentButtonOnClick = async (binaryId: string) => {
     const requestContext = await getRequestContext();
     const binaryDocument = await getBinaryDocument(requestContext, binaryId);
-    updateBinaryDocumentState({
+    setBinaryDocumentState({
       isModalOpen: true,
       rawBinary: binaryDocument,
     });
@@ -141,7 +144,12 @@ export function ConditionHistory({
       <CCDAModal
         isOpen={binaryDocumentState.isModalOpen}
         rawBinary={binaryDocumentState.rawBinary}
-        onClose={() => updateBinaryDocumentState({ isModalOpen: false })}
+        onClose={() =>
+          setBinaryDocumentState((prevState) => ({
+            ...prevState,
+            isModalOpen: false,
+          }))
+        }
       />
 
       <div className="ctw-space-y-6">
