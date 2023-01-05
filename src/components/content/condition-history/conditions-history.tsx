@@ -51,15 +51,6 @@ export function ConditionHistory({
     useState<CollapsibleDataListStackEntries>([]);
   const [isHistoryLoading, setIsHistoryLoading] = useState(true);
 
-  // Reducers
-  // const [binaryDocumentState, updateBinaryDocumentState] = useReducer(
-  //   (data: BinaryDocument, partialData: Partial<BinaryDocument>) => ({
-  //     ...data,
-  //     ...partialData,
-  //   }),
-  //   DEFAULT_BINARY_DATA
-  // );
-
   const [binaryDocumentState, setBinaryDocumentState] =
     useState<BinaryDocument>(DEFAULT_BINARY_DATA);
 
