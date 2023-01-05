@@ -226,7 +226,10 @@ const renderDocumentButton = (
 ) => (
   <>
     {binaryId && (
-      <DocumentButton onClick={() => handleDocumentButtonOnClick(binaryId)} />
+      <DocumentButton
+        onClick={() => handleDocumentButtonOnClick(binaryId)}
+        text="Source Document"
+      />
     )}
   </>
 );

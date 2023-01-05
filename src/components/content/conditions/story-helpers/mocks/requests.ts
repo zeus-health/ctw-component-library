@@ -3,7 +3,6 @@ import { rest } from "msw";
 import { ComponentType, createElement } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { conditionBinary } from "./condition-binary";
-import { provenanaceConditionHistory } from "./condition-history-provenance-ccda";
 import { heartConditions } from "./forms-data-conditions-search";
 import { historyChronsDisease } from "./history-crohns-disease";
 import { historyDermatitis } from "./history-dermatitis";
@@ -46,7 +45,6 @@ export function setupConditionMocks({
         mockConditionPut,
         mockPatientHistoryGet,
         mockConditionHistoryBinaryDocument,
-        mockConditionHistoryProvenanceForCondition,
         mockConditionsBasic,
         mockConditionVersionHistoryBundle,
         mockConditionProvenance,
@@ -72,32 +70,32 @@ const mockPatientGet = rest.get(
   "https://api.dev.zusapi.com/fhir/Patient",
   // Add ctx.delay(750), delay to show loading, we set this to 750ms to be
   // less than the default testing-library timeout of 1000ms.
-  (req, res, ctx) => res(ctx.delay(750), ctx.status(200), ctx.json(patient))
+  (_, res, ctx) => res(ctx.delay(750), ctx.status(200), ctx.json(patient))
 );
 
 const mockPatientHistoryGet = rest.get(
   "https://api.dev.zusapi.com/patient-history/messages",
-  (req, res, ctx) => res(ctx.status(200), ctx.json(patientHistoryMessage))
+  (_, res, ctx) => res(ctx.status(200), ctx.json(patientHistoryMessage))
 );
 
 const mockProvenancePost = rest.post(
   "https://api.dev.zusapi.com/fhir/Provenance",
-  (req, res, ctx) => res(ctx.status(200))
+  (_, res, ctx) => res(ctx.status(200))
 );
 
 const mockConditionHistoryBinaryDocument = rest.get(
   "https://api.dev.zusapi.com/fhir/Binary",
-  (req, res, ctx) => res(ctx.status(200), ctx.json(conditionBinary))
+  async (_, res, ctx) => res(ctx.status(200), ctx.json(conditionBinary))
 );
 
-const mockConditionHistoryProvenanceForCondition = rest.get(
-  "https://api.dev.zusapi.com/fhir/Provenance?target=Condition",
-  (req, res, ctx) => res(ctx.status(200), ctx.json(provenanaceConditionHistory))
+const mockConditionProvenance = rest.get(
+  "https://api.dev.zusapi.com/fhir/Provenance?target=Condition/:Condition",
+  async (_, res, ctx) => res(ctx.status(200), ctx.json(ProvenanceCondition))
 );
 
 const mockConditionSearch = rest.get(
   "https://api.dev.zusapi.com/forms-data/terminology/conditions",
-  (req, res, ctx) => res(ctx.status(200), ctx.json(heartConditions))
+  (_, res, ctx) => res(ctx.status(200), ctx.json(heartConditions))
 );
 
 // Mocked post will add the new condition to the
@@ -174,11 +172,6 @@ const mockConditionsBasic = rest.post(
     otherConditionsCache.total = otherConditionsCache.entry?.length;
     return res(ctx.status(200), ctx.json(newBasicResource));
   }
-);
-
-const mockConditionProvenance = rest.get(
-  "https://api.dev.zusapi.com/fhir/Provenance?target=Condition/:Condition",
-  async (req, res, ctx) => res(ctx.status(200), ctx.json(ProvenanceCondition))
 );
 
 // To handle batch request for conditions used to get version history.

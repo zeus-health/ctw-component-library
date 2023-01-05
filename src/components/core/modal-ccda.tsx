@@ -26,7 +26,7 @@ export const CCDAModal = ({
       {isXMLData && rawBinary?.data && (
         <div className="ctw-flex ctw-w-full ctw-space-x-4">
           <Base64BinaryField
-            value={rawBinary.data}
+            data={rawBinary.data}
             contentType={rawBinary.contentType}
           />
           <div className="ctw-ml-3 ctw-flex ctw-h-7 ctw-items-center">

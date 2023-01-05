@@ -1,9 +1,10 @@
 import { DOMParser } from "@xmldom/xmldom";
 import { Buffer } from "buffer";
-import { ChangeEvent, useMemo, useState } from "react";
+import { useMemo } from "react";
 import xpath from "xpath";
 import { CcdaViewer } from "./ccda_viewer";
 import "./styles.scss";
+import { DocumentButton } from "./document-button";
 
 const xmlTypes = ["/xml", "/xhtml+xml", "application/xml"];
 
@@ -11,20 +12,14 @@ const isSpecificContentType = (extensions: string[], contentType: string) =>
   extensions.some((extension) => contentType.includes(extension));
 
 interface Base64BinaryFieldProps {
-  value: string;
+  data: string;
   contentType: string;
 }
 
 export const Base64BinaryField = ({
-  value,
+  data,
   contentType,
 }: Base64BinaryFieldProps) => {
-  const decoded = true;
-  const [parsedCCDA, setParsedCCDA] = useState(true);
-
-  const handleChange = (event: ChangeEvent<HTMLInputElement>): void =>
-    setParsedCCDA(event.target.checked);
-
   const ccdaDoc = useMemo(() => {
     if (!isSpecificContentType(xmlTypes, contentType)) return undefined;
 
@@ -32,7 +27,7 @@ export const Base64BinaryField = ({
       locator: {},
       errorHandler: (_) => null,
     }).parseFromString(
-      Buffer.from(value, "base64").toString("utf8"),
+      Buffer.from(data, "base64").toString("utf8"),
       contentType
     );
 
@@ -41,36 +36,35 @@ export const Base64BinaryField = ({
     }
 
     return undefined;
-  }, [contentType, value]);
+  }, [contentType, data]);
 
-  const actions = [
-    {
-      label: "Parsed",
-      value: parsedCCDA,
-      event: handleChange,
-      display: Boolean(ccdaDoc),
-    },
-  ];
-  const ccdaDocument = parsedCCDA ? ccdaDoc : undefined;
+  function downloadDocument() {
+    const a = window.document.createElement("a");
+    a.href = window.URL.createObjectURL(
+      new Blob([Buffer.from(data, "base64").toString("utf8")], {
+        type: "text/xml",
+      })
+    );
+    a.download = "CCDA-XML-Document";
 
-  const getContent = () => {
-    if (ccdaDocument) return <CcdaViewer document={ccdaDocument} />;
+    // Append anchor to body.
+    document.body.appendChild(a);
+    a.click();
 
-    return <div className="ctw-ccda-base64-binary-text">{value}</div>;
-  };
+    // Remove anchor from body
+    document.body.removeChild(a);
+  }
+
   return (
     <div className="ctw-ccda-container">
       <div className="ctw-ccda-switch-container">
-        {actions.map(
-          (action) =>
-            action.display && (
-              <div key={action.label} className="ctw-cda-switch-wrapper">
-                <span className="ctw-flex" />
-              </div>
-            )
-        )}
+        <DocumentButton onClick={downloadDocument} text="Download XML" />
       </div>
-      {getContent()}
+      {ccdaDoc ? (
+        <CcdaViewer document={ccdaDoc} />
+      ) : (
+        <div className="ctw-ccda-base64-binary-text">{data}</div>
+      )}
     </div>
   );
 };
