@@ -1,7 +1,7 @@
 import type { DataListEntry } from "../core/data-list";
 import type { DrawerProps } from "../core/drawer";
 import type { MedicationStatementModel } from "@/fhir/models/medication-statement";
-import { capitalize } from "lodash";
+import { isFunction } from "lodash/fp";
 import { DataList, entryFromArray } from "../core/data-list";
 import { Drawer } from "../core/drawer";
 import { MedicationHistory } from "./medications/medication-history";
@@ -10,6 +10,7 @@ import { useLastPrescriber } from "@/fhir/medications";
 
 export type MedicationDrawerProps = {
   medication?: MedicationStatementModel;
+  onDismissal?: (m: MedicationStatementModel) => void;
 } & Pick<DrawerProps, "isOpen" | "onClose">;
 
 function getDataEntriesFromMedicationStatement(
@@ -18,7 +19,7 @@ function getDataEntriesFromMedicationStatement(
 ): DataListEntry[] {
   return medication
     ? [
-        { label: "Status", value: capitalize(medication.status) },
+        { label: "Status", value: medication.displayStatus },
         { label: "Last Fill Date", value: medication.lastFillDate },
         { label: "Quantity", value: medication.quantity },
         { label: "Days Supply", value: medication.daysSupply },
@@ -33,6 +34,7 @@ function getDataEntriesFromMedicationStatement(
 
 export const MedicationDrawer = ({
   medication,
+  onDismissal,
   ...drawerProps
 }: MedicationDrawerProps) => {
   const { lastPrescriber, isLoading } = useLastPrescriber(medication?.resource);
@@ -55,7 +57,19 @@ export const MedicationDrawer = ({
         </div>
       </Drawer.Body>
       <Drawer.Footer>
-        <div className="ctw-flex ctw-justify-end">
+        <div className="ctw-flex ctw-justify-end ctw-space-x-2">
+          {isFunction(onDismissal) && (
+            <button
+              type="button"
+              className="ctw-btn-primary"
+              onClick={() => {
+                onDismissal(medication);
+                drawerProps.onClose();
+              }}
+            >
+              Dismiss
+            </button>
+          )}
           <button
             type="button"
             className="ctw-btn-default"

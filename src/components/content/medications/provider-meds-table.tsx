@@ -46,7 +46,7 @@ export function ProviderMedsTable({
       sort(
         showInactive
           ? builderMedications
-          : builderMedications.filter((bm) => bm.status === "Active"),
+          : builderMedications.filter((bm) => bm.displayStatus === "Active"),
         pipe(get(sortColumn), toLower),
         sortOrder
       )
