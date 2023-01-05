@@ -1,6 +1,4 @@
-import { isEqual, orderBy, uniqWith } from "lodash";
 import { useEffect, useReducer, useState } from "react";
-import { CollapsibleDataListProps } from "../../core/collapsible-data-list";
 import { Details } from "../../core/collapsible-data-list-details";
 import {
   CollapsibleDataListStack,
@@ -10,6 +8,7 @@ import { CCDAModal } from "../../core/modal-ccda";
 import { useCTW } from "../../core/providers/ctw-provider";
 import { DocumentButton } from "../CCDA/document-button";
 import { ConditionHeader } from "../condition-header";
+import { applyConditionHistoryFilters } from "./condition-history-filters";
 import { conditionData, setupData } from "./condition-history-schema";
 import { Loading } from "@/components/core/loading";
 import { getIncludedResources } from "@/fhir/bundle";
@@ -75,45 +74,30 @@ export function ConditionHistory({
   };
 
   useEffect(() => {
-    let conditionsDataDeduped: CollapsibleDataListProps[] = [];
     async function load() {
       if (historyResponse.data) {
         const includedResources = getIncludedResources(
           historyResponse.data.bundle
         );
 
-        const conditionModels = historyResponse.data.conditions.map(
-          (c) => new ConditionModel(c, includedResources)
-        );
-
-        const sortedConditions = orderBy(
-          conditionModels,
-          (c) => c.resource.recordedDate ?? "",
-          "desc"
-        );
-
-        const filterEnteredinErrorConditions = sortedConditions.filter(
-          (c) => c.verificationStatus !== "entered-in-error"
-        );
-
-        conditionsDataDeduped = uniqWith(
-          filterEnteredinErrorConditions.map((model) => setupData(model)),
-          (a, b) => isEqual(a.data, b.data)
+        const conditionsDataDeduped = applyConditionHistoryFilters(
+          historyResponse.data.conditions,
+          includedResources
         );
 
         const requestContext = await getRequestContext();
         const provenanceBundles = await getProvenanceForConditions(
           requestContext,
-          [setupData(condition), ...conditionsDataDeduped]
+          [condition, ...conditionsDataDeduped]
         );
 
         let binaryId;
-        conditionsDataDeduped = conditionsDataDeduped.map(
+        const conditionsToDisplay = conditionsDataDeduped.map(
           (dedupdedCondition) => {
             binaryId = getBinaryId(provenanceBundles, dedupdedCondition.id);
 
             return {
-              ...dedupdedCondition,
+              ...setupData(dedupdedCondition),
               ...(binaryId && {
                 binaryId,
               }),
@@ -121,8 +105,8 @@ export function ConditionHistory({
           }
         );
 
-        setConditionsWithDate(conditionsDataDeduped.filter((d) => d.date));
-        setConditionsWithoutDate(conditionsDataDeduped.filter((d) => !d.date));
+        setConditionsWithDate(conditionsToDisplay.filter((d) => d.date));
+        setConditionsWithoutDate(conditionsToDisplay.filter((d) => !d.date));
         setIsHistoryLoading(false);
       }
     }
