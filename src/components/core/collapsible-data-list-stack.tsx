@@ -16,13 +16,17 @@ export const CollapsibleDataListStack = ({
   limit,
 }: CollapsibleListProp) => {
   const [showAll, setShowAll] = useState(!limit || entries.length <= limit);
+  const displayedEntries =
+    showAll || !limit ? entries : entries.slice(0, limit);
   return (
     <div className="ctw-space-y-3">
       <div className="ctw-text-base ctw-font-medium ctw-uppercase ctw-text-content-light">
         History
       </div>
-      {entries.map((entry) => (
-        <div key={`${entry.id}`}>
+      {displayedEntries.map((entry, idx) => (
+        // We can have have multiple items with the same condition id
+        // eslint-disable-next-line react/no-array-index-key
+        <div key={`${entry.id}-${idx}`}>
           <CollapsibleDataList
             id={entry.id}
             date={entry.date}
@@ -31,6 +35,7 @@ export const CollapsibleDataListStack = ({
             data={entry.data}
             hideEmpty={entry.hideEmpty}
             documentButton={entry.documentButton}
+            binaryId={entry.binaryId}
           />
         </div>
       ))}
@@ -38,7 +43,7 @@ export const CollapsibleDataListStack = ({
         <div className="ctw-text-center">
           <button
             type="button"
-            className="ctw-link-primary"
+            className="ctw-btn-primary"
             onClick={() => setShowAll(true)}
           >
             {/* We know limit must be set if showAll is false. */}

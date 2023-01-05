@@ -2,7 +2,7 @@ import { SearchParams } from "fhir-kit-client";
 import { pickBy } from "lodash";
 import { getIncludedResources } from "./bundle";
 import { searchBuilderRecords } from "./search-helpers";
-import { CTWRequestContext } from "@/components/core/ctw-context";
+import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { PatientModel } from "@/fhir/models/patient";
 import { errorResponse } from "@/utils/errors";
 

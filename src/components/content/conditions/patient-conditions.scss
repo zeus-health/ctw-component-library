@@ -38,4 +38,11 @@
   .ctw-pc-status {
     @apply ctw-text-base ctw-font-medium ctw-capitalize ctw-text-content-black;
   }
+
+  .ctw-pc-notes {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
 }

@@ -1,9 +1,14 @@
 import { FhirResource } from "fhir-kit-client";
 import { cloneDeep } from "lodash";
-import { CTWRequestContext } from "../core/ctw-context";
+import { CTWRequestContext } from "../core/providers/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
+import { recordProfileAction } from "@/fhir/basic";
+import { ConditionModel } from "@/fhir/models";
 import { SYSTEM_CONDITION_VERIFICATION_STATUS } from "@/fhir/system-urls";
-import { QUERY_KEY_PATIENT_CONDITIONS } from "@/utils/query-keys";
+import {
+  QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
+  QUERY_KEY_PATIENT_CONDITIONS,
+} from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 
 export const onConditionDelete = async (
@@ -37,4 +42,25 @@ export const onConditionDelete = async (
   }
 
   await queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]);
+};
+
+export const toggleArchive = async (
+  condition: ConditionModel,
+  requestContext: CTWRequestContext
+) => {
+  const existingBasic =
+    condition.getBasicResourceByAction("archive") ||
+    condition.getBasicResourceByAction("unarchive");
+  const profileAction = condition.isArchived ? "unarchive" : "archive";
+
+  await recordProfileAction(
+    existingBasic,
+    condition,
+    requestContext,
+    profileAction
+  );
+
+  // Refresh our data (this is really just needed to update
+  // otherProviderRecord state).
+  await queryClient.invalidateQueries([QUERY_KEY_OTHER_PROVIDER_CONDITIONS]);
 };

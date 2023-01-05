@@ -28,7 +28,7 @@ export function useConditionFilters() {
     return conditions.filter((c) => {
       if (filters.showHistoric) return true;
 
-      return ["Active", "Pending"].includes(c.status);
+      return ["Active", "Pending"].includes(c.displayStatus);
     });
   }
 

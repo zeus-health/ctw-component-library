@@ -10,7 +10,7 @@ import {
   SYSTEM_ZUS_UPI_RECORD_TYPE,
 } from "./system-urls";
 import { ResourceType, ResourceTypeString } from "./types";
-import { CTWRequestContext } from "@/components/core/ctw-context";
+import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 
 const MAX_COUNT = 250;
 
@@ -19,6 +19,8 @@ const THIRD_PARTY_TAGS = [
   `${SYSTEM_ZUS_THIRD_PARTY}|surescripts`,
   `${SYSTEM_ZUS_THIRD_PARTY}|commonwell`,
   `${SYSTEM_ZUS_THIRD_PARTY}|elation`,
+  `${SYSTEM_ZUS_THIRD_PARTY}|collective-medical`,
+  `${SYSTEM_ZUS_THIRD_PARTY}|quest-connector`,
 ];
 
 // Enumerating ALL of the lens tags.

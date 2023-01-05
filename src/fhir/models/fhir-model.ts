@@ -38,8 +38,8 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
   getBasicResourceByAction(profileAction: string): Basic | undefined {
     return find(this.revIncludes, {
       resourceType: "Basic",
-      meta: {
-        tag: [{ system: SYSTEM_ZUS_PROFILE_ACTION, code: profileAction }],
+      code: {
+        coding: [{ system: SYSTEM_ZUS_PROFILE_ACTION, code: profileAction }],
       },
     }) as Basic | undefined;
   }

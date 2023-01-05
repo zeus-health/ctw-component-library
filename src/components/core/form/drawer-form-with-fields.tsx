@@ -38,8 +38,7 @@ export type DrawerFormWithFieldsProps<T> = {
   title: string;
   header?: ReactNode;
   data: FormEntry[] | undefined;
-  schema: AnyZodSchema;
-} & Pick<DrawerFormProps<T>, "onClose" | "isOpen" | "action">;
+} & Pick<DrawerFormProps<T>, "onClose" | "isOpen" | "action" | "schema">;
 
 export type FormActionTypes = "Edit" | "Add";
 

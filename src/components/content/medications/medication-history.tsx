@@ -69,7 +69,7 @@ function createMedicationStatementCard(medication: MedicationModel) {
     data: [
       {
         label: "Status",
-        value: capitalize(medStatement.status),
+        value: capitalize(medStatement.displayStatus),
       },
       {
         label: "Instructions",

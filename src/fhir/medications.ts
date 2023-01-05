@@ -3,6 +3,7 @@ import { cloneDeep, uniqWith } from "lodash";
 import {
   compact,
   filter,
+  find,
   get,
   groupBy,
   last,
@@ -34,9 +35,9 @@ import {
   LENS_EXTENSION_MEDICATION_REFILLS,
   SYSTEM_ZUS_UNIVERSAL_ID,
 } from "./system-urls";
-import { ResourceMap, ResourceTypeString } from "./types";
-import { CTWRequestContext } from "@/components/core/ctw-context";
-import { useQueryWithPatient } from "@/components/core/patient-provider";
+import { ResourceTypeString } from "./types";
+import { CTWRequestContext } from "@/components/core/providers/ctw-context";
+import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { MedicationModel } from "@/fhir/models/medication";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { PatientModel } from "@/fhir/models/patient";
@@ -57,7 +58,7 @@ type MedicationFilter = {
   informationSourceNot?: InformationSource;
 };
 
-export type MedicationBuilder = {
+export type MedicationResults = {
   bundle: fhir4.Bundle;
   medications: fhir4.MedicationStatement[];
 };
@@ -96,7 +97,7 @@ export async function getBuilderMedications(
   requestContext: CTWRequestContext,
   patient: PatientModel,
   keys: object[] = []
-): Promise<MedicationBuilder> {
+): Promise<MedicationResults> {
   const [searchFilters = {}] = keys;
 
   try {
@@ -127,8 +128,8 @@ be in the returned medications, such as medications with no RxNorm code. */
 export async function getActiveMedications(
   requestContext: CTWRequestContext,
   patient: PatientModel,
-  keys = []
-): Promise<MedicationBuilder> {
+  keys: Record<string, string>[] = []
+): Promise<MedicationResults> {
   const [searchFilters = {}] = keys;
 
   try {
@@ -166,37 +167,34 @@ export function filterMedicationsWithNoRxNorms(
   );
 }
 
-// Splits medications into those that the builder already knows about ("Provider Medications")
-// and those that they do not know about ("Other Provider Medications").
+// Splits medications into those that the builder already knows about ("Provider Medications"),
+// those that they do not know about ("Other Provider Medications"), and those they didn't know
+// about originally and then dismissed ("Dismissed Other Provider Medications").
 export function splitMedications(
-  activeMedications: MedicationStatement[],
-  builderOwnedMedications: MedicationStatement[],
-  includedResources?: ResourceMap
+  activeMedications: MedicationStatementModel[],
+  builderOwnedMedications: MedicationStatementModel[]
 ) {
   // Get active medications where there does not exist a matching builder owned record.
   const otherProviderMedications = activeMedications.filter(
     (activeMed) =>
-      !builderOwnedMedications.some(
-        (builderMed) =>
-          getIdentifyingRxNormCode(builderMed, includedResources) ===
-          getIdentifyingRxNormCode(activeMed, includedResources)
+      !(
+        activeMed.isArchived ||
+        builderOwnedMedications.some(
+          (builderMed) => builderMed.rxNorm === activeMed.rxNorm
+        )
       )
   );
 
   // Get builder owned medications and splash in some data from lens meds if available.
   const builderMedications = builderOwnedMedications.map((m) => {
-    const activeMed = activeMedications.find(
-      (a) =>
-        getIdentifyingRxNormCode(a, includedResources) ===
-        getIdentifyingRxNormCode(m, includedResources)
-    );
+    const activeMed = find((a) => a.rxNorm === m.rxNorm, activeMedications);
 
     if (!activeMed) {
       return m;
     }
 
     // If we did find an active med then copy the builder med and add in the lens extensions.
-    const builderMed = cloneDeep(m);
+    const builderMedResource = cloneDeep(m.resource);
 
     const LENS_MEDICATION_EXTENSIONS = [
       LENS_EXTENSION_MEDICATION_LAST_FILL_DATE,
@@ -207,24 +205,37 @@ export function splitMedications(
       LENS_EXTENSION_MEDICATION_LAST_PRESCRIBER,
     ];
 
-    builderMed.extension = activeMed.extension?.filter((x) =>
+    builderMedResource.extension = activeMed.resource.extension?.filter((x) =>
       LENS_MEDICATION_EXTENSIONS.includes(x.url)
     );
 
     const medHistory = cloneDeep(
-      activeMed.extension?.find((x) => x.url === LENS_EXTENSION_AGGREGATED_FROM)
+      find(
+        { url: LENS_EXTENSION_AGGREGATED_FROM },
+        activeMed.resource.extension
+      )
     );
     if (medHistory) {
       // To avoid confusion about the lens extension (since "aggregated from" doesn't really
       // make sense on this builder record), use a different extension URL.
       medHistory.url = CTW_EXTENSION_LENS_AGGREGATED_FROM;
-      builderMed.extension?.push(medHistory);
+      builderMedResource.extension?.push(medHistory);
     }
 
-    return builderMed;
+    return new MedicationStatementModel(
+      builderMedResource,
+      m.includedResources,
+      m.revIncludes
+    );
   });
-
-  return { builderMedications, otherProviderMedications };
+  const dismissedOtherProviderMedications = otherProviderMedications.filter(
+    (m) => m.isArchived
+  );
+  return {
+    builderMedications,
+    otherProviderMedications,
+    dismissedOtherProviderMedications,
+  };
 }
 
 export function useMedicationHistory(medication?: fhir4.MedicationStatement) {

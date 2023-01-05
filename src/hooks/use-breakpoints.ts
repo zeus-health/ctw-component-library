@@ -1,9 +1,21 @@
-import useResizeObserver from "@react-hook/resize-observer";
+import useResizeObserverTemp from "@react-hook/resize-observer";
 import { mapValues } from "lodash";
 import { RefObject, useState } from "react";
 import { useIsomorphicLayoutEffect } from "./use-isomorphic-layout-effect";
-import { useCTW } from "@/components/core/ctw-provider";
+import { useCTW } from "@/components/core/providers/ctw-provider";
 import { defaultBreakpoints } from "@/styles/tailwind.theme";
+
+// This is an ugly hack / work around for a SSR/CommonJS/build
+// issue where useResizeObserver is getting compiled to
+// foo = require("@react-hook/resize-observer")
+// instead of
+// foo = require("@react-hook/resize-observer").default
+// causing a "foo is not a function" error.
+// This shouldn't be a problem when using ES Modules or for
+// libraries that don't use default exports!
+const useResizeObserver: typeof useResizeObserverTemp =
+  // @ts-ignore
+  useResizeObserverTemp.default || useResizeObserverTemp;
 
 type BreakpointKeys = keyof typeof defaultBreakpoints;
 export type Breakpoints = Record<BreakpointKeys, boolean>;

@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import { toLower } from "lodash/fp";
 import { z } from "zod";
 import { MedicationsAutoComplete } from "../medications-autocomplete";
 import { FormEntry } from "@/components/core/form/drawer-form-with-fields";
@@ -11,20 +12,18 @@ export const getMedicationFormData = (
     label: "Subject",
     value: medication.subjectID,
     field: "subjectID",
-    readonly: true,
     hidden: true,
   },
   {
     label: "Date Asserted",
     value: format(new Date(), "P"),
     field: "dateAsserted",
-    readonly: true,
+    hidden: true,
   },
   {
     label: "Medication",
     field: "medication",
     value: medication.display,
-    readonly: false,
     render: (readonly: boolean | undefined, inputProps) => (
       <MedicationsAutoComplete
         readonly={readonly}
@@ -35,7 +34,7 @@ export const getMedicationFormData = (
   },
   {
     label: "Latest Status",
-    value: medication.status,
+    value: toLower(medication.status),
     field: "status",
   },
   {

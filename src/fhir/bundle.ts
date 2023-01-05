@@ -68,7 +68,7 @@ export function getIncludedResources(bundle: FhirResource): ResourceMap {
 // of associated basic resources.
 // This way we can easily lookup a specific resources associated basic resources.
 export function getIncludedBasics(bundle: FhirResource): ResourceArrayMap {
-  const resources = {} as ResourceArrayMap;
+  const resources = new Map() as ResourceArrayMap;
   if (!isBundle(bundle) || !bundle.entry) {
     return resources;
   }
@@ -86,10 +86,10 @@ export function getIncludedBasics(bundle: FhirResource): ResourceArrayMap {
     const refId = last(resource.subject?.reference?.split("/"));
     if (!refId) return;
 
-    if (!resources[refId]) {
-      resources[refId] = [];
+    if (!resources.has(refId)) {
+      resources.set(refId, []);
     }
-    resources[refId]?.push(resource);
+    resources.get(refId)?.push(resource);
   });
 
   return resources;

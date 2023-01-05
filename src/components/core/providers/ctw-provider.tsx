@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { version } from "../../../package.json";
+import { version } from "../../../../package.json";
 import {
   CTWRequestContext,
   CTWState,
@@ -25,7 +25,7 @@ import {
 } from "@/styles/tailwind.theme";
 import { claimsBuilderId } from "@/utils/auth";
 import { ctwFetch, queryClient } from "@/utils/request";
-import "./main.scss";
+import "../main.scss";
 
 export type Env = "dev" | "sandbox" | "production";
 
