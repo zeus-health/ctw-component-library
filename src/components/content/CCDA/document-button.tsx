@@ -1,5 +1,5 @@
-import { DocumentIcon } from "@heroicons/react/outline";
 import { MouseEventHandler } from "react";
+import { DocumentIcon } from "@/components/core/document-icon";
 
 export type DocumentButtonProps = {
   onClick?: MouseEventHandler<HTMLButtonElement> | undefined;

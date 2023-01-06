@@ -1,6 +1,6 @@
 import { DOMParser } from "@xmldom/xmldom";
 import { Buffer } from "buffer";
-import { useMemo } from "react";
+import { useMemo, useRef, useState } from "react";
 import xpath from "xpath";
 import { CcdaViewer } from "./ccda_viewer";
 import "./styles.scss";
@@ -38,27 +38,35 @@ export const Base64BinaryField = ({
     return undefined;
   }, [contentType, data]);
 
+  const ref = useRef<HTMLAnchorElement>(null);
+  const [url, setFileUrl] = useState<string>();
+  const [name, setFileName] = useState<string>();
+
   function downloadDocument() {
-    const a = window.document.createElement("a");
-    a.href = window.URL.createObjectURL(
+    const objectURL = URL.createObjectURL(
       new Blob([Buffer.from(data, "base64").toString("utf8")], {
         type: "text/xml",
       })
     );
-    a.download = "CCDA-XML-Document";
-
-    // Append anchor to body.
-    document.body.appendChild(a);
-    a.click();
-
-    // Remove anchor from body
-    document.body.removeChild(a);
+    setFileUrl(objectURL);
+    setFileName("CCDA-condition");
+    ref.current?.click();
+    if (url) {
+      URL.revokeObjectURL(url);
+    }
   }
 
   return (
     <div className="ctw-ccda-container">
       <div className="ctw-ccda-switch-container">
-        <DocumentButton onClick={downloadDocument} text="Download XML" />
+        <a
+          href={url}
+          ref={ref}
+          download={name}
+          className="ctw-decoration-none ctw-flex ctw-w-fit"
+        >
+          <DocumentButton onClick={downloadDocument} text="Download XML" />
+        </a>
       </div>
       {ccdaDoc ? (
         <CcdaViewer document={ccdaDoc} />

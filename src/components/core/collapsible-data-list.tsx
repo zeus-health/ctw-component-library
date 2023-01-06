@@ -1,8 +1,9 @@
-import { ChevronRightIcon, DocumentIcon } from "@heroicons/react/outline";
+import { ChevronRightIcon } from "@heroicons/react/outline";
 import cx from "classnames";
 import { ReactNode, useState } from "react";
 import { Details } from "./collapsible-data-list-details";
 import "./collapsible-data-list.scss";
+import { DocumentIcon } from "@/components/core/document-icon";
 
 export type CollapsibleDataListEntry = {
   label: string;
