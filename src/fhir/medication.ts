@@ -70,8 +70,24 @@ export function getIdentifyingRxNormCoding(
     includedResources
   );
 
-  const excludedExtensions = ["ActiveIngredient", "BrandName"];
+  // look for an explicitly defined SCD on the medication
+  const scd = codeableConcept?.coding?.find(
+    (code) =>
+      // must be an RxNorm code
+      code.system === SYSTEM_RXNORM &&
+      code.extension?.some(
+        (e) =>
+          e.url === SYSTEM_ENRICHMENT &&
+          e.valueString === "ClinicalDrug_TTY_SCD"
+      )
+  );
 
+  if (scd && scd.code !== "UNK") {
+    return scd;
+  }
+
+  // fall back to whatever RxNorm is available that isn't a brand or ingredient
+  const excludedExtensions = ["ActiveIngredient", "BrandName"];
   return codeableConcept?.coding?.find(
     (code) =>
       // must be an RxNorm code
