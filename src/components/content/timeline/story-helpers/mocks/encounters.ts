@@ -463,8 +463,8 @@ export const encounters: fhir4.Bundle = {
         ],
         status: "finished",
         class: {
-          system: "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
-          code: "UNK",
+          system: "urn:oid:2.16.840.1.113883.5.4",
+          code: "EMER",
         },
         type: [
           {

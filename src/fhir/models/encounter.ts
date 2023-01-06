@@ -6,6 +6,11 @@ import { SYSTEM_ACT_CODE } from "../system-urls";
 import { FHIRModel } from "./fhir-model";
 
 export class EncounterModel extends FHIRModel<fhir4.Encounter> {
+  get class(): string | undefined {
+    const { display, code } = this.resource.class;
+    return display ?? code !== "UNK" ? code : undefined;
+  }
+
   get diagnosis(): string | undefined {
     const diagnoses = compact(
       this.resource.diagnosis?.map((d) => d.condition.display)
