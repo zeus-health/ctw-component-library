@@ -79,10 +79,12 @@ export function getIdentifyingRxNormCoding(
         (e) =>
           e.url === SYSTEM_ENRICHMENT &&
           e.valueString === "ClinicalDrug_TTY_SCD"
-      )
+      ) &&
+      code.code &&
+      code.code !== "UNK"
   );
 
-  if (scd && scd.code !== "UNK") {
+  if (scd) {
     return scd;
   }
 
