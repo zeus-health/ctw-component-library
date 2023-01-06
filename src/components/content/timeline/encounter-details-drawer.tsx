@@ -56,6 +56,7 @@ export const encounterData = (encounter: EncounterModel) => [
   { label: "Period Start", value: encounter.periodStart },
   { label: "Period End", value: encounter.periodEnd },
   { label: "Status", value: capitalize(encounter.status) },
+  { label: "Class", value: encounter.class },
   {
     label: "Type",
     value: encounter.typeCodings.length ? (
