@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 0.38.1
+
+### Patch Changes
+
+- 4600f9b: Add encounter class to encounter details drawer.
+- 2ff4690: More explicitly targeting SCD on summary med
+
 ## 0.38.0
 
 ### Minor Changes
