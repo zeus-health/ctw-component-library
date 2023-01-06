@@ -1,9 +1,9 @@
-export type SVGDocumentProps = {
+export type DocumentIconProps = {
   className: string;
   height: number;
 };
 
-export const SVGDocument = ({ className, height }: SVGDocumentProps) => (
+export const DocumentIcon = ({ className, height }: DocumentIconProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 448 512"

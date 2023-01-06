@@ -1,9 +1,8 @@
-import { ChevronRightIcon } from "@heroicons/react/outline";
+import { ChevronRightIcon, DocumentIcon } from "@heroicons/react/outline";
 import cx from "classnames";
 import { ReactNode, useState } from "react";
 import { Details } from "./collapsible-data-list-details";
 import "./collapsible-data-list.scss";
-import { SVGDocument } from "./svg-document";
 
 export type CollapsibleDataListEntry = {
   label: string;
@@ -88,7 +87,7 @@ const DetailSummary = ({
       </div>
       <div className="ctw-flex ctw-items-center ctw-space-x-3">
         {binaryId && (
-          <SVGDocument
+          <DocumentIcon
             className="ctw-fill-content-light hover:ctw-fill-content-light"
             height={16}
           />
