@@ -1,5 +1,18 @@
 # ctw-component-library
 
+## 0.38.0
+
+### Minor Changes
+
+- 96485e3: Added an action to dismiss records from other provider medications table.
+
+### Patch Changes
+
+- 3a1ea81: WIP: New patient timeline (encounters) table.
+- 8a8d85f: Change deduping logic in history drawer so that enriched records will now no longer cause dupes to show.
+- 5d90126: Add timeline/encounter details.
+- d56f3b5: Updating list of 3rd party tags
+
 ## 0.37.1
 
 ### Patch Changes
