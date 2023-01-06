@@ -10,7 +10,7 @@ export const patientTimelineColumns: TableColumn<EncounterModel>[] = [
         <div className="ctw-pt-title group-hover:ctw-underline">
           {encounter.periodStart}
         </div>
-        <div className="ctw-pt-chapter">{encounter.type}</div>
+        <div className="ctw-pt-chapter">{encounter.typeDisplay}</div>
       </div>
     ),
   },
