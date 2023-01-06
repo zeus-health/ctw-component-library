@@ -534,6 +534,18 @@ export const encounters: fhir4.Bundle = {
           system: "http://unitsofmeasure.org",
           code: "min",
         },
+        reasonCode: [
+          {
+            coding: [
+              {
+                system: "http://snomed.info/sct",
+                code: "404684003",
+                display: "Clinical finding (finding)",
+              },
+            ],
+            text: "Clinical finding",
+          },
+        ],
         diagnosis: [
           {
             condition: {
