@@ -19,7 +19,7 @@ export function PatientConditionsHeader({
   }
 
   const activeCount = otherConditions.filter(
-    (condition) => condition.status === "Active"
+    (condition) => condition.displayStatus === "Active"
   ).length;
 
   return (

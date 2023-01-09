@@ -1,5 +1,5 @@
 import { SearchParams } from "fhir-kit-client";
-import { orderBy } from "lodash";
+import { compact, find, orderBy } from "lodash";
 import { getIncludedBasics } from "./bundle";
 import { CodePreference } from "./codeable-concept";
 import {
@@ -114,6 +114,49 @@ export function useOtherProviderConditions() {
   );
 }
 
+const historyRequestTemplate = (id: string) => ({
+  request: {
+    method: "GET",
+    url: `/Condition/${id}/_history`,
+  },
+});
+
+export const getConditionVersionHistory = async (
+  requestContext: CTWRequestContext,
+  searchParams: SearchParams
+) => {
+  const response = await searchBuilderRecords(
+    "Condition",
+    requestContext,
+    searchParams
+  );
+
+  const builderIds = response.resources.map(
+    // The only time that a resource does not have an id is when it is being submitted to the server using a create operation.
+    (resource) => resource.id
+  ) as string[];
+
+  if (!builderIds.length) {
+    return undefined;
+  }
+
+  const bundle: fhir4.Bundle = {
+    resourceType: "Bundle",
+    id: "bundle-history-conditions",
+    type: "batch",
+    entry: builderIds.map((id) =>
+      historyRequestTemplate(id)
+    ) as fhir4.BundleEntry<fhir4.FhirResource>[],
+  };
+
+  return requestContext.fhirClient.batch({
+    body: {
+      ...bundle,
+      type: "batch",
+    },
+  });
+};
+
 export function useConditionHistory(condition?: ConditionModel) {
   return useQueryWithPatient(
     QUERY_KEY_CONDITION_HISTORY,
@@ -148,7 +191,33 @@ export function useConditionHistory(condition?: ConditionModel) {
           searchParams
         );
 
-        return { conditions, bundle };
+        const versionHistoryBundle = await getConditionVersionHistory(
+          requestContext,
+          searchParams
+        );
+
+        const conditionVersions: fhir4.BundleEntry[] = [];
+        if (versionHistoryBundle && versionHistoryBundle.entry) {
+          versionHistoryBundle.entry.forEach(
+            (bundleEntry: fhir4.BundleEntry) => {
+              const { resource } = bundleEntry;
+              if (resource?.resourceType === "Bundle" && resource.entry) {
+                conditionVersions.push(...resource.entry);
+              }
+            }
+          );
+        }
+
+        const combinedConditions = conditions.concat(
+          ...(compact(
+            conditionVersions.map((r) => r.resource)
+          ) as fhir4.Condition[])
+        );
+
+        return {
+          conditions: combinedConditions,
+          bundle,
+        };
       } catch (e) {
         throw new Error(
           `Failed fetching condition history information for patient: ${e}`
@@ -165,7 +234,7 @@ function setupConditionModels(
 ): ConditionModel[] {
   const basicsMap = getIncludedBasics(bundle);
   return conditionResources.map(
-    (c) => new ConditionModel(c, undefined, basicsMap[c.id ?? ""])
+    (c) => new ConditionModel(c, undefined, basicsMap.get(c.id ?? ""))
   );
 }
 
@@ -182,27 +251,28 @@ function filterAndSort(conditions: ConditionModel[]): ConditionModel[] {
   );
 }
 
-export type SourceDocumentMap = Map<string, BinaryDocumentData>;
-
-export type BinaryDocumentData = {
-  xmlBinary: fhir4.Binary | undefined;
-  isBinary: boolean;
-};
-
-export async function getBinary(
+export async function getBinaryDocument(
   requestContext: CTWRequestContext,
-  conditionsData?: CollapsibleDataListProps[]
-): Promise<SourceDocumentMap> {
-  // Call to Provenance for the conditionID to see if Binary exists. If it exists, use it to obtain the binary document and return that.
+  binaryId: string
+) {
+  const { env, authToken } = requestContext;
+  const endpointBinaryUrl = `${getZusApiBaseUrl(env)}/fhir/${binaryId}`;
 
-  const binaryObjects: Map<string, BinaryDocumentData> = new Map();
+  const response = await fetch(endpointBinaryUrl, {
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+      accept: "application/json",
+      "Content-Type": "application/json+fhir",
+    },
+  });
+  return response.json();
+}
 
-  // No conditions in the history drawer.
-  if (!conditionsData) {
-    return binaryObjects;
-  }
-
-  await Promise.all(
+export async function getProvenanceForConditions(
+  requestContext: CTWRequestContext,
+  conditionsData: CollapsibleDataListProps[]
+) {
+  const data = await Promise.all(
     conditionsData.map(async (condition) => {
       const endpointConditionsUrl = `${getZusApiBaseUrl(
         requestContext.env
@@ -212,33 +282,53 @@ export async function getBinary(
           Authorization: `Bearer ${requestContext.authToken}`,
         },
       });
-      const conditionsJSON = await bundle.json();
-
-      // The role should be of source otherwise can't be trusted to be provide the correct and truthy binary.
-      let documentBinary: fhir4.Binary | undefined;
-      if (conditionsJSON.entry?.[0].resource.entity?.[0].role === "source") {
-        const binaryID =
-          conditionsJSON.entry[0].resource.entity[0].what.reference;
-        const endpointBinaryUrl = `${getZusApiBaseUrl(
-          requestContext.env
-        )}/fhir/${binaryID}`;
-        const response = await fetch(endpointBinaryUrl, {
-          headers: {
-            Authorization: `Bearer ${requestContext.authToken}`,
-            accept: "application/json",
-            "Content-Type": "application/json+fhir",
-          },
-        });
-        documentBinary = await response.json();
-      }
-
-      const documents = {
-        xmlBinary: documentBinary || undefined,
-        isBinary: documentBinary?.data !== undefined,
-      } as BinaryDocumentData;
-      binaryObjects.set(condition.id, documents);
+      return bundle.json();
     })
   );
 
-  return binaryObjects;
+  return data;
 }
+
+export function getBinaryId(
+  provenanceBundles: fhir4.Bundle[],
+  targetConditionId: string
+): string | undefined {
+  let binaryId;
+
+  provenanceBundles.forEach((bundle) => {
+    if (bundle.entry) {
+      const link = find(bundle.link, { relation: "self" });
+      if (link) {
+        const decodedUrl = decodeURIComponent(link.url).split("/");
+        const conditionId = decodedUrl[decodedUrl.length - 1];
+
+        const binaryElem = retrieveBinaryDocumentElement(
+          bundle.entry,
+          conditionId,
+          targetConditionId
+        ) as fhir4.BundleEntry<fhir4.Provenance> | undefined;
+        if (binaryElem && binaryElem.resource?.entity) {
+          binaryId = binaryElem.resource.entity[0].what.reference;
+        }
+      }
+    }
+  });
+  return binaryId;
+}
+
+const retrieveBinaryDocumentElement = (
+  bundleEntry: fhir4.BundleEntry<fhir4.FhirResource>[],
+  conditionId: string,
+  targetConditionId: string
+) =>
+  bundleEntry.find((entry) => {
+    if (
+      entry.resource?.resourceType === "Provenance" &&
+      entry.resource.entity
+    ) {
+      const hasDocument = entry.resource.entity[0].role === "source";
+      const idMatch = conditionId === targetConditionId;
+      return idMatch && hasDocument;
+    }
+    return false;
+  });
