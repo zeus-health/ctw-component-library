@@ -41,8 +41,12 @@ export const Base64BinaryField = ({
   }, [contentType, data]);
 
   const ref = useRef<HTMLAnchorElement>(null);
-  const [url, setFileUrl] = useState<string>();
-  const [name, setFileName] = useState<string>();
+  const [fileUrl, setFileUrl] = useState<string>();
+  const [fileTitle, setFileTitle] = useState<string>();
+  // Clean up any previously created file.
+  if (fileUrl) {
+    URL.revokeObjectURL(fileUrl);
+  }
 
   function downloadDocument() {
     const objectURL = URL.createObjectURL(
@@ -51,20 +55,17 @@ export const Base64BinaryField = ({
       })
     );
     setFileUrl(objectURL);
-    setFileName(`CCDA-${fileName}`);
+    setFileTitle(`CCDA-${fileName}`);
     ref.current?.click();
-    if (url) {
-      URL.revokeObjectURL(url);
-    }
   }
 
   return (
     <div className="ctw-ccda-container">
       <div className="ctw-ccda-switch-container">
         <a
-          href={url}
+          href={fileUrl}
           ref={ref}
-          download={name}
+          download={fileTitle}
           className="ctw-decoration-none ctw-flex ctw-w-fit"
         >
           <DocumentButton onClick={downloadDocument} text="Download XML" />

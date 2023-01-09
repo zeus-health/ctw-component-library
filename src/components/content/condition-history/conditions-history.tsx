@@ -40,18 +40,18 @@ export function ConditionHistory({
     useState<CollapsibleDataListStackEntries>([]);
   const [isHistoryLoading, setIsHistoryLoading] = useState(true);
 
-  const [binaryDocument, setBinaryDocument] = useState<
-    fhir4.Binary | undefined
-  >();
+  const [binaryDocument, setBinaryDocument] = useState<fhir4.Binary>();
 
-  const [ccdaViewerTitle, setCCDAViewerTitle] = useState<string | undefined>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [ccdaViewerTitle, setCCDAViewerTitle] = useState<string>();
 
   // Fetching
   const { getRequestContext } = useCTW();
   const historyResponse = useConditionHistory(condition);
 
   // Handlers
-  const handleDocumentButtonOnClick = async (
+  const onClick = async (
     binaryId: string,
     conditionDisplayName?: string | undefined
   ) => {
@@ -61,6 +61,7 @@ export function ConditionHistory({
       binaryId
     );
     setBinaryDocument(binaryDocumentResponse);
+    setIsModalOpen(true);
     if (conditionDisplayName) {
       setCCDAViewerTitle(conditionDisplayName);
     }
@@ -119,7 +120,7 @@ export function ConditionHistory({
         isOpen={!!binaryDocument}
         fileName={ccdaViewerTitle}
         rawBinary={binaryDocument}
-        onClose={() => setBinaryDocument(undefined)}
+        onClose={() => setIsModalOpen(false)}
       />
 
       <div className="ctw-space-y-6">
@@ -136,7 +137,7 @@ export function ConditionHistory({
           conditionsWithDate={conditionsWithDate}
           conditionsWithoutDate={conditionsWithoutDate}
           historyIsLoading={isHistoryLoading}
-          handleDocumentButtonOnClick={handleDocumentButtonOnClick}
+          onClick={onClick}
         />
       </div>
     </>
@@ -147,14 +148,14 @@ type HistoryRecordsProps = {
   conditionsWithDate: CollapsibleDataListStackEntries;
   conditionsWithoutDate: CollapsibleDataListStackEntries;
   historyIsLoading: boolean;
-  handleDocumentButtonOnClick: (binaryId: string) => Promise<void>;
+  onClick: (binaryId: string) => Promise<void>;
 };
 
 const HistoryRecords = ({
   conditionsWithDate,
   conditionsWithoutDate,
   historyIsLoading,
-  handleDocumentButtonOnClick,
+  onClick,
 }: HistoryRecordsProps) => {
   if (
     conditionsWithDate.length === 0 &&
@@ -174,7 +175,7 @@ const HistoryRecords = ({
           ...entry,
           documentButton: renderDocumentButton(
             entry.binaryId,
-            handleDocumentButtonOnClick,
+            onClick,
             entry.title
           ),
         }))}
@@ -188,7 +189,7 @@ const HistoryRecords = ({
               ...entry,
               documentButton: renderDocumentButton(
                 entry.binaryId,
-                handleDocumentButtonOnClick,
+                onClick,
                 entry.title
               ),
             }))}
@@ -202,7 +203,7 @@ const HistoryRecords = ({
 
 const renderDocumentButton = (
   binaryId: string | undefined,
-  handleDocumentButtonOnClick: (
+  onClick: (
     binaryId: string,
     conditionDisplayName: string | undefined
   ) => Promise<void>,
@@ -211,9 +212,7 @@ const renderDocumentButton = (
   <>
     {binaryId && (
       <DocumentButton
-        onClick={() =>
-          handleDocumentButtonOnClick(binaryId, conditionDisplayName)
-        }
+        onClick={() => onClick(binaryId, conditionDisplayName)}
         text="Source Document"
       />
     )}
