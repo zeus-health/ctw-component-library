@@ -117,7 +117,7 @@ export function ConditionHistory({
   return (
     <>
       <CCDAModal
-        isOpen={!!binaryDocument}
+        isOpen={isModalOpen}
         fileName={ccdaViewerTitle}
         rawBinary={binaryDocument}
         onClose={() => setIsModalOpen(false)}
