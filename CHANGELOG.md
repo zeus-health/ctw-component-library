@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.38.2
+
+### Patch Changes
+
+- 3bf7f39: Update CCDA viewer with download xml functionality and styling features.
+
 ## 0.38.1
 
 ### Patch Changes
