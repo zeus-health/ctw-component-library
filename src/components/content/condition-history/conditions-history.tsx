@@ -28,16 +28,6 @@ export type ConditionHistoryProps = {
   onEdit?: () => void;
 };
 
-export type BinaryDocument = {
-  isModalOpen: boolean;
-  rawBinary: fhir4.Binary | undefined;
-};
-
-const DEFAULT_BINARY_DATA = {
-  isModalOpen: false,
-  rawBinary: undefined,
-};
-
 export function ConditionHistory({
   condition,
   onClose,
@@ -50,21 +40,30 @@ export function ConditionHistory({
     useState<CollapsibleDataListStackEntries>([]);
   const [isHistoryLoading, setIsHistoryLoading] = useState(true);
 
-  const [binaryDocumentState, setBinaryDocumentState] =
-    useState<BinaryDocument>(DEFAULT_BINARY_DATA);
+  const [binaryDocument, setBinaryDocument] = useState<
+    fhir4.Binary | undefined
+  >();
+
+  const [ccdaViewerTitle, setCCDAViewerTitle] = useState<string | undefined>();
 
   // Fetching
   const { getRequestContext } = useCTW();
   const historyResponse = useConditionHistory(condition);
 
   // Handlers
-  const handleDocumentButtonOnClick = async (binaryId: string) => {
+  const handleDocumentButtonOnClick = async (
+    binaryId: string,
+    conditionDisplayName?: string | undefined
+  ) => {
     const requestContext = await getRequestContext();
-    const binaryDocument = await getBinaryDocument(requestContext, binaryId);
-    setBinaryDocumentState({
-      isModalOpen: true,
-      rawBinary: binaryDocument,
-    });
+    const binaryDocumentResponse = await getBinaryDocument(
+      requestContext,
+      binaryId
+    );
+    setBinaryDocument(binaryDocumentResponse);
+    if (conditionDisplayName) {
+      setCCDAViewerTitle(conditionDisplayName);
+    }
   };
 
   useEffect(() => {
@@ -117,14 +116,10 @@ export function ConditionHistory({
   return (
     <>
       <CCDAModal
-        isOpen={binaryDocumentState.isModalOpen}
-        rawBinary={binaryDocumentState.rawBinary}
-        onClose={() =>
-          setBinaryDocumentState((prevState) => ({
-            ...prevState,
-            isModalOpen: false,
-          }))
-        }
+        isOpen={!!binaryDocument}
+        fileName={ccdaViewerTitle}
+        rawBinary={binaryDocument}
+        onClose={() => setBinaryDocument(undefined)}
       />
 
       <div className="ctw-space-y-6">
@@ -179,7 +174,8 @@ const HistoryRecords = ({
           ...entry,
           documentButton: renderDocumentButton(
             entry.binaryId,
-            handleDocumentButtonOnClick
+            handleDocumentButtonOnClick,
+            entry.title
           ),
         }))}
         limit={CONDITION_HISTORY_LIMIT}
@@ -192,7 +188,8 @@ const HistoryRecords = ({
               ...entry,
               documentButton: renderDocumentButton(
                 entry.binaryId,
-                handleDocumentButtonOnClick
+                handleDocumentButtonOnClick,
+                entry.title
               ),
             }))}
             limit={CONDITION_HISTORY_LIMIT}
@@ -205,12 +202,18 @@ const HistoryRecords = ({
 
 const renderDocumentButton = (
   binaryId: string | undefined,
-  handleDocumentButtonOnClick: (binaryId: string) => Promise<void>
+  handleDocumentButtonOnClick: (
+    binaryId: string,
+    conditionDisplayName: string | undefined
+  ) => Promise<void>,
+  conditionDisplayName: string | undefined
 ) => (
   <>
     {binaryId && (
       <DocumentButton
-        onClick={() => handleDocumentButtonOnClick(binaryId)}
+        onClick={() =>
+          handleDocumentButtonOnClick(binaryId, conditionDisplayName)
+        }
         text="Source Document"
       />
     )}

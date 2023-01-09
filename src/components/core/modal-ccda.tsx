@@ -5,11 +5,13 @@ import { Modal, ModalProps } from "./modal";
 
 export type CCDAModalProps = {
   rawBinary: fhir4.Binary | undefined;
+  fileName: string | undefined;
   onClose: () => void;
 } & Omit<ModalProps, "title" | "children" | "onAfterClosed">;
 
 export const CCDAModal = ({
   rawBinary,
+  fileName,
   onClose,
   ...modalProps
 }: CCDAModalProps) => {
@@ -28,6 +30,7 @@ export const CCDAModal = ({
           <Base64BinaryField
             data={rawBinary.data}
             contentType={rawBinary.contentType}
+            fileName={fileName}
           />
           <div className="ctw-ml-3 ctw-flex ctw-h-7 ctw-items-center">
             <button

@@ -14,11 +14,13 @@ const isSpecificContentType = (extensions: string[], contentType: string) =>
 interface Base64BinaryFieldProps {
   data: string;
   contentType: string;
+  fileName: string | undefined;
 }
 
 export const Base64BinaryField = ({
   data,
   contentType,
+  fileName,
 }: Base64BinaryFieldProps) => {
   const ccdaDoc = useMemo(() => {
     if (!isSpecificContentType(xmlTypes, contentType)) return undefined;
@@ -49,7 +51,7 @@ export const Base64BinaryField = ({
       })
     );
     setFileUrl(objectURL);
-    setFileName("CCDA-condition");
+    setFileName(`CCDA-${fileName}`);
     ref.current?.click();
     if (url) {
       URL.revokeObjectURL(url);
