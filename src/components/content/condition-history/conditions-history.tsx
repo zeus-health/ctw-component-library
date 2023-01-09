@@ -148,7 +148,10 @@ type HistoryRecordsProps = {
   conditionsWithDate: CollapsibleDataListStackEntries;
   conditionsWithoutDate: CollapsibleDataListStackEntries;
   historyIsLoading: boolean;
-  onClick: (binaryId: string) => Promise<void>;
+  onClick: (
+    binaryId: string,
+    conditionTitle: string | undefined
+  ) => Promise<void>;
 };
 
 const HistoryRecords = ({
@@ -173,10 +176,15 @@ const HistoryRecords = ({
       <CollapsibleDataListStack
         entries={conditionsWithDate.map((entry) => ({
           ...entry,
-          documentButton: renderDocumentButton(
-            entry.binaryId,
-            onClick,
-            entry.title
+          documentButton: (
+            <>
+              {entry.binaryId && (
+                <DocumentButton
+                  onClick={() => onClick(entry.binaryId as string, entry.title)}
+                  text="Source Document"
+                />
+              )}
+            </>
           ),
         }))}
         limit={CONDITION_HISTORY_LIMIT}
@@ -187,10 +195,17 @@ const HistoryRecords = ({
           <CollapsibleDataListStack
             entries={conditionsWithoutDate.map((entry) => ({
               ...entry,
-              documentButton: renderDocumentButton(
-                entry.binaryId,
-                onClick,
-                entry.title
+              documentButton: (
+                <>
+                  {entry.binaryId && (
+                    <DocumentButton
+                      onClick={() =>
+                        onClick(entry.binaryId as string, entry.title)
+                      }
+                      text="Source Document"
+                    />
+                  )}
+                </>
               ),
             }))}
             limit={CONDITION_HISTORY_LIMIT}
@@ -200,21 +215,3 @@ const HistoryRecords = ({
     </>
   );
 };
-
-const renderDocumentButton = (
-  binaryId: string | undefined,
-  onClick: (
-    binaryId: string,
-    conditionDisplayName: string | undefined
-  ) => Promise<void>,
-  conditionDisplayName: string | undefined
-) => (
-  <>
-    {binaryId && (
-      <DocumentButton
-        onClick={() => onClick(binaryId, conditionDisplayName)}
-        text="Source Document"
-      />
-    )}
-  </>
-);
