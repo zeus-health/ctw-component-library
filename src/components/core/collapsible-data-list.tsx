@@ -22,7 +22,6 @@ export type CollapsibleDataListProps = {
 };
 
 export const CollapsibleDataList = ({
-  id,
   date,
   title,
   subtitle,

@@ -19,7 +19,6 @@ import {
   getAddConditionWithDefaults,
   getClincalAndVerificationStatus,
 } from "@/components/content/forms/actions/conditions";
-import { CollapsibleDataListProps } from "@/components/core/collapsible-data-list";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { ConditionModel } from "@/fhir/models/condition";
@@ -270,7 +269,7 @@ export async function getBinaryDocument(
 
 export async function getProvenanceForConditions(
   requestContext: CTWRequestContext,
-  conditionsData: CollapsibleDataListProps[]
+  conditionsData: ConditionModel[]
 ) {
   const data = await Promise.all(
     conditionsData.map(async (condition) => {

@@ -13,6 +13,9 @@ export type DrawerProps = {
    * any cleanup that would affect the content displayed in the drawer.
    */
   onAfterClosed?: () => void;
+  /** Shows a simple footer with a single "Close" button. */
+  showCloseFooter?: boolean;
+  /** Prevent drawer from closing on ESC or background click. */
   disableCloseOnBlur?: boolean;
   title: string;
 };
@@ -30,6 +33,7 @@ export function Drawer({
   isOpen,
   onClose,
   onAfterClosed,
+  showCloseFooter,
   title,
   disableCloseOnBlur = false,
 }: DrawerProps) {
@@ -98,6 +102,9 @@ export function Drawer({
                     </div>
 
                     {children}
+                    {showCloseFooter && (
+                      <Drawer.CloseFooter onClose={onClose} />
+                    )}
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
@@ -113,6 +120,20 @@ Drawer.Footer = ({ children }: { children: ReactNode }) => (
   <div className="ctw-border-default ctw-border-t ctw-px-6 ctw-py-4">
     {children}
   </div>
+);
+
+Drawer.CloseFooter = ({ onClose }: { onClose: () => void }) => (
+  <Drawer.Footer>
+    <div className="ctw-flex ctw-justify-end ctw-space-x-3 ctw-text-black ">
+      <button
+        type="button"
+        className="ctw-btn-default ctw-font-semibold ctw-outline-bg-light"
+        onClick={onClose}
+      >
+        Close
+      </button>
+    </div>
+  </Drawer.Footer>
 );
 
 Drawer.Body = ({ children }: { children: ReactNode }) => (
