@@ -51,7 +51,7 @@ export function ConditionHistory({
   const historyResponse = useConditionHistory(condition);
 
   // Handlers
-  const onClick = async (
+  const openCCDAModal = async (
     binaryId: string,
     conditionDisplayName?: string | undefined
   ) => {
@@ -137,7 +137,7 @@ export function ConditionHistory({
           conditionsWithDate={conditionsWithDate}
           conditionsWithoutDate={conditionsWithoutDate}
           historyIsLoading={isHistoryLoading}
-          onClick={onClick}
+          openCCDAModal={openCCDAModal}
         />
       </div>
     </>
@@ -148,7 +148,7 @@ type HistoryRecordsProps = {
   conditionsWithDate: CollapsibleDataListStackEntries;
   conditionsWithoutDate: CollapsibleDataListStackEntries;
   historyIsLoading: boolean;
-  onClick: (
+  openCCDAModal: (
     binaryId: string,
     conditionTitle: string | undefined
   ) => Promise<void>;
@@ -158,7 +158,7 @@ const HistoryRecords = ({
   conditionsWithDate,
   conditionsWithoutDate,
   historyIsLoading,
-  onClick,
+  openCCDAModal,
 }: HistoryRecordsProps) => {
   if (
     conditionsWithDate.length === 0 &&
@@ -180,7 +180,9 @@ const HistoryRecords = ({
             <>
               {entry.binaryId && (
                 <DocumentButton
-                  onClick={() => onClick(entry.binaryId as string, entry.title)}
+                  onClick={() =>
+                    openCCDAModal(entry.binaryId as string, entry.title)
+                  }
                   text="Source Document"
                 />
               )}
@@ -200,7 +202,7 @@ const HistoryRecords = ({
                   {entry.binaryId && (
                     <DocumentButton
                       onClick={() =>
-                        onClick(entry.binaryId as string, entry.title)
+                        openCCDAModal(entry.binaryId as string, entry.title)
                       }
                       text="Source Document"
                     />

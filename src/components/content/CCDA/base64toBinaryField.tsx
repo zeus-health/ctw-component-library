@@ -26,11 +26,6 @@ export const Base64BinaryField = ({
   const [fileUrl, setFileUrl] = useState<string>();
   const [fileTitle, setFileTitle] = useState<string>();
 
-  // Clean up any previously created file.
-  if (fileUrl) {
-    URL.revokeObjectURL(fileUrl);
-  }
-
   const ccdaDoc = useMemo(() => {
     if (!isSpecificContentType(xmlTypes, contentType)) return undefined;
 
@@ -50,6 +45,11 @@ export const Base64BinaryField = ({
   }, [contentType, data]);
 
   function downloadDocument() {
+    // Clean up any previously created file.
+    if (fileUrl) {
+      URL.revokeObjectURL(fileUrl);
+    }
+
     const objectURL = URL.createObjectURL(
       new Blob([Buffer.from(data, "base64").toString("utf8")], {
         type: "text/xml",
