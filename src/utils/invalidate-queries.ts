@@ -20,7 +20,7 @@ export function invalidateMedicationHistoryQueries() {
   return invalidateQueriesFrom([QUERY_KEY_MEDICATION_HISTORY]);
 }
 
-export async function invalidateAnyMedicationBasedQueries() {
+export function invalidateAllMedicationQueries() {
   return Promise.all([
     invalidateBuilderMedsQueries(),
     invalidateOtherProviderMedsQueries(),
