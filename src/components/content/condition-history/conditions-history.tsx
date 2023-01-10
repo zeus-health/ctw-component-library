@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useState } from "react";
 import { Details } from "../../core/collapsible-data-list-details";
 import {
   CollapsibleDataListStack,
@@ -28,16 +28,6 @@ export type ConditionHistoryProps = {
   onEdit?: () => void;
 };
 
-export type BinaryDocument = {
-  isModalOpen: boolean;
-  rawBinary: fhir4.Binary | undefined;
-};
-
-const DEFAULT_BINARY_DATA = {
-  isModalOpen: false,
-  rawBinary: undefined,
-};
-
 export function ConditionHistory({
   condition,
   onClose,
@@ -50,27 +40,31 @@ export function ConditionHistory({
     useState<CollapsibleDataListStackEntries>([]);
   const [isHistoryLoading, setIsHistoryLoading] = useState(true);
 
-  // Reducers
-  const [binaryDocumentState, updateBinaryDocumentState] = useReducer(
-    (data: BinaryDocument, partialData: Partial<BinaryDocument>) => ({
-      ...data,
-      ...partialData,
-    }),
-    DEFAULT_BINARY_DATA
-  );
+  const [binaryDocument, setBinaryDocument] = useState<fhir4.Binary>();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [ccdaViewerTitle, setCCDAViewerTitle] = useState<string>();
 
   // Fetching
   const { getRequestContext } = useCTW();
   const historyResponse = useConditionHistory(condition);
 
   // Handlers
-  const handleDocumentButtonOnClick = async (binaryId: string) => {
+  const openCCDAModal = async (
+    binaryId: string,
+    conditionDisplayName?: string | undefined
+  ) => {
     const requestContext = await getRequestContext();
-    const binaryDocument = await getBinaryDocument(requestContext, binaryId);
-    updateBinaryDocumentState({
-      isModalOpen: true,
-      rawBinary: binaryDocument,
-    });
+    const binaryDocumentResponse = await getBinaryDocument(
+      requestContext,
+      binaryId
+    );
+    setBinaryDocument(binaryDocumentResponse);
+    setIsModalOpen(true);
+    if (conditionDisplayName) {
+      setCCDAViewerTitle(conditionDisplayName);
+    }
   };
 
   useEffect(() => {
@@ -123,9 +117,10 @@ export function ConditionHistory({
   return (
     <>
       <CCDAModal
-        isOpen={binaryDocumentState.isModalOpen}
-        rawBinary={binaryDocumentState.rawBinary}
-        onClose={() => updateBinaryDocumentState({ isModalOpen: false })}
+        isOpen={isModalOpen}
+        fileName={ccdaViewerTitle}
+        rawBinary={binaryDocument}
+        onClose={() => setIsModalOpen(false)}
       />
 
       <div className="ctw-space-y-6">
@@ -142,7 +137,7 @@ export function ConditionHistory({
           conditionsWithDate={conditionsWithDate}
           conditionsWithoutDate={conditionsWithoutDate}
           historyIsLoading={isHistoryLoading}
-          handleDocumentButtonOnClick={handleDocumentButtonOnClick}
+          openCCDAModal={openCCDAModal}
         />
       </div>
     </>
@@ -153,14 +148,17 @@ type HistoryRecordsProps = {
   conditionsWithDate: CollapsibleDataListStackEntries;
   conditionsWithoutDate: CollapsibleDataListStackEntries;
   historyIsLoading: boolean;
-  handleDocumentButtonOnClick: (binaryId: string) => Promise<void>;
+  openCCDAModal: (
+    binaryId: string,
+    conditionTitle: string | undefined
+  ) => Promise<void>;
 };
 
 const HistoryRecords = ({
   conditionsWithDate,
   conditionsWithoutDate,
   historyIsLoading,
-  handleDocumentButtonOnClick,
+  openCCDAModal,
 }: HistoryRecordsProps) => {
   if (
     conditionsWithDate.length === 0 &&
@@ -178,9 +176,17 @@ const HistoryRecords = ({
       <CollapsibleDataListStack
         entries={conditionsWithDate.map((entry) => ({
           ...entry,
-          documentButton: renderDocumentButton(
-            entry.binaryId,
-            handleDocumentButtonOnClick
+          documentButton: (
+            <>
+              {entry.binaryId && (
+                <DocumentButton
+                  onClick={() =>
+                    openCCDAModal(entry.binaryId as string, entry.title)
+                  }
+                  text="Source Document"
+                />
+              )}
+            </>
           ),
         }))}
         limit={CONDITION_HISTORY_LIMIT}
@@ -191,9 +197,17 @@ const HistoryRecords = ({
           <CollapsibleDataListStack
             entries={conditionsWithoutDate.map((entry) => ({
               ...entry,
-              documentButton: renderDocumentButton(
-                entry.binaryId,
-                handleDocumentButtonOnClick
+              documentButton: (
+                <>
+                  {entry.binaryId && (
+                    <DocumentButton
+                      onClick={() =>
+                        openCCDAModal(entry.binaryId as string, entry.title)
+                      }
+                      text="Source Document"
+                    />
+                  )}
+                </>
               ),
             }))}
             limit={CONDITION_HISTORY_LIMIT}
@@ -203,14 +217,3 @@ const HistoryRecords = ({
     </>
   );
 };
-
-const renderDocumentButton = (
-  binaryId: string | undefined,
-  handleDocumentButtonOnClick: (binaryId: string) => Promise<void>
-) => (
-  <>
-    {binaryId && (
-      <DocumentButton onClick={() => handleDocumentButtonOnClick(binaryId)} />
-    )}
-  </>
-);
