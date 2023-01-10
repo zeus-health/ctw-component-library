@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.38.3
+
+### Patch Changes
+
+- ac97c42: Add query invalidation helpers for both internal and external use
+
 ## 0.38.2
 
 ### Patch Changes
