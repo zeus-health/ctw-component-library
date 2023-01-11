@@ -91,12 +91,9 @@
   }
 
   .ctw-pagination {
+    @apply ctw-items-center ctw-justify-between ctw-pl-4 ctw-pr-4;
     margin: 8px 0 !important;
     flex-direction: initial;
-    justify-content: space-between;
-    align-items: center;
-    padding-left: 1rem;
-    padding-right: 1rem;
     gap: 10px;
   }
 
