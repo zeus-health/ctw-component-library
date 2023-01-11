@@ -15,7 +15,7 @@ import {
   sortBy,
   split,
 } from "lodash/fp";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { bundleToResourceMap, getMergedIncludedResources } from "./bundle";
 import { getIdentifyingRxNormCode } from "./medication";
 import {
@@ -36,7 +36,9 @@ import {
   SYSTEM_ZUS_UNIVERSAL_ID,
 } from "./system-urls";
 import { ResourceTypeString } from "./types";
+import { handleMedicationDismissal } from "@/components/content/medications/medication-actions";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
+import { useCTW } from "@/components/core/providers/ctw-provider";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { MedicationModel } from "@/fhir/models/medication";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
@@ -396,4 +398,18 @@ function searchWrapper<T extends ResourceTypeString>(
     });
   }
   return { resources: [], bundle: undefined };
+}
+
+/**
+ * Create a callback function that dismisses a medication
+ */
+export function useDismissMedication() {
+  const { getRequestContext } = useCTW();
+
+  return useCallback(
+    async (medication: MedicationStatementModel) => {
+      await handleMedicationDismissal(medication, getRequestContext);
+    },
+    [getRequestContext]
+  );
 }
