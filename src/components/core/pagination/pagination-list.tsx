@@ -27,7 +27,7 @@ export const PaginationList = ({
           {!allShown && (
             <button
               type="button"
-              className="ctw-btn-clear ctw-link ctw-w-28 ctw-whitespace-nowrap"
+              className="ctw-btn-clear ctw-link ctw-whitespace-nowrap"
               onClick={() => changeCount(total)}
             >
               Show All
@@ -37,7 +37,7 @@ export const PaginationList = ({
           {allShown && hasPages && (
             <button
               type="button"
-              className="ctw-btn-clear ctw-link ctw-w-28 ctw-whitespace-nowrap"
+              className="ctw-btn-clear ctw-link ctw-whitespace-nowrap"
               onClick={() => changeCount(DEFAULT_PAGE_SIZE)}
             >
               Clear
