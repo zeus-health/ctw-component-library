@@ -92,7 +92,11 @@
 
   .ctw-pagination {
     margin: 8px 0 !important;
-    flex-direction: column-reverse;
+    flex-direction: initial;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
     gap: 10px;
   }
 
