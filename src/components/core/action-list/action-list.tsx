@@ -3,19 +3,21 @@ import { isFunction } from "lodash/fp";
 import "./action-list.scss";
 
 export type MinActionItem = {
+  complete: boolean;
   id: string;
   subtitle?: string;
   title: string;
-  complete: boolean;
 };
 
 export type ActionItemProps<T extends MinActionItem> = {
+  actionText?: string;
+  activeClassName?: string;
   className?: string;
   item: T;
   onAction?: (i: T) => void;
   onRowClick?: (i: T) => void;
-  actionText?: string;
-  activeClassName?: string;
+  onSecondaryAction?: (i: T) => void;
+  secondaryActionText?: string;
   onUndoAction?: (i: T) => void;
   undoActionText?: string;
 };
@@ -54,6 +56,8 @@ export const ActionListItem = <T extends MinActionItem>({
   item,
   onRowClick,
   onAction = () => {},
+  onSecondaryAction,
+  secondaryActionText,
   actionText = "Mark Complete",
   undoActionText = "Undo",
   onUndoAction,
@@ -82,6 +86,18 @@ export const ActionListItem = <T extends MinActionItem>({
       {item.subtitle && <div className="ctw-font-light">{item.subtitle}</div>}
     </div>
     <div className="ctw-action-list-item-action">
+      {onSecondaryAction && secondaryActionText && (
+        <button
+          type="button"
+          className="ctw-btn-primary ctw-ml-1"
+          onClick={(event) => {
+            event.stopPropagation();
+            onSecondaryAction(item);
+          }}
+        >
+          {secondaryActionText}
+        </button>
+      )}
       {!item.complete && (
         <button
           type="button"
@@ -94,7 +110,6 @@ export const ActionListItem = <T extends MinActionItem>({
           {actionText}
         </button>
       )}
-
       {item.complete && !!onUndoAction && (
         <button
           type="button"
