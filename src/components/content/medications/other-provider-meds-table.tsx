@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import { MedicationDrawer } from "@/components/content/medication-drawer";
 import { MedicationsTableBase } from "@/components/content/medications-table-base";
 import { AddNewMedDrawer } from "@/components/content/medications/add-new-med-drawer";
-import { handleMedicationDismissal } from "@/components/content/medications/medication-actions";
-import { useCTW } from "@/components/core/providers/ctw-provider";
+import { useDismissMedication } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { sort, SortDir } from "@/utils/sort";
@@ -26,7 +25,7 @@ export function OtherProviderMedsTable({
   sortOrder = "asc",
   sortColumn = "display",
 }: OtherProviderMedsTableProps) {
-  const { getRequestContext } = useCTW();
+  const dismissMedication = useDismissMedication();
   const [medicationModels, setMedicationModels] = useState<
     MedicationStatementModel[]
   >([]);
@@ -78,10 +77,7 @@ export function OtherProviderMedsTable({
               : {
                   name: "Dismiss",
                   action: async () => {
-                    await handleMedicationDismissal(
-                      medication,
-                      getRequestContext
-                    );
+                    await dismissMedication(medication);
                   },
                 },
           ])
@@ -91,9 +87,7 @@ export function OtherProviderMedsTable({
         medication={selectedMedication}
         isOpen={historyDrawerOpen}
         onClose={() => setHistoryDrawerOpen(false)}
-        onDismissal={async (medication: MedicationStatementModel) => {
-          await handleMedicationDismissal(medication, getRequestContext);
-        }}
+        onDismissal={dismissMedication}
       />
       <AddNewMedDrawer
         medication={selectedMedication?.resource}
