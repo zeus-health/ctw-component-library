@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.39.1
+
+### Patch Changes
+
+- a4ff125: Update 3rd party tag for quest.
+
 ## 0.39.0
 
 ### Minor Changes
