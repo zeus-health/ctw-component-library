@@ -48,6 +48,13 @@ export const Basic: StoryObj<Props> = {
   },
 };
 
+export const WithSecondaryAction: StoryObj<Props> = {
+  args: {
+    items,
+    secondaryActionText: "Do Something Else",
+  },
+};
+
 export const WithoutUndo: StoryObj<Props> = {
   args: {
     items,

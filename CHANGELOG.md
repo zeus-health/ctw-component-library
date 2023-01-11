@@ -1,5 +1,15 @@
 # ctw-component-library
 
+## 0.39.0
+
+### Minor Changes
+
+- a0a85b6: Update text and button styling for pagination.
+
+### Patch Changes
+
+- d4c1a61: ActionList supports a secondary action. Added a `useDismissMedication` callback hook that creates a reusable dismiss medications function.
+
 ## 0.38.3
 
 ### Patch Changes
