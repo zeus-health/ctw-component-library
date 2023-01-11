@@ -23,21 +23,11 @@ export const PaginationList = ({
       </div>
 
       {(!allShown || hasPages) && (
-        <div className="ctw-flex ctw-h-full ctw-justify-end ctw-space-x-3">
-          {!allShown && total > DEFAULT_PAGE_SIZE * 2 && (
-            <button
-              type="button"
-              className="ctw-btn-default"
-              onClick={() => changeCount(count + DEFAULT_PAGE_SIZE)}
-            >
-              Show More
-            </button>
-          )}
-
+        <div className="ctw-leading-5">
           {!allShown && (
             <button
               type="button"
-              className="ctw-btn-primary ctw-w-28 ctw-whitespace-nowrap"
+              className="ctw-btn-clear ctw-link ctw-w-28 ctw-whitespace-nowrap"
               onClick={() => changeCount(total)}
             >
               Show All
@@ -47,10 +37,10 @@ export const PaginationList = ({
           {allShown && hasPages && (
             <button
               type="button"
-              className="ctw-btn-primary ctw-w-28 ctw-whitespace-nowrap"
+              className="ctw-btn-clear ctw-link ctw-w-28 ctw-whitespace-nowrap"
               onClick={() => changeCount(DEFAULT_PAGE_SIZE)}
             >
-              Reset
+              Clear
             </button>
           )}
         </div>
