@@ -265,6 +265,68 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
     );
   }
 
+  get displayStatus2(): string {
+    const concatenation = this.verificationStatus + this.clinicalStatus;
+
+    switch (concatenation) {
+      case "unconfirmedactive":
+        return "Pending";
+      case "unconfirmedinactive":
+      case "refutedactive":
+        return "Select One";
+      case "confirmedinactive":
+        return "Inactive";
+      case "confirmedactive":
+        return "Active";
+      case "refutedinactive":
+        return "Refuted";
+      case "entered-in-error":
+        return "Entered in Error";
+      default:
+        return "Unknown";
+    }
+
+    function byClinicalStatus(code: ClinicalStatus | undefined) {
+      switch (code) {
+        case "active":
+        case "recurrence":
+        case "relapse":
+          return "Active";
+        case "inactive":
+        case "remission":
+        case "resolved":
+          return "Inactive";
+        default:
+          return "Unknown";
+      }
+    }
+
+    // What to show if lens or summary resource.
+    if (this.isSummaryResource) {
+      if (this.isArchived) {
+        return "Dismissed";
+      }
+
+      return byClinicalStatus(this.clinicalStatusCode);
+    }
+
+    // What to show if patient record resource.
+    switch (this.verificationStatusCode) {
+      case "confirmed":
+        return byClinicalStatus(this.clinicalStatusCode);
+      case "unconfirmed":
+      case "provisional":
+      case "differential":
+        return "Pending";
+      case "refuted":
+        return "Refuted";
+      case "entered-in-error":
+        return "Entered In Error";
+      default:
+        return "Unknown";
+    }
+  }
+
   get displayStatus(): string {
     function byClinicalStatus(code: ClinicalStatus | undefined) {
       switch (code) {
