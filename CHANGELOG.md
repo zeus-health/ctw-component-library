@@ -1,5 +1,53 @@
 # ctw-component-library
 
+## 0.39.1
+
+### Patch Changes
+
+- a4ff125: Update 3rd party tag for quest.
+
+## 0.39.0
+
+### Minor Changes
+
+- a0a85b6: Update text and button styling for pagination.
+
+### Patch Changes
+
+- d4c1a61: ActionList supports a secondary action. Added a `useDismissMedication` callback hook that creates a reusable dismiss medications function.
+
+## 0.38.3
+
+### Patch Changes
+
+- ac97c42: Add query invalidation helpers for both internal and external use
+
+## 0.38.2
+
+### Patch Changes
+
+- 3bf7f39: Update CCDA viewer with download xml functionality and styling features.
+
+## 0.38.1
+
+### Patch Changes
+
+- 4600f9b: Add encounter class to encounter details drawer.
+- 2ff4690: More explicitly targeting SCD on summary med
+
+## 0.38.0
+
+### Minor Changes
+
+- 96485e3: Added an action to dismiss records from other provider medications table.
+
+### Patch Changes
+
+- 3a1ea81: WIP: New patient timeline (encounters) table.
+- 8a8d85f: Change deduping logic in history drawer so that enriched records will now no longer cause dupes to show.
+- 5d90126: Add timeline/encounter details.
+- d56f3b5: Updating list of 3rd party tags
+
 ## 0.37.1
 
 ### Patch Changes

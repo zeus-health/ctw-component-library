@@ -30,5 +30,7 @@ export * from "@/components/core/toggle-control";
 // Models
 export * from "@/fhir/models";
 export * from "@/hooks/use-medications";
+export * from "@/fhir/medications";
 // Utility
+export * from "@/utils/invalidate-queries";
 export { version } from "../package.json";

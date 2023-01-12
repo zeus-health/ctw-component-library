@@ -48,6 +48,7 @@ export function ConditionHistoryDrawer({
       title="Condition History"
       isOpen={isOpen}
       onClose={onClose}
+      showCloseFooter
     >
       <Drawer.Body>
         <ConditionHistory
@@ -56,17 +57,6 @@ export function ConditionHistoryDrawer({
           onEdit={onEdit}
         />
       </Drawer.Body>
-      <Drawer.Footer>
-        <div className="ctw-flex ctw-justify-end ctw-space-x-3 ctw-text-black ">
-          <button
-            type="button"
-            className="ctw-btn-default ctw-font-semibold ctw-outline-bg-light"
-            onClick={onClose}
-          >
-            Close
-          </button>
-        </div>
-      </Drawer.Footer>
     </Drawer>
   );
 }

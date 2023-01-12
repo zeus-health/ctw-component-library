@@ -5,8 +5,8 @@ export type CodingListProps = {
 export const CodingList = ({ codings }: CodingListProps) => (
   <div className="ctw-flex ctw-flex-col ctw-space-y-4">
     {codings.map((coding) => (
-      <div key={`${coding.id}-${coding.code}`}>
-        {coding.display}
+      <div key={`${coding.system}-${coding.code}`}>
+        <div>{coding.display}</div>
         <div>{coding.code}</div>
         <div>{coding.system}</div>
       </div>

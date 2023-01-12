@@ -463,8 +463,8 @@ export const encounters: fhir4.Bundle = {
         ],
         status: "finished",
         class: {
-          system: "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
-          code: "UNK",
+          system: "urn:oid:2.16.840.1.113883.5.4",
+          code: "EMER",
         },
         type: [
           {
@@ -534,6 +534,18 @@ export const encounters: fhir4.Bundle = {
           system: "http://unitsofmeasure.org",
           code: "min",
         },
+        reasonCode: [
+          {
+            coding: [
+              {
+                system: "http://snomed.info/sct",
+                code: "404684003",
+                display: "Clinical finding (finding)",
+              },
+            ],
+            text: "Clinical finding",
+          },
+        ],
         diagnosis: [
           {
             condition: {

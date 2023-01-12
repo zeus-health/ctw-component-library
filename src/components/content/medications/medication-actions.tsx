@@ -1,8 +1,7 @@
 import type { MedicationStatementModel } from "@/fhir/models";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { recordProfileAction } from "@/fhir/basic";
-import { QUERY_KEY_OTHER_PROVIDER_MEDICATIONS } from "@/utils/query-keys";
-import { queryClient } from "@/utils/request";
+import { invalidateOtherProviderMedsQueries } from "@/utils/invalidate-queries";
 
 export const handleMedicationDismissal = async (
   medication: MedicationStatementModel,
@@ -19,5 +18,5 @@ export const handleMedicationDismissal = async (
   );
 
   // Invalidate related queries
-  await queryClient.invalidateQueries([QUERY_KEY_OTHER_PROVIDER_MEDICATIONS]);
+  await invalidateOtherProviderMedsQueries();
 };

@@ -1,10 +1,10 @@
 import { DOMParser } from "@xmldom/xmldom";
 import { Buffer } from "buffer";
-import { ChangeEvent, useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import xpath from "xpath";
 import { CcdaViewer } from "./ccda_viewer";
 import "./styles.scss";
-import { Toggle } from "@/components/core/toggle";
+import { DocumentButton } from "./document-button";
 
 const xmlTypes = ["/xml", "/xhtml+xml", "application/xml"];
 
@@ -12,19 +12,19 @@ const isSpecificContentType = (extensions: string[], contentType: string) =>
   extensions.some((extension) => contentType.includes(extension));
 
 interface Base64BinaryFieldProps {
-  value: string;
+  data: string;
   contentType: string;
+  fileName: string | undefined;
 }
 
 export const Base64BinaryField = ({
-  value,
+  data,
   contentType,
+  fileName,
 }: Base64BinaryFieldProps) => {
-  const decoded = true;
-  const [parsedCCDA, setParsedCCDA] = useState(true);
-
-  const handleChange = (event: ChangeEvent<HTMLInputElement>): void =>
-    setParsedCCDA(event.target.checked);
+  const ref = useRef<HTMLAnchorElement>(null);
+  const [fileUrl, setFileUrl] = useState<string>();
+  const [fileTitle, setFileTitle] = useState<string>();
 
   const ccdaDoc = useMemo(() => {
     if (!isSpecificContentType(xmlTypes, contentType)) return undefined;
@@ -33,7 +33,7 @@ export const Base64BinaryField = ({
       locator: {},
       errorHandler: (_) => null,
     }).parseFromString(
-      Buffer.from(value, "base64").toString("utf8"),
+      Buffer.from(data, "base64").toString("utf8"),
       contentType
     );
 
@@ -42,48 +42,41 @@ export const Base64BinaryField = ({
     }
 
     return undefined;
-  }, [contentType, value]);
+  }, [contentType, data]);
 
-  const actions = [
-    {
-      label: "Parsed",
-      value: parsedCCDA,
-      event: handleChange,
-      disabled: !decoded,
-      display: Boolean(ccdaDoc),
-    },
-  ];
-  const ccdaDocument = parsedCCDA ? ccdaDoc : undefined;
+  function downloadDocument() {
+    // Clean up any previously created file.
+    if (fileUrl) {
+      URL.revokeObjectURL(fileUrl);
+    }
 
-  const getContent = () => {
-    if (ccdaDocument) return <CcdaViewer document={ccdaDocument} />;
+    const objectURL = URL.createObjectURL(
+      new Blob([Buffer.from(data, "base64").toString("utf8")], {
+        type: "text/xml",
+      })
+    );
+    setFileUrl(objectURL);
+    setFileTitle(`CCDA-${fileName}`);
+    ref.current?.click();
+  }
 
-    return <div className="ctw-ccda-base64-binary-text">{value}</div>;
-  };
   return (
     <div className="ctw-ccda-container">
       <div className="ctw-ccda-switch-container">
-        {actions.map(
-          (action) =>
-            action.display && (
-              <div key={action.label} className="ctw-cda-switch-wrapper">
-                <span className="ctw-flex">
-                  <Toggle
-                    inputProps={{
-                      value: action.label,
-                      checked: action.value,
-                      disabled: action.disabled,
-                    }}
-                    name={action.label}
-                    text={action.label}
-                    onChange={action.event}
-                  />
-                </span>
-              </div>
-            )
-        )}
+        <a
+          href={fileUrl}
+          ref={ref}
+          download={fileTitle}
+          className="ctw-decoration-none ctw-flex ctw-w-fit"
+        >
+          <DocumentButton onClick={downloadDocument} text="Download XML" />
+        </a>
       </div>
-      {getContent()}
+      {ccdaDoc ? (
+        <CcdaViewer document={ccdaDoc} />
+      ) : (
+        <div className="ctw-ccda-base64-binary-text">{data}</div>
+      )}
     </div>
   );
 };

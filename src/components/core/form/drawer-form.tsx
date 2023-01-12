@@ -106,7 +106,12 @@ export const DrawerForm = <T,>({
   };
 
   return (
-    <Drawer {...drawerProps} onClose={onClose} onAfterClosed={reset}>
+    <Drawer
+      {...drawerProps}
+      onClose={onClose}
+      onAfterClosed={reset}
+      disableCloseOnBlur
+    >
       <form
         className="ctw-flex ctw-h-full ctw-flex-col ctw-overflow-y-auto"
         onSubmit={onFormSubmit}
