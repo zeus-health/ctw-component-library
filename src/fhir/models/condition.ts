@@ -265,8 +265,52 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
     );
   }
 
-  get displayStatus2(): string {
-    const concatenation = this.verificationStatus + this.clinicalStatus;
+  get displayStatus(): string {
+    function byClinicalStatus(code: ClinicalStatus | undefined) {
+      switch (code) {
+        case "active":
+        case "recurrence":
+        case "relapse":
+          return "Active";
+        case "inactive":
+        case "remission":
+        case "resolved":
+          return "Inactive";
+        default:
+          return "";
+      }
+    }
+
+    // What to show if patient record resource.
+    function byVerificationStatus(code: VerificationStatus | undefined) {
+      switch (code) {
+        case "confirmed":
+          return "confirmed";
+        case "unconfirmed":
+        case "provisional":
+        case "differential":
+          return "unconfirmed";
+        case "refuted":
+          return "refuted";
+        case "entered-in-error":
+          return "entered-in-error";
+        default:
+          return "";
+      }
+    }
+
+    const concatenation =
+      byVerificationStatus(this.verificationStatusCode) +
+      byClinicalStatus(this.clinicalStatusCode).toLowerCase();
+
+    // What to show if lens or summary resource.
+    if (this.isSummaryResource) {
+      if (this.isArchived) {
+        return "Dismissed";
+      }
+
+      return byClinicalStatus(this.clinicalStatusCode) || "Unknown";
+    }
 
     switch (concatenation) {
       case "unconfirmedactive":
@@ -282,88 +326,6 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
         return "Refuted";
       case "entered-in-error":
         return "Entered in Error";
-      default:
-        return "Unknown";
-    }
-
-    function byClinicalStatus(code: ClinicalStatus | undefined) {
-      switch (code) {
-        case "active":
-        case "recurrence":
-        case "relapse":
-          return "Active";
-        case "inactive":
-        case "remission":
-        case "resolved":
-          return "Inactive";
-        default:
-          return "Unknown";
-      }
-    }
-
-    // What to show if lens or summary resource.
-    if (this.isSummaryResource) {
-      if (this.isArchived) {
-        return "Dismissed";
-      }
-
-      return byClinicalStatus(this.clinicalStatusCode);
-    }
-
-    // What to show if patient record resource.
-    switch (this.verificationStatusCode) {
-      case "confirmed":
-        return byClinicalStatus(this.clinicalStatusCode);
-      case "unconfirmed":
-      case "provisional":
-      case "differential":
-        return "Pending";
-      case "refuted":
-        return "Refuted";
-      case "entered-in-error":
-        return "Entered In Error";
-      default:
-        return "Unknown";
-    }
-  }
-
-  get displayStatus(): string {
-    function byClinicalStatus(code: ClinicalStatus | undefined) {
-      switch (code) {
-        case "active":
-        case "recurrence":
-        case "relapse":
-          return "Active";
-        case "inactive":
-        case "remission":
-        case "resolved":
-          return "Inactive";
-        default:
-          return "Unknown";
-      }
-    }
-
-    // What to show if lens or summary resource.
-    if (this.isSummaryResource) {
-      if (this.isArchived) {
-        return "Dismissed";
-      }
-
-      return byClinicalStatus(this.clinicalStatusCode);
-    }
-
-    // What to show if patient record resource.
-    switch (this.verificationStatusCode) {
-      case "confirmed":
-        return byClinicalStatus(this.clinicalStatusCode);
-      case "unconfirmed":
-      case "provisional":
-      case "differential":
-        return "Pending";
-      case "refuted":
-        return "Refuted";
-      case "entered-in-error":
-        return "Entered In Error";
       default:
         return "Unknown";
     }
