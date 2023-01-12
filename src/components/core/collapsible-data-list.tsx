@@ -2,8 +2,8 @@ import { ChevronRightIcon } from "@heroicons/react/outline";
 import cx from "classnames";
 import { ReactNode, useState } from "react";
 import { Details } from "./collapsible-data-list-details";
-
 import "./collapsible-data-list.scss";
+import { DocumentIcon } from "@/components/core/document-icon";
 
 export type CollapsibleDataListEntry = {
   label: string;
@@ -22,7 +22,6 @@ export type CollapsibleDataListProps = {
 };
 
 export const CollapsibleDataList = ({
-  id,
   date,
   title,
   subtitle,
@@ -41,6 +40,7 @@ export const CollapsibleDataList = ({
         subtitle={subtitle}
         isDetailShown={isDetailShown}
         setIsDetailShown={setIsDetailShown}
+        binaryId={binaryId}
       />
       {isDetailShown && (
         <Details
@@ -59,12 +59,14 @@ const DetailSummary = ({
   title,
   subtitle,
   isDetailShown,
+  binaryId,
   setIsDetailShown,
 }: {
   date?: string;
   title?: string;
   subtitle?: string;
   isDetailShown: boolean;
+  binaryId: string | undefined;
   setIsDetailShown: React.Dispatch<React.SetStateAction<boolean>>;
 }) => (
   <button
@@ -83,12 +85,20 @@ const DetailSummary = ({
           <div className="ctw-text-content-light">{subtitle}</div>
         </div>
       </div>
-      <div className="ctw-justify-right ctw-flex">
-        <ChevronRightIcon
-          className={cx("ctw-h-5 ctw-w-5 ctw-text-primary-dark", {
-            "ctw-rotate-90": isDetailShown,
-          })}
-        />
+      <div className="ctw-flex ctw-items-center ctw-space-x-3">
+        {binaryId && (
+          <DocumentIcon
+            className="ctw-fill-content-light hover:ctw-fill-content-light"
+            height={16}
+          />
+        )}
+        <div className="ctw-justify-right ctw-flex">
+          <ChevronRightIcon
+            className={cx("ctw-h-5 ctw-w-5 ctw-text-primary-dark", {
+              "ctw-rotate-90": isDetailShown,
+            })}
+          />
+        </div>
       </div>
     </div>
   </button>
