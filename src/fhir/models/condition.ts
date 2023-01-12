@@ -266,7 +266,7 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
   }
 
   get displayStatus(): string {
-    function byClinicalStatus(code: ClinicalStatus | undefined) {
+    function clinicalStatusMap(code: ClinicalStatus | undefined) {
       switch (code) {
         case "active":
         case "recurrence":
@@ -281,8 +281,7 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
       }
     }
 
-    // What to show if patient record resource.
-    function byVerificationStatus(code: VerificationStatus | undefined) {
+    function verificationStatusMap(code: VerificationStatus | undefined) {
       switch (code) {
         case "confirmed":
           return "confirmed";
@@ -300,8 +299,8 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
     }
 
     const concatenation =
-      byVerificationStatus(this.verificationStatusCode) +
-      byClinicalStatus(this.clinicalStatusCode).toLowerCase();
+      verificationStatusMap(this.verificationStatusCode) +
+      clinicalStatusMap(this.clinicalStatusCode).toLowerCase();
 
     // What to show if lens or summary resource.
     if (this.isSummaryResource) {
@@ -309,9 +308,10 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
         return "Dismissed";
       }
 
-      return byClinicalStatus(this.clinicalStatusCode) || "Unknown";
+      return clinicalStatusMap(this.clinicalStatusCode) || "Unknown";
     }
 
+    // What to show if patient record resource.
     switch (concatenation) {
       case "unconfirmedactive":
         return "Pending";
