@@ -1,6 +1,6 @@
 import { getIncludedBasics } from "./bundle";
 import { EncounterModel } from "./models/encounter";
-import { searchBuilderRecords } from "./search-helpers";
+import { searchCommonRecords } from "./search-helpers";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { QUERY_KEY_PATIENT_ENCOUNTERS } from "@/utils/query-keys";
 
@@ -10,7 +10,7 @@ export function usePatientEncounters() {
     [],
     async (requestContext, patient) => {
       try {
-        const { bundle, resources: encounters } = await searchBuilderRecords(
+        const { bundle, resources: encounters } = await searchCommonRecords(
           "Encounter",
           requestContext,
           {
