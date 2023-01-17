@@ -8,9 +8,9 @@ export const applyConditionHistoryFilters = (
 ) => {
   let conditionsDataDeduped = [];
 
-  const conditionModels = data
-    .map((c) => new ConditionModel(c, includedResources))
-    .filter((c) => c.verificationStatus !== "entered-in-error");
+  const conditionModels = data.map(
+    (c) => new ConditionModel(c, includedResources)
+  );
 
   const sortedConditions = orderBy(
     conditionModels,

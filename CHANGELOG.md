@@ -1,5 +1,18 @@
 # ctw-component-library
 
+## 0.39.2
+
+### Patch Changes
+
+- f4aa1b2: Timeline now shows all 3rd party encounters.
+- 21646b0: Reordered the buttons in action list so secondary action comes after primary
+
+## 0.39.1
+
+### Patch Changes
+
+- a4ff125: Update 3rd party tag for quest.
+
 ## 0.39.0
 
 ### Minor Changes
