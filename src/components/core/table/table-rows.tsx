@@ -48,7 +48,7 @@ export const TableRows = <T extends MinRecordItem>({
         <tr
           // ctw-mx-px fixes bug where side borders disappear on hover when stacked.
           className={cx("ctw-group ctw-relative ctw-mx-px", {
-            "ctw-z-10 ctw-cursor-pointer hover:ctw-bg-bg-lighter":
+            "ctw-cursor-pointer hover:ctw-bg-bg-lighter":
               isFunction(handleRowClick),
           })}
           key={record.id}
