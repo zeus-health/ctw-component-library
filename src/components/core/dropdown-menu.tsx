@@ -39,7 +39,11 @@ export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
           {!isLoading && children}
         </RadixDropdownMenu.Trigger>
 
-        <RadixDropdownMenu.Portal container={ctwProviderRef.current}>
+        <RadixDropdownMenu.Portal
+          container={ctwProviderRef.current}
+          className="ctw-z-[100000]"
+          style={{ zIndex: "10000" }}
+        >
           <RadixDropdownMenu.Content
             // Prevent focus from closing menu, this fixes
             // an issue with interactive testing where a "click"
