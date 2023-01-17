@@ -2,6 +2,7 @@ import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/outline";
 import cx from "classnames";
 import { MinRecordItem, TableColumn, TableSort } from "./table-helpers";
 import { SortDir } from "@/utils/sort";
+import { Telemetry } from "@/utils/telemetry";
 
 type SortChevronProps = {
   sortOrder?: SortDir;
@@ -39,7 +40,7 @@ export const TableHead = <T extends MinRecordItem>({
   sort,
   onSort,
 }: TableHeadProps<T>) => (
-  <thead>
+  <thead data-zus-telemetry-namespace="TableHead">
     <tr>
       {columns.map((column, index) => (
         <th
@@ -49,9 +50,15 @@ export const TableHead = <T extends MinRecordItem>({
           )}
           key={column.title ?? index}
           scope="col"
-          onClick={() =>
-            column.sortIndices && onSort && onSort(column.title || "")
-          }
+          onClick={(event) => {
+            if (column.sortIndices && onSort) {
+              Telemetry.processClickEvent(
+                event.currentTarget,
+                `sort=${column.title}`
+              );
+              onSort(column.title || "");
+            }
+          }}
         >
           <div className="ctw-flex ctw-items-center ctw-space-x-2">
             <div>{column.title}</div>

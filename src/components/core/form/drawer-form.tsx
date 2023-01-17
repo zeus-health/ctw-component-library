@@ -150,6 +150,7 @@ export const DrawerForm = <T,>({
                 type="button"
                 className="ctw-btn-default"
                 onClick={onClose}
+                data-zus-telemetry-click="Cancel form"
               >
                 Cancel
               </button>

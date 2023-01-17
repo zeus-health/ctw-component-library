@@ -57,6 +57,7 @@ export function ProviderMedsTable({
     <>
       <MedicationsTableBase
         medicationStatements={medicationModels}
+        telemetryNamespace="ProviderMedsTable"
         isLoading={isLoading}
         rowMenuActions={(medication) => [
           {

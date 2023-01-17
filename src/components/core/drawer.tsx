@@ -44,6 +44,7 @@ export function Drawer({
     <Transition.Root show={isOpen} as={Fragment}>
       <Dialog
         as="div"
+        data-zus-telemetry-namespace={`Drawer[${title}]`}
         className={cx("ctw-relative ctw-z-[10000]", className)}
         onClose={() => {
           if (!disableCloseOnBlur) {

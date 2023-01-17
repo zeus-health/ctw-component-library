@@ -133,6 +133,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       className="ctw-btn-primary"
       type="button"
       onClick={handleAddNewCondition}
+      data-zus-telemetry-click="Add new condition (Empty table)"
     >
       Add Condition
     </button>
@@ -204,6 +205,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   return (
     <div
       ref={containerRef}
+      data-zus-telemetry-namespace="Conditions"
       className={cx("ctw-conditions", className, {
         "ctw-conditions-stacked": breakpoints.sm,
       })}
@@ -214,6 +216,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           <button
             type="button"
             className="ctw-btn-clear ctw-link"
+            data-zus-telemetry-click="Add new condition"
             onClick={handleAddNewCondition}
           >
             + Add Condition
@@ -280,6 +283,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
                 type="button"
                 className="ctw-btn-clear ctw-link"
                 onClick={() => setRequestDrawerIsOpen(true)}
+                data-zus-telemetry-click="Request records"
               >
                 Request Records
               </button>

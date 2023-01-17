@@ -54,8 +54,9 @@ export function OtherProviderMedsTable({
   }, [otherProviderMedications, sortColumn, sortOrder]);
 
   return (
-    <>
+    <div data-zus-telemetry-namespace="OtherProviderMedsTable">
       <MedicationsTableBase
+        telemetryNamespace="MedicationsTableBase"
         medicationStatements={medicationModels}
         isLoading={isLoading}
         rowMenuActions={(medication) =>
@@ -94,6 +95,6 @@ export function OtherProviderMedsTable({
         isOpen={addNewMedDrawerOpen}
         handleOnClose={() => setAddNewMedDrawerOpen(false)}
       />
-    </>
+    </div>
   );
 }

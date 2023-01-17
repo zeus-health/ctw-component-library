@@ -17,7 +17,6 @@ import "./patients-table.scss";
 export type PatientsTableProps = {
   className?: cx.Argument;
   handleRowClick: (row: PatientModel) => void;
-  handleAddNewPatient?: () => void;
   pageSize?: number;
   title?: string;
 } & TableOptionProps<PatientModel>;
@@ -51,7 +50,6 @@ export function usePatientsList(
  */
 export const PatientsTable = ({
   className,
-  handleAddNewPatient,
   handleRowClick,
   pageSize = 5,
   title = "Patients",
@@ -96,7 +94,10 @@ export const PatientsTable = ({
   }, [isError, isFetching]);
 
   return (
-    <CTWBox.StackedWrapper className={cx("ctw-patients-table", className)}>
+    <CTWBox.StackedWrapper
+      className={cx("ctw-patients-table", className)}
+      data-zus-telemetry-namespace="PatientsTable"
+    >
       <CTWBox.Heading title={title}>
         <div className="ctw-relative">
           <div className="ctw-search-icon-wrapper">

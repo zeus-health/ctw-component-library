@@ -101,6 +101,7 @@ export const Table = <T extends MinRecordItem>({
 
   return (
     <div
+      data-zus-telemetry-namespace="Table"
       className={cx("ctw-space-y-4", {
         "ctw-table-stacked": stacked,
       })}

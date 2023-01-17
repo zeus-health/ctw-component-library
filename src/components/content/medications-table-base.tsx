@@ -12,6 +12,7 @@ export type MedicationsTableBaseProps<T extends MinRecordItem> = {
   rowMenuActions?: (condition: MedicationStatementModel) => MenuItem[];
   hideMenu?: boolean;
   className?: string;
+  telemetryNamespace?: string;
   children?: ReactNode;
 } & TableBaseProps<MedicationStatementModel>;
 
@@ -21,6 +22,7 @@ export const MedicationsTableBase = ({
   rowMenuActions,
   hideMenu = false,
   medicationStatements,
+  telemetryNamespace,
   ...tableProps
 }: MedicationsTableBaseProps<MedicationStatementModel>) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -83,7 +85,10 @@ export const MedicationsTableBase = ({
     columns.push({
       className: "ctw-table-action-column",
       render: (medication) => (
-        <DropdownMenu menuItems={rowMenuActions(medication)}>
+        <DropdownMenu
+          menuItems={rowMenuActions(medication)}
+          telemetryNamespace={telemetryNamespace}
+        >
           <DotsHorizontalIcon className="ctw-w-5" />
         </DropdownMenu>
       ),
@@ -91,7 +96,11 @@ export const MedicationsTableBase = ({
   }
 
   return (
-    <div className={className} ref={containerRef}>
+    <div
+      className={className}
+      ref={containerRef}
+      data-zus-telemetry-namespace={telemetryNamespace}
+    >
       <Table
         stacked={breakpoints.sm}
         records={medicationStatements}

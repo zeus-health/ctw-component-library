@@ -29,7 +29,10 @@ export function PatientMedications({
   const [includeInactiveMeds, setIncludeInactiveMeds] = useState(false);
 
   return (
-    <CTWBox.StackedWrapper className={cx("ctw-patient-medications", className)}>
+    <CTWBox.StackedWrapper
+      className={cx("ctw-patient-medications", className)}
+      data-zus-telemetry-namespace="PatientMedications"
+    >
       <CTWBox.Heading title="Medications">
         {!readOnly && (
           <AddNewMedDrawer
@@ -40,6 +43,7 @@ export function PatientMedications({
               className="ctw-btn-clear ctw-link"
               type="button"
               onClick={() => setDrawerIsOpen(true)}
+              data-zus-telemetry-click="Add medication"
             >
               + Add Medication
             </button>

@@ -39,7 +39,10 @@ export const ModalConfirmDelete = ({
   return (
     <Modal onAfterClosed={() => setAlert(undefined)} {...modalProps}>
       {alert && <ErrorAlert header={alert} />}
-      <div className="ctw-items-left ctw-flex ctw-h-full ctw-flex-col ctw-space-y-2 ctw-overflow-y-auto">
+      <div
+        className="ctw-items-left ctw-flex ctw-h-full ctw-flex-col ctw-space-y-2 ctw-overflow-y-auto"
+        data-zus-telemetry-namespace="ModalConfirmDelete"
+      >
         <span className="ctw-text-left ctw-text-lg ctw-font-medium ctw-text-content-black">
           {`Remove this ${resourceType}?`}
         </span>
@@ -54,6 +57,7 @@ export const ModalConfirmDelete = ({
           type="button"
           onClick={onClose}
           className="ctw-btn-default ctw-flex-1"
+          data-zus-telemetry-click="Cancel button"
         >
           Cancel
         </button>
@@ -62,6 +66,7 @@ export const ModalConfirmDelete = ({
           disabled={isDeleting}
           onClick={onConfirm}
           className="ctw-btn-primary ctw-save-button ctw-flex-1"
+          data-zus-telemetry-click="Remove button"
         >
           {isDeleting ? "Removing..." : "Remove"}
           {isDeleting && <Spinner className="ctw-ml-2 ctw-text-white" />}

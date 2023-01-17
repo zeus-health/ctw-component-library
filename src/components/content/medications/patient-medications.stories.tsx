@@ -17,7 +17,12 @@ export default {
   component: PatientMedications,
   decorators: [
     (Story, { args }) => (
-      <CTWProvider env="dev" authToken="ey.12345" builderId="12345">
+      <CTWProvider
+        env="dev"
+        authToken="ey.12345"
+        builderId="12345"
+        disableTelemetry
+      >
         <PatientProvider patientID="007" systemURL={SYSTEM_ZUS_UNIVERSAL_ID}>
           <Story args={args} />
         </PatientProvider>

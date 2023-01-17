@@ -70,6 +70,7 @@ export function PatientConditions({
   return (
     <div
       ref={containerRef}
+      data-zus-telemetry-namespace="PatientConditions"
       className={cx("ctw-patient-conditions", className, {
         "ctw-patient-conditions-stacked": breakpoints.sm,
       })}

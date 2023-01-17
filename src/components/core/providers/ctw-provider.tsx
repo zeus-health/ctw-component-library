@@ -25,6 +25,7 @@ import {
 } from "@/styles/tailwind.theme";
 import { claimsBuilderId } from "@/utils/auth";
 import { ctwFetch, queryClient } from "@/utils/request";
+import { Telemetry } from "@/utils/telemetry";
 import "../main.scss";
 
 export type Env = "dev" | "sandbox" | "production";
@@ -35,11 +36,12 @@ type AuthTokenSpecified = { authToken: string; authTokenURL?: never };
 type AuthTokenURLSpecified = { authToken?: never; authTokenURL: string };
 
 type CTWProviderProps = {
-  children: ReactNode;
-  env: Env;
   builderId?: string;
-  theme?: Theme;
+  children: ReactNode;
+  disableTelemetry?: boolean;
+  env: Env;
   headers?: Record<string, string>;
+  theme?: Theme;
 } & (AuthTokenSpecified | AuthTokenURLSpecified);
 
 declare global {
@@ -50,7 +52,12 @@ declare global {
   }
 }
 
-function CTWProvider({ theme, children, ...ctwState }: CTWProviderProps) {
+function CTWProvider({
+  theme,
+  disableTelemetry,
+  children,
+  ...ctwState
+}: CTWProviderProps) {
   const [token, setToken] = useState<CTWToken>();
   const ctwProviderRef = useRef<HTMLDivElement>(null);
 
@@ -94,6 +101,16 @@ function CTWProvider({ theme, children, ...ctwState }: CTWProviderProps) {
     }
     return newToken.accessToken;
   }, [token, ctwState]);
+
+  useEffect(() => {
+    if (!disableTelemetry) {
+      Telemetry.init(ctwState.env);
+      Telemetry.setBuilder(ctwState.builderId);
+      handleAuth()
+        .then((accessToken) => Telemetry.setUser(accessToken))
+        .catch(() => Telemetry.clearUser());
+    }
+  }, [ctwState.builderId, ctwState.env, disableTelemetry, handleAuth, token]);
 
   const providerState = useMemo(
     () => ({
