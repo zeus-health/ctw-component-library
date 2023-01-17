@@ -7,7 +7,6 @@ import { PatientProvider } from "./components/core/providers/patient-provider";
 import { ErrorBoundary } from "./error-boundary";
 import { SecuredApp } from "./SecuredApp";
 import { PatientConditions } from "./components/content/conditions/patient-conditions";
-import { PatientsTable } from "@/components/content/patients/patients-table";
 
 const {
   VITE_SYSTEM_URL,
@@ -55,11 +54,6 @@ const DemoApp = ({ accessToken = "" }) => (
           </h3>
           <ErrorBoundary>
             <PatientMedications />
-            <PatientsTable
-              handleRowClick={(patient) => {
-                console.log("clicked patient", patient);
-              }}
-            />
           </ErrorBoundary>
         </div>
       </div>
