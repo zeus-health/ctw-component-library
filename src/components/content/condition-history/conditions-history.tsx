@@ -39,11 +39,8 @@ export function ConditionHistory({
   const [conditionsWithoutDate, setConditionsWithoutDate] =
     useState<CollapsibleDataListStackEntries>([]);
   const [isHistoryLoading, setIsHistoryLoading] = useState(true);
-
   const [binaryDocument, setBinaryDocument] = useState<fhir4.Binary>();
-
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const [ccdaViewerTitle, setCCDAViewerTitle] = useState<string>();
 
   // Fetching

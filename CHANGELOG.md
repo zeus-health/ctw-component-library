@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 0.39.3
+
+### Patch Changes
+
+- 20bb079: Do not fetch condition history for conditions with verification status of entered-in-error. Also do not remove entered-in-error from conditions with entered-in-error from the audit trail.
+- 19f396c: Display status will now show the correct display status.
+
 ## 0.39.2
 
 ### Patch Changes
