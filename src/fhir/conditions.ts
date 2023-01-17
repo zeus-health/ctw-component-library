@@ -161,7 +161,15 @@ export function useConditionHistory(condition?: ConditionModel) {
     QUERY_KEY_CONDITION_HISTORY,
     [condition],
     async (requestContext, patient) => {
-      if (!condition) return undefined;
+      if (!condition) {
+        return undefined;
+      }
+      if (condition.verificationStatus === "entered-in-error") {
+        return {
+          conditions: [],
+          bundle: { resourceType: "Bundle", entry: [] },
+        };
+      }
       try {
         const tokens = condition.knownCodings.map(
           (coding) => `${coding.system}|${coding.code}`
