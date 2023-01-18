@@ -20,11 +20,8 @@ export function useConditionFilters() {
   }
 
   function applyFilters(
-    patientConditions: ConditionModel[],
-    otherConditions: ConditionModel[]
+    conditions: ConditionModel[],
   ) {
-    const conditions =
-      filters.collection === "patient" ? patientConditions : otherConditions;
     return conditions.filter((c) => {
       if (filters.showHistoric) return true;
 
