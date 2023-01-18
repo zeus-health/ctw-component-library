@@ -30,7 +30,7 @@ export function PatientMedications({
   const [includeInactiveMeds, setIncludeInactiveMeds] = useState(false);
 
   return (
-    <TelemetryBoundary>
+    <TelemetryBoundary name="PatientMedications">
       <CTWBox.StackedWrapper
         className={cx("ctw-patient-medications", className)}
         data-zus-telemetry-namespace="PatientMedications"

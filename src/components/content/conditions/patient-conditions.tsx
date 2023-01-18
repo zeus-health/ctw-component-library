@@ -69,7 +69,7 @@ export function PatientConditions({
       : OtherProviderConditionHoverActions;
 
   return (
-    <TelemetryBoundary>
+    <TelemetryBoundary name="PatientConditions">
       <div
         ref={containerRef}
         data-zus-telemetry-namespace="PatientConditions"

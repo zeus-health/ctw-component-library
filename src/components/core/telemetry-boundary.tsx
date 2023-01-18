@@ -1,9 +1,11 @@
-import { Component, ErrorInfo, ReactNode } from "react";
+import { pickBy } from "lodash";
+import React, { Component, ErrorInfo, ReactNode } from "react";
 import * as CTWBox from "@/components/core/ctw-box";
 import { Telemetry } from "@/utils/telemetry";
 
 interface Props {
   children?: ReactNode;
+  name?: string;
 }
 
 interface State {
@@ -26,19 +28,24 @@ export class TelemetryBoundary extends Component<Props, State> {
   };
 
   componentDidMount() {
-    const {
-      props: { children },
-    } = this;
-    Telemetry.logger.info(`Loaded component ${children?.constructor.name}`);
+    const { props } = this;
+    if (props.name) {
+      Telemetry.logger.info(`Loaded component ${props.name}`);
+    }
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    Telemetry.logger.error(error.message, {
-      ...errorInfo,
-      error: {
-        stack: error.stack,
-      },
-    });
+    const { props } = this;
+    Telemetry.logger.error(
+      error.message,
+      pickBy({
+        ...errorInfo,
+        componentName: props.name,
+        error: {
+          stack: error.stack,
+        },
+      })
+    );
   }
 
   resetState = () => {

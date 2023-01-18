@@ -122,6 +122,14 @@ export class Telemetry {
     datadogLogs.setUser({});
   }
 
+  static logError(error: Error) {
+    this.logger.error(error.message, {
+      error: {
+        stack: error.stack,
+      },
+    });
+  }
+
   static trackInteraction(
     eventType: string,
     namespace: string,

@@ -55,7 +55,7 @@ export function ProviderMedsTable({
   }, [builderMedications, sortColumn, sortOrder, showInactive]);
 
   return (
-    <TelemetryBoundary>
+    <TelemetryBoundary name="ProviderMedsTable">
       <MedicationsTableBase
         medicationStatements={medicationModels}
         telemetryNamespace="ProviderMedsTable"

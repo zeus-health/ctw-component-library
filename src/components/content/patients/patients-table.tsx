@@ -95,7 +95,7 @@ export const PatientsTable = ({
   }, [isError, isFetching]);
 
   return (
-    <TelemetryBoundary>
+    <TelemetryBoundary name="PatientsTable">
       <CTWBox.StackedWrapper
         className={cx("ctw-patients-table", className)}
         data-zus-telemetry-namespace="PatientsTable"

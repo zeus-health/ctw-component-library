@@ -43,7 +43,7 @@ export function MedicationHistory({ medication }: MedicationHistoryProps) {
   }
 
   return (
-    <TelemetryBoundary>
+    <TelemetryBoundary name="MedicationHistory">
       <h2 className="ctw-text-lg ctw-font-semibold">Medication History</h2>
       {entries.length ? (
         <CollapsibleDataListStack

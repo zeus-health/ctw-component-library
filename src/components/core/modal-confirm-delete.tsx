@@ -3,6 +3,7 @@ import { useState } from "react";
 import { ErrorAlert } from "./alert";
 import { Modal, ModalProps } from "./modal";
 import { Spinner } from "./spinner";
+import { Telemetry } from "@/utils/telemetry";
 
 export type ModalConfirmDeleteProps = {
   resource: Resource;
@@ -28,6 +29,7 @@ export const ModalConfirmDelete = ({
       setIsDeleting(false);
       onClose();
     } catch (err) {
+      Telemetry.logError(err as Error);
       setIsDeleting(false);
       setAlert(`Something went wrong. Please try again.`);
       throw err;

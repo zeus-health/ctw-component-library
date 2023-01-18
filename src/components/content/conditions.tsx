@@ -204,7 +204,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   }
 
   return (
-    <TelemetryBoundary>
+    <TelemetryBoundary name="Conditions">
       <div
         ref={containerRef}
         data-zus-telemetry-namespace="Conditions"

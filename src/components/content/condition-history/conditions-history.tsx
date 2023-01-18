@@ -113,7 +113,7 @@ export function ConditionHistory({
   }, [condition, getRequestContext, historyResponse.data, onEdit]);
 
   return (
-    <TelemetryBoundary>
+    <TelemetryBoundary name="ConditionHistory">
       <CCDAModal
         isOpen={isModalOpen}
         fileName={ccdaViewerTitle}

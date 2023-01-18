@@ -55,7 +55,7 @@ export function OtherProviderMedsTable({
   }, [otherProviderMedications, sortColumn, sortOrder]);
 
   return (
-    <TelemetryBoundary>
+    <TelemetryBoundary name="OtherProviderMedsTable">
       <div data-zus-telemetry-namespace="OtherProviderMedsTable">
         <MedicationsTableBase
           telemetryNamespace="MedicationsTableBase"
