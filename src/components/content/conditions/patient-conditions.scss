@@ -45,4 +45,21 @@
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
   }
+
+  .ctw-tab { 
+    @apply ctw-cursor-pointer ctw-border-0 ctw-bg-transparent ctw-p-0 ctw-text-base;
+  }
+
+  .ctw-tab-underline {
+    &:after {
+      @apply ctw-h-0.5 ctw-left-0 -ctw-bottom-5 ctw-w-full ctw-block ctw-absolute;
+      content: "";
+    }
+    
+    &:hover:after {
+      @apply ctw-bg-content-black;
+    }
+  }
+
+  
 }

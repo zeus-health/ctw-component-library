@@ -6,7 +6,6 @@ import { filterOtherConditions } from "./helpers";
 import { PatientConditionsActions } from "./patient-conditions-actions";
 import { patientConditionsColumns } from "./patient-conditions-columns";
 import { useConditionFilters } from "./patient-conditions-filters";
-import { PatientConditionsHeader } from "./patient-conditions-header";
 import {
   OtherProviderConditionHoverActions,
   PatientConditionHoverActions,
@@ -74,32 +73,35 @@ export function PatientConditions({
         "ctw-patient-conditions-stacked": breakpoints.sm,
       })}
     >
-      <PatientConditionsHeader
-        otherConditions={otherConditions}
-        collection={filters.collection}
-        onCollectionChange={(collection) => updateFilters({ collection })}
-      />
-      <PatientConditionsActions
-        hideAdd={readOnly || filters.collection === "other"}
-        onToggleShowHistoric={() =>
-          updateFilters({ showHistoric: !filters.showHistoric })
-        }
-      />
-      <Table
-        stacked={breakpoints.sm}
-        className="-ctw-mx-px !ctw-rounded-none"
-        showTableHead={false}
-        isLoading={isLoading()}
-        records={conditions}
-        RowActions={readOnly ? undefined : RowActions}
-        columns={patientConditionsColumns}
-        handleRowClick={(condition) =>
-          showConditionHistory({
-            condition,
-            readOnly: readOnly || condition.isSummaryResource,
-          })
-        }
-      />
+      <div className="ctw-items-center ctw-justify-between ctw-py-5 ctw-px-4">
+        <div className="ctw-text-xl ctw-font-medium ctw-text-content-black">
+          Conditions
+        </div>
+        <PatientConditionsActions
+          hideAdd={readOnly || filters.collection === "other"}
+          onToggleShowHistoric={() =>
+            updateFilters({ showHistoric: !filters.showHistoric })
+          }
+          otherConditions={otherConditions}
+          collection={filters.collection}
+          onCollectionChange={(collection) => updateFilters({ collection })}
+        />
+        <Table
+          stacked={breakpoints.sm}
+          className="-ctw-mx-px !ctw-rounded-none"
+          showTableHead={false}
+          isLoading={isLoading()}
+          records={conditions}
+          RowActions={readOnly ? undefined : RowActions}
+          columns={patientConditionsColumns}
+          handleRowClick={(condition) =>
+            showConditionHistory({
+              condition,
+              readOnly: readOnly || condition.isSummaryResource,
+            })
+          }
+        />
+      </div>
     </div>
   );
 }
