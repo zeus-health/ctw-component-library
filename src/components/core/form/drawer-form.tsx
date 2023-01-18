@@ -7,6 +7,7 @@ import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { getFormResponseErrors } from "@/utils/errors";
 import { AnyZodSchema, getFormData } from "@/utils/form-helper";
+import { Telemetry } from "@/utils/telemetry";
 
 export type FormErrors = Record<string, string[]>;
 type InputError = Record<string, string[]>;
@@ -82,6 +83,7 @@ export const DrawerForm = <T,>({
     try {
       response = await action(formResult.data, getRequestContext);
     } catch (e) {
+      Telemetry.logError(e as Error);
       responseIsSuccess = false;
       requestErrors = [];
     }

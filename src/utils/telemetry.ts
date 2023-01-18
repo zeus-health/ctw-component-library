@@ -2,6 +2,7 @@ import { datadogLogs } from "@datadog/browser-logs";
 import { datadogRum } from "@datadog/browser-rum-slim";
 import jwtDecode from "jwt-decode";
 import packageJson from "../../package.json";
+import { FhirError, fhirErrorResponse } from "@/fhir/errors";
 import {
   AUTH_BUILDER_ID,
   AUTH_BUILDER_NAME,
@@ -122,12 +123,17 @@ export class Telemetry {
     datadogLogs.setUser({});
   }
 
-  static logError(error: Error) {
-    this.logger.error(error.message, {
+  static logError(error: Error, overrideMessage?: string) {
+    this.logger.error(overrideMessage || error.message, {
       error: {
         stack: error.stack,
       },
     });
+  }
+
+  static logFhirError(error: FhirError, message: string) {
+    const context = fhirErrorResponse(message, error);
+    this.logger.error(message, context);
   }
 
   static trackInteraction(

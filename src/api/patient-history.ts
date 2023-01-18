@@ -1,6 +1,7 @@
 import { getZusApiBaseUrl } from "./urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { ctwFetch } from "@/utils/request";
+import { Telemetry } from "@/utils/telemetry";
 
 export type PatientHistoryResponseError = {
   // TODO: Can code be a list of status codes? Do we have that type defined anywhere.
@@ -33,6 +34,10 @@ export const schedulePatientHistory = async (
     });
     return await response.json();
   } catch (e) {
+    Telemetry.logError(
+      e as Error,
+      `Error scheduling patient history job with id of ${patientID}`
+    );
     throw Error(`Error scheduling patient history job with id of ${patientID}`);
   }
 };

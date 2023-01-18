@@ -3,6 +3,7 @@ import { EncounterModel } from "./models/encounter";
 import { searchCommonRecords } from "./search-helpers";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { QUERY_KEY_PATIENT_ENCOUNTERS } from "@/utils/query-keys";
+import { Telemetry } from "@/utils/telemetry";
 
 export function usePatientEncounters() {
   return useQueryWithPatient(
@@ -20,6 +21,10 @@ export function usePatientEncounters() {
         const models = setupEncounterModels(encounters, bundle);
         return models;
       } catch (e) {
+        Telemetry.logError(
+          e as Error,
+          "Failed fetching timeline information for patient"
+        );
         throw new Error(
           `Failed fetching timeline information for patient: ${e}`
         );
