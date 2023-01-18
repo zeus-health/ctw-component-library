@@ -1,7 +1,7 @@
 import plugin from "@vitejs/plugin-react";
 import { resolve } from "path";
 import { defineConfig } from "vite";
-import { dependencies, peerDependencies } from "./package.json";
+import { peerDependencies } from "./package.json";
 
 export default defineConfig({
   plugins: [
