@@ -1,3 +1,4 @@
+import { Tab } from "@headlessui/react";
 import cx from "classnames";
 import { useAddConditionForm } from "./condition-hooks";
 import { FilterCollection } from "./patient-conditions-filters";
@@ -36,27 +37,49 @@ export function PatientConditionsActions({
     <>
       <div className="ctw-justify-end ctw-space-x-2 ctw-border-0 ctw-border-b ctw-border-t ctw-border-solid ctw-border-divider-light ctw-py-5">
         <div className="ctw-space-x-4">
-          <button
-            type="button"
-            className={cx(
-              activeClass("patient"),
-              "ctw-tab-underline ctw-tab ctw-relative"
-            )}
-            onClick={() => onCollectionChange("patient")}
-          >
-            Condition List
-          </button>
-          <button
-            type="button"
-            className={cx(
-              activeClass("other"),
-              "ctw-tab-underline ctw-tab ctw-relative ctw-space-x-2"
-            )}
-            onClick={() => onCollectionChange("other")}
-          >
-            <span>Other Provider Records</span>
-            <Badge text={`${activeCount}`} color="primary" />
-          </button>
+          <Tab.Group>
+            <Tab.List className="ctw-space-x-2">
+              <Tab
+                className={cx(
+                  activeClass("patient"),
+                  "ctw-tab-underline ctw-tab ctw-relative"
+                )}
+              >
+                <button
+                  type="button"
+                  className={cx(
+                    activeClass("patient"),
+                    "ctw-tab-underline ctw-tab ctw-relative"
+                  )}
+                  onClick={() => {
+                    onCollectionChange("patient");
+                  }}
+                >
+                  Condition List
+                </button>
+              </Tab>
+              <Tab
+                className={cx(
+                  activeClass("other"),
+                  "ctw-tab-underline ctw-tab ctw-relative ctw-space-x-2"
+                )}
+              >
+                <button
+                  type="button"
+                  className={cx(
+                    activeClass("other"),
+                    "ctw-tab-underline ctw-tab ctw-relative ctw-space-x-2"
+                  )}
+                  onClick={() => {
+                    onCollectionChange("other");
+                  }}
+                >
+                  <span>Other Provider Records</span>
+                  <Badge text={`${activeCount}`} color="primary" />
+                </button>
+              </Tab>
+            </Tab.List>
+          </Tab.Group>
         </div>
       </div>
       {!hideAdd ? (
