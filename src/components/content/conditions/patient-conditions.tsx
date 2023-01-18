@@ -3,13 +3,13 @@ import "./patient-conditions.scss";
 import { useRef } from "react";
 import { useConditionHistory } from "../condition-history/conditions-history-drawer";
 import { filterOtherConditions } from "./helpers";
+import { PatientConditionsActions } from "./patient-conditions-actions";
 import { patientConditionsColumns } from "./patient-conditions-columns";
 import { useConditionFilters } from "./patient-conditions-filters";
 import {
   OtherProviderConditionHoverActions,
   PatientConditionHoverActions,
 } from "./patient-conditions-menu-actions";
-import { Badge } from "@/components/core/badge";
 import { FormEntry } from "@/components/core/form/drawer-form-with-fields";
 import { Table } from "@/components/core/table/table";
 import {
@@ -18,7 +18,6 @@ import {
 } from "@/fhir/conditions";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { AnyZodSchema } from "@/utils/form-helper";
-import { Tab } from "@headlessui/react";
 
 export type PatientConditionsProps = {
   className?: string;
@@ -61,55 +60,11 @@ export function PatientConditions({
     patientConditions,
     true
   );
+  const conditions = applyFilters(patientConditions, otherConditions);
   const RowActions =
     filters.collection === "patient"
       ? PatientConditionHoverActions
       : OtherProviderConditionHoverActions;
-
-
-  const tabbedContent = [
-    {
-      key: "condition-list",
-      display: () => "Condition List",
-      render: () => <Table
-        stacked={breakpoints.sm}
-        className="-ctw-mx-px !ctw-rounded-none"
-        showTableHead={false}
-        isLoading={isLoading()}
-        records={applyFilters(patientConditions)}
-        RowActions={readOnly ? undefined : RowActions}
-        columns={patientConditionsColumns}
-        handleRowClick={(condition) =>
-          showConditionHistory({
-            condition,
-            readOnly: readOnly || condition.isSummaryResource,
-          })
-        }
-      />
-    },
-    {
-      key: "other-provider-records",
-      display: () => <>
-        Other Provider Records
-        <Badge text="activeCount" color="primary" />
-      </>,
-      render: () => <Table
-        stacked={breakpoints.sm}
-        className="-ctw-mx-px !ctw-rounded-none"
-        showTableHead={false}
-        isLoading={isLoading()}
-        records={applyFilters(otherConditions)}
-        RowActions={readOnly ? undefined : RowActions}
-        columns={patientConditionsColumns}
-        handleRowClick={(condition) =>
-          showConditionHistory({
-            condition,
-            readOnly: readOnly || condition.isSummaryResource,
-          })
-        }
-      />,
-    },
-  ];
 
   return (
     <div
@@ -122,39 +77,30 @@ export function PatientConditions({
         <div className="ctw-text-xl ctw-font-medium ctw-text-content-black">
           Conditions
         </div>
-        <Tab.Group>
-          <Tab.List className="ctw-flex ctw-space-x-1 ctw-rounded-xl ctw-p-1">
-            {tabbedContent.map(({ key, display }) => (
-              <Tab
-                key={key}
-                className={({ selected }) =>
-                  cx(
-                    "ctw-w-full ctw-rounded-lg ctw-py-2.5 ctw-text-sm ctw-font-medium",
-                    "ctw-ring-white ctw-ring-opacity-60 ctw-ring-offset-2 focus:ctw-outline-none focus:ctw-ring-2",
-                    selected
-                      ? "ctw-bg-white ctw-shadow"
-                      : "hover:ctw-bg-white/[0.12] ctw-cursor-pointer hover:ctw-text-white"
-                  )
-                }
-              >
-                {display()}
-              </Tab>
-            ))}
-          </Tab.List>
-          <Tab.Panels className="mt-2">
-            {tabbedContent.map(({ key, render }) => (
-              <Tab.Panel
-                key={key}
-                className={cx(
-                  "ctw-rounded-xl ctw-p-3",
-                  "focus:outline-none focus:ring-2"
-                )}
-              >
-                {render()}
-              </Tab.Panel>
-            ))}
-          </Tab.Panels>
-        </Tab.Group>
+        <PatientConditionsActions
+          hideAdd={readOnly || filters.collection === "other"}
+          onToggleShowHistoric={() =>
+            updateFilters({ showHistoric: !filters.showHistoric })
+          }
+          otherConditions={otherConditions}
+          collection={filters.collection}
+          onCollectionChange={(collection) => updateFilters({ collection })}
+        />
+        <Table
+          stacked={breakpoints.sm}
+          className="-ctw-mx-px !ctw-rounded-none"
+          showTableHead={false}
+          isLoading={isLoading()}
+          records={conditions}
+          RowActions={readOnly ? undefined : RowActions}
+          columns={patientConditionsColumns}
+          handleRowClick={(condition) =>
+            showConditionHistory({
+              condition,
+              readOnly: readOnly || condition.isSummaryResource,
+            })
+          }
+        />
       </div>
     </div>
   );
