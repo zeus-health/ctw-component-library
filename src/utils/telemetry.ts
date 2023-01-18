@@ -15,12 +15,10 @@ import {
   ZusJWT,
 } from "@/utils/auth";
 
-// Assume environment is production unless localhost
-let defaultEnvironment = "production";
-if (/https?:\/\/(localhost|\d+\.\d+\.\d+\.\d+)/.test(window.location.origin)) {
-  defaultEnvironment = "development";
-}
-
+// Assume local development if origin is localhost or just an IP address
+const isLocalDevelopment = /https?:\/\/(localhost|\d+\.\d+\.\d+\.\d+)/i.test(
+  window.location.origin
+);
 // Avoid initializing telemetry multiple times
 let isInitialized = false;
 
@@ -44,12 +42,19 @@ export class Telemetry {
     return isInitialized;
   }
 
-  static init(environment = defaultEnvironment) {
+  static init(environment: string) {
     if (this.telemetryIsAvailable) {
       return;
     }
-    const datadogClientToken = "pub29b659b1cd402a88d57c4f8c923c1eea";
-    const datadogApplicationId = "48fec1f8-b187-492a-afdd-e809cc6b3b82";
+    const DATADOG_SERVICE_NAME = "ctw-component-library";
+    const DATADOG_CLIENT_TOKEN = "";
+    const DEV_DATADOG_CLIENT_TOKEN = "pub29b659b1cd402a88d57c4f8c923c1eea";
+    const DATADOG_APP_ID = "";
+    const DEV_DATADOG_APP_ID = "48fec1f8-b187-492a-afdd-e809cc6b3b82";
+
+    const isDev = isLocalDevelopment || /dev.*/i.test(environment);
+    const datadogClientToken = isDev ? DEV_DATADOG_CLIENT_TOKEN : DATADOG_CLIENT_TOKEN;
+    const datadogApplicationId = isDev ? DEV_DATADOG_APP_ID : DATADOG_APP_ID;
 
     datadogRum.init({
       allowedTracingUrls: [], // No allowed tracing urls
@@ -57,7 +62,7 @@ export class Telemetry {
       clientToken: datadogClientToken,
       defaultPrivacyLevel: "mask",
       env: environment,
-      service: "ctw-component-library",
+      service: DATADOG_SERVICE_NAME,
       sessionReplaySampleRate: 20,
       sessionSampleRate: 100,
       site: "datadoghq.com",
@@ -71,7 +76,7 @@ export class Telemetry {
       env: environment,
       forwardConsoleLogs: [], // No console logs to datadog.
       forwardErrorsToLogs: false,
-      service: "ctw-component-library",
+      service: DATADOG_SERVICE_NAME,
       site: "datadoghq.com",
       version: packageJson.version,
     });
