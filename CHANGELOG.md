@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 0.39.4
+
+### Patch Changes
+
+- 44b6b89a: Updating logic for getting identifying RxNorm on a medication.
+- 837ed00c: Fix z-index with radix dropdown menu. Change background color of condition 2.0 to white, to better reflect design.
+
 ## 0.39.3
 
 ### Patch Changes
