@@ -22,22 +22,25 @@ const tabbedContent = [
   {
     key: "builder-medications",
     display: "Builder Medications",
-    render: () =>
-      <ProviderMedsTable /> },
+    render: () => <ProviderMedsTable />,
+  },
   {
     key: "historic-medications",
-    display: "Historic Medications", render: () => <div>No Content...</div>},
+    display: "Historic Medications",
+    render: () => <div>No Content...</div>,
+  },
   {
     key: "other-provider-medications",
     display: "Other Provider Medications",
-    render: () => <OtherProviderMedsTable />},
-]
+    render: () => <OtherProviderMedsTable />,
+  },
+];
 export function PatientMedicationsTabbed({
-                                           className,
-                                           readOnly = false,
-                                           showConfirmedMedsTable = true,
-                                           showOtherProvidersMedsTable = true,
-                                         }: PatientMedicationsTabbedProps) {
+  className,
+  readOnly = false,
+  showConfirmedMedsTable = true,
+  showOtherProvidersMedsTable = true,
+}: PatientMedicationsTabbedProps) {
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
   const [includeInactiveMeds, setIncludeInactiveMeds] = useState(false);
 
@@ -68,11 +71,11 @@ export function PatientMedicationsTabbed({
                 key={key}
                 className={({ selected }) =>
                   classNames(
-                    'ctw-w-full ctw-rounded-lg ctw-py-2.5 ctw-text-sm ctw-font-medium',
-                    'ctw-ring-white ctw-ring-opacity-60 ctw-ring-offset-2 focus:ctw-outline-none focus:ctw-ring-2',
+                    "ctw-w-full ctw-rounded-lg ctw-py-2.5 ctw-text-sm ctw-font-medium",
+                    "ctw-ring-white ctw-ring-opacity-60 ctw-ring-offset-2 focus:ctw-outline-none focus:ctw-ring-2",
                     selected
-                      ? 'ctw-bg-white ctw-shadow'
-                      : 'hover:ctw-bg-white/[0.12] hover:ctw-text-white ctw-cursor-pointer'
+                      ? "ctw-bg-white ctw-shadow"
+                      : "hover:ctw-bg-white/[0.12] ctw-cursor-pointer hover:ctw-text-white"
                   )
                 }
               >
@@ -86,8 +89,8 @@ export function PatientMedicationsTabbed({
               <Tab.Panel
                 key={key}
                 className={classNames(
-                  'ctw-rounded-xl ctw-p-3',
-                  'focus:outline-none focus:ring-2'
+                  "ctw-rounded-xl ctw-p-3",
+                  "focus:outline-none focus:ring-2"
                 )}
               >
                 {render()}
