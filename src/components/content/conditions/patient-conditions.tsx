@@ -13,6 +13,7 @@ import {
 } from "./patient-conditions-menu-actions";
 import { FormEntry } from "@/components/core/form/drawer-form-with-fields";
 import { Table } from "@/components/core/table/table";
+import { TelemetryBoundary } from "@/components/core/telemetry-boundary";
 import {
   useOtherProviderConditions,
   usePatientConditions,
@@ -68,39 +69,41 @@ export function PatientConditions({
       : OtherProviderConditionHoverActions;
 
   return (
-    <div
-      ref={containerRef}
-      data-zus-telemetry-namespace="PatientConditions"
-      className={cx("ctw-patient-conditions", className, {
-        "ctw-patient-conditions-stacked": breakpoints.sm,
-      })}
-    >
-      <PatientConditionsHeader
-        otherConditions={otherConditions}
-        collection={filters.collection}
-        onCollectionChange={(collection) => updateFilters({ collection })}
-      />
-      <PatientConditionsActions
-        hideAdd={readOnly || filters.collection === "other"}
-        onToggleShowHistoric={() =>
-          updateFilters({ showHistoric: !filters.showHistoric })
-        }
-      />
-      <Table
-        stacked={breakpoints.sm}
-        className="-ctw-mx-px !ctw-rounded-none"
-        showTableHead={false}
-        isLoading={isLoading()}
-        records={conditions}
-        RowActions={readOnly ? undefined : RowActions}
-        columns={patientConditionsColumns}
-        handleRowClick={(condition) =>
-          showConditionHistory({
-            condition,
-            readOnly: readOnly || condition.isSummaryResource,
-          })
-        }
-      />
-    </div>
+    <TelemetryBoundary>
+      <div
+        ref={containerRef}
+        data-zus-telemetry-namespace="PatientConditions"
+        className={cx("ctw-patient-conditions", className, {
+          "ctw-patient-conditions-stacked": breakpoints.sm,
+        })}
+      >
+        <PatientConditionsHeader
+          otherConditions={otherConditions}
+          collection={filters.collection}
+          onCollectionChange={(collection) => updateFilters({ collection })}
+        />
+        <PatientConditionsActions
+          hideAdd={readOnly || filters.collection === "other"}
+          onToggleShowHistoric={() =>
+            updateFilters({ showHistoric: !filters.showHistoric })
+          }
+        />
+        <Table
+          stacked={breakpoints.sm}
+          className="-ctw-mx-px !ctw-rounded-none"
+          showTableHead={false}
+          isLoading={isLoading()}
+          records={conditions}
+          RowActions={readOnly ? undefined : RowActions}
+          columns={patientConditionsColumns}
+          handleRowClick={(condition) =>
+            showConditionHistory({
+              condition,
+              readOnly: readOnly || condition.isSummaryResource,
+            })
+          }
+        />
+      </div>
+    </TelemetryBoundary>
   );
 }

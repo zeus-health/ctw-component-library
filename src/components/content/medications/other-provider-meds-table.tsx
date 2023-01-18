@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { MedicationDrawer } from "@/components/content/medication-drawer";
 import { MedicationsTableBase } from "@/components/content/medications-table-base";
 import { AddNewMedDrawer } from "@/components/content/medications/add-new-med-drawer";
+import { TelemetryBoundary } from "@/components/core/telemetry-boundary";
 import { useDismissMedication } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
@@ -54,47 +55,49 @@ export function OtherProviderMedsTable({
   }, [otherProviderMedications, sortColumn, sortOrder]);
 
   return (
-    <div data-zus-telemetry-namespace="OtherProviderMedsTable">
-      <MedicationsTableBase
-        telemetryNamespace="MedicationsTableBase"
-        medicationStatements={medicationModels}
-        isLoading={isLoading}
-        rowMenuActions={(medication) =>
-          compact([
-            {
-              name: "View History",
-              action: async () => {
-                openHistoryDrawer(medication);
-              },
-            },
-            {
-              name: "Add to Record",
-              action: async () => {
-                openAddNewMedicationDrawer(medication);
-              },
-            },
-            medication.isArchived
-              ? null
-              : {
-                  name: "Dismiss",
-                  action: async () => {
-                    await dismissMedication(medication);
-                  },
+    <TelemetryBoundary>
+      <div data-zus-telemetry-namespace="OtherProviderMedsTable">
+        <MedicationsTableBase
+          telemetryNamespace="MedicationsTableBase"
+          medicationStatements={medicationModels}
+          isLoading={isLoading}
+          rowMenuActions={(medication) =>
+            compact([
+              {
+                name: "View History",
+                action: async () => {
+                  openHistoryDrawer(medication);
                 },
-          ])
-        }
-      />
-      <MedicationDrawer
-        medication={selectedMedication}
-        isOpen={historyDrawerOpen}
-        onClose={() => setHistoryDrawerOpen(false)}
-        onDismissal={dismissMedication}
-      />
-      <AddNewMedDrawer
-        medication={selectedMedication?.resource}
-        isOpen={addNewMedDrawerOpen}
-        handleOnClose={() => setAddNewMedDrawerOpen(false)}
-      />
-    </div>
+              },
+              {
+                name: "Add to Record",
+                action: async () => {
+                  openAddNewMedicationDrawer(medication);
+                },
+              },
+              medication.isArchived
+                ? null
+                : {
+                    name: "Dismiss",
+                    action: async () => {
+                      await dismissMedication(medication);
+                    },
+                  },
+            ])
+          }
+        />
+        <MedicationDrawer
+          medication={selectedMedication}
+          isOpen={historyDrawerOpen}
+          onClose={() => setHistoryDrawerOpen(false)}
+          onDismissal={dismissMedication}
+        />
+        <AddNewMedDrawer
+          medication={selectedMedication?.resource}
+          isOpen={addNewMedDrawerOpen}
+          handleOnClose={() => setAddNewMedDrawerOpen(false)}
+        />
+      </div>
+    </TelemetryBoundary>
   );
 }

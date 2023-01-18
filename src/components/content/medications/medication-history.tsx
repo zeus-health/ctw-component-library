@@ -4,6 +4,7 @@ import { sortMedHistory } from "./helpers";
 import { CollapsibleDataListProps } from "@/components/core/collapsible-data-list";
 import { CollapsibleDataListStack } from "@/components/core/collapsible-data-list-stack";
 import { Loading } from "@/components/core/loading";
+import { TelemetryBoundary } from "@/components/core/telemetry-boundary";
 import { useMedicationHistory } from "@/fhir/medications";
 import { MedicationModel } from "@/fhir/models/medication";
 import { MedicationAdministrationModel } from "@/fhir/models/medication-administration";
@@ -42,7 +43,7 @@ export function MedicationHistory({ medication }: MedicationHistoryProps) {
   }
 
   return (
-    <>
+    <TelemetryBoundary>
       <h2 className="ctw-text-lg ctw-font-semibold">Medication History</h2>
       {entries.length ? (
         <CollapsibleDataListStack
@@ -52,7 +53,7 @@ export function MedicationHistory({ medication }: MedicationHistoryProps) {
       ) : (
         <span>No history available for this medication.</span>
       )}
-    </>
+    </TelemetryBoundary>
   );
 }
 

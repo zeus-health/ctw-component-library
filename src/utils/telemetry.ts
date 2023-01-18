@@ -37,6 +37,8 @@ let isInitialized = false;
 export class Telemetry {
   private static namespaceMap = new WeakMap();
 
+  static logger = datadogLogs.logger;
+
   private static get telemetryIsAvailable() {
     return isInitialized;
   }
@@ -49,26 +51,28 @@ export class Telemetry {
     const datadogApplicationId = "48fec1f8-b187-492a-afdd-e809cc6b3b82";
 
     datadogRum.init({
-      env: environment,
-      site: "datadoghq.com",
+      allowedTracingUrls: [], // No allowed tracing urls
       applicationId: datadogApplicationId,
       clientToken: datadogClientToken,
-      service: "ctw-component-library",
-      version: packageJson.version,
-      sessionSampleRate: 100,
-      sessionReplaySampleRate: 20,
-      trackUserInteractions: false,
-      trackResources: false,
-      trackLongTasks: true,
       defaultPrivacyLevel: "mask",
-      allowedTracingUrls: [], // No allowed tracing urls
+      env: environment,
+      service: "ctw-component-library",
+      sessionReplaySampleRate: 20,
+      sessionSampleRate: 100,
+      site: "datadoghq.com",
+      trackLongTasks: true,
+      trackResources: false,
+      trackUserInteractions: false,
+      version: packageJson.version,
     });
     datadogLogs.init({
-      env: environment,
-      site: "datadoghq.com",
       clientToken: datadogClientToken,
+      env: environment,
+      forwardConsoleLogs: [], // No console logs to datadog.
+      forwardErrorsToLogs: false,
       service: "ctw-component-library",
-      forwardErrorsToLogs: true,
+      site: "datadoghq.com",
+      version: packageJson.version,
     });
 
     // We are listening to click events propagating to the document body as that
@@ -124,7 +128,7 @@ export class Telemetry {
     action: string
   ) {
     if (this.telemetryIsAvailable) {
-      datadogLogs.logger.log(`${eventType} event: ${namespace} > ${action}`, {
+      this.logger.log(`${eventType} event: ${namespace} > ${action}`, {
         eventType,
         action,
         namespace,
@@ -135,7 +139,7 @@ export class Telemetry {
   /**
    * Lookup Component Namespace - Events are tracked with dataset attributes
    * such as `data-zus-telemetry-click="Submit"` which informs us that a submit
-   * button was clicked. However, our "Submit" button may be apart of a reusable
+   * button was clicked. However, our "Submit" button may be part of a reusable
    * form component and to get context as to which component the event took place
    * in, we traverse up the DOM tree looking for `data-zus-telemetry-namespace`
    * attributes.

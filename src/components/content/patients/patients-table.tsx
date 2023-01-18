@@ -10,6 +10,7 @@ import { Pagination } from "@/components/core/pagination/pagination";
 import { useQueryWithCTW } from "@/components/core/providers/ctw-provider";
 import { Table } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
+import { TelemetryBoundary } from "@/components/core/telemetry-boundary";
 import { getBuilderPatientsList } from "@/fhir/patient-helper";
 import { QUERY_KEY_PATIENTS_LIST } from "@/utils/query-keys";
 import "./patients-table.scss";
@@ -94,41 +95,43 @@ export const PatientsTable = ({
   }, [isError, isFetching]);
 
   return (
-    <CTWBox.StackedWrapper
-      className={cx("ctw-patients-table", className)}
-      data-zus-telemetry-namespace="PatientsTable"
-    >
-      <CTWBox.Heading title={title}>
-        <div className="ctw-relative">
-          <div className="ctw-search-icon-wrapper">
-            <SearchIcon className="ctw-search-icon" />
+    <TelemetryBoundary>
+      <CTWBox.StackedWrapper
+        className={cx("ctw-patients-table", className)}
+        data-zus-telemetry-namespace="PatientsTable"
+      >
+        <CTWBox.Heading title={title}>
+          <div className="ctw-relative">
+            <div className="ctw-search-icon-wrapper">
+              <SearchIcon className="ctw-search-icon" />
+            </div>
+            <input
+              type="text"
+              className="ctw-patients-table-search"
+              placeholder="Search"
+              name="searchPatientName"
+              onChange={(e) => debouncedSearch(e.currentTarget.value)}
+            />
           </div>
-          <input
-            type="text"
-            className="ctw-patients-table-search"
-            placeholder="Search"
-            name="searchPatientName"
-            onChange={(e) => debouncedSearch(e.currentTarget.value)}
-          />
-        </div>
-      </CTWBox.Heading>
-      <CTWBox.Body>
-        <Table
-          records={patients}
-          columns={columns}
-          handleRowClick={handleRowClick}
-          hidePagination
-        >
-          <Pagination
-            setCurrentPage={setCurrentPage}
-            total={total}
-            currentPage={currentPage}
-            pageSize={pageSize}
-            isLoading={isFetching}
-          />
-        </Table>
-      </CTWBox.Body>
-    </CTWBox.StackedWrapper>
+        </CTWBox.Heading>
+        <CTWBox.Body>
+          <Table
+            records={patients}
+            columns={columns}
+            handleRowClick={handleRowClick}
+            hidePagination
+          >
+            <Pagination
+              setCurrentPage={setCurrentPage}
+              total={total}
+              currentPage={currentPage}
+              pageSize={pageSize}
+              isLoading={isFetching}
+            />
+          </Table>
+        </CTWBox.Body>
+      </CTWBox.StackedWrapper>
+    </TelemetryBoundary>
   );
 };
 

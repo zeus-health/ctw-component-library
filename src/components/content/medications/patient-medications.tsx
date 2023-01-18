@@ -5,6 +5,7 @@ import { AddNewMedDrawer } from "@/components/content/medications/add-new-med-dr
 import { OtherProviderMedsTable } from "@/components/content/medications/other-provider-meds-table";
 import { ProviderMedsTable } from "@/components/content/medications/provider-meds-table";
 import * as CTWBox from "@/components/core/ctw-box";
+import { TelemetryBoundary } from "@/components/core/telemetry-boundary";
 import { ToggleControl } from "@/components/core/toggle-control";
 import "./patient-medications.scss";
 
@@ -29,48 +30,52 @@ export function PatientMedications({
   const [includeInactiveMeds, setIncludeInactiveMeds] = useState(false);
 
   return (
-    <CTWBox.StackedWrapper
-      className={cx("ctw-patient-medications", className)}
-      data-zus-telemetry-namespace="PatientMedications"
-    >
-      <CTWBox.Heading title="Medications">
-        {!readOnly && (
-          <AddNewMedDrawer
-            isOpen={drawerIsOpen}
-            handleOnClose={() => setDrawerIsOpen(false)}
-          >
-            <button
-              className="ctw-btn-clear ctw-link"
-              type="button"
-              onClick={() => setDrawerIsOpen(true)}
-              data-zus-telemetry-click="Add medication"
+    <TelemetryBoundary>
+      <CTWBox.StackedWrapper
+        className={cx("ctw-patient-medications", className)}
+        data-zus-telemetry-namespace="PatientMedications"
+      >
+        <CTWBox.Heading title="Medications">
+          {!readOnly && (
+            <AddNewMedDrawer
+              isOpen={drawerIsOpen}
+              handleOnClose={() => setDrawerIsOpen(false)}
             >
-              + Add Medication
-            </button>
-          </AddNewMedDrawer>
+              <button
+                className="ctw-btn-clear ctw-link"
+                type="button"
+                onClick={() => setDrawerIsOpen(true)}
+                data-zus-telemetry-click="Add medication"
+              >
+                + Add Medication
+              </button>
+            </AddNewMedDrawer>
+          )}
+        </CTWBox.Heading>
+
+        {showConfirmedMedsTable && (
+          <CTWBox.Body>
+            <CTWBox.Title title="Confirmed Medications">
+              <ToggleControl
+                onFormChange={() =>
+                  setIncludeInactiveMeds(!includeInactiveMeds)
+                }
+                toggleProps={{
+                  name: "status",
+                  text: "Include Inactive",
+                }}
+              />
+            </CTWBox.Title>
+            <ProviderMedsTable showInactive={includeInactiveMeds} />
+          </CTWBox.Body>
         )}
-      </CTWBox.Heading>
 
-      {showConfirmedMedsTable && (
-        <CTWBox.Body>
-          <CTWBox.Title title="Confirmed Medications">
-            <ToggleControl
-              onFormChange={() => setIncludeInactiveMeds(!includeInactiveMeds)}
-              toggleProps={{
-                name: "status",
-                text: "Include Inactive",
-              }}
-            />
-          </CTWBox.Title>
-          <ProviderMedsTable showInactive={includeInactiveMeds} />
-        </CTWBox.Body>
-      )}
-
-      {showOtherProvidersMedsTable && (
-        <CTWBox.Body title="Other Provider Records">
-          <OtherProviderMedsTable />
-        </CTWBox.Body>
-      )}
-    </CTWBox.StackedWrapper>
+        {showOtherProvidersMedsTable && (
+          <CTWBox.Body title="Other Provider Records">
+            <OtherProviderMedsTable />
+          </CTWBox.Body>
+        )}
+      </CTWBox.StackedWrapper>
+    </TelemetryBoundary>
   );
 }

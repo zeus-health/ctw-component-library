@@ -2,6 +2,7 @@ import { get, pipe, toLower } from "lodash/fp";
 import { useEffect, useState } from "react";
 import { MedicationDrawer } from "@/components/content/medication-drawer";
 import { MedicationsTableBase } from "@/components/content/medications-table-base";
+import { TelemetryBoundary } from "@/components/core/telemetry-boundary";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { sort, SortDir } from "@/utils/sort";
@@ -54,7 +55,7 @@ export function ProviderMedsTable({
   }, [builderMedications, sortColumn, sortOrder, showInactive]);
 
   return (
-    <>
+    <TelemetryBoundary>
       <MedicationsTableBase
         medicationStatements={medicationModels}
         telemetryNamespace="ProviderMedsTable"
@@ -73,6 +74,6 @@ export function ProviderMedsTable({
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
       />
-    </>
+    </TelemetryBoundary>
   );
 }

@@ -11,6 +11,7 @@ import { ConditionHeader } from "../condition-header";
 import { applyConditionHistoryFilters } from "./condition-history-filters";
 import { conditionData, setupData } from "./condition-history-schema";
 import { Loading } from "@/components/core/loading";
+import { TelemetryBoundary } from "@/components/core/telemetry-boundary";
 import { getIncludedResources } from "@/fhir/bundle";
 import {
   getBinaryDocument,
@@ -112,7 +113,7 @@ export function ConditionHistory({
   }, [condition, getRequestContext, historyResponse.data, onEdit]);
 
   return (
-    <>
+    <TelemetryBoundary>
       <CCDAModal
         isOpen={isModalOpen}
         fileName={ccdaViewerTitle}
@@ -137,7 +138,7 @@ export function ConditionHistory({
           openCCDAModal={openCCDAModal}
         />
       </div>
-    </>
+    </TelemetryBoundary>
   );
 }
 

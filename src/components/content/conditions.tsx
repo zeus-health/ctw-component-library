@@ -30,6 +30,7 @@ import {
   conditionEditSchema,
   getEditingPatientConditionData,
 } from "@/components/content/forms/schemas/condition-schema";
+import { TelemetryBoundary } from "@/components/core/telemetry-boundary";
 import {
   getNewCondition,
   useOtherProviderConditions,
@@ -203,182 +204,187 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   }
 
   return (
-    <div
-      ref={containerRef}
-      data-zus-telemetry-namespace="Conditions"
-      className={cx("ctw-conditions", className, {
-        "ctw-conditions-stacked": breakpoints.sm,
-      })}
-    >
-      {!readOnly && (
-        <div className="ctw-conditions-heading-container">
-          <div className="ctw-title">Conditions</div>
-          <button
-            type="button"
-            className="ctw-btn-clear ctw-link"
-            data-zus-telemetry-click="Add new condition"
-            onClick={handleAddNewCondition}
-          >
-            + Add Condition
-          </button>
-        </div>
-      )}
-
-      <div className="ctw-conditions-body-container">
-        <div className="ctw-space-y-3">
-          <div className="ctw-conditions-title-container">
-            <div className="ctw-title">Patient Record</div>
-            <ToggleControl
-              onFormChange={() => setIncludeInactive(!includeInactive)}
-              toggleProps={{ name: "conditions", text: "Include Inactive" }}
-            />
+    <TelemetryBoundary>
+      <div
+        ref={containerRef}
+        data-zus-telemetry-namespace="Conditions"
+        className={cx("ctw-conditions", className, {
+          "ctw-conditions-stacked": breakpoints.sm,
+        })}
+      >
+        {!readOnly && (
+          <div className="ctw-conditions-heading-container">
+            <div className="ctw-title">Conditions</div>
+            <button
+              type="button"
+              className="ctw-btn-clear ctw-link"
+              data-zus-telemetry-click="Add new condition"
+              onClick={handleAddNewCondition}
+            >
+              + Add Condition
+            </button>
           </div>
+        )}
 
-          <ConditionsTableBase
-            stacked={breakpoints.sm}
-            conditions={patientRecords}
-            isLoading={patientRecordsResponse.isLoading}
-            hideMenu={readOnly}
-            sort={sort}
-            onSort={(newSort) => setSort(newSort)}
-            emptyMessage={
-              <>
-                <div>{patientRecordsMessage}</div>
-                {!patientRecordsResponse.isError && !readOnly && (
-                  <div className="ctw-mt-5">{addConditionBtn}</div>
-                )}
-              </>
-            }
-            rowMenuActions={(condition) => [
-              {
-                name: "Edit",
-                action: async () => {
-                  handleEditCondition(condition);
-                },
-              },
-              {
-                name: "View History",
-                action: async () => {
-                  showConditionHistory({
-                    condition,
-                    readOnly,
-                  });
-                },
-              },
-              {
-                name: "Delete",
-                className: "dangerous",
-                action: async () => {
-                  handleConditionDelete(condition);
-                },
-              },
-            ]}
-          />
-        </div>
-        <div className="ctw-space-y-3">
-          <div className="ctw-conditions-title-container">
-            <div className="ctw-title">Other Provider Records</div>
-            {shouldShowClinicalHistoryArea && (
-              <button
-                type="button"
-                className="ctw-btn-clear ctw-link"
-                onClick={() => setRequestDrawerIsOpen(true)}
-                data-zus-telemetry-click="Request records"
-              >
-                Request Records
-              </button>
-            )}
-          </div>
-          {shouldShowClinicalHistoryArea ? (
+        <div className="ctw-conditions-body-container">
+          <div className="ctw-space-y-3">
+            <div className="ctw-conditions-title-container">
+              <div className="ctw-title">Patient Record</div>
+              <ToggleControl
+                onFormChange={() => setIncludeInactive(!includeInactive)}
+                toggleProps={{ name: "conditions", text: "Include Inactive" }}
+              />
+            </div>
+
             <ConditionsTableBase
-              className="ctw-conditions-not-reviewed"
               stacked={breakpoints.sm}
-              conditions={otherProviderRecords}
+              conditions={patientRecords}
+              isLoading={patientRecordsResponse.isLoading}
+              hideMenu={readOnly}
               sort={sort}
               onSort={(newSort) => setSort(newSort)}
-              isLoading={
-                otherProviderRecordsResponse.isLoading ||
-                patientRecordsResponse.isLoading
+              emptyMessage={
+                <>
+                  <div>{patientRecordsMessage}</div>
+                  {!patientRecordsResponse.isError && !readOnly && (
+                    <div className="ctw-mt-5">{addConditionBtn}</div>
+                  )}
+                </>
               }
-              hideMenu={readOnly}
-              emptyMessage={otherProviderRecordMessage}
               rowMenuActions={(condition) => [
                 {
-                  name: "Add",
+                  name: "Edit",
                   action: async () => {
-                    handleAddOtherProviderCondition(condition);
+                    handleEditCondition(condition);
                   },
                 },
                 {
                   name: "View History",
                   action: async () => {
-                    showConditionHistory({ condition, readOnly: true });
+                    showConditionHistory({
+                      condition,
+                      readOnly,
+                    });
                   },
                 },
                 {
-                  name: condition.isArchived ? "Un-Archive" : "Archive",
+                  name: "Delete",
+                  className: "dangerous",
                   action: async () => {
-                    const requestContext = await getRequestContext();
-                    await toggleArchive(condition, requestContext);
+                    handleConditionDelete(condition);
                   },
                 },
               ]}
             />
-          ) : (
-            <PatientHistoryMessage
-              onClick={() => setRequestDrawerIsOpen(true)}
-            />
-          )}
-        </div>
-      </div>
-
-      {patientResponse.data && (
-        <DrawerFormWithFields
-          title={`${formAction} Condition`}
-          header={
-            formAction === "Edit" &&
-            selectedCondition && (
-              <ConditionHeader condition={selectedCondition} />
-            )
-          }
-          action={curry(createOrEditCondition)(
-            selectedCondition,
-            patientResponse.data.id
-          )}
-          data={currentSelectedData}
-          schema={schema}
-          isOpen={drawerIsOpen}
-          onClose={() => setDrawerIsOpen(false)}
-        />
-      )}
-
-      {patientResponse.data && (
-        <PatientHistoryRequestDrawer
-          header={
-            <div className="ctw-pt-0 ctw-text-base">
-              Request patient clinical history from 70K+ providers across the
-              nation. No changes will be made to your patient record.
+          </div>
+          <div className="ctw-space-y-3">
+            <div className="ctw-conditions-title-container">
+              <div className="ctw-title">Other Provider Records</div>
+              {shouldShowClinicalHistoryArea && (
+                <button
+                  type="button"
+                  className="ctw-btn-clear ctw-link"
+                  onClick={() => setRequestDrawerIsOpen(true)}
+                  data-zus-telemetry-click="Request records"
+                >
+                  Request Records
+                </button>
+              )}
             </div>
-          }
-          patient={patientResponse.data}
-          isOpen={requestRecordsDrawerIsOpen}
-          onClose={() => setRequestDrawerIsOpen(false)}
-          setClinicalHistoryExists={setClinicalHistoryExists}
-        />
-      )}
+            {shouldShowClinicalHistoryArea ? (
+              <ConditionsTableBase
+                className="ctw-conditions-not-reviewed"
+                stacked={breakpoints.sm}
+                conditions={otherProviderRecords}
+                sort={sort}
+                onSort={(newSort) => setSort(newSort)}
+                isLoading={
+                  otherProviderRecordsResponse.isLoading ||
+                  patientRecordsResponse.isLoading
+                }
+                hideMenu={readOnly}
+                emptyMessage={otherProviderRecordMessage}
+                rowMenuActions={(condition) => [
+                  {
+                    name: "Add",
+                    action: async () => {
+                      handleAddOtherProviderCondition(condition);
+                    },
+                  },
+                  {
+                    name: "View History",
+                    action: async () => {
+                      showConditionHistory({ condition, readOnly: true });
+                    },
+                  },
+                  {
+                    name: condition.isArchived ? "Un-Archive" : "Archive",
+                    action: async () => {
+                      const requestContext = await getRequestContext();
+                      await toggleArchive(condition, requestContext);
+                    },
+                  },
+                ]}
+              />
+            ) : (
+              <PatientHistoryMessage
+                onClick={() => setRequestDrawerIsOpen(true)}
+              />
+            )}
+          </div>
+        </div>
 
-      {selectedCondition && patientResponse.data && (
-        <ModalConfirmDelete
-          resource={selectedCondition}
-          resourceName={selectedCondition.display || "unnamed condition"}
-          onClose={() => setShowConfirmDelete(false)}
-          isOpen={showConfirmDelete}
-          onDelete={async () => {
-            const requestContext = await getRequestContext();
-            await onConditionDelete(selectedCondition.resource, requestContext);
-          }}
-        />
-      )}
-    </div>
+        {patientResponse.data && (
+          <DrawerFormWithFields
+            title={`${formAction} Condition`}
+            header={
+              formAction === "Edit" &&
+              selectedCondition && (
+                <ConditionHeader condition={selectedCondition} />
+              )
+            }
+            action={curry(createOrEditCondition)(
+              selectedCondition,
+              patientResponse.data.id
+            )}
+            data={currentSelectedData}
+            schema={schema}
+            isOpen={drawerIsOpen}
+            onClose={() => setDrawerIsOpen(false)}
+          />
+        )}
+
+        {patientResponse.data && (
+          <PatientHistoryRequestDrawer
+            header={
+              <div className="ctw-pt-0 ctw-text-base">
+                Request patient clinical history from 70K+ providers across the
+                nation. No changes will be made to your patient record.
+              </div>
+            }
+            patient={patientResponse.data}
+            isOpen={requestRecordsDrawerIsOpen}
+            onClose={() => setRequestDrawerIsOpen(false)}
+            setClinicalHistoryExists={setClinicalHistoryExists}
+          />
+        )}
+
+        {selectedCondition && patientResponse.data && (
+          <ModalConfirmDelete
+            resource={selectedCondition}
+            resourceName={selectedCondition.display || "unnamed condition"}
+            onClose={() => setShowConfirmDelete(false)}
+            isOpen={showConfirmDelete}
+            onDelete={async () => {
+              const requestContext = await getRequestContext();
+              await onConditionDelete(
+                selectedCondition.resource,
+                requestContext
+              );
+            }}
+          />
+        )}
+      </div>
+    </TelemetryBoundary>
   );
 }
