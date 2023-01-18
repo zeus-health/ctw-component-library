@@ -1,6 +1,5 @@
 import type { ClinicalStatus } from "@/fhir/medication";
 import { Tab } from "@headlessui/react";
-import classNames from "classnames";
 import cx from "classnames";
 import { useState } from "react";
 import { AddNewMedDrawer } from "@/components/content/medications/add-new-med-drawer";
@@ -70,7 +69,7 @@ export function PatientMedicationsTabbed({
               <Tab
                 key={key}
                 className={({ selected }) =>
-                  classNames(
+                  cx(
                     "ctw-w-full ctw-rounded-lg ctw-py-2.5 ctw-text-sm ctw-font-medium",
                     "ctw-ring-white ctw-ring-opacity-60 ctw-ring-offset-2 focus:ctw-outline-none focus:ctw-ring-2",
                     selected
@@ -88,7 +87,7 @@ export function PatientMedicationsTabbed({
             {tabbedContent.map(({ key, render }) => (
               <Tab.Panel
                 key={key}
-                className={classNames(
+                className={cx(
                   "ctw-rounded-xl ctw-p-3",
                   "focus:outline-none focus:ring-2"
                 )}
