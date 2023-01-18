@@ -124,4 +124,9 @@
   .ctw-alert-bg {
     @apply ctw-flex ctw-items-start ctw-space-x-2 ctw-p-4 ctw-text-left;
   }
+
+  .ctw-provider > [data-radix-popper-content-wrapper] {
+    // We add important here because radix z-index will take presedence if we don't.
+    z-index: 10000 !important;
+  }
 }

@@ -113,7 +113,7 @@ function CTWProvider({ theme, children, ...ctwState }: CTWProviderProps) {
   );
 
   return (
-    <div ref={ctwProviderRef}>
+    <div ref={ctwProviderRef} className="ctw-provider">
       <CTWStateContext.Provider value={providerState}>
         <QueryClientProvider client={queryClient}>
           {children}
