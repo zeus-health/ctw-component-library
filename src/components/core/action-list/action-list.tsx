@@ -1,5 +1,5 @@
 import cx from "classnames";
-import { isFunction } from "lodash/fp";
+import { isFunction } from "@/utils/nodash/fp";
 import "./action-list.scss";
 
 export type MinActionItem = {
@@ -86,18 +86,6 @@ export const ActionListItem = <T extends MinActionItem>({
       {item.subtitle && <div className="ctw-font-light">{item.subtitle}</div>}
     </div>
     <div className="ctw-action-list-item-action">
-      {onSecondaryAction && secondaryActionText && (
-        <button
-          type="button"
-          className="ctw-btn-primary ctw-ml-1"
-          onClick={(event) => {
-            event.stopPropagation();
-            onSecondaryAction(item);
-          }}
-        >
-          {secondaryActionText}
-        </button>
-      )}
       {!item.complete && (
         <button
           type="button"
@@ -108,6 +96,18 @@ export const ActionListItem = <T extends MinActionItem>({
           }}
         >
           {actionText}
+        </button>
+      )}
+      {onSecondaryAction && secondaryActionText && (
+        <button
+          type="button"
+          className="ctw-btn-primary ctw-ml-1"
+          onClick={(event) => {
+            event.stopPropagation();
+            onSecondaryAction(item);
+          }}
+        >
+          {secondaryActionText}
         </button>
       )}
       {item.complete && !!onUndoAction && (

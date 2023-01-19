@@ -1,4 +1,4 @@
-import { escapeRegExp, identity, isArray } from "lodash";
+import { escapeRegExp, identity, isArray } from "@/utils/nodash";
 
 const replaceInXML = (
   xmlString: string,

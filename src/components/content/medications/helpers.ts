@@ -1,3 +1,5 @@
+import { dateToISO } from "@/fhir/formatters";
+import { MedicationModel } from "@/fhir/models";
 import {
   concat,
   get,
@@ -6,9 +8,7 @@ import {
   mapValues,
   orderBy,
   pipe,
-} from "lodash/fp";
-import { dateToISO } from "@/fhir/formatters";
-import { MedicationModel } from "@/fhir/models";
+} from "@/utils/nodash/fp";
 
 const getMedicationValue = (medication: MedicationModel) => {
   const coding = get("resource.medicationCodeableConcept.coding.0", medication);

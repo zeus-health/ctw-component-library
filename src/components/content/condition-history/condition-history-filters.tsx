@@ -1,6 +1,6 @@
-import { isEqual, orderBy, uniqWith } from "lodash";
 import { ConditionModel } from "@/fhir/models";
 import { ResourceMap } from "@/fhir/types";
+import { isEqual, orderBy, uniqWith } from "@/utils/nodash";
 
 export const applyConditionHistoryFilters = (
   data: fhir4.Condition[],
@@ -8,9 +8,9 @@ export const applyConditionHistoryFilters = (
 ) => {
   let conditionsDataDeduped = [];
 
-  const conditionModels = data
-    .map((c) => new ConditionModel(c, includedResources))
-    .filter((c) => c.verificationStatus !== "entered-in-error");
+  const conditionModels = data.map(
+    (c) => new ConditionModel(c, includedResources)
+  );
 
   const sortedConditions = orderBy(
     conditionModels,

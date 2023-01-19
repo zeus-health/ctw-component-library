@@ -1,7 +1,7 @@
 import type { ResourceMap } from "./types";
-import { get, sortBy } from "lodash";
 import { findReference } from "./resource-helper";
 import { SYSTEM_ENRICHMENT, SYSTEM_RXNORM } from "./system-urls";
+import { get, sortBy } from "@/utils/nodash";
 
 export type Medication =
   | fhir4.MedicationStatement
@@ -58,9 +58,7 @@ export function getIdentifyingRxNormCode(
   return getIdentifyingRxNormCoding(medication, includedResources)?.code;
 }
 
-/**
- * Gets the CodeableConcept.Coding for the pass in medication.
- */
+// Returns the best RxNorm code for uniquely identifying a medication.
 export function getIdentifyingRxNormCoding(
   medication: Medication,
   includedResources?: ResourceMap
@@ -70,40 +68,27 @@ export function getIdentifyingRxNormCoding(
     includedResources
   );
 
-  // look for an explicitly defined SCD on the medication
-  const scd = codeableConcept?.coding?.find(
+  // first check to see if the med has an RxNorm coding that wasn't provided via enrichment
+  const rxNorm = codeableConcept?.coding?.find(
     (code) =>
       // must be an RxNorm code
-      code.system === SYSTEM_RXNORM &&
-      code.extension?.some(
-        (e) =>
-          e.url === SYSTEM_ENRICHMENT &&
-          e.valueString === "ClinicalDrug_TTY_SCD"
-      ) &&
-      code.code &&
-      code.code !== "UNK"
+      code.system === SYSTEM_RXNORM && code.extension === undefined
   );
 
-  if (scd) {
-    return scd;
+  if (rxNorm) {
+    return rxNorm;
   }
 
-  // fall back to whatever RxNorm is available that isn't a brand or ingredient
-  const excludedExtensions = ["ActiveIngredient", "BrandName"];
+  // otherwise look for an RxNorm provided via the enrichment process
   return codeableConcept?.coding?.find(
     (code) =>
       // must be an RxNorm code
       code.system === SYSTEM_RXNORM &&
       // must have no extensions
-      (code.extension === undefined ||
-        // or the extensions must not contain
-        // any of the excluded extensions
-        !code.extension.some(
-          (e) =>
-            e.url === SYSTEM_ENRICHMENT &&
-            e.valueString &&
-            excludedExtensions.includes(e.valueString)
-        ))
+      code.extension?.some(
+        (e) =>
+          e.url === SYSTEM_ENRICHMENT && e.valueString === "Standardization"
+      )
   );
 }
 

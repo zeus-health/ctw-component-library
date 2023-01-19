@@ -1,8 +1,8 @@
-import { isEmpty } from "lodash";
 import xpath from "xpath";
 import { getContactDetails } from "../../helpers";
 import { GeneralInfoWithOrg, LabelValueType } from "../../types";
 import { getAuthor as getAuthorDataFromHeader } from "../Header/data/getAuthor";
+import { isEmpty } from "@/utils/nodash";
 
 export const getAuthorData = (
   document: Document

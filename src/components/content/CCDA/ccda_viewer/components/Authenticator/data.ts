@@ -1,4 +1,3 @@
-import { isEmpty } from "lodash";
 import xpath from "xpath";
 import {
   getContactDetails,
@@ -6,6 +5,7 @@ import {
   parseToISOString,
 } from "../../helpers";
 import { ExtendedGeneralInfo, isExtendedGeneralInfoExist } from "../../types";
+import { isEmpty } from "@/utils/nodash";
 
 export const getAuthenticatorData = (
   document: Document

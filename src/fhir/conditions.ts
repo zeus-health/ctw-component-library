@@ -1,5 +1,4 @@
 import { SearchParams } from "fhir-kit-client";
-import { compact, find, orderBy } from "lodash";
 import { getIncludedBasics } from "./bundle";
 import { CodePreference } from "./codeable-concept";
 import {
@@ -22,6 +21,7 @@ import {
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { ConditionModel } from "@/fhir/models/condition";
+import { compact, find, orderBy } from "@/utils/nodash";
 import {
   QUERY_KEY_CONDITION_HISTORY,
   QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
@@ -161,7 +161,15 @@ export function useConditionHistory(condition?: ConditionModel) {
     QUERY_KEY_CONDITION_HISTORY,
     [condition],
     async (requestContext, patient) => {
-      if (!condition) return undefined;
+      if (!condition) {
+        return undefined;
+      }
+      if (condition.verificationStatus === "entered-in-error") {
+        return {
+          conditions: [],
+          bundle: { resourceType: "Bundle", entry: [] },
+        };
+      }
       try {
         const tokens = condition.knownCodings.map(
           (coding) => `${coding.system}|${coding.code}`

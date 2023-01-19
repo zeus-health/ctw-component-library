@@ -1,6 +1,31 @@
-import { clone } from "lodash";
 import { SYSTEM_CONDITION_CLINICAL } from "../system-urls";
 import { ConditionModel } from "./condition";
+import { clone } from "@/utils/nodash";
+
+const getConditionStatus = (
+  verificationStatus: string,
+  clinicalStatus: string
+) =>
+  new ConditionModel({
+    resourceType: "Condition",
+    verificationStatus: {
+      coding: [
+        {
+          system: "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+          code: verificationStatus,
+        },
+      ],
+    },
+    clinicalStatus: {
+      coding: [
+        {
+          system: "http://terminology.hl7.org/CodeSystem/condition-clinical",
+          code: clinicalStatus,
+        },
+      ],
+    },
+    subject: { display: "Bob" },
+  }).displayStatus;
 
 describe("FHIR Model: Condition", () => {
   describe("active", () => {
@@ -35,6 +60,44 @@ describe("FHIR Model: Condition", () => {
         };
         expect(condition.active).toBeFalsy();
       });
+    });
+  });
+
+  describe("displayStatus", () => {
+    test("displayStatus should show correct status", () => {
+      expect(getConditionStatus("unconfirmed", "active")).toBe("Pending");
+      expect(getConditionStatus("unconfirmed", "recurrence")).toBe("Pending");
+      expect(getConditionStatus("unconfirmed", "relapse")).toBe("Pending");
+      expect(getConditionStatus("differential", "active")).toBe("Pending");
+      expect(getConditionStatus("differential", "recurrence")).toBe("Pending");
+      expect(getConditionStatus("differential", "relapse")).toBe("Pending");
+      expect(getConditionStatus("provisional", "active")).toBe("Pending");
+      expect(getConditionStatus("provisional", "recurrence")).toBe("Pending");
+      expect(getConditionStatus("provisional", "relapse")).toBe("Pending");
+      expect(getConditionStatus("unconfirmed", "inactive")).toBe("Unknown");
+      expect(getConditionStatus("unconfirmed", "remission")).toBe("Unknown");
+      expect(getConditionStatus("unconfirmed", "resolved")).toBe("Unknown");
+      expect(getConditionStatus("refuted", "active")).toBe("Unknown");
+      expect(getConditionStatus("refuted", "recurrence")).toBe("Unknown");
+      expect(getConditionStatus("refuted", "relapse")).toBe("Unknown");
+      expect(getConditionStatus("differential", "inactive")).toBe("Unknown");
+      expect(getConditionStatus("differential", "remission")).toBe("Unknown");
+      expect(getConditionStatus("differential", "resolved")).toBe("Unknown");
+      expect(getConditionStatus("provisional", "inactive")).toBe("Unknown");
+      expect(getConditionStatus("provisional", "remission")).toBe("Unknown");
+      expect(getConditionStatus("provisional", "resolved")).toBe("Unknown");
+      expect(getConditionStatus("confirmed", "inactive")).toBe("Inactive");
+      expect(getConditionStatus("confirmed", "remission")).toBe("Inactive");
+      expect(getConditionStatus("confirmed", "resolved")).toBe("Inactive");
+      expect(getConditionStatus("confirmed", "active")).toBe("Active");
+      expect(getConditionStatus("confirmed", "recurrence")).toBe("Active");
+      expect(getConditionStatus("confirmed", "relapse")).toBe("Active");
+      expect(getConditionStatus("refuted", "inactive")).toBe("Refuted");
+      expect(getConditionStatus("refuted", "remission")).toBe("Refuted");
+      expect(getConditionStatus("refuted", "resolved")).toBe("Refuted");
+      expect(getConditionStatus("entered-in-error", "")).toBe(
+        "Entered in Error"
+      );
     });
   });
 

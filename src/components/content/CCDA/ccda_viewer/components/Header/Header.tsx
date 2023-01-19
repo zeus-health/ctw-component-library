@@ -1,7 +1,7 @@
 /* eslint-disable react/no-array-index-key */
-import { isEmpty, map, startCase } from "lodash";
 import { DocumentOnlyProps, LabelValueType } from "../../types";
 import { getHeaderData } from "./data";
+import { isEmpty, map, startCase } from "@/utils/nodash";
 import "../../../styles.scss";
 
 export const Header = ({ document }: DocumentOnlyProps): JSX.Element => {

@@ -1,5 +1,42 @@
 # ctw-component-library
 
+## 0.39.6
+
+### Patch Changes
+
+- 2ab4de50: Created "@/utils/nodash" and "@/utils/nodash/fp" modules to replace all
+  usage of lodash in the project. The reason for this is because vite is
+  unable to properly tree-shake lodash when functions are imported from
+  the global "lodash" package. This change should yield a smaller build and
+  more importantly it won't clobber `window._` with the lodash library.
+
+## 0.39.5
+
+### Patch Changes
+
+- 768389cd: Do not default to Select One but instead to Unknown.
+
+## 0.39.4
+
+### Patch Changes
+
+- 44b6b89a: Updating logic for getting identifying RxNorm on a medication.
+- 837ed00c: Fix z-index with radix dropdown menu. Change background color of condition 2.0 to white, to better reflect design.
+
+## 0.39.3
+
+### Patch Changes
+
+- 20bb079: Do not fetch condition history for conditions with verification status of entered-in-error. Also do not remove entered-in-error from conditions with entered-in-error from the audit trail.
+- 19f396c: Display status will now show the correct display status.
+
+## 0.39.2
+
+### Patch Changes
+
+- f4aa1b2: Timeline now shows all 3rd party encounters.
+- 21646b0: Reordered the buttons in action list so secondary action comes after primary
+
 ## 0.39.1
 
 ### Patch Changes

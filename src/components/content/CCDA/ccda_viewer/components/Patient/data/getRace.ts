@@ -1,5 +1,5 @@
-import { isEmpty } from "lodash";
 import xpath from "xpath";
+import { isEmpty } from "@/utils/nodash";
 
 export const getRace = (patient: Document): string => {
   const race = xpath.select1("*[name()='raceCode']", patient) as

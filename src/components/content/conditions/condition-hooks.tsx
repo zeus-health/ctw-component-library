@@ -1,4 +1,3 @@
-import { curry } from "lodash";
 import { ConditionHeader } from "../condition-header";
 import { onConditionDelete } from "../conditions-helper";
 import {
@@ -18,6 +17,7 @@ import { useModal } from "@/components/core/providers/modal-provider";
 import { usePatient } from "@/components/core/providers/patient-provider";
 import { getNewCondition } from "@/fhir/conditions";
 import { ConditionModel, useCTW } from "@/index";
+import { curry } from "@/utils/nodash";
 
 export function useAddConditionForm() {
   const { openDrawer } = useDrawer();
