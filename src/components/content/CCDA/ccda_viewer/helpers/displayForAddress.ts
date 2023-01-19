@@ -1,5 +1,5 @@
-import { capitalize, isArray, isEmpty } from "lodash";
 import { ModifiedAddress } from "../types";
+import { capitalize, isArray, isEmpty } from "@/utils/nodash";
 
 const addressParser = (addr: ModifiedAddress) => {
   if (addr.text) return addr.text;

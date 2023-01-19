@@ -1,7 +1,7 @@
-import { isEmpty } from "lodash";
 import xpath from "xpath";
 import { getHumanName } from "../../../helpers";
 import { LabelValueType } from "../../../types";
+import { isEmpty } from "@/utils/nodash";
 
 export const getGuardian = (
   patientRole: Document

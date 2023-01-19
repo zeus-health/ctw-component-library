@@ -1,5 +1,6 @@
-import { ListIteratee, orderBy } from "lodash";
+import type { ListIteratee } from "lodash";
 import { ReactNode } from "react";
+import { orderBy } from "@/utils/nodash";
 import { SortDir } from "@/utils/sort";
 import { isEmptyValue } from "@/utils/types";
 

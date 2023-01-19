@@ -1,6 +1,6 @@
-import { pick } from "lodash/fp";
 import { sortMedHistory } from "./helpers";
 import { MedicationModel } from "@/fhir/models";
+import { pick } from "@/utils/nodash/fp";
 
 describe("Medication Helpers", () => {
   describe("sortMedHistory", () => {

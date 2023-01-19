@@ -1,7 +1,7 @@
 import type { ResourceMap } from "./types";
-import { get, sortBy } from "lodash";
 import { findReference } from "./resource-helper";
 import { SYSTEM_ENRICHMENT, SYSTEM_RXNORM } from "./system-urls";
+import { get, sortBy } from "@/utils/nodash";
 
 export type Medication =
   | fhir4.MedicationStatement

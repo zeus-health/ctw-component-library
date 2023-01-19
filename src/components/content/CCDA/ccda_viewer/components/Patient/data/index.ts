@@ -1,4 +1,3 @@
-import { camelCase, isEmpty } from "lodash";
 import xpath from "xpath";
 import { getContactDetails } from "../../../helpers";
 import { getPatient as getPatientDataFromHeader } from "../../Header/data/getPatient";
@@ -10,6 +9,7 @@ import { getMaritalStatus } from "./getMaritalStatus";
 import { getProviderOrganization } from "./getProviderOrganization";
 import { getRace } from "./getRace";
 import { getReligion } from "./getReligion";
+import { camelCase, isEmpty } from "@/utils/nodash";
 
 export const getPatientData = (document: Document) => {
   const patientRoles = xpath.select("//*[name()='patientRole']", document) as
