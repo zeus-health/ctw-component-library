@@ -25,6 +25,8 @@ export function PatientConditionsTabs({
     (condition) => condition.displayStatus === "Active"
   ).length;
 
+  const sharedTabStyles = "ctw-relative ctw-tab-underline ctw-tab";
+
   return (
     <div className="ctw-justify-end ctw-space-x-2 ctw-border-0 ctw-border-b ctw-border-t ctw-border-solid ctw-border-divider-light ctw-py-5">
       <div className="ctw-space-x-4">
@@ -36,25 +38,21 @@ export function PatientConditionsTabs({
         >
           <Tab.List className="ctw-space-x-2">
             <Tab
+              tabIndex={-1}
               className={({ selected }) =>
-                cx(
-                  activeClass("patient"),
-                  selected
-                    ? "ctw-tab-underline-hover ctw-tab-underline-selected ctw-tab ctw-relative"
-                    : "ctw-tab-underline-hover ctw-tab ctw-relative"
-                )
+                cx(activeClass("patient"), sharedTabStyles, {
+                  "ctw-tab-underline-selected": selected,
+                })
               }
             >
               Condition List
             </Tab>
             <Tab
+              tabIndex={-1}
               className={({ selected }) =>
-                cx(
-                  activeClass("other"),
-                  selected
-                    ? "ctw-tab-underline-selected ctw-tab-underline-hover ctw-tab ctw-relative ctw-space-x-2"
-                    : "ctw-tab-underline-hover ctw-tab ctw-relative ctw-space-x-2"
-                )
+                cx(activeClass("other"), sharedTabStyles, "ctw-space-x-2", {
+                  "ctw-tab-underline-selected": selected,
+                })
               }
             >
               <span>Other Provider Records</span>
