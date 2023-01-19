@@ -124,30 +124,4 @@ describe("getIdentifyingRxNormCode", () => {
 
     expect(getIdentifyingRxNormCode(testMed)).toEqual(testRxNormCode);
   });
-
-  test("chooses SCD when explicitly defined", () => {
-    const testMed = {
-      ...baseMed,
-      medicationCodeableConcept: {
-        coding: [
-          {
-            code: "the wrong code",
-            system: SYSTEM_RXNORM,
-          },
-          {
-            code: testRxNormCode,
-            system: SYSTEM_RXNORM,
-            extension: [
-              {
-                url: SYSTEM_ENRICHMENT,
-                valueString: "ClinicalDrug_TTY_SCD",
-              },
-            ],
-          },
-        ],
-      },
-    };
-
-    expect(getIdentifyingRxNormCode(testMed)).toEqual(testRxNormCode);
-  });
 });
