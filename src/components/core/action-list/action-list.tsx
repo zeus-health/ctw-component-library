@@ -1,5 +1,5 @@
 import cx from "classnames";
-import { isFunction } from "lodash/fp";
+import { isFunction } from "@/utils/nodash/fp";
 import "./action-list.scss";
 
 export type MinActionItem = {

@@ -1,5 +1,4 @@
 import { QueryClientProvider, useQuery } from "@tanstack/react-query";
-import { merge } from "lodash";
 import {
   ReactNode,
   useCallback,
@@ -24,6 +23,7 @@ import {
   Theme,
 } from "@/styles/tailwind.theme";
 import { claimsBuilderId } from "@/utils/auth";
+import { merge } from "@/utils/nodash";
 import { ctwFetch, queryClient } from "@/utils/request";
 import { Telemetry } from "@/utils/telemetry";
 import "../main.scss";

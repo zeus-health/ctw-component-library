@@ -1,5 +1,5 @@
 import type { ResourceMap, ResourceType, ResourceTypeString } from "./types";
-import { find } from "lodash";
+import { find } from "@/utils/nodash";
 
 // Returns the referenced resource if there is one.
 // Checks both the contained resources AND any included resources map.

@@ -1,10 +1,10 @@
 import { differenceInYears, parseISO } from "date-fns";
-import { cloneDeep, find } from "lodash";
 import { formatDateISOToLocal, formatPhoneNumber } from "../formatters";
 import { FHIRModel } from "./fhir-model";
 import { OrganizationModel } from "./organization";
 import { findReference } from "@/fhir/resource-helper";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
+import { cloneDeep, find } from "@/utils/nodash";
 
 export const MaritalStatuses = [
   { text: "Annulled", code: "A" },

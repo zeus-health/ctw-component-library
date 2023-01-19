@@ -1,11 +1,11 @@
 import type { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { DotsHorizontalIcon } from "@heroicons/react/outline";
-import { compact, isFunction } from "lodash/fp";
 import { ReactNode, useRef } from "react";
 import { MinRecordItem, TableColumn } from "../core/table/table-helpers";
 import { DropdownMenu, MenuItem } from "@/components/core/dropdown-menu";
 import { Table, TableBaseProps } from "@/components/core/table/table";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
+import { compact, isFunction } from "@/utils/nodash/fp";
 
 export type MedicationsTableBaseProps<T extends MinRecordItem> = {
   medicationStatements: MedicationStatementModel[];

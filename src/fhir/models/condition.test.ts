@@ -1,6 +1,6 @@
-import { clone } from "lodash";
 import { SYSTEM_CONDITION_CLINICAL } from "../system-urls";
 import { ConditionModel } from "./condition";
+import { clone } from "@/utils/nodash";
 
 const getConditionStatus = (
   verificationStatus: string,
@@ -74,20 +74,18 @@ describe("FHIR Model: Condition", () => {
       expect(getConditionStatus("provisional", "active")).toBe("Pending");
       expect(getConditionStatus("provisional", "recurrence")).toBe("Pending");
       expect(getConditionStatus("provisional", "relapse")).toBe("Pending");
-      expect(getConditionStatus("unconfirmed", "inactive")).toBe("Select One");
-      expect(getConditionStatus("unconfirmed", "remission")).toBe("Select One");
-      expect(getConditionStatus("unconfirmed", "resolved")).toBe("Select One");
-      expect(getConditionStatus("refuted", "active")).toBe("Select One");
-      expect(getConditionStatus("refuted", "recurrence")).toBe("Select One");
-      expect(getConditionStatus("refuted", "relapse")).toBe("Select One");
-      expect(getConditionStatus("differential", "inactive")).toBe("Select One");
-      expect(getConditionStatus("differential", "remission")).toBe(
-        "Select One"
-      );
-      expect(getConditionStatus("differential", "resolved")).toBe("Select One");
-      expect(getConditionStatus("provisional", "inactive")).toBe("Select One");
-      expect(getConditionStatus("provisional", "remission")).toBe("Select One");
-      expect(getConditionStatus("provisional", "resolved")).toBe("Select One");
+      expect(getConditionStatus("unconfirmed", "inactive")).toBe("Unknown");
+      expect(getConditionStatus("unconfirmed", "remission")).toBe("Unknown");
+      expect(getConditionStatus("unconfirmed", "resolved")).toBe("Unknown");
+      expect(getConditionStatus("refuted", "active")).toBe("Unknown");
+      expect(getConditionStatus("refuted", "recurrence")).toBe("Unknown");
+      expect(getConditionStatus("refuted", "relapse")).toBe("Unknown");
+      expect(getConditionStatus("differential", "inactive")).toBe("Unknown");
+      expect(getConditionStatus("differential", "remission")).toBe("Unknown");
+      expect(getConditionStatus("differential", "resolved")).toBe("Unknown");
+      expect(getConditionStatus("provisional", "inactive")).toBe("Unknown");
+      expect(getConditionStatus("provisional", "remission")).toBe("Unknown");
+      expect(getConditionStatus("provisional", "resolved")).toBe("Unknown");
       expect(getConditionStatus("confirmed", "inactive")).toBe("Inactive");
       expect(getConditionStatus("confirmed", "remission")).toBe("Inactive");
       expect(getConditionStatus("confirmed", "resolved")).toBe("Inactive");

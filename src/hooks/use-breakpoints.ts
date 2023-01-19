@@ -1,9 +1,9 @@
 import useResizeObserverTemp from "@react-hook/resize-observer";
-import { mapValues } from "lodash";
 import { RefObject, useState } from "react";
 import { useIsomorphicLayoutEffect } from "./use-isomorphic-layout-effect";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { defaultBreakpoints } from "@/styles/tailwind.theme";
+import { mapValues } from "@/utils/nodash";
 
 // This is an ugly hack / work around for a SSR/CommonJS/build
 // issue where useResizeObserver is getting compiled to

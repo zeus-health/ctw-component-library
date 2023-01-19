@@ -1,4 +1,3 @@
-import { compact, get, pipe, toLower } from "lodash/fp";
 import { useEffect, useState } from "react";
 import { MedicationDrawer } from "@/components/content/medication-drawer";
 import { MedicationsTableBase } from "@/components/content/medications-table-base";
@@ -7,6 +6,7 @@ import { TelemetryBoundary } from "@/components/core/telemetry-boundary";
 import { useDismissMedication } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
+import { compact, get, pipe, toLower } from "@/utils/nodash/fp";
 import { sort, SortDir } from "@/utils/sort";
 
 export type OtherProviderMedsTableProps = {

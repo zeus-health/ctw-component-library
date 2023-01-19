@@ -1,9 +1,9 @@
-import { orderBy } from "lodash";
 import { useEncounterDetailsDrawer } from "./encounter-details-drawer";
 import { patientTimelineColumns } from "./patient-timeline-columns";
 import { Table } from "@/components/core/table/table";
 import { usePatientEncounters } from "@/fhir/encounters";
 import { EncounterModel } from "@/fhir/models/encounter";
+import { orderBy } from "@/utils/nodash";
 import "./patient-timeline.scss";
 
 export type PatientTimelineProps = {

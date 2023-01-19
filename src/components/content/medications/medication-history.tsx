@@ -1,4 +1,3 @@
-import { capitalize, compact } from "lodash";
 import { useEffect, useState } from "react";
 import { sortMedHistory } from "./helpers";
 import { CollapsibleDataListProps } from "@/components/core/collapsible-data-list";
@@ -11,6 +10,7 @@ import { MedicationAdministrationModel } from "@/fhir/models/medication-administ
 import { MedicationDispenseModel } from "@/fhir/models/medication-dispense";
 import { MedicationRequestModel } from "@/fhir/models/medication-request";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
+import { capitalize, compact } from "@/utils/nodash";
 
 const MEDICATION_HISTORY_LIMIT = 10;
 

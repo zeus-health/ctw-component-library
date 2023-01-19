@@ -1,10 +1,10 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import cx from "classnames";
-import { uniq } from "lodash";
 import type { ReactNode } from "react";
 import { Fragment } from "react";
 import "./pagination.scss";
 import { Loading } from "@/components/core/loading";
+import { uniq } from "@/utils/nodash";
 
 export type PaginationProps = {
   currentPage: number;

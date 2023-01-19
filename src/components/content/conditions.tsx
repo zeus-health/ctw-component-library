@@ -1,5 +1,4 @@
 import cx from "classnames";
-import { curry } from "lodash";
 import { useEffect, useRef, useState } from "react";
 import {
   DrawerFormWithFields,
@@ -40,6 +39,7 @@ import { ConditionModel } from "@/fhir/models/condition";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { hasFetchedPatientHistory } from "@/services/patient-history/patient-history";
 import { AnyZodSchema } from "@/utils/form-helper";
+import { curry } from "@/utils/nodash";
 
 export type ConditionsProps = {
   className?: string;

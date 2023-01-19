@@ -3,7 +3,6 @@ import type { PatientModel } from "@/fhir/models/patient";
 import { SearchIcon } from "@heroicons/react/solid";
 import type { Argument } from "classnames";
 import cx from "classnames";
-import { debounce } from "lodash";
 import { useCallback, useEffect, useState } from "react";
 import * as CTWBox from "@/components/core/ctw-box";
 import { Pagination } from "@/components/core/pagination/pagination";
@@ -12,6 +11,7 @@ import { Table } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
 import { TelemetryBoundary } from "@/components/core/telemetry-boundary";
 import { getBuilderPatientsList } from "@/fhir/patient-helper";
+import { debounce } from "@/utils/nodash";
 import { QUERY_KEY_PATIENTS_LIST } from "@/utils/query-keys";
 import "./patients-table.scss";
 
