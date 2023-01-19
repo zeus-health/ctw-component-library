@@ -75,7 +75,7 @@ export function PatientConditions({
       })}
     >
       <div className="ctw-items-center ctw-justify-between ctw-py-5 ctw-px-4">
-        <div className="ctw-text-xl ctw-font-medium ctw-text-content-black">
+        <div className="ctw-ml-3 ctw-text-xl ctw-font-medium ctw-text-content-black">
           Conditions
         </div>
         <PatientConditionsTabs

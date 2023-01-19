@@ -25,10 +25,20 @@ export function PatientConditionsTabs({
     (condition) => condition.displayStatus === "Active"
   ).length;
 
+  function blurClicked() {
+    if (document.activeElement) {
+      requestAnimationFrame(() => {
+        if (document.activeElement instanceof HTMLElement) {
+          document.activeElement.blur();
+        }
+      });
+    }
+  }
+
   const sharedTabStyles = "ctw-relative ctw-tab-underline ctw-tab";
 
   return (
-    <div className="ctw-justify-end ctw-space-x-2 ctw-border-0 ctw-border-b ctw-border-t ctw-border-solid ctw-border-divider-light ctw-py-5">
+    <div className="ctw-justify-end ctw-space-x-2 ctw-border-0 ctw-border-b ctw-border-t ctw-border-solid ctw-border-divider-light ctw-py-2">
       <div className="ctw-space-x-4">
         <Tab.Group
           // Keyboard navigation requires onChange instead of onClick.
@@ -36,9 +46,9 @@ export function PatientConditionsTabs({
             onCollectionChange(index === 0 ? "patient" : "other");
           }}
         >
-          <Tab.List className="ctw-space-x-2">
+          <Tab.List>
             <Tab
-              tabIndex={-1}
+              onClick={() => blurClicked()}
               className={({ selected }) =>
                 cx(activeClass("patient"), sharedTabStyles, {
                   "ctw-tab-underline-selected": selected,
@@ -48,7 +58,7 @@ export function PatientConditionsTabs({
               Condition List
             </Tab>
             <Tab
-              tabIndex={-1}
+              onClick={() => blurClicked()}
               className={({ selected }) =>
                 cx(activeClass("other"), sharedTabStyles, "ctw-space-x-2", {
                   "ctw-tab-underline-selected": selected,
