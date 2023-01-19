@@ -48,6 +48,9 @@
 
   .ctw-tab {
     @apply ctw-cursor-pointer ctw-border-0 ctw-bg-transparent ctw-p-0 ctw-text-base;
+    &:focus-visible {
+      @apply ctw-outline-none;
+    }
   }
 
   .ctw-tab-underline-hover {
@@ -56,7 +59,7 @@
       content: "";
     }
 
-    &:hover:after:focus-visible {
+    &:hover:after {
       @apply ctw-bg-content-black;
     }
   }

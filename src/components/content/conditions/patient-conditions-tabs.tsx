@@ -28,54 +28,37 @@ export function PatientConditionsTabs({
   return (
     <div className="ctw-justify-end ctw-space-x-2 ctw-border-0 ctw-border-b ctw-border-t ctw-border-solid ctw-border-divider-light ctw-py-5">
       <div className="ctw-space-x-4">
-        <Tab.Group>
+        <Tab.Group
+          // Keyboard navigation requires onChange instead of onClick.
+          onChange={(index) => {
+            onCollectionChange(index === 0 ? "patient" : "other");
+          }}
+        >
           <Tab.List className="ctw-space-x-2">
             <Tab
-              className={cx(
-                activeClass("patient"),
-                "ctw-tab-underline ctw-tab ctw-relative"
-              )}
+              className={({ selected }) =>
+                cx(
+                  activeClass("patient"),
+                  selected
+                    ? "ctw-tab-underline-hover ctw-tab-underline ctw-tab ctw-relative"
+                    : "ctw-tab-underline-hover ctw-tab ctw-relative"
+                )
+              }
             >
-              {({ selected }) => (
-                <button
-                  type="button"
-                  className={cx(
-                    activeClass("patient"),
-                    selected
-                      ? "ctw-tab-underline-hover ctw-tab-underline ctw-tab ctw-relative"
-                      : "ctw-tab-underline-hover:focus-visible ctw-tab-underline ctw-tab ctw-relative"
-                  )}
-                  onClick={() => {
-                    onCollectionChange("patient");
-                  }}
-                >
-                  Condition List
-                </button>
-              )}
+              Condition List
             </Tab>
             <Tab
-              className={cx(
-                activeClass("other"),
-                "ctw-tab-underline ctw-tab ctw-relative ctw-space-x-2"
-              )}
+              className={({ selected }) =>
+                cx(
+                  activeClass("other"),
+                  selected
+                    ? "ctw-tab-underline ctw-tab-underline-hover ctw-tab ctw-relative ctw-space-x-2"
+                    : "ctw-tab-underline-hover ctw-tab ctw-relative ctw-space-x-2"
+                )
+              }
             >
-              {({ selected }) => (
-                <button
-                  type="button"
-                  className={cx(
-                    activeClass("other"),
-                    selected
-                      ? "ctw-tab-underline ctw-tab-underline-hover ctw-tab ctw-relative ctw-space-x-2"
-                      : "ctw-tab-underline ctw-tab-underline-hover:focus-visible ctw-tab ctw-relative ctw-space-x-2"
-                  )}
-                  onClick={() => {
-                    onCollectionChange("other");
-                  }}
-                >
-                  <span>Other Provider Records</span>
-                  <Badge text={`${activeCount}`} color="primary" />
-                </button>
-              )}
+              <span>Other Provider Records</span>
+              <Badge text={`${activeCount}`} color="primary" />
             </Tab>
           </Tab.List>
         </Tab.Group>
