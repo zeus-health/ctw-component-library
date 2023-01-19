@@ -1,5 +1,21 @@
-.ctw-dropdown-menu-container {
-  @apply ctw-bg-white ctw-ring-1 ctw-ring-divider-light;
+.ctw-dropdown-action-menu {
+  @apply ctw-min-w-[8rem]  ctw-rounded-md ctw-bg-white ctw-shadow-lg ctw-ring-divider-light;
+}
+
+.ctw-dropdown-action-menu {
+  @apply ctw-bg-white  ctw-ring-divider-light;
+}
+
+.ctw-dropdown-action-menu-item {
+  @apply ctw-flex ctw-w-full ctw-cursor-pointer ctw-p-2 ctw-text-content-black ctw-outline-none;
+
+  &.dangerous {
+    @apply ctw-text-error-main;
+  }
+
+  &[data-highlighted] {
+    @apply ctw-rounded-md ctw-bg-primary-light ctw-bg-bg-lighter;
+  }
 }
 
 .ctw-dropdown-menu-item {
@@ -12,6 +28,12 @@
   &[data-highlighted] {
     @apply ctw-bg-primary-light;
   }
+}
+
+.ctw-dropdown-separator {
+  @apply ctw-bg-divider-light;
+  height: 1px;
+  margin: 5px 0px;
 }
 
 .ctw-dropdown-menu-arrow {

@@ -15,9 +15,14 @@ export type MenuItem = {
 export type DropdownMenuProps = {
   children: ReactNode;
   menuItems: MenuItem[];
+  pinnedActions: MenuItem[];
 };
 
-export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
+export function DropdownMenu({
+  children,
+  menuItems,
+  pinnedActions,
+}: DropdownMenuProps) {
   const { ctwProviderRef } = useCTW();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -39,29 +44,37 @@ export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
           {!isLoading && children}
         </RadixDropdownMenu.Trigger>
 
-        <RadixDropdownMenu.Portal
-          container={ctwProviderRef.current}
-          className="ctw-z-[100000]"
-          style={{ zIndex: "10000" }}
-        >
+        <RadixDropdownMenu.Portal container={ctwProviderRef.current}>
           <RadixDropdownMenu.Content
             // Prevent focus from closing menu, this fixes
             // an issue with interactive testing where a "click"
             // would fire twice, once for the mousedown and
             // again for focus on the button being clicked.
             onFocusOutside={(event) => event.preventDefault()}
-            className="ctw-dropdown-menu-container"
+            className="ctw-dropdown-action-menu"
             collisionPadding={10}
           >
-            <RadixDropdownMenu.Arrow asChild>
-              <div className="ctw-dropdown-menu-arrow" />
-            </RadixDropdownMenu.Arrow>
-
             {menuItems.map((menuItem) => (
               <RadixDropdownMenu.Item
                 onClick={() => handleClick(menuItem)}
                 key={menuItem.name}
-                className={cx(menuItem.className, "ctw-dropdown-menu-item")}
+                className={cx(
+                  menuItem.className,
+                  "ctw-dropdown-action-menu-item"
+                )}
+              >
+                {menuItem.name}
+              </RadixDropdownMenu.Item>
+            ))}
+            <RadixDropdownMenu.Separator className="ctw-dropdown-separator" />
+            {pinnedActions.map((menuItem) => (
+              <RadixDropdownMenu.Item
+                onClick={() => handleClick(menuItem)}
+                key={menuItem.name}
+                className={cx(
+                  menuItem.className,
+                  "ctw-dropdown-action-menu-item"
+                )}
               >
                 {menuItem.name}
               </RadixDropdownMenu.Item>
