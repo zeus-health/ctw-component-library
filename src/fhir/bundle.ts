@@ -5,7 +5,7 @@ import type {
   ResourceTypeString,
 } from "./types";
 import type { FhirResource } from "fhir-kit-client";
-import { last } from "lodash";
+import { last } from "@/utils/nodash";
 
 export const isBundle = (resource: fhir4.Resource): resource is fhir4.Bundle =>
   resource.resourceType === "Bundle";

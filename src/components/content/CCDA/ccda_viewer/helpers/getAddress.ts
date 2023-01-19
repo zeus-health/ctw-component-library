@@ -1,7 +1,7 @@
-import { isArray, map } from "lodash";
 import xpath from "xpath";
 import { ModifiedAddress } from "../types";
 import { displayForAddress } from "./displayForAddress";
+import { isArray, map } from "@/utils/nodash";
 
 export const addressUseMap: Record<string, string> = {
   BAD: "bad",

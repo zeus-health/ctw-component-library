@@ -1,9 +1,9 @@
 import { differenceInYears, format, isValid } from "date-fns";
-import { map } from "lodash";
 import xpath from "xpath";
 import { getHumanName, getId, parseToISOString } from "../../../helpers";
 import { LabelValueType } from "../../../types";
 import { getGuardian } from "./getGuardian";
+import { map } from "@/utils/nodash";
 
 export const getPatient = (
   document: Document

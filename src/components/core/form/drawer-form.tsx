@@ -1,4 +1,3 @@
-import { isEmpty } from "lodash";
 import { ReactNode, useState } from "react";
 import { Drawer, DrawerProps } from "../drawer";
 import { SaveButton } from "@/components/content/forms/save-button";
@@ -7,6 +6,7 @@ import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { getFormResponseErrors } from "@/utils/errors";
 import { AnyZodSchema, getFormData } from "@/utils/form-helper";
+import { isEmpty } from "@/utils/nodash";
 
 export type FormErrors = Record<string, string[]>;
 type InputError = Record<string, string[]>;

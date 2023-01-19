@@ -1,6 +1,6 @@
-import { compact } from "lodash/fp";
 import { FHIRModel } from "./fhir-model";
 import { formatDateISOToLocal } from "@/fhir/formatters";
+import { compact } from "@/utils/nodash/fp";
 
 export class MedicationAdministrationModel extends FHIRModel<fhir4.MedicationAdministration> {
   get dosageDisplay(): string {

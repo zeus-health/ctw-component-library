@@ -1,5 +1,5 @@
-import { isArray, isEmpty } from "lodash";
 import { ModifiedHumanName } from "../types";
+import { isArray, isEmpty } from "@/utils/nodash";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isHumanNameArray(data: any): data is ModifiedHumanName[] {

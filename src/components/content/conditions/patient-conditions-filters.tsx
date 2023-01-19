@@ -1,6 +1,6 @@
-import { cloneDeep, merge } from "lodash";
 import { useState } from "react";
 import { ConditionModel } from "@/fhir/models";
+import { cloneDeep, merge } from "@/utils/nodash";
 
 export type FilterCollection = "patient" | "other";
 

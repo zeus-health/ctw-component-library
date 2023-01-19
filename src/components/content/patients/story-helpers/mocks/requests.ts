@@ -1,9 +1,9 @@
-import { chunk, toLower } from "lodash/fp";
 import { rest } from "msw";
 import {
   createMockPatientBundle,
   createMockPatientBundleEntry,
 } from "./patient-bundle";
+import { chunk, toLower } from "@/utils/nodash/fp";
 
 export function setupPatientsTableMocks(total: number) {
   const patients = Array.from({ length: total }).map(

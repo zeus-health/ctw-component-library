@@ -1,5 +1,5 @@
-import { capitalize, isArray, isEmpty } from "lodash";
 import { ModifiedContactPoint } from "../types";
+import { capitalize, isArray, isEmpty } from "@/utils/nodash";
 
 const telecomParser = ({ use, system, value }: ModifiedContactPoint) => {
   const withUse = use ? ` (${use})` : "";

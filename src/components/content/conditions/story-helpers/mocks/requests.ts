@@ -1,4 +1,3 @@
-import { cloneDeep } from "lodash";
 import { rest } from "msw";
 import { ComponentType, createElement } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -13,6 +12,7 @@ import { patient } from "./patient";
 import { patientHistoryMessage } from "./patient-history-message";
 import { ProvenanceCondition } from "./provenance-conditions";
 import { SYSTEM_SUMMARY } from "@/fhir/system-urls";
+import { cloneDeep } from "@/utils/nodash";
 
 let patientConditionsCache: fhir4.Bundle;
 let otherConditionsCache: fhir4.Bundle;

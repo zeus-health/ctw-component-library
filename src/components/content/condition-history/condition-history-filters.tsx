@@ -1,6 +1,6 @@
-import { isEqual, orderBy, uniqWith } from "lodash";
 import { ConditionModel } from "@/fhir/models";
 import { ResourceMap } from "@/fhir/types";
+import { isEqual, orderBy, uniqWith } from "@/utils/nodash";
 
 export const applyConditionHistoryFilters = (
   data: fhir4.Condition[],

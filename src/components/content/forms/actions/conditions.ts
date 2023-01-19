@@ -1,5 +1,4 @@
 import { Condition } from "fhir/r4";
-import { cloneDeep, isUndefined, omitBy } from "lodash";
 import { ConditionStatus } from "../types";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
@@ -11,6 +10,7 @@ import {
   SYSTEM_CONDITION_CLINICAL,
   SYSTEM_CONDITION_VERIFICATION_STATUS,
 } from "@/fhir/system-urls";
+import { cloneDeep, isUndefined, omitBy } from "@/utils/nodash";
 import {
   QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
   QUERY_KEY_PATIENT_CONDITIONS,

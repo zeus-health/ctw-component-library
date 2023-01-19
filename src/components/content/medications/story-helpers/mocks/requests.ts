@@ -1,5 +1,4 @@
 import { MedicationStatement } from "fhir/r4";
-import { cloneDeep, find } from "lodash/fp";
 import { rest } from "msw";
 import { ComponentType, createElement } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -8,6 +7,7 @@ import { medicationAdministration } from "./medication-administration";
 import { medicationDispense } from "./medication-dispense";
 import { medicationRequest } from "./medication-request";
 import { patient } from "./patient";
+import { cloneDeep, find } from "@/utils/nodash/fp";
 
 let patientProviderMedsCache: fhir4.Bundle;
 let patientOtherProviderMedsCache: fhir4.Bundle;

@@ -1,8 +1,8 @@
 import { ExclamationCircleIcon, LockClosedIcon } from "@heroicons/react/solid";
 import cx from "classnames";
-import { startCase } from "lodash";
 import type { InputHTMLAttributes } from "react";
 import { formatDateLocalToISO } from "@/fhir/formatters";
+import { startCase } from "@/utils/nodash";
 
 export type FormFieldProps = {
   errors?: string[];
