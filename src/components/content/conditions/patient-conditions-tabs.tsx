@@ -40,7 +40,7 @@ export function PatientConditionsTabs({
                 cx(
                   activeClass("patient"),
                   selected
-                    ? "ctw-tab-underline-hover ctw-tab-underline ctw-tab ctw-relative"
+                    ? "ctw-tab-underline-hover ctw-tab-underline-selected ctw-tab ctw-relative"
                     : "ctw-tab-underline-hover ctw-tab ctw-relative"
                 )
               }
@@ -52,7 +52,7 @@ export function PatientConditionsTabs({
                 cx(
                   activeClass("other"),
                   selected
-                    ? "ctw-tab-underline ctw-tab-underline-hover ctw-tab ctw-relative ctw-space-x-2"
+                    ? "ctw-tab-underline-selected ctw-tab-underline-hover ctw-tab ctw-relative ctw-space-x-2"
                     : "ctw-tab-underline-hover ctw-tab ctw-relative ctw-space-x-2"
                 )
               }

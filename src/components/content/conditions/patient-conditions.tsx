@@ -83,12 +83,14 @@ export function PatientConditions({
           collection={filters.collection}
           onCollectionChange={(collection) => updateFilters({ collection })}
         />
+
         <PatientConditionsActions
           hideAdd={readOnly || filters.collection === "other"}
           onToggleShowHistoric={() =>
             updateFilters({ showHistoric: !filters.showHistoric })
           }
         />
+
         <Table
           stacked={breakpoints.sm}
           className="-ctw-mx-px !ctw-rounded-none"
