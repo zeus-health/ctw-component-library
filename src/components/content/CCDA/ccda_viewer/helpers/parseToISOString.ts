@@ -1,4 +1,4 @@
-import { isFinite } from "lodash";
+import { isFinite } from "@/utils/nodash";
 
 /**
  * Estimates the index of the timezone sign counting from the end of the string and the type of the sign itself ("-" or "+")

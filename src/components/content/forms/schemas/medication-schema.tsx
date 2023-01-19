@@ -1,9 +1,9 @@
 import { format } from "date-fns";
-import { toLower } from "lodash/fp";
 import { z } from "zod";
 import { MedicationsAutoComplete } from "../medications-autocomplete";
 import { FormEntry } from "@/components/core/form/drawer-form-with-fields";
 import { MedicationStatementModel } from "@/fhir/models";
+import { toLower } from "@/utils/nodash/fp";
 
 export const getMedicationFormData = (
   medication: MedicationStatementModel
