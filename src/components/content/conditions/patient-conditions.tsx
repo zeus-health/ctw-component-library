@@ -3,13 +3,13 @@ import "./patient-conditions.scss";
 import { useRef } from "react";
 import { useConditionHistory } from "../condition-history/conditions-history-drawer";
 import { filterOtherConditions } from "./helpers";
-import { PatientConditionsActions } from "./patient-conditions-actions";
 import { patientConditionsColumns } from "./patient-conditions-columns";
 import { useConditionFilters } from "./patient-conditions-filters";
 import {
   OtherProviderConditionHoverActions,
   PatientConditionHoverActions,
 } from "./patient-conditions-menu-actions";
+import { PatientConditionsActions } from "./patient-conditions-tabs";
 import { FormEntry } from "@/components/core/form/drawer-form-with-fields";
 import { Table } from "@/components/core/table/table";
 import {
