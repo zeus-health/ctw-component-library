@@ -50,13 +50,19 @@
     @apply ctw-cursor-pointer ctw-border-0 ctw-bg-transparent ctw-p-0 ctw-text-base;
   }
 
-  .ctw-tab-underline {
+  .ctw-tab-underline-hover {
     &:after {
       @apply ctw-absolute ctw-left-0 -ctw-bottom-5 ctw-block ctw-h-0.5 ctw-w-full;
       content: "";
     }
 
-    &:hover:after {
+    &:hover:after:focus-visible {
+      @apply ctw-bg-content-black;
+    }
+  }
+
+  .ctw-tab-underline {
+    &:after {
       @apply ctw-bg-content-black;
     }
   }
