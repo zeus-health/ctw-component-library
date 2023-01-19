@@ -12,18 +12,18 @@ export function PatientConditionsActions({
 }: PatientConditionsActionsProps) {
   const showAddConditionForm = useAddConditionForm();
 
-  return !hideAdd ? (
+  return (
     <div className="ctw-flex ctw-items-center ctw-justify-end ctw-space-x-2 ctw-p-4">
       <Toggle name="historic" text="Historic" onChange={onToggleShowHistoric} />
-      <button
-        type="button"
-        className="ctw-btn-primary"
-        onClick={() => showAddConditionForm()}
-      >
-        Add Condition
-      </button>
+      {!hideAdd && (
+        <button
+          type="button"
+          className="ctw-btn-primary"
+          onClick={() => showAddConditionForm()}
+        >
+          Add Condition
+        </button>
+      )}
     </div>
-  ) : (
-    <div className="ctw-p-4" />
   );
 }
