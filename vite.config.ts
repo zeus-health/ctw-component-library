@@ -1,7 +1,7 @@
 import plugin from "@vitejs/plugin-react";
 import { resolve } from "path";
 import { defineConfig } from "vite";
-import { peerDependencies } from "./package.json";
+import { dependencies, peerDependencies } from "./package.json";
 
 export default defineConfig({
   plugins: [
@@ -22,7 +22,10 @@ export default defineConfig({
       // for UMD name: 'GlobalName'
     },
     rollupOptions: {
-      external: [...Object.keys(peerDependencies)],
+      external: [
+        ...Object.keys(peerDependencies),
+        ...Object.keys(dependencies),
+      ],
     },
     target: "es2015",
     sourcemap: true,
