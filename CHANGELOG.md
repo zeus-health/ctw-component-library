@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.39.5
+
+### Patch Changes
+
+- 768389cd: Do not default to Select One but instead to Unknown.
+
 ## 0.39.4
 
 ### Patch Changes
