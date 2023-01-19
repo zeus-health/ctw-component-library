@@ -15,6 +15,17 @@ import {
   ZusJWT,
 } from "@/utils/auth";
 
+const prodAccountConfig = {
+  service: "ctw-component-library",
+  clientToken: "pub7f1b01887ceb412fd989f5e08cf60d9a",
+  applicationId: "44011d8b-3aa4-4672-9c7b-ee23ddac16b5",
+};
+const devAccountConfig = {
+  service: "ctw-component-library",
+  clientToken: "pub29b659b1cd402a88d57c4f8c923c1eea",
+  applicationId: "48fec1f8-b187-492a-afdd-e809cc6b3b82",
+};
+
 // Assume local development if origin is localhost or just an IP address
 const isLocalDevelopment = /https?:\/\/(localhost|\d+\.\d+\.\d+\.\d+)/i.test(
   window.location.origin
@@ -46,23 +57,13 @@ export class Telemetry {
     if (this.telemetryIsAvailable) {
       return;
     }
-    const DATADOG_SERVICE_NAME = "ctw-component-library";
-    const DATADOG_CLIENT_TOKEN = "";
-    const DEV_DATADOG_CLIENT_TOKEN = "pub29b659b1cd402a88d57c4f8c923c1eea";
-    const DATADOG_APP_ID = "";
-    const DEV_DATADOG_APP_ID = "48fec1f8-b187-492a-afdd-e809cc6b3b82";
-
     const isDev = isLocalDevelopment || /dev.*/i.test(environment);
-    const datadogClientToken = isDev ? DEV_DATADOG_CLIENT_TOKEN : DATADOG_CLIENT_TOKEN;
-    const datadogApplicationId = isDev ? DEV_DATADOG_APP_ID : DATADOG_APP_ID;
 
     datadogRum.init({
+      ...(isDev ? devAccountConfig : prodAccountConfig),
       allowedTracingUrls: [], // No allowed tracing urls
-      applicationId: datadogApplicationId,
-      clientToken: datadogClientToken,
       defaultPrivacyLevel: "mask",
       env: environment,
-      service: DATADOG_SERVICE_NAME,
       sessionReplaySampleRate: 20,
       sessionSampleRate: 100,
       site: "datadoghq.com",
@@ -72,11 +73,10 @@ export class Telemetry {
       version: packageJson.version,
     });
     datadogLogs.init({
-      clientToken: datadogClientToken,
+      ...(isDev ? devAccountConfig : prodAccountConfig),
       env: environment,
       forwardConsoleLogs: [], // No console logs to datadog.
       forwardErrorsToLogs: false,
-      service: DATADOG_SERVICE_NAME,
       site: "datadoghq.com",
       version: packageJson.version,
     });
