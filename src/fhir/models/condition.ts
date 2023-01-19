@@ -1,4 +1,3 @@
-import { compact, find, intersectionWith, uniqWith } from "lodash";
 import { formatDateISOToLocal, formatStringToDate } from "../formatters";
 import { CCSChapterName } from "../mappings/ccs-chapter-names";
 import {
@@ -22,6 +21,7 @@ import {
   VerificationStatus,
 } from "@/fhir/conditions";
 import { findReference } from "@/fhir/resource-helper";
+import { compact, find, intersectionWith, uniqWith } from "@/utils/nodash";
 
 export class ConditionModel extends FHIRModel<fhir4.Condition> {
   get abatement(): string | undefined {

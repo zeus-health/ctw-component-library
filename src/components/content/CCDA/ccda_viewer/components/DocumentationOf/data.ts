@@ -1,4 +1,3 @@
-import { get, isEmpty } from "lodash";
 import xpath from "xpath";
 import { getContactDetails } from "../../helpers";
 import {
@@ -7,6 +6,7 @@ import {
   LabelValueType,
 } from "../../types";
 import { getDocumentationOf as getDocumentationOfDataFromHeader } from "../Header/data/getDocumentationOf";
+import { get, isEmpty } from "@/utils/nodash";
 
 export const getDocumentationOfData = (
   document: Document

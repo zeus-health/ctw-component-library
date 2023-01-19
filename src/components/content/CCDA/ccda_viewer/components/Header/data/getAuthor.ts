@@ -1,7 +1,7 @@
-import { isEmpty } from "lodash";
 import xpath from "xpath";
 import { getHumanName, parseToISOString } from "../../../helpers";
 import { LabelValueType } from "../../../types";
+import { isEmpty } from "@/utils/nodash";
 
 export const getAuthor = (
   document: Document

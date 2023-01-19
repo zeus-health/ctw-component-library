@@ -22,9 +22,7 @@ export default defineConfig({
       // for UMD name: 'GlobalName'
     },
     rollupOptions: {
-      external: [
-        ...Object.keys(peerDependencies),
-      ],
+      external: [...Object.keys(peerDependencies)],
     },
     target: "es2015",
     sourcemap: true,

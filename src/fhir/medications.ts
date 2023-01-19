@@ -1,20 +1,4 @@
 import type { FhirResource, MedicationStatement } from "fhir/r4";
-import { cloneDeep, uniqWith } from "lodash";
-import {
-  compact,
-  filter,
-  find,
-  get,
-  groupBy,
-  last,
-  map,
-  mapValues,
-  omit,
-  pipe,
-  propEq,
-  sortBy,
-  split,
-} from "lodash/fp";
 import { useCallback, useEffect, useState } from "react";
 import { bundleToResourceMap, getMergedIncludedResources } from "./bundle";
 import { getIdentifyingRxNormCode } from "./medication";
@@ -44,6 +28,22 @@ import { MedicationModel } from "@/fhir/models/medication";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { PatientModel } from "@/fhir/models/patient";
 import { errorResponse } from "@/utils/errors";
+import { cloneDeep, uniqWith } from "@/utils/nodash";
+import {
+  compact,
+  filter,
+  find,
+  get,
+  groupBy,
+  last,
+  map,
+  mapValues,
+  omit,
+  pipe,
+  propEq,
+  sortBy,
+  split,
+} from "@/utils/nodash/fp";
 import { QUERY_KEY_MEDICATION_HISTORY } from "@/utils/query-keys";
 import { sort } from "@/utils/sort";
 

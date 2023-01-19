@@ -1,7 +1,7 @@
 import { Basic, Resource } from "fhir/r4";
-import { find } from "lodash";
 import { SYSTEM_SUMMARY, SYSTEM_ZUS_PROFILE_ACTION } from "../system-urls";
 import { ResourceMap } from "../types";
+import { find } from "@/utils/nodash";
 
 export abstract class FHIRModel<T extends fhir4.Resource> {
   public resource: T;

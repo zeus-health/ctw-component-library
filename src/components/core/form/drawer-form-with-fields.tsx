@@ -1,4 +1,3 @@
-import { isArray } from "lodash";
 import { Fragment, InputHTMLAttributes, ReactNode } from "react";
 import { DrawerForm, DrawerFormProps, FormErrors } from "./drawer-form";
 import { FormField } from "@/components/content/forms/form-field";
@@ -8,6 +7,7 @@ import {
   InputPropType,
   useFormInputProps,
 } from "@/utils/form-helper";
+import { isArray } from "@/utils/nodash";
 
 export type FormFieldType = {
   label: string;

@@ -1,9 +1,9 @@
-import { capitalize } from "lodash";
 import { CodingList } from "@/components/core/coding-list";
 import { Details } from "@/components/core/collapsible-data-list-details";
 import { Drawer } from "@/components/core/drawer";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
 import { EncounterModel } from "@/fhir/models/encounter";
+import { capitalize } from "@/utils/nodash";
 
 export function useEncounterDetailsDrawer() {
   const { openDrawer } = useDrawer();
