@@ -317,7 +317,7 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
         return "Pending";
       case "unconfirmedinactive":
       case "refutedactive":
-        return "Select One";
+        return "Unknown";
       case "confirmedinactive":
         return "Inactive";
       case "confirmedactive":
