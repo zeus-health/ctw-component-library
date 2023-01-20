@@ -49,7 +49,7 @@ export function PatientConditionsTabs({
             onCollectionChange(index === 0 ? "patient" : "other");
           }}
         >
-          <Tab.List>
+          <Tab.List className="ctw-mt-3">
             <Tab
               onClick={blurClicked}
               className={({ selected }) =>
