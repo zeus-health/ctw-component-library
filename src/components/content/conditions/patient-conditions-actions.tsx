@@ -13,7 +13,7 @@ export function PatientConditionsActions({
   const showAddConditionForm = useAddConditionForm();
 
   return (
-    <div className="ctw-flex ctw-items-center ctw-justify-end ctw-space-x-2 ctw-p-4">
+    <div className="ctw-flex ctw-items-center ctw-justify-end ctw-space-x-2 ctw-p-3">
       <Toggle name="historic" text="Historic" onChange={onToggleShowHistoric} />
       {!hideAdd && (
         <button
