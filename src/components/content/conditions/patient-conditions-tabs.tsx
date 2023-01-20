@@ -29,8 +29,7 @@ export function PatientConditionsTabs({
   // Resolution: https://github.com/tailwindlabs/headlessui/issues/1694
   function blurClicked() {
     // Guard against server side where document isn't defined.
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (document) {
+    if (typeof document !== "undefined") {
       requestAnimationFrame(() => {
         if (document.activeElement instanceof HTMLElement) {
           document.activeElement.blur();
