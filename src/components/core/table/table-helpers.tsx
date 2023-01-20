@@ -1,4 +1,3 @@
-import type { ListIteratee } from "lodash";
 import { ReactNode } from "react";
 import { orderBy } from "@/utils/nodash";
 import { SortDir } from "@/utils/sort";
@@ -43,9 +42,10 @@ export function sortRecords<T extends MinRecordItem>(
   return records;
 }
 
+type Predicate<T> = (a: T) => boolean;
 export function sortByIndices<T>(records: T[], indexSorts: IndexSort<T>[]) {
   // Makes a list of iteratees, where each index iteratee is preceded by an iteratee that ensures blanks go last.
-  let iteratees: ListIteratee<T>[] = [];
+  let iteratees: (Predicate<T> | keyof T)[] = [];
   let orders: SortDir[] = [];
   indexSorts.forEach((indexSort) => {
     const { index, dir } = indexSort;
