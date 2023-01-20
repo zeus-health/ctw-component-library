@@ -14,20 +14,20 @@ export type PatientMedicationsTabbedProps = {
 
 const tabbedContent = [
   {
-    key: "builder-medications",
-    display: () => "Builder Medications",
+    key: "medication-list",
+    display: () => "Medication List",
     render: () => <ProviderMedsTable />,
   },
   {
-    key: "historic-medications",
-    display: () => "Historic Medications",
+    key: "historic",
+    display: () => "Historic",
     render: () => <div>No Content...</div>,
   },
   {
-    key: "other-provider-medications",
+    key: "other-provider-records",
     display: () => (
       <>
-        <span className="ctw-pr-2">Other Provider Medications</span>
+        <span className="ctw-pr-2">Other Provider Records</span>
         <BadgeOtherProviderMedCount />
       </>
     ),
