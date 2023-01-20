@@ -52,6 +52,13 @@ declare global {
   }
 }
 
+/**
+ * CTWProvider is required for Zus components to operate and at least one
+ * should exist in the app as an ancestor to any ctw-component-library React
+ * components (we recommend CTWProvider be at the root of your project). In
+ * addition to providing a client request context, the CTWProvider also allows
+ * for theme configuration and opting out of telemetry collection if desired.
+ */
 function CTWProvider({
   theme,
   disableTelemetry,

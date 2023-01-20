@@ -15,6 +15,8 @@ import {
   ZusJWT,
 } from "@/utils/auth";
 
+type TelemetryEventKey = "zusTelemetryClick" | "zusTelemetryFocus";
+
 const prodAccountConfig = {
   service: "ctw-component-library",
   clientToken: "pub7f1b01887ceb412fd989f5e08cf60d9a",
@@ -45,9 +47,14 @@ let isInitialized = false;
  * https://docs.datadoghq.com/real_user_monitoring/browser/#configuration
  */
 export class Telemetry {
+  static logger = datadogLogs.logger;
+
   private static namespaceMap = new WeakMap();
 
-  static logger = datadogLogs.logger;
+  private static eventTypes: Record<TelemetryEventKey, string> = {
+    zusTelemetryClick: "click",
+    zusTelemetryFocus: "focus",
+  };
 
   private static get telemetryIsAvailable() {
     return isInitialized;
@@ -95,11 +102,18 @@ export class Telemetry {
     // are listening on body and not button, we would have to walk up 2 parent
     // nodes of the DOM before knowing whether this event was relevant to us.
     window.document.body.addEventListener("click", (event) => {
-      const { target } = event;
-      if (!(target instanceof HTMLElement)) {
+      const { target, isTrusted } = event;
+      if (!(isTrusted && target instanceof HTMLElement)) {
         return;
       }
-      this.processClickEvent(target);
+      this.processHTMLEvent(target, "zusTelemetryClick");
+    });
+    window.document.body.addEventListener("focusin", (event) => {
+      const { target, isTrusted } = event;
+      if (!(isTrusted && target instanceof HTMLElement)) {
+        return;
+      }
+      this.processHTMLEvent(target, "zusTelemetryFocus");
     });
     isInitialized = true;
   }
@@ -185,34 +199,41 @@ export class Telemetry {
    * event or not. However, if `explicitTargetName` is passed in, then we can
    * assume this is an event ready for processing.
    */
-  static processClickEvent(target: HTMLElement, explicitTargetName?: string) {
-    let clickedTarget: HTMLElement | null = null;
+  static processHTMLEvent(
+    target: HTMLElement,
+    telemetryKey: TelemetryEventKey,
+    explicitTargetName?: string
+  ) {
+    let eventTarget: HTMLElement | null = null;
 
     if (explicitTargetName) {
-      clickedTarget = target;
+      eventTarget = target;
     } else {
       let nextTarget: HTMLElement | null = target;
       let depth = 5;
-      while (!clickedTarget && depth > 0 && nextTarget) {
-        if (nextTarget.dataset.zusTelemetryClick) {
-          clickedTarget = nextTarget;
+      while (!eventTarget && depth > 0 && nextTarget) {
+        if (nextTarget.dataset[telemetryKey]) {
+          eventTarget = nextTarget;
         }
         nextTarget = nextTarget.parentElement;
         depth -= 1;
       }
     }
 
-    const targetName =
-      clickedTarget?.dataset.zusTelemetryClick ?? explicitTargetName;
-    if (clickedTarget && targetName) {
-      if (!this.namespaceMap.has(clickedTarget)) {
+    const targetName = eventTarget?.dataset[telemetryKey] ?? explicitTargetName;
+    if (eventTarget && targetName) {
+      if (!this.namespaceMap.has(eventTarget)) {
         this.namespaceMap.set(
-          clickedTarget,
-          this.lookupComponentNamespace(clickedTarget)
+          eventTarget,
+          this.lookupComponentNamespace(eventTarget)
         );
       }
-      const namespace = this.namespaceMap.get(clickedTarget);
-      this.trackInteraction("click", namespace, targetName);
+      const namespace = this.namespaceMap.get(eventTarget);
+      this.trackInteraction(
+        this.eventTypes[telemetryKey],
+        namespace,
+        targetName
+      );
     }
   }
 }

@@ -50,6 +50,7 @@ export const FormField = ({
           id={inputProps.name}
           disabled={inputProps.disabled}
           defaultValue={value}
+          data-zus-telemetry-focus={inputProps.name}
         >
           {!options.includes(defaultValue as string) && (
             <option value={defaultValue} disabled>
@@ -77,6 +78,7 @@ export const FormField = ({
           readOnly={readonly}
           name={inputProps.name}
           id={inputProps.name}
+          data-zus-telemetry-focus={inputProps.name}
         />
       );
     }
@@ -92,6 +94,7 @@ export const FormField = ({
         // would get reset when saving and showing errors as the defaultValue could
         // be undefined and the input gets reset to that (empty).
         {...(value ? { defaultValue: value } : {})}
+        data-zus-telemetry-focus={inputProps.name}
       />
     );
   };
