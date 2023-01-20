@@ -1,97 +1,81 @@
-import type { ClinicalStatus } from "@/fhir/medication";
 import { Tab } from "@headlessui/react";
 import cx from "classnames";
-import { useState } from "react";
-import { AddNewMedDrawer } from "@/components/content/medications/add-new-med-drawer";
-import { OtherProviderMedsTable } from "@/components/content/medications/other-provider-meds-table";
+import {
+  BadgeOtherProviderMedCount,
+  OtherProviderMedsTable,
+} from "@/components/content/medications/other-provider-meds-table";
 import { ProviderMedsTable } from "@/components/content/medications/provider-meds-table";
 import * as CTWBox from "@/components/core/ctw-box";
+import "./patient-medications.scss";
 
 export type PatientMedicationsTabbedProps = {
   className?: string;
-  status?: ClinicalStatus;
-  // should we render the Zus confirmed meds component (default true)?
-  showConfirmedMedsTable?: boolean;
-  // should we render the Zus other providers meds component (default true)?
-  showOtherProvidersMedsTable?: boolean;
-  // should we show the button to add new meds (default true)?
-  readOnly?: boolean;
 };
+
 const tabbedContent = [
   {
     key: "builder-medications",
-    display: "Builder Medications",
+    display: () => "Builder Medications",
     render: () => <ProviderMedsTable />,
   },
   {
     key: "historic-medications",
-    display: "Historic Medications",
+    display: () => "Historic Medications",
     render: () => <div>No Content...</div>,
   },
   {
     key: "other-provider-medications",
-    display: "Other Provider Medications",
-    render: () => <OtherProviderMedsTable />,
+    display: () => (
+      <>
+        <span className="ctw-pr-2">Other Provider Medications</span>
+        <BadgeOtherProviderMedCount />
+      </>
+    ),
+    render: () => (
+      <>
+        <OtherProviderMedsTable />
+      </>
+    ),
   },
 ];
+function onClickBlur() {
+  if (typeof document !== "undefined") {
+    requestAnimationFrame(() => {
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
+    });
+  }
+}
 export function PatientMedicationsTabbed({
   className,
-  readOnly = false,
-  showConfirmedMedsTable = true,
-  showOtherProvidersMedsTable = true,
 }: PatientMedicationsTabbedProps) {
-  const [drawerIsOpen, setDrawerIsOpen] = useState(false);
-  const [includeInactiveMeds, setIncludeInactiveMeds] = useState(false);
-
   return (
-    <CTWBox.StackedWrapper className={cx("ctw-patient-medications", className)}>
-      <CTWBox.Heading title="Medications">
-        {!readOnly && (
-          <AddNewMedDrawer
-            isOpen={drawerIsOpen}
-            handleOnClose={() => setDrawerIsOpen(false)}
-          >
-            <button
-              className="ctw-btn-clear ctw-link"
-              type="button"
-              onClick={() => setDrawerIsOpen(true)}
-            >
-              + Add Medication
-            </button>
-          </AddNewMedDrawer>
-        )}
-      </CTWBox.Heading>
-
-      <div className="ctw-w-full ctw-px-2 ctw-py-2 sm:ctw-px-0">
+    <CTWBox.StackedWrapper
+      className={cx("ctw-patient-medications ctw-space-y-3", className)}
+    >
+      <div className="ctw-w-full ctw-p-4">
         <Tab.Group>
-          <Tab.List className="ctw-flex ctw-space-x-1 ctw-rounded-xl ctw-p-1">
+          <Tab.List className="ctw-flex ctw-justify-start">
             {tabbedContent.map(({ key, display }) => (
               <Tab
                 key={key}
+                onClick={onClickBlur}
                 className={({ selected }) =>
-                  cx(
-                    "ctw-w-full ctw-rounded-lg ctw-py-2.5 ctw-text-sm ctw-font-medium",
-                    "ctw-ring-white ctw-ring-opacity-60 ctw-ring-offset-2 focus:ctw-outline-none focus:ctw-ring-2",
-                    selected
-                      ? "ctw-bg-white ctw-shadow"
-                      : "hover:ctw-bg-white/[0.12] ctw-cursor-pointer hover:ctw-text-white"
-                  )
+                  cx("ctw-tab", {
+                    "ctw-tab-active": selected,
+                    "ctw-text-content-light": !selected,
+                  })
                 }
               >
-                {display}
+                {display()}
               </Tab>
             ))}
           </Tab.List>
 
-          <Tab.Panels className="mt-2">
+          <Tab.Panels>
             {tabbedContent.map(({ key, render }) => (
-              <Tab.Panel
-                key={key}
-                className={cx(
-                  "ctw-rounded-xl ctw-p-3",
-                  "focus:outline-none focus:ring-2"
-                )}
-              >
+              <Tab.Panel key={key} onClick={onClickBlur} className="ctw-mt-4">
                 {render()}
               </Tab.Panel>
             ))}
