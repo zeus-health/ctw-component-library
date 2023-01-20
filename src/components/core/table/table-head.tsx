@@ -52,8 +52,9 @@ export const TableHead = <T extends MinRecordItem>({
           scope="col"
           onClick={(event) => {
             if (column.sortIndices && onSort) {
-              Telemetry.processClickEvent(
+              Telemetry.processHTMLEvent(
                 event.currentTarget,
+                "zusTelemetryClick",
                 `sort=${column.title}`
               );
               onSort(column.title || "");
