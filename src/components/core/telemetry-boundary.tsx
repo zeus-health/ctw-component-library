@@ -1,6 +1,6 @@
-import { pickBy } from "lodash";
 import React, { Component, ErrorInfo, ReactNode } from "react";
 import * as CTWBox from "@/components/core/ctw-box";
+import { pickBy } from "@/utils/nodash";
 import { Telemetry } from "@/utils/telemetry";
 
 interface Props {
