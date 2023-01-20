@@ -25,6 +25,7 @@ export function PatientConditionsTabs({
     (condition) => condition.displayStatus === "Active"
   ).length;
 
+  // https://github.com/tailwindlabs/headlessui/issues/1694
   function blurClicked() {
     if (document.activeElement) {
       requestAnimationFrame(() => {
