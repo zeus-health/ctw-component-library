@@ -84,6 +84,8 @@ module.exports = {
             message:
               "`useLayoutEffect` causes a warning in SSR. Use `useIsomorphicLayoutEffect` instead.",
           },
+          { name: "lodash" },
+          { name: "lodash/fp" },
         ],
       },
     ],
