@@ -47,7 +47,7 @@
   }
 
   .ctw-tab {
-    @apply ctw-cursor-pointer ctw-p-2 ctw-border-transparent ctw-bg-transparent ctw-text-base;
+    @apply ctw-cursor-pointer ctw-border-transparent ctw-bg-transparent ctw-p-2 ctw-text-base;
     &:focus-visible {
       @apply ctw-outline-2;
     }
