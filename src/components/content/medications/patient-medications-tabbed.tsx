@@ -19,8 +19,8 @@ const tabbedContent = [
     render: () => <ProviderMedsTable />,
   },
   {
-    key: "historic",
-    display: () => "Historic",
+    key: "historical",
+    display: () => "Historical",
     render: () => <div>No Content...</div>,
   },
   {
