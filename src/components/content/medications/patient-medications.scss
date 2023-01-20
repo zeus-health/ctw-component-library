@@ -11,7 +11,9 @@
 
   .ctw-tab {
     @apply ctw-relative ctw-mr-5 ctw-cursor-pointer ctw-border-0 ctw-border-transparent ctw-bg-transparent ctw-py-4 ctw-px-1;
-    @apply ctw-text-base ctw-font-medium;
+    @apply ctw-font-medium;
+    font-size: 14px;
+    line-height: 20px;
     &:after {
       @apply ctw-absolute ctw-left-0 -ctw-bottom-0 ctw-block ctw-h-0.5 ctw-w-full;
       content: "";
