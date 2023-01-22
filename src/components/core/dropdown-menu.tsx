@@ -8,7 +8,7 @@ import "./dropdown-menu.scss";
 
 export type MenuItem = {
   name: string;
-  action: () => Promise<void>;
+  action: () => void;
   className?: string;
 };
 
@@ -37,7 +37,8 @@ export function DropdownMenu({
     <Menu>
       <RadixDropdownMenu.Root modal={false}>
         <RadixDropdownMenu.Trigger
-          className="ctw-btn-clear ctw-link"
+          // className="ctw-btn-clear ctw-link"
+          className="ctw-border-none ctw-bg-transparent"
           aria-label="dropdown"
         >
           {isLoading && <Loading message="" />}

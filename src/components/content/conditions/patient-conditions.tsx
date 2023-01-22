@@ -51,7 +51,9 @@ export function PatientConditions({
   function isLoading() {
     const isLoadingPatient = patientConditionsQuery.isLoading;
     const isLoadingOther = isLoadingPatient || otherConditionsQuery.isLoading;
-    return filters.collection === "patient" ? isLoadingPatient : isLoadingOther;
+    return filters.activeCollection === "patient"
+      ? isLoadingPatient
+      : isLoadingOther;
   }
 
   // Get our conditions.
@@ -61,11 +63,15 @@ export function PatientConditions({
     patientConditions,
     true
   );
+
   const conditions = applyFilters(patientConditions, otherConditions);
   const RowActions =
-    filters.collection === "patient"
+    filters.activeCollection === "patient"
       ? PatientConditionHoverActions
       : OtherProviderConditionHoverActions;
+
+  // console.log("conditions", conditions[0].displayStatus);
+  // console.log("conditions", conditions[0].ccsChapter);
 
   return (
     <div
@@ -76,14 +82,15 @@ export function PatientConditions({
     >
       <PatientConditionsHeader
         otherConditions={otherConditions}
-        collection={filters.collection}
-        onCollectionChange={(collection) => updateFilters({ collection })}
+        collection={filters.activeCollection}
+        onCollectionChange={(collection) =>
+          updateFilters({ activeCollection: collection })
+        }
       />
       <PatientConditionsActions
-        hideAdd={readOnly || filters.collection === "other"}
-        onToggleShowHistoric={() =>
-          updateFilters({ showHistoric: !filters.showHistoric })
-        }
+        hideAdd={readOnly || filters.activeCollection === "other"}
+        filters={filters}
+        conditions={conditions}
       />
       <Table
         stacked={breakpoints.sm}

@@ -1,47 +1,55 @@
 import { PlusIcon } from "@heroicons/react/outline";
 import { useAddConditionForm } from "./condition-hooks";
+import { PatientConditionPill } from "./patient-condition-pill";
+import { AddFilter, Filters2 } from "./patient-conditions-filters";
 import { DropdownMenu } from "@/components/core/dropdown-menu";
-import { Toggle } from "@/components/core/toggle";
+import { ConditionModel } from "@/fhir/models";
 
 export type PatientConditionsActionsProps = {
   hideAdd: boolean;
-  onToggleShowHistoric: () => void;
+  filters: Filters2;
+  conditions: ConditionModel[];
+};
+
+export const filterMap = {
+  status: "displayStatus",
+  category: "ccsChapter",
 };
 
 export function PatientConditionsActions({
   hideAdd,
-  onToggleShowHistoric,
+  filters,
+  conditions,
 }: PatientConditionsActionsProps) {
   const showAddConditionForm = useAddConditionForm();
+  const filtersToShow =
+    filters.activeCollection === "patient"
+      ? filters.patientFilters
+      : filters.otherFilters;
 
   return (
     <div className="ctw-flex ctw-items-center ctw-justify-between ctw-border-0 ctw-border-t ctw-border-solid ctw-border-divider-light ctw-py-5 ctw-px-4">
-      <div>
-        <DropdownMenu
-          menuItems={[{ name: "Category" }]}
-          pinnedActions={[
-            { name: "Show Inactive Records" },
-            { name: "Clear All Filters" },
-          ]}
-        >
-          <div
-            className="ctw-flex ctw-cursor-pointer ctw-items-center ctw-space-x-1 ctw-rounded-md ctw-border-none ctw-bg-transparent ctw-py-3 ctw-px-3 ctw-text-content-light hover:ctw-bg-bg-lighter"
-            role="button"
-          >
-            <span>
-              <PlusIcon className="ctw-h-3.5 ctw-w-3.5" />
-            </span>
+      <div className="ctw-flex ctw-items-center ctw-space-x-1">
+        {filtersToShow &&
+          Object.entries(filtersToShow).map(([name, values]) => (
+            <DropdownMenu
+              menuItems={[filterMap[name]]}
+              pinnedActions={[
+                {
+                  name: "Remove Filter",
+                  action: () => {
+                    console.log("hello");
+                  },
+                },
+              ]}
+            >
+              <PatientConditionPill title={name} items={values} />
+            </DropdownMenu>
+          ))}
 
-            <span>Add Filter</span>
-          </div>
-        </DropdownMenu>
+        <AddFilter />
       </div>
       <div className="ctw-flex ctw-items-center ctw-space-x-2 ">
-        <Toggle
-          name="historic"
-          text="Show Historic"
-          onChange={onToggleShowHistoric}
-        />
         {!hideAdd && (
           <button
             type="button"
