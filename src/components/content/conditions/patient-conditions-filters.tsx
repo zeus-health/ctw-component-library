@@ -1,8 +1,8 @@
 import { PlusIcon } from "@heroicons/react/outline";
-import { cloneDeep, merge } from "lodash";
 import { useState } from "react";
 import { DropdownMenu } from "@/components/core/dropdown-menu";
 import { ConditionModel } from "@/fhir/models";
+import { cloneDeep, merge } from "@/utils/nodash";
 
 export type FilterCollection = "patient" | "other";
 export type Status =

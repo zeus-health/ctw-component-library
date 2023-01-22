@@ -1,7 +1,7 @@
 import cx from "classnames";
-import { compact } from "lodash";
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { ConditionModel } from "@/fhir/models";
+import { compact } from "@/utils/nodash";
 
 function statusToColor(status: string) {
   switch (status) {

@@ -1,7 +1,7 @@
-import { isArray, isEmpty } from "lodash";
 import { DocumentOnlyProps, TableInfo } from "../../types";
 import { Table } from "../Table/Table";
 import { getPatientData } from "./data";
+import { isArray, isEmpty } from "@/utils/nodash";
 
 export const Patient = ({
   document,

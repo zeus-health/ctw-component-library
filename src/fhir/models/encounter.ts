@@ -1,9 +1,9 @@
 import { Coding } from "fhir/r4";
-import { compact, find, flatten } from "lodash";
 import { codeableConceptLabel, findCoding } from "../codeable-concept";
 import { formatDateISOToLocal } from "../formatters";
 import { SYSTEM_ACT_CODE } from "../system-urls";
 import { FHIRModel } from "./fhir-model";
+import { compact, find, flatten } from "@/utils/nodash";
 
 export class EncounterModel extends FHIRModel<fhir4.Encounter> {
   get class(): string | undefined {

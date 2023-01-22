@@ -1,8 +1,8 @@
-import { capitalize, startCase } from "lodash";
 import { CodingList } from "@/components/core/coding-list";
 import { CollapsibleDataListProps } from "@/components/core/collapsible-data-list";
 import { NotesList } from "@/components/core/notes-list";
 import { ConditionModel } from "@/fhir/models";
+import { capitalize, startCase } from "@/utils/nodash";
 
 export function setupData(condition: ConditionModel): CollapsibleDataListProps {
   const detailData = [

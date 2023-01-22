@@ -1,8 +1,8 @@
-import { isEmpty } from "lodash";
 import xpath from "xpath";
 import { getContactDetails } from "../../../helpers";
 import { GeneralInfo, LabelValueType } from "../../../types";
 import { getGuardian as getGuardianFromHeader } from "../../Header/data/getGuardian";
+import { isEmpty } from "@/utils/nodash";
 
 export const getGuardian = (
   patientRole: Document
