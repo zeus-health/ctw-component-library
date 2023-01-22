@@ -63,6 +63,8 @@ export function useConditionFilters() {
       filters.activeCollection === "patient"
         ? patientConditions
         : otherConditions;
+
+    return { status: conditions.map((c) => c.displayStatus) };
   }
 
   return { filters, updateFilters, applyFilters, availableFilters };
