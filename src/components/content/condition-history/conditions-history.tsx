@@ -6,12 +6,12 @@ import {
 } from "../../core/collapsible-data-list-stack";
 import { useCTW } from "../../core/providers/ctw-provider";
 import { DocumentButton } from "../CCDA/document-button";
-import { CCDAModal } from "../CCDA/modal-ccda";
+import { useCCDAModal } from "../CCDA/modal-ccda";
 import { ConditionHeader } from "../condition-header";
 import { applyConditionHistoryFilters } from "./condition-history-filters";
 import { conditionData, setupData } from "./condition-history-schema";
 import { Loading } from "@/components/core/loading";
-import { getBinaryDocument, getBinaryId } from "@/fhir/binaries";
+import { getBinaryId } from "@/fhir/binaries";
 import { getIncludedResources } from "@/fhir/bundle";
 import { useConditionHistory } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models/condition";
@@ -36,30 +36,10 @@ export function ConditionHistory({
   const [conditionsWithoutDate, setConditionsWithoutDate] =
     useState<CollapsibleDataListStackEntries>([]);
   const [isHistoryLoading, setIsHistoryLoading] = useState(true);
-  const [binaryDocument, setBinaryDocument] = useState<fhir4.Binary>();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [ccdaViewerTitle, setCCDAViewerTitle] = useState<string>();
 
   // Fetching
   const { getRequestContext } = useCTW();
   const historyResponse = useConditionHistory(condition);
-
-  // Handlers
-  const openCCDAModal = async (
-    binaryId: string,
-    conditionDisplayName?: string | undefined
-  ) => {
-    const requestContext = await getRequestContext();
-    const binaryDocumentResponse = await getBinaryDocument(
-      requestContext,
-      binaryId
-    );
-    setBinaryDocument(binaryDocumentResponse);
-    setIsModalOpen(true);
-    if (conditionDisplayName) {
-      setCCDAViewerTitle(conditionDisplayName);
-    }
-  };
 
   useEffect(() => {
     async function load() {
@@ -109,32 +89,22 @@ export function ConditionHistory({
   }, [condition, getRequestContext, historyResponse.data, onEdit]);
 
   return (
-    <>
-      <CCDAModal
-        isOpen={isModalOpen}
-        fileName={ccdaViewerTitle}
-        rawBinary={binaryDocument}
-        onClose={() => setIsModalOpen(false)}
+    <div className="ctw-space-y-6">
+      <ConditionHeader condition={condition} />
+      <Details
+        data={conditionData(condition)}
+        readOnly={!onEdit}
+        onEdit={() => {
+          onClose();
+          onEdit?.();
+        }}
       />
-
-      <div className="ctw-space-y-6">
-        <ConditionHeader condition={condition} />
-        <Details
-          data={conditionData(condition)}
-          readOnly={!onEdit}
-          onEdit={() => {
-            onClose();
-            onEdit?.();
-          }}
-        />
-        <HistoryRecords
-          conditionsWithDate={conditionsWithDate}
-          conditionsWithoutDate={conditionsWithoutDate}
-          historyIsLoading={isHistoryLoading}
-          openCCDAModal={openCCDAModal}
-        />
-      </div>
-    </>
+      <HistoryRecords
+        conditionsWithDate={conditionsWithDate}
+        conditionsWithoutDate={conditionsWithoutDate}
+        historyIsLoading={isHistoryLoading}
+      />
+    </div>
   );
 }
 
@@ -142,18 +112,15 @@ type HistoryRecordsProps = {
   conditionsWithDate: CollapsibleDataListStackEntries;
   conditionsWithoutDate: CollapsibleDataListStackEntries;
   historyIsLoading: boolean;
-  openCCDAModal: (
-    binaryId: string,
-    conditionTitle: string | undefined
-  ) => Promise<void>;
 };
 
 const HistoryRecords = ({
   conditionsWithDate,
   conditionsWithoutDate,
   historyIsLoading,
-  openCCDAModal,
 }: HistoryRecordsProps) => {
+  const openCCDAModal = useCCDAModal();
+
   if (
     conditionsWithDate.length === 0 &&
     conditionsWithoutDate.length === 0 &&
@@ -175,7 +142,10 @@ const HistoryRecords = ({
               {entry.binaryId && (
                 <DocumentButton
                   onClick={() =>
-                    openCCDAModal(entry.binaryId as string, entry.title)
+                    openCCDAModal(
+                      entry.binaryId as string,
+                      entry.title ?? "Condition"
+                    )
                   }
                   text="Source Document"
                 />
@@ -196,7 +166,10 @@ const HistoryRecords = ({
                   {entry.binaryId && (
                     <DocumentButton
                       onClick={() =>
-                        openCCDAModal(entry.binaryId as string, entry.title)
+                        openCCDAModal(
+                          entry.binaryId as string,
+                          entry.title ?? "Condition"
+                        )
                       }
                       text="Source Document"
                     />
