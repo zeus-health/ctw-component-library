@@ -4,9 +4,9 @@ import {
   CollapsibleDataListStack,
   CollapsibleDataListStackEntries,
 } from "../../core/collapsible-data-list-stack";
-import { CCDAModal } from "../../core/modal-ccda";
 import { useCTW } from "../../core/providers/ctw-provider";
 import { DocumentButton } from "../CCDA/document-button";
+import { CCDAModal } from "../CCDA/modal-ccda";
 import { ConditionHeader } from "../condition-header";
 import { applyConditionHistoryFilters } from "./condition-history-filters";
 import { conditionData, setupData } from "./condition-history-schema";

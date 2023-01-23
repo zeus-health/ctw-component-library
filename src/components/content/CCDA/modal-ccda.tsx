@@ -1,6 +1,6 @@
 import { XIcon } from "@heroicons/react/outline";
-import { Base64BinaryField } from "../content/CCDA/base64toBinaryField";
-import { Modal, ModalProps } from "./modal";
+import { Base64BinaryField } from "./base64toBinaryField";
+import { Modal, ModalProps } from "@/components/core/modal";
 
 export type CCDAModalProps = {
   rawBinary: fhir4.Binary | undefined;
