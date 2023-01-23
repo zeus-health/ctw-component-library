@@ -1,0 +1,11 @@
+import{R as r}from"./index-6f814c40.js";import{s,p as a,o as p}from"./requests-8296ee7a.js";import{a4 as m,p as n,P as d,S as c}from"./index-ec599385.js";import"./_commonjsHelpers-042e6b4d.js";import"./action-list-661b9948.js";import"./index-74f03c09.js";import"./sortBy-1bd29ff1.js";import"./_baseForOwn-d14a5c7b.js";import"./_getTag-f6946e3e.js";import"./_baseIsEqual-87615994.js";import"./_baseToString-d6b3b198.js";import"./_baseClone-73248e56.js";import"./noop-640bb2f2.js";import"./toNumber-dfb0a5dc.js";import"./isPlainObject-1763b18f.js";import"./_basePickBy-b8cc8020.js";import"./mapValues-bf5b7280.js";import"./drawer-683c09d6.js";import"./index-6de6b113.js";import"./spinner-66aa4ba7.js";import"./index-7a14e213.js";import"./_commonjs-dynamic-modules-302442b1.js";import"./table-5f18d0a5.js";import"./_createSet-958401e2.js";import"./data-list-254aa0b0.js";import"./extends-c883cf05.js";import"./uniq-838ae00f.js";import"./isString-de61ee5c.js";import"./debounce-df0b008f.js";const Z={tags:["docsPage"],component:m,decorators:[(e,{args:i})=>r.createElement(n,{env:"dev",authToken:"ey.12345",builderId:"12345"},r.createElement(d,{patientID:"007",systemURL:c},r.createElement(e,{args:i})))]},o={args:{sortColumn:"display",sortOrder:"asc"},...s({providerMedications:a,otherProviderMedications:p})};var t;o.parameters={...o.parameters,storySource:{source:`{
+  args: {
+    sortColumn: "display",
+    sortOrder: "asc"
+  },
+  ...setupMedicationMocks({
+    providerMedications,
+    otherProviderMedications
+  })
+}`,...(t=o.parameters)==null?void 0:t.storySource}};const j=["Basic"];export{o as Basic,j as __namedExportsOrder,Z as default};
+//# sourceMappingURL=other-provider-meds-table.stories-da8617bf.js.map
