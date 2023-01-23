@@ -1,4 +1,10 @@
 import { z } from "zod";
+import {
+  getStateEnum,
+  phoneNumberRegex,
+  stateCode,
+  zipCodeRegex,
+} from "./validations";
 import { FormEntry } from "@/components/core/form/drawer-form-with-fields";
 import { PatientModel } from "@/fhir/models";
 
@@ -86,7 +92,7 @@ export const getRequestData = (patient: PatientModel): FormEntry[] => [
     {
       label: "State",
       field: "state",
-      value: patient.homeAddress?.state,
+      value: stateCode(patient.homeAddress?.state),
       readonly: false,
     },
     {
@@ -128,6 +134,7 @@ export const requestHistorySchema = z.object({
   }),
   dateOfBirth: z
     .date()
+    .min(new Date("1900"), { message: "Date of birth is invalid." })
     .max(new Date(), { message: "Date of birth cannot be a future date." }),
   gender: z.enum(["-", "male", "female", "other", "unknown"]),
   address: z.string({
@@ -136,12 +143,17 @@ export const requestHistorySchema = z.object({
   city: z.string({
     required_error: "City must be specified.",
   }),
-  state: z.string({
-    required_error: "State must be specified.",
-  }),
-  zipCode: z.string({
-    required_error: "Zip code must be specified.",
-  }),
-  phone: z.string().optional(),
-  email: z.string().optional(),
+  state: getStateEnum("State must be specified."),
+  zipCode: z
+    .string({
+      required_error: "Zip code must be specified.",
+    })
+    .regex(zipCodeRegex, {
+      message: "Zip code is invalid.",
+    }),
+  phone: z
+    .string()
+    .regex(phoneNumberRegex, { message: "Phone number is invalid." })
+    .optional(),
+  email: z.string().email({ message: "Email address is invalid." }).optional(),
 });

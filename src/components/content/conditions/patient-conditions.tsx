@@ -6,11 +6,11 @@ import { filterOtherConditions } from "./helpers";
 import { PatientConditionsActions } from "./patient-conditions-actions";
 import { patientConditionsColumns } from "./patient-conditions-columns";
 import { useConditionFilters } from "./patient-conditions-filters";
-import { PatientConditionsHeader } from "./patient-conditions-header";
 import {
   OtherProviderConditionHoverActions,
   PatientConditionHoverActions,
 } from "./patient-conditions-menu-actions";
+import { PatientConditionsTabs } from "./patient-conditions-tabs";
 import { FormEntry } from "@/components/core/form/drawer-form-with-fields";
 import { Table } from "@/components/core/table/table";
 import {
@@ -74,32 +74,39 @@ export function PatientConditions({
         "ctw-patient-conditions-stacked": breakpoints.sm,
       })}
     >
-      <PatientConditionsHeader
-        otherConditions={otherConditions}
-        collection={filters.collection}
-        onCollectionChange={(collection) => updateFilters({ collection })}
-      />
-      <PatientConditionsActions
-        hideAdd={readOnly || filters.collection === "other"}
-        onToggleShowHistoric={() =>
-          updateFilters({ showHistoric: !filters.showHistoric })
-        }
-      />
-      <Table
-        stacked={breakpoints.sm}
-        className="-ctw-mx-px !ctw-rounded-none"
-        showTableHead={false}
-        isLoading={isLoading()}
-        records={conditions}
-        RowActions={readOnly ? undefined : RowActions}
-        columns={patientConditionsColumns}
-        handleRowClick={(condition) =>
-          showConditionHistory({
-            condition,
-            readOnly: readOnly || condition.isSummaryResource,
-          })
-        }
-      />
+      <div className="ctw-items-center ctw-justify-between ctw-py-5 ctw-px-4">
+        <div className="ctw-ml-3 ctw-text-xl ctw-font-medium ctw-text-content-black">
+          Conditions
+        </div>
+        <PatientConditionsTabs
+          otherConditions={otherConditions}
+          collection={filters.collection}
+          onCollectionChange={(collection) => updateFilters({ collection })}
+        />
+
+        <PatientConditionsActions
+          hideAdd={readOnly || filters.collection === "other"}
+          onToggleShowHistoric={() =>
+            updateFilters({ showHistoric: !filters.showHistoric })
+          }
+        />
+
+        <Table
+          stacked={breakpoints.sm}
+          className="-ctw-mx-px !ctw-rounded-none"
+          showTableHead={false}
+          isLoading={isLoading()}
+          records={conditions}
+          RowActions={readOnly ? undefined : RowActions}
+          columns={patientConditionsColumns}
+          handleRowClick={(condition) =>
+            showConditionHistory({
+              condition,
+              readOnly: readOnly || condition.isSummaryResource,
+            })
+          }
+        />
+      </div>
     </div>
   );
 }

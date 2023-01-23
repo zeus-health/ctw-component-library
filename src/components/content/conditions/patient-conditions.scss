@@ -45,4 +45,28 @@
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
   }
+
+  .ctw-tab {
+    @apply ctw-cursor-pointer ctw-border-transparent ctw-bg-transparent ctw-p-2 ctw-text-base;
+    &:focus-visible {
+      @apply ctw-outline-2;
+    }
+  }
+
+  .ctw-tab-underline {
+    &:after {
+      @apply ctw-absolute ctw-left-0 -ctw-bottom-0.5 ctw-block ctw-h-0.5 ctw-w-full;
+      content: "";
+    }
+
+    &:hover:after {
+      @apply ctw-bg-content-black;
+    }
+  }
+
+  .ctw-tab-underline-selected {
+    &:after {
+      @apply ctw-bg-content-black;
+    }
+  }
 }
