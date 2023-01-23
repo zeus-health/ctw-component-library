@@ -132,51 +132,38 @@ const HistoryRecords = ({
     return <Loading message="Loading condition history..." />;
   }
 
+  function maybeAddDocumentButtons(entries: CollapsibleDataListStackEntries) {
+    return entries.map((entry) => {
+      if (entry.binaryId) {
+        // eslint-disable-next-line no-param-reassign
+        entry.documentButton = (
+          <DocumentButton
+            onClick={() =>
+              openCCDAModal(
+                entry.binaryId as string,
+                entry.title ?? "Condition"
+              )
+            }
+            text="Source Document"
+          />
+        );
+      }
+      return entry;
+    });
+  }
+
   return (
     <>
       <CollapsibleDataListStack
-        entries={conditionsWithDate.map((entry) => ({
-          ...entry,
-          documentButton: (
-            <>
-              {entry.binaryId && (
-                <DocumentButton
-                  onClick={() =>
-                    openCCDAModal(
-                      entry.binaryId as string,
-                      entry.title ?? "Condition"
-                    )
-                  }
-                  text="Source Document"
-                />
-              )}
-            </>
-          ),
-        }))}
+        entries={maybeAddDocumentButtons(conditionsWithDate)}
         limit={CONDITION_HISTORY_LIMIT}
       />
+
       {conditionsWithoutDate.length !== 0 && (
         <div className="ctw-space-y-2">
           <div className="ctw-font-medium">Records with no date:</div>
           <CollapsibleDataListStack
-            entries={conditionsWithoutDate.map((entry) => ({
-              ...entry,
-              documentButton: (
-                <>
-                  {entry.binaryId && (
-                    <DocumentButton
-                      onClick={() =>
-                        openCCDAModal(
-                          entry.binaryId as string,
-                          entry.title ?? "Condition"
-                        )
-                      }
-                      text="Source Document"
-                    />
-                  )}
-                </>
-              ),
-            }))}
+            entries={maybeAddDocumentButtons(conditionsWithoutDate)}
             limit={CONDITION_HISTORY_LIMIT}
           />
         </div>
