@@ -230,8 +230,8 @@ export function splitMedications(
       m.revIncludes
     );
   });
-  const dismissedOtherProviderMedications = otherProviderMedications.filter(
-    (m) => m.isArchived
+  const dismissedOtherProviderMedications = activeMedications.filter(
+    (activeMed) => activeMed.isArchived
   );
   return {
     builderMedications,

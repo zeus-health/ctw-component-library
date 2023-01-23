@@ -9,20 +9,21 @@
     @apply ctw-flex ctw-h-11 ctw-items-center ctw-justify-between ctw-bg-bg-light ctw-p-3;
   }
 
-  .ctw-tab {
-    @apply ctw-relative ctw-mr-5 ctw-cursor-pointer ctw-border-0 ctw-border-transparent ctw-bg-transparent ctw-py-4 ctw-px-1;
-    @apply ctw-font-medium;
+  .ctw-tab,
+  .ctw-tab-list {
     font-size: 0.875rem;
     line-height: 1.25rem;
+  }
+
+  .ctw-tab {
+    @apply ctw-relative ctw-mr-5 ctw-cursor-pointer ctw-border-0 ctw-border-transparent ctw-bg-transparent ctw-py-4 ctw-px-1 ctw-font-medium;
     &:after {
-      @apply ctw-absolute ctw-left-0 -ctw-bottom-0 ctw-block ctw-h-0.5 ctw-w-full;
+      @apply ctw-absolute ctw-left-0 ctw-bottom-0 ctw-block ctw-h-0.5 ctw-w-full;
       content: "";
     }
-    &:hover:after {
-      @apply ctw-bg-content-black;
-    }
-    &.ctw-tab-active:after {
-      @apply ctw-bg-content-black;
-    }
+  }
+
+  .ctw-tab-list {
+    width: 312px;
   }
 }

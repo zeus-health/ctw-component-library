@@ -110,6 +110,7 @@ export const BadgeOtherProviderMedCount = () => {
       <Badge
         color="primary"
         text={otherProviderMedications.length.toString()}
+        className="ctw-h-5"
       />
     );
   }
