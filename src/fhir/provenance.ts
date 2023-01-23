@@ -1,11 +1,14 @@
 import { Provenance, Resource } from "fhir/r4";
+import { FHIRModel } from "./models/fhir-model";
 import { getUsersPractitionerReference } from "./practitioner";
+import { searchAllRecords } from "./search-helpers";
 import {
   SYSTEM_PROVENANCE_ACTIVITY_TYPE,
   SYSTEM_PROVENANCE_AGENT_TYPE,
 } from "./system-urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { claimsBuilderName } from "@/utils/auth";
+import { uniq } from "@/utils/nodash";
 
 export const ASSEMBLER_CODING = {
   system: SYSTEM_PROVENANCE_AGENT_TYPE,
@@ -70,3 +73,14 @@ export const createProvenance = async (
     body: provenance,
   });
 };
+
+export async function searchProvenances<T extends fhir4.Resource>(
+  requestContext: CTWRequestContext,
+  models: FHIRModel<T>[]
+): Promise<Provenance[]> {
+  const target = uniq(models.map((m) => `${m.resourceType}/${m.id}`)).join(",");
+  const { resources } = await searchAllRecords("Provenance", requestContext, {
+    target,
+  });
+  return resources;
+}

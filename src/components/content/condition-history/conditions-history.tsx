@@ -11,14 +11,11 @@ import { ConditionHeader } from "../condition-header";
 import { applyConditionHistoryFilters } from "./condition-history-filters";
 import { conditionData, setupData } from "./condition-history-schema";
 import { Loading } from "@/components/core/loading";
+import { getBinaryDocument, getBinaryId } from "@/fhir/binaries";
 import { getIncludedResources } from "@/fhir/bundle";
-import {
-  getBinaryDocument,
-  getBinaryId,
-  getProvenanceForConditions,
-  useConditionHistory,
-} from "@/fhir/conditions";
+import { useConditionHistory } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models/condition";
+import { searchProvenances } from "@/fhir/provenance";
 
 const CONDITION_HISTORY_LIMIT = 10;
 
@@ -77,15 +74,15 @@ export function ConditionHistory({
         );
 
         const requestContext = await getRequestContext();
-        const provenanceBundles = await getProvenanceForConditions(
-          requestContext,
-          [condition, ...conditionsDataDeduped]
-        );
+        const provenances = await searchProvenances(requestContext, [
+          condition,
+          ...conditionsDataDeduped,
+        ]);
 
         let binaryId;
         const conditionsToDisplay = conditionsDataDeduped.map(
           (dedupdedCondition) => {
-            binaryId = getBinaryId(provenanceBundles, dedupdedCondition.id);
+            binaryId = getBinaryId(provenances, dedupdedCondition.id);
 
             return {
               ...setupData(dedupdedCondition),
