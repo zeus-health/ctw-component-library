@@ -13,7 +13,7 @@ import {
 import { PatientConditionsTabs } from "./patient-conditions-tabs";
 import { FormEntry } from "@/components/core/form/drawer-form-with-fields";
 import { Table } from "@/components/core/table/table";
-import { TelemetryBoundary } from "@/components/core/telemetry-boundary";
+import { TelemetryErrorBoundary } from "@/components/core/telemetry-boundary";
 import {
   useOtherProviderConditions,
   usePatientConditions,
@@ -69,7 +69,7 @@ export function PatientConditions({
       : OtherProviderConditionHoverActions;
 
   return (
-    <TelemetryBoundary name="PatientConditions">
+    <TelemetryErrorBoundary name="PatientConditions">
       <div
         ref={containerRef}
         className={cx("ctw-patient-conditions", className, {
@@ -110,6 +110,6 @@ export function PatientConditions({
           />
         </div>
       </div>
-    </TelemetryBoundary>
+    </TelemetryErrorBoundary>
   );
 }

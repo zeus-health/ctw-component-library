@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { MedicationDrawer } from "@/components/content/medication-drawer";
 import { MedicationsTableBase } from "@/components/content/medications-table-base";
-import { TelemetryBoundary } from "@/components/core/telemetry-boundary";
+import { TelemetryErrorBoundary } from "@/components/core/telemetry-boundary";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { get, pipe, toLower } from "@/utils/nodash/fp";
@@ -55,7 +55,7 @@ export function ProviderMedsTable({
   }, [builderMedications, sortColumn, sortOrder, showInactive]);
 
   return (
-    <TelemetryBoundary name="ProviderMedsTable">
+    <TelemetryErrorBoundary name="ProviderMedsTable">
       <MedicationsTableBase
         medicationStatements={medicationModels}
         telemetryNamespace="ProviderMedsTable"
@@ -74,6 +74,6 @@ export function ProviderMedsTable({
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
       />
-    </TelemetryBoundary>
+    </TelemetryErrorBoundary>
   );
 }

@@ -1,11 +1,11 @@
-import { TelemetryBoundary } from "@/components/core/telemetry-boundary";
+import { TelemetryErrorBoundary } from "@/components/core/telemetry-boundary";
 
 export type PatientHistoryProps = {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
 };
 
 export const PatientHistoryMessage = ({ onClick }: PatientHistoryProps) => (
-  <TelemetryBoundary name="PatientHistoryMessage">
+  <TelemetryErrorBoundary name="PatientHistoryMessage">
     <div
       className="ctw-flex ctw-justify-center ctw-space-x-2 ctw-border ctw-border-solid ctw-border-divider-light ctw-p-5"
       data-zus-telemetry-namespace="PatientHistoryMessage"
@@ -22,5 +22,5 @@ export const PatientHistoryMessage = ({ onClick }: PatientHistoryProps) => (
         Request Records
       </button>
     </div>
-  </TelemetryBoundary>
+  </TelemetryErrorBoundary>
 );

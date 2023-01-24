@@ -5,7 +5,7 @@ import { AddNewMedDrawer } from "@/components/content/medications/add-new-med-dr
 import { OtherProviderMedsTable } from "@/components/content/medications/other-provider-meds-table";
 import { ProviderMedsTable } from "@/components/content/medications/provider-meds-table";
 import * as CTWBox from "@/components/core/ctw-box";
-import { TelemetryBoundary } from "@/components/core/telemetry-boundary";
+import { TelemetryErrorBoundary } from "@/components/core/telemetry-boundary";
 import { ToggleControl } from "@/components/core/toggle-control";
 import "./patient-medications.scss";
 
@@ -30,7 +30,7 @@ export function PatientMedications({
   const [includeInactiveMeds, setIncludeInactiveMeds] = useState(false);
 
   return (
-    <TelemetryBoundary name="PatientMedications">
+    <TelemetryErrorBoundary name="PatientMedications">
       <CTWBox.StackedWrapper
         className={cx("ctw-patient-medications", className)}
         data-zus-telemetry-namespace="PatientMedications"
@@ -76,6 +76,6 @@ export function PatientMedications({
           </CTWBox.Body>
         )}
       </CTWBox.StackedWrapper>
-    </TelemetryBoundary>
+    </TelemetryErrorBoundary>
   );
 }

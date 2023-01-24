@@ -9,7 +9,7 @@ import { Pagination } from "@/components/core/pagination/pagination";
 import { useQueryWithCTW } from "@/components/core/providers/ctw-provider";
 import { Table } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
-import { TelemetryBoundary } from "@/components/core/telemetry-boundary";
+import { TelemetryErrorBoundary } from "@/components/core/telemetry-boundary";
 import { getBuilderPatientsList } from "@/fhir/patient-helper";
 import { debounce } from "@/utils/nodash";
 import { QUERY_KEY_PATIENTS_LIST } from "@/utils/query-keys";
@@ -95,7 +95,7 @@ export const PatientsTable = ({
   }, [isError, isFetching]);
 
   return (
-    <TelemetryBoundary name="PatientsTable">
+    <TelemetryErrorBoundary name="PatientsTable">
       <CTWBox.StackedWrapper
         className={cx("ctw-patients-table", className)}
         data-zus-telemetry-namespace="PatientsTable"
@@ -131,7 +131,7 @@ export const PatientsTable = ({
           </Table>
         </CTWBox.Body>
       </CTWBox.StackedWrapper>
-    </TelemetryBoundary>
+    </TelemetryErrorBoundary>
   );
 };
 

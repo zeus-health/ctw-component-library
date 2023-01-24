@@ -169,24 +169,24 @@ try {
 }
 ```
 
-### Using the `TelemetryBoundary` Component
+### Using the `TelemetryErrorBoundary` Component
 
-The `TelemetryBoundary` component is a React error boundary wrapper that simply renders any children passed into it.
-If there is an uncaught error thrown from any descendants of the `TelemetryBoundary`, the boundary will catch the error
-and log the error to DataDog. It then renders a friendly error message with a "refresh component" button so the user may
-opt to show the component again. The error message sent to DataDog will use the `name` prop to log which component the
-error was thrown under. Unlike `data-zus-telemetry-namespace`, we don't log the name of all `TelemetryBoundary`s in the
-tree. The error boundary to catch an error is the one to log it.
+The `TelemetryErrorBoundary` component is a React error boundary wrapper that simply renders any children passed into it.
+If there is an uncaught error thrown from any descendants of the `TelemetryErrorBoundary`, the boundary will catch the
+error and log the error to DataDog. It then renders a friendly error message with a "refresh component" button so the
+user may opt to show the component again. The error message sent to DataDog will use the `name` prop to log which
+component the error was thrown under. Unlike `data-zus-telemetry-namespace`, we don't log the name of all
+`TelemetryErrorBoundary`s in the tree. The error boundary to catch an error is the one to log it.
 
 ```tsx
-import { TelemetryBoundary } from "@/components/core/telemetry-boundary";
+import { TelemetryErrorBoundary } from "@/components/core/telemetry-boundary";
 
 function SomeComponent(props) {
   return (
-    <TelemetryBoundary name="SomeComponent">
+    <TelemetryErrorBoundary name="SomeComponent">
       <h1>Wow! This is some component!</h1>
       <AnotherComponent />
-    </TelemetryBoundary>
+    </TelemetryErrorBoundary>
   );
 }
 ```

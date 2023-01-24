@@ -29,7 +29,7 @@ import {
   conditionEditSchema,
   getEditingPatientConditionData,
 } from "@/components/content/forms/schemas/condition-schema";
-import { TelemetryBoundary } from "@/components/core/telemetry-boundary";
+import { TelemetryErrorBoundary } from "@/components/core/telemetry-boundary";
 import {
   getNewCondition,
   useOtherProviderConditions,
@@ -204,7 +204,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   }
 
   return (
-    <TelemetryBoundary name="Conditions">
+    <TelemetryErrorBoundary name="Conditions">
       <div
         ref={containerRef}
         data-zus-telemetry-namespace="Conditions"
@@ -385,6 +385,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           />
         )}
       </div>
-    </TelemetryBoundary>
+    </TelemetryErrorBoundary>
   );
 }

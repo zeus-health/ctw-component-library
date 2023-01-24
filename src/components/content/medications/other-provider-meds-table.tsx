@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { MedicationDrawer } from "@/components/content/medication-drawer";
 import { MedicationsTableBase } from "@/components/content/medications-table-base";
 import { AddNewMedDrawer } from "@/components/content/medications/add-new-med-drawer";
-import { TelemetryBoundary } from "@/components/core/telemetry-boundary";
+import { TelemetryErrorBoundary } from "@/components/core/telemetry-boundary";
 import { useDismissMedication } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
@@ -55,7 +55,7 @@ export function OtherProviderMedsTable({
   }, [otherProviderMedications, sortColumn, sortOrder]);
 
   return (
-    <TelemetryBoundary name="OtherProviderMedsTable">
+    <TelemetryErrorBoundary name="OtherProviderMedsTable">
       <div data-zus-telemetry-namespace="OtherProviderMedsTable">
         <MedicationsTableBase
           telemetryNamespace="MedicationsTableBase"
@@ -98,6 +98,6 @@ export function OtherProviderMedsTable({
           handleOnClose={() => setAddNewMedDrawerOpen(false)}
         />
       </div>
-    </TelemetryBoundary>
+    </TelemetryErrorBoundary>
   );
 }
