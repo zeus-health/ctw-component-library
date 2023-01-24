@@ -100,7 +100,7 @@ function PatientPortal({ patientID }: PatientPortalProps) {
 Telemetry is sent to DataDog from CTW components. This telemetry tracks usage so that Zus can continually
 improve the ctw-component-library and fix issues that might otherwise go unnoticed. Currently, the telemetry
 provides a basic logger, a React error boundary to log errors and a few HTML dataset attributes to inform which
-elements have trackable events to listen for and the context of which CTW component the event was trigger from.
+elements have trackable events to listen for and the context of which CTW component the event was triggered from.
 
 | Dataset Attribute            | Description                                                                                                                                           |
 | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
