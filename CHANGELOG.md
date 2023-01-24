@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 0.40.0
+
+### Minor Changes
+
+- 2b15a12c: Update styling and layout for conditions 2.0.
+
+### Patch Changes
+
+- be32d6a9: Added `data-test-id` to form elements to target them easier in tests.
+- c26aebc7: Fix spacing on tabs.
+- d126ec06: Add more form validations to patient history request form.
+
 ## 0.39.6
 
 ### Patch Changes

@@ -14,13 +14,14 @@ export function conditionFormDrawer(canvasElement: HTMLElement) {
     selectCondition: async (name: string) =>
       userEvent.click(await drawer.findByRole("option", { name })),
     status: (status: string) =>
-      userEvent.selectOptions(drawer.getByLabelText("Status"), status),
+      userEvent.selectOptions(drawer.getByTestId("form-field-status"), status),
 
     onset: (date: string) =>
-      userEvent.type(drawer.getByLabelText("Onset"), date),
+      userEvent.type(drawer.getByTestId("form-field-onset"), date),
     abatement: (date: string) =>
-      userEvent.type(drawer.getByLabelText("Abatement"), date),
-    note: (note: string) => userEvent.type(drawer.getByLabelText("Note"), note),
+      userEvent.type(drawer.getByTestId("form-field-abatement"), date),
+    note: (note: string) =>
+      userEvent.type(drawer.getByTestId("form-field-note"), note),
 
     cancel: () =>
       userEvent.click(drawer.getByRole("button", { name: "Cancel" })),
