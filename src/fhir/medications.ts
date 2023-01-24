@@ -178,11 +178,12 @@ export function splitMedications(
 ) {
   // Get active medications where there does not exist a matching builder owned record.
   const otherProviderMedications = summarizedMedications.filter(
-    (activeMed) =>
+    (medication) =>
       !(
-        activeMed.isArchived ||
+        medication.isArchived ||
+        medication.status !== "active" ||
         builderOwnedMedications.some(
-          (builderMed) => builderMed.rxNorm === activeMed.rxNorm
+          (builderMed) => builderMed.rxNorm === medication.rxNorm
         )
       )
   );
