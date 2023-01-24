@@ -16,12 +16,6 @@ export type ListBoxProps<T> = {
   onChange: (index: number, item: T) => void;
 };
 
-const renderDisplay = <T extends MinListBoxItem>(item: T) => {
-  if (isFunction(item.display)) {
-    return item.display();
-  }
-  return item.display;
-};
 export function ListBox<T extends MinListBoxItem>({
   items,
   defaultIndex = 0,
@@ -88,4 +82,12 @@ export function ListBox<T extends MinListBoxItem>({
       </Listbox.Options>
     </Listbox>
   );
+}
+
+// A helper function to render items for both the ListBox button and options.
+function renderDisplay<T extends MinListBoxItem>(item: T) {
+  if (isFunction(item.display)) {
+    return item.display();
+  }
+  return item.display;
 }
