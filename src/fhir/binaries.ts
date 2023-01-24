@@ -17,9 +17,9 @@ export function getBinaryId(
 
     if (hasTarget) {
       const source = find(provenance.entity, { role: "source" });
-      if (source) {
+      if (source?.what.reference) {
         // Return the ID portion of the reference.
-        return source.what.reference?.split("/")[1];
+        return source.what.reference.split("/")[1];
       }
     }
   }

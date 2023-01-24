@@ -59,10 +59,9 @@ export function ConditionHistory({
           ...conditionsDataDeduped,
         ]);
 
-        let binaryId;
         const conditionsToDisplay = conditionsDataDeduped.map(
           (dedupdedCondition) => {
-            binaryId = getBinaryId(provenances, dedupdedCondition.id);
+            const binaryId = getBinaryId(provenances, dedupdedCondition.id);
 
             return {
               ...setupData(dedupdedCondition),
@@ -134,9 +133,13 @@ const HistoryRecords = ({
 
   function maybeAddDocumentButtons(entries: CollapsibleDataListStackEntries) {
     return entries.map((entry) => {
-      if (entry.binaryId) {
-        // eslint-disable-next-line no-param-reassign
-        entry.documentButton = (
+      if (!entry.binaryId) {
+        return entry;
+      }
+
+      return {
+        ...entry,
+        documentButton: (
           <DocumentButton
             onClick={() =>
               openCCDAModal(
@@ -146,9 +149,8 @@ const HistoryRecords = ({
             }
             text="Source Document"
           />
-        );
-      }
-      return entry;
+        ),
+      };
     });
   }
 
