@@ -1,7 +1,6 @@
-import { Listbox, Tab } from "@headlessui/react";
-import { CheckIcon, ChevronDownIcon } from "@heroicons/react/solid";
+import { Tab } from "@headlessui/react";
 import cx from "classnames";
-import { Fragment, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { HistoricalMedRecordsTable } from "@/components/content/medications/historical-med-records-table";
 import {
   BadgeOtherProviderMedCount,
@@ -9,6 +8,7 @@ import {
 } from "@/components/content/medications/other-provider-meds-table";
 import { ProviderMedsTable } from "@/components/content/medications/provider-meds-table";
 import * as CTWBox from "@/components/core/ctw-box";
+import { ListBox } from "@/components/core/list-box/list-box";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import "./patient-medications.scss";
 
@@ -72,40 +72,7 @@ export function PatientMedicationsTabbed({
           onChange={setSelectedTabIndex}
         >
           {isVertical && (
-            <Listbox value={selectedTabIndex} onChange={setSelectedTabIndex}>
-              <Listbox.Button className="ctw-tab after:ctw-bg-content-black focus-visible:ctw-outline-primary-dark focus-visible:after:ctw-bg-transparent">
-                {tabbedContent[selectedTabIndex]?.display() ?? "Select a tab"}
-                <span className="ctw-relative ctw-inline-block ctw-w-7 ctw-align-middle">
-                  <ChevronDownIcon className="ctw-absolute -ctw-top-3 ctw-left-1.5 ctw-h-6" />
-                </span>
-              </Listbox.Button>
-              <Listbox.Options className="ctw-tab-list ctw-absolute ctw-z-10 ctw-mt-1 ctw-list-outside ctw-list-none ctw-rounded-lg ctw-border ctw-border-solid ctw-border-divider-light ctw-bg-white ctw-p-0 ctw-text-sm focus-visible:ctw-outline-primary-dark">
-                {tabbedContent.map((item, index) => (
-                  <Listbox.Option key={item.key} value={index} as={Fragment}>
-                    {({ active, selected }) => (
-                      <li
-                        className={cx(
-                          "ctw-flex ctw-cursor-pointer ctw-justify-between ctw-px-3 ctw-pb-4 first:ctw-pt-3 last:ctw-pb-3",
-                          {
-                            "ctw-text-medium": active || selected,
-                            "ctw-text-content-light": !(active || selected),
-                          }
-                        )}
-                      >
-                        <span className="ctw-inline-flex ctw-align-middle">
-                          {item.display()}
-                        </span>
-                        {selected && (
-                          <span className="ctw-inline-flex ctw-pb-0.5">
-                            <CheckIcon className="ctw-inline-block ctw-h-5 ctw-fill-primary-dark ctw-stroke-0 ctw-align-middle" />
-                          </span>
-                        )}
-                      </li>
-                    )}
-                  </Listbox.Option>
-                ))}
-              </Listbox.Options>
-            </Listbox>
+            <ListBox onChange={setSelectedTabIndex} items={tabbedContent} />
           )}
           <Tab.List
             className={cx(
@@ -128,11 +95,9 @@ export function PatientMedicationsTabbed({
                 className={({ selected }) =>
                   cx(
                     [
-                      "ctw-tab",
-                      "ctw-text-sm",
+                      "ctw-tab ctw-text-sm",
                       "hover:after:ctw-bg-content-black",
-                      "focus-visible:ctw-outline-primary-dark",
-                      "focus-visible:after:ctw-bg-transparent",
+                      "focus-visible:ctw-outline-primary-dark focus-visible:after:ctw-bg-transparent",
                     ],
                     {
                       "after:ctw-bg-content-black": selected,
