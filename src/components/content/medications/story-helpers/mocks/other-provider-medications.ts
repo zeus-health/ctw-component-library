@@ -22,7 +22,7 @@ export const otherProviderMedications: fhir4.Bundle = {
   resourceType: "Bundle",
   id: "7c7a1c16",
   type: "searchset",
-  total: 6,
+  total: 5,
   entry: [
     {
       resource: {
