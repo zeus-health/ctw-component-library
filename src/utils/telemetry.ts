@@ -182,12 +182,15 @@ export class Telemetry {
     namespace = ""
   ): string {
     let ns = namespace;
-    if (target.dataset.zusTelemetryNamespace) {
-      const nextNamespace = target.dataset.zusTelemetryNamespace;
-      ns = ns ? `${nextNamespace} > ${ns}` : nextNamespace;
-    }
-    if (target.parentElement && target.parentElement !== window.document.body) {
-      return this.lookupComponentNamespace(target.parentElement, ns);
+    const closest = target.closest("[data-zus-telemetry-namespace]");
+    if (closest instanceof HTMLElement) {
+      const nextNamespace = closest.dataset.zusTelemetryNamespace;
+      if (typeof nextNamespace === "string") {
+        ns = ns ? `${nextNamespace} > ${ns}` : nextNamespace;
+      }
+      if (closest.parentElement) {
+        return this.lookupComponentNamespace(closest.parentElement, ns);
+      }
     }
     return ns || "unknown";
   }
