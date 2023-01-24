@@ -198,13 +198,17 @@ function SomeComponent(props) {
 ### Opting out of telemetry
 
 Zus has a BAA with DataDog and we understand that your applications need to meet HIPAA regulations the same as ours.
-We take this into account when choosing which telemetry data can be tracked, but we also respect the choice to opt-out
-of telemetry collection all together. We encourage you to reach out to the team to discuss which telemetry we collect.
-However, you choose to simply opt-out, simply pass the boolean property `disableTelemetry` to the `CTWProvider`
-component used in your React app.
+We take this into account when choosing which telemetry data can be tracked, but we also respect the choice to not
+opt-in to telemetry collection. We encourage you to reach out to the team to discuss which telemetry we collect.
+However, if choose not to opt-in, there is no action required on your part, as long as the property `enableTelemetry` is
+not passed to the `CTWProvider` component used in your React app, no telemetry will be logged.
 
 ```tsx
-<CTWProvider disableTelemetry>{/** Application **/}</CTWProvider>
+// Telemetry off:
+<CTWProvider>{/** Application **/}</CTWProvider>
+
+// Telemetry on:
+<CTWProvider enableTelemetry>{/** Application **/}</CTWProvider>
 ```
 
 # Contributing

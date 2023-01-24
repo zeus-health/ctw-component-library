@@ -15,12 +15,7 @@ export default {
   component: PatientsTable,
   decorators: [
     (Story, { args }) => (
-      <CTWProvider
-        env="dev"
-        authToken="ey.12345"
-        builderId="12345"
-        disableTelemetry
-      >
+      <CTWProvider env="dev" authToken="ey.12345" builderId="12345">
         <Story args={args} />
       </CTWProvider>
     ),

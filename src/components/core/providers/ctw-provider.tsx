@@ -38,7 +38,7 @@ type AuthTokenURLSpecified = { authToken?: never; authTokenURL: string };
 type CTWProviderProps = {
   builderId?: string;
   children: ReactNode;
-  disableTelemetry?: boolean;
+  enableTelemetry?: boolean;
   env: Env;
   headers?: Record<string, string>;
   theme?: Theme;
@@ -60,9 +60,9 @@ declare global {
  * for theme configuration and opting out of telemetry collection if desired.
  */
 function CTWProvider({
-  theme,
-  disableTelemetry,
   children,
+  enableTelemetry = false,
+  theme,
   ...ctwState
 }: CTWProviderProps) {
   const [token, setToken] = useState<CTWToken>();
@@ -110,14 +110,14 @@ function CTWProvider({
   }, [token, ctwState]);
 
   useEffect(() => {
-    if (!disableTelemetry) {
+    if (enableTelemetry) {
       Telemetry.init(ctwState.env);
       Telemetry.setBuilder(ctwState.builderId);
       handleAuth()
         .then((accessToken) => Telemetry.setUser(accessToken))
         .catch(() => Telemetry.clearUser());
     }
-  }, [ctwState.builderId, ctwState.env, disableTelemetry, handleAuth, token]);
+  }, [ctwState.builderId, ctwState.env, enableTelemetry, handleAuth, token]);
 
   const providerState = useMemo(
     () => ({

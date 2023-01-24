@@ -29,12 +29,7 @@ export default {
   },
   decorators: [
     (Story, { args }) => (
-      <CTWProvider
-        env="dev"
-        authToken="dummy-token"
-        builderId="b123"
-        disableTelemetry
-      >
+      <CTWProvider env="dev" authToken="dummy-token" builderId="b123">
         <PatientProvider patientID="u12345" systemURL={SYSTEM_ZUS_UNIVERSAL_ID}>
           <Story args={args} />
         </PatientProvider>

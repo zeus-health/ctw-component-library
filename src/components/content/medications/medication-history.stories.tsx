@@ -23,12 +23,7 @@ export default {
   tags: ["docsPage"],
   decorators: [
     (Story, { args }) => (
-      <CTWProvider
-        env="dev"
-        authToken="12345"
-        builderId="12345"
-        disableTelemetry
-      >
+      <CTWProvider env="dev" authToken="12345" builderId="12345">
         <PatientProvider patientID="007" systemURL={SYSTEM_ZUS_UNIVERSAL_ID}>
           <Story args={args} />
         </PatientProvider>

@@ -25,6 +25,7 @@ const DemoApp = ({ accessToken = "" }) => (
     env={VITE_ENV}
     authToken={accessToken}
     builderId={VITE_BUILDER_ID}
+    enableTelemetry
   >
     <PatientProvider patientID={VITE_PATIENT_ID} systemURL={VITE_SYSTEM_URL}>
       <div className="App">
