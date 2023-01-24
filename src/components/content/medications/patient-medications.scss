@@ -16,7 +16,7 @@
   }
 
   .ctw-tab {
-    @apply ctw-relative ctw-mr-5 ctw-cursor-pointer ctw-border-0 ctw-border-transparent ctw-bg-transparent ctw-py-4 ctw-px-1 ctw-font-medium;
+    @apply ctw-relative ctw-mr-5 ctw-cursor-pointer ctw-border-0 ctw-border-transparent ctw-bg-transparent ctw-py-4 ctw-px-1;
     &:after {
       @apply ctw-absolute ctw-left-0 ctw-bottom-0 ctw-block ctw-h-0.5 ctw-w-full;
       content: "";
