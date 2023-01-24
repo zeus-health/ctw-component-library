@@ -1,6 +1,8 @@
 import { Provenance } from "fhir/r4";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { find, some } from "@/utils/nodash";
+import { QUERY_KEY_BINARY } from "@/utils/query-keys";
+import { queryClient } from "@/utils/request";
 
 export function getBinaryId(
   provenances: Provenance[],
@@ -29,8 +31,10 @@ export async function getBinaryDocument(
   requestContext: CTWRequestContext,
   binaryId: string
 ): Promise<fhir4.Binary> {
-  return (await requestContext.fhirClient.read({
-    resourceType: "Binary",
-    id: binaryId,
-  })) as fhir4.Binary;
+  return queryClient.fetchQuery([QUERY_KEY_BINARY, binaryId], async () =>
+    requestContext.fhirClient.read({
+      resourceType: "Binary",
+      id: binaryId,
+    })
+  );
 }

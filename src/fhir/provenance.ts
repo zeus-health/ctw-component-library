@@ -9,6 +9,8 @@ import {
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { claimsBuilderName } from "@/utils/auth";
 import { uniq } from "@/utils/nodash";
+import { QUERY_KEY_PROVENANCE } from "@/utils/query-keys";
+import { queryClient } from "@/utils/request";
 
 export const ASSEMBLER_CODING = {
   system: SYSTEM_PROVENANCE_AGENT_TYPE,
@@ -79,8 +81,14 @@ export async function searchProvenances<T extends fhir4.Resource>(
   models: FHIRModel<T>[]
 ): Promise<Provenance[]> {
   const target = uniq(models.map((m) => `${m.resourceType}/${m.id}`)).join(",");
-  const { resources } = await searchAllRecords("Provenance", requestContext, {
-    target,
-  });
+
+  const { resources } = await queryClient.fetchQuery(
+    [QUERY_KEY_PROVENANCE, target],
+    async () =>
+      searchAllRecords("Provenance", requestContext, {
+        target,
+      })
+  );
+
   return resources;
 }
