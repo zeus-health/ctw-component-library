@@ -3,11 +3,11 @@ import { ImmunizationModel } from "./models/immunization";
 import { searchCommonRecords } from "./search-helpers";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { orderBy } from "@/utils/nodash";
-import { QUERY_KEY_PATIENT_ENCOUNTERS } from "@/utils/query-keys";
+import { QUERY_KEY_PATIENT_IMMUNIZATIONS } from "@/utils/query-keys";
 
 export function usePatientImmunizations() {
   return useQueryWithPatient(
-    QUERY_KEY_PATIENT_ENCOUNTERS,
+    QUERY_KEY_PATIENT_IMMUNIZATIONS,
     [],
     async (requestContext, patient) => {
       try {
