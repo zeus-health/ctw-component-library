@@ -21,7 +21,6 @@ export async function getBuilderFhirPatient(
       _count: 1,
       _include: "Patient:organization",
     });
-    console.log(response);
 
     patients = response.resources;
     bundle = response.bundle;
