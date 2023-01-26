@@ -44,7 +44,7 @@ export const patientTimelineColumns: TableColumn<EncounterModel>[] = [
     },
   },
   {
-    widthPercent: 50,
+    widthPercent: 40,
     minWidth: 200,
     render: (encounter) => {
       const { diagnosis } = encounter.resource;
@@ -63,7 +63,7 @@ export const patientTimelineColumns: TableColumn<EncounterModel>[] = [
     },
   },
   {
-    widthPercent: 40,
+    widthPercent: 10,
     minWidth: 200,
     render: (encounter) => (
       <ViewFHIR name="Encounter Resource" resource={encounter.resource} />

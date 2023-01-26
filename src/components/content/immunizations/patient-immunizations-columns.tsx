@@ -9,7 +9,7 @@ export const patientImmunizationsColumns: TableColumn<ImmunizationModel>[] = [
     dataIndex: "occurance",
   },
   {
-    widthPercent: 50,
+    widthPercent: 40,
     minWidth: 250,
     dataIndex: "description",
   },
@@ -20,7 +20,7 @@ export const patientImmunizationsColumns: TableColumn<ImmunizationModel>[] = [
       immunization.cvxCode && <div>CVX: {immunization.cvxCode}</div>,
   },
   {
-    widthPercent: 40,
+    widthPercent: 10,
     minWidth: 200,
     render: (immunization) => (
       <ViewFHIR name="Immunization Resource" resource={immunization.resource} />

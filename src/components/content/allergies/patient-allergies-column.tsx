@@ -24,8 +24,6 @@ export const patientAllergiesColumns: TableColumn<AllergyModel>[] = [
     dataIndex: "onset",
   },
   {
-    widthPercent: 40,
-    minWidth: 200,
     render: (allergy) => (
       <ViewFHIR name="Allergy Resource" resource={allergy.resource} />
     ),
