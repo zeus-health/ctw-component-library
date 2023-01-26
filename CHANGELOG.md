@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.42.0
+
+### Minor Changes
+
+- e2d7ffef: Dedupe allergies and add manifestation column.
+
 ## 0.41.1
 
 ### Patch Changes
