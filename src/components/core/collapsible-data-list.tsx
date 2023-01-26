@@ -28,7 +28,6 @@ export const CollapsibleDataList = ({
   data,
   hideEmpty,
   documentButton,
-  binaryId,
 }: CollapsibleDataListProps) => {
   const [isDetailShown, setIsDetailShown] = useState(false);
 
@@ -40,14 +39,13 @@ export const CollapsibleDataList = ({
         subtitle={subtitle}
         isDetailShown={isDetailShown}
         setIsDetailShown={setIsDetailShown}
-        binaryId={binaryId}
+        hasDocument={!!documentButton}
       />
       {isDetailShown && (
         <Details
           data={data}
           hideEmpty={hideEmpty}
           documentButton={documentButton}
-          binaryId={binaryId}
         />
       )}
     </div>
@@ -59,14 +57,14 @@ const DetailSummary = ({
   title,
   subtitle,
   isDetailShown,
-  binaryId,
+  hasDocument = false,
   setIsDetailShown,
 }: {
   date?: string;
   title?: string;
   subtitle?: string;
   isDetailShown: boolean;
-  binaryId: string | undefined;
+  hasDocument?: boolean;
   setIsDetailShown: React.Dispatch<React.SetStateAction<boolean>>;
 }) => (
   <button
@@ -86,7 +84,7 @@ const DetailSummary = ({
         </div>
       </div>
       <div className="ctw-flex ctw-items-center ctw-space-x-3">
-        {binaryId && (
+        {hasDocument && (
           <DocumentIcon
             className="ctw-fill-content-light hover:ctw-fill-content-light"
             height={16}

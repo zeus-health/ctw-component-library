@@ -7,6 +7,7 @@ import { PatientProvider } from "./components/core/providers/patient-provider";
 import { ErrorBoundary } from "./error-boundary";
 import { SecuredApp } from "./SecuredApp";
 import { PatientConditions } from "./components/content/conditions/patient-conditions";
+import { PatientAllergies } from "@/components/content/allergies/patient-allergies";
 
 const {
   VITE_SYSTEM_URL,
@@ -29,6 +30,15 @@ const DemoApp = ({ accessToken = "" }) => (
     <PatientProvider patientID={VITE_PATIENT_ID} systemURL={VITE_SYSTEM_URL}>
       <div className="App">
         <h1>CTW Component Library</h1>
+
+        <div className="ctw-space-y-5">
+          <h3>
+            Patient Allergies <small>(default)</small>
+          </h3>
+          <ErrorBoundary>
+            <PatientAllergies />
+          </ErrorBoundary>
+        </div>
 
         <div className="ctw-space-y-5">
           <h3>
