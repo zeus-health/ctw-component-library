@@ -37,7 +37,13 @@ export function PatientConditions({
   readOnly = false,
 }: PatientConditionsProps) {
   // State.
-  const { filters, updateFilters, applyFilters } = useConditionFilters();
+  const {
+    filters,
+    updateFilters,
+    applyFilters,
+    actions,
+    currentAndAvailableFilterMap,
+  } = useConditionFilters();
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
 
@@ -70,9 +76,6 @@ export function PatientConditions({
       ? PatientConditionHoverActions
       : OtherProviderConditionHoverActions;
 
-  // console.log("conditions", conditions[0].displayStatus);
-  // console.log("conditions", conditions[0].ccsChapter);
-
   return (
     <div
       ref={containerRef}
@@ -86,14 +89,21 @@ export function PatientConditions({
         </div>
         <PatientConditionsTabs
           otherConditions={otherConditions}
-          collection={filters.collection}
-          onCollectionChange={(collection) => updateFilters({ collection })}
+          collection={filters.activeCollection}
+          onCollectionChange={(collection) =>
+            updateFilters({ activeCollection: collection })
+          }
         />
 
         <PatientConditionsActions
           hideAdd={readOnly || filters.activeCollection === "other"}
+          updateFilters={updateFilters}
+          actions={actions}
           filters={filters}
-          conditions={conditions}
+          availableFilters={currentAndAvailableFilterMap(
+            patientConditions,
+            otherConditions
+          )}
         />
 
         <Table

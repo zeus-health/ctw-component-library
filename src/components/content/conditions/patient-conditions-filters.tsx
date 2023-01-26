@@ -1,41 +1,51 @@
 import { PlusIcon } from "@heroicons/react/outline";
 import { useState } from "react";
-import { DropdownMenu } from "@/components/core/dropdown-menu";
+import { DropdownMenuAction } from "@/components/core/dropdown-action-menu";
 import { ConditionModel } from "@/fhir/models";
-import { cloneDeep, merge } from "@/utils/nodash";
+import { DisplayStatus } from "@/fhir/models/condition";
+import { uniq } from "@/utils/nodash";
 
 export type FilterCollection = "patient" | "other";
-export type Status =
-  | "Active"
-  | "Pending"
-  | "Inactive"
-  | "Refuted"
-  | "Entered in Error";
-
+export type FilterTypes = { status?: DisplayStatus[]; ccsChapter?: string[] };
 export type Filters = {
-  collection: FilterCollection;
-  showHistoric: boolean;
-};
-
-export type Filters2 = {
   activeCollection: FilterCollection;
-  patientFilters?: { status?: Status[]; ccsChapter?: string[] };
-  otherFilters?: { status?: Status[]; ccsChapter?: string[] };
+  patient?: FilterTypes;
+  other?: FilterTypes;
 };
 
+export type FilterActions = {
+  removeFilter: (filterName: keyof FilterTypes) => void;
+};
+
+export type AvailableFilters = {
+  [key: string]: {
+    selected: unknown[];
+    avalable: unknown[];
+  }[];
+};
+
+const filterMap = { status: "status", ccsChapter: "category" };
 export function useConditionFilters() {
-  const [filters, setFilters] = useState<Filters2>({
+  const [filters, setFilters] = useState<Filters>({
     activeCollection: "patient",
-    patientFilters: {
-      status: ["Active", "Pending"],
-      ccsChapter: ["test"],
+    patient: {
+      status: ["Active", "Pending", "Unknown"],
+      ccsChapter: ["Mental and Behavioral"],
     },
-    otherFilters: { status: ["Active", "Pending"] },
+    other: { status: ["Active", "Pending"] },
   });
 
-  function updateFilters(newFilters: Partial<Filters2>) {
-    setFilters(merge(cloneDeep(filters), newFilters));
+  console.log("filters", filters);
+  function updateFilters(newFilters: Partial<Filters>) {
+    setFilters((prevState) => ({ ...prevState, ...newFilters }));
   }
+
+  const actions = {
+    removeFilter: (filterName: keyof FilterTypes) =>
+      updateFilters({
+        [filters.activeCollection]: { [filterName]: [] },
+      }),
+  };
 
   function applyFilters(
     patientConditions: ConditionModel[],
@@ -45,13 +55,38 @@ export function useConditionFilters() {
       filters.activeCollection === "patient"
         ? patientConditions
         : otherConditions;
-    return conditions.filter((c) => {
-      const conditionFilters =
-        filters.activeCollection === "patient"
-          ? filters.patientFilters
-          : filters.otherFilters;
 
-      return conditionFilters?.status?.includes(c.displayStatus as Status);
+    return conditions.filter((c) => {
+      const conditionFilters = filters[filters.activeCollection];
+
+      const statusFilter =
+        !conditionFilters?.status ||
+        conditionFilters.status.length < 1 ||
+        conditionFilters.status.includes(c.displayStatus);
+
+      const ccsChapterFilter =
+        !conditionFilters?.ccsChapter ||
+        conditionFilters.ccsChapter.length < 1 ||
+        conditionFilters.ccsChapter.includes(c.ccsChapter ?? "");
+
+      return statusFilter && ccsChapterFilter;
+    });
+  }
+
+  function currentAndAvailableFilterMap(
+    patientConditions: ConditionModel[],
+    otherConditions: ConditionModel[]
+  ) {
+    return Object.entries(
+      availableFilters(patientConditions, otherConditions)
+    ).map(([key, values]) => {
+      const selected = filters[filters.activeCollection][key] || [];
+      return {
+        [filterMap[key as keyof typeof filterMap]]: {
+          available: values,
+          selected: selected.filter((val) => values.includes(val)),
+        },
+      };
     });
   }
 
@@ -64,18 +99,33 @@ export function useConditionFilters() {
         ? patientConditions
         : otherConditions;
 
-    return { status: conditions.map((c) => c.displayStatus) };
+    return {
+      status: uniq(conditions.map((c) => c.displayStatus)),
+      cssChapter: uniq(conditions.map((c) => c.ccsChapter)),
+    };
   }
 
-  return { filters, updateFilters, applyFilters, availableFilters };
+  return {
+    filters,
+    updateFilters,
+    applyFilters,
+    availableFilters,
+    actions,
+    currentAndAvailableFilterMap,
+  };
 }
 
-export const AddFilter = () => (
-  <DropdownMenu
+export const AddFilter = ({ updateFilters }) => (
+  <DropdownMenuAction
     menuItems={[{ name: "Category" }, { name: "Status" }]}
     pinnedActions={[
-      { name: "Show Inactive Records" },
-      { name: "Clear All Filters" },
+      { name: "Reset Filters", action: () => {} },
+      {
+        name: "Clear All Filters",
+        action: () => {
+          updateFilters({ patient: {}, other: {} });
+        },
+      },
     ]}
   >
     <div
@@ -88,5 +138,5 @@ export const AddFilter = () => (
 
       <span>Add Filter</span>
     </div>
-  </DropdownMenu>
+  </DropdownMenuAction>
 );
