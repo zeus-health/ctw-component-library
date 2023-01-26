@@ -13,9 +13,6 @@ export const DocumentButton = ({ onClick, text }: DocumentButtonProps) => (
     onClick={onClick}
   >
     <div>{text}</div>
-    <DocumentIcon
-      className="ctw-fill-primary-dark hover:ctw-fill-primary-main"
-      height={12}
-    />
+    <DocumentIcon height={12} />
   </button>
 );

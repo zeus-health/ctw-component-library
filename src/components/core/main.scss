@@ -79,6 +79,8 @@
 
   .ctw-link {
     @apply ctw-cursor-pointer ctw-text-xs ctw-font-medium ctw-text-primary-dark hover:ctw-text-primary-main;
+    // Also handle any icons (svg fill).
+    @apply ctw-fill-primary-dark hover:ctw-fill-primary-main;
   }
 
   .ctw-scrollbar::-webkit-scrollbar {

@@ -18,6 +18,10 @@
   background: linear-gradient(90deg, #f9fafb00 0%, #f9fafb 4.17%);
 }
 
+.ctw-cell-title {
+  @apply ctw-text-base ctw-font-medium;
+}
+
 .ctw-table-scroll-right-shadow::after {
   right: 0;
 }
@@ -57,10 +61,10 @@
         }
 
         td {
-          @apply ctw-whitespace-pre-wrap ctw-px-3 ctw-py-4 ctw-text-sm ctw-text-content-light;
+          @apply ctw-whitespace-pre-wrap ctw-px-3 ctw-py-4 ctw-text-sm ctw-text-content-black;
 
           &.ctw-table-full-length-row {
-            @apply ctw-flex ctw-flex-col ctw-items-center ctw-p-6 ctw-text-content-light;
+            @apply ctw-flex ctw-flex-col ctw-items-center ctw-p-6 ctw-text-content-black;
           }
         }
       }
