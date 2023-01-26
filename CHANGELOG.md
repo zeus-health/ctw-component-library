@@ -1,5 +1,13 @@
 # ctw-component-library
 
+## 0.40.3
+
+### Patch Changes
+
+- 448c21f7: Add immunization component
+- 6a913ad2: Add diagnosis and more info to patient timeline table.
+- 72350620: Add source documents to patient timeline / encounter details.
+
 ## 0.40.2
 
 ### Patch Changes
