@@ -1,8 +1,15 @@
+import { useEffect, useState } from "react";
+import { DocumentButton } from "../CCDA/document-button";
+import { useCCDAModal } from "../CCDA/modal-ccda";
 import { CodingList } from "@/components/core/coding-list";
 import { Details } from "@/components/core/collapsible-data-list-details";
 import { Drawer } from "@/components/core/drawer";
+import { Loading } from "@/components/core/loading";
+import { useCTW } from "@/components/core/providers/ctw-provider";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
+import { getBinaryId } from "@/fhir/binaries";
 import { EncounterModel } from "@/fhir/models/encounter";
+import { searchProvenances } from "@/fhir/provenance";
 import { capitalize } from "@/utils/nodash";
 
 export function useEncounterDetailsDrawer() {
@@ -30,6 +37,23 @@ export function EncounterDetailsDrawer({
   isOpen,
   onClose,
 }: EncounterDetailsDrawerProps) {
+  const openCCDAModal = useCCDAModal();
+  const [isLoading, setIsLoading] = useState(true);
+  const [binaryId, setBinaryId] = useState<string>();
+  const { getRequestContext } = useCTW();
+
+  useEffect(() => {
+    async function load() {
+      setIsLoading(true);
+      const requestContext = await getRequestContext();
+      const provenances = await searchProvenances(requestContext, [encounter]);
+      setBinaryId(getBinaryId(provenances, encounter.id));
+      setIsLoading(false);
+    }
+
+    void load();
+  }, [encounter, getRequestContext]);
+
   return (
     <Drawer
       className={className}
@@ -46,7 +70,21 @@ export function EncounterDetailsDrawer({
           <div className="ctw-text-sm">{encounter.typeDisplay}</div>
         </div>
 
-        <Details data={encounterData(encounter)} />
+        {isLoading ? (
+          <Loading message="Loading encounter data..." />
+        ) : (
+          <Details
+            data={encounterData(encounter)}
+            documentButton={
+              binaryId ? (
+                <DocumentButton
+                  onClick={() => openCCDAModal(binaryId, "Encounter")}
+                  text="Source Document"
+                />
+              ) : undefined
+            }
+          />
+        )}
       </Drawer.Body>
     </Drawer>
   );
