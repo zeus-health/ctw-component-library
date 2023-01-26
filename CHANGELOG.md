@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.40.1
+
+### Patch Changes
+
+- ecf3e710: Added PatientAllergies component
+
 ## 0.40.0
 
 ### Minor Changes
