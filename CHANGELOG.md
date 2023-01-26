@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.41.0
+
+### Minor Changes
+
+- 51bdf383: Add a View FHIR button to Allergies, Immunization, and Timeline components.
+
 ## 0.40.3
 
 ### Patch Changes
