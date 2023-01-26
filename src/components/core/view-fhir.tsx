@@ -1,9 +1,11 @@
+import { ReactJason } from "react-jason";
+import github from "react-jason/themes/github";
 import { Drawer } from "./drawer";
 import { useDrawer } from "./providers/drawer-provider";
 
 export type ViewFHIRProps = {
   name: string;
-  resource: fhir4.Encounter;
+  resource: fhir4.Resource;
 };
 
 export function useFHIRDrawer() {
@@ -59,9 +61,7 @@ function FHIRDrawer({
       showCloseFooter
     >
       <Drawer.Body>
-        <pre>
-          <div>{JSON.stringify(resource, null, 2)}</div>
-        </pre>
+        <ReactJason value={resource} theme={github} />
       </Drawer.Body>
     </Drawer>
   );
