@@ -11,7 +11,7 @@ export const patientAllergiesColumns: TableColumn<AllergyModel>[] = [
     dataIndex: "type",
   },
   {
-    title: 'Status',
+    title: "Status",
     dataIndex: "clinicalStatus",
   },
   {

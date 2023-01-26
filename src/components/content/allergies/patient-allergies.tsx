@@ -9,9 +9,7 @@ export type PatientAllergiesProps = {
   className?: string;
 };
 
-export function PatientAllergies({
-  className,
-}: PatientAllergiesProps) {
+export function PatientAllergies({ className }: PatientAllergiesProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const patientAllergiesQuery = usePatientAllergies();
@@ -23,9 +21,13 @@ export function PatientAllergies({
   return (
     <div
       ref={containerRef}
-      className={cx("ctw-border ctw-border-solid ctw-border-divider-light ctw-bg-white", className, {
-        "ctw-stacked": breakpoints.sm,
-      })}
+      className={cx(
+        "ctw-border ctw-border-solid ctw-border-divider-light ctw-bg-white",
+        className,
+        {
+          "ctw-stacked": breakpoints.sm,
+        }
+      )}
     >
       <div className="ctw-items-center ctw-justify-between ctw-py-5 ctw-px-4">
         <div className="ctw-ml-3 ctw-text-xl ctw-font-medium ctw-text-content-black">

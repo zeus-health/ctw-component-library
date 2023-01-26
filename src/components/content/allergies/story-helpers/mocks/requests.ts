@@ -16,10 +16,7 @@ export function setupAllergiesMocks({
       },
     ],
     parameters: {
-      msw: [
-        mockPatientGet,
-        mockAllergiesIntolleranceGet,
-      ],
+      msw: [mockPatientGet, mockAllergiesIntolleranceGet],
     },
   };
 }

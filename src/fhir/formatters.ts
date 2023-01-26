@@ -71,7 +71,6 @@ export function formatPhoneNumber(phoneNumber?: string): string | undefined {
   return match ? `${match[1]}-${match[2]}-${match[3]}` : phoneNumber;
 }
 
-
 // Tries to format a date string from either YYYYMMDD or YYYYMMDDkkmmss
 // to MM/DD/YYYY kk:mm:ss.
 export function maybeFormatDateStringToLocal(
@@ -97,7 +96,6 @@ export function maybeFormatDateStringToLocal(
         )}`;
         // eslint-disable-next-line no-empty
       } catch {}
-
     }
     return result;
   }
