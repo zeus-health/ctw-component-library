@@ -68,8 +68,8 @@ export const allergyIntolerance: Bundle<AllergyIntolerance> = {
           reference: "Patient/07d6b737",
           type: "Patient",
         },
-        onsetDateTime: "2021-11-02",
-        recordedDate: "2021-11-02",
+        onsetDateTime: "2021-10-12",
+        recordedDate: "2021-10-12",
       },
       search: {
         mode: "match",
