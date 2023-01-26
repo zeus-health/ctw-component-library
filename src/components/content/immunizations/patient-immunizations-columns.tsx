@@ -16,6 +16,6 @@ export const patientImmunizationsColumns: TableColumn<ImmunizationModel>[] = [
     widthPercent: 20,
     minWidth: 250,
     render: (immunization) =>
-      immunization.cvxCode ? <div>CVX: {immunization.cvxCode}</div> : undefined,
+      immunization.cvxCode && <div>CVX: {immunization.cvxCode}</div>,
   },
 ];
