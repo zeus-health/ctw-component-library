@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.40.2
+
+### Patch Changes
+
+- 43b5ddd8: Forgot to export the Allergies component
+
 ## 0.40.1
 
 ### Patch Changes
