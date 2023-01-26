@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.41.1
+
+### Patch Changes
+
+- 775adf6f: Fix immunization query key.
+
 ## 0.41.0
 
 ### Minor Changes
