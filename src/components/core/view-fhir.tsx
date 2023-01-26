@@ -28,7 +28,7 @@ export function ViewFHIR({ name, resource }: ViewFHIRProps) {
       type="button"
       className="ctw-btn-primary"
       onClick={(event) => {
-        // Prevents further propagation of the current event.
+        // Prevents any rowClick handler from firing.
         event.stopPropagation();
         openDrawer(name, resource);
       }}
