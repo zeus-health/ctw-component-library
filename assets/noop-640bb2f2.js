@@ -1,2 +1,0 @@
-function a(n,e,t,s){for(var i=n.length,r=t+(s?1:-1);s?r--:++r<i;)if(e(n[r],r,n))return r;return-1}var d=a;function u(n){return n!==n}var I=u;function f(n,e,t){for(var s=t-1,i=n.length;++s<i;)if(n[s]===e)return s;return-1}var c=f,x=d,b=I,l=c;function o(n,e,t){return e===e?l(n,e,t):x(n,b,t)}var v=o,h=v;function _(n,e){var t=n==null?0:n.length;return!!t&&h(n,e,0)>-1}var O=_;function N(){}var g=N;export{O as _,d as a,g as n};
-//# sourceMappingURL=noop-640bb2f2.js.map
