@@ -1,5 +1,6 @@
 import { SimpleMoreList } from "@/components/core/simple-more-list";
 import { TableColumn } from "@/components/core/table/table-helpers";
+import { ViewFHIR } from "@/components/core/view-fhir";
 import { EncounterModel } from "@/fhir/models/encounter";
 
 export const patientTimelineColumns: TableColumn<EncounterModel>[] = [
@@ -43,7 +44,7 @@ export const patientTimelineColumns: TableColumn<EncounterModel>[] = [
     },
   },
   {
-    widthPercent: 50,
+    widthPercent: 40,
     minWidth: 200,
     render: (encounter) => {
       const { diagnosis } = encounter.resource;
@@ -60,5 +61,12 @@ export const patientTimelineColumns: TableColumn<EncounterModel>[] = [
         </div>
       );
     },
+  },
+  {
+    widthPercent: 10,
+    minWidth: 200,
+    render: (encounter) => (
+      <ViewFHIR name="Encounter Resource" resource={encounter.resource} />
+    ),
   },
 ];

@@ -1,4 +1,5 @@
 import { TableColumn } from "@/components/core/table/table-helpers";
+import { ViewFHIR } from "@/components/core/view-fhir";
 import { AllergyModel } from "@/fhir/models/allergies";
 
 export const patientAllergiesColumns: TableColumn<AllergyModel>[] = [
@@ -21,5 +22,10 @@ export const patientAllergiesColumns: TableColumn<AllergyModel>[] = [
   {
     title: "Onset",
     dataIndex: "onset",
+  },
+  {
+    render: (allergy) => (
+      <ViewFHIR name="Allergy Resource" resource={allergy.resource} />
+    ),
   },
 ];
