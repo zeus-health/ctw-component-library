@@ -162,6 +162,7 @@ function patientSearchParams(
       return { "beneficiary.identifier": identifier };
     case "Condition":
     case "Encounter":
+    case "Immunization":
     case "MedicationAdministration":
     case "MedicationDispense":
     case "MedicationRequest":
