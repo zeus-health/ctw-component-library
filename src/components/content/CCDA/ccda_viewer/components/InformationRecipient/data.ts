@@ -1,7 +1,7 @@
-import { isEmpty } from "lodash";
 import xpath from "xpath";
 import { getContactDetails, getHumanName, getId } from "../../helpers";
 import { GeneralInfoWithOrg } from "../../types";
+import { isEmpty } from "@/utils/nodash";
 
 export const getInformationRecipientData = (
   document: Document

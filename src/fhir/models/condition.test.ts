@@ -1,6 +1,6 @@
-import { clone } from "lodash";
 import { SYSTEM_CONDITION_CLINICAL } from "../system-urls";
 import { ConditionModel } from "./condition";
+import { clone } from "@/utils/nodash";
 
 const getConditionStatus = (
   verificationStatus: string,

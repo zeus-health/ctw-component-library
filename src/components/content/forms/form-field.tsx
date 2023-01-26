@@ -1,8 +1,8 @@
 import { ExclamationCircleIcon, LockClosedIcon } from "@heroicons/react/solid";
 import cx from "classnames";
-import { startCase } from "lodash";
 import type { InputHTMLAttributes } from "react";
 import { formatDateLocalToISO } from "@/fhir/formatters";
+import { startCase } from "@/utils/nodash";
 
 export type FormFieldProps = {
   errors?: string[];
@@ -42,6 +42,7 @@ export const FormField = ({
     if (options) {
       return (
         <select
+          data-testid={`form-field-${inputProps.name}`}
           className={cx(
             { "ctw-error": errors },
             "ctw-listbox-button ctw-w-full"
@@ -67,6 +68,7 @@ export const FormField = ({
     if (lines) {
       return (
         <textarea
+          data-testid={`form-field-${inputProps.name}`}
           rows={lines}
           className={cx(
             { "ctw-error": errors },
@@ -82,6 +84,7 @@ export const FormField = ({
     }
     return (
       <input
+        data-testid={`form-field-${inputProps.name}`}
         {...inputProps}
         id={inputProps.name}
         type={inputProps.type}
@@ -105,7 +108,14 @@ export const FormField = ({
   }
 
   if (hidden) {
-    return <input {...inputProps} defaultValue={value} hidden={hidden} />;
+    return (
+      <input
+        data-testid={`form-field-${inputProps.name}`}
+        {...inputProps}
+        defaultValue={value}
+        hidden={hidden}
+      />
+    );
   }
 
   return (

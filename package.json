@@ -1,6 +1,6 @@
 {
   "name": "@zus-health/ctw-component-library",
-  "version": "0.39.5",
+  "version": "0.41.1",
   "type": "module",
   "engines": {
     "node": ">=16 <19"
@@ -38,7 +38,8 @@
     "release": "changeset publish",
     "storybook": "npm run generate:theme-cjs && storybook dev -p 6006",
     "build-storybook": "npm run generate:theme-cjs && storybook build",
-    "test-storybook": "test-storybook"
+    "test-storybook": "test-storybook",
+    "test-storybook:watch": "test-storybook --watch"
   },
   "prettier": {},
   "repository": {
@@ -114,6 +115,7 @@
     "fhir-kit-client": "^1.9.1",
     "jwt-decode": "^3.1.2",
     "lodash": "^4.17.21",
+    "react-jason": "^1.1.2",
     "use-isomorphic-layout-effect": "^1.1.2",
     "uuid": "^9.0.0",
     "xml-beautify": "^1.2.3",
@@ -122,11 +124,5 @@
   },
   "msw": {
     "workerDirectory": "public"
-  },
-  "overrides": {
-    "react-json-view": {
-      "react": "^16.9.0 || ^17 || ^18",
-      "react-dom": "^16.9.0 || ^17 || ^18"
-    }
   }
 }

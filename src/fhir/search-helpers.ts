@@ -1,5 +1,4 @@
 import { SearchParams } from "fhir-kit-client";
-import { mapValues, mergeWith } from "lodash";
 import { getResources } from "./bundle";
 import {
   SYSTEM_SUMMARY,
@@ -11,6 +10,7 @@ import {
 } from "./system-urls";
 import { ResourceType, ResourceTypeString } from "./types";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
+import { mapValues, mergeWith } from "@/utils/nodash";
 
 const MAX_COUNT = 250;
 
@@ -160,8 +160,10 @@ function patientSearchParams(
   switch (resourceType) {
     case "Coverage":
       return { "beneficiary.identifier": identifier };
+    case "AllergyIntolerance":
     case "Condition":
     case "Encounter":
+    case "Immunization":
     case "MedicationAdministration":
     case "MedicationDispense":
     case "MedicationRequest":

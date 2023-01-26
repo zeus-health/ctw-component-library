@@ -1,12 +1,13 @@
 import { MedicationStatement } from "fhir/r4";
-import { cloneDeep, find } from "lodash/fp";
 import { rest } from "msw";
 import { ComponentType, createElement } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { searchDosagesALB } from "./forms-data-terminology-dosages";
 import { medicationAdministration } from "./medication-administration";
 import { medicationDispense } from "./medication-dispense";
 import { medicationRequest } from "./medication-request";
 import { patient } from "./patient";
+import { cloneDeep, find } from "@/utils/nodash/fp";
 
 let patientProviderMedsCache: fhir4.Bundle;
 let patientOtherProviderMedsCache: fhir4.Bundle;
@@ -27,6 +28,7 @@ export function setupMedicationMocks({
     parameters: {
       msw: [
         mockPatientGet,
+        mockTerminologyDosageGet,
         mockMedicationStatementGet,
         mockMedicationStatementPost,
         mockMedicationRequestGet,
@@ -94,6 +96,23 @@ const mockMedicationDispenseGet = rest.get(
 const mockMedicationAdministrationGet = rest.get(
   "https://api.dev.zusapi.com/fhir/MedicationAdministration",
   (req, res, ctx) => res(ctx.status(200), ctx.json(medicationAdministration))
+);
+
+const mockTerminologyDosageGet = rest.get(
+  "https://api.dev.zusapi.com/forms-data/terminology/dosages",
+  (req, res, ctx) => {
+    const search = req.url.searchParams.get("display") ?? "";
+    const results = searchDosagesALB.filter(
+      (item) => item.display.indexOf(search) !== -1
+    );
+    return res(
+      ctx.status(200),
+      ctx.json({
+        total: results.length,
+        data: results,
+      })
+    );
+  }
 );
 
 // Mock the creation of a Basic resource for a dismissed med and add to cache.

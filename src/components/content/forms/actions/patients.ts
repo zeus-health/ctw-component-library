@@ -1,8 +1,8 @@
-import { cloneDeep } from "lodash";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { dateToISO } from "@/fhir/formatters";
 import { PatientModel } from "@/fhir/models";
+import { cloneDeep } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 

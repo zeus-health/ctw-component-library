@@ -194,7 +194,6 @@ export type InputPropType = {
   max?: number;
   minLength?: number;
   maxLength?: number;
-  pattern?: string;
   options?: string[] | undefined;
 };
 
@@ -223,7 +222,6 @@ export function getInputProps(
   let max;
   let minlength;
   let maxlength;
-  let pattern;
   const options = getOptions(schema, name);
   if (def instanceof ZodString) {
     if (def.isEmail) {
@@ -235,7 +233,6 @@ export function getInputProps(
     maxlength = def.maxLength ?? undefined;
 
     const check: any = def._def.checks.find((c) => c.kind === "regex");
-    pattern = check ? check.regex.source : undefined;
   } else if (def instanceof ZodNumber) {
     type = "number";
     min = def.minValue ?? undefined;
@@ -261,6 +258,5 @@ export function getInputProps(
   if (max) inputProps.max = max;
   if (minlength && Number.isFinite(minlength)) inputProps.minLength = minlength;
   if (maxlength && Number.isFinite(maxlength)) inputProps.maxLength = maxlength;
-  if (pattern) inputProps.pattern = pattern;
   return inputProps;
 }

@@ -1,7 +1,7 @@
-import { isEmpty } from "lodash";
 import { DocumentOnlyProps } from "../../types";
 import { Table } from "../Table/Table";
 import { getAuthenticatorData } from "./data";
+import { isEmpty } from "@/utils/nodash";
 
 export const Authenticator = ({
   document,

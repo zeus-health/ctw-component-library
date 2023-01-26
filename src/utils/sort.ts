@@ -1,5 +1,5 @@
-import { isString, orderBy } from "lodash";
-import { get } from "lodash/fp";
+import { isString, orderBy } from "@/utils/nodash";
+import { get } from "@/utils/nodash/fp";
 
 export type SortDir = "asc" | "desc";
 

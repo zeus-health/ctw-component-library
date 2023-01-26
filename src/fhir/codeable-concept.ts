@@ -2,8 +2,8 @@
 // a coding with the given code within an array of CodeableConcepts.
 // E.g. find(concepts, codeableConceptPredicate("C")) will find the first
 
-import { find } from "lodash";
 import { SYSTEM_ENRICHMENT } from "./system-urls";
+import { find } from "@/utils/nodash";
 
 // concept that has a code of "C".
 export const codeableConceptPredicate = (code: string) => [
