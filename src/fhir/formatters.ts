@@ -1,4 +1,5 @@
 import { format, formatISO, isValid, parse, parseISO } from "date-fns";
+import { compact } from "@/utils/nodash/fp";
 
 // Formats a date from YYYY-MM-DD to MM/DD/YYYY.
 export function formatDateISOToLocal(dateStr?: string): string | undefined {
@@ -68,4 +69,44 @@ export function formatPhoneNumber(phoneNumber?: string): string | undefined {
   // Return the new format OR the original if we don't have a match.
   // This would happen if we didn't have the expected 10 digits.
   return match ? `${match[1]}-${match[2]}-${match[3]}` : phoneNumber;
+}
+
+
+// Tries to format a date string from either YYYYMMDD or YYYYMMDDkkmmss
+// to MM/DD/YYYY kk:mm:ss.
+export function maybeFormatDateStringToLocal(
+  dateStr?: string
+): string | undefined {
+  if (dateStr && /^\d+$/.test(dateStr) && dateStr.length >= 8) {
+    let result = "";
+    try {
+      result = format(
+        parse(dateStr.substring(0, 8), "yyyyMMdd", new Date()),
+        "P"
+      );
+      // eslint-disable-next-line no-empty
+    } catch {}
+
+    // Check if there's a time component and add it.
+    // Result will be MM/DD/YYY kk:mm:ss.
+    if (dateStr.length === 14) {
+      try {
+        result += ` ${format(
+          parse(dateStr.substring(9, 15), "kkmmss", new Date()),
+          "kk:mm:ss"
+        )}`;
+        // eslint-disable-next-line no-empty
+      } catch {}
+
+    }
+    return result;
+  }
+
+  return dateStr;
+}
+
+// Formats an age as value followed by unit, or whichever one is available.
+export function formatAge(age: fhir4.Age): string {
+  const { value, unit } = age;
+  return compact([value, unit]).join(" ");
 }
