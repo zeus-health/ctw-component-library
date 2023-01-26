@@ -163,6 +163,7 @@ function patientSearchParams(
     case "AllergyIntolerance":
     case "Condition":
     case "Encounter":
+    case "Immunization":
     case "MedicationAdministration":
     case "MedicationDispense":
     case "MedicationRequest":
