@@ -24,6 +24,10 @@ export const patientAllergiesColumns: TableColumn<AllergyModel>[] = [
     dataIndex: "onset",
   },
   {
+    title: "Manifestations",
+    dataIndex: "manifestations",
+  },
+  {
     render: (allergy) => (
       <ViewFHIR name="Allergy Resource" resource={allergy.resource} />
     ),

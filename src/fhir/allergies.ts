@@ -1,5 +1,5 @@
+import { applyAllergyFilters } from "@/components/content/allergies/allergies-filter";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
-import { AllergyModel } from "@/fhir/models/allergies";
 import { searchCommonRecords } from "@/fhir/search-helpers";
 import { orderBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_ALLERGIES } from "@/utils/query-keys";
@@ -19,7 +19,7 @@ export function usePatientAllergies() {
         );
 
         return orderBy(
-          resources.map((allergy) => new AllergyModel(allergy)),
+          applyAllergyFilters(resources),
           [(allergy) => allergy.onset],
           ["desc"]
         );
