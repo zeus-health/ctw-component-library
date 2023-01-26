@@ -1,4 +1,5 @@
 import { TableColumn } from "@/components/core/table/table-helpers";
+import { ViewFHIR } from "@/components/core/view-fhir";
 import { ImmunizationModel } from "@/fhir/models/immunization";
 
 export const patientImmunizationsColumns: TableColumn<ImmunizationModel>[] = [
@@ -17,5 +18,12 @@ export const patientImmunizationsColumns: TableColumn<ImmunizationModel>[] = [
     minWidth: 250,
     render: (immunization) =>
       immunization.cvxCode && <div>CVX: {immunization.cvxCode}</div>,
+  },
+  {
+    widthPercent: 40,
+    minWidth: 200,
+    render: (immunization) => (
+      <ViewFHIR name="Immunization Resource" resource={immunization.resource} />
+    ),
   },
 ];
