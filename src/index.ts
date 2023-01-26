@@ -1,4 +1,6 @@
 // Content components
+export * from "@/components/content/allergies/patient-allergies";
+export * from "@/components/content/allergies/patient-allergies-column";
 export * from "@/components/content/conditions";
 export * from "@/components/content/conditions/patient-conditions";
 export * from "@/components/content/conditions-table-base";
