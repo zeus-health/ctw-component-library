@@ -160,6 +160,7 @@ function patientSearchParams(
   switch (resourceType) {
     case "Coverage":
       return { "beneficiary.identifier": identifier };
+    case "AllergyIntolerance":
     case "Condition":
     case "Encounter":
     case "MedicationAdministration":
