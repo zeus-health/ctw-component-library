@@ -35,7 +35,7 @@ export function ViewFHIR({ name, resource }: ViewFHIRProps) {
         openDrawer(name, resource);
       }}
     >
-      <span className="ctw-relative ctw-inline-block ctw-w-5 ctw-align-middle">
+      <span className="ctw-relative ctw-inline-block ctw-w-4 ctw-pr-4 ctw-align-middle">
         <FireIcon className="ctw-absolute -ctw-top-2.5 ctw-left-0 ctw-h-4" />
       </span>
       FHIR
