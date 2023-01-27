@@ -36,7 +36,7 @@ export function ViewFHIR({ name, resource }: ViewFHIRProps) {
       }}
     >
       <span className="ctw-relative ctw-inline-block ctw-w-5 ctw-align-middle">
-        <FireIcon className="ctw-absolute -ctw-top-3 ctw-left-0 ctw-h-5" />
+        <FireIcon className="ctw-absolute -ctw-top-2.5 ctw-left-0 ctw-h-4" />
       </span>
       FHIR
     </button>
