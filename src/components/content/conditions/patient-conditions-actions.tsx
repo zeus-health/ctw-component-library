@@ -12,7 +12,6 @@ export type PatientConditionsActionsProps = {
   hideAdd: boolean;
   filters: Filters;
   availableFilters: Record<string, unknown>;
-  updateFilters: (newFilters: Partial<Filters>) => void;
   actions: FilterActions;
 };
 
@@ -20,7 +19,6 @@ export function PatientConditionsActions({
   hideAdd,
   filters,
   availableFilters,
-  updateFilters,
   actions,
 }: PatientConditionsActionsProps) {
   const showAddConditionForm = useAddConditionForm();
@@ -31,7 +29,7 @@ export function PatientConditionsActions({
         {filters[filters.activeCollection] && (
           <PillWrapper availableFilters={availableFilters} actions={actions} />
         )}
-        <AddFilter updateFilters={updateFilters} />
+        <AddFilter actions={actions} />
       </div>
       <div className="ctw-flex ctw-items-center ctw-space-x-2 ">
         {!hideAdd && (

@@ -24,18 +24,21 @@ export type AvailableFilters = {
   }[];
 };
 
+const DEFAULT_FILTER_STATE: Omit<Filters, "activeCollection"> = {
+  patient: {
+    status: ["Active", "Pending", "Unknown"],
+    ccsChapter: ["Mental and Behavioral"],
+  },
+  other: { status: ["Active", "Pending"] },
+};
+
 const filterMap = { status: "status", ccsChapter: "category" };
 export function useConditionFilters() {
   const [filters, setFilters] = useState<Filters>({
     activeCollection: "patient",
-    patient: {
-      status: ["Active", "Pending", "Unknown"],
-      ccsChapter: ["Mental and Behavioral"],
-    },
-    other: { status: ["Active", "Pending"] },
+    ...DEFAULT_FILTER_STATE,
   });
 
-  console.log("filters", filters);
   function updateFilters(newFilters: Partial<Filters>) {
     setFilters((prevState) => ({ ...prevState, ...newFilters }));
   }
@@ -45,6 +48,8 @@ export function useConditionFilters() {
       updateFilters({
         [filters.activeCollection]: { [filterName]: [] },
       }),
+    clearFilters: () => updateFilters({ patient: {}, other: {} }),
+    resetFilters: () => updateFilters({ ...DEFAULT_FILTER_STATE }),
   };
 
   function applyFilters(
@@ -115,15 +120,15 @@ export function useConditionFilters() {
   };
 }
 
-export const AddFilter = ({ updateFilters }) => (
+export const AddFilter = ({ actions }) => (
   <DropdownMenuAction
     menuItems={[{ name: "Category" }, { name: "Status" }]}
     pinnedActions={[
-      { name: "Reset Filters", action: () => {} },
+      { name: "Reset Filters", action: () => actions.resetFilters() },
       {
         name: "Clear All Filters",
         action: () => {
-          updateFilters({ patient: {}, other: {} });
+          actions.clearFilters();
         },
       },
     ]}
