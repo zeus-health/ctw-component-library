@@ -24,7 +24,7 @@ const tabbedContent = [
     render: () => <ProviderMedsTable />,
   },
   {
-    key: "inactive",
+    key: "inactive-provider-records",
     display: () => "Inactive",
     render: () => <ProviderInactiveMedicationsTable />,
   },
