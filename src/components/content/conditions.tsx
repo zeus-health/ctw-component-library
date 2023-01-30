@@ -162,7 +162,6 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       dateCreated,
     } = await hasFetchedPatientHistory(requestContext, patientID);
 
-    console.log("status is", status);
     setClinicalHistoryExists(patientHistoryFetched);
     setPatientHistoryInfo({
       patientHistoryExists: patientHistoryFetched,

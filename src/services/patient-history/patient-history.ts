@@ -52,8 +52,6 @@ export async function hasFetchedPatientHistory(
     return { patientHistoryExists: false, status: "", dateCreated: undefined };
   }
 
-  console.log(messages);
-
   switch (messages[0].status) {
     case "done":
       return {
