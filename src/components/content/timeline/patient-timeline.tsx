@@ -4,7 +4,6 @@ import { Table } from "@/components/core/table/table";
 import { usePatientEncounters } from "@/fhir/encounters";
 import { EncounterModel } from "@/fhir/models/encounter";
 import { orderBy } from "@/utils/nodash";
-import "./patient-timeline.scss";
 
 export type PatientTimelineProps = {
   className?: string;

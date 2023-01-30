@@ -20,3 +20,4 @@ export { default as propEq } from "lodash/fp/propEq";
 export { default as sortBy } from "lodash/fp/sortBy";
 export { default as split } from "lodash/fp/split";
 export { default as toLower } from "lodash/fp/toLower";
+export { default as uniqBy } from "lodash/fp/uniqBy";

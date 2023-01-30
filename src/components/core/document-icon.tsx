@@ -1,5 +1,5 @@
 export type DocumentIconProps = {
-  className: string;
+  className?: string;
   height: number;
 };
 
