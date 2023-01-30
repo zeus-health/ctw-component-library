@@ -14,7 +14,7 @@ type Props = PatientConditionsProps;
 
 export default {
   component: PatientConditions,
-  tags: ["docsPage"],
+  tags: ["autodocs"],
   argTypes: {
     className: {
       options: ["Blank", "Fixed Width"],

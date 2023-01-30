@@ -15,7 +15,7 @@ type Props = PatientImmunizationsProps;
 
 export default {
   component: PatientImmunizations,
-  tags: ["docsPage"],
+  tags: ["autodocs"],
   argTypes: {
     className: {
       options: ["Blank", "Fixed Width"],

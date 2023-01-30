@@ -3,7 +3,7 @@ import { DataList, DataListProps } from "@/components/core/data-list";
 
 export default {
   component: DataList,
-  tags: ["docsPage"],
+  tags: ["autodocs"],
 } as Meta<DataListProps>;
 
 export const Basic: StoryObj<DataListProps> = {
