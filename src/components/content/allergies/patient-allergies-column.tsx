@@ -15,12 +15,6 @@ export const patientAllergiesColumns = (
       title: "Type",
       dataIndex: "type",
     },
-    isStackedView
-      ? null
-      : {
-          title: "Status",
-          dataIndex: "clinicalStatus",
-        },
     {
       title: "Category",
       dataIndex: "categories",
