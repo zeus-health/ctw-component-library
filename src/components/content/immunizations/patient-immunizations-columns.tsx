@@ -4,7 +4,7 @@ import { ImmunizationModel } from "@/fhir/models/immunization";
 import { compact } from "@/utils/nodash";
 
 export const patientImmunizationsColumns = (
-  cardView = false
+  isStackedView = false
 ): TableColumn<ImmunizationModel>[] =>
   compact([
     {
@@ -19,7 +19,7 @@ export const patientImmunizationsColumns = (
       title: "CVX Code",
       dataIndex: "cvxCode",
     },
-    cardView
+    isStackedView
       ? null
       : {
           render: (immunization) => (
