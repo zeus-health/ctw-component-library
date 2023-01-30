@@ -11,7 +11,7 @@ type Props = TableProps<Record>;
 
 export default {
   component: Table,
-  tags: ["docsPage"],
+  tags: ["autodocs"],
   argTypes: {
     emptyMessage: {
       options: ["Default", "String", "ReactElement"],
