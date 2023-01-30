@@ -1,7 +1,7 @@
 import cx from "classnames";
 import { useRef } from "react";
 import { patientAllergiesColumns } from "@/components/content/allergies/patient-allergies-column";
-import { Heading, StackedWrapper } from "@/components/core/ctw-box";
+import { Heading } from "@/components/core/ctw-box";
 import { Table } from "@/components/core/table/table";
 import { ViewFHIR } from "@/components/core/view-fhir";
 import { usePatientAllergies } from "@/fhir/allergies";
@@ -26,27 +26,25 @@ export function PatientAllergies({ className }: PatientAllergiesProps) {
   const { isLoading } = patientAllergiesQuery;
 
   return (
-    <StackedWrapper className={cx("ctw-patient-allergies", className)}>
+    <div
+      ref={containerRef}
+      className={cx(
+        "ctw-border ctw-border-solid ctw-border-divider-light ctw-bg-white",
+        className,
+        {
+          "ctw-stacked": breakpoints.sm,
+        }
+      )}
+    >
       <Heading title="Allergies" />
-      <div
-        ref={containerRef}
-        className={cx(
-          "ctw-border ctw-border-solid ctw-border-divider-light ctw-bg-white",
-          className,
-          {
-            "ctw-stacked": breakpoints.sm,
-          }
-        )}
-      >
-        <Table
-          RowActions={viewRecordFHIR}
-          stacked={breakpoints.sm}
-          className="-ctw-mx-px !ctw-rounded-none"
-          isLoading={isLoading}
-          records={allergies}
-          columns={patientAllergiesColumns}
-        />
-      </div>
-    </StackedWrapper>
+      <Table
+        RowActions={viewRecordFHIR}
+        stacked={breakpoints.sm}
+        className="-ctw-mx-px !ctw-rounded-none"
+        isLoading={isLoading}
+        records={allergies}
+        columns={patientAllergiesColumns}
+      />
+    </div>
   );
 }
