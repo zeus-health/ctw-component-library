@@ -113,8 +113,8 @@ export function formatAge(age: fhir4.Age): string {
 export function formatStringISOtoDate(dateStr?: string): string | undefined {
   if (!dateStr) return undefined;
 
-  const month = dateStr.substring(8, 10);
-  const day = dateStr.substring(5, 7);
+  const day = dateStr.substring(8, 10);
+  const month = dateStr.substring(5, 7);
   const year = dateStr.substring(0, 4);
 
   return `${month}/${day}/${year}`;
