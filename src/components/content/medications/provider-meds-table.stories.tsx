@@ -13,7 +13,7 @@ import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 type Props = ProviderMedsTableProps;
 
 export default {
-  tags: ["docsPage"],
+  tags: ["autodocs"],
   component: ProviderMedsTable,
   args: {
     sortColumn: "display",

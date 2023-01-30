@@ -16,7 +16,7 @@ type Props = ConditionsProps;
 
 export default {
   component: Conditions,
-  tags: ["docsPage"],
+  tags: ["autodocs"],
   argTypes: {
     className: {
       options: ["Blank", "Fixed Width"],

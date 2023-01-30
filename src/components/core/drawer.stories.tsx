@@ -6,7 +6,7 @@ import { Drawer, DrawerProps } from "@/components/core/drawer";
 
 export default {
   component: Drawer,
-  tags: ["docsPage"],
+  tags: ["autodocs"],
   // Setup a button to open drawer stories.
   decorators: [
     (Story, { args }) => {

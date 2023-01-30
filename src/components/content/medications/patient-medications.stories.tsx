@@ -17,7 +17,7 @@ import { delay } from "@/utils/delay";
 type Props = PatientMedicationsProps;
 
 export default {
-  tags: ["docsPage"],
+  tags: ["autodocs"],
   component: PatientMedications,
   decorators: [
     (Story, { args }) => (
