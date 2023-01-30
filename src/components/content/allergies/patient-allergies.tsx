@@ -39,12 +39,12 @@ export function PatientAllergies({ className }: PatientAllergiesProps) {
         )}
       >
         <Table
-          RowActions={breakpoints.sm ? viewRecordFHIR : undefined}
+          RowActions={viewRecordFHIR}
           stacked={breakpoints.sm}
           className="-ctw-mx-px !ctw-rounded-none"
           isLoading={isLoading}
           records={allergies}
-          columns={patientAllergiesColumns(breakpoints.sm)}
+          columns={patientAllergiesColumns}
         />
       </div>
     </StackedWrapper>
