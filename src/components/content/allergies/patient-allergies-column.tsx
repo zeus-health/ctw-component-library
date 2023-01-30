@@ -4,7 +4,7 @@ import { AllergyModel } from "@/fhir/models/allergies";
 import { compact } from "@/utils/nodash";
 
 export const patientAllergiesColumns = (
-  cardView = false
+  isStackedView = false
 ): TableColumn<AllergyModel>[] =>
   compact([
     {
@@ -15,7 +15,7 @@ export const patientAllergiesColumns = (
       title: "Type",
       dataIndex: "type",
     },
-    cardView
+    isStackedView
       ? null
       : {
           title: "Status",
@@ -29,7 +29,7 @@ export const patientAllergiesColumns = (
       title: "Onset",
       dataIndex: "onset",
     },
-    cardView
+    isStackedView
       ? null
       : {
           render: (allergy) => (
