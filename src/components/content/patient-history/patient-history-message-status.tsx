@@ -11,7 +11,7 @@ export const PatientHistoryStatus = ({
 }: PatientHistoryStatusProps) => {
   switch (status) {
     case "initialize":
-    case "error":
+    case "in_progress":
       return (
         <div className="ctw-alert-bg ctw-rounded-md ctw-bg-caution-bg">
           <svg
@@ -35,7 +35,7 @@ export const PatientHistoryStatus = ({
         </div>
       );
     case "done":
-    case "in_progress":
+    case "error":
     default:
       return <div />;
   }
