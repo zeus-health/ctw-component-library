@@ -74,7 +74,7 @@ export function PatientConditions({
         "ctw-patient-conditions-stacked": breakpoints.sm,
       })}
     >
-      <div className="ctw-items-center ctw-justify-between ctw-py-5 ctw-px-4">
+      <div className="ctw-items-center ctw-justify-between ctw-py-5">
         <div className="ctw-ml-3 ctw-text-xl ctw-font-medium ctw-text-content-black">
           Conditions
         </div>
@@ -95,6 +95,7 @@ export function PatientConditions({
           stacked={breakpoints.sm}
           className="-ctw-mx-px !ctw-rounded-none"
           showTableHead={false}
+          emptyMessage="There are no condition records available."
           isLoading={isLoading()}
           records={conditions}
           RowActions={readOnly ? undefined : RowActions}
