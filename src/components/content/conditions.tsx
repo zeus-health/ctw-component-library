@@ -24,6 +24,7 @@ import {
 import { getAddConditionData } from "./forms/schemas/condition-schema";
 import { PatientHistoryRequestDrawer } from "./patient-history-request-drawer";
 import { PatientHistoryMessage } from "./patient-history/patient-history-message";
+import { PatientHistoryStatus } from "./patient-history/patient-history-message-status";
 import {
   conditionAddSchema,
   conditionEditSchema,
@@ -36,7 +37,10 @@ import {
 } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models/condition";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
-import { hasFetchedPatientHistory } from "@/services/patient-history/patient-history";
+import {
+  hasFetchedPatientHistory,
+  PatientHistoryData,
+} from "@/services/patient-history/patient-history";
 import { AnyZodSchema } from "@/utils/form-helper";
 import { curry } from "@/utils/nodash";
 
@@ -76,6 +80,12 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const [sort, setSort] = useState<TableSort>();
 
   const [clinicalHistoryExists, setClinicalHistoryExists] = useState<boolean>();
+  const [patientHistoryInfo, setPatientHistoryInfo] =
+    useState<PatientHistoryData>({
+      patientHistoryExists: false,
+      status: "",
+      dateCreated: "",
+    });
 
   const patientRecordsMessage = patientRecordsResponse.isError
     ? ERROR_MSG
@@ -146,12 +156,19 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const checkClinicalHistory = async (patientID: string) => {
     const requestContext = await getRequestContext();
 
-    const patientHistoryFetched = await hasFetchedPatientHistory(
-      requestContext,
-      patientID
-    );
+    const {
+      patientHistoryExists: patientHistoryFetched,
+      status,
+      dateCreated,
+    } = await hasFetchedPatientHistory(requestContext, patientID);
 
+    console.log("status is", status);
     setClinicalHistoryExists(patientHistoryFetched);
+    setPatientHistoryInfo({
+      patientHistoryExists: patientHistoryFetched,
+      status,
+      dateCreated,
+    });
   };
 
   useEffect(() => {
@@ -351,10 +368,18 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       {patientResponse.data && (
         <PatientHistoryRequestDrawer
           header={
-            <div className="ctw-pt-0 ctw-text-base">
-              Request patient clinical history from 70K+ providers across the
-              nation. No changes will be made to your patient record.
-            </div>
+            <>
+              {patientHistoryInfo.status !== "done" && (
+                <PatientHistoryStatus
+                  status={patientHistoryInfo.status}
+                  date={patientHistoryInfo.dateCreated}
+                />
+              )}
+              <div className="ctw-pt-0 ctw-text-base">
+                Request patient clinical history from 70K+ providers across the
+                nation. No changes will be made to your patient record.
+              </div>
+            </>
           }
           patient={patientResponse.data}
           isOpen={requestRecordsDrawerIsOpen}

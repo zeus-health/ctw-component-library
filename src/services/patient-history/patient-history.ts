@@ -33,18 +33,57 @@ export async function getPatientRefreshHistoryMessages(
   }
 }
 
+export type PatientHistoryData = {
+  patientHistoryExists: boolean;
+  status: string;
+  dateCreated: string | undefined;
+};
+
 export async function hasFetchedPatientHistory(
   requestContext: CTWRequestContext,
   patientID: string
-): Promise<boolean> {
+): Promise<PatientHistoryData> {
   const messages = await getPatientRefreshHistoryMessages(
     requestContext,
     patientID
   );
 
   if (messages.length === 0) {
-    return false;
+    return { patientHistoryExists: false, status: "", dateCreated: undefined };
   }
-  // This is the case for messages.length > 0 which is the current workaround.
-  return true;
+
+  console.log(messages);
+
+  switch (messages[0].status) {
+    case "done":
+      return {
+        patientHistoryExists: true,
+        status: "done",
+        dateCreated: messages[0]._createdAt,
+      };
+    case "in_progress":
+      return {
+        patientHistoryExists: true,
+        status: "in_progress",
+        dateCreated: messages[0]._createdAt,
+      };
+    case "initialize":
+      return {
+        patientHistoryExists: true,
+        status: "initialize",
+        dateCreated: messages[0]._createdAt,
+      };
+    case "error":
+      return {
+        patientHistoryExists: true,
+        status: "error",
+        dateCreated: messages[0]._createdAt,
+      };
+    default:
+      return {
+        patientHistoryExists: false,
+        status: "",
+        dateCreated: messages[0]._createdAt,
+      };
+  }
 }
