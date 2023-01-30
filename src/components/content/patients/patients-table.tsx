@@ -5,11 +5,11 @@ import type { Argument } from "classnames";
 import cx from "classnames";
 import { useCallback, useEffect, useState } from "react";
 import * as CTWBox from "@/components/core/ctw-box";
+import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Pagination } from "@/components/core/pagination/pagination";
 import { useQueryWithCTW } from "@/components/core/providers/ctw-provider";
 import { Table } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
-import { withTelemetryErrorBoundary } from "@/components/core/telemetry-error-boundary";
 import { getBuilderPatientsList } from "@/fhir/patient-helper";
 import { debounce } from "@/utils/nodash";
 import { QUERY_KEY_PATIENTS_LIST } from "@/utils/query-keys";
@@ -49,7 +49,7 @@ export function usePatientsList(
  * object as `.resource`.
  *
  */
-export const PatientsTable = withTelemetryErrorBoundary(
+export const PatientsTable = withErrorBoundary(
   ({
     className,
     handleRowClick,

@@ -1,10 +1,10 @@
-import { withTelemetryErrorBoundary } from "@/components/core/telemetry-error-boundary";
+import { withErrorBoundary } from "@/components/core/error-boundary";
 
 export type PatientHistoryProps = {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
 };
 
-export const PatientHistoryMessage = withTelemetryErrorBoundary(
+export const PatientHistoryMessage = withErrorBoundary(
   ({ onClick }: PatientHistoryProps) => (
     <div
       className="ctw-flex ctw-justify-center ctw-space-x-2 ctw-border ctw-border-solid ctw-border-divider-light ctw-p-5"

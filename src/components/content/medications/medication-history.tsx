@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { sortMedHistory } from "./helpers";
 import { CollapsibleDataListProps } from "@/components/core/collapsible-data-list";
 import { CollapsibleDataListStack } from "@/components/core/collapsible-data-list-stack";
+import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Loading } from "@/components/core/loading";
-import { withTelemetryErrorBoundary } from "@/components/core/telemetry-error-boundary";
 import { useMedicationHistory } from "@/fhir/medications";
 import { MedicationModel } from "@/fhir/models/medication";
 import { MedicationAdministrationModel } from "@/fhir/models/medication-administration";
@@ -21,7 +21,7 @@ export type MedicationHistoryProps = {
 /**
  * Displays the history of a medication
  */
-export const MedicationHistory = withTelemetryErrorBoundary(
+export const MedicationHistory = withErrorBoundary(
   ({ medication }: MedicationHistoryProps) => {
     const [entries, setEntries] = useState<CollapsibleDataListProps[]>([]);
     const medHistoryQuery = useMedicationHistory(medication.resource);

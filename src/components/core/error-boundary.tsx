@@ -17,7 +17,7 @@ interface State {
 /**
  * Error Boundary for internal use.
  */
-export class TelemetryErrorBoundary extends Component<Props, State> {
+export class ErrorBoundary extends Component<Props, State> {
   static getDerivedStateFromError(error: Error): State {
     // Update state so the next render will show the fallback UI.
     return { hasError: true, error };
@@ -81,13 +81,11 @@ export class TelemetryErrorBoundary extends Component<Props, State> {
   }
 }
 
-export function withTelemetryErrorBoundary<T>(
+export function withErrorBoundary<T>(
   wrappedComponent: (props: T) => ReactNode,
   name?: string
 ) {
   return (props: T) => (
-    <TelemetryErrorBoundary name={name}>
-      {wrappedComponent(props)}
-    </TelemetryErrorBoundary>
+    <ErrorBoundary name={name}>{wrappedComponent(props)}</ErrorBoundary>
   );
 }

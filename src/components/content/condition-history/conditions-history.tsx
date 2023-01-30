@@ -10,8 +10,8 @@ import { useCCDAModal } from "../CCDA/modal-ccda";
 import { ConditionHeader } from "../condition-header";
 import { applyConditionHistoryFilters } from "./condition-history-filters";
 import { conditionData, setupData } from "./condition-history-schema";
+import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Loading } from "@/components/core/loading";
-import { withTelemetryErrorBoundary } from "@/components/core/telemetry-error-boundary";
 import { getBinaryId } from "@/fhir/binaries";
 import { getIncludedResources } from "@/fhir/bundle";
 import { useConditionHistory } from "@/fhir/conditions";
@@ -26,7 +26,7 @@ export type ConditionHistoryProps = {
   onEdit?: () => void;
 };
 
-export const ConditionHistory = withTelemetryErrorBoundary(
+export const ConditionHistory = withErrorBoundary(
   ({ condition, onClose, onEdit }: ConditionHistoryProps) => {
     // State
     const [conditionsWithDate, setConditionsWithDate] =

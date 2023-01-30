@@ -10,9 +10,9 @@ import {
   PatientConditionHoverActions,
 } from "./patient-conditions-menu-actions";
 import { PatientConditionsTabs } from "./patient-conditions-tabs";
+import { withErrorBoundary } from "@/components/core/error-boundary";
 import { FormEntry } from "@/components/core/form/drawer-form-with-fields";
 import { Table } from "@/components/core/table/table";
-import { withTelemetryErrorBoundary } from "@/components/core/telemetry-error-boundary";
 import {
   useOtherProviderConditions,
   usePatientConditions,
@@ -33,7 +33,7 @@ export type ConditionFormData = {
   drawerIsOpen: boolean;
 };
 
-export const PatientConditions = withTelemetryErrorBoundary(
+export const PatientConditions = withErrorBoundary(
   ({ className, readOnly = false }: PatientConditionsProps) => {
     // State.
     const { filters, updateFilters, applyFilters } = useConditionFilters();

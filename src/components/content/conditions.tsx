@@ -29,7 +29,7 @@ import {
   conditionEditSchema,
   getEditingPatientConditionData,
 } from "@/components/content/forms/schemas/condition-schema";
-import { withTelemetryErrorBoundary } from "@/components/core/telemetry-error-boundary";
+import { withErrorBoundary } from "@/components/core/error-boundary";
 import {
   getNewCondition,
   useOtherProviderConditions,
@@ -52,7 +52,7 @@ const EMPTY_MESSAGE_PROVIDER = "There are no conditions available.";
 const ERROR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
 
-export const Conditions = withTelemetryErrorBoundary(
+export const Conditions = withErrorBoundary(
   ({ className, readOnly = false }: ConditionsProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const breakpoints = useBreakpoints(containerRef);

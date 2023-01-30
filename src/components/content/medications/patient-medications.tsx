@@ -5,7 +5,7 @@ import { AddNewMedDrawer } from "@/components/content/medications/add-new-med-dr
 import { OtherProviderMedsTable } from "@/components/content/medications/other-provider-meds-table";
 import { ProviderMedsTable } from "@/components/content/medications/provider-meds-table";
 import * as CTWBox from "@/components/core/ctw-box";
-import { withTelemetryErrorBoundary } from "@/components/core/telemetry-error-boundary";
+import { withErrorBoundary } from "@/components/core/error-boundary";
 import { ToggleControl } from "@/components/core/toggle-control";
 import "./patient-medications.scss";
 
@@ -20,7 +20,7 @@ export type PatientMedicationsProps = {
   readOnly?: boolean;
 };
 
-export const PatientMedications = withTelemetryErrorBoundary(
+export const PatientMedications = withErrorBoundary(
   ({
     className,
     readOnly = false,

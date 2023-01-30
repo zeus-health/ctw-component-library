@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { MedicationDrawer } from "@/components/content/medication-drawer";
 import { MedicationsTableBase } from "@/components/content/medications-table-base";
 import { AddNewMedDrawer } from "@/components/content/medications/add-new-med-drawer";
-import { withTelemetryErrorBoundary } from "@/components/core/telemetry-error-boundary";
+import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useDismissMedication } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
@@ -22,7 +22,7 @@ export type OtherProviderMedsTableProps = {
  * The table has a menu to the right side which will pull out the
  * history for the medication listed in that row.
  */
-export const OtherProviderMedsTable = withTelemetryErrorBoundary(
+export const OtherProviderMedsTable = withErrorBoundary(
   ({
     sortOrder = "asc",
     sortColumn = "display",

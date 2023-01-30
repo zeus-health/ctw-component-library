@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { MedicationDrawer } from "@/components/content/medication-drawer";
 import { MedicationsTableBase } from "@/components/content/medications-table-base";
-import { withTelemetryErrorBoundary } from "@/components/core/telemetry-error-boundary";
+import { withErrorBoundary } from "@/components/core/error-boundary";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { get, pipe, toLower } from "@/utils/nodash/fp";
@@ -23,7 +23,7 @@ export type ProviderMedsTableProps = {
  * The table has a menu to the right side which will pull out the
  * history for the medication listed in that row.
  */
-export const ProviderMedsTable = withTelemetryErrorBoundary(
+export const ProviderMedsTable = withErrorBoundary(
   ({
     showInactive = false,
     sortColumn = "display",
