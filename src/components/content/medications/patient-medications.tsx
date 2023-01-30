@@ -5,7 +5,7 @@ import { AddNewMedDrawer } from "@/components/content/medications/add-new-med-dr
 import { OtherProviderMedsTable } from "@/components/content/medications/other-provider-meds-table";
 import { ProviderMedsTable } from "@/components/content/medications/provider-meds-table";
 import * as CTWBox from "@/components/core/ctw-box";
-import { TelemetryErrorBoundary } from "@/components/core/telemetry-boundary";
+import { withTelemetryErrorBoundary } from "@/components/core/telemetry-error-boundary";
 import { ToggleControl } from "@/components/core/toggle-control";
 import "./patient-medications.scss";
 
@@ -20,17 +20,17 @@ export type PatientMedicationsProps = {
   readOnly?: boolean;
 };
 
-export function PatientMedications({
-  className,
-  readOnly = false,
-  showConfirmedMedsTable = true,
-  showOtherProvidersMedsTable = true,
-}: PatientMedicationsProps) {
-  const [drawerIsOpen, setDrawerIsOpen] = useState(false);
-  const [includeInactiveMeds, setIncludeInactiveMeds] = useState(false);
+export const PatientMedications = withTelemetryErrorBoundary(
+  ({
+    className,
+    readOnly = false,
+    showConfirmedMedsTable = true,
+    showOtherProvidersMedsTable = true,
+  }: PatientMedicationsProps) => {
+    const [drawerIsOpen, setDrawerIsOpen] = useState(false);
+    const [includeInactiveMeds, setIncludeInactiveMeds] = useState(false);
 
-  return (
-    <TelemetryErrorBoundary name="PatientMedications">
+    return (
       <CTWBox.StackedWrapper
         className={cx("ctw-patient-medications", className)}
         data-zus-telemetry-namespace="PatientMedications"
@@ -76,6 +76,7 @@ export function PatientMedications({
           </CTWBox.Body>
         )}
       </CTWBox.StackedWrapper>
-    </TelemetryErrorBoundary>
-  );
-}
+    );
+  },
+  "PatientMedications"
+);

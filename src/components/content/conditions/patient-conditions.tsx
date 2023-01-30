@@ -1,5 +1,4 @@
 import cx from "classnames";
-import "./patient-conditions.scss";
 import { useRef } from "react";
 import { useConditionHistory } from "../condition-history/conditions-history-drawer";
 import { filterOtherConditions } from "./helpers";
@@ -13,13 +12,14 @@ import {
 import { PatientConditionsTabs } from "./patient-conditions-tabs";
 import { FormEntry } from "@/components/core/form/drawer-form-with-fields";
 import { Table } from "@/components/core/table/table";
-import { TelemetryErrorBoundary } from "@/components/core/telemetry-boundary";
+import { withTelemetryErrorBoundary } from "@/components/core/telemetry-error-boundary";
 import {
   useOtherProviderConditions,
   usePatientConditions,
 } from "@/fhir/conditions";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { AnyZodSchema } from "@/utils/form-helper";
+import "./patient-conditions.scss";
 
 export type PatientConditionsProps = {
   className?: string;
@@ -33,43 +33,42 @@ export type ConditionFormData = {
   drawerIsOpen: boolean;
 };
 
-export function PatientConditions({
-  className,
-  readOnly = false,
-}: PatientConditionsProps) {
-  // State.
-  const { filters, updateFilters, applyFilters } = useConditionFilters();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const breakpoints = useBreakpoints(containerRef);
+export const PatientConditions = withTelemetryErrorBoundary(
+  ({ className, readOnly = false }: PatientConditionsProps) => {
+    // State.
+    const { filters, updateFilters, applyFilters } = useConditionFilters();
+    const containerRef = useRef<HTMLDivElement>(null);
+    const breakpoints = useBreakpoints(containerRef);
 
-  // Drawer helpers.
-  const showConditionHistory = useConditionHistory();
+    // Drawer helpers.
+    const showConditionHistory = useConditionHistory();
 
-  // Data fetching.
-  const patientConditionsQuery = usePatientConditions();
-  const otherConditionsQuery = useOtherProviderConditions();
+    // Data fetching.
+    const patientConditionsQuery = usePatientConditions();
+    const otherConditionsQuery = useOtherProviderConditions();
 
-  function isLoading() {
-    const isLoadingPatient = patientConditionsQuery.isLoading;
-    const isLoadingOther = isLoadingPatient || otherConditionsQuery.isLoading;
-    return filters.collection === "patient" ? isLoadingPatient : isLoadingOther;
-  }
+    function isLoading() {
+      const isLoadingPatient = patientConditionsQuery.isLoading;
+      const isLoadingOther = isLoadingPatient || otherConditionsQuery.isLoading;
+      return filters.collection === "patient"
+        ? isLoadingPatient
+        : isLoadingOther;
+    }
 
-  // Get our conditions.
-  const patientConditions = patientConditionsQuery.data ?? [];
-  const otherConditions = filterOtherConditions(
-    otherConditionsQuery.data ?? [],
-    patientConditions,
-    true
-  );
-  const conditions = applyFilters(patientConditions, otherConditions);
-  const RowActions =
-    filters.collection === "patient"
-      ? PatientConditionHoverActions
-      : OtherProviderConditionHoverActions;
+    // Get our conditions.
+    const patientConditions = patientConditionsQuery.data ?? [];
+    const otherConditions = filterOtherConditions(
+      otherConditionsQuery.data ?? [],
+      patientConditions,
+      true
+    );
+    const conditions = applyFilters(patientConditions, otherConditions);
+    const RowActions =
+      filters.collection === "patient"
+        ? PatientConditionHoverActions
+        : OtherProviderConditionHoverActions;
 
-  return (
-    <TelemetryErrorBoundary name="PatientConditions">
+    return (
       <div
         ref={containerRef}
         className={cx("ctw-patient-conditions", className, {
@@ -110,6 +109,7 @@ export function PatientConditions({
           />
         </div>
       </div>
-    </TelemetryErrorBoundary>
-  );
-}
+    );
+  },
+  "PatientConditions"
+);

@@ -3,7 +3,7 @@ import { sortMedHistory } from "./helpers";
 import { CollapsibleDataListProps } from "@/components/core/collapsible-data-list";
 import { CollapsibleDataListStack } from "@/components/core/collapsible-data-list-stack";
 import { Loading } from "@/components/core/loading";
-import { TelemetryErrorBoundary } from "@/components/core/telemetry-boundary";
+import { withTelemetryErrorBoundary } from "@/components/core/telemetry-error-boundary";
 import { useMedicationHistory } from "@/fhir/medications";
 import { MedicationModel } from "@/fhir/models/medication";
 import { MedicationAdministrationModel } from "@/fhir/models/medication-administration";
@@ -21,41 +21,46 @@ export type MedicationHistoryProps = {
 /**
  * Displays the history of a medication
  */
-export function MedicationHistory({ medication }: MedicationHistoryProps) {
-  const [entries, setEntries] = useState<CollapsibleDataListProps[]>([]);
-  const medHistoryQuery = useMedicationHistory(medication.resource);
-  const loading = medHistoryQuery.isLoading;
+export const MedicationHistory = withTelemetryErrorBoundary(
+  ({ medication }: MedicationHistoryProps) => {
+    const [entries, setEntries] = useState<CollapsibleDataListProps[]>([]);
+    const medHistoryQuery = useMedicationHistory(medication.resource);
+    const loading = medHistoryQuery.isLoading;
 
-  useEffect(() => {
-    if (medHistoryQuery.data) {
-      const { medications } = medHistoryQuery.data;
-      setEntries(sortMedHistory(medications).map(createMedicationDetailsCard));
+    useEffect(() => {
+      if (medHistoryQuery.data) {
+        const { medications } = medHistoryQuery.data;
+        setEntries(
+          sortMedHistory(medications).map(createMedicationDetailsCard)
+        );
+      }
+    }, [medHistoryQuery.data]);
+
+    if (loading) {
+      return (
+        <>
+          <h2 className="ctw-text-lg ctw-font-semibold">Medication History</h2>
+          <Loading message="" />
+        </>
+      );
     }
-  }, [medHistoryQuery.data]);
 
-  if (loading) {
     return (
       <>
         <h2 className="ctw-text-lg ctw-font-semibold">Medication History</h2>
-        <Loading message="" />
+        {entries.length ? (
+          <CollapsibleDataListStack
+            entries={entries}
+            limit={MEDICATION_HISTORY_LIMIT}
+          />
+        ) : (
+          <span>No history available for this medication.</span>
+        )}
       </>
     );
-  }
-
-  return (
-    <TelemetryErrorBoundary name="MedicationHistory">
-      <h2 className="ctw-text-lg ctw-font-semibold">Medication History</h2>
-      {entries.length ? (
-        <CollapsibleDataListStack
-          entries={entries}
-          limit={MEDICATION_HISTORY_LIMIT}
-        />
-      ) : (
-        <span>No history available for this medication.</span>
-      )}
-    </TelemetryErrorBoundary>
-  );
-}
+  },
+  "MedicationHistory"
+);
 
 function createMedicationStatementCard(medication: MedicationModel) {
   const resource = medication.resource as fhir4.MedicationStatement;

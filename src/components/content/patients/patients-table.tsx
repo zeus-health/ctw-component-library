@@ -9,7 +9,7 @@ import { Pagination } from "@/components/core/pagination/pagination";
 import { useQueryWithCTW } from "@/components/core/providers/ctw-provider";
 import { Table } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
-import { TelemetryErrorBoundary } from "@/components/core/telemetry-boundary";
+import { withTelemetryErrorBoundary } from "@/components/core/telemetry-error-boundary";
 import { getBuilderPatientsList } from "@/fhir/patient-helper";
 import { debounce } from "@/utils/nodash";
 import { QUERY_KEY_PATIENTS_LIST } from "@/utils/query-keys";
@@ -49,53 +49,55 @@ export function usePatientsList(
  * object as `.resource`.
  *
  */
-export const PatientsTable = ({
-  className,
-  handleRowClick,
-  pageSize = 5,
-  title = "Patients",
-}: PatientsTableProps) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [total, setTotal] = useState(0);
-  const [patients, setPatients] = useState<PatientModel[]>([]);
-  const [searchNameValue, setSearchNameValue] = useState<string | undefined>();
-  const {
-    data: { patients: responsePatients, total: responseTotal } = {},
-    isFetching,
-    isError,
-  } = usePatientsList(pageSize, currentPage - 1, searchNameValue);
+export const PatientsTable = withTelemetryErrorBoundary(
+  ({
+    className,
+    handleRowClick,
+    pageSize = 5,
+    title = "Patients",
+  }: PatientsTableProps) => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [total, setTotal] = useState(0);
+    const [patients, setPatients] = useState<PatientModel[]>([]);
+    const [searchNameValue, setSearchNameValue] = useState<
+      string | undefined
+    >();
+    const {
+      data: { patients: responsePatients, total: responseTotal } = {},
+      isFetching,
+      isError,
+    } = usePatientsList(pageSize, currentPage - 1, searchNameValue);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedSearch = useCallback(
-    debounce((value) => {
-      setSearchNameValue(value);
-      setCurrentPage(1);
-      setTotal(0);
-      setPatients([]);
-    }, 100),
-    []
-  );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const debouncedSearch = useCallback(
+      debounce((value) => {
+        setSearchNameValue(value);
+        setCurrentPage(1);
+        setTotal(0);
+        setPatients([]);
+      }, 100),
+      []
+    );
 
-  // Here we are setting the total and patients only when we know that useQuery
-  // isn't fetching. This will prevent empty intermediate states where there
-  // is no data because the value of `usePatientsTable()` hasn't settled yet.
-  useEffect(() => {
-    if (!isFetching && responsePatients) {
-      setTotal(responseTotal ?? 0);
-      setPatients(responsePatients);
-    }
-  }, [responsePatients, responseTotal, isError, isFetching]);
+    // Here we are setting the total and patients only when we know that useQuery
+    // isn't fetching. This will prevent empty intermediate states where there
+    // is no data because the value of `usePatientsTable()` hasn't settled yet.
+    useEffect(() => {
+      if (!isFetching && responsePatients) {
+        setTotal(responseTotal ?? 0);
+        setPatients(responsePatients);
+      }
+    }, [responsePatients, responseTotal, isError, isFetching]);
 
-  // This resets our state when there is an error fetching patients from ODS.
-  useEffect(() => {
-    if (isError) {
-      setTotal(0);
-      setPatients([]);
-    }
-  }, [isError, isFetching]);
+    // This resets our state when there is an error fetching patients from ODS.
+    useEffect(() => {
+      if (isError) {
+        setTotal(0);
+        setPatients([]);
+      }
+    }, [isError, isFetching]);
 
-  return (
-    <TelemetryErrorBoundary name="PatientsTable">
+    return (
       <CTWBox.StackedWrapper
         className={cx("ctw-patients-table", className)}
         data-zus-telemetry-namespace="PatientsTable"
@@ -131,9 +133,10 @@ export const PatientsTable = ({
           </Table>
         </CTWBox.Body>
       </CTWBox.StackedWrapper>
-    </TelemetryErrorBoundary>
-  );
-};
+    );
+  },
+  "PatientsTable"
+);
 
 const columns: TableColumn<PatientModel>[] = [
   {

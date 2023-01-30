@@ -80,3 +80,14 @@ export class TelemetryErrorBoundary extends Component<Props, State> {
     return props.children;
   }
 }
+
+export function withTelemetryErrorBoundary<T>(
+  wrappedComponent: (props: T) => ReactNode,
+  name?: string
+) {
+  return (props: T) => (
+    <TelemetryErrorBoundary name={name}>
+      {wrappedComponent(props)}
+    </TelemetryErrorBoundary>
+  );
+}

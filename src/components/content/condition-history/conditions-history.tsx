@@ -11,7 +11,7 @@ import { ConditionHeader } from "../condition-header";
 import { applyConditionHistoryFilters } from "./condition-history-filters";
 import { conditionData, setupData } from "./condition-history-schema";
 import { Loading } from "@/components/core/loading";
-import { TelemetryErrorBoundary } from "@/components/core/telemetry-boundary";
+import { withTelemetryErrorBoundary } from "@/components/core/telemetry-error-boundary";
 import { getIncludedResources } from "@/fhir/bundle";
 import {
   getBinaryDocument,
@@ -29,118 +29,117 @@ export type ConditionHistoryProps = {
   onEdit?: () => void;
 };
 
-export function ConditionHistory({
-  condition,
-  onClose,
-  onEdit,
-}: ConditionHistoryProps) {
-  // State
-  const [conditionsWithDate, setConditionsWithDate] =
-    useState<CollapsibleDataListStackEntries>([]);
-  const [conditionsWithoutDate, setConditionsWithoutDate] =
-    useState<CollapsibleDataListStackEntries>([]);
-  const [isHistoryLoading, setIsHistoryLoading] = useState(true);
-  const [binaryDocument, setBinaryDocument] = useState<fhir4.Binary>();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [ccdaViewerTitle, setCCDAViewerTitle] = useState<string>();
+export const ConditionHistory = withTelemetryErrorBoundary(
+  ({ condition, onClose, onEdit }: ConditionHistoryProps) => {
+    // State
+    const [conditionsWithDate, setConditionsWithDate] =
+      useState<CollapsibleDataListStackEntries>([]);
+    const [conditionsWithoutDate, setConditionsWithoutDate] =
+      useState<CollapsibleDataListStackEntries>([]);
+    const [isHistoryLoading, setIsHistoryLoading] = useState(true);
+    const [binaryDocument, setBinaryDocument] = useState<fhir4.Binary>();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [ccdaViewerTitle, setCCDAViewerTitle] = useState<string>();
 
-  // Fetching
-  const { getRequestContext } = useCTW();
-  const historyResponse = useConditionHistory(condition);
+    // Fetching
+    const { getRequestContext } = useCTW();
+    const historyResponse = useConditionHistory(condition);
 
-  // Handlers
-  const openCCDAModal = async (
-    binaryId: string,
-    conditionDisplayName?: string | undefined
-  ) => {
-    const requestContext = await getRequestContext();
-    const binaryDocumentResponse = await getBinaryDocument(
-      requestContext,
-      binaryId
-    );
-    setBinaryDocument(binaryDocumentResponse);
-    setIsModalOpen(true);
-    if (conditionDisplayName) {
-      setCCDAViewerTitle(conditionDisplayName);
-    }
-  };
-
-  useEffect(() => {
-    async function load() {
-      if (historyResponse.data) {
-        const includedResources = getIncludedResources(
-          historyResponse.data.bundle
-        );
-
-        const conditionsDataDeduped = applyConditionHistoryFilters(
-          historyResponse.data.conditions,
-          includedResources
-        );
-
-        const requestContext = await getRequestContext();
-        const provenanceBundles = await getProvenanceForConditions(
-          requestContext,
-          [condition, ...conditionsDataDeduped]
-        );
-
-        let binaryId;
-        const conditionsToDisplay = conditionsDataDeduped.map(
-          (dedupdedCondition) => {
-            binaryId = getBinaryId(provenanceBundles, dedupdedCondition.id);
-
-            return {
-              ...setupData(dedupdedCondition),
-              ...(binaryId && {
-                binaryId,
-              }),
-            };
-          }
-        );
-
-        setConditionsWithDate(conditionsToDisplay.filter((d) => d.date));
-        setConditionsWithoutDate(conditionsToDisplay.filter((d) => !d.date));
-        setIsHistoryLoading(false);
+    // Handlers
+    const openCCDAModal = async (
+      binaryId: string,
+      conditionDisplayName?: string | undefined
+    ) => {
+      const requestContext = await getRequestContext();
+      const binaryDocumentResponse = await getBinaryDocument(
+        requestContext,
+        binaryId
+      );
+      setBinaryDocument(binaryDocumentResponse);
+      setIsModalOpen(true);
+      if (conditionDisplayName) {
+        setCCDAViewerTitle(conditionDisplayName);
       }
-    }
-
-    void load();
-
-    return function cleanup() {
-      setConditionsWithDate([]);
-      setConditionsWithoutDate([]);
-      setIsHistoryLoading(true);
     };
-  }, [condition, getRequestContext, historyResponse.data, onEdit]);
 
-  return (
-    <TelemetryErrorBoundary name="ConditionHistory">
-      <CCDAModal
-        isOpen={isModalOpen}
-        fileName={ccdaViewerTitle}
-        rawBinary={binaryDocument}
-        onClose={() => setIsModalOpen(false)}
-      />
+    useEffect(() => {
+      async function load() {
+        if (historyResponse.data) {
+          const includedResources = getIncludedResources(
+            historyResponse.data.bundle
+          );
 
-      <div className="ctw-space-y-6">
-        <ConditionHeader condition={condition} />
-        <Details
-          data={conditionData(condition)}
-          readOnly={!onEdit}
-          onEdit={() => {
-            onClose();
-            onEdit?.();
-          }}
+          const conditionsDataDeduped = applyConditionHistoryFilters(
+            historyResponse.data.conditions,
+            includedResources
+          );
+
+          const requestContext = await getRequestContext();
+          const provenanceBundles = await getProvenanceForConditions(
+            requestContext,
+            [condition, ...conditionsDataDeduped]
+          );
+
+          let binaryId;
+          const conditionsToDisplay = conditionsDataDeduped.map(
+            (dedupdedCondition) => {
+              binaryId = getBinaryId(provenanceBundles, dedupdedCondition.id);
+
+              return {
+                ...setupData(dedupdedCondition),
+                ...(binaryId && {
+                  binaryId,
+                }),
+              };
+            }
+          );
+
+          setConditionsWithDate(conditionsToDisplay.filter((d) => d.date));
+          setConditionsWithoutDate(conditionsToDisplay.filter((d) => !d.date));
+          setIsHistoryLoading(false);
+        }
+      }
+
+      void load();
+
+      return function cleanup() {
+        setConditionsWithDate([]);
+        setConditionsWithoutDate([]);
+        setIsHistoryLoading(true);
+      };
+    }, [condition, getRequestContext, historyResponse.data, onEdit]);
+
+    return (
+      <>
+        <CCDAModal
+          isOpen={isModalOpen}
+          fileName={ccdaViewerTitle}
+          rawBinary={binaryDocument}
+          onClose={() => setIsModalOpen(false)}
         />
-        <HistoryRecords
-          conditionsWithDate={conditionsWithDate}
-          conditionsWithoutDate={conditionsWithoutDate}
-          historyIsLoading={isHistoryLoading}
-          openCCDAModal={openCCDAModal}
-        />
-      </div>
-    </TelemetryErrorBoundary>
-  );
-}
+
+        <div className="ctw-space-y-6">
+          <ConditionHeader condition={condition} />
+          <Details
+            data={conditionData(condition)}
+            readOnly={!onEdit}
+            onEdit={() => {
+              onClose();
+              onEdit?.();
+            }}
+          />
+          <HistoryRecords
+            conditionsWithDate={conditionsWithDate}
+            conditionsWithoutDate={conditionsWithoutDate}
+            historyIsLoading={isHistoryLoading}
+            openCCDAModal={openCCDAModal}
+          />
+        </div>
+      </>
+    );
+  },
+  "ConditionHistory"
+);
 
 type HistoryRecordsProps = {
   conditionsWithDate: CollapsibleDataListStackEntries;

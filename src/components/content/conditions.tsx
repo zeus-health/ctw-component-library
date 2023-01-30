@@ -29,7 +29,7 @@ import {
   conditionEditSchema,
   getEditingPatientConditionData,
 } from "@/components/content/forms/schemas/condition-schema";
-import { TelemetryErrorBoundary } from "@/components/core/telemetry-boundary";
+import { withTelemetryErrorBoundary } from "@/components/core/telemetry-error-boundary";
 import {
   getNewCondition,
   useOtherProviderConditions,
@@ -52,159 +52,162 @@ const EMPTY_MESSAGE_PROVIDER = "There are no conditions available.";
 const ERROR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
 
-export function Conditions({ className, readOnly = false }: ConditionsProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const breakpoints = useBreakpoints(containerRef);
-  const [drawerIsOpen, setDrawerIsOpen] = useState(false);
-  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+export const Conditions = withTelemetryErrorBoundary(
+  ({ className, readOnly = false }: ConditionsProps) => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const breakpoints = useBreakpoints(containerRef);
+    const [drawerIsOpen, setDrawerIsOpen] = useState(false);
+    const [showConfirmDelete, setShowConfirmDelete] = useState(false);
 
-  const showConditionHistory = useConditionHistory();
-  const [requestRecordsDrawerIsOpen, setRequestDrawerIsOpen] = useState(false);
-  const [patientRecords, setPatientRecords] = useState<ConditionModel[]>([]);
-  const [otherProviderRecords, setOtherProviderRecords] = useState<
-    ConditionModel[]
-  >([]);
-  const [includeInactive, setIncludeInactive] = useState(false);
-  const [formAction, setFormAction] = useState<FormActionTypes>("Add");
-  const [schema, setSchema] = useState<AnyZodSchema>(conditionAddSchema);
-  const [currentSelectedData, setCurrentlySelectedData] =
-    useState<FormEntry[]>();
-  const [selectedCondition, setSelectedCondition] = useState<ConditionModel>();
-  const patientResponse = usePatient();
-  const patientRecordsResponse = usePatientConditions();
-  const otherProviderRecordsResponse = useOtherProviderConditions();
-  const { getRequestContext } = useCTW();
-  const [sort, setSort] = useState<TableSort>();
+    const showConditionHistory = useConditionHistory();
+    const [requestRecordsDrawerIsOpen, setRequestDrawerIsOpen] =
+      useState(false);
+    const [patientRecords, setPatientRecords] = useState<ConditionModel[]>([]);
+    const [otherProviderRecords, setOtherProviderRecords] = useState<
+      ConditionModel[]
+    >([]);
+    const [includeInactive, setIncludeInactive] = useState(false);
+    const [formAction, setFormAction] = useState<FormActionTypes>("Add");
+    const [schema, setSchema] = useState<AnyZodSchema>(conditionAddSchema);
+    const [currentSelectedData, setCurrentlySelectedData] =
+      useState<FormEntry[]>();
+    const [selectedCondition, setSelectedCondition] =
+      useState<ConditionModel>();
+    const patientResponse = usePatient();
+    const patientRecordsResponse = usePatientConditions();
+    const otherProviderRecordsResponse = useOtherProviderConditions();
+    const { getRequestContext } = useCTW();
+    const [sort, setSort] = useState<TableSort>();
 
-  const [clinicalHistoryExists, setClinicalHistoryExists] = useState<boolean>();
+    const [clinicalHistoryExists, setClinicalHistoryExists] =
+      useState<boolean>();
 
-  const patientRecordsMessage = patientRecordsResponse.isError
-    ? ERROR_MSG
-    : EMPTY_MESSAGE_PATIENT_RECORD;
+    const patientRecordsMessage = patientRecordsResponse.isError
+      ? ERROR_MSG
+      : EMPTY_MESSAGE_PATIENT_RECORD;
 
-  const otherProviderRecordMessage = otherProviderRecordsResponse.isError
-    ? ERROR_MSG
-    : EMPTY_MESSAGE_PROVIDER;
+    const otherProviderRecordMessage = otherProviderRecordsResponse.isError
+      ? ERROR_MSG
+      : EMPTY_MESSAGE_PROVIDER;
 
-  const handleEditCondition = (condition: ConditionModel) => {
-    if (patientResponse.data) {
-      setDrawerIsOpen(true);
-      setFormAction("Edit");
-      setSchema(conditionEditSchema);
-      setCurrentlySelectedData(getEditingPatientConditionData({ condition }));
+    const handleEditCondition = (condition: ConditionModel) => {
+      if (patientResponse.data) {
+        setDrawerIsOpen(true);
+        setFormAction("Edit");
+        setSchema(conditionEditSchema);
+        setCurrentlySelectedData(getEditingPatientConditionData({ condition }));
+        setSelectedCondition(condition);
+      }
+    };
+
+    const handleConditionDelete = (condition: ConditionModel) => {
+      setShowConfirmDelete(true);
       setSelectedCondition(condition);
-    }
-  };
+    };
 
-  const handleConditionDelete = (condition: ConditionModel) => {
-    setShowConfirmDelete(true);
-    setSelectedCondition(condition);
-  };
+    const handleAddOtherProviderCondition = (condition: ConditionModel) => {
+      const newCondition = getAddConditionWithDefaults(condition.resource);
 
-  const handleAddOtherProviderCondition = (condition: ConditionModel) => {
-    const newCondition = getAddConditionWithDefaults(condition.resource);
+      if (patientResponse.data) {
+        setSchema(conditionAddSchema);
+        setDrawerIsOpen(true);
+        setFormAction("Add");
+        setCurrentlySelectedData(
+          getAddConditionData({
+            condition: new ConditionModel(newCondition),
+          })
+        );
+      }
+    };
 
-    if (patientResponse.data) {
-      setSchema(conditionAddSchema);
+    const handleAddNewCondition = () => {
+      if (!patientResponse.data) return;
+
+      const newCondition = getNewCondition(patientResponse.data.id);
       setDrawerIsOpen(true);
-      setFormAction("Add");
+      setSchema(conditionAddSchema);
       setCurrentlySelectedData(
         getAddConditionData({
           condition: new ConditionModel(newCondition),
         })
       );
-    }
-  };
+    };
 
-  const handleAddNewCondition = () => {
-    if (!patientResponse.data) return;
-
-    const newCondition = getNewCondition(patientResponse.data.id);
-    setDrawerIsOpen(true);
-    setSchema(conditionAddSchema);
-    setCurrentlySelectedData(
-      getAddConditionData({
-        condition: new ConditionModel(newCondition),
-      })
-    );
-  };
-
-  const addConditionBtn = (
-    <button
-      className="ctw-btn-primary"
-      type="button"
-      onClick={handleAddNewCondition}
-      data-zus-telemetry-click="Add new condition (Empty table)"
-    >
-      Add Condition
-    </button>
-  );
-
-  const shouldShowClinicalHistoryArea =
-    clinicalHistoryExists ||
-    (otherProviderRecordsResponse.data &&
-      otherProviderRecordsResponse.data.length > 0);
-
-  const checkClinicalHistory = async (patientID: string) => {
-    const requestContext = await getRequestContext();
-
-    const patientHistoryFetched = await hasFetchedPatientHistory(
-      requestContext,
-      patientID
+    const addConditionBtn = (
+      <button
+        className="ctw-btn-primary"
+        type="button"
+        onClick={handleAddNewCondition}
+        data-zus-telemetry-click="Add new condition (Empty table)"
+      >
+        Add Condition
+      </button>
     );
 
-    setClinicalHistoryExists(patientHistoryFetched);
-  };
+    const shouldShowClinicalHistoryArea =
+      clinicalHistoryExists ||
+      (otherProviderRecordsResponse.data &&
+        otherProviderRecordsResponse.data.length > 0);
 
-  useEffect(() => {
-    async function load() {
-      const patientConditions = patientRecordsResponse.data;
-      const otherConditions = otherProviderRecordsResponse.data;
+    const checkClinicalHistory = async (patientID: string) => {
+      const requestContext = await getRequestContext();
 
-      if (patientConditions) {
-        setPatientRecords(
-          patientConditions.filter((c) => c.active || includeInactive)
-        );
+      const patientHistoryFetched = await hasFetchedPatientHistory(
+        requestContext,
+        patientID
+      );
 
-        if (otherConditions) {
-          setOtherProviderRecords(
-            filterOtherConditions(
-              otherConditions,
-              patientConditions,
-              includeInactive
-            )
+      setClinicalHistoryExists(patientHistoryFetched);
+    };
+
+    useEffect(() => {
+      async function load() {
+        const patientConditions = patientRecordsResponse.data;
+        const otherConditions = otherProviderRecordsResponse.data;
+
+        if (patientConditions) {
+          setPatientRecords(
+            patientConditions.filter((c) => c.active || includeInactive)
           );
-        } else {
+
+          if (otherConditions) {
+            setOtherProviderRecords(
+              filterOtherConditions(
+                otherConditions,
+                patientConditions,
+                includeInactive
+              )
+            );
+          } else {
+            setOtherProviderRecords([]);
+          }
+        }
+
+        if (patientRecordsResponse.error) {
+          setPatientRecords([]);
           setOtherProviderRecords([]);
         }
       }
-
-      if (patientRecordsResponse.error) {
-        setPatientRecords([]);
-        setOtherProviderRecords([]);
+      void load();
+      if (patientResponse.data?.id && clinicalHistoryExists === undefined) {
+        void checkClinicalHistory(patientResponse.data.id);
       }
+
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [
+      includeInactive,
+      patientResponse.data,
+      patientRecordsResponse.data,
+      otherProviderRecordsResponse.data,
+      clinicalHistoryExists,
+      patientRecordsResponse.error,
+    ]);
+
+    if (patientResponse.isError) {
+      return <ConditionsNoPatient className={className} />;
     }
-    void load();
-    if (patientResponse.data?.id && clinicalHistoryExists === undefined) {
-      void checkClinicalHistory(patientResponse.data.id);
-    }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    includeInactive,
-    patientResponse.data,
-    patientRecordsResponse.data,
-    otherProviderRecordsResponse.data,
-    clinicalHistoryExists,
-    patientRecordsResponse.error,
-  ]);
-
-  if (patientResponse.isError) {
-    return <ConditionsNoPatient className={className} />;
-  }
-
-  return (
-    <TelemetryErrorBoundary name="Conditions">
+    return (
       <div
         ref={containerRef}
         data-zus-telemetry-namespace="Conditions"
@@ -385,6 +388,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           />
         )}
       </div>
-    </TelemetryErrorBoundary>
-  );
-}
+    );
+  },
+  "Conditions"
+);

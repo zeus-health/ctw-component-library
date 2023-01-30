@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { MedicationDrawer } from "@/components/content/medication-drawer";
 import { MedicationsTableBase } from "@/components/content/medications-table-base";
 import { AddNewMedDrawer } from "@/components/content/medications/add-new-med-drawer";
-import { TelemetryErrorBoundary } from "@/components/core/telemetry-boundary";
+import { withTelemetryErrorBoundary } from "@/components/core/telemetry-error-boundary";
 import { useDismissMedication } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
@@ -22,40 +22,44 @@ export type OtherProviderMedsTableProps = {
  * The table has a menu to the right side which will pull out the
  * history for the medication listed in that row.
  */
-export function OtherProviderMedsTable({
-  sortOrder = "asc",
-  sortColumn = "display",
-}: OtherProviderMedsTableProps) {
-  const dismissMedication = useDismissMedication();
-  const [medicationModels, setMedicationModels] = useState<
-    MedicationStatementModel[]
-  >([]);
-  const [historyDrawerOpen, setHistoryDrawerOpen] = useState(false);
-  const [addNewMedDrawerOpen, setAddNewMedDrawerOpen] = useState(false);
-  const [selectedMedication, setSelectedMedication] =
-    useState<MedicationStatementModel>();
-  const { otherProviderMedications, isLoading } =
-    useQueryAllPatientMedications();
+export const OtherProviderMedsTable = withTelemetryErrorBoundary(
+  ({
+    sortOrder = "asc",
+    sortColumn = "display",
+  }: OtherProviderMedsTableProps) => {
+    const dismissMedication = useDismissMedication();
+    const [medicationModels, setMedicationModels] = useState<
+      MedicationStatementModel[]
+    >([]);
+    const [historyDrawerOpen, setHistoryDrawerOpen] = useState(false);
+    const [addNewMedDrawerOpen, setAddNewMedDrawerOpen] = useState(false);
+    const [selectedMedication, setSelectedMedication] =
+      useState<MedicationStatementModel>();
+    const { otherProviderMedications, isLoading } =
+      useQueryAllPatientMedications();
 
-  function openHistoryDrawer(row: MedicationStatementModel) {
-    setSelectedMedication(row);
-    setHistoryDrawerOpen(true);
-  }
+    function openHistoryDrawer(row: MedicationStatementModel) {
+      setSelectedMedication(row);
+      setHistoryDrawerOpen(true);
+    }
 
-  function openAddNewMedicationDrawer(row: MedicationStatementModel) {
-    setSelectedMedication(row);
-    setAddNewMedDrawerOpen(true);
-  }
+    function openAddNewMedicationDrawer(row: MedicationStatementModel) {
+      setSelectedMedication(row);
+      setAddNewMedDrawerOpen(true);
+    }
 
-  useEffect(() => {
-    if (!otherProviderMedications) return;
-    setMedicationModels(
-      sort(otherProviderMedications, pipe(get(sortColumn), toLower), sortOrder)
-    );
-  }, [otherProviderMedications, sortColumn, sortOrder]);
+    useEffect(() => {
+      if (!otherProviderMedications) return;
+      setMedicationModels(
+        sort(
+          otherProviderMedications,
+          pipe(get(sortColumn), toLower),
+          sortOrder
+        )
+      );
+    }, [otherProviderMedications, sortColumn, sortOrder]);
 
-  return (
-    <TelemetryErrorBoundary name="OtherProviderMedsTable">
+    return (
       <div data-zus-telemetry-namespace="OtherProviderMedsTable">
         <MedicationsTableBase
           telemetryNamespace="MedicationsTableBase"
@@ -98,6 +102,7 @@ export function OtherProviderMedsTable({
           handleOnClose={() => setAddNewMedDrawerOpen(false)}
         />
       </div>
-    </TelemetryErrorBoundary>
-  );
-}
+    );
+  },
+  "OtherProviderMedsTable"
+);
