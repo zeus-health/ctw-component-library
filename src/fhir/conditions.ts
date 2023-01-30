@@ -13,7 +13,6 @@ import {
   SYSTEM_ICD9_CM,
   SYSTEM_SNOMED,
 } from "./system-urls";
-import { getZusApiBaseUrl } from "@/api/urls";
 import {
   getAddConditionWithDefaults,
   getClincalAndVerificationStatus,
@@ -21,7 +20,7 @@ import {
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { ConditionModel } from "@/fhir/models/condition";
-import { compact, find, orderBy } from "@/utils/nodash";
+import { compact, orderBy } from "@/utils/nodash";
 import {
   QUERY_KEY_CONDITION_HISTORY,
   QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
@@ -267,85 +266,3 @@ function filterAndSort(conditions: ConditionModel[]): ConditionModel[] {
     ["desc"]
   );
 }
-
-export async function getBinaryDocument(
-  requestContext: CTWRequestContext,
-  binaryId: string
-) {
-  const { env, authToken } = requestContext;
-  const endpointBinaryUrl = `${getZusApiBaseUrl(env)}/fhir/${binaryId}`;
-
-  const response = await fetch(endpointBinaryUrl, {
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-      accept: "application/json",
-      "Content-Type": "application/json+fhir",
-    },
-  });
-  return response.json();
-}
-
-export async function getProvenanceForConditions(
-  requestContext: CTWRequestContext,
-  conditionsData: ConditionModel[]
-) {
-  const data = await Promise.all(
-    conditionsData.map(async (condition) => {
-      const endpointConditionsUrl = `${getZusApiBaseUrl(
-        requestContext.env
-      )}/fhir/Provenance?target=Condition/${condition.id}`;
-      const bundle = await fetch(endpointConditionsUrl, {
-        headers: {
-          Authorization: `Bearer ${requestContext.authToken}`,
-        },
-      });
-      return bundle.json();
-    })
-  );
-
-  return data;
-}
-
-export function getBinaryId(
-  provenanceBundles: fhir4.Bundle[],
-  targetConditionId: string
-): string | undefined {
-  let binaryId;
-
-  provenanceBundles.forEach((bundle) => {
-    if (bundle.entry) {
-      const link = find(bundle.link, { relation: "self" });
-      if (link) {
-        const decodedUrl = decodeURIComponent(link.url).split("/");
-        const conditionId = decodedUrl[decodedUrl.length - 1];
-
-        const binaryElem = retrieveBinaryDocumentElement(
-          bundle.entry,
-          conditionId,
-          targetConditionId
-        ) as fhir4.BundleEntry<fhir4.Provenance> | undefined;
-        if (binaryElem && binaryElem.resource?.entity) {
-          binaryId = binaryElem.resource.entity[0].what.reference;
-        }
-      }
-    }
-  });
-  return binaryId;
-}
-
-const retrieveBinaryDocumentElement = (
-  bundleEntry: fhir4.BundleEntry<fhir4.FhirResource>[],
-  conditionId: string,
-  targetConditionId: string
-) =>
-  bundleEntry.find((entry) => {
-    if (
-      entry.resource?.resourceType === "Provenance" &&
-      entry.resource.entity
-    ) {
-      const hasDocument = entry.resource.entity[0].role === "source";
-      const idMatch = conditionId === targetConditionId;
-      return idMatch && hasDocument;
-    }
-    return false;
-  });
