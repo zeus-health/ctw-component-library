@@ -26,87 +26,86 @@ export type ConditionHistoryProps = {
   onEdit?: () => void;
 };
 
-export const ConditionHistory = withTelemetryErrorBoundary(({
-  condition,
-  onClose,
-  onEdit,
-}: ConditionHistoryProps) => {
-  // State
-  const [conditionsWithDate, setConditionsWithDate] =
-    useState<CollapsibleDataListStackEntries>([]);
-  const [conditionsWithoutDate, setConditionsWithoutDate] =
-    useState<CollapsibleDataListStackEntries>([]);
-  const [isHistoryLoading, setIsHistoryLoading] = useState(true);
+export const ConditionHistory = withTelemetryErrorBoundary(
+  ({ condition, onClose, onEdit }: ConditionHistoryProps) => {
+    // State
+    const [conditionsWithDate, setConditionsWithDate] =
+      useState<CollapsibleDataListStackEntries>([]);
+    const [conditionsWithoutDate, setConditionsWithoutDate] =
+      useState<CollapsibleDataListStackEntries>([]);
+    const [isHistoryLoading, setIsHistoryLoading] = useState(true);
 
-  // Fetching
-  const { getRequestContext } = useCTW();
-  const historyResponse = useConditionHistory(condition);
+    // Fetching
+    const { getRequestContext } = useCTW();
+    const historyResponse = useConditionHistory(condition);
 
-  useEffect(() => {
-    async function load() {
-      if (historyResponse.data) {
-        const includedResources = getIncludedResources(
-          historyResponse.data.bundle
-        );
+    useEffect(() => {
+      async function load() {
+        if (historyResponse.data) {
+          const includedResources = getIncludedResources(
+            historyResponse.data.bundle
+          );
 
-        const conditionsDataDeduped = applyConditionHistoryFilters(
-          historyResponse.data.conditions,
-          includedResources
-        );
+          const conditionsDataDeduped = applyConditionHistoryFilters(
+            historyResponse.data.conditions,
+            includedResources
+          );
 
-        const requestContext = await getRequestContext();
-        const provenances = await searchProvenances(requestContext, [
-          condition,
-          ...conditionsDataDeduped,
-        ]);
+          const requestContext = await getRequestContext();
+          const provenances = await searchProvenances(requestContext, [
+            condition,
+            ...conditionsDataDeduped,
+          ]);
 
-        const conditionsToDisplay = conditionsDataDeduped.map(
-          (dedupdedCondition) => {
-            const binaryId = getBinaryId(provenances, dedupdedCondition.id);
+          const conditionsToDisplay = conditionsDataDeduped.map(
+            (dedupdedCondition) => {
+              const binaryId = getBinaryId(provenances, dedupdedCondition.id);
 
-            return {
-              ...setupData(dedupdedCondition),
-              ...(binaryId && {
-                binaryId,
-              }),
-            };
-          }
-        );
+              return {
+                ...setupData(dedupdedCondition),
+                ...(binaryId && {
+                  binaryId,
+                }),
+              };
+            }
+          );
 
-        setConditionsWithDate(conditionsToDisplay.filter((d) => d.date));
-        setConditionsWithoutDate(conditionsToDisplay.filter((d) => !d.date));
-        setIsHistoryLoading(false);
+          setConditionsWithDate(conditionsToDisplay.filter((d) => d.date));
+          setConditionsWithoutDate(conditionsToDisplay.filter((d) => !d.date));
+          setIsHistoryLoading(false);
+        }
       }
-    }
 
-    void load();
+      void load();
 
-    return function cleanup() {
-      setConditionsWithDate([]);
-      setConditionsWithoutDate([]);
-      setIsHistoryLoading(true);
-    };
-  }, [condition, getRequestContext, historyResponse.data, onEdit]);
+      return function cleanup() {
+        setConditionsWithDate([]);
+        setConditionsWithoutDate([]);
+        setIsHistoryLoading(true);
+      };
+    }, [condition, getRequestContext, historyResponse.data, onEdit]);
 
-  return (
-    <div className="ctw-space-y-6">
-      <ConditionHeader condition={condition} />
-      <Details
-        data={conditionData(condition)}
-        readOnly={!onEdit}
-        onEdit={() => {
-          onClose();
-          onEdit?.();
-        }}
-      />
-      <HistoryRecords
-        conditionsWithDate={conditionsWithDate}
-        conditionsWithoutDate={conditionsWithoutDate}
-        historyIsLoading={isHistoryLoading}
-      />
-    </div>
-  );
-}, "ConditionsHistory");
+    return (
+      <div className="ctw-space-y-6">
+        <ConditionHeader condition={condition} />
+        <Details
+          data={conditionData(condition)}
+          readOnly={!onEdit}
+          onEdit={() => {
+            onClose();
+            onEdit?.();
+          }}
+        />
+        <HistoryRecords
+          conditionsWithDate={conditionsWithDate}
+          conditionsWithoutDate={conditionsWithoutDate}
+          historyIsLoading={isHistoryLoading}
+        />
+      </div>
+    );
+  },
+  "ConditionsHistory"
+);
 
 type HistoryRecordsProps = {
   conditionsWithDate: CollapsibleDataListStackEntries;
