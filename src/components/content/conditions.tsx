@@ -368,12 +368,10 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
         <PatientHistoryRequestDrawer
           header={
             <>
-              {patientHistoryInfo.status !== "done" && (
-                <PatientHistoryStatus
-                  status={patientHistoryInfo.status}
-                  date={patientHistoryInfo.dateCreated}
-                />
-              )}
+              <PatientHistoryStatus
+                status={patientHistoryInfo.status}
+                date={patientHistoryInfo.dateCreated}
+              />
               <div className="ctw-pt-0 ctw-text-base">
                 Request patient clinical history from 70K+ providers across the
                 nation. No changes will be made to your patient record.
