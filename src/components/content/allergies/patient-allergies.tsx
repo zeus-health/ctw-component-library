@@ -26,7 +26,7 @@ export function PatientAllergies({ className }: PatientAllergiesProps) {
   const { isLoading } = patientAllergiesQuery;
 
   return (
-    <StackedWrapper className={cx("ctw-patient-medications", className)}>
+    <StackedWrapper className={cx("ctw-patient-allergies", className)}>
       <Heading title="Allergies" />
       <div
         ref={containerRef}
