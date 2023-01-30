@@ -14,7 +14,7 @@ export type HistoricalMedRecordsTableProps = {
  * Displays a table of historical medical records. These are medications from
  * other providers that have been dismissed by the builder viewing the table.
  */
-export function HistoricalMedRecordsTable({
+export function ProviderInactiveMedicationsTable({
   className,
 }: HistoricalMedRecordsTableProps) {
   const [medicationModels, setMedicationModels] = useState<
@@ -23,8 +23,7 @@ export function HistoricalMedRecordsTable({
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedMedication, setSelectedMedication] =
     useState<MedicationStatementModel>();
-  const { dismissedOtherProviderMedications, isLoading } =
-    useQueryAllPatientMedications();
+  const { builderMedications, isLoading } = useQueryAllPatientMedications();
 
   function openMedicationDrawer(row: MedicationStatementModel) {
     setSelectedMedication(row);
@@ -32,15 +31,15 @@ export function HistoricalMedRecordsTable({
   }
 
   useEffect(() => {
-    if (!dismissedOtherProviderMedications) return;
+    if (!builderMedications) return;
     setMedicationModels(
       sort(
-        dismissedOtherProviderMedications,
+        builderMedications.filter((bm) => bm.displayStatus !== "Active"),
         pipe(get("display"), toLower),
         "asc"
       )
     );
-  }, [dismissedOtherProviderMedications]);
+  }, [builderMedications]);
 
   return (
     <>

@@ -1,11 +1,11 @@
 import { Tab } from "@headlessui/react";
 import cx from "classnames";
 import { useRef, useState } from "react";
-import { HistoricalMedRecordsTable } from "@/components/content/medications/historical-med-records-table";
 import {
   BadgeOtherProviderMedCount,
   OtherProviderMedsTable,
 } from "@/components/content/medications/other-provider-meds-table";
+import { ProviderInactiveMedicationsTable } from "@/components/content/medications/provider-inactive-medications-table";
 import { ProviderMedsTable } from "@/components/content/medications/provider-meds-table";
 import * as CTWBox from "@/components/core/ctw-box";
 import { ListBox } from "@/components/core/list-box/list-box";
@@ -24,9 +24,9 @@ const tabbedContent = [
     render: () => <ProviderMedsTable />,
   },
   {
-    key: "historical",
-    display: () => "Historical",
-    render: () => <HistoricalMedRecordsTable />,
+    key: "inactive",
+    display: () => "Inactive",
+    render: () => <ProviderInactiveMedicationsTable />,
   },
   {
     key: "other-provider-records",

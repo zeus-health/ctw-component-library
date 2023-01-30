@@ -190,9 +190,12 @@ export function splitMedications(
 
   // Get builder owned medications and splash in some data from lens meds if available.
   const builderMedications = builderOwnedMedications.map((m) => {
-    const activeMed = find((a) => a.rxNorm === m.rxNorm, summarizedMedications);
+    const summarizedMed = find(
+      (a) => a.rxNorm === m.rxNorm,
+      summarizedMedications
+    );
 
-    if (!activeMed || activeMed.status !== "active") {
+    if (!summarizedMed) {
       return m;
     }
 
@@ -208,14 +211,14 @@ export function splitMedications(
       LENS_EXTENSION_MEDICATION_LAST_PRESCRIBER,
     ];
 
-    builderMedResource.extension = activeMed.resource.extension?.filter((x) =>
-      LENS_MEDICATION_EXTENSIONS.includes(x.url)
+    builderMedResource.extension = summarizedMed.resource.extension?.filter(
+      (x) => LENS_MEDICATION_EXTENSIONS.includes(x.url)
     );
 
     const medHistory = cloneDeep(
       find(
         { url: LENS_EXTENSION_AGGREGATED_FROM },
-        activeMed.resource.extension
+        summarizedMed.resource.extension
       )
     );
     if (medHistory) {
@@ -232,14 +235,9 @@ export function splitMedications(
     );
   });
 
-  const dismissedOtherProviderMedications = summarizedMedications.filter(
-    ({ isArchived, status }) => isArchived || status !== "active"
-  );
-
   return {
     builderMedications,
     otherProviderMedications,
-    dismissedOtherProviderMedications,
   };
 }
 
