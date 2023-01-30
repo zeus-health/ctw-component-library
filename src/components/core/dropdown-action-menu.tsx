@@ -13,16 +13,18 @@ export type MenuItem = {
 
 export type DropdownMenuProps = {
   children: ReactNode;
-  menuItems: MenuItem[];
+  options: string[];
+  optionsAction: () => void;
   pinnedActions: MenuItem[];
 };
 
 export function DropdownMenuAction({
   children,
-  menuItems,
+  options,
   pinnedActions,
 }: DropdownMenuProps) {
   const { ctwProviderRef } = useCTW();
+  console.log("options", options);
 
   return (
     <Menu>
@@ -45,16 +47,12 @@ export function DropdownMenuAction({
             className="ctw-dropdown-action-menu"
             collisionPadding={10}
           >
-            {menuItems.map((menuItem) => (
+            {options.map((menuItem) => (
               <RadixDropdownMenu.Item
-                onClick={() => menuItem.action()}
-                key={menuItem.name}
-                className={cx(
-                  menuItem.className,
-                  "ctw-dropdown-action-menu-item"
-                )}
+                key={menuItem}
+                className={cx("ctw-dropdown-action-menu-item")}
               >
-                {menuItem.name}
+                {menuItem}
               </RadixDropdownMenu.Item>
             ))}
             <RadixDropdownMenu.Separator className="ctw-dropdown-separator" />

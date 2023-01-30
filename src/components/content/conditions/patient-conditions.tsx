@@ -64,6 +64,7 @@ export function PatientConditions({
 
   // Get our conditions.
   const patientConditions = patientConditionsQuery.data ?? [];
+  console.log("patientConditionsQuery", patientConditionsQuery.data);
   const otherConditions = filterOtherConditions(
     otherConditionsQuery.data ?? [],
     patientConditions,
@@ -97,7 +98,6 @@ export function PatientConditions({
 
         <PatientConditionsActions
           hideAdd={readOnly || filters.activeCollection === "other"}
-          updateFilters={updateFilters}
           actions={actions}
           filters={filters}
           availableFilters={currentAndAvailableFilterMap(

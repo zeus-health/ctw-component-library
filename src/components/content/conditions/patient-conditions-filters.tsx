@@ -3,7 +3,7 @@ import { useState } from "react";
 import { DropdownMenuAction } from "@/components/core/dropdown-action-menu";
 import { ConditionModel } from "@/fhir/models";
 import { DisplayStatus } from "@/fhir/models/condition";
-import { uniq } from "@/utils/nodash";
+import { compact, uniq } from "@/utils/nodash";
 
 export type FilterCollection = "patient" | "other";
 export type FilterTypes = { status?: DisplayStatus[]; ccsChapter?: string[] };
@@ -19,10 +19,10 @@ export type FilterActions = {
 
 export type AvailableFilters = {
   [key: string]: {
-    selected: unknown[];
-    avalable: unknown[];
-  }[];
-};
+    selected: string[];
+    available: string[];
+  };
+}[];
 
 const DEFAULT_FILTER_STATE: Omit<Filters, "activeCollection"> = {
   patient: {
@@ -32,7 +32,8 @@ const DEFAULT_FILTER_STATE: Omit<Filters, "activeCollection"> = {
   other: { status: ["Active", "Pending"] },
 };
 
-const filterMap = { status: "status", ccsChapter: "category" };
+const FILTER_MAP = { status: "status", ccsChapter: "category" };
+
 export function useConditionFilters() {
   const [filters, setFilters] = useState<Filters>({
     activeCollection: "patient",
@@ -82,13 +83,17 @@ export function useConditionFilters() {
     patientConditions: ConditionModel[],
     otherConditions: ConditionModel[]
   ) {
+    console.log(
+      "availableFilters(patientConditions, otherConditions)",
+      availableFilters(patientConditions, otherConditions)
+    );
     return Object.entries(
       availableFilters(patientConditions, otherConditions)
     ).map(([key, values]) => {
       const selected = filters[filters.activeCollection][key] || [];
       return {
-        [filterMap[key as keyof typeof filterMap]]: {
-          available: values,
+        [FILTER_MAP[key as keyof typeof FILTER_MAP]]: {
+          available: compact(values),
           selected: selected.filter((val) => values.includes(val)),
         },
       };
@@ -106,7 +111,7 @@ export function useConditionFilters() {
 
     return {
       status: uniq(conditions.map((c) => c.displayStatus)),
-      cssChapter: uniq(conditions.map((c) => c.ccsChapter)),
+      ccsChapter: uniq(conditions.map((c) => c.ccsChapter)),
     };
   }
 
@@ -122,7 +127,7 @@ export function useConditionFilters() {
 
 export const AddFilter = ({ actions }) => (
   <DropdownMenuAction
-    menuItems={[{ name: "Category" }, { name: "Status" }]}
+    options={["Category", "Status"]}
     pinnedActions={[
       { name: "Reset Filters", action: () => actions.resetFilters() },
       {

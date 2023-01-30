@@ -1,8 +1,10 @@
 import { PlusIcon } from "@heroicons/react/outline";
+import { Fragment } from "react";
 import { useAddConditionForm } from "./condition-hooks";
 import { PatientConditionPill } from "./patient-condition-pill";
 import {
   AddFilter,
+  AvailableFilters,
   FilterActions,
   Filters,
 } from "./patient-conditions-filters";
@@ -11,7 +13,7 @@ import { DropdownMenuAction } from "@/components/core/dropdown-action-menu";
 export type PatientConditionsActionsProps = {
   hideAdd: boolean;
   filters: Filters;
-  availableFilters: Record<string, unknown>;
+  availableFilters: AvailableFilters;
   actions: FilterActions;
 };
 
@@ -47,33 +49,36 @@ export function PatientConditionsActions({
 }
 
 type PillWrapper = {
-  availableFilters: any;
+  availableFilters: AvailableFilters;
   actions: FilterActions;
 };
 
 const PillWrapper = ({ availableFilters, actions }: PillWrapper) => (
   <>
     {availableFilters.map((item) =>
-      Object.entries(item).map(([filterName, obj]) => (
-        <DropdownMenuAction
-          key={filterName}
-          menuItems={obj.available.map((name) => ({ name })) || []}
-          pinnedActions={[
-            {
-              name: "Remove Filter",
-              action: () => {
-                actions.removeFilter(filterName);
-              },
-            },
-          ]}
-        >
-          {obj.selected.length > 0 && (
-            <PatientConditionPill
-              title={filterName}
-              items={obj.selected || []}
-            />
+      Object.entries(item).map(([filterName, filters]) => (
+        <Fragment key={filterName}>
+          {filters.available.length > 0 && (
+            <DropdownMenuAction
+              options={filters.available}
+              pinnedActions={[
+                {
+                  name: "Remove Filter",
+                  action: () => {
+                    actions.removeFilter(filterName);
+                  },
+                },
+              ]}
+            >
+              {filters.selected.length > 0 && (
+                <PatientConditionPill
+                  title={filterName}
+                  items={filters.selected}
+                />
+              )}
+            </DropdownMenuAction>
           )}
-        </DropdownMenuAction>
+        </Fragment>
       ))
     )}
   </>
