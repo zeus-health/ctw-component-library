@@ -23,6 +23,8 @@ export const SYSTEM_TASK_STATUS =
 export const SYSTEM_CCS =
   "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp";
 
+export const SYSTEM_CVX = "http://hl7.org/fhir/sid/cvx";
+
 export const SYSTEM_ICD9 = "http://hl7.org/fhir/sid/icd-9";
 
 export const SYSTEM_ICD9_CM = "http://hl7.org/fhir/sid/icd-9-cm";

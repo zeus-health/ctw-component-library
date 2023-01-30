@@ -35,7 +35,6 @@ export const CollapsibleDataListStack = ({
             data={entry.data}
             hideEmpty={entry.hideEmpty}
             documentButton={entry.documentButton}
-            binaryId={entry.binaryId}
           />
         </div>
       ))}

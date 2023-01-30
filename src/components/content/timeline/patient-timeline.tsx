@@ -3,7 +3,6 @@ import { patientTimelineColumns } from "./patient-timeline-columns";
 import { Table } from "@/components/core/table/table";
 import { usePatientEncounters } from "@/fhir/encounters";
 import { orderBy } from "@/utils/nodash";
-import "./patient-timeline.scss";
 
 export type PatientTimelineProps = {
   className?: string;

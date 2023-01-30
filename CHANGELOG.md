@@ -1,5 +1,55 @@
 # ctw-component-library
 
+## 0.42.0
+
+### Minor Changes
+
+- e2d7ffef: Dedupe allergies and add manifestation column.
+
+## 0.41.1
+
+### Patch Changes
+
+- 775adf6f: Fix immunization query key.
+
+## 0.41.0
+
+### Minor Changes
+
+- 51bdf383: Add a View FHIR button to Allergies, Immunization, and Timeline components.
+
+## 0.40.3
+
+### Patch Changes
+
+- 448c21f7: Add immunization component
+- 6a913ad2: Add diagnosis and more info to patient timeline table.
+- 72350620: Add source documents to patient timeline / encounter details.
+
+## 0.40.2
+
+### Patch Changes
+
+- 43b5ddd8: Forgot to export the Allergies component
+
+## 0.40.1
+
+### Patch Changes
+
+- ecf3e710: Added PatientAllergies component
+
+## 0.40.0
+
+### Minor Changes
+
+- 2b15a12c: Update styling and layout for conditions 2.0.
+
+### Patch Changes
+
+- be32d6a9: Added `data-test-id` to form elements to target them easier in tests.
+- c26aebc7: Fix spacing on tabs.
+- d126ec06: Add more form validations to patient history request form.
+
 ## 0.39.6
 
 ### Patch Changes

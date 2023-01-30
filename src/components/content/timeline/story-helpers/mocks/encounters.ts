@@ -128,6 +128,20 @@ export const encounters: fhir4.Bundle = {
               display: "Upper respiratory infection, acute",
             },
           },
+          {
+            condition: {
+              reference: "Condition/12345",
+              type: "Condition",
+              display: "Difficulty breathing",
+            },
+          },
+          {
+            condition: {
+              reference: "Condition/12345",
+              type: "Condition",
+              display: "Infection",
+            },
+          },
         ],
         location: [
           {
@@ -658,6 +672,27 @@ export const encounters: fhir4.Bundle = {
               reference: "Practitioner/26da410b-44d7-49ec-9827-26fc34f8aad7",
               type: "Practitioner",
               display: "Michael Morris, MD",
+            },
+          },
+          {
+            individual: {
+              reference: "Practitioner/12345",
+              type: "Practitioner",
+              display: "Jenny Morris, MD",
+            },
+          },
+          {
+            individual: {
+              reference: "Practitioner/12345",
+              type: "Practitioner",
+              display: "Rose Donald",
+            },
+          },
+          {
+            individual: {
+              reference: "Practitioner/12345",
+              type: "Practitioner",
+              display: "Al Bundy",
             },
           },
         ],
