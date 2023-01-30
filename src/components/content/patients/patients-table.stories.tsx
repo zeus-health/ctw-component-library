@@ -11,7 +11,7 @@ type Props = PatientsTableProps;
 const MOCKED_PATIENT_COUNT = 17;
 
 export default {
-  tags: ["docsPage"],
+  tags: ["autodocs"],
   component: PatientsTable,
   decorators: [
     (Story, { args }) => (

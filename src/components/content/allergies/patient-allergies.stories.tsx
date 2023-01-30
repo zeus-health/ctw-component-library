@@ -12,7 +12,7 @@ import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 type Props = PatientAllergiesProps;
 
 export default {
-  tags: ["docsPage"],
+  tags: ["autodocs"],
   component: PatientAllergies,
   decorators: [
     (Story, { args }) => (
