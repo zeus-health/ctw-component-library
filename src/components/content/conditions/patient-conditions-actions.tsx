@@ -5,10 +5,14 @@ import { PatientConditionPill } from "./patient-condition-pill";
 import {
   AddFilter,
   AvailableFilters,
+  FILTER_MAP,
   FilterActions,
   Filters,
 } from "./patient-conditions-filters";
-import { DropdownMenuAction } from "@/components/core/dropdown-action-menu";
+import {
+  DropdownMenuAction,
+  OptionsItem,
+} from "@/components/core/dropdown-action-menu";
 
 export type PatientConditionsActionsProps = {
   hideAdd: boolean;
@@ -72,6 +76,7 @@ const PillWrapper = ({ availableFilters, actions }: PillWrapper) => (
                     e.name
                   );
                 },
+                type: "checkbox",
               }}
               pinnedActions={[
                 {
@@ -84,7 +89,7 @@ const PillWrapper = ({ availableFilters, actions }: PillWrapper) => (
             >
               {filters.selected.length > 0 && (
                 <PatientConditionPill
-                  title={filterName}
+                  title={FILTER_MAP[filterName]}
                   items={filters.selected}
                 />
               )}
@@ -94,4 +99,29 @@ const PillWrapper = ({ availableFilters, actions }: PillWrapper) => (
       ))
     )}
   </>
+);
+
+export type RadioSelectProps = {
+  menuItem: OptionsItem;
+  onClick: (clickedValue: any) => void;
+};
+
+export const RadioSelect = ({ menuItem, onClick }: RadioSelectProps) => (
+  <div>
+    <input
+      type="checkbox"
+      id={menuItem.name}
+      name={menuItem.name}
+      onClick={(e) => {
+        const clickedValue = {
+          name: e.target.value,
+          value: e.target.checked,
+        };
+        onClick(clickedValue);
+      }}
+      value={menuItem.name}
+      checked={menuItem.isSelected}
+    />
+    <label htmlFor={menuItem.name}> {menuItem.name}</label>
+  </div>
 );

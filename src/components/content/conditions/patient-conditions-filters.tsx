@@ -37,7 +37,7 @@ const DEFAULT_FILTER_STATE: Omit<Filters, "activeCollection"> = {
   other: { status: ["Active", "Pending"] },
 };
 
-const FILTER_MAP = { status: "status", ccsChapter: "category" };
+export const FILTER_MAP = { status: "status", ccsChapter: "category" };
 
 export function useConditionFilters() {
   const [filters, setFilters] = useState<Filters>({
@@ -46,11 +46,7 @@ export function useConditionFilters() {
   });
 
   function updateFilters(newFilters: Partial<Filters>) {
-    console.log("prev state", newFilters);
-    setFilters((prevState) => {
-      console.log("test", filters);
-      return { ...prevState, ...newFilters };
-    });
+    setFilters((prevState) => ({ ...prevState, ...newFilters }));
   }
 
   const actions = {
@@ -65,10 +61,6 @@ export function useConditionFilters() {
       filterType: "ADD" | "REMOVE",
       value: string
     ) => {
-      console.log(
-        "test",
-        filters[filters.activeCollection][FILTER_MAP[filterName]]
-      );
       let newValues = [...filters[filters.activeCollection][filterName]];
       switch (filterType) {
         case "ADD":
@@ -126,7 +118,7 @@ export function useConditionFilters() {
     ).map(([key, values]) => {
       const selected = filters[filters.activeCollection][key] || [];
       return {
-        [FILTER_MAP[key as keyof typeof FILTER_MAP]]: {
+        [key]: {
           available: compact(values),
           selected: selected.filter((val) => values.includes(val)),
         },

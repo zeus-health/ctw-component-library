@@ -11,12 +11,17 @@ export type MenuItem = {
   className?: string;
 };
 
+export type OptionsItem = { name: string; isSelected: boolean };
+export type DropDownMenuItemType = "checkbox" | "select";
+
 export type DropdownMenuProps = {
   children: ReactNode;
   options: {
-    items: { name: string; isSelected: boolean }[];
+    items: OptionsItem[];
     onItemSelect: (clickedItem: { name: string; value: boolean }) => void;
+    type: DropDownMenuItemType;
   };
+  customOptionRender?: (optionsItem: OptionsItem) => JSX.Element;
   pinnedActions: MenuItem[];
 };
 
@@ -26,7 +31,6 @@ export function DropdownMenuAction({
   pinnedActions,
 }: DropdownMenuProps) {
   const { ctwProviderRef } = useCTW();
-  console.log("options", options);
 
   return (
     <Menu>
@@ -54,27 +58,14 @@ export function DropdownMenuAction({
                 key={menuItem.name}
                 className={cx("ctw-dropdown-action-menu-item")}
                 onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
+                  console.log("e", e);
                 }}
               >
-                <input
-                  type="checkbox"
-                  id={menuItem.name}
-                  name={menuItem.name}
-                  onClick={(e) => {
-                    console.log("hello", e.target.checked);
-                    const clickedValue = {
-                      name: e.target.value,
-                      value: e.target.checked,
-                    };
-                    options.onItemSelect(clickedValue);
-                    console.log("clickedValue", clickedValue);
-                  }}
-                  value={menuItem.name}
-                  checked={menuItem.isSelected}
+                <RenderCorrectFieldType
+                  inputType={options.type}
+                  menuItem={menuItem}
+                  onClick={options.onItemSelect}
                 />
-                <label htmlFor={menuItem.name}> {menuItem.name}</label>
               </RadixDropdownMenu.Item>
             ))}
 
@@ -97,3 +88,42 @@ export function DropdownMenuAction({
     </Menu>
   );
 }
+
+export type RenderCorrectFieldTypeProps = {
+  inputType: DropDownMenuItemType;
+  menuItem: OptionsItem;
+  onClick: (value: any) => void;
+};
+
+const RenderCorrectFieldType = ({
+  inputType,
+  menuItem,
+  onClick,
+}: RenderCorrectFieldTypeProps) => {
+  switch (inputType) {
+    case "checkbox":
+      return (
+        <div>
+          <input
+            type="checkbox"
+            id={menuItem.name}
+            name={menuItem.name}
+            onClick={(e) => {
+              const clickedValue = {
+                name: e.target.value,
+                value: e.target.checked,
+              };
+              onClick(clickedValue);
+            }}
+            value={menuItem.name}
+            checked={menuItem.isSelected}
+          />
+          <label htmlFor={menuItem.name}> {menuItem.name}</label>
+        </div>
+      );
+    case "select":
+      return <div>{menuItem.name}</div>;
+    default:
+      return <div>{menuItem.name}</div>;
+  }
+};
