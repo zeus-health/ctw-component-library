@@ -39,7 +39,7 @@ export type PatientHistoryData = {
   dateCreated: string | undefined;
 };
 
-export async function hasFetchedPatientHistory(
+export async function getLatestPatientHistoryMessage(
   requestContext: CTWRequestContext,
   patientID: string
 ): Promise<PatientHistoryData> {
@@ -47,6 +47,11 @@ export async function hasFetchedPatientHistory(
     requestContext,
     patientID
   );
+
+  const lastPatientHistoryRequest = {
+    status: messages[0].status,
+    dateCreated: messages[0]._createdAt,
+  };
 
   if (messages.length === 0) {
     return { patientHistoryExists: false, status: "", dateCreated: undefined };
@@ -56,26 +61,22 @@ export async function hasFetchedPatientHistory(
     case "done":
       return {
         patientHistoryExists: true,
-        status: "done",
-        dateCreated: messages[0]._createdAt,
+        ...lastPatientHistoryRequest,
       };
     case "in_progress":
       return {
-        patientHistoryExists: true,
-        status: "in_progress",
-        dateCreated: messages[0]._createdAt,
+        patientHistoryExists: false,
+        ...lastPatientHistoryRequest,
       };
     case "initialize":
       return {
-        patientHistoryExists: true,
-        status: "initialize",
-        dateCreated: messages[0]._createdAt,
+        patientHistoryExists: false,
+        ...lastPatientHistoryRequest,
       };
     case "error":
       return {
         patientHistoryExists: true,
-        status: "error",
-        dateCreated: messages[0]._createdAt,
+        ...lastPatientHistoryRequest,
       };
     default:
       return {

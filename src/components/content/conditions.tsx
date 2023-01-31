@@ -38,7 +38,7 @@ import {
 import { ConditionModel } from "@/fhir/models/condition";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import {
-  hasFetchedPatientHistory,
+  getLatestPatientHistoryMessage,
   PatientHistoryData,
 } from "@/services/patient-history/patient-history";
 import { AnyZodSchema } from "@/utils/form-helper";
@@ -160,7 +160,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
       patientHistoryExists: patientHistoryFetched,
       status,
       dateCreated,
-    } = await hasFetchedPatientHistory(requestContext, patientID);
+    } = await getLatestPatientHistoryMessage(requestContext, patientID);
 
     setClinicalHistoryExists(patientHistoryFetched);
     setPatientHistoryInfo({
