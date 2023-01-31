@@ -28,10 +28,6 @@ export function PatientAllergies({ className }: PatientAllergiesProps) {
     openDetails(allergy);
   }
 
-  // Get our allergies.
-  const allergies = patientAllergiesQuery.data ?? [];
-  const { isLoading } = patientAllergiesQuery;
-
   return (
     <div
       ref={containerRef}
@@ -48,8 +44,8 @@ export function PatientAllergies({ className }: PatientAllergiesProps) {
         RowActions={viewRecordFHIR}
         stacked={breakpoints.sm}
         className="-ctw-mx-px !ctw-rounded-none"
-        isLoading={isLoading}
-        records={allergies}
+        isLoading={patientAllergiesQuery.isLoading}
+        records={patientAllergiesQuery.data ?? []}
         columns={patientAllergiesColumns}
         handleRowClick={handleRowClick}
       />
