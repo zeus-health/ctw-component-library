@@ -3,6 +3,7 @@ import {
   PatientConditions,
   PatientConditionsProps,
 } from "./patient-conditions";
+import { emptyConditions } from "./story-helpers/mocks/empty-conditions";
 import { otherConditions } from "./story-helpers/mocks/other-conditions";
 import { patientConditions } from "./story-helpers/mocks/patient-conditions";
 import { setupConditionMocks } from "./story-helpers/mocks/requests";
@@ -14,7 +15,7 @@ type Props = PatientConditionsProps;
 
 export default {
   component: PatientConditions,
-  tags: ["docsPage"],
+  tags: ["autodocs"],
   argTypes: {
     className: {
       options: ["Blank", "Fixed Width"],
@@ -42,4 +43,11 @@ export default {
 
 export const Basic: StoryObj<Props> = {
   ...setupConditionMocks({ otherConditions, patientConditions }),
+};
+
+export const Empty: StoryObj<Props> = {
+  ...setupConditionMocks({
+    otherConditions: emptyConditions,
+    patientConditions: emptyConditions,
+  }),
 };
