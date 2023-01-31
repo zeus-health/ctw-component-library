@@ -1,5 +1,6 @@
 import cx from "classnames";
 import { useRef } from "react";
+import { useAllergyDetailsDrawer } from "./allergy-details-drawer";
 import { patientAllergiesColumns } from "@/components/content/allergies/patient-allergies-column";
 import { Heading } from "@/components/core/ctw-box";
 import { Table } from "@/components/core/table/table";
@@ -20,6 +21,12 @@ export function PatientAllergies({ className }: PatientAllergiesProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const patientAllergiesQuery = usePatientAllergies();
+
+  const openDetails = useAllergyDetailsDrawer();
+
+  function handleRowClick(allergy: AllergyModel) {
+    openDetails(allergy);
+  }
 
   // Get our allergies.
   const allergies = patientAllergiesQuery.data ?? [];
@@ -44,6 +51,7 @@ export function PatientAllergies({ className }: PatientAllergiesProps) {
         isLoading={isLoading}
         records={allergies}
         columns={patientAllergiesColumns}
+        handleRowClick={handleRowClick}
       />
     </div>
   );

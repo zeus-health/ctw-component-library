@@ -3,6 +3,10 @@ import { AllergyModel } from "@/fhir/models/allergies";
 
 export const patientAllergiesColumns: TableColumn<AllergyModel>[] = [
   {
+    title: "Onset",
+    dataIndex: "onset",
+  },
+  {
     title: "Description",
     dataIndex: "display",
   },
@@ -13,9 +17,5 @@ export const patientAllergiesColumns: TableColumn<AllergyModel>[] = [
   {
     title: "Category",
     dataIndex: "categories",
-  },
-  {
-    title: "Onset",
-    dataIndex: "onset",
   },
 ];
