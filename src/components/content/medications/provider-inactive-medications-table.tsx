@@ -11,8 +11,9 @@ export type InactiveMedRecordsTableProps = {
 };
 
 /**
- * Displays a table of historical medical records. These are medications from
- * other providers that have been dismissed by the builder viewing the table.
+ * Displays a table of inactive medication records. These are builder-owned medications
+ * that have a status other than "active". These are not to be confused with "dismissed" or "archived"
+ * medication records pulled from the network of other providers.
  */
 export function ProviderInactiveMedicationsTable({
   className,
