@@ -10,6 +10,7 @@ import { SecuredApp } from "./SecuredApp";
 import { PatientConditions } from "./components/content/conditions/patient-conditions";
 import { PatientMedicationsTabbed } from "./components/content/medications/patient-medications-tabbed";
 import { PatientAllergies } from "@/components/content/allergies/patient-allergies";
+import { PatientImmunizations } from "./components/content/immunizations/patient-immunizations";
 
 const {
   VITE_SYSTEM_URL,
