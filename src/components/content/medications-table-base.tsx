@@ -1,9 +1,13 @@
 import type { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { DotsHorizontalIcon } from "@heroicons/react/outline";
-import { ReactNode, useRef } from "react";
-import { MinRecordItem, TableColumn } from "../core/table/table-helpers";
+import { ReactNode, useRef, useState } from "react";
 import { DropdownMenu, MenuItem } from "@/components/core/dropdown-menu";
 import { Table, TableBaseProps } from "@/components/core/table/table";
+import {
+  MinRecordItem,
+  TableColumn,
+  TableSort,
+} from "@/components/core/table/table-helpers";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { compact, isFunction } from "@/utils/nodash/fp";
 
@@ -27,6 +31,7 @@ export const MedicationsTableBase = ({
 }: MedicationsTableBaseProps<MedicationStatementModel>) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
+  const [sort, setSort] = useState<TableSort>();
 
   const columns = compact([
     {
@@ -37,6 +42,9 @@ export const MedicationsTableBase = ({
           <div className="ctw-font-light">{medication.dosage}</div>
         </>
       ),
+      widthPercent: 35,
+      minWidth: 270,
+      sortIndices: [{ index: "display" }, { index: "dosage", dir: "asc" }],
     },
     {
       title: "Dispensed",
@@ -46,6 +54,7 @@ export const MedicationsTableBase = ({
           {medication.refills && <div>{medication.refills} refills</div>}
         </>
       ),
+      widthPercent: 14,
     },
     {
       title: "Status",
@@ -57,16 +66,17 @@ export const MedicationsTableBase = ({
           )}
         </div>
       ),
-      widthPercent: 17.5,
-      minWidth: 128,
       sortIndices: [
         { index: "status" },
         { index: "dateAsserted", dir: "desc" },
       ],
+      widthPercent: 14,
     },
     {
       title: "Last Filled",
       dataIndex: "lastFillDate",
+      sortIndices: [{ index: "lastFillDate" }],
+      widthPercent: 18,
     },
     {
       title: "Last Prescribed",
@@ -78,6 +88,12 @@ export const MedicationsTableBase = ({
           {medication.lastPrescriber && <div>{medication.lastPrescriber}</div>}
         </>
       ),
+      sortIndices: [
+        { index: "lastPrescribedDate" },
+        { index: "lastPrescriber", dir: "asc" },
+      ],
+      widthPercent: 18,
+      minWidth: "90px",
     },
   ]) as TableColumn<MedicationStatementModel>[];
 
@@ -102,6 +118,8 @@ export const MedicationsTableBase = ({
       data-zus-telemetry-namespace={telemetryNamespace}
     >
       <Table
+        sort={sort}
+        onSort={setSort}
         stacked={breakpoints.sm}
         records={medicationStatements}
         columns={columns}

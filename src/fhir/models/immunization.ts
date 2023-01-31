@@ -13,7 +13,7 @@ export class ImmunizationModel extends FHIRModel<fhir4.Immunization> {
     return cvxCoding?.code;
   }
 
-  get occurance(): string | undefined {
+  get occurrence(): string | undefined {
     if (this.resource.occurrenceDateTime) {
       return formatDateISOToLocal(this.resource.occurrenceDateTime);
     }

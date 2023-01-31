@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { MedicationDrawer } from "@/components/content/medication-drawer";
 import { MedicationsTableBase } from "@/components/content/medications-table-base";
 import { AddNewMedDrawer } from "@/components/content/medications/add-new-med-drawer";
+import { Badge } from "@/components/core/badge";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useDismissMedication } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
+import { isArray } from "@/utils/nodash";
 import { compact, get, pipe, toLower } from "@/utils/nodash/fp";
 import { sort, SortDir } from "@/utils/sort";
 
@@ -106,3 +108,20 @@ export const OtherProviderMedsTable = withErrorBoundary(
   },
   "OtherProviderMedsTable"
 );
+
+export const BadgeOtherProviderMedCount = () => {
+  const { otherProviderMedications } = useQueryAllPatientMedications();
+  if (
+    isArray(otherProviderMedications) &&
+    otherProviderMedications.length > 0
+  ) {
+    return (
+      <Badge
+        color="primary"
+        text={otherProviderMedications.length.toString()}
+        className="ctw-h-5"
+      />
+    );
+  }
+  return null;
+};

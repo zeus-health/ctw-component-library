@@ -12,9 +12,9 @@ export const TableColGroup = <T extends MinRecordItem>({
       <col
         key={column.title ?? index}
         className={column.className}
+        width={column.widthPercent ? `${column.widthPercent}%` : "0*"}
         style={{
           minWidth: column.minWidth,
-          width: `${column.widthPercent}%`,
         }}
       />
     ))}
