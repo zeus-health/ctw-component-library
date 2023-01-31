@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Auth0Provider } from "@auth0/auth0-react";
 import "./App.css";
 import { Conditions } from "./components/content/conditions";
@@ -7,6 +8,7 @@ import { PatientProvider } from "./components/core/providers/patient-provider";
 import { ErrorBoundary } from "./error-boundary";
 import { SecuredApp } from "./SecuredApp";
 import { PatientConditions } from "./components/content/conditions/patient-conditions";
+import { PatientMedicationsTabbed } from "./components/content/medications/patient-medications-tabbed";
 import { PatientAllergies } from "@/components/content/allergies/patient-allergies";
 import { PatientImmunizations } from "./components/content/immunizations/patient-immunizations";
 
@@ -22,6 +24,27 @@ const {
   VITE_ENV = "dev",
 } = import.meta.env;
 
+type DemoComponent = {
+  render: () => ReactNode;
+  title: string;
+  note?: string;
+};
+const demoComponents: DemoComponent[] = [
+  {
+    render: () => <PatientMedicationsTabbed />,
+    title: "Patient Medications Tabbed",
+  },
+  { render: () => <PatientAllergies />, title: "Patient Allergies" },
+  { render: () => <Conditions />, title: "Patient Conditions" },
+  { render: () => <PatientConditions />, title: "Patient Conditions 2.0" },
+  { render: () => <PatientMedications />, title: "Patient Medications" },
+  {
+    render: () => <PatientMedications readOnly />,
+    title: "Patient Medications",
+    note: "(readonly)",
+  },
+];
+
 const DemoApp = ({ accessToken = "" }) => (
   <CTWProvider
     env={VITE_ENV}
@@ -32,50 +55,14 @@ const DemoApp = ({ accessToken = "" }) => (
       <div className="App">
         <h1>CTW Component Library</h1>
 
-        <div className="ctw-space-y-5">
-          <h3>
-            Immunizations <small>(default)</small>
-          </h3>
-          <ErrorBoundary>
-            <PatientImmunizations />
-          </ErrorBoundary>
-        </div>
-
-        <div className="ctw-space-y-5">
-          <h3>
-            Allergies <small>(default)</small>
-          </h3>
-          <ErrorBoundary>
-            <PatientAllergies />
-          </ErrorBoundary>
-        </div>
-
-        <div className="ctw-space-y-5">
-          <h3>
-            Conditions <small>(default)</small>
-          </h3>
-          <ErrorBoundary>
-            <Conditions />
-          </ErrorBoundary>
-        </div>
-
-        <div className="ctw-space-y-5">
-          <h3>
-            Conditions 2.0 <small>(default)</small>
-          </h3>
-          <ErrorBoundary>
-            <PatientConditions />
-          </ErrorBoundary>
-        </div>
-
-        <div className="ctw-space-y-5">
-          <h3>
-            Medications <small>(default)</small>
-          </h3>
-          <ErrorBoundary>
-            <PatientMedications />
-          </ErrorBoundary>
-        </div>
+        {demoComponents.map((demo) => (
+          <div className="ctw-space-y-5 ctw-bg-white" key={demo.title}>
+            <h3>
+              {demo.title} <small>{demo.note ?? "(default)"}</small>
+            </h3>
+            <ErrorBoundary>{demo.render()}</ErrorBoundary>
+          </div>
+        ))}
       </div>
     </PatientProvider>
   </CTWProvider>
