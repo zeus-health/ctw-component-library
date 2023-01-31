@@ -6,7 +6,7 @@ import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { get, pipe, toLower } from "@/utils/nodash/fp";
 import { sort } from "@/utils/sort";
 
-export type HistoricalMedRecordsTableProps = {
+export type InactiveMedRecordsTableProps = {
   className?: string;
 };
 
