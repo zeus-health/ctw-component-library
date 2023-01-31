@@ -16,6 +16,7 @@ import {
 } from "@/api/patient-history";
 import { PatientModel } from "@/fhir/models";
 import { getFormResponseErrors } from "@/utils/errors";
+import { Telemetry } from "@/utils/telemetry";
 
 type PatientHistoryRequestDrawer<T> = Pick<
   DrawerFormWithFieldsProps<T>,
@@ -52,6 +53,7 @@ export const PatientHistoryRequestDrawer = <T,>({
         return new Error(requestErrors.join(","));
       }
 
+      Telemetry.logError(e as Error, "Failed to save patient data.");
       return new Error("Failed to save patient data.");
     }
 

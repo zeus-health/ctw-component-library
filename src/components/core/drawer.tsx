@@ -44,6 +44,7 @@ export function Drawer({
     <Transition.Root show={isOpen} as={Fragment}>
       <Dialog
         as="div"
+        data-zus-telemetry-namespace={`Drawer[${title}]`}
         className={cx("ctw-relative ctw-z-[10000]", className)}
         onClose={() => {
           if (!disableCloseOnBlur) {
@@ -90,6 +91,7 @@ export function Drawer({
                           type="button"
                           aria-label="close"
                           onClick={onClose}
+                          data-zus-telemetry-click="Close icon"
                           className="ctw-btn-clear"
                         >
                           <span className="ctw-sr-only">Close panel</span>
@@ -128,6 +130,7 @@ Drawer.CloseFooter = ({ onClose }: { onClose: () => void }) => (
       <button
         type="button"
         className="ctw-btn-default ctw-font-semibold ctw-outline-bg-light"
+        data-zus-telemetry-click="Close button"
         onClick={onClose}
       >
         Close

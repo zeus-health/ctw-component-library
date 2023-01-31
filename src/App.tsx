@@ -50,13 +50,14 @@ const DemoApp = ({ accessToken = "" }) => (
     env={VITE_ENV}
     authToken={accessToken}
     builderId={VITE_BUILDER_ID}
+    enableTelemetry
   >
     <PatientProvider patientID={VITE_PATIENT_ID} systemURL={VITE_SYSTEM_URL}>
       <div className="App">
         <h1>CTW Component Library</h1>
 
-        {demoComponents.map((demo) => (
-          <div className="ctw-space-y-5 ctw-bg-white" key={demo.title}>
+        {demoComponents.map((demo, index) => (
+          <div className="ctw-space-y-5 ctw-bg-white" key={index}>
             <h3>
               {demo.title} <small>{demo.note ?? "(default)"}</small>
             </h3>

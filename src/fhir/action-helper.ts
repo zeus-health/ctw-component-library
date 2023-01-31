@@ -10,6 +10,7 @@ import {
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { getUsersPractitionerReference } from "@/fhir/practitioner";
 import { claimsBuilderName } from "@/utils/auth";
+import { Telemetry } from "@/utils/telemetry";
 
 export async function createOrEditFhirResource(
   resource: Resource,
@@ -39,6 +40,7 @@ export async function createOrEditFhirResource(
     }
     return response;
   } catch (err) {
+    Telemetry.logError(err as Error);
     return err;
   }
 }
