@@ -15,6 +15,11 @@ export type Filters = {
 
 export type FilterActions = {
   removeFilter: (filterName: keyof FilterTypes) => void;
+  addToFilter: (
+    filterName: keyof FilterTypes,
+    filterType: "ADD" | "REMOVE",
+    value: string
+  ) => void;
 };
 
 export type AvailableFilters = {
@@ -41,7 +46,11 @@ export function useConditionFilters() {
   });
 
   function updateFilters(newFilters: Partial<Filters>) {
-    setFilters((prevState) => ({ ...prevState, ...newFilters }));
+    console.log("prev state", newFilters);
+    setFilters((prevState) => {
+      console.log("test", filters);
+      return { ...prevState, ...newFilters };
+    });
   }
 
   const actions = {
@@ -51,6 +60,31 @@ export function useConditionFilters() {
       }),
     clearFilters: () => updateFilters({ patient: {}, other: {} }),
     resetFilters: () => updateFilters({ ...DEFAULT_FILTER_STATE }),
+    addToFilter: (
+      filterName: keyof FilterTypes,
+      filterType: "ADD" | "REMOVE",
+      value: string
+    ) => {
+      console.log(
+        "test",
+        filters[filters.activeCollection][FILTER_MAP[filterName]]
+      );
+      let newValues = [...filters[filters.activeCollection][filterName]];
+      switch (filterType) {
+        case "ADD":
+          newValues = [...newValues, value];
+          break;
+        case "REMOVE":
+          newValues = newValues.filter((item) => item !== value);
+          break;
+        default:
+          newValues = [];
+      }
+
+      updateFilters({
+        [filters.activeCollection]: { [filterName]: newValues },
+      });
+    },
   };
 
   function applyFilters(
@@ -127,7 +161,7 @@ export function useConditionFilters() {
 
 export const AddFilter = ({ actions }) => (
   <DropdownMenuAction
-    options={["Category", "Status"]}
+    options={{ items: [{ name: "Category" }, { name: "Status" }] }}
     pinnedActions={[
       { name: "Reset Filters", action: () => actions.resetFilters() },
       {

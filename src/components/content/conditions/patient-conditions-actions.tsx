@@ -60,7 +60,19 @@ const PillWrapper = ({ availableFilters, actions }: PillWrapper) => (
         <Fragment key={filterName}>
           {filters.available.length > 0 && (
             <DropdownMenuAction
-              options={filters.available}
+              options={{
+                items: filters.available.map((filter) => ({
+                  name: filter,
+                  isSelected: filters.selected.includes(filter),
+                })),
+                onItemSelect: (e) => {
+                  actions.addToFilter(
+                    filterName,
+                    e.value ? "ADD" : "REMOVE",
+                    e.name
+                  );
+                },
+              }}
               pinnedActions={[
                 {
                   name: "Remove Filter",

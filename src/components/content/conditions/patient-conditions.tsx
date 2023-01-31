@@ -57,6 +57,7 @@ export function PatientConditions({
   function isLoading() {
     const isLoadingPatient = patientConditionsQuery.isLoading;
     const isLoadingOther = isLoadingPatient || otherConditionsQuery.isLoading;
+
     return filters.activeCollection === "patient"
       ? isLoadingPatient
       : isLoadingOther;

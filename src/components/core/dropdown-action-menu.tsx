@@ -13,8 +13,10 @@ export type MenuItem = {
 
 export type DropdownMenuProps = {
   children: ReactNode;
-  options: string[];
-  optionsAction: () => void;
+  options: {
+    items: { name: string; isSelected: boolean }[];
+    onItemSelect: (clickedItem: { name: string; value: boolean }) => void;
+  };
   pinnedActions: MenuItem[];
 };
 
@@ -47,14 +49,35 @@ export function DropdownMenuAction({
             className="ctw-dropdown-action-menu"
             collisionPadding={10}
           >
-            {options.map((menuItem) => (
+            {options.items.map((menuItem) => (
               <RadixDropdownMenu.Item
-                key={menuItem}
+                key={menuItem.name}
                 className={cx("ctw-dropdown-action-menu-item")}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
               >
-                {menuItem}
+                <input
+                  type="checkbox"
+                  id={menuItem.name}
+                  name={menuItem.name}
+                  onClick={(e) => {
+                    console.log("hello", e.target.checked);
+                    const clickedValue = {
+                      name: e.target.value,
+                      value: e.target.checked,
+                    };
+                    options.onItemSelect(clickedValue);
+                    console.log("clickedValue", clickedValue);
+                  }}
+                  value={menuItem.name}
+                  checked={menuItem.isSelected}
+                />
+                <label htmlFor={menuItem.name}> {menuItem.name}</label>
               </RadixDropdownMenu.Item>
             ))}
+
             <RadixDropdownMenu.Separator className="ctw-dropdown-separator" />
             {pinnedActions.map((menuItem) => (
               <RadixDropdownMenu.Item
