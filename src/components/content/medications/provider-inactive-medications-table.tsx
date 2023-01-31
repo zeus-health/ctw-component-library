@@ -16,7 +16,7 @@ export type InactiveMedRecordsTableProps = {
  */
 export function ProviderInactiveMedicationsTable({
   className,
-}: HistoricalMedRecordsTableProps) {
+}: InactiveMedRecordsTableProps) {
   const [medicationModels, setMedicationModels] = useState<
     MedicationStatementModel[]
   >([]);
