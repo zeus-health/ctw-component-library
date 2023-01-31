@@ -1,5 +1,13 @@
 # ctw-component-library
 
+## 0.42.1
+
+### Patch Changes
+
+- 3e40c2b5: Change font size of rendered react-jason FHIR resources for readability. Also added fhir icon to "view FHIR" button.
+- a6d5303d: Created the PatientMedicationsTabbed component and stories.
+- 0f15d8b9: Add empty state for patient conditions (2.0 component).
+
 ## 0.42.0
 
 ### Minor Changes
