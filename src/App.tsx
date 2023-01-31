@@ -8,6 +8,7 @@ import { ErrorBoundary } from "./error-boundary";
 import { SecuredApp } from "./SecuredApp";
 import { PatientConditions } from "./components/content/conditions/patient-conditions";
 import { PatientAllergies } from "@/components/content/allergies/patient-allergies";
+import { PatientImmunizations } from "./components/content/immunizations/patient-immunizations";
 
 const {
   VITE_SYSTEM_URL,
@@ -33,7 +34,16 @@ const DemoApp = ({ accessToken = "" }) => (
 
         <div className="ctw-space-y-5">
           <h3>
-            Patient Allergies <small>(default)</small>
+            Immunizations <small>(default)</small>
+          </h3>
+          <ErrorBoundary>
+            <PatientImmunizations />
+          </ErrorBoundary>
+        </div>
+
+        <div className="ctw-space-y-5">
+          <h3>
+            Allergies <small>(default)</small>
           </h3>
           <ErrorBoundary>
             <PatientAllergies />
@@ -42,16 +52,16 @@ const DemoApp = ({ accessToken = "" }) => (
 
         <div className="ctw-space-y-5">
           <h3>
-            Patient Conditions <small>(default)</small>
+            Conditions <small>(default)</small>
           </h3>
           <ErrorBoundary>
             <Conditions />
           </ErrorBoundary>
         </div>
 
-        <div className="ctw-space-y-5 ctw-bg-white">
+        <div className="ctw-space-y-5">
           <h3>
-            Patient Conditions 2.0 <small>(default)</small>
+            Conditions 2.0 <small>(default)</small>
           </h3>
           <ErrorBoundary>
             <PatientConditions />
@@ -60,7 +70,7 @@ const DemoApp = ({ accessToken = "" }) => (
 
         <div className="ctw-space-y-5">
           <h3>
-            Patient Meds <small>(default)</small>
+            Medications <small>(default)</small>
           </h3>
           <ErrorBoundary>
             <PatientMedications />
