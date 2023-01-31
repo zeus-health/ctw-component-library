@@ -52,4 +52,5 @@ export const allergyData = (allergy: AllergyModel) => [
   { label: "Description", value: allergy.display },
   { label: "Type", value: allergy.type },
   { label: "Category", value: allergy.categories },
+  { label: "Manifestations", value: allergy.manifestations },
 ];

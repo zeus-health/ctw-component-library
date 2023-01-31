@@ -18,4 +18,8 @@ export const patientAllergiesColumns: TableColumn<AllergyModel>[] = [
     title: "Category",
     dataIndex: "categories",
   },
+  {
+    title: "Manifestations",
+    dataIndex: "manifestations",
+  },
 ];
