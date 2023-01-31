@@ -156,18 +156,13 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const checkClinicalHistory = async (patientID: string) => {
     const requestContext = await getRequestContext();
 
-    const {
-      patientHistoryExists: patientHistoryFetched,
-      status,
-      dateCreated,
-    } = await getLatestPatientHistoryMessage(requestContext, patientID);
+    const patientHistoryMessage = await getLatestPatientHistoryMessage(
+      requestContext,
+      patientID
+    );
 
-    setClinicalHistoryExists(patientHistoryFetched);
-    setPatientHistoryInfo({
-      patientHistoryExists: patientHistoryFetched,
-      status,
-      dateCreated,
-    });
+    setClinicalHistoryExists(patientHistoryMessage.patientHistoryExists);
+    setPatientHistoryInfo(patientHistoryMessage);
   };
 
   useEffect(() => {
