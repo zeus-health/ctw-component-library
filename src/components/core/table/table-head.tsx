@@ -2,7 +2,6 @@ import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/outline";
 import cx from "classnames";
 import { MinRecordItem, TableColumn, TableSort } from "./table-helpers";
 import { SortDir } from "@/utils/sort";
-import { Telemetry } from "@/utils/telemetry";
 
 type SortChevronProps = {
   sortOrder?: SortDir;
@@ -50,13 +49,11 @@ export const TableHead = <T extends MinRecordItem>({
           )}
           key={column.title ?? index}
           scope="col"
+          {...(column.sortIndices && onSort
+            ? { "data-zus-telemetry-click": `sort=${column.title}` }
+            : null)}
           onClick={(event) => {
             if (column.sortIndices && onSort) {
-              Telemetry.processHTMLEvent(
-                event.currentTarget,
-                "zusTelemetryClick",
-                `sort=${column.title}`
-              );
               onSort(column.title || "");
             }
           }}

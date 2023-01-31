@@ -56,8 +56,8 @@ const DemoApp = ({ accessToken = "" }) => (
       <div className="App">
         <h1>CTW Component Library</h1>
 
-        {demoComponents.map((demo) => (
-          <div className="ctw-space-y-5 ctw-bg-white" key={demo.title}>
+        {demoComponents.map((demo, index) => (
+          <div className="ctw-space-y-5 ctw-bg-white" key={index}>
             <h3>
               {demo.title} <small>{demo.note ?? "(default)"}</small>
             </h3>

@@ -103,17 +103,19 @@ export class Telemetry {
     // nodes of the DOM before knowing whether this event was relevant to us.
     window.document.body.addEventListener("click", (event) => {
       const { target, isTrusted } = event;
-      if (!(isTrusted && target instanceof HTMLElement)) {
+      if (!(isTrusted && target instanceof Element)) {
         return;
       }
-      this.processHTMLEvent(target, "zusTelemetryClick");
+      const htmlElement = this.closestHTMLElement(target);
+      if (htmlElement instanceof HTMLElement) {
+        this.processHTMLEvent(htmlElement, "zusTelemetryClick");
+      }
     });
     window.document.body.addEventListener("focusin", (event) => {
       const { target, isTrusted } = event;
-      if (!(isTrusted && target instanceof HTMLElement)) {
-        return;
+      if (isTrusted && target instanceof HTMLElement) {
+        this.processHTMLEvent(target, "zusTelemetryFocus");
       }
-      this.processHTMLEvent(target, "zusTelemetryFocus");
     });
     isInitialized = true;
   }
@@ -238,5 +240,17 @@ export class Telemetry {
         targetName
       );
     }
+  }
+
+  private static closestHTMLElement(
+    target: Element | Node | null
+  ): HTMLElement | null {
+    if (!target || target instanceof HTMLElement) {
+      return target;
+    }
+    if (target.parentElement instanceof HTMLElement) {
+      return target.parentElement;
+    }
+    return this.closestHTMLElement(target.parentNode);
   }
 }

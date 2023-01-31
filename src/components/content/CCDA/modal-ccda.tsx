@@ -45,6 +45,7 @@ export const CCDAModal = ({
             type="button"
             aria-label="close"
             onClick={onClose}
+            data-zus-telemetry-click="Close CCDA modal"
             className="ctw-btn-clear"
           >
             <span className="ctw-sr-only">Close panel</span>

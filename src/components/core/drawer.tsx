@@ -91,6 +91,7 @@ export function Drawer({
                           type="button"
                           aria-label="close"
                           onClick={onClose}
+                          data-zus-telemetry-click="Close icon"
                           className="ctw-btn-clear"
                         >
                           <span className="ctw-sr-only">Close panel</span>
@@ -129,6 +130,7 @@ Drawer.CloseFooter = ({ onClose }: { onClose: () => void }) => (
       <button
         type="button"
         className="ctw-btn-default ctw-font-semibold ctw-outline-bg-light"
+        data-zus-telemetry-click="Close button"
         onClick={onClose}
       >
         Close
