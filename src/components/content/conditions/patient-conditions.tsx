@@ -65,7 +65,6 @@ export function PatientConditions({
 
   // Get our conditions.
   const patientConditions = patientConditionsQuery.data ?? [];
-  console.log("patientConditionsQuery", patientConditionsQuery.data);
   const otherConditions = filterOtherConditions(
     otherConditionsQuery.data ?? [],
     patientConditions,

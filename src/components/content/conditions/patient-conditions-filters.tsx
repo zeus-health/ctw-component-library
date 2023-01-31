@@ -109,10 +109,6 @@ export function useConditionFilters() {
     patientConditions: ConditionModel[],
     otherConditions: ConditionModel[]
   ) {
-    console.log(
-      "availableFilters(patientConditions, otherConditions)",
-      availableFilters(patientConditions, otherConditions)
-    );
     return Object.entries(
       availableFilters(patientConditions, otherConditions)
     ).map(([key, values]) => {
