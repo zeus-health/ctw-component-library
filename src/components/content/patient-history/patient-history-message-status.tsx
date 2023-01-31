@@ -1,5 +1,5 @@
-import { LoadingIcon } from "@/components/core/loading-icon";
-import { formatStringISOtoDate } from "@/fhir/formatters";
+import { ProgressIcon } from "@/components/core/progress-icon";
+import { formatISODateStringToDate } from "@/fhir/formatters";
 
 export type PatientHistoryStatusProps = {
   status: string;
@@ -12,20 +12,18 @@ export const PatientHistoryStatus = ({
 }: PatientHistoryStatusProps) => {
   switch (status) {
     case "initialize":
-    case "in_progress":
+    case "error":
       return (
         <div className="ctw-alert-bg ctw-rounded-md ctw-bg-caution-bg">
-          <LoadingIcon className="ctw-h-5 ctw-flex-none ctw-fill-caution-icon" />
-          <div className="ctw-space-y-2">
-            <div className="ctw-text-caution-message">
-              In Progress - request received {formatStringISOtoDate(date)}
-            </div>
+          <ProgressIcon className="ctw-h-5 ctw-flex-none ctw-fill-caution-icon" />
+          <div className="ctw-text-caution-message">
+            In Progress - request received {formatISODateStringToDate(date)}
           </div>
         </div>
       );
     case "done":
-    case "error":
+    case "in_progress":
     default:
-      return <div />;
+      return null;
   }
 };

@@ -1,9 +1,9 @@
-export type LoadingIconProps = {
+export type ProgressIconProps = {
   className?: string;
   height?: number;
 };
 
-export const LoadingIcon = ({ className, height }: LoadingIconProps) => (
+export const ProgressIcon = ({ className, height }: ProgressIconProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 512 512"

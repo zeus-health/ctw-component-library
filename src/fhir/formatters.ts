@@ -110,7 +110,9 @@ export function formatAge(age: fhir4.Age): string {
 }
 
 // Formats a string ISO date to MM/DD/YYY.
-export function formatStringISOtoDate(dateStr?: string): string | undefined {
+export function formatISODateStringToDate(
+  dateStr?: string
+): string | undefined {
   if (!dateStr) return undefined;
 
   const day = dateStr.substring(8, 10);
