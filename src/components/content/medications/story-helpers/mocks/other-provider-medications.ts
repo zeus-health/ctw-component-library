@@ -1,3 +1,23 @@
+const tags = [
+  {
+    system: "https://zusapi.com/lens",
+    code: "ActiveMedications",
+  },
+  {
+    system: "https://zusapi.com/summary",
+    code: "Common",
+  },
+  {
+    system: "https://zusapi.com/accesscontrol/owner",
+    code: "builder/12345",
+    display: "Storybook Medical - Test Customer",
+  },
+  {
+    system: "https://zusapi.com/lens/upid",
+    code: "57ddcfa9-6df8-4d00-a86d-c63c0faad93f",
+  },
+];
+
 export const otherProviderMedications: fhir4.Bundle = {
   resourceType: "Bundle",
   id: "7c7a1c16",
@@ -18,25 +38,7 @@ export const otherProviderMedications: fhir4.Bundle = {
           versionId: "2",
           lastUpdated: "2022-11-08T15:03:31.124+00:00",
           source: "#b9875aae99734b0c",
-          tag: [
-            {
-              system: "https://zusapi.com/lens",
-              code: "ActiveMedications",
-            },
-            {
-              system: "https://zusapi.com/summary",
-              code: "Common",
-            },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/12345",
-              display: "Storybook Medical - Test Customer",
-            },
-            {
-              system: "https://zusapi.com/lens/upid",
-              code: "57ddcfa9-6df8-4d00-a86d-c63c0faad93f",
-            },
-          ],
+          tag: tags,
         },
         extension: [
           {
@@ -157,25 +159,7 @@ export const otherProviderMedications: fhir4.Bundle = {
           versionId: "2",
           lastUpdated: "2022-11-08T15:03:31.148+00:00",
           source: "#b9875aae99734b0c",
-          tag: [
-            {
-              system: "https://zusapi.com/lens",
-              code: "ActiveMedications",
-            },
-            {
-              system: "https://zusapi.com/summary",
-              code: "Common",
-            },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/12345",
-              display: "Storybook Medical - Test Customer",
-            },
-            {
-              system: "https://zusapi.com/lens/upid",
-              code: "57ddcfa9-6df8-4d00-a86d-c63c0faad93f",
-            },
-          ],
+          tag: tags,
         },
         extension: [
           {
@@ -357,25 +341,7 @@ export const otherProviderMedications: fhir4.Bundle = {
           versionId: "2",
           lastUpdated: "2022-11-08T15:03:31.098+00:00",
           source: "#b9875aae99734b0c",
-          tag: [
-            {
-              system: "https://zusapi.com/lens",
-              code: "ActiveMedications",
-            },
-            {
-              system: "https://zusapi.com/summary",
-              code: "Common",
-            },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/12345",
-              display: "Storybook Medical - Test Customer",
-            },
-            {
-              system: "https://zusapi.com/lens/upid",
-              code: "57ddcfa9-6df8-4d00-a86d-c63c0faad93f",
-            },
-          ],
+          tag: tags,
         },
         extension: [
           {
@@ -556,25 +522,7 @@ export const otherProviderMedications: fhir4.Bundle = {
           versionId: "2",
           lastUpdated: "2022-11-08T15:03:31.174+00:00",
           source: "#b9875aae99734b0c",
-          tag: [
-            {
-              system: "https://zusapi.com/lens",
-              code: "ActiveMedications",
-            },
-            {
-              system: "https://zusapi.com/summary",
-              code: "Common",
-            },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/12345",
-              display: "Storybook Medical - Test Customer",
-            },
-            {
-              system: "https://zusapi.com/lens/upid",
-              code: "57ddcfa9-6df8-4d00-a86d-c63c0faad93f",
-            },
-          ],
+          tag: tags,
         },
         extension: [
           {
@@ -740,26 +688,8 @@ export const otherProviderMedications: fhir4.Bundle = {
           ],
           versionId: "1",
           lastUpdated: "2022-11-08T18:47:34.568+00:00",
-          source: "#5685aa4fa060a7f4",
-          tag: [
-            {
-              system: "https://zusapi.com/lens",
-              code: "ActiveMedications",
-            },
-            {
-              system: "https://zusapi.com/summary",
-              code: "Common",
-            },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/12345",
-              display: "Storybook Medical - Test Customer",
-            },
-            {
-              system: "https://zusapi.com/lens/upid",
-              code: "57ddcfa9-6df8-4d00-a86d-c63c0faad93f",
-            },
-          ],
+          source: "#b9875aae99734b0c",
+          tag: tags,
         },
         extension: [
           {
