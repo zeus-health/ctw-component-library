@@ -1,22 +1,25 @@
 import { PlusIcon } from "@heroicons/react/outline";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DropdownMenuAction } from "@/components/core/dropdown-action-menu";
 import { ConditionModel } from "@/fhir/models";
 import { DisplayStatus } from "@/fhir/models/condition";
 import { compact, uniq } from "@/utils/nodash";
 
 export type FilterCollection = "patient" | "other";
-export type FilterTypes = { status?: DisplayStatus[]; ccsChapter?: string[] };
+export type ConditionFilters = {
+  status?: DisplayStatus[];
+  ccsChapter?: string[];
+};
 export type Filters = {
   activeCollection: FilterCollection;
-  patient?: FilterTypes;
-  other?: FilterTypes;
+  patient?: ConditionFilters;
+  other?: ConditionFilters;
 };
 
 export type FilterActions = {
-  removeFilter: (filterName: keyof FilterTypes) => void;
+  removeFilter: (filterName: keyof ConditionFilters) => void;
   addToFilter: (
-    filterName: keyof FilterTypes,
+    filterName: keyof ConditionFilters,
     filterType: "ADD" | "REMOVE",
     value: string
   ) => void;
@@ -24,8 +27,8 @@ export type FilterActions = {
 
 export type AvailableFilters = {
   [key: string]: {
-    selected: string[];
     available: string[];
+    selected: string[];
   };
 }[];
 
@@ -58,6 +61,8 @@ export function useConditionFilters() {
       ...newFilters,
     }));
   }
+
+  useEffect(() => {});
 
   function applyFilters(
     patientConditions: ConditionModel[],
@@ -106,10 +111,10 @@ export const getUnfilteredCollection = (
 
 export const selectedAndAvailableFilters = (
   conditions: ConditionModel[],
-  filters: FilterTypes
+  filters: ConditionFilters
 ) =>
   Object.entries(availableConditionFilters(conditions)).map(([key, values]) => {
-    const selected = filters[key] || [];
+    const selected = filters[key as keyof ConditionFilters] || [];
     return {
       [key]: {
         available: compact(values),
@@ -118,7 +123,17 @@ export const selectedAndAvailableFilters = (
     };
   });
 
-export const AddFilter = ({ updateFilters, activeCollection, filters }) => (
+type AddFilterProps = {
+  updateFilters: any;
+  activeCollection: FilterCollection;
+  filters: any;
+};
+
+export const AddFilter = ({
+  updateFilters,
+  activeCollection,
+  filters,
+}: AddFilterProps) => (
   <DropdownMenuAction
     options={{
       items: [

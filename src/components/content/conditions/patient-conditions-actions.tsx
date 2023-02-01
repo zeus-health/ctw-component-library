@@ -5,16 +5,16 @@ import { PatientConditionPill } from "./patient-condition-pill";
 import {
   AddFilter,
   AvailableFilters,
+  ConditionFilters,
   FILTER_MAP,
   FilterCollection,
   Filters,
-  FilterTypes,
 } from "./patient-conditions-filters";
 import { DropdownMenuAction } from "@/components/core/dropdown-action-menu";
 
 export type PatientConditionsActionsProps = {
   hideAdd: boolean;
-  filters: FilterTypes;
+  filters: ConditionFilters;
   availableFilters: AvailableFilters;
   updateFilters: (newFilters: Partial<Filters>) => void;
   activeCollection: FilterCollection;
@@ -61,7 +61,7 @@ export function PatientConditionsActions({
 
 type PillWrapper = {
   availableFilters: AvailableFilters;
-  filters: FilterTypes;
+  filters: ConditionFilters;
   updateFilters: (newFilters: Partial<Filters>) => void;
 };
 
