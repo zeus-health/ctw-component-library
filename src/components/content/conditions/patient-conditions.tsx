@@ -5,7 +5,11 @@ import { useConditionHistory } from "../condition-history/conditions-history-dra
 import { filterOtherConditions } from "./helpers";
 import { PatientConditionsActions } from "./patient-conditions-actions";
 import { patientConditionsColumns } from "./patient-conditions-columns";
-import { useConditionFilters } from "./patient-conditions-filters";
+import {
+  getUnfilteredCollection,
+  selectedAndAvailableFilters,
+  useConditionFilters,
+} from "./patient-conditions-filters";
 import {
   OtherProviderConditionHoverActions,
   PatientConditionHoverActions,
@@ -37,13 +41,8 @@ export function PatientConditions({
   readOnly = false,
 }: PatientConditionsProps) {
   // State.
-  const {
-    filters,
-    updateFilters,
-    applyFilters,
-    actions,
-    currentAndAvailableFilterMap,
-  } = useConditionFilters();
+  const { filters, updateFilters, applyFilters, actions } =
+    useConditionFilters();
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
 
@@ -100,10 +99,15 @@ export function PatientConditions({
           hideAdd={readOnly || filters.activeCollection === "other"}
           actions={actions}
           filters={filters}
-          availableFilters={currentAndAvailableFilterMap(
-            patientConditions,
-            otherConditions
+          availableFilters={selectedAndAvailableFilters(
+            getUnfilteredCollection(
+              patientConditions,
+              otherConditions,
+              filters.activeCollection
+            ),
+            filters[filters.activeCollection]
           )}
+          updateFilters={updateFilters}
         />
 
         <Table

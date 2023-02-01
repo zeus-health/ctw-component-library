@@ -32,7 +32,7 @@ export type AvailableFilters = {
 const DEFAULT_FILTER_STATE: Omit<Filters, "activeCollection"> = {
   patient: {
     status: ["Active", "Pending", "Unknown"],
-    ccsChapter: ["Mental and Behavioral"],
+    // ccsChapter: ["Mental and Behavioral"],
   },
   other: { status: ["Active", "Pending"] },
 };
@@ -105,47 +105,39 @@ export function useConditionFilters() {
     });
   }
 
-  function currentAndAvailableFilterMap(
-    patientConditions: ConditionModel[],
-    otherConditions: ConditionModel[]
-  ) {
-    return Object.entries(
-      availableFilters(patientConditions, otherConditions)
-    ).map(([key, values]) => {
-      const selected = filters[filters.activeCollection][key] || [];
-      return {
-        [key]: {
-          available: compact(values),
-          selected: selected.filter((val) => values.includes(val)),
-        },
-      };
-    });
-  }
-
-  function availableFilters(
-    patientConditions: ConditionModel[],
-    otherConditions: ConditionModel[]
-  ) {
-    const conditions =
-      filters.activeCollection === "patient"
-        ? patientConditions
-        : otherConditions;
-
-    return {
-      status: uniq(conditions.map((c) => c.displayStatus)),
-      ccsChapter: uniq(conditions.map((c) => c.ccsChapter)),
-    };
-  }
-
   return {
     filters,
     updateFilters,
     applyFilters,
-    availableFilters,
     actions,
-    currentAndAvailableFilterMap,
   };
 }
+
+export const availableConditionFilters = (conditions: ConditionModel[]) => ({
+  status: uniq(conditions.map((c) => c.displayStatus)),
+  ccsChapter: uniq(conditions.map((c) => c.ccsChapter)),
+});
+
+export const getUnfilteredCollection = (
+  patientConditions: ConditionModel[],
+  otherConditions: ConditionModel[],
+  activeCollection: string
+) => (activeCollection === "patient" ? patientConditions : otherConditions);
+
+export const selectedAndAvailableFilters = (
+  conditions: ConditionModel[],
+  filters: FilterTypes
+) =>
+  Object.entries(availableConditionFilters(conditions)).map(([key, values]) => {
+    const selected = filters[key] || [];
+    console.log("selected", values);
+    return {
+      [key]: {
+        available: compact(values),
+        selected: selected.filter((val) => values.includes(val)),
+      },
+    };
+  });
 
 export const AddFilter = ({ actions }) => (
   <DropdownMenuAction

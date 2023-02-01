@@ -104,21 +104,23 @@ const RenderCorrectFieldType = ({
     case "checkbox":
       return (
         <div>
-          <input
-            type="checkbox"
-            id={menuItem.name}
-            name={menuItem.name}
-            onClick={(e) => {
-              const clickedValue = {
-                name: e.target.value,
-                value: e.target.checked,
-              };
-              onClick(clickedValue);
-            }}
-            value={menuItem.name}
-            checked={menuItem.isSelected}
-          />
-          <label htmlFor={menuItem.name}> {menuItem.name}</label>
+          <label htmlFor={menuItem.name}>
+            <input
+              type="checkbox"
+              id={menuItem.name}
+              name={menuItem.name}
+              onClick={(e) => {
+                const clickedValue = {
+                  name: e.target.value,
+                  value: e.target.checked,
+                };
+                onClick(clickedValue);
+              }}
+              value={menuItem.name}
+              checked={menuItem.isSelected}
+            />
+            <span>{menuItem.name}</span>
+          </label>
         </div>
       );
     case "select":
