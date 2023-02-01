@@ -79,6 +79,7 @@ export const OtherProviderMedsTable = withErrorBoundary(
                 <button
                   type="button"
                   className="ctw-btn-primary ctw-capitalize"
+                  data-zus-telemetry-click="Dismiss record"
                   onClick={async () => {
                     await dismissMedication(record);
                   }}
@@ -89,6 +90,7 @@ export const OtherProviderMedsTable = withErrorBoundary(
               <button
                 type="button"
                 className="ctw-btn-primary ctw-ml-1 ctw-capitalize"
+                data-zus-telemetry-click="Add to record"
                 onClick={() => {
                   if (handleAddToRecord) {
                     handleAddToRecord(record);
