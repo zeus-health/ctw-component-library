@@ -61,7 +61,11 @@ export function DropdownMenuAction({
               <RadixDropdownMenu.Item
                 key={menuItem.key}
                 className={cx("ctw-dropdown-action-menu-item")}
-                onClick={() => {
+                onClick={(e) => {
+                  if (options.type === "checkbox") {
+                    e.preventDefault();
+                  }
+
                   options.onItemSelect({
                     key: menuItem.key,
                     name: menuItem.name,
