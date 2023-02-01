@@ -299,16 +299,15 @@ export const Conditions = withErrorBoundary(
             />
             <div className="ctw-conditions-title-container">
               <div className="ctw-title">Other Provider Records</div>
-              {shouldShowClinicalHistoryArea &&
-                !readOnly &&
-                !hideRequestRecords && (
-                  <div className="ctw-flex ctw-items-baseline ctw-space-x-2">
-                    {patientHistoryInfo?.lastRetrievedAt && (
-                      <div className="ctw-text-sm ctw-italic ctw-text-black">
-                        Last Retrieved {patientHistoryInfo.lastRetrievedAt}
-                      </div>
-                    )}
-
+              <div className="ctw-flex ctw-items-baseline ctw-space-x-2">
+                {patientHistoryInfo?.lastRetrievedAt && (
+                  <div className="ctw-text-sm ctw-italic ctw-text-black">
+                    Last Retrieved {patientHistoryInfo.lastRetrievedAt}
+                  </div>
+                )}
+                {shouldShowClinicalHistoryArea &&
+                  !readOnly &&
+                  !hideRequestRecords && (
                     <button
                       type="button"
                       className="ctw-btn-clear ctw-link"
@@ -317,8 +316,8 @@ export const Conditions = withErrorBoundary(
                     >
                       Request Records
                     </button>
-                  </div>
-                )}
+                  )}
+              </div>
             </div>
             {shouldShowClinicalHistoryArea ? (
               <ConditionsTableBase
