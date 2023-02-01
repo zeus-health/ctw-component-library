@@ -8,7 +8,7 @@ import { useDismissMedication } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { isArray } from "@/utils/nodash";
-import { compact, get, pipe, toLower } from "@/utils/nodash/fp";
+import { get, pipe, toLower } from "@/utils/nodash/fp";
 import { sort, SortDir } from "@/utils/sort";
 
 export type OtherProviderMedsTableProps = {
@@ -69,34 +69,38 @@ export const OtherProviderMedsTable = withErrorBoundary(
           telemetryNamespace="MedicationsTableBase"
           medicationStatements={medicationModels}
           isLoading={isLoading}
-          rowMenuActions={(medication) =>
-            compact([
-              {
-                name: "View History",
-                action: async () => {
-                  openHistoryDrawer(medication);
-                },
-              },
-              {
-                name: "Add to Record",
-                action: async () => {
+          handleRowClick={openHistoryDrawer}
+          RowActions={({ record }) => (
+            <div
+              onClick={(event) => event.stopPropagation()}
+              onKeyDown={(event) => event.stopPropagation()}
+            >
+              {!record.isArchived && (
+                <button
+                  type="button"
+                  className="ctw-btn-primary ctw-capitalize"
+                  onClick={async () => {
+                    await dismissMedication(record);
+                  }}
+                >
+                  dismiss
+                </button>
+              )}
+              <button
+                type="button"
+                className="ctw-btn-primary ctw-ml-1 ctw-capitalize"
+                onClick={() => {
                   if (handleAddToRecord) {
-                    handleAddToRecord(medication);
+                    handleAddToRecord(record);
                   } else {
-                    openAddNewMedicationDrawer(medication);
+                    openAddNewMedicationDrawer(record);
                   }
-                },
-              },
-              medication.isArchived
-                ? null
-                : {
-                    name: "Dismiss",
-                    action: async () => {
-                      await dismissMedication(medication);
-                    },
-                  },
-            ])
-          }
+                }}
+              >
+                add to record
+              </button>
+            </div>
+          )}
         />
         <MedicationDrawer
           medication={selectedMedication}
