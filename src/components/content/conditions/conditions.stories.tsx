@@ -30,6 +30,7 @@ export default {
   args: {
     className: "Blank",
     readOnly: false,
+    hideRequestRecords: false,
   },
   decorators: [
     (Story, { args }) => (
