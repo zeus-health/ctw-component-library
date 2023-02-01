@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.43.0
+
+### Minor Changes
+
+- 255feb05: Add progress bar in patient history drawer.
+
 ## 0.42.1
 
 ### Patch Changes
