@@ -48,6 +48,7 @@ import { curry } from "@/utils/nodash";
 export type ConditionsProps = {
   className?: string;
   readOnly?: boolean;
+  hideRequestRecords?: boolean;
 };
 
 const EMPTY_MESSAGE_PATIENT_RECORD =
@@ -57,7 +58,11 @@ const ERROR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
 
 export const Conditions = withErrorBoundary(
-  ({ className, readOnly = false }: ConditionsProps) => {
+  ({
+    className,
+    readOnly = false,
+    hideRequestRecords = false,
+  }: ConditionsProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const breakpoints = useBreakpoints(containerRef);
     const [drawerIsOpen, setDrawerIsOpen] = useState(false);
@@ -297,24 +302,26 @@ export const Conditions = withErrorBoundary(
             )}
             <div className="ctw-conditions-title-container">
               <div className="ctw-title">Other Provider Records</div>
-              {shouldShowClinicalHistoryArea && (
-                <div className="ctw-flex ctw-items-baseline ctw-space-x-2">
-                  {patientHistoryInfo?.lastRetrievedAt && (
-                    <div className="ctw-text-sm ctw-italic ctw-text-black">
-                      Last Retrieved {patientHistoryInfo.lastRetrievedAt}
-                    </div>
-                  )}
+              {shouldShowClinicalHistoryArea &&
+                !readOnly &&
+                !hideRequestRecords && (
+                  <div className="ctw-flex ctw-items-baseline ctw-space-x-2">
+                    {patientHistoryInfo?.lastRetrievedAt && (
+                      <div className="ctw-text-sm ctw-italic ctw-text-black">
+                        Last Retrieved {patientHistoryInfo.lastRetrievedAt}
+                      </div>
+                    )}
 
-                  <button
-                    type="button"
-                    className="ctw-btn-clear ctw-link"
-                    onClick={() => setRequestDrawerIsOpen(true)}
-                    data-zus-telemetry-click="Request records"
-                  >
-                    Request Records
-                  </button>
-                </div>
-              )}
+                    <button
+                      type="button"
+                      className="ctw-btn-clear ctw-link"
+                      onClick={() => setRequestDrawerIsOpen(true)}
+                      data-zus-telemetry-click="Request records"
+                    >
+                      Request Records
+                    </button>
+                  </div>
+                )}
             </div>
             {shouldShowClinicalHistoryArea ? (
               <ConditionsTableBase
@@ -353,6 +360,7 @@ export const Conditions = withErrorBoundary(
               />
             ) : (
               <PatientHistoryMessage
+                readOnly={readOnly || hideRequestRecords}
                 onClick={() => setRequestDrawerIsOpen(true)}
               />
             )}
