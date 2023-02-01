@@ -91,6 +91,7 @@ export const OtherProviderMedsTable = withErrorBoundary(
                 type="button"
                 className="ctw-btn-primary ctw-ml-1 ctw-capitalize"
                 data-zus-telemetry-click="Add to record"
+                data-testid="add-to-record"
                 onClick={() => {
                   if (handleAddToRecord) {
                     handleAddToRecord(record);
