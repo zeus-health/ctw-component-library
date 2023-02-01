@@ -13,6 +13,7 @@ export * from "@/components/content/medications/other-provider-meds-table";
 export * from "@/components/content/medications/patient-medications";
 export * from "@/components/content/medications/patient-medications-tabbed";
 export * from "@/components/content/medications/provider-meds-table";
+export * from "@/components/content/patient-history/use-patient-history";
 export * from "@/components/content/patients/patients-table";
 export * from "@/components/content/timeline/patient-timeline";
 // Core components
