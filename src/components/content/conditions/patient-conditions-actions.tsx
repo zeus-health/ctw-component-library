@@ -96,7 +96,13 @@ const PillWrapper = ({
                 {
                   name: "Remove Filter",
                   action: () => {
-                    actions.removeFilter(filterName);
+                    patientConditionActions(
+                      filters,
+                      updateFilters,
+                      filterName,
+                      "",
+                      "REMOVE"
+                    );
                   },
                 },
               ]}
@@ -130,9 +136,7 @@ const patientConditionActions = (
       });
       break;
     case "REMOVE":
-      updateFilters({
-        [filterName]: filters[filterName].filter((item) => item !== value),
-      });
+      updateFilters({ [filterName]: [] });
       break;
     default:
       break;
