@@ -37,7 +37,10 @@ import {
 } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models/condition";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
-import { hasFetchedPatientHistory } from "@/services/patient-history/patient-history";
+import {
+  getPatientHistoryDetails,
+  PatientHistoryDetails,
+} from "@/services/patient-history/patient-history";
 import { AnyZodSchema } from "@/utils/form-helper";
 import { curry } from "@/utils/nodash";
 
@@ -81,6 +84,8 @@ export const Conditions = withErrorBoundary(
 
     const [clinicalHistoryExists, setClinicalHistoryExists] =
       useState<boolean>();
+    const [patientHistoryInfo, setPatientHistoryInfo] =
+      useState<PatientHistoryDetails>();
 
     const patientRecordsMessage = patientRecordsResponse.isError
       ? ERROR_MSG
@@ -152,12 +157,13 @@ export const Conditions = withErrorBoundary(
     const checkClinicalHistory = async (patientID: string) => {
       const requestContext = await getRequestContext();
 
-      const patientHistoryFetched = await hasFetchedPatientHistory(
+      const patientHistoryMessage = await getPatientHistoryDetails(
         requestContext,
         patientID
       );
 
-      setClinicalHistoryExists(patientHistoryFetched);
+      setClinicalHistoryExists(!!patientHistoryMessage?.lastRetrievedAt);
+      setPatientHistoryInfo(patientHistoryMessage);
     };
 
     useEffect(() => {

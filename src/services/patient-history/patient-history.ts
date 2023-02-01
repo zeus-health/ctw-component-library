@@ -2,6 +2,7 @@ import { PatientRefreshHistoryMessage } from "./patient-history-types";
 import { getZusApiBaseUrl } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { errorResponse } from "@/utils/errors";
+import { find } from "@/utils/nodash";
 import { ctwFetch } from "@/utils/request";
 
 export async function getPatientRefreshHistoryMessages(
@@ -33,18 +34,36 @@ export async function getPatientRefreshHistoryMessages(
   }
 }
 
-export async function hasFetchedPatientHistory(
+export type PatientHistoryDetails = {
+  lastRetrievedAt?: string;
+  status: string;
+  dateCreated: string;
+};
+
+export async function getPatientHistoryDetails(
   requestContext: CTWRequestContext,
   patientID: string
-): Promise<boolean> {
+): Promise<PatientHistoryDetails | undefined> {
   const messages = await getPatientRefreshHistoryMessages(
     requestContext,
     patientID
   );
 
   if (messages.length === 0) {
-    return false;
+    return undefined;
   }
-  // This is the case for messages.length > 0 which is the current workaround.
-  return true;
+
+  const latestDone = find(messages, {
+    _messages: [
+      {
+        status: "done",
+      },
+    ],
+  }) as PatientRefreshHistoryMessage | undefined;
+
+  return {
+    lastRetrievedAt: latestDone?._createdAt,
+    status: messages[0].status,
+    dateCreated: messages[0]._createdAt,
+  };
 }
