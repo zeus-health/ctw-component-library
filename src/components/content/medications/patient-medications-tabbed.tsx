@@ -9,12 +9,14 @@ import { ProviderInactiveMedicationsTable } from "@/components/content/medicatio
 import { ProviderMedsTable } from "@/components/content/medications/provider-meds-table";
 import * as CTWBox from "@/components/core/ctw-box";
 import { ListBox } from "@/components/core/list-box/list-box";
+import { MedicationStatementModel } from "@/fhir/models";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import "./patient-medications.scss";
 
 export type PatientMedicationsTabbedProps = {
   className?: string;
   forceHorizontalTabs?: boolean;
+  handleAddToRecord?: (m: MedicationStatementModel) => void;
 };
 
 const tabbedContent = [
@@ -36,9 +38,9 @@ const tabbedContent = [
         <BadgeOtherProviderMedCount />
       </>
     ),
-    render: () => (
+    render: ({ handleAddToRecord }: PatientMedicationsTabbedProps) => (
       <>
-        <OtherProviderMedsTable />
+        <OtherProviderMedsTable handleAddToRecord={handleAddToRecord} />
       </>
     ),
   },
@@ -56,6 +58,7 @@ const tabbedContent = [
 export function PatientMedicationsTabbed({
   className,
   forceHorizontalTabs = false,
+  handleAddToRecord,
 }: PatientMedicationsTabbedProps) {
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -117,7 +120,7 @@ export function PatientMedicationsTabbed({
                 key={key}
                 className={cx(breakpoints.sm ? "ctw-mt-0" : "ctw-mt-4")}
               >
-                {render()}
+                {render({ handleAddToRecord })}
               </Tab.Panel>
             ))}
           </Tab.Panels>

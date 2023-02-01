@@ -13,6 +13,7 @@ import { sort, SortDir } from "@/utils/sort";
 
 export type OtherProviderMedsTableProps = {
   className?: string;
+  handleAddToRecord?: (m: MedicationStatementModel) => void;
   sortColumn?: keyof MedicationStatementModel;
   sortOrder?: SortDir;
 };
@@ -28,6 +29,7 @@ export const OtherProviderMedsTable = withErrorBoundary(
   ({
     sortOrder = "asc",
     sortColumn = "display",
+    handleAddToRecord,
   }: OtherProviderMedsTableProps) => {
     const dismissMedication = useDismissMedication();
     const [medicationModels, setMedicationModels] = useState<
@@ -78,7 +80,11 @@ export const OtherProviderMedsTable = withErrorBoundary(
               {
                 name: "Add to Record",
                 action: async () => {
-                  openAddNewMedicationDrawer(medication);
+                  if (handleAddToRecord) {
+                    handleAddToRecord(medication);
+                  } else {
+                    openAddNewMedicationDrawer(medication);
+                  }
                 },
               },
               medication.isArchived

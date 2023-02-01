@@ -141,7 +141,7 @@ export const DrawerForm = <T,>({
           <div className="ctw-flex ctw-items-center ctw-justify-between">
             <>
               {(errors?.requestErrors || errors?.formErrors) && (
-                <div className="ctw-text-sm ctw-font-medium ctw-text-error-text">
+                <div className="ctw-text-error-text ctw-text-sm ctw-font-medium">
                   There was an error with your submission
                 </div>
               )}

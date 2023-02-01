@@ -139,7 +139,7 @@ export const FormField = ({
       </div>
 
       {errors && (
-        <div className="ctw-text-xs ctw-italic ctw-text-error-text">
+        <div className="ctw-text-error-text ctw-text-xs ctw-italic">
           {errors.length > 1
             ? errors.map((error) => <div key={error}>&bull; {error}</div>)
             : errors[0]}
