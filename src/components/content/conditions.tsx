@@ -344,6 +344,7 @@ export const Conditions = withErrorBoundary(
               />
             ) : (
               <PatientHistoryMessage
+                readOnly={readOnly || hideRequestRecords}
                 onClick={() => setRequestDrawerIsOpen(true)}
               />
             )}
