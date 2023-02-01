@@ -3,6 +3,7 @@ import { MedicationDrawer } from "@/components/content/medication-drawer";
 import { MedicationsTableBase } from "@/components/content/medications-table-base";
 import { AddNewMedDrawer } from "@/components/content/medications/add-new-med-drawer";
 import { Badge } from "@/components/core/badge";
+import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useDismissMedication } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
@@ -23,82 +24,90 @@ export type OtherProviderMedsTableProps = {
  * The table has a menu to the right side which will pull out the
  * history for the medication listed in that row.
  */
-export function OtherProviderMedsTable({
-  sortOrder = "asc",
-  sortColumn = "display",
-}: OtherProviderMedsTableProps) {
-  const dismissMedication = useDismissMedication();
-  const [medicationModels, setMedicationModels] = useState<
-    MedicationStatementModel[]
-  >([]);
-  const [historyDrawerOpen, setHistoryDrawerOpen] = useState(false);
-  const [addNewMedDrawerOpen, setAddNewMedDrawerOpen] = useState(false);
-  const [selectedMedication, setSelectedMedication] =
-    useState<MedicationStatementModel>();
-  const { otherProviderMedications, isLoading } =
-    useQueryAllPatientMedications();
+export const OtherProviderMedsTable = withErrorBoundary(
+  ({
+    sortOrder = "asc",
+    sortColumn = "display",
+  }: OtherProviderMedsTableProps) => {
+    const dismissMedication = useDismissMedication();
+    const [medicationModels, setMedicationModels] = useState<
+      MedicationStatementModel[]
+    >([]);
+    const [historyDrawerOpen, setHistoryDrawerOpen] = useState(false);
+    const [addNewMedDrawerOpen, setAddNewMedDrawerOpen] = useState(false);
+    const [selectedMedication, setSelectedMedication] =
+      useState<MedicationStatementModel>();
+    const { otherProviderMedications, isLoading } =
+      useQueryAllPatientMedications();
 
-  function openHistoryDrawer(row: MedicationStatementModel) {
-    setSelectedMedication(row);
-    setHistoryDrawerOpen(true);
-  }
+    function openHistoryDrawer(row: MedicationStatementModel) {
+      setSelectedMedication(row);
+      setHistoryDrawerOpen(true);
+    }
 
-  function openAddNewMedicationDrawer(row: MedicationStatementModel) {
-    setSelectedMedication(row);
-    setAddNewMedDrawerOpen(true);
-  }
+    function openAddNewMedicationDrawer(row: MedicationStatementModel) {
+      setSelectedMedication(row);
+      setAddNewMedDrawerOpen(true);
+    }
 
-  useEffect(() => {
-    if (!otherProviderMedications) return;
-    setMedicationModels(
-      sort(otherProviderMedications, pipe(get(sortColumn), toLower), sortOrder)
-    );
-  }, [otherProviderMedications, sortColumn, sortOrder]);
+    useEffect(() => {
+      if (!otherProviderMedications) return;
+      setMedicationModels(
+        sort(
+          otherProviderMedications,
+          pipe(get(sortColumn), toLower),
+          sortOrder
+        )
+      );
+    }, [otherProviderMedications, sortColumn, sortOrder]);
 
-  return (
-    <>
-      <MedicationsTableBase
-        medicationStatements={medicationModels}
-        isLoading={isLoading}
-        rowMenuActions={(medication) =>
-          compact([
-            {
-              name: "View History",
-              action: async () => {
-                openHistoryDrawer(medication);
-              },
-            },
-            {
-              name: "Add to Record",
-              action: async () => {
-                openAddNewMedicationDrawer(medication);
-              },
-            },
-            medication.isArchived
-              ? null
-              : {
-                  name: "Dismiss",
-                  action: async () => {
-                    await dismissMedication(medication);
-                  },
+    return (
+      <div data-zus-telemetry-namespace="OtherProviderMedsTable">
+        <MedicationsTableBase
+          telemetryNamespace="MedicationsTableBase"
+          medicationStatements={medicationModels}
+          isLoading={isLoading}
+          rowMenuActions={(medication) =>
+            compact([
+              {
+                name: "View History",
+                action: async () => {
+                  openHistoryDrawer(medication);
                 },
-          ])
-        }
-      />
-      <MedicationDrawer
-        medication={selectedMedication}
-        isOpen={historyDrawerOpen}
-        onClose={() => setHistoryDrawerOpen(false)}
-        onDismissal={dismissMedication}
-      />
-      <AddNewMedDrawer
-        medication={selectedMedication?.resource}
-        isOpen={addNewMedDrawerOpen}
-        handleOnClose={() => setAddNewMedDrawerOpen(false)}
-      />
-    </>
-  );
-}
+              },
+              {
+                name: "Add to Record",
+                action: async () => {
+                  openAddNewMedicationDrawer(medication);
+                },
+              },
+              medication.isArchived
+                ? null
+                : {
+                    name: "Dismiss",
+                    action: async () => {
+                      await dismissMedication(medication);
+                    },
+                  },
+            ])
+          }
+        />
+        <MedicationDrawer
+          medication={selectedMedication}
+          isOpen={historyDrawerOpen}
+          onClose={() => setHistoryDrawerOpen(false)}
+          onDismissal={dismissMedication}
+        />
+        <AddNewMedDrawer
+          medication={selectedMedication?.resource}
+          isOpen={addNewMedDrawerOpen}
+          handleOnClose={() => setAddNewMedDrawerOpen(false)}
+        />
+      </div>
+    );
+  },
+  "OtherProviderMedsTable"
+);
 
 export const BadgeOtherProviderMedCount = () => {
   const { otherProviderMedications } = useQueryAllPatientMedications();

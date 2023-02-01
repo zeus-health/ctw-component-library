@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { MedicationDrawer } from "@/components/content/medication-drawer";
 import { MedicationsTableBase } from "@/components/content/medications-table-base";
+import { withErrorBoundary } from "@/components/core/error-boundary";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { get, pipe, toLower } from "@/utils/nodash/fp";
@@ -22,56 +23,60 @@ export type ProviderMedsTableProps = {
  * The table has a menu to the right side which will pull out the
  * history for the medication listed in that row.
  */
-export function ProviderMedsTable({
-  showInactive = false,
-  sortColumn = "display",
-  sortOrder = "asc",
-}: ProviderMedsTableProps) {
-  const [medicationModels, setMedicationModels] = useState<
-    MedicationStatementModel[]
-  >([]);
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [selectedMedication, setSelectedMedication] =
-    useState<MedicationStatementModel>();
-  const { builderMedications, isLoading } = useQueryAllPatientMedications();
+export const ProviderMedsTable = withErrorBoundary(
+  ({
+    showInactive = false,
+    sortColumn = "display",
+    sortOrder = "asc",
+  }: ProviderMedsTableProps) => {
+    const [medicationModels, setMedicationModels] = useState<
+      MedicationStatementModel[]
+    >([]);
+    const [drawerOpen, setDrawerOpen] = useState(false);
+    const [selectedMedication, setSelectedMedication] =
+      useState<MedicationStatementModel>();
+    const { builderMedications, isLoading } = useQueryAllPatientMedications();
 
-  function openMedicationDrawer(row: MedicationStatementModel) {
-    setSelectedMedication(row);
-    setDrawerOpen(true);
-  }
+    function openMedicationDrawer(row: MedicationStatementModel) {
+      setSelectedMedication(row);
+      setDrawerOpen(true);
+    }
 
-  useEffect(() => {
-    if (!builderMedications) return;
-    setMedicationModels(
-      sort(
-        showInactive
-          ? builderMedications
-          : builderMedications.filter((bm) => bm.displayStatus === "Active"),
-        pipe(get(sortColumn), toLower),
-        sortOrder
-      )
-    );
-  }, [builderMedications, sortColumn, sortOrder, showInactive]);
+    useEffect(() => {
+      if (!builderMedications) return;
+      setMedicationModels(
+        sort(
+          showInactive
+            ? builderMedications
+            : builderMedications.filter((bm) => bm.displayStatus === "Active"),
+          pipe(get(sortColumn), toLower),
+          sortOrder
+        )
+      );
+    }, [builderMedications, sortColumn, sortOrder, showInactive]);
 
-  return (
-    <>
-      <MedicationsTableBase
-        medicationStatements={medicationModels}
-        isLoading={isLoading}
-        rowMenuActions={(medication) => [
-          {
-            name: "View History",
-            action: async () => {
-              openMedicationDrawer(medication);
+    return (
+      <>
+        <MedicationsTableBase
+          medicationStatements={medicationModels}
+          telemetryNamespace="ProviderMedsTable"
+          isLoading={isLoading}
+          rowMenuActions={(medication) => [
+            {
+              name: "View History",
+              action: async () => {
+                openMedicationDrawer(medication);
+              },
             },
-          },
-        ]}
-      />
-      <MedicationDrawer
-        medication={selectedMedication}
-        isOpen={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-      />
-    </>
-  );
-}
+          ]}
+        />
+        <MedicationDrawer
+          medication={selectedMedication}
+          isOpen={drawerOpen}
+          onClose={() => setDrawerOpen(false)}
+        />
+      </>
+    );
+  },
+  "ProviderMedsTable"
+);

@@ -5,6 +5,7 @@ import type { Argument } from "classnames";
 import cx from "classnames";
 import { useCallback, useEffect, useState } from "react";
 import * as CTWBox from "@/components/core/ctw-box";
+import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Pagination } from "@/components/core/pagination/pagination";
 import { useQueryWithCTW } from "@/components/core/providers/ctw-provider";
 import { Table } from "@/components/core/table/table";
@@ -17,7 +18,6 @@ import "./patients-table.scss";
 export type PatientsTableProps = {
   className?: cx.Argument;
   handleRowClick: (row: PatientModel) => void;
-  handleAddNewPatient?: () => void;
   pageSize?: number;
   title?: string;
 } & TableOptionProps<PatientModel>;
@@ -49,87 +49,94 @@ export function usePatientsList(
  * object as `.resource`.
  *
  */
-export const PatientsTable = ({
-  className,
-  handleAddNewPatient,
-  handleRowClick,
-  pageSize = 5,
-  title = "Patients",
-}: PatientsTableProps) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [total, setTotal] = useState(0);
-  const [patients, setPatients] = useState<PatientModel[]>([]);
-  const [searchNameValue, setSearchNameValue] = useState<string | undefined>();
-  const {
-    data: { patients: responsePatients, total: responseTotal } = {},
-    isFetching,
-    isError,
-  } = usePatientsList(pageSize, currentPage - 1, searchNameValue);
+export const PatientsTable = withErrorBoundary(
+  ({
+    className,
+    handleRowClick,
+    pageSize = 5,
+    title = "Patients",
+  }: PatientsTableProps) => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [total, setTotal] = useState(0);
+    const [patients, setPatients] = useState<PatientModel[]>([]);
+    const [searchNameValue, setSearchNameValue] = useState<
+      string | undefined
+    >();
+    const {
+      data: { patients: responsePatients, total: responseTotal } = {},
+      isFetching,
+      isError,
+    } = usePatientsList(pageSize, currentPage - 1, searchNameValue);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedSearch = useCallback(
-    debounce((value) => {
-      setSearchNameValue(value);
-      setCurrentPage(1);
-      setTotal(0);
-      setPatients([]);
-    }, 100),
-    []
-  );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const debouncedSearch = useCallback(
+      debounce((value) => {
+        setSearchNameValue(value);
+        setCurrentPage(1);
+        setTotal(0);
+        setPatients([]);
+      }, 100),
+      []
+    );
 
-  // Here we are setting the total and patients only when we know that useQuery
-  // isn't fetching. This will prevent empty intermediate states where there
-  // is no data because the value of `usePatientsTable()` hasn't settled yet.
-  useEffect(() => {
-    if (!isFetching && responsePatients) {
-      setTotal(responseTotal ?? 0);
-      setPatients(responsePatients);
-    }
-  }, [responsePatients, responseTotal, isError, isFetching]);
+    // Here we are setting the total and patients only when we know that useQuery
+    // isn't fetching. This will prevent empty intermediate states where there
+    // is no data because the value of `usePatientsTable()` hasn't settled yet.
+    useEffect(() => {
+      if (!isFetching && responsePatients) {
+        setTotal(responseTotal ?? 0);
+        setPatients(responsePatients);
+      }
+    }, [responsePatients, responseTotal, isError, isFetching]);
 
-  // This resets our state when there is an error fetching patients from ODS.
-  useEffect(() => {
-    if (isError) {
-      setTotal(0);
-      setPatients([]);
-    }
-  }, [isError, isFetching]);
+    // This resets our state when there is an error fetching patients from ODS.
+    useEffect(() => {
+      if (isError) {
+        setTotal(0);
+        setPatients([]);
+      }
+    }, [isError, isFetching]);
 
-  return (
-    <CTWBox.StackedWrapper className={cx("ctw-patients-table", className)}>
-      <CTWBox.Heading title={title}>
-        <div className="ctw-relative">
-          <div className="ctw-search-icon-wrapper">
-            <SearchIcon className="ctw-search-icon" />
+    return (
+      <CTWBox.StackedWrapper
+        className={cx("ctw-patients-table", className)}
+        data-zus-telemetry-namespace="PatientsTable"
+      >
+        <CTWBox.Heading title={title}>
+          <div className="ctw-relative">
+            <div className="ctw-search-icon-wrapper">
+              <SearchIcon className="ctw-search-icon" />
+            </div>
+            <input
+              type="text"
+              className="ctw-patients-table-search"
+              placeholder="Search"
+              name="searchPatientName"
+              onChange={(e) => debouncedSearch(e.currentTarget.value)}
+            />
           </div>
-          <input
-            type="text"
-            className="ctw-patients-table-search"
-            placeholder="Search"
-            name="searchPatientName"
-            onChange={(e) => debouncedSearch(e.currentTarget.value)}
-          />
-        </div>
-      </CTWBox.Heading>
-      <CTWBox.Body>
-        <Table
-          records={patients}
-          columns={columns}
-          handleRowClick={handleRowClick}
-          hidePagination
-        >
-          <Pagination
-            setCurrentPage={setCurrentPage}
-            total={total}
-            currentPage={currentPage}
-            pageSize={pageSize}
-            isLoading={isFetching}
-          />
-        </Table>
-      </CTWBox.Body>
-    </CTWBox.StackedWrapper>
-  );
-};
+        </CTWBox.Heading>
+        <CTWBox.Body>
+          <Table
+            records={patients}
+            columns={columns}
+            handleRowClick={handleRowClick}
+            hidePagination
+          >
+            <Pagination
+              setCurrentPage={setCurrentPage}
+              total={total}
+              currentPage={currentPage}
+              pageSize={pageSize}
+              isLoading={isFetching}
+            />
+          </Table>
+        </CTWBox.Body>
+      </CTWBox.StackedWrapper>
+    );
+  },
+  "PatientsTable"
+);
 
 const columns: TableColumn<PatientModel>[] = [
   {

@@ -192,6 +192,7 @@ const FormFieldEntry = ({
         errors={fieldErrors}
         hidden={hidden}
         render={render}
+        data-zus-telemetry-focus={label}
       />
     </div>
   );

@@ -15,9 +15,14 @@ export type MenuItem = {
 export type DropdownMenuProps = {
   children: ReactNode;
   menuItems: MenuItem[];
+  telemetryNamespace?: string;
 };
 
-export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
+export function DropdownMenu({
+  children,
+  menuItems,
+  telemetryNamespace = "unknown",
+}: DropdownMenuProps) {
   const { ctwProviderRef } = useCTW();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -41,6 +46,7 @@ export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
 
         <RadixDropdownMenu.Portal container={ctwProviderRef.current}>
           <RadixDropdownMenu.Content
+            data-zus-telemetry-namespace={`Menu[${telemetryNamespace}]`}
             // Prevent focus from closing menu, this fixes
             // an issue with interactive testing where a "click"
             // would fire twice, once for the mousedown and
@@ -55,6 +61,7 @@ export function DropdownMenu({ children, menuItems }: DropdownMenuProps) {
 
             {menuItems.map((menuItem) => (
               <RadixDropdownMenu.Item
+                data-zus-telemetry-click={`Item[${menuItem.name}]`}
                 onClick={() => handleClick(menuItem)}
                 key={menuItem.name}
                 className={cx(menuItem.className, "ctw-dropdown-menu-item")}

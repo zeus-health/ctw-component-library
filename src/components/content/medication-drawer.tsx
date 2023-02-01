@@ -66,6 +66,7 @@ export const MedicationDrawer = ({
                 onDismissal(medication);
                 drawerProps.onClose();
               }}
+              data-zus-telemetry-click="Dismiss"
             >
               Dismiss
             </button>
@@ -74,6 +75,7 @@ export const MedicationDrawer = ({
             type="button"
             className="ctw-btn-default"
             onClick={drawerProps.onClose}
+            data-zus-telemetry-click="Close"
           >
             Close
           </button>

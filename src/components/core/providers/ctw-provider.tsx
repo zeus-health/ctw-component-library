@@ -25,6 +25,7 @@ import {
 import { claimsBuilderId } from "@/utils/auth";
 import { merge } from "@/utils/nodash";
 import { ctwFetch, queryClient } from "@/utils/request";
+import { Telemetry } from "@/utils/telemetry";
 import "../main.scss";
 
 export type Env = "dev" | "sandbox" | "production";
@@ -35,11 +36,12 @@ type AuthTokenSpecified = { authToken: string; authTokenURL?: never };
 type AuthTokenURLSpecified = { authToken?: never; authTokenURL: string };
 
 type CTWProviderProps = {
-  children: ReactNode;
-  env: Env;
   builderId?: string;
-  theme?: Theme;
+  children: ReactNode;
+  enableTelemetry?: boolean;
+  env: Env;
   headers?: Record<string, string>;
+  theme?: Theme;
 } & (AuthTokenSpecified | AuthTokenURLSpecified);
 
 declare global {
@@ -50,7 +52,19 @@ declare global {
   }
 }
 
-function CTWProvider({ theme, children, ...ctwState }: CTWProviderProps) {
+/**
+ * CTWProvider is required for Zus components to operate and at least one
+ * should exist in the app as an ancestor to any ctw-component-library React
+ * components (we recommend CTWProvider be at the root of your project). In
+ * addition to providing a client request context, the CTWProvider also allows
+ * for theme configuration and opting out of telemetry collection if desired.
+ */
+function CTWProvider({
+  children,
+  enableTelemetry = false,
+  theme,
+  ...ctwState
+}: CTWProviderProps) {
   const [token, setToken] = useState<CTWToken>();
   const ctwProviderRef = useRef<HTMLDivElement>(null);
 
@@ -94,6 +108,16 @@ function CTWProvider({ theme, children, ...ctwState }: CTWProviderProps) {
     }
     return newToken.accessToken;
   }, [token, ctwState]);
+
+  useEffect(() => {
+    if (enableTelemetry) {
+      Telemetry.init(ctwState.env);
+      Telemetry.setBuilder(ctwState.builderId);
+      handleAuth()
+        .then((accessToken) => Telemetry.setUser(accessToken))
+        .catch(() => Telemetry.clearUser());
+    }
+  }, [ctwState.builderId, ctwState.env, enableTelemetry, handleAuth, token]);
 
   const providerState = useMemo(
     () => ({
