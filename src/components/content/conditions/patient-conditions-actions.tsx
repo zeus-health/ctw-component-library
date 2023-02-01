@@ -126,9 +126,11 @@ const patientConditionActions = (
   value: string,
   actionType: string
 ) => {
+  const newValues = filters[filterName] ? [...filters[filterName]] : [];
+
   switch (actionType) {
     case "ADD":
-      updateFilters({ [filterName]: [...filters[filterName], value] });
+      updateFilters({ [filterName]: [...newValues, value] });
       break;
     case "DELETE":
       updateFilters({
