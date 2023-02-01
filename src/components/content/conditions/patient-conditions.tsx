@@ -98,7 +98,7 @@ export function PatientConditions({
         <PatientConditionsActions
           hideAdd={readOnly || filters.activeCollection === "other"}
           actions={actions}
-          filters={filters}
+          filters={filters[filters.activeCollection]}
           availableFilters={selectedAndAvailableFilters(
             getUnfilteredCollection(
               patientConditions,

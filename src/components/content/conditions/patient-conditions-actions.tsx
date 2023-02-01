@@ -14,7 +14,7 @@ import { DropdownMenuAction } from "@/components/core/dropdown-action-menu";
 
 export type PatientConditionsActionsProps = {
   hideAdd: boolean;
-  filters: Filters;
+  filters: FilterTypes;
   availableFilters: AvailableFilters;
   actions: FilterActions;
   updateFilters: (newFilters: Partial<Filters>) => void;
@@ -32,11 +32,12 @@ export function PatientConditionsActions({
   return (
     <div className="ctw-flex ctw-items-center ctw-justify-between ctw-border-0 ctw-border-t ctw-border-solid ctw-border-divider-light ctw-py-5">
       <div className="ctw-flex ctw-items-center ctw-space-x-1">
-        {filters[filters.activeCollection] && (
+        {filters && (
           <PillWrapper
             availableFilters={availableFilters}
             actions={actions}
             updateFilters={updateFilters}
+            filters={filters}
           />
         )}
         <AddFilter actions={actions} />
@@ -58,32 +59,35 @@ export function PatientConditionsActions({
 
 type PillWrapper = {
   availableFilters: AvailableFilters;
-  actions: FilterActions;
+  filters: FilterTypes;
   updateFilters: (newFilters: Partial<Filters>) => void;
+  actions: FilterActions;
 };
 
 const PillWrapper = ({
   availableFilters,
-  actions,
+  filters,
   updateFilters,
+  actions,
 }: PillWrapper) => (
   <>
     {availableFilters.map((item) =>
-      Object.entries(item).map(([filterName, filters]) => (
+      Object.entries(item).map(([filterName, filterMap]) => (
         <Fragment key={filterName}>
-          {filters.available.length > 0 && (
+          {filterMap.available.length > 0 && (
             <DropdownMenuAction
               options={{
-                items: filters.available.map((filter) => ({
+                items: filterMap.available.map((filter) => ({
                   name: filter,
-                  isSelected: filters.selected.includes(filter),
+                  isSelected: filterMap.selected.includes(filter),
                 })),
                 onItemSelect: (e) => {
-                  patientConditionActions();
-                  actions.addToFilter(
+                  patientConditionActions(
+                    filters,
+                    updateFilters,
                     filterName,
-                    e.value ? "ADD" : "REMOVE",
-                    e.name
+                    e.name,
+                    e.value ? "ADD" : "DELETE"
                   );
                 },
                 type: "checkbox",
@@ -99,7 +103,7 @@ const PillWrapper = ({
             >
               <PatientConditionPill
                 title={FILTER_MAP[filterName]}
-                items={filters.selected}
+                items={filterMap.selected}
               />
             </DropdownMenuAction>
           )}
@@ -111,40 +115,26 @@ const PillWrapper = ({
 
 const patientConditionActions = (
   filters: FilterTypes,
-  updateFilters: Partial<Filters>,
+  updateFilters: (newFilters: Partial<Filters>) => void,
+  filterName: string,
+  value: string,
   actionType: string
 ) => {
   switch (actionType) {
-    case "Add":
-      return undefined;
+    case "ADD":
+      updateFilters({ [filterName]: [...filters[filterName], value] });
+      break;
+    case "DELETE":
+      updateFilters({
+        [filterName]: filters[filterName].filter((item) => item !== value),
+      });
+      break;
+    case "REMOVE":
+      updateFilters({
+        [filterName]: filters[filterName].filter((item) => item !== value),
+      });
+      break;
     default:
-      return undefined;
+      break;
   }
 };
-
-// removeFilter: (filterName: keyof FilterTypes) =>
-// updateFilters({
-//   [filters.activeCollection]: { [filterName]: [] },
-// }),
-// clearFilters: () => updateFilters({ patient: {}, other: {} }),
-// resetFilters: () => updateFilters({ ...DEFAULT_FILTER_STATE }),
-// addToFilter: (
-// filterName: keyof FilterTypes,
-// filterType: "ADD" | "REMOVE",
-// value: string
-// ) => {
-// let newValues = [...filters[filters.activeCollection][filterName]];
-// switch (filterType) {
-//   case "ADD":
-//     newValues = [...newValues, value];
-//     break;
-//   case "REMOVE":
-//     newValues = newValues.filter((item) => item !== value);
-//     break;
-//   default:
-//     newValues = [];
-// }
-
-// updateFilters({
-//   [filters.activeCollection]: { [filterName]: newValues },
-// });

@@ -46,7 +46,10 @@ export function useConditionFilters() {
   });
 
   function updateFilters(newFilters: Partial<Filters>) {
-    setFilters((prevState) => ({ ...prevState, ...newFilters }));
+    setFilters((prevState) => ({
+      ...prevState,
+      ...{ [filters.activeCollection]: newFilters },
+    }));
   }
 
   const actions = {
@@ -56,27 +59,6 @@ export function useConditionFilters() {
       }),
     clearFilters: () => updateFilters({ patient: {}, other: {} }),
     resetFilters: () => updateFilters({ ...DEFAULT_FILTER_STATE }),
-    addToFilter: (
-      filterName: keyof FilterTypes,
-      filterType: "ADD" | "REMOVE",
-      value: string
-    ) => {
-      let newValues = [...filters[filters.activeCollection][filterName]];
-      switch (filterType) {
-        case "ADD":
-          newValues = [...newValues, value];
-          break;
-        case "REMOVE":
-          newValues = newValues.filter((item) => item !== value);
-          break;
-        default:
-          newValues = [];
-      }
-
-      updateFilters({
-        [filters.activeCollection]: { [filterName]: newValues },
-      });
-    },
   };
 
   function applyFilters(
@@ -130,7 +112,6 @@ export const selectedAndAvailableFilters = (
 ) =>
   Object.entries(availableConditionFilters(conditions)).map(([key, values]) => {
     const selected = filters[key] || [];
-    console.log("selected", values);
     return {
       [key]: {
         available: compact(values),
