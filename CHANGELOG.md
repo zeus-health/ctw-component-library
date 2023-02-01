@@ -1,5 +1,13 @@
 # ctw-component-library
 
+## 0.43.1
+
+### Patch Changes
+
+- eea869eb: Add new usePatientHistory hook which can be used to open the patient history request drawer from anywhere.
+- eea869eb: Update form field error color and add generic message to drawer form footer, indicating the form has errors.
+- 002d4099: Add hideRequestRecords prop to conditions 1.0 component.
+
 ## 0.43.0
 
 ### Minor Changes
