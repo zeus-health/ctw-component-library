@@ -38,8 +38,8 @@ import {
 import { ConditionModel } from "@/fhir/models/condition";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import {
-  getLatestPatientHistoryMessage,
-  PatientHistoryData,
+  getPatientHistoryDetails,
+  PatientHistoryDetails,
 } from "@/services/patient-history/patient-history";
 import { AnyZodSchema } from "@/utils/form-helper";
 import { curry } from "@/utils/nodash";
@@ -81,11 +81,7 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
 
   const [clinicalHistoryExists, setClinicalHistoryExists] = useState<boolean>();
   const [patientHistoryInfo, setPatientHistoryInfo] =
-    useState<PatientHistoryData>({
-      patientHistoryExists: false,
-      status: "",
-      dateCreated: "",
-    });
+    useState<PatientHistoryDetails>();
 
   const patientRecordsMessage = patientRecordsResponse.isError
     ? ERROR_MSG
@@ -156,12 +152,12 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
   const checkClinicalHistory = async (patientID: string) => {
     const requestContext = await getRequestContext();
 
-    const patientHistoryMessage = await getLatestPatientHistoryMessage(
+    const patientHistoryMessage = await getPatientHistoryDetails(
       requestContext,
       patientID
     );
 
-    setClinicalHistoryExists(patientHistoryMessage.patientHistoryExists);
+    setClinicalHistoryExists(!!patientHistoryMessage?.lastRetrievedAt);
     setPatientHistoryInfo(patientHistoryMessage);
   };
 
@@ -364,8 +360,8 @@ export function Conditions({ className, readOnly = false }: ConditionsProps) {
           header={
             <>
               <PatientHistoryStatus
-                status={patientHistoryInfo.status}
-                date={patientHistoryInfo.dateCreated}
+                status={patientHistoryInfo?.status}
+                date={patientHistoryInfo?.dateCreated}
               />
               <div className="ctw-pt-0 ctw-text-base">
                 Request patient clinical history from 70K+ providers across the

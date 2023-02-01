@@ -2,6 +2,7 @@ import { PatientRefreshHistoryMessage } from "./patient-history-types";
 import { getZusApiBaseUrl } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { errorResponse } from "@/utils/errors";
+import { find } from "@/utils/nodash";
 import { ctwFetch } from "@/utils/request";
 
 export async function getPatientRefreshHistoryMessages(
@@ -33,56 +34,36 @@ export async function getPatientRefreshHistoryMessages(
   }
 }
 
-export type PatientHistoryData = {
-  patientHistoryExists: boolean;
+export type PatientHistoryDetails = {
+  lastRetrievedAt?: string;
   status: string;
-  dateCreated: string | undefined;
+  dateCreated: string;
 };
 
-export async function getLatestPatientHistoryMessage(
+export async function getPatientHistoryDetails(
   requestContext: CTWRequestContext,
   patientID: string
-): Promise<PatientHistoryData> {
+): Promise<PatientHistoryDetails | undefined> {
   const messages = await getPatientRefreshHistoryMessages(
     requestContext,
     patientID
   );
 
-  const lastPatientHistoryRequest = {
+  if (messages.length === 0) {
+    return undefined;
+  }
+
+  const latestDone = find(messages, {
+    _messages: [
+      {
+        status: "done",
+      },
+    ],
+  }) as PatientRefreshHistoryMessage | undefined;
+
+  return {
+    lastRetrievedAt: latestDone?._createdAt,
     status: messages[0].status,
     dateCreated: messages[0]._createdAt,
   };
-
-  if (messages.length === 0) {
-    return { patientHistoryExists: false, status: "", dateCreated: undefined };
-  }
-
-  switch (messages[0].status) {
-    case "done":
-      return {
-        patientHistoryExists: true,
-        ...lastPatientHistoryRequest,
-      };
-    case "in_progress":
-      return {
-        patientHistoryExists: false,
-        ...lastPatientHistoryRequest,
-      };
-    case "initialize":
-      return {
-        patientHistoryExists: false,
-        ...lastPatientHistoryRequest,
-      };
-    case "error":
-      return {
-        patientHistoryExists: true,
-        ...lastPatientHistoryRequest,
-      };
-    default:
-      return {
-        patientHistoryExists: false,
-        status: "",
-        dateCreated: messages[0]._createdAt,
-      };
-  }
 }
