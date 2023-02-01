@@ -11,15 +11,19 @@ export type MenuItem = {
   className?: string;
 };
 
-export type OptionsItem = { name: string; isSelected: boolean };
+export type OptionsItem = { key: string; name: string; isSelected?: boolean };
 export type DropDownMenuItemType = "checkbox" | "select";
 
 export type DropdownMenuProps = {
   children: ReactNode;
   options: {
     items: OptionsItem[];
-    onItemSelect: (clickedItem: { name: string; value: boolean }) => void;
-    type: DropDownMenuItemType;
+    onItemSelect: (clickedItem: {
+      key: string;
+      name: string;
+      value: boolean;
+    }) => void;
+    type?: DropDownMenuItemType;
   };
   customOptionRender?: (optionsItem: OptionsItem) => JSX.Element;
   pinnedActions: MenuItem[];
@@ -55,16 +59,19 @@ export function DropdownMenuAction({
           >
             {options.items.map((menuItem) => (
               <RadixDropdownMenu.Item
-                key={menuItem.name}
+                key={menuItem.key}
                 className={cx("ctw-dropdown-action-menu-item")}
-                onClick={(e) => {
-                  console.log("e", e);
+                onClick={() => {
+                  options.onItemSelect({
+                    key: menuItem.key,
+                    name: menuItem.name,
+                    value: !menuItem.isSelected,
+                  });
                 }}
               >
                 <RenderCorrectFieldType
                   inputType={options.type}
                   menuItem={menuItem}
-                  onClick={options.onItemSelect}
                 />
               </RadixDropdownMenu.Item>
             ))}
@@ -90,15 +97,13 @@ export function DropdownMenuAction({
 }
 
 export type RenderCorrectFieldTypeProps = {
-  inputType: DropDownMenuItemType;
+  inputType?: DropDownMenuItemType;
   menuItem: OptionsItem;
-  onClick: (value: any) => void;
 };
 
 const RenderCorrectFieldType = ({
   inputType,
   menuItem,
-  onClick,
 }: RenderCorrectFieldTypeProps) => {
   switch (inputType) {
     case "checkbox":
@@ -109,13 +114,6 @@ const RenderCorrectFieldType = ({
               type="checkbox"
               id={menuItem.name}
               name={menuItem.name}
-              onClick={(e) => {
-                const clickedValue = {
-                  name: e.target.value,
-                  value: e.target.checked,
-                };
-                onClick(clickedValue);
-              }}
               value={menuItem.name}
               checked={menuItem.isSelected}
             />

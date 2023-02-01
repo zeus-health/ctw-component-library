@@ -32,16 +32,16 @@ export function PatientConditionsActions({
   return (
     <div className="ctw-flex ctw-items-center ctw-justify-between ctw-border-0 ctw-border-t ctw-border-solid ctw-border-divider-light ctw-py-5">
       <div className="ctw-flex ctw-items-center ctw-space-x-1">
-        {filters && (
-          <PillWrapper
-            availableFilters={availableFilters}
-            updateFilters={updateFilters}
-            filters={filters}
-          />
-        )}
+        <PillWrapper
+          availableFilters={availableFilters}
+          updateFilters={updateFilters}
+          filters={filters}
+        />
+
         <AddFilter
           updateFilters={updateFilters}
           activeCollection={activeCollection}
+          filters={filters}
         />
       </div>
       <div className="ctw-flex ctw-items-center ctw-space-x-2 ">
@@ -107,10 +107,12 @@ const PillWrapper = ({
                 },
               ]}
             >
-              <PatientConditionPill
-                title={FILTER_MAP[filterName]}
-                items={filterMap.selected}
-              />
+              {filters[filterName] && (
+                <PatientConditionPill
+                  title={FILTER_MAP[filterName]}
+                  items={filterMap.selected}
+                />
+              )}
             </DropdownMenuAction>
           )}
         </Fragment>
@@ -134,11 +136,12 @@ const patientConditionActions = (
       break;
     case "DELETE":
       updateFilters({
+        ...filters,
         [filterName]: filters[filterName].filter((item) => item !== value),
       });
       break;
     case "REMOVE":
-      updateFilters({ ...filters, [filterName]: [] });
+      updateFilters({ ...filters, [filterName]: null });
       break;
     default:
       break;

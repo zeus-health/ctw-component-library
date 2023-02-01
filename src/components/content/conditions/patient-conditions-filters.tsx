@@ -118,9 +118,17 @@ export const selectedAndAvailableFilters = (
     };
   });
 
-export const AddFilter = ({ updateFilters, activeCollection }) => (
+export const AddFilter = ({ updateFilters, activeCollection, filters }) => (
   <DropdownMenuAction
-    options={{ items: [{ name: "Category" }, { name: "Status" }] }}
+    options={{
+      items: [
+        { name: "Category", key: "ccsChapter" },
+        { key: "status", name: "Status" },
+      ],
+      onItemSelect: (e) => {
+        updateFilters({ ...filters, [e.key]: [] });
+      },
+    }}
     pinnedActions={[
       {
         name: "Reset Filters",
