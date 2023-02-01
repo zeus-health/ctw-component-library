@@ -61,14 +61,7 @@ export const ProviderMedsTable = withErrorBoundary(
           medicationStatements={medicationModels}
           telemetryNamespace="ProviderMedsTable"
           isLoading={isLoading}
-          rowMenuActions={(medication) => [
-            {
-              name: "View History",
-              action: async () => {
-                openMedicationDrawer(medication);
-              },
-            },
-          ]}
+          handleRowClick={(medication) => openMedicationDrawer(medication)}
         />
         <MedicationDrawer
           medication={selectedMedication}

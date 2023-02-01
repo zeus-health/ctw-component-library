@@ -1,7 +1,5 @@
 import type { MedicationStatementModel } from "@/fhir/models/medication-statement";
-import { DotsHorizontalIcon } from "@heroicons/react/outline";
 import { ReactNode, useRef, useState } from "react";
-import { DropdownMenu, MenuItem } from "@/components/core/dropdown-menu";
 import { Table, TableBaseProps } from "@/components/core/table/table";
 import {
   MinRecordItem,
@@ -9,11 +7,9 @@ import {
   TableSort,
 } from "@/components/core/table/table-helpers";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
-import { compact, isFunction } from "@/utils/nodash/fp";
 
 export type MedicationsTableBaseProps<T extends MinRecordItem> = {
   medicationStatements: MedicationStatementModel[];
-  rowMenuActions?: (condition: MedicationStatementModel) => MenuItem[];
   hideMenu?: boolean;
   className?: string;
   telemetryNamespace?: string;
@@ -23,7 +19,6 @@ export type MedicationsTableBaseProps<T extends MinRecordItem> = {
 export const MedicationsTableBase = ({
   children,
   className = "",
-  rowMenuActions,
   hideMenu = false,
   medicationStatements,
   telemetryNamespace,
@@ -33,7 +28,7 @@ export const MedicationsTableBase = ({
   const breakpoints = useBreakpoints(containerRef);
   const [sort, setSort] = useState<TableSort>();
 
-  const columns = compact([
+  const columnsStacked = [
     {
       title: "Medication Name",
       render: (medication) => (
@@ -46,6 +41,10 @@ export const MedicationsTableBase = ({
       minWidth: 270,
       sortIndices: [{ index: "display" }, { index: "dosage", dir: "asc" }],
     },
+  ] as TableColumn<MedicationStatementModel>[];
+
+  const columns = [
+    ...columnsStacked,
     {
       title: "Dispensed",
       render: (medication) => (
@@ -95,21 +94,7 @@ export const MedicationsTableBase = ({
       widthPercent: 18,
       minWidth: "90px",
     },
-  ]) as TableColumn<MedicationStatementModel>[];
-
-  if (!hideMenu && isFunction(rowMenuActions)) {
-    columns.push({
-      className: "ctw-table-action-column",
-      render: (medication) => (
-        <DropdownMenu
-          menuItems={rowMenuActions(medication)}
-          telemetryNamespace={telemetryNamespace}
-        >
-          <DotsHorizontalIcon className="ctw-w-5" />
-        </DropdownMenu>
-      ),
-    });
-  }
+  ] as TableColumn<MedicationStatementModel>[];
 
   return (
     <div
@@ -122,7 +107,7 @@ export const MedicationsTableBase = ({
         onSort={setSort}
         stacked={breakpoints.sm}
         records={medicationStatements}
-        columns={columns}
+        columns={breakpoints.sm ? columnsStacked : columns}
         emptyMessage="There are no medications to display."
         {...tableProps}
       />

@@ -9,36 +9,38 @@ import { ProviderInactiveMedicationsTable } from "@/components/content/medicatio
 import { ProviderMedsTable } from "@/components/content/medications/provider-meds-table";
 import * as CTWBox from "@/components/core/ctw-box";
 import { ListBox } from "@/components/core/list-box/list-box";
+import { MedicationStatementModel } from "@/fhir/models";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import "./patient-medications.scss";
 
 export type PatientMedicationsTabbedProps = {
   className?: string;
   forceHorizontalTabs?: boolean;
+  handleAddToRecord?: (m: MedicationStatementModel) => void;
 };
 
 const tabbedContent = [
   {
     key: "medication-list",
-    display: () => "Medication List",
+    display: () => "medication list",
     render: () => <ProviderMedsTable />,
   },
   {
     key: "inactive-provider-records",
-    display: () => "Inactive",
+    display: () => "inactive",
     render: () => <ProviderInactiveMedicationsTable />,
   },
   {
     key: "other-provider-records",
     display: () => (
       <>
-        <span className="ctw-pr-2">Other Provider Records</span>
+        <span className="ctw-pr-2 ctw-capitalize">other provider records</span>
         <BadgeOtherProviderMedCount />
       </>
     ),
-    render: () => (
+    render: ({ handleAddToRecord }: PatientMedicationsTabbedProps) => (
       <>
-        <OtherProviderMedsTable />
+        <OtherProviderMedsTable handleAddToRecord={handleAddToRecord} />
       </>
     ),
   },
@@ -56,6 +58,7 @@ const tabbedContent = [
 export function PatientMedicationsTabbed({
   className,
   forceHorizontalTabs = false,
+  handleAddToRecord,
 }: PatientMedicationsTabbedProps) {
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -95,7 +98,7 @@ export function PatientMedicationsTabbed({
                 className={({ selected }) =>
                   cx(
                     [
-                      "ctw-tab ctw-text-sm",
+                      "ctw-tab ctw-text-sm ctw-capitalize",
                       "hover:after:ctw-bg-content-black",
                       "focus-visible:ctw-outline-primary-dark focus-visible:after:ctw-bg-transparent",
                     ],
@@ -117,7 +120,7 @@ export function PatientMedicationsTabbed({
                 key={key}
                 className={cx(breakpoints.sm ? "ctw-mt-0" : "ctw-mt-4")}
               >
-                {render()}
+                {render({ handleAddToRecord })}
               </Tab.Panel>
             ))}
           </Tab.Panels>
