@@ -289,7 +289,7 @@ export const Conditions = withErrorBoundary(
           </div>
           <div className="ctw-space-y-3">
             {(patientHistoryInfo?.status === "in_progress" ||
-              patientHistoryInfo?.status === "error") && (
+              patientHistoryInfo?.status === "initialize") && (
               <PatientHistoryStatus
                 status={patientHistoryInfo.status}
                 date={patientHistoryInfo.dateCreated}
@@ -298,12 +298,13 @@ export const Conditions = withErrorBoundary(
             <div className="ctw-conditions-title-container">
               <div className="ctw-title">Other Provider Records</div>
               {shouldShowClinicalHistoryArea && (
-                <div className="ctw-flex ctw-space-x-2">
+                <div className="ctw-flex ctw-items-baseline ctw-space-x-2">
                   {patientHistoryInfo?.lastRetrievedAt && (
-                    <div className="ctw-italic">
+                    <div className="ctw-text-sm ctw-italic ctw-text-black">
                       Last Retrived {patientHistoryInfo.lastRetrievedAt}
                     </div>
                   )}
+
                   <button
                     type="button"
                     className="ctw-btn-clear ctw-link"
