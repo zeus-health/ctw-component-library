@@ -301,7 +301,7 @@ export const Conditions = withErrorBoundary(
                 <div className="ctw-flex ctw-items-baseline ctw-space-x-2">
                   {patientHistoryInfo?.lastRetrievedAt && (
                     <div className="ctw-text-sm ctw-italic ctw-text-black">
-                      Last Retrived {patientHistoryInfo.lastRetrievedAt}
+                      Last Retrieved {patientHistoryInfo.lastRetrievedAt}
                     </div>
                   )}
 
