@@ -52,14 +52,12 @@ export function useConditionFilters() {
     }));
   }
 
-  const actions = {
-    removeFilter: (filterName: keyof FilterTypes) =>
-      updateFilters({
-        [filters.activeCollection]: { [filterName]: [] },
-      }),
-    clearFilters: () => updateFilters({ patient: {}, other: {} }),
-    resetFilters: () => updateFilters({ ...DEFAULT_FILTER_STATE }),
-  };
+  function updateCollection(newFilters: Partial<Filters>) {
+    setFilters((prevState) => ({
+      ...prevState,
+      ...newFilters,
+    }));
+  }
 
   function applyFilters(
     patientConditions: ConditionModel[],
@@ -91,7 +89,7 @@ export function useConditionFilters() {
     filters,
     updateFilters,
     applyFilters,
-    actions,
+    updateCollection,
   };
 }
 
@@ -120,15 +118,18 @@ export const selectedAndAvailableFilters = (
     };
   });
 
-export const AddFilter = ({ actions }) => (
+export const AddFilter = ({ updateFilters, activeCollection }) => (
   <DropdownMenuAction
     options={{ items: [{ name: "Category" }, { name: "Status" }] }}
     pinnedActions={[
-      { name: "Reset Filters", action: () => actions.resetFilters() },
+      {
+        name: "Reset Filters",
+        action: () => updateFilters(DEFAULT_FILTER_STATE[activeCollection]),
+      },
       {
         name: "Clear All Filters",
         action: () => {
-          actions.clearFilters();
+          updateFilters({});
         },
       },
     ]}

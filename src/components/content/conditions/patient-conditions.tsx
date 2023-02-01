@@ -41,7 +41,7 @@ export function PatientConditions({
   readOnly = false,
 }: PatientConditionsProps) {
   // State.
-  const { filters, updateFilters, applyFilters, actions } =
+  const { filters, updateFilters, applyFilters, updateCollection } =
     useConditionFilters();
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
@@ -91,14 +91,14 @@ export function PatientConditions({
           otherConditions={otherConditions}
           collection={filters.activeCollection}
           onCollectionChange={(collection) =>
-            updateFilters({ activeCollection: collection })
+            updateCollection({ activeCollection: collection })
           }
         />
 
         <PatientConditionsActions
           hideAdd={readOnly || filters.activeCollection === "other"}
-          actions={actions}
           filters={filters[filters.activeCollection]}
+          activeCollection={filters.activeCollection}
           availableFilters={selectedAndAvailableFilters(
             getUnfilteredCollection(
               patientConditions,

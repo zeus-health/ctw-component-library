@@ -6,7 +6,7 @@ import {
   AddFilter,
   AvailableFilters,
   FILTER_MAP,
-  FilterActions,
+  FilterCollection,
   Filters,
   FilterTypes,
 } from "./patient-conditions-filters";
@@ -16,8 +16,8 @@ export type PatientConditionsActionsProps = {
   hideAdd: boolean;
   filters: FilterTypes;
   availableFilters: AvailableFilters;
-  actions: FilterActions;
   updateFilters: (newFilters: Partial<Filters>) => void;
+  activeCollection: FilterCollection;
 };
 
 export function PatientConditionsActions({
@@ -25,7 +25,7 @@ export function PatientConditionsActions({
   filters,
   availableFilters,
   updateFilters,
-  actions,
+  activeCollection,
 }: PatientConditionsActionsProps) {
   const showAddConditionForm = useAddConditionForm();
 
@@ -35,12 +35,14 @@ export function PatientConditionsActions({
         {filters && (
           <PillWrapper
             availableFilters={availableFilters}
-            actions={actions}
             updateFilters={updateFilters}
             filters={filters}
           />
         )}
-        <AddFilter actions={actions} />
+        <AddFilter
+          updateFilters={updateFilters}
+          activeCollection={activeCollection}
+        />
       </div>
       <div className="ctw-flex ctw-items-center ctw-space-x-2 ">
         {!hideAdd && (
@@ -61,14 +63,12 @@ type PillWrapper = {
   availableFilters: AvailableFilters;
   filters: FilterTypes;
   updateFilters: (newFilters: Partial<Filters>) => void;
-  actions: FilterActions;
 };
 
 const PillWrapper = ({
   availableFilters,
   filters,
   updateFilters,
-  actions,
 }: PillWrapper) => (
   <>
     {availableFilters.map((item) =>
