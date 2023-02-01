@@ -28,9 +28,12 @@ const devAccountConfig = {
   applicationId: "48fec1f8-b187-492a-afdd-e809cc6b3b82",
 };
 
+const origin = typeof window !== "undefined" ? window.location.origin : "";
+const body = typeof window !== "undefined" ? window.document.body : undefined;
+
 // Assume local development if origin is localhost or just an IP address
 const isLocalDevelopment = /https?:\/\/(localhost|\d+\.\d+\.\d+\.\d+)/i.test(
-  window.location.origin
+  origin
 );
 // Avoid initializing telemetry multiple times
 let isInitialized = false;
@@ -101,7 +104,7 @@ export class Telemetry {
     // of "button[data-zus-telemetry-click="submit"] > span > span". Because we
     // are listening on body and not button, we would have to walk up 2 parent
     // nodes of the DOM before knowing whether this event was relevant to us.
-    window.document.body.addEventListener("click", (event) => {
+    body?.addEventListener("click", (event) => {
       const { target, isTrusted } = event;
       if (!(isTrusted && target instanceof Element)) {
         return;
@@ -111,7 +114,7 @@ export class Telemetry {
         this.processHTMLEvent(htmlElement, "zusTelemetryClick");
       }
     });
-    window.document.body.addEventListener("focusin", (event) => {
+    body?.addEventListener("focusin", (event) => {
       const { target, isTrusted } = event;
       if (isTrusted && target instanceof HTMLElement) {
         this.processHTMLEvent(target, "zusTelemetryFocus");
