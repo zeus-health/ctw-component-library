@@ -22,19 +22,19 @@ export type PatientMedicationsTabbedProps = {
 const tabbedContent = [
   {
     key: "medication-list",
-    display: () => "Medication List",
+    display: () => "medication list",
     render: () => <ProviderMedsTable />,
   },
   {
     key: "inactive-provider-records",
-    display: () => "Inactive",
+    display: () => "inactive",
     render: () => <ProviderInactiveMedicationsTable />,
   },
   {
     key: "other-provider-records",
     display: () => (
       <>
-        <span className="ctw-pr-2">Other Provider Records</span>
+        <span className="ctw-pr-2 ctw-capitalize">other provider records</span>
         <BadgeOtherProviderMedCount />
       </>
     ),
@@ -98,7 +98,7 @@ export function PatientMedicationsTabbed({
                 className={({ selected }) =>
                   cx(
                     [
-                      "ctw-tab ctw-text-sm",
+                      "ctw-tab ctw-text-sm ctw-capitalize",
                       "hover:after:ctw-bg-content-black",
                       "focus-visible:ctw-outline-primary-dark focus-visible:after:ctw-bg-transparent",
                     ],
