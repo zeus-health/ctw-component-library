@@ -8,6 +8,7 @@ import {
 import { ProviderInactiveMedicationsTable } from "@/components/content/medications/provider-inactive-medications-table";
 import { ProviderMedsTable } from "@/components/content/medications/provider-meds-table";
 import * as CTWBox from "@/components/core/ctw-box";
+import { FilterBar } from "@/components/core/filter-bar/filter-bar";
 import { ListBox } from "@/components/core/list-box/list-box";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import "./patient-medications.scss";
@@ -15,6 +16,78 @@ import "./patient-medications.scss";
 export type PatientMedicationsTabbedProps = {
   className?: string;
   forceHorizontalTabs?: boolean;
+};
+
+// const AddFilterBar = ({ listView }) =>
+//   !listView ? (
+//     <>
+//       <PlusIcon className={cx(iconClassNames)} />
+//       <span>Add Filter</span>
+//     </>
+//   ) : (
+//     <>
+//       <TrashIcon className={cx(iconClassNames)} />
+//       <span>Clear All Filters</span>
+//     </>
+//   );
+//
+// const DismissedMedsButton = ({ listView, tagView }) =>
+//   tagView ? (
+//     <span>Dismissed Records</span>
+//   ) : (
+//     <>
+//       <EyeIcon
+//         className={cx(iconClassNames, listView ? "ctw-top-0" : "-ctw-top-2.5")}
+//       />
+//       <span>show dismissed records</span>
+//     </>
+//   );
+
+const OtherProviderMedsTab = () => {
+  const [selectedFilterIndex, setSelectedFilterIndex] = useState(0);
+  return (
+    <>
+      <FilterBar
+        className="-ctw-mt-2"
+        filters={[
+          {
+            key: "dismissed",
+            type: "tag",
+            icon: "eye",
+            display: ({ active }) =>
+              active ? "dismissed records" : "show dismissed records",
+          },
+          {
+            key: "who-sits-shotgun",
+            type: "select",
+            display: "sitting shotgun",
+            values: [
+              "Joe",
+              "Mike",
+              "Kristen",
+              "peter",
+              "sir kitty cat woofington",
+            ],
+          },
+          {
+            key: "cool-things",
+            type: "checkbox",
+            icon: "plus",
+            display: ({ active }) =>
+              active ? "cool things" : "filter cool things",
+            values: [
+              "cats",
+              { key: "dogs", display: "doggies" },
+              "pizza",
+              "showtime",
+            ],
+          },
+        ]}
+        handleOnChange={(...args) => console.log("change", ...args)}
+      />
+      <OtherProviderMedsTable />
+    </>
+  );
 };
 
 const tabbedContent = [
@@ -36,11 +109,9 @@ const tabbedContent = [
         <BadgeOtherProviderMedCount />
       </>
     ),
-    render: () => (
-      <>
-        <OtherProviderMedsTable />
-      </>
-    ),
+    render: OtherProviderMedsTab,
+    // This function puts a smaller margin on this panel to adjust for filters
+    getPanelClassName: (sm: boolean) => (sm ? "ctw-mt-0" : "ctw-mt-1.5"),
   },
 ];
 
@@ -72,7 +143,12 @@ export function PatientMedicationsTabbed({
           onChange={setSelectedTabIndex}
         >
           {isVertical && (
-            <ListBox onChange={setSelectedTabIndex} items={tabbedContent} />
+            <ListBox
+              btnClassName="ctw-tab"
+              optionsClassName="ctw-tab-list"
+              onChange={setSelectedTabIndex}
+              items={tabbedContent}
+            />
           )}
           <Tab.List
             className={cx(
@@ -80,6 +156,7 @@ export function PatientMedicationsTabbed({
               { "ctw-hidden": isVertical }
             )}
           >
+            {/* Renders button for each tab using "display | display()" */}
             {tabbedContent.map(({ key, display }) => (
               <Tab
                 key={key}
@@ -111,15 +188,23 @@ export function PatientMedicationsTabbed({
             ))}
           </Tab.List>
 
+          {/* Renders body of each tab using "render()" */}
           <Tab.Panels>
-            {tabbedContent.map(({ key, render }) => (
-              <Tab.Panel
-                key={key}
-                className={cx(breakpoints.sm ? "ctw-mt-0" : "ctw-mt-4")}
-              >
-                {render()}
-              </Tab.Panel>
-            ))}
+            {tabbedContent.map(
+              ({
+                key,
+                render,
+                getPanelClassName = (sm: boolean) =>
+                  sm ? "ctw-mt-0" : "ctw-mt-4",
+              }) => (
+                <Tab.Panel
+                  key={key}
+                  className={cx(getPanelClassName(breakpoints.sm))}
+                >
+                  {render()}
+                </Tab.Panel>
+              )
+            )}
           </Tab.Panels>
         </Tab.Group>
       </div>

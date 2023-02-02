@@ -31,6 +31,11 @@ type DemoComponent = {
 };
 const demoComponents: DemoComponent[] = [
   {
+    render: () => <PatientMedicationsTabbed forceHorizontalTabs />,
+    title: "Patient Medications Tabbed",
+    note: "(forceHorizontalTabs)",
+  },
+  {
     render: () => <PatientMedicationsTabbed />,
     title: "Patient Medications Tabbed",
   },
