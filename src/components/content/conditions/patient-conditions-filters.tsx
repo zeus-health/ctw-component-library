@@ -114,10 +114,10 @@ export const getUnfilteredCollection = (
 
 export const selectedAndAvailableFilters = (
   conditions: ConditionModel[],
-  filters: ConditionFilters
+  filters: ConditionFilters | undefined
 ) =>
   Object.entries(availableConditionFilters(conditions)).map(([key, values]) => {
-    const selected = filters[key as keyof ConditionFilters] || [];
+    const selected = filters?.[key as keyof ConditionFilters] || [];
     return {
       [key]: {
         available: compact(values),
@@ -131,7 +131,7 @@ export const selectedAndAvailableFilters = (
 type AddFilterProps = {
   updateFilters: (newFilters: Partial<Filters>) => void;
   activeCollection: FilterCollection;
-  filters: ConditionFilters;
+  filters: ConditionFilters | undefined;
 };
 
 export const AddFilter = ({

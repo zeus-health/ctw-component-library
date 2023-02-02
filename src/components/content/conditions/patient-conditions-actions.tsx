@@ -14,7 +14,7 @@ import { DropdownMenuAction } from "@/components/core/dropdown-action-menu";
 
 export type PatientConditionsActionsProps = {
   hideAdd: boolean;
-  filters: ConditionFilters;
+  filters: ConditionFilters | undefined;
   availableFilters: AvailableFilters;
   updateFilters: (newFilters: Partial<Filters>) => void;
   activeCollection: FilterCollection;
@@ -61,7 +61,7 @@ export function PatientConditionsActions({
 
 type PillWrapper = {
   availableFilters: AvailableFilters;
-  filters: ConditionFilters;
+  filters: ConditionFilters | undefined;
   updateFilters: (newFilters: Partial<Filters>) => void;
 };
 
@@ -86,8 +86,7 @@ const PillWrapper = ({
                   patientConditionActions(
                     filters,
                     updateFilters,
-                    filterName,
-                    e.name,
+                    { name: filterName, value: e.name },
                     e.value ? "ADD" : "DELETE"
                   );
                 },
@@ -100,8 +99,7 @@ const PillWrapper = ({
                     patientConditionActions(
                       filters,
                       updateFilters,
-                      filterName,
-                      "",
+                      { name: filterName },
                       "REMOVE"
                     );
                   },
@@ -124,25 +122,26 @@ const PillWrapper = ({
 
 const patientConditionActions = (
   filters: ConditionFilters,
-  updateFilters: (newFilters: Partial<Filters>) => void,
-  filterName: keyof ConditionFilters,
-  value: string,
+  updateFilters: (newFilters: ConditionFilters) => void,
+  payload: { name: keyof ConditionFilters; value?: string },
   actionType: string
 ) => {
-  const newValues = filters[filterName] ? [...filters[filterName]] : [];
+  const { name, value } = payload;
+  const filterArr = filters[name] ?? [];
+  const newValues = [...filterArr];
 
   switch (actionType) {
     case "ADD":
-      updateFilters({ ...filters, [filterName]: [...newValues, value] });
+      updateFilters({ ...filters, [name]: [...newValues, value] });
       break;
     case "DELETE":
       updateFilters({
         ...filters,
-        [filterName]: filters[filterName].filter((item) => item !== value),
+        [name]: filterArr.filter((item) => item !== value),
       });
       break;
     case "REMOVE":
-      updateFilters({ ...filters, [filterName]: null });
+      updateFilters({ ...filters, [name]: null });
       break;
     default:
       break;
