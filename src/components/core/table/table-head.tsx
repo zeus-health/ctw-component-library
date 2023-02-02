@@ -39,7 +39,7 @@ export const TableHead = <T extends MinRecordItem>({
   sort,
   onSort,
 }: TableHeadProps<T>) => (
-  <thead>
+  <thead data-zus-telemetry-namespace="TableHead">
     <tr>
       {columns.map((column, index) => (
         <th
@@ -49,9 +49,14 @@ export const TableHead = <T extends MinRecordItem>({
           )}
           key={column.title ?? index}
           scope="col"
-          onClick={() =>
-            column.sortIndices && onSort && onSort(column.title || "")
-          }
+          {...(column.sortIndices && onSort
+            ? { "data-zus-telemetry-click": `sort=${column.title}` }
+            : null)}
+          onClick={(event) => {
+            if (column.sortIndices && onSort) {
+              onSort(column.title || "");
+            }
+          }}
         >
           <div className="ctw-flex ctw-items-center ctw-space-x-2">
             <div>{column.title}</div>

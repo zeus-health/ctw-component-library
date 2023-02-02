@@ -39,7 +39,10 @@ export const Pagination = ({
   );
 
   return (
-    <div className="ctw-flex ctw-justify-between ctw-py-3 ctw-px-6">
+    <div
+      className="ctw-flex ctw-justify-between ctw-py-3 ctw-px-6"
+      data-zus-telemetry-namespace="Pagination"
+    >
       <div className="ctw-text-gray-600 ctw-text-sm">
         {isLoading ? (
           <Loading />
@@ -134,6 +137,7 @@ const Page = ({
       disabled={disabled}
       onClick={() => setCurrentPage(page)}
       className={cx(className, "ctw-pagination-page-btn", { active, disabled })}
+      data-zus-telemetry-click={`paginate(${page})`}
     >
       {children || page}
     </button>

@@ -26,6 +26,7 @@ import {
   QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
   QUERY_KEY_PATIENT_CONDITIONS,
 } from "@/utils/query-keys";
+import { Telemetry } from "@/utils/telemetry";
 
 export type VerificationStatus =
   | "unconfirmed"
@@ -80,6 +81,7 @@ export function usePatientConditions() {
         );
         return filterAndSort(setupConditionModels(conditions, bundle));
       } catch (e) {
+        Telemetry.logError(e as Error, "Failed fetching condition information");
         throw new Error(
           `Failed fetching condition information for patient: ${e}`
         );
@@ -104,6 +106,10 @@ export function useOtherProviderConditions() {
         );
         return filterAndSort(setupConditionModels(conditions, bundle));
       } catch (e) {
+        Telemetry.logError(
+          e as Error,
+          `Failed fetching condition information for patient: ${e}`
+        );
         throw new Error(
           `Failed fetching condition information for patient: ${e}`
         );
@@ -225,6 +231,10 @@ export function useConditionHistory(condition?: ConditionModel) {
           bundle,
         };
       } catch (e) {
+        Telemetry.logError(
+          e as Error,
+          "Failed fetching condition history information for patient"
+        );
         throw new Error(
           `Failed fetching condition history information for patient: ${e}`
         );

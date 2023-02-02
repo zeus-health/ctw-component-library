@@ -7,6 +7,7 @@ import { useCTW } from "@/components/core/providers/ctw-provider";
 import { getFormResponseErrors } from "@/utils/errors";
 import { AnyZodSchema, getFormData } from "@/utils/form-helper";
 import { isEmpty } from "@/utils/nodash";
+import { Telemetry } from "@/utils/telemetry";
 
 export type FormErrors = Record<string, string[]>;
 type InputError = Record<string, string[]>;
@@ -82,6 +83,7 @@ export const DrawerForm = <T,>({
     try {
       response = await action(formResult.data, getRequestContext);
     } catch (e) {
+      Telemetry.logError(e as Error);
       responseIsSuccess = false;
       requestErrors = [];
     }
@@ -138,8 +140,8 @@ export const DrawerForm = <T,>({
         <Drawer.Footer>
           <div className="ctw-flex ctw-items-center ctw-justify-between">
             <>
-              {errors?.requestErrors && (
-                <div className="ctw-text-sm ctw-font-medium ctw-text-error-heading">
+              {(errors?.requestErrors || errors?.formErrors) && (
+                <div className="ctw-text-sm ctw-font-medium ctw-text-error-text">
                   There was an error with your submission
                 </div>
               )}
@@ -150,6 +152,7 @@ export const DrawerForm = <T,>({
                 type="button"
                 className="ctw-btn-default"
                 onClick={onClose}
+                data-zus-telemetry-click="Cancel form"
               >
                 Cancel
               </button>

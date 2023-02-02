@@ -1,5 +1,4 @@
 import cx from "classnames";
-import "./patient-conditions.scss";
 import { useRef } from "react";
 import { useConditionHistory } from "../condition-history/conditions-history-drawer";
 import { filterOtherConditions } from "./helpers";
@@ -15,6 +14,7 @@ import {
   PatientConditionHoverActions,
 } from "./patient-conditions-menu-actions";
 import { PatientConditionsTabs } from "./patient-conditions-tabs";
+import { withErrorBoundary } from "@/components/core/error-boundary";
 import { FormEntry } from "@/components/core/form/drawer-form-with-fields";
 import { Table } from "@/components/core/table/table";
 import {
@@ -23,6 +23,7 @@ import {
 } from "@/fhir/conditions";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { AnyZodSchema } from "@/utils/form-helper";
+import "./patient-conditions.scss";
 
 export type PatientConditionsProps = {
   className?: string;
@@ -36,98 +37,98 @@ export type ConditionFormData = {
   drawerIsOpen: boolean;
 };
 
-export function PatientConditions({
-  className,
-  readOnly = false,
-}: PatientConditionsProps) {
-  // State.
-  const { filters, updateFilters, applyFilters, updateCollection } =
-    useConditionFilters();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const breakpoints = useBreakpoints(containerRef);
+export const PatientConditions = withErrorBoundary(
+  ({ className, readOnly = false }: PatientConditionsProps) => {
+    // State.
+    const { filters, updateFilters, applyFilters, updateCollection } =
+      useConditionFilters();
+    const containerRef = useRef<HTMLDivElement>(null);
+    const breakpoints = useBreakpoints(containerRef);
 
-  // Drawer helpers.
-  const showConditionHistory = useConditionHistory();
+    // Drawer helpers.
+    const showConditionHistory = useConditionHistory();
 
-  // Data fetching.
-  const patientConditionsQuery = usePatientConditions();
-  const otherConditionsQuery = useOtherProviderConditions();
+    // Data fetching.
+    const patientConditionsQuery = usePatientConditions();
+    const otherConditionsQuery = useOtherProviderConditions();
 
-  function isLoading() {
-    const isLoadingPatient = patientConditionsQuery.isLoading;
-    const isLoadingOther = isLoadingPatient || otherConditionsQuery.isLoading;
+    function isLoading() {
+      const isLoadingPatient = patientConditionsQuery.isLoading;
+      const isLoadingOther = isLoadingPatient || otherConditionsQuery.isLoading;
 
-    return filters.activeCollection === "patient"
-      ? isLoadingPatient
-      : isLoadingOther;
-  }
+      return filters.activeCollection === "patient"
+        ? isLoadingPatient
+        : isLoadingOther;
+    }
 
-  // Get our conditions.
-  const patientConditions = patientConditionsQuery.data ?? [];
-  const otherConditions = filterOtherConditions(
-    otherConditionsQuery.data ?? [],
-    patientConditions,
-    true
-  );
-
-  const conditions = applyFilters(patientConditions, otherConditions);
-  const availableFilters = selectedAndAvailableFilters(
-    getUnfilteredCollection(
+    // Get our conditions.
+    const patientConditions = patientConditionsQuery.data ?? [];
+    const otherConditions = filterOtherConditions(
+      otherConditionsQuery.data ?? [],
       patientConditions,
-      otherConditions,
-      filters.activeCollection
-    ),
-    filters[filters.activeCollection]
-  );
-  const RowActions =
-    filters.activeCollection === "patient"
-      ? PatientConditionHoverActions
-      : OtherProviderConditionHoverActions;
+      true
+    );
 
-  return (
-    <div
-      ref={containerRef}
-      className={cx("ctw-patient-conditions", className, {
-        "ctw-patient-conditions-stacked": breakpoints.sm,
-      })}
-    >
-      <div className="ctw-items-center ctw-justify-between ctw-py-5">
-        <div className="ctw-ml-3 ctw-text-xl ctw-font-medium ctw-text-content-black">
-          Conditions
+    const conditions = applyFilters(patientConditions, otherConditions);
+    const availableFilters = selectedAndAvailableFilters(
+      getUnfilteredCollection(
+        patientConditions,
+        otherConditions,
+        filters.activeCollection
+      ),
+      filters[filters.activeCollection]
+    );
+    const RowActions =
+      filters.activeCollection === "patient"
+        ? PatientConditionHoverActions
+        : OtherProviderConditionHoverActions;
+
+    return (
+      <div
+        ref={containerRef}
+        className={cx("ctw-patient-conditions", className, {
+          "ctw-patient-conditions-stacked": breakpoints.sm,
+        })}
+      >
+        <div className="ctw-items-center ctw-justify-between ctw-py-5">
+          <div className="ctw-ml-3 ctw-text-xl ctw-font-medium ctw-text-content-black">
+            Conditions
+          </div>
+          <PatientConditionsTabs
+            otherConditions={otherConditions}
+            collection={filters.activeCollection}
+            onCollectionChange={(collection) =>
+              updateCollection({ activeCollection: collection })
+            }
+          />
+
+          <PatientConditionsActions
+            hideAdd={readOnly || filters.activeCollection === "other"}
+            filters={filters[filters.activeCollection]}
+            activeCollection={filters.activeCollection}
+            availableFilters={availableFilters}
+            updateFilters={updateFilters}
+          />
+
+          <Table
+            stacked={breakpoints.sm}
+            className="-ctw-mx-px !ctw-rounded-none"
+            showTableHead={false}
+            emptyMessage="There are no condition records available."
+            isLoading={isLoading()}
+            records={conditions}
+            RowActions={readOnly ? undefined : RowActions}
+            columns={patientConditionsColumns}
+            handleRowClick={(condition) =>
+              showConditionHistory({
+                condition,
+                readOnly: readOnly || condition.isSummaryResource,
+              })
+            }
+          />
         </div>
-        <PatientConditionsTabs
-          otherConditions={otherConditions}
-          collection={filters.activeCollection}
-          onCollectionChange={(collection) =>
-            updateCollection({ activeCollection: collection })
-          }
-        />
-
-        <PatientConditionsActions
-          hideAdd={readOnly || filters.activeCollection === "other"}
-          filters={filters[filters.activeCollection]}
-          activeCollection={filters.activeCollection}
-          availableFilters={availableFilters}
-          updateFilters={updateFilters}
-        />
-
-        <Table
-          stacked={breakpoints.sm}
-          className="-ctw-mx-px !ctw-rounded-none"
-          showTableHead={false}
-          emptyMessage="There are no condition records available."
-          isLoading={isLoading()}
-          records={conditions}
-          RowActions={readOnly ? undefined : RowActions}
-          columns={patientConditionsColumns}
-          handleRowClick={(condition) =>
-            showConditionHistory({
-              condition,
-              readOnly: readOnly || condition.isSummaryResource,
-            })
-          }
-        />
       </div>
-    </div>
-  );
-}
+    );
+  },
+  "PatientConditions"
+);

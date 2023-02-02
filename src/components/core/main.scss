@@ -54,10 +54,6 @@
     @apply ctw-pointer-events-none ctw-flex ctw-items-center ctw-justify-center ctw-opacity-70;
   }
 
-  div.error .ctw-listbox-button {
-    @apply ctw-border-error-light ctw-text-error-main;
-  }
-
   .ctw-listbox-textarea:focus-visible,
   .ctw-listbox-input:focus-visible {
     outline-offset: -1px;
@@ -117,10 +113,6 @@
   select.ctw-error,
   input.ctw-error {
     @apply ctw-border-error-main ctw-pr-10 focus:ctw-border-error-main focus:ctw-outline-none focus:ctw-ring-1 focus:ctw-ring-error-main;
-  }
-
-  label.ctw-error {
-    @apply ctw-text-error-main;
   }
 
   .ctw-alert-bg {

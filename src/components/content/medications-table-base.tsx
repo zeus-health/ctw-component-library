@@ -1,32 +1,34 @@
 import type { MedicationStatementModel } from "@/fhir/models/medication-statement";
-import { DotsHorizontalIcon } from "@heroicons/react/outline";
-import { ReactNode, useRef } from "react";
-import { MinRecordItem, TableColumn } from "../core/table/table-helpers";
-import { DropdownMenu, MenuItem } from "@/components/core/dropdown-menu";
+import { ReactNode, useRef, useState } from "react";
 import { Table, TableBaseProps } from "@/components/core/table/table";
+import {
+  MinRecordItem,
+  TableColumn,
+  TableSort,
+} from "@/components/core/table/table-helpers";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
-import { compact, isFunction } from "@/utils/nodash/fp";
 
 export type MedicationsTableBaseProps<T extends MinRecordItem> = {
   medicationStatements: MedicationStatementModel[];
-  rowMenuActions?: (condition: MedicationStatementModel) => MenuItem[];
   hideMenu?: boolean;
   className?: string;
+  telemetryNamespace?: string;
   children?: ReactNode;
 } & TableBaseProps<MedicationStatementModel>;
 
 export const MedicationsTableBase = ({
   children,
   className = "",
-  rowMenuActions,
   hideMenu = false,
   medicationStatements,
+  telemetryNamespace,
   ...tableProps
 }: MedicationsTableBaseProps<MedicationStatementModel>) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
+  const [sort, setSort] = useState<TableSort>();
 
-  const columns = compact([
+  const columnsStacked = [
     {
       title: "Medication Name",
       render: (medication) => (
@@ -35,7 +37,14 @@ export const MedicationsTableBase = ({
           <div className="ctw-font-light">{medication.dosage}</div>
         </>
       ),
+      widthPercent: 35,
+      minWidth: 270,
+      sortIndices: [{ index: "display" }, { index: "dosage", dir: "asc" }],
     },
+  ] as TableColumn<MedicationStatementModel>[];
+
+  const columns = [
+    ...columnsStacked,
     {
       title: "Dispensed",
       render: (medication) => (
@@ -44,6 +53,7 @@ export const MedicationsTableBase = ({
           {medication.refills && <div>{medication.refills} refills</div>}
         </>
       ),
+      widthPercent: 14,
     },
     {
       title: "Status",
@@ -55,16 +65,17 @@ export const MedicationsTableBase = ({
           )}
         </div>
       ),
-      widthPercent: 17.5,
-      minWidth: 128,
       sortIndices: [
         { index: "status" },
         { index: "dateAsserted", dir: "desc" },
       ],
+      widthPercent: 14,
     },
     {
       title: "Last Filled",
       dataIndex: "lastFillDate",
+      sortIndices: [{ index: "lastFillDate" }],
+      widthPercent: 18,
     },
     {
       title: "Last Prescribed",
@@ -76,26 +87,27 @@ export const MedicationsTableBase = ({
           {medication.lastPrescriber && <div>{medication.lastPrescriber}</div>}
         </>
       ),
+      sortIndices: [
+        { index: "lastPrescribedDate" },
+        { index: "lastPrescriber", dir: "asc" },
+      ],
+      widthPercent: 18,
+      minWidth: "90px",
     },
-  ]) as TableColumn<MedicationStatementModel>[];
-
-  if (!hideMenu && isFunction(rowMenuActions)) {
-    columns.push({
-      className: "ctw-table-action-column",
-      render: (medication) => (
-        <DropdownMenu menuItems={rowMenuActions(medication)}>
-          <DotsHorizontalIcon className="ctw-w-5" />
-        </DropdownMenu>
-      ),
-    });
-  }
+  ] as TableColumn<MedicationStatementModel>[];
 
   return (
-    <div className={className} ref={containerRef}>
+    <div
+      className={className}
+      ref={containerRef}
+      data-zus-telemetry-namespace={telemetryNamespace}
+    >
       <Table
+        sort={sort}
+        onSort={setSort}
         stacked={breakpoints.sm}
         records={medicationStatements}
-        columns={columns}
+        columns={breakpoints.sm ? columnsStacked : columns}
         emptyMessage="There are no medications to display."
         {...tableProps}
       />

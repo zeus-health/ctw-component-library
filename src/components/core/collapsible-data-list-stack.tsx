@@ -19,12 +19,15 @@ export const CollapsibleDataListStack = ({
   const displayedEntries =
     showAll || !limit ? entries : entries.slice(0, limit);
   return (
-    <div className="ctw-space-y-3">
+    <div
+      className="ctw-space-y-3"
+      data-zus-telemetry-namespace="CollapsibleDataListStack"
+    >
       <div className="ctw-text-base ctw-font-medium ctw-uppercase ctw-text-content-light">
         History
       </div>
       {displayedEntries.map((entry, idx) => (
-        // We can have have multiple items with the same condition id
+        // We can have multiple items with the same condition id
         // eslint-disable-next-line react/no-array-index-key
         <div key={`${entry.id}-${idx}`}>
           <CollapsibleDataList

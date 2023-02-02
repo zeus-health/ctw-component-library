@@ -20,17 +20,14 @@ export function singleMedicationsTable(
   canvasElement: HTMLElement,
   tableEl: HTMLElement
 ) {
-  async function clickInMenu(row: number, menuItem: string) {
-    userEvent.click(getRow(row).getByRole("button", { name: /dropdown/i }));
-    await within(canvasElement).findAllByRole("menuitem");
-    userEvent.click(
-      within(canvasElement).getByRole("menuitem", { name: menuItem })
-    );
+  async function clickInRow(row: number, menuItemId: string) {
+    userEvent.hover(getRow(row));
+    userEvent.click(within(getRow(row)).getByTestId(menuItemId));
   }
 
   function getRow(row: number) {
     const tbody = within(tableEl).getAllByRole("rowgroup")[1];
-    return within(within(tbody).queryAllByRole("row")[row]);
+    return within(tbody).queryAllByRole("row")[row];
   }
 
   return {
@@ -51,7 +48,7 @@ export function singleMedicationsTable(
       }
     },
     toHaveRowWithText: (row: number, text: string | RegExp) =>
-      getRow(row).getByText(text),
+      within(getRow(row)).getByText(text),
     toHaveAnyRowWithText: async (text: string | RegExp) => {
       const tbody = await within(tableEl).getAllByRole("rowgroup")[1];
       expect(
@@ -60,6 +57,6 @@ export function singleMedicationsTable(
           .some((next) => !!within(next).queryByText(text))
       ).toBeTruthy();
     },
-    addToRecord: (row: number) => clickInMenu(row, "Add to Record"),
+    addToRecord: (row: number) => clickInRow(row, "add-to-record"),
   };
 }
