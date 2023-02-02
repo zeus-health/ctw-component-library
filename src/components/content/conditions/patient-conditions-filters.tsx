@@ -38,7 +38,7 @@ export function useConditionFilters() {
     ...DEFAULT_FILTER_STATE,
   });
 
-  function updateFilters(newFilters: Partial<Filters>) {
+  function updateFilters(newFilters: Partial<ConditionFilters>) {
     setFilters(() => ({
       ...filters,
       [filters.activeCollection]: {
