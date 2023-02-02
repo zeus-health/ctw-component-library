@@ -1,4 +1,6 @@
-import { QueryClient } from "@tanstack/react-query";
+import { QueryClient, UseQueryResult } from "@tanstack/react-query";
+
+const PROMISE_TIMEOUT = 15000; // 15s.
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,4 +28,31 @@ export function ctwFetch(
   newInit.headers = headers;
 
   return fetch(input, newInit);
+}
+
+export async function getPromise<T, U>(
+  result: UseQueryResult<T, U>
+): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const startTime = Date.now();
+    const interval = setInterval(() => {
+      console.log(
+        "Result is loading and error",
+        result.isLoading,
+        result.isError
+      );
+      if (!result.isLoading) {
+        clearInterval(interval);
+        if (result.isSuccess) {
+          resolve(result.data);
+        } else {
+          reject(result.error);
+        }
+      }
+      if (Date.now() - startTime > PROMISE_TIMEOUT) {
+        clearInterval(interval);
+        reject(new Error("Request timed out."));
+      }
+    }, 500);
+  });
 }

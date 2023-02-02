@@ -14,6 +14,7 @@ import { getBuilderFhirPatient } from "@/fhir/patient-helper";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 import { Tag } from "@/fhir/types";
 import { QUERY_KEY_PATIENT } from "@/utils/query-keys";
+import { queryClient } from "@/utils/request";
 
 // Cache patient for 5 minutes.
 const PATIENT_STALE_TIME = 1000 * 60 * 5;
@@ -75,6 +76,29 @@ export function usePatient(): UseQueryResult<PatientModel, unknown> {
   const { patientID, systemURL, tags } = context;
 
   return useQuery(
+    [QUERY_KEY_PATIENT, patientID, systemURL, tags],
+    async () => {
+      const requestContext = await getRequestContext();
+      return getBuilderFhirPatient(requestContext, patientID, systemURL, {
+        _tag: tags?.map((tag) => `${tag.system}|${tag.code}`) ?? [],
+      });
+    },
+    { staleTime: PATIENT_STALE_TIME }
+  );
+}
+
+export function usePatientPromise(): Promise<PatientModel> {
+  const { getRequestContext } = useCTW();
+
+  const context = useContext(PatientContext);
+
+  if (!context) {
+    throw new Error("usePatient must be used within a PatientProvider");
+  }
+
+  const { patientID, systemURL, tags } = context;
+
+  return queryClient.fetchQuery(
     [QUERY_KEY_PATIENT, patientID, systemURL, tags],
     async () => {
       const requestContext = await getRequestContext();
