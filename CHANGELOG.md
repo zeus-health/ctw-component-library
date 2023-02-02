@@ -1,5 +1,38 @@
 # ctw-component-library
 
+## 0.44.1
+
+### Patch Changes
+
+- ba10f383: Simplify authTokenURL use by relying on exp from access token itself.
+
+## 0.44.0
+
+### Minor Changes
+
+- 9700e631: Add progress banner and last retrieved date to other provider recorder table.
+
+### Patch Changes
+
+- 1ace695f: For overriding the opening of drawer to add new medication when using "Add to Record", we may now pass a function as
+  prop `handleAddToRecord` to the `PatientMedicationsTabbed` component.
+
+  The medications tables no longer use the ellipsis dropdown for row actions.
+  Instead they use buttons that appear on hover.
+
+  Tabs and buttons for meds now capitalize using the "ctw-capitalize" CSS class
+  rather than explicitly using uppercase lettering in the tsx.
+
+  Medications table stacked view shows only medication name and dosage.
+
+## 0.43.1
+
+### Patch Changes
+
+- eea869eb: Add new usePatientHistory hook which can be used to open the patient history request drawer from anywhere.
+- eea869eb: Update form field error color and add generic message to drawer form footer, indicating the form has errors.
+- 002d4099: Add hideRequestRecords prop to conditions 1.0 component.
+
 ## 0.43.0
 
 ### Minor Changes

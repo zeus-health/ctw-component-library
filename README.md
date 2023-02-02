@@ -24,8 +24,9 @@ The `CTWProvider` component provides authentication details needed for other com
 
 1. Add `<CTWProvider>` wrapper at a high level within your application.
 2. Pass in the desired environment, either `env="sandbox"` or `env="production"`.
-3. Pass in either the Zus `authToken` or the URL of an endpoint that will return one via `authTokenURL`.
+3. Setup `authTokenURL` to point to an endpoint that will return `{access_token: TOKEN}`. This is how we provide seamless logins for your users to access Zus APIs.
 4. Optioally pass in a `theme` to overwrite styles across all of the components.
+5. Optioally pass in a `enableTelemetry` to enable telemetry, see details below.
 
 Example:
 

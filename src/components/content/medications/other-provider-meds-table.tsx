@@ -8,11 +8,12 @@ import { useDismissMedication } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { isArray } from "@/utils/nodash";
-import { compact, get, pipe, toLower } from "@/utils/nodash/fp";
+import { get, pipe, toLower } from "@/utils/nodash/fp";
 import { sort, SortDir } from "@/utils/sort";
 
 export type OtherProviderMedsTableProps = {
   className?: string;
+  handleAddToRecord?: (m: MedicationStatementModel) => void;
   sortColumn?: keyof MedicationStatementModel;
   sortOrder?: SortDir;
 };
@@ -28,6 +29,7 @@ export const OtherProviderMedsTable = withErrorBoundary(
   ({
     sortOrder = "asc",
     sortColumn = "display",
+    handleAddToRecord,
   }: OtherProviderMedsTableProps) => {
     const dismissMedication = useDismissMedication();
     const [medicationModels, setMedicationModels] = useState<
@@ -67,30 +69,41 @@ export const OtherProviderMedsTable = withErrorBoundary(
           telemetryNamespace="MedicationsTableBase"
           medicationStatements={medicationModels}
           isLoading={isLoading}
-          rowMenuActions={(medication) =>
-            compact([
-              {
-                name: "View History",
-                action: async () => {
-                  openHistoryDrawer(medication);
-                },
-              },
-              {
-                name: "Add to Record",
-                action: async () => {
-                  openAddNewMedicationDrawer(medication);
-                },
-              },
-              medication.isArchived
-                ? null
-                : {
-                    name: "Dismiss",
-                    action: async () => {
-                      await dismissMedication(medication);
-                    },
-                  },
-            ])
-          }
+          handleRowClick={openHistoryDrawer}
+          RowActions={({ record }) => (
+            <div
+              onClick={(event) => event.stopPropagation()}
+              onKeyDown={(event) => event.stopPropagation()}
+            >
+              {!record.isArchived && (
+                <button
+                  type="button"
+                  className="ctw-btn-primary ctw-capitalize"
+                  data-zus-telemetry-click="Dismiss record"
+                  onClick={async () => {
+                    await dismissMedication(record);
+                  }}
+                >
+                  dismiss
+                </button>
+              )}
+              <button
+                type="button"
+                className="ctw-btn-primary ctw-ml-1 ctw-capitalize"
+                data-zus-telemetry-click="Add to record"
+                data-testid="add-to-record"
+                onClick={() => {
+                  if (handleAddToRecord) {
+                    handleAddToRecord(record);
+                  } else {
+                    openAddNewMedicationDrawer(record);
+                  }
+                }}
+              >
+                add to record
+              </button>
+            </div>
+          )}
         />
         <MedicationDrawer
           medication={selectedMedication}

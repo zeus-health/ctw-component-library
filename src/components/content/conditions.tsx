@@ -24,6 +24,7 @@ import {
 import { getAddConditionData } from "./forms/schemas/condition-schema";
 import { PatientHistoryRequestDrawer } from "./patient-history-request-drawer";
 import { PatientHistoryMessage } from "./patient-history/patient-history-message";
+import { PatientHistoryStatus } from "./patient-history/patient-history-message-status";
 import {
   conditionAddSchema,
   conditionEditSchema,
@@ -35,6 +36,7 @@ import {
   useOtherProviderConditions,
   usePatientConditions,
 } from "@/fhir/conditions";
+import { formatISODateStringToDate } from "@/fhir/formatters";
 import { ConditionModel } from "@/fhir/models/condition";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import {
@@ -47,6 +49,7 @@ import { curry } from "@/utils/nodash";
 export type ConditionsProps = {
   className?: string;
   readOnly?: boolean;
+  hideRequestRecords?: boolean;
 };
 
 const EMPTY_MESSAGE_PATIENT_RECORD =
@@ -56,7 +59,11 @@ const ERROR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
 
 export const Conditions = withErrorBoundary(
-  ({ className, readOnly = false }: ConditionsProps) => {
+  ({
+    className,
+    readOnly = false,
+    hideRequestRecords = false,
+  }: ConditionsProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const breakpoints = useBreakpoints(containerRef);
     const [drawerIsOpen, setDrawerIsOpen] = useState(false);
@@ -287,18 +294,34 @@ export const Conditions = withErrorBoundary(
             />
           </div>
           <div className="ctw-space-y-3">
+            <PatientHistoryStatus
+              status={patientHistoryInfo?.status}
+              date={patientHistoryInfo?.dateCreated}
+            />
             <div className="ctw-conditions-title-container">
               <div className="ctw-title">Other Provider Records</div>
-              {shouldShowClinicalHistoryArea && (
-                <button
-                  type="button"
-                  className="ctw-btn-clear ctw-link"
-                  onClick={() => setRequestDrawerIsOpen(true)}
-                  data-zus-telemetry-click="Request records"
-                >
-                  Request Records
-                </button>
-              )}
+              <div className="ctw-flex ctw-items-baseline ctw-space-x-2">
+                {patientHistoryInfo?.lastRetrievedAt && (
+                  <div className="ctw-text-sm ctw-italic ctw-text-black">
+                    Last Retrieved{" "}
+                    {formatISODateStringToDate(
+                      patientHistoryInfo.lastRetrievedAt
+                    )}
+                  </div>
+                )}
+                {shouldShowClinicalHistoryArea &&
+                  !readOnly &&
+                  !hideRequestRecords && (
+                    <button
+                      type="button"
+                      className="ctw-btn-clear ctw-link"
+                      onClick={() => setRequestDrawerIsOpen(true)}
+                      data-zus-telemetry-click="Request records"
+                    >
+                      Request Records
+                    </button>
+                  )}
+              </div>
             </div>
             {shouldShowClinicalHistoryArea ? (
               <ConditionsTableBase
@@ -337,6 +360,7 @@ export const Conditions = withErrorBoundary(
               />
             ) : (
               <PatientHistoryMessage
+                readOnly={readOnly || hideRequestRecords}
                 onClick={() => setRequestDrawerIsOpen(true)}
               />
             )}
@@ -366,10 +390,16 @@ export const Conditions = withErrorBoundary(
         {patientResponse.data && (
           <PatientHistoryRequestDrawer
             header={
-              <div className="ctw-pt-0 ctw-text-base">
-                Request patient clinical history from 70K+ providers across the
-                nation. No changes will be made to your patient record.
-              </div>
+              <>
+                <PatientHistoryStatus
+                  status={patientHistoryInfo?.status}
+                  date={patientHistoryInfo?.dateCreated}
+                />
+                <div className="ctw-pt-0 ctw-text-base">
+                  Request patient clinical history from 70K+ providers across
+                  the nation. No changes will be made to your patient record.
+                </div>
+              </>
             }
             patient={patientResponse.data}
             isOpen={requestRecordsDrawerIsOpen}
