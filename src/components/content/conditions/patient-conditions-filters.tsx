@@ -35,7 +35,7 @@ export type AvailableFilters = {
 const DEFAULT_FILTER_STATE: Omit<Filters, "activeCollection"> = {
   patient: {
     status: ["Active", "Pending", "Unknown"],
-    // ccsChapter: ["Mental and Behavioral"],
+    ccsChapter: ["Mental and Behavioral"],
   },
   other: { status: ["Active", "Pending"] },
 };
@@ -49,9 +49,11 @@ export function useConditionFilters() {
   });
 
   function updateFilters(newFilters: Partial<Filters>) {
-    setFilters((prevState) => ({
-      ...prevState,
-      ...{ [filters.activeCollection]: newFilters },
+    setFilters(() => ({
+      ...filters,
+      [filters.activeCollection]: {
+        ...newFilters,
+      },
     }));
   }
 
@@ -137,7 +139,7 @@ export const AddFilter = ({
   <DropdownMenuAction
     options={{
       items: [
-        { name: "Category", key: "ccsChapter" },
+        { key: "ccsChapter", name: "Category" },
         { key: "status", name: "Status" },
       ],
       onItemSelect: (e) => {

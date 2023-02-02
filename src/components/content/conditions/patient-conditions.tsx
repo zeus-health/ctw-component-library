@@ -71,6 +71,14 @@ export function PatientConditions({
   );
 
   const conditions = applyFilters(patientConditions, otherConditions);
+  const availableFilters = selectedAndAvailableFilters(
+    getUnfilteredCollection(
+      patientConditions,
+      otherConditions,
+      filters.activeCollection
+    ),
+    filters[filters.activeCollection]
+  );
   const RowActions =
     filters.activeCollection === "patient"
       ? PatientConditionHoverActions
@@ -99,14 +107,7 @@ export function PatientConditions({
           hideAdd={readOnly || filters.activeCollection === "other"}
           filters={filters[filters.activeCollection]}
           activeCollection={filters.activeCollection}
-          availableFilters={selectedAndAvailableFilters(
-            getUnfilteredCollection(
-              patientConditions,
-              otherConditions,
-              filters.activeCollection
-            ),
-            filters[filters.activeCollection]
-          )}
+          availableFilters={availableFilters}
           updateFilters={updateFilters}
         />
 

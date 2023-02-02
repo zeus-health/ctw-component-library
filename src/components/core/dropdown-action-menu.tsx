@@ -40,15 +40,14 @@ export function DropdownMenuAction({
     <Menu>
       <RadixDropdownMenu.Root modal={false}>
         <RadixDropdownMenu.Trigger
-          // className="ctw-btn-clear ctw-link"
           className="ctw-border-none ctw-bg-transparent"
           aria-label="dropdown"
         >
           {children}
         </RadixDropdownMenu.Trigger>
-
         <RadixDropdownMenu.Portal container={ctwProviderRef.current}>
           <RadixDropdownMenu.Content
+            align="start"
             // Prevent focus from closing menu, this fixes
             // an issue with interactive testing where a "click"
             // would fire twice, once for the mousedown and
@@ -76,6 +75,7 @@ export function DropdownMenuAction({
                 <RenderCorrectFieldType
                   inputType={options.type}
                   menuItem={menuItem}
+                  onClick={options.onItemSelect}
                 />
               </RadixDropdownMenu.Item>
             ))}
@@ -103,22 +103,33 @@ export function DropdownMenuAction({
 export type RenderCorrectFieldTypeProps = {
   inputType?: DropDownMenuItemType;
   menuItem: OptionsItem;
+  onClick: (clickedItem: { key: string; name: string; value: boolean }) => void;
 };
 
 const RenderCorrectFieldType = ({
   inputType,
   menuItem,
+  onClick,
 }: RenderCorrectFieldTypeProps) => {
   switch (inputType) {
     case "checkbox":
       return (
         <div>
-          <label htmlFor={menuItem.name}>
+          <label
+            htmlFor={menuItem.name}
+            className="ctw-flex ctw-cursor-pointer ctw-items-center ctw-space-x-2"
+          >
             <input
               type="checkbox"
-              id={menuItem.name}
               name={menuItem.name}
-              value={menuItem.name}
+              onClick={(e) => {
+                onClick({
+                  key: menuItem.key,
+                  name: menuItem.name,
+                  value: !menuItem.isSelected,
+                });
+                e.stopPropagation();
+              }}
               checked={menuItem.isSelected}
             />
             <span>{menuItem.name}</span>

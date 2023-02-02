@@ -61,7 +61,7 @@ export function PatientConditionsActions({
 
 type PillWrapper = {
   availableFilters: AvailableFilters;
-  filters: ConditionFilters;
+  filters: FilterTypes;
   updateFilters: (newFilters: Partial<Filters>) => void;
 };
 
@@ -78,6 +78,7 @@ const PillWrapper = ({
             <DropdownMenuAction
               options={{
                 items: filterMap.available.map((filter) => ({
+                  key: filter,
                   name: filter,
                   isSelected: filterMap.selected.includes(filter),
                 })),
