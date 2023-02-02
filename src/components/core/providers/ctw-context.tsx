@@ -5,9 +5,7 @@ import { Theme } from "@/styles/tailwind.theme";
 
 export type CTWToken = {
   accessToken: string;
-  issuedTokenType: string;
-  tokenType: string;
-  expiresAt: number;
+  expiresAt: number; // Timestamp in ms.
 };
 
 export type CTWState = {

@@ -49,6 +49,10 @@ export function claimsBuilderName(authToken: string): string | undefined {
   return getClaims(authToken)[AUTH_BUILDER_NAME];
 }
 
+export function claimsExp(authToken: string): number {
+  return getClaims(authToken).exp;
+}
+
 export function claimsPractitionerId(authToken: string): string | undefined {
   return getClaims(authToken)[AUTH_PRACTITIONER_ID];
 }
