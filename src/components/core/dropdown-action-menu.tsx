@@ -131,6 +131,9 @@ const RenderCorrectFieldType = ({
                 e.stopPropagation();
               }}
               checked={menuItem.isSelected}
+              onChange={(e) => {
+                e.stopPropagation();
+              }}
             />
             <span>{menuItem.name}</span>
           </label>

@@ -16,15 +16,6 @@ export type Filters = {
   other?: ConditionFilters;
 };
 
-export type FilterActions = {
-  removeFilter: (filterName: keyof ConditionFilters) => void;
-  addToFilter: (
-    filterName: keyof ConditionFilters,
-    filterType: "ADD" | "REMOVE",
-    value: string
-  ) => void;
-};
-
 export type AvailableFilters = {
   [key: string]: {
     available: string[];
@@ -35,7 +26,6 @@ export type AvailableFilters = {
 const DEFAULT_FILTER_STATE: Omit<Filters, "activeCollection"> = {
   patient: {
     status: ["Active", "Pending", "Unknown"],
-    ccsChapter: ["Mental and Behavioral"],
   },
   other: { status: ["Active", "Pending"] },
 };
@@ -75,16 +65,27 @@ export function useConditionFilters() {
         ? patientConditions
         : otherConditions;
 
-    return conditions.filter((c) => {
-      const conditionFilters = filters[filters.activeCollection];
+    // Filter out any filters from our filter list that aren't in the data.
+    const conditionFilters: ConditionFilters = {};
+    const activeTab = filters[filters.activeCollection];
+    Object.entries(availableConditionFilters(conditions)).forEach(
+      ([key, values]) => {
+        conditionFilters[key] = compact(values).filter((val) =>
+          activeTab && activeTab[key as keyof ConditionFilters]
+            ? (activeTab[key as keyof ConditionFilters] || []).includes(val)
+            : false
+        );
+      }
+    );
 
+    return conditions.filter((c) => {
       const statusFilter =
-        !conditionFilters?.status ||
+        !conditionFilters.status ||
         conditionFilters.status.length < 1 ||
         conditionFilters.status.includes(c.displayStatus);
 
       const ccsChapterFilter =
-        !conditionFilters?.ccsChapter ||
+        !conditionFilters.ccsChapter ||
         conditionFilters.ccsChapter.length < 1 ||
         conditionFilters.ccsChapter.includes(c.ccsChapter ?? "");
 
@@ -120,15 +121,17 @@ export const selectedAndAvailableFilters = (
     return {
       [key]: {
         available: compact(values),
-        selected: selected.filter((val) => values.includes(val)),
+        selected: compact(selected).filter((val) =>
+          values.includes(val as DisplayStatus)
+        ),
       },
     };
   });
 
 type AddFilterProps = {
-  updateFilters: any;
+  updateFilters: (newFilters: Partial<Filters>) => void;
   activeCollection: FilterCollection;
-  filters: any;
+  filters: ConditionFilters;
 };
 
 export const AddFilter = ({

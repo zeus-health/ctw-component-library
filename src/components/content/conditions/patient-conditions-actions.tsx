@@ -61,7 +61,7 @@ export function PatientConditionsActions({
 
 type PillWrapper = {
   availableFilters: AvailableFilters;
-  filters: FilterTypes;
+  filters: ConditionFilters;
   updateFilters: (newFilters: Partial<Filters>) => void;
 };
 
@@ -108,9 +108,9 @@ const PillWrapper = ({
                 },
               ]}
             >
-              {filters[filterName] && (
+              {filters[filterName as keyof ConditionFilters] && (
                 <PatientConditionPill
-                  title={FILTER_MAP[filterName]}
+                  title={FILTER_MAP[filterName as keyof ConditionFilters]}
                   items={filterMap.selected}
                 />
               )}
@@ -123,9 +123,9 @@ const PillWrapper = ({
 );
 
 const patientConditionActions = (
-  filters: FilterTypes,
+  filters: ConditionFilters,
   updateFilters: (newFilters: Partial<Filters>) => void,
-  filterName: string,
+  filterName: keyof ConditionFilters,
   value: string,
   actionType: string
 ) => {
