@@ -8,7 +8,6 @@ import {
   ConditionFilters,
   FILTER_MAP,
   FilterCollection,
-  Filters,
 } from "./patient-conditions-filters";
 import { DropdownMenuAction } from "@/components/core/dropdown-action-menu";
 
@@ -16,7 +15,7 @@ export type PatientConditionsActionsProps = {
   hideAdd: boolean;
   filters: ConditionFilters | undefined;
   availableFilters: AvailableFilters;
-  updateFilters: (newFilters: Partial<Filters>) => void;
+  updateFilters: (newFilters: Partial<ConditionFilters>) => void;
   activeCollection: FilterCollection;
 };
 
@@ -62,7 +61,7 @@ export function PatientConditionsActions({
 type PillWrapper = {
   availableFilters: AvailableFilters;
   filters: ConditionFilters | undefined;
-  updateFilters: (newFilters: Partial<Filters>) => void;
+  updateFilters: (newFilters: Partial<ConditionFilters>) => void;
 };
 
 const PillWrapper = ({
@@ -86,7 +85,10 @@ const PillWrapper = ({
                   patientConditionActions(
                     filters,
                     updateFilters,
-                    { name: filterName, value: e.name },
+                    {
+                      name: filterName as keyof ConditionFilters,
+                      value: e.name,
+                    },
                     e.value ? "ADD" : "DELETE"
                   );
                 },
@@ -99,14 +101,14 @@ const PillWrapper = ({
                     patientConditionActions(
                       filters,
                       updateFilters,
-                      { name: filterName },
+                      { name: filterName as keyof ConditionFilters },
                       "REMOVE"
                     );
                   },
                 },
               ]}
             >
-              {filters[filterName as keyof ConditionFilters] && (
+              {filters?.[filterName as keyof ConditionFilters] && (
                 <PatientConditionPill
                   title={FILTER_MAP[filterName as keyof ConditionFilters]}
                   items={filterMap.selected}
@@ -121,14 +123,14 @@ const PillWrapper = ({
 );
 
 const patientConditionActions = (
-  filters: ConditionFilters,
+  filters: ConditionFilters | undefined,
   updateFilters: (newFilters: ConditionFilters) => void,
   payload: { name: keyof ConditionFilters; value?: string },
   actionType: string
 ) => {
   const { name, value } = payload;
-  const filterArr = filters[name] ?? [];
-  const newValues = [...filterArr];
+  const filterValues = filters?.[name] ?? [];
+  const newValues = [...filterValues];
 
   switch (actionType) {
     case "ADD":
@@ -137,7 +139,7 @@ const patientConditionActions = (
     case "DELETE":
       updateFilters({
         ...filters,
-        [name]: filterArr.filter((item) => item !== value),
+        [name]: filterValues.filter((item) => item !== value),
       });
       break;
     case "REMOVE":

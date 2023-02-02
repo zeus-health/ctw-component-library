@@ -129,7 +129,7 @@ export const selectedAndAvailableFilters = (
   });
 
 type AddFilterProps = {
-  updateFilters: (newFilters: Partial<Filters>) => void;
+  updateFilters: (newFilters: Partial<ConditionFilters>) => void;
   activeCollection: FilterCollection;
   filters: ConditionFilters | undefined;
 };
