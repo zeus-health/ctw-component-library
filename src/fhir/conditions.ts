@@ -20,11 +20,14 @@ import {
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { ConditionModel } from "@/fhir/models/condition";
-import { compact, orderBy } from "@/utils/nodash";
+import { getPatientRefreshHistoryMessages } from "@/services/patient-history/patient-history";
+import { PatientRefreshHistoryMessage } from "@/services/patient-history/patient-history-types";
+import { compact, find, orderBy } from "@/utils/nodash";
 import {
   QUERY_KEY_CONDITION_HISTORY,
   QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
   QUERY_KEY_PATIENT_CONDITIONS,
+  QUERY_KEY_PATIENT_HISTORY_DETAILS,
 } from "@/utils/query-keys";
 import { Telemetry } from "@/utils/telemetry";
 
@@ -264,5 +267,47 @@ function filterAndSort(conditions: ConditionModel[]): ConditionModel[] {
       (condition) => condition.display,
     ],
     ["desc"]
+  );
+}
+
+export function usePatientHistoryDetails() {
+  return useQueryWithPatient(
+    QUERY_KEY_PATIENT_HISTORY_DETAILS,
+    [],
+    async (requestContext, patient) => {
+      try {
+        const messages = await getPatientRefreshHistoryMessages(
+          requestContext,
+          patient.id
+        );
+
+        if (messages.length === 0) {
+          return undefined;
+        }
+
+        const latestDone = find(messages, {
+          _messages: [
+            {
+              status: "done",
+            },
+          ],
+        }) as PatientRefreshHistoryMessage | undefined;
+        return {
+          // eslint-disable-next-line no-underscore-dangle
+          lastRetrievedAt: latestDone?._createdAt,
+          status: messages[0].status,
+          // eslint-disable-next-line no-underscore-dangle
+          dateCreated: messages[0]._createdAt,
+        };
+      } catch (e) {
+        Telemetry.logError(
+          e as Error,
+          "Failed fetching patient history details"
+        );
+        throw new Error(
+          `Failed fetching patient history details for patient: ${e}`
+        );
+      }
+    }
   );
 }
