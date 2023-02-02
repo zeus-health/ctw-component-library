@@ -36,6 +36,7 @@ import {
   useOtherProviderConditions,
   usePatientConditions,
 } from "@/fhir/conditions";
+import { formatISODateStringToDate } from "@/fhir/formatters";
 import { ConditionModel } from "@/fhir/models/condition";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import {
@@ -302,7 +303,10 @@ export const Conditions = withErrorBoundary(
               <div className="ctw-flex ctw-items-baseline ctw-space-x-2">
                 {patientHistoryInfo?.lastRetrievedAt && (
                   <div className="ctw-text-sm ctw-italic ctw-text-black">
-                    Last Retrieved {patientHistoryInfo.lastRetrievedAt}
+                    Last Retrieved
+                    {formatISODateStringToDate(
+                      patientHistoryInfo.lastRetrievedAt
+                    )}
                   </div>
                 )}
                 {shouldShowClinicalHistoryArea &&
