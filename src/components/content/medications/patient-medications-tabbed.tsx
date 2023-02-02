@@ -45,79 +45,70 @@ export type PatientMedicationsTabbedProps = {
 //     </>
 //   );
 
-const OtherProviderMedsTab = () => {
-  const [selectedFilterIndex, setSelectedFilterIndex] = useState(0);
-  return (
-    <>
-      <FilterBar
-        className="-ctw-mt-2"
-        filters={[
-          {
-            key: "dismissed",
-            type: "tag",
-            icon: "eye",
-            display: ({ active }) =>
-              active ? "dismissed records" : "show dismissed records",
-          },
-          {
-            key: "who-sits-shotgun",
-            type: "select",
-            display: "sitting shotgun",
-            values: [
-              "Joe",
-              "Mike",
-              "Kristen",
-              "peter",
-              "sir kitty cat woofington",
-            ],
-          },
-          {
-            key: "cool-things",
-            type: "checkbox",
-            icon: "plus",
-            display: ({ active }) =>
-              active ? "cool things" : "filter cool things",
-            values: [
-              "cats",
-              { key: "dogs", display: "doggies" },
-              "pizza",
-              "showtime",
-            ],
-          },
-        ]}
-        handleOnChange={(...args) => console.log("change", ...args)}
-      />
-      <OtherProviderMedsTable />
-    </>
-  );
-};
-
 const tabbedContent = [
   {
     key: "medication-list",
-    display: () => "medication list",
+    display: () => "Medication List",
     render: () => <ProviderMedsTable />,
   },
   {
     key: "inactive-provider-records",
-    display: () => "inactive",
+    display: () => "Inactive",
     render: () => <ProviderInactiveMedicationsTable />,
   },
   {
     key: "other-provider-records",
     display: () => (
       <>
-        <span className="ctw-pr-2 ctw-capitalize">other provider records</span>
+        <span className="ctw-pr-2">Other Provider Records</span>
         <BadgeOtherProviderMedCount />
+      </>
+    ),
+    render: ({ handleAddToRecord }: { handleAddToRecord: (m: MedicationStatementModel) => void }) => (
+      <>
+        <FilterBar
+          className="-ctw-mt-2"
+          filters={[
+            {
+              key: "dismissed",
+              type: "tag",
+              icon: "eye",
+              display: ({ active }) =>
+                active ? "dismissed records" : "show dismissed records",
+            },
+            {
+              key: "who-sits-shotgun",
+              type: "select",
+              display: "sitting shotgun",
+              values: [
+                "Joe",
+                "Mike",
+                "Kristen",
+                "peter",
+                "sir kitty cat woofington",
+              ],
+            },
+            {
+              key: "cool-things",
+              type: "checkbox",
+              icon: "plus",
+              display: ({ active }) =>
+                active ? "cool things" : "filter cool things",
+              values: [
+                "cats",
+                { key: "dogs", display: "doggies" },
+                "pizza",
+                "showtime",
+              ],
+            },
+          ]}
+          handleOnChange={console.log}
+        />
+        <OtherProviderMedsTable />
       </>
     ),
     // This function puts a smaller margin on this panel to adjust for filters
     getPanelClassName: (sm: boolean) => (sm ? "ctw-mt-0" : "ctw-mt-1.5"),
-    render: ({ handleAddToRecord }: PatientMedicationsTabbedProps) => (
-      <>
-        <OtherProviderMedsTable handleAddToRecord={handleAddToRecord} />
-      </>
-    ),
   },
 ];
 
