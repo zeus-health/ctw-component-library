@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 0.44.2
+
+### Patch Changes
+
+- 06a43794: Fix date to be in MM/DD/YYYY format.
+
+## 0.44.1
+
+### Patch Changes
+
+- ba10f383: Simplify authTokenURL use by relying on exp from access token itself.
+
 ## 0.44.0
 
 ### Minor Changes

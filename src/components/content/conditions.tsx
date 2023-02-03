@@ -66,8 +66,6 @@ export const Conditions = withErrorBoundary(
     const [showConfirmDelete, setShowConfirmDelete] = useState(false);
 
     const showConditionHistory = useConditionHistory();
-    // const [requestRecordsDrawerIsOpen, setRequestDrawerIsOpen] =
-    //   useState(false);
     const [patientRecords, setPatientRecords] = useState<ConditionModel[]>([]);
     const [otherProviderRecords, setOtherProviderRecords] = useState<
       ConditionModel[]
@@ -84,11 +82,6 @@ export const Conditions = withErrorBoundary(
     const otherProviderRecordsResponse = useOtherProviderConditions();
     const { getRequestContext } = useCTW();
     const [sort, setSort] = useState<TableSort>();
-
-    // const [clinicalHistoryExists, setClinicalHistoryExists] =
-    //   useState<boolean>();
-    // const [patientHistoryInfo, setPatientHistoryInfo] =
-    //   useState<PatientHistoryDetails>();
 
     const patientRecordsMessage = patientRecordsResponse.isError
       ? ERROR_MSG
@@ -284,7 +277,7 @@ export const Conditions = withErrorBoundary(
               <div className="ctw-flex ctw-items-baseline ctw-space-x-2">
                 {patientHistory.lastRetrieved && (
                   <div className="ctw-text-sm ctw-italic ctw-text-black">
-                    Last Retrieved
+                    Last Retrieved{" "}
                     {formatISODateStringToDate(patientHistory.lastRetrieved)}
                   </div>
                 )}
