@@ -59,9 +59,9 @@ export function usePatientHistory() {
         ),
       });
     },
-    lastRetrieved: patientHistoryDetails?.lastRetrievedAt,
-    latestStatus: patientHistoryDetails?.status,
-    dateCreated: patientHistoryDetails?.dateCreated,
+    lastRetrievedAt: patientHistoryDetails?.lastRetrievedAt,
+    lastStatus: patientHistoryDetails?.status,
+    dateCreatedAt: patientHistoryDetails?.dateCreated,
   };
 }
 

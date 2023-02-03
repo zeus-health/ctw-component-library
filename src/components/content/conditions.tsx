@@ -148,7 +148,7 @@ export const Conditions = withErrorBoundary(
     const patientHistory = usePatientHistory();
 
     const shouldShowClinicalHistoryArea =
-      !!patientHistory.lastRetrieved ||
+      !!patientHistory.lastRetrievedAt ||
       (otherProviderRecordsResponse.data &&
         otherProviderRecordsResponse.data.length > 0);
 
@@ -269,16 +269,16 @@ export const Conditions = withErrorBoundary(
           </div>
           <div className="ctw-space-y-3">
             <PatientHistoryStatus
-              status={patientHistory.latestStatus}
-              date={patientHistory.dateCreated}
+              status={patientHistory.lastStatus}
+              date={patientHistory.dateCreatedAt}
             />
             <div className="ctw-conditions-title-container">
               <div className="ctw-title">Other Provider Records</div>
               <div className="ctw-flex ctw-items-baseline ctw-space-x-2">
-                {patientHistory.lastRetrieved && (
+                {patientHistory.lastRetrievedAt && (
                   <div className="ctw-text-sm ctw-italic ctw-text-black">
                     Last Retrieved{" "}
-                    {formatISODateStringToDate(patientHistory.lastRetrieved)}
+                    {formatISODateStringToDate(patientHistory.lastRetrievedAt)}
                   </div>
                 )}
                 {shouldShowClinicalHistoryArea &&
