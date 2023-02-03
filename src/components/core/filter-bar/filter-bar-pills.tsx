@@ -1,5 +1,6 @@
 import type {
   FilterItem,
+  FilterItemStatus,
   FilterOptionCheckbox,
   FilterOptionSelect,
 } from "./filter-bar";
@@ -7,9 +8,12 @@ import cx from "classnames";
 import { FilterValuesRecord } from "./filter-bar";
 import { displayFilterItem } from "./filter-bar-utils";
 import { DropdownMenuAction } from "@/components/core/dropdown-action-menu";
-import { ListBox } from "@/components/core/list-box/list-box";
+import {
+  ListBox,
+  ListBoxOptionStatus,
+} from "@/components/core/list-box/list-box";
 import { isString } from "@/utils/nodash";
-import { omit, set } from "@/utils/nodash/fp";
+import { isFunction, omit, set } from "@/utils/nodash/fp";
 
 const buttonClassName =
   "ctw-capitalize ctw-bg-bg-lighter ctw-text-sm ctw-rounded ctw-text-content-light ctw-my-2 ctw-py-2 ctw-px-3 ctw-relative ctw-mr-1 ctw-cursor-pointer ctw-border-0 ctw-border-transparent";
@@ -50,6 +54,10 @@ function FilterBarCheckboxPill({
     isSelected: selected.includes(isString(item) ? item : item.key),
   }));
 
+  const selectedItems = items
+    .filter((item) => item.isSelected)
+    .map((item) => item.key);
+
   return (
     <DropdownMenuAction
       items={items}
@@ -64,38 +72,56 @@ function FilterBarCheckboxPill({
       onItemSelect={(item) => onChange(item.key, item.value)}
     >
       {displayFilterItem(omit("icon", filter), { active: true })}
+      {selectedItems.length > 0 && ": "}
+      {selectedItems.join(", ")}
     </DropdownMenuAction>
   );
 }
 
 type FilterBarSelectPillProps = {
   filter: FilterOptionSelect;
-  filterValues: FilterValuesRecord;
   onChange: (key: string, isSelected: boolean) => void;
   onRemove: () => void;
 };
 function FilterBarSelectPill({
   filter,
   onChange,
-  filterValues,
   onRemove,
 }: FilterBarSelectPillProps) {
-  const items = [
-    {
-      display: "Choose a selection",
-      key: "clear",
-    },
-    ...filter.values,
-    "reset",
-  ];
+  const renderDisplay = (
+    display: string | ((status: FilterItemStatus) => string)
+  ) => (isFunction(display) ? display({ active: false }) : display);
+  const clearButton = {
+    display: ({ listView }: ListBoxOptionStatus) =>
+      listView ? "clear filter" : renderDisplay(filter.display),
+    key: "_clear",
+  };
+  const items = [...filter.values, clearButton];
   return (
     <ListBox
       useBasicStyles
+      defaultIndex={items.length - 1} // clear index
       btnClassName={buttonClassName}
       items={items.map((item) => ({
-        display: isString(item) ? item : item.display,
+        // eslint-disable-next-line react/no-unstable-nested-components
+        display: ({ listView }: ListBoxOptionStatus) => {
+          if (item === clearButton) {
+            return item.display({ listView });
+          }
+          const title = isString(item) ? item : renderDisplay(item.display);
+          return listView ? (
+            title
+          ) : (
+            <>
+              {renderDisplay(filter.display)}: {title}
+            </>
+          );
+        },
         key: isString(item) ? item : item.key,
-        className: "ctw-capitalize",
+        className: cx("ctw-capitalize", {
+          "ctw-border ctw-capitalize ctw-border-solid ctw-border-divider-light":
+            item === clearButton,
+        }),
       }))}
       onChange={(index, item) => {
         if (item.key === "reset") {
@@ -130,7 +156,6 @@ export function FilterBarPill({
       return (
         <FilterBarSelectPill
           filter={filter}
-          filterValues={filterValues}
           onRemove={onRemove}
           onChange={updateSelectedFilterValues}
         />

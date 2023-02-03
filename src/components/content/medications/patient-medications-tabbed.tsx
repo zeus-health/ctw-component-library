@@ -8,7 +8,10 @@ import {
 import { ProviderInactiveMedicationsTable } from "@/components/content/medications/provider-inactive-medications-table";
 import { ProviderMedsTable } from "@/components/content/medications/provider-meds-table";
 import * as CTWBox from "@/components/core/ctw-box";
-import { FilterBar } from "@/components/core/filter-bar/filter-bar";
+import {
+  FilterBar,
+  FilterChangeEvent,
+} from "@/components/core/filter-bar/filter-bar";
 import { ListBox } from "@/components/core/list-box/list-box";
 import { MedicationStatementModel } from "@/fhir/models";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
@@ -19,31 +22,6 @@ export type PatientMedicationsTabbedProps = {
   forceHorizontalTabs?: boolean;
   handleAddToRecord?: (m: MedicationStatementModel) => void;
 };
-
-// const AddFilterBar = ({ listView }) =>
-//   !listView ? (
-//     <>
-//       <PlusIcon className={cx(iconClassNames)} />
-//       <span>Add Filter</span>
-//     </>
-//   ) : (
-//     <>
-//       <TrashIcon className={cx(iconClassNames)} />
-//       <span>Clear All Filters</span>
-//     </>
-//   );
-//
-// const DismissedMedsButton = ({ listView, tagView }) =>
-//   tagView ? (
-//     <span>Dismissed Records</span>
-//   ) : (
-//     <>
-//       <EyeIcon
-//         className={cx(iconClassNames, listView ? "ctw-top-0" : "-ctw-top-2.5")}
-//       />
-//       <span>show dismissed records</span>
-//     </>
-//   );
 
 const tabbedContent = [
   {
@@ -64,56 +42,65 @@ const tabbedContent = [
         <BadgeOtherProviderMedCount />
       </>
     ),
-    render: ({ handleAddToRecord }: PatientMedicationsTabbedProps) => (
-      <>
-        <FilterBar
-          className="-ctw-mt-2"
-          filters={[
-            {
-              key: "dismissed",
-              type: "tag",
-              icon: "eye",
-              display: ({ active }) =>
-                active ? "dismissed records" : "show dismissed records",
-            },
-            {
-              key: "who-sits-shotgun",
-              type: "select",
-              display: "sitting shotgun",
-              values: [
-                "Joe",
-                "Mike",
-                "Kristen",
-                "peter",
-                "sir kitty cat woofington",
-              ],
-            },
-            {
-              key: "cool-things",
-              type: "checkbox",
-              icon: "plus",
-              display: ({ active }) =>
-                active ? "cool things" : "filter cool things",
-              values: [
-                "cats",
-                { key: "dogs", display: "doggies" },
-                "pizza",
-                "showtime",
-              ],
-            },
-          ]}
-          handleOnChange={(filters) => {
-            // console.log(filters);
-          }}
-        />
-        <OtherProviderMedsTable />
-      </>
-    ),
+    render: OtherProviderMedsTableTab,
     // This function puts a smaller margin on this panel to adjust for filters
     getPanelClassName: (sm: boolean) => (sm ? "ctw-mt-0" : "ctw-mt-1.5"),
   },
 ];
 
+function OtherProviderMedsTableTab({
+  handleAddToRecord,
+}: PatientMedicationsTabbedProps) {
+  const [filters, setFilters] = useState<FilterChangeEvent>({});
+  const showDismissed = "dismissed" in filters;
+  const showInactive = "inactive" in filters;
+  return (
+    <>
+      <FilterBar
+        className="-ctw-mt-2"
+        filters={[
+          {
+            key: "dismissed",
+            type: "tag",
+            icon: "eye",
+            display: ({ active }) =>
+              active ? "dismissed records" : "show dismissed records",
+          },
+          {
+            key: "who-sits-shotgun",
+            type: "select",
+            display: "sitting shotgun",
+            values: [
+              "Joe",
+              "Mike",
+              "Kristen",
+              "peter",
+              "sir kitty cat woofington",
+            ],
+          },
+          {
+            key: "cool-things",
+            type: "checkbox",
+            icon: "plus",
+            display: ({ active }) =>
+              active ? "cool things" : "filter cool things",
+            values: [
+              "cats",
+              { key: "dogs", display: "doggies" },
+              "pizza",
+              "showtime",
+            ],
+          },
+        ]}
+        handleOnChange={setFilters}
+      />
+      <OtherProviderMedsTable
+        showDismissed={showDismissed}
+        showInactive={showInactive}
+      />
+    </>
+  );
+}
 /**
  * This component is a tabbed view of patient medications from the current
  * provider, other providers and historical. When rendered in a small breakpoint

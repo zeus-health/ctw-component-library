@@ -7,7 +7,7 @@ import { omit, partition, uniq } from "@/utils/nodash/fp";
 
 export type FilterBarProps = {
   className?: cx.Argument;
-  handleOnChange: (filters: FilterValueItem[]) => void;
+  handleOnChange: (filters: FilterChangeEvent) => void;
   filters: FilterItem[];
 };
 
@@ -40,42 +40,33 @@ export type FilterItem =
   | FilterOptionSelect
   | FilterOptionCheckbox;
 
-type MinFilterValueItem = {
-  key: string;
-};
-type SelectBoxFilterValueItem = MinFilterValueItem & {
-  selected: string;
-};
-type CheckBoxFilterValueItem = MinFilterValueItem & {
-  selected: string[];
-};
-
-type FilterValueItem =
-  | MinFilterValueItem
-  | SelectBoxFilterValueItem
-  | CheckBoxFilterValueItem;
-
 export type FilterValuesRecord = Record<string, string | string[]>;
 
-type FilterChangeEvent = {
-  key: string;
-  type: "tag" | "checkbox" | "select";
-  selected: boolean | string | string[];
-};
+export type FilterChangeEvent = Record<
+  string,
+  {
+    key: string;
+    selected: boolean | string | string[];
+    type: "tag" | "checkbox" | "select";
+  }
+>;
 
 function filterChangeEvent(
   filters: FilterItem[],
   activeFilterKeys: string[],
   activeFilterValues: FilterValuesRecord
-): FilterChangeEvent[] {
-  return activeFilterKeys.map((key) => {
+): FilterChangeEvent {
+  return activeFilterKeys.reduce((acc, key) => {
     const filter = filters.find((item) => item.key === key) as FilterItem;
     return {
-      key: filter.key,
-      type: filter.type,
-      selected: filter.type === "tag" ? true : activeFilterValues[filter.key],
+      ...acc,
+      [filter.key]: {
+        key: filter.key,
+        type: filter.type,
+        selected: filter.type === "tag" ? true : activeFilterValues[filter.key],
+      },
     };
-  });
+  }, {});
 }
 
 export const FilterBar = ({
@@ -92,17 +83,21 @@ export const FilterBar = ({
   );
 
   useEffect(() => {
-    // Validating that the "reset" filter is never passed in from parent
-    if (filters.map(({ key }) => key).includes("reset")) {
-      throw new Error("FilterBar filters should not have key name 'reset'");
+    // Validating that the "_reset" filter is never passed in from parent
+    if (filters.map(({ key }) => key).includes("_reset")) {
+      throw new Error("FilterBar filters should not have key name '_reset'");
     }
   }, [filters]);
 
+  const removeInternalKeys = (keys: string[]) =>
+    keys.filter((key) => !["_reset", "_clear"].includes(key));
   // Add or remove a filter from the activated filters list
   const addRemoveFilter = (key: string, remove = false) => {
-    const updatedKeys = remove
-      ? activeFilterKeys.filter((k) => k !== key)
-      : uniq(activeFilterKeys.concat(key));
+    const updatedKeys = removeInternalKeys(
+      remove
+        ? activeFilterKeys.filter((k) => k !== key)
+        : uniq(activeFilterKeys.concat(key))
+    );
     setActiveFilterKeys(updatedKeys);
 
     let updatedActiveFilterValues;
@@ -152,7 +147,8 @@ export const FilterBar = ({
 
   const resetAllFilters = () => {
     setActiveFilterKeys([]);
-    handleOnChange([]);
+    setActiveFilterValues({});
+    handleOnChange({});
   };
 
   // Creates the main filter list dropdown
@@ -160,13 +156,11 @@ export const FilterBar = ({
     ...inactiveFilters.map((filter) => ({
       display: () => displayFilterItem(filter, { active: false }),
       key: filter.key,
-      action: () => addRemoveFilter(filter.key),
       className: cx("ctw-capitalize", filter.className),
     })),
     {
-      display: "reset",
-      key: "reset",
-      action: resetAllFilters,
+      display: "clear all filters",
+      key: "_reset",
       icon: "trash",
       className:
         "ctw-border ctw-capitalize ctw-border-solid ctw-border-divider-light",
@@ -194,9 +188,15 @@ export const FilterBar = ({
         useBasicStyles
         btnClassName="ctw-bg-transparent ctw-rounded ctw-text-content-light ctw-my-2 ctw-py-2 ctw-px-3"
         items={inactiveFilterMenuItems}
-        onChange={(index, item) => addRemoveFilter(item.key, false)}
+        onChange={(index, item) => {
+          if (item.key === "_reset") {
+            resetAllFilters();
+          } else {
+            addRemoveFilter(item.key, false);
+          }
+        }}
       >
-        {getIcon("plus")} Filter
+        {getIcon("plus")} Add Filters
       </ListBox>
     </>
   );

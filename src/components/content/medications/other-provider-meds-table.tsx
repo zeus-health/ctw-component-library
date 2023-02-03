@@ -14,6 +14,8 @@ import { sort, SortDir } from "@/utils/sort";
 export type OtherProviderMedsTableProps = {
   className?: string;
   handleAddToRecord?: (m: MedicationStatementModel) => void;
+  showDismissed?: boolean;
+  showInactive?: boolean;
   sortColumn?: keyof MedicationStatementModel;
   sortOrder?: SortDir;
 };
@@ -29,6 +31,8 @@ export const OtherProviderMedsTable = withErrorBoundary(
   ({
     sortOrder = "asc",
     sortColumn = "display",
+    showDismissed = false,
+    showInactive = false,
     handleAddToRecord,
   }: OtherProviderMedsTableProps) => {
     const dismissMedication = useDismissMedication();
@@ -56,12 +60,20 @@ export const OtherProviderMedsTable = withErrorBoundary(
       if (!otherProviderMedications) return;
       setMedicationModels(
         sort(
-          otherProviderMedications,
+          otherProviderMedications
+            .filter((med) => !med.isArchived || showDismissed)
+            .filter((med) => !med.isInactive || showInactive),
           pipe(get(sortColumn), toLower),
           sortOrder
         )
       );
-    }, [otherProviderMedications, sortColumn, sortOrder]);
+    }, [
+      otherProviderMedications,
+      sortColumn,
+      sortOrder,
+      showInactive,
+      showDismissed,
+    ]);
 
     return (
       <div data-zus-telemetry-namespace="OtherProviderMedsTable">
