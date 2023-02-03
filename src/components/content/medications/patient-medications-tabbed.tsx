@@ -64,11 +64,7 @@ const tabbedContent = [
         <BadgeOtherProviderMedCount />
       </>
     ),
-    render: ({
-      handleAddToRecord,
-    }: {
-      handleAddToRecord: (m: MedicationStatementModel) => void;
-    }) => (
+    render: ({ handleAddToRecord }: PatientMedicationsTabbedProps) => (
       <>
         <FilterBar
           className="-ctw-mt-2"

@@ -40,6 +40,7 @@ const demoComponents: DemoComponent[] = [
     title: "Patient Medications Tabbed",
   },
   { render: () => <PatientAllergies />, title: "Patient Allergies" },
+  { render: () => <PatientImmunizations />, title: "Patient Immunizations" },
   { render: () => <Conditions />, title: "Patient Conditions" },
   { render: () => <PatientConditions />, title: "Patient Conditions 2.0" },
   { render: () => <PatientMedications />, title: "Patient Medications" },

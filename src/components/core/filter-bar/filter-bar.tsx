@@ -168,7 +168,7 @@ export const FilterBar = ({
       key: "reset",
       action: resetAllFilters,
       icon: "trash",
-      className: "ctw-border ctw-border-solid ctw-border-divider-light",
+      className: "ctw-border ctw-capitalize ctw-border-solid ctw-border-divider-light",
     },
   ];
 

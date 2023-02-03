@@ -343,7 +343,6 @@ export function useMedicationHistory(medication?: fhir4.MedicationStatement) {
  */
 export function useLastPrescriber(medication?: fhir4.MedicationStatement) {
   const [lastPrescriber, setLastPrescriber] = useState<string | undefined>();
-  const [isLoading, setIsLoading] = useState(true);
   const historyQuery = useMedicationHistory(medication);
 
   useEffect(() => {
@@ -368,11 +367,10 @@ export function useLastPrescriber(medication?: fhir4.MedicationStatement) {
 
       // Fall back to a string, so we don't try to find prescriber again.
       setLastPrescriber(prescriber || "");
-      setIsLoading(false);
     }
   }, [lastPrescriber, historyQuery.data]);
 
-  return { isLoading, lastPrescriber };
+  return { isLoading: historyQuery.isFetching, lastPrescriber };
 }
 
 type NoopSearchResults = { resources: []; bundle: undefined };
