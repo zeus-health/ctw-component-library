@@ -2,4 +2,4 @@
 "@zus-health/ctw-component-library": patch
 ---
 
-Update usePatientHistory to use patientHistoryDetails and fix date.
+Refactor usePatientHistory hook to open RequestDrawers and pass patientHistory information. Also, resolves a few bugs regarding empty states while opening drawers in patient history.
