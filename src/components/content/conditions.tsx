@@ -22,9 +22,9 @@ import {
   getAddConditionWithDefaults,
 } from "./forms/actions/conditions";
 import { getAddConditionData } from "./forms/schemas/condition-schema";
-import { PatientHistoryRequestDrawer } from "./patient-history-request-drawer";
 import { PatientHistoryMessage } from "./patient-history/patient-history-message";
 import { PatientHistoryStatus } from "./patient-history/patient-history-message-status";
+import { usePatientHistory } from "./patient-history/use-patient-history";
 import {
   conditionAddSchema,
   conditionEditSchema,
@@ -39,10 +39,6 @@ import {
 import { formatISODateStringToDate } from "@/fhir/formatters";
 import { ConditionModel } from "@/fhir/models/condition";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
-import {
-  getPatientHistoryDetails,
-  PatientHistoryDetails,
-} from "@/services/patient-history/patient-history";
 import { AnyZodSchema } from "@/utils/form-helper";
 import { curry } from "@/utils/nodash";
 
@@ -70,8 +66,8 @@ export const Conditions = withErrorBoundary(
     const [showConfirmDelete, setShowConfirmDelete] = useState(false);
 
     const showConditionHistory = useConditionHistory();
-    const [requestRecordsDrawerIsOpen, setRequestDrawerIsOpen] =
-      useState(false);
+    // const [requestRecordsDrawerIsOpen, setRequestDrawerIsOpen] =
+    //   useState(false);
     const [patientRecords, setPatientRecords] = useState<ConditionModel[]>([]);
     const [otherProviderRecords, setOtherProviderRecords] = useState<
       ConditionModel[]
@@ -89,10 +85,10 @@ export const Conditions = withErrorBoundary(
     const { getRequestContext } = useCTW();
     const [sort, setSort] = useState<TableSort>();
 
-    const [clinicalHistoryExists, setClinicalHistoryExists] =
-      useState<boolean>();
-    const [patientHistoryInfo, setPatientHistoryInfo] =
-      useState<PatientHistoryDetails>();
+    // const [clinicalHistoryExists, setClinicalHistoryExists] =
+    //   useState<boolean>();
+    // const [patientHistoryInfo, setPatientHistoryInfo] =
+    //   useState<PatientHistoryDetails>();
 
     const patientRecordsMessage = patientRecordsResponse.isError
       ? ERROR_MSG
@@ -156,22 +152,12 @@ export const Conditions = withErrorBoundary(
       </button>
     );
 
+    const patientHistory = usePatientHistory();
+
     const shouldShowClinicalHistoryArea =
-      clinicalHistoryExists ||
+      !!patientHistory.lastRetrieved ||
       (otherProviderRecordsResponse.data &&
         otherProviderRecordsResponse.data.length > 0);
-
-    const checkClinicalHistory = async (patientID: string) => {
-      const requestContext = await getRequestContext();
-
-      const patientHistoryMessage = await getPatientHistoryDetails(
-        requestContext,
-        patientID
-      );
-
-      setClinicalHistoryExists(!!patientHistoryMessage?.lastRetrievedAt);
-      setPatientHistoryInfo(patientHistoryMessage);
-    };
 
     useEffect(() => {
       async function load() {
@@ -202,17 +188,12 @@ export const Conditions = withErrorBoundary(
         }
       }
       void load();
-      if (patientResponse.data?.id && clinicalHistoryExists === undefined) {
-        void checkClinicalHistory(patientResponse.data.id);
-      }
-
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
       includeInactive,
       patientResponse.data,
       patientRecordsResponse.data,
       otherProviderRecordsResponse.data,
-      clinicalHistoryExists,
       patientRecordsResponse.error,
     ]);
 
@@ -295,18 +276,16 @@ export const Conditions = withErrorBoundary(
           </div>
           <div className="ctw-space-y-3">
             <PatientHistoryStatus
-              status={patientHistoryInfo?.status}
-              date={patientHistoryInfo?.dateCreated}
+              status={patientHistory.latestStatus}
+              date={patientHistory.dateCreated}
             />
             <div className="ctw-conditions-title-container">
               <div className="ctw-title">Other Provider Records</div>
               <div className="ctw-flex ctw-items-baseline ctw-space-x-2">
-                {patientHistoryInfo?.lastRetrievedAt && (
+                {patientHistory.lastRetrieved && (
                   <div className="ctw-text-sm ctw-italic ctw-text-black">
                     Last Retrieved
-                    {formatISODateStringToDate(
-                      patientHistoryInfo.lastRetrievedAt
-                    )}
+                    {formatISODateStringToDate(patientHistory.lastRetrieved)}
                   </div>
                 )}
                 {shouldShowClinicalHistoryArea &&
@@ -315,7 +294,7 @@ export const Conditions = withErrorBoundary(
                     <button
                       type="button"
                       className="ctw-btn-clear ctw-link"
-                      onClick={() => setRequestDrawerIsOpen(true)}
+                      onClick={patientHistory.openHistoryRequestDrawer}
                       data-zus-telemetry-click="Request records"
                     >
                       Request Records
@@ -361,7 +340,7 @@ export const Conditions = withErrorBoundary(
             ) : (
               <PatientHistoryMessage
                 readOnly={readOnly || hideRequestRecords}
-                onClick={() => setRequestDrawerIsOpen(true)}
+                onClick={patientHistory.openHistoryRequestDrawer}
               />
             )}
           </div>
@@ -384,27 +363,6 @@ export const Conditions = withErrorBoundary(
             schema={schema}
             isOpen={drawerIsOpen}
             onClose={() => setDrawerIsOpen(false)}
-          />
-        )}
-
-        {patientResponse.data && (
-          <PatientHistoryRequestDrawer
-            header={
-              <>
-                <PatientHistoryStatus
-                  status={patientHistoryInfo?.status}
-                  date={patientHistoryInfo?.dateCreated}
-                />
-                <div className="ctw-pt-0 ctw-text-base">
-                  Request patient clinical history from 70K+ providers across
-                  the nation. No changes will be made to your patient record.
-                </div>
-              </>
-            }
-            patient={patientResponse.data}
-            isOpen={requestRecordsDrawerIsOpen}
-            onClose={() => setRequestDrawerIsOpen(false)}
-            setClinicalHistoryExists={setClinicalHistoryExists}
           />
         )}
 

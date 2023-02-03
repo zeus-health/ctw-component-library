@@ -87,27 +87,31 @@ export function usePatient(): UseQueryResult<PatientModel, unknown> {
   );
 }
 
-export function usePatientPromise(): Promise<PatientModel> {
+export function usePatientPromise() {
   const { getRequestContext } = useCTW();
 
   const context = useContext(PatientContext);
 
-  if (!context) {
-    throw new Error("usePatient must be used within a PatientProvider");
-  }
+  return {
+    getPatient: useCallback(() => {
+      if (!context) {
+        throw new Error("usePatient must be used within a PatientProvider");
+      }
 
-  const { patientID, systemURL, tags } = context;
+      const { patientID, systemURL, tags } = context;
 
-  return queryClient.fetchQuery(
-    [QUERY_KEY_PATIENT, patientID, systemURL, tags],
-    async () => {
-      const requestContext = await getRequestContext();
-      return getBuilderFhirPatient(requestContext, patientID, systemURL, {
-        _tag: tags?.map((tag) => `${tag.system}|${tag.code}`) ?? [],
-      });
-    },
-    { staleTime: PATIENT_STALE_TIME }
-  );
+      return queryClient.fetchQuery(
+        [QUERY_KEY_PATIENT, patientID, systemURL, tags],
+        async () => {
+          const requestContext = await getRequestContext();
+          return getBuilderFhirPatient(requestContext, patientID, systemURL, {
+            _tag: tags?.map((tag) => `${tag.system}|${tag.code}`) ?? [],
+          });
+        },
+        { staleTime: PATIENT_STALE_TIME }
+      );
+    }, [context, getRequestContext]),
+  };
 }
 
 export function useHandlePatientSave(patient: PatientModel) {
