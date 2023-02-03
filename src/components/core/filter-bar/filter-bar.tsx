@@ -1,14 +1,15 @@
 import cx from "classnames";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { displayFilterItem, getIcon } from "./filter-bar-utils";
 import { FilterBarPill } from "@/components/core/filter-bar/filter-bar-pills";
 import { ListBox } from "@/components/core/list-box/list-box";
 import { omit, partition, uniq } from "@/utils/nodash/fp";
 
-export type FilterBarProps = {
+export type FilterBarProps<T extends FilterItem> = {
   className?: cx.Argument;
   handleOnChange: (filters: FilterChangeEvent) => void;
-  filters: FilterItem[];
+  filters: T[];
+  defaultState?: FilterChangeEvent;
 };
 
 export type FilterItemStatus = {
@@ -17,7 +18,7 @@ export type FilterItemStatus = {
 
 export type MinFilterItem = {
   className?: cx.Argument;
-  display: string | ((status: FilterItemStatus) => string);
+  display: string | ((status: FilterItemStatus) => ReactNode | string);
   icon?: string;
   key: string;
   type: "tag";
@@ -69,14 +70,32 @@ function filterChangeEvent(
   }, {});
 }
 
-export const FilterBar = ({
+export const FilterBar = <T extends FilterItem>({
   className,
   handleOnChange,
   filters,
-}: FilterBarProps) => {
-  const [activeFilterKeys, setActiveFilterKeys] = useState<string[]>([]);
+  defaultState = {},
+}: FilterBarProps<T>) => {
+  const [activeFilterKeys, setActiveFilterKeys] = useState<string[]>(
+    Object.keys(defaultState)
+  );
   const [activeFilterValues, setActiveFilterValues] =
-    useState<FilterValuesRecord>({});
+    useState<FilterValuesRecord>(
+      Object.keys(defaultState).reduce((acc, key) => {
+        const { selected, type } = defaultState[key];
+        if (type === "tag") {
+          return {
+            ...acc,
+            [key]: [],
+          };
+        }
+        return {
+          ...acc,
+          [key]: selected,
+        };
+      }, {})
+    );
+
   const [activeFilters, inactiveFilters] = partition(
     ({ key }) => activeFilterKeys.includes(key),
     filters
@@ -123,26 +142,26 @@ export const FilterBar = ({
   ) => {
     const filter = filters.find((item) => item.key === key);
     const values = activeFilterValues[key];
+    let activeValues;
     if (isSelected) {
-      setActiveFilterValues({
+      activeValues = {
         ...activeFilterValues,
         [key]:
           filter?.type === "checkbox"
             ? uniq(values.concat(valueKey))
             : valueKey,
-      });
+      };
     } else if (Array.isArray(values)) {
-      setActiveFilterValues({
+      activeValues = {
         ...activeFilterValues,
         [key]: values.filter((k) => k !== valueKey),
-      });
+      };
     } else {
       // Edge case, if not selected and values not array, just remove key
-      setActiveFilterValues(omit(key, activeFilterValues));
+      activeValues = omit(key, activeFilterValues);
     }
-    handleOnChange(
-      filterChangeEvent(filters, activeFilterKeys, activeFilterValues)
-    );
+    setActiveFilterValues(activeValues);
+    handleOnChange(filterChangeEvent(filters, activeFilterKeys, activeValues));
   };
 
   const resetAllFilters = () => {

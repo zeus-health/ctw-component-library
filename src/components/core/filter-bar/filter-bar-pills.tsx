@@ -5,8 +5,9 @@ import type {
   FilterOptionSelect,
 } from "./filter-bar";
 import cx from "classnames";
+import type { ReactNode } from "react";
 import { FilterValuesRecord } from "./filter-bar";
-import { displayFilterItem } from "./filter-bar-utils";
+import { displayFilterItem, getIcon } from "./filter-bar-utils";
 import { DropdownMenuAction } from "@/components/core/dropdown-action-menu";
 import {
   ListBox,
@@ -16,7 +17,7 @@ import { isString } from "@/utils/nodash";
 import { isFunction, omit, set } from "@/utils/nodash/fp";
 
 const buttonClassName =
-  "ctw-capitalize ctw-bg-bg-lighter ctw-text-sm ctw-rounded ctw-text-content-light ctw-my-2 ctw-py-2 ctw-px-3 ctw-relative ctw-mr-1 ctw-cursor-pointer ctw-border-0 ctw-border-transparent";
+  "ctw-max-w-[15rem] ctw-capitalize ctw-text-content-black ctw-bg-bg-dark ctw-text-sm ctw-rounded ctw-my-2 ctw-py-2 ctw-px-3 ctw-relative ctw-mr-1 ctw-cursor-pointer ctw-border-0 ctw-border-transparent";
 function FilterBarTagPill({
   filter,
   onRemove,
@@ -71,9 +72,13 @@ function FilterBarCheckboxPill({
       buttonClassName={cx(filter.className, buttonClassName)}
       onItemSelect={(item) => onChange(item.key, item.value)}
     >
-      {displayFilterItem(omit("icon", filter), { active: true })}
-      {selectedItems.length > 0 && ": "}
-      {selectedItems.join(", ")}
+      <span className="ctw-font-medium ctw-text-content-black">
+        {displayFilterItem(omit("icon", filter), { active: true })}
+        {selectedItems.length > 0 && ": "}
+      </span>
+      <span className="ctw-font-normal">{selectedItems.join(", ")}</span>
+      {getIcon("chevron-down")}
+      <span className="ctw-inline-block ctw-font-normal" />
     </DropdownMenuAction>
   );
 }
@@ -89,7 +94,7 @@ function FilterBarSelectPill({
   onRemove,
 }: FilterBarSelectPillProps) {
   const renderDisplay = (
-    display: string | ((status: FilterItemStatus) => string)
+    display: string | ((status: FilterItemStatus) => string | ReactNode)
   ) => (isFunction(display) ? display({ active: false }) : display);
   const clearButton = {
     display: ({ listView }: ListBoxOptionStatus) =>

@@ -11,6 +11,7 @@ import * as CTWBox from "@/components/core/ctw-box";
 import {
   FilterBar,
   FilterChangeEvent,
+  FilterItem,
 } from "@/components/core/filter-bar/filter-bar";
 import { ListBox } from "@/components/core/list-box/list-box";
 import { MedicationStatementModel } from "@/fhir/models";
@@ -48,51 +49,70 @@ const tabbedContent = [
   },
 ];
 
+type MyCustomFilterItem = {
+  test?: string;
+} & FilterItem;
+
 function OtherProviderMedsTableTab({
   handleAddToRecord,
 }: PatientMedicationsTabbedProps) {
   const [filters, setFilters] = useState<FilterChangeEvent>({});
   const showDismissed = "dismissed" in filters;
   const showInactive = "inactive" in filters;
+  const filterItems: MyCustomFilterItem[] = [
+    {
+      key: "dismissed",
+      type: "tag",
+      icon: "eye",
+      test: "test",
+      display: ({ active }) =>
+        active ? "dismissed records" : "show dismissed records",
+    },
+    {
+      key: "who-sits-shotgun",
+      type: "select",
+      display: "sitting shotgun",
+      values: ["Joe", "Mike", "Kristen", "peter", "sir kitty cat woofington"],
+    },
+    {
+      key: "cool-things",
+      type: "checkbox",
+      icon: "plus",
+      display: ({ active }) => (active ? "cool things" : "filter cool things"),
+      values: [
+        "cats",
+        { key: "dogs", display: "doggies" },
+        "pizza",
+        "showtime",
+      ],
+    },
+  ];
   return (
     <>
       <FilterBar
-        className="-ctw-mt-2"
-        filters={[
-          {
-            key: "dismissed",
-            type: "tag",
-            icon: "eye",
-            display: ({ active }) =>
-              active ? "dismissed records" : "show dismissed records",
-          },
-          {
-            key: "who-sits-shotgun",
-            type: "select",
-            display: "sitting shotgun",
-            values: [
-              "Joe",
-              "Mike",
-              "Kristen",
-              "peter",
-              "sir kitty cat woofington",
-            ],
-          },
-          {
+        defaultState={{
+          "cool-things": {
             key: "cool-things",
             type: "checkbox",
-            icon: "plus",
-            display: ({ active }) =>
-              active ? "cool things" : "filter cool things",
-            values: [
-              "cats",
-              { key: "dogs", display: "doggies" },
-              "pizza",
-              "showtime",
-            ],
+            selected: ["cats", "dogs", "pizza"],
           },
-        ]}
-        handleOnChange={setFilters}
+          "who-sits-shotgun": {
+            key: "who-sits-shotgun",
+            type: "select",
+            selected: "Kristen",
+          },
+          dismissed: {
+            key: "dismissed",
+            type: "tag",
+            selected: true,
+          },
+        }}
+        className="-ctw-mt-2"
+        filters={filterItems}
+        handleOnChange={(filterChangeEvent) => {
+          console.log(filterChangeEvent);
+          setFilters(filterChangeEvent);
+        }}
       />
       <OtherProviderMedsTable
         showDismissed={showDismissed}
