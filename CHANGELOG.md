@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.44.2
+
+### Patch Changes
+
+- 06a43794: Fix date to be in MM/DD/YYYY format.
+
 ## 0.44.1
 
 ### Patch Changes
