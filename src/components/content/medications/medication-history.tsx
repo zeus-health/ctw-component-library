@@ -64,14 +64,17 @@ export const MedicationHistory = withErrorBoundary(
 
 function createMedicationStatementCard(medication: MedicationModel) {
   const resource = medication.resource as fhir4.MedicationStatement;
-  const medStatement = new MedicationStatementModel(resource);
+  const medStatement = new MedicationStatementModel(
+    resource,
+    medication.includedResources
+  );
 
   return {
     date: medication.dateLocal,
     id: medication.id,
     title: "Medication Reviewed",
     hideEmpty: false,
-    subtitle: medStatement.informationSource?.display || "",
+    subtitle: medStatement.patient?.organization?.name,
     data: [
       {
         label: "Status",
