@@ -102,7 +102,9 @@ const tabbedContent = [
               ],
             },
           ]}
-          handleOnChange={console.log}
+          handleOnChange={(filters) => {
+            // console.log(filters);
+          }}
         />
         <OtherProviderMedsTable />
       </>
