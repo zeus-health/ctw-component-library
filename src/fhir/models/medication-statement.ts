@@ -1,5 +1,6 @@
 import type { Reference } from "fhir/r4";
 import { FHIRModel } from "./fhir-model";
+import { PatientModel } from "./patient";
 import { codeableConceptLabel } from "@/fhir/codeable-concept";
 import { dateToISO, formatDateISOToLocal } from "@/fhir/formatters";
 import {
@@ -162,6 +163,21 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
   get subjectID(): string {
     const [, subjectID] = this.resource.subject.reference?.split("/") || [];
     return subjectID || "";
+  }
+
+  get patient(): PatientModel | undefined {
+    const reference = findReference(
+      "Patient",
+      this.resource.contained,
+      this.includedResources,
+      this.resource.subject.reference
+    );
+
+    if (reference) {
+      return new PatientModel(reference, this.includedResources);
+    }
+
+    return undefined;
   }
 
   // lens extensions
