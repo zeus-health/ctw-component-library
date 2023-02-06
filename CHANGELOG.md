@@ -1,5 +1,23 @@
 # ctw-component-library
 
+## 0.44.5
+
+### Patch Changes
+
+- a05abcfa: Lower minimum node version to 12
+
+## 0.44.4
+
+### Patch Changes
+
+- edcae3d3: Refactor usePatientHistory hook to open RequestDrawers and pass patientHistory information. Also, resolves a few bugs regarding empty states while opening drawers in patient history.
+
+## 0.44.3
+
+### Patch Changes
+
+- 3f99b04f: Add patient managing organization to medication statement cards in history.
+
 ## 0.44.2
 
 ### Patch Changes

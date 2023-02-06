@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import {
   mockPatientGet,
+  mockPatientHistoryGet,
   mockPatientHistoryPost,
   mockPatientPut,
   mockProvenancePost,
@@ -42,6 +43,7 @@ export const Basic: StoryObj = {
   parameters: {
     msw: [
       mockPatientGet,
+      mockPatientHistoryGet,
       mockPatientPut,
       mockProvenancePost,
       mockPatientHistoryPost,
