@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.44.4
+
+### Patch Changes
+
+- edcae3d3: Refactor usePatientHistory hook to open RequestDrawers and pass patientHistory information. Also, resolves a few bugs regarding empty states while opening drawers in patient history.
+
 ## 0.44.3
 
 ### Patch Changes
