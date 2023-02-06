@@ -107,7 +107,7 @@ export function PatientMedicationsTabbed({
 
   return (
     <CTWBox.StackedWrapper
-      className={cx(" ctw-space-y-3", className)}
+      className={cx("ctw-patient-medications ctw-space-y-3", className)}
     >
       <div ref={containerRef} className="ctw-relative ctw-w-full">
         <Tab.Group
