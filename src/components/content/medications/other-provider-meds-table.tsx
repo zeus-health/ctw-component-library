@@ -57,11 +57,6 @@ export const OtherProviderMedsTable = withErrorBoundary(
 
     useEffect(() => {
       if (!otherProviderMedications) return;
-      console.log("change", {
-        otherProviderMedications,
-        showDismissed,
-        showInactive,
-      });
       setMedicationModels(
         sort(
           otherProviderMedications
