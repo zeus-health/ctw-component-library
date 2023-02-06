@@ -162,19 +162,13 @@ export function PatientMedicationsTabbed({
 
           {/* Renders body of each tab using "render()" */}
           <Tab.Panels>
-            {tabbedContent.map(
-              ({
-                key,
-                render,
-                getPanelClassName = (sm: boolean) =>
-                  sm ? "ctw-mt-0" : "ctw-mt-4",
-              }) => (
-                <Tab.Panel
-                  key={key}
-                  className={cx(getPanelClassName(breakpoints.sm))}
-                >
-                  {render({ handleAddToRecord })}
-                </Tab.Panel>
+            {tabbedContent.map(item => (
+              <Tab.Panel
+                key={item.key}
+                className={cx(item.getPanelClassName?.(breakpoints.sm))}
+              >
+                {item.render({ handleAddToRecord })}
+              </Tab.Panel>
               )
             )}
           </Tab.Panels>
