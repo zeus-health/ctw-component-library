@@ -10,7 +10,9 @@
   }
 
   .ctw-tr-archived {
-    td, td span, td div {
+    td,
+    td span,
+    td div {
       // Gray out archived table content
       @apply ctw-text-content-lighter;
     }

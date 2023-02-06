@@ -25,8 +25,5 @@ export const mockProvenancePost = rest.post(
 // https://api.dev.zusapi.com/patient-history/patient/u12345/refresh?consent=1
 export const mockPatientHistoryPost = rest.post(
   "https://api.dev.zusapi.com/patient-history/patient/:patientId/refresh",
-  (req, res, ctx) => 
-    // Patient history request expects json response.
-     res(ctx.status(200), ctx.json({}))
-  
+  (req, res, ctx) => res(ctx.status(200), ctx.json({}))
 );

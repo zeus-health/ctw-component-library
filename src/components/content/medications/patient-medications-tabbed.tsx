@@ -48,7 +48,7 @@ const tabbedContent: TabbedContent<MedicationStatementModel>[] = [
     key: "other-provider-records",
     display: () => (
       <>
-        <span className="ctw-capitalize ctw-pr-2">other provider records</span>
+        <span className="ctw-pr-2 ctw-capitalize">other provider records</span>
         <BadgeOtherProviderMedCount />
       </>
     ),
@@ -162,15 +162,14 @@ export function PatientMedicationsTabbed({
 
           {/* Renders body of each tab using "render()" */}
           <Tab.Panels>
-            {tabbedContent.map(item => (
+            {tabbedContent.map((item) => (
               <Tab.Panel
                 key={item.key}
                 className={cx(item.getPanelClassName?.(breakpoints.sm))}
               >
                 {item.render({ handleAddToRecord })}
               </Tab.Panel>
-              )
-            )}
+            ))}
           </Tab.Panels>
         </Tab.Group>
       </div>
