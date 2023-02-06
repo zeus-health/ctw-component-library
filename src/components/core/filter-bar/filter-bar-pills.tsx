@@ -3,10 +3,10 @@ import type {
   FilterItemStatus,
   FilterOptionCheckbox,
   FilterOptionSelect,
-} from "./filter-bar";
+  FilterValuesRecord,
+} from "./filter-bar-types";
 import cx from "classnames";
 import type { ReactNode } from "react";
-import { FilterValuesRecord } from "./filter-bar";
 import { displayFilterItem, getIcon } from "./filter-bar-utils";
 import { DropdownMenuAction } from "@/components/core/dropdown-action-menu";
 import {

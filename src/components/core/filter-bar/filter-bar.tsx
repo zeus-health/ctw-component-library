@@ -1,56 +1,15 @@
+import type {
+  FilterBarProps,
+  FilterChangeEvent,
+  FilterItem,
+  FilterValuesRecord,
+} from "@/components/core/filter-bar/filter-bar-types";
 import cx from "classnames";
-import { ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { displayFilterItem, getIcon } from "./filter-bar-utils";
 import { FilterBarPill } from "@/components/core/filter-bar/filter-bar-pills";
 import { ListBox } from "@/components/core/list-box/list-box";
-import { omit, partition, uniq } from "@/utils/nodash/fp";
-
-export type FilterBarProps<T extends FilterItem> = {
-  className?: cx.Argument;
-  handleOnChange: (filters: FilterChangeEvent) => void;
-  filters: T[];
-  defaultState?: FilterChangeEvent;
-};
-
-export type FilterItemStatus = {
-  active: boolean;
-};
-
-export type MinFilterItem = {
-  className?: cx.Argument;
-  display: string | ((status: FilterItemStatus) => ReactNode | string);
-  icon?: string;
-  key: string;
-  type: "tag";
-};
-
-export type FilterOptionSelect = {
-  type: "select";
-  // Using strings in `values` will set both key and display automatically
-  values: (string | { key: string; display: string })[];
-} & Omit<MinFilterItem, "type">;
-
-export type FilterOptionCheckbox = {
-  type: "checkbox";
-  // Using strings in `values` will set both key and display automatically
-  values: (string | { key: string; display: string })[];
-} & Omit<MinFilterItem, "type">;
-
-export type FilterItem =
-  | MinFilterItem
-  | FilterOptionSelect
-  | FilterOptionCheckbox;
-
-export type FilterValuesRecord = Record<string, string | string[]>;
-
-export type FilterChangeEvent = Record<
-  string,
-  {
-    key: string;
-    selected: boolean | string | string[];
-    type: "tag" | "checkbox" | "select";
-  }
->;
+import { omit, partition, set, uniq } from "@/utils/nodash/fp";
 
 function filterChangeEvent(
   filters: FilterItem[],
@@ -70,6 +29,34 @@ function filterChangeEvent(
   }, {});
 }
 
+/**
+ * FilterBar - A configurable filter bar with base menu and pills to control
+ * which filters are active.
+ *
+ * Use the defaultState param to pre-set filters on mount.
+ *
+ * example:
+ * ```
+ * <FilterBar
+ *   defaultState={{
+ *     "furry-things": {
+ *       type: "checkbox",
+ *       selected: ["cats", "dogs", "dice"],
+ *     },
+ *    "who-called-shotgun": {
+ *       type: "select",
+ *       selected: "Kristen",
+ *     },
+ *     dismissed: {
+ *       type: "tag",
+ *       selected: true,
+ *     },
+ *   }}
+ *   filters={filters}
+ *   handleOnChange={handleOnChange}
+ * />
+ * ```
+ */
 export const FilterBar = <T extends FilterItem>({
   className,
   handleOnChange,
@@ -84,15 +71,9 @@ export const FilterBar = <T extends FilterItem>({
       Object.keys(defaultState).reduce((acc, key) => {
         const { selected, type } = defaultState[key];
         if (type === "tag") {
-          return {
-            ...acc,
-            [key]: [],
-          };
+          return set(key, [], acc);
         }
-        return {
-          ...acc,
-          [key]: selected,
-        };
+        return set(key, selected, acc);
       }, {})
     );
 
