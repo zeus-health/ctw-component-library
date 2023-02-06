@@ -12,7 +12,9 @@ import {
 import { ProviderInactiveMedicationsTable } from "@/components/content/medications/provider-inactive-medications-table";
 import { ProviderMedsTable } from "@/components/content/medications/provider-meds-table";
 import * as CTWBox from "@/components/core/ctw-box";
-import { FilterBar } from "@/components/core/filter-bar/filter-bar";
+import {
+  FilterBar,
+} from "@/components/core/filter-bar/filter-bar";
 import { ListBox } from "@/components/core/list-box/list-box";
 import { MedicationStatementModel } from "@/fhir/models";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
@@ -26,12 +28,10 @@ export type PatientMedicationsTabbedProps = {
 
 type TabbedContent<T> = {
   key: string;
-  display: () => string | ReactNode;
-  render: (props: {
-    handleAddToRecord: (record: T) => void;
-  }) => string | ReactNode;
-  getPanelClassName?: (sm: boolean) => cx.Argument;
-};
+  display: ()=>string|ReactNode;
+  render: ((props: { handleAddToRecord: (record: T)=>void })=>(string|ReactNode));
+  getPanelClassName?:(sm: boolean) => cx.Argument;
+}
 
 const tabbedContent: TabbedContent<MedicationStatementModel>[] = [
   {
@@ -170,7 +170,14 @@ export function PatientMedicationsTabbed({
                 render,
                 getPanelClassName = (sm: boolean) =>
                   sm ? "ctw-mt-0" : "ctw-mt-4",
-              }) => ç
+              }) => (
+                <Tab.Panel
+                  key={key}
+                  className={cx(getPanelClassName(breakpoints.sm))}
+                >
+                  {render({ handleAddToRecord })}
+                </Tab.Panel>
+              )
             )}
           </Tab.Panels>
         </Tab.Group>
