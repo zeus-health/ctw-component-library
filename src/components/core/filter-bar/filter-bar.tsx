@@ -74,7 +74,7 @@ export const FilterBar = <T extends FilterItem>({
     }
   }, [filters]);
 
-  const resetAllFilters = () => {
+  const clearAllFilters = () => {
     setActiveFilterKeys([]);
     setActiveFilterValues({});
     handleOnChange({});
@@ -175,7 +175,7 @@ export const FilterBar = <T extends FilterItem>({
         items={inactiveFilterMenuItems}
         onChange={(index, item) => {
           if (item.key === "_clear") {
-            resetAllFilters();
+            clearAllFilters();
           } else {
             addOrRemoveFilter(item.key, false);
           }
