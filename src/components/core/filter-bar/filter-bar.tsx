@@ -187,8 +187,8 @@ export const FilterBar = <T extends FilterItem>({
   ];
 
   return (
-    <>
-      <div className={cx(className, "ctw-relative ctw-inline-block")}>
+    <div className="ctw-flex ctw-items-center ctw-justify-between">
+      <div className={cx(className, "ctw-relative ctw-flex")}>
         {activeFilters.map((filter) => (
           <FilterBarPill
             key={filter.key}
@@ -217,6 +217,6 @@ export const FilterBar = <T extends FilterItem>({
       >
         {getIcon("plus")} Add Filters
       </ListBox>
-    </>
+    </div>
   );
 };

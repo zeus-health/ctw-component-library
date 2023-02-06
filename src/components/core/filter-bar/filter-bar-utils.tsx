@@ -13,17 +13,17 @@ import {
 import cx from "classnames";
 import { isFunction } from "@/utils/nodash/fp";
 
-const iconClassNames = "ctw-text-content-light ctw-h-3.5 ctw-mt-0 ctw-mr-1";
+const iconClassNames = "ctw-text-content-light ctw-h-3.5 ctw-mr-1";
 
 export function getIcon(icon: string) {
   switch (icon) {
     case "arrow-down":
-      return <ArrowDownIcon className={iconClassNames} />;
+      return <ArrowDownIcon />;
     case "check":
       return <CheckIcon className={iconClassNames} />;
     case "chevron-down":
       return (
-        <ChevronDownIcon className={cx(iconClassNames, "ctw-scale-110")} />
+        <ChevronDownIcon className={cx(iconClassNames, " ctw-h-[1.25rem]")} />
       );
     case "eye":
       return <EyeIcon className={iconClassNames} />;
