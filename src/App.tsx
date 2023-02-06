@@ -31,12 +31,12 @@ type DemoComponent = {
 };
 const demoComponents: DemoComponent[] = [
   {
-    render: () => <PatientMedicationsTabbed forceHorizontalTabs />,
+    render: () => <PatientMedicationsTabbed handleAddToRecord={() => null} forceHorizontalTabs />,
     title: "Patient Medications Tabbed",
     note: "(forceHorizontalTabs)",
   },
   {
-    render: () => <PatientMedicationsTabbed />,
+    render: () => <PatientMedicationsTabbed handleAddToRecord={() => null} />,
     title: "Patient Medications Tabbed",
   },
   { render: () => <PatientAllergies />, title: "Patient Allergies" },
