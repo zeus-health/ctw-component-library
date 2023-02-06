@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.44.5
+
+### Patch Changes
+
+- a05abcfa: Lower minimum node version to 12
+
 ## 0.44.4
 
 ### Patch Changes
