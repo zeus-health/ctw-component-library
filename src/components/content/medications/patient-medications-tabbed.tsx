@@ -30,7 +30,6 @@ type TabbedContent<T> = {
   render: (props: {
     handleAddToRecord: (record: T) => void;
   }) => string | ReactNode;
-  getPanelClassName?: (sm: boolean) => cx.Argument;
 };
 
 const tabbedContent: TabbedContent<MedicationStatementModel>[] = [
@@ -53,8 +52,6 @@ const tabbedContent: TabbedContent<MedicationStatementModel>[] = [
       </>
     ),
     render: OtherProviderMedsTableTab,
-    // This function puts a smaller margin on this panel to adjust for filters
-    getPanelClassName: (sm: boolean) => (sm ? "ctw-mt-0" : "ctw-mt-1.5"),
   },
 ];
 
@@ -163,10 +160,7 @@ export function PatientMedicationsTabbed({
           {/* Renders body of each tab using "render()" */}
           <Tab.Panels>
             {tabbedContent.map((item) => (
-              <Tab.Panel
-                key={item.key}
-                className={cx(item.getPanelClassName?.(breakpoints.sm))}
-              >
+              <Tab.Panel key={item.key}>
                 {item.render({ handleAddToRecord })}
               </Tab.Panel>
             ))}
