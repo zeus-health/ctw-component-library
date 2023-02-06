@@ -116,8 +116,8 @@ export function PatientMedicationsTabbed({
         >
           {isVertical && (
             <ListBox
-              btnClassName="ctw-tab"
-              optionsClassName="ctw-tab-list"
+              btnClassName="ctw-tab ctw-capitalize"
+              optionsClassName="ctw-tab-list ctw-capitalize"
               onChange={setSelectedTabIndex}
               items={tabbedContent}
             />

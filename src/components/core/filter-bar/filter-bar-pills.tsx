@@ -106,6 +106,7 @@ function FilterBarSelectPill({
       useBasicStyles
       defaultIndex={items.length - 1} // clear index
       btnClassName={buttonClassName}
+      optionsClassName="ctw-capitalize"
       items={items.map((item) => ({
         // eslint-disable-next-line react/no-unstable-nested-components
         display: ({ listView }: ListBoxOptionStatus) => {

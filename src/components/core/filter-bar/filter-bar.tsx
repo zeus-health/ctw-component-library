@@ -170,7 +170,8 @@ export const FilterBar = <T extends FilterItem>({
 
       <ListBox
         useBasicStyles
-        btnClassName="ctw-bg-transparent ctw-rounded ctw-text-content-light ctw-my-2 ctw-py-2 ctw-px-3 ctw-flex"
+        btnClassName="ctw-capitalize ctw-bg-transparent ctw-rounded ctw-text-content-light ctw-my-2 ctw-py-2 ctw-px-3 ctw-flex"
+        optionsClassName="ctw-capitalize"
         items={inactiveFilterMenuItems}
         onChange={(index, item) => {
           if (item.key === "_clear") {
