@@ -10,6 +10,11 @@ type FilterBarPillProps = {
   updateSelectedFilterValues: (valueKey: string, isSelected: boolean) => void;
 };
 
+/**
+ * Filter pill component that can render any pill type. It abstracts the various
+ * pill types (located in ./filter-bar-pills folder). In practice this component
+ * will only be used by the FilterBar component.
+ */
 export function FilterBarPill({
   addRemoveFilter,
   filter,
