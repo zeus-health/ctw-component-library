@@ -1,9 +1,15 @@
 import { rest } from "msw";
 import { patient } from "./patient";
+import { patientHistory } from "./patient-history";
 
 export const mockPatientGet = rest.get(
   "https://api.dev.zusapi.com/fhir/Patient",
   (req, res, ctx) => res(ctx.status(200), ctx.json(patient))
+);
+
+export const mockPatientHistoryGet = rest.get(
+  "https://api.dev.zusapi.com/patient-history/messages",
+  (_, res, ctx) => res(ctx.status(200), ctx.json(patientHistory))
 );
 
 export const mockPatientPut = rest.put(
