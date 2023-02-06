@@ -1,33 +1,19 @@
 import type {
   FilterBarProps,
-  FilterChangeEvent,
   FilterItem,
   FilterValuesRecord,
 } from "@/components/core/filter-bar/filter-bar-types";
 import cx from "classnames";
 import { useEffect, useState } from "react";
-import { displayFilterItem, getIcon } from "./filter-bar-utils";
+import {
+  displayFilterItem,
+  filterChangeEvent,
+  filterChangeEventToValuesRecord,
+  getIcon,
+} from "./filter-bar-utils";
 import { FilterBarPill } from "@/components/core/filter-bar/filter-bar-pills";
 import { ListBox } from "@/components/core/list-box/list-box";
-import { omit, partition, set, uniq } from "@/utils/nodash/fp";
-
-function filterChangeEvent(
-  filters: FilterItem[],
-  activeFilterKeys: string[],
-  activeFilterValues: FilterValuesRecord
-): FilterChangeEvent {
-  return activeFilterKeys.reduce((acc, key) => {
-    const filter = filters.find((item) => item.key === key) as FilterItem;
-    return {
-      ...acc,
-      [filter.key]: {
-        key: filter.key,
-        type: filter.type,
-        selected: filter.type === "tag" ? true : activeFilterValues[filter.key],
-      },
-    };
-  }, {});
-}
+import { omit, partition, uniq } from "@/utils/nodash/fp";
 
 /**
  * FilterBar - A configurable filter bar with base menu and pills to control
@@ -67,15 +53,7 @@ export const FilterBar = <T extends FilterItem>({
     Object.keys(defaultState)
   );
   const [activeFilterValues, setActiveFilterValues] =
-    useState<FilterValuesRecord>(
-      Object.keys(defaultState).reduce((acc, key) => {
-        const { selected, type } = defaultState[key];
-        if (type === "tag") {
-          return set(key, [], acc);
-        }
-        return set(key, selected, acc);
-      }, {})
-    );
+    useState<FilterValuesRecord>(filterChangeEventToValuesRecord(defaultState));
 
   const [activeFilters, inactiveFilters] = partition(
     ({ key }) => activeFilterKeys.includes(key),
@@ -91,6 +69,13 @@ export const FilterBar = <T extends FilterItem>({
 
   const removeInternalKeys = (keys: string[]) =>
     keys.filter((key) => !["_reset", "_clear"].includes(key));
+
+  const resetAllFilters = () => {
+    setActiveFilterKeys([]);
+    setActiveFilterValues({});
+    handleOnChange({});
+  };
+
   // Add or remove a filter from the activated filters list
   const addRemoveFilter = (key: string, remove = false) => {
     const updatedKeys = removeInternalKeys(
@@ -143,12 +128,6 @@ export const FilterBar = <T extends FilterItem>({
     }
     setActiveFilterValues(activeValues);
     handleOnChange(filterChangeEvent(filters, activeFilterKeys, activeValues));
-  };
-
-  const resetAllFilters = () => {
-    setActiveFilterKeys([]);
-    setActiveFilterValues({});
-    handleOnChange({});
   };
 
   // Creates the main filter list dropdown

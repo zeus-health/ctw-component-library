@@ -11,7 +11,8 @@ import {
   XIcon,
 } from "@heroicons/react/solid";
 import cx from "classnames";
-import { isFunction } from "@/utils/nodash/fp";
+import { FilterChangeEvent, FilterValuesRecord } from "./filter-bar-types";
+import { isFunction, set } from "@/utils/nodash/fp";
 
 const iconClassNames = "ctw-text-content-light ctw-h-3.5 ctw-mr-1";
 
@@ -50,4 +51,36 @@ export function displayFilterItem(
       {isFunction(display) ? display(status) : display}
     </>
   );
+}
+
+// Create onChange event from current <FilterBar /> state
+export function filterChangeEvent(
+  filters: FilterItem[],
+  activeFilterKeys: string[],
+  activeFilterValues: FilterValuesRecord
+): FilterChangeEvent {
+  return activeFilterKeys.reduce((acc, key) => {
+    const filter = filters.find((item) => item.key === key) as FilterItem;
+    return {
+      ...acc,
+      [filter.key]: {
+        key: filter.key,
+        type: filter.type,
+        selected: filter.type === "tag" ? true : activeFilterValues[filter.key],
+      },
+    };
+  }, {});
+}
+
+// Convert a FilterChangeEvent into FilterValuesRecord (setting default state)
+export function filterChangeEventToValuesRecord(
+  state: FilterChangeEvent
+): FilterValuesRecord {
+  return Object.keys(state).reduce((acc, key) => {
+    const { selected, type } = state[key];
+    if (type === "tag") {
+      return set(key, [], acc);
+    }
+    return set(key, selected, acc);
+  }, {});
 }
