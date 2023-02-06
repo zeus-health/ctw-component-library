@@ -81,7 +81,7 @@ export const FilterBar = <T extends FilterItem>({
   };
 
   // Add or remove a filter from the activated filters list
-  const addRemoveFilter = (key: string, remove = false) => {
+  const addOrRemoveFilter = (key: string, remove = false) => {
     const updatedKeys = removeInternalKeys(
       remove
         ? activeFilterKeys.filter((k) => k !== key)
@@ -159,7 +159,7 @@ export const FilterBar = <T extends FilterItem>({
             key={filter.key}
             filter={filter}
             filterValues={activeFilterValues}
-            addRemoveFilter={addRemoveFilter}
+            addOrRemoveFilter={addOrRemoveFilter}
             updateSelectedFilterValues={(
               valueKey: string,
               isSelected: boolean
@@ -177,7 +177,7 @@ export const FilterBar = <T extends FilterItem>({
           if (item.key === "_clear") {
             resetAllFilters();
           } else {
-            addRemoveFilter(item.key, false);
+            addOrRemoveFilter(item.key, false);
           }
         }}
       >

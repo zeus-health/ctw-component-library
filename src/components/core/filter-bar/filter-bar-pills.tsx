@@ -4,7 +4,7 @@ import { FilterBarSelectPill } from "./filter-bar-pills/select-pill";
 import { FilterBarTagPill } from "./filter-bar-pills/tag-pill";
 
 type FilterBarPillProps = {
-  addRemoveFilter: (key: string, remove: boolean) => void;
+  addOrRemoveFilter: (key: string, remove: boolean) => void;
   filter: FilterItem;
   filterValues: FilterValuesRecord;
   updateSelectedFilterValues: (valueKey: string, isSelected: boolean) => void;
@@ -16,12 +16,12 @@ type FilterBarPillProps = {
  * will only be used by the FilterBar component.
  */
 export function FilterBarPill({
-  addRemoveFilter,
+  addOrRemoveFilter,
   filter,
   filterValues,
   updateSelectedFilterValues,
 }: FilterBarPillProps) {
-  const onRemove = () => addRemoveFilter(filter.key, true);
+  const onRemove = () => addOrRemoveFilter(filter.key, true);
   switch (filter.type) {
     case "tag":
       return <FilterBarTagPill filter={filter} onRemove={onRemove} />;
