@@ -1,3 +1,4 @@
+import { XIcon } from "@heroicons/react/solid";
 import cx from "classnames";
 import { FilterItem } from "@/components/core/filter-bar/filter-bar-types";
 import { displayFilterItem } from "@/components/core/filter-bar/filter-bar-utils";
@@ -19,7 +20,8 @@ export function FilterBarTagPill({ filter, onRemove }: FilterBarTagPillProps) {
       className={cx(buttonClassName, filter.className)}
       onClick={onRemove}
     >
-      {displayFilterItem(set("icon", "x", filter), { active: true })}
+      {displayFilterItem(set("icon", null, filter), { active: true })}
+      <XIcon className="ctw-ml-1 ctw-h-3.5 ctw-text-content-light" />
     </button>
   );
 }
