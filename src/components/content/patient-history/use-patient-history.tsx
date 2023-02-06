@@ -3,18 +3,28 @@ import { PatientHistoryRequestDrawer } from "../patient-history-request-drawer";
 import { PatientHistoryStatus } from "./patient-history-message-status";
 import { getZusApiBaseUrl } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { useCTW } from "@/components/core/providers/ctw-provider";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
-import { usePatientPromise } from "@/components/core/providers/patient-provider";
+import {
+  usePatientPromise,
+  useQueryWithPatient,
+} from "@/components/core/providers/patient-provider";
 import { PatientRefreshHistoryMessage } from "@/services/patient-history/patient-history-types";
 import { errorResponse } from "@/utils/errors";
 import { find } from "@/utils/nodash";
+import { QUERY_KEY_PATIENT_HISTORY_DETAILS } from "@/utils/query-keys";
 import { ctwFetch } from "@/utils/request";
+import { Telemetry } from "@/utils/telemetry";
+
+type PatientHistoryDetails = {
+  lastRetrievedAt?: string;
+  status: string;
+  dateCreated: string;
+};
 
 export function usePatientHistory() {
-  const { getRequestContext } = useCTW();
   const { openDrawer } = useDrawer();
   const { getPatient } = usePatientPromise();
+  const patientHistoryInformation = usePatientHistoryDetails();
   const [patientHistoryDetails, setPatientHistoryDetails] =
     useState<PatientHistoryDetails>();
 
@@ -23,15 +33,17 @@ export function usePatientHistory() {
 
   useEffect(() => {
     async function patientHistoryRequest() {
-      const patient = await getPatient();
-      const requestContext = await getRequestContext();
-      setPatientHistoryDetails(
-        await getPatientHistoryDetails(requestContext, patient.id)
-      );
+      if (!patientHistoryInformation.isLoading) {
+        setPatientHistoryDetails(patientHistoryInformation.data);
+      }
     }
 
     setPatientHistoryRequestPromise(patientHistoryRequest());
-  }, [getRequestContext, getPatient]);
+  }, [
+    getPatient,
+    patientHistoryInformation.isLoading,
+    patientHistoryInformation.data,
+  ]);
 
   return {
     openHistoryRequestDrawer: async () => {
@@ -94,36 +106,44 @@ async function getPatientRefreshHistoryMessages(
   }
 }
 
-type PatientHistoryDetails = {
-  lastRetrievedAt?: string;
-  status: string;
-  dateCreated: string;
-};
+function usePatientHistoryDetails() {
+  return useQueryWithPatient(
+    QUERY_KEY_PATIENT_HISTORY_DETAILS,
+    [],
+    async (requestContext, patient) => {
+      try {
+        const messages = await getPatientRefreshHistoryMessages(
+          requestContext,
+          patient.id
+        );
 
-async function getPatientHistoryDetails(
-  requestContext: CTWRequestContext,
-  patientID: string
-): Promise<PatientHistoryDetails | undefined> {
-  const messages = await getPatientRefreshHistoryMessages(
-    requestContext,
-    patientID
+        if (messages.length === 0) {
+          return undefined;
+        }
+
+        const latestDone = find(messages, {
+          _messages: [
+            {
+              status: "done",
+            },
+          ],
+        }) as PatientRefreshHistoryMessage | undefined;
+        return {
+          // eslint-disable-next-line no-underscore-dangle
+          lastRetrievedAt: latestDone?._createdAt,
+          status: messages[0].status,
+          // eslint-disable-next-line no-underscore-dangle
+          dateCreated: messages[0]._createdAt,
+        };
+      } catch (e) {
+        Telemetry.logError(
+          e as Error,
+          "Failed fetching patient history details"
+        );
+        throw new Error(
+          `Failed fetching patient history details for patient: ${e}`
+        );
+      }
+    }
   );
-
-  if (messages.length === 0) {
-    return undefined;
-  }
-
-  const latestDone = find(messages, {
-    _messages: [
-      {
-        status: "done",
-      },
-    ],
-  }) as PatientRefreshHistoryMessage | undefined;
-
-  return {
-    lastRetrievedAt: latestDone?._createdAt,
-    status: messages[0].status,
-    dateCreated: messages[0]._createdAt,
-  };
 }
