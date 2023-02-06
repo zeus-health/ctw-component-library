@@ -1,6 +1,10 @@
+import type {
+  FilterChangeEvent,
+  FilterItem,
+} from "@/components/core/filter-bar/filter-bar-types";
 import { Tab } from "@headlessui/react";
 import cx from "classnames";
-import { useRef, useState } from "react";
+import { ReactNode, useRef, useState } from "react";
 import {
   BadgeOtherProviderMedCount,
   OtherProviderMedsTable,
@@ -8,11 +12,7 @@ import {
 import { ProviderInactiveMedicationsTable } from "@/components/content/medications/provider-inactive-medications-table";
 import { ProviderMedsTable } from "@/components/content/medications/provider-meds-table";
 import * as CTWBox from "@/components/core/ctw-box";
-import {
-  FilterBar,
-  FilterChangeEvent,
-  FilterItem,
-} from "@/components/core/filter-bar/filter-bar";
+import { FilterBar } from "@/components/core/filter-bar/filter-bar";
 import { ListBox } from "@/components/core/list-box/list-box";
 import { MedicationStatementModel } from "@/fhir/models";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
@@ -21,10 +21,19 @@ import "./patient-medications.scss";
 export type PatientMedicationsTabbedProps = {
   className?: string;
   forceHorizontalTabs?: boolean;
-  handleAddToRecord?: (m: MedicationStatementModel) => void;
+  handleAddToRecord: (m: MedicationStatementModel) => void;
 };
 
-const tabbedContent = [
+type TabbedContent<T> = {
+  key: string;
+  display: () => string | ReactNode;
+  render: (props: {
+    handleAddToRecord: (record: T) => void;
+  }) => string | ReactNode;
+  getPanelClassName?: (sm: boolean) => cx.Argument;
+};
+
+const tabbedContent: TabbedContent<MedicationStatementModel>[] = [
   {
     key: "medication-list",
     display: () => "Medication List",
@@ -49,74 +58,32 @@ const tabbedContent = [
   },
 ];
 
-type MyCustomFilterItem = {
-  test?: string;
-} & FilterItem;
-
 function OtherProviderMedsTableTab({
   handleAddToRecord,
 }: PatientMedicationsTabbedProps) {
   const [filters, setFilters] = useState<FilterChangeEvent>({});
   const showDismissed = "dismissed" in filters;
   const showInactive = "inactive" in filters;
-  const filterItems: MyCustomFilterItem[] = [
+  const filterItems: FilterItem[] = [
     {
       key: "dismissed",
       type: "tag",
       icon: "eye",
-      test: "test",
       display: ({ active }) =>
         active ? "dismissed records" : "show dismissed records",
-    },
-    {
-      key: "who-sits-shotgun",
-      type: "select",
-      display: "sitting shotgun",
-      values: ["Joe", "Mike", "Kristen", "peter", "sir kitty cat woofington"],
-    },
-    {
-      key: "cool-things",
-      type: "checkbox",
-      icon: "plus",
-      display: ({ active }) => (active ? "cool things" : "filter cool things"),
-      values: [
-        "cats",
-        { key: "dogs", display: "doggies" },
-        "pizza",
-        "showtime",
-      ],
     },
   ];
   return (
     <>
       <FilterBar
-        defaultState={{
-          "cool-things": {
-            key: "cool-things",
-            type: "checkbox",
-            selected: ["cats", "dogs", "pizza"],
-          },
-          "who-sits-shotgun": {
-            key: "who-sits-shotgun",
-            type: "select",
-            selected: "Kristen",
-          },
-          dismissed: {
-            key: "dismissed",
-            type: "tag",
-            selected: true,
-          },
-        }}
         className="-ctw-mt-2"
         filters={filterItems}
-        handleOnChange={(filterChangeEvent) => {
-          console.log(filterChangeEvent);
-          setFilters(filterChangeEvent);
-        }}
+        handleOnChange={setFilters}
       />
       <OtherProviderMedsTable
         showDismissed={showDismissed}
         showInactive={showInactive}
+        handleAddToRecord={handleAddToRecord}
       />
     </>
   );
@@ -203,14 +170,7 @@ export function PatientMedicationsTabbed({
                 render,
                 getPanelClassName = (sm: boolean) =>
                   sm ? "ctw-mt-0" : "ctw-mt-4",
-              }) => (
-                <Tab.Panel
-                  key={key}
-                  className={cx(getPanelClassName(breakpoints.sm))}
-                >
-                  {render({ handleAddToRecord })}
-                </Tab.Panel>
-              )
+              }) => ç
             )}
           </Tab.Panels>
         </Tab.Group>

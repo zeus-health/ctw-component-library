@@ -1,4 +1,4 @@
-import type { FilterItem, FilterItemStatus } from "./filter-bar";
+import type { FilterItem, FilterItemStatus } from "./filter-bar-types";
 import {
   ArrowDownIcon,
   CheckIcon,
