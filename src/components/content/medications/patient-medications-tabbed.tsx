@@ -75,11 +75,7 @@ function OtherProviderMedsTableTab({
   ];
   return (
     <>
-      <FilterBar
-        className="-ctw-mt-2"
-        filters={filterItems}
-        handleOnChange={setFilters}
-      />
+      <FilterBar filters={filterItems} handleOnChange={setFilters} />
       <OtherProviderMedsTable
         showDismissed={showDismissed}
         showInactive={showInactive}
@@ -88,6 +84,7 @@ function OtherProviderMedsTableTab({
     </>
   );
 }
+
 /**
  * This component is a tabbed view of patient medications from the current
  * provider, other providers and historical. When rendered in a small breakpoint

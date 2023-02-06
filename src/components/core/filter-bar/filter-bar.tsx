@@ -15,6 +15,10 @@ import { FilterBarPill } from "@/components/core/filter-bar/filter-bar-pills";
 import { ListBox } from "@/components/core/list-box/list-box";
 import { omit, partition, uniq } from "@/utils/nodash/fp";
 
+const INTERNAL_KEYS = ["_reset", "_clear"];
+const removeInternalKeys = (keys: string[]) =>
+  keys.filter((key) => !INTERNAL_KEYS.includes(key));
+
 /**
  * FilterBar - A configurable filter bar with base menu and pills to control
  * which filters are active.
@@ -55,20 +59,20 @@ export const FilterBar = <T extends FilterItem>({
   const [activeFilterValues, setActiveFilterValues] =
     useState<FilterValuesRecord>(filterChangeEventToValuesRecord(defaultState));
 
+  // Split the filters up by which are active (selected) or inactive (main menu)
   const [activeFilters, inactiveFilters] = partition(
     ({ key }) => activeFilterKeys.includes(key),
     filters
   );
 
   useEffect(() => {
-    // Validating that the "_reset" filter is never passed in from parent
-    if (filters.map(({ key }) => key).includes("_reset")) {
-      throw new Error("FilterBar filters should not have key name '_reset'");
+    // Validating that the "_clear" filter is never passed in from parent
+    if (filters.some(({ key }) => INTERNAL_KEYS.includes(key))) {
+      throw new Error(
+        `Filters should not use keys ${INTERNAL_KEYS.join(", ")}`
+      );
     }
   }, [filters]);
-
-  const removeInternalKeys = (keys: string[]) =>
-    keys.filter((key) => !["_reset", "_clear"].includes(key));
 
   const resetAllFilters = () => {
     setActiveFilterKeys([]);
@@ -83,6 +87,7 @@ export const FilterBar = <T extends FilterItem>({
         ? activeFilterKeys.filter((k) => k !== key)
         : uniq(activeFilterKeys.concat(key))
     );
+
     setActiveFilterKeys(updatedKeys);
 
     let updatedActiveFilterValues;
@@ -96,19 +101,19 @@ export const FilterBar = <T extends FilterItem>({
       updatedActiveFilterValues = { ...activeFilterValues, [key]: [] };
       setActiveFilterValues(updatedActiveFilterValues);
     }
-
+    // Finally we fire off a change event
     handleOnChange(filterChangeEvent(filters, updatedKeys, activeFilterValues));
   };
 
-  // Update selected values for dropdown style filters
-  const updateValuesForFilter = (
+  // The update function for checkbox and select pills to call on change
+  const updateSelectedFilter = (
     key: string,
     valueKey: string,
     isSelected: boolean
   ) => {
+    let activeValues;
     const filter = filters.find((item) => item.key === key);
     const values = activeFilterValues[key];
-    let activeValues;
     if (isSelected) {
       activeValues = {
         ...activeFilterValues,
@@ -139,7 +144,7 @@ export const FilterBar = <T extends FilterItem>({
     })),
     {
       display: "clear all filters",
-      key: "_reset",
+      key: "_clear",
       icon: "trash",
       className:
         "ctw-border ctw-capitalize ctw-border-solid ctw-border-divider-light",
@@ -158,7 +163,7 @@ export const FilterBar = <T extends FilterItem>({
             updateSelectedFilterValues={(
               valueKey: string,
               isSelected: boolean
-            ) => updateValuesForFilter(filter.key, valueKey, isSelected)}
+            ) => updateSelectedFilter(filter.key, valueKey, isSelected)}
           />
         ))}
       </div>
@@ -168,7 +173,7 @@ export const FilterBar = <T extends FilterItem>({
         btnClassName="ctw-bg-transparent ctw-rounded ctw-text-content-light ctw-my-2 ctw-py-2 ctw-px-3 ctw-flex"
         items={inactiveFilterMenuItems}
         onChange={(index, item) => {
-          if (item.key === "_reset") {
+          if (item.key === "_clear") {
             resetAllFilters();
           } else {
             addRemoveFilter(item.key, false);
