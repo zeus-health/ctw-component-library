@@ -56,7 +56,7 @@ export function ListBox<T extends MinListBoxItem>({
             !useBasicStyles && "after:ctw-bg-content-black",
             !useBasicStyles &&
               "focus-visible:ctw-outline-primary-dark focus-visible:after:ctw-bg-transparent",
-            "ctw-relative ctw-mr-2 ctw-cursor-pointer ctw-border-0 ctw-border-transparent"
+            "ctw-relative ctw-capitalize ctw-mr-2 ctw-cursor-pointer ctw-border-0 ctw-border-transparent"
           )}
         >
           {children || renderDisplay(selectedItem, { listView: false })}
@@ -78,7 +78,7 @@ export function ListBox<T extends MinListBoxItem>({
               {({ active, selected }) => (
                 <li
                   className={cx(
-                    "ctw-flex ctw-cursor-pointer ctw-justify-between ctw-px-3 ctw-py-2",
+                    "ctw-capitalize ctw-flex ctw-cursor-pointer ctw-justify-between ctw-px-3 ctw-py-2",
                     "first:ctw-pt-3 last:ctw-pb-3",
                     "hover:ctw-bg-bg-lighter",
                     item.className,

@@ -36,19 +36,19 @@ type TabbedContent<T> = {
 const tabbedContent: TabbedContent<MedicationStatementModel>[] = [
   {
     key: "medication-list",
-    display: () => "Medication List",
+    display: () => "medication list",
     render: () => <ProviderMedsTable />,
   },
   {
     key: "inactive-provider-records",
-    display: () => "Inactive",
+    display: () => "inactive",
     render: () => <ProviderInactiveMedicationsTable />,
   },
   {
     key: "other-provider-records",
     display: () => (
       <>
-        <span className="ctw-pr-2">Other Provider Records</span>
+        <span className="ctw-capitalize ctw-pr-2">other provider records</span>
         <BadgeOtherProviderMedCount />
       </>
     ),
