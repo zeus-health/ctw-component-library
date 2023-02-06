@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.44.6
+
+### Patch Changes
+
+- a3fcb709: Fix deduping in allergies and immunizations. Fix patient history refresh banner to auto-refresh in drawer and table.
+
 ## 0.44.5
 
 ### Patch Changes
