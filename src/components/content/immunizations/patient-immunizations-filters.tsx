@@ -1,9 +1,19 @@
 import { ImmunizationModel } from "@/fhir/models/immunization";
-import { pick, uniqBy } from "@/utils/nodash/fp";
+import { isEqual, uniqWith } from "@/utils/nodash";
 
-export const applyImmunizationFilters = (data: fhir4.Immunization[]) =>
-  uniqBy(
-    pickDedupeValues,
-    data.map((immunization) => new ImmunizationModel(immunization))
+export const applyImmunizationFilters = (data: fhir4.Immunization[]) => {
+  const immunizationModel = data.map(
+    (immunization) => new ImmunizationModel(immunization)
   );
-const pickDedupeValues = pick(["description", "cvxCode", "occurance"]);
+  const immunizationData = uniqWith(immunizationModel, (a, b) =>
+    isEqual(valuesToDedupeOn(a), valuesToDedupeOn(b))
+  );
+
+  return immunizationData;
+};
+
+const valuesToDedupeOn = (immunization: ImmunizationModel) => [
+  immunization.description,
+  immunization.cvxCode,
+  immunization.occurrence,
+];

@@ -1,17 +1,20 @@
 import { AllergyModel } from "@/fhir/models/allergies";
-import { pick, uniqBy } from "@/utils/nodash/fp";
+import { isEqual, uniqWith } from "@/utils/nodash";
 
-export const applyAllergyFilters = (data: fhir4.AllergyIntolerance[]) =>
-  uniqBy(
-    pickDedupeValues,
-    data.map((allergy) => new AllergyModel(allergy))
+export const applyAllergyFilters = (data: fhir4.AllergyIntolerance[]) => {
+  const allergyModel = data.map((allergy) => new AllergyModel(allergy));
+  const allergyData = uniqWith(allergyModel, (a, b) =>
+    isEqual(valuesToDedupeOn(a), valuesToDedupeOn(b))
   );
 
-const pickDedupeValues = pick([
-  "categories",
-  "clinicalStatus",
-  "display",
-  "manifestations",
-  "onset",
-  "type",
-]);
+  return allergyData;
+};
+
+const valuesToDedupeOn = (allergy: AllergyModel) => [
+  allergy.categories,
+  allergy.clinicalStatus,
+  allergy.display,
+  allergy.manifestations,
+  allergy.onset,
+  allergy.type,
+];
