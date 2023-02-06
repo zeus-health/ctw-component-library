@@ -73,6 +73,7 @@ function OtherProviderMedsTableTab({
         active ? "dismissed records" : "show dismissed records",
     },
   ];
+
   return (
     <>
       <FilterBar filters={filterItems} handleOnChange={setFilters} />
@@ -108,7 +109,7 @@ export function PatientMedicationsTabbed({
     <CTWBox.StackedWrapper
       className={cx("ctw-patient-medications ctw-space-y-3", className)}
     >
-      <div className="ctw-relative ctw-w-full ctw-p-4" ref={containerRef}>
+      <div ref={containerRef} className="ctw-relative ctw-w-full ctw-p-4">
         <Tab.Group
           selectedIndex={selectedTabIndex}
           onChange={setSelectedTabIndex}

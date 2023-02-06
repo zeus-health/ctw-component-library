@@ -152,8 +152,8 @@ export const FilterBar = <T extends FilterItem>({
   ];
 
   return (
-    <div className="ctw-flex ctw-items-center">
-      <div className={cx(className, "ctw-relative ctw-flex")}>
+    <div className={cx(className, "ctw-flex ctw-items-center")}>
+      <div className="ctw-relative ctw-flex">
         {activeFilters.map((filter) => (
           <FilterBarPill
             key={filter.key}
