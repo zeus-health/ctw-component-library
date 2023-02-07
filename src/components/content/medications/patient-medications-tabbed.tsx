@@ -30,16 +30,22 @@ type TabbedContent<T> = {
   render: (props: {
     handleAddToRecord: (record: T) => void;
   }) => string | ReactNode;
+  getPanelClassName?: (sm: boolean) => cx.Argument;
 };
 
+// We use getPanelClassName on all tabs except for the other-provider-records
+// tab because without the FilterBar there is no margin between tab and panel
+// when md - lg sized.
 const tabbedContent: TabbedContent<MedicationStatementModel>[] = [
   {
     key: "medication-list",
+    getPanelClassName: (sm: boolean) => (sm ? "ctw-mt-0" : "ctw-mt-2"),
     display: () => "medication list",
     render: () => <ProviderMedsTable />,
   },
   {
     key: "inactive-provider-records",
+    getPanelClassName: (sm: boolean) => (sm ? "ctw-mt-0" : "ctw-mt-2"),
     display: () => "inactive",
     render: () => <ProviderInactiveMedicationsTable />,
   },
@@ -160,7 +166,10 @@ export function PatientMedicationsTabbed({
           {/* Renders body of each tab using "render()" */}
           <Tab.Panels>
             {tabbedContent.map((item) => (
-              <Tab.Panel key={item.key}>
+              <Tab.Panel
+                key={item.key}
+                className={cx(item.getPanelClassName?.(breakpoints.sm))}
+              >
                 {item.render({ handleAddToRecord })}
               </Tab.Panel>
             ))}
