@@ -15,13 +15,20 @@ export const PatientHistoryTableHeaderMessage = ({
   message,
 }: PatientHistoryTableHeaderMessageProps) => {
   switch (patientHistory?.lastStatus) {
+    case "done":
+    case "error":
     case "in_progress":
+    case "initialize":
       return (
         <div className="ctw-text-sm ctw-italic ctw-text-black">
           {message} {formatISODateStringToDate(patientHistory.lastRetrievedAt)}
         </div>
       );
     default:
-      return null;
+      return (
+        <div className="ctw-text-sm ctw-italic ctw-text-black">
+          {message} {formatISODateStringToDate(patientHistory?.lastRetrievedAt)}
+        </div>
+      );
   }
 };
