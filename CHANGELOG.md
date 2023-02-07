@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.45.0
+
+### Minor Changes
+
+- d8140291: Add error state banner to drawer component and condition 1.0 and 2.0 tables to indicate when patient history retrieval is in a failed state.
+
 ## 0.44.7
 
 ### Patch Changes
