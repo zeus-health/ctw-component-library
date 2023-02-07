@@ -95,7 +95,7 @@ export async function searchBuilderRecords<T extends ResourceTypeString>(
     firstparty?: boolean;
     "_tag:not"?: string[];
   };
-  const firstPartyParams: FirstPartParams = {
+  const firstPartyParams: FirstPartyParams = {
     _tag: [builderTag],
   };
 
