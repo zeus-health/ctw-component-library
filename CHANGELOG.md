@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.44.7
+
+### Patch Changes
+
+- ba38340f: Added the FilterBar component. Medications tabbed component now has dismissed filter.
+
 ## 0.44.6
 
 ### Patch Changes
