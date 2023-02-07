@@ -25,6 +25,10 @@ export const PatientHistoryTableHeaderMessage = ({
         </div>
       );
     default:
-      return null;
+      return (
+        <div className="ctw-text-sm ctw-italic ctw-text-black">
+          {message} {formatISODateStringToDate(patientHistory?.lastRetrievedAt)}
+        </div>
+      );
   }
 };
