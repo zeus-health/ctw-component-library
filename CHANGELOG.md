@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.45.1
+
+### Patch Changes
+
+- 35c40132: Add last retrieved date from patient history request to conditions 1.0 and 2.0.
+
 ## 0.45.0
 
 ### Minor Changes
