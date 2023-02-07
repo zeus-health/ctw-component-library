@@ -43,11 +43,11 @@ export function PatientConditionsTabs({
 
   const sharedTabStyles = "ctw-relative ctw-tab-underline ctw-tab";
   const patientHistory = usePatientHistory();
-  const [isOther, setIsOther] = useState(false);
+  const [isOtherProvider, setIsOtherProvider] = useState(false);
 
   return (
     <div className="ctw-justify-end ctw-space-x-2 ctw-border-0 ctw-border-b ctw-border-t ctw-border-solid ctw-border-divider-light">
-      {isOther && (
+      {isOtherProvider && (
         <div className="ctw-space-y-3">
           <PatientHistoryStatus
             status={patientHistory.lastStatus}
@@ -65,7 +65,7 @@ export function PatientConditionsTabs({
           <Tab.List className="ctw-mt-3">
             <Tab
               onClick={() => {
-                setIsOther(false);
+                setIsOtherProvider(false);
                 blurClicked();
               }}
               className={({ selected }) =>
@@ -78,7 +78,7 @@ export function PatientConditionsTabs({
             </Tab>
             <Tab
               onClick={() => {
-                setIsOther(true);
+                setIsOtherProvider(true);
                 blurClicked();
               }}
               className={({ selected }) =>
