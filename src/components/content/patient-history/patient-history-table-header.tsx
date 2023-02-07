@@ -3,9 +3,9 @@ import { formatISODateStringToDate } from "@/fhir/formatters";
 export type PatientHistoryTableHeaderMessageProps = {
   patientHistory?: {
     openHistoryRequestDrawer: () => Promise<void>;
-    lastRetrievedAt: string | undefined;
-    lastStatus: string | undefined;
-    dateCreatedAt: string | undefined;
+    lastRetrievedAt?: string;
+    lastStatus?: string;
+    dateCreatedAt?: string;
   };
   message?: string;
 };
