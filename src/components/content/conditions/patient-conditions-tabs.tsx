@@ -1,6 +1,5 @@
 import { Tab } from "@headlessui/react";
 import cx from "classnames";
-import { useState } from "react";
 import { PatientHistoryStatus } from "../patient-history/patient-history-message-status";
 import { usePatientHistory } from "../patient-history/use-patient-history";
 import { FilterCollection } from "./patient-conditions-filters";
@@ -43,11 +42,10 @@ export function PatientConditionsTabs({
 
   const sharedTabStyles = "ctw-relative ctw-tab-underline ctw-tab";
   const patientHistory = usePatientHistory();
-  const [isOtherProvider, setIsOtherProvider] = useState(false);
 
   return (
     <div className="ctw-justify-end ctw-space-x-2 ctw-border-0 ctw-border-b ctw-border-t ctw-border-solid ctw-border-divider-light">
-      {isOtherProvider && (
+      {collection === "other" && (
         <div className="ctw-space-y-3">
           <PatientHistoryStatus
             status={patientHistory.lastStatus}
@@ -64,10 +62,7 @@ export function PatientConditionsTabs({
         >
           <Tab.List className="ctw-mt-3">
             <Tab
-              onClick={() => {
-                setIsOtherProvider(false);
-                blurClicked();
-              }}
+              onClick={blurClicked}
               className={({ selected }) =>
                 cx(activeClass("patient"), sharedTabStyles, {
                   "ctw-tab-underline-selected": selected,
@@ -77,10 +72,7 @@ export function PatientConditionsTabs({
               Condition List
             </Tab>
             <Tab
-              onClick={() => {
-                setIsOtherProvider(true);
-                blurClicked();
-              }}
+              onClick={blurClicked}
               className={({ selected }) =>
                 cx(activeClass("other"), sharedTabStyles, "ctw-space-x-2", {
                   "ctw-tab-underline-selected": selected,
