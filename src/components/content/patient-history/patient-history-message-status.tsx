@@ -25,7 +25,7 @@ export const PatientHistoryStatus = ({
     case "done":
     case "error":
       return (
-        <div className="ctw-alert-bg ctw-rounded-md ctw-text-error-bg">
+        <div className="ctw-alert-bg ctw-rounded-md ctw-bg-error-bg">
           <ErrorIcon className="ctw-h-5 ctw-flex-none ctw-fill-error-main" />
           <div className="ctw-font-medium ctw-text-error-text">
             There was an error fetching some or all records for this patient.
