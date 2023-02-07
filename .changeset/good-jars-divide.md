@@ -2,4 +2,4 @@
 "@zus-health/ctw-component-library": minor
 ---
 
-Add error state to drawer and table in conditions 1.0 and conditions 2.0.
+Add error state banner to drawer component and condition 1.0 and 2.0 tables to indicate when patient history retrieval is in a failed state. 
