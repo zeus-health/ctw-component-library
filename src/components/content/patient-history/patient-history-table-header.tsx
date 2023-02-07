@@ -15,6 +15,8 @@ export const PatientHistoryTableHeaderMessage = ({
   message,
 }: PatientHistoryTableHeaderMessageProps) => {
   switch (patientHistory?.lastStatus) {
+    case "done":
+    case "error":
     case "in_progress":
       return (
         <div className="ctw-text-sm ctw-italic ctw-text-black">
