@@ -8,19 +8,21 @@ import "./dropdown-menu.scss";
 
 export type MenuItem = {
   name: string;
-  action: () => Promise<void>;
-  className?: string;
+  action: () => void;
+  className?: cx.Argument;
 };
 
 export type DropdownMenuProps = {
   children: ReactNode;
   menuItems: MenuItem[];
   telemetryNamespace?: string;
+  triggerClassName?: cx.Argument;
 };
 
 export function DropdownMenu({
   children,
   menuItems,
+  triggerClassName,
   telemetryNamespace = "unknown",
 }: DropdownMenuProps) {
   const { ctwProviderRef } = useCTW();
@@ -37,7 +39,7 @@ export function DropdownMenu({
     <Menu>
       <RadixDropdownMenu.Root modal={false}>
         <RadixDropdownMenu.Trigger
-          className="ctw-btn-clear ctw-link"
+          className={cx("ctw-btn-clear ctw-link", triggerClassName)}
           aria-label="dropdown"
         >
           {isLoading && <Loading message="" />}

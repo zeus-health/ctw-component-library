@@ -58,7 +58,7 @@ export const MedicationDrawer = ({
       </Drawer.Body>
       <Drawer.Footer>
         <div className="ctw-flex ctw-justify-end ctw-space-x-2">
-          {isFunction(onDismissal) && (
+          {isFunction(onDismissal) && !medication?.isArchived && (
             <button
               type="button"
               className="ctw-btn-primary"

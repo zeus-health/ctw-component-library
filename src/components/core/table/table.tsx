@@ -30,7 +30,10 @@ export type TableProps<T extends MinRecordItem> = {
   onSort?: (sort: TableSort) => void;
   hidePagination?: boolean;
   children?: ReactNode;
-} & Pick<TableRowsProps<T>, "handleRowClick" | "RowActions">;
+} & Pick<
+  TableRowsProps<T>,
+  "handleRowClick" | "RowActions" | "getRowClassName"
+>;
 
 export type TableBaseProps<T extends MinRecordItem> = Omit<
   TableProps<T>,
@@ -49,6 +52,7 @@ export const Table = <T extends MinRecordItem>({
   onSort,
   handleRowClick,
   RowActions,
+  getRowClassName,
   hidePagination = false,
   children,
 }: TableProps<T>) => {
@@ -121,6 +125,7 @@ export const Table = <T extends MinRecordItem>({
 
             <tbody>
               <TableRows
+                getRowClassName={getRowClassName}
                 records={sortedRecords.slice(0, count)}
                 handleRowClick={handleRowClick}
                 RowActions={RowActions}

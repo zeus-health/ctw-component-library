@@ -141,6 +141,10 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
     return !!this.getBasicResourceByAction("archive");
   }
 
+  get isInactive(): boolean {
+    return !["active", "intended", "unknown"].includes(this.status);
+  }
+
   get status() {
     return this.resource.status;
   }

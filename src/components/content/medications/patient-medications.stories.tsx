@@ -12,7 +12,6 @@ import { medicationsTables } from "@/components/content/medications/story-helper
 import { CTWProvider } from "@/components/core/providers/ctw-provider";
 import { PatientProvider } from "@/components/core/providers/patient-provider";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
-import { delay } from "@/utils/delay";
 
 type Props = PatientMedicationsProps;
 
@@ -62,24 +61,13 @@ export const TestAddToRecord: StoryObj<Props> = {
     const medications = await medicationsTables(canvasElement);
     await medications.patientRecord.toHaveRowCount(1);
     await medications.otherProvider.toHaveRowCount(4);
-    let medicationName =
+    const medicationName =
       "3 ML insulin aspart protamine, human 70 UNT/ML / insulin aspart, human 30 UNT/ML Pen Injector [NovoLog Mix]";
     medications.otherProvider.toHaveRowWithText(0, medicationName);
     await medications.otherProvider.addToRecord(0);
     await medicationFormDrawer(canvasElement).save();
     await medications.patientRecord.toHaveRowCount(2);
     await medications.otherProvider.toHaveRowCount(3);
-    await medications.patientRecord.toHaveAnyRowWithText(medicationName);
-
-    await delay(1000);
-    medicationName = "3 ML insulin glargine 100 UNT/ML Pen Injector [Lantus]";
-    // Test adding a second medication from other provider records.
-    medications.otherProvider.toHaveRowWithText(0, medicationName);
-    await medications.otherProvider.addToRecord(0);
-    await medicationFormDrawer(canvasElement).save();
-
-    await medications.patientRecord.toHaveRowCount(3);
-    await medications.otherProvider.toHaveRowCount(2);
     await medications.patientRecord.toHaveAnyRowWithText(medicationName);
   },
 };

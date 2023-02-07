@@ -7,13 +7,14 @@ import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useDismissMedication } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
-import { isArray } from "@/utils/nodash";
 import { get, pipe, toLower } from "@/utils/nodash/fp";
 import { sort, SortDir } from "@/utils/sort";
 
 export type OtherProviderMedsTableProps = {
   className?: string;
   handleAddToRecord?: (m: MedicationStatementModel) => void;
+  showDismissed?: boolean;
+  showInactive?: boolean;
   sortColumn?: keyof MedicationStatementModel;
   sortOrder?: SortDir;
 };
@@ -29,6 +30,8 @@ export const OtherProviderMedsTable = withErrorBoundary(
   ({
     sortOrder = "asc",
     sortColumn = "display",
+    showDismissed = false,
+    showInactive = false,
     handleAddToRecord,
   }: OtherProviderMedsTableProps) => {
     const dismissMedication = useDismissMedication();
@@ -56,16 +59,27 @@ export const OtherProviderMedsTable = withErrorBoundary(
       if (!otherProviderMedications) return;
       setMedicationModels(
         sort(
-          otherProviderMedications,
+          otherProviderMedications
+            .filter((med) => !med.isArchived || showDismissed)
+            .filter((med) => !med.isInactive || showInactive),
           pipe(get(sortColumn), toLower),
           sortOrder
         )
       );
-    }, [otherProviderMedications, sortColumn, sortOrder]);
+    }, [
+      otherProviderMedications,
+      sortColumn,
+      sortOrder,
+      showInactive,
+      showDismissed,
+    ]);
 
     return (
       <div data-zus-telemetry-namespace="OtherProviderMedsTable">
         <MedicationsTableBase
+          getRowClassName={(medication) => ({
+            "ctw-tr-archived": medication.isArchived,
+          })}
           telemetryNamespace="MedicationsTableBase"
           medicationStatements={medicationModels}
           isLoading={isLoading}
@@ -123,15 +137,16 @@ export const OtherProviderMedsTable = withErrorBoundary(
 );
 
 export const BadgeOtherProviderMedCount = () => {
-  const { otherProviderMedications } = useQueryAllPatientMedications();
-  if (
-    isArray(otherProviderMedications) &&
-    otherProviderMedications.length > 0
-  ) {
+  const { otherProviderMedications = [] } = useQueryAllPatientMedications();
+  const activeUnarchivedMedications = otherProviderMedications.filter(
+    (medication) => !(medication.isArchived || medication.isInactive)
+  );
+
+  if (activeUnarchivedMedications.length > 0) {
     return (
       <Badge
         color="primary"
-        text={otherProviderMedications.length.toString()}
+        text={activeUnarchivedMedications.length.toString()}
         className="ctw-h-5"
       />
     );

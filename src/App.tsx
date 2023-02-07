@@ -31,10 +31,21 @@ type DemoComponent = {
 };
 const demoComponents: DemoComponent[] = [
   {
-    render: () => <PatientMedicationsTabbed />,
+    render: () => (
+      <PatientMedicationsTabbed
+        handleAddToRecord={() => null}
+        forceHorizontalTabs
+      />
+    ),
+    title: "Patient Medications Tabbed",
+    note: "(forceHorizontalTabs)",
+  },
+  {
+    render: () => <PatientMedicationsTabbed handleAddToRecord={() => null} />,
     title: "Patient Medications Tabbed",
   },
   { render: () => <PatientAllergies />, title: "Patient Allergies" },
+  { render: () => <PatientImmunizations />, title: "Patient Immunizations" },
   { render: () => <Conditions />, title: "Patient Conditions" },
   { render: () => <PatientConditions />, title: "Patient Conditions 2.0" },
   { render: () => <PatientMedications />, title: "Patient Medications" },

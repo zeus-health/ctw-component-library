@@ -25,13 +25,5 @@ export const mockProvenancePost = rest.post(
 // https://api.dev.zusapi.com/patient-history/patient/u12345/refresh?consent=1
 export const mockPatientHistoryPost = rest.post(
   "https://api.dev.zusapi.com/patient-history/patient/:patientId/refresh",
-  (req, res, ctx) => {
-    // eslint-disable-next-line no-console
-    console.log("Sent Patient History Request:");
-    // eslint-disable-next-line no-console
-    console.log(req.headers.all());
-
-    // Patient history request expects json response.
-    return res(ctx.status(200), ctx.json({}));
-  }
+  (req, res, ctx) => res(ctx.status(200), ctx.json({}))
 );
