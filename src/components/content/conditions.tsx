@@ -24,6 +24,7 @@ import {
 import { getAddConditionData } from "./forms/schemas/condition-schema";
 import { PatientHistoryMessage } from "./patient-history/patient-history-message";
 import { PatientHistoryStatus } from "./patient-history/patient-history-message-status";
+import { PatientHistoryTableHeaderMessage } from "./patient-history/patient-history-table-header";
 import { usePatientHistory } from "./patient-history/use-patient-history";
 import {
   conditionAddSchema,
@@ -36,7 +37,6 @@ import {
   useOtherProviderConditions,
   usePatientConditions,
 } from "@/fhir/conditions";
-import { formatISODateStringToDate } from "@/fhir/formatters";
 import { ConditionModel } from "@/fhir/models/condition";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { AnyZodSchema } from "@/utils/form-helper";
@@ -276,10 +276,10 @@ export const Conditions = withErrorBoundary(
               <div className="ctw-title">Other Provider Records</div>
               <div className="ctw-flex ctw-items-baseline ctw-space-x-2">
                 {patientHistory.lastRetrievedAt && (
-                  <div className="ctw-text-sm ctw-italic ctw-text-black">
-                    Last Retrieved{" "}
-                    {formatISODateStringToDate(patientHistory.lastRetrievedAt)}
-                  </div>
+                  <PatientHistoryTableHeaderMessage
+                    patientHistory={patientHistory}
+                    message="Last Retrieved"
+                  />
                 )}
                 {shouldShowClinicalHistoryArea &&
                   !readOnly &&
