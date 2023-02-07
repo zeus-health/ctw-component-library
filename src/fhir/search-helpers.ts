@@ -90,7 +90,7 @@ export async function searchBuilderRecords<T extends ResourceTypeString>(
     ...UPI_TAGS,
   ];
   const builderTag = `${SYSTEM_ZUS_OWNER}|builder/${requestContext.builderId}`;
-  type FirstPartParams = {
+  type FirstPartyParams = {
     _tag: string[];
     firstparty?: boolean;
     "_tag:not"?: string[];
