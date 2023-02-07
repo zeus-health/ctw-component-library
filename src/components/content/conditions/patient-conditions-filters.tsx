@@ -6,13 +6,24 @@ export type FilterCollection = "patient" | "other";
 
 export type Filters = {
   collection: FilterCollection;
-  showHistoric: boolean;
 };
 
+// const [filters, setFilters] = useState<FilterChangeEvent>({});
+// const filterItems: FilterItem[] = [
+//   {
+//     key: "status",
+//     type: "checkbox",
+//     icon: "eye",
+//     display: ({ active }) =>
+//       active ? "dismissed records" : "show dismissed records",
+//     values: [],
+//   },
+// ];
+
 export function useConditionFilters() {
+  const [collection, setCollection] = useState<FilterCollection>("patient");
   const [filters, setFilters] = useState<Filters>({
     collection: "patient",
-    showHistoric: false,
   });
 
   function updateFilters(newFilters: Partial<Filters>) {
@@ -25,11 +36,9 @@ export function useConditionFilters() {
   ) {
     const conditions =
       filters.collection === "patient" ? patientConditions : otherConditions;
-    return conditions.filter((c) => {
-      if (filters.showHistoric) return true;
-
-      return ["Active", "Pending"].includes(c.displayStatus);
-    });
+    return conditions.filter((c) =>
+      ["Active", "Pending"].includes(c.displayStatus)
+    );
   }
 
   return { filters, updateFilters, applyFilters };

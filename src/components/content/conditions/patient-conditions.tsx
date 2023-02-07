@@ -39,6 +39,17 @@ export const PatientConditions = withErrorBoundary(
     const { filters, updateFilters, applyFilters } = useConditionFilters();
     const containerRef = useRef<HTMLDivElement>(null);
     const breakpoints = useBreakpoints(containerRef);
+    // const [filters, setFilters] = useState<FilterChangeEvent>({});
+    // const filterItems: FilterItem[] = [
+    //   {
+    //     key: "status",
+    //     type: "checkbox",
+    //     icon: "eye",
+    //     display: ({ active }) =>
+    //       active ? "dismissed records" : "show dismissed records",
+    //     values: [],
+    //   },
+    // ];
 
     // Drawer helpers.
     const showConditionHistory = useConditionHistory();
@@ -87,9 +98,6 @@ export const PatientConditions = withErrorBoundary(
 
           <PatientConditionsActions
             hideAdd={readOnly || filters.collection === "other"}
-            onToggleShowHistoric={() =>
-              updateFilters({ showHistoric: !filters.showHistoric })
-            }
           />
 
           <Table

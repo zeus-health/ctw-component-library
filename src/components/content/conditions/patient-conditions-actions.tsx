@@ -1,20 +1,18 @@
 import { useAddConditionForm } from "./condition-hooks";
-import { Toggle } from "@/components/core/toggle";
+import { FilterBar } from "@/components/core/filter-bar/filter-bar";
 
 export type PatientConditionsActionsProps = {
   hideAdd: boolean;
-  onToggleShowHistoric: () => void;
 };
 
 export function PatientConditionsActions({
   hideAdd,
-  onToggleShowHistoric,
 }: PatientConditionsActionsProps) {
   const showAddConditionForm = useAddConditionForm();
 
   return (
     <div className="ctw-flex ctw-items-center ctw-justify-end ctw-space-x-2 ctw-p-3">
-      <Toggle name="historic" text="Historic" onChange={onToggleShowHistoric} />
+      <FilterBar filters={filterItems} handleOnChange={setFilters} />
       {!hideAdd && (
         <button
           type="button"
