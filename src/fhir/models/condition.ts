@@ -23,6 +23,15 @@ import {
 import { findReference } from "@/fhir/resource-helper";
 import { compact, find, intersectionWith, uniqWith } from "@/utils/nodash";
 
+export type DisplayStatus =
+  | "Active"
+  | "Pending"
+  | "Inactive"
+  | "Refuted"
+  | "Unknown"
+  | "Entered in Error"
+  | "Dismissed";
+
 export class ConditionModel extends FHIRModel<fhir4.Condition> {
   get abatement(): string | undefined {
     if (this.resource.abatementAge) {
@@ -265,7 +274,7 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
     );
   }
 
-  get displayStatus(): string {
+  get displayStatus(): DisplayStatus {
     function clinicalStatusMap(code: ClinicalStatus | undefined) {
       switch (code) {
         case "active":

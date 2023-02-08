@@ -66,6 +66,7 @@ export const FilterBar = <T extends FilterItem>({
   );
 
   useEffect(() => {
+    console.log("filters", filters);
     // Validating that the "_clear" filter is never passed in from parent
     if (filters.some(({ key }) => INTERNAL_KEYS.includes(key))) {
       throw new Error(

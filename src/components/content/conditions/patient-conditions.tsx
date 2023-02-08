@@ -1,10 +1,13 @@
 import cx from "classnames";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useConditionHistory } from "../condition-history/conditions-history-drawer";
 import { filterOtherConditions } from "./helpers";
 import { PatientConditionsActions } from "./patient-conditions-actions";
 import { patientConditionsColumns } from "./patient-conditions-columns";
-import { useConditionFilters } from "./patient-conditions-filters";
+import {
+  FilterCollection,
+  useConditionFilters,
+} from "./patient-conditions-filters";
 import {
   OtherProviderConditionHoverActions,
   PatientConditionHoverActions,
@@ -17,6 +20,7 @@ import {
   useOtherProviderConditions,
   usePatientConditions,
 } from "@/fhir/conditions";
+import { ConditionModel } from "@/fhir/models";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { AnyZodSchema } from "@/utils/form-helper";
 import "./patient-conditions.scss";
@@ -35,21 +39,13 @@ export type ConditionFormData = {
 
 export const PatientConditions = withErrorBoundary(
   ({ className, readOnly = false }: PatientConditionsProps) => {
+    const [collection, setCollection] = useState<FilterCollection>("patient");
+
     // State.
-    const { filters, updateFilters, applyFilters } = useConditionFilters();
+    const { filters, updateFilters, applyFilters, availableFilters } =
+      useConditionFilters(collection);
     const containerRef = useRef<HTMLDivElement>(null);
     const breakpoints = useBreakpoints(containerRef);
-    // const [filters, setFilters] = useState<FilterChangeEvent>({});
-    // const filterItems: FilterItem[] = [
-    //   {
-    //     key: "status",
-    //     type: "checkbox",
-    //     icon: "eye",
-    //     display: ({ active }) =>
-    //       active ? "dismissed records" : "show dismissed records",
-    //     values: [],
-    //   },
-    // ];
 
     // Drawer helpers.
     const showConditionHistory = useConditionHistory();
@@ -61,9 +57,7 @@ export const PatientConditions = withErrorBoundary(
     function isLoading() {
       const isLoadingPatient = patientConditionsQuery.isLoading;
       const isLoadingOther = isLoadingPatient || otherConditionsQuery.isLoading;
-      return filters.collection === "patient"
-        ? isLoadingPatient
-        : isLoadingOther;
+      return collection === "patient" ? isLoadingPatient : isLoadingOther;
     }
 
     // Get our conditions.
@@ -75,7 +69,7 @@ export const PatientConditions = withErrorBoundary(
     );
     const conditions = applyFilters(patientConditions, otherConditions);
     const RowActions =
-      filters.collection === "patient"
+      collection === "patient"
         ? PatientConditionHoverActions
         : OtherProviderConditionHoverActions;
 
@@ -92,12 +86,21 @@ export const PatientConditions = withErrorBoundary(
           </div>
           <PatientConditionsTabs
             otherConditions={otherConditions}
-            collection={filters.collection}
-            onCollectionChange={(collection) => updateFilters({ collection })}
+            collection={collection}
+            onCollectionChange={(c) => setCollection(c)}
           />
 
           <PatientConditionsActions
-            hideAdd={readOnly || filters.collection === "other"}
+            hideAdd={readOnly || collection === "other"}
+            filterItems={availableFilters(
+              getUnfilteredCollection(
+                patientConditions,
+                otherConditions,
+                collection
+              )
+            )}
+            setFilters={updateFilters}
+            filters={filters[collection]}
           />
 
           <Table
@@ -122,3 +125,9 @@ export const PatientConditions = withErrorBoundary(
   },
   "PatientConditions"
 );
+
+export const getUnfilteredCollection = (
+  patientConditions: ConditionModel[],
+  otherConditions: ConditionModel[],
+  activeCollection: string
+) => (activeCollection === "patient" ? patientConditions : otherConditions);
