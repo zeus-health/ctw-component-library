@@ -24,6 +24,15 @@ const {
   VITE_ENV = "dev",
 } = import.meta.env;
 
+const theme = {
+  colors: {
+    caution: {
+      main: "#FFFFFF",
+      light: "#BD0B00",
+    },
+  },
+};
+
 type DemoComponent = {
   render: () => ReactNode;
   title: string;
@@ -62,6 +71,7 @@ const DemoApp = ({ accessToken = "" }) => (
     authToken={accessToken}
     builderId={VITE_BUILDER_ID}
     enableTelemetry
+    theme={theme}
   >
     <PatientProvider patientID={VITE_PATIENT_ID} systemURL={VITE_SYSTEM_URL}>
       <div className="App">

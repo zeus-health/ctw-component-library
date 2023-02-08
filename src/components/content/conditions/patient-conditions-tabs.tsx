@@ -80,7 +80,7 @@ export function PatientConditionsTabs({
               }
             >
               <span>Other Provider Records</span>
-              <Badge text={`${activeCount}`} color="primary" />
+              <Badge text={`${activeCount}`} color="caution" />
             </Tab>
           </Tab.List>
         </Tab.Group>
