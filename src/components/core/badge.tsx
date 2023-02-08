@@ -2,7 +2,14 @@ import cx from "classnames";
 
 export type BadgeProps = {
   className?: string;
-  color: "primary" | "gray" | "info" | "success" | "caution" | "error";
+  color:
+    | "primary"
+    | "gray"
+    | "info"
+    | "success"
+    | "caution"
+    | "error"
+    | "notification";
   text: string;
 };
 
@@ -14,6 +21,7 @@ export const Badge = ({ className, color, text }: BadgeProps) => {
     success: "ctw-bg-success-light ctw-text-success-main",
     caution: "ctw-bg-caution-light ctw-text-caution-main",
     error: "ctw-bg-error-light ctw-text-error-main",
+    notification: "ctw-bg-notification-light ctw-text-notification-main",
   }[color];
 
   return (
