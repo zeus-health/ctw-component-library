@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { FilterChangeEvent } from "@/components/core/filter-bar/filter-bar-types";
 import { ConditionModel } from "@/fhir/models";
-import { DisplayStatus } from "@/fhir/models/condition";
-import { uniq } from "@/utils/nodash";
+import { isArray, uniq } from "@/utils/nodash";
 
 export type FilterCollection = "patient" | "other";
 
@@ -11,22 +10,17 @@ export type Filters = {
   other?: FilterChangeEvent;
 };
 
-export type ConditionFilters = {
-  status?: DisplayStatus[];
-  ccsChapter?: string[];
-};
-
 const DEFAULT_FILTERS: Omit<Filters, "activeCollection"> = {
   patient: {
     status: {
-      key: "status",
+      key: "displayStatus",
       selected: ["Active", "Pending", "Unknown"],
       type: "checkbox",
     },
   },
   other: {
     status: {
-      key: "status",
+      key: "displayStatus",
       selected: ["Active", "Pending", "Unknown"],
       type: "checkbox",
     },
@@ -50,7 +44,7 @@ export function useConditionFilters(collection: FilterCollection) {
   function availableFilters(conditions: ConditionModel[]) {
     return [
       {
-        key: "status",
+        key: "displayStatus",
         type: "checkbox",
         icon: "eye",
         display: () => "Status",
@@ -72,25 +66,25 @@ export function useConditionFilters(collection: FilterCollection) {
   ) {
     const conditions =
       collection === "patient" ? patientConditions : otherConditions;
-    const conditionFilters = filters[collection];
 
-    console.log("conditionFilters", conditionFilters);
+    return conditions.filter((c) =>
+      Object.entries(filters[collection]).every(([key, filterItem]) => {
+        if (!filterItem.selected) {
+          return false;
+        }
+        if (isArray(filterItem.selected)) {
+          console.log("test", filterItem);
+          return (
+            filterItem.selected.length < 1 ||
+            filterItem.selected.includes(
+              c[filterItem.key as keyof ConditionModel] ?? ""
+            )
+          );
+        }
 
-    return conditions.filter((c) => {
-      const statusFilter =
-        !conditionFilters?.status.selected ||
-        !conditionFilters.status.selected ||
-        conditionFilters.status.selected.length < 1 ||
-        conditionFilters.status.selected.includes(c.displayStatus);
-
-      const ccsChapterFilter =
-        !conditionFilters?.ccsChapter ||
-        !conditionFilters.ccsChapter.selected ||
-        conditionFilters.ccsChapter.selected.length < 1 ||
-        conditionFilters.ccsChapter.selected.includes(c.ccsChapter ?? "");
-
-      return statusFilter && ccsChapterFilter;
-    });
+        return true;
+      })
+    );
   }
 
   return { filters, updateFilters, applyFilters, availableFilters };
