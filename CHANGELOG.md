@@ -1,5 +1,29 @@
 # ctw-component-library
 
+## 0.45.2
+
+### Patch Changes
+
+- f0383e2e: Add notification color palette for badge.
+
+## 0.45.1
+
+### Patch Changes
+
+- 35c40132: Add last retrieved date from patient history request to conditions 1.0 and 2.0.
+
+## 0.45.0
+
+### Minor Changes
+
+- d8140291: Add error state banner to drawer component and condition 1.0 and 2.0 tables to indicate when patient history retrieval is in a failed state.
+
+## 0.44.7
+
+### Patch Changes
+
+- ba38340f: Added the FilterBar component. Medications tabbed component now has dismissed filter.
+
 ## 0.44.6
 
 ### Patch Changes

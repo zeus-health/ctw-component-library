@@ -146,7 +146,7 @@ export const BadgeOtherProviderMedCount = () => {
   if (activeUnarchivedMedications.length > 0) {
     return (
       <Badge
-        color="primary"
+        color="notification"
         text={activeUnarchivedMedications.length.toString()}
         className="ctw-h-5"
       />
