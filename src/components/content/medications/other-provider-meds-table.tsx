@@ -80,6 +80,7 @@ export const OtherProviderMedsTable = withErrorBoundary(
           getRowClassName={(medication) => ({
             "ctw-tr-archived": medication.isArchived,
           })}
+          emptyMessage="No records found."
           telemetryNamespace="MedicationsTableBase"
           medicationStatements={medicationModels}
           isLoading={isLoading}
@@ -145,7 +146,7 @@ export const BadgeOtherProviderMedCount = () => {
   if (activeUnarchivedMedications.length > 0) {
     return (
       <Badge
-        color="primary"
+        color="notification"
         text={activeUnarchivedMedications.length.toString()}
         className="ctw-h-5"
       />

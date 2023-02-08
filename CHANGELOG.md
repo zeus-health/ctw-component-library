@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.45.2
+
+### Patch Changes
+
+- f0383e2e: Add notification color palette for badge.
+
 ## 0.45.1
 
 ### Patch Changes
