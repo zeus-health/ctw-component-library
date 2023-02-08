@@ -13,6 +13,7 @@ export type FilterItemStatus = {
 };
 
 export type MinFilterItem = {
+  belowTheFold?: boolean; // should the filter be below divider in main menu?
   className?: cx.Argument;
   display: string | ((status: FilterItemStatus) => ReactNode | string);
   icon?: string;

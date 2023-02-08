@@ -142,20 +142,42 @@ export const FilterBar = <T extends FilterItem>({
     handleOnChange(filterChangeEvent(filters, activeFilterKeys, activeValues));
   };
 
+  const toFilterMenuItem = (filter: FilterItem) => ({
+    display: () => displayFilterItem(filter, { active: false }),
+    key: filter.key,
+    className: cx("ctw-capitalize", filter.className),
+  });
+
+  const [aboveTheFold, belowTheFold] = partition(
+    (filter) => !filter.belowTheFold,
+    inactiveFilters
+  );
+  const hasBelowTheFoldItems = belowTheFold.length > 0;
+  if (hasBelowTheFoldItems) {
+    // We need to add the ccs border top divider to first item under fold
+    belowTheFold[0] = {
+      ...belowTheFold[0],
+      className: cx(
+        belowTheFold[0].className,
+        "ctw-border-solid ctw-border-divider-light ctw-border-b-0"
+      ),
+    };
+  }
   // Creates the main filter list dropdown
   const inactiveFilterMenuItems = [
-    ...inactiveFilters.map((filter) => ({
-      display: () => displayFilterItem(filter, { active: false }),
-      key: filter.key,
-      className: cx("ctw-capitalize", filter.className),
-    })),
+    ...aboveTheFold.map(toFilterMenuItem),
+    // Need to add class for the first menu item under the fold
+    ...belowTheFold.slice(0, 1).map(toFilterMenuItem),
+    ...belowTheFold.slice(1).map(toFilterMenuItem),
     {
       // eslint-disable-next-line react/no-unstable-nested-components
       display: () => <>{getIcon("trash")} remove all filters</>,
       key: "_remove",
       icon: "trash",
-      className:
-        "ctw-border ctw-capitalize ctw-border-solid ctw-border-divider-light",
+      className: cx("ctw-border ctw-capitalize", {
+        // This adds divider to this item if needed
+        "ctw-border-solid ctw-border-divider-light": !hasBelowTheFoldItems,
+      }),
     },
   ];
 

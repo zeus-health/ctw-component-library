@@ -17,6 +17,7 @@ export type OtherProviderMedsTableProps = {
   showInactive?: boolean;
   sortColumn?: keyof MedicationStatementModel;
   sortOrder?: SortDir;
+  records?: MedicationStatementModel[];
 };
 
 /**
@@ -33,7 +34,9 @@ export const OtherProviderMedsTable = withErrorBoundary(
     showDismissed = false,
     showInactive = false,
     handleAddToRecord,
+    records,
   }: OtherProviderMedsTableProps) => {
+    const [overrideState, setOverrideState] = useState(!!records);
     const dismissMedication = useDismissMedication();
     const [medicationModels, setMedicationModels] = useState<
       MedicationStatementModel[]
@@ -56,10 +59,11 @@ export const OtherProviderMedsTable = withErrorBoundary(
     }
 
     useEffect(() => {
-      if (!otherProviderMedications) return;
+      const theRecords = records || otherProviderMedications;
+      if (!theRecords) return;
       setMedicationModels(
         sort(
-          otherProviderMedications
+          theRecords
             .filter((med) => !med.isArchived || showDismissed)
             .filter((med) => !med.isInactive || showInactive),
           pipe(get(sortColumn), toLower),
@@ -72,6 +76,7 @@ export const OtherProviderMedsTable = withErrorBoundary(
       sortOrder,
       showInactive,
       showDismissed,
+      records,
     ]);
 
     return (
