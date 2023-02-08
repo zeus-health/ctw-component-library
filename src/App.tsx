@@ -26,8 +26,8 @@ const {
 
 const theme = {
   colors: {
-    caution: {
-      main: "#FFFFFF",
+    notification: {
+      main: "#FFFFFF", // Inverting these for Canvas theming
       light: "#BD0B00",
     },
   },
