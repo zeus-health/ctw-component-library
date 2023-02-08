@@ -4,7 +4,7 @@ import type {
   FilterValuesRecord,
 } from "@/components/core/filter-bar/filter-bar-types";
 import cx from "classnames";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   displayFilterItem,
   filterChangeEvent,
@@ -15,7 +15,7 @@ import { FilterBarPill } from "@/components/core/filter-bar/filter-bar-pills";
 import { ListBox } from "@/components/core/list-box/list-box";
 import { omit, partition, uniq } from "@/utils/nodash/fp";
 
-const INTERNAL_KEYS = ["_reset", "_clear"];
+const INTERNAL_KEYS = ["_remove", "_reset"];
 const removeInternalKeys = (keys: string[]) =>
   keys.filter((key) => !INTERNAL_KEYS.includes(key));
 
@@ -66,7 +66,7 @@ export const FilterBar = <T extends FilterItem>({
   );
 
   useEffect(() => {
-    // Validating that the "_clear" filter is never passed in from parent
+    // Validating that the "_remove" filter is never passed in from parent
     if (filters.some(({ key }) => INTERNAL_KEYS.includes(key))) {
       throw new Error(
         `Filters should not use keys ${INTERNAL_KEYS.join(", ")}`
@@ -79,6 +79,13 @@ export const FilterBar = <T extends FilterItem>({
     setActiveFilterValues({});
     handleOnChange({});
   };
+
+  const clearFilter = useCallback(
+    (key: string) => {
+      setActiveFilterValues({ ...activeFilterValues, [key]: [] });
+    },
+    [activeFilterValues]
+  );
 
   // Add or remove a filter from the activated filters list
   const addOrRemoveFilter = (key: string, remove = false) => {
@@ -143,8 +150,9 @@ export const FilterBar = <T extends FilterItem>({
       className: cx("ctw-capitalize", filter.className),
     })),
     {
-      display: "clear all filters",
-      key: "_clear",
+      // eslint-disable-next-line react/no-unstable-nested-components
+      display: () => <>{getIcon("trash")} clear all filters</>,
+      key: "_remove",
       icon: "trash",
       className:
         "ctw-border ctw-capitalize ctw-border-solid ctw-border-divider-light",
@@ -159,7 +167,8 @@ export const FilterBar = <T extends FilterItem>({
             key={filter.key}
             filter={filter}
             filterValues={activeFilterValues}
-            addOrRemoveFilter={addOrRemoveFilter}
+            handleAddOrRemoveFilter={addOrRemoveFilter}
+            handleClearFilter={clearFilter}
             updateSelectedFilterValues={(
               valueKey: string,
               isSelected: boolean
@@ -174,7 +183,7 @@ export const FilterBar = <T extends FilterItem>({
         optionsClassName="ctw-capitalize"
         items={inactiveFilterMenuItems}
         onChange={(index, item) => {
-          if (item.key === "_clear") {
+          if (item.key === "_remove") {
             clearAllFilters();
           } else {
             addOrRemoveFilter(item.key, false);

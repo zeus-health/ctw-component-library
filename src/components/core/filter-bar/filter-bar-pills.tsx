@@ -4,9 +4,10 @@ import { FilterBarSelectPill } from "./filter-bar-pills/select-pill";
 import { FilterBarTagPill } from "./filter-bar-pills/tag-pill";
 
 type FilterBarPillProps = {
-  addOrRemoveFilter: (key: string, remove: boolean) => void;
+  handleAddOrRemoveFilter: (key: string, remove: boolean) => void;
   filter: FilterItem;
   filterValues: FilterValuesRecord;
+  handleClearFilter: (key: string) => void;
   updateSelectedFilterValues: (valueKey: string, isSelected: boolean) => void;
 };
 
@@ -16,20 +17,21 @@ type FilterBarPillProps = {
  * will only be used by the FilterBar component.
  */
 export function FilterBarPill({
-  addOrRemoveFilter,
+  handleAddOrRemoveFilter,
+  handleClearFilter,
   filter,
   filterValues,
   updateSelectedFilterValues,
 }: FilterBarPillProps) {
-  const onRemove = () => addOrRemoveFilter(filter.key, true);
+  const handleRemove = () => handleAddOrRemoveFilter(filter.key, true);
   switch (filter.type) {
     case "tag":
-      return <FilterBarTagPill filter={filter} onRemove={onRemove} />;
+      return <FilterBarTagPill filter={filter} onRemove={handleRemove} />;
     case "select":
       return (
         <FilterBarSelectPill
           filter={filter}
-          onRemove={onRemove}
+          onRemove={handleRemove}
           onChange={updateSelectedFilterValues}
         />
       );
@@ -38,8 +40,9 @@ export function FilterBarPill({
         <FilterBarCheckboxPill
           filter={filter}
           filterValues={filterValues}
-          onRemove={onRemove}
+          onRemove={handleRemove}
           onChange={updateSelectedFilterValues}
+          onReset={() => handleClearFilter(filter.key)}
         />
       );
     default:

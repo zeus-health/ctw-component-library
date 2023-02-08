@@ -41,9 +41,20 @@ export type FilterValuesRecord = Record<string, string | string[]>;
 
 export type FilterChangeEvent = Record<
   string,
-  {
-    key: string;
-    selected: boolean | string | string[];
-    type: "tag" | "checkbox" | "select";
-  }
+  | undefined
+  | {
+      key: string;
+      selected: boolean;
+      type: "tag";
+    }
+  | {
+      key: string;
+      selected: string[];
+      type: "checkbox";
+    }
+  | {
+      key: string;
+      selected: string;
+      type: "select";
+    }
 >;

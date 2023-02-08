@@ -9,13 +9,14 @@ import {
   getIcon,
 } from "@/components/core/filter-bar/filter-bar-utils";
 import { isString } from "@/utils/nodash";
-import { omit } from "@/utils/nodash/fp";
+import { compact, omit } from "@/utils/nodash/fp";
 
 type FilterBarCheckboxPillProps = {
   filter: FilterOptionCheckbox;
   filterValues: FilterValuesRecord;
   onChange: (key: string, isSelected: boolean) => void;
-  onRemove: () => void;
+  onRemove?: () => void;
+  onReset?: () => void;
 };
 
 const buttonClassName =
@@ -26,6 +27,7 @@ export function FilterBarCheckboxPill({
   filterValues,
   onRemove,
   onChange,
+  onReset,
 }: FilterBarCheckboxPillProps) {
   const selected = filter.key in filterValues ? filterValues[filter.key] : [];
   const items = filter.values.map((item) => ({
@@ -42,12 +44,22 @@ export function FilterBarCheckboxPill({
     <DropdownMenuAction
       items={items}
       type="checkbox"
-      pinnedActions={[
-        {
-          name: "Remove Filter",
-          action: onRemove,
-        },
-      ]}
+      pinnedActions={compact([
+        onReset
+          ? {
+              decoration: getIcon("reset"),
+              name: "Reset Filter",
+              action: onReset,
+            }
+          : null,
+        onRemove
+          ? {
+              decoration: getIcon("trash"),
+              name: "Remove Filter",
+              action: onRemove,
+            }
+          : null,
+      ])}
       buttonClassName={cx(filter.className, buttonClassName)}
       onItemSelect={(item) => onChange(item.key, item.value)}
     >
