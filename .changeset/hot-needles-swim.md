@@ -2,4 +2,4 @@
 "@zus-health/ctw-component-library": patch
 ---
 
-Fixed types and text on the filter bar. Also added icons where missing.
+Fix types and text on the filter bar. Add icons that are missing.
