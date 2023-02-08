@@ -24,10 +24,11 @@ const {
   VITE_ENV = "dev",
 } = import.meta.env;
 
+// Feel free to play with this theme object
 const theme = {
   colors: {
     notification: {
-      main: "#FFFFFF", // Inverting these for Canvas theming
+      main: "#FFFFFF",
       light: "#BD0B00",
     },
   },
