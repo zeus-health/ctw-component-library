@@ -1,6 +1,10 @@
+import type {
+  FilterChangeEvent,
+  FilterItem,
+} from "@/components/core/filter-bar/filter-bar-types";
 import { Tab } from "@headlessui/react";
 import cx from "classnames";
-import { useRef, useState } from "react";
+import { ReactNode, useRef, useState } from "react";
 import {
   BadgeOtherProviderMedCount,
   OtherProviderMedsTable,
@@ -8,6 +12,7 @@ import {
 import { ProviderInactiveMedicationsTable } from "@/components/content/medications/provider-inactive-medications-table";
 import { ProviderMedsTable } from "@/components/content/medications/provider-meds-table";
 import * as CTWBox from "@/components/core/ctw-box";
+import { FilterBar } from "@/components/core/filter-bar/filter-bar";
 import { ListBox } from "@/components/core/list-box/list-box";
 import { MedicationStatementModel } from "@/fhir/models";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
@@ -16,17 +21,31 @@ import "./patient-medications.scss";
 export type PatientMedicationsTabbedProps = {
   className?: string;
   forceHorizontalTabs?: boolean;
-  handleAddToRecord?: (m: MedicationStatementModel) => void;
+  handleAddToRecord: (m: MedicationStatementModel) => void;
 };
 
-const tabbedContent = [
+type TabbedContent<T> = {
+  key: string;
+  display: () => string | ReactNode;
+  render: (props: {
+    handleAddToRecord: (record: T) => void;
+  }) => string | ReactNode;
+  getPanelClassName?: (sm: boolean) => cx.Argument;
+};
+
+// We use getPanelClassName on all tabs except for the other-provider-records
+// tab because without the FilterBar there is no margin between tab and panel
+// when md - lg sized.
+const tabbedContent: TabbedContent<MedicationStatementModel>[] = [
   {
     key: "medication-list",
+    getPanelClassName: (sm: boolean) => (sm ? "ctw-mt-0" : "ctw-mt-2"),
     display: () => "medication list",
     render: () => <ProviderMedsTable />,
   },
   {
     key: "inactive-provider-records",
+    getPanelClassName: (sm: boolean) => (sm ? "ctw-mt-0" : "ctw-mt-2"),
     display: () => "inactive",
     render: () => <ProviderInactiveMedicationsTable />,
   },
@@ -38,13 +57,37 @@ const tabbedContent = [
         <BadgeOtherProviderMedCount />
       </>
     ),
-    render: ({ handleAddToRecord }: PatientMedicationsTabbedProps) => (
-      <>
-        <OtherProviderMedsTable handleAddToRecord={handleAddToRecord} />
-      </>
-    ),
+    render: OtherProviderMedsTableTab,
   },
 ];
+
+function OtherProviderMedsTableTab({
+  handleAddToRecord,
+}: PatientMedicationsTabbedProps) {
+  const [filters, setFilters] = useState<FilterChangeEvent>({});
+  const showDismissed = "dismissed" in filters;
+  const showInactive = "inactive" in filters;
+  const filterItems: FilterItem[] = [
+    {
+      key: "dismissed",
+      type: "tag",
+      icon: "eye",
+      display: ({ active }) =>
+        active ? "dismissed records" : "show dismissed records",
+    },
+  ];
+
+  return (
+    <>
+      <FilterBar filters={filterItems} handleOnChange={setFilters} />
+      <OtherProviderMedsTable
+        showDismissed={showDismissed}
+        showInactive={showInactive}
+        handleAddToRecord={handleAddToRecord}
+      />
+    </>
+  );
+}
 
 /**
  * This component is a tabbed view of patient medications from the current
@@ -69,13 +112,18 @@ export function PatientMedicationsTabbed({
     <CTWBox.StackedWrapper
       className={cx("ctw-patient-medications ctw-space-y-3", className)}
     >
-      <div className="ctw-relative ctw-w-full ctw-p-4" ref={containerRef}>
+      <div ref={containerRef} className="ctw-relative ctw-w-full">
         <Tab.Group
           selectedIndex={selectedTabIndex}
           onChange={setSelectedTabIndex}
         >
           {isVertical && (
-            <ListBox onChange={setSelectedTabIndex} items={tabbedContent} />
+            <ListBox
+              btnClassName="ctw-tab ctw-capitalize"
+              optionsClassName="ctw-tab-list ctw-capitalize"
+              onChange={setSelectedTabIndex}
+              items={tabbedContent}
+            />
           )}
           <Tab.List
             className={cx(
@@ -83,6 +131,7 @@ export function PatientMedicationsTabbed({
               { "ctw-hidden": isVertical }
             )}
           >
+            {/* Renders button for each tab using "display | display()" */}
             {tabbedContent.map(({ key, display }) => (
               <Tab
                 key={key}
@@ -114,13 +163,14 @@ export function PatientMedicationsTabbed({
             ))}
           </Tab.List>
 
+          {/* Renders body of each tab using "render()" */}
           <Tab.Panels>
-            {tabbedContent.map(({ key, render }) => (
+            {tabbedContent.map((item) => (
               <Tab.Panel
-                key={key}
-                className={cx(breakpoints.sm ? "ctw-mt-0" : "ctw-mt-4")}
+                key={item.key}
+                className={cx(item.getPanelClassName?.(breakpoints.sm))}
               >
-                {render({ handleAddToRecord })}
+                {item.render({ handleAddToRecord })}
               </Tab.Panel>
             ))}
           </Tab.Panels>

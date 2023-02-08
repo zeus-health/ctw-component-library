@@ -9,6 +9,15 @@
     @apply ctw-flex ctw-h-11 ctw-items-center ctw-justify-between ctw-bg-bg-light ctw-p-3;
   }
 
+  .ctw-tr-archived {
+    td,
+    td span,
+    td div {
+      // Gray out archived table content
+      @apply ctw-text-content-lighter;
+    }
+  }
+
   .ctw-tab {
     @apply ctw-relative ctw-mr-5 ctw-cursor-pointer ctw-border-0 ctw-border-transparent ctw-bg-transparent ctw-py-4 ctw-px-1;
     &:after {
