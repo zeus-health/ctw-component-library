@@ -9,16 +9,18 @@ import {
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 
 export type MedicationsTableBaseProps<T extends MinRecordItem> = {
-  medicationStatements: MedicationStatementModel[];
-  hideMenu?: boolean;
-  className?: string;
-  telemetryNamespace?: string;
   children?: ReactNode;
+  className?: string;
+  emptyMessage?: string;
+  hideMenu?: boolean;
+  medicationStatements: MedicationStatementModel[];
+  telemetryNamespace?: string;
 } & TableBaseProps<MedicationStatementModel>;
 
 export const MedicationsTableBase = ({
   children,
   className = "",
+  emptyMessage = "No medications on record.",
   hideMenu = false,
   medicationStatements,
   telemetryNamespace,
@@ -108,7 +110,7 @@ export const MedicationsTableBase = ({
         stacked={breakpoints.sm}
         records={medicationStatements}
         columns={breakpoints.sm ? columnsStacked : columns}
-        emptyMessage="There are no medications to display."
+        emptyMessage={emptyMessage}
         {...tableProps}
       />
       {children}

@@ -15,11 +15,11 @@ export const PaginationList = ({
   const hasPages = total > DEFAULT_PAGE_SIZE;
 
   return (
-    <div className="ctw-pagination">
+    <div className="ctw-pagination !ctw-mt-1 sm:!ctw-mt-2">
       <div className="ctw-text-gray-600 ctw-text-sm">
         Showing{" "}
         <span className="ctw-font-medium">{Math.min(count, total)}</span> of{" "}
-        <span className="ctw-font-medium">{total}</span> results
+        <span className="ctw-font-medium">{total}</span> records
       </div>
 
       {(!allShown || hasPages) && (
