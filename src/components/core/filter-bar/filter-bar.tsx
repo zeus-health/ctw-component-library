@@ -151,7 +151,7 @@ export const FilterBar = <T extends FilterItem>({
     })),
     {
       // eslint-disable-next-line react/no-unstable-nested-components
-      display: () => <>{getIcon("trash")} clear all filters</>,
+      display: () => <>{getIcon("trash")} remove all filters</>,
       key: "_remove",
       icon: "trash",
       className:
