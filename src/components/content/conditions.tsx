@@ -22,13 +22,16 @@ import {
   getAddConditionWithDefaults,
 } from "./forms/actions/conditions";
 import { getAddConditionData } from "./forms/schemas/condition-schema";
-import { PatientHistoryRequestDrawer } from "./patient-history-request-drawer";
 import { PatientHistoryMessage } from "./patient-history/patient-history-message";
+import { PatientHistoryStatus } from "./patient-history/patient-history-message-status";
+import { PatientHistoryTableHeaderMessage } from "./patient-history/patient-history-table-header";
+import { usePatientHistory } from "./patient-history/use-patient-history";
 import {
   conditionAddSchema,
   conditionEditSchema,
   getEditingPatientConditionData,
 } from "@/components/content/forms/schemas/condition-schema";
+import { withErrorBoundary } from "@/components/core/error-boundary";
 import {
   getNewCondition,
   useOtherProviderConditions,
@@ -36,13 +39,13 @@ import {
 } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models/condition";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
-import { hasFetchedPatientHistory } from "@/services/patient-history/patient-history";
 import { AnyZodSchema } from "@/utils/form-helper";
 import { curry } from "@/utils/nodash";
 
 export type ConditionsProps = {
   className?: string;
   readOnly?: boolean;
+  hideRequestRecords?: boolean;
 };
 
 const EMPTY_MESSAGE_PATIENT_RECORD =
@@ -51,330 +54,328 @@ const EMPTY_MESSAGE_PROVIDER = "There are no conditions available.";
 const ERROR_MSG =
   "There was an error fetching conditions for this patient. Refresh the page or contact your organization's technical support if this issue persists.";
 
-export function Conditions({ className, readOnly = false }: ConditionsProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const breakpoints = useBreakpoints(containerRef);
-  const [drawerIsOpen, setDrawerIsOpen] = useState(false);
-  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+export const Conditions = withErrorBoundary(
+  ({
+    className,
+    readOnly = false,
+    hideRequestRecords = false,
+  }: ConditionsProps) => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const breakpoints = useBreakpoints(containerRef);
+    const [drawerIsOpen, setDrawerIsOpen] = useState(false);
+    const [showConfirmDelete, setShowConfirmDelete] = useState(false);
 
-  const showConditionHistory = useConditionHistory();
-  const [requestRecordsDrawerIsOpen, setRequestDrawerIsOpen] = useState(false);
-  const [patientRecords, setPatientRecords] = useState<ConditionModel[]>([]);
-  const [otherProviderRecords, setOtherProviderRecords] = useState<
-    ConditionModel[]
-  >([]);
-  const [includeInactive, setIncludeInactive] = useState(false);
-  const [formAction, setFormAction] = useState<FormActionTypes>("Add");
-  const [schema, setSchema] = useState<AnyZodSchema>(conditionAddSchema);
-  const [currentSelectedData, setCurrentlySelectedData] =
-    useState<FormEntry[]>();
-  const [selectedCondition, setSelectedCondition] = useState<ConditionModel>();
-  const patientResponse = usePatient();
-  const patientRecordsResponse = usePatientConditions();
-  const otherProviderRecordsResponse = useOtherProviderConditions();
-  const { getRequestContext } = useCTW();
-  const [sort, setSort] = useState<TableSort>();
+    const showConditionHistory = useConditionHistory();
+    const [patientRecords, setPatientRecords] = useState<ConditionModel[]>([]);
+    const [otherProviderRecords, setOtherProviderRecords] = useState<
+      ConditionModel[]
+    >([]);
+    const [includeInactive, setIncludeInactive] = useState(false);
+    const [formAction, setFormAction] = useState<FormActionTypes>("Add");
+    const [schema, setSchema] = useState<AnyZodSchema>(conditionAddSchema);
+    const [currentSelectedData, setCurrentlySelectedData] =
+      useState<FormEntry[]>();
+    const [selectedCondition, setSelectedCondition] =
+      useState<ConditionModel>();
+    const patientResponse = usePatient();
+    const patientRecordsResponse = usePatientConditions();
+    const otherProviderRecordsResponse = useOtherProviderConditions();
+    const { getRequestContext } = useCTW();
+    const [sort, setSort] = useState<TableSort>();
 
-  const [clinicalHistoryExists, setClinicalHistoryExists] = useState<boolean>();
+    const patientRecordsMessage = patientRecordsResponse.isError
+      ? ERROR_MSG
+      : EMPTY_MESSAGE_PATIENT_RECORD;
 
-  const patientRecordsMessage = patientRecordsResponse.isError
-    ? ERROR_MSG
-    : EMPTY_MESSAGE_PATIENT_RECORD;
+    const otherProviderRecordMessage = otherProviderRecordsResponse.isError
+      ? ERROR_MSG
+      : EMPTY_MESSAGE_PROVIDER;
 
-  const otherProviderRecordMessage = otherProviderRecordsResponse.isError
-    ? ERROR_MSG
-    : EMPTY_MESSAGE_PROVIDER;
+    const handleEditCondition = (condition: ConditionModel) => {
+      if (patientResponse.data) {
+        setDrawerIsOpen(true);
+        setFormAction("Edit");
+        setSchema(conditionEditSchema);
+        setCurrentlySelectedData(getEditingPatientConditionData({ condition }));
+        setSelectedCondition(condition);
+      }
+    };
 
-  const handleEditCondition = (condition: ConditionModel) => {
-    if (patientResponse.data) {
-      setDrawerIsOpen(true);
-      setFormAction("Edit");
-      setSchema(conditionEditSchema);
-      setCurrentlySelectedData(getEditingPatientConditionData({ condition }));
+    const handleConditionDelete = (condition: ConditionModel) => {
+      setShowConfirmDelete(true);
       setSelectedCondition(condition);
-    }
-  };
+    };
 
-  const handleConditionDelete = (condition: ConditionModel) => {
-    setShowConfirmDelete(true);
-    setSelectedCondition(condition);
-  };
+    const handleAddOtherProviderCondition = (condition: ConditionModel) => {
+      const newCondition = getAddConditionWithDefaults(condition.resource);
 
-  const handleAddOtherProviderCondition = (condition: ConditionModel) => {
-    const newCondition = getAddConditionWithDefaults(condition.resource);
+      if (patientResponse.data) {
+        setSchema(conditionAddSchema);
+        setDrawerIsOpen(true);
+        setFormAction("Add");
+        setCurrentlySelectedData(
+          getAddConditionData({
+            condition: new ConditionModel(newCondition),
+          })
+        );
+      }
+    };
 
-    if (patientResponse.data) {
-      setSchema(conditionAddSchema);
+    const handleAddNewCondition = () => {
+      if (!patientResponse.data) return;
+
+      const newCondition = getNewCondition(patientResponse.data.id);
       setDrawerIsOpen(true);
-      setFormAction("Add");
+      setSchema(conditionAddSchema);
       setCurrentlySelectedData(
         getAddConditionData({
           condition: new ConditionModel(newCondition),
         })
       );
-    }
-  };
+    };
 
-  const handleAddNewCondition = () => {
-    if (!patientResponse.data) return;
-
-    const newCondition = getNewCondition(patientResponse.data.id);
-    setDrawerIsOpen(true);
-    setSchema(conditionAddSchema);
-    setCurrentlySelectedData(
-      getAddConditionData({
-        condition: new ConditionModel(newCondition),
-      })
-    );
-  };
-
-  const addConditionBtn = (
-    <button
-      className="ctw-btn-primary"
-      type="button"
-      onClick={handleAddNewCondition}
-    >
-      Add Condition
-    </button>
-  );
-
-  const shouldShowClinicalHistoryArea =
-    clinicalHistoryExists ||
-    (otherProviderRecordsResponse.data &&
-      otherProviderRecordsResponse.data.length > 0);
-
-  const checkClinicalHistory = async (patientID: string) => {
-    const requestContext = await getRequestContext();
-
-    const patientHistoryFetched = await hasFetchedPatientHistory(
-      requestContext,
-      patientID
+    const addConditionBtn = (
+      <button
+        className="ctw-btn-primary"
+        type="button"
+        onClick={handleAddNewCondition}
+        data-zus-telemetry-click="Add new condition (Empty table)"
+      >
+        Add Condition
+      </button>
     );
 
-    setClinicalHistoryExists(patientHistoryFetched);
-  };
+    const patientHistory = usePatientHistory();
 
-  useEffect(() => {
-    async function load() {
-      const patientConditions = patientRecordsResponse.data;
-      const otherConditions = otherProviderRecordsResponse.data;
+    const shouldShowClinicalHistoryArea =
+      !!patientHistory.lastRetrievedAt ||
+      (otherProviderRecordsResponse.data &&
+        otherProviderRecordsResponse.data.length > 0);
 
-      if (patientConditions) {
-        setPatientRecords(
-          patientConditions.filter((c) => c.active || includeInactive)
-        );
+    useEffect(() => {
+      async function load() {
+        const patientConditions = patientRecordsResponse.data;
+        const otherConditions = otherProviderRecordsResponse.data;
 
-        if (otherConditions) {
-          setOtherProviderRecords(
-            filterOtherConditions(
-              otherConditions,
-              patientConditions,
-              includeInactive
-            )
+        if (patientConditions) {
+          setPatientRecords(
+            patientConditions.filter((c) => c.active || includeInactive)
           );
-        } else {
+
+          if (otherConditions) {
+            setOtherProviderRecords(
+              filterOtherConditions(
+                otherConditions,
+                patientConditions,
+                includeInactive
+              )
+            );
+          } else {
+            setOtherProviderRecords([]);
+          }
+        }
+
+        if (patientRecordsResponse.error) {
+          setPatientRecords([]);
           setOtherProviderRecords([]);
         }
       }
+      void load();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [
+      includeInactive,
+      patientResponse.data,
+      patientRecordsResponse.data,
+      otherProviderRecordsResponse.data,
+      patientRecordsResponse.error,
+    ]);
 
-      if (patientRecordsResponse.error) {
-        setPatientRecords([]);
-        setOtherProviderRecords([]);
-      }
+    if (patientResponse.isError) {
+      return <ConditionsNoPatient className={className} />;
     }
-    void load();
-    if (patientResponse.data?.id && clinicalHistoryExists === undefined) {
-      void checkClinicalHistory(patientResponse.data.id);
-    }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    includeInactive,
-    patientResponse.data,
-    patientRecordsResponse.data,
-    otherProviderRecordsResponse.data,
-    clinicalHistoryExists,
-    patientRecordsResponse.error,
-  ]);
-
-  if (patientResponse.isError) {
-    return <ConditionsNoPatient className={className} />;
-  }
-
-  return (
-    <div
-      ref={containerRef}
-      className={cx("ctw-conditions", className, {
-        "ctw-conditions-stacked": breakpoints.sm,
-      })}
-    >
-      {!readOnly && (
-        <div className="ctw-conditions-heading-container">
-          <div className="ctw-title">Conditions</div>
-          <button
-            type="button"
-            className="ctw-btn-clear ctw-link"
-            onClick={handleAddNewCondition}
-          >
-            + Add Condition
-          </button>
-        </div>
-      )}
-
-      <div className="ctw-conditions-body-container">
-        <div className="ctw-space-y-3">
-          <div className="ctw-conditions-title-container">
-            <div className="ctw-title">Patient Record</div>
-            <ToggleControl
-              onFormChange={() => setIncludeInactive(!includeInactive)}
-              toggleProps={{ name: "conditions", text: "Include Inactive" }}
-            />
+    return (
+      <div
+        ref={containerRef}
+        data-zus-telemetry-namespace="Conditions"
+        className={cx("ctw-conditions", className, {
+          "ctw-conditions-stacked": breakpoints.sm,
+        })}
+      >
+        {!readOnly && (
+          <div className="ctw-conditions-heading-container">
+            <div className="ctw-title">Conditions</div>
+            <button
+              type="button"
+              className="ctw-btn-clear ctw-link"
+              data-zus-telemetry-click="Add new condition"
+              onClick={handleAddNewCondition}
+            >
+              + Add Condition
+            </button>
           </div>
+        )}
 
-          <ConditionsTableBase
-            stacked={breakpoints.sm}
-            conditions={patientRecords}
-            isLoading={patientRecordsResponse.isLoading}
-            hideMenu={readOnly}
-            sort={sort}
-            onSort={(newSort) => setSort(newSort)}
-            emptyMessage={
-              <>
-                <div>{patientRecordsMessage}</div>
-                {!patientRecordsResponse.isError && !readOnly && (
-                  <div className="ctw-mt-5">{addConditionBtn}</div>
-                )}
-              </>
-            }
-            rowMenuActions={(condition) => [
-              {
-                name: "Edit",
-                action: async () => {
-                  handleEditCondition(condition);
-                },
-              },
-              {
-                name: "View History",
-                action: async () => {
-                  showConditionHistory({
-                    condition,
-                    readOnly,
-                  });
-                },
-              },
-              {
-                name: "Delete",
-                className: "dangerous",
-                action: async () => {
-                  handleConditionDelete(condition);
-                },
-              },
-            ]}
-          />
-        </div>
-        <div className="ctw-space-y-3">
-          <div className="ctw-conditions-title-container">
-            <div className="ctw-title">Other Provider Records</div>
-            {shouldShowClinicalHistoryArea && (
-              <button
-                type="button"
-                className="ctw-btn-clear ctw-link"
-                onClick={() => setRequestDrawerIsOpen(true)}
-              >
-                Request Records
-              </button>
-            )}
-          </div>
-          {shouldShowClinicalHistoryArea ? (
+        <div className="ctw-conditions-body-container">
+          <div className="ctw-space-y-3">
+            <div className="ctw-conditions-title-container">
+              <div className="ctw-title">Patient Record</div>
+              <ToggleControl
+                onFormChange={() => setIncludeInactive(!includeInactive)}
+                toggleProps={{ name: "conditions", text: "Include Inactive" }}
+              />
+            </div>
+
             <ConditionsTableBase
-              className="ctw-conditions-not-reviewed"
               stacked={breakpoints.sm}
-              conditions={otherProviderRecords}
+              conditions={patientRecords}
+              isLoading={patientRecordsResponse.isLoading}
+              hideMenu={readOnly}
               sort={sort}
               onSort={(newSort) => setSort(newSort)}
-              isLoading={
-                otherProviderRecordsResponse.isLoading ||
-                patientRecordsResponse.isLoading
+              emptyMessage={
+                <>
+                  <div>{patientRecordsMessage}</div>
+                  {!patientRecordsResponse.isError && !readOnly && (
+                    <div className="ctw-mt-5">{addConditionBtn}</div>
+                  )}
+                </>
               }
-              hideMenu={readOnly}
-              emptyMessage={otherProviderRecordMessage}
               rowMenuActions={(condition) => [
                 {
-                  name: "Add",
+                  name: "Edit",
                   action: async () => {
-                    handleAddOtherProviderCondition(condition);
+                    handleEditCondition(condition);
                   },
                 },
                 {
                   name: "View History",
                   action: async () => {
-                    showConditionHistory({ condition, readOnly: true });
+                    showConditionHistory({
+                      condition,
+                      readOnly,
+                    });
                   },
                 },
                 {
-                  name: condition.isArchived ? "Un-Archive" : "Archive",
+                  name: "Delete",
+                  className: "dangerous",
                   action: async () => {
-                    const requestContext = await getRequestContext();
-                    await toggleArchive(condition, requestContext);
+                    handleConditionDelete(condition);
                   },
                 },
               ]}
             />
-          ) : (
-            <PatientHistoryMessage
-              onClick={() => setRequestDrawerIsOpen(true)}
+          </div>
+          <div className="ctw-space-y-3">
+            <PatientHistoryStatus
+              status={patientHistory.lastStatus}
+              date={patientHistory.dateCreatedAt}
             />
-          )}
-        </div>
-      </div>
-
-      {patientResponse.data && (
-        <DrawerFormWithFields
-          title={`${formAction} Condition`}
-          header={
-            formAction === "Edit" &&
-            selectedCondition && (
-              <ConditionHeader condition={selectedCondition} />
-            )
-          }
-          action={curry(createOrEditCondition)(
-            selectedCondition,
-            patientResponse.data.id
-          )}
-          data={currentSelectedData}
-          schema={schema}
-          isOpen={drawerIsOpen}
-          onClose={() => setDrawerIsOpen(false)}
-        />
-      )}
-
-      {patientResponse.data && (
-        <PatientHistoryRequestDrawer
-          header={
-            <div className="ctw-pt-0 ctw-text-base">
-              Request patient clinical history from 70K+ providers across the
-              nation. No changes will be made to your patient record.
+            <div className="ctw-conditions-title-container">
+              <div className="ctw-title">Other Provider Records</div>
+              <div className="ctw-flex ctw-items-baseline ctw-space-x-2">
+                {patientHistory.lastRetrievedAt && (
+                  <PatientHistoryTableHeaderMessage
+                    patientHistory={patientHistory}
+                    message="Last Retrieved"
+                  />
+                )}
+                {shouldShowClinicalHistoryArea &&
+                  !readOnly &&
+                  !hideRequestRecords && (
+                    <button
+                      type="button"
+                      className="ctw-btn-clear ctw-link"
+                      onClick={patientHistory.openHistoryRequestDrawer}
+                      data-zus-telemetry-click="Request records"
+                    >
+                      Request Records
+                    </button>
+                  )}
+              </div>
             </div>
-          }
-          patient={patientResponse.data}
-          isOpen={requestRecordsDrawerIsOpen}
-          onClose={() => setRequestDrawerIsOpen(false)}
-          setClinicalHistoryExists={setClinicalHistoryExists}
-        />
-      )}
+            {shouldShowClinicalHistoryArea ? (
+              <ConditionsTableBase
+                className="ctw-conditions-not-reviewed"
+                stacked={breakpoints.sm}
+                conditions={otherProviderRecords}
+                sort={sort}
+                onSort={(newSort) => setSort(newSort)}
+                isLoading={
+                  otherProviderRecordsResponse.isLoading ||
+                  patientRecordsResponse.isLoading
+                }
+                hideMenu={readOnly}
+                emptyMessage={otherProviderRecordMessage}
+                rowMenuActions={(condition) => [
+                  {
+                    name: "Add",
+                    action: async () => {
+                      handleAddOtherProviderCondition(condition);
+                    },
+                  },
+                  {
+                    name: "View History",
+                    action: async () => {
+                      showConditionHistory({ condition, readOnly: true });
+                    },
+                  },
+                  {
+                    name: condition.isArchived ? "Un-Archive" : "Archive",
+                    action: async () => {
+                      const requestContext = await getRequestContext();
+                      await toggleArchive(condition, requestContext);
+                    },
+                  },
+                ]}
+              />
+            ) : (
+              <PatientHistoryMessage
+                readOnly={readOnly || hideRequestRecords}
+                onClick={patientHistory.openHistoryRequestDrawer}
+              />
+            )}
+          </div>
+        </div>
 
-      {selectedCondition && patientResponse.data && (
-        <ModalConfirmDelete
-          resource={selectedCondition}
-          resourceName={selectedCondition.display || "unnamed condition"}
-          onClose={() => setShowConfirmDelete(false)}
-          isOpen={showConfirmDelete}
-          onDelete={async () => {
-            const requestContext = await getRequestContext();
-            await onConditionDelete(selectedCondition.resource, requestContext);
-          }}
-        />
-      )}
-    </div>
-  );
-}
+        {patientResponse.data && (
+          <DrawerFormWithFields
+            title={`${formAction} Condition`}
+            header={
+              formAction === "Edit" &&
+              selectedCondition && (
+                <ConditionHeader condition={selectedCondition} />
+              )
+            }
+            action={curry(createOrEditCondition)(
+              selectedCondition,
+              patientResponse.data.id
+            )}
+            data={currentSelectedData}
+            schema={schema}
+            isOpen={drawerIsOpen}
+            onClose={() => setDrawerIsOpen(false)}
+          />
+        )}
+
+        {selectedCondition && patientResponse.data && (
+          <ModalConfirmDelete
+            resource={selectedCondition}
+            resourceName={selectedCondition.display || "unnamed condition"}
+            onClose={() => setShowConfirmDelete(false)}
+            isOpen={showConfirmDelete}
+            onDelete={async () => {
+              const requestContext = await getRequestContext();
+              await onConditionDelete(
+                selectedCondition.resource,
+                requestContext
+              );
+            }}
+          />
+        )}
+      </div>
+    );
+  },
+  "Conditions"
+);

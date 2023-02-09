@@ -24,8 +24,9 @@ The `CTWProvider` component provides authentication details needed for other com
 
 1. Add `<CTWProvider>` wrapper at a high level within your application.
 2. Pass in the desired environment, either `env="sandbox"` or `env="production"`.
-3. Pass in either the Zus `authToken` or the URL of an endpoint that will return one via `authTokenURL`.
+3. Setup `authTokenURL` to point to an endpoint that will return `{access_token: TOKEN}`. This is how we provide seamless logins for your users to access Zus APIs.
 4. Optioally pass in a `theme` to overwrite styles across all of the components.
+5. Optioally pass in a `enableTelemetry` to enable telemetry, see details below.
 
 Example:
 
@@ -93,6 +94,27 @@ function PatientPortal({ patientID }: PatientPortalProps) {
     </PatientProvider>
   );
 }
+```
+
+## Telemetry
+
+Telemetry is sent to DataDog from CTW components. This telemetry tracks usage so that Zus can continually
+improve the ctw-component-library and fix issues that might otherwise go unnoticed.
+
+### Opting out of telemetry
+
+Zus has a BAA with DataDog and we understand that your applications need to meet HIPAA regulations the same as ours.
+We take this into account when choosing which telemetry data can be tracked, but we also respect the choice to not
+opt-in to telemetry collection. We encourage you to reach out to the team to discuss which telemetry we collect.
+However, if choose not to opt-in, there is no action required on your part, as long as the property `enableTelemetry` is
+not passed to the `CTWProvider` component used in your React app, no telemetry will be logged.
+
+```tsx
+// Telemetry off:
+<CTWProvider>{/** Application **/}</CTWProvider>
+
+// Telemetry on:
+<CTWProvider enableTelemetry>{/** Application **/}</CTWProvider>
 ```
 
 # Contributing

@@ -16,7 +16,7 @@ type Props = ConditionsProps;
 
 export default {
   component: Conditions,
-  tags: ["docsPage"],
+  tags: ["autodocs"],
   argTypes: {
     className: {
       options: ["Blank", "Fixed Width"],
@@ -30,6 +30,7 @@ export default {
   args: {
     className: "Blank",
     readOnly: false,
+    hideRequestRecords: false,
   },
   decorators: [
     (Story, { args }) => (

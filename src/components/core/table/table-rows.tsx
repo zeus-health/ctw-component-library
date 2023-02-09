@@ -7,12 +7,13 @@ import { MinRecordItem, TableColumn } from "./table-helpers";
 import { isFunction } from "@/utils/nodash";
 
 export type TableRowsProps<T extends MinRecordItem> = {
-  records: T[];
-  columns: TableColumn<T>[];
-  isLoading: boolean;
-  emptyMessage: string | ReactElement;
-  handleRowClick?: (record: T) => void;
   RowActions?: ComponentType<{ record: T }>;
+  columns: TableColumn<T>[];
+  emptyMessage: string | ReactElement;
+  getRowClassName?: (record: T) => cx.Argument;
+  handleRowClick?: (record: T) => void;
+  isLoading: boolean;
+  records: T[];
 };
 
 export const TableRows = <T extends MinRecordItem>({
@@ -22,6 +23,7 @@ export const TableRows = <T extends MinRecordItem>({
   emptyMessage,
   handleRowClick,
   RowActions,
+  getRowClassName,
 }: TableRowsProps<T>) => {
   if (isLoading) {
     return (
@@ -37,7 +39,9 @@ export const TableRows = <T extends MinRecordItem>({
   if (records.length === 0) {
     return (
       <TableFullLengthRow colSpan={columns.length}>
-        {emptyMessage}
+        <span className="ctw-empty-message -ctw-mt-3.5 sm:ctw-mt-0">
+          {emptyMessage}
+        </span>
       </TableFullLengthRow>
     );
   }
@@ -46,11 +50,16 @@ export const TableRows = <T extends MinRecordItem>({
     <>
       {records.map((record) => (
         <tr
+          data-zus-telemetry-click={handleRowClick ? "Table row" : null}
           // ctw-mx-px fixes bug where side borders disappear on hover when stacked.
-          className={cx("ctw-group ctw-relative ctw-mx-px", {
-            "ctw-cursor-pointer hover:ctw-bg-bg-lighter":
-              isFunction(handleRowClick),
-          })}
+          className={cx(
+            "ctw-group ctw-relative ctw-mx-px",
+            isFunction(getRowClassName) ? getRowClassName(record) : "",
+            {
+              "ctw-cursor-pointer hover:ctw-bg-bg-lighter":
+                isFunction(handleRowClick),
+            }
+          )}
           key={record.id}
           onClick={({ target }) => {
             // This is for the case where a user clicks area near the button (but not on), we do not want have the onRowClick handler trigger as that will cause confusion to the user.

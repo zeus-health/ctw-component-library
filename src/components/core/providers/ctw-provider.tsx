@@ -22,24 +22,32 @@ import {
   mapToCSSVar,
   Theme,
 } from "@/styles/tailwind.theme";
-import { claimsBuilderId } from "@/utils/auth";
+import { claimsBuilderId, claimsExp } from "@/utils/auth";
 import { merge } from "@/utils/nodash";
 import { ctwFetch, queryClient } from "@/utils/request";
+import { Telemetry } from "@/utils/telemetry";
 import "../main.scss";
 
 export type Env = "dev" | "sandbox" | "production";
 
+// We use an expiry padding to provide a buffer to prevent race conditions.
+// A race condition could happen in that we check if the token is expired,
+// it isn't, but by time we do our request(s) it has expired.
 const EXPIRY_PADDING_MS = 60000;
 
 type AuthTokenSpecified = { authToken: string; authTokenURL?: never };
+
+// authTokenURL should return a valid Zus accessToken.
+// E.g. {access_token: ZUS_ACCESS_TOKEN}
 type AuthTokenURLSpecified = { authToken?: never; authTokenURL: string };
 
 type CTWProviderProps = {
-  children: ReactNode;
-  env: Env;
   builderId?: string;
-  theme?: Theme;
+  children: ReactNode;
+  enableTelemetry?: boolean;
+  env: Env;
   headers?: Record<string, string>;
+  theme?: Theme;
 } & (AuthTokenSpecified | AuthTokenURLSpecified);
 
 declare global {
@@ -50,7 +58,19 @@ declare global {
   }
 }
 
-function CTWProvider({ theme, children, ...ctwState }: CTWProviderProps) {
+/**
+ * CTWProvider is required for Zus components to operate and at least one
+ * should exist in the app as an ancestor to any ctw-component-library React
+ * component (we recommend CTWProvider be at the root of your project). In
+ * addition to providing a client request context, the CTWProvider also allows
+ * for theme configuration and opting into telemetry collection if desired.
+ */
+function CTWProvider({
+  children,
+  enableTelemetry = false,
+  theme,
+  ...ctwState
+}: CTWProviderProps) {
   const [token, setToken] = useState<CTWToken>();
   const ctwProviderRef = useRef<HTMLDivElement>(null);
 
@@ -94,6 +114,16 @@ function CTWProvider({ theme, children, ...ctwState }: CTWProviderProps) {
     }
     return newToken.accessToken;
   }, [token, ctwState]);
+
+  useEffect(() => {
+    if (enableTelemetry) {
+      Telemetry.init(ctwState.env);
+      Telemetry.setBuilder(ctwState.builderId);
+      handleAuth()
+        .then((accessToken) => Telemetry.setUser(accessToken))
+        .catch(() => Telemetry.clearUser());
+    }
+  }, [ctwState.builderId, ctwState.env, enableTelemetry, handleAuth, token]);
 
   const providerState = useMemo(
     () => ({
@@ -185,9 +215,7 @@ async function checkOrRefreshAuth(
     const newToken = await response.json();
     return {
       accessToken: newToken.access_token,
-      issuedTokenType: newToken.issued_token_type,
-      tokenType: newToken.token_type,
-      expiresAt: Date.now() + newToken.expires_in * 1000,
+      expiresAt: claimsExp(newToken.access_token) * 1000,
     };
   }
   return token;

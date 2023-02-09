@@ -19,7 +19,7 @@ export function usePatientImmunizations() {
         );
         return orderBy(
           applyImmunizationFilters(immunizations),
-          [(model) => model.occurance ?? ""],
+          [(model) => model.occurrence ?? ""],
           ["desc"]
         );
       } catch (e) {

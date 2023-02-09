@@ -55,10 +55,6 @@ export function useQueryAllPatientMedications() {
     useState<MedicationStatementModel[]>();
   const [otherProviderMedications, setOtherProviderMedications] =
     useState<MedicationStatementModel[]>();
-  const [
-    dismissedOtherProviderMedications,
-    setDismissedOtherProviderMedications,
-  ] = useState<MedicationStatementModel[]>();
 
   const summarizedMedicationsQuery = useQueryGetSummarizedPatientMedications();
   const builderMedicationsQuery = useQueryGetPatientMedsForBuilder();
@@ -80,7 +76,7 @@ export function useQueryAllPatientMedications() {
         builderMedicationsQuery.data.bundle,
       ]);
 
-      // Split the summarized medications into those known to the builder, unknown and historical/dismissed.
+      // Split the summarized medications into those known/unknown to the builder
       const splitData = splitMedications(
         summarizedMedications.map(
           (m) =>
@@ -102,9 +98,6 @@ export function useQueryAllPatientMedications() {
 
       setBuilderMedications(splitData.builderMedications);
       setOtherProviderMedications(splitData.otherProviderMedications);
-      setDismissedOtherProviderMedications(
-        splitData.dismissedOtherProviderMedications
-      );
     }
   }, [summarizedMedicationsQuery.data, builderMedicationsQuery.data]);
 
@@ -121,6 +114,5 @@ export function useQueryAllPatientMedications() {
     isError,
     builderMedications,
     otherProviderMedications,
-    dismissedOtherProviderMedications,
   };
 }

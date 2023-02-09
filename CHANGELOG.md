@@ -1,5 +1,131 @@
 # ctw-component-library
 
+## 0.45.5
+
+### Patch Changes
+
+- a2448843: Add ability to remove view fhir button from timeline.
+- 38b486bd: Add sort dropdown to conditions 2.0.
+
+## 0.45.4
+
+### Patch Changes
+
+- 2c238e88: The OtherProviderMedsTable, along with curated components PatientMedications and PatientMedicationsTabbed now accept an optional prop hideAddToRecord which will omit the "Add to Record" button from other providermedications tables.
+
+## 0.45.3
+
+### Patch Changes
+
+- f3e4ad11: Fix to reduce some vertical spacing and addressing scrollbar that always appears in stacked tables.
+
+## 0.45.2
+
+### Patch Changes
+
+- f0383e2e: Add notification color palette for badge.
+
+## 0.45.1
+
+### Patch Changes
+
+- 35c40132: Add last retrieved date from patient history request to conditions 1.0 and 2.0.
+
+## 0.45.0
+
+### Minor Changes
+
+- d8140291: Add error state banner to drawer component and condition 1.0 and 2.0 tables to indicate when patient history retrieval is in a failed state.
+
+## 0.44.7
+
+### Patch Changes
+
+- ba38340f: Added the FilterBar component. Medications tabbed component now has dismissed filter.
+
+## 0.44.6
+
+### Patch Changes
+
+- a3fcb709: Fix deduping in allergies and immunizations. Fix patient history refresh banner to auto-refresh in drawer and table.
+
+## 0.44.5
+
+### Patch Changes
+
+- a05abcfa: Lower minimum node version to 12
+
+## 0.44.4
+
+### Patch Changes
+
+- edcae3d3: Refactor usePatientHistory hook to open RequestDrawers and pass patientHistory information. Also, resolves a few bugs regarding empty states while opening drawers in patient history.
+
+## 0.44.3
+
+### Patch Changes
+
+- 3f99b04f: Add patient managing organization to medication statement cards in history.
+
+## 0.44.2
+
+### Patch Changes
+
+- 06a43794: Fix date to be in MM/DD/YYYY format.
+
+## 0.44.1
+
+### Patch Changes
+
+- ba10f383: Simplify authTokenURL use by relying on exp from access token itself.
+
+## 0.44.0
+
+### Minor Changes
+
+- 9700e631: Add progress banner and last retrieved date to other provider recorder table.
+
+### Patch Changes
+
+- 1ace695f: For overriding the opening of drawer to add new medication when using "Add to Record", we may now pass a function as
+  prop `handleAddToRecord` to the `PatientMedicationsTabbed` component.
+
+  The medications tables no longer use the ellipsis dropdown for row actions.
+  Instead they use buttons that appear on hover.
+
+  Tabs and buttons for meds now capitalize using the "ctw-capitalize" CSS class
+  rather than explicitly using uppercase lettering in the tsx.
+
+  Medications table stacked view shows only medication name and dosage.
+
+## 0.43.1
+
+### Patch Changes
+
+- eea869eb: Add new usePatientHistory hook which can be used to open the patient history request drawer from anywhere.
+- eea869eb: Update form field error color and add generic message to drawer form footer, indicating the form has errors.
+- 002d4099: Add hideRequestRecords prop to conditions 1.0 component.
+
+## 0.43.0
+
+### Minor Changes
+
+- 255feb05: Add progress bar in patient history drawer.
+
+## 0.42.1
+
+### Patch Changes
+
+- 3e40c2b5: Change font size of rendered react-jason FHIR resources for readability. Also added fhir icon to "view FHIR" button.
+- a6d5303d: Created the PatientMedicationsTabbed component and stories.
+- 0f15d8b9: Add empty state for patient conditions (2.0 component).
+
+## 0.42.0
+
+### Minor Changes
+
+- e2d7ffef: Dedupe allergies and add manifestation column.
+
 ## 0.41.1
 
 ### Patch Changes

@@ -68,7 +68,10 @@ export function ConditionsTableBase({
     columns.push({
       className: "ctw-table-action-column",
       render: (condition: ConditionModel) => (
-        <DropdownMenu menuItems={rowMenuActions(condition)}>
+        <DropdownMenu
+          menuItems={rowMenuActions(condition)}
+          telemetryNamespace="ConditionsTableBase"
+        >
           <DotsHorizontalIcon className="ctw-w-5" />
         </DropdownMenu>
       ),

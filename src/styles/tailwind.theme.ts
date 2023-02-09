@@ -42,7 +42,7 @@ export const TailwindTheme = {
       main: "#EF4444",
       light: "#FEE2E2",
       dark: "#7F1D1D",
-      heading: "#991B1B",
+      text: "#991B1B",
       message: "#B91C1B",
       bg: "#FEF2F2",
       icon: "#F97171",
@@ -58,6 +58,10 @@ export const TailwindTheme = {
       message: "#B45309",
       bg: "#FFFBEB",
       icon: "#FBBF24",
+    },
+    notification: {
+      light: "#F3E8FF",
+      main: "#A855F7",
     },
     info: {
       main: "#0EA5E9",

@@ -7,6 +7,7 @@ export type SaveButtonProps = {
 
 export const SaveButton = ({ submitting }: SaveButtonProps) => (
   <button
+    data-zus-telemetry-click="Submit form"
     type="submit"
     disabled={submitting}
     className={cx(

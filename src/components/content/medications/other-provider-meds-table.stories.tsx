@@ -13,7 +13,7 @@ import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 type Props = OtherProviderMedsTableProps;
 
 export default {
-  tags: ["docsPage"],
+  tags: ["autodocs"],
   component: OtherProviderMedsTable,
   decorators: [
     (Story, { args }) => (
@@ -32,4 +32,13 @@ export const Basic: StoryObj<Props> = {
     sortOrder: "asc",
   },
   ...setupMedicationMocks({ providerMedications, otherProviderMedications }),
+};
+
+export const HideAddToRecord: StoryObj<Props> = {
+  ...Basic,
+  args: {
+    sortColumn: "display",
+    sortOrder: "asc",
+    hideAddToRecord: true,
+  },
 };

@@ -30,7 +30,10 @@ export type TableProps<T extends MinRecordItem> = {
   onSort?: (sort: TableSort) => void;
   hidePagination?: boolean;
   children?: ReactNode;
-} & Pick<TableRowsProps<T>, "handleRowClick" | "RowActions">;
+} & Pick<
+  TableRowsProps<T>,
+  "handleRowClick" | "RowActions" | "getRowClassName"
+>;
 
 export type TableBaseProps<T extends MinRecordItem> = Omit<
   TableProps<T>,
@@ -49,6 +52,7 @@ export const Table = <T extends MinRecordItem>({
   onSort,
   handleRowClick,
   RowActions,
+  getRowClassName,
   hidePagination = false,
   children,
 }: TableProps<T>) => {
@@ -101,6 +105,7 @@ export const Table = <T extends MinRecordItem>({
 
   return (
     <div
+      data-zus-telemetry-namespace="Table"
       className={cx("ctw-space-y-4", {
         "ctw-table-stacked": stacked,
       })}
@@ -118,8 +123,9 @@ export const Table = <T extends MinRecordItem>({
               <TableHead columns={columns} sort={sort} onSort={switchSort} />
             )}
 
-            <tbody>
+            <tbody className={cx({ "ctw-h-[7rem]": records.length === 0 })}>
               <TableRows
+                getRowClassName={getRowClassName}
                 records={sortedRecords.slice(0, count)}
                 handleRowClick={handleRowClick}
                 RowActions={RowActions}
@@ -131,7 +137,7 @@ export const Table = <T extends MinRecordItem>({
           </table>
         </div>
       </div>
-      {!hidePagination && records.length > 0 && !isLoading && (
+      {!hidePagination && !isLoading && (
         <PaginationList
           total={records.length}
           count={count}

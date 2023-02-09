@@ -173,25 +173,25 @@ export function filterMedicationsWithNoRxNorms(
 // those that they do not know about ("Other Provider Medications"), and those they didn't know
 // about originally and then dismissed ("Dismissed Other Provider Medications").
 export function splitMedications(
-  activeMedications: MedicationStatementModel[],
+  summarizedMedications: MedicationStatementModel[],
   builderOwnedMedications: MedicationStatementModel[]
 ) {
   // Get active medications where there does not exist a matching builder owned record.
-  const otherProviderMedications = activeMedications.filter(
-    (activeMed) =>
-      !(
-        activeMed.isArchived ||
-        builderOwnedMedications.some(
-          (builderMed) => builderMed.rxNorm === activeMed.rxNorm
-        )
+  const otherProviderMedications = summarizedMedications.filter(
+    (medication) =>
+      !builderOwnedMedications.some(
+        (builderMed) => builderMed.rxNorm === medication.rxNorm
       )
   );
 
   // Get builder owned medications and splash in some data from lens meds if available.
   const builderMedications = builderOwnedMedications.map((m) => {
-    const activeMed = find((a) => a.rxNorm === m.rxNorm, activeMedications);
+    const summarizedMed = find(
+      (a) => a.rxNorm === m.rxNorm,
+      summarizedMedications
+    );
 
-    if (!activeMed) {
+    if (!summarizedMed) {
       return m;
     }
 
@@ -207,14 +207,14 @@ export function splitMedications(
       LENS_EXTENSION_MEDICATION_LAST_PRESCRIBER,
     ];
 
-    builderMedResource.extension = activeMed.resource.extension?.filter((x) =>
-      LENS_MEDICATION_EXTENSIONS.includes(x.url)
+    builderMedResource.extension = summarizedMed.resource.extension?.filter(
+      (x) => LENS_MEDICATION_EXTENSIONS.includes(x.url)
     );
 
     const medHistory = cloneDeep(
       find(
         { url: LENS_EXTENSION_AGGREGATED_FROM },
-        activeMed.resource.extension
+        summarizedMed.resource.extension
       )
     );
     if (medHistory) {
@@ -230,13 +230,10 @@ export function splitMedications(
       m.revIncludes
     );
   });
-  const dismissedOtherProviderMedications = otherProviderMedications.filter(
-    (m) => m.isArchived
-  );
+
   return {
     builderMedications,
     otherProviderMedications,
-    dismissedOtherProviderMedications,
   };
 }
 
@@ -342,7 +339,6 @@ export function useMedicationHistory(medication?: fhir4.MedicationStatement) {
  */
 export function useLastPrescriber(medication?: fhir4.MedicationStatement) {
   const [lastPrescriber, setLastPrescriber] = useState<string | undefined>();
-  const [isLoading, setIsLoading] = useState(true);
   const historyQuery = useMedicationHistory(medication);
 
   useEffect(() => {
@@ -367,11 +363,10 @@ export function useLastPrescriber(medication?: fhir4.MedicationStatement) {
 
       // Fall back to a string, so we don't try to find prescriber again.
       setLastPrescriber(prescriber || "");
-      setIsLoading(false);
     }
   }, [lastPrescriber, historyQuery.data]);
 
-  return { isLoading, lastPrescriber };
+  return { isLoading: historyQuery.isFetching, lastPrescriber };
 }
 
 type NoopSearchResults = { resources: []; bundle: undefined };

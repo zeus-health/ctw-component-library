@@ -16,6 +16,9 @@ import {
 } from "@/api/patient-history";
 import { PatientModel } from "@/fhir/models";
 import { getFormResponseErrors } from "@/utils/errors";
+import { QUERY_KEY_PATIENT_HISTORY_DETAILS } from "@/utils/query-keys";
+import { queryClient } from "@/utils/request";
+import { Telemetry } from "@/utils/telemetry";
 
 type PatientHistoryRequestDrawer<T> = Pick<
   DrawerFormWithFieldsProps<T>,
@@ -52,6 +55,7 @@ export const PatientHistoryRequestDrawer = <T,>({
         return new Error(requestErrors.join(","));
       }
 
+      Telemetry.logError(e as Error, "Failed to save patient data.");
       return new Error("Failed to save patient data.");
     }
 
@@ -70,6 +74,8 @@ export const PatientHistoryRequestDrawer = <T,>({
       ];
       return new Error(requestErrors.join(","));
     }
+
+    await queryClient.invalidateQueries([QUERY_KEY_PATIENT_HISTORY_DETAILS]);
 
     // patientHistoryResponse has succeeded at this point and should remove empty request history state.
     setClinicalHistoryExists(true);

@@ -49,6 +49,7 @@ export function ImmunizationDetailsDrawer({
 }
 
 export const immunizationData = (immunization: ImmunizationModel) => [
+  { label: "Date", value: immunization.occurrence },
   { label: "Description", value: immunization.description },
   {
     label: "Vaccine Code",

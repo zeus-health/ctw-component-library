@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { sortMedHistory } from "./helpers";
 import { CollapsibleDataListProps } from "@/components/core/collapsible-data-list";
 import { CollapsibleDataListStack } from "@/components/core/collapsible-data-list-stack";
+import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Loading } from "@/components/core/loading";
 import { useMedicationHistory } from "@/fhir/medications";
 import { MedicationModel } from "@/fhir/models/medication";
@@ -20,52 +21,60 @@ export type MedicationHistoryProps = {
 /**
  * Displays the history of a medication
  */
-export function MedicationHistory({ medication }: MedicationHistoryProps) {
-  const [entries, setEntries] = useState<CollapsibleDataListProps[]>([]);
-  const medHistoryQuery = useMedicationHistory(medication.resource);
-  const loading = medHistoryQuery.isLoading;
+export const MedicationHistory = withErrorBoundary(
+  ({ medication }: MedicationHistoryProps) => {
+    const [entries, setEntries] = useState<CollapsibleDataListProps[]>([]);
+    const medHistoryQuery = useMedicationHistory(medication.resource);
+    const loading = medHistoryQuery.isLoading;
 
-  useEffect(() => {
-    if (medHistoryQuery.data) {
-      const { medications } = medHistoryQuery.data;
-      setEntries(sortMedHistory(medications).map(createMedicationDetailsCard));
+    useEffect(() => {
+      if (medHistoryQuery.data) {
+        const { medications } = medHistoryQuery.data;
+        setEntries(
+          sortMedHistory(medications).map(createMedicationDetailsCard)
+        );
+      }
+    }, [medHistoryQuery.data]);
+
+    if (loading) {
+      return (
+        <>
+          <h2 className="ctw-text-lg ctw-font-semibold">Medication History</h2>
+          <Loading message="" />
+        </>
+      );
     }
-  }, [medHistoryQuery.data]);
 
-  if (loading) {
     return (
       <>
         <h2 className="ctw-text-lg ctw-font-semibold">Medication History</h2>
-        <Loading message="" />
+        {entries.length ? (
+          <CollapsibleDataListStack
+            entries={entries}
+            limit={MEDICATION_HISTORY_LIMIT}
+          />
+        ) : (
+          <span>No history available for this medication.</span>
+        )}
       </>
     );
-  }
-
-  return (
-    <>
-      <h2 className="ctw-text-lg ctw-font-semibold">Medication History</h2>
-      {entries.length ? (
-        <CollapsibleDataListStack
-          entries={entries}
-          limit={MEDICATION_HISTORY_LIMIT}
-        />
-      ) : (
-        <span>No history available for this medication.</span>
-      )}
-    </>
-  );
-}
+  },
+  "MedicationHistory"
+);
 
 function createMedicationStatementCard(medication: MedicationModel) {
   const resource = medication.resource as fhir4.MedicationStatement;
-  const medStatement = new MedicationStatementModel(resource);
+  const medStatement = new MedicationStatementModel(
+    resource,
+    medication.includedResources
+  );
 
   return {
     date: medication.dateLocal,
     id: medication.id,
     title: "Medication Reviewed",
     hideEmpty: false,
-    subtitle: medStatement.informationSource?.display || "",
+    subtitle: medStatement.patient?.organization?.name,
     data: [
       {
         label: "Status",

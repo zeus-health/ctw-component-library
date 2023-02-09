@@ -1,3 +1,5 @@
+import { FireIcon } from "@heroicons/react/solid";
+import cx from "classnames";
 import { ReactJason } from "react-jason";
 import github from "react-jason/themes/github";
 import { Drawer } from "./drawer";
@@ -26,13 +28,16 @@ export function ViewFHIR({ name, resource }: ViewFHIRProps) {
   return (
     <button
       type="button"
-      className="ctw-btn-primary"
+      className="ctw-btn-primary ctw-text-sm"
       onClick={(event) => {
         // Prevents any rowClick handler from firing.
         event.stopPropagation();
         openDrawer(name, resource);
       }}
     >
+      <span className="ctw-relative ctw-inline-block ctw-w-4 ctw-pr-4 ctw-align-middle">
+        <FireIcon className="ctw-absolute -ctw-top-2.5 ctw-left-0 ctw-h-4" />
+      </span>{" "}
       View FHIR
     </button>
   );
@@ -55,14 +60,16 @@ function FHIRDrawer({
 }: FHIRDrawerProps) {
   return (
     <Drawer
-      className={className}
+      className={cx(className, "ctw-view-fhir")}
       title={name}
       isOpen={isOpen}
       onClose={onClose}
       showCloseFooter
     >
       <Drawer.Body>
-        <ReactJason value={resource} theme={github} />
+        <div className="ctw-text-sm">
+          <ReactJason value={resource} theme={github} />
+        </div>
       </Drawer.Body>
     </Drawer>
   );

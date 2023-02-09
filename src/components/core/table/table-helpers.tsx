@@ -19,7 +19,7 @@ export type TableColumn<T extends MinRecordItem> = {
   title?: string;
   className?: string;
   widthPercent?: number;
-  minWidth?: number;
+  minWidth?: number | string;
   sortIndices?: IndexSort<T>[];
 } & (DataIndexSpecified<T> | RenderSpecified<T>);
 

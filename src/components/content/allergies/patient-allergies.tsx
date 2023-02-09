@@ -1,22 +1,32 @@
 import cx from "classnames";
 import { useRef } from "react";
+import { useAllergyDetailsDrawer } from "./allergy-details-drawer";
 import { patientAllergiesColumns } from "@/components/content/allergies/patient-allergies-column";
+import { Heading } from "@/components/core/ctw-box";
 import { Table } from "@/components/core/table/table";
+import { ViewFHIR } from "@/components/core/view-fhir";
 import { usePatientAllergies } from "@/fhir/allergies";
+import { AllergyModel } from "@/fhir/models/allergies";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 
 export type PatientAllergiesProps = {
   className?: string;
 };
 
+const viewRecordFHIR = ({ record }: { record: AllergyModel }) => (
+  <ViewFHIR name="Allergy Resource" resource={record.resource} />
+);
+
 export function PatientAllergies({ className }: PatientAllergiesProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const patientAllergiesQuery = usePatientAllergies();
 
-  // Get our allergies.
-  const allergies = patientAllergiesQuery.data ?? [];
-  const { isLoading } = patientAllergiesQuery;
+  const openDetails = useAllergyDetailsDrawer();
+
+  function handleRowClick(allergy: AllergyModel) {
+    openDetails(allergy);
+  }
 
   return (
     <div
@@ -29,18 +39,16 @@ export function PatientAllergies({ className }: PatientAllergiesProps) {
         }
       )}
     >
-      <div className="ctw-items-center ctw-justify-between ctw-py-5 ctw-px-4">
-        <div className="ctw-ml-3 ctw-text-xl ctw-font-medium ctw-text-content-black">
-          Allergies
-        </div>
-        <Table
-          stacked={breakpoints.sm}
-          className="-ctw-mx-px !ctw-rounded-none"
-          isLoading={isLoading}
-          records={allergies}
-          columns={patientAllergiesColumns}
-        />
-      </div>
+      <Heading title="Allergies" />
+      <Table
+        RowActions={viewRecordFHIR}
+        stacked={breakpoints.sm}
+        className="-ctw-mx-px !ctw-rounded-none"
+        isLoading={patientAllergiesQuery.isLoading}
+        records={patientAllergiesQuery.data ?? []}
+        columns={patientAllergiesColumns}
+        handleRowClick={handleRowClick}
+      />
     </div>
   );
 }

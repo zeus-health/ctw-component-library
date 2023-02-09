@@ -12,7 +12,7 @@ type Props = PatientTimelineProps;
 
 export default {
   component: PatientTimeline,
-  tags: ["docsPage"],
+  tags: ["autodocs"],
   argTypes: {
     className: {
       options: ["Blank", "Fixed Width"],
@@ -26,6 +26,7 @@ export default {
   args: {
     className: "Blank",
     readOnly: false,
+    includeViewFhirResource: false,
   },
   decorators: [
     (Story, { args }) => (

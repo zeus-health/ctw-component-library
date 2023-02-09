@@ -1,6 +1,7 @@
 import { OperationOutcomeModel } from "..";
 import { FhirError, fhirErrorResponse, isFhirError } from "@/fhir/errors";
 import { isOperationOutcome } from "@/fhir/operation-outcome";
+import { Telemetry } from "@/utils/telemetry";
 
 export function isError(error: unknown): error is Error {
   if (typeof error === "object" && error !== null) {
@@ -20,13 +21,16 @@ export const errorResponse = (
   e?: FhirError | Error | unknown
 ) => {
   if (isFhirError(e)) {
+    Telemetry.logFhirError(e, title);
     throw fhirErrorResponse(title, e);
   }
 
   if (isError(e)) {
+    Telemetry.logError(e as Error, `${title}: ${e.message}`);
     return { ...{ title }, ...{ statusText: e.message } };
   }
 
+  Telemetry.logError(new Error(title));
   return { title };
 };
 

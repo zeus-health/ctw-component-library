@@ -12,7 +12,7 @@ export const AUTH_USER_TYPE = "https://zusapi.com/user_type";
 export const AUTH_PATIENT_ID = "https://zusapi.com/patient_id";
 export const AUTH_AUTHENTICATED_BY = "https://zusapi.com/authenticated_by";
 
-type ZusJWT = {
+export type ZusJWT = {
   [AUTH_BUILDER_ID]: string;
   [AUTH_BUILDER_NAME]: string;
   [AUTH_PRACTITIONER_ID]: string;
@@ -47,6 +47,10 @@ export function claimsBuilderId(authToken: string): string | undefined {
 
 export function claimsBuilderName(authToken: string): string | undefined {
   return getClaims(authToken)[AUTH_BUILDER_NAME];
+}
+
+export function claimsExp(authToken: string): number {
+  return getClaims(authToken).exp;
 }
 
 export function claimsPractitionerId(authToken: string): string | undefined {
