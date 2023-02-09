@@ -18,6 +18,7 @@ export type OtherProviderMedsTableProps = {
   showInactive?: boolean;
   sortColumn?: keyof MedicationStatementModel;
   sortOrder?: SortDir;
+  records?: MedicationStatementModel[];
 };
 
 /**
@@ -35,6 +36,7 @@ export const OtherProviderMedsTable = withErrorBoundary(
     showInactive = false,
     hideAddToRecord = false,
     handleAddToRecord,
+    records,
   }: OtherProviderMedsTableProps) => {
     const dismissMedication = useDismissMedication();
     const [medicationModels, setMedicationModels] = useState<
@@ -59,16 +61,17 @@ export const OtherProviderMedsTable = withErrorBoundary(
     }
 
     useEffect(() => {
-      if (!otherProviderMedications) return;
-      const records = otherProviderMedications
+      const theRecords = records || otherProviderMedications;
+      if (!theRecords) return;
+      const filteredRecords = theRecords
         .filter((med) => !med.isArchived || showDismissed)
         .filter((med) => !med.isInactive || showInactive);
-      const allRecordsHaveBeenDismissed = records.every(
+
+      const allRecordsHaveBeenDismissed = filteredRecords.every(
         (record) => record.isArchived
       );
-
       setMedicationModels(
-        sort(records, pipe(get(sortColumn), toLower), sortOrder)
+        sort(filteredRecords, pipe(get(sortColumn), toLower), sortOrder)
       );
       setHasZeroRowActions(hideAddToRecord && allRecordsHaveBeenDismissed);
     }, [
@@ -77,6 +80,7 @@ export const OtherProviderMedsTable = withErrorBoundary(
       sortOrder,
       showInactive,
       showDismissed,
+      records,
       hideAddToRecord,
     ]);
 
