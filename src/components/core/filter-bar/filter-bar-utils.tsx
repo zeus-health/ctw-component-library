@@ -1,43 +1,52 @@
 import type { FilterItem, FilterItemStatus } from "./filter-bar-types";
 import {
   ArrowDownIcon,
+  CalendarIcon,
   CheckIcon,
   ChevronDownIcon,
+  ClipboardIcon,
   EyeIcon,
   EyeOffIcon,
   PlusIcon,
   QuestionMarkCircleIcon,
   TrashIcon,
+  XCircleIcon,
   XIcon,
 } from "@heroicons/react/solid";
 import cx from "classnames";
 import { FilterChangeEvent, FilterValuesRecord } from "./filter-bar-types";
 import { isFunction, set } from "@/utils/nodash/fp";
 
-const iconClassNames = "ctw-text-content-light ctw-h-3.5 ctw-mr-1";
+const iconClassNames = "ctw-text-content-light ctw-h-3.5 ctw-mr-1 ctw-my-auto";
 
 export function getIcon(icon: string) {
   switch (icon) {
     case "arrow-down":
       return <ArrowDownIcon />;
-    case "check":
+    case "calendar":
       return <CheckIcon className={iconClassNames} />;
+    case "check":
+      return <CalendarIcon className={iconClassNames} />;
     case "chevron-down":
       return (
         <ChevronDownIcon className={cx(iconClassNames, " ctw-h-[1.25rem]")} />
       );
+    case "clipboard":
+      return <ClipboardIcon className={iconClassNames} />;
     case "eye":
       return <EyeIcon className={iconClassNames} />;
     case "eye-off":
       return <EyeOffIcon className={iconClassNames} />;
     case "plus":
       return <PlusIcon className={iconClassNames} />;
+    case "reset":
+      return <XCircleIcon className={iconClassNames} />;
     case "trash":
       return <TrashIcon className={iconClassNames} />;
     case "x":
       return <XIcon className={iconClassNames} />;
     default:
-      return <QuestionMarkCircleIcon />;
+      return <QuestionMarkCircleIcon className={iconClassNames} />;
   }
 }
 
@@ -77,10 +86,14 @@ export function filterChangeEventToValuesRecord(
   state: FilterChangeEvent
 ): FilterValuesRecord {
   return Object.keys(state).reduce((acc, key) => {
-    const { selected, type } = state[key];
-    if (type === "tag") {
-      return set(key, [], acc);
+    const filterState = state[key];
+    if (typeof filterState !== "undefined") {
+      const { type } = filterState;
+      if (type === "tag") {
+        return set(key, [], acc);
+      }
+      return set(key, filterState.selected, acc);
     }
-    return set(key, selected, acc);
+    return acc;
   }, {});
 }
