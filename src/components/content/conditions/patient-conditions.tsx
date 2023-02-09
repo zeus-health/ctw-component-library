@@ -41,7 +41,8 @@ export const PatientConditions = withErrorBoundary(
   ({ className, readOnly = false }: PatientConditionsProps) => {
     // State.
     const [collection, setCollection] = useState<FilterCollection>("patient");
-    const { filters, updateFilters, applyFilters } = useConditionFilters();
+    const { filters, updateFilters, applyFilters } =
+      useConditionFilters(collection);
     const { applySorts, sortOptions, updateSorts, currentSorts } =
       useConditionSorts(collection);
     const containerRef = useRef<HTMLDivElement>(null);
