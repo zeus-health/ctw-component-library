@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 0.45.6
+
+### Patch Changes
+
+- 1643187b: Fix types and text on the filter bar. Add icons that are missing.
+- 72a214c3: Fix bug for done state when a patient history request is finished"
+
 ## 0.45.5
 
 ### Patch Changes
