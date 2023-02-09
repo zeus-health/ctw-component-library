@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 0.45.5
+
+### Patch Changes
+
+- a2448843: Add ability to remove view fhir button from timeline.
+- 38b486bd: Add sort dropdown to conditions 2.0.
+
 ## 0.45.4
 
 ### Patch Changes
