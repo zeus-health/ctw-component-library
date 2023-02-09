@@ -123,7 +123,7 @@ export const Table = <T extends MinRecordItem>({
               <TableHead columns={columns} sort={sort} onSort={switchSort} />
             )}
 
-            <tbody>
+            <tbody className={cx({ "ctw-h-[7rem]": records.length === 0 })}>
               <TableRows
                 getRowClassName={getRowClassName}
                 records={sortedRecords.slice(0, count)}
@@ -137,7 +137,7 @@ export const Table = <T extends MinRecordItem>({
           </table>
         </div>
       </div>
-      {!hidePagination && records.length > 0 && !isLoading && (
+      {!hidePagination && !isLoading && (
         <PaginationList
           total={records.length}
           count={count}
