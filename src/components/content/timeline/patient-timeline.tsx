@@ -26,7 +26,6 @@ export function PatientTimeline({
   return (
     <div className={className}>
       <Heading title="Encounter Timeline" />
-
       <Table
         className="-ctw-mx-px !ctw-rounded-none"
         showTableHead={false}
