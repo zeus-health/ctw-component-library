@@ -4,7 +4,7 @@ import { useState } from "react";
 import { AddNewMedDrawer } from "@/components/content/medications/add-new-med-drawer";
 import {
   OtherProviderMedsTable,
-  OtherProviderMedsTableProps
+  OtherProviderMedsTableProps,
 } from "@/components/content/medications/other-provider-meds-table";
 import { ProviderMedsTable } from "@/components/content/medications/provider-meds-table";
 import * as CTWBox from "@/components/core/ctw-box";
@@ -21,10 +21,7 @@ export type PatientMedicationsProps = {
   showOtherProvidersMedsTable?: boolean;
   // should we show the button to add new meds (default true)?
   readOnly?: boolean;
-} & Pick<
-  OtherProviderMedsTableProps,
-  "hideAddToRecord" | "handleAddToRecord"
->;
+} & Pick<OtherProviderMedsTableProps, "hideAddToRecord" | "handleAddToRecord">;
 
 export const PatientMedications = withErrorBoundary(
   ({
