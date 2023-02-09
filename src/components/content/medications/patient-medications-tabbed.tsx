@@ -71,7 +71,7 @@ export function OtherProviderMedsTableTab({
   useEffect(() => {
     if (!isLoading && otherProviderMedications) {
       const filteredRecords = otherProviderMedications.filter((medication) => {
-        if (filters.providers.selected) {
+        if (filters.providers?.selected) {
           return filters.providers.selected === medication.lastPrescriber;
         }
         return true;
