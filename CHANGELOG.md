@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.45.4
+
+### Patch Changes
+
+- 2c238e88: The OtherProviderMedsTable, along with curated components PatientMedications and PatientMedicationsTabbed now accept an optional prop hideAddToRecord which will omit the "Add to Record" button from other providermedications tables.
+
 ## 0.45.3
 
 ### Patch Changes
