@@ -84,21 +84,23 @@ export function DropdownMenuAction({
               </RadixDropdownMenu.Item>
             ))}
 
-            {pinnedActions.length > 0 && <>
-              <RadixDropdownMenu.Separator className="ctw-dropdown-separator" />
-              {pinnedActions.map((menuItem) => (
-                <RadixDropdownMenu.Item
-                  onClick={() => menuItem.action()}
-                  key={menuItem.name}
-                  className={cx(
-                    menuItem.className,
-                    "ctw-dropdown-action-menu-item"
-                  )}
-                >
-                  {menuItem.decoration} {menuItem.name}
-                </RadixDropdownMenu.Item>
-              ))}
-            </>}
+            {pinnedActions.length > 0 && (
+              <>
+                <RadixDropdownMenu.Separator className="ctw-dropdown-separator" />
+                {pinnedActions.map((menuItem) => (
+                  <RadixDropdownMenu.Item
+                    onClick={() => menuItem.action()}
+                    key={menuItem.name}
+                    className={cx(
+                      menuItem.className,
+                      "ctw-dropdown-action-menu-item"
+                    )}
+                  >
+                    {menuItem.decoration} {menuItem.name}
+                  </RadixDropdownMenu.Item>
+                ))}
+              </>
+            )}
           </RadixDropdownMenu.Content>
         </RadixDropdownMenu.Portal>
       </RadixDropdownMenu.Root>

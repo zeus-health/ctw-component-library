@@ -17,7 +17,7 @@ import cx from "classnames";
 import { FilterChangeEvent, FilterValuesRecord } from "./filter-bar-types";
 import { isFunction, set } from "@/utils/nodash/fp";
 
-const iconClassNames = "ctw-text-content-light ctw-h-3.5 ctw-mr-1";
+const iconClassNames = "ctw-text-content-light ctw-h-3.5 ctw-mr-1 ctw-my-auto";
 
 export function getIcon(icon: string) {
   switch (icon) {
