@@ -232,7 +232,7 @@ export const Conditions = withErrorBoundary(
               isLoading={patientRecordsResponse.isLoading}
               hideMenu={readOnly}
               sort={sort}
-              onSort={(newSort) => setSort(newSort)}
+              onSort={setSort}
               emptyMessage={
                 <>
                   <div>{patientRecordsMessage}</div>
@@ -301,7 +301,7 @@ export const Conditions = withErrorBoundary(
                 stacked={breakpoints.sm}
                 conditions={otherProviderRecords}
                 sort={sort}
-                onSort={(newSort) => setSort(newSort)}
+                onSort={setSort}
                 isLoading={
                   otherProviderRecordsResponse.isLoading ||
                   patientRecordsResponse.isLoading
