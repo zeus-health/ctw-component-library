@@ -1,5 +1,5 @@
-import { gql } from "graphql-request";
 import { createGraphClient } from "./fqs";
+import { getAllergiesQuery } from "./queries/allergies";
 import { applyAllergyFilters } from "@/components/content/allergies/allergies-filter";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { orderBy } from "@/utils/nodash";
@@ -27,78 +27,3 @@ export function usePatientAllergies() {
     }
   );
 }
-
-const getAllergiesQuery = (upid: string) => gql`
-  {
-    AllergyIntoleranceList(upid: "${upid}") {
-      id
-      meta {
-        tag {
-          system
-          code
-        }
-      }
-      identifier {
-        id
-        system
-        use
-        type {
-          coding {
-            code
-            display
-            system
-          }
-        }
-        period {
-          start
-          end
-        }
-        value
-      }
-      type
-      clinicalStatus {
-        coding {
-          code
-          display
-          system
-        }
-      }
-      code {
-        coding {
-          code
-          display
-          system
-        }
-      }
-      category
-      onsetAge {
-        value
-        unit
-      }
-      onsetRange {
-        low {
-          value
-        }
-        high {
-          value
-        }
-      }
-      onsetPeriod {
-        start
-        end
-      }
-      onsetString
-      onsetDateTime
-      reaction {
-        id
-        manifestation {
-          coding {
-            code
-            display
-            system
-          }
-        }
-      }
-    }
-  }
-`;
