@@ -33,3 +33,12 @@ export const Basic: StoryObj<Props> = {
   },
   ...setupMedicationMocks({ providerMedications, otherProviderMedications }),
 };
+
+export const HideAddToRecord: StoryObj<Props> = {
+  ...Basic,
+  args: {
+    sortColumn: "display",
+    sortOrder: "asc",
+    hideAddToRecord: true,
+  },
+};

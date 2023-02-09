@@ -2,7 +2,10 @@ import type { ClinicalStatus } from "@/fhir/medication";
 import cx from "classnames";
 import { useState } from "react";
 import { AddNewMedDrawer } from "@/components/content/medications/add-new-med-drawer";
-import { OtherProviderMedsTable } from "@/components/content/medications/other-provider-meds-table";
+import {
+  OtherProviderMedsTable,
+  OtherProviderMedsTableProps,
+} from "@/components/content/medications/other-provider-meds-table";
 import { ProviderMedsTable } from "@/components/content/medications/provider-meds-table";
 import * as CTWBox from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
@@ -18,7 +21,7 @@ export type PatientMedicationsProps = {
   showOtherProvidersMedsTable?: boolean;
   // should we show the button to add new meds (default true)?
   readOnly?: boolean;
-};
+} & Pick<OtherProviderMedsTableProps, "hideAddToRecord" | "handleAddToRecord">;
 
 export const PatientMedications = withErrorBoundary(
   ({
@@ -26,6 +29,7 @@ export const PatientMedications = withErrorBoundary(
     readOnly = false,
     showConfirmedMedsTable = true,
     showOtherProvidersMedsTable = true,
+    ...otherProviderTableProps
   }: PatientMedicationsProps) => {
     const [drawerIsOpen, setDrawerIsOpen] = useState(false);
     const [includeInactiveMeds, setIncludeInactiveMeds] = useState(false);
@@ -72,7 +76,7 @@ export const PatientMedications = withErrorBoundary(
 
         {showOtherProvidersMedsTable && (
           <CTWBox.Body title="Other Provider Records">
-            <OtherProviderMedsTable />
+            <OtherProviderMedsTable {...otherProviderTableProps} />
           </CTWBox.Body>
         )}
       </CTWBox.StackedWrapper>
