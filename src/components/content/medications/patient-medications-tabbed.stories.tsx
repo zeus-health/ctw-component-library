@@ -31,8 +31,15 @@ export const Basic: StoryObj<Props> = {
 };
 
 export const ForceHorizontalTabs: StoryObj<Props> = {
+  ...Basic,
   args: {
     forceHorizontalTabs: true,
   },
-  ...setupMedicationMocks({ providerMedications, otherProviderMedications }),
+};
+
+export const HideAddToRecord: StoryObj<Props> = {
+  ...Basic,
+  args: {
+    hideAddToRecord: true,
+  },
 };

@@ -13,6 +13,7 @@ import { sort, SortDir } from "@/utils/sort";
 export type OtherProviderMedsTableProps = {
   className?: string;
   handleAddToRecord?: (m: MedicationStatementModel) => void;
+  hideAddToRecord?: boolean;
   showDismissed?: boolean;
   showInactive?: boolean;
   sortColumn?: keyof MedicationStatementModel;
@@ -33,16 +34,17 @@ export const OtherProviderMedsTable = withErrorBoundary(
     sortColumn = "display",
     showDismissed = false,
     showInactive = false,
+    hideAddToRecord = false,
     handleAddToRecord,
     records,
   }: OtherProviderMedsTableProps) => {
-    const [overrideState, setOverrideState] = useState(!!records);
     const dismissMedication = useDismissMedication();
     const [medicationModels, setMedicationModels] = useState<
       MedicationStatementModel[]
     >([]);
     const [historyDrawerOpen, setHistoryDrawerOpen] = useState(false);
     const [addNewMedDrawerOpen, setAddNewMedDrawerOpen] = useState(false);
+    const [hasZeroRowActions, setHasZeroRowActions] = useState(false);
     const [selectedMedication, setSelectedMedication] =
       useState<MedicationStatementModel>();
     const { otherProviderMedications, isLoading } =
@@ -61,15 +63,17 @@ export const OtherProviderMedsTable = withErrorBoundary(
     useEffect(() => {
       const theRecords = records || otherProviderMedications;
       if (!theRecords) return;
-      setMedicationModels(
-        sort(
-          theRecords
-            .filter((med) => !med.isArchived || showDismissed)
-            .filter((med) => !med.isInactive || showInactive),
-          pipe(get(sortColumn), toLower),
-          sortOrder
-        )
+      const filteredRecords = theRecords
+        .filter((med) => !med.isArchived || showDismissed)
+        .filter((med) => !med.isInactive || showInactive);
+
+      const allRecordsHaveBeenDismissed = filteredRecords.every(
+        (record) => record.isArchived
       );
+      setMedicationModels(
+        sort(filteredRecords, pipe(get(sortColumn), toLower), sortOrder)
+      );
+      setHasZeroRowActions(hideAddToRecord && allRecordsHaveBeenDismissed);
     }, [
       otherProviderMedications,
       sortColumn,
@@ -77,6 +81,7 @@ export const OtherProviderMedsTable = withErrorBoundary(
       showInactive,
       showDismissed,
       records,
+      hideAddToRecord,
     ]);
 
     return (
@@ -90,40 +95,46 @@ export const OtherProviderMedsTable = withErrorBoundary(
           medicationStatements={medicationModels}
           isLoading={isLoading}
           handleRowClick={openHistoryDrawer}
-          RowActions={({ record }) => (
-            <div
-              onClick={(event) => event.stopPropagation()}
-              onKeyDown={(event) => event.stopPropagation()}
-            >
-              {!record.isArchived && (
-                <button
-                  type="button"
-                  className="ctw-btn-primary ctw-capitalize"
-                  data-zus-telemetry-click="Dismiss record"
-                  onClick={async () => {
-                    await dismissMedication(record);
-                  }}
-                >
-                  dismiss
-                </button>
-              )}
-              <button
-                type="button"
-                className="ctw-btn-primary ctw-ml-1 ctw-capitalize"
-                data-zus-telemetry-click="Add to record"
-                data-testid="add-to-record"
-                onClick={() => {
-                  if (handleAddToRecord) {
-                    handleAddToRecord(record);
-                  } else {
-                    openAddNewMedicationDrawer(record);
-                  }
-                }}
-              >
-                add to record
-              </button>
-            </div>
-          )}
+          RowActions={
+            hasZeroRowActions
+              ? undefined
+              : ({ record }) => (
+                  <div
+                    onClick={(event) => event.stopPropagation()}
+                    onKeyDown={(event) => event.stopPropagation()}
+                  >
+                    {!record.isArchived && (
+                      <button
+                        type="button"
+                        className="ctw-btn-primary ctw-capitalize"
+                        data-zus-telemetry-click="Dismiss record"
+                        onClick={async () => {
+                          await dismissMedication(record);
+                        }}
+                      >
+                        dismiss
+                      </button>
+                    )}
+                    {!hideAddToRecord && (
+                      <button
+                        type="button"
+                        className="ctw-btn-primary ctw-ml-1 ctw-capitalize"
+                        data-zus-telemetry-click="Add to record"
+                        data-testid="add-to-record"
+                        onClick={() => {
+                          if (handleAddToRecord) {
+                            handleAddToRecord(record);
+                          } else {
+                            openAddNewMedicationDrawer(record);
+                          }
+                        }}
+                      >
+                        add to record
+                      </button>
+                    )}
+                  </div>
+                )
+          }
         />
         <MedicationDrawer
           medication={selectedMedication}

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import {
   BadgeOtherProviderMedCount,
   OtherProviderMedsTable,
+  OtherProviderMedsTableProps,
 } from "@/components/content/medications/other-provider-meds-table";
 import { ProviderInactiveMedicationsTable } from "@/components/content/medications/provider-inactive-medications-table";
 import { ProviderMedsTable } from "@/components/content/medications/provider-meds-table";
@@ -22,14 +23,17 @@ import { uniq } from "@/utils/nodash/fp";
 export type PatientMedicationsTabbedProps = {
   className?: string;
   forceHorizontalTabs?: boolean;
-  handleAddToRecord: (m: MedicationStatementModel) => void;
-};
+} & SubsetOtherProviderTableProps;
+type SubsetOtherProviderTableProps = Pick<
+  OtherProviderMedsTableProps,
+  "hideAddToRecord" | "handleAddToRecord"
+>;
 
 // We use getPanelClassName on all tabs except for the other-provider-records
 // tab because without the FilterBar there is no margin between tab and panel
 // when md - lg sized.
 const tabbedContent = (
-  addToRecord: (m: MedicationStatementModel) => void
+  otherProviderTableProps: SubsetOtherProviderTableProps
 ): TabGroupItem<MedicationStatementModel>[] => [
   {
     key: "medication-list",
@@ -51,12 +55,13 @@ const tabbedContent = (
         <BadgeOtherProviderMedCount />
       </>
     ),
-    render: () => <OtherProviderMedsTableTab handleAddToRecord={addToRecord} />,
+    render: () => <OtherProviderMedsTableTab {...otherProviderTableProps} />,
   },
 ];
 
 export function OtherProviderMedsTableTab({
   handleAddToRecord,
+  hideAddToRecord,
 }: PatientMedicationsTabbedProps) {
   const [filters, setFilters] = useState<FilterChangeEvent>({});
   const [records, setRecords] = useState<MedicationStatementModel[]>([]);
@@ -66,7 +71,7 @@ export function OtherProviderMedsTableTab({
   useEffect(() => {
     if (!isLoading && otherProviderMedications) {
       const filteredRecords = otherProviderMedications.filter((medication) => {
-        if (filters.providers?.selected) {
+        if (filters.providers.selected) {
           return filters.providers.selected === medication.lastPrescriber;
         }
         return true;
@@ -111,9 +116,10 @@ export function OtherProviderMedsTableTab({
       <FilterBar filters={filterItems} handleOnChange={setFilters} />
       <OtherProviderMedsTable
         records={records}
+        handleAddToRecord={handleAddToRecord}
+        hideAddToRecord={hideAddToRecord}
         showDismissed={showDismissed}
         showInactive={showInactive}
-        handleAddToRecord={handleAddToRecord}
       />
     </>
   );
@@ -131,9 +137,9 @@ export function OtherProviderMedsTableTab({
 export function PatientMedicationsTabbed({
   className,
   forceHorizontalTabs = false,
-  handleAddToRecord,
+  ...otherProviderTableProps
 }: PatientMedicationsTabbedProps) {
-  const tabItems = tabbedContent(handleAddToRecord);
+  const tabItems = tabbedContent(otherProviderTableProps);
 
   return (
     <CTWBox.StackedWrapper
