@@ -5,13 +5,11 @@ import { cloneDeep, merge } from "@/utils/nodash";
 export type FilterCollection = "patient" | "other";
 
 export type Filters = {
-  collection: FilterCollection;
   showHistoric: boolean;
 };
 
-export function useConditionFilters() {
+export function useConditionFilters(collection: FilterCollection) {
   const [filters, setFilters] = useState<Filters>({
-    collection: "patient",
     showHistoric: false,
   });
 
@@ -24,7 +22,7 @@ export function useConditionFilters() {
     otherConditions: ConditionModel[]
   ) {
     const conditions =
-      filters.collection === "patient" ? patientConditions : otherConditions;
+      collection === "patient" ? patientConditions : otherConditions;
     return conditions.filter((c) => {
       if (filters.showHistoric) return true;
 
