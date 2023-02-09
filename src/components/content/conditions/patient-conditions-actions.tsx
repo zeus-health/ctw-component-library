@@ -13,6 +13,7 @@ export type PatientConditionsActionsProps = {
   sortOptions: SortOption[];
   updateSorts: (newSorts: Partial<Sort>) => void;
   activeCollection: FilterCollection;
+  currentSorts: Sort;
 };
 
 export function PatientConditionsActions({
@@ -21,6 +22,7 @@ export function PatientConditionsActions({
   sortOptions,
   updateSorts,
   activeCollection,
+  currentSorts,
 }: PatientConditionsActionsProps) {
   const showAddConditionForm = useAddConditionForm();
   const patientHistory = usePatientHistory();
@@ -38,6 +40,7 @@ export function PatientConditionsActions({
           options={sortOptions}
           updateSorts={updateSorts}
           activeCollection={activeCollection}
+          currentSorts={currentSorts}
         />
       </div>
       <div className="ctw-flex ctw-items-center ctw-space-x-2">
@@ -64,12 +67,14 @@ type SortButtonProps = {
   options: SortOption[];
   updateSorts: (newSorts: Partial<Sort>) => void;
   activeCollection: FilterCollection;
+  currentSorts: Sort;
 };
 
 const SortButton = ({
   options,
   updateSorts,
   activeCollection,
+  currentSorts,
 }: SortButtonProps) => (
   <DropdownMenuAction
     type="select"
@@ -85,14 +90,12 @@ const SortButton = ({
     items={options.map((option) => ({
       key: option.display,
       name: option.display,
+      isSelected: currentSorts.display === option.display,
     }))}
   >
-    <button
-      type="button"
-      className="ctw-btn-default ctw-flex ctw-items-center ctw-space-x-1"
-    >
+    <div className="ctw-btn-default ctw-flex ctw-items-center ctw-space-x-1">
       <span>Sort</span>
       <ChevronDownIcon className="ctw-h-4" />
-    </button>
+    </div>
   </DropdownMenuAction>
 );

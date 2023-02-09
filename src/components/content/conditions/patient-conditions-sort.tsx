@@ -84,5 +84,10 @@ export function useConditionSorts(activeCollection: FilterCollection) {
     );
   }
 
-  return { applySorts, sortOptions: SORT_OPTIONS, updateSorts };
+  return {
+    applySorts,
+    sortOptions: SORT_OPTIONS,
+    updateSorts,
+    currentSorts: sorts,
+  };
 }

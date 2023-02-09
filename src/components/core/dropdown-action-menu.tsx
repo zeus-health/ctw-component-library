@@ -1,4 +1,5 @@
 import { Menu } from "@headlessui/react";
+import { CheckIcon } from "@heroicons/react/solid";
 import * as RadixDropdownMenu from "@radix-ui/react-dropdown-menu";
 import cx from "classnames";
 import { ReactNode } from "react";
@@ -143,7 +144,16 @@ const RenderCorrectFieldType = ({
         </div>
       );
     case "select":
-      return <div>{menuItem.name}</div>;
+      return (
+        <div className="ctw-flex ctw-w-full ctw-justify-between">
+          <span>{menuItem.name}</span>
+          {menuItem.isSelected && (
+            <div>
+              <CheckIcon className="ctw-inline-block ctw-h-5 ctw-items-center  ctw-fill-primary-dark ctw-stroke-0" />
+            </div>
+          )}
+        </div>
+      );
     default:
       return <div>{menuItem.name}</div>;
   }

@@ -42,7 +42,7 @@ export const PatientConditions = withErrorBoundary(
     // State.
     const [collection, setCollection] = useState<FilterCollection>("patient");
     const { filters, updateFilters, applyFilters } = useConditionFilters();
-    const { applySorts, sortOptions, updateSorts } =
+    const { applySorts, sortOptions, updateSorts, currentSorts } =
       useConditionSorts(collection);
     const containerRef = useRef<HTMLDivElement>(null);
     const breakpoints = useBreakpoints(containerRef);
@@ -99,6 +99,7 @@ export const PatientConditions = withErrorBoundary(
             onToggleShowHistoric={() =>
               updateFilters({ showHistoric: !filters.showHistoric })
             }
+            currentSorts={currentSorts[collection]}
           />
 
           <Table
