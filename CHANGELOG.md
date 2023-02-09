@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.45.3
+
+### Patch Changes
+
+- f3e4ad11: Fix to reduce some vertical spacing and addressing scrollbar that always appears in stacked tables.
+
 ## 0.45.2
 
 ### Patch Changes
