@@ -1,9 +1,8 @@
 import { gql } from "graphql-request";
 import { createGraphClient } from "./fqs";
-import { AllergyModel } from "./models/allergies";
-import { searchCommonRecords } from "./search-helpers";
 import { applyAllergyFilters } from "@/components/content/allergies/allergies-filter";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
+import { orderBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_ALLERGIES } from "@/utils/query-keys";
 
 export function usePatientAllergies() {
@@ -15,38 +14,12 @@ export function usePatientAllergies() {
         const graphClient = createGraphClient(requestContext);
         const data = await graphClient.request(getAllergiesQuery(patient.UPID));
 
-        const { bundle, resources } = await searchCommonRecords(
-          "AllergyIntolerance",
-          requestContext,
-          {
-            patientUPID: patient.UPID,
-          }
+        return orderBy(
+          applyAllergyFilters(data.AllergyIntoleranceList),
+          [(allergy) => allergy.onset],
+          ["desc"]
         );
-
-        console.log("resources", resources);
-        console.log("data", data.AllergyIntoleranceList);
-        console.log(
-          "  data.map((allergy) => new AllergyModel(allergy))",
-          data.AllergyIntoleranceList.map(
-            (allergy) => new AllergyModel(allergy)
-          )
-        );
-        // return resources;
-        // return data.AllergyIntoleranceList;
-
-        return data.AllergyIntoleranceList.map(
-          (allergy) => new AllergyModel(allergy)
-        );
-
-        return applyAllergyFilters(data.AllergyIntoleranceLis);
-
-        // return orderBy(
-        //   applyAllergyFilters(data.AllergyIntoleranceLis),
-        //   [(allergy) => allergy.onset],
-        //   ["desc"]
-        // );
       } catch (e) {
-        console.log("e", e);
         throw new Error(
           `Failed fetching allergies information for patient ${patient.UPID}`
         );
