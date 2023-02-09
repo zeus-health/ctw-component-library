@@ -35,8 +35,8 @@ export function DropdownMenuAction({
   items,
   onItemSelect,
   type,
-  pinnedActions,
   buttonClassName,
+  pinnedActions = [],
 }: DropdownMenuProps) {
   const { ctwProviderRef } = useCTW();
 
@@ -84,9 +84,9 @@ export function DropdownMenuAction({
               </RadixDropdownMenu.Item>
             ))}
 
-            <RadixDropdownMenu.Separator className="ctw-dropdown-separator" />
-            {pinnedActions &&
-              pinnedActions.map((menuItem) => (
+            {pinnedActions.length > 0 && <>
+              <RadixDropdownMenu.Separator className="ctw-dropdown-separator" />
+              {pinnedActions.map((menuItem) => (
                 <RadixDropdownMenu.Item
                   onClick={() => menuItem.action()}
                   key={menuItem.name}
@@ -98,6 +98,7 @@ export function DropdownMenuAction({
                   {menuItem.decoration} {menuItem.name}
                 </RadixDropdownMenu.Item>
               ))}
+            </>}
           </RadixDropdownMenu.Content>
         </RadixDropdownMenu.Portal>
       </RadixDropdownMenu.Root>
