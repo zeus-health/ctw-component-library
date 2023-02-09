@@ -26,28 +26,36 @@ export function PatientConditionsActions({
   const patientHistory = usePatientHistory();
 
   return (
-    <div className="ctw-flex ctw-items-center ctw-justify-end ctw-space-x-2 ctw-p-3">
+    <div className="ctw-flex ctw-items-center  ctw-justify-between ctw-space-x-2 ctw-p-3">
       {patientHistory.lastRetrievedAt && hideAdd && (
         <PatientHistoryTableHeaderMessage
           patientHistory={patientHistory}
           message="Last Retrieved"
         />
       )}
-      <SortButton
-        options={sortOptions}
-        updateSorts={updateSorts}
-        activeCollection={activeCollection}
-      />
-      <Toggle name="historic" text="Historic" onChange={onToggleShowHistoric} />
-      {!hideAdd && (
-        <button
-          type="button"
-          className="ctw-btn-primary"
-          onClick={() => showAddConditionForm()}
-        >
-          Add Condition
-        </button>
-      )}
+      <div>
+        <SortButton
+          options={sortOptions}
+          updateSorts={updateSorts}
+          activeCollection={activeCollection}
+        />
+      </div>
+      <div className="ctw-flex ctw-items-center ctw-space-x-2">
+        <Toggle
+          name="historic"
+          text="Historic"
+          onChange={onToggleShowHistoric}
+        />
+        {!hideAdd && (
+          <button
+            type="button"
+            className="ctw-btn-primary"
+            onClick={() => showAddConditionForm()}
+          >
+            Add Condition
+          </button>
+        )}
+      </div>
     </div>
   );
 }
