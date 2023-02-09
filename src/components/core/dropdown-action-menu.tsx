@@ -6,9 +6,10 @@ import { useCTW } from "./providers/ctw-provider";
 import "./dropdown-menu.scss";
 
 export type MenuItem = {
-  name: string;
   action: () => void;
   className?: string;
+  decoration?: ReactNode;
+  name: string;
 };
 
 export type OptionsItem = { key: string; name: string; isSelected?: boolean };
@@ -92,7 +93,7 @@ export function DropdownMenuAction({
                   "ctw-dropdown-action-menu-item"
                 )}
               >
-                {menuItem.name}
+                {menuItem.decoration} {menuItem.name}
               </RadixDropdownMenu.Item>
             ))}
           </RadixDropdownMenu.Content>
