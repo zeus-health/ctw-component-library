@@ -1,5 +1,8 @@
 import { gql } from "graphql-request";
 import { createGraphClient } from "./fqs";
+import { AllergyModel } from "./models/allergies";
+import { searchCommonRecords } from "./search-helpers";
+import { applyAllergyFilters } from "@/components/content/allergies/allergies-filter";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { QUERY_KEY_PATIENT_ALLERGIES } from "@/utils/query-keys";
 
@@ -11,19 +14,34 @@ export function usePatientAllergies() {
       try {
         const graphClient = createGraphClient(requestContext);
         const data = await graphClient.request(getAllergiesQuery(patient.UPID));
-        console.log("data", data);
-        return data;
 
-        // const { bundle, resources } = await searchCommonRecords(
-        //   "AllergyIntolerance",
-        //   requestContext,
-        //   {
-        //     patientUPID: patient.UPID,
-        //   }
-        // );
+        const { bundle, resources } = await searchCommonRecords(
+          "AllergyIntolerance",
+          requestContext,
+          {
+            patientUPID: patient.UPID,
+          }
+        );
+
+        console.log("resources", resources);
+        console.log("data", data.AllergyIntoleranceList);
+        console.log(
+          "  data.map((allergy) => new AllergyModel(allergy))",
+          data.AllergyIntoleranceList.map(
+            (allergy) => new AllergyModel(allergy)
+          )
+        );
+        // return resources;
+        // return data.AllergyIntoleranceList;
+
+        return data.AllergyIntoleranceList.map(
+          (allergy) => new AllergyModel(allergy)
+        );
+
+        return applyAllergyFilters(data.AllergyIntoleranceLis);
 
         // return orderBy(
-        //   applyAllergyFilters(resources),
+        //   applyAllergyFilters(data.AllergyIntoleranceLis),
         //   [(allergy) => allergy.onset],
         //   ["desc"]
         // );
@@ -39,7 +57,7 @@ export function usePatientAllergies() {
 
 const getAllergiesQuery = (upid: string) => gql`
   {
-    AllergyIntoleranceList(upid: ${upid}) {
+    AllergyIntoleranceList(upid: "${upid}") {
       id
       meta {
         tag {
