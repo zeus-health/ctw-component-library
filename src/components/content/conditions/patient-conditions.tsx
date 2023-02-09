@@ -42,8 +42,13 @@ export const PatientConditions = withErrorBoundary(
     const [collection, setCollection] = useState<FilterCollection>("patient");
 
     // State.
-    const { filters, updateFilters, applyFilters, availableFilters } =
-      useConditionFilters(collection);
+    const {
+      filters,
+      updateFilters,
+      applyFilters,
+      availableFilters,
+      getCurrentCollectionFilters,
+    } = useConditionFilters(collection);
     const containerRef = useRef<HTMLDivElement>(null);
     const breakpoints = useBreakpoints(containerRef);
 
@@ -68,6 +73,13 @@ export const PatientConditions = withErrorBoundary(
       true
     );
     const conditions = applyFilters(patientConditions, otherConditions);
+
+    const activeFilters = getCurrentCollectionFilters(
+      getUnfilteredCollection(patientConditions, otherConditions, collection)
+    );
+    console.log("test", activeFilters);
+    console.log("test 2, ", filters[collection]);
+
     const RowActions =
       collection === "patient"
         ? PatientConditionHoverActions

@@ -15,9 +15,6 @@ export function PatientConditionsActions({
 }: PatientConditionsActionsProps) {
   const showAddConditionForm = useAddConditionForm();
 
-  console.log("PatientConditionsActions filters", filters);
-  console.log("PatientConditionsActions filterItems", filterItems);
-
   return (
     <div className="ctw-flex ctw-items-center ctw-justify-end ctw-space-x-2 ctw-p-3">
       <FilterBar

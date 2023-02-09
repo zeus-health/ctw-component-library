@@ -10,16 +10,16 @@ export type Filters = {
   other?: FilterChangeEvent;
 };
 
-const DEFAULT_FILTERS: Omit<Filters, "activeCollection"> = {
+const DEFAULT_FILTERS: Filters = {
   patient: {
-    status: {
+    displayStatus: {
       key: "displayStatus",
       selected: ["Active", "Pending", "Unknown"],
       type: "checkbox",
     },
   },
   other: {
-    status: {
+    displayStatus: {
       key: "displayStatus",
       selected: ["Active", "Pending", "Unknown"],
       type: "checkbox",
@@ -32,6 +32,28 @@ export function useConditionFilters(collection: FilterCollection) {
     ...DEFAULT_FILTERS,
   });
 
+  // useEffect(() => {
+  //   const filterChangeEvent: FilterChangeEvent = {};
+
+  //   Object.entries(filters[collection]).forEach(([key, value]) => {
+  //     const availableValues = availableFilters(conditions).filter(
+  //       (filter) => filter.key === key
+  //     )[0].values;
+
+  //     let { selected } = value;
+
+  //     if (isArray(value.selected)) {
+  //       selected = selected.filter((val) => availableValues.includes(val));
+  //     }
+  //     filterChangeEvent[key] = {
+  //       ...value,
+  //       selected,
+  //     };
+  //   });
+
+  //   updateFilters(filterChangeEvent);
+  // }, [filters]);
+
   function updateFilters(newFilters: Partial<Filters>) {
     setFilters(() => ({
       ...filters,
@@ -39,6 +61,28 @@ export function useConditionFilters(collection: FilterCollection) {
         ...newFilters,
       },
     }));
+  }
+
+  function getCurrentCollectionFilters(conditions: ConditionModel[]) {
+    const filterChangeEvent: FilterChangeEvent = {};
+
+    Object.entries(filters[collection]).forEach(([key, value]) => {
+      const availableValues = availableFilters(conditions).filter(
+        (filter) => filter.key === key
+      )[0].values;
+
+      let { selected } = value;
+
+      if (isArray(value.selected)) {
+        selected = selected.filter((val) => availableValues.includes(val));
+      }
+      filterChangeEvent[key] = {
+        ...value,
+        selected,
+      };
+    });
+
+    return filterChangeEvent;
   }
 
   function availableFilters(conditions: ConditionModel[]) {
@@ -70,10 +114,9 @@ export function useConditionFilters(collection: FilterCollection) {
     return conditions.filter((c) =>
       Object.entries(filters[collection]).every(([key, filterItem]) => {
         if (!filterItem.selected) {
-          return false;
+          return true;
         }
         if (isArray(filterItem.selected)) {
-          console.log("test", filterItem);
           return (
             filterItem.selected.length < 1 ||
             filterItem.selected.includes(
@@ -87,5 +130,11 @@ export function useConditionFilters(collection: FilterCollection) {
     );
   }
 
-  return { filters, updateFilters, applyFilters, availableFilters };
+  return {
+    filters,
+    updateFilters,
+    applyFilters,
+    availableFilters,
+    getCurrentCollectionFilters,
+  };
 }
