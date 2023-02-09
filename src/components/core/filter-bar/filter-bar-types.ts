@@ -13,6 +13,7 @@ export type FilterItemStatus = {
 };
 
 export type MinFilterItem = {
+  belowTheFold?: boolean; // should the filter be below divider in main menu?
   className?: cx.Argument;
   display: string | ((status: FilterItemStatus) => ReactNode | string);
   icon?: string;
@@ -41,9 +42,20 @@ export type FilterValuesRecord = Record<string, string | string[]>;
 
 export type FilterChangeEvent = Record<
   string,
-  {
-    key: string;
-    selected: boolean | string | string[];
-    type: "tag" | "checkbox" | "select";
-  }
+  | undefined
+  | {
+      key: string;
+      selected: boolean;
+      type: "tag";
+    }
+  | {
+      key: string;
+      selected: string[];
+      type: "checkbox";
+    }
+  | {
+      key: string;
+      selected: string;
+      type: "select";
+    }
 >;

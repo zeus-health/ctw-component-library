@@ -3,6 +3,7 @@ import { CheckIcon, ChevronDownIcon } from "@heroicons/react/solid";
 import cx from "classnames";
 import React, { Fragment, useState } from "react";
 import type { ReactNode } from "react";
+import { FilterOptionSelect } from "@/components/core/filter-bar/filter-bar-types";
 import { isFunction } from "@/utils/nodash";
 
 export type MinListBoxItem = {
@@ -23,6 +24,7 @@ export type ListBoxProps<T> = {
 
 export type ListBoxOptionStatus = {
   active?: boolean;
+  filter?: FilterOptionSelect;
   listView?: boolean;
   selected?: boolean;
 };
