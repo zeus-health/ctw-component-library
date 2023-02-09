@@ -1,14 +1,18 @@
 import cx from "classnames";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useConditionHistory } from "../condition-history/conditions-history-drawer";
 import { filterOtherConditions } from "./helpers";
 import { PatientConditionsActions } from "./patient-conditions-actions";
 import { patientConditionsColumns } from "./patient-conditions-columns";
-import { useConditionFilters } from "./patient-conditions-filters";
+import {
+  FilterCollection,
+  useConditionFilters,
+} from "./patient-conditions-filters";
 import {
   OtherProviderConditionHoverActions,
   PatientConditionHoverActions,
 } from "./patient-conditions-menu-actions";
+import { useConditionSorts } from "./patient-conditions-sort";
 import { PatientConditionsTabs } from "./patient-conditions-tabs";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { FormEntry } from "@/components/core/form/drawer-form-with-fields";
@@ -36,7 +40,10 @@ export type ConditionFormData = {
 export const PatientConditions = withErrorBoundary(
   ({ className, readOnly = false }: PatientConditionsProps) => {
     // State.
+    const [collection, setCollection] = useState<FilterCollection>("patient");
     const { filters, updateFilters, applyFilters } = useConditionFilters();
+    const { applySorts, sortOptions, updateSorts } =
+      useConditionSorts(collection);
     const containerRef = useRef<HTMLDivElement>(null);
     const breakpoints = useBreakpoints(containerRef);
 
@@ -50,9 +57,7 @@ export const PatientConditions = withErrorBoundary(
     function isLoading() {
       const isLoadingPatient = patientConditionsQuery.isLoading;
       const isLoadingOther = isLoadingPatient || otherConditionsQuery.isLoading;
-      return filters.collection === "patient"
-        ? isLoadingPatient
-        : isLoadingOther;
+      return collection === "patient" ? isLoadingPatient : isLoadingOther;
     }
 
     // Get our conditions.
@@ -62,9 +67,10 @@ export const PatientConditions = withErrorBoundary(
       patientConditions,
       true
     );
-    const conditions = applyFilters(patientConditions, otherConditions);
+    let conditions = applyFilters(patientConditions, otherConditions);
+    conditions = applySorts(conditions);
     const RowActions =
-      filters.collection === "patient"
+      collection === "patient"
         ? PatientConditionHoverActions
         : OtherProviderConditionHoverActions;
 
@@ -81,12 +87,15 @@ export const PatientConditions = withErrorBoundary(
           </div>
           <PatientConditionsTabs
             otherConditions={otherConditions}
-            collection={filters.collection}
-            onCollectionChange={(collection) => updateFilters({ collection })}
+            collection={collection}
+            onCollectionChange={(c) => setCollection(c)}
           />
 
           <PatientConditionsActions
-            hideAdd={readOnly || filters.collection === "other"}
+            sortOptions={sortOptions}
+            updateSorts={updateSorts}
+            activeCollection={collection}
+            hideAdd={readOnly || collection === "other"}
             onToggleShowHistoric={() =>
               updateFilters({ showHistoric: !filters.showHistoric })
             }
