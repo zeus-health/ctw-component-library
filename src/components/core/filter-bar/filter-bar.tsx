@@ -4,7 +4,7 @@ import type {
   FilterValuesRecord,
 } from "@/components/core/filter-bar/filter-bar-types";
 import cx from "classnames";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   displayFilterItem,
   filterChangeEvent,
@@ -15,7 +15,7 @@ import { FilterBarPill } from "@/components/core/filter-bar/filter-bar-pills";
 import { ListBox } from "@/components/core/list-box/list-box";
 import { omit, partition, uniq } from "@/utils/nodash/fp";
 
-const INTERNAL_KEYS = ["_reset", "_clear"];
+const INTERNAL_KEYS = ["_remove", "_reset"];
 const removeInternalKeys = (keys: string[]) =>
   keys.filter((key) => !INTERNAL_KEYS.includes(key));
 
@@ -66,7 +66,7 @@ export const FilterBar = <T extends FilterItem>({
   );
 
   useEffect(() => {
-    // Validating that the "_clear" filter is never passed in from parent
+    // Validating that the "_remove" filter is never passed in from parent
     if (filters.some(({ key }) => INTERNAL_KEYS.includes(key))) {
       throw new Error(
         `Filters should not use keys ${INTERNAL_KEYS.join(", ")}`
@@ -79,6 +79,13 @@ export const FilterBar = <T extends FilterItem>({
     setActiveFilterValues({});
     handleOnChange({});
   };
+
+  const clearFilter = useCallback(
+    (key: string) => {
+      setActiveFilterValues({ ...activeFilterValues, [key]: [] });
+    },
+    [activeFilterValues]
+  );
 
   // Add or remove a filter from the activated filters list
   const addOrRemoveFilter = (key: string, remove = false) => {
@@ -135,19 +142,42 @@ export const FilterBar = <T extends FilterItem>({
     handleOnChange(filterChangeEvent(filters, activeFilterKeys, activeValues));
   };
 
+  const toFilterMenuItem = (filter: FilterItem) => ({
+    display: () => displayFilterItem(filter, { active: false }),
+    key: filter.key,
+    className: cx("ctw-capitalize", filter.className),
+  });
+
+  const [aboveTheFold, belowTheFold] = partition(
+    (filter) => !filter.belowTheFold,
+    inactiveFilters
+  );
+  const hasBelowTheFoldItems = belowTheFold.length > 0;
+  if (hasBelowTheFoldItems) {
+    // We need to add the ccs border top divider to first item under fold
+    belowTheFold[0] = {
+      ...belowTheFold[0],
+      className: cx(
+        belowTheFold[0].className,
+        "ctw-border-solid ctw-border-divider-light ctw-border-b-0"
+      ),
+    };
+  }
   // Creates the main filter list dropdown
   const inactiveFilterMenuItems = [
-    ...inactiveFilters.map((filter) => ({
-      display: () => displayFilterItem(filter, { active: false }),
-      key: filter.key,
-      className: cx("ctw-capitalize", filter.className),
-    })),
+    ...aboveTheFold.map(toFilterMenuItem),
+    // Need to add class for the first menu item under the fold
+    ...belowTheFold.slice(0, 1).map(toFilterMenuItem),
+    ...belowTheFold.slice(1).map(toFilterMenuItem),
     {
-      display: "clear all filters",
-      key: "_clear",
+      // eslint-disable-next-line react/no-unstable-nested-components
+      display: () => <>{getIcon("trash")} remove all filters</>,
+      key: "_remove",
       icon: "trash",
-      className:
-        "ctw-border ctw-capitalize ctw-border-solid ctw-border-divider-light",
+      className: cx("ctw-border ctw-capitalize", {
+        // This adds divider to this item if needed
+        "ctw-border-solid ctw-border-divider-light": !hasBelowTheFoldItems,
+      }),
     },
   ];
 
@@ -159,7 +189,8 @@ export const FilterBar = <T extends FilterItem>({
             key={filter.key}
             filter={filter}
             filterValues={activeFilterValues}
-            addOrRemoveFilter={addOrRemoveFilter}
+            handleAddOrRemoveFilter={addOrRemoveFilter}
+            handleClearFilter={clearFilter}
             updateSelectedFilterValues={(
               valueKey: string,
               isSelected: boolean
@@ -174,7 +205,7 @@ export const FilterBar = <T extends FilterItem>({
         optionsClassName="ctw-capitalize"
         items={inactiveFilterMenuItems}
         onChange={(index, item) => {
-          if (item.key === "_clear") {
+          if (item.key === "_remove") {
             clearAllFilters();
           } else {
             addOrRemoveFilter(item.key, false);

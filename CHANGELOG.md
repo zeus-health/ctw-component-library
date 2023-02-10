@@ -1,5 +1,37 @@
 # ctw-component-library
 
+## 0.45.6
+
+### Patch Changes
+
+- 1643187b: Fix types and text on the filter bar. Add icons that are missing.
+- 72a214c3: Fix bug for done state when a patient history request is finished"
+
+## 0.45.5
+
+### Patch Changes
+
+- a2448843: Add ability to remove view fhir button from timeline.
+- 38b486bd: Add sort dropdown to conditions 2.0.
+
+## 0.45.4
+
+### Patch Changes
+
+- 2c238e88: The OtherProviderMedsTable, along with curated components PatientMedications and PatientMedicationsTabbed now accept an optional prop hideAddToRecord which will omit the "Add to Record" button from other providermedications tables.
+
+## 0.45.3
+
+### Patch Changes
+
+- f3e4ad11: Fix to reduce some vertical spacing and addressing scrollbar that always appears in stacked tables.
+
+## 0.45.2
+
+### Patch Changes
+
+- f0383e2e: Add notification color palette for badge.
+
 ## 0.45.1
 
 ### Patch Changes

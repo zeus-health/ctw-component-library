@@ -1,4 +1,5 @@
 import { Menu } from "@headlessui/react";
+import { CheckIcon } from "@heroicons/react/solid";
 import * as RadixDropdownMenu from "@radix-ui/react-dropdown-menu";
 import cx from "classnames";
 import { ReactNode } from "react";
@@ -6,9 +7,10 @@ import { useCTW } from "./providers/ctw-provider";
 import "./dropdown-menu.scss";
 
 export type MenuItem = {
-  name: string;
   action: () => void;
   className?: string;
+  decoration?: ReactNode;
+  name: string;
 };
 
 export type OptionsItem = { key: string; name: string; isSelected?: boolean };
@@ -25,7 +27,7 @@ export type DropdownMenuProps = {
   }) => void;
   type?: DropDownMenuItemType;
   customOptionRender?: (optionsItem: OptionsItem) => JSX.Element;
-  pinnedActions: MenuItem[];
+  pinnedActions?: MenuItem[];
 };
 
 export function DropdownMenuAction({
@@ -33,8 +35,8 @@ export function DropdownMenuAction({
   items,
   onItemSelect,
   type,
-  pinnedActions,
   buttonClassName,
+  pinnedActions = [],
 }: DropdownMenuProps) {
   const { ctwProviderRef } = useCTW();
 
@@ -82,19 +84,23 @@ export function DropdownMenuAction({
               </RadixDropdownMenu.Item>
             ))}
 
-            <RadixDropdownMenu.Separator className="ctw-dropdown-separator" />
-            {pinnedActions.map((menuItem) => (
-              <RadixDropdownMenu.Item
-                onClick={() => menuItem.action()}
-                key={menuItem.name}
-                className={cx(
-                  menuItem.className,
-                  "ctw-dropdown-action-menu-item"
-                )}
-              >
-                {menuItem.name}
-              </RadixDropdownMenu.Item>
-            ))}
+            {pinnedActions.length > 0 && (
+              <>
+                <RadixDropdownMenu.Separator className="ctw-dropdown-separator" />
+                {pinnedActions.map((menuItem) => (
+                  <RadixDropdownMenu.Item
+                    onClick={() => menuItem.action()}
+                    key={menuItem.name}
+                    className={cx(
+                      menuItem.className,
+                      "ctw-dropdown-action-menu-item"
+                    )}
+                  >
+                    {menuItem.decoration} {menuItem.name}
+                  </RadixDropdownMenu.Item>
+                ))}
+              </>
+            )}
           </RadixDropdownMenu.Content>
         </RadixDropdownMenu.Portal>
       </RadixDropdownMenu.Root>
@@ -142,7 +148,16 @@ const RenderCorrectFieldType = ({
         </div>
       );
     case "select":
-      return <div>{menuItem.name}</div>;
+      return (
+        <div className="ctw-flex ctw-w-full ctw-justify-between">
+          <span>{menuItem.name}</span>
+          {menuItem.isSelected && (
+            <div>
+              <CheckIcon className="ctw-inline-block ctw-h-5 ctw-items-center  ctw-fill-primary-dark ctw-stroke-0" />
+            </div>
+          )}
+        </div>
+      );
     default:
       return <div>{menuItem.name}</div>;
   }
