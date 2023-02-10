@@ -34,9 +34,10 @@ export const AddNewMedDrawer = ({
   let medStatementModelForFormPopulation: MedicationStatementModel;
   // If we're starting from an existing medication, make sure the subject is set correctly
   if (medication) {
-    const medCopy = { ...medication };
-    medCopy.subject = patientSubjectRef;
-    medStatementModelForFormPopulation = new MedicationStatementModel(medCopy);
+    medStatementModelForFormPopulation = new MedicationStatementModel({
+      ...medication,
+      subject: patientSubjectRef,
+    });
   } else {
     medStatementModelForFormPopulation = new MedicationStatementModel({
       resourceType: "MedicationStatement",
