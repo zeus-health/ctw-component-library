@@ -1,0 +1,2 @@
+import{S as t}from"./spinner-66aa4ba7.js";import"./index-6f814c40.js";import"./_commonjsHelpers-042e6b4d.js";import"./index-74f03c09.js";const m={component:t,tags:["autodocs"]},r={};var o,s,e;r.parameters={...r.parameters,docs:{...(o=r.parameters)==null?void 0:o.docs,source:{originalSource:"{}",...(e=(s=r.parameters)==null?void 0:s.docs)==null?void 0:e.source}}};const n=["Basic"];export{r as Basic,n as __namedExportsOrder,m as default};
+//# sourceMappingURL=spinner.stories-1625d6f0.js.map
