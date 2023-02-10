@@ -70,14 +70,23 @@ export function useConditionFilters(collection: FilterCollection) {
     const conditions =
       collection === "patient" ? patientConditions : otherConditions;
 
-    return conditions.filter((c) =>
+    return conditions.filter((condition) =>
       Object.entries(filters[collection]).every(([_, filterItem]) => {
         if (filterItem?.type === "checkbox" && isArray(filterItem.selected)) {
+          const filteredList = filterItem.selected.filter((item) =>
+            compact(
+              uniq(
+                conditions.map((c) => c[filterItem.key as keyof ConditionModel])
+              )
+            ).includes(item)
+          );
+
+          const targetFilter =
+            condition[filterItem.key as keyof ConditionModel] ?? "";
+
           return (
-            filterItem.selected.length < 1 ||
-            filterItem.selected.includes(
-              c[filterItem.key as keyof ConditionModel] ?? ""
-            )
+            filteredList.length < 1 ||
+            filteredList.includes(String(targetFilter))
           );
         }
 

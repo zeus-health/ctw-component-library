@@ -45,13 +45,6 @@ export function FilterBarCheckboxPill({
       items={items}
       type="checkbox"
       pinnedActions={compact([
-        onReset
-          ? {
-              decoration: getIcon("reset"),
-              name: "Reset Filter",
-              action: onReset,
-            }
-          : null,
         onRemove
           ? {
               decoration: getIcon("trash"),
