@@ -25,18 +25,31 @@ export const AddNewMedDrawer = ({
 }: Props) => {
   const patient = usePatient();
 
+  const patientSubjectRef = {
+    reference: `Patient/${patient.data?.id}`,
+    display: patient.data?.display,
+  };
+
+  // Create a MedicationStatementModel that can be used to pre-populate the form appropriately.
+  let medStatementModelForFormPopulation: MedicationStatementModel;
+  // If we're starting from an existing medication, make sure the subject is set correctly
+  if (medication) {
+    medStatementModelForFormPopulation = new MedicationStatementModel({
+      ...medication,
+      subject: patientSubjectRef,
+      dateAsserted: format(new Date(), "yyyy-MM-dd"),
+    });
+  } else {
+    medStatementModelForFormPopulation = new MedicationStatementModel({
+      resourceType: "MedicationStatement",
+      status: "active",
+      subject: patientSubjectRef,
+      dateAsserted: format(new Date(), "yyyy-MM-dd"),
+    });
+  }
+
   const createMedData = getMedicationFormData(
-    new MedicationStatementModel(
-      medication ?? {
-        resourceType: "MedicationStatement",
-        status: "active",
-        subject: {
-          reference: `Patient/${patient.data?.id}`,
-          display: patient.data?.display,
-        },
-        dateAsserted: format(new Date(), "yyyy-MM-dd"),
-      }
-    )
+    medStatementModelForFormPopulation
   );
 
   return (
