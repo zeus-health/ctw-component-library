@@ -10,13 +10,14 @@ export type TabGroupProps<T> = {
   className?: string;
   content: TabGroupItem<T>[];
   forceHorizontalTabs?: boolean;
+  onChange?: (index: number) => void; // optional event
 };
 
 export type TabGroupItem<T> = {
-  key: string;
   display: () => string | ReactNode;
-  render: (sm: boolean) => string | ReactNode;
   getPanelClassName?: (sm: boolean) => cx.Argument;
+  key: string;
+  render: (sm: boolean) => string | ReactNode;
 };
 
 /**
@@ -30,26 +31,31 @@ export function TabGroup<T>({
   className,
   forceHorizontalTabs = false,
   content,
+  onChange,
 }: TabGroupProps<T>) {
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const isVertical = !forceHorizontalTabs && breakpoints.sm;
 
+  const handleOnChange = (index: number) => {
+    setSelectedTabIndex(index);
+    if (onChange) {
+      onChange(index);
+    }
+  };
+
   return (
     <div
       ref={containerRef}
       className={cx(className, "ctw-tab-group ctw-relative ctw-w-full")}
     >
-      <Tab.Group
-        selectedIndex={selectedTabIndex}
-        onChange={setSelectedTabIndex}
-      >
+      <Tab.Group selectedIndex={selectedTabIndex} onChange={handleOnChange}>
         {isVertical && (
           <ListBox
             btnClassName="ctw-tab ctw-capitalize"
             optionsClassName="ctw-tab-list ctw-capitalize"
-            onChange={setSelectedTabIndex}
+            onChange={handleOnChange}
             items={content}
           />
         )}
