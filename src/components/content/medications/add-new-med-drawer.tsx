@@ -37,6 +37,7 @@ export const AddNewMedDrawer = ({
     medStatementModelForFormPopulation = new MedicationStatementModel({
       ...medication,
       subject: patientSubjectRef,
+      dateAsserted: format(new Date(), "yyyy-MM-dd"),
     });
   } else {
     medStatementModelForFormPopulation = new MedicationStatementModel({
