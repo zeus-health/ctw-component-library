@@ -1,5 +1,21 @@
 # ctw-component-library
 
+## 0.46.0
+
+### Minor Changes
+
+- 67ab76e1: Fix issue with incorrect patient reference being passed when reconciling existing medications.
+
+### Patch Changes
+
+- ae8f7a7b: SideEffects set to prevent css from being tree-shaken by webpack. Upgraded storybook to 7.0.0-beta.45
+
+## 0.45.7
+
+### Patch Changes
+
+- 1ea52c11: Add header to timeline.
+
 ## 0.45.6
 
 ### Patch Changes
