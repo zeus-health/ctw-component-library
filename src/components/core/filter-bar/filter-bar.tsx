@@ -58,6 +58,9 @@ export const FilterBar = <T extends FilterItem>({
   );
   const [activeFilterValues, setActiveFilterValues] =
     useState<FilterValuesRecord>(filterChangeEventToValuesRecord(defaultState));
+  const [initialState, _] = useState<FilterValuesRecord>(
+    filterChangeEventToValuesRecord(defaultState)
+  );
 
   // Split the filters up by which are active (selected) or inactive (main menu)
   const [activeFilters, inactiveFilters] = partition(
@@ -78,6 +81,14 @@ export const FilterBar = <T extends FilterItem>({
     setActiveFilterKeys([]);
     setActiveFilterValues({});
     handleOnChange({});
+  };
+
+  const resetAllFilters = () => {
+    setActiveFilterValues(initialState);
+    setActiveFilterKeys(Object.keys(initialState));
+    handleOnChange(
+      filterChangeEvent(filters, Object.keys(initialState), initialState)
+    );
   };
 
   const clearFilter = useCallback(
@@ -171,13 +182,20 @@ export const FilterBar = <T extends FilterItem>({
     ...belowTheFold.slice(1).map(toFilterMenuItem),
     {
       // eslint-disable-next-line react/no-unstable-nested-components
+      display: () => <>{getIcon("reset")} reset filters</>,
+      key: "_reset",
+      icon: "reset",
+      className: cx("ctw-capitalize", {
+        // This adds divider to this item if needed
+        "ctw-border-top": !hasBelowTheFoldItems,
+      }),
+    },
+    {
+      // eslint-disable-next-line react/no-unstable-nested-components
       display: () => <>{getIcon("trash")} remove all filters</>,
       key: "_remove",
       icon: "trash",
-      className: cx("ctw-border ctw-capitalize", {
-        // This adds divider to this item if needed
-        "ctw-border-solid ctw-border-divider-light": !hasBelowTheFoldItems,
-      }),
+      className: cx("ctw-capitalize"),
     },
   ];
 
@@ -207,6 +225,8 @@ export const FilterBar = <T extends FilterItem>({
         onChange={(index, item) => {
           if (item.key === "_remove") {
             clearAllFilters();
+          } else if (item.key === "_reset") {
+            resetAllFilters();
           } else {
             addOrRemoveFilter(item.key, false);
           }

@@ -36,26 +36,27 @@ export function PatientConditionsActions({
   const patientHistory = usePatientHistory();
 
   return (
-    <div className="ctw-flex ctw-items-center ctw-justify-end ctw-space-x-2 ctw-p-3">
-      {patientHistory.lastRetrievedAt && hideAdd && (
-        <PatientHistoryTableHeaderMessage
-          patientHistory={patientHistory}
-          message="Last Retrieved"
-        />
-      )}
-      <div>
+    <div className="ctw-flex ctw-items-center ctw-justify-between ctw-space-x-2 ctw-p-3">
+      <div className="ctw-flex">
         <SortButton
           options={sortOptions}
           updateSorts={updateSorts}
           activeCollection={activeCollection}
           currentSorts={currentSorts}
         />
+        <FilterBar
+          filters={filterItems}
+          handleOnChange={setFilters}
+          defaultState={filters}
+        />
       </div>
-      <FilterBar
-        filters={filterItems}
-        handleOnChange={setFilters}
-        defaultState={filters}
-      />
+
+      {patientHistory.lastRetrievedAt && hideAdd && (
+        <PatientHistoryTableHeaderMessage
+          patientHistory={patientHistory}
+          message="Last Retrieved"
+        />
+      )}
       {!hideAdd && (
         <button
           type="button"
@@ -84,6 +85,7 @@ const SortButton = ({
 }: SortButtonProps) => (
   <DropdownMenuAction
     type="select"
+    buttonClassName="ctw-bg-transparent ctw-border-none"
     onItemSelect={(event) => {
       const { dir, key, isDate } = options.filter(
         (option) => option.display === event.key
