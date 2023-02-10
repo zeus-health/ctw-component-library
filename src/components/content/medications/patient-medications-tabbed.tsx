@@ -2,41 +2,39 @@ import type {
   FilterChangeEvent,
   FilterItem,
 } from "@/components/core/filter-bar/filter-bar-types";
-import { Tab } from "@headlessui/react";
 import cx from "classnames";
-import { ReactNode, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   BadgeOtherProviderMedCount,
   OtherProviderMedsTable,
+  OtherProviderMedsTableProps,
 } from "@/components/content/medications/other-provider-meds-table";
 import { ProviderInactiveMedicationsTable } from "@/components/content/medications/provider-inactive-medications-table";
 import { ProviderMedsTable } from "@/components/content/medications/provider-meds-table";
 import * as CTWBox from "@/components/core/ctw-box";
 import { FilterBar } from "@/components/core/filter-bar/filter-bar";
-import { ListBox } from "@/components/core/list-box/list-box";
+import { TabGroup, TabGroupItem } from "@/components/core/tab-group/tab-group";
 import { MedicationStatementModel } from "@/fhir/models";
-import { useBreakpoints } from "@/hooks/use-breakpoints";
 import "./patient-medications.scss";
+import { useQueryAllPatientMedications } from "@/hooks/use-medications";
+import { compact } from "@/utils/nodash";
+import { uniq } from "@/utils/nodash/fp";
 
 export type PatientMedicationsTabbedProps = {
   className?: string;
   forceHorizontalTabs?: boolean;
-  handleAddToRecord: (m: MedicationStatementModel) => void;
-};
-
-type TabbedContent<T> = {
-  key: string;
-  display: () => string | ReactNode;
-  render: (props: {
-    handleAddToRecord: (record: T) => void;
-  }) => string | ReactNode;
-  getPanelClassName?: (sm: boolean) => cx.Argument;
-};
+} & SubsetOtherProviderTableProps;
+type SubsetOtherProviderTableProps = Pick<
+  OtherProviderMedsTableProps,
+  "hideAddToRecord" | "handleAddToRecord"
+>;
 
 // We use getPanelClassName on all tabs except for the other-provider-records
 // tab because without the FilterBar there is no margin between tab and panel
 // when md - lg sized.
-const tabbedContent: TabbedContent<MedicationStatementModel>[] = [
+const tabbedContent = (
+  otherProviderTableProps: SubsetOtherProviderTableProps
+): TabGroupItem<MedicationStatementModel>[] => [
   {
     key: "medication-list",
     getPanelClassName: (sm: boolean) => (sm ? "ctw-mt-0" : "ctw-mt-2"),
@@ -57,17 +55,44 @@ const tabbedContent: TabbedContent<MedicationStatementModel>[] = [
         <BadgeOtherProviderMedCount />
       </>
     ),
-    render: OtherProviderMedsTableTab,
+    render: () => <OtherProviderMedsTableTab {...otherProviderTableProps} />,
   },
 ];
 
-function OtherProviderMedsTableTab({
+export function OtherProviderMedsTableTab({
   handleAddToRecord,
+  hideAddToRecord,
 }: PatientMedicationsTabbedProps) {
   const [filters, setFilters] = useState<FilterChangeEvent>({});
+  const [records, setRecords] = useState<MedicationStatementModel[]>([]);
+  const { otherProviderMedications, isLoading } =
+    useQueryAllPatientMedications();
+
+  useEffect(() => {
+    if (!isLoading && otherProviderMedications) {
+      const filteredRecords = otherProviderMedications.filter((medication) => {
+        if (filters.providers?.selected) {
+          return filters.providers.selected === medication.lastPrescriber;
+        }
+        return true;
+      });
+      setRecords(filteredRecords);
+    }
+  }, [filters, otherProviderMedications, isLoading]);
+
   const showDismissed = "dismissed" in filters;
   const showInactive = "inactive" in filters;
-  const filterItems: FilterItem[] = [
+
+  // Create a list of prescriber names to use in a filter
+  const prescriberNames = !otherProviderMedications
+    ? []
+    : (uniq(
+        otherProviderMedications
+          .map((medication) => medication.lastPrescriber)
+          .filter((s) => typeof s === "string")
+      ) as string[]);
+
+  const filterItems: FilterItem[] = compact([
     {
       key: "dismissed",
       type: "tag",
@@ -75,15 +100,26 @@ function OtherProviderMedsTableTab({
       display: ({ active }) =>
         active ? "dismissed records" : "show dismissed records",
     },
-  ];
+    !otherProviderMedications || prescriberNames.length < 2
+      ? null
+      : {
+          key: "providers",
+          type: "checkbox",
+          icon: "clipboard",
+          values: prescriberNames,
+          display: "prescriber",
+        },
+  ]);
 
   return (
     <>
       <FilterBar filters={filterItems} handleOnChange={setFilters} />
       <OtherProviderMedsTable
+        records={records}
+        handleAddToRecord={handleAddToRecord}
+        hideAddToRecord={hideAddToRecord}
         showDismissed={showDismissed}
         showInactive={showInactive}
-        handleAddToRecord={handleAddToRecord}
       />
     </>
   );
@@ -101,81 +137,19 @@ function OtherProviderMedsTableTab({
 export function PatientMedicationsTabbed({
   className,
   forceHorizontalTabs = false,
-  handleAddToRecord,
+  ...otherProviderTableProps
 }: PatientMedicationsTabbedProps) {
-  const [selectedTabIndex, setSelectedTabIndex] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const breakpoints = useBreakpoints(containerRef);
-  const isVertical = !forceHorizontalTabs && breakpoints.sm;
+  const tabItems = tabbedContent(otherProviderTableProps);
 
   return (
     <CTWBox.StackedWrapper
       className={cx("ctw-patient-medications ctw-space-y-3", className)}
     >
-      <div ref={containerRef} className="ctw-relative ctw-w-full">
-        <Tab.Group
-          selectedIndex={selectedTabIndex}
-          onChange={setSelectedTabIndex}
-        >
-          {isVertical && (
-            <ListBox
-              btnClassName="ctw-tab ctw-capitalize"
-              optionsClassName="ctw-tab-list ctw-capitalize"
-              onChange={setSelectedTabIndex}
-              items={tabbedContent}
-            />
-          )}
-          <Tab.List
-            className={cx(
-              "ctw-border-default ctw-flex ctw-justify-start ctw-border-b ctw-border-divider-light",
-              { "ctw-hidden": isVertical }
-            )}
-          >
-            {/* Renders button for each tab using "display | display()" */}
-            {tabbedContent.map(({ key, display }) => (
-              <Tab
-                key={key}
-                onClick={function onClickBlur() {
-                  if (typeof document !== "undefined") {
-                    requestAnimationFrame(() => {
-                      if (document.activeElement instanceof HTMLElement) {
-                        document.activeElement.blur();
-                      }
-                    });
-                  }
-                }}
-                className={({ selected }) =>
-                  cx(
-                    [
-                      "ctw-tab ctw-text-sm ctw-capitalize",
-                      "hover:after:ctw-bg-content-black",
-                      "focus-visible:ctw-outline-primary-dark focus-visible:after:ctw-bg-transparent",
-                    ],
-                    {
-                      "after:ctw-bg-content-black": selected,
-                      "ctw-text-content-light": !selected,
-                    }
-                  )
-                }
-              >
-                {display()}
-              </Tab>
-            ))}
-          </Tab.List>
-
-          {/* Renders body of each tab using "render()" */}
-          <Tab.Panels>
-            {tabbedContent.map((item) => (
-              <Tab.Panel
-                key={item.key}
-                className={cx(item.getPanelClassName?.(breakpoints.sm))}
-              >
-                {item.render({ handleAddToRecord })}
-              </Tab.Panel>
-            ))}
-          </Tab.Panels>
-        </Tab.Group>
-      </div>
+      <TabGroup
+        content={tabItems}
+        forceHorizontalTabs={forceHorizontalTabs}
+        className={className}
+      />
     </CTWBox.StackedWrapper>
   );
 }

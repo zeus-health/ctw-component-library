@@ -39,7 +39,9 @@ export const TableRows = <T extends MinRecordItem>({
   if (records.length === 0) {
     return (
       <TableFullLengthRow colSpan={columns.length}>
-        {emptyMessage}
+        <span className="ctw-empty-message -ctw-mt-3.5 sm:ctw-mt-0">
+          {emptyMessage}
+        </span>
       </TableFullLengthRow>
     );
   }

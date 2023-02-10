@@ -1,5 +1,7 @@
 import { Tab } from "@headlessui/react";
 import cx from "classnames";
+import { PatientHistoryStatus } from "../patient-history/patient-history-message-status";
+import { usePatientHistory } from "../patient-history/use-patient-history";
 import { FilterCollection } from "./patient-conditions-filters";
 import { Badge } from "@/components/core/badge";
 import { ConditionModel } from "@/fhir/models";
@@ -39,9 +41,18 @@ export function PatientConditionsTabs({
   }
 
   const sharedTabStyles = "ctw-relative ctw-tab-underline ctw-tab";
+  const patientHistory = usePatientHistory();
 
   return (
     <div className="ctw-justify-end ctw-space-x-2 ctw-border-0 ctw-border-b ctw-border-t ctw-border-solid ctw-border-divider-light">
+      {collection === "other" && (
+        <div className="ctw-space-y-3">
+          <PatientHistoryStatus
+            status={patientHistory.lastStatus}
+            date={patientHistory.dateCreatedAt}
+          />
+        </div>
+      )}
       <div className="ctw-space-x-4">
         <Tab.Group
           // Keyboard navigation requires onChange instead of onClick.
@@ -69,7 +80,7 @@ export function PatientConditionsTabs({
               }
             >
               <span>Other Provider Records</span>
-              <Badge text={`${activeCount}`} color="primary" />
+              <Badge text={`${activeCount}`} color="notification" />
             </Tab>
           </Tab.List>
         </Tab.Group>

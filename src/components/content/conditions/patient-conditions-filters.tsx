@@ -8,18 +8,6 @@ export type Filters = {
   collection: FilterCollection;
 };
 
-// const [filters, setFilters] = useState<FilterChangeEvent>({});
-// const filterItems: FilterItem[] = [
-//   {
-//     key: "status",
-//     type: "checkbox",
-//     icon: "eye",
-//     display: ({ active }) =>
-//       active ? "dismissed records" : "show dismissed records",
-//     values: [],
-//   },
-// ];
-
 export function useConditionFilters() {
   const [collection, setCollection] = useState<FilterCollection>("patient");
   const [filters, setFilters] = useState<Filters>({

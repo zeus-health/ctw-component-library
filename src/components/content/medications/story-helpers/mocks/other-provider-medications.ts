@@ -435,7 +435,7 @@ export const otherProviderMedications: fhir4.Bundle = {
             valueReference: {
               reference: "Practitioner/a8b57218-3699-4354-bf39-b73175ba85e0",
               type: "Practitioner",
-              display: "Sally McCann",
+              display: "Mike McDonald",
             },
           },
           {
@@ -576,7 +576,7 @@ export const otherProviderMedications: fhir4.Bundle = {
             valueReference: {
               reference: "Practitioner/a8b57218-3699-4354-bf39-b73175ba85e0",
               type: "Practitioner",
-              display: "Sally McCann",
+              display: "Dr. People Person",
             },
           },
           {

@@ -6,9 +6,13 @@ import { orderBy } from "@/utils/nodash";
 
 export type PatientTimelineProps = {
   className?: string;
+  includeViewFhirResource: boolean;
 };
 
-export function PatientTimeline({ className }: PatientTimelineProps) {
+export function PatientTimeline({
+  className,
+  includeViewFhirResource,
+}: PatientTimelineProps) {
   const patientEncounterQuery = usePatientEncounters();
   const openDetails = useEncounterDetailsDrawer();
 
@@ -25,7 +29,7 @@ export function PatientTimeline({ className }: PatientTimelineProps) {
         showTableHead={false}
         isLoading={patientEncounterQuery.isLoading}
         records={encounters}
-        columns={patientTimelineColumns}
+        columns={patientTimelineColumns(includeViewFhirResource)}
         handleRowClick={(encounter) => openDetails(encounter)}
       />
     </div>
