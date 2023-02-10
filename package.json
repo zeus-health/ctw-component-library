@@ -1,9 +1,9 @@
 {
   "name": "@zus-health/ctw-component-library",
-  "version": "0.45.6",
+  "version": "0.45.7",
   "type": "module",
   "engines": {
-    "node": ">=12 <19"
+    "node": ">=16 <19"
   },
   "main": "dist/index.cjs",
   "module": "dist/index.es.js",
@@ -16,7 +16,9 @@
     },
     "./dist/style.css": "./dist/style.css"
   },
-  "sideEffects": false,
+  "sideEffects": [
+    "*.css"
+  ],
   "files": [
     "dist"
   ],
@@ -55,14 +57,14 @@
     "@changesets/cli": "^2.24.3",
     "@faker-js/faker": "^7.6.0",
     "@kensho-technologies/eslint-config": "^23.1.1",
-    "@storybook/addon-docs": "^7.0.0-beta.15",
-    "@storybook/addon-essentials": "^7.0.0-beta.15",
-    "@storybook/addon-interactions": "^7.0.0-beta.15",
-    "@storybook/addon-links": "^7.0.0-beta.15",
+    "@storybook/addon-docs": "^7.0.0-beta.45",
+    "@storybook/addon-essentials": "^7.0.0-beta.45",
+    "@storybook/addon-interactions": "^7.0.0-beta.45",
+    "@storybook/addon-links": "^7.0.0-beta.45",
     "@storybook/jest": "^0.0.10",
-    "@storybook/react": "^7.0.0-beta.15",
-    "@storybook/react-vite": "^7.0.0-beta.15",
-    "@storybook/test-runner": "^0.9.0",
+    "@storybook/react": "^7.0.0-beta.45",
+    "@storybook/react-vite": "^7.0.0-beta.45",
+    "@storybook/test-runner": "^0.9.4",
     "@storybook/testing-library": "^0.0.13",
     "@tailwindcss/line-clamp": "^0.4.0",
     "@testing-library/jest-dom": "^5.16.5",
@@ -82,11 +84,11 @@
     "eslint": "^8.25.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-storybook": "^0.6.6",
+    "eslint-plugin-storybook": "^0.6.10",
     "eslint-plugin-unused-imports": "^2.0.0",
     "jsdom": "^20.0.1",
     "msw": "^0.48.2",
-    "msw-storybook-addon": "^1.6.3",
+    "msw-storybook-addon": "^1.7.0",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.4.16",
     "prettier": "^2.7.1",
@@ -95,7 +97,7 @@
     "react-dom": "^16.9.8",
     "rename-css-selectors": "^4.1.0",
     "sass": "^1.55.0",
-    "storybook": "^7.0.0-beta.15",
+    "storybook": "^7.0.0-beta.45",
     "tailwindcss": "^3.1.6",
     "tsc-alias": "^1.7.0",
     "typescript": "^4.7.4",
