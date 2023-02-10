@@ -22,7 +22,6 @@ export const PatientHistoryStatus = ({
           </div>
         </div>
       );
-    case "done":
     case "error":
       return (
         <div className="ctw-alert-bg ctw-rounded-md ctw-bg-error-bg">
@@ -36,6 +35,7 @@ export const PatientHistoryStatus = ({
           </div>
         </div>
       );
+    case "done":
     default:
       return null;
   }
