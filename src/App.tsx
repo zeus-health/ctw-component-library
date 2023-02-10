@@ -41,24 +41,13 @@ type DemoComponent = {
 };
 const demoComponents: DemoComponent[] = [
   {
-    render: () => (
-      <PatientMedicationsTabbed
-        handleAddToRecord={() => null}
-        forceHorizontalTabs
-      />
-    ),
-    title: "Patient Medications Tabbed",
-    note: "(forceHorizontalTabs)",
-  },
-  {
     render: () => <PatientMedicationsTabbed handleAddToRecord={() => null} />,
     title: "Patient Medications Tabbed",
   },
+  { render: () => <PatientConditions />, title: "Patient Conditions 2.0" },
+  { render: () => <Conditions />, title: "Patient Conditions" },
   { render: () => <PatientAllergies />, title: "Patient Allergies" },
   { render: () => <PatientImmunizations />, title: "Patient Immunizations" },
-  { render: () => <Conditions />, title: "Patient Conditions" },
-  { render: () => <PatientConditions />, title: "Patient Conditions 2.0" },
-  { render: () => <PatientMedications />, title: "Patient Medications" },
   {
     render: () => <PatientMedications readOnly />,
     title: "Patient Medications",
@@ -79,7 +68,7 @@ const DemoApp = ({ accessToken = "" }) => (
         <h1>CTW Component Library</h1>
 
         {demoComponents.map((demo, index) => (
-          <div className="ctw-space-y-5 ctw-bg-white" key={index}>
+          <div className="ctw-space-y-5 ctw-bg-white ctw-p-1" key={index}>
             <h3>
               {demo.title} <small>{demo.note ?? "(default)"}</small>
             </h3>

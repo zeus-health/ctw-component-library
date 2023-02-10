@@ -1,50 +1,46 @@
-import { Tab } from "@headlessui/react";
-import cx from "classnames";
 import { PatientHistoryStatus } from "../patient-history/patient-history-message-status";
 import { usePatientHistory } from "../patient-history/use-patient-history";
 import { FilterCollection } from "./patient-conditions-filters";
 import { Badge } from "@/components/core/badge";
+import { TabGroup, TabGroupItem } from "@/components/core/tab-group/tab-group";
+import { useOtherProviderConditions } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models";
 
 export type PatientConditionsTabsProps = {
   collection: FilterCollection;
-  otherConditions: ConditionModel[];
+  forceHorizontalTabs?: boolean;
   onCollectionChange: (collection: FilterCollection) => void;
+  otherConditions: ConditionModel[];
 };
+
+const tabbedContent: TabGroupItem<ConditionModel>[] = [
+  {
+    key: "inactive-provider-records",
+    getPanelClassName: (sm: boolean) => (sm ? "ctw-mt-0" : "ctw-mt-2"),
+    display: () => "condition list",
+    render: () => null,
+  },
+  {
+    key: "other-provider-records",
+    display: () => (
+      <>
+        <span className="ctw-pr-2 ctw-capitalize">other provider records</span>
+        <BadgeOtherProviderConditionsCount />
+      </>
+    ),
+    render: () => null,
+  },
+];
 
 export function PatientConditionsTabs({
   collection,
-  otherConditions,
   onCollectionChange,
+  forceHorizontalTabs = false,
 }: PatientConditionsTabsProps) {
-  function activeClass(collection2: FilterCollection) {
-    return collection === collection2
-      ? "ctw-text-content-black"
-      : "ctw-text-content-light";
-  }
-
-  const activeCount = otherConditions.filter(
-    (condition) => condition.displayStatus === "Active"
-  ).length;
-
-  // Issue: Clicking on tab enables focus-visible and not only via keyboard interactions.
-  // Resolution: https://github.com/tailwindlabs/headlessui/issues/1694
-  function blurClicked() {
-    // Guard against server side where document isn't defined.
-    if (typeof document !== "undefined") {
-      requestAnimationFrame(() => {
-        if (document.activeElement instanceof HTMLElement) {
-          document.activeElement.blur();
-        }
-      });
-    }
-  }
-
-  const sharedTabStyles = "ctw-relative ctw-tab-underline ctw-tab";
   const patientHistory = usePatientHistory();
 
   return (
-    <div className="ctw-justify-end ctw-space-x-2 ctw-border-0 ctw-border-b ctw-border-t ctw-border-solid ctw-border-divider-light">
+    <>
       {collection === "other" && (
         <div className="ctw-space-y-3">
           <PatientHistoryStatus
@@ -53,38 +49,34 @@ export function PatientConditionsTabs({
           />
         </div>
       )}
-      <div className="ctw-space-x-4">
-        <Tab.Group
-          // Keyboard navigation requires onChange instead of onClick.
-          onChange={(index) => {
-            onCollectionChange(index === 0 ? "patient" : "other");
-          }}
-        >
-          <Tab.List className="ctw-mt-3">
-            <Tab
-              onClick={blurClicked}
-              className={({ selected }) =>
-                cx(activeClass("patient"), sharedTabStyles, {
-                  "ctw-tab-underline-selected": selected,
-                })
-              }
-            >
-              Condition List
-            </Tab>
-            <Tab
-              onClick={blurClicked}
-              className={({ selected }) =>
-                cx(activeClass("other"), sharedTabStyles, "ctw-space-x-2", {
-                  "ctw-tab-underline-selected": selected,
-                })
-              }
-            >
-              <span>Other Provider Records</span>
-              <Badge text={`${activeCount}`} color="notification" />
-            </Tab>
-          </Tab.List>
-        </Tab.Group>
-      </div>
-    </div>
+      <TabGroup
+        content={tabbedContent}
+        forceHorizontalTabs={forceHorizontalTabs}
+        onChange={(index) => {
+          onCollectionChange(index === 0 ? "patient" : "other");
+        }}
+      />
+    </>
   );
 }
+
+export const BadgeOtherProviderConditionsCount = () => {
+  const otherConditionsQuery = useOtherProviderConditions();
+  if (!otherConditionsQuery.data) {
+    return null;
+  }
+  const activeUnarchivedConditions = otherConditionsQuery.data.filter(
+    (condition) => condition.displayStatus === "Active"
+  );
+
+  if (activeUnarchivedConditions.length > 0) {
+    return (
+      <Badge
+        color="notification"
+        text={activeUnarchivedConditions.length.toString()}
+        className="ctw-h-5"
+      />
+    );
+  }
+  return null;
+};

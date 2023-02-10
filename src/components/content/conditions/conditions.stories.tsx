@@ -111,6 +111,7 @@ export const TestDelete: StoryObj<Props> = {
     await conditions.patientRecord.toHaveRowCount(1);
     conditions.toggleInactive();
     await conditions.patientRecord.toHaveRowCount(3);
+    await conditions.patientRecord.toHaveRowWithText(1, /entered-in-error/i);
     conditions.toggleInactive();
     await conditions.patientRecord.toHaveRowCount(1);
   },
