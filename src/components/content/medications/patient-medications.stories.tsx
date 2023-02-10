@@ -33,6 +33,13 @@ export const Basic: StoryObj<Props> = {
   ...setupMedicationMocks({ providerMedications, otherProviderMedications }),
 };
 
+export const HideAddToRecord: StoryObj<Props> = {
+  ...Basic,
+  args: {
+    hideAddToRecord: true,
+  },
+};
+
 export const TestAddNewMed: StoryObj<Props> = {
   ...Basic,
   play: async ({ canvasElement }) => {

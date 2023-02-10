@@ -55,7 +55,7 @@
 
   .ctw-tab-underline {
     &:after {
-      @apply ctw-absolute ctw-left-0 -ctw-bottom-0.5 ctw-block ctw-h-0.5 ctw-w-full;
+      @apply ctw-absolute ctw-left-0 -ctw-bottom-1 ctw-block ctw-h-0.5 ctw-w-full;
       content: "";
     }
 

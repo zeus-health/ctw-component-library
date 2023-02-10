@@ -277,7 +277,7 @@ export const patientConditions: fhir4.Bundle = {
             text: "Patient presents with a lot of stress. Current medications don't seem to help. And this is a long dummy note to test things.",
           },
         ],
-        recordedDate: "2022-09-18",
+        recordedDate: "2022-09-17",
       },
       search: {
         mode: "match",

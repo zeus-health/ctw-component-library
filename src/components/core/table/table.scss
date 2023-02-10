@@ -114,10 +114,6 @@
         td:not(.ctw-table-full-length-row):not(.ctw-table-row-actions) {
           @apply ctw-block ctw-w-full ctw-p-0 ctw-pr-7;
         }
-
-        td.ctw-table-row-actions {
-          height: inherit;
-        }
       }
     }
   }
