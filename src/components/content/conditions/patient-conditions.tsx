@@ -21,6 +21,7 @@ import {
   useOtherProviderConditions,
   usePatientConditions,
 } from "@/fhir/conditions";
+import { ConditionModel } from "@/fhir/models";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { AnyZodSchema } from "@/utils/form-helper";
 import "./patient-conditions.scss";
@@ -41,23 +42,12 @@ export const PatientConditions = withErrorBoundary(
   ({ className, readOnly = false }: PatientConditionsProps) => {
     // State.
     const [collection, setCollection] = useState<FilterCollection>("patient");
-    const { filters, updateFilters, applyFilters } =
+    const { filters, updateFilters, applyFilters, availableFilters } =
       useConditionFilters(collection);
     const { applySorts, sortOptions, updateSorts, currentSorts } =
       useConditionSorts(collection);
     const containerRef = useRef<HTMLDivElement>(null);
     const breakpoints = useBreakpoints(containerRef);
-    // const [filters, setFilters] = useState<FilterChangeEvent>({});
-    // const filterItems: FilterItem[] = [
-    //   {
-    //     key: "status",
-    //     type: "checkbox",
-    //     icon: "eye",
-    //     display: ({ active }) =>
-    //       active ? "dismissed records" : "show dismissed records",
-    //     values: [],
-    //   },
-    // ];
 
     // Drawer helpers.
     const showConditionHistory = useConditionHistory();
@@ -79,6 +69,7 @@ export const PatientConditions = withErrorBoundary(
       patientConditions,
       true
     );
+
     let conditions = applyFilters(patientConditions, otherConditions);
     conditions = applySorts(conditions);
     const RowActions =
@@ -108,10 +99,16 @@ export const PatientConditions = withErrorBoundary(
             updateSorts={updateSorts}
             activeCollection={collection}
             hideAdd={readOnly || collection === "other"}
-            onToggleShowHistoric={() =>
-              updateFilters({ showHistoric: !filters.showHistoric })
-            }
             currentSorts={currentSorts[collection]}
+            filterItems={availableFilters(
+              getUnfilteredCollection(
+                patientConditions,
+                otherConditions,
+                collection
+              )
+            )}
+            setFilters={updateFilters}
+            filters={filters[collection]}
           />
 
           <Table
@@ -136,3 +133,9 @@ export const PatientConditions = withErrorBoundary(
   },
   "PatientConditions"
 );
+
+export const getUnfilteredCollection = (
+  patientConditions: ConditionModel[],
+  otherConditions: ConditionModel[],
+  activeCollection: string
+) => (activeCollection === "patient" ? patientConditions : otherConditions);

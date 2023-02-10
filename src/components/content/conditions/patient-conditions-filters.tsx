@@ -1,21 +1,66 @@
 import { useState } from "react";
+import {
+  FilterChangeEvent,
+  FilterItem,
+} from "@/components/core/filter-bar/filter-bar-types";
 import { ConditionModel } from "@/fhir/models";
-import { cloneDeep, merge } from "@/utils/nodash";
+import { compact, isArray, uniq } from "@/utils/nodash";
 
 export type FilterCollection = "patient" | "other";
 
 export type Filters = {
-  collection: FilterCollection;
+  patient: FilterChangeEvent;
+  other: FilterChangeEvent;
 };
 
-export function useConditionFilters() {
-  const [collection, setCollection] = useState<FilterCollection>("patient");
+const DEFAULT_FILTERS: Filters = {
+  patient: {
+    displayStatus: {
+      key: "displayStatus",
+      selected: ["Active", "Pending", "Unknown"],
+      type: "checkbox",
+    },
+  },
+  other: {
+    displayStatus: {
+      key: "displayStatus",
+      selected: ["Active", "Pending", "Unknown"],
+      type: "checkbox",
+    },
+  },
+};
+
+export function useConditionFilters(collection: FilterCollection) {
   const [filters, setFilters] = useState<Filters>({
-    collection: "patient",
+    ...DEFAULT_FILTERS,
   });
 
   function updateFilters(newFilters: Partial<Filters>) {
-    setFilters(merge(cloneDeep(filters), newFilters));
+    setFilters(() => ({
+      ...filters,
+      [collection]: {
+        ...newFilters,
+      },
+    }));
+  }
+
+  function availableFilters(conditions: ConditionModel[]): FilterItem[] {
+    return [
+      {
+        key: "displayStatus",
+        type: "checkbox",
+        icon: "eye",
+        display: () => "Status",
+        values: uniq(conditions.map((c) => c.displayStatus)),
+      },
+      {
+        key: "ccsChapter",
+        type: "checkbox",
+        icon: "eye",
+        display: () => "Category",
+        values: compact(uniq(conditions.map((c) => c.ccsChapter))),
+      },
+    ];
   }
 
   function applyFilters(
@@ -23,11 +68,28 @@ export function useConditionFilters() {
     otherConditions: ConditionModel[]
   ) {
     const conditions =
-      filters.collection === "patient" ? patientConditions : otherConditions;
+      collection === "patient" ? patientConditions : otherConditions;
+
     return conditions.filter((c) =>
-      ["Active", "Pending"].includes(c.displayStatus)
+      Object.entries(filters[collection]).every(([_, filterItem]) => {
+        if (filterItem?.type === "checkbox" && isArray(filterItem.selected)) {
+          return (
+            filterItem.selected.length < 1 ||
+            filterItem.selected.includes(
+              c[filterItem.key as keyof ConditionModel] ?? ""
+            )
+          );
+        }
+
+        return true;
+      })
     );
   }
 
-  return { filters, updateFilters, applyFilters };
+  return {
+    filters,
+    updateFilters,
+    applyFilters,
+    availableFilters,
+  };
 }

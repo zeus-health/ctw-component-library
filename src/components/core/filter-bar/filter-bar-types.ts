@@ -42,7 +42,7 @@ export type FilterValuesRecord = Record<string, string | string[]>;
 
 export type FilterChangeEvent = Record<
   string,
-  | undefined
+  | null
   | {
       key: string;
       selected: boolean;

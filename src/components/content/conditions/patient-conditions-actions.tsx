@@ -5,25 +5,32 @@ import { useAddConditionForm } from "./condition-hooks";
 import { FilterCollection } from "./patient-conditions-filters";
 import { Sort, SortOption } from "./patient-conditions-sort";
 import { DropdownMenuAction } from "@/components/core/dropdown-action-menu";
-import { Toggle } from "@/components/core/toggle";
 import { FilterBar } from "@/components/core/filter-bar/filter-bar";
+import {
+  FilterChangeEvent,
+  FilterItem,
+} from "@/components/core/filter-bar/filter-bar-types";
 
 export type PatientConditionsActionsProps = {
   hideAdd: boolean;
-  onToggleShowHistoric: () => void;
   sortOptions: SortOption[];
   updateSorts: (newSorts: Partial<Sort>) => void;
   activeCollection: FilterCollection;
   currentSorts: Sort;
+  filterItems: FilterItem[];
+  setFilters: (filterChangeEvent: FilterChangeEvent) => void;
+  filters: FilterChangeEvent;
 };
 
 export function PatientConditionsActions({
   hideAdd,
-  onToggleShowHistoric,
   sortOptions,
   updateSorts,
   activeCollection,
   currentSorts,
+  filterItems,
+  setFilters,
+  filters,
 }: PatientConditionsActionsProps) {
   const showAddConditionForm = useAddConditionForm();
   const patientHistory = usePatientHistory();
@@ -36,7 +43,19 @@ export function PatientConditionsActions({
           message="Last Retrieved"
         />
       )}
-      <FilterBar filters={filterItems} handleOnChange={setFilters} />
+      <div>
+        <SortButton
+          options={sortOptions}
+          updateSorts={updateSorts}
+          activeCollection={activeCollection}
+          currentSorts={currentSorts}
+        />
+      </div>
+      <FilterBar
+        filters={filterItems}
+        handleOnChange={setFilters}
+        defaultState={filters}
+      />
       {!hideAdd && (
         <button
           type="button"
@@ -46,30 +65,6 @@ export function PatientConditionsActions({
           Add Condition
         </button>
       )}
-      <div>
-        <SortButton
-          options={sortOptions}
-          updateSorts={updateSorts}
-          activeCollection={activeCollection}
-          currentSorts={currentSorts}
-        />
-      </div>
-      <div className="ctw-flex ctw-items-center ctw-space-x-2">
-        <Toggle
-          name="historic"
-          text="Historic"
-          onChange={onToggleShowHistoric}
-        />
-        {!hideAdd && (
-          <button
-            type="button"
-            className="ctw-btn-primary"
-            onClick={() => showAddConditionForm()}
-          >
-            Add Condition
-          </button>
-        )}
-      </div>
     </div>
   );
 }
