@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.45.7
+
+### Patch Changes
+
+- 1ea52c11: Add header to timeline.
+
 ## 0.45.6
 
 ### Patch Changes
