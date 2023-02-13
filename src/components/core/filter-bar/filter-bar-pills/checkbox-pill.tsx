@@ -56,18 +56,14 @@ export function FilterBarCheckboxPill({
       buttonClassName={cx(filter.className, buttonClassName)}
       onItemSelect={(item) => onChange(item.key, item.value)}
     >
-      <div className="ctw-font-medium ctw-text-content-black">
+      <span className="ctw-font-medium ctw-text-content-black">
         {displayFilterItem(omit("icon", filter), { active: true })}
         {selectedItems.length > 0 && ": "}
-      </div>
-      <div className="ctw-inline-block ctw-overflow-hidden ctw-text-ellipsis ctw-whitespace-nowrap ctw-text-left ctw-font-normal">
-        {selectedItems.map((item, idx) => (
-          <span>
-            {item}
-            {idx + 1 < selectedItems.length && ","}
-          </span>
-        ))}
-      </div>
+      </span>
+      <span className="ctw-inline-block ctw-overflow-hidden ctw-text-ellipsis ctw-whitespace-nowrap ctw-text-left ctw-font-normal">
+        {selectedItems.join(",")}
+      </span>
+
       <div className="ctw-flex">{getIcon("chevron-down")}</div>
     </DropdownMenuAction>
   );
