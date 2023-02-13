@@ -180,16 +180,7 @@ export const FilterBar = <T extends FilterItem>({
     // Need to add class for the first menu item under the fold
     ...belowTheFold.slice(0, 1).map(toFilterMenuItem),
     ...belowTheFold.slice(1).map(toFilterMenuItem),
-    {
-      // eslint-disable-next-line react/no-unstable-nested-components
-      display: () => <>{getIcon("reset")} reset filters</>,
-      key: "_reset",
-      icon: "reset",
-      className: cx("ctw-capitalize", {
-        // This adds divider to this item if needed
-        "ctw-border-top": !hasBelowTheFoldItems,
-      }),
-    },
+
     {
       // eslint-disable-next-line react/no-unstable-nested-components
       display: () => <>{getIcon("trash")} remove all filters</>,
@@ -198,6 +189,19 @@ export const FilterBar = <T extends FilterItem>({
       className: cx("ctw-capitalize"),
     },
   ];
+
+  if (activeFilters.filter((filter) => filter.type !== "tag").length > 0) {
+    inactiveFilterMenuItems.splice(-1, 0, {
+      // eslint-disable-next-line react/no-unstable-nested-components
+      display: () => <>{getIcon("reset")} reset filters</>,
+      key: "_reset",
+      icon: "reset",
+      className: cx("ctw-capitalize", {
+        // This adds divider to this item if needed
+        "ctw-border-top": !hasBelowTheFoldItems,
+      }),
+    });
+  }
 
   return (
     <div className={cx(className, "ctw-flex ctw-items-center")}>
