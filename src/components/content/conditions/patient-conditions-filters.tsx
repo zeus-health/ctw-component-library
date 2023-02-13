@@ -36,13 +36,7 @@ export function useConditionFilters(collection: FilterCollection) {
   });
 
   function updateFilters(newFilters: Partial<Filters>) {
-    setFilters(() => ({
-      ...filters,
-      [collection]: {
-        ...newFilters,
-      },
-    }));
-  }
+    setFilters(set(collection, newFilters, filters));
 
   function availableFilters(conditions: ConditionModel[]): FilterItem[] {
     return [
