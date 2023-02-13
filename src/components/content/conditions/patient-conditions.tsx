@@ -20,7 +20,6 @@ import {
   useOtherProviderConditions,
   usePatientConditions,
 } from "@/fhir/conditions";
-import { ConditionModel } from "@/fhir/models";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import "./patient-conditions.scss";
 
@@ -93,11 +92,7 @@ export const PatientConditions = withErrorBoundary(
           hideAdd={readOnly || collection === "other"}
           currentSorts={currentSorts[collection]}
           filterItems={availableFilters(
-            getUnfilteredCollection(
-              patientConditions,
-              otherConditions,
-              collection
-            )
+            collection === "patient" ? patientConditions : otherConditions
           )}
           setFilters={updateFilters}
           filters={filters[collection]}
@@ -124,9 +119,3 @@ export const PatientConditions = withErrorBoundary(
   },
   "PatientConditions"
 );
-
-export const getUnfilteredCollection = (
-  patientConditions: ConditionModel[],
-  otherConditions: ConditionModel[],
-  activeCollection: string
-) => (activeCollection === "patient" ? patientConditions : otherConditions);
