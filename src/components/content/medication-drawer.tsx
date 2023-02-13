@@ -11,7 +11,7 @@ import { isFunction } from "@/utils/nodash/fp";
 export type MedicationDrawerProps = {
   medication?: MedicationStatementModel;
   onDismissal?: (m: MedicationStatementModel) => void;
-} & Pick<DrawerProps, "isOpen" | "onClose">;
+} & Pick<DrawerProps, "isOpen" | "onOpen"|"onAfterOpen"|"onClose">;
 
 function getDataEntriesFromMedicationStatement(
   medication?: MedicationStatementModel,
