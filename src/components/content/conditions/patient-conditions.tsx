@@ -32,7 +32,7 @@ export const PatientConditions = withErrorBoundary(
   ({ className, readOnly = false }: PatientConditionsProps) => {
     // State.
     const [collection, setCollection] = useState<FilterCollection>("patient");
-    const { filters, updateFilters, applyFilters } =
+    const { filters, updateFilters, applyFilters, availableFilters } =
       useConditionFilters(collection);
     const { applySorts, sortOptions, updateSorts, currentSorts } =
       useConditionSorts(collection);
@@ -59,6 +59,7 @@ export const PatientConditions = withErrorBoundary(
       patientConditions,
       true
     );
+
     let conditions = applyFilters(patientConditions, otherConditions);
     conditions = applySorts(conditions);
     const RowActions =
@@ -89,10 +90,12 @@ export const PatientConditions = withErrorBoundary(
           updateSorts={updateSorts}
           activeCollection={collection}
           hideAdd={readOnly || collection === "other"}
-          onToggleShowHistoric={() =>
-            updateFilters({ showHistoric: !filters.showHistoric })
-          }
           currentSorts={currentSorts[collection]}
+          filterItems={availableFilters(
+            collection === "patient" ? patientConditions : otherConditions
+          )}
+          setFilters={updateFilters}
+          filters={filters[collection]}
         />
 
         <Table

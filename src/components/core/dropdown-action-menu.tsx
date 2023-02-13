@@ -44,7 +44,7 @@ export function DropdownMenuAction({
     <Menu>
       <RadixDropdownMenu.Root modal={false}>
         <RadixDropdownMenu.Trigger
-          className={cx(buttonClassName, "ctw-border-none ctw-bg-transparent")}
+          className={cx(buttonClassName)}
           aria-label="dropdown"
         >
           {children}
