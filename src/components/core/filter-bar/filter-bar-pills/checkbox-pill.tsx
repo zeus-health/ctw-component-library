@@ -60,7 +60,7 @@ export function FilterBarCheckboxPill({
         {displayFilterItem(omit("icon", filter), { active: true })}
         {selectedItems.length > 0 && ": "}
       </div>
-      <div className="ctw-flex ctw-flex-col ctw-text-left ctw-font-normal">
+      <div className="ctw-inline-block ctw-overflow-hidden ctw-text-ellipsis ctw-whitespace-nowrap ctw-text-left ctw-font-normal">
         {selectedItems.map((item, idx) => (
           <span>
             {item}
