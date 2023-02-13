@@ -36,8 +36,8 @@ export function PatientConditionsActions({
   const patientHistory = usePatientHistory();
 
   return (
-    <div className="ctw-flex ctw-items-center ctw-justify-between ctw-space-x-2 ctw-p-3 sm:ctw-pt-1.5">
-      <div className="ctw-flex">
+    <div className="ctw-flex ctw-flex-wrap ctw-items-center ctw-justify-between ctw-p-3 sm:ctw-pt-1.5">
+      <div className="ctw-flex ctw-flex-wrap ctw-gap-x-2">
         <SortButton
           options={sortOptions}
           updateSorts={updateSorts}
@@ -60,7 +60,7 @@ export function PatientConditionsActions({
       {!hideAdd && (
         <button
           type="button"
-          className="ctw-btn-primary"
+          className="ctw-btn-primary ctw-p-0"
           onClick={() => showAddConditionForm()}
         >
           Add Condition
@@ -85,7 +85,7 @@ const SortButton = ({
 }: SortButtonProps) => (
   <DropdownMenuAction
     type="select"
-    buttonClassName="ctw-bg-transparent ctw-border-none"
+    buttonClassName="ctw-bg-transparent ctw-border-none ctw-p-0"
     onItemSelect={(event) => {
       const { dir, key, isDate } = options.filter(
         (option) => option.display === event.key
