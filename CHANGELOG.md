@@ -1,5 +1,41 @@
 # ctw-component-library
 
+## 0.46.2
+
+### Patch Changes
+
+- b035d8f7: Add filters to condtions 2.0.
+
+## 0.46.1
+
+### Patch Changes
+
+- 3db87fc5: Add flag to enable FQS on allergies.
+- 75f2dfaa: Added `isDate` bool to sortIndices for table to fix a bug where dates do not sort correctly. Also fixed a bug where react-query errors if the use-patient-history-details hook returned empty
+
+## 0.46.0
+
+### Minor Changes
+
+- 67ab76e1: Fix issue with incorrect patient reference being passed when reconciling existing medications.
+
+### Patch Changes
+
+- ae8f7a7b: SideEffects set to prevent css from being tree-shaken by webpack. Upgraded storybook to 7.0.0-beta.45
+
+## 0.45.7
+
+### Patch Changes
+
+- 1ea52c11: Add header to timeline.
+
+## 0.45.6
+
+### Patch Changes
+
+- 1643187b: Fix types and text on the filter bar. Add icons that are missing.
+- 72a214c3: Fix bug for done state when a patient history request is finished"
+
 ## 0.45.5
 
 ### Patch Changes

@@ -1,25 +1,35 @@
+import { createGraphClient } from "./fqs";
+import { getAllergiesQuery } from "./queries/allergies";
+import { searchCommonRecords } from "./search-helpers";
 import { applyAllergyFilters } from "@/components/content/allergies/allergies-filter";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
-import { searchCommonRecords } from "@/fhir/search-helpers";
 import { orderBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_ALLERGIES } from "@/utils/query-keys";
 
-export function usePatientAllergies() {
+export function usePatientAllergies(enableFqs = false) {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_ALLERGIES,
     [],
     async (requestContext, patient) => {
       try {
-        const { bundle, resources } = await searchCommonRecords(
-          "AllergyIntolerance",
-          requestContext,
-          {
-            patientUPID: patient.UPID,
-          }
-        );
+        let data;
+        if (enableFqs) {
+          const graphClient = createGraphClient(requestContext);
+          data = await graphClient.request(getAllergiesQuery(patient.UPID));
+          data = data.AllergyIntoleranceList;
+        } else {
+          const response = await searchCommonRecords(
+            "AllergyIntolerance",
+            requestContext,
+            {
+              patientUPID: patient.UPID,
+            }
+          );
+          data = response.resources;
+        }
 
         return orderBy(
-          applyAllergyFilters(resources),
+          applyAllergyFilters(data),
           [(allergy) => allergy.onset],
           ["desc"]
         );
