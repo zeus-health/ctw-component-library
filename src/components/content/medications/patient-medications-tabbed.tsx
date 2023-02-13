@@ -3,7 +3,7 @@ import type {
   FilterItem,
 } from "@/components/core/filter-bar/filter-bar-types";
 import cx from "classnames";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   BadgeOtherProviderMedCount,
   OtherProviderMedsTable,
@@ -16,6 +16,9 @@ import { FilterBar } from "@/components/core/filter-bar/filter-bar";
 import { TabGroup, TabGroupItem } from "@/components/core/tab-group/tab-group";
 import { MedicationStatementModel } from "@/fhir/models";
 import "./patient-medications.scss";
+import { useQueryAllPatientMedications } from "@/hooks/use-medications";
+import { compact } from "@/utils/nodash";
+import { uniq } from "@/utils/nodash/fp";
 
 export type PatientMedicationsTabbedProps = {
   className?: string;
@@ -56,14 +59,40 @@ const tabbedContent = (
   },
 ];
 
-function OtherProviderMedsTableTab({
+export function OtherProviderMedsTableTab({
   handleAddToRecord,
   hideAddToRecord,
 }: PatientMedicationsTabbedProps) {
   const [filters, setFilters] = useState<FilterChangeEvent>({});
+  const [records, setRecords] = useState<MedicationStatementModel[]>([]);
+  const { otherProviderMedications, isLoading } =
+    useQueryAllPatientMedications();
+
+  useEffect(() => {
+    if (!isLoading && otherProviderMedications) {
+      const filteredRecords = otherProviderMedications.filter((medication) => {
+        if (filters.providers?.selected) {
+          return filters.providers.selected === medication.lastPrescriber;
+        }
+        return true;
+      });
+      setRecords(filteredRecords);
+    }
+  }, [filters, otherProviderMedications, isLoading]);
+
   const showDismissed = "dismissed" in filters;
   const showInactive = "inactive" in filters;
-  const filterItems: FilterItem[] = [
+
+  // Create a list of prescriber names to use in a filter
+  const prescriberNames = !otherProviderMedications
+    ? []
+    : (uniq(
+        otherProviderMedications
+          .map((medication) => medication.lastPrescriber)
+          .filter((s) => typeof s === "string")
+      ) as string[]);
+
+  const filterItems: FilterItem[] = compact([
     {
       key: "dismissed",
       type: "tag",
@@ -71,12 +100,22 @@ function OtherProviderMedsTableTab({
       display: ({ active }) =>
         active ? "dismissed records" : "show dismissed records",
     },
-  ];
+    !otherProviderMedications || prescriberNames.length < 2
+      ? null
+      : {
+          key: "providers",
+          type: "checkbox",
+          icon: "clipboard",
+          values: prescriberNames,
+          display: "prescriber",
+        },
+  ]);
 
   return (
     <>
       <FilterBar filters={filterItems} handleOnChange={setFilters} />
       <OtherProviderMedsTable
+        records={records}
         handleAddToRecord={handleAddToRecord}
         hideAddToRecord={hideAddToRecord}
         showDismissed={showDismissed}
