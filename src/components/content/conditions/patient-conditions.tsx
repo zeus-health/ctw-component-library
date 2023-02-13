@@ -86,22 +86,22 @@ export const PatientConditions = withErrorBoundary(
           onCollectionChange={setCollection}
         />
 
-          <PatientConditionsActions
-            sortOptions={sortOptions}
-            updateSorts={updateSorts}
-            activeCollection={collection}
-            hideAdd={readOnly || collection === "other"}
-            currentSorts={currentSorts[collection]}
-            filterItems={availableFilters(
-              getUnfilteredCollection(
-                patientConditions,
-                otherConditions,
-                collection
-              )
-            )}
-            setFilters={updateFilters}
-            filters={filters[collection]}
-          />
+        <PatientConditionsActions
+          sortOptions={sortOptions}
+          updateSorts={updateSorts}
+          activeCollection={collection}
+          hideAdd={readOnly || collection === "other"}
+          currentSorts={currentSorts[collection]}
+          filterItems={availableFilters(
+            getUnfilteredCollection(
+              patientConditions,
+              otherConditions,
+              collection
+            )
+          )}
+          setFilters={updateFilters}
+          filters={filters[collection]}
+        />
 
         <Table
           stacked={breakpoints.sm}
