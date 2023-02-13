@@ -190,7 +190,7 @@ export const FilterBar = <T extends FilterItem>({
     },
   ];
 
-  if (activeFilters.filter((filter) => filter.type !== "tag").length > 0) {
+  if ([initialState].filter((filter) => filter.type !== "tag").length > 0) {
     inactiveFilterMenuItems.splice(-1, 0, {
       // eslint-disable-next-line react/no-unstable-nested-components
       display: () => <>{getIcon("reset")} reset filters</>,
@@ -198,7 +198,7 @@ export const FilterBar = <T extends FilterItem>({
       icon: "reset",
       className: cx("ctw-capitalize", {
         // This adds divider to this item if needed
-        "ctw-border-top": !hasBelowTheFoldItems,
+        "ctw-border-top first-of-type:ctw-border-none": !hasBelowTheFoldItems,
       }),
     });
   }
