@@ -15,7 +15,6 @@ import {
 import { useConditionSorts } from "./patient-conditions-sort";
 import { PatientConditionsTabs } from "./patient-conditions-tabs";
 import { withErrorBoundary } from "@/components/core/error-boundary";
-import { FormEntry } from "@/components/core/form/drawer-form-with-fields";
 import { Table } from "@/components/core/table/table";
 import {
   useOtherProviderConditions,
@@ -23,19 +22,11 @@ import {
 } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
-import { AnyZodSchema } from "@/utils/form-helper";
 import "./patient-conditions.scss";
 
 export type PatientConditionsProps = {
   className?: string;
   readOnly?: boolean;
-};
-
-export type ConditionFormData = {
-  schema: AnyZodSchema;
-  actionType: string;
-  data: FormEntry[] | undefined;
-  drawerIsOpen: boolean;
 };
 
 export const PatientConditions = withErrorBoundary(
@@ -80,19 +71,20 @@ export const PatientConditions = withErrorBoundary(
     return (
       <div
         ref={containerRef}
-        className={cx("ctw-patient-conditions", className, {
-          "ctw-patient-conditions-stacked": breakpoints.sm,
-        })}
+        className={cx(
+          "ctw-patient-conditions ctw-items-center ctw-justify-between ctw-py-5",
+          className,
+          {
+            "ctw-patient-conditions-stacked": breakpoints.sm,
+          }
+        )}
       >
-        <div className="ctw-items-center ctw-justify-between ctw-py-5">
-          <div className="ctw-ml-3 ctw-text-xl ctw-font-medium ctw-text-content-black">
-            Conditions
-          </div>
-          <PatientConditionsTabs
-            otherConditions={otherConditions}
-            collection={collection}
-            onCollectionChange={(c) => setCollection(c)}
-          />
+        <PatientConditionsTabs
+          forceHorizontalTabs
+          otherConditions={otherConditions}
+          collection={collection}
+          onCollectionChange={setCollection}
+        />
 
           <PatientConditionsActions
             sortOptions={sortOptions}
@@ -111,23 +103,22 @@ export const PatientConditions = withErrorBoundary(
             filters={filters[collection]}
           />
 
-          <Table
-            stacked={breakpoints.sm}
-            className="-ctw-mx-px !ctw-rounded-none"
-            showTableHead={false}
-            emptyMessage="There are no condition records available."
-            isLoading={isLoading()}
-            records={conditions}
-            RowActions={readOnly ? undefined : RowActions}
-            columns={patientConditionsColumns}
-            handleRowClick={(condition) =>
-              showConditionHistory({
-                condition,
-                readOnly: readOnly || condition.isSummaryResource,
-              })
-            }
-          />
-        </div>
+        <Table
+          stacked={breakpoints.sm}
+          className="-ctw-mx-px !ctw-rounded-none"
+          showTableHead={false}
+          emptyMessage="There are no condition records available."
+          isLoading={isLoading()}
+          records={conditions}
+          RowActions={readOnly ? undefined : RowActions}
+          columns={patientConditionsColumns}
+          handleRowClick={(condition) =>
+            showConditionHistory({
+              condition,
+              readOnly: readOnly || condition.isSummaryResource,
+            })
+          }
+        />
       </div>
     );
   },
