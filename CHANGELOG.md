@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.46.2
+
+### Patch Changes
+
+- b035d8f7: Add filters to condtions 2.0.
+
 ## 0.46.1
 
 ### Patch Changes
