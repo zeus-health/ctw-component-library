@@ -8,6 +8,8 @@ export type DrawerProps = {
   className?: string;
   children: ReactNode;
   isOpen: boolean;
+  onOpen?: () => void;
+  onAfterOpen?: () => void;
   onClose: () => void;
   /** Called after drawer closing animation has ended. Use this for
    * any cleanup that would affect the content displayed in the drawer.
@@ -33,6 +35,8 @@ export function Drawer({
   isOpen,
   onClose,
   onAfterClosed,
+  onOpen,
+  onAfterOpen,
   showCloseFooter,
   title,
   disableCloseOnBlur = false,
@@ -62,6 +66,8 @@ export function Drawer({
           leaveFrom="ctw-opacity-100"
           leaveTo="ctw-opacity-0"
           afterLeave={onAfterClosed}
+          beforeEnter={onOpen}
+          afterEnter={onAfterOpen}
         >
           <div className="ctw-fixed ctw-inset-0  ctw-transition-opacity">
             <div className="ctw-h-full ctw-w-full ctw-bg-content-light ctw-opacity-75" />
