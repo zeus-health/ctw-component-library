@@ -36,7 +36,7 @@ export const PatientMedications = withErrorBoundary(
 
     return (
       <CTWBox.StackedWrapper
-        className={cx("ctw-patient-medications", className)}
+        className={cx(" ctw-patient-medications", className)}
         data-zus-telemetry-namespace="PatientMedications"
       >
         <CTWBox.Heading title="Medications">

@@ -20,6 +20,7 @@ export type RowActionsProps<T extends MinRecordItem> = { record: T };
 export type TableProps<T extends MinRecordItem> = {
   className?: cx.Argument;
   records: T[];
+  removeLeftAndRightBorders?: boolean;
   columns: TableColumn<T>[];
   isLoading?: boolean;
   /** Displayed when we have 0 records. */
@@ -47,6 +48,7 @@ export const Table = <T extends MinRecordItem>({
   isLoading = false,
   emptyMessage: message = "No records found",
   showTableHead = true,
+  removeLeftAndRightBorders = false,
   stacked,
   sort,
   onSort,
@@ -111,9 +113,10 @@ export const Table = <T extends MinRecordItem>({
       })}
     >
       <div
-        className={cx("ctw-table-container", className, {
+        className={cx(`ctw-table-container`, className, {
           "ctw-table-scroll-left-shadow": showLeftShadow,
           "ctw-table-scroll-right-shadow": showRightShadow,
+          "ctw-border-x-0": removeLeftAndRightBorders,
         })}
       >
         <div className="ctw-scrollbar" ref={scrollContainerRef}>
