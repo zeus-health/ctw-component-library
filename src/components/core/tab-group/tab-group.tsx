@@ -1,10 +1,10 @@
 import { Tab } from "@headlessui/react";
 import cx from "classnames";
 import { ReactNode, useRef, useState } from "react";
+import { withErrorBoundary } from "@/components/core/error-boundary";
 import { ListBox } from "@/components/core/list-box/list-box";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import "./tab-group.scss";
-import { withErrorBoundary } from "@/components/core/error-boundary";
 
 export type TabGroupProps<T> = {
   children?: ReactNode;
