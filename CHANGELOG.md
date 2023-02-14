@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 0.46.4
+
+### Patch Changes
+
+- 385304f1: Miscellaneous style fixes.
+- 0da295fc: RUM views will now use component names instead of url path name.
+
 ## 0.46.3
 
 ### Patch Changes
