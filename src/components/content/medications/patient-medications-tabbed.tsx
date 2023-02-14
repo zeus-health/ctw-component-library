@@ -4,6 +4,7 @@ import type {
 } from "@/components/core/filter-bar/filter-bar-types";
 import cx from "classnames";
 import { useEffect, useState } from "react";
+import { MedsHistoryTempProps } from "@/components/content/medications-table-base";
 import {
   BadgeOtherProviderMedCount,
   OtherProviderMedsTable,
@@ -23,29 +24,41 @@ import { uniq } from "@/utils/nodash/fp";
 export type PatientMedicationsTabbedProps = {
   className?: string;
   forceHorizontalTabs?: boolean;
-} & SubsetOtherProviderTableProps;
-type SubsetOtherProviderTableProps = Pick<
+} & TabbedContentProps;
+
+type TabbedContentProps = Pick<
   OtherProviderMedsTableProps,
   "hideAddToRecord" | "handleAddToRecord"
->;
+> &
+  MedsHistoryTempProps;
 
 // We use getPanelClassName on all tabs except for the other-provider-records
 // tab because without the FilterBar there is no margin between tab and panel
 // when md - lg sized.
 const tabbedContent = (
-  otherProviderTableProps: SubsetOtherProviderTableProps
+  tabbedContentProps: TabbedContentProps
 ): TabGroupItem<MedicationStatementModel>[] => [
   {
     key: "medication-list",
     getPanelClassName: (sm: boolean) => (sm ? "ctw-mt-0" : "ctw-mt-2"),
     display: () => "medication list",
-    render: () => <ProviderMedsTable />,
+    render: () => (
+      <ProviderMedsTable
+        onOpenHistoryDrawer={tabbedContentProps.onOpenHistoryDrawer}
+        onAfterOpenHistoryDrawer={tabbedContentProps.onOpenHistoryDrawer}
+      />
+    ),
   },
   {
     key: "inactive-provider-records",
     getPanelClassName: (sm: boolean) => (sm ? "ctw-mt-0" : "ctw-mt-2"),
     display: () => "inactive",
-    render: () => <ProviderInactiveMedicationsTable />,
+    render: () => (
+      <ProviderInactiveMedicationsTable
+        onOpenHistoryDrawer={tabbedContentProps.onOpenHistoryDrawer}
+        onAfterOpenHistoryDrawer={tabbedContentProps.onOpenHistoryDrawer}
+      />
+    ),
   },
   {
     key: "other-provider-records",
@@ -55,7 +68,7 @@ const tabbedContent = (
         <BadgeOtherProviderMedCount />
       </>
     ),
-    render: () => <OtherProviderMedsTableTab {...otherProviderTableProps} />,
+    render: () => <OtherProviderMedsTableTab {...tabbedContentProps} />,
   },
 ];
 

@@ -8,6 +8,11 @@ import {
 } from "@/components/core/table/table-helpers";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 
+export type MedsHistoryTempProps = Partial<{
+  onOpenHistoryDrawer: () => void;
+  onAfterOpenHistoryDrawer: () => void;
+}>;
+
 export type MedicationsTableBaseProps<T extends MinRecordItem> = {
   children?: ReactNode;
   className?: string;

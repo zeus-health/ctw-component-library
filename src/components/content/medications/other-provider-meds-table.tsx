@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
-import { useMedicationHistory } from "./medication-history-drawer"
-import { MedicationsTableBase } from "@/components/content/medications-table-base";
+import { useMedicationHistory } from "./medication-history-drawer";
+import {
+  MedicationsTableBase,
+  MedsHistoryTempProps,
+} from "@/components/content/medications-table-base";
 import { AddNewMedDrawer } from "@/components/content/medications/add-new-med-drawer";
 import { Badge } from "@/components/core/badge";
 import { withErrorBoundary } from "@/components/core/error-boundary";
@@ -9,11 +12,6 @@ import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { get, isFunction, pipe, toLower } from "@/utils/nodash/fp";
 import { sort, SortDir } from "@/utils/sort";
-
-export type MedsHistoryTempProps = Partial<{
-  onOpen: () => void;
-  onAfterOpen: () => void;
-}>
 
 export type OtherProviderMedsTableProps = {
   className?: string;
@@ -42,11 +40,11 @@ export const OtherProviderMedsTable = withErrorBoundary(
     hideAddToRecord = false,
     handleAddToRecord,
     records,
-    onAfterOpen,
-    onOpen,
+    onAfterOpenHistoryDrawer,
+    onOpenHistoryDrawer,
   }: OtherProviderMedsTableProps) => {
     const dismissMedication = useDismissMedication();
-    const medicationHistoryDrawer = useMedicationHistory();
+    const openMedHistoryDrawer = useMedicationHistory();
     const [medicationModels, setMedicationModels] = useState<
       MedicationStatementModel[]
     >([]);
@@ -61,16 +59,16 @@ export const OtherProviderMedsTable = withErrorBoundary(
       // Temp - onOpen and onAfterOpen should be side-effect free as
       // they may be called after component unmounts. We added
       // this to support a bug-fix workaround in canvas.
-      if (isFunction(onOpen)) {
-        onOpen();
+      if (isFunction(onOpenHistoryDrawer)) {
+        onOpenHistoryDrawer();
       }
-      setTimeout(() => {
-        if (isFunction(onAfterOpen)) {
-          onAfterOpen();
-        }
-      }, 0)
       setSelectedMedication(row);
-      medicationHistoryDrawer({ medication: row });
+      openMedHistoryDrawer({ medication: row });
+      setTimeout(() => {
+        if (isFunction(onAfterOpenHistoryDrawer)) {
+          onAfterOpenHistoryDrawer();
+        }
+      }, 0);
     }
 
     function openAddNewMedicationDrawer(row: MedicationStatementModel) {
