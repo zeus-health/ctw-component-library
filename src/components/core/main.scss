@@ -123,4 +123,8 @@
     // We add important here because radix z-index will take presedence if we don't.
     z-index: 10000 !important;
   }
+
+  .ctw-border-top {
+    border-top: 1px solid #e5e7eb;
+  }
 }

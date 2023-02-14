@@ -1,5 +1,18 @@
 # ctw-component-library
 
+## 0.46.2
+
+### Patch Changes
+
+- b035d8f7: Add filters to condtions 2.0.
+
+## 0.46.1
+
+### Patch Changes
+
+- 3db87fc5: Add flag to enable FQS on allergies.
+- 75f2dfaa: Added `isDate` bool to sortIndices for table to fix a bug where dates do not sort correctly. Also fixed a bug where react-query errors if the use-patient-history-details hook returned empty
+
 ## 0.46.0
 
 ### Minor Changes

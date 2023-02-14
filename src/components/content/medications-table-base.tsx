@@ -81,7 +81,7 @@ export const MedicationsTableBase = ({
     {
       title: "Last Filled",
       dataIndex: "lastFillDate",
-      sortIndices: [{ index: "lastFillDate" }],
+      sortIndices: [{ index: "lastFillDate", isDate: true }],
       widthPercent: 18,
     },
     {
@@ -95,7 +95,7 @@ export const MedicationsTableBase = ({
         </>
       ),
       sortIndices: [
-        { index: "lastPrescribedDate" },
+        { index: "lastPrescribedDate", isDate: true },
         { index: "lastPrescriber", dir: "asc" },
       ],
       widthPercent: 18,
