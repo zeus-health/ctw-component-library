@@ -10,10 +10,10 @@ import {
   PlusIcon,
   QuestionMarkCircleIcon,
   TrashIcon,
-  XCircleIcon,
   XIcon,
 } from "@heroicons/react/solid";
 import cx from "classnames";
+import { RotateIcon } from "../rotate-icon";
 import { FilterChangeEvent, FilterValuesRecord } from "./filter-bar-types";
 import { isFunction, set } from "@/utils/nodash/fp";
 
@@ -40,11 +40,12 @@ export function getIcon(icon: string) {
     case "plus":
       return <PlusIcon className={iconClassNames} />;
     case "reset":
-      return <XCircleIcon className={iconClassNames} />;
+      return <RotateIcon className={iconClassNames} />;
     case "trash":
       return <TrashIcon className={iconClassNames} />;
     case "x":
       return <XIcon className={iconClassNames} />;
+
     default:
       return <QuestionMarkCircleIcon className={iconClassNames} />;
   }

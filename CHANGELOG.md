@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 0.46.3
+
+### Patch Changes
+
+- 95895cef: Expose functions that run when opening a drawer.
+
+## 0.46.2
+
+### Patch Changes
+
+- b035d8f7: Add filters to condtions 2.0.
+
 ## 0.46.1
 
 ### Patch Changes

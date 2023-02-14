@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
-import { MedicationDrawer } from "@/components/content/medication-drawer";
-import { MedicationsTableBase } from "@/components/content/medications-table-base";
+import { useMedicationHistory } from "./medication-history-drawer";
+import {
+  MedicationsTableBase,
+  MedsHistoryTempProps,
+} from "@/components/content/medications-table-base";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
-import { get, pipe, toLower } from "@/utils/nodash/fp";
+import { get, isFunction, pipe, toLower } from "@/utils/nodash/fp";
 import { sort, SortDir } from "@/utils/sort";
 
 export type ProviderMedsTableProps = {
@@ -13,7 +16,7 @@ export type ProviderMedsTableProps = {
   sortOrder?: SortDir;
   // should inactive meds be shown?
   showInactive?: boolean;
-};
+} & MedsHistoryTempProps;
 
 /**
  * Displays a table of medications that are scoped to the CTWContext builder
@@ -28,18 +31,28 @@ export const ProviderMedsTable = withErrorBoundary(
     showInactive = false,
     sortColumn = "display",
     sortOrder = "asc",
+    onAfterOpenHistoryDrawer,
+    onOpenHistoryDrawer,
   }: ProviderMedsTableProps) => {
     const [medicationModels, setMedicationModels] = useState<
       MedicationStatementModel[]
     >([]);
-    const [drawerOpen, setDrawerOpen] = useState(false);
-    const [selectedMedication, setSelectedMedication] =
-      useState<MedicationStatementModel>();
     const { builderMedications, isLoading } = useQueryAllPatientMedications();
+    const openMedHistoryDrawer = useMedicationHistory();
 
-    function openMedicationDrawer(row: MedicationStatementModel) {
-      setSelectedMedication(row);
-      setDrawerOpen(true);
+    function openHistoryDrawer(row: MedicationStatementModel) {
+      // Temp - onOpen and onAfterOpen should be side-effect free as
+      // they may be called after component unmounts. We added
+      // this to support a bug-fix workaround in canvas.
+      if (isFunction(onOpenHistoryDrawer)) {
+        onOpenHistoryDrawer();
+      }
+      openMedHistoryDrawer({ medication: row });
+      setTimeout(() => {
+        if (isFunction(onAfterOpenHistoryDrawer)) {
+          onAfterOpenHistoryDrawer();
+        }
+      }, 0);
     }
 
     useEffect(() => {
@@ -61,12 +74,7 @@ export const ProviderMedsTable = withErrorBoundary(
           medicationStatements={medicationModels}
           telemetryNamespace="ProviderMedsTable"
           isLoading={isLoading}
-          handleRowClick={(medication) => openMedicationDrawer(medication)}
-        />
-        <MedicationDrawer
-          medication={selectedMedication}
-          isOpen={drawerOpen}
-          onClose={() => setDrawerOpen(false)}
+          handleRowClick={openHistoryDrawer}
         />
       </>
     );

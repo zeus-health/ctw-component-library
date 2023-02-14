@@ -20,7 +20,7 @@ type FilterBarCheckboxPillProps = {
 };
 
 const buttonClassName =
-  "ctw-flex ctw-items-center ctw-max-w-[15rem] ctw-capitalize ctw-text-content-black ctw-bg-bg-dark ctw-text-sm ctw-rounded ctw-my-2 ctw-py-2 ctw-px-3 ctw-relative ctw-mr-1 ctw-cursor-pointer ctw-border-0 ctw-border-transparent";
+  "ctw-flex ctw-items-center ctw-max-w-[15rem] ctw-space-x-1 ctw-capitalize ctw-text-content-black ctw-bg-bg-dark ctw-text-sm ctw-rounded ctw-my-2 ctw-py-2 ctw-px-3 ctw-relative ctw-mr-1 ctw-cursor-pointer ctw-border-0 ctw-border-transparent";
 
 export function FilterBarCheckboxPill({
   filter,
@@ -45,13 +45,6 @@ export function FilterBarCheckboxPill({
       items={items}
       type="checkbox"
       pinnedActions={compact([
-        onReset
-          ? {
-              decoration: getIcon("reset"),
-              name: "Reset Filter",
-              action: onReset,
-            }
-          : null,
         onRemove
           ? {
               decoration: getIcon("trash"),
@@ -67,7 +60,10 @@ export function FilterBarCheckboxPill({
         {displayFilterItem(omit("icon", filter), { active: true })}
         {selectedItems.length > 0 && ": "}
       </span>
-      <span className="ctw-font-normal">{selectedItems.join(", ")}</span>
+      <span className="ctw-inline-block ctw-overflow-hidden ctw-text-ellipsis ctw-whitespace-nowrap ctw-text-left ctw-font-normal">
+        {selectedItems.join(",")}
+      </span>
+
       <div className="ctw-flex">{getIcon("chevron-down")}</div>
     </DropdownMenuAction>
   );
