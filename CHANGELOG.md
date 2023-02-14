@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.46.3
+
+### Patch Changes
+
+- 95895cef: Expose functions that run when opening a drawer.
+
 ## 0.46.2
 
 ### Patch Changes
