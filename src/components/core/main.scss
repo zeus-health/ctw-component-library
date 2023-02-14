@@ -110,6 +110,10 @@
     hyphens: auto;
   }
 
+  .ctw-patient-resource-component {
+    @apply ctw-bg-white ctw-p-5;
+  }
+
   select.ctw-error,
   input.ctw-error {
     @apply ctw-border-error-main ctw-pr-10 focus:ctw-border-error-main focus:ctw-outline-none focus:ctw-ring-1 focus:ctw-ring-error-main;

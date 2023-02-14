@@ -71,7 +71,7 @@ export const PatientConditions = withErrorBoundary(
       <div
         ref={containerRef}
         className={cx(
-          "ctw-patient-conditions ctw-items-center ctw-justify-between ctw-py-5",
+          "ctw-patient-resource-component ctw-patient-conditions ctw-items-center ctw-justify-between ctw-py-5",
           className,
           {
             "ctw-patient-conditions-stacked": breakpoints.sm,
@@ -100,6 +100,7 @@ export const PatientConditions = withErrorBoundary(
 
         <Table
           stacked={breakpoints.sm}
+          removeLeftAndRightBorders
           className="-ctw-mx-px !ctw-rounded-none"
           showTableHead={false}
           emptyMessage="There are no condition records available."
