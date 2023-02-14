@@ -22,6 +22,7 @@ import {
 } from "@/fhir/conditions";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import "./patient-conditions.scss";
+import { applyFilters } from "@/utils/filters";
 
 export type PatientConditionsProps = {
   className?: string;
@@ -32,7 +33,7 @@ export const PatientConditions = withErrorBoundary(
   ({ className, readOnly = false }: PatientConditionsProps) => {
     // State.
     const [collection, setCollection] = useState<FilterCollection>("patient");
-    const { filters, updateFilters, applyFilters, availableFilters } =
+    const { filters, updateFilters, availableFilters } =
       useConditionFilters(collection);
     const { applySorts, sortOptions, updateSorts, currentSorts } =
       useConditionSorts(collection);
@@ -60,7 +61,10 @@ export const PatientConditions = withErrorBoundary(
       true
     );
 
-    let conditions = applyFilters(patientConditions, otherConditions);
+    let conditions = applyFilters(
+      collection === "patient" ? patientConditions : otherConditions,
+      filters[collection]
+    );
     conditions = applySorts(conditions);
     const RowActions =
       collection === "patient"
