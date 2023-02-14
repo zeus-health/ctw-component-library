@@ -45,7 +45,7 @@ const tabbedContent = (
     render: () => (
       <ProviderMedsTable
         onOpenHistoryDrawer={tabbedContentProps.onOpenHistoryDrawer}
-        onAfterOpenHistoryDrawer={tabbedContentProps.onOpenHistoryDrawer}
+        onAfterOpenHistoryDrawer={tabbedContentProps.onAfterOpenHistoryDrawer}
       />
     ),
   },
@@ -56,7 +56,7 @@ const tabbedContent = (
     render: () => (
       <ProviderInactiveMedicationsTable
         onOpenHistoryDrawer={tabbedContentProps.onOpenHistoryDrawer}
-        onAfterOpenHistoryDrawer={tabbedContentProps.onOpenHistoryDrawer}
+        onAfterOpenHistoryDrawer={tabbedContentProps.onAfterOpenHistoryDrawer}
       />
     ),
   },
@@ -75,6 +75,8 @@ const tabbedContent = (
 export function OtherProviderMedsTableTab({
   handleAddToRecord,
   hideAddToRecord,
+  onOpenHistoryDrawer,
+  onAfterOpenHistoryDrawer,
 }: PatientMedicationsTabbedProps) {
   const [filters, setFilters] = useState<FilterChangeEvent>({});
   const [records, setRecords] = useState<MedicationStatementModel[]>([]);
@@ -133,6 +135,8 @@ export function OtherProviderMedsTableTab({
         hideAddToRecord={hideAddToRecord}
         showDismissed={showDismissed}
         showInactive={showInactive}
+        onOpenHistoryDrawer={onOpenHistoryDrawer}
+        onAfterOpenHistoryDrawer={onAfterOpenHistoryDrawer}
       />
     </>
   );
@@ -150,9 +154,9 @@ export function OtherProviderMedsTableTab({
 export function PatientMedicationsTabbed({
   className,
   forceHorizontalTabs = false,
-  ...otherProviderTableProps
+  ...tabbedContentProps
 }: PatientMedicationsTabbedProps) {
-  const tabItems = tabbedContent(otherProviderTableProps);
+  const tabItems = tabbedContent(tabbedContentProps);
 
   return (
     <CTWBox.StackedWrapper
