@@ -1,8 +1,8 @@
-import { userEvent, within } from "@storybook/testing-library";
+import { userEvent, waitFor, within } from "@storybook/testing-library";
 
-export function medicationFormDrawer(canvasElement: HTMLElement) {
+export async function medicationFormDrawer(canvasElement: HTMLElement) {
   const canvas = within(canvasElement);
-  const drawer = within(canvas.getByRole("dialog"));
+  const drawer = await waitFor(() => within(canvas.getByRole("dialog")));
 
   return {
     search: (search: string) =>
