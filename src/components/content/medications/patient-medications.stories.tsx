@@ -72,7 +72,7 @@ export const TestAddToRecord: StoryObj<Props> = {
       "3 ML insulin aspart protamine, human 70 UNT/ML / insulin aspart, human 30 UNT/ML Pen Injector [NovoLog Mix]";
     medications.otherProvider.toHaveRowWithText(0, medicationName);
     await medications.otherProvider.addToRecord(0);
-    // await medicationFormDrawer(canvasElement).save();
+    await medicationFormDrawer(canvasElement).save();
     // await medications.patientRecord.toHaveRowCount(2);
     // await medications.otherProvider.toHaveRowCount(3);
     // await medications.patientRecord.toHaveAnyRowWithText(medicationName);
