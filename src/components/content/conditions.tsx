@@ -136,12 +136,12 @@ export const Conditions = withErrorBoundary(
 
     const addConditionBtn = (
       <button
-        className="ctw-btn-primary"
+        className="ctw-btn-primary ctw-capitalize"
         type="button"
         onClick={handleAddNewCondition}
         data-zus-telemetry-click="Add new condition (Empty table)"
       >
-        Add Condition
+        Add condition
       </button>
     );
 
@@ -207,11 +207,12 @@ export const Conditions = withErrorBoundary(
             <div className="ctw-title">Conditions</div>
             <button
               type="button"
-              className="ctw-btn-clear ctw-link"
+              className="ctw-btn-clear ctw-link ctw-capitalize"
               data-zus-telemetry-click="Add new condition"
+              data-testid="button.add-condition"
               onClick={handleAddNewCondition}
             >
-              + Add Condition
+              + Add condition
             </button>
           </div>
         )}

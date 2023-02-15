@@ -1,6 +1,7 @@
 import type { ClinicalStatus } from "@/fhir/medication";
 import cx from "classnames";
 import { useState } from "react";
+import { MedsHistoryTempProps } from "@/components/content/medications-table-base";
 import { AddNewMedDrawer } from "@/components/content/medications/add-new-med-drawer";
 import {
   OtherProviderMedsTable,
@@ -21,7 +22,8 @@ export type PatientMedicationsProps = {
   showOtherProvidersMedsTable?: boolean;
   // should we show the button to add new meds (default true)?
   readOnly?: boolean;
-} & Pick<OtherProviderMedsTableProps, "hideAddToRecord" | "handleAddToRecord">;
+} & Pick<OtherProviderMedsTableProps, "hideAddToRecord" | "handleAddToRecord"> &
+  MedsHistoryTempProps;
 
 export const PatientMedications = withErrorBoundary(
   ({
@@ -29,6 +31,8 @@ export const PatientMedications = withErrorBoundary(
     readOnly = false,
     showConfirmedMedsTable = true,
     showOtherProvidersMedsTable = true,
+    onOpenHistoryDrawer,
+    onAfterOpenHistoryDrawer,
     ...otherProviderTableProps
   }: PatientMedicationsProps) => {
     const [drawerIsOpen, setDrawerIsOpen] = useState(false);
@@ -46,12 +50,13 @@ export const PatientMedications = withErrorBoundary(
               handleOnClose={() => setDrawerIsOpen(false)}
             >
               <button
-                className="ctw-btn-clear ctw-link"
+                className="ctw-btn-clear ctw-link ctw-capitalize"
                 type="button"
                 onClick={() => setDrawerIsOpen(true)}
-                data-zus-telemetry-click="Add medication"
+                data-testid="button.add-medication"
+                data-zus-telemetry-click="Add new medication"
               >
-                + Add Medication
+                + Add medication
               </button>
             </AddNewMedDrawer>
           )}
@@ -70,13 +75,21 @@ export const PatientMedications = withErrorBoundary(
                 }}
               />
             </CTWBox.Title>
-            <ProviderMedsTable showInactive={includeInactiveMeds} />
+            <ProviderMedsTable
+              showInactive={includeInactiveMeds}
+              onOpenHistoryDrawer={onOpenHistoryDrawer}
+              onAfterOpenHistoryDrawer={onAfterOpenHistoryDrawer}
+            />
           </CTWBox.Body>
         )}
 
         {showOtherProvidersMedsTable && (
           <CTWBox.Body title="Other Provider Records">
-            <OtherProviderMedsTable {...otherProviderTableProps} />
+            <OtherProviderMedsTable
+              {...otherProviderTableProps}
+              onOpenHistoryDrawer={onOpenHistoryDrawer}
+              onAfterOpenHistoryDrawer={onAfterOpenHistoryDrawer}
+            />
           </CTWBox.Body>
         )}
       </CTWBox.StackedWrapper>
