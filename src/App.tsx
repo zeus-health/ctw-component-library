@@ -49,6 +49,10 @@ const demoComponents: DemoComponent[] = [
   { render: () => <PatientAllergies />, title: "Patient Allergies" },
   { render: () => <PatientImmunizations />, title: "Patient Immunizations" },
   {
+    render: () => <PatientMedications />,
+    title: "Patient Medications",
+  },
+  {
     render: () => <PatientMedications readOnly />,
     title: "Patient Medications",
     note: "(readonly)",
