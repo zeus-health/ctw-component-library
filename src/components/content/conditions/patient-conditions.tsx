@@ -22,18 +22,24 @@ import {
 } from "@/fhir/conditions";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import "./patient-conditions.scss";
-import { applyFilters } from "@/utils/filters";
 
 export type PatientConditionsProps = {
   className?: string;
   readOnly?: boolean;
+  hideBuilderOwnedRecords?: boolean;
 };
 
 export const PatientConditions = withErrorBoundary(
-  ({ className, readOnly = false }: PatientConditionsProps) => {
+  ({
+    className,
+    readOnly = false,
+    hideBuilderOwnedRecords = false,
+  }: PatientConditionsProps) => {
     // State.
-    const [collection, setCollection] = useState<FilterCollection>("patient");
-    const { filters, updateFilters, availableFilters } =
+    const [collection, setCollection] = useState<FilterCollection>(
+      hideBuilderOwnedRecords ? "other" : "patient"
+    );
+    const { filters, updateFilters, applyFilters, availableFilters } =
       useConditionFilters(collection);
     const { applySorts, sortOptions, updateSorts, currentSorts } =
       useConditionSorts(collection);
@@ -82,12 +88,14 @@ export const PatientConditions = withErrorBoundary(
           }
         )}
       >
-        <PatientConditionsTabs
-          forceHorizontalTabs
-          otherConditions={otherConditions}
-          collection={collection}
-          onCollectionChange={setCollection}
-        />
+        {!hideBuilderOwnedRecords && (
+          <PatientConditionsTabs
+            forceHorizontalTabs
+            otherConditions={otherConditions}
+            collection={collection}
+            onCollectionChange={setCollection}
+          />
+        )}
 
         <PatientConditionsActions
           sortOptions={sortOptions}

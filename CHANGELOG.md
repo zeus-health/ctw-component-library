@@ -1,5 +1,24 @@
 # ctw-component-library
 
+## 0.46.5
+
+### Patch Changes
+
+- fd266008: Add prop for hiding builder owned records in conditions component.
+
+## 0.46.4
+
+### Patch Changes
+
+- 385304f1: Miscellaneous style fixes.
+- 0da295fc: RUM views will now use component names instead of url path name.
+
+## 0.46.3
+
+### Patch Changes
+
+- 95895cef: Expose functions that run when opening a drawer.
+
 ## 0.46.2
 
 ### Patch Changes
