@@ -5,7 +5,11 @@ export type OpenDrawerProps = {
   component: ({
     isOpen,
     onClose,
-  }: Pick<DrawerProps, "isOpen" | "onClose">) => JSX.Element | undefined;
+    onOpen,
+    onAfterOpen,
+  }: Pick<DrawerProps, "isOpen" | "onClose" | "onOpen" | "onAfterOpen">) =>
+    | JSX.Element
+    | undefined;
 };
 
 export type DrawerState = {

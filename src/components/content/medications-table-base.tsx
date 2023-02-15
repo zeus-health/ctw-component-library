@@ -8,6 +8,11 @@ import {
 } from "@/components/core/table/table-helpers";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 
+export type MedsHistoryTempProps = Partial<{
+  onOpenHistoryDrawer: () => void;
+  onAfterOpenHistoryDrawer: () => void;
+}>;
+
 export type MedicationsTableBaseProps<T extends MinRecordItem> = {
   children?: ReactNode;
   className?: string;
@@ -76,7 +81,7 @@ export const MedicationsTableBase = ({
     {
       title: "Last Filled",
       dataIndex: "lastFillDate",
-      sortIndices: [{ index: "lastFillDate" }],
+      sortIndices: [{ index: "lastFillDate", isDate: true }],
       widthPercent: 18,
     },
     {
@@ -90,7 +95,7 @@ export const MedicationsTableBase = ({
         </>
       ),
       sortIndices: [
-        { index: "lastPrescribedDate" },
+        { index: "lastPrescribedDate", isDate: true },
         { index: "lastPrescriber", dir: "asc" },
       ],
       widthPercent: 18,

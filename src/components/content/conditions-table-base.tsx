@@ -26,7 +26,10 @@ export function ConditionsTableBase({
       dataIndex: "display",
       widthPercent: 40,
       minWidth: 320,
-      sortIndices: [{ index: "display" }, { index: "recorded", dir: "desc" }],
+      sortIndices: [
+        { index: "display" },
+        { index: "recorded", dir: "desc", isDate: true },
+      ],
     },
     {
       title: "Category",
@@ -52,7 +55,7 @@ export function ConditionsTableBase({
       sortIndices: [
         { index: "clinicalStatus" },
         { index: "verificationStatus" },
-        { index: "recorded", dir: "desc" },
+        { index: "recorded", dir: "desc", isDate: true },
       ],
     },
     {
@@ -60,7 +63,10 @@ export function ConditionsTableBase({
       dataIndex: "recordedDate",
       widthPercent: 17.5,
       minWidth: 132,
-      sortIndices: [{ index: "recorded" }, { index: "display", dir: "asc" }],
+      sortIndices: [
+        { index: "recorded", isDate: true },
+        { index: "display", dir: "asc" },
+      ],
     },
   ];
 

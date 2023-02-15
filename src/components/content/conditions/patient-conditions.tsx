@@ -26,13 +26,20 @@ import "./patient-conditions.scss";
 export type PatientConditionsProps = {
   className?: string;
   readOnly?: boolean;
+  hideBuilderOwnedRecords?: boolean;
 };
 
 export const PatientConditions = withErrorBoundary(
-  ({ className, readOnly = false }: PatientConditionsProps) => {
+  ({
+    className,
+    readOnly = false,
+    hideBuilderOwnedRecords = false,
+  }: PatientConditionsProps) => {
     // State.
-    const [collection, setCollection] = useState<FilterCollection>("patient");
-    const { filters, updateFilters, applyFilters } =
+    const [collection, setCollection] = useState<FilterCollection>(
+      hideBuilderOwnedRecords ? "other" : "patient"
+    );
+    const { filters, updateFilters, applyFilters, availableFilters } =
       useConditionFilters(collection);
     const { applySorts, sortOptions, updateSorts, currentSorts } =
       useConditionSorts(collection);
@@ -59,6 +66,7 @@ export const PatientConditions = withErrorBoundary(
       patientConditions,
       true
     );
+
     let conditions = applyFilters(patientConditions, otherConditions);
     conditions = applySorts(conditions);
     const RowActions =
@@ -70,33 +78,38 @@ export const PatientConditions = withErrorBoundary(
       <div
         ref={containerRef}
         className={cx(
-          "ctw-patient-conditions ctw-items-center ctw-justify-between ctw-py-5",
+          "ctw-patient-resource-component ctw-patient-conditions ctw-items-center ctw-justify-between ctw-py-5",
           className,
           {
             "ctw-patient-conditions-stacked": breakpoints.sm,
           }
         )}
       >
-        <PatientConditionsTabs
-          forceHorizontalTabs
-          otherConditions={otherConditions}
-          collection={collection}
-          onCollectionChange={setCollection}
-        />
+        {!hideBuilderOwnedRecords && (
+          <PatientConditionsTabs
+            forceHorizontalTabs
+            otherConditions={otherConditions}
+            collection={collection}
+            onCollectionChange={setCollection}
+          />
+        )}
 
         <PatientConditionsActions
           sortOptions={sortOptions}
           updateSorts={updateSorts}
           activeCollection={collection}
           hideAdd={readOnly || collection === "other"}
-          onToggleShowHistoric={() =>
-            updateFilters({ showHistoric: !filters.showHistoric })
-          }
           currentSorts={currentSorts[collection]}
+          filterItems={availableFilters(
+            collection === "patient" ? patientConditions : otherConditions
+          )}
+          setFilters={updateFilters}
+          filters={filters[collection]}
         />
 
         <Table
           stacked={breakpoints.sm}
+          removeLeftAndRightBorders
           className="-ctw-mx-px !ctw-rounded-none"
           showTableHead={false}
           emptyMessage="There are no condition records available."

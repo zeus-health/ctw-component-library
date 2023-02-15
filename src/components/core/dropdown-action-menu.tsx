@@ -44,7 +44,7 @@ export function DropdownMenuAction({
     <Menu>
       <RadixDropdownMenu.Root modal={false}>
         <RadixDropdownMenu.Trigger
-          className={cx(buttonClassName, "ctw-border-none ctw-bg-transparent")}
+          className={cx(buttonClassName)}
           aria-label="dropdown"
         >
           {children}
@@ -125,7 +125,7 @@ const RenderCorrectFieldType = ({
         <div>
           <label
             htmlFor={menuItem.name}
-            className="ctw-flex ctw-cursor-pointer ctw-items-center ctw-space-x-2"
+            className="ctw-flex ctw-cursor-pointer ctw-items-baseline ctw-space-x-2"
           >
             <input
               type="checkbox"

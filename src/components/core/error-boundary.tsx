@@ -6,6 +6,7 @@ import { Telemetry } from "@/utils/telemetry";
 interface Props {
   children?: ReactNode;
   name?: string;
+  trackView?: boolean;
 }
 
 interface State {
@@ -31,6 +32,9 @@ export class ErrorBoundary extends Component<Props, State> {
     const { props } = this;
     if (props.name) {
       Telemetry.logger.info(`Loaded component ${props.name}`);
+      if (props.trackView) {
+        Telemetry.trackView(props.name);
+      }
     }
   }
 
@@ -83,9 +87,12 @@ export class ErrorBoundary extends Component<Props, State> {
 
 export function withErrorBoundary<T>(
   wrappedComponent: (props: T) => ReactNode,
-  name?: string
+  name?: string,
+  trackView = true
 ) {
   return (props: T) => (
-    <ErrorBoundary name={name}>{wrappedComponent(props)}</ErrorBoundary>
+    <ErrorBoundary name={name} trackView={trackView}>
+      {wrappedComponent(props)}
+    </ErrorBoundary>
   );
 }

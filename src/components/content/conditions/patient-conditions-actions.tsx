@@ -5,60 +5,67 @@ import { useAddConditionForm } from "./condition-hooks";
 import { FilterCollection } from "./patient-conditions-filters";
 import { Sort, SortOption } from "./patient-conditions-sort";
 import { DropdownMenuAction } from "@/components/core/dropdown-action-menu";
-import { Toggle } from "@/components/core/toggle";
+import { FilterBar } from "@/components/core/filter-bar/filter-bar";
+import {
+  FilterChangeEvent,
+  FilterItem,
+} from "@/components/core/filter-bar/filter-bar-types";
 
 export type PatientConditionsActionsProps = {
   hideAdd: boolean;
-  onToggleShowHistoric: () => void;
   sortOptions: SortOption[];
   updateSorts: (newSorts: Partial<Sort>) => void;
   activeCollection: FilterCollection;
   currentSorts: Sort;
+  filterItems: FilterItem[];
+  setFilters: (filterChangeEvent: FilterChangeEvent) => void;
+  filters: FilterChangeEvent;
 };
 
 export function PatientConditionsActions({
   hideAdd,
-  onToggleShowHistoric,
   sortOptions,
   updateSorts,
   activeCollection,
   currentSorts,
+  filterItems,
+  setFilters,
+  filters,
 }: PatientConditionsActionsProps) {
   const showAddConditionForm = useAddConditionForm();
   const patientHistory = usePatientHistory();
 
   return (
-    <div className="ctw-flex ctw-items-center ctw-justify-between ctw-space-x-2 ctw-p-3 sm:ctw-pt-1.5">
-      {patientHistory.lastRetrievedAt && hideAdd && (
-        <PatientHistoryTableHeaderMessage
-          patientHistory={patientHistory}
-          message="Last Retrieved"
-        />
-      )}
-      <div>
+    <div className="ctw-flex ctw-flex-wrap ctw-items-center ctw-justify-between ctw-py-3 sm:ctw-pt-1.5">
+      <div className="ctw-flex ctw-flex-wrap ctw-gap-x-2">
         <SortButton
           options={sortOptions}
           updateSorts={updateSorts}
           activeCollection={activeCollection}
           currentSorts={currentSorts}
         />
-      </div>
-      <div className="ctw-flex ctw-items-center ctw-space-x-2">
-        <Toggle
-          name="historic"
-          text="Historic"
-          onChange={onToggleShowHistoric}
+        <FilterBar
+          filters={filterItems}
+          handleOnChange={setFilters}
+          defaultState={filters}
         />
-        {!hideAdd && (
-          <button
-            type="button"
-            className="ctw-btn-primary"
-            onClick={() => showAddConditionForm()}
-          >
-            Add Condition
-          </button>
-        )}
       </div>
+
+      {patientHistory.lastRetrievedAt && hideAdd && (
+        <PatientHistoryTableHeaderMessage
+          patientHistory={patientHistory}
+          message="Last Retrieved"
+        />
+      )}
+      {!hideAdd && (
+        <button
+          type="button"
+          className="ctw-btn-primary ctw-p-0"
+          onClick={() => showAddConditionForm()}
+        >
+          Add Condition
+        </button>
+      )}
     </div>
   );
 }
@@ -78,6 +85,7 @@ const SortButton = ({
 }: SortButtonProps) => (
   <DropdownMenuAction
     type="select"
+    buttonClassName="ctw-bg-transparent ctw-border-none ctw-p-0"
     onItemSelect={(event) => {
       const { dir, key, isDate } = options.filter(
         (option) => option.display === event.key

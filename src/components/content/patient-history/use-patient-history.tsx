@@ -15,11 +15,11 @@ import { QUERY_KEY_PATIENT_HISTORY_DETAILS } from "@/utils/query-keys";
 import { ctwFetch } from "@/utils/request";
 import { Telemetry } from "@/utils/telemetry";
 
-type PatientHistoryDetails = {
-  lastRetrievedAt?: string;
+type PatientHistoryDetails = Partial<{
+  lastRetrievedAt: string;
   status: string;
   dateCreated: string;
-};
+}>;
 
 export function usePatientHistory() {
   const { openDrawer } = useDrawer();
@@ -117,10 +117,6 @@ function usePatientHistoryDetails() {
           patient.id
         );
 
-        if (messages.length === 0) {
-          return undefined;
-        }
-
         const latestDone = find(messages, {
           _messages: [
             {
@@ -131,9 +127,9 @@ function usePatientHistoryDetails() {
         return {
           // eslint-disable-next-line no-underscore-dangle
           lastRetrievedAt: latestDone?._createdAt,
-          status: messages[0].status,
+          status: messages[0]?.status,
           // eslint-disable-next-line no-underscore-dangle
-          dateCreated: messages[0]._createdAt,
+          dateCreated: messages[0]?._createdAt,
         };
       } catch (e) {
         Telemetry.logError(
