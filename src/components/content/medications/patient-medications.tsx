@@ -51,7 +51,7 @@ export const PatientMedications = withErrorBoundary(
                 onClick={() => setDrawerIsOpen(true)}
                 data-zus-telemetry-click="Add new medication"
               >
-                + Add new medication
+                + Add medication
               </button>
             </AddNewMedDrawer>
           )}
