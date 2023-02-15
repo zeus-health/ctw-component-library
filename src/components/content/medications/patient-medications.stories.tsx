@@ -47,7 +47,7 @@ export const TestAddNewMed: StoryObj<Props> = {
     await medications.patientRecord.toHaveRowCount(1);
     const newMedication = "albendazole 200 MG Oral Tablet [Albenza]";
     medications.clickAddMedication();
-    const addMedicationForm = medicationFormDrawer(canvasElement);
+    const addMedicationForm = await medicationFormDrawer(canvasElement);
     addMedicationForm.search("alb");
     await addMedicationForm.selectMedication(newMedication);
     addMedicationForm.status("Active");
@@ -72,10 +72,11 @@ export const TestAddToRecord: StoryObj<Props> = {
       "3 ML insulin aspart protamine, human 70 UNT/ML / insulin aspart, human 30 UNT/ML Pen Injector [NovoLog Mix]";
     medications.otherProvider.toHaveRowWithText(0, medicationName);
     await medications.otherProvider.addToRecord(0);
-    await medicationFormDrawer(canvasElement).save();
-    // await medications.patientRecord.toHaveRowCount(2);
-    // await medications.otherProvider.toHaveRowCount(3);
-    // await medications.patientRecord.toHaveAnyRowWithText(medicationName);
+    const medDrawer = await medicationFormDrawer(canvasElement);
+    await medDrawer.save();
+    await medications.patientRecord.toHaveRowCount(2);
+    await medications.otherProvider.toHaveRowCount(3);
+    await medications.patientRecord.toHaveAnyRowWithText(medicationName);
   },
 };
 
@@ -86,14 +87,14 @@ export const TestCancelAddNewMed: StoryObj<Props> = {
     await medications.patientRecord.toHaveRowCount(1);
     const newMedication = "cabozantinib 20 MG Oral Capsule [Cometriq]";
     medications.clickAddMedication();
-    const addMedicationForm = medicationFormDrawer(canvasElement);
+    const addMedicationForm = await medicationFormDrawer(canvasElement);
     addMedicationForm.search("cab");
     await addMedicationForm.selectMedication(newMedication);
     addMedicationForm.status("Active");
-    await addMedicationForm.cancel();
+    addMedicationForm.cancel();
     await medications.patientRecord.toHaveRowCount(1);
     expect(
-      await medications.patientRecord.table.queryByText(newMedication)
+      medications.patientRecord.table.queryByText(newMedication)
     ).toBeFalsy();
   },
 };
