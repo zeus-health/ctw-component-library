@@ -26,12 +26,19 @@ import "./patient-conditions.scss";
 export type PatientConditionsProps = {
   className?: string;
   readOnly?: boolean;
+  hideBuilderOwnedRecords?: boolean;
 };
 
 export const PatientConditions = withErrorBoundary(
-  ({ className, readOnly = false }: PatientConditionsProps) => {
+  ({
+    className,
+    readOnly = false,
+    hideBuilderOwnedRecords = false,
+  }: PatientConditionsProps) => {
     // State.
-    const [collection, setCollection] = useState<FilterCollection>("patient");
+    const [collection, setCollection] = useState<FilterCollection>(
+      hideBuilderOwnedRecords ? "other" : "patient"
+    );
     const { filters, updateFilters, applyFilters, availableFilters } =
       useConditionFilters(collection);
     const { applySorts, sortOptions, updateSorts, currentSorts } =
@@ -78,12 +85,14 @@ export const PatientConditions = withErrorBoundary(
           }
         )}
       >
-        <PatientConditionsTabs
-          forceHorizontalTabs
-          otherConditions={otherConditions}
-          collection={collection}
-          onCollectionChange={setCollection}
-        />
+        {!hideBuilderOwnedRecords && (
+          <PatientConditionsTabs
+            forceHorizontalTabs
+            otherConditions={otherConditions}
+            collection={collection}
+            onCollectionChange={setCollection}
+          />
+        )}
 
         <PatientConditionsActions
           sortOptions={sortOptions}
