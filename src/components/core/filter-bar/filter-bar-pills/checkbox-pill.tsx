@@ -20,7 +20,7 @@ type FilterBarCheckboxPillProps = {
 };
 
 const buttonClassName =
-  "ctw-flex ctw-items-center ctw-max-w-[15rem] ctw-space-x-1 ctw-capitalize ctw-text-content-black ctw-bg-bg-dark ctw-text-sm ctw-rounded ctw-my-2 ctw-py-2 ctw-px-3 ctw-relative ctw-mr-1 ctw-cursor-pointer ctw-border-0 ctw-border-transparent";
+  "ctw-flex ctw-items-center ctw-max-w-[15rem] ctw-space-x-1 ctw-capitalize ctw-text-content-black ctw-bg-bg-dark ctw-text-sm ctw-rounded ctw-my-2 ctw-py-2 ctw-px-3 ctw-relative ctw-mr-1 ctw-cursor-pointer ctw-border-0 ctw-border-transparent  ctw-whitespace-nowrap";
 
 export function FilterBarCheckboxPill({
   filter,
@@ -56,7 +56,7 @@ export function FilterBarCheckboxPill({
       buttonClassName={cx(filter.className, buttonClassName)}
       onItemSelect={(item) => onChange(item.key, item.value)}
     >
-      <span className="ctw-font-medium ctw-text-content-black">
+      <span className="ctw-min-w-fit ctw-font-medium ctw-text-content-black">
         {displayFilterItem(omit("icon", filter), { active: true })}
         {selectedItems.length > 0 && ": "}
       </span>

@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
-import { MedicationDrawer } from "@/components/content/medication-drawer";
-import { MedicationsTableBase } from "@/components/content/medications-table-base";
+import { useMedicationHistory } from "./medication-history-drawer";
+import {
+  MedsHistoryTempProps as MedHistoryTempProps,
+  MedicationsTableBase,
+} from "@/components/content/medications-table-base";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
-import { get, pipe, toLower } from "@/utils/nodash/fp";
+import { get, isFunction, pipe, toLower } from "@/utils/nodash/fp";
 import { sort } from "@/utils/sort";
 
 export type InactiveMedRecordsTableProps = {
   className?: string;
-};
+} & MedHistoryTempProps;
 
 /**
  * Displays a table of inactive medication records. These are builder-owned medications
@@ -17,18 +20,28 @@ export type InactiveMedRecordsTableProps = {
  */
 export function ProviderInactiveMedicationsTable({
   className,
+  onAfterOpenHistoryDrawer,
+  onOpenHistoryDrawer,
 }: InactiveMedRecordsTableProps) {
   const [medicationModels, setMedicationModels] = useState<
     MedicationStatementModel[]
   >([]);
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [selectedMedication, setSelectedMedication] =
-    useState<MedicationStatementModel>();
+  const openMedHistoryDrawer = useMedicationHistory();
   const { builderMedications, isLoading } = useQueryAllPatientMedications();
 
-  function openMedicationDrawer(row: MedicationStatementModel) {
-    setSelectedMedication(row);
-    setDrawerOpen(true);
+  function openHistoryDrawer(row: MedicationStatementModel) {
+    // Temp - onOpen and onAfterOpen should be side-effect free as
+    // they may be called after component unmounts. We added
+    // this to support a bug-fix workaround in canvas.
+    if (isFunction(onOpenHistoryDrawer)) {
+      onOpenHistoryDrawer();
+    }
+    openMedHistoryDrawer({ medication: row });
+    setTimeout(() => {
+      if (isFunction(onAfterOpenHistoryDrawer)) {
+        onAfterOpenHistoryDrawer();
+      }
+    }, 0);
   }
 
   useEffect(() => {
@@ -48,12 +61,7 @@ export function ProviderInactiveMedicationsTable({
         className={className}
         medicationStatements={medicationModels}
         isLoading={isLoading}
-        handleRowClick={(medication) => openMedicationDrawer(medication)}
-      />
-      <MedicationDrawer
-        medication={selectedMedication}
-        isOpen={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
+        handleRowClick={openHistoryDrawer}
       />
     </>
   );

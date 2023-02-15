@@ -1,6 +1,7 @@
 import { Tab } from "@headlessui/react";
 import cx from "classnames";
 import { ReactNode, useRef, useState } from "react";
+import { withErrorBoundary } from "@/components/core/error-boundary";
 import { ListBox } from "@/components/core/list-box/list-box";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import "./tab-group.scss";
@@ -26,7 +27,7 @@ export type TabGroupItem<T> = {
  * property `forceHorizontalTabs` to true and the tabs will remain visible and
  * horizontal.
  */
-export function TabGroup<T>({
+function TabGroupComponent<T>({
   children,
   className,
   forceHorizontalTabs = false,
@@ -69,6 +70,7 @@ export function TabGroup<T>({
           {content.map(({ key, display }) => (
             <Tab
               key={key}
+              data-zus-telemetry-click={`Tab[${key}]`}
               onClick={onClickBlur}
               className={({ selected }) =>
                 cx(
@@ -107,6 +109,8 @@ export function TabGroup<T>({
     </div>
   );
 }
+
+export const TabGroup = withErrorBoundary(TabGroupComponent, "TabGroup", false);
 
 function onClickBlur() {
   if (typeof document !== "undefined") {
