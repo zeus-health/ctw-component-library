@@ -209,6 +209,7 @@ export const Conditions = withErrorBoundary(
               type="button"
               className="ctw-btn-clear ctw-link ctw-capitalize"
               data-zus-telemetry-click="Add new condition"
+              data-testid="button.add-condition"
               onClick={handleAddNewCondition}
             >
               + Add condition

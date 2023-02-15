@@ -15,7 +15,7 @@ export async function conditionsObject(canvasElement: HTMLElement) {
 
   return {
     clickAddCondition: () =>
-      userEvent.click(canvas.getByRole("button", { name: "+ Add Condition" })),
+      userEvent.click(canvas.getByTestId("button.add-condition")),
 
     toggleInactive: () =>
       userEvent.click(canvas.getByLabelText("Include Inactive")),

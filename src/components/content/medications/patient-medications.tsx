@@ -53,6 +53,7 @@ export const PatientMedications = withErrorBoundary(
                 className="ctw-btn-clear ctw-link ctw-capitalize"
                 type="button"
                 onClick={() => setDrawerIsOpen(true)}
+                data-testid="button.add-medication"
                 data-zus-telemetry-click="Add new medication"
               >
                 + Add medication
