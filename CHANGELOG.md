@@ -1,5 +1,47 @@
 # ctw-component-library
 
+## 0.46.4
+
+### Patch Changes
+
+- 385304f1: Miscellaneous style fixes.
+- 0da295fc: RUM views will now use component names instead of url path name.
+
+## 0.46.3
+
+### Patch Changes
+
+- 95895cef: Expose functions that run when opening a drawer.
+
+## 0.46.2
+
+### Patch Changes
+
+- b035d8f7: Add filters to condtions 2.0.
+
+## 0.46.1
+
+### Patch Changes
+
+- 3db87fc5: Add flag to enable FQS on allergies.
+- 75f2dfaa: Added `isDate` bool to sortIndices for table to fix a bug where dates do not sort correctly. Also fixed a bug where react-query errors if the use-patient-history-details hook returned empty
+
+## 0.46.0
+
+### Minor Changes
+
+- 67ab76e1: Fix issue with incorrect patient reference being passed when reconciling existing medications.
+
+### Patch Changes
+
+- ae8f7a7b: SideEffects set to prevent css from being tree-shaken by webpack. Upgraded storybook to 7.0.0-beta.45
+
+## 0.45.7
+
+### Patch Changes
+
+- 1ea52c11: Add header to timeline.
+
 ## 0.45.6
 
 ### Patch Changes

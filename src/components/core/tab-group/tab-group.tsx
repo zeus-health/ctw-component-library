@@ -1,6 +1,7 @@
 import { Tab } from "@headlessui/react";
 import cx from "classnames";
 import { ReactNode, useRef, useState } from "react";
+import { withErrorBoundary } from "@/components/core/error-boundary";
 import { ListBox } from "@/components/core/list-box/list-box";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import "./tab-group.scss";
@@ -10,13 +11,14 @@ export type TabGroupProps<T> = {
   className?: string;
   content: TabGroupItem<T>[];
   forceHorizontalTabs?: boolean;
+  onChange?: (index: number) => void; // optional event
 };
 
 export type TabGroupItem<T> = {
-  key: string;
   display: () => string | ReactNode;
-  render: (sm: boolean) => string | ReactNode;
   getPanelClassName?: (sm: boolean) => cx.Argument;
+  key: string;
+  render: (sm: boolean) => string | ReactNode;
 };
 
 /**
@@ -25,31 +27,36 @@ export type TabGroupItem<T> = {
  * property `forceHorizontalTabs` to true and the tabs will remain visible and
  * horizontal.
  */
-export function TabGroup<T>({
+function TabGroupComponent<T>({
   children,
   className,
   forceHorizontalTabs = false,
   content,
+  onChange,
 }: TabGroupProps<T>) {
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const isVertical = !forceHorizontalTabs && breakpoints.sm;
 
+  const handleOnChange = (index: number) => {
+    setSelectedTabIndex(index);
+    if (onChange) {
+      onChange(index);
+    }
+  };
+
   return (
     <div
       ref={containerRef}
       className={cx(className, "ctw-tab-group ctw-relative ctw-w-full")}
     >
-      <Tab.Group
-        selectedIndex={selectedTabIndex}
-        onChange={setSelectedTabIndex}
-      >
+      <Tab.Group selectedIndex={selectedTabIndex} onChange={handleOnChange}>
         {isVertical && (
           <ListBox
             btnClassName="ctw-tab ctw-capitalize"
             optionsClassName="ctw-tab-list ctw-capitalize"
-            onChange={setSelectedTabIndex}
+            onChange={handleOnChange}
             items={content}
           />
         )}
@@ -63,6 +70,7 @@ export function TabGroup<T>({
           {content.map(({ key, display }) => (
             <Tab
               key={key}
+              data-zus-telemetry-click={`Tab[${key}]`}
               onClick={onClickBlur}
               className={({ selected }) =>
                 cx(
@@ -101,6 +109,8 @@ export function TabGroup<T>({
     </div>
   );
 }
+
+export const TabGroup = withErrorBoundary(TabGroupComponent, "TabGroup", false);
 
 function onClickBlur() {
   if (typeof document !== "undefined") {

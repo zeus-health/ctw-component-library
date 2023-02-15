@@ -1,5 +1,6 @@
 import { useEncounterDetailsDrawer } from "./encounter-details-drawer";
 import { patientTimelineColumns } from "./patient-timeline-columns";
+import { Heading } from "@/components/core/ctw-box";
 import { Table } from "@/components/core/table/table";
 import { usePatientEncounters } from "@/fhir/encounters";
 import { orderBy } from "@/utils/nodash";
@@ -24,6 +25,7 @@ export function PatientTimeline({
 
   return (
     <div className={className}>
+      <Heading title="Encounter Timeline" />
       <Table
         className="-ctw-mx-px !ctw-rounded-none"
         showTableHead={false}

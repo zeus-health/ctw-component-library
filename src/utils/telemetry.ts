@@ -80,6 +80,7 @@ export class Telemetry {
       trackLongTasks: true,
       trackResources: false,
       trackUserInteractions: false,
+      trackViewsManually: true, // url path names are useless to cwl-cl
       version: packageJson.version,
     });
     datadogLogs.init({
@@ -124,13 +125,14 @@ export class Telemetry {
   }
 
   static setBuilder(builderId?: string) {
-    datadogLogs.setUserProperty("builderId", builderId);
+    datadogLogs.setGlobalContextProperty("builderId", builderId);
+    datadogRum.setGlobalContextProperty("builderId", builderId);
   }
 
   static setUser(accessToken?: string) {
     if (accessToken) {
       const user = jwtDecode(accessToken) as ZusJWT;
-      datadogLogs.setUser({
+      const decodedUser = {
         id: user[AUTH_USER_ID],
         type: user[AUTH_USER_TYPE],
         email: user[AUTH_EMAIL],
@@ -139,12 +141,19 @@ export class Telemetry {
         builderId: user[AUTH_BUILDER_ID],
         patientId: user[AUTH_PATIENT_ID],
         isSuperOrg: user[AUTH_IS_SUPER_ORG],
-      });
+      };
+      datadogLogs.setUser(decodedUser);
+      datadogRum.setUser(decodedUser);
     }
   }
 
   static clearUser() {
     datadogLogs.setUser({});
+    datadogRum.setUser({});
+  }
+
+  static trackView(viewName: string) {
+    datadogRum.startView(viewName);
   }
 
   static logError(error: Error, overrideMessage?: string) {

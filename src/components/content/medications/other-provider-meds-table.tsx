@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
-import { MedicationDrawer } from "@/components/content/medication-drawer";
-import { MedicationsTableBase } from "@/components/content/medications-table-base";
+import { useMedicationHistory } from "./medication-history-drawer";
+import {
+  MedicationsTableBase,
+  MedsHistoryTempProps,
+} from "@/components/content/medications-table-base";
 import { AddNewMedDrawer } from "@/components/content/medications/add-new-med-drawer";
 import { Badge } from "@/components/core/badge";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useDismissMedication } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
-import { get, pipe, toLower } from "@/utils/nodash/fp";
+import { get, isFunction, pipe, toLower } from "@/utils/nodash/fp";
 import { sort, SortDir } from "@/utils/sort";
 
 export type OtherProviderMedsTableProps = {
@@ -19,7 +22,7 @@ export type OtherProviderMedsTableProps = {
   sortColumn?: keyof MedicationStatementModel;
   sortOrder?: SortDir;
   records?: MedicationStatementModel[];
-};
+} & MedsHistoryTempProps;
 
 /**
  * Displays a table of medications that are not scoped to the current builder.
@@ -37,12 +40,14 @@ export const OtherProviderMedsTable = withErrorBoundary(
     hideAddToRecord = false,
     handleAddToRecord,
     records,
+    onAfterOpenHistoryDrawer,
+    onOpenHistoryDrawer,
   }: OtherProviderMedsTableProps) => {
     const dismissMedication = useDismissMedication();
+    const openMedHistoryDrawer = useMedicationHistory();
     const [medicationModels, setMedicationModels] = useState<
       MedicationStatementModel[]
     >([]);
-    const [historyDrawerOpen, setHistoryDrawerOpen] = useState(false);
     const [addNewMedDrawerOpen, setAddNewMedDrawerOpen] = useState(false);
     const [hasZeroRowActions, setHasZeroRowActions] = useState(false);
     const [selectedMedication, setSelectedMedication] =
@@ -51,8 +56,19 @@ export const OtherProviderMedsTable = withErrorBoundary(
       useQueryAllPatientMedications();
 
     function openHistoryDrawer(row: MedicationStatementModel) {
+      // Temp - onOpen and onAfterOpen should be side-effect free as
+      // they may be called after component unmounts. We added
+      // this to support a bug-fix workaround in canvas.
+      if (isFunction(onOpenHistoryDrawer)) {
+        onOpenHistoryDrawer();
+      }
       setSelectedMedication(row);
-      setHistoryDrawerOpen(true);
+      openMedHistoryDrawer({ medication: row });
+      setTimeout(() => {
+        if (isFunction(onAfterOpenHistoryDrawer)) {
+          onAfterOpenHistoryDrawer();
+        }
+      }, 0);
     }
 
     function openAddNewMedicationDrawer(row: MedicationStatementModel) {
@@ -135,12 +151,6 @@ export const OtherProviderMedsTable = withErrorBoundary(
                   </div>
                 )
           }
-        />
-        <MedicationDrawer
-          medication={selectedMedication}
-          isOpen={historyDrawerOpen}
-          onClose={() => setHistoryDrawerOpen(false)}
-          onDismissal={dismissMedication}
         />
         <AddNewMedDrawer
           medication={selectedMedication?.resource}
