@@ -70,10 +70,10 @@ export class ErrorBoundary extends Component<Props, State> {
               <p>{state.error?.message || "Unknown"}</p>
               <button
                 type="button"
-                className="ctw-btn-primary"
+                className="ctw-btn-primary ctw-capitalize"
                 onClick={this.resetState}
               >
-                Refresh Component
+                Refresh component
               </button>
             </div>
           </CTWBox.Body>

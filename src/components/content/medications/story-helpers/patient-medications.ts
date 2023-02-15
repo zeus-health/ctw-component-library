@@ -12,7 +12,7 @@ export async function medicationsTables(canvasElement: HTMLElement) {
     patientRecord,
     otherProvider,
     clickAddMedication: () =>
-      userEvent.click(canvas.getByRole("button", { name: "+ Add Medication" })),
+      userEvent.click(canvas.getByTestId("button.add-medication")),
   };
 }
 
