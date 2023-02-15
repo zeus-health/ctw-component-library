@@ -17,19 +17,23 @@ import {
 
 type TelemetryEventKey = "zusTelemetryClick" | "zusTelemetryFocus";
 
-const prodAccountConfig = {
+const prodDatadogConfig = {
   service: "ctw-component-library",
   clientToken: "pub7f1b01887ceb412fd989f5e08cf60d9a",
   applicationId: "44011d8b-3aa4-4672-9c7b-ee23ddac16b5",
 };
-const devAccountConfig = {
+const devDatadogConfig = {
   service: "ctw-component-library",
   clientToken: "pub29b659b1cd402a88d57c4f8c923c1eea",
   applicationId: "48fec1f8-b187-492a-afdd-e809cc6b3b82",
 };
 
-const origin = typeof window !== "undefined" ? window.location.origin : "";
-const body = typeof window !== "undefined" ? window.document.body : undefined;
+let origin = "";
+let body: HTMLElement | undefined;
+if (typeof window !== "undefined") {
+  origin = window.location.origin;
+  body = window.document.body;
+}
 
 // Assume local development if origin is localhost or just an IP address
 const isLocalDevelopment = /https?:\/\/(localhost|\d+\.\d+\.\d+\.\d+)/i.test(
@@ -67,13 +71,12 @@ export class Telemetry {
     if (this.telemetryIsAvailable) {
       return;
     }
-    const isDev = isLocalDevelopment || /dev.*/i.test(environment);
 
     datadogRum.init({
-      ...(isDev ? devAccountConfig : prodAccountConfig),
+      ...(isLocalDevelopment ? devDatadogConfig : prodDatadogConfig),
       allowedTracingUrls: [], // No allowed tracing urls
       defaultPrivacyLevel: "mask",
-      env: environment,
+      env: this.normalizeEnv(environment),
       sessionReplaySampleRate: 20,
       sessionSampleRate: 100,
       site: "datadoghq.com",
@@ -84,8 +87,8 @@ export class Telemetry {
       version: packageJson.version,
     });
     datadogLogs.init({
-      ...(isDev ? devAccountConfig : prodAccountConfig),
-      env: environment,
+      ...(isLocalDevelopment ? devDatadogConfig : prodDatadogConfig),
+      env: this.normalizeEnv(environment),
       forwardConsoleLogs: [], // No console logs to datadog.
       forwardErrorsToLogs: false,
       site: "datadoghq.com",
@@ -199,9 +202,7 @@ export class Telemetry {
     const closest = target.closest("[data-zus-telemetry-namespace]");
     if (closest instanceof HTMLElement) {
       const nextNamespace = closest.dataset.zusTelemetryNamespace;
-      if (typeof nextNamespace === "string") {
-        ns = ns ? `${nextNamespace} > ${ns}` : nextNamespace;
-      }
+      ns = !ns ? `${nextNamespace}` : `${nextNamespace} > ${ns}`;
       if (closest.parentElement) {
         return this.lookupComponentNamespace(closest.parentElement, ns);
       }
@@ -264,5 +265,20 @@ export class Telemetry {
       return target.parentElement;
     }
     return this.closestHTMLElement(target.parentNode);
+  }
+
+  /**
+   * We need to normalize environment name in order to effectively use template
+   * variables on dashboards in Datadog. Otherwise, users of the dashboard would
+   * need to know to select all variations of an environment.
+   */
+  private static normalizeEnv(environment: string) {
+    if (["dev", "development"].includes(environment.toLowerCase())) {
+      return "dev";
+    }
+    if (["prod", "production"].includes(environment.toLowerCase())) {
+      return "prod";
+    }
+    return environment;
   }
 }
