@@ -37,7 +37,7 @@
 }
 
 .ctw-table-container {
-  @apply ctw-relative ctw-overflow-hidden ctw-rounded-lg ctw-border-solid ctw-border-divider-light;
+  @apply ctw-relative ctw-overflow-hidden ctw-rounded-lg ctw-border ctw-border-solid ctw-border-divider-light;
 
   .ctw-scrollbar {
     @apply ctw-overflow-x-auto;
