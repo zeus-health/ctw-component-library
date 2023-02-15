@@ -1,5 +1,15 @@
 # ctw-component-library
 
+## 0.46.6
+
+### Patch Changes
+
+- 838c3956: Use prod datadog account for everything besides local development.
+  Use normalized environment names (prod, dev).
+- e40e1d90: Add medication button uses same css classes as Add conditions button
+- e40e1d90: Small button style changes
+- b9d4c0de: Fix bug around borders in table. Fix intermittent failing tests.
+
 ## 0.46.5
 
 ### Patch Changes
