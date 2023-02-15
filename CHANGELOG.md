@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.46.5
+
+### Patch Changes
+
+- fd266008: Add prop for hiding builder owned records in conditions component.
+
 ## 0.46.4
 
 ### Patch Changes
