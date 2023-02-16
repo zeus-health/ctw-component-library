@@ -36,7 +36,7 @@ export function PatientConditionsActions({
   const patientHistory = usePatientHistory();
 
   return (
-    <div className="ctw-flex ctw-flex-wrap ctw-items-center ctw-justify-between ctw-py-3 sm:ctw-pt-1.5">
+    <div className="ctw-flex ctw-flex-wrap ctw-items-center ctw-justify-between ctw-py-3 ctw-pt-1.5">
       <div className="ctw-flex ctw-flex-wrap ctw-gap-x-2">
         <SortButton
           options={sortOptions}
