@@ -4,7 +4,7 @@ import {
   FilterItem,
 } from "@/components/core/filter-bar/filter-bar-types";
 import { ConditionModel } from "@/fhir/models";
-import { compact, isArray, uniq } from "@/utils/nodash";
+import { cloneDeep, compact, find, isArray, uniq } from "@/utils/nodash";
 
 export type FilterCollection = "patient" | "other";
 
@@ -35,14 +35,30 @@ export function useConditionFilters(collection: FilterCollection) {
     ...DEFAULT_FILTERS,
   });
 
-  function updateFilters(newFilters: Partial<Filters>) {
+  function updateFilters(newFilters: Partial<FilterChangeEvent>) {
+    console.log("new filters", newFilters);
+
     setFilters(() => ({
       ...filters,
       [collection]: {
-        ...newFilters,
+        ...assignOpenStatus(newFilters),
       },
     }));
   }
+
+  const assignOpenStatus = (newFilters: Partial<FilterChangeEvent>) => {
+    const reasssignedFilters = cloneDeep(newFilters);
+    const itemToOpen = find(
+      reasssignedFilters,
+      (o) => typeof o?.selected === "undefined" && o?.type === "checkbox"
+    );
+
+    if (itemToOpen?.key && itemToOpen.type === "checkbox") {
+      reasssignedFilters[itemToOpen.key].isOpen = true;
+    }
+
+    return reasssignedFilters;
+  };
 
   function availableFilters(conditions: ConditionModel[]): FilterItem[] {
     return [
@@ -52,6 +68,7 @@ export function useConditionFilters(collection: FilterCollection) {
         icon: "eye",
         display: () => "Status",
         values: uniq(conditions.map((c) => c.displayStatus)),
+        isOpen: filters[collection].displayStatus?.isOpen,
       },
       {
         key: "ccsChapter",
@@ -59,6 +76,7 @@ export function useConditionFilters(collection: FilterCollection) {
         icon: "eye",
         display: () => "Category",
         values: compact(uniq(conditions.map((c) => c.ccsChapter))),
+        isOpen: filters[collection].ccsChapter?.isOpen,
       },
     ];
   }

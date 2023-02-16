@@ -25,12 +25,14 @@ export type FilterOptionSelect = {
   type: "select";
   // Using strings in `values` will set both key and display automatically
   values: (string | { key: string; display: string })[];
+  isOpen: boolean;
 } & Omit<MinFilterItem, "type">;
 
 export type FilterOptionCheckbox = {
   type: "checkbox";
   // Using strings in `values` will set both key and display automatically
   values: (string | { key: string; display: string })[];
+  isOpen?: boolean;
 } & Omit<MinFilterItem, "type">;
 
 export type FilterItem =
@@ -50,12 +52,14 @@ export type FilterChangeEvent = Record<
     }
   | {
       key: string;
-      selected: string[];
+      selected: string[] | undefined;
       type: "checkbox";
+      isOpen?: boolean;
     }
   | {
       key: string;
       selected: string;
       type: "select";
+      isOpen?: boolean;
     }
 >;

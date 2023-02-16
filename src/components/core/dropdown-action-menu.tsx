@@ -2,7 +2,7 @@ import { Menu } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/solid";
 import * as RadixDropdownMenu from "@radix-ui/react-dropdown-menu";
 import cx from "classnames";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { useCTW } from "./providers/ctw-provider";
 import "./dropdown-menu.scss";
 
@@ -28,6 +28,7 @@ export type DropdownMenuProps = {
   type?: DropDownMenuItemType;
   customOptionRender?: (optionsItem: OptionsItem) => JSX.Element;
   pinnedActions?: MenuItem[];
+  isOpen?: boolean;
 };
 
 export function DropdownMenuAction({
@@ -37,12 +38,17 @@ export function DropdownMenuAction({
   type,
   buttonClassName,
   pinnedActions = [],
+  isOpen,
 }: DropdownMenuProps) {
   const { ctwProviderRef } = useCTW();
-
+  const [isMenuOpen, setIsMenuOpen] = useState(isOpen);
   return (
     <Menu>
-      <RadixDropdownMenu.Root modal={false}>
+      <RadixDropdownMenu.Root
+        modal={false}
+        open={isMenuOpen}
+        onOpenChange={(e) => setIsMenuOpen(e)}
+      >
         <RadixDropdownMenu.Trigger
           className={cx(buttonClassName)}
           aria-label="dropdown"

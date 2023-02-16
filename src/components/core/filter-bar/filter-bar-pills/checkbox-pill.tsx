@@ -39,9 +39,11 @@ export function FilterBarCheckboxPill({
   const selectedItems = items
     .filter((item) => item.isSelected)
     .map((item) => item.key);
+  console.log("isopen", filter);
 
   return (
     <DropdownMenuAction
+      isOpen={filter.isOpen}
       items={items}
       type="checkbox"
       pinnedActions={compact([
