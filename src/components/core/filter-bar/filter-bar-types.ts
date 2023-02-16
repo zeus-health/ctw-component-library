@@ -49,6 +49,7 @@ export type FilterChangeEvent = Record<
       key: string;
       selected: boolean;
       type: "tag";
+      isOpen?: never;
     }
   | {
       key: string;

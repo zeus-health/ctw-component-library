@@ -36,8 +36,6 @@ export function useConditionFilters(collection: FilterCollection) {
   });
 
   function updateFilters(newFilters: Partial<FilterChangeEvent>) {
-    console.log("new filters", newFilters);
-
     setFilters(() => ({
       ...filters,
       [collection]: {
@@ -50,14 +48,15 @@ export function useConditionFilters(collection: FilterCollection) {
     const reasssignedFilters = cloneDeep(newFilters);
     const itemToOpen = find(
       reasssignedFilters,
-      (o) => typeof o?.selected === "undefined" && o?.type === "checkbox"
+      (o) =>
+        (typeof o?.selected === "undefined" && o?.type === "checkbox") ||
+        o?.type === "select"
     );
 
-    if (itemToOpen?.key && itemToOpen.type === "checkbox") {
-      reasssignedFilters[itemToOpen.key].isOpen = true;
+    if (itemToOpen?.key) {
+      return { ...reasssignedFilters, [itemToOpen.key]: { isOpen: true } };
     }
-
-    return reasssignedFilters;
+    return newFilters;
   };
 
   function availableFilters(conditions: ConditionModel[]): FilterItem[] {
