@@ -125,7 +125,7 @@ const RenderCorrectFieldType = ({
         <div>
           <label
             htmlFor={menuItem.name}
-            className="ctw-flex ctw-cursor-pointer ctw-items-center ctw-space-x-2"
+            className="ctw-flex ctw-cursor-pointer ctw-items-baseline ctw-space-x-2"
           >
             <input
               type="checkbox"

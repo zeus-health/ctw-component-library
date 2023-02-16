@@ -5,7 +5,7 @@ src/styles/tailwind.theme.js
 tailwind-gen.theme.cjs
 scripts/prefixer/tmp/
 node_modules
+storybook-static
 .env
 .DS_Store
-src/utils/typescript.js
 .vscode

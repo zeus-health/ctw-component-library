@@ -1,5 +1,34 @@
 # ctw-component-library
 
+## 0.46.6
+
+### Patch Changes
+
+- 838c3956: Use prod datadog account for everything besides local development.
+  Use normalized environment names (prod, dev).
+- e40e1d90: Add medication button uses same css classes as Add conditions button
+- e40e1d90: Small button style changes
+- b9d4c0de: Fix bug around borders in table. Fix intermittent failing tests.
+
+## 0.46.5
+
+### Patch Changes
+
+- fd266008: Add prop for hiding builder owned records in conditions component.
+
+## 0.46.4
+
+### Patch Changes
+
+- 385304f1: Miscellaneous style fixes.
+- 0da295fc: RUM views will now use component names instead of url path name.
+
+## 0.46.3
+
+### Patch Changes
+
+- 95895cef: Expose functions that run when opening a drawer.
+
 ## 0.46.2
 
 ### Patch Changes

@@ -26,12 +26,19 @@ import "./patient-conditions.scss";
 export type PatientConditionsProps = {
   className?: string;
   readOnly?: boolean;
+  hideBuilderOwnedRecords?: boolean;
 };
 
 export const PatientConditions = withErrorBoundary(
-  ({ className, readOnly = false }: PatientConditionsProps) => {
+  ({
+    className,
+    readOnly = false,
+    hideBuilderOwnedRecords = false,
+  }: PatientConditionsProps) => {
     // State.
-    const [collection, setCollection] = useState<FilterCollection>("patient");
+    const [collection, setCollection] = useState<FilterCollection>(
+      hideBuilderOwnedRecords ? "other" : "patient"
+    );
     const { filters, updateFilters, applyFilters, availableFilters } =
       useConditionFilters(collection);
     const { applySorts, sortOptions, updateSorts, currentSorts } =
@@ -71,19 +78,21 @@ export const PatientConditions = withErrorBoundary(
       <div
         ref={containerRef}
         className={cx(
-          "ctw-patient-conditions ctw-items-center ctw-justify-between ctw-py-5",
+          "ctw-patient-resource-component ctw-patient-conditions ctw-items-center ctw-justify-between ctw-py-5",
           className,
           {
             "ctw-patient-conditions-stacked": breakpoints.sm,
           }
         )}
       >
-        <PatientConditionsTabs
-          forceHorizontalTabs
-          otherConditions={otherConditions}
-          collection={collection}
-          onCollectionChange={setCollection}
-        />
+        {!hideBuilderOwnedRecords && (
+          <PatientConditionsTabs
+            forceHorizontalTabs
+            otherConditions={otherConditions}
+            collection={collection}
+            onCollectionChange={setCollection}
+          />
+        )}
 
         <PatientConditionsActions
           sortOptions={sortOptions}
@@ -100,6 +109,7 @@ export const PatientConditions = withErrorBoundary(
 
         <Table
           stacked={breakpoints.sm}
+          removeLeftAndRightBorders
           className="-ctw-mx-px !ctw-rounded-none"
           showTableHead={false}
           emptyMessage="There are no condition records available."
