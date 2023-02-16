@@ -13,7 +13,7 @@ import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 type Props = PatientMedicationsTabbedProps;
 
 export default {
-  tags: ["docsPage"],
+  tags: ["autodocs"],
   component: PatientMedicationsTabbed,
   decorators: [
     (Story, { args }) => (
@@ -24,6 +24,12 @@ export default {
       </CTWProvider>
     ),
   ],
+  args: {
+    hideAddToRecord: undefined,
+    forceHorizontalTabs: undefined,
+    onAfterOpenHistoryDrawer: undefined,
+    onOpenHistoryDrawer: undefined,
+  },
 } as Meta<Props>;
 
 export const Basic: StoryObj<Props> = {
