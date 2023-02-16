@@ -10,6 +10,18 @@ type Props = ActionListProps<MinActionItem>;
 export default {
   component: ActionList,
   tags: ["autodocs"],
+  args: {
+    actionText: undefined,
+    activeClassName: undefined,
+    className: undefined,
+    items: [],
+    onAction: undefined,
+    onRowClick: undefined,
+    onUndoAction: undefined,
+    onSecondaryAction: undefined,
+    secondaryActionText: undefined,
+    undoActionText: undefined,
+  },
 } as Meta<Props>;
 
 const item = (id = "", title = "", subtitle = "", complete = false) => ({

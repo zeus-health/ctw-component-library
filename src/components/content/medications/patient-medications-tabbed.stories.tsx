@@ -24,6 +24,12 @@ export default {
       </CTWProvider>
     ),
   ],
+  args: {
+    hideAddToRecord: undefined,
+    forceHorizontalTabs: undefined,
+    onAfterOpenHistoryDrawer: undefined,
+    onOpenHistoryDrawer: undefined,
+  },
 } as Meta<Props>;
 
 export const Basic: StoryObj<Props> = {

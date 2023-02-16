@@ -29,6 +29,22 @@ export default {
       },
     },
   },
+  args: {
+    RowActions: undefined,
+    className: undefined,
+    columns: undefined,
+    emptyMessage: undefined,
+    getRowClassName: undefined,
+    handleRowClick: undefined,
+    hidePagination: undefined,
+    isLoading: undefined,
+    onSort: undefined,
+    records: undefined,
+    removeLeftAndRightBorders: undefined,
+    showTableHead: undefined,
+    sort: undefined,
+    stacked: undefined,
+  },
 } as Meta<Props>;
 
 const columns: TableColumn<Record>[] = [

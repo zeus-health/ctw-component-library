@@ -13,6 +13,7 @@ export default {
       const [drawerIsOpen, setDrawerIsOpen] = useState(false);
       return (
         <div id="headlessui-portal-root">
+          <p>To open up the drawer, simply press the button below</p>
           <button
             type="button"
             className="ctw-btn-primary"
@@ -31,21 +32,42 @@ export default {
       );
     },
   ],
+  args: {
+    children: undefined,
+    className: undefined,
+    disableCloseOnBlur: undefined,
+    isOpen: undefined,
+    onAfterClosed: undefined,
+    onAfterOpen: undefined,
+    onClose: undefined,
+    onOpen: undefined,
+    showCloseFooter: undefined,
+    title: undefined,
+  },
 } as Meta<DrawerProps>;
 
 export const Basic: StoryObj<DrawerProps> = {
   args: {
-    title: "My Title",
+    title: "Drawer Title",
     children: (
       <>
         <Drawer.Body>
-          My Body
-          {[...Array(20)].map((_, i) => (
-            // eslint-disable-next-line react/no-array-index-key
-            <p key={i}>scrollable content {i}</p>
-          ))}
+          <h4>Drawer Body</h4>
+          <ol>
+            {[...Array(10)].map((_, i) => (
+              // eslint-disable-next-line react/no-array-index-key
+              <li key={i} data-testid={`scrollable-content-${i}`}>
+                Lorem ipsum dolor sit amet, his te vulputate cotidieque
+                concludaturque, no nulla dicit vocibus ius. Eos ne recusabo
+                scriptorem, admodum ullamcorper te mei. Eros mundi eos te, mea
+                at errem graecis. Ex cum delicata intellegam, mea at duis
+                patrioque conclusionemque, pri te brute ceteros eloquentiam.
+                Veri placerat persecuti ut vix, sint esse iriure ei sit
+              </li>
+            ))}
+          </ol>
         </Drawer.Body>
-        <Drawer.Footer>My Footer</Drawer.Footer>
+        <Drawer.Footer>Drawer Footer</Drawer.Footer>
       </>
     ),
   },
@@ -57,13 +79,13 @@ export const Test: StoryObj<DrawerProps> = {
     const canvas = within(canvasElement);
 
     // Verify drawer doesn't show right away.
-    expect(canvas.queryByText(/my title/i)).toBeNull();
+    expect(canvas.queryByText(/drawer title/i)).toBeNull();
 
     // Open drawer and verify our three areas appear.
     userEvent.click(canvas.getByRole("button"));
-    expect(canvas.getByText(/my title/i)).toBeInTheDocument();
-    expect(canvas.getByText(/scrollable content 0/i)).toBeInTheDocument();
-    expect(canvas.getByText(/my footer/i)).toBeInTheDocument();
+    expect(canvas.getByText(/drawer title/i)).toBeInTheDocument();
+    expect(canvas.getByTestId("scrollable-content-0")).toBeInTheDocument();
+    expect(canvas.getByText(/drawer footer/i)).toBeInTheDocument();
     userEvent.click(canvas.getByLabelText("close"));
   },
 };
