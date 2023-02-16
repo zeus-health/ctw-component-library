@@ -14,7 +14,22 @@
     <link rel="preload" href="./sb-common-assets/nunito-sans-bold.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="./sb-common-assets/fonts.css" />
 
-      
+     <script>
+  if (location.hostname === "zeus-health.github.io") {
+    const head = document.head || document.getElementsByTagName("head")[0];
+    const style = document.createElement("style");
+    head.appendChild(style);
+    style.appendChild(
+      document.createTextNode(`
+      /* Hide tests from the sidebar when rendered from GitHub pages */
+      *[id*="test"] {
+        display: none !important;
+      }
+  `)
+    );
+  }
+</script>
+ 
 
     <style>
       #storybook-root[hidden] {
@@ -93,8 +108,6 @@
       import './sb-addons/essentials-outline-7/manager-bundle.mjs';
       
       import './sb-addons/interactions-8/manager-bundle.mjs';
-      
-      import './sb-addons/storybook-9/manager-bundle.mjs';
       
     </script>
 
