@@ -1,0 +1,15 @@
+<script>
+  if (location.hostname === "zeus-health.github.io") {
+    const head = document.head || document.getElementsByTagName("head")[0];
+    const style = document.createElement("style");
+    head.appendChild(style);
+    style.appendChild(
+      document.createTextNode(`
+      /* Hide tests from the sidebar when rendered from GitHub pages */
+      *[id*="test"] {
+        display: none !important;
+      }
+  `)
+    );
+  }
+</script>
