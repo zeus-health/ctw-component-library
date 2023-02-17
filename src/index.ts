@@ -24,6 +24,7 @@ export * from "@/components/core/list-box/list-box";
 export * from "@/components/core/pagination/pagination";
 export * from "@/components/core/pagination/pagination-list";
 export * as CTWBox from "@/components/core/ctw-box";
+export * from "@/components/core/form/drawer-form-with-fields";
 // Zus Providers and Hooks
 export * from "@/components/core/drawer";
 export * from "@/components/core/modal";

@@ -50,7 +50,7 @@ const mockPatientGet = rest.get(
 const mockMedicationStatementGet = rest.get(
   "https://api.dev.zusapi.com/fhir/MedicationStatement",
   (req, res, ctx) => {
-    if (req.url.searchParams.get("_tag:not")) {
+    if (req.url.searchParams.get("firstparty")) {
       return res(ctx.status(200), ctx.json(patientProviderMedsCache));
     }
     return res(ctx.status(200), ctx.json(patientOtherProviderMedsCache));

@@ -33,6 +33,16 @@ const UPI_TAGS = [`${SYSTEM_ZUS_UPI_RECORD_TYPE}|universal`];
 
 const SUMMARY_TAGS = [`${SYSTEM_SUMMARY}|Common`];
 
+// ODS must be specifically configured *by resource* to support the firstparty tag.
+// This is a performance optimization to address slow queries using _tag:not.
+const FIRST_PARTY_TAG_SUPPORTED_RESOURCES = [
+  "Patient",
+  "Condition",
+  "Coverage",
+  "Encounter",
+  "MedicationStatement",
+];
+
 export type SearchReturn<T extends ResourceTypeString> = {
   bundle: fhir4.Bundle;
   total: number;
@@ -80,10 +90,22 @@ export async function searchBuilderRecords<T extends ResourceTypeString>(
     ...UPI_TAGS,
   ];
   const builderTag = `${SYSTEM_ZUS_OWNER}|builder/${requestContext.builderId}`;
-  const params = mergeParams(searchParams, {
+  type FirstPartyParams = {
+    _tag: string[];
+    firstparty?: boolean;
+    "_tag:not"?: string[];
+  };
+  const firstPartyParams: FirstPartyParams = {
     _tag: [builderTag],
-    "_tag:not": nonBuilderTags,
-  });
+  };
+
+  if (FIRST_PARTY_TAG_SUPPORTED_RESOURCES.includes(resourceType)) {
+    firstPartyParams.firstparty = true;
+  } else {
+    firstPartyParams["_tag:not"] = nonBuilderTags;
+  }
+
+  const params = mergeParams(searchParams, firstPartyParams);
   return searchAllRecords(resourceType, requestContext, params);
 }
 
