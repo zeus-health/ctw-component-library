@@ -10,10 +10,11 @@ import {
   FilterChangeEvent,
   FilterItem,
 } from "@/components/core/filter-bar/filter-bar-types";
+import { ConditionModel } from "@/fhir/models";
 
 export type PatientConditionsActionsProps = {
   hideAdd: boolean;
-  sortOptions: SortOption[];
+  sortOptions: SortOption<ConditionModel>[];
   updateSorts: (newSorts: Partial<Sort>) => void;
   activeCollection: FilterCollection;
   currentSorts: Sort;
@@ -70,8 +71,8 @@ export function PatientConditionsActions({
   );
 }
 
-type SortButtonProps = {
-  options: SortOption[];
+type SortButtonProps<T> = {
+  options: SortOption<T>[];
   updateSorts: (newSorts: Partial<Sort>) => void;
   activeCollection: FilterCollection;
   currentSorts: Sort;
@@ -82,14 +83,14 @@ const SortButton = ({
   updateSorts,
   activeCollection,
   currentSorts,
-}: SortButtonProps) => (
+}: SortButtonProps<ConditionModel>) => (
   <DropdownMenuAction
     type="select"
     buttonClassName="ctw-bg-transparent ctw-border-none ctw-p-0"
     onItemSelect={(event) => {
       const { dir, key, isDate } = options.filter(
         (option) => option.display === event.key
-      )[0].payload;
+      )[0];
 
       updateSorts({
         [activeCollection]: { key, dir, isDate, display: event.name },

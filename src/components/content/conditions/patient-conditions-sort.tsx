@@ -27,43 +27,55 @@ const DEFAULT_SORTS = {
   },
 };
 
-export type SortOption = {
+export type SortOption<T> = {
   display: string;
-  payload: { key: keyof ConditionModel; dir: SortDir; isDate?: boolean };
+  key: keyof T;
+  dir: SortDir;
+  isDate?: boolean;
 };
 
-const SORT_OPTIONS: SortOption[] = [
+const SORT_OPTIONS: SortOption<ConditionModel>[] = [
   {
     display: "Name (A-Z)",
-    payload: { key: "display", dir: "asc" },
+    key: "display",
+    dir: "asc",
   },
   {
     display: "Name (Z-A)",
-    payload: { key: "display", dir: "desc" },
+    key: "display",
+    dir: "desc",
   },
   {
     display: "Category (A-Z)",
-    payload: { key: "ccsChapter", dir: "asc" },
+    key: "ccsChapter",
+    dir: "asc",
   },
   {
     display: "Category (Z-A)",
-    payload: { key: "ccsChapter", dir: "desc" },
+    key: "ccsChapter",
+    dir: "desc",
   },
   {
     display: "Status (A-Z)",
-    payload: { key: "displayStatus", dir: "asc" },
+    key: "displayStatus",
+    dir: "asc",
   },
   {
     display: "Status (Z-A)",
-    payload: { key: "displayStatus", dir: "desc" },
+    key: "displayStatus",
+    dir: "desc",
   },
   {
     display: "Last Updated Date (Oldest to Newest)",
-    payload: { key: "recordedDate", dir: "asc", isDate: true },
+    key: "recordedDate",
+    dir: "asc",
+    isDate: true,
   },
   {
     display: "Last Updated Date (Newest to Oldest)",
-    payload: { key: "recordedDate", dir: "desc", isDate: true },
+    key: "recordedDate",
+    dir: "desc",
+    isDate: true,
   },
 ];
 
