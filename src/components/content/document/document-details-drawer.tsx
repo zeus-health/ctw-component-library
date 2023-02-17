@@ -1,8 +1,12 @@
+import { useEffect, useState } from "react";
+import { DocumentButton } from "../CCDA/document-button";
+import { useCCDAModal } from "../CCDA/modal-ccda";
 import { Details } from "@/components/core/collapsible-data-list-details";
 import { Drawer } from "@/components/core/drawer";
+import { Loading } from "@/components/core/loading";
+import { useCTW } from "@/components/core/providers/ctw-provider";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
 import { DocumentModel } from "@/fhir/models/document";
-import { useCCDAModal } from "../CCDA/modal-ccda";
 
 export function useDocumentDetailsDrawer() {
   const { openDrawer } = useDrawer();
@@ -30,7 +34,22 @@ export function DocumentDetailsDrawer({
   onClose,
 }: DocumentDetailsDrawerProps) {
   const openCCDAModal = useCCDAModal();
+  const [isLoading, setIsLoading] = useState(true);
+  const [binaryId, setBinaryId] = useState<string | undefined>();
+  const { getRequestContext } = useCTW();
 
+  useEffect(() => {
+    async function load() {
+      setIsLoading(true);
+      if (document.binaryID) {
+        setBinaryId(document.binaryID);
+      }
+      console.log("binaryId", binaryId);
+      setIsLoading(false);
+    }
+
+    void load();
+  }, [binaryId, document, getRequestContext]);
   return (
     <Drawer
       className={className}
@@ -44,7 +63,21 @@ export function DocumentDetailsDrawer({
           <div className="ctw-text-2xl">{document.status}</div>
         </div>
 
-        <Details data={documentData(document)} />
+        {isLoading ? (
+          <Loading message="Loading document data..." />
+        ) : (
+          <Details
+            data={documentData(document)}
+            documentButton={
+              binaryId ? (
+                <DocumentButton
+                  onClick={() => openCCDAModal(binaryId, "Document")}
+                  text="Source Document"
+                />
+              ) : undefined
+            }
+          />
+        )}
       </Drawer.Body>
     </Drawer>
   );

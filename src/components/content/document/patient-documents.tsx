@@ -1,23 +1,22 @@
 import cx from "classnames";
 import { useRef } from "react";
 import { useDocumentDetailsDrawer } from "./document-details-drawer";
-import { patientImmunizationsColumns } from "./patient-document-columns";
+import { patientDocumentColumns } from "./patient-document-columns";
 import { Heading } from "@/components/core/ctw-box";
 import { Table } from "@/components/core/table/table";
-import { ViewFHIR } from "@/components/core/view-fhir";
 import { usePatientDocument } from "@/fhir/document";
 import { DocumentModel } from "@/fhir/models/document";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 
 export type PatientDocumentProps = {
   className?: string;
+  includeViewFhirResource: boolean;
 };
 
-const viewRecordFHIR = ({ record }: { record: DocumentModel }) => (
-  <ViewFHIR name="DocumentReference Resource" resource={record.resource} />
-);
-
-export function PatientDocuments({ className }: PatientDocumentProps) {
+export function PatientDocuments({
+  className,
+  includeViewFhirResource,
+}: PatientDocumentProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const patientDocumentQuery = usePatientDocument();
@@ -43,12 +42,11 @@ export function PatientDocuments({ className }: PatientDocumentProps) {
     >
       <Heading title="Documents" />
       <Table
-        RowActions={viewRecordFHIR}
         stacked={breakpoints.sm}
         className="-ctw-mx-px !ctw-rounded-none"
         isLoading={isLoading}
         records={document}
-        columns={patientImmunizationsColumns}
+        columns={patientDocumentColumns(includeViewFhirResource)}
         handleRowClick={handleRowClick}
       />
     </div>

@@ -1,8 +1,7 @@
 import { useQueryWithPatient } from "..";
+import { getIncludedBasics } from "./bundle";
 import { DocumentModel } from "./models/document";
 import { searchCommonRecords } from "./search-helpers";
-import { applyDocumentFilters } from "@/components/content/document/patient-document-filters";
-import { orderBy } from "@/utils/nodash/fp";
 import { QUERY_KEY_PATIENT_DOCUMENTS } from "@/utils/query-keys";
 
 export function usePatientDocument() {
@@ -15,18 +14,28 @@ export function usePatientDocument() {
           "DocumentReference",
           requestContext,
           {
-            patientUPID: patient.UPID,
+            subject: `Patient/${patient.id}`,
           }
         );
-        console.log("The documentReference query is, ");
-        return orderBy(
-          applyDocumentFilters(documents)
-        ) as unknown as DocumentModel[];
+        console.log("The documentReference query is", documents);
+        const models = setupDocumentModel(documents, bundle);
+
+        return models;
       } catch (e) {
         throw new Error(
           `Failed fetching document information for patient: ${e}`
         );
       }
     }
+  );
+}
+
+function setupDocumentModel(
+  resources: fhir4.DocumentReference[],
+  bundle: fhir4.Bundle
+): DocumentModel[] {
+  const basicsMap = getIncludedBasics(bundle);
+  return resources.map(
+    (c) => new DocumentModel(c, undefined, basicsMap.get(c.id ?? ""))
   );
 }
