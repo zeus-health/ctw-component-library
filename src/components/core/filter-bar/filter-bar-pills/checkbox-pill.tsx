@@ -42,6 +42,7 @@ export function FilterBarCheckboxPill({
 
   return (
     <DropdownMenuAction
+      isOpen={filter.isOpen}
       items={items}
       type="checkbox"
       pinnedActions={compact([
