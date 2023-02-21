@@ -9,6 +9,8 @@ export const SYSTEM_CONDITION_VERIFICATION_STATUS =
   "http://terminology.hl7.org/CodeSystem/condition-ver-status";
 export const SYSTEM_MARITAL_STATUS =
   "http://terminology.hl7.org/CodeSystem/v3-MaritalStatus";
+export const SYSTEM_NULL_FLAVOR =
+  "http://terminology.hl7.org/CodeSystem/v3-NullFlavor";
 export const SYSTEM_PROVENANCE_ACTIVITY_TYPE =
   "http://terminology.hl7.org/3.1.0/CodeSystem-v3-DataOperation.html";
 export const SYSTEM_PROVENANCE_AGENT_TYPE =
