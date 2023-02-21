@@ -1,5 +1,14 @@
 # ctw-component-library
 
+## 0.46.9
+
+### Patch Changes
+
+- 1d38ec5e: Flatten sorts object.
+- b4a317d6: Create generic filter utility.
+- b4a317d6: Automatically open select and checkbox filters when adding from filter button.
+- 2aefff35: Remove padding that is added by default.
+
 ## 0.46.8
 
 ### Patch Changes
