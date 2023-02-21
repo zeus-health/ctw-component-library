@@ -82,7 +82,7 @@ export const PatientConditions = withErrorBoundary(
       <div
         ref={containerRef}
         className={cx(
-          "ctw-patient-resource-component ctw-patient-conditions ctw-items-center ctw-justify-between ctw-py-5",
+          "ctw-patient-conditions ctw-items-center ctw-justify-between ctw-py-5",
           className,
           {
             "ctw-patient-conditions-stacked": breakpoints.sm,
