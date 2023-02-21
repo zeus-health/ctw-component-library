@@ -14,7 +14,7 @@ export function usePatientDocument() {
           "DocumentReference",
           requestContext,
           {
-            subject: `Patient/${patient.id}`,
+            patientUPID: patient.UPID,
           }
         );
         const models = setupDocumentModel(documents, bundle);
