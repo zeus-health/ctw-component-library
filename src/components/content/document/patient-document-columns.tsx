@@ -7,29 +7,17 @@ export const patientDocumentColumns = (includeViewFhirResource = true) => {
     {
       widthPercent: 20,
       minWidth: 150,
-      title: "Title",
-      render: (document) => <div>{document.title}</div>,
-    },
-    {
-      widthPercent: 20,
-      minWidth: 150,
       title: "Date Created",
       render: (document) => <div>{document.dateCreated}</div>,
     },
     {
-      widthPercent: 20,
+      widthPercent: 40,
       minWidth: 150,
-      title: "Status",
-      render: (document) => <div>{document.status}</div>,
+      title: "Title",
+      render: (document) => <div>{document.title}</div>,
     },
     {
-      widthPercent: 20,
-      minWidth: 150,
-      title: "DocStatus",
-      render: (document) => <div>{document.docStatus}</div>,
-    },
-    {
-      widthPercent: 10,
+      widthPercent: 30,
       minWidth: 150,
       title: "Managing Organization",
       render: (document) => <div>{document.managingOrganization}</div>,

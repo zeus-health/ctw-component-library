@@ -17,7 +17,12 @@ export function usePatientDocument() {
             patientUPID: patient.UPID,
           }
         );
-        return orderBy(applyDocumentFilters(documents), ["desc"]);
+        return orderBy(
+          applyDocumentFilters(documents),
+          [(document) => document.dateCreated || ""],
+
+          ["desc"]
+        );
       } catch (e) {
         throw new Error(
           `Failed fetching document information for patient: ${e}`

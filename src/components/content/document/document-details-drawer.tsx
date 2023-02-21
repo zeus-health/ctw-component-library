@@ -60,7 +60,9 @@ export function DocumentDetailsDrawer({
     >
       <Drawer.Body>
         <div className="ctw-py-2">
-          <div className="ctw-text-2xl">{document.status}</div>
+          <div className="ctw-text-2xl">
+            {document.dateCreated} - {document.title}
+          </div>
         </div>
 
         {isLoading ? (
@@ -84,8 +86,6 @@ export function DocumentDetailsDrawer({
 }
 
 export const documentData = (document: DocumentModel) => [
-  { label: "Title", value: document.title },
-  { label: "Date Created", value: document.dateCreated },
   { label: "status", value: document.status },
   { label: "docStatus", value: document.docStatus },
   { label: "Managing Organization", value: document.managingOrganization },

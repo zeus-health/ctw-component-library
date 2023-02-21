@@ -1,5 +1,5 @@
 import { codeableConceptLabel } from "../codeable-concept";
-import { formatISODatetoDashedDate } from "../formatters";
+import { formatISODateStringToDate } from "../formatters";
 import { FHIRModel } from "./fhir-model";
 
 export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
@@ -25,7 +25,7 @@ export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
   }
 
   get dateCreated(): string | undefined {
-    return formatISODatetoDashedDate(
+    return formatISODateStringToDate(
       this.resource.content[0].attachment.creation
     );
   }
