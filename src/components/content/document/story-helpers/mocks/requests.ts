@@ -1,6 +1,7 @@
 import { rest } from "msw";
 import { documents } from "./document";
 import { patient } from "./patient";
+import { conditionBinary } from "@/components/content/conditions/story-helpers/mocks/condition-binary";
 
 function mockDocumentRequests() {
   const mockPatientGet = rest.get(
@@ -14,7 +15,12 @@ function mockDocumentRequests() {
     "https://api.dev.zusapi.com/fhir/DocumentReference",
     (req, res, ctx) => res(ctx.status(200), ctx.json(documents))
   );
-  return [mockPatientGet, mockDocumentGet];
+
+  const mockConditionHistoryBinaryDocument = rest.get(
+    "https://api.dev.zusapi.com/fhir/Binary",
+    async (_, res, ctx) => res(ctx.status(200), ctx.json(conditionBinary))
+  );
+  return [mockPatientGet, mockDocumentGet, mockConditionHistoryBinaryDocument];
 }
 
 export function setupDocumentMocks() {
