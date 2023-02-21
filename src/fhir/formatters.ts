@@ -121,3 +121,16 @@ export function formatISODateStringToDate(
 
   return `${month}/${day}/${year}`;
 }
+
+// Formats a string ISO date to MM-DD-YYYY.
+export function formatISODatetoDashedDate(
+  dateStr?: string
+): string | undefined {
+  if (!dateStr) return undefined;
+
+  const day = dateStr.substring(8, 10);
+  const month = dateStr.substring(5, 7);
+  const year = dateStr.substring(0, 4);
+
+  return `${month}-${day}-${year}`;
+}

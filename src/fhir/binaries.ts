@@ -31,7 +31,6 @@ export async function getBinaryDocument(
   requestContext: CTWRequestContext,
   binaryId: string
 ): Promise<fhir4.Binary> {
-  console.log("inside Binary Document");
   return queryClient.fetchQuery([QUERY_KEY_BINARY, binaryId], async () =>
     requestContext.fhirClient.read({
       resourceType: "Binary",

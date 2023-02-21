@@ -1,7 +1,7 @@
 import { useQueryWithPatient } from "..";
-import { getIncludedBasics } from "./bundle";
-import { DocumentModel } from "./models/document";
 import { searchCommonRecords } from "./search-helpers";
+import { applyDocumentFilters } from "@/components/content/document/patient-document-filters";
+import { orderBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_DOCUMENTS } from "@/utils/query-keys";
 
 export function usePatientDocument() {
@@ -17,24 +17,12 @@ export function usePatientDocument() {
             patientUPID: patient.UPID,
           }
         );
-        const models = setupDocumentModel(documents, bundle);
-
-        return models;
+        return orderBy(applyDocumentFilters(documents), ["desc"]);
       } catch (e) {
         throw new Error(
           `Failed fetching document information for patient: ${e}`
         );
       }
     }
-  );
-}
-
-function setupDocumentModel(
-  resources: fhir4.DocumentReference[],
-  bundle: fhir4.Bundle
-): DocumentModel[] {
-  const basicsMap = getIncludedBasics(bundle);
-  return resources.map(
-    (c) => new DocumentModel(c, undefined, basicsMap.get(c.id ?? ""))
   );
 }

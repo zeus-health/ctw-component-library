@@ -6,6 +6,7 @@ import { Drawer } from "@/components/core/drawer";
 import { Loading } from "@/components/core/loading";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
+import { SimpleMoreList } from "@/components/core/simple-more-list";
 import { DocumentModel } from "@/fhir/models/document";
 
 export function useDocumentDetailsDrawer() {
@@ -83,5 +84,19 @@ export function DocumentDetailsDrawer({
 }
 
 export const documentData = (document: DocumentModel) => [
+  { label: "Title", value: document.title },
+  { label: "Date Created", value: document.dateCreated },
   { label: "status", value: document.status },
+  { label: "docStatus", value: document.docStatus },
+  { label: "Managing Organization", value: document.managingOrganization },
+  {
+    label: "Section Display",
+    value: document.SectionDisplays && (
+      <SimpleMoreList
+        items={document.SectionDisplays}
+        limit={30}
+        total={document.SectionDisplays.length}
+      />
+    ),
+  },
 ];

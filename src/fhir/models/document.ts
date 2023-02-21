@@ -1,3 +1,5 @@
+import { codeableConceptLabel } from "../codeable-concept";
+import { formatISODatetoDashedDate } from "../formatters";
 import { FHIRModel } from "./fhir-model";
 
 export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
@@ -12,5 +14,30 @@ export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
       return binaryID.split("/").pop();
     }
     return undefined;
+  }
+
+  get docStatus(): string | undefined {
+    return this.resource.docStatus;
+  }
+
+  get title(): string | undefined {
+    return this.resource.content[0].attachment.title;
+  }
+
+  get dateCreated(): string | undefined {
+    return formatISODatetoDashedDate(
+      this.resource.content[0].attachment.creation
+    );
+  }
+
+  get managingOrganization(): string | undefined {
+    return this.resource.custodian?.display;
+  }
+
+  get SectionDisplays(): string[] | undefined {
+    return (
+      this.resource.category?.map((coding) => codeableConceptLabel(coding)) ||
+      undefined
+    );
   }
 }

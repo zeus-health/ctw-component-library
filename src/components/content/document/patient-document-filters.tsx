@@ -10,4 +10,10 @@ export const applyDocumentFilters = (data: fhir4.DocumentReference[]) => {
   return documentData;
 };
 
-const valuesToDedupeOn = (document: DocumentModel) => [document.status];
+const valuesToDedupeOn = (document: DocumentModel) => [
+  document.status,
+  document.binaryID,
+  document.docStatus,
+  document.dateCreated,
+  document.managingOrganization,
+];
