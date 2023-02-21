@@ -1,5 +1,6 @@
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { ViewFHIR } from "@/components/core/view-fhir";
+import { formatISODateStringToDate } from "@/fhir/formatters";
 import { DocumentModel } from "@/fhir/models/document";
 
 export const patientDocumentColumns = (includeViewFhirResource = true) => {
@@ -8,7 +9,9 @@ export const patientDocumentColumns = (includeViewFhirResource = true) => {
       widthPercent: 20,
       minWidth: 150,
       title: "Date Created",
-      render: (document) => <div>{document.dateCreated}</div>,
+      render: (document) => (
+        <div>{formatISODateStringToDate(document.dateCreated)}</div>
+      ),
     },
     {
       widthPercent: 40,

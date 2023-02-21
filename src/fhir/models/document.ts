@@ -1,5 +1,4 @@
 import { codeableConceptLabel } from "../codeable-concept";
-import { formatISODateStringToDate } from "../formatters";
 import { FHIRModel } from "./fhir-model";
 
 export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
@@ -25,9 +24,7 @@ export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
   }
 
   get dateCreated(): string | undefined {
-    return formatISODateStringToDate(
-      this.resource.content[0].attachment.creation
-    );
+    return this.resource.content[0].attachment.creation;
   }
 
   get managingOrganization(): string | undefined {

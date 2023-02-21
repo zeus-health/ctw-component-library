@@ -7,6 +7,7 @@ import { Loading } from "@/components/core/loading";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
 import { SimpleMoreList } from "@/components/core/simple-more-list";
+import { formatISODateStringToDate } from "@/fhir/formatters";
 import { DocumentModel } from "@/fhir/models/document";
 
 export function useDocumentDetailsDrawer() {
@@ -61,7 +62,7 @@ export function DocumentDetailsDrawer({
       <Drawer.Body>
         <div className="ctw-py-2">
           <div className="ctw-text-2xl">
-            {document.dateCreated} - {document.title}
+            {formatISODateStringToDate(document.dateCreated)} - {document.title}
           </div>
         </div>
 
