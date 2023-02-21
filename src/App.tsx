@@ -47,7 +47,10 @@ const demoComponents: DemoComponent[] = [
   },
   { render: () => <PatientConditions />, title: "Patient Conditions 2.0" },
   { render: () => <Conditions />, title: "Patient Conditions" },
-  { render: () => <PatientDocuments />, title: "Patient Documents" },
+  {
+    render: () => <PatientDocuments />,
+    title: "Patient Documents",
+  },
   { render: () => <PatientAllergies />, title: "Patient Allergies" },
   { render: () => <PatientImmunizations />, title: "Patient Immunizations" },
   {

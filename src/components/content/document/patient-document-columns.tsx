@@ -7,6 +7,7 @@ export const patientDocumentColumns = (includeViewFhirResource = true) => {
     {
       widthPercent: 90,
       minWidth: 150,
+      title: "Status",
       render: (document) => <div>{document.status}</div>,
     },
   ];

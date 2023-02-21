@@ -44,7 +44,6 @@ export function DocumentDetailsDrawer({
       if (document.binaryID) {
         setBinaryId(document.binaryID);
       }
-      console.log("binaryId", binaryId);
       setIsLoading(false);
     }
 

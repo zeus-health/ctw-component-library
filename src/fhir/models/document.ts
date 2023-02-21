@@ -7,7 +7,6 @@ export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
 
   get binaryID(): string | undefined {
     const binaryID = this.resource.content[0].attachment.url;
-    console.log("binaryID", binaryID?.split("/").pop());
 
     if (binaryID) {
       return binaryID.split("/").pop();

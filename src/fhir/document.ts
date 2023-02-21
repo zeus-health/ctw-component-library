@@ -17,7 +17,6 @@ export function usePatientDocument() {
             subject: `Patient/${patient.id}`,
           }
         );
-        console.log("The documentReference query is", documents);
         const models = setupDocumentModel(documents, bundle);
 
         return models;

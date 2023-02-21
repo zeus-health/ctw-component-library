@@ -10,7 +10,7 @@ import { useBreakpoints } from "@/hooks/use-breakpoints";
 
 export type PatientDocumentProps = {
   className?: string;
-  includeViewFhirResource: boolean;
+  includeViewFhirResource?: boolean;
 };
 
 export function PatientDocuments({
