@@ -22,6 +22,7 @@ const tabbedContent: TabGroupItem<ConditionModel>[] = [
   },
   {
     key: "other-provider-records",
+    getPanelClassName: (sm: boolean) => (sm ? "ctw-mt-0" : "ctw-mt-2"),
     display: () => (
       <>
         <span className="ctw-pr-2 ctw-capitalize">other provider records</span>
@@ -42,12 +43,10 @@ export function PatientConditionsTabs({
   return (
     <>
       {collection === "other" && (
-        <div className="ctw-space-y-3">
-          <PatientHistoryStatus
-            status={patientHistory.lastStatus}
-            date={patientHistory.dateCreatedAt}
-          />
-        </div>
+        <PatientHistoryStatus
+          status={patientHistory.lastStatus}
+          date={patientHistory.dateCreatedAt}
+        />
       )}
       <TabGroup
         content={tabbedContent}

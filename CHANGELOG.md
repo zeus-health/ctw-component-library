@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 0.46.8
+
+### Patch Changes
+
+- 8ebcdc1a: Expose `DrawerFormWithFields`.
+
+## 0.46.7
+
+### Patch Changes
+
+- 0e5fa73f: Added firstparty search parameter for supported resource types
+
 ## 0.46.6
 
 ### Patch Changes
