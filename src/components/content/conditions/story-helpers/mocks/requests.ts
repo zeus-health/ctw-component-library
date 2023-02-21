@@ -36,20 +36,7 @@ export function setupConditionMocks({
     ],
 
     parameters: {
-      msw: [
-        mockPatientGet,
-        mockConditionSearch,
-        mockProvenancePost,
-        mockConditionGet,
-        mockConditionPost,
-        mockConditionPut,
-        mockPatientHistoryGet,
-        mockConditionHistoryBinaryDocument,
-        mockConditionsBasic,
-        mockConditionVersionHistoryBundle,
-        mockConditionProvenance,
-        mockConditionsBasicPut,
-      ],
+      msw: mockRequests(),
     },
   };
 }
@@ -66,150 +53,172 @@ const hasHistoryMatch = (param: string) => {
   return Object.entries(histories).find((entry) => param.includes(entry[0]));
 };
 
-const mockPatientGet = rest.get(
-  "https://api.dev.zusapi.com/fhir/Patient",
-  // Add ctx.delay(750), delay to show loading, we set this to 750ms to be
-  // less than the default testing-library timeout of 1000ms.
-  (_, res, ctx) => res(ctx.delay(750), ctx.status(200), ctx.json(patient))
-);
+function mockRequests() {
+  const mockPatientGet = rest.get(
+    "https://api.dev.zusapi.com/fhir/Patient",
+    // Add ctx.delay(750), delay to show loading, we set this to 750ms to be
+    // less than the default testing-library timeout of 1000ms.
+    (_, res, ctx) => res(ctx.delay(750), ctx.status(200), ctx.json(patient))
+  );
 
-const mockPatientHistoryGet = rest.get(
-  "https://api.dev.zusapi.com/patient-history/messages",
-  (_, res, ctx) => res(ctx.status(200), ctx.json(patientHistoryMessage))
-);
+  const mockPatientHistoryGet = rest.get(
+    "https://api.dev.zusapi.com/patient-history/messages",
+    (_, res, ctx) => res(ctx.status(200), ctx.json(patientHistoryMessage))
+  );
 
-const mockProvenancePost = rest.post(
-  "https://api.dev.zusapi.com/fhir/Provenance",
-  (_, res, ctx) => res(ctx.status(200))
-);
+  const mockProvenancePost = rest.post(
+    "https://api.dev.zusapi.com/fhir/Provenance",
+    (_, res, ctx) => res(ctx.status(200))
+  );
 
-const mockConditionHistoryBinaryDocument = rest.get(
-  "https://api.dev.zusapi.com/fhir/Binary",
-  async (_, res, ctx) => res(ctx.status(200), ctx.json(conditionBinary))
-);
+  const mockConditionHistoryBinaryDocument = rest.get(
+    "https://api.dev.zusapi.com/fhir/Binary",
+    async (_, res, ctx) => res(ctx.status(200), ctx.json(conditionBinary))
+  );
 
-const mockConditionProvenance = rest.get(
-  "https://api.dev.zusapi.com/fhir/Provenance?target=Condition/:Condition",
-  async (_, res, ctx) => res(ctx.status(200), ctx.json(ProvenanceCondition))
-);
+  const mockConditionProvenance = rest.get(
+    "https://api.dev.zusapi.com/fhir/Provenance?target=Condition/:Condition",
+    async (_, res, ctx) => res(ctx.status(200), ctx.json(ProvenanceCondition))
+  );
 
-const mockConditionSearch = rest.get(
-  "https://api.dev.zusapi.com/forms-data/terminology/conditions",
-  (_, res, ctx) => res(ctx.status(200), ctx.json(heartConditions))
-);
+  const mockConditionSearch = rest.get(
+    "https://api.dev.zusapi.com/forms-data/terminology/conditions",
+    (_, res, ctx) => res(ctx.status(200), ctx.json(heartConditions))
+  );
 
-// Mocked post will add the new condition to the
-// patient conditions bundle.
-const mockConditionPost = rest.post(
-  "https://api.dev.zusapi.com/fhir/Condition",
-  async (req, res, ctx) => {
-    const newCondition = await req.json();
-    newCondition.id = uuidv4();
-    patientConditionsCache.entry?.push({
-      resource: newCondition,
-      search: { mode: "match" },
-    });
-    patientConditionsCache.total = patientConditionsCache.entry?.length;
-    return res(ctx.status(200), ctx.json(newCondition));
-  }
-);
-
-// Mocked put will modify the condition in the
-// patient conditions bundle.
-const mockConditionPut = rest.put(
-  "https://api.dev.zusapi.com/fhir/Condition/:conditionId",
-  async (req, res, ctx) => {
-    const condition: fhir4.Condition = await req.json();
-    const index = patientConditionsCache.entry?.findIndex(
-      (entry) => entry.resource?.id === condition.id
-    );
-    if (index !== undefined && patientConditionsCache.entry?.[index]) {
-      patientConditionsCache.entry[index].resource = condition;
+  // Mocked post will add the new condition to the
+  // patient conditions bundle.
+  const mockConditionPost = rest.post(
+    "https://api.dev.zusapi.com/fhir/Condition",
+    async (req, res, ctx) => {
+      const newCondition = await req.json();
+      newCondition.id = uuidv4();
+      patientConditionsCache.entry?.push({
+        resource: newCondition,
+        search: { mode: "match" },
+      });
+      patientConditionsCache.total = patientConditionsCache.entry?.length;
+      return res(ctx.status(200), ctx.json(newCondition));
     }
-    return res(ctx.status(200), ctx.json(condition));
-  }
-);
+  );
 
-// Mocked get will return one of the following:
-//  1. History conditions based on code search param.
-//  2. Other provider conditions.
-//  3. Patient conditions.
-const mockConditionGet = rest.get(
-  "https://api.dev.zusapi.com/fhir/Condition",
-  (req, res, ctx) => {
-    const codeParam = req.url.searchParams.get("code");
-
-    // Search by code is used for condition history.
-    if (codeParam) {
-      const historyMatch = hasHistoryMatch(codeParam);
-      if (historyMatch) {
-        return res(ctx.status(200), ctx.json(historyMatch[1]));
+  // Mocked put will modify the condition in the
+  // patient conditions bundle.
+  const mockConditionPut = rest.put(
+    "https://api.dev.zusapi.com/fhir/Condition/:conditionId",
+    async (req, res, ctx) => {
+      const condition: fhir4.Condition = await req.json();
+      const index = patientConditionsCache.entry?.findIndex(
+        (entry) => entry.resource?.id === condition.id
+      );
+      if (index !== undefined && patientConditionsCache.entry?.[index]) {
+        patientConditionsCache.entry[index].resource = condition;
       }
-      return res(ctx.status(200), ctx.json([]));
+      return res(ctx.status(200), ctx.json(condition));
     }
+  );
 
-    // Search for either patient or other provider conditions.
-    const tagParam = req.url.searchParams.get("_tag");
-    const other = tagParam === `${SYSTEM_SUMMARY}|Common`;
-    return res(
-      ctx.status(200),
-      ctx.json(other ? otherConditionsCache : patientConditionsCache)
-    );
-  }
-);
+  // Mocked get will return one of the following:
+  //  1. History conditions based on code search param.
+  //  2. Other provider conditions.
+  //  3. Patient conditions.
+  const mockConditionGet = rest.get(
+    "https://api.dev.zusapi.com/fhir/Condition",
+    (req, res, ctx) => {
+      const codeParam = req.url.searchParams.get("code");
 
-const mockConditionsBasic = rest.post(
-  "https://api.dev.zusapi.com/fhir/Basic",
-  async (req, res, ctx) => {
-    const newBasicResource = await req.json();
-    newBasicResource.search = { mode: "include" };
-    newBasicResource.id = uuidv4();
-    otherConditionsCache.entry?.push({
-      resource: newBasicResource,
-      search: { mode: "include" },
-    });
-
-    otherConditionsCache.total = otherConditionsCache.entry?.length;
-    return res(ctx.status(200), ctx.json(newBasicResource));
-  }
-);
-
-// To handle batch request for conditions used to get version history.
-const mockConditionVersionHistoryBundle = rest.post(
-  "https://api.dev.zusapi.com/fhir",
-  async (req, res, ctx) => {
-    const codeParam = req.url.searchParams.get("code");
-
-    // Search by code is used for condition history.
-    if (codeParam) {
-      const historyMatch = hasHistoryMatch(codeParam);
-
-      if (historyMatch) {
-        return res(ctx.status(200), ctx.json(historyMatch[1]));
+      // Search by code is used for condition history.
+      if (codeParam) {
+        const historyMatch = hasHistoryMatch(codeParam);
+        if (historyMatch) {
+          return res(ctx.status(200), ctx.json(historyMatch[1]));
+        }
+        return res(ctx.status(200), ctx.json([]));
       }
-      return res(ctx.status(200), ctx.json([]));
-    }
 
-    // Search for either patient or other provider conditions.
-    const tagParam = req.url.searchParams.get("_tag");
-    const other = tagParam === `${SYSTEM_SUMMARY}|Common`;
-    return res(
-      ctx.status(200),
-      ctx.json(other ? otherConditionsCache : patientConditionsCache)
-    );
-  }
-);
-
-const mockConditionsBasicPut = rest.put(
-  "https://api.dev.zusapi.com/fhir/Basic/:basicId",
-  async (req, res, ctx) => {
-    const basic = await req.json();
-    const index = otherConditionsCache.entry?.findIndex(
-      (entry) => entry.resource?.id === basic.id
-    );
-    if (index !== undefined && otherConditionsCache.entry?.[index]) {
-      otherConditionsCache.entry[index].resource = basic;
+      // Search for either patient or other provider conditions.
+      const tagParam = req.url.searchParams.get("_tag");
+      const other = tagParam === `${SYSTEM_SUMMARY}|Common`;
+      return res(
+        ctx.status(200),
+        ctx.json(other ? otherConditionsCache : patientConditionsCache)
+      );
     }
-    return res(ctx.status(200), ctx.json(basic));
-  }
-);
+  );
+
+  const mockConditionsBasic = rest.post(
+    "https://api.dev.zusapi.com/fhir/Basic",
+    async (req, res, ctx) => {
+      const newBasicResource = await req.json();
+      if (newBasicResource.subject.type !== "Condition") {
+        // The ZusAggregatedProfile component has multiple tabs mocking fhir
+        // Basic resources. We only want to handle conditions here.
+        return undefined;
+      }
+      newBasicResource.search = { mode: "include" };
+      newBasicResource.id = uuidv4();
+      otherConditionsCache.entry?.push({
+        resource: newBasicResource,
+        search: { mode: "include" },
+      });
+
+      otherConditionsCache.total = otherConditionsCache.entry?.length;
+      return res(ctx.status(200), ctx.json(newBasicResource));
+    }
+  );
+
+  // To handle batch request for conditions used to get version history.
+  const mockConditionVersionHistoryBundle = rest.post(
+    "https://api.dev.zusapi.com/fhir",
+    async (req, res, ctx) => {
+      const codeParam = req.url.searchParams.get("code");
+
+      // Search by code is used for condition history.
+      if (codeParam) {
+        const historyMatch = hasHistoryMatch(codeParam);
+
+        if (historyMatch) {
+          return res(ctx.status(200), ctx.json(historyMatch[1]));
+        }
+        return res(ctx.status(200), ctx.json([]));
+      }
+
+      // Search for either patient or other provider conditions.
+      const tagParam = req.url.searchParams.get("_tag");
+      const other = tagParam === `${SYSTEM_SUMMARY}|Common`;
+      return res(
+        ctx.status(200),
+        ctx.json(other ? otherConditionsCache : patientConditionsCache)
+      );
+    }
+  );
+
+  const mockConditionsBasicPut = rest.put(
+    "https://api.dev.zusapi.com/fhir/Basic/:basicId",
+    async (req, res, ctx) => {
+      const basic = await req.json();
+      const index = otherConditionsCache.entry?.findIndex(
+        (entry) => entry.resource?.id === basic.id
+      );
+      if (index !== undefined && otherConditionsCache.entry?.[index]) {
+        otherConditionsCache.entry[index].resource = basic;
+      }
+      return res(ctx.status(200), ctx.json(basic));
+    }
+  );
+
+  return [
+    mockPatientGet,
+    mockConditionSearch,
+    mockProvenancePost,
+    mockConditionGet,
+    mockConditionPost,
+    mockConditionPut,
+    mockPatientHistoryGet,
+    mockConditionHistoryBinaryDocument,
+    mockConditionsBasic,
+    mockConditionVersionHistoryBundle,
+    mockConditionProvenance,
+    mockConditionsBasicPut,
+  ];
+}

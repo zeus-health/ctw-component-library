@@ -1,7 +1,6 @@
 import cx from "classnames";
 import { useRef, useState } from "react";
 import { useConditionHistory } from "../condition-history/conditions-history-drawer";
-import { filterOtherConditions } from "./helpers";
 import { PatientConditionsActions } from "./patient-conditions-actions";
 import { patientConditionsColumns } from "./patient-conditions-columns";
 import {
@@ -17,7 +16,7 @@ import { PatientConditionsTabs } from "./patient-conditions-tabs";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Table } from "@/components/core/table/table";
 import {
-  useOtherProviderConditions,
+  useOtherProviderConditionsDeduped,
   usePatientConditions,
 } from "@/fhir/conditions";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
@@ -28,6 +27,7 @@ export type PatientConditionsProps = {
   className?: string;
   readOnly?: boolean;
   hideBuilderOwnedRecords?: boolean;
+  hideOutsideOwnedRecords?: boolean;
 };
 
 export const PatientConditions = withErrorBoundary(
@@ -35,6 +35,7 @@ export const PatientConditions = withErrorBoundary(
     className,
     readOnly = false,
     hideBuilderOwnedRecords = false,
+    hideOutsideOwnedRecords = false,
   }: PatientConditionsProps) => {
     // State.
     const [collection, setCollection] = useState<FilterCollection>(
@@ -52,7 +53,7 @@ export const PatientConditions = withErrorBoundary(
 
     // Data fetching.
     const patientConditionsQuery = usePatientConditions();
-    const otherConditionsQuery = useOtherProviderConditions();
+    const otherConditionsQuery = useOtherProviderConditionsDeduped();
 
     function isLoading() {
       const isLoadingPatient = patientConditionsQuery.isLoading;
@@ -62,11 +63,7 @@ export const PatientConditions = withErrorBoundary(
 
     // Get our conditions.
     const patientConditions = patientConditionsQuery.data ?? [];
-    const otherConditions = filterOtherConditions(
-      otherConditionsQuery.data ?? [],
-      patientConditions,
-      true
-    );
+    const otherConditions = otherConditionsQuery.data;
 
     let conditions = applyFilters(
       collection === "patient" ? patientConditions : otherConditions,
@@ -82,17 +79,16 @@ export const PatientConditions = withErrorBoundary(
       <div
         ref={containerRef}
         className={cx(
-          "ctw-patient-resource-component ctw-patient-conditions ctw-items-center ctw-justify-between ctw-py-5",
+          "ctw-patient-conditions ctw-items-center ctw-justify-between ctw-bg-white",
           className,
           {
             "ctw-patient-conditions-stacked": breakpoints.sm,
           }
         )}
       >
-        {!hideBuilderOwnedRecords && (
+        {!(hideBuilderOwnedRecords || hideOutsideOwnedRecords) && (
           <PatientConditionsTabs
             forceHorizontalTabs
-            otherConditions={otherConditions}
             collection={collection}
             onCollectionChange={setCollection}
           />
