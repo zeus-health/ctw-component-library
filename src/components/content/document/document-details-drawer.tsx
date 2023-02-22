@@ -3,10 +3,7 @@ import { DocumentButton } from "../CCDA/document-button";
 import { useCCDAModal } from "../CCDA/modal-ccda";
 import { Details } from "@/components/core/collapsible-data-list-details";
 import { Drawer } from "@/components/core/drawer";
-import { Loading } from "@/components/core/loading";
-import { useCTW } from "@/components/core/providers/ctw-provider";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
-import { SimpleMoreList } from "@/components/core/simple-more-list";
 import { DocumentModel } from "@/fhir/models/document";
 
 export function useDocumentDetailsDrawer() {
@@ -35,21 +32,15 @@ export function DocumentDetailsDrawer({
   onClose,
 }: DocumentDetailsDrawerProps) {
   const openCCDAModal = useCCDAModal();
-  const [isLoading, setIsLoading] = useState(true);
   const [binaryId, setBinaryId] = useState<string | undefined>();
-  const { getRequestContext } = useCTW();
 
   useEffect(() => {
-    async function load() {
-      setIsLoading(true);
-      if (document.binaryID) {
-        setBinaryId(document.binaryID);
-      }
-      setIsLoading(false);
+    function load() {
+      setBinaryId(document.binaryID);
     }
 
     void load();
-  }, [binaryId, document, getRequestContext]);
+  }, [binaryId, document]);
   return (
     <Drawer
       className={className}
@@ -65,21 +56,17 @@ export function DocumentDetailsDrawer({
           </div>
         </div>
 
-        {isLoading ? (
-          <Loading message="Loading document data..." />
-        ) : (
-          <Details
-            data={documentData(document)}
-            documentButton={
-              binaryId ? (
-                <DocumentButton
-                  onClick={() => openCCDAModal(binaryId, "Document")}
-                  text="Source Document"
-                />
-              ) : undefined
-            }
-          />
-        )}
+        <Details
+          data={documentData(document)}
+          documentButton={
+            binaryId ? (
+              <DocumentButton
+                onClick={() => openCCDAModal(binaryId, "Document")}
+                text="Source Document"
+              />
+            ) : undefined
+          }
+        />
       </Drawer.Body>
     </Drawer>
   );
@@ -92,11 +79,14 @@ export const documentData = (document: DocumentModel) => [
   {
     label: "Section Display",
     value: document.sectionDisplays && (
-      <SimpleMoreList
-        items={document.sectionDisplays}
-        limit={30}
-        total={document.sectionDisplays.length}
-      />
+      <div>
+        {document.sectionDisplays.map((item, index) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <div key={item + index}>
+            <div>{item}</div>
+          </div>
+        ))}
+      </div>
     ),
   },
 ];
