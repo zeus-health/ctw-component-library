@@ -71,15 +71,9 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
 
     // Grab our code and display, first from class if valid, otherwise from
     // first type coding.
-    let code;
-    let display;
-    if (classSystem !== SYSTEM_NULL_FLAVOR) {
-      code = classCode;
-      display = classDisplay;
-    } else {
-      code = typeCode;
-      display = typeText;
-    }
+    const isNullFlavor = classSystem === SYSTEM_NULL_FLAVOR;
+    const code = isNullFlavor ? typeCode : classCode;
+    const display = isNullFlavor ? typeText : classDisplay;
 
     // Optionally add expanded version of the code
     // if code is AMB, IMP, EMER and display isn't already the expanded version.
