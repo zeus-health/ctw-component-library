@@ -1,5 +1,4 @@
 import { useQueryWithPatient } from "..";
-import { formatDateLocalToISO } from "./formatters";
 import { searchCommonRecords } from "./search-helpers";
 import { applyDocumentFilters } from "@/components/content/document/patient-document-filters";
 import { orderBy } from "@/utils/nodash";
