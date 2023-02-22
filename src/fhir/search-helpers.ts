@@ -183,6 +183,7 @@ function patientSearchParams(
     case "Coverage":
       return { "beneficiary.identifier": identifier };
     case "AllergyIntolerance":
+    case "CareTeam":
     case "Condition":
     case "Encounter":
     case "Immunization":

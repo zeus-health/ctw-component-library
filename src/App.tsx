@@ -11,6 +11,7 @@ import { PatientConditions } from "./components/content/conditions/patient-condi
 import { PatientMedicationsTabbed } from "./components/content/medications/patient-medications-tabbed";
 import { PatientAllergies } from "@/components/content/allergies/patient-allergies";
 import { PatientImmunizations } from "./components/content/immunizations/patient-immunizations";
+import { PatientCareTeam } from "./components/care-team/patient-careteam";
 
 const {
   VITE_SYSTEM_URL,
@@ -40,6 +41,7 @@ type DemoComponent = {
   note?: string;
 };
 const demoComponents: DemoComponent[] = [
+  { render: () => <PatientCareTeam />, title: "Patient CareTeam" },
   {
     render: () => <PatientMedicationsTabbed handleAddToRecord={() => null} />,
     title: "Patient Medications Tabbed",
