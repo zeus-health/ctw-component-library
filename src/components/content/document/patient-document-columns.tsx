@@ -11,13 +11,13 @@ export const patientDocumentColumns = (includeViewFhirResource = true) => {
       render: (document) => <div>{document.dateCreated}</div>,
     },
     {
-      widthPercent: 40,
+      widthPercent: 30,
       minWidth: 200,
       title: "Title",
       render: (document) => <div>{document.title}</div>,
     },
     {
-      widthPercent: 40,
+      widthPercent: 30,
       minWidth: 200,
       title: "Managing Organization",
       render: (document) => <div>{document.custodian}</div>,

@@ -35,11 +35,7 @@ export function DocumentDetailsDrawer({
   const [binaryId, setBinaryId] = useState<string | undefined>();
 
   useEffect(() => {
-    function load() {
-      setBinaryId(document.binaryID);
-    }
-
-    void load();
+    setBinaryId(document.binaryID);
   }, [binaryId, document]);
   return (
     <Drawer
@@ -82,9 +78,7 @@ export const documentData = (document: DocumentModel) => [
       <div>
         {document.sectionDisplays.map((item, index) => (
           // eslint-disable-next-line react/no-array-index-key
-          <div key={item + index}>
-            <div>{item}</div>
-          </div>
+          <div key={item + index}>{item}</div>
         ))}
       </div>
     ),
