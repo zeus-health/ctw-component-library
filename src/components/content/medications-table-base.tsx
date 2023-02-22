@@ -110,6 +110,8 @@ export const MedicationsTableBase = ({
       data-zus-telemetry-namespace={telemetryNamespace}
     >
       <Table
+        removeLeftAndRightBorders
+        className="-ctw-mx-px !ctw-rounded-none"
         sort={sort}
         onSort={setSort}
         stacked={breakpoints.sm}

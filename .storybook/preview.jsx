@@ -9,7 +9,7 @@ import {
   Subtitle,
   Title,
 } from "@storybook/addon-docs";
-import { initialize, mswDecorator } from "msw-storybook-addon";
+import { initialize, getWorker, mswDecorator } from "msw-storybook-addon";
 import "./preview.scss";
 
 // Disable caching in react query. This way mock data responses
@@ -70,4 +70,12 @@ export const parameters = {
 };
 
 // Provide the MSW addon decorator globally
-export const decorators = [mswDecorator];
+export const decorators = [
+  mswDecorator,
+  (Story) => {
+    // This solves some of our storybook test issues as it resets
+    // handlers in between stories now.
+    getWorker().resetHandlers();
+    return Story();
+  },
+];
