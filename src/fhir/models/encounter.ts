@@ -1,9 +1,9 @@
 import { Coding } from "fhir/r4";
-import { codeableConceptLabel, findCoding } from "../codeable-concept";
+import { codeableConceptLabel } from "../codeable-concept";
 import { formatDateISOToLocal } from "../formatters";
-import { SYSTEM_ACT_CODE } from "../system-urls";
+import { SYSTEM_NULL_FLAVOR } from "../system-urls";
 import { FHIRModel } from "./fhir-model";
-import { compact, find, flatten } from "@/utils/nodash";
+import { compact, flatten } from "@/utils/nodash";
 
 export class EncounterModel extends FHIRModel<fhir4.Encounter> {
   get class(): string | undefined {
@@ -63,10 +63,36 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
   }
 
   get typeDisplay(): string | undefined {
-    const codeableConcept = find(this.resource.type, {
-      coding: [{ system: SYSTEM_ACT_CODE }],
-    });
-    const coding = findCoding(SYSTEM_ACT_CODE, codeableConcept);
-    return coding?.display || coding?.code;
+    const { display: classDisplay, system: classSystem } = this.resource.class;
+    const classCode = (this.resource.class.code ?? "").toUpperCase();
+    const firstTypeCoding = this.resource.type?.[0]?.coding?.[0] ?? {};
+    const { text: typeText } = this.resource.type?.[0] ?? {};
+    const typeCode = (firstTypeCoding.code ?? "").toUpperCase();
+
+    // Grab our code and display, first from class if valid, otherwise from
+    // first type coding.
+    const isNullFlavor = classSystem === SYSTEM_NULL_FLAVOR;
+    const code = isNullFlavor ? typeCode : classCode;
+    let display = isNullFlavor ? typeText : classDisplay;
+
+    // Optionally add expanded version of the code
+    // if code is AMB, IMP, EMER and display isn't already the expanded version.
+    const mappings: Record<string, string> = {
+      AMB: "Ambulatory",
+      IMP: "Inpatient",
+      EMER: "Emergency",
+    };
+    if (code && Object.keys(mappings).includes(code)) {
+      const codeDisplay = mappings[code];
+      if (!display) {
+        return codeDisplay;
+      }
+
+      if (display.toLowerCase() !== codeDisplay.toLowerCase()) {
+        display += `, ${mappings[code]}`;
+      }
+    }
+
+    return display ?? "Unknown";
   }
 }

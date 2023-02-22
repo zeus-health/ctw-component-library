@@ -6,20 +6,26 @@ import { EncounterModel } from "@/fhir/models/encounter";
 export const patientTimelineColumns = (includeViewFhirResource = true) => {
   const timellineColumns: TableColumn<EncounterModel>[] = [
     {
+      title: "Date",
+      widthPercent: 10,
+      minWidth: 120,
+      dataIndex: "periodStart",
+    },
+    {
+      title: "Type",
       widthPercent: 20,
       minWidth: 150,
       render: (encounter) => (
         <div>
-          <div className="ctw-cell-title group-hover:ctw-underline">
-            {encounter.periodStart}
-          </div>
+          <div>Encounter</div>
           <div>{encounter.typeDisplay}</div>
         </div>
       ),
     },
     {
-      widthPercent: 30,
-      minWidth: 250,
+      title: "Provider",
+      widthPercent: 25,
+      minWidth: 200,
       render: (encounter) => {
         const { participant } = encounter.resource;
         if (!participant || participant.length === 0) return null;
@@ -38,26 +44,25 @@ export const patientTimelineColumns = (includeViewFhirResource = true) => {
 
         return (
           <div>
-            <div className="ctw-cell-title">{encounter.location}</div>
             <SimpleMoreList
               items={items}
-              limit={3}
+              limit={6}
               total={participant.length}
             />
+            <div>{encounter.location}</div>
           </div>
         );
       },
     },
     {
-      widthPercent: 40,
-      minWidth: 200,
+      widthPercent: 45,
+      minWidth: 250,
       render: (encounter) => {
         const { diagnosis } = encounter.resource;
         if (!diagnosis || diagnosis.length === 0) return null;
 
         return (
           <div>
-            <div className="ctw-cell-title">Diagnosis</div>
             <SimpleMoreList
               items={diagnosis.map((d) => d.condition.display ?? "")}
               limit={3}
