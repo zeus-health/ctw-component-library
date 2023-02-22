@@ -26,7 +26,7 @@ export const patientDocumentColumns = (includeViewFhirResource = true) => {
   if (includeViewFhirResource) {
     documentColumns.push({
       widthPercent: 20,
-      minWidth: 120,
+      minWidth: 150,
       render: (document: DocumentModel) => (
         <ViewFHIR name="Document Resource" resource={document.resource} />
       ),

@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { DocumentButton } from "../CCDA/document-button";
 import { useCCDAModal } from "../CCDA/modal-ccda";
 import { Details } from "@/components/core/collapsible-data-list-details";
@@ -32,11 +31,7 @@ export function DocumentDetailsDrawer({
   onClose,
 }: DocumentDetailsDrawerProps) {
   const openCCDAModal = useCCDAModal();
-  const [binaryId, setBinaryId] = useState<string | undefined>();
 
-  useEffect(() => {
-    setBinaryId(document.binaryID);
-  }, [binaryId, document]);
   return (
     <Drawer
       className={className}
@@ -55,12 +50,15 @@ export function DocumentDetailsDrawer({
         <Details
           data={documentData(document)}
           documentButton={
-            binaryId ? (
+            document.binaryID && (
               <DocumentButton
-                onClick={() => openCCDAModal(binaryId, "Document")}
+                onClick={() =>
+                  document.binaryID &&
+                  openCCDAModal(document.binaryID, "Document")
+                }
                 text="Source Document"
               />
-            ) : undefined
+            )
           }
         />
       </Drawer.Body>
