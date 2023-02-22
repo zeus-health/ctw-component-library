@@ -12,10 +12,9 @@ import { sort, SortDir } from "@/utils/sort";
 
 export type ProviderMedsTableProps = {
   className?: string;
+  showInactive?: boolean;
   sortColumn?: keyof MedicationStatementModel;
   sortOrder?: SortDir;
-  // should inactive meds be shown?
-  showInactive?: boolean;
 } & MedsHistoryTempProps;
 
 /**

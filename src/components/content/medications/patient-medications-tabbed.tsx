@@ -86,8 +86,13 @@ export function OtherProviderMedsTableTab({
   useEffect(() => {
     if (!isLoading && otherProviderMedications) {
       const filteredRecords = otherProviderMedications.filter((medication) => {
-        if (filters.providers?.selected) {
-          return filters.providers.selected === medication.lastPrescriber;
+        if (
+          Array.isArray(filters.providers?.selected) &&
+          filters.providers?.selected.length
+        ) {
+          return filters.providers.selected.includes(
+            medication.lastPrescriber as string
+          );
         }
         return true;
       });
@@ -160,7 +165,10 @@ export function PatientMedicationsTabbed({
 
   return (
     <CTWBox.StackedWrapper
-      className={cx("ctw-patient-medications ctw-space-y-3", className)}
+      className={cx(
+        "ctw-patient-medications ctw-space-y-3 ctw-bg-white",
+        className
+      )}
     >
       <TabGroup
         content={tabItems}
