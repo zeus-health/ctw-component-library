@@ -73,7 +73,7 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
     // first type coding.
     const isNullFlavor = classSystem === SYSTEM_NULL_FLAVOR;
     const code = isNullFlavor ? typeCode : classCode;
-    const display = isNullFlavor ? typeText : classDisplay;
+    let display = isNullFlavor ? typeText : classDisplay;
 
     // Optionally add expanded version of the code
     // if code is AMB, IMP, EMER and display isn't already the expanded version.
