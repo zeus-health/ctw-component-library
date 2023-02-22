@@ -1,5 +1,5 @@
 import { searchCommonRecords } from "./search-helpers";
-import { applyCareTeamFilters } from "@/components/care-team/patient-careteam-filters";
+import { applyCareTeamFilters } from "@/components/content/care-team/patient-careteam-filters";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { orderBy } from "@/utils/nodash";
 import { QUERY_KEY_CARETEAM } from "@/utils/query-keys";
