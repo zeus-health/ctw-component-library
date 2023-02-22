@@ -1,4 +1,5 @@
 import { SearchParams } from "fhir-kit-client";
+import { useEffect, useState } from "react";
 import { getIncludedBasics } from "./bundle";
 import { CodePreference } from "./codeable-concept";
 import {
@@ -13,6 +14,7 @@ import {
   SYSTEM_ICD9_CM,
   SYSTEM_SNOMED,
 } from "./system-urls";
+import { filterOtherConditions } from "@/components/content/conditions/helpers";
 import {
   getAddConditionWithDefaults,
   getClincalAndVerificationStatus,
@@ -116,6 +118,36 @@ export function useOtherProviderConditions() {
       }
     }
   );
+}
+
+export function useOtherProviderConditionsDeduped() {
+  const [conditions, setConditions] = useState<ConditionModel[]>([]);
+  const patientConditionsQuery = usePatientConditions();
+  const otherConditionsQuery = useOtherProviderConditions();
+
+  useEffect(() => {
+    const patientConditions = patientConditionsQuery.data ?? [];
+    const otherConditions = filterOtherConditions(
+      otherConditionsQuery.data ?? [],
+      patientConditions,
+      true
+    );
+    setConditions(otherConditions);
+  }, [patientConditionsQuery.data, otherConditionsQuery.data]);
+
+  const isLoading =
+    patientConditionsQuery.isLoading || otherConditionsQuery.isLoading;
+  const isError =
+    patientConditionsQuery.isError || otherConditionsQuery.isError;
+  const isFetching =
+    patientConditionsQuery.isFetching || otherConditionsQuery.isFetching;
+
+  return {
+    isLoading,
+    isError,
+    isFetching,
+    data: conditions,
+  };
 }
 
 const historyRequestTemplate = (id: string) => ({

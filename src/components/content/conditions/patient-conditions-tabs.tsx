@@ -3,14 +3,13 @@ import { usePatientHistory } from "../patient-history/use-patient-history";
 import { FilterCollection } from "./patient-conditions-filters";
 import { Badge } from "@/components/core/badge";
 import { TabGroup, TabGroupItem } from "@/components/core/tab-group/tab-group";
-import { useOtherProviderConditions } from "@/fhir/conditions";
+import { useOtherProviderConditionsDeduped } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models";
 
 export type PatientConditionsTabsProps = {
   collection: FilterCollection;
   forceHorizontalTabs?: boolean;
   onCollectionChange: (collection: FilterCollection) => void;
-  otherConditions: ConditionModel[];
 };
 
 const tabbedContent: TabGroupItem<ConditionModel>[] = [
@@ -60,10 +59,7 @@ export function PatientConditionsTabs({
 }
 
 export const BadgeOtherProviderConditionsCount = () => {
-  const otherConditionsQuery = useOtherProviderConditions();
-  if (!otherConditionsQuery.data) {
-    return null;
-  }
+  const otherConditionsQuery = useOtherProviderConditionsDeduped();
   const activeUnarchivedConditions = otherConditionsQuery.data.filter(
     (condition) => condition.displayStatus === "Active"
   );
