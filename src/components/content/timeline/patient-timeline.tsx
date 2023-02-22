@@ -28,7 +28,6 @@ export function PatientTimeline({
       <Heading title="Encounter Timeline" />
       <Table
         className="-ctw-mx-px !ctw-rounded-none"
-        showTableHead={false}
         isLoading={patientEncounterQuery.isLoading}
         records={encounters}
         columns={patientTimelineColumns(includeViewFhirResource)}
