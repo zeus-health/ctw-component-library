@@ -7,7 +7,6 @@ import { Loading } from "@/components/core/loading";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
 import { SimpleMoreList } from "@/components/core/simple-more-list";
-import { formatISODateStringToDate } from "@/fhir/formatters";
 import { DocumentModel } from "@/fhir/models/document";
 
 export function useDocumentDetailsDrawer() {
@@ -62,7 +61,7 @@ export function DocumentDetailsDrawer({
       <Drawer.Body>
         <div className="ctw-py-2">
           <div className="ctw-text-2xl">
-            {formatISODateStringToDate(document.dateCreated)} - {document.title}
+            {document.dateCreated} - {document.title}
           </div>
         </div>
 
@@ -89,14 +88,14 @@ export function DocumentDetailsDrawer({
 export const documentData = (document: DocumentModel) => [
   { label: "status", value: document.status },
   { label: "docStatus", value: document.docStatus },
-  { label: "Managing Organization", value: document.managingOrganization },
+  { label: "Managing Organization", value: document.custodian },
   {
     label: "Section Display",
-    value: document.SectionDisplays && (
+    value: document.sectionDisplays && (
       <SimpleMoreList
-        items={document.SectionDisplays}
+        items={document.sectionDisplays}
         limit={30}
-        total={document.SectionDisplays.length}
+        total={document.sectionDisplays.length}
       />
     ),
   },

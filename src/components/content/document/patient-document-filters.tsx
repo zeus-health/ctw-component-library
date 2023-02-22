@@ -1,4 +1,3 @@
-import { formatISODateStringToDate } from "@/fhir/formatters";
 import { DocumentModel } from "@/fhir/models/document";
 import { isEqual, uniqWith } from "@/utils/nodash";
 
@@ -12,7 +11,7 @@ export const applyDocumentFilters = (data: fhir4.DocumentReference[]) => {
 };
 
 const valuesToDedupeOn = (document: DocumentModel) => [
-  formatISODateStringToDate(document.dateCreated),
-  document.managingOrganization,
+  document.dateCreated,
+  document.custodian,
   document.title,
 ];

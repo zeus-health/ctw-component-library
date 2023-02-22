@@ -33,40 +33,6 @@ const UPI_TAGS = [`${SYSTEM_ZUS_UPI_RECORD_TYPE}|universal`];
 
 const SUMMARY_TAGS = [`${SYSTEM_SUMMARY}|Common`];
 
-// Returns the needed search params to filter resources down to those
-// pertaining to our patientUPID.
-function patientSearchParams(
-  resourceType: ResourceTypeString,
-  patientUPID?: string
-): SearchParams {
-  // No search param needed when not searching for a patientUPID.
-  if (!patientUPID) {
-    return {};
-  }
-
-  const identifier = `${SYSTEM_ZUS_UNIVERSAL_ID}|${patientUPID}`;
-
-  switch (resourceType) {
-    case "Coverage":
-      return { "beneficiary.identifier": identifier };
-    case "AllergyIntolerance":
-    case "Condition":
-    case "DocumentReference":
-    case "Encounter":
-    case "Immunization":
-    case "MedicationAdministration":
-    case "MedicationDispense":
-    case "MedicationRequest":
-    case "MedicationStatement":
-      return { "patient.identifier": identifier };
-    case "Patient":
-      return { identifier };
-    default:
-      throw new Error(
-        `Unhandled patient search for resource type: ${resourceType}`
-      );
-  }
-}
 // ODS must be specifically configured *by resource* to support the firstparty tag.
 // This is a performance optimization to address slow queries using _tag:not.
 const FIRST_PARTY_TAG_SUPPORTED_RESOURCES = [
@@ -212,4 +178,39 @@ function mergeParams(
     // Concat arrays otherwise return undefined to let mergeWith handle it.
     Array.isArray(v) ? v.concat(v2) : undefined
   );
+}
+
+// Returns the needed search params to filter resources down to those
+// pertaining to our patientUPID.
+function patientSearchParams(
+  resourceType: ResourceTypeString,
+  patientUPID?: string
+): SearchParams {
+  // No search param needed when not searching for a patientUPID.
+  if (!patientUPID) {
+    return {};
+  }
+
+  const identifier = `${SYSTEM_ZUS_UNIVERSAL_ID}|${patientUPID}`;
+
+  switch (resourceType) {
+    case "Coverage":
+      return { "beneficiary.identifier": identifier };
+    case "AllergyIntolerance":
+    case "Condition":
+    case "DocumentReference":
+    case "Encounter":
+    case "Immunization":
+    case "MedicationAdministration":
+    case "MedicationDispense":
+    case "MedicationRequest":
+    case "MedicationStatement":
+      return { "patient.identifier": identifier };
+    case "Patient":
+      return { identifier };
+    default:
+      throw new Error(
+        `Unhandled patient search for resource type: ${resourceType}`
+      );
+  }
 }

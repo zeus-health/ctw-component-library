@@ -3,6 +3,7 @@ import { searchCommonRecords } from "./search-helpers";
 import { applyDocumentFilters } from "@/components/content/document/patient-document-filters";
 import { orderBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_DOCUMENTS } from "@/utils/query-keys";
+import { formatDateLocalToISO } from "./formatters";
 
 export function usePatientDocument() {
   return useQueryWithPatient(
@@ -19,7 +20,7 @@ export function usePatientDocument() {
         );
         return orderBy(
           applyDocumentFilters(documents),
-          [(document) => document.dateCreated || ""],
+          [(document) => formatDateLocalToISO(document.dateCreated) || ""],
 
           ["desc"]
         );
