@@ -16,15 +16,11 @@ function mockDocumentRequests() {
     (req, res, ctx) => res(ctx.status(200), ctx.json(documents))
   );
 
-  const mockBinaryDocumentinDocumentReference = rest.get(
+  const mockBinary = rest.get(
     "https://api.dev.zusapi.com/fhir/Binary",
     async (_, res, ctx) => res(ctx.status(200), ctx.json(conditionBinary))
   );
-  return [
-    mockPatientGet,
-    mockDocumentGet,
-    mockBinaryDocumentinDocumentReference,
-  ];
+  return [mockPatientGet, mockDocumentGet, mockBinary];
 }
 
 export function setupDocumentMocks() {

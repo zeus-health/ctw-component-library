@@ -20,7 +20,10 @@ export function usePatientDocument() {
         );
         return orderBy(
           applyDocumentFilters(documents),
-          [(document) => formatDateLocalToISO(document.dateCreated) || ""],
+          [
+            (document) =>
+              document.resource.content[0].attachment.creation || "",
+          ],
 
           ["desc"]
         );

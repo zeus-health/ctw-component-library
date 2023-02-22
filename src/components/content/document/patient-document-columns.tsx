@@ -2,7 +2,7 @@ import { TableColumn } from "@/components/core/table/table-helpers";
 import { ViewFHIR } from "@/components/core/view-fhir";
 import { DocumentModel } from "@/fhir/models/document";
 
-export const patientDocumentColumns = (includeViewFhirResource = false) => {
+export const patientDocumentColumns = (includeViewFhirResource = true) => {
   const documentColumns: TableColumn<DocumentModel>[] = [
     {
       widthPercent: 20,
@@ -26,7 +26,7 @@ export const patientDocumentColumns = (includeViewFhirResource = false) => {
   if (includeViewFhirResource) {
     documentColumns.push({
       widthPercent: 20,
-      minWidth: 150,
+      minWidth: 120,
       render: (document: DocumentModel) => (
         <ViewFHIR name="Document Resource" resource={document.resource} />
       ),
