@@ -2,4 +2,4 @@
 "@zus-health/ctw-component-library": patch
 ---
 
-Create generic filter utility.
+Storybook mocked requests cleanup after themselves.

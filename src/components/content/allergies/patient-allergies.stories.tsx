@@ -26,5 +26,5 @@ export default {
 } as Meta<Props>;
 
 export const Basic: StoryObj<Props> = {
-  ...setupAllergiesMocks({ allergies: allergyIntolerance }),
+  ...setupAllergiesMocks({ allergyIntolerance }),
 };
