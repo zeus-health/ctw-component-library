@@ -1,6 +1,5 @@
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { ViewFHIR } from "@/components/core/view-fhir";
-import { formatISODateStringToDate } from "@/fhir/formatters";
 import { DocumentModel } from "@/fhir/models/document";
 
 export const patientDocumentColumns = (includeViewFhirResource = false) => {
