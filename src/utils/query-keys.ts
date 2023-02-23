@@ -12,3 +12,4 @@ export const QUERY_KEY_PATIENT_ENCOUNTERS = "patientEncounters";
 export const QUERY_KEY_PATIENT_IMMUNIZATIONS = "patientImmunizations";
 export const QUERY_KEY_PROVENANCE = "provenance";
 export const QUERY_KEY_PATIENT_HISTORY_DETAILS = "patientHistoryDetails";
+export const QUERY_KEY_PATIENT_DOCUMENTS = "patientDocuments";
