@@ -82,7 +82,6 @@ const SORT_OPTIONS: SortOption<ConditionModel>[] = [
 
 export function useConditionSorts(activeCollection: FilterCollection) {
   const [sorts, setSorts] = useState(DEFAULT_SORTS);
-  console.log("sorts", sorts);
 
   function updateSorts(newSorts: Partial<Sort>) {
     setSorts({ ...sorts, ...newSorts });
