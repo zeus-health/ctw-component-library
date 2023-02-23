@@ -1,0 +1,2 @@
+import{R as a}from"./index-6f814c40.js";import{S as r}from"./spinner-66aa4ba7.js";const t=({message:e="Loading..."})=>a.createElement("div",{className:"ctw-space-x-2"},e&&a.createElement("span",{className:"ctw-text-sm ctw-italic"},e),a.createElement(r,null));try{t.displayName="Loading",t.__docgenInfo={description:"",displayName:"Loading",props:{message:{defaultValue:{value:"Loading..."},description:"",name:"message",required:!1,type:{name:"string"}}}}}catch{}export{t as L};
+//# sourceMappingURL=loading-c7ff698a.js.map
