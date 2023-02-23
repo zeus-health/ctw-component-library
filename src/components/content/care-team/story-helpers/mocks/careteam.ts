@@ -1,34 +1,18 @@
 export const careTeam: fhir4.Bundle = {
   resourceType: "Bundle",
-  id: "f2b911f3-b5cc-42c0-899c-f4f3ed92cfd1",
-  meta: {
-    lastUpdated: "2023-01-26T16:02:38.923+00:00",
-  },
+  id: "9f8f9095-cc74-4cd5-ac58-ab233e6c7a92",
   type: "searchset",
-  total: 2,
-  link: [
-    {
-      relation: "self",
-      url: "https://api.sandbox.zusapi.com/fhir/Immunization?_count=10&_offset=0&_sort=-_lastUpdated&_total=accurate",
-    },
-  ],
   entry: [
     {
       fullUrl:
-        "https://api.sandbox.zusapi.com/fhir/Immunization/efc72c61-a46c-412f-9c24-adca7a99a498",
+        "https://api.sandbox.zusapi.com/fhir/CareTeam/d2b3df4b-f5bb-445c-8612-de4458579449",
       resource: {
-        resourceType: "Immunization",
-        id: "efc72c61-a46c-412f-9c24-adca7a99a498",
+        resourceType: "CareTeam",
+        id: "d2b3df4b-f5bb-445c-8612-de4458579449",
         meta: {
-          extension: [
-            {
-              url: "https://zusapi.com/created-at",
-              valueInstant: "2023-01-26T15:49:39.352+00:00",
-            },
-          ],
-          versionId: "1",
-          lastUpdated: "2023-01-26T15:49:39.354+00:00",
-          source: "#nzL1s2NVRsaV2H7S",
+          versionId: "3",
+          lastUpdated: "2022-11-03T18:27:19.991+00:00",
+          source: "#N3Id7pd6FENe0Zcr",
           tag: [
             {
               system: "https://zusapi.com/thirdparty/source",
@@ -36,86 +20,123 @@ export const careTeam: fhir4.Bundle = {
             },
             {
               system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/f09f6b6f-ae4b-45f4-a653-5677b1582115",
-              display: "HLTH 2022 - Gunther",
+              code: "builder/2a6358ef-9276-49fb-bf62-000f1aba1a68",
+              display: "GoodRx Care",
             },
           ],
         },
+        contained: [
+          {
+            resourceType: "Practitioner",
+            id: "Practitioner28",
+            name: [
+              {
+                family: "Davis",
+                given: ["Albert"],
+                prefix: ["Dr", "MD"],
+              },
+            ],
+            telecom: [
+              {
+                system: "phone",
+                value: "+1(555)555-1002",
+                use: "work",
+              },
+            ],
+            address: [
+              {
+                line: ["2472 Rocky Place"],
+                city: "BEAVERTON",
+                state: "OR",
+                postalCode: "97006",
+              },
+            ],
+            qualification: [
+              {
+                code: {
+                  coding: [
+                    {
+                      system:
+                        "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
+                      code: "NA",
+                      display: "not applicable",
+                    },
+                  ],
+                  text: "not applicable",
+                },
+              },
+            ],
+          },
+        ],
         extension: [
           {
             url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "b640bda1-aec7-4be6-a890-e3685a55bce3",
+            valueString: "93b436c5-c9ea-4d2d-98cc-53483d8322df",
           },
         ],
-        status: "completed",
-        vaccineCode: {
-          coding: [
-            {
-              system: "http://hl7.org/fhir/sid/cvx",
-              code: "205",
-            },
-          ],
-          text: "Influenza vaccine, quadrivalent, adjuvanted\t",
-        },
-        patient: {
-          reference: "Patient/07d6b737-8cf4-42e8-8eda-66777985aa15",
-          type: "Patient",
-        },
-        occurrenceDateTime: "2022-07-10",
-      },
-      search: {
-        mode: "match",
-      },
-    },
-    {
-      fullUrl:
-        "https://api.sandbox.zusapi.com/fhir/Immunization/7c2c8f76-d8ca-4ea7-9977-4bfd8b2f5085",
-      resource: {
-        resourceType: "Immunization",
-        id: "7c2c8f76-d8ca-4ea7-9977-4bfd8b2f5085",
-        meta: {
-          extension: [
-            {
-              url: "https://zusapi.com/created-at",
-              valueInstant: "2023-01-26T15:49:39.087+00:00",
-            },
-          ],
-          versionId: "1",
-          lastUpdated: "2023-01-26T15:49:39.102+00:00",
-          source: "#C2QEi5NSLV0uyr1o",
-          tag: [
-            {
-              system: "https://zusapi.com/thirdparty/source",
-              code: "commonwell",
-            },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/f09f6b6f-ae4b-45f4-a653-5677b1582115",
-              display: "HLTH 2022 - Gunther",
-            },
-          ],
-        },
-        extension: [
+        identifier: [
           {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "b640bda1-aec7-4be6-a890-e3685a55bce3",
+            use: "usual",
+            system: "urn:oid:2.16.840.1.113883.3.432.54321.1.1.100.11",
+            value: "331829",
+          },
+          {
+            system: "https://zushealth.com/system/commonwellconnectorservice",
+            value: "dev-resource",
           },
         ],
-        status: "completed",
-        vaccineCode: {
-          coding: [
-            {
-              system: "http://hl7.org/fhir/sid/cvx",
-              code: "211",
-            },
-          ],
-          text: "COVID-19, subunit, rS-nanoparticle+Matrix-M1 Adjuvant, PF, 0.5 mL",
-        },
-        patient: {
-          reference: "Patient/07d6b737-8cf4-42e8-8eda-66777985aa15",
+        status: "proposed",
+        category: [
+          {
+            coding: [
+              {
+                system: "http://loinc.org",
+                code: "LA27977-0",
+                display: "Episode of care-focused care team",
+              },
+            ],
+            text: "Episode of care-focused care team",
+          },
+        ],
+        subject: {
+          reference: "Patient/0743dd70-b89f-468b-9a9d-648f005805db",
           type: "Patient",
         },
-        occurrenceDateTime: "2022-04-01",
+        period: {
+          start: "2015-06-22",
+          end: "2022-06-15",
+        },
+        participant: [
+          {
+            role: [
+              {
+                coding: [
+                  {
+                    system: "urn:oid:2.16.840.1.113883.5.88",
+                    code: "ATTPHYS",
+                    display: "Attending Provider",
+                  },
+                ],
+                text: "Attending Provider",
+              },
+            ],
+            member: {
+              reference: "#Practitioner28",
+              type: "Practitioner",
+              display: "Dr MD Albert Davis",
+            },
+            period: {
+              start: "2015-06-22",
+            },
+          },
+        ],
+        telecom: [
+          {
+            system: "phone",
+            value: "+1(555)555-1002",
+            use: "work",
+          },
+        ],
       },
       search: {
         mode: "match",
