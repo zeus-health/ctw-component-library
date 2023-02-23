@@ -1,4 +1,5 @@
 import { codeableConceptLabel } from "../codeable-concept";
+import { formatDateISOToLocal } from "../formatters";
 import { findReference } from "../resource-helper";
 import { FHIRModel } from "./fhir-model";
 import { PractitionerModel } from "./practitioner";
@@ -9,7 +10,7 @@ export class CareTeamModel extends FHIRModel<fhir4.CareTeam> {
   }
 
   get periodStart(): string | undefined {
-    return this.resource.period?.start;
+    return formatDateISOToLocal(this.resource.period?.start);
   }
 
   get periodEnd(): string | undefined {

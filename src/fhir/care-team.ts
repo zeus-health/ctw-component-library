@@ -17,7 +17,11 @@ export function usePatientCareTeam() {
             patientUPID: patient.UPID,
           }
         );
-        return orderBy(applyCareTeamFilters(careteam), ["desc"]);
+        return orderBy(
+          applyCareTeamFilters(careteam),
+          [(ct) => ct.resource.period?.start || ""],
+          ["desc"]
+        );
       } catch (e) {
         throw new Error(
           `Failed fetching care team information for patient: ${e}`
