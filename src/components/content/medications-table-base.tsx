@@ -109,17 +109,19 @@ export const MedicationsTableBase = ({
       ref={containerRef}
       data-zus-telemetry-namespace={telemetryNamespace}
     >
-      <Table
-        removeLeftAndRightBorders
-        className="-ctw-mx-px !ctw-rounded-none"
-        sort={sort}
-        onSort={setSort}
-        stacked={breakpoints.sm}
-        records={medicationStatements}
-        columns={breakpoints.sm ? columnsStacked : columns}
-        emptyMessage={emptyMessage}
-        {...tableProps}
-      />
+      <div className="ctw-overflow-hidden">
+        <Table
+          removeLeftAndRightBorders
+          className="-ctw-mx-px !ctw-rounded-none"
+          sort={sort}
+          onSort={setSort}
+          stacked={breakpoints.sm}
+          records={medicationStatements}
+          columns={breakpoints.sm ? columnsStacked : columns}
+          emptyMessage={emptyMessage}
+          {...tableProps}
+        />
+      </div>
       {children}
     </div>
   );
