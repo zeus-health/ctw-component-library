@@ -69,6 +69,11 @@ export const DrawerForm = <T,>({
     // Validation that occurs before the request.
     const formResult = await getFormData(data, schema);
     if (!formResult.success) {
+      // eslint-disable-next-line no-console
+      console.error(
+        "There was an error processing form data. formResult:",
+        formResult
+      );
       setErrors({
         formErrors: formResult.errors,
         requestErrors: undefined,
