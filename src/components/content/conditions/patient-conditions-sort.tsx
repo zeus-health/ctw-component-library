@@ -16,6 +16,7 @@ const DEFAULT_SORT: Sort = {
   key: "recordedDate",
   dir: "desc",
   display: "Last Updated Date (Newest to Oldest)",
+  isDate: true,
 };
 
 const DEFAULT_SORTS = {
@@ -81,6 +82,7 @@ const SORT_OPTIONS: SortOption<ConditionModel>[] = [
 
 export function useConditionSorts(activeCollection: FilterCollection) {
   const [sorts, setSorts] = useState(DEFAULT_SORTS);
+  console.log("sorts", sorts);
 
   function updateSorts(newSorts: Partial<Sort>) {
     setSorts({ ...sorts, ...newSorts });
