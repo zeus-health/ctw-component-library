@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 0.47.0
+
+### Minor Changes
+
+- 6f5345c9: Create component to show documents and their associated binaries for the patient.
+
+### Patch Changes
+
+- b3b0768d: Add headers to patient timeline columns. Adjust data displayed, particularly how "Type" is computed.
+- 59d3808f: Storybook mocked requests cleanup after themselves.
+- 57651b56: Add logging when our form fails our validation, so that consumers of library can debug better.
+
 ## 0.46.9
 
 ### Patch Changes
