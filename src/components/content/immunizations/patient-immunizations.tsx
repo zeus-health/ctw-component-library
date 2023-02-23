@@ -1,7 +1,8 @@
 import cx from "classnames";
 import { useRef } from "react";
-import { useImmunizationDetailsDrawer } from "./immunizations-details-drawer";
+import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { patientImmunizationsColumns } from "./patient-immunizations-columns";
+import { CodingList } from "@/components/core/coding-list";
 import { Heading } from "@/components/core/ctw-box";
 import { Table } from "@/components/core/table/table";
 import { ViewFHIR } from "@/components/core/view-fhir";
@@ -21,11 +22,10 @@ export function PatientImmunizations({ className }: PatientImmunizationsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const patientImmunizationsQuery = usePatientImmunizations();
-  const openDetails = useImmunizationDetailsDrawer();
-
-  function handleRowClick(immunization: ImmunizationModel) {
-    openDetails(immunization);
-  }
+  const openDetails = useResourceDetailsDrawer({
+    header: (m) => m.description,
+    details: immunizationData,
+  });
 
   return (
     <div
@@ -46,8 +46,19 @@ export function PatientImmunizations({ className }: PatientImmunizationsProps) {
         isLoading={patientImmunizationsQuery.isLoading}
         records={patientImmunizationsQuery.data ?? []}
         columns={patientImmunizationsColumns}
-        handleRowClick={handleRowClick}
+        handleRowClick={openDetails}
       />
     </div>
   );
 }
+
+const immunizationData = (immunization: ImmunizationModel) => [
+  { label: "Date", value: immunization.occurrence },
+  { label: "Description", value: immunization.description },
+  {
+    label: "Vaccine Code",
+    value: immunization.resource.vaccineCode.coding ? (
+      <CodingList codings={immunization.resource.vaccineCode.coding} />
+    ) : undefined,
+  },
+];

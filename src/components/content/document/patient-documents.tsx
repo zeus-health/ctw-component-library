@@ -1,6 +1,6 @@
 import cx from "classnames";
 import { useRef } from "react";
-import { useDocumentDetailsDrawer } from "./document-details-drawer";
+import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { patientDocumentColumns } from "./patient-document-columns";
 import { Heading } from "@/components/core/ctw-box";
 import { Table } from "@/components/core/table/table";
@@ -20,7 +20,10 @@ export function PatientDocuments({
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const patientDocumentQuery = usePatientDocument();
-  const openDetails = useDocumentDetailsDrawer();
+  const openDetails = useResourceDetailsDrawer({
+    header: (m) => `${m.dateCreated} - ${m.title}`,
+    details: documentData,
+  });
 
   function handleRowClick(document: DocumentModel) {
     openDetails(document);
@@ -52,3 +55,20 @@ export function PatientDocuments({
     </div>
   );
 }
+
+const documentData = (document: DocumentModel) => [
+  { label: "status", value: document.status },
+  { label: "docStatus", value: document.docStatus },
+  { label: "Managing Organization", value: document.custodian },
+  {
+    label: "Section Display",
+    value: document.sectionDisplays && (
+      <div>
+        {document.sectionDisplays.map((item, index) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <div key={item + index}>{item}</div>
+        ))}
+      </div>
+    ),
+  },
+];
