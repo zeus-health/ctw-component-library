@@ -38,7 +38,7 @@ export function CareTeamDetailDrawer({
     >
       <Drawer.Body>
         <div className="ctw-py-2">
-          <div className="ctw-text-2xl">{careteam.status}</div>
+          <div className="ctw-text-2xl">{careteam.periodStart}</div>
         </div>
 
         <Details data={careTeamData(careteam)} />
@@ -48,5 +48,9 @@ export function CareTeamDetailDrawer({
 }
 
 export const careTeamData = (careTeam: CareTeamModel) => [
+  { label: "Organization", value: careTeam.managingOrganization },
+  { label: "Practitioner", value: careTeam.includedPerformer },
+  { label: "CareTeam Telecom", value: careTeam.careTeamTelecom },
+  { label: "Role", value: careTeam.role },
   { label: "Status", value: careTeam.status },
 ];

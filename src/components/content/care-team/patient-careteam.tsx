@@ -4,20 +4,19 @@ import { useCareTeamDetailDrawer } from "./careteam-details-drawer";
 import { patientCareTeamColumns } from "./patient-careteam-columns";
 import { Heading } from "@/components/core/ctw-box";
 import { Table } from "@/components/core/table/table";
-import { ViewFHIR } from "@/components/core/view-fhir";
 import { usePatientCareTeam } from "@/fhir/care-team";
 import { CareTeamModel } from "@/fhir/models/careteam";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 
 export type PatientCareTeamProps = {
   className?: string;
+  includeViewFhirResource?: boolean;
 };
 
-const viewRecordFHIR = ({ record }: { record: CareTeamModel }) => (
-  <ViewFHIR name="CareTeam Resource" resource={record.resource} />
-);
-
-export function PatientCareTeam({ className }: PatientCareTeamProps) {
+export function PatientCareTeam({
+  className,
+  includeViewFhirResource,
+}: PatientCareTeamProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const patientCareTeamQuery = usePatientCareTeam();
@@ -40,12 +39,11 @@ export function PatientCareTeam({ className }: PatientCareTeamProps) {
     >
       <Heading title="CareTeam" />
       <Table
-        RowActions={viewRecordFHIR}
         stacked={breakpoints.sm}
         className="-ctw-mx-px !ctw-rounded-none"
         isLoading={patientCareTeamQuery.isLoading}
         records={patientCareTeamQuery.data ?? []}
-        columns={patientCareTeamColumns}
+        columns={patientCareTeamColumns(includeViewFhirResource)}
         handleRowClick={handleRowClick}
       />
     </div>
