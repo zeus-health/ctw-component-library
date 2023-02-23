@@ -43,4 +43,22 @@ export class CareTeamModel extends FHIRModel<fhir4.CareTeam> {
   get role(): string | undefined {
     return codeableConceptLabel(this.resource.participant?.[0].role?.[0]);
   }
+
+  get practitionerQualification(): string | undefined {
+    const reference = this.resource.participant?.[0]?.member?.reference;
+
+    const practitioner = findReference(
+      "Practitioner",
+      this.resource.contained,
+      this.includedResources,
+      reference
+    );
+
+    if (practitioner) {
+      return codeableConceptLabel(
+        new PractitionerModel(practitioner).resource.qualification?.[0].code
+      );
+    }
+    return undefined;
+  }
 }

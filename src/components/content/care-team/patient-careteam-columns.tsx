@@ -11,16 +11,22 @@ export const patientCareTeamColumns = (includeViewFhirResource = true) => {
       render: (careTeam) => <div>{careTeam.periodStart}</div>,
     },
     {
-      widthPercent: 30,
-      minWidth: 200,
+      widthPercent: 20,
+      minWidth: 150,
       title: "Practitioner",
       render: (careTeam) => <div>{careTeam.includedPerformer}</div>,
     },
     {
-      widthPercent: 35,
-      minWidth: 200,
+      widthPercent: 20,
+      minWidth: 150,
       title: "Role",
       render: (careTeam) => <div>{careTeam.role}</div>,
+    },
+    {
+      widthPercent: 20,
+      minWidth: 150,
+      title: "Qualification",
+      render: (careTeam) => <div>{careTeam.practitionerQualification}</div>,
     },
   ];
 
