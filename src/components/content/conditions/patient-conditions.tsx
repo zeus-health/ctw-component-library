@@ -78,13 +78,9 @@ export const PatientConditions = withErrorBoundary(
     return (
       <div
         ref={containerRef}
-        className={cx(
-          "ctw-patient-conditions ctw-items-center ctw-justify-between ctw-bg-white",
-          className,
-          {
-            "ctw-patient-conditions-stacked": breakpoints.sm,
-          }
-        )}
+        className={cx("ctw-patient-conditions ctw-bg-white", className, {
+          "ctw-patient-conditions-stacked": breakpoints.sm,
+        })}
       >
         {!(hideBuilderOwnedRecords || hideOutsideOwnedRecords) && (
           <PatientConditionsTabs
@@ -107,23 +103,25 @@ export const PatientConditions = withErrorBoundary(
           filters={filters[collection]}
         />
 
-        <Table
-          stacked={breakpoints.sm}
-          removeLeftAndRightBorders
-          className="-ctw-mx-px !ctw-rounded-none"
-          showTableHead={false}
-          emptyMessage="There are no condition records available."
-          isLoading={isLoading()}
-          records={conditions}
-          RowActions={readOnly ? undefined : RowActions}
-          columns={patientConditionsColumns}
-          handleRowClick={(condition) =>
-            showConditionHistory({
-              condition,
-              readOnly: readOnly || condition.isSummaryResource,
-            })
-          }
-        />
+        <div className="ctw-overflow-hidden">
+          <Table
+            stacked={breakpoints.sm}
+            removeLeftAndRightBorders
+            className="-ctw-mx-px !ctw-rounded-none"
+            showTableHead={false}
+            emptyMessage="There are no condition records available."
+            isLoading={isLoading()}
+            records={conditions}
+            RowActions={readOnly ? undefined : RowActions}
+            columns={patientConditionsColumns}
+            handleRowClick={(condition) =>
+              showConditionHistory({
+                condition,
+                readOnly: readOnly || condition.isSummaryResource,
+              })
+            }
+          />
+        </div>
       </div>
     );
   },

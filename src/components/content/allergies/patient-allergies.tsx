@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { patientAllergiesColumns } from "@/components/content/allergies/patient-allergies-column";
+import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Table } from "@/components/core/table/table";
 import { usePatientAllergies } from "@/fhir/allergies";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
@@ -9,7 +10,7 @@ export type PatientAllergiesProps = {
   enableFqs?: boolean;
 };
 
-export function PatientAllergies({
+function PatientAllergiesComponent({
   className,
   enableFqs,
 }: PatientAllergiesProps) {
@@ -27,14 +28,21 @@ export function PatientAllergies({
       ref={containerRef}
       data-zus-telemetry-namespace="Allergies"
     >
-      <Table
-        stacked={breakpoints.sm}
-        className="-ctw-mx-px !ctw-rounded-none"
-        removeLeftAndRightBorders
-        isLoading={isLoading}
-        records={allergies}
-        columns={patientAllergiesColumns}
-      />
+      <div className="ctw-overflow-hidden">
+        <Table
+          stacked={breakpoints.sm}
+          className="-ctw-mx-px !ctw-rounded-none"
+          removeLeftAndRightBorders
+          isLoading={isLoading}
+          records={allergies}
+          columns={patientAllergiesColumns}
+        />
+      </div>
     </div>
   );
 }
+
+export const PatientAllergies = withErrorBoundary(
+  PatientAllergiesComponent,
+  "PatientAllergies"
+);
