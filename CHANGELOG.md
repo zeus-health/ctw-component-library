@@ -1,5 +1,14 @@
 # ctw-component-library
 
+## 0.47.1
+
+### Patch Changes
+
+- f2277a2b: Telemetry wrapper on Allergies, Immunizations and Documents.
+  Remove heading titles from Immunizations and Documents.
+  Remove inner padding on PatientsTable.
+- 17c3c9bd: Fix bug where default sort was not sorting correctly.
+
 ## 0.47.0
 
 ### Minor Changes
