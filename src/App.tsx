@@ -11,6 +11,7 @@ import { PatientConditions } from "./components/content/conditions/patient-condi
 import { PatientMedicationsTabbed } from "./components/content/medications/patient-medications-tabbed";
 import { PatientAllergies } from "@/components/content/allergies/patient-allergies";
 import { PatientImmunizations } from "./components/content/immunizations/patient-immunizations";
+import { PatientDocuments } from "./components/content/document/patient-documents";
 
 const {
   VITE_SYSTEM_URL,
@@ -46,6 +47,10 @@ const demoComponents: DemoComponent[] = [
   },
   { render: () => <PatientConditions />, title: "Patient Conditions 2.0" },
   { render: () => <Conditions />, title: "Patient Conditions" },
+  {
+    render: () => <PatientDocuments />,
+    title: "Patient Documents",
+  },
   { render: () => <PatientAllergies />, title: "Patient Allergies" },
   { render: () => <PatientImmunizations />, title: "Patient Immunizations" },
   {

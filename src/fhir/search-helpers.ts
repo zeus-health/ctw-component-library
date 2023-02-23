@@ -166,6 +166,20 @@ export function flattenArrayFilters(filters: { [key: string]: unknown }) {
   );
 }
 
+// Merges two sets of params into a single set,
+// taking special care to concat any arrays.
+// E.g. mergeParams({_tag: [1], foo: "foo"}, {_tag: [2], bar: "bar"})
+//   -> {_tag: [1, 2], foo: "foo", bar: "bar"}
+function mergeParams(
+  params: SearchParams | undefined,
+  params2: SearchParams
+): SearchParams {
+  return mergeWith(params, params2, (v, v2) =>
+    // Concat arrays otherwise return undefined to let mergeWith handle it.
+    Array.isArray(v) ? v.concat(v2) : undefined
+  );
+}
+
 // Returns the needed search params to filter resources down to those
 // pertaining to our patientUPID.
 function patientSearchParams(
@@ -184,6 +198,7 @@ function patientSearchParams(
       return { "beneficiary.identifier": identifier };
     case "AllergyIntolerance":
     case "Condition":
+    case "DocumentReference":
     case "Encounter":
     case "Immunization":
     case "MedicationAdministration":
@@ -198,18 +213,4 @@ function patientSearchParams(
         `Unhandled patient search for resource type: ${resourceType}`
       );
   }
-}
-
-// Merges two sets of params into a single set,
-// taking special care to concat any arrays.
-// E.g. mergeParams({_tag: [1], foo: "foo"}, {_tag: [2], bar: "bar"})
-//   -> {_tag: [1, 2], foo: "foo", bar: "bar"}
-function mergeParams(
-  params: SearchParams | undefined,
-  params2: SearchParams
-): SearchParams {
-  return mergeWith(params, params2, (v, v2) =>
-    // Concat arrays otherwise return undefined to let mergeWith handle it.
-    Array.isArray(v) ? v.concat(v2) : undefined
-  );
 }
