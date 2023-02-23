@@ -2,7 +2,7 @@ import cx from "classnames";
 import { useRef } from "react";
 import { useDocumentDetailsDrawer } from "./document-details-drawer";
 import { patientDocumentColumns } from "./patient-document-columns";
-import { Heading } from "@/components/core/ctw-box";
+import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Table } from "@/components/core/table/table";
 import { usePatientDocument } from "@/fhir/document";
 import { DocumentModel } from "@/fhir/models/document";
@@ -13,7 +13,7 @@ export type PatientDocumentProps = {
   includeViewFhirResource?: boolean;
 };
 
-export function PatientDocuments({
+function PatientDocumentsComponent({
   className,
   includeViewFhirResource,
 }: PatientDocumentProps) {
@@ -32,23 +32,27 @@ export function PatientDocuments({
   return (
     <div
       ref={containerRef}
-      className={cx(
-        "ctw-border ctw-border-solid ctw-border-divider-light ctw-bg-white",
-        className,
-        {
-          "ctw-stacked": breakpoints.sm,
-        }
-      )}
+      data-zus-telemetry-namespace="Documents"
+      className={cx("ctw-patient-documents ctw-bg-white", className, {
+        "ctw-stacked": breakpoints.sm,
+      })}
     >
-      <Heading title="Documents" />
-      <Table
-        stacked={breakpoints.sm}
-        className="-ctw-mx-px !ctw-rounded-none"
-        isLoading={isLoading}
-        records={document}
-        columns={patientDocumentColumns(includeViewFhirResource)}
-        handleRowClick={handleRowClick}
-      />
+      <div className="ctw-overflow-hidden">
+        <Table
+          stacked={breakpoints.sm}
+          removeLeftAndRightBorders
+          className="-ctw-mx-px !ctw-rounded-none"
+          isLoading={isLoading}
+          records={document}
+          columns={patientDocumentColumns(includeViewFhirResource)}
+          handleRowClick={handleRowClick}
+        />
+      </div>
     </div>
   );
 }
+
+export const PatientDocuments = withErrorBoundary(
+  PatientDocumentsComponent,
+  "PatientDocuments"
+);
