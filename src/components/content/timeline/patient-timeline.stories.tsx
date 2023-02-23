@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { mockBinaryGet } from "../story-helpers/mocks/requests";
 import { PatientTimeline, PatientTimelineProps } from "./patient-timeline";
 import {
-  mockBinaryGet,
   mockEncounterGet,
   mockPatientGet,
   mockProvenanceGet,
