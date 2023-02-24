@@ -2,7 +2,7 @@ import cx from "classnames";
 import { useRef } from "react";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { patientDocumentColumns } from "./patient-document-columns";
-import { Heading } from "@/components/core/ctw-box";
+import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Table } from "@/components/core/table/table";
 import { usePatientDocument } from "@/fhir/document";
 import { DocumentModel } from "@/fhir/models/document";
@@ -13,7 +13,7 @@ export type PatientDocumentProps = {
   includeViewFhirResource?: boolean;
 };
 
-export function PatientDocuments({
+function PatientDocumentsComponent({
   className,
   includeViewFhirResource,
 }: PatientDocumentProps) {
@@ -25,36 +25,36 @@ export function PatientDocuments({
     details: documentData,
   });
 
-  function handleRowClick(document: DocumentModel) {
-    openDetails(document);
-  }
-
   const document = patientDocumentQuery.data ?? [];
   const { isLoading } = patientDocumentQuery;
 
   return (
     <div
       ref={containerRef}
-      className={cx(
-        "ctw-border ctw-border-solid ctw-border-divider-light ctw-bg-white",
-        className,
-        {
-          "ctw-stacked": breakpoints.sm,
-        }
-      )}
+      data-zus-telemetry-namespace="Documents"
+      className={cx("ctw-patient-documents ctw-bg-white", className, {
+        "ctw-stacked": breakpoints.sm,
+      })}
     >
-      <Heading title="Documents" />
-      <Table
-        stacked={breakpoints.sm}
-        className="-ctw-mx-px !ctw-rounded-none"
-        isLoading={isLoading}
-        records={document}
-        columns={patientDocumentColumns(includeViewFhirResource)}
-        handleRowClick={handleRowClick}
-      />
+      <div className="ctw-overflow-hidden">
+        <Table
+          stacked={breakpoints.sm}
+          removeLeftAndRightBorders
+          className="-ctw-mx-px !ctw-rounded-none"
+          isLoading={isLoading}
+          records={document}
+          columns={patientDocumentColumns(includeViewFhirResource)}
+          handleRowClick={openDetails}
+        />
+      </div>
     </div>
   );
 }
+
+export const PatientDocuments = withErrorBoundary(
+  PatientDocumentsComponent,
+  "PatientDocuments"
+);
 
 const documentData = (document: DocumentModel) => [
   { label: "status", value: document.status },

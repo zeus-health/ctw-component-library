@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { patientAllergiesColumns } from "@/components/content/allergies/patient-allergies-column";
+import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Table } from "@/components/core/table/table";
 import { usePatientAllergies } from "@/fhir/allergies";
 import { AllergyModel } from "@/fhir/models/allergies";
@@ -11,7 +12,7 @@ export type PatientAllergiesProps = {
   enableFqs?: boolean;
 };
 
-export function PatientAllergies({
+function PatientAllergiesComponent({
   className,
   enableFqs,
 }: PatientAllergiesProps) {
@@ -33,18 +34,25 @@ export function PatientAllergies({
       ref={containerRef}
       data-zus-telemetry-namespace="Allergies"
     >
-      <Table
-        stacked={breakpoints.sm}
-        className="-ctw-mx-px !ctw-rounded-none"
-        removeLeftAndRightBorders
-        isLoading={isLoading}
-        records={allergies}
-        columns={patientAllergiesColumns}
-        handleRowClick={openDetails}
-      />
+      <div className="ctw-overflow-hidden">
+        <Table
+          stacked={breakpoints.sm}
+          className="-ctw-mx-px !ctw-rounded-none"
+          removeLeftAndRightBorders
+          isLoading={isLoading}
+          records={allergies}
+          columns={patientAllergiesColumns}
+          handleRowClick={openDetails}
+        />
+      </div>
     </div>
   );
 }
+
+export const PatientAllergies = withErrorBoundary(
+  PatientAllergiesComponent,
+  "PatientAllergies"
+);
 
 const allergyData = (allergy: AllergyModel) => [
   { label: "Onset", value: allergy.onset },

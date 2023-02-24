@@ -16,6 +16,7 @@ const DEFAULT_SORT: Sort = {
   key: "recordedDate",
   dir: "desc",
   display: "Last Updated Date (Newest to Oldest)",
+  isDate: true,
 };
 
 const DEFAULT_SORTS = {
