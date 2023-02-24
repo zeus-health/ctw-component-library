@@ -92,7 +92,7 @@ export function ResourceDetailsDrawer<
   return (
     <Drawer
       className={className}
-      title={`${model.resourceType} Details`}
+      title={`${model.resourceTypeTitle} Details`}
       isOpen={isOpen}
       onClose={onClose}
       showCloseFooter
@@ -111,7 +111,9 @@ export function ResourceDetailsDrawer<
             documentButton={
               binaryId && (
                 <DocumentButton
-                  onClick={() => openCCDAModal(binaryId, model.resourceType)}
+                  onClick={() =>
+                    openCCDAModal(binaryId, model.resourceTypeTitle)
+                  }
                   text="Source Document"
                 />
               )
