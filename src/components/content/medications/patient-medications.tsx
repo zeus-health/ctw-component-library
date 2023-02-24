@@ -63,7 +63,7 @@ export const PatientMedications = withErrorBoundary(
         </CTWBox.Heading>
 
         {showConfirmedMedsTable && (
-          <CTWBox.Body>
+          <CTWBox.Body className="ctw-pt-3">
             <CTWBox.Title title="Confirmed Medications">
               <ToggleControl
                 onFormChange={() =>
