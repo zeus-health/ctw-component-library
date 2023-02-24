@@ -1,19 +1,10 @@
+import { FHIRModel } from "./fhir-model";
 import { codeableConceptLabel } from "@/fhir/codeable-concept";
 import { displayOnset } from "@/fhir/display-onset";
 
-export class AllergyModel {
-  resource: fhir4.AllergyIntolerance;
-
-  constructor(allergy: fhir4.AllergyIntolerance) {
-    this.resource = allergy;
-  }
-
-  get id(): string {
-    return this.resource.id ?? "";
-  }
-
-  get type(): string {
-    return this.resource.type ?? "";
+export class AllergyModel extends FHIRModel<fhir4.AllergyIntolerance> {
+  get categories(): string | undefined {
+    return this.resource.category?.join(", ");
   }
 
   get clinicalStatus(): string {
@@ -22,14 +13,6 @@ export class AllergyModel {
 
   get display(): string | undefined {
     return codeableConceptLabel(this.resource.code);
-  }
-
-  get categories(): string | undefined {
-    return this.resource.category?.join(", ");
-  }
-
-  get onset(): string | undefined {
-    return displayOnset(this.resource);
   }
 
   get manifestations(): string {
@@ -42,5 +25,13 @@ export class AllergyModel {
     );
 
     return manifestations.join(", ");
+  }
+
+  get onset(): string | undefined {
+    return displayOnset(this.resource);
+  }
+
+  get type(): string {
+    return this.resource.type ?? "";
   }
 }
