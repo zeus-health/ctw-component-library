@@ -1,2 +1,0 @@
-import{_ as a,a as c}from"./_equalByTag-3aa7c076.js";import{_ as n}from"./_baseForOwn-d5bf979e.js";var i=a,s=n,b=c,p="[object Object]",f=Function.prototype,j=Object.prototype,e=f.toString,u=j.hasOwnProperty,l=e.call(Object);function O(r){if(!b(r)||i(r)!=p)return!1;var o=s(r);if(o===null)return!0;var t=u.call(o,"constructor")&&o.constructor;return typeof t=="function"&&t instanceof t&&e.call(t)==l}var v=O;export{v as i};
-//# sourceMappingURL=isPlainObject-7e0f34c5.js.map

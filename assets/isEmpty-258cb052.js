@@ -1,0 +1,2 @@
+import{j as i,i as e,c as o}from"./_baseIsEqual-7d59e24c.js";import{n as a,g as n,b as p,j as y,k as f}from"./_equalByTag-eda72788.js";var g=i,c=a,m=n,A=p,_=e,b=y,j=o,T=f,P="[object Map]",h="[object Set]",k=Object.prototype,E=k.hasOwnProperty;function O(r){if(r==null)return!0;if(_(r)&&(A(r)||typeof r=="string"||typeof r.splice=="function"||b(r)||T(r)||m(r)))return!r.length;var t=c(r);if(t==P||t==h)return!r.size;if(j(r))return!g(r).length;for(var s in r)if(E.call(r,s))return!1;return!0}var x=O;export{x as i};
+//# sourceMappingURL=isEmpty-258cb052.js.map
