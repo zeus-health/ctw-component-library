@@ -1,7 +1,7 @@
 import { Basic, Resource } from "fhir/r4";
 import { SYSTEM_SUMMARY, SYSTEM_ZUS_PROFILE_ACTION } from "../system-urls";
 import { ResourceMap } from "../types";
-import { find } from "@/utils/nodash";
+import { find, startCase } from "@/utils/nodash";
 
 export abstract class FHIRModel<T extends fhir4.Resource> {
   public resource: T;
@@ -33,6 +33,10 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
 
   get resourceType(): string {
     return this.resource.resourceType;
+  }
+
+  get resourceTypeTitle(): string {
+    return startCase(this.resourceType);
   }
 
   getBasicResourceByAction(profileAction: string): Basic | undefined {

@@ -1,6 +1,6 @@
 import cx from "classnames";
 import { useRef } from "react";
-import { useDocumentDetailsDrawer } from "./document-details-drawer";
+import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { patientDocumentColumns } from "./patient-document-columns";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Table } from "@/components/core/table/table";
@@ -20,11 +20,10 @@ function PatientDocumentsComponent({
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const patientDocumentQuery = usePatientDocument();
-  const openDetails = useDocumentDetailsDrawer();
-
-  function handleRowClick(document: DocumentModel) {
-    openDetails(document);
-  }
+  const openDetails = useResourceDetailsDrawer({
+    header: (m) => `${m.dateCreated} - ${m.title}`,
+    details: documentData,
+  });
 
   const document = patientDocumentQuery.data ?? [];
   const { isLoading } = patientDocumentQuery;
@@ -45,7 +44,7 @@ function PatientDocumentsComponent({
           isLoading={isLoading}
           records={document}
           columns={patientDocumentColumns(includeViewFhirResource)}
-          handleRowClick={handleRowClick}
+          handleRowClick={openDetails}
         />
       </div>
     </div>
@@ -56,3 +55,20 @@ export const PatientDocuments = withErrorBoundary(
   PatientDocumentsComponent,
   "PatientDocuments"
 );
+
+const documentData = (document: DocumentModel) => [
+  { label: "status", value: document.status },
+  { label: "docStatus", value: document.docStatus },
+  { label: "Managing Organization", value: document.custodian },
+  {
+    label: "Section Display",
+    value: document.sectionDisplays && (
+      <div>
+        {document.sectionDisplays.map((item, index) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <div key={item + index}>{item}</div>
+        ))}
+      </div>
+    ),
+  },
+];

@@ -20,6 +20,11 @@ export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
     return this.resource.docStatus;
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  get resourceTypeTitle(): string {
+    return "Document";
+  }
+
   get title(): string | undefined {
     return this.resource.content[0].attachment.title;
   }

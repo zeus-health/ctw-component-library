@@ -1,6 +1,7 @@
 import { rest } from "msw";
 import { encounters } from "./encounters";
 import { patient } from "./patient";
+import { provenances } from "./provenances";
 
 export const mockPatientGet = rest.get(
   "https://api.dev.zusapi.com/fhir/Patient",
@@ -12,4 +13,9 @@ export const mockPatientGet = rest.get(
 export const mockEncounterGet = rest.get(
   "https://api.dev.zusapi.com/fhir/Encounter",
   (req, res, ctx) => res(ctx.status(200), ctx.json(encounters))
+);
+
+export const mockProvenanceGet = rest.get(
+  "https://api.dev.zusapi.com/fhir/Provenance?target=Encounter/:Encounter",
+  async (_, res, ctx) => res(ctx.status(200), ctx.json(provenances))
 );

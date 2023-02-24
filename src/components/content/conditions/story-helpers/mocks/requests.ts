@@ -1,7 +1,6 @@
 import { rest } from "msw";
 import { ComponentType, createElement } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { conditionBinary } from "./condition-binary";
 import { heartConditions } from "./forms-data-conditions-search";
 import { historyChronsDisease } from "./history-crohns-disease";
 import { historyDermatitis } from "./history-dermatitis";
@@ -11,6 +10,7 @@ import { historyOralContraception } from "./history-oral-contraception";
 import { patient } from "./patient";
 import { patientHistoryMessage } from "./patient-history-message";
 import { ProvenanceCondition } from "./provenance-conditions";
+import { mockBinaryGet } from "@/components/content/story-helpers/mocks/requests";
 import { SYSTEM_SUMMARY } from "@/fhir/system-urls";
 import { cloneDeep } from "@/utils/nodash";
 
@@ -69,11 +69,6 @@ function mockRequests() {
   const mockProvenancePost = rest.post(
     "https://api.dev.zusapi.com/fhir/Provenance",
     (_, res, ctx) => res(ctx.status(200))
-  );
-
-  const mockConditionHistoryBinaryDocument = rest.get(
-    "https://api.dev.zusapi.com/fhir/Binary",
-    async (_, res, ctx) => res(ctx.status(200), ctx.json(conditionBinary))
   );
 
   const mockConditionProvenance = rest.get(
@@ -215,7 +210,7 @@ function mockRequests() {
     mockConditionPost,
     mockConditionPut,
     mockPatientHistoryGet,
-    mockConditionHistoryBinaryDocument,
+    mockBinaryGet,
     mockConditionsBasic,
     mockConditionVersionHistoryBundle,
     mockConditionProvenance,
