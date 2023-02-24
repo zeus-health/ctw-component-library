@@ -39,6 +39,7 @@ function PatientImmunizationsComponent({
     >
       <div className="ctw-overflow-hidden">
         <Table
+          removeLeftAndRightBorders
           RowActions={viewRecordFHIR}
           stacked={breakpoints.sm}
           className="-ctw-mx-px !ctw-rounded-none"
