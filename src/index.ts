@@ -3,14 +3,7 @@ export * from "@/components/content/allergies/patient-allergies";
 export * from "@/components/content/conditions/patient-conditions";
 export * from "@/components/content/immunizations/patient-immunizations";
 export * from "@/components/content/document/patient-documents";
-export * from "@/components/content/medication-drawer";
-export * from "@/components/content/medications-table-base";
-export * from "@/components/content/medications/add-new-med-drawer";
-export * from "@/components/content/medications/medication-history";
-export * from "@/components/content/medications/other-provider-meds-table";
-export * from "@/components/content/medications/patient-medications";
 export * from "@/components/content/medications/patient-medications-tabbed";
-export * from "@/components/content/medications/provider-meds-table";
 export * from "@/components/content/patient-history/use-patient-history";
 export * from "@/components/content/patients/patients-table";
 export * from "@/components/content/timeline/patient-timeline";
@@ -32,10 +25,10 @@ export * from "@/components/core/spinner";
 export * from "@/components/core/table/table";
 export * from "@/components/core/toggle";
 export * from "@/components/core/toggle-control";
+export * from "@/hooks/use-medications";
 // Models
 export * from "@/fhir/models";
 export * from "@/fhir/medications";
-export * from "@/hooks/use-medications";
 // Utility
 export * from "@/utils/invalidate-queries";
 export { version } from "../package.json";
