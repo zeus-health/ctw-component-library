@@ -26,12 +26,16 @@ export default {
     ),
   ],
   args: {
-    allergies: undefined,
-    conditions: undefined,
-    medications: undefined,
-    outsideConditions: undefined,
-    outsideMedications: undefined,
     resources: undefined,
+    forceHorizontalTabs: undefined,
+    title: undefined,
+    allergiesProps: undefined,
+    conditionsProps: undefined,
+    conditionsOutsideProps: undefined,
+    documentsProps: undefined,
+    immunizationsProps: undefined,
+    medicationsProps: undefined,
+    medicationsOutsideProps: undefined,
   },
 } as Meta<Props>;
 

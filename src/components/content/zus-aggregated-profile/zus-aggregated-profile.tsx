@@ -5,7 +5,10 @@ import { PatientDocumentProps } from "@/components/content/document/patient-docu
 import { PatientImmunizationsProps } from "@/components/content/immunizations/patient-immunizations";
 import { OtherProviderMedsTableProps } from "@/components/content/medications/other-provider-meds-table";
 import { ProviderMedsTableProps } from "@/components/content/medications/provider-meds-table";
-import { zusAggregatedProfileTabs } from "@/components/content/zus-aggregated-profile/zus-aggregated-profile-tabs";
+import {
+  ZusAggregatedProfileTabs,
+  zusAggregatedProfileTabs,
+} from "@/components/content/zus-aggregated-profile/zus-aggregated-profile-tabs";
 import { Title } from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { TabGroup } from "@/components/core/tab-group/tab-group";
@@ -13,14 +16,15 @@ import { TabGroup } from "@/components/core/tab-group/tab-group";
 export type ZAPResourceName =
   | "allergies"
   | "conditions"
-  | "documents"
   | "conditions-outside"
+  | "documents"
   | "immunizations"
   | "medications"
   | "medications-outside";
 
 export type ZusAggregatedProfileProps = {
   resources: ZAPResourceName[];
+  forceHorizontalTabs?: boolean;
   title?: string;
 } & SubComponentProps;
 
@@ -41,12 +45,33 @@ type SubComponentProps = Partial<{
 }>;
 
 const zusAggregatedProfile = ({
+  forceHorizontalTabs = false,
+  allergiesProps,
+  conditionsProps,
+  conditionsOutsideProps,
+  documentsProps,
+  immunizationsProps,
+  medicationsProps,
+  medicationsOutsideProps,
   resources,
   title = "Outside Records",
 }: ZusAggregatedProfileProps) => {
-  const tabbedContent = resources.map(
-    (tabName) => zusAggregatedProfileTabs[tabName]
-  );
+  // Get the configuration for each tab group by resource type
+  const subcomponentProps: Record<keyof ZusAggregatedProfileTabs, unknown> = {
+    allergies: allergiesProps,
+    conditions: conditionsProps,
+    "conditions-outside": conditionsOutsideProps,
+    documents: documentsProps,
+    immunizations: immunizationsProps,
+    medications: medicationsProps,
+    "medications-outside": medicationsOutsideProps,
+  };
+
+  const tabbedContent = resources.map((tabName) => {
+    const props = subcomponentProps[tabName] ?? {};
+    return zusAggregatedProfileTabs[tabName](props);
+  });
+
   return (
     <div className="ctw-zus-aggregated-profile ctw-p-5">
       <Title className="ctw-border-b-2 ctw-border-r-0 ctw-border-l-0 ctw-border-t-0 ctw-border-solid ctw-border-divider-light">
@@ -57,7 +82,10 @@ const zusAggregatedProfile = ({
           </span>
         </h3>
       </Title>
-      <TabGroup content={tabbedContent} />
+      <TabGroup
+        content={tabbedContent}
+        forceHorizontalTabs={forceHorizontalTabs}
+      />
     </div>
   );
 };
@@ -74,15 +102,16 @@ const zusAggregatedProfile = ({
  *
  * For example:
  * ```
- * const ZusMedsWidget = <ZusAggregatedProfile
+ * export const ZusMedsWidget = <ZusAggregatedProfile
  *   title="Medications"
  *   resources={["medications", "medications-outside"]}
  * />
- * const ZusProblemsWidget = <ZusAggregatedProfile
+ *
+ * export const ZusProblemsWidget = <ZusAggregatedProfile
  *   title="Problems"
  *   resources={["allergies", "conditions", "conditions-outside"]}
  * />
- *
+ *```
  * The complete set of available resources in the ZusAggregatedProfile are
  * "allergies", "conditions", "documents", "conditions-outside",
  * "immunizations", "medications" and "medications-outside".

@@ -1,33 +1,52 @@
-import { PatientAllergies } from "@/components/content/allergies/patient-allergies";
-import { PatientConditions } from "@/components/content/conditions/patient-conditions";
+import {
+  PatientAllergies,
+  PatientAllergiesProps,
+} from "@/components/content/allergies/patient-allergies";
+import {
+  PatientConditions,
+  PatientConditionsProps,
+} from "@/components/content/conditions/patient-conditions";
 import { BadgeOtherProviderConditionsCount } from "@/components/content/conditions/patient-conditions-tabs";
-import { PatientDocuments } from "@/components/content/document/patient-documents";
-import { PatientImmunizations } from "@/components/content/immunizations/patient-immunizations";
-import { BadgeOtherProviderMedCount } from "@/components/content/medications/other-provider-meds-table";
+import {
+  PatientDocumentProps,
+  PatientDocuments,
+} from "@/components/content/document/patient-documents";
+import {
+  PatientImmunizations,
+  PatientImmunizationsProps,
+} from "@/components/content/immunizations/patient-immunizations";
+import {
+  BadgeOtherProviderMedCount,
+  OtherProviderMedsTableProps,
+} from "@/components/content/medications/other-provider-meds-table";
 import { OtherProviderMedsTableTab } from "@/components/content/medications/patient-medications-tabbed";
-import { ProviderMedsTable } from "@/components/content/medications/provider-meds-table";
+import {
+  ProviderMedsTable,
+  ProviderMedsTableProps,
+} from "@/components/content/medications/provider-meds-table";
 import { ZAPResourceName } from "@/components/content/zus-aggregated-profile/zus-aggregated-profile";
 import { TabGroupItem } from "@/components/core/tab-group/tab-group";
-import { ConditionModel, MedicationStatementModel } from "@/fhir/models";
 
-export const zusAggregatedProfileTabs: Record<
+export type ZusAggregatedProfileTabs = Record<
   ZAPResourceName,
-  TabGroupItem<ConditionModel | MedicationStatementModel>
-> = {
-  allergies: {
+  (props: object) => TabGroupItem<unknown>
+>;
+
+export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
+  allergies: (props: PatientAllergiesProps = {}) => ({
     key: "allergies-builder-records",
     getPanelClassName: () => "ctw-pt-5",
     display: () => "allergy list",
-    render: () => <PatientAllergies />,
-  },
+    render: () => <PatientAllergies {...props} />,
+  }),
 
-  conditions: {
+  conditions: (props: PatientConditionsProps = {}) => ({
     key: "condition-provider-records",
     display: () => "conditions list",
-    render: () => <PatientConditions hideOutsideOwnedRecords />,
-  },
+    render: () => <PatientConditions hideOutsideOwnedRecords {...props} />,
+  }),
 
-  "conditions-outside": {
+  "conditions-outside": (props: PatientConditionsProps = {}) => ({
     key: "condition-outside-records",
     display: () => (
       <>
@@ -35,34 +54,29 @@ export const zusAggregatedProfileTabs: Record<
         <BadgeOtherProviderConditionsCount />
       </>
     ),
-    render: () => <PatientConditions hideBuilderOwnedRecords />,
-  },
+    render: () => <PatientConditions hideBuilderOwnedRecords {...props} />,
+  }),
 
-  documents: {
+  documents: (props: PatientDocumentProps = {}) => ({
     key: "documents",
     getPanelClassName: () => "ctw-pt-5",
     display: () => "documents",
-    render: () => <PatientDocuments />,
-  },
+    render: () => <PatientDocuments {...props} />,
+  }),
 
-  immunizations: {
+  immunizations: (props: PatientImmunizationsProps = {}) => ({
     key: "immunization-outside-records",
-    display: () => (
-      <>
-        <span className="ctw-pr-2 ctw-capitalize">immunizations</span>
-        <BadgeOtherProviderConditionsCount />
-      </>
-    ),
-    render: () => <PatientImmunizations />,
-  },
+    display: () => "immunizations",
+    render: () => <PatientImmunizations {...props} />,
+  }),
 
-  medications: {
+  medications: (props: ProviderMedsTableProps = {}) => ({
     key: "medication-builder-records",
     display: () => "medication list",
-    render: () => <ProviderMedsTable />,
-  },
+    render: () => <ProviderMedsTable {...props} />,
+  }),
 
-  "medications-outside": {
+  "medications-outside": (props: OtherProviderMedsTableProps = {}) => ({
     key: "other-provider-records",
     display: () => (
       <>
@@ -70,6 +84,6 @@ export const zusAggregatedProfileTabs: Record<
         <BadgeOtherProviderMedCount />
       </>
     ),
-    render: () => <OtherProviderMedsTableTab />,
-  },
+    render: () => <OtherProviderMedsTableTab {...props} />,
+  }),
 };
