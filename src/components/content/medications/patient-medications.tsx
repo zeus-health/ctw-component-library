@@ -21,7 +21,7 @@ import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { compact } from "@/utils/nodash";
 import { uniq } from "@/utils/nodash/fp";
 
-export type PatientMedicationsTabbedProps = {
+export type PatientMedicationsProps = {
   className?: string;
   forceHorizontalTabs?: boolean;
 } & TabbedContentProps;
@@ -77,7 +77,7 @@ export function OtherProviderMedsTableTab({
   hideAddToRecord,
   onOpenHistoryDrawer,
   onAfterOpenHistoryDrawer,
-}: PatientMedicationsTabbedProps) {
+}: PatientMedicationsProps) {
   const [filters, setFilters] = useState<FilterChangeEvent>({});
   const [records, setRecords] = useState<MedicationStatementModel[]>([]);
   const { otherProviderMedications, isLoading } =
@@ -156,11 +156,11 @@ export function OtherProviderMedsTableTab({
  * prop will not prevent the medication tables from switching to their stacked
  * view when viewed on smaller screens.
  */
-export function PatientMedicationsTabbed({
+export function PatientMedications({
   className,
   forceHorizontalTabs = false,
   ...tabbedContentProps
-}: PatientMedicationsTabbedProps) {
+}: PatientMedicationsProps) {
   const tabItems = tabbedContent(tabbedContentProps);
 
   return (

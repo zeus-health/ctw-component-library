@@ -6,7 +6,7 @@ import { PatientProvider } from "./components/core/providers/patient-provider";
 import { ErrorBoundary } from "./error-boundary";
 import { SecuredApp } from "./SecuredApp";
 import { PatientConditions } from "./components/content/conditions/patient-conditions";
-import { PatientMedicationsTabbed } from "./components/content/medications/patient-medications-tabbed";
+import { PatientMedications } from "./components/content/medications/patient-medications";
 import { PatientAllergies } from "@/components/content/allergies/patient-allergies";
 import { PatientImmunizations } from "./components/content/immunizations/patient-immunizations";
 import { PatientDocuments } from "./components/content/document/patient-documents";
@@ -40,7 +40,7 @@ type DemoComponent = {
 };
 const demoComponents: DemoComponent[] = [
   {
-    render: () => <PatientMedicationsTabbed handleAddToRecord={() => null} />,
+    render: () => <PatientMedications handleAddToRecord={() => null} />,
     title: "Patient Medications Tabbed",
   },
   { render: () => <PatientConditions />, title: "Patient Conditions 2.0" },
