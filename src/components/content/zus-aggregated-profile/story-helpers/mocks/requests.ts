@@ -1,5 +1,6 @@
 import { setupAllergiesMocks } from "@/components/content/allergies/story-helpers/mocks/requests";
 import { setupConditionMocks } from "@/components/content/conditions/story-helpers/mocks/requests";
+import { setupDocumentMocks } from "@/components/content/document/story-helpers/mocks/requests";
 import { setupImmunizationMocks } from "@/components/content/immunizations/story-helpers/mocks/requests";
 import { setupMedicationMocks } from "@/components/content/medications/story-helpers/mocks/requests";
 
@@ -15,6 +16,7 @@ export function setupMocks({
     otherConditions,
     patientConditions,
   });
+  const documentMocks = setupDocumentMocks();
   const immunizationMocks = setupImmunizationMocks();
   const medicationMocks = setupMedicationMocks({
     providerMedications,
@@ -31,8 +33,9 @@ export function setupMocks({
       msw: [
         ...allergyMocks.parameters.msw,
         ...conditionMocks.parameters.msw,
-        ...medicationMocks.parameters.msw,
+        ...documentMocks.parameters.msw,
         ...immunizationMocks.parameters.msw,
+        ...medicationMocks.parameters.msw,
       ],
     },
   };

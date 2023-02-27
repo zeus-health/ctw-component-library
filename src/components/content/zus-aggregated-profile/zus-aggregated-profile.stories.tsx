@@ -31,11 +31,11 @@ export default {
     medications: undefined,
     outsideConditions: undefined,
     outsideMedications: undefined,
-    tabs: undefined,
+    resources: undefined,
   },
 } as Meta<Props>;
 
-export const Basic: StoryObj<Props> = {
+export const OutsideRecords: StoryObj<Props> = {
   ...setupMocks({
     allergyIntolerance,
     otherConditions,
@@ -44,12 +44,58 @@ export const Basic: StoryObj<Props> = {
     providerMedications,
   }),
   args: {
-    tabs: [
+    resources: ["conditions-outside", "medications-outside"],
+  },
+};
+
+export const ConditionsAndMedications: StoryObj<Props> = {
+  ...setupMocks({
+    allergyIntolerance,
+    otherConditions,
+    otherProviderMedications,
+    patientConditions,
+    providerMedications,
+  }),
+  args: {
+    resources: [
+      "conditions",
+      "conditions-outside",
+      "medications",
+      "medications-outside",
+    ],
+  },
+};
+
+export const ProblemsAndDocuments: StoryObj<Props> = {
+  ...setupMocks({
+    allergyIntolerance,
+    otherConditions,
+    otherProviderMedications,
+    patientConditions,
+    providerMedications,
+  }),
+  args: {
+    resources: ["allergies", "conditions", "immunizations", "documents"],
+  },
+};
+
+export const Everything: StoryObj<Props> = {
+  ...setupMocks({
+    allergyIntolerance,
+    otherConditions,
+    otherProviderMedications,
+    patientConditions,
+    providerMedications,
+  }),
+  args: {
+    resources: [
       "allergies",
       "conditions",
-      "outside-conditions",
+      "conditions-outside",
+      "documents",
+      "immunizations",
       "medications",
-      "outside-medications",
+      "medications-outside",
     ],
   },
 };

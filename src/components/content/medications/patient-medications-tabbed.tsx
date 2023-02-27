@@ -1,15 +1,11 @@
-import type {
-  FilterChangeEvent,
-  FilterItem,
-} from "@/components/core/filter-bar/filter-bar-types";
 import cx from "classnames";
-import { useEffect, useState } from "react";
 import { MedsHistoryTempProps } from "@/components/content/medications-table-base";
 import {
   BadgeOtherProviderMedCount,
   OtherProviderMedsTable,
   OtherProviderMedsTableProps,
 } from "@/components/content/medications/other-provider-meds-table";
+import { useMedicationFilters } from "@/components/content/medications/patient-medications-filters";
 import { ProviderInactiveMedicationsTable } from "@/components/content/medications/provider-inactive-medications-table";
 import { ProviderMedsTable } from "@/components/content/medications/provider-meds-table";
 import * as CTWBox from "@/components/core/ctw-box";
@@ -18,8 +14,6 @@ import { TabGroup, TabGroupItem } from "@/components/core/tab-group/tab-group";
 import { MedicationStatementModel } from "@/fhir/models";
 import "./patient-medications.scss";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
-import { compact } from "@/utils/nodash";
-import { uniq } from "@/utils/nodash/fp";
 
 export type PatientMedicationsTabbedProps = {
   className?: string;
@@ -78,68 +72,24 @@ export function OtherProviderMedsTableTab({
   onOpenHistoryDrawer,
   onAfterOpenHistoryDrawer,
 }: PatientMedicationsTabbedProps) {
-  const [filters, setFilters] = useState<FilterChangeEvent>({});
-  const [records, setRecords] = useState<MedicationStatementModel[]>([]);
-  const { otherProviderMedications, isLoading } =
-    useQueryAllPatientMedications();
+  const { filters, updateFilters, applyFilters, availableFilters } =
+    useMedicationFilters("other");
+  const { otherProviderMedications } = useQueryAllPatientMedications();
 
-  useEffect(() => {
-    if (!isLoading && otherProviderMedications) {
-      const filteredRecords = otherProviderMedications.filter((medication) => {
-        if (
-          Array.isArray(filters.providers?.selected) &&
-          filters.providers?.selected.length
-        ) {
-          return filters.providers.selected.includes(
-            medication.lastPrescriber as string
-          );
-        }
-        return true;
-      });
-      setRecords(filteredRecords);
-    }
-  }, [filters, otherProviderMedications, isLoading]);
-
-  const showDismissed = "dismissed" in filters;
-  const showInactive = "inactive" in filters;
-
-  // Create a list of prescriber names to use in a filter
-  const prescriberNames = !otherProviderMedications
-    ? []
-    : (uniq(
-        otherProviderMedications
-          .map((medication) => medication.lastPrescriber)
-          .filter((s) => typeof s === "string")
-      ) as string[]);
-
-  const filterItems: FilterItem[] = compact([
-    {
-      key: "dismissed",
-      type: "tag",
-      icon: "eye",
-      display: ({ active }) =>
-        active ? "dismissed records" : "show dismissed records",
-    },
-    !otherProviderMedications || prescriberNames.length < 2
-      ? null
-      : {
-          key: "providers",
-          type: "checkbox",
-          icon: "clipboard",
-          values: prescriberNames,
-          display: "prescriber",
-        },
-  ]);
+  const records = applyFilters(otherProviderMedications ?? []);
 
   return (
     <>
-      <FilterBar filters={filterItems} handleOnChange={setFilters} />
+      <FilterBar
+        filters={availableFilters(otherProviderMedications ?? [])}
+        handleOnChange={updateFilters}
+        defaultState={filters.other}
+      />
       <OtherProviderMedsTable
         records={records}
+        showDismissed={!!filters.other.isArchived}
         handleAddToRecord={handleAddToRecord}
         hideAddToRecord={hideAddToRecord}
-        showDismissed={showDismissed}
-        showInactive={showInactive}
         onOpenHistoryDrawer={onOpenHistoryDrawer}
         onAfterOpenHistoryDrawer={onAfterOpenHistoryDrawer}
       />

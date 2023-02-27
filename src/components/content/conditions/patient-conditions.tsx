@@ -21,7 +21,6 @@ import {
 } from "@/fhir/conditions";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import "./patient-conditions.scss";
-import { applyFilters } from "@/utils/filters";
 
 export type PatientConditionsProps = {
   className?: string;
@@ -41,7 +40,7 @@ export const PatientConditions = withErrorBoundary(
     const [collection, setCollection] = useState<FilterCollection>(
       hideBuilderOwnedRecords ? "other" : "patient"
     );
-    const { filters, updateFilters, availableFilters } =
+    const { filters, updateFilters, availableFilters, applyFilters } =
       useConditionFilters(collection);
     const { applySorts, sortOptions, updateSorts, currentSorts } =
       useConditionSorts(collection);
@@ -65,11 +64,11 @@ export const PatientConditions = withErrorBoundary(
     const patientConditions = patientConditionsQuery.data ?? [];
     const otherConditions = otherConditionsQuery.data;
 
-    let conditions = applyFilters(
-      collection === "patient" ? patientConditions : otherConditions,
-      filters[collection]
+    const conditions = applySorts(
+      applyFilters(
+        collection === "patient" ? patientConditions : otherConditions
+      )
     );
-    conditions = applySorts(conditions);
     const RowActions =
       collection === "patient"
         ? PatientConditionHoverActions

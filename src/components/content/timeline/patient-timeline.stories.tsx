@@ -43,6 +43,6 @@ export default {
 
 export const Basic: StoryObj<Props> = {
   parameters: {
-    msw: [mockPatientGet, mockEncounterGet, mockProvenanceGet, mockBinaryGet],
+    msw: [mockPatientGet, mockEncounterGet, mockProvenanceGet, mockBinaryGet()],
   },
 };

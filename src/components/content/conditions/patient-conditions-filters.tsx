@@ -80,13 +80,7 @@ export function useConditionFilters(collection: FilterCollection) {
     ];
   }
 
-  function applyFilters(
-    patientConditions: ConditionModel[],
-    otherConditions: ConditionModel[]
-  ) {
-    const conditions =
-      collection === "patient" ? patientConditions : otherConditions;
-
+  function applyFilters(conditions: ConditionModel[]) {
     return conditions.filter((condition) =>
       Object.entries(filters[collection]).every(([_, filterItem]) => {
         if (filterItem?.type === "checkbox" && isArray(filterItem.selected)) {
