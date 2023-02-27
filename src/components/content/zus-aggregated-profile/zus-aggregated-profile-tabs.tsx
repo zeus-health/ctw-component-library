@@ -66,12 +66,14 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
 
   immunizations: (props: PatientImmunizationsProps = {}) => ({
     key: "immunization-outside-records",
+    getPanelClassName: () => "ctw-pt-5",
     display: () => "immunizations",
     render: () => <PatientImmunizations {...props} />,
   }),
 
   medications: (props: ProviderMedsTableProps = {}) => ({
     key: "medication-builder-records",
+    getPanelClassName: () => "ctw-pt-5",
     display: () => "medication list",
     render: () => <ProviderMedsTable {...props} />,
   }),

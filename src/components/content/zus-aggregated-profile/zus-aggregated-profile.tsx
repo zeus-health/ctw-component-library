@@ -26,6 +26,7 @@ export type ZusAggregatedProfileProps = {
   resources: ZAPResourceName[];
   forceHorizontalTabs?: boolean;
   title?: string;
+  removeBranding?: boolean;
 } & SubComponentProps;
 
 type SubComponentProps = Partial<{
@@ -55,6 +56,7 @@ const zusAggregatedProfile = ({
   medicationsOutsideProps,
   resources,
   title = "Outside Records",
+  removeBranding = false,
 }: ZusAggregatedProfileProps) => {
   // Get the configuration for each tab group by resource type
   const subcomponentProps: Record<keyof ZusAggregatedProfileTabs, unknown> = {
@@ -77,9 +79,11 @@ const zusAggregatedProfile = ({
       <Title className="ctw-border-b-2 ctw-border-r-0 ctw-border-l-0 ctw-border-t-0 ctw-border-solid ctw-border-divider-light">
         <h3 className="ctw-m-0 ctw-inline-block ctw-p-0 ctw-pb-3 ctw-text-lg ctw-font-medium">
           {title}{" "}
-          <span className="ctw-text-sm ctw-font-light ctw-italic ctw-text-content-light">
-            Powered by <img src={ZusSVG} alt="Zus" className="-ctw-mb-1.5" />
-          </span>
+          {!removeBranding && (
+            <span className="ctw-text-sm ctw-font-light ctw-italic ctw-text-content-light">
+              Powered by <img src={ZusSVG} alt="Zus" className="-ctw-mb-1.5" />
+            </span>
+          )}
         </h3>
       </Title>
       <TabGroup
@@ -100,7 +104,6 @@ const zusAggregatedProfile = ({
  * making it a single component which can be used to create a handful of
  * different widgets within an app.
  *
- * For example:
  * ```
  * export const ZusMedsWidget = <ZusAggregatedProfile
  *   title="Medications"
@@ -111,7 +114,7 @@ const zusAggregatedProfile = ({
  *   title="Problems"
  *   resources={["allergies", "conditions", "conditions-outside"]}
  * />
- *```
+ * ```
  * The complete set of available resources in the ZusAggregatedProfile are
  * "allergies", "conditions", "documents", "conditions-outside",
  * "immunizations", "medications" and "medications-outside".

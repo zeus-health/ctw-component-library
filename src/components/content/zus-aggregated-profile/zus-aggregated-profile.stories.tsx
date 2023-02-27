@@ -36,6 +36,7 @@ export default {
     immunizationsProps: undefined,
     medicationsProps: undefined,
     medicationsOutsideProps: undefined,
+    removeBranding: undefined,
   },
 } as Meta<Props>;
 
