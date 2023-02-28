@@ -1,5 +1,6 @@
 import ZusSVG from "@/assets/zus.svg";
 import { PatientAllergiesProps } from "@/components/content/allergies/patient-allergies";
+import { PatientCareTeamProps } from "@/components/content/care-team/patient-careteam";
 import { PatientConditionsProps } from "@/components/content/conditions/patient-conditions";
 import { PatientDocumentProps } from "@/components/content/document/patient-documents";
 import { PatientImmunizationsProps } from "@/components/content/immunizations/patient-immunizations";
@@ -16,6 +17,7 @@ import { TabGroup } from "@/components/core/tab-group/tab-group";
 
 export type ZAPResourceName =
   | "allergies"
+  | "care-team"
   | "conditions"
   | "conditions-outside"
   | "documents"
@@ -33,6 +35,7 @@ export type ZusAggregatedProfileProps = {
 
 type SubComponentProps = Partial<{
   allergiesProps: PatientAllergiesProps;
+  careTeamProps: PatientCareTeamProps;
   conditionsProps: Omit<
     PatientConditionsProps,
     "hideBuilderOwnedRecords" | "hideOutsideOwnedRecords"
@@ -51,6 +54,7 @@ type SubComponentProps = Partial<{
 const zusAggregatedProfile = ({
   forceHorizontalTabs = false,
   allergiesProps,
+  careTeamProps,
   conditionsProps,
   conditionsOutsideProps,
   documentsProps,
@@ -65,6 +69,7 @@ const zusAggregatedProfile = ({
   // Get the configuration for each tab group by resource type
   const subcomponentProps: Record<keyof ZusAggregatedProfileTabs, unknown> = {
     allergies: allergiesProps,
+    "care-team": careTeamProps,
     conditions: conditionsProps,
     "conditions-outside": conditionsOutsideProps,
     documents: documentsProps,
@@ -121,8 +126,8 @@ const zusAggregatedProfile = ({
  * />
  * ```
  * The complete set of available resources in the ZusAggregatedProfile are
- * "allergies", "conditions", "documents", "conditions-outside",
- * "immunizations", "medications" and "medications-outside".
+ * "allergies", "care-team", "conditions", "documents", "conditions-outside",
+ * "immunizations", "medications", "medications-outside" and "timelines".
  */
 export const ZusAggregatedProfile = withErrorBoundary(
   zusAggregatedProfile,

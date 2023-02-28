@@ -4,7 +4,6 @@ import { FilterCollection } from "./patient-conditions-filters";
 import { Badge } from "@/components/core/badge";
 import { TabGroup, TabGroupItem } from "@/components/core/tab-group/tab-group";
 import { useOtherProviderConditionsDeduped } from "@/fhir/conditions";
-import { ConditionModel } from "@/fhir/models";
 
 export type PatientConditionsTabsProps = {
   collection: FilterCollection;
@@ -12,7 +11,7 @@ export type PatientConditionsTabsProps = {
   onCollectionChange: (collection: FilterCollection) => void;
 };
 
-const tabbedContent: TabGroupItem<ConditionModel>[] = [
+const tabbedContent: TabGroupItem[] = [
   {
     key: "inactive-provider-records",
     display: () => "condition list",

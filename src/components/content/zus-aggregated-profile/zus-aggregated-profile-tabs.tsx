@@ -3,6 +3,10 @@ import {
   PatientAllergiesProps,
 } from "@/components/content/allergies/patient-allergies";
 import {
+  PatientCareTeam,
+  PatientCareTeamProps,
+} from "@/components/content/care-team/patient-careteam";
+import {
   PatientConditions,
   PatientConditionsProps,
 } from "@/components/content/conditions/patient-conditions";
@@ -33,7 +37,7 @@ import { TabGroupItem } from "@/components/core/tab-group/tab-group";
 
 export type ZusAggregatedProfileTabs = Record<
   ZAPResourceName,
-  (props: object) => TabGroupItem<unknown>
+  (props: object) => TabGroupItem
 >;
 
 export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
@@ -42,6 +46,12 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     getPanelClassName: () => "ctw-pt-5",
     display: () => "allergy list",
     render: () => <PatientAllergies {...props} />,
+  }),
+
+  "care-team": (props: PatientCareTeamProps = {}) => ({
+    key: "care-team",
+    display: () => "care team",
+    render: () => <PatientCareTeam {...props} />,
   }),
 
   conditions: (props: PatientConditionsProps = {}) => ({
