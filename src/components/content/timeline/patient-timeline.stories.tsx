@@ -28,7 +28,6 @@ export default {
   args: {
     className: "Blank",
     readOnly: false,
-    includeViewFhirResource: false,
   },
   decorators: [
     (Story, { args }) => (

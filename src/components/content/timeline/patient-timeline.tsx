@@ -2,6 +2,7 @@ import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { patientTimelineColumns } from "./patient-timeline-columns";
 import { CodingList } from "@/components/core/coding-list";
 import { Heading } from "@/components/core/ctw-box";
+import { useCTW } from "@/components/core/providers/ctw-provider";
 import { Table } from "@/components/core/table/table";
 import { usePatientEncounters } from "@/fhir/encounters";
 import { EncounterModel } from "@/fhir/models/encounter";
@@ -9,14 +10,11 @@ import { capitalize, orderBy } from "@/utils/nodash";
 
 export type PatientTimelineProps = {
   className?: string;
-  includeViewFhirResource: boolean;
 };
 
-export function PatientTimeline({
-  className,
-  includeViewFhirResource,
-}: PatientTimelineProps) {
+export function PatientTimeline({ className }: PatientTimelineProps) {
   const patientEncounterQuery = usePatientEncounters();
+  const { featureFlags } = useCTW();
   const openDetails = useResourceDetailsDrawer({
     header: (m) => `${m.periodStart} - ${m.periodEnd}`,
     subHeader: (m) => m.typeDisplay,
@@ -37,7 +35,9 @@ export function PatientTimeline({
         className="-ctw-mx-px !ctw-rounded-none"
         isLoading={patientEncounterQuery.isLoading}
         records={encounters}
-        columns={patientTimelineColumns(includeViewFhirResource)}
+        columns={patientTimelineColumns(
+          featureFlags?.enablePatientTimelineFhirButton
+        )}
         handleRowClick={openDetails}
       />
     </div>

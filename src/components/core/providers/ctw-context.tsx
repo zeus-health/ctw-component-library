@@ -8,12 +8,19 @@ export type CTWToken = {
   expiresAt: number; // Timestamp in ms.
 };
 
+export type FeatureFlags = {
+  enablePatientImmuniztionsFhirButton?: boolean;
+  enablePatientTimelineFhirButton?: boolean;
+  enablePatientDocumentButton?: boolean;
+};
+
 export type CTWState = {
   env: Env;
   authToken?: string;
   builderId?: string;
   headers?: HeadersInit;
   authTokenURL?: string;
+  featureFlags?: FeatureFlags;
   theme?: Theme;
   ctwProviderRef: RefObject<HTMLDivElement>;
   token?: CTWToken;
