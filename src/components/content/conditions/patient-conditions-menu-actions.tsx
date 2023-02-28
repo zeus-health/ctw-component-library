@@ -1,9 +1,9 @@
-import { toggleArchive } from "../conditions-helper";
 import {
   useAddConditionForm,
   useConfirmDeleteCondition,
   useEditConditionForm,
 } from "./condition-hooks";
+import { toggleArchive } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models";
 import { RowActionsProps, useCTW } from "@/index";
 

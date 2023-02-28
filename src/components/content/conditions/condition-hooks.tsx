@@ -1,5 +1,3 @@
-import { ConditionHeader } from "../condition-header";
-import { onConditionDelete } from "../conditions-helper";
 import {
   createOrEditCondition,
   getAddConditionWithDefaults,
@@ -10,12 +8,13 @@ import {
   getAddConditionData,
   getEditingPatientConditionData,
 } from "../forms/schemas/condition-schema";
+import { ConditionHeader } from "./condition-header";
 import { DrawerFormWithFields } from "@/components/core/form/drawer-form-with-fields";
 import { ModalConfirmDelete } from "@/components/core/modal-confirm-delete";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
 import { useModal } from "@/components/core/providers/modal-provider";
 import { usePatient } from "@/components/core/providers/patient-provider";
-import { getNewCondition } from "@/fhir/conditions";
+import { deleteCondition, getNewCondition } from "@/fhir/conditions";
 import { ConditionModel, useCTW } from "@/index";
 import { curry } from "@/utils/nodash";
 
@@ -78,7 +77,7 @@ export function useConfirmDeleteCondition() {
           resourceName={condition.display ?? "unnamed condition"}
           onDelete={async () => {
             const requestContext = await getRequestContext();
-            await onConditionDelete(condition.resource, requestContext);
+            await deleteCondition(condition.resource, requestContext);
           }}
           {...props}
         />
