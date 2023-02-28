@@ -6,10 +6,12 @@ import {
   OtherProviderMedsTableProps,
 } from "@/components/content/medications/other-provider-meds-table";
 import { useMedicationFilters } from "@/components/content/medications/patient-medications-filters";
+import { useMedicationSorts } from "@/components/content/medications/patient-medications-sort";
 import { ProviderInactiveMedicationsTable } from "@/components/content/medications/provider-inactive-medications-table";
 import { ProviderMedsTable } from "@/components/content/medications/provider-meds-table";
 import * as CTWBox from "@/components/core/ctw-box";
 import { FilterBar } from "@/components/core/filter-bar/filter-bar";
+import { SortButton } from "@/components/core/sort-button/sort-button";
 import { TabGroup, TabGroupItem } from "@/components/core/tab-group/tab-group";
 import { MedicationStatementModel } from "@/fhir/models";
 import "./patient-medications.scss";
@@ -34,7 +36,6 @@ const tabbedContent = (
 ): TabGroupItem<MedicationStatementModel>[] => [
   {
     key: "medication-list",
-    getPanelClassName: (sm: boolean) => (sm ? "ctw-mt-0" : "ctw-mt-2"),
     display: () => "medication list",
     render: () => (
       <ProviderMedsTable
@@ -45,7 +46,6 @@ const tabbedContent = (
   },
   {
     key: "inactive-provider-records",
-    getPanelClassName: (sm: boolean) => (sm ? "ctw-mt-0" : "ctw-mt-2"),
     display: () => "inactive",
     render: () => (
       <ProviderInactiveMedicationsTable
@@ -72,21 +72,31 @@ export function OtherProviderMedsTableTab({
   onOpenHistoryDrawer,
   onAfterOpenHistoryDrawer,
 }: PatientMedicationsProps) {
+  const { otherProviderMedications } = useQueryAllPatientMedications();
   const { filters, updateFilters, applyFilters, availableFilters } =
     useMedicationFilters("other");
-  const { otherProviderMedications } = useQueryAllPatientMedications();
+  const { currentSorts, updateSorts, sortOptions, applySorts } =
+    useMedicationSorts();
 
   const records = applyFilters(otherProviderMedications ?? []);
-
   return (
     <>
-      <FilterBar
-        filters={availableFilters(otherProviderMedications ?? [])}
-        handleOnChange={updateFilters}
-        defaultState={filters.other}
-      />
+      <div className="ctw-flex ctw-flex-wrap ctw-gap-x-2">
+        <SortButton
+          className="ctw-my-2"
+          options={sortOptions}
+          updateSorts={updateSorts}
+          currentSorts={currentSorts}
+        />
+        <FilterBar
+          filters={availableFilters(otherProviderMedications ?? [])}
+          handleOnChange={updateFilters}
+          defaultState={filters.other}
+        />
+      </div>
+
       <OtherProviderMedsTable
-        records={records}
+        records={applySorts(records)}
         showDismissed={!!filters.other.isArchived}
         handleAddToRecord={handleAddToRecord}
         hideAddToRecord={hideAddToRecord}
