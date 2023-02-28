@@ -1,6 +1,7 @@
 import cx from "classnames";
 import { useRef, useState } from "react";
 import { useConditionHistory } from "../condition-history/conditions-history-drawer";
+import { conditionFilters } from "./filter-options";
 import { PatientConditionsActions } from "./patient-conditions-actions";
 import { patientConditionsColumns } from "./patient-conditions-columns";
 import {
@@ -41,8 +42,7 @@ export const PatientConditions = withErrorBoundary(
     const [collection, setCollection] = useState<FilterCollection>(
       hideBuilderOwnedRecords ? "other" : "patient"
     );
-    const { filters, updateFilters, availableFilters } =
-      useConditionFilters(collection);
+    const { filters, updateFilters } = useConditionFilters(collection);
     const { applySorts, sortOptions, updateSorts, currentSorts } =
       useConditionSorts(collection);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -96,7 +96,7 @@ export const PatientConditions = withErrorBoundary(
           activeCollection={collection}
           hideAdd={readOnly || collection === "other"}
           currentSorts={currentSorts[collection]}
-          filterItems={availableFilters(
+          filterItems={conditionFilters(
             collection === "patient" ? patientConditions : otherConditions
           )}
           setFilters={updateFilters}
