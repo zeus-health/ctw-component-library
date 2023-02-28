@@ -1,5 +1,16 @@
 # ctw-component-library
 
+## 0.48.0
+
+### Minor Changes
+
+- 3ec7dba7: Create careTeam component.
+- 949cb7c8: Remove old conditions & medications components in favor of new design with tabs for patient records and other provider records.
+
+### Patch Changes
+
+- be808188: Add generic sort button. Add sort button to medications component.
+
 ## 0.47.2
 
 ### Patch Changes
