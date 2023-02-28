@@ -27,18 +27,13 @@ export default {
 } as Meta<Props>;
 
 export const Basic: StoryObj<Props> = {
-  args: {
-    sortColumn: "display",
-    sortOrder: "asc",
-  },
+  args: {},
   ...setupMedicationMocks({ providerMedications, otherProviderMedications }),
 };
 
 export const HideAddToRecord: StoryObj<Props> = {
   ...Basic,
   args: {
-    sortColumn: "display",
-    sortOrder: "asc",
     hideAddToRecord: true,
   },
 };

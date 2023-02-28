@@ -4,6 +4,8 @@ import {
   MedsHistoryTempProps as MedHistoryTempProps,
   MedicationsTableBase,
 } from "@/components/content/medications-table-base";
+import { useMedicationSorts } from "@/components/content/medications/patient-medications-sort";
+import { SortButton } from "@/components/core/sort-button/sort-button";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { get, isFunction, pipe, toLower } from "@/utils/nodash/fp";
@@ -28,6 +30,8 @@ export function ProviderInactiveMedicationsTable({
   >([]);
   const openMedHistoryDrawer = useMedicationHistory();
   const { builderMedications, isLoading } = useQueryAllPatientMedications();
+  const { currentSorts, updateSorts, sortOptions, applySorts } =
+    useMedicationSorts();
 
   function openHistoryDrawer(row: MedicationStatementModel) {
     // Temp - onOpen and onAfterOpen should be side-effect free as
@@ -57,9 +61,18 @@ export function ProviderInactiveMedicationsTable({
 
   return (
     <>
+      <div className="ctw-flex ctw-flex-wrap ctw-gap-x-2">
+        <SortButton
+          className="ctw-my-2"
+          options={sortOptions}
+          updateSorts={updateSorts}
+          currentSorts={currentSorts}
+        />
+      </div>
+
       <MedicationsTableBase
         className={className}
-        medicationStatements={medicationModels}
+        medicationStatements={applySorts(medicationModels)}
         isLoading={isLoading}
         handleRowClick={openHistoryDrawer}
       />

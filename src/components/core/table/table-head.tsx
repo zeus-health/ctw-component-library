@@ -60,7 +60,7 @@ export const TableHead = <T extends MinRecordItem>({
         >
           <div className="ctw-flex ctw-items-center ctw-space-x-2">
             <div>{column.title}</div>
-            {column.sortIndices && (
+            {onSort && column.sortIndices && (
               <SortChevron
                 sortOrder={
                   sort?.columnTitle === column.title ? sort?.dir : undefined
