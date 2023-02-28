@@ -25,7 +25,6 @@ function PatientImmunizationsComponent({
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const { featureFlags } = useCTW();
-  console.log("feature", featureFlags);
   const patientImmunizationsQuery = usePatientImmunizations();
   const openDetails = useResourceDetailsDrawer({
     header: (m) => m.description,
