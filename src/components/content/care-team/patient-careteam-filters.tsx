@@ -20,4 +20,10 @@ export const applyCareTeamFilters = (
   return careTeamData;
 };
 
-const valuesToDedupeOn = (careteam: CareTeamModel) => [careteam.status];
+const valuesToDedupeOn = (careteam: CareTeamModel) => [
+  careteam.status,
+  careteam.periodStart,
+  careteam.role,
+  careteam.practitionerQualification,
+  careteam.includedPerformer,
+];
