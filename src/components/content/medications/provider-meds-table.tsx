@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMedicationHistory } from "./medication-history-drawer";
 import {
   MedicationsTableBase,
   MedsHistoryTempProps,
 } from "@/components/content/medications-table-base";
+import { useMedicationSorts } from "@/components/content/medications/patient-medications-sort";
 import { withErrorBoundary } from "@/components/core/error-boundary";
+import { SortButton } from "@/components/core/sort-button/sort-button";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
+import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { get, isFunction, pipe, toLower } from "@/utils/nodash/fp";
 import { sort, SortDir } from "@/utils/sort";
@@ -38,6 +41,10 @@ export const ProviderMedsTable = withErrorBoundary(
     >([]);
     const { builderMedications, isLoading } = useQueryAllPatientMedications();
     const openMedHistoryDrawer = useMedicationHistory();
+    const { currentSorts, updateSorts, sortOptions, applySorts } =
+      useMedicationSorts();
+    const containerRef = useRef<HTMLDivElement>(null);
+    const breakpoints = useBreakpoints(containerRef);
 
     function openHistoryDrawer(row: MedicationStatementModel) {
       // Temp - onOpen and onAfterOpen should be side-effect free as
@@ -69,6 +76,17 @@ export const ProviderMedsTable = withErrorBoundary(
 
     return (
       <>
+        <div className="ctw-flex ctw-flex-wrap ctw-gap-x-2" ref={containerRef}>
+          {breakpoints.sm && (
+            <SortButton
+              className="ctw-my-2.5"
+              options={sortOptions}
+              updateSorts={updateSorts}
+              currentSorts={currentSorts}
+            />
+          )}
+        </div>
+
         <MedicationsTableBase
           medicationStatements={medicationModels}
           telemetryNamespace="ProviderMedsTable"

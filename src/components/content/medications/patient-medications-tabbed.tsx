@@ -87,12 +87,10 @@ export function OtherProviderMedsTableTab({
   const records = applyFilters(otherProviderMedications ?? []);
   return (
     <>
-      <div
-        className="ctw-my-1.5 ctw-flex ctw-flex-wrap ctw-gap-x-2"
-        ref={containerRef}
-      >
+      <div className="ctw-flex ctw-flex-wrap ctw-gap-x-2" ref={containerRef}>
         {breakpoints.sm && (
           <SortButton
+            className="ctw-my-2"
             options={sortOptions}
             updateSorts={updateSorts}
             currentSorts={currentSorts}

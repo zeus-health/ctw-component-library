@@ -1,4 +1,5 @@
 import { ChevronDownIcon } from "@heroicons/react/outline";
+import cx from "classnames";
 import { DropdownMenuAction } from "@/components/core/dropdown-action-menu";
 import { IndexSort } from "@/components/core/table/table-helpers";
 
@@ -9,19 +10,24 @@ export type SortOption<T> = {
 };
 
 export type SortButtonProps<T> = {
+  className?: cx.Argument;
+  currentSorts: SortOption<T>;
   options: SortOption<T>[];
   updateSorts: (newSorts: SortOption<T>) => void;
-  currentSorts: SortOption<T>;
 };
 
 export const SortButton = <T,>({
   options,
   updateSorts,
   currentSorts,
+  className,
 }: SortButtonProps<T>) => (
   <DropdownMenuAction
     type="select"
-    buttonClassName="ctw-bg-transparent ctw-border-none ctw-p-0"
+    buttonClassName={cx(
+      className,
+      "ctw-bg-transparent ctw-border-none ctw-p-0"
+    )}
     onItemSelect={(event) => {
       const item = options.filter((option) => option.display === event.key)[0];
       updateSorts(item);
