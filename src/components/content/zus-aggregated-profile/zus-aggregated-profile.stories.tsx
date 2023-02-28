@@ -101,7 +101,6 @@ export const Everything: StoryObj<Props> = {
       "immunizations",
       "medications",
       "medications-outside",
-      "care-team",
       "timelines",
     ],
   },
