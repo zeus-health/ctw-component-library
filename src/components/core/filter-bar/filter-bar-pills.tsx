@@ -8,6 +8,7 @@ type FilterBarPillProps = {
   filter: FilterItem;
   filterValues: FilterValuesRecord;
   handleClearFilter: (key: string) => void;
+  isOpen: boolean;
   updateSelectedFilterValues: (valueKey: string, isSelected: boolean) => void;
 };
 
@@ -21,6 +22,7 @@ export function FilterBarPill({
   handleClearFilter,
   filter,
   filterValues,
+  isOpen,
   updateSelectedFilterValues,
 }: FilterBarPillProps) {
   const handleRemove = () => handleAddOrRemoveFilter(filter.key, true);
@@ -38,6 +40,7 @@ export function FilterBarPill({
     case "checkbox":
       return (
         <FilterBarCheckboxPill
+          isOpen={isOpen}
           filter={filter}
           filterValues={filterValues}
           onRemove={handleRemove}

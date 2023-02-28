@@ -47,7 +47,7 @@ export function PatientConditionsActions({
         />
         <FilterBar
           filters={filterItems}
-          handleOnChange={setFilters}
+          onChange={setFilters}
           defaultState={filters}
         />
       </div>
