@@ -122,9 +122,13 @@ export const Table = <T extends MinRecordItem>({
         <div className="ctw-scrollbar" ref={scrollContainerRef}>
           <table ref={tableRef}>
             {hasData && <TableColGroup columns={columns} />}
-            {showTableHead && hasData && (
-              <TableHead columns={columns} sort={sort} onSort={switchSort} />
-            )}
+            {showTableHead &&
+              hasData &&
+              (onSort ? (
+                <TableHead columns={columns} sort={sort} onSort={switchSort} />
+              ) : (
+                <TableHead columns={columns} />
+              ))}
 
             <tbody className={cx({ "ctw-h-[7rem]": records.length === 0 })}>
               <TableRows
