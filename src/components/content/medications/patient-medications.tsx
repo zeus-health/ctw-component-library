@@ -90,7 +90,7 @@ export function OtherProviderMedsTableTab({
         />
         <FilterBar
           filters={availableFilters(otherProviderMedications ?? [])}
-          handleOnChange={updateFilters}
+          onChange={updateFilters}
           defaultState={filters.other}
         />
       </div>
