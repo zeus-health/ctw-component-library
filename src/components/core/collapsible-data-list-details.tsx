@@ -2,7 +2,7 @@ import type { CollapsibleDataListEntry } from "./collapsible-data-list";
 import { PencilIcon } from "@heroicons/react/solid";
 import { ReactNode } from "react";
 
-type DetailsProps = {
+export type DetailsProps = {
   hideEmpty?: boolean;
   data: CollapsibleDataListEntry[];
   readOnly?: boolean;

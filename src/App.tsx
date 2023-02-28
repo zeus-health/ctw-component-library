@@ -1,14 +1,12 @@
 import type { ReactNode } from "react";
 import { Auth0Provider } from "@auth0/auth0-react";
 import "./App.css";
-import { Conditions } from "./components/content/conditions";
-import { PatientMedications } from "./components/content/medications/patient-medications";
 import { CTWProvider } from "./components/core/providers/ctw-provider";
 import { PatientProvider } from "./components/core/providers/patient-provider";
 import { ErrorBoundary } from "./error-boundary";
 import { SecuredApp } from "./SecuredApp";
 import { PatientConditions } from "./components/content/conditions/patient-conditions";
-import { PatientMedicationsTabbed } from "./components/content/medications/patient-medications-tabbed";
+import { PatientMedications } from "./components/content/medications/patient-medications";
 import { PatientAllergies } from "@/components/content/allergies/patient-allergies";
 import { PatientImmunizations } from "./components/content/immunizations/patient-immunizations";
 import { PatientCareTeam } from "./components/content/care-team/patient-careteam";
@@ -44,26 +42,16 @@ type DemoComponent = {
 const demoComponents: DemoComponent[] = [
   { render: () => <PatientCareTeam />, title: "Patient CareTeam" },
   {
-    render: () => <PatientMedicationsTabbed handleAddToRecord={() => null} />,
+    render: () => <PatientMedications handleAddToRecord={() => null} />,
     title: "Patient Medications Tabbed",
   },
   { render: () => <PatientConditions />, title: "Patient Conditions 2.0" },
-  { render: () => <Conditions />, title: "Patient Conditions" },
   {
     render: () => <PatientDocuments />,
     title: "Patient Documents",
   },
   { render: () => <PatientAllergies />, title: "Patient Allergies" },
   { render: () => <PatientImmunizations />, title: "Patient Immunizations" },
-  {
-    render: () => <PatientMedications />,
-    title: "Patient Medications",
-  },
-  {
-    render: () => <PatientMedications readOnly />,
-    title: "Patient Medications",
-    note: "(readonly)",
-  },
 ];
 
 const DemoApp = ({ accessToken = "" }) => (

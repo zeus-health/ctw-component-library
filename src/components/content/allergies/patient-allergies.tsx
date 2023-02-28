@@ -1,8 +1,10 @@
 import { useRef } from "react";
+import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { patientAllergiesColumns } from "@/components/content/allergies/patient-allergies-column";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Table } from "@/components/core/table/table";
 import { usePatientAllergies } from "@/fhir/allergies";
+import { AllergyModel } from "@/fhir/models/allergies";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 
 export type PatientAllergiesProps = {
@@ -17,6 +19,10 @@ function PatientAllergiesComponent({
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const patientAllergiesQuery = usePatientAllergies(enableFqs);
+  const openDetails = useResourceDetailsDrawer({
+    header: (m) => m.display,
+    details: allergyData,
+  });
 
   // Get our allergies.
   const allergies = patientAllergiesQuery.data ?? [];
@@ -36,6 +42,7 @@ function PatientAllergiesComponent({
           isLoading={isLoading}
           records={allergies}
           columns={patientAllergiesColumns}
+          handleRowClick={openDetails}
         />
       </div>
     </div>
@@ -46,3 +53,11 @@ export const PatientAllergies = withErrorBoundary(
   PatientAllergiesComponent,
   "PatientAllergies"
 );
+
+const allergyData = (allergy: AllergyModel) => [
+  { label: "Onset", value: allergy.onset },
+  { label: "Description", value: allergy.display },
+  { label: "Type", value: allergy.type },
+  { label: "Category", value: allergy.categories },
+  { label: "Manifestations", value: allergy.manifestations },
+];
