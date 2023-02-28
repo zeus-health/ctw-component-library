@@ -19,7 +19,7 @@ import {
   BadgeOtherProviderMedCount,
   OtherProviderMedsTableProps,
 } from "@/components/content/medications/other-provider-meds-table";
-import { OtherProviderMedsTableTab } from "@/components/content/medications/patient-medications-tabbed";
+import { OtherProviderMedsTableTab } from "@/components/content/medications/patient-medications";
 import {
   ProviderMedsTable,
   ProviderMedsTableProps,
