@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.47.2
+
+### Patch Changes
+
+- ef176fcc: Set x padding on tabs component buttons
+
 ## 0.47.1
 
 ### Patch Changes

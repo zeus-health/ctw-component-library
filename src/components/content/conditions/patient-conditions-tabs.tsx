@@ -15,13 +15,11 @@ export type PatientConditionsTabsProps = {
 const tabbedContent: TabGroupItem<ConditionModel>[] = [
   {
     key: "inactive-provider-records",
-    getPanelClassName: (sm: boolean) => (sm ? "ctw-mt-0" : "ctw-mt-2"),
     display: () => "condition list",
     render: () => null,
   },
   {
     key: "other-provider-records",
-    getPanelClassName: (sm: boolean) => (sm ? "ctw-mt-0" : "ctw-mt-2"),
     display: () => (
       <>
         <span className="ctw-pr-2 ctw-capitalize">other provider records</span>
