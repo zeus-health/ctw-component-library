@@ -1,10 +1,10 @@
 import cx from "classnames";
 import { ReactNode } from "react";
 
-export type FilterBarProps<T extends FilterItem> = {
+export type FilterBarProps = {
   className?: cx.Argument;
-  handleOnChange: (filters: FilterChangeEvent) => void;
-  filters: T[];
+  onChange: (filters: FilterChangeEvent) => void;
+  filters: FilterItem[];
   defaultState?: FilterChangeEvent;
 };
 
@@ -25,14 +25,12 @@ export type FilterOptionSelect = {
   type: "select";
   // Using strings in `values` will set both key and display automatically
   values: (string | { key: string; display: string })[];
-  isOpen: boolean;
 } & Omit<MinFilterItem, "type">;
 
 export type FilterOptionCheckbox = {
   type: "checkbox";
   // Using strings in `values` will set both key and display automatically
   values: (string | { key: string; display: string })[];
-  isOpen?: boolean;
 } & Omit<MinFilterItem, "type">;
 
 export type FilterItem =
@@ -49,18 +47,15 @@ export type FilterChangeEvent = Record<
       key: string;
       selected: boolean;
       type: "tag";
-      isOpen?: never;
     }
   | {
       key: string;
       selected: string[] | undefined;
       type: "checkbox";
-      isOpen?: boolean;
     }
   | {
       key: string;
       selected: string;
       type: "select";
-      isOpen?: boolean;
     }
 >;

@@ -133,7 +133,7 @@ export function OtherProviderMedsTableTab({
 
   return (
     <>
-      <FilterBar filters={filterItems} handleOnChange={setFilters} />
+      <FilterBar filters={filterItems} onChange={setFilters} />
       <OtherProviderMedsTable
         records={records}
         handleAddToRecord={handleAddToRecord}

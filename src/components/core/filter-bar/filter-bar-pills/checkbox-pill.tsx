@@ -14,6 +14,7 @@ import { compact, omit } from "@/utils/nodash/fp";
 type FilterBarCheckboxPillProps = {
   filter: FilterOptionCheckbox;
   filterValues: FilterValuesRecord;
+  isOpen: boolean;
   onChange: (key: string, isSelected: boolean) => void;
   onRemove?: () => void;
   onReset?: () => void;
@@ -25,6 +26,7 @@ const buttonClassName =
 export function FilterBarCheckboxPill({
   filter,
   filterValues,
+  isOpen,
   onRemove,
   onChange,
   onReset,
@@ -42,7 +44,7 @@ export function FilterBarCheckboxPill({
 
   return (
     <DropdownMenuAction
-      isOpen={filter.isOpen}
+      isOpen={isOpen}
       items={items}
       type="checkbox"
       pinnedActions={compact([
