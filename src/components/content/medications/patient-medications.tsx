@@ -1,99 +1,140 @@
-import type { ClinicalStatus } from "@/fhir/medication";
 import cx from "classnames";
-import { useState } from "react";
 import { MedsHistoryTempProps } from "@/components/content/medications-table-base";
-import { AddNewMedDrawer } from "@/components/content/medications/add-new-med-drawer";
 import {
+  BadgeOtherProviderMedCount,
   OtherProviderMedsTable,
   OtherProviderMedsTableProps,
 } from "@/components/content/medications/other-provider-meds-table";
+import { useMedicationFilters } from "@/components/content/medications/patient-medications-filters";
+import { useMedicationSorts } from "@/components/content/medications/patient-medications-sort";
+import { ProviderInactiveMedicationsTable } from "@/components/content/medications/provider-inactive-medications-table";
 import { ProviderMedsTable } from "@/components/content/medications/provider-meds-table";
 import * as CTWBox from "@/components/core/ctw-box";
-import { withErrorBoundary } from "@/components/core/error-boundary";
-import { ToggleControl } from "@/components/core/toggle-control";
+import { FilterBar } from "@/components/core/filter-bar/filter-bar";
+import { SortButton } from "@/components/core/sort-button/sort-button";
+import { TabGroup, TabGroupItem } from "@/components/core/tab-group/tab-group";
+import { MedicationStatementModel } from "@/fhir/models";
 import "./patient-medications.scss";
+import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 
 export type PatientMedicationsProps = {
   className?: string;
-  status?: ClinicalStatus;
-  // should we render the Zus confirmed meds component (default true)?
-  showConfirmedMedsTable?: boolean;
-  // should we render the Zus other providers meds component (default true)?
-  showOtherProvidersMedsTable?: boolean;
-  // should we show the button to add new meds (default true)?
-  readOnly?: boolean;
-} & Pick<OtherProviderMedsTableProps, "hideAddToRecord" | "handleAddToRecord"> &
+  forceHorizontalTabs?: boolean;
+} & TabbedContentProps;
+
+type TabbedContentProps = Pick<
+  OtherProviderMedsTableProps,
+  "hideAddToRecord" | "handleAddToRecord"
+> &
   MedsHistoryTempProps;
 
-export const PatientMedications = withErrorBoundary(
-  ({
-    className,
-    readOnly = false,
-    showConfirmedMedsTable = true,
-    showOtherProvidersMedsTable = true,
-    onOpenHistoryDrawer,
-    onAfterOpenHistoryDrawer,
-    ...otherProviderTableProps
-  }: PatientMedicationsProps) => {
-    const [drawerIsOpen, setDrawerIsOpen] = useState(false);
-    const [includeInactiveMeds, setIncludeInactiveMeds] = useState(false);
-
-    return (
-      <CTWBox.StackedWrapper
-        className={cx("ctw-patient-medications", className)}
-        data-zus-telemetry-namespace="PatientMedications"
-      >
-        <CTWBox.Heading title="Medications">
-          {!readOnly && (
-            <AddNewMedDrawer
-              isOpen={drawerIsOpen}
-              handleOnClose={() => setDrawerIsOpen(false)}
-            >
-              <button
-                className="ctw-btn-clear ctw-link ctw-capitalize"
-                type="button"
-                onClick={() => setDrawerIsOpen(true)}
-                data-testid="button.add-medication"
-                data-zus-telemetry-click="Add new medication"
-              >
-                + Add medication
-              </button>
-            </AddNewMedDrawer>
-          )}
-        </CTWBox.Heading>
-
-        {showConfirmedMedsTable && (
-          <CTWBox.Body className="ctw-pt-3">
-            <CTWBox.Title title="Confirmed Medications">
-              <ToggleControl
-                onFormChange={() =>
-                  setIncludeInactiveMeds(!includeInactiveMeds)
-                }
-                toggleProps={{
-                  name: "status",
-                  text: "Include Inactive",
-                }}
-              />
-            </CTWBox.Title>
-            <ProviderMedsTable
-              showInactive={includeInactiveMeds}
-              onOpenHistoryDrawer={onOpenHistoryDrawer}
-              onAfterOpenHistoryDrawer={onAfterOpenHistoryDrawer}
-            />
-          </CTWBox.Body>
-        )}
-
-        {showOtherProvidersMedsTable && (
-          <CTWBox.Body title="Other Provider Records">
-            <OtherProviderMedsTable
-              {...otherProviderTableProps}
-              onOpenHistoryDrawer={onOpenHistoryDrawer}
-              onAfterOpenHistoryDrawer={onAfterOpenHistoryDrawer}
-            />
-          </CTWBox.Body>
-        )}
-      </CTWBox.StackedWrapper>
-    );
+// We use getPanelClassName on all tabs except for the other-provider-records
+// tab because without the FilterBar there is no margin between tab and panel
+// when md - lg sized.
+const tabbedContent = (
+  tabbedContentProps: TabbedContentProps
+): TabGroupItem<MedicationStatementModel>[] => [
+  {
+    key: "medication-list",
+    display: () => "medication list",
+    render: () => (
+      <ProviderMedsTable
+        onOpenHistoryDrawer={tabbedContentProps.onOpenHistoryDrawer}
+        onAfterOpenHistoryDrawer={tabbedContentProps.onAfterOpenHistoryDrawer}
+      />
+    ),
   },
-  "PatientMedications"
-);
+  {
+    key: "inactive-provider-records",
+    display: () => "inactive",
+    render: () => (
+      <ProviderInactiveMedicationsTable
+        onOpenHistoryDrawer={tabbedContentProps.onOpenHistoryDrawer}
+        onAfterOpenHistoryDrawer={tabbedContentProps.onAfterOpenHistoryDrawer}
+      />
+    ),
+  },
+  {
+    key: "other-provider-records",
+    display: () => (
+      <>
+        <span className="ctw-pr-2 ctw-capitalize">other provider records</span>
+        <BadgeOtherProviderMedCount />
+      </>
+    ),
+    render: () => <OtherProviderMedsTableTab {...tabbedContentProps} />,
+  },
+];
+
+export function OtherProviderMedsTableTab({
+  handleAddToRecord,
+  hideAddToRecord,
+  onOpenHistoryDrawer,
+  onAfterOpenHistoryDrawer,
+}: PatientMedicationsProps) {
+  const { otherProviderMedications } = useQueryAllPatientMedications();
+  const { filters, updateFilters, applyFilters, availableFilters } =
+    useMedicationFilters("other");
+  const { currentSorts, updateSorts, sortOptions, applySorts } =
+    useMedicationSorts();
+
+  const records = applyFilters(otherProviderMedications ?? []);
+  return (
+    <>
+      <div className="ctw-flex ctw-flex-wrap ctw-gap-x-2">
+        <SortButton
+          className="ctw-my-2"
+          options={sortOptions}
+          updateSorts={updateSorts}
+          currentSorts={currentSorts}
+        />
+        <FilterBar
+          filters={availableFilters(otherProviderMedications ?? [])}
+          onChange={updateFilters}
+          defaultState={filters.other}
+        />
+      </div>
+
+      <OtherProviderMedsTable
+        records={applySorts(records)}
+        showDismissed={!!filters.other.isArchived}
+        handleAddToRecord={handleAddToRecord}
+        hideAddToRecord={hideAddToRecord}
+        onOpenHistoryDrawer={onOpenHistoryDrawer}
+        onAfterOpenHistoryDrawer={onAfterOpenHistoryDrawer}
+      />
+    </>
+  );
+}
+
+/**
+ * This component is a tabbed view of patient medications from the current
+ * provider, other providers and historical. When rendered in a small breakpoint
+ * the component will change from horizontal tabs to a vertical dropdown menu.
+ * If this is undesired, you may set the property `forceHorizontalTabs` to true
+ * and the tabs will remain visible and horizontal. The `forceHorizontalTabs`
+ * prop will not prevent the medication tables from switching to their stacked
+ * view when viewed on smaller screens.
+ */
+export function PatientMedications({
+  className,
+  forceHorizontalTabs = false,
+  ...tabbedContentProps
+}: PatientMedicationsProps) {
+  const tabItems = tabbedContent(tabbedContentProps);
+
+  return (
+    <CTWBox.StackedWrapper
+      className={cx(
+        "ctw-patient-medications ctw-space-y-3 ctw-bg-white",
+        className
+      )}
+    >
+      <TabGroup
+        content={tabItems}
+        forceHorizontalTabs={forceHorizontalTabs}
+        className={className}
+      />
+    </CTWBox.StackedWrapper>
+  );
+}

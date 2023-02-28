@@ -10,8 +10,7 @@ import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useDismissMedication } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
-import { get, isFunction, pipe, toLower } from "@/utils/nodash/fp";
-import { sort, SortDir } from "@/utils/sort";
+import { isFunction } from "@/utils/nodash/fp";
 
 export type OtherProviderMedsTableProps = {
   className?: string;
@@ -19,8 +18,6 @@ export type OtherProviderMedsTableProps = {
   hideAddToRecord?: boolean;
   showDismissed?: boolean;
   showInactive?: boolean;
-  sortColumn?: keyof MedicationStatementModel;
-  sortOrder?: SortDir;
   records?: MedicationStatementModel[];
 } & MedsHistoryTempProps;
 
@@ -33,8 +30,6 @@ export type OtherProviderMedsTableProps = {
  */
 export const OtherProviderMedsTable = withErrorBoundary(
   ({
-    sortOrder = "asc",
-    sortColumn = "display",
     showDismissed = false,
     showInactive = false,
     hideAddToRecord = false,
@@ -86,14 +81,10 @@ export const OtherProviderMedsTable = withErrorBoundary(
       const allRecordsHaveBeenDismissed = filteredRecords.every(
         (record) => record.isArchived
       );
-      setMedicationModels(
-        sort(filteredRecords, pipe(get(sortColumn), toLower), sortOrder)
-      );
+      setMedicationModels(filteredRecords);
       setHasZeroRowActions(hideAddToRecord && allRecordsHaveBeenDismissed);
     }, [
       otherProviderMedications,
-      sortColumn,
-      sortOrder,
       showInactive,
       showDismissed,
       records,

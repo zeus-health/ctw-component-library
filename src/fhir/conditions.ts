@@ -1,5 +1,7 @@
-import { SearchParams } from "fhir-kit-client";
+import { FhirResource, SearchParams } from "fhir-kit-client";
 import { useEffect, useState } from "react";
+import { createOrEditFhirResource } from "./action-helper";
+import { recordProfileAction } from "./basic";
 import { getIncludedBasics } from "./bundle";
 import { CodePreference } from "./codeable-concept";
 import {
@@ -8,6 +10,7 @@ import {
   searchSummaryRecords,
 } from "./search-helpers";
 import {
+  SYSTEM_CONDITION_VERIFICATION_STATUS,
   SYSTEM_ICD10,
   SYSTEM_ICD10_CM,
   SYSTEM_ICD9,
@@ -22,12 +25,13 @@ import {
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { ConditionModel } from "@/fhir/models/condition";
-import { compact, orderBy } from "@/utils/nodash";
+import { cloneDeep, compact, orderBy } from "@/utils/nodash";
 import {
   QUERY_KEY_CONDITION_HISTORY,
   QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
   QUERY_KEY_PATIENT_CONDITIONS,
 } from "@/utils/query-keys";
+import { queryClient } from "@/utils/request";
 import { Telemetry } from "@/utils/telemetry";
 
 export type VerificationStatus =
@@ -298,3 +302,57 @@ function filterAndSort(conditions: ConditionModel[]): ConditionModel[] {
     ["desc"]
   );
 }
+
+export const toggleArchive = async (
+  condition: ConditionModel,
+  requestContext: CTWRequestContext
+) => {
+  const existingBasic =
+    condition.getBasicResourceByAction("archive") ||
+    condition.getBasicResourceByAction("unarchive");
+  const profileAction = condition.isArchived ? "unarchive" : "archive";
+
+  await recordProfileAction(
+    existingBasic,
+    condition,
+    requestContext,
+    profileAction
+  );
+
+  // Refresh our data (this is really just needed to update
+  // otherProviderRecord state).
+  await queryClient.invalidateQueries([QUERY_KEY_OTHER_PROVIDER_CONDITIONS]);
+};
+
+export const deleteCondition = async (
+  resource: fhir4.Condition,
+  requestContext: CTWRequestContext
+) => {
+  if (!resource.id) {
+    throw new Error("Tried to edit a resource that hasn't been created yet.");
+  }
+
+  const clonedResource = cloneDeep(resource);
+
+  clonedResource.verificationStatus = {
+    coding: [
+      {
+        code: "entered-in-error",
+        system: SYSTEM_CONDITION_VERIFICATION_STATUS,
+      },
+    ],
+  };
+  // We have to delete clinical status because it can't be present if verification is 'entered-in-error'
+  delete clonedResource.clinicalStatus;
+
+  const response = (await createOrEditFhirResource(
+    clonedResource,
+    requestContext
+  )) as FhirResource;
+
+  if (!response.id) {
+    throw new Error(`Failed to edit resource with id of ${resource.id}`);
+  }
+
+  await queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]);
+};
