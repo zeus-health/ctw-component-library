@@ -3,8 +3,9 @@ import { setupConditionMocks } from "@/components/content/conditions/story-helpe
 import { setupDocumentMocks } from "@/components/content/document/story-helpers/mocks/requests";
 import { setupImmunizationMocks } from "@/components/content/immunizations/story-helpers/mocks/requests";
 import { setupMedicationMocks } from "@/components/content/medications/story-helpers/mocks/requests";
+import { setupTimelineMocks } from "@/components/content/timeline/story-helpers/mocks/requests";
 
-export function setupMocks({
+export function setupZusAggregatedProfileMocks({
   allergyIntolerance,
   otherConditions,
   patientConditions,
@@ -22,6 +23,7 @@ export function setupMocks({
     providerMedications,
     otherProviderMedications,
   });
+  const timelineMocks = setupTimelineMocks();
 
   return {
     decorators: [
@@ -36,6 +38,7 @@ export function setupMocks({
         ...documentMocks.parameters.msw,
         ...immunizationMocks.parameters.msw,
         ...medicationMocks.parameters.msw,
+        ...timelineMocks.parameters.msw,
       ],
     },
   };

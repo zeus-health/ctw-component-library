@@ -24,6 +24,10 @@ import {
   ProviderMedsTable,
   ProviderMedsTableProps,
 } from "@/components/content/medications/provider-meds-table";
+import {
+  PatientTimeline,
+  PatientTimelineProps,
+} from "@/components/content/timeline/patient-timeline";
 import { ZAPResourceName } from "@/components/content/zus-aggregated-profile/zus-aggregated-profile";
 import { TabGroupItem } from "@/components/core/tab-group/tab-group";
 
@@ -87,5 +91,12 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
       </>
     ),
     render: () => <OtherProviderMedsTableTab {...props} />,
+  }),
+
+  timelines: (props: PatientTimelineProps = {}) => ({
+    key: "timelines",
+    getPanelClassName: () => "ctw-pt-5",
+    display: () => "encounter timeline",
+    render: () => <PatientTimeline {...props} />,
   }),
 };

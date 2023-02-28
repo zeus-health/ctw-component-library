@@ -5,6 +5,7 @@ import { PatientDocumentProps } from "@/components/content/document/patient-docu
 import { PatientImmunizationsProps } from "@/components/content/immunizations/patient-immunizations";
 import { OtherProviderMedsTableProps } from "@/components/content/medications/other-provider-meds-table";
 import { ProviderMedsTableProps } from "@/components/content/medications/provider-meds-table";
+import { PatientTimelineProps } from "@/components/content/timeline/patient-timeline";
 import {
   ZusAggregatedProfileTabs,
   zusAggregatedProfileTabs,
@@ -20,7 +21,8 @@ export type ZAPResourceName =
   | "documents"
   | "immunizations"
   | "medications"
-  | "medications-outside";
+  | "medications-outside"
+  | "timelines";
 
 export type ZusAggregatedProfileProps = {
   resources: ZAPResourceName[];
@@ -43,6 +45,7 @@ type SubComponentProps = Partial<{
   immunizationsProps: PatientImmunizationsProps;
   medicationsProps: ProviderMedsTableProps;
   medicationsOutsideProps: OtherProviderMedsTableProps;
+  timelineProps: PatientTimelineProps;
 }>;
 
 const zusAggregatedProfile = ({
@@ -54,6 +57,7 @@ const zusAggregatedProfile = ({
   immunizationsProps,
   medicationsProps,
   medicationsOutsideProps,
+  timelineProps,
   resources,
   title = "Outside Records",
   removeBranding = false,
@@ -64,6 +68,7 @@ const zusAggregatedProfile = ({
     conditions: conditionsProps,
     "conditions-outside": conditionsOutsideProps,
     documents: documentsProps,
+    timelines: timelineProps,
     immunizations: immunizationsProps,
     medications: medicationsProps,
     "medications-outside": medicationsOutsideProps,

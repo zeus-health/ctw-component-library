@@ -7,6 +7,7 @@ export * from "@/components/content/medications/patient-medications";
 export * from "@/components/content/patient-history/use-patient-history";
 export * from "@/components/content/patients/patients-table";
 export * from "@/components/content/timeline/patient-timeline";
+export * from "@/components/content/zus-aggregated-profile/zus-aggregated-profile";
 // Core components
 export * from "@/components/core/action-list/action-list";
 export * from "@/components/core/alert";

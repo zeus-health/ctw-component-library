@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { setupMocks } from "./story-helpers/mocks/requests";
+import { setupZusAggregatedProfileMocks } from "./story-helpers/mocks/requests";
 import { allergyIntolerance } from "@/components/content/allergies/story-helpers/mocks/allergy-intolerance";
 import { otherConditions } from "@/components/content/conditions/story-helpers/mocks/other-conditions";
 import { patientConditions } from "@/components/content/conditions/story-helpers/mocks/patient-conditions";
@@ -41,7 +41,7 @@ export default {
 } as Meta<Props>;
 
 export const OutsideRecords: StoryObj<Props> = {
-  ...setupMocks({
+  ...setupZusAggregatedProfileMocks({
     allergyIntolerance,
     otherConditions,
     otherProviderMedications,
@@ -54,7 +54,7 @@ export const OutsideRecords: StoryObj<Props> = {
 };
 
 export const ConditionsAndMedications: StoryObj<Props> = {
-  ...setupMocks({
+  ...setupZusAggregatedProfileMocks({
     allergyIntolerance,
     otherConditions,
     otherProviderMedications,
@@ -72,7 +72,7 @@ export const ConditionsAndMedications: StoryObj<Props> = {
 };
 
 export const ProblemsAndDocuments: StoryObj<Props> = {
-  ...setupMocks({
+  ...setupZusAggregatedProfileMocks({
     allergyIntolerance,
     otherConditions,
     otherProviderMedications,
@@ -85,7 +85,7 @@ export const ProblemsAndDocuments: StoryObj<Props> = {
 };
 
 export const Everything: StoryObj<Props> = {
-  ...setupMocks({
+  ...setupZusAggregatedProfileMocks({
     allergyIntolerance,
     otherConditions,
     otherProviderMedications,
@@ -101,6 +101,7 @@ export const Everything: StoryObj<Props> = {
       "immunizations",
       "medications",
       "medications-outside",
+      "timelines",
     ],
   },
 };
