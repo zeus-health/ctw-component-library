@@ -35,9 +35,7 @@ export function PatientTimeline({ className }: PatientTimelineProps) {
         className="-ctw-mx-px !ctw-rounded-none"
         isLoading={patientEncounterQuery.isLoading}
         records={encounters}
-        columns={patientTimelineColumns(
-          featureFlags?.enablePatientTimelineFhirButton
-        )}
+        columns={patientTimelineColumns(featureFlags?.enableViewFhirButton)}
         handleRowClick={openDetails}
       />
     </div>

@@ -52,9 +52,7 @@ export function PatientCareTeam({
         className="-ctw-mx-px !ctw-rounded-none"
         isLoading={patientCareTeamQuery.isLoading}
         records={patientCareTeamQuery.data ?? []}
-        columns={patientCareTeamColumns(
-          featureFlags?.enablePatientCareTeamFhirButton
-        )}
+        columns={patientCareTeamColumns(featureFlags?.enableViewFhirButton)}
         handleRowClick={openDetails}
       />
     </div>

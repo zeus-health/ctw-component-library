@@ -9,10 +9,7 @@ export type CTWToken = {
 };
 
 export type FeatureFlags = {
-  enablePatientImmuniztionsFhirButton?: boolean;
-  enablePatientTimelineFhirButton?: boolean;
-  enablePatientDocumentButton?: boolean;
-  enablePatientCareTeamFhirButton?: boolean;
+  enableViewFhirButton?: boolean;
 };
 
 export type CTWState = {

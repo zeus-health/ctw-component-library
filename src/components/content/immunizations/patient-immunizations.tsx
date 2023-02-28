@@ -43,9 +43,7 @@ function PatientImmunizationsComponent({
         <Table
           removeLeftAndRightBorders
           RowActions={
-            featureFlags?.enablePatientImmuniztionsFhirButton
-              ? viewRecordFHIR
-              : undefined
+            featureFlags?.enableViewFhirButton ? viewRecordFHIR : undefined
           }
           stacked={breakpoints.sm}
           className="-ctw-mx-px !ctw-rounded-none"

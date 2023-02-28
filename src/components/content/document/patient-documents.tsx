@@ -41,9 +41,7 @@ function PatientDocumentsComponent({ className }: PatientDocumentProps) {
           className="-ctw-mx-px !ctw-rounded-none"
           isLoading={isLoading}
           records={document}
-          columns={patientDocumentColumns(
-            featureFlags?.enablePatientDocumentButton
-          )}
+          columns={patientDocumentColumns(featureFlags?.enableViewFhirButton)}
           handleRowClick={openDetails}
         />
       </div>
