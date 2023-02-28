@@ -9,6 +9,7 @@ import { PatientConditions } from "./components/content/conditions/patient-condi
 import { PatientMedications } from "./components/content/medications/patient-medications";
 import { PatientAllergies } from "@/components/content/allergies/patient-allergies";
 import { PatientImmunizations } from "./components/content/immunizations/patient-immunizations";
+import { PatientCareTeam } from "./components/content/care-team/patient-careteam";
 import { PatientDocuments } from "./components/content/document/patient-documents";
 
 const {
@@ -39,6 +40,7 @@ type DemoComponent = {
   note?: string;
 };
 const demoComponents: DemoComponent[] = [
+  { render: () => <PatientCareTeam />, title: "Patient CareTeam" },
   {
     render: () => <PatientMedications handleAddToRecord={() => null} />,
     title: "Patient Medications Tabbed",

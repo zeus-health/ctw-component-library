@@ -2,6 +2,7 @@
 export * from "@/components/content/allergies/patient-allergies";
 export * from "@/components/content/conditions/patient-conditions";
 export * from "@/components/content/immunizations/patient-immunizations";
+export * from "@/components/content/care-team/patient-careteam";
 export * from "@/components/content/document/patient-documents";
 export * from "@/components/content/medications/patient-medications";
 export * from "@/components/content/patient-history/use-patient-history";
