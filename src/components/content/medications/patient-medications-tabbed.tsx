@@ -1,5 +1,4 @@
 import cx from "classnames";
-import { useRef } from "react";
 import { MedsHistoryTempProps } from "@/components/content/medications-table-base";
 import {
   BadgeOtherProviderMedCount,
@@ -16,7 +15,6 @@ import { SortButton } from "@/components/core/sort-button/sort-button";
 import { TabGroup, TabGroupItem } from "@/components/core/tab-group/tab-group";
 import { MedicationStatementModel } from "@/fhir/models";
 import "./patient-medications.scss";
-import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 
 export type PatientMedicationsTabbedProps = {
@@ -38,7 +36,6 @@ const tabbedContent = (
 ): TabGroupItem<MedicationStatementModel>[] => [
   {
     key: "medication-list",
-    getPanelClassName: (sm: boolean) => (sm ? "ctw-mt-0" : "ctw-mt-2"),
     display: () => "medication list",
     render: () => (
       <ProviderMedsTable
@@ -49,7 +46,6 @@ const tabbedContent = (
   },
   {
     key: "inactive-provider-records",
-    getPanelClassName: (sm: boolean) => (sm ? "ctw-mt-0" : "ctw-mt-2"),
     display: () => "inactive",
     render: () => (
       <ProviderInactiveMedicationsTable
@@ -76,8 +72,6 @@ export function OtherProviderMedsTableTab({
   onOpenHistoryDrawer,
   onAfterOpenHistoryDrawer,
 }: PatientMedicationsTabbedProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const breakpoints = useBreakpoints(containerRef);
   const { otherProviderMedications } = useQueryAllPatientMedications();
   const { filters, updateFilters, applyFilters, availableFilters } =
     useMedicationFilters("other");
@@ -87,15 +81,13 @@ export function OtherProviderMedsTableTab({
   const records = applyFilters(otherProviderMedications ?? []);
   return (
     <>
-      <div className="ctw-flex ctw-flex-wrap ctw-gap-x-2" ref={containerRef}>
-        {breakpoints.sm && (
-          <SortButton
-            className="ctw-my-2"
-            options={sortOptions}
-            updateSorts={updateSorts}
-            currentSorts={currentSorts}
-          />
-        )}
+      <div className="ctw-flex ctw-flex-wrap ctw-gap-x-2">
+        <SortButton
+          className="ctw-my-2"
+          options={sortOptions}
+          updateSorts={updateSorts}
+          currentSorts={currentSorts}
+        />
         <FilterBar
           filters={availableFilters(otherProviderMedications ?? [])}
           handleOnChange={updateFilters}
@@ -104,8 +96,6 @@ export function OtherProviderMedsTableTab({
       </div>
 
       <OtherProviderMedsTable
-        sortColumn={currentSorts.key}
-        sortOrder={currentSorts.sortIndices[0].dir}
         records={applySorts(records)}
         showDismissed={!!filters.other.isArchived}
         handleAddToRecord={handleAddToRecord}

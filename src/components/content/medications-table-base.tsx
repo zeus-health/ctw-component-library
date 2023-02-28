@@ -1,10 +1,9 @@
 import type { MedicationStatementModel } from "@/fhir/models/medication-statement";
-import { ReactNode, useRef, useState } from "react";
+import { ReactNode, useRef } from "react";
 import { Table, TableBaseProps } from "@/components/core/table/table";
 import {
   MinRecordItem,
   TableColumn,
-  TableSort,
 } from "@/components/core/table/table-helpers";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 
@@ -33,7 +32,6 @@ export const MedicationsTableBase = ({
 }: MedicationsTableBaseProps<MedicationStatementModel>) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
-  const [sort, setSort] = useState<TableSort>();
 
   const columnsStacked = [
     {
@@ -111,8 +109,6 @@ export const MedicationsTableBase = ({
     >
       <div className="ctw-overflow-hidden">
         <Table
-          sort={!breakpoints.sm ? sort : undefined}
-          onSort={!breakpoints.sm ? setSort : undefined}
           showTableHead={!breakpoints.sm}
           removeLeftAndRightBorders
           className="-ctw-mx-px !ctw-rounded-none"
