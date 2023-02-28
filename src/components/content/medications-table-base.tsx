@@ -111,8 +111,8 @@ export const MedicationsTableBase = ({
     >
       <div className="ctw-overflow-hidden">
         <Table
-          sort={breakpoints.sm ? undefined : sort}
-          onSort={breakpoints.sm ? undefined : setSort}
+          sort={!breakpoints.sm ? sort : undefined}
+          onSort={!breakpoints.sm ? setSort : undefined}
           showTableHead={!breakpoints.sm}
           removeLeftAndRightBorders
           className="-ctw-mx-px !ctw-rounded-none"

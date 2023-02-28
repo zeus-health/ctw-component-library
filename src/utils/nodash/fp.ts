@@ -23,4 +23,4 @@ export { default as sortBy } from "lodash/fp/sortBy";
 export { default as split } from "lodash/fp/split";
 export { default as toLower } from "lodash/fp/toLower";
 export { default as uniq } from "lodash/fp/uniq";
-export { default as uniqBy } from "lodash/fp/uniqBy";
+export { default as values } from "lodash/fp/values";

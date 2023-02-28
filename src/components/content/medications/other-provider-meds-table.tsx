@@ -103,7 +103,6 @@ export const OtherProviderMedsTable = withErrorBoundary(
     return (
       <div data-zus-telemetry-namespace="OtherProviderMedsTable">
         <MedicationsTableBase
-          removeLeftAndRightBorders
           getRowClassName={(medication) => ({
             "ctw-tr-archived": medication.isArchived,
           })}

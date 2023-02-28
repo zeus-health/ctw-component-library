@@ -5,7 +5,7 @@ import {
 } from "@/components/core/filter-bar/filter-bar-types";
 import { MedicationStatementModel } from "@/fhir/models";
 import { compact, isArray } from "@/utils/nodash";
-import { set, uniq } from "@/utils/nodash/fp";
+import { set, uniq, values } from "@/utils/nodash/fp";
 
 export type FilterCollection = "patient" | "other";
 
@@ -60,7 +60,7 @@ export function useMedicationFilters(collection: FilterCollection) {
   const applyFilters = useCallback(
     (medications: MedicationStatementModel[]) =>
       medications.filter((medication) =>
-        Object.entries(filters[collection]).every(([_, filterItem]) => {
+        values(filters[collection]).every((filterItem) => {
           const filterKey = filterItem?.key as keyof MedicationStatementModel;
           if (filterItem?.type === "checkbox" && isArray(filterItem.selected)) {
             const completeList = uniq(
@@ -72,9 +72,10 @@ export function useMedicationFilters(collection: FilterCollection) {
 
             return (
               filteredList.length < 1 ||
-              filteredList.includes(String(medication[filterKey]))
+              filteredList.includes(`${medication[filterKey]}`)
             );
           }
+
           return true;
         })
       ),
