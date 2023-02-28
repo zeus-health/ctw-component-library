@@ -16,7 +16,7 @@ export function usePatientCareTeam() {
           requestContext,
           {
             patientUPID: patient.UPID,
-            _include: "participant",
+            _include: "CareTeam:participant",
           }
         );
         const includedResources = getIncludedResources(bundle);
