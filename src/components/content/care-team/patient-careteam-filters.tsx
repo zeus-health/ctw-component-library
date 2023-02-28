@@ -1,8 +1,14 @@
 import { CareTeamModel } from "@/fhir/models/careteam";
+import { ResourceMap } from "@/fhir/types";
 import { isEqual, uniqWith } from "@/utils/nodash";
 
-export const applyCareTeamFilters = (data: fhir4.CareTeam[]) => {
-  const careTeamModel = data.map((careteam) => new CareTeamModel(careteam));
+export const applyCareTeamFilters = (
+  data: fhir4.CareTeam[],
+  includedResources: ResourceMap
+) => {
+  const careTeamModel = data.map(
+    (careteam) => new CareTeamModel(careteam, includedResources)
+  );
   // Only want to obtain records that have a period.start but no period.end
   const currentCareTeam = careTeamModel.filter(
     (careTeam) => !careTeam.periodEnd

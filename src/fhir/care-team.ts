@@ -1,3 +1,4 @@
+import { getIncludedResources } from "./bundle";
 import { searchCommonRecords } from "./search-helpers";
 import { applyCareTeamFilters } from "@/components/content/care-team/patient-careteam-filters";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
@@ -15,10 +16,12 @@ export function usePatientCareTeam() {
           requestContext,
           {
             patientUPID: patient.UPID,
+            _include: "participant",
           }
         );
+        const includedResources = getIncludedResources(bundle);
         return orderBy(
-          applyCareTeamFilters(careteam),
+          applyCareTeamFilters(careteam, includedResources),
           [(ct) => ct.resource.period?.start || ""],
           ["desc"]
         );
