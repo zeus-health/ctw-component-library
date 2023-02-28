@@ -1,6 +1,6 @@
 import cx from "classnames";
 import { useRef } from "react";
-import { useCareTeamDetailDrawer } from "./careteam-details-drawer";
+import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { patientCareTeamColumns } from "./patient-careteam-columns";
 import { Heading } from "@/components/core/ctw-box";
 import { Table } from "@/components/core/table/table";
@@ -13,6 +13,13 @@ export type PatientCareTeamProps = {
   includeViewFhirResource?: boolean;
 };
 
+export type CareTeamDetailsDrawerProps = {
+  className?: string;
+  careteam: CareTeamModel;
+  isOpen: boolean;
+  onClose: () => void;
+};
+
 export function PatientCareTeam({
   className,
   includeViewFhirResource,
@@ -20,11 +27,11 @@ export function PatientCareTeam({
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const patientCareTeamQuery = usePatientCareTeam();
-  const openDetails = useCareTeamDetailDrawer();
 
-  function handleRowClick(careTeam: CareTeamModel) {
-    openDetails(careTeam);
-  }
+  const openDetails = useResourceDetailsDrawer({
+    header: (m) => m.periodStart,
+    details: careTeamData,
+  });
 
   return (
     <div
@@ -44,8 +51,16 @@ export function PatientCareTeam({
         isLoading={patientCareTeamQuery.isLoading}
         records={patientCareTeamQuery.data ?? []}
         columns={patientCareTeamColumns(includeViewFhirResource)}
-        handleRowClick={handleRowClick}
+        handleRowClick={openDetails}
       />
     </div>
   );
 }
+
+export const careTeamData = (careTeam: CareTeamModel) => [
+  { label: "Organization", value: careTeam.managingOrganization },
+  { label: "Practitioner", value: careTeam.includedPerformer },
+  { label: "CareTeam Telecom", value: careTeam.careTeamTelecom },
+  { label: "Role", value: careTeam.role },
+  { label: "Status", value: careTeam.status },
+];
