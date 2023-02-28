@@ -12,6 +12,7 @@ export type FeatureFlags = {
   enablePatientImmuniztionsFhirButton?: boolean;
   enablePatientTimelineFhirButton?: boolean;
   enablePatientDocumentButton?: boolean;
+  enablePatientCareTeamFhirButton?: boolean;
 };
 
 export type CTWState = {
