@@ -1,3 +1,5 @@
+const { mergeConfig } = require("vite");
+
 module.exports = {
   stories: ["../src/**/*.stories.@(js|jsx|ts|tsx|mdx)"],
   addons: [
@@ -18,4 +20,18 @@ module.exports = {
     disableTelemetry: true,
   },
   staticDirs: ["../public"],
+  // Build configuration
+  async viteFinal(config, { configType }) {
+    const overrides = {
+      build: {},
+      server: {},
+    };
+    if (configType === "DEVELOPMENT") {
+      overrides.build.sourcemap = true;
+    }
+    if (configType === "PRODUCTION") {
+      overrides.build.sourcemap = false;
+    }
+    return mergeConfig(config, overrides);
+  },
 };

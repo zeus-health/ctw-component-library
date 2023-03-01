@@ -11,6 +11,7 @@ import { PatientAllergies } from "@/components/content/allergies/patient-allergi
 import { PatientImmunizations } from "./components/content/immunizations/patient-immunizations";
 import { PatientCareTeam } from "./components/content/care-team/patient-careteam";
 import { PatientDocuments } from "./components/content/document/patient-documents";
+import { ZusAggregatedProfile } from "@/components/content/zus-aggregated-profile/zus-aggregated-profile";
 
 const {
   VITE_SYSTEM_URL,
@@ -42,8 +43,14 @@ type DemoComponent = {
 const demoComponents: DemoComponent[] = [
   { render: () => <PatientCareTeam />, title: "Patient CareTeam" },
   {
+    render: () => (
+      <ZusAggregatedProfile resources={["medications", "timelines"]} />
+    ),
+    title: "ZAP",
+  },
+  {
     render: () => <PatientMedications handleAddToRecord={() => null} />,
-    title: "Patient Medications Tabbed",
+    title: "Patient Medications",
   },
   { render: () => <PatientConditions />, title: "Patient Conditions 2.0" },
   {

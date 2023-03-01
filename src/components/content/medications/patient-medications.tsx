@@ -16,7 +16,6 @@ import * as CTWBox from "@/components/core/ctw-box";
 import { FilterBar } from "@/components/core/filter-bar/filter-bar";
 import { SortButton } from "@/components/core/sort-button/sort-button";
 import { TabGroup, TabGroupItem } from "@/components/core/tab-group/tab-group";
-import { MedicationStatementModel } from "@/fhir/models";
 import "./patient-medications.scss";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
@@ -37,7 +36,7 @@ type TabbedContentProps = Pick<
 // when md - lg sized.
 const tabbedContent = (
   tabbedContentProps: TabbedContentProps
-): TabGroupItem<MedicationStatementModel>[] => [
+): TabGroupItem[] => [
   {
     key: "medication-list",
     display: () => "medication list",
