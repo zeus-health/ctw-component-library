@@ -28,6 +28,7 @@ export type PatientConditionsProps = {
   readOnly?: boolean;
   hideBuilderOwnedRecords?: boolean;
   hideOutsideOwnedRecords?: boolean;
+  hideRequestRecords?: boolean;
 };
 
 export const PatientConditions = withErrorBoundary(
@@ -36,6 +37,7 @@ export const PatientConditions = withErrorBoundary(
     readOnly = false,
     hideBuilderOwnedRecords = false,
     hideOutsideOwnedRecords = false,
+    hideRequestRecords = false,
   }: PatientConditionsProps) => {
     // State.
     const [collection, setCollection] = useState<FilterCollection>(
@@ -99,6 +101,7 @@ export const PatientConditions = withErrorBoundary(
           )}
           setFilters={updateFilters}
           filters={filters[collection]}
+          hideRequestRecords={hideRequestRecords}
         />
 
         <div className="ctw-overflow-hidden">

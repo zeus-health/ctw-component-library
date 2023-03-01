@@ -54,13 +54,21 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     render: () => <PatientCareTeam {...props} />,
   }),
 
-  conditions: (props: PatientConditionsProps = {}) => ({
+  conditions: (
+    props: PatientConditionsProps = {
+      hideRequestRecords: true,
+    }
+  ) => ({
     key: "condition-provider-records",
     display: () => "conditions list",
     render: () => <PatientConditions hideOutsideOwnedRecords {...props} />,
   }),
 
-  "conditions-outside": (props: PatientConditionsProps = {}) => ({
+  "conditions-outside": (
+    props: PatientConditionsProps = {
+      hideRequestRecords: false,
+    }
+  ) => ({
     key: "condition-outside-records",
     display: () => (
       <>
