@@ -38,11 +38,9 @@ export default {
     handleRowClick: undefined,
     hidePagination: undefined,
     isLoading: undefined,
-    onSort: undefined,
     records: undefined,
     removeLeftAndRightBorders: undefined,
     showTableHead: undefined,
-    sort: undefined,
     stacked: undefined,
   },
 } as Meta<Props>;
@@ -57,7 +55,6 @@ const columns: TableColumn<Record>[] = [
     title: "Name",
     dataIndex: "name",
     className: "ctw-w-[20%]",
-    sortIndices: [{ index: "name" }],
   },
   {
     title: "With Render",

@@ -1,46 +1,53 @@
 import { ChevronDownIcon } from "@heroicons/react/outline";
 import cx from "classnames";
+import { useState } from "react";
 import { DropdownMenuAction } from "@/components/core/dropdown-action-menu";
-import { IndexSort } from "@/components/core/table/table-helpers";
+import { Sort } from "@/utils/sort";
 
-export type SortOption<T> = {
+export type SortOption<T extends object> = {
   display: string;
-  key: keyof T;
-  sortIndices: IndexSort<T>[];
+  sorts: Sort<T>[];
 };
 
-export type SortButtonProps<T> = {
+export type SortButtonProps<T extends object> = {
   className?: cx.Argument;
-  currentSorts: SortOption<T>;
+  defaultSort: SortOption<T>;
+  onChange: (sort: SortOption<T>) => void;
   options: SortOption<T>[];
-  updateSorts: (newSorts: SortOption<T>) => void;
 };
 
-export const SortButton = <T,>({
-  options,
-  updateSorts,
-  currentSorts,
+export const SortButton = <T extends object>({
   className,
-}: SortButtonProps<T>) => (
-  <DropdownMenuAction
-    type="select"
-    buttonClassName={cx(
-      className,
-      "ctw-bg-transparent ctw-border-none ctw-p-0"
-    )}
-    onItemSelect={(event) => {
-      const item = options.filter((option) => option.display === event.key)[0];
-      updateSorts(item);
-    }}
-    items={options.map((option) => ({
-      key: option.display,
-      name: option.display,
-      isSelected: currentSorts.display === option.display,
-    }))}
-  >
-    <div className="ctw-btn-default ctw-flex ctw-items-center ctw-space-x-1">
-      <span>Sort</span>
-      <ChevronDownIcon className="ctw-h-4" />
-    </div>
-  </DropdownMenuAction>
-);
+  defaultSort,
+  onChange,
+  options,
+}: SortButtonProps<T>) => {
+  const [selected, setSelected] = useState<SortOption<T>>(defaultSort);
+
+  return (
+    <DropdownMenuAction
+      type="select"
+      buttonClassName={cx(
+        className,
+        "ctw-bg-transparent ctw-border-none ctw-p-0"
+      )}
+      onItemSelect={(item) => {
+        const selectedOption = options.filter(
+          (option) => option.display === item.key
+        )[0];
+        onChange(selectedOption);
+        setSelected(selectedOption);
+      }}
+      items={options.map((option) => ({
+        key: option.display,
+        name: option.display,
+        isSelected: selected.display === option.display,
+      }))}
+    >
+      <div className="ctw-btn-default ctw-flex ctw-items-center ctw-space-x-1">
+        <span>Sort: {selected.display}</span>
+        <ChevronDownIcon className="ctw-h-4" />
+      </div>
+    </DropdownMenuAction>
+  );
+};
