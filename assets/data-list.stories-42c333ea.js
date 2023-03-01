@@ -13,4 +13,3 @@ import{D as n}from"./data-list-254aa0b0.js";import"./index-6f814c40.js";import".
     }]
   }
 }`,...(l=(t=a.parameters)==null?void 0:t.docs)==null?void 0:l.source}}};const d=["Basic"];export{a as Basic,d as __namedExportsOrder,i as default};
-//# sourceMappingURL=data-list.stories-42c333ea.js.map

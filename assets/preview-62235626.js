@@ -394,4 +394,3 @@ import{s as a}from"./index-d475d2ea.js";import{d as $}from"./index-356e4a49.js";
     ${i} wbr {
       outline: 1px solid #db175b !important;
     }`}var e=(i,t)=>{let{globals:o}=t,n=[!0,"true"].includes(o[m]),d=t.viewMode==="docs",l=x(()=>{let p=d?`#anchor--${t.id} .docs-story`:".sb-show-main";return s(p)},[t]);return r(()=>{let p=d?`addon-outline-docs-${t.id}`:"addon-outline";return n?b(p,l):u(p),()=>{u(p)}},[n,l,t]),i()},g=[e],v={[m]:!1};export{g as decorators,v as globals};
-//# sourceMappingURL=preview-62235626.js.map

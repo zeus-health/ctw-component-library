@@ -5,4 +5,3 @@ import{s}from"./index-d475d2ea.js";var i="storybook/highlight",n="storybookHighl
 `,I=e=>({outline:`2px dashed ${e}`,outlineOffset:2,boxShadow:"0 0 0 6px rgba(255,255,255,0.6)"});module&&module.hot&&module.hot.decline&&module.hot.decline();var h=m.getChannel(),O=e=>{let t=n;d();let r=Array.from(new Set(e.elements)),o=l.createElement("style");o.setAttribute("id",t),o.innerHTML=r.map(a=>`${a}{
           ${H(e.color,e.style)}
          }`).join(" "),l.head.appendChild(o)},d=()=>{let e=n,t=l.getElementById(e);t&&t.parentNode.removeChild(t)};h.on(E,d);h.on(g,d);h.on(_,O);export{I as highlightObject,H as highlightStyle};
-//# sourceMappingURL=preview-a1e285ec.js.map

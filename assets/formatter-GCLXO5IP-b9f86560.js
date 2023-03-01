@@ -154,4 +154,3 @@ ${e}`}l.exports={isPragma:t,hasPragma:a,insertPragma:s}}}),Jo=$({"src/language-y
 `)&&(Br=String(gr).split(`
 `).map(function(Zr,nn){return nn===0?Zr:""+Dr+Zr}).join(`
 `)),Hr+=Br+Yt[Dn+1]}),Hr}var yl=ll(2)((Jr,Xr)=>Jr===!1?Xr:Jr==="dedent"||Jr===!0?ml(Xr):dl.default.format(Xr,{parser:Jr,plugins:[Dl.default],htmlWhitespaceSensitivity:"ignore"}).trim());export{yl as formatter};
-//# sourceMappingURL=formatter-GCLXO5IP-b9f86560.js.map

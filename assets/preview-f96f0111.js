@@ -18,4 +18,3 @@ import{s as _}from"./index-d475d2ea.js";import{d as k}from"./index-356e4a49.js";
          linear-gradient(90deg, rgba(130, 130, 130, ${g/2}) 1px, transparent 1px) !important;
       }
     `},[o]);return T(()=>{let f=e.viewMode==="docs"?`addon-backgrounds-grid-docs-${e.id}`:"addon-backgrounds-grid";if(!i){v(f);return}O(f,$)},[i,$,e]),r()},P=[C,I],Y={[p]:{grid:{cellSize:20,opacity:.5,cellAmount:5},values:[{name:"light",value:"#F8F8F8"},{name:"dark",value:"#333333"}]}},G={[p]:null};export{P as decorators,G as globals,Y as parameters};
-//# sourceMappingURL=preview-f96f0111.js.map
