@@ -2,7 +2,6 @@ import cx from "classnames";
 import { useRef } from "react";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { patientCareTeamColumns } from "./patient-careteam-columns";
-import { Heading } from "@/components/core/ctw-box";
 import { Table } from "@/components/core/table/table";
 import { usePatientCareTeam } from "@/fhir/care-team";
 import { CareTeamModel } from "@/fhir/models/careteam";
@@ -44,8 +43,8 @@ export function PatientCareTeam({
         }
       )}
     >
-      <Heading title="CareTeam" />
       <Table
+        removeLeftAndRightBorders
         stacked={breakpoints.sm}
         className="-ctw-mx-px !ctw-rounded-none"
         isLoading={patientCareTeamQuery.isLoading}

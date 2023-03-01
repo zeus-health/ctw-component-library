@@ -75,7 +75,6 @@ export function useMedicationFilters(collection: FilterCollection) {
               filteredList.includes(`${medication[filterKey]}`)
             );
           }
-
           return true;
         })
       ),
