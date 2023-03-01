@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.48.1
+
+### Patch Changes
+
+- 20b95783: Add ZusAggregatedProfile component.
+
 ## 0.48.0
 
 ### Minor Changes
