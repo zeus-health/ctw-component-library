@@ -44,7 +44,14 @@ const demoComponents: DemoComponent[] = [
   { render: () => <PatientCareTeam />, title: "Patient CareTeam" },
   {
     render: () => (
-      <ZusAggregatedProfile resources={["medications", "timelines"]} />
+      <ZusAggregatedProfile
+        resources={[
+          "medications",
+          "timelines",
+          "allergies",
+          "conditions-outside",
+        ]}
+      />
     ),
     title: "ZAP",
   },

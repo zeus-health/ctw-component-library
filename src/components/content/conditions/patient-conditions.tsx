@@ -28,7 +28,7 @@ export type PatientConditionsProps = {
   readOnly?: boolean;
   hideBuilderOwnedRecords?: boolean;
   hideOutsideOwnedRecords?: boolean;
-  hideRequestRecords: boolean;
+  hideRequestRecords?: boolean;
 };
 
 export const PatientConditions = withErrorBoundary(
