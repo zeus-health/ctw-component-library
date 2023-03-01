@@ -12,6 +12,7 @@ import { PatientImmunizations } from "./components/content/immunizations/patient
 import { PatientCareTeam } from "./components/content/care-team/patient-careteam";
 import { PatientDocuments } from "./components/content/document/patient-documents";
 import { ZusAggregatedProfile } from "@/components/content/zus-aggregated-profile/zus-aggregated-profile";
+import { PatientSearch } from "./components/content/patients/patients-search";
 
 const {
   VITE_SYSTEM_URL,
@@ -59,6 +60,7 @@ const demoComponents: DemoComponent[] = [
   },
   { render: () => <PatientAllergies />, title: "Patient Allergies" },
   { render: () => <PatientImmunizations />, title: "Patient Immunizations" },
+  { render: () => <PatientSearch />, title: "Patient Search" },
 ];
 
 const DemoApp = ({ accessToken = "" }) => (

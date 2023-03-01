@@ -1,9 +1,15 @@
 import { Combobox } from "@headlessui/react";
+import { SearchIcon } from "@heroicons/react/outline";
+import cx from "classnames";
 import { ChangeEvent, useMemo, useState } from "react";
 import { debounce, isEmpty, isObject } from "@/utils/nodash";
 import { isMouseEvent } from "@/utils/types";
 
-export type ComboxboxFieldOption = { value: unknown; label: string };
+export type ComboxboxFieldOption = {
+  value: unknown;
+  label: string;
+  key?: string;
+};
 
 export type ComboboxFieldProps<T> = {
   options: ComboxboxFieldOption[];
@@ -13,6 +19,8 @@ export type ComboboxFieldProps<T> = {
   defaultSearchTerm: string;
   onSearchChange: (searchTerm: string) => void;
   readonly: boolean | undefined;
+  enableSearchIcon?: boolean;
+  onCustomChange?: (e: unknown) => void;
 };
 
 export const ComboboxField = <T,>({
@@ -23,6 +31,8 @@ export const ComboboxField = <T,>({
   defaultValue,
   onSearchChange,
   readonly,
+  enableSearchIcon = false,
+  onCustomChange,
 }: ComboboxFieldProps<T>) => {
   const [searchTerm, setSearchTerm] = useState(defaultSearchTerm || "");
   const [inputValue, setInputValue] = useState<unknown>({});
@@ -58,12 +68,13 @@ export const ComboboxField = <T,>({
     const currentItem = options.filter((item) => item.label === eventValue)[0];
     setInputValue(currentItem.value);
     setSearchTerm(eventValue);
+    onCustomChange?.(currentItem);
   };
 
   return (
     <Combobox onChange={onSelectChange} value={searchTerm} disabled={readonly}>
       {({ open }) => (
-        <div>
+        <div className="ctw-relative ctw-text-left">
           <Combobox.Button
             as="div"
             onClick={(e: unknown) => {
@@ -74,16 +85,25 @@ export const ComboboxField = <T,>({
               }
             }}
           >
-            <Combobox.Input
-              className="ctw-listbox-input ctw-w-full"
-              onChange={(e) => {
-                // Due to debounce, we have to persist the event.
-                // https://reactjs.org/docs/legacy-event-pooling.html
-                e.persist();
-                debouncedSearchInputChange(e);
-              }}
-              placeholder="Type to search"
-            />
+            <div className="ctw-relative">
+              {enableSearchIcon && (
+                <div className="ctw-search-icon-wrapper">
+                  <SearchIcon className="ctw-search-icon" />
+                </div>
+              )}
+              <Combobox.Input
+                className={cx(`ctw-listbox-input ctw-w-full`, {
+                  "ctw-pl-10": enableSearchIcon,
+                })}
+                onChange={(e) => {
+                  // Due to debounce, we have to persist the event.
+                  // https://reactjs.org/docs/legacy-event-pooling.html
+                  e.persist();
+                  debouncedSearchInputChange(e);
+                }}
+                placeholder="Type to search"
+              />
+            </div>
           </Combobox.Button>
 
           <input
@@ -146,7 +166,7 @@ const ComboboxOptions = ({
   return (
     <>
       {options.map((option) => (
-        <ComboboxOption option={option} key={option.label} />
+        <ComboboxOption option={option} key={option.key} />
       ))}
     </>
   );
