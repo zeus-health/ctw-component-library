@@ -11,6 +11,7 @@ import { PatientAllergies } from "@/components/content/allergies/patient-allergi
 import { PatientImmunizations } from "./components/content/immunizations/patient-immunizations";
 import { PatientCareTeam } from "./components/content/care-team/patient-careteam";
 import { PatientDocuments } from "./components/content/document/patient-documents";
+import { PatientsTable } from "./components/content/patients/patients-table";
 
 const {
   VITE_SYSTEM_URL,
@@ -52,6 +53,7 @@ const demoComponents: DemoComponent[] = [
   },
   { render: () => <PatientAllergies />, title: "Patient Allergies" },
   { render: () => <PatientImmunizations />, title: "Patient Immunizations" },
+  { render: () => <PatientsTable />, title: "Patient Table" },
 ];
 
 const DemoApp = ({ accessToken = "" }) => (

@@ -3,7 +3,6 @@ import { getResources } from "./bundle";
 import {
   SYSTEM_SUMMARY,
   SYSTEM_ZUS_LENS,
-  SYSTEM_ZUS_OWNER,
   SYSTEM_ZUS_THIRD_PARTY,
   SYSTEM_ZUS_UNIVERSAL_ID,
   SYSTEM_ZUS_UPI_RECORD_TYPE,
@@ -89,15 +88,12 @@ export async function searchBuilderRecords<T extends ResourceTypeString>(
     ...SUMMARY_TAGS,
     ...UPI_TAGS,
   ];
-  const builderTag = `${SYSTEM_ZUS_OWNER}|builder/${requestContext.builderId}`;
   type FirstPartyParams = {
-    _tag: string[];
+    _tag?: string[];
     firstparty?: boolean;
     "_tag:not"?: string[];
   };
-  const firstPartyParams: FirstPartyParams = {
-    _tag: [builderTag],
-  };
+  const firstPartyParams: FirstPartyParams = {};
 
   if (FIRST_PARTY_TAG_SUPPORTED_RESOURCES.includes(resourceType)) {
     firstPartyParams.firstparty = true;
@@ -118,10 +114,7 @@ export async function searchLensRecords<T extends ResourceTypeString>(
   lensTag: LensTag,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
-  const tagFilter = [
-    `${SYSTEM_ZUS_LENS}|${lensTag}`,
-    `${SYSTEM_ZUS_OWNER}|builder/${requestContext.builderId}`,
-  ];
+  const tagFilter = [`${SYSTEM_ZUS_LENS}|${lensTag}`];
   const params = mergeParams(searchParams, {
     _tag: tagFilter,
   });
@@ -134,10 +127,7 @@ export async function searchSummaryRecords<T extends ResourceTypeString>(
   requestContext: CTWRequestContext,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
-  const tagFilter = [
-    ...SUMMARY_TAGS,
-    `${SYSTEM_ZUS_OWNER}|builder/${requestContext.builderId}`,
-  ];
+  const tagFilter = [...SUMMARY_TAGS];
   const params = mergeParams(searchParams, {
     _tag: tagFilter,
   });
