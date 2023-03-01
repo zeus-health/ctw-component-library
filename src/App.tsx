@@ -52,7 +52,10 @@ const demoComponents: DemoComponent[] = [
     render: () => <PatientMedications handleAddToRecord={() => null} />,
     title: "Patient Medications",
   },
-  { render: () => <PatientConditions />, title: "Patient Conditions 2.0" },
+  {
+    render: () => <PatientConditions hideRequestRecords={false} />,
+    title: "Patient Conditions 2.0",
+  },
   {
     render: () => <PatientDocuments />,
     title: "Patient Documents",
