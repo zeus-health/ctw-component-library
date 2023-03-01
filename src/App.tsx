@@ -45,7 +45,14 @@ const demoComponents: DemoComponent[] = [
   { render: () => <PatientCareTeam />, title: "Patient CareTeam" },
   {
     render: () => (
-      <ZusAggregatedProfile resources={["medications", "timelines"]} />
+      <ZusAggregatedProfile
+        resources={[
+          "medications",
+          "timelines",
+          "allergies",
+          "conditions-outside",
+        ]}
+      />
     ),
     title: "ZAP",
   },
@@ -53,7 +60,10 @@ const demoComponents: DemoComponent[] = [
     render: () => <PatientMedications handleAddToRecord={() => null} />,
     title: "Patient Medications",
   },
-  { render: () => <PatientConditions />, title: "Patient Conditions 2.0" },
+  {
+    render: () => <PatientConditions />,
+    title: "Patient Conditions 2.0",
+  },
   {
     render: () => <PatientDocuments />,
     title: "Patient Documents",
