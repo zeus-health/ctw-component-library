@@ -101,7 +101,7 @@ export const PatientConditions = withErrorBoundary(
           )}
           setFilters={updateFilters}
           filters={filters[collection]}
-          hideRequestRecords={hideRequestRecords}
+          hideRequestRecords={hideRequestRecords || collection === "patient"}
         />
 
         <div className="ctw-overflow-hidden">

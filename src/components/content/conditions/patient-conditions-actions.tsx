@@ -60,7 +60,7 @@ export function PatientConditionsActions({
             message="Last Retrieved"
           />
         )}
-        {hideAdd && !hideRequestRecords && (
+        {!hideRequestRecords && (
           <button
             type="button"
             className="ctw-btn-clear ctw-link"
