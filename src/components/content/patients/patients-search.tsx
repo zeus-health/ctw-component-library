@@ -36,7 +36,7 @@ export const PatientSearch = withErrorBoundary(
       data: { patients: responsePatients, total: responseTotal } = {},
       isFetching,
       isError,
-    } = usePatientSearchList(pageSize, 1, searchNameValue);
+    } = usePatientSearchList(pageSize, 0, searchNameValue);
 
     // Here we are setting the total and patients only when we know that useQuery
     // isn't fetching. This will prevent empty intermediate states where there
