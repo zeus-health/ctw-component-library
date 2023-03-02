@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.48.4
+
+### Patch Changes
+
+- cb98edb6: Export patientSearch component.
+
 ## 0.48.3
 
 ### Patch Changes
