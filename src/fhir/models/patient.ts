@@ -1,4 +1,5 @@
 import { differenceInYears, parseISO } from "date-fns";
+import fhir4 from "fhir/r4";
 import { formatDateISOToLocal, formatPhoneNumber } from "../formatters";
 import { FHIRModel } from "./fhir-model";
 import { OrganizationModel } from "./organization";
