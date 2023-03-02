@@ -1,5 +1,3 @@
-import { createGraphClient } from "./fqs";
-import { getAllergiesQuery } from "./queries/allergies";
 import { searchCommonRecords } from "./search-helpers";
 import { applyAllergyFilters } from "@/components/content/allergies/allergies-filter";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
@@ -12,21 +10,14 @@ export function usePatientAllergies(enableFqs = false) {
     [],
     async (requestContext, patient) => {
       try {
-        let data;
-        if (enableFqs) {
-          const graphClient = createGraphClient(requestContext);
-          data = await graphClient.request(getAllergiesQuery(patient.UPID));
-          data = data.AllergyIntoleranceList;
-        } else {
-          const response = await searchCommonRecords(
-            "AllergyIntolerance",
-            requestContext,
-            {
-              patientUPID: patient.UPID,
-            }
-          );
-          data = response.resources;
-        }
+        const response = await searchCommonRecords(
+          "AllergyIntolerance",
+          requestContext,
+          {
+            patientUPID: patient.UPID,
+          }
+        );
+        const data = response.resources;
 
         return orderBy(
           applyAllergyFilters(data),

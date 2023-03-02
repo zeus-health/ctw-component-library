@@ -2,6 +2,7 @@ import cx from "classnames";
 import { useRef } from "react";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { patientCareTeamColumns } from "./patient-careteam-columns";
+import { useCTW } from "@/components/core/providers/ctw-provider";
 import { Table } from "@/components/core/table/table";
 import { usePatientCareTeam } from "@/fhir/care-team";
 import { CareTeamModel } from "@/fhir/models/careteam";
@@ -25,6 +26,7 @@ export function PatientCareTeam({
 }: PatientCareTeamProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
+  const { featureFlags } = useCTW();
   const patientCareTeamQuery = usePatientCareTeam();
 
   const openDetails = useResourceDetailsDrawer({
@@ -47,7 +49,7 @@ export function PatientCareTeam({
         stacked={breakpoints.sm}
         isLoading={patientCareTeamQuery.isLoading}
         records={patientCareTeamQuery.data ?? []}
-        columns={patientCareTeamColumns(includeViewFhirResource)}
+        columns={patientCareTeamColumns(featureFlags?.enableViewFhirButton)}
         handleRowClick={openDetails}
       />
     </div>
