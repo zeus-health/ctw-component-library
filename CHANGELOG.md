@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 0.48.5
+
+### Patch Changes
+
+- 2ab8798f: Remove Graphql to avoid build errors.
+- 97c1a1db: Add ability to manage feature toggles via ctw provider.
+
 ## 0.48.4
 
 ### Patch Changes
