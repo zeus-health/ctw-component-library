@@ -9,20 +9,27 @@ import { ConditionModel } from "@/fhir/models";
 export type PatientConditionsOutsideProps = {
   className?: string;
   hideRequestRecords?: boolean;
+  readOnly?: boolean;
 };
 
 export const PatientConditionsOutside = ({
   className,
   hideRequestRecords = false,
+  readOnly = false,
 }: PatientConditionsOutsideProps) => {
   const query = usePatientConditionsOutside();
 
+  const action = (
+    <PatientHistoryAction hideRequestRecords={hideRequestRecords || readOnly} />
+  );
+
   return (
     <PatientConditionsBase
-      query={query}
+      action={action}
       className={className}
-      action={<PatientHistoryAction hideRequestRecords={hideRequestRecords} />}
-      rowActions={RowActions}
+      query={query}
+      readOnly={readOnly}
+      rowActions={readOnly ? undefined : RowActions}
     />
   );
 };

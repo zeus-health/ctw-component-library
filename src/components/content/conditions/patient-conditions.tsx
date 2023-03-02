@@ -10,26 +10,33 @@ import { ConditionModel } from "@/fhir/models";
 
 export type PatientConditionsProps = {
   className?: string;
+  readOnly?: boolean;
 };
 
-export const PatientConditions = ({ className }: PatientConditionsProps) => {
+export const PatientConditions = ({
+  className,
+  readOnly = false,
+}: PatientConditionsProps) => {
   const query = usePatientConditions();
   const showAddConditionForm = useAddConditionForm();
 
+  const action = !readOnly && (
+    <button
+      type="button"
+      className="ctw-btn-primary"
+      onClick={() => showAddConditionForm()}
+    >
+      Add Condition
+    </button>
+  );
+
   return (
     <PatientConditionsBase
-      query={query}
+      action={action}
       className={className}
-      action={
-        <button
-          type="button"
-          className="ctw-btn-primary ctw-p-0"
-          onClick={() => showAddConditionForm()}
-        >
-          Add Condition
-        </button>
-      }
-      rowActions={RowActions}
+      query={query}
+      readOnly={readOnly}
+      rowActions={readOnly ? undefined : RowActions}
     />
   );
 };

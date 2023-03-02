@@ -18,6 +18,7 @@ export type PatientConditionsTableProps = {
   action?: ResourceTableActionsProps<ConditionModel>["action"];
   className?: string;
   query: { data?: ConditionModel[]; isLoading: boolean };
+  readOnly?: boolean;
   rowActions?: ResourceTableProps<ConditionModel>["rowActions"];
 };
 
@@ -25,6 +26,7 @@ export const PatientConditionsBase = ({
   action,
   className,
   query,
+  readOnly = false,
   rowActions,
 }: PatientConditionsTableProps) => {
   const showConditionHistory = useConditionHistory();
@@ -59,7 +61,7 @@ export const PatientConditionsBase = ({
         onRowClick={(condition) =>
           showConditionHistory({
             condition,
-            readOnly: false,
+            readOnly,
           })
         }
         rowActions={rowActions}
