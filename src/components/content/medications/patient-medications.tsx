@@ -5,16 +5,19 @@ import {
   OtherProviderMedsTable,
   OtherProviderMedsTableProps,
 } from "@/components/content/medications/other-provider-meds-table";
-import { useMedicationFilters } from "@/components/content/medications/patient-medications-filters";
-import { useMedicationSorts } from "@/components/content/medications/patient-medications-sort";
+import { medicationFilters } from "@/components/content/medications/patient-medications-filters";
+import {
+  defaultMedicationSort,
+  medicationSortOptions,
+} from "@/components/content/medications/patient-medications-sort";
 import { ProviderInactiveMedicationsTable } from "@/components/content/medications/provider-inactive-medications-table";
 import { ProviderMedsTable } from "@/components/content/medications/provider-meds-table";
 import * as CTWBox from "@/components/core/ctw-box";
 import { FilterBar } from "@/components/core/filter-bar/filter-bar";
 import { SortButton } from "@/components/core/sort-button/sort-button";
 import { TabGroup, TabGroupItem } from "@/components/core/tab-group/tab-group";
-import { MedicationStatementModel } from "@/fhir/models";
 import "./patient-medications.scss";
+import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 
 export type PatientMedicationsProps = {
@@ -33,7 +36,7 @@ type TabbedContentProps = Pick<
 // when md - lg sized.
 const tabbedContent = (
   tabbedContentProps: TabbedContentProps
-): TabGroupItem<MedicationStatementModel>[] => [
+): TabGroupItem[] => [
   {
     key: "medication-list",
     display: () => "medication list",
@@ -73,31 +76,31 @@ export function OtherProviderMedsTableTab({
   onAfterOpenHistoryDrawer,
 }: PatientMedicationsProps) {
   const { otherProviderMedications } = useQueryAllPatientMedications();
-  const { filters, updateFilters, applyFilters, availableFilters } =
-    useMedicationFilters("other");
-  const { currentSorts, updateSorts, sortOptions, applySorts } =
-    useMedicationSorts();
+  const { data, filters, setFilters, setSort } = useFilteredSortedData({
+    defaultFilters: {},
+    defaultSort: defaultMedicationSort,
+    records: otherProviderMedications,
+  });
 
-  const records = applyFilters(otherProviderMedications ?? []);
   return (
     <>
       <div className="ctw-flex ctw-flex-wrap ctw-gap-x-2">
         <SortButton
           className="ctw-my-2"
-          options={sortOptions}
-          updateSorts={updateSorts}
-          currentSorts={currentSorts}
+          options={medicationSortOptions}
+          onChange={setSort}
+          defaultSort={defaultMedicationSort}
         />
         <FilterBar
-          filters={availableFilters(otherProviderMedications ?? [])}
-          onChange={updateFilters}
-          defaultState={filters.other}
+          filters={medicationFilters(otherProviderMedications ?? [])}
+          onChange={setFilters}
+          defaultState={{}}
         />
       </div>
 
       <OtherProviderMedsTable
-        records={applySorts(records)}
-        showDismissed={!!filters.other.isArchived}
+        records={data}
+        showDismissed={!!filters.isArchived}
         handleAddToRecord={handleAddToRecord}
         hideAddToRecord={hideAddToRecord}
         onOpenHistoryDrawer={onOpenHistoryDrawer}

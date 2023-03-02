@@ -210,7 +210,7 @@ function mockRequests() {
     mockConditionPost,
     mockConditionPut,
     mockPatientHistoryGet,
-    mockBinaryGet,
+    mockBinaryGet(),
     mockConditionsBasic,
     mockConditionVersionHistoryBundle,
     mockConditionProvenance,

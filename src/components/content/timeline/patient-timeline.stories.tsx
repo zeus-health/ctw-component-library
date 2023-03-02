@@ -1,11 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { mockBinaryGet } from "../story-helpers/mocks/requests";
 import { PatientTimeline, PatientTimelineProps } from "./patient-timeline";
-import {
-  mockEncounterGet,
-  mockPatientGet,
-  mockProvenanceGet,
-} from "./story-helpers/mocks/requests";
+import { setupTimelineMocks } from "./story-helpers/mocks/requests";
 import { CTWProvider } from "@/components/core/providers/ctw-provider";
 import { PatientProvider } from "@/components/core/providers/patient-provider";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
@@ -42,7 +37,5 @@ export default {
 } as Meta<Props>;
 
 export const Basic: StoryObj<Props> = {
-  parameters: {
-    msw: [mockPatientGet, mockEncounterGet, mockProvenanceGet, mockBinaryGet],
-  },
+  ...setupTimelineMocks(),
 };

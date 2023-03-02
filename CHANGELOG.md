@@ -1,5 +1,18 @@
 # ctw-component-library
 
+## 0.48.2
+
+### Patch Changes
+
+- 01c1d0f7: Fix request records logic.
+- a51b4046: Add Request Records to ZAP and conditions components.
+
+## 0.48.1
+
+### Patch Changes
+
+- 20b95783: Add ZusAggregatedProfile component.
+
 ## 0.48.0
 
 ### Minor Changes

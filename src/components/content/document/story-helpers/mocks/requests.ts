@@ -3,7 +3,15 @@ import { documents } from "./document";
 import { patient } from "./patient";
 import { mockBinaryGet } from "@/components/content/story-helpers/mocks/requests";
 
-function mockDocumentRequests() {
+export function setupDocumentMocks() {
+  return {
+    parameters: {
+      msw: mockRequests(),
+    },
+  };
+}
+
+function mockRequests() {
   const mockPatientGet = rest.get(
     "https://api.dev.zusapi.com/fhir/Patient",
     // Add ctx.delay(750), delay to show loading, we set this to 750ms to be
@@ -15,13 +23,6 @@ function mockDocumentRequests() {
     "https://api.dev.zusapi.com/fhir/DocumentReference",
     (req, res, ctx) => res(ctx.status(200), ctx.json(documents))
   );
-  return [mockPatientGet, mockDocumentGet, mockBinaryGet];
-}
 
-export function setupDocumentMocks() {
-  return {
-    parameters: {
-      msw: mockDocumentRequests(),
-    },
-  };
+  return [mockPatientGet, mockDocumentGet, mockBinaryGet()];
 }
