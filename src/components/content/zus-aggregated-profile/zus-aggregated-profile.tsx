@@ -1,3 +1,4 @@
+import { PatientConditionsOutsideProps } from "../conditions/patient-conditions-outside";
 import ZusSVG from "@/assets/zus.svg";
 import { PatientAllergiesProps } from "@/components/content/allergies/patient-allergies";
 import { PatientCareTeamProps } from "@/components/content/care-team/patient-careteam";
@@ -30,20 +31,15 @@ export type ZusAggregatedProfileProps = {
   resources: ZAPResourceName[];
   forceHorizontalTabs?: boolean;
   title?: string;
+  hideTitle?: boolean;
   removeBranding?: boolean;
 } & SubComponentProps;
 
 type SubComponentProps = Partial<{
   allergiesProps: PatientAllergiesProps;
   careTeamProps: PatientCareTeamProps;
-  conditionsProps: Omit<
-    PatientConditionsProps,
-    "hideBuilderOwnedRecords" | "hideOutsideOwnedRecords"
-  >;
-  conditionsOutsideProps: Omit<
-    PatientConditionsProps,
-    "hideBuilderOwnedRecords" | "hideOutsideOwnedRecords"
-  >;
+  conditionsProps: PatientConditionsProps;
+  conditionsOutsideProps: PatientConditionsOutsideProps;
   documentsProps: PatientDocumentProps;
   immunizationsProps: PatientImmunizationsProps;
   medicationsProps: ProviderMedsTableProps;
@@ -64,6 +60,7 @@ const zusAggregatedProfile = ({
   timelineProps,
   resources,
   title = "Outside Records",
+  hideTitle = false,
   removeBranding = false,
 }: ZusAggregatedProfileProps) => {
   // Get the configuration for each tab group by resource type
@@ -86,16 +83,19 @@ const zusAggregatedProfile = ({
 
   return (
     <div className="ctw-zus-aggregated-profile ctw-p-5">
-      <Title className="ctw-border-b-2 ctw-border-r-0 ctw-border-l-0 ctw-border-t-0 ctw-border-solid ctw-border-divider-light">
-        <h3 className="ctw-m-0 ctw-inline-block ctw-p-0 ctw-pb-3 ctw-text-lg ctw-font-medium">
-          {title}{" "}
-          {!removeBranding && (
-            <span className="ctw-text-sm ctw-font-light ctw-italic ctw-text-content-light">
-              Powered by <img src={ZusSVG} alt="Zus" className="-ctw-mb-1.5" />
-            </span>
-          )}
-        </h3>
-      </Title>
+      {!hideTitle && (
+        <Title className="ctw-border-b-2 ctw-border-r-0 ctw-border-l-0 ctw-border-t-0 ctw-border-solid ctw-border-divider-light">
+          <h3 className="ctw-m-0 ctw-inline-block ctw-p-0 ctw-pb-3 ctw-text-lg ctw-font-medium">
+            {title}{" "}
+            {!removeBranding && (
+              <span className="ctw-text-sm ctw-font-light ctw-italic ctw-text-content-light">
+                Powered by{" "}
+                <img src={ZusSVG} alt="Zus" className="-ctw-mb-1.5" />
+              </span>
+            )}
+          </h3>
+        </Title>
+      )}
       <TabGroup
         content={tabbedContent}
         forceHorizontalTabs={forceHorizontalTabs}

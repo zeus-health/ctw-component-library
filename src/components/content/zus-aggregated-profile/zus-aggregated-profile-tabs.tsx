@@ -1,4 +1,9 @@
 import {
+  PatientConditionsOutside,
+  PatientConditionsOutsideProps,
+} from "../conditions/patient-conditions-outside";
+import { PatientConditionsOutsideBadge } from "../conditions/patient-conditions-outside-badge";
+import {
   PatientAllergies,
   PatientAllergiesProps,
 } from "@/components/content/allergies/patient-allergies";
@@ -10,7 +15,6 @@ import {
   PatientConditions,
   PatientConditionsProps,
 } from "@/components/content/conditions/patient-conditions";
-import { BadgeOtherProviderConditionsCount } from "@/components/content/conditions/patient-conditions-tabs";
 import {
   PatientDocumentProps,
   PatientDocuments,
@@ -54,29 +58,21 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     render: () => <PatientCareTeam {...props} />,
   }),
 
-  conditions: (
-    props: PatientConditionsProps = {
-      hideRequestRecords: true,
-    }
-  ) => ({
+  conditions: (props: PatientConditionsProps = {}) => ({
     key: "condition-provider-records",
     display: () => "conditions list",
-    render: () => <PatientConditions hideOutsideOwnedRecords {...props} />,
+    render: () => <PatientConditions {...props} />,
   }),
 
-  "conditions-outside": (
-    props: PatientConditionsProps = {
-      hideRequestRecords: false,
-    }
-  ) => ({
+  "conditions-outside": (props: PatientConditionsOutsideProps = {}) => ({
     key: "condition-outside-records",
     display: () => (
       <>
         <span className="ctw-pr-2 ctw-capitalize">outside conditions</span>
-        <BadgeOtherProviderConditionsCount />
+        <PatientConditionsOutsideBadge />
       </>
     ),
-    render: () => <PatientConditions hideBuilderOwnedRecords {...props} />,
+    render: () => <PatientConditionsOutside {...props} />,
   }),
 
   documents: (props: PatientDocumentProps = {}) => ({

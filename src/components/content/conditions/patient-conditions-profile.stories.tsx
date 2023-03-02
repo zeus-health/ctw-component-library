@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import {
-  PatientConditions,
-  PatientConditionsProps,
-} from "./patient-conditions";
+  PatientConditionsProfile,
+  PatientConditionsProfileProps,
+} from "./patient-conditions-profile";
 import { emptyConditions } from "./story-helpers/mocks/empty-conditions";
 import { otherConditions } from "./story-helpers/mocks/other-conditions";
 import { patientConditions } from "./story-helpers/mocks/patient-conditions";
@@ -11,10 +11,10 @@ import { CTWProvider } from "@/components/core/providers/ctw-provider";
 import { PatientProvider } from "@/components/core/providers/patient-provider";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 
-type Props = PatientConditionsProps;
+type Props = PatientConditionsProfileProps;
 
 export default {
-  component: PatientConditions,
+  component: PatientConditionsProfile,
   tags: ["autodocs"],
   argTypes: {
     className: {

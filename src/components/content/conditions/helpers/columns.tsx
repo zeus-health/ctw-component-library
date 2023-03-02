@@ -16,6 +16,7 @@ function statusToColor(status: string) {
 
 export const patientConditionsColumns: TableColumn<ConditionModel>[] = [
   {
+    title: "Name",
     widthPercent: 30,
     minWidth: 320,
     render: (condition) => (
@@ -28,6 +29,7 @@ export const patientConditionsColumns: TableColumn<ConditionModel>[] = [
     ),
   },
   {
+    title: "Status",
     render: (condition) => (
       <div className="ctw-pc-status-container">
         <div
@@ -60,6 +62,7 @@ export const patientConditionsColumns: TableColumn<ConditionModel>[] = [
     minWidth: 128,
   },
   {
+    title: "Details",
     widthPercent: 40,
     minWidth: 132,
     render: (condition) => {

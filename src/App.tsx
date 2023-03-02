@@ -60,8 +60,8 @@ const demoComponents: DemoComponent[] = [
     title: "Patient Medications",
   },
   {
-    render: () => <PatientConditions hideRequestRecords={false} />,
-    title: "Patient Conditions 2.0",
+    render: () => <PatientConditions />,
+    title: "Patient Conditions",
   },
   {
     render: () => <PatientDocuments />,
