@@ -37,8 +37,6 @@ function PatientAllergiesComponent({
       <div className="ctw-overflow-hidden">
         <Table
           stacked={breakpoints.sm}
-          className="-ctw-mx-px !ctw-rounded-none"
-          removeLeftAndRightBorders
           isLoading={isLoading}
           records={allergies}
           columns={patientAllergiesColumns}

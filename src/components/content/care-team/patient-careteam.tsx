@@ -44,9 +44,7 @@ export function PatientCareTeam({
       )}
     >
       <Table
-        removeLeftAndRightBorders
         stacked={breakpoints.sm}
-        className="-ctw-mx-px !ctw-rounded-none"
         isLoading={patientCareTeamQuery.isLoading}
         records={patientCareTeamQuery.data ?? []}
         columns={patientCareTeamColumns(includeViewFhirResource)}

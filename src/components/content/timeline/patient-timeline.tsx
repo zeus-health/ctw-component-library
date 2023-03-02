@@ -33,8 +33,6 @@ export function PatientTimeline({
   return (
     <div className={cx(className, "ctw-overflow-hidden")}>
       <Table
-        removeLeftAndRightBorders
-        className="-ctw-mx-px !ctw-rounded-none"
         isLoading={patientEncounterQuery.isLoading}
         records={encounters}
         columns={patientTimelineColumns(includeViewFhirResource)}

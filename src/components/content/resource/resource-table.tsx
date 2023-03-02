@@ -1,5 +1,7 @@
+import { useRef } from "react";
 import { Table, TableProps } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
+import { useBreakpoints } from "@/hooks/use-breakpoints";
 
 export type ResourceTableProps<T extends MinRecordItem> = {
   className?: string;
@@ -9,7 +11,6 @@ export type ResourceTableProps<T extends MinRecordItem> = {
   isLoading: boolean;
   onRowClick?: TableProps<T>["handleRowClick"];
   rowActions?: TableProps<T>["RowActions"];
-  stacked?: TableProps<T>["stacked"];
 };
 
 export const ResourceTable = <T extends MinRecordItem>({
@@ -20,19 +21,22 @@ export const ResourceTable = <T extends MinRecordItem>({
   isLoading,
   onRowClick,
   rowActions,
-  stacked,
-}: ResourceTableProps<T>) => (
-  <div className={className}>
-    <Table
-      stacked={stacked}
-      removeLeftAndRightBorders
-      className="-ctw-mx-px !ctw-rounded-none"
-      emptyMessage={emptyMessage}
-      isLoading={isLoading}
-      records={data}
-      RowActions={rowActions}
-      columns={columns}
-      handleRowClick={onRowClick}
-    />
-  </div>
-);
+}: ResourceTableProps<T>) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const breakpoints = useBreakpoints(containerRef);
+
+  return (
+    <div className={className} ref={containerRef}>
+      <Table
+        showTableHead={!breakpoints.sm}
+        stacked={breakpoints.sm}
+        emptyMessage={emptyMessage}
+        isLoading={isLoading}
+        records={data}
+        RowActions={rowActions}
+        columns={columns}
+        handleRowClick={onRowClick}
+      />
+    </div>
+  );
+};
