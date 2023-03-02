@@ -71,6 +71,14 @@ export class PatientModel extends FHIRModel<fhir4.Patient> {
     return this.bestName.use;
   }
 
+  get officialOrUsualIdentifier(): string {
+    return (
+      find(this.resource.identifier, { use: "official" })?.value ||
+      find(this.resource.identifier, { use: "usual" })?.value ||
+      ""
+    );
+  }
+
   get UPID(): string {
     const upid = find(this.resource.identifier, {
       system: SYSTEM_ZUS_UNIVERSAL_ID,

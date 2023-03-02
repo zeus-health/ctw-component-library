@@ -41,14 +41,12 @@ export const PatientSearch = withErrorBoundary(
     onSearchClick,
   }: PatientSearchProps) => {
     const [patients, setPatients] = useState<PatientModel[]>([]);
-    const [searchNameValue, setSearchNameValue] = useState<
-      string | undefined
-    >();
+    const [searchValue, setSearchValue] = useState<string | undefined>();
     const {
       data: { patients: responsePatients, total: responseTotal } = {},
       isFetching,
       isError,
-    } = usePatientSearchList(pageSize, 0, searchNameValue);
+    } = usePatientSearchList(pageSize, 0, searchValue);
 
     // Here we are setting the total and patients only when we know that useQuery
     // isn't fetching. This will prevent empty intermediate states where there
@@ -91,7 +89,7 @@ export const PatientSearch = withErrorBoundary(
             <CustomComboBox option={e as CustomPatientOptionValue} />
           )}
           onSearchChange={(e) => {
-            setSearchNameValue(e);
+            setSearchValue(e);
             setPatients([]);
           }}
           defaultValue={{}}
@@ -119,7 +117,9 @@ const CustomComboBox = ({ option }: { option: CustomPatientOptionValue }) => (
         {option.value.gender && `(${option.value.gender[0].toUpperCase()})`}
       </span>
     </div>
-
+    <div className="ctw-font-medium">
+      {option.value.officialOrUsualIdentifier}
+    </div>
     <div className="ctw-space-x-1">
       <span>{option.value.dob}</span>
       <span>{option.value.age && `(${option.value.age})`}</span>
