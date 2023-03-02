@@ -9,7 +9,6 @@ export const PatientConditionsProfile = ({
   hideRequestRecords,
   readOnly,
 }: PatientConditionsProfileProps) => (
-  // TODO: 2. How can we get filters/sort selections to persist?
   <ZusAggregatedProfile
     hideTitle
     resources={["conditions", "conditions-outside"]}
