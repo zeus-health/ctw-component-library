@@ -21,6 +21,7 @@ export type PatientConditionsActionsProps = {
   filterItems: FilterItem[];
   setFilters: (filterChangeEvent: FilterChangeEvent) => void;
   filters: FilterChangeEvent;
+  hideRequestRecords: boolean;
 };
 
 export function PatientConditionsActions({
@@ -32,12 +33,13 @@ export function PatientConditionsActions({
   filterItems,
   setFilters,
   filters,
+  hideRequestRecords,
 }: PatientConditionsActionsProps) {
   const showAddConditionForm = useAddConditionForm();
   const patientHistory = usePatientHistory();
 
   return (
-    <div className="ctw-flex ctw-flex-wrap ctw-items-center ctw-justify-between ctw-py-2 sm:ctw-pt-1.5">
+    <div className="ctw-flex ctw-flex-wrap ctw-items-center ctw-justify-between ctw-py-2">
       <div className="ctw-flex ctw-flex-wrap ctw-gap-x-2">
         <SortButton
           options={sortOptions}
@@ -47,17 +49,28 @@ export function PatientConditionsActions({
         />
         <FilterBar
           filters={filterItems}
-          handleOnChange={setFilters}
+          onChange={setFilters}
           defaultState={filters}
         />
       </div>
-
-      {patientHistory.lastRetrievedAt && hideAdd && (
-        <PatientHistoryTableHeaderMessage
-          patientHistory={patientHistory}
-          message="Last Retrieved"
-        />
-      )}
+      <div className="ctw-flex ctw-space-x-2 ctw-p-1">
+        {patientHistory.lastRetrievedAt && hideAdd && (
+          <PatientHistoryTableHeaderMessage
+            patientHistory={patientHistory}
+            message="Last Retrieved"
+          />
+        )}
+        {!hideRequestRecords && (
+          <button
+            type="button"
+            className="ctw-btn-clear ctw-link"
+            onClick={patientHistory.openHistoryRequestDrawer}
+            data-zus-telemetry-click="Request records"
+          >
+            Request Records
+          </button>
+        )}
+      </div>
       {!hideAdd && (
         <button
           type="button"

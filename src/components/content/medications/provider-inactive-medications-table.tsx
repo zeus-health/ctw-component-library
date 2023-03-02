@@ -4,9 +4,13 @@ import {
   MedsHistoryTempProps as MedHistoryTempProps,
   MedicationsTableBase,
 } from "@/components/content/medications-table-base";
-import { useMedicationSorts } from "@/components/content/medications/patient-medications-sort";
+import {
+  defaultMedicationSort,
+  medicationSortOptions,
+} from "@/components/content/medications/patient-medications-sort";
 import { SortButton } from "@/components/core/sort-button/sort-button";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
+import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { get, isFunction, pipe, toLower } from "@/utils/nodash/fp";
 import { sort } from "@/utils/sort";
@@ -30,8 +34,11 @@ export function ProviderInactiveMedicationsTable({
   >([]);
   const openMedHistoryDrawer = useMedicationHistory();
   const { builderMedications, isLoading } = useQueryAllPatientMedications();
-  const { currentSorts, updateSorts, sortOptions, applySorts } =
-    useMedicationSorts();
+  const { data, setSort } = useFilteredSortedData({
+    defaultFilters: {},
+    defaultSort: defaultMedicationSort,
+    records: builderMedications,
+  });
 
   function openHistoryDrawer(row: MedicationStatementModel) {
     // Temp - onOpen and onAfterOpen should be side-effect free as
@@ -49,30 +56,29 @@ export function ProviderInactiveMedicationsTable({
   }
 
   useEffect(() => {
-    if (!builderMedications) return;
     setMedicationModels(
       sort(
-        builderMedications.filter((bm) => bm.displayStatus !== "Active"),
+        data.filter((bm) => bm.displayStatus !== "Active"),
         pipe(get("display"), toLower),
         "asc"
       )
     );
-  }, [builderMedications]);
+  }, [data]);
 
   return (
     <>
       <div className="ctw-flex ctw-flex-wrap ctw-gap-x-2">
         <SortButton
           className="ctw-my-2"
-          options={sortOptions}
-          updateSorts={updateSorts}
-          currentSorts={currentSorts}
+          options={medicationSortOptions}
+          onChange={setSort}
+          defaultSort={defaultMedicationSort}
         />
       </div>
 
       <MedicationsTableBase
         className={className}
-        medicationStatements={applySorts(medicationModels)}
+        medicationStatements={medicationModels}
         isLoading={isLoading}
         handleRowClick={openHistoryDrawer}
       />

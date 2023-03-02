@@ -1,5 +1,29 @@
 # ctw-component-library
 
+## 0.48.2
+
+### Patch Changes
+
+- 01c1d0f7: Fix request records logic.
+- a51b4046: Add Request Records to ZAP and conditions components.
+
+## 0.48.1
+
+### Patch Changes
+
+- 20b95783: Add ZusAggregatedProfile component.
+
+## 0.48.0
+
+### Minor Changes
+
+- 3ec7dba7: Create careTeam component.
+- 949cb7c8: Remove old conditions & medications components in favor of new design with tabs for patient records and other provider records.
+
+### Patch Changes
+
+- be808188: Add generic sort button. Add sort button to medications component.
+
 ## 0.47.2
 
 ### Patch Changes

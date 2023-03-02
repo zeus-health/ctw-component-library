@@ -6,12 +6,7 @@ import {
 } from "../pagination/pagination-list";
 import { TableColGroup } from "./table-colgroup";
 import { TableHead } from "./table-head";
-import {
-  MinRecordItem,
-  sortRecords,
-  TableColumn,
-  TableSort,
-} from "./table-helpers";
+import { MinRecordItem, TableColumn } from "./table-helpers";
 import { TableRows, TableRowsProps } from "./table-rows";
 import "./table.scss";
 
@@ -27,8 +22,6 @@ export type TableProps<T extends MinRecordItem> = {
   emptyMessage?: string | ReactElement;
   showTableHead?: boolean;
   stacked?: boolean;
-  sort?: TableSort;
-  onSort?: (sort: TableSort) => void;
   hidePagination?: boolean;
   children?: ReactNode;
 } & Pick<
@@ -50,8 +43,6 @@ export const Table = <T extends MinRecordItem>({
   showTableHead = true,
   removeLeftAndRightBorders = false,
   stacked,
-  sort,
-  onSort,
   handleRowClick,
   RowActions,
   getRowClassName,
@@ -64,8 +55,6 @@ export const Table = <T extends MinRecordItem>({
   const [showRightShadow, setShowRightShadow] = useState(false);
   const [count, setCount] = useState(DEFAULT_PAGE_SIZE);
 
-  const sortedRecords = sortRecords(records, columns, sort);
-
   const updateShadows = () => {
     const container = scrollContainerRef.current;
     const table = tableRef.current;
@@ -74,17 +63,6 @@ export const Table = <T extends MinRecordItem>({
       const rightSide = container.scrollLeft + container.clientWidth;
       setShowRightShadow(rightSide < table.clientWidth);
     }
-  };
-
-  const switchSort = (newSortColumn: string) => {
-    const newState: TableSort = {
-      columnTitle: newSortColumn,
-      dir: "asc",
-    };
-    if (newSortColumn === sort?.columnTitle) {
-      newState.dir = sort.dir === "asc" ? "desc" : "asc";
-    }
-    if (onSort) onSort(newState);
   };
 
   useEffect(() => {
@@ -122,18 +100,11 @@ export const Table = <T extends MinRecordItem>({
         <div className="ctw-scrollbar" ref={scrollContainerRef}>
           <table ref={tableRef}>
             {hasData && <TableColGroup columns={columns} />}
-            {showTableHead &&
-              hasData &&
-              (onSort ? (
-                <TableHead columns={columns} sort={sort} onSort={switchSort} />
-              ) : (
-                <TableHead columns={columns} />
-              ))}
-
+            {showTableHead && hasData && <TableHead columns={columns} />}
             <tbody className={cx({ "ctw-h-[7rem]": records.length === 0 })}>
               <TableRows
                 getRowClassName={getRowClassName}
-                records={sortedRecords.slice(0, count)}
+                records={records.slice(0, count)}
                 handleRowClick={handleRowClick}
                 RowActions={RowActions}
                 columns={columns}

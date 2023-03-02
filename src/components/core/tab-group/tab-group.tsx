@@ -6,15 +6,15 @@ import { ListBox } from "@/components/core/list-box/list-box";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import "./tab-group.scss";
 
-export type TabGroupProps<T> = {
+export type TabGroupProps = {
   children?: ReactNode;
   className?: string;
-  content: TabGroupItem<T>[];
+  content: TabGroupItem[];
   forceHorizontalTabs?: boolean;
   onChange?: (index: number) => void; // optional event
 };
 
-export type TabGroupItem<T> = {
+export type TabGroupItem = {
   display: () => string | ReactNode;
   getPanelClassName?: (sm: boolean) => cx.Argument;
   key: string;
@@ -27,13 +27,13 @@ export type TabGroupItem<T> = {
  * property `forceHorizontalTabs` to true and the tabs will remain visible and
  * horizontal.
  */
-function TabGroupComponent<T>({
+function TabGroupComponent({
   children,
   className,
   forceHorizontalTabs = false,
   content,
   onChange,
-}: TabGroupProps<T>) {
+}: TabGroupProps) {
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);

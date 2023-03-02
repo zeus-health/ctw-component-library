@@ -1,7 +1,7 @@
+import cx from "classnames";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { patientTimelineColumns } from "./patient-timeline-columns";
 import { CodingList } from "@/components/core/coding-list";
-import { Heading } from "@/components/core/ctw-box";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { Table } from "@/components/core/table/table";
 import { usePatientEncounters } from "@/fhir/encounters";
@@ -9,7 +9,8 @@ import { EncounterModel } from "@/fhir/models/encounter";
 import { capitalize, orderBy } from "@/utils/nodash";
 
 export type PatientTimelineProps = {
-  className?: string;
+  className?: cx.Argument;
+  includeViewFhirResource?: boolean;
 };
 
 export function PatientTimeline({ className }: PatientTimelineProps) {
@@ -29,9 +30,9 @@ export function PatientTimeline({ className }: PatientTimelineProps) {
   );
 
   return (
-    <div className={className}>
-      <Heading title="Encounter Timeline" />
+    <div className={cx(className, "ctw-overflow-hidden")}>
       <Table
+        removeLeftAndRightBorders
         className="-ctw-mx-px !ctw-rounded-none"
         isLoading={patientEncounterQuery.isLoading}
         records={encounters}

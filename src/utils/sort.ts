@@ -1,9 +1,43 @@
+import { isEmptyValue } from "./types";
 import { isString, orderBy } from "@/utils/nodash";
 import { get } from "@/utils/nodash/fp";
 
 export type SortDir = "asc" | "desc";
 
+export type Sort<T extends object> = {
+  dir: SortDir;
+  isDate?: boolean;
+  key: keyof T;
+};
+
 type GetValueFunction<T> = (c: T) => unknown;
+
+type Comparator<T> = (a: T) => unknown;
+export function applySorts<T extends object>(records: T[], sorts: Sort<T>[]) {
+  const dateIteratee =
+    (column: keyof T): Comparator<T> =>
+    (record: T) => {
+      const value = record[column];
+      if (!isString(value) || !value) {
+        return 0;
+      }
+      return new Date(value).getTime();
+    };
+
+  // Makes a list of iteratees, where each index iteratee is preceded by an iteratee that ensures blanks go last.
+  const iteratees: (Comparator<T> | keyof T)[] = [];
+  const orders: SortDir[] = [];
+  sorts.forEach((sortEntry) => {
+    const { key, dir, isDate } = sortEntry;
+    iteratees.push(
+      (o) => isEmptyValue(o[key]),
+      isDate ? dateIteratee(key) : key
+    );
+    orders.push("asc", dir);
+  });
+
+  return orderBy(records, iteratees, orders);
+}
 
 export function sort<T>(
   collection: T[],

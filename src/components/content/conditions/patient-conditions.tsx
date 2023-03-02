@@ -1,6 +1,7 @@
 import cx from "classnames";
 import { useRef, useState } from "react";
 import { useConditionHistory } from "../condition-history/conditions-history-drawer";
+import { conditionFilters } from "./filter-options";
 import { PatientConditionsActions } from "./patient-conditions-actions";
 import { patientConditionsColumns } from "./patient-conditions-columns";
 import {
@@ -21,13 +22,13 @@ import {
 } from "@/fhir/conditions";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import "./patient-conditions.scss";
-import { applyFilters } from "@/utils/filters";
 
 export type PatientConditionsProps = {
   className?: string;
   readOnly?: boolean;
   hideBuilderOwnedRecords?: boolean;
   hideOutsideOwnedRecords?: boolean;
+  hideRequestRecords?: boolean;
 };
 
 export const PatientConditions = withErrorBoundary(
@@ -36,12 +37,13 @@ export const PatientConditions = withErrorBoundary(
     readOnly = false,
     hideBuilderOwnedRecords = false,
     hideOutsideOwnedRecords = false,
+    hideRequestRecords = false,
   }: PatientConditionsProps) => {
     // State.
     const [collection, setCollection] = useState<FilterCollection>(
       hideBuilderOwnedRecords ? "other" : "patient"
     );
-    const { filters, updateFilters, availableFilters } =
+    const { filters, updateFilters, applyFilters } =
       useConditionFilters(collection);
     const { applySorts, sortOptions, updateSorts, currentSorts } =
       useConditionSorts(collection);
@@ -65,11 +67,9 @@ export const PatientConditions = withErrorBoundary(
     const patientConditions = patientConditionsQuery.data ?? [];
     const otherConditions = otherConditionsQuery.data;
 
-    let conditions = applyFilters(
-      collection === "patient" ? patientConditions : otherConditions,
-      filters[collection]
+    const conditions = applySorts(
+      applyFilters(patientConditions, otherConditions)
     );
-    conditions = applySorts(conditions);
     const RowActions =
       collection === "patient"
         ? PatientConditionHoverActions
@@ -96,11 +96,12 @@ export const PatientConditions = withErrorBoundary(
           activeCollection={collection}
           hideAdd={readOnly || collection === "other"}
           currentSorts={currentSorts[collection]}
-          filterItems={availableFilters(
+          filterItems={conditionFilters(
             collection === "patient" ? patientConditions : otherConditions
           )}
           setFilters={updateFilters}
           filters={filters[collection]}
+          hideRequestRecords={hideRequestRecords || collection === "patient"}
         />
 
         <div className="ctw-overflow-hidden">

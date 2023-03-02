@@ -43,16 +43,17 @@ const removeInternalKeys = (keys: string[]) =>
  *     },
  *   }}
  *   filters={filters}
- *   handleOnChange={handleOnChange}
+ *   onChange={handleOnChange}
  * />
  * ```
  */
-export const FilterBar = <T extends FilterItem>({
+export const FilterBar = ({
   className,
-  handleOnChange,
+  onChange,
   filters,
   defaultState = {},
-}: FilterBarProps<T>) => {
+}: FilterBarProps) => {
+  const [recentlyAdded, setRecentlyAdded] = useState<string>();
   const [activeFilterKeys, setActiveFilterKeys] = useState<string[]>(
     Object.keys(defaultState)
   );
@@ -80,13 +81,13 @@ export const FilterBar = <T extends FilterItem>({
   const clearAllFilters = () => {
     setActiveFilterKeys([]);
     setActiveFilterValues({});
-    handleOnChange({});
+    onChange({});
   };
 
   const resetAllFilters = () => {
     setActiveFilterValues(initialState);
     setActiveFilterKeys(Object.keys(initialState));
-    handleOnChange(
+    onChange(
       filterChangeEvent(filters, Object.keys(initialState), initialState)
     );
   };
@@ -100,6 +101,9 @@ export const FilterBar = <T extends FilterItem>({
 
   // Add or remove a filter from the activated filters list
   const addOrRemoveFilter = (key: string, remove = false) => {
+    if (!remove) {
+      setRecentlyAdded(key);
+    }
     const updatedKeys = removeInternalKeys(
       remove
         ? activeFilterKeys.filter((k) => k !== key)
@@ -120,7 +124,7 @@ export const FilterBar = <T extends FilterItem>({
       setActiveFilterValues(updatedActiveFilterValues);
     }
     // Finally we fire off a change event
-    handleOnChange(filterChangeEvent(filters, updatedKeys, activeFilterValues));
+    onChange(filterChangeEvent(filters, updatedKeys, activeFilterValues));
   };
 
   // The update function for checkbox and select pills to call on change
@@ -150,7 +154,7 @@ export const FilterBar = <T extends FilterItem>({
       activeValues = omit(key, activeFilterValues);
     }
     setActiveFilterValues(activeValues);
-    handleOnChange(filterChangeEvent(filters, activeFilterKeys, activeValues));
+    onChange(filterChangeEvent(filters, activeFilterKeys, activeValues));
   };
 
   const toFilterMenuItem = (filter: FilterItem) => ({
@@ -208,6 +212,7 @@ export const FilterBar = <T extends FilterItem>({
       <div className="ctw-relative ctw-flex">
         {activeFilters.map((filter) => (
           <FilterBarPill
+            isOpen={recentlyAdded === filter.key}
             key={filter.key}
             filter={filter}
             filterValues={activeFilterValues}
