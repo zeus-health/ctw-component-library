@@ -1,5 +1,24 @@
 # ctw-component-library
 
+## 0.48.5
+
+### Patch Changes
+
+- 2ab8798f: Remove Graphql to avoid build errors.
+- 97c1a1db: Add ability to manage feature toggles via ctw provider.
+
+## 0.48.4
+
+### Patch Changes
+
+- cb98edb6: Export patientSearch component.
+
+## 0.48.3
+
+### Patch Changes
+
+- d9191657: Add patient search component.
+
 ## 0.48.2
 
 ### Patch Changes

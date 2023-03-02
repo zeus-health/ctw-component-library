@@ -3,6 +3,7 @@ import { useRef } from "react";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { patientDocumentColumns } from "./patient-document-columns";
 import { withErrorBoundary } from "@/components/core/error-boundary";
+import { useCTW } from "@/components/core/providers/ctw-provider";
 import { Table } from "@/components/core/table/table";
 import { usePatientDocument } from "@/fhir/document";
 import { DocumentModel } from "@/fhir/models/document";
@@ -10,16 +11,13 @@ import { useBreakpoints } from "@/hooks/use-breakpoints";
 
 export type PatientDocumentProps = {
   className?: string;
-  includeViewFhirResource?: boolean;
 };
 
-function PatientDocumentsComponent({
-  className,
-  includeViewFhirResource,
-}: PatientDocumentProps) {
+function PatientDocumentsComponent({ className }: PatientDocumentProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const patientDocumentQuery = usePatientDocument();
+  const { featureFlags } = useCTW();
   const openDetails = useResourceDetailsDrawer({
     header: (m) => `${m.dateCreated} - ${m.title}`,
     details: documentData,
@@ -43,7 +41,7 @@ function PatientDocumentsComponent({
           className="-ctw-mx-px !ctw-rounded-none"
           isLoading={isLoading}
           records={document}
-          columns={patientDocumentColumns(includeViewFhirResource)}
+          columns={patientDocumentColumns(featureFlags?.enableViewFhirButton)}
           handleRowClick={openDetails}
         />
       </div>

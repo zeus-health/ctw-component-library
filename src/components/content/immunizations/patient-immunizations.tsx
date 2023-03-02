@@ -4,6 +4,7 @@ import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { patientImmunizationsColumns } from "./patient-immunizations-columns";
 import { CodingList } from "@/components/core/coding-list";
 import { withErrorBoundary } from "@/components/core/error-boundary";
+import { useCTW } from "@/components/core/providers/ctw-provider";
 import { Table } from "@/components/core/table/table";
 import { ViewFHIR } from "@/components/core/view-fhir";
 import { usePatientImmunizations } from "@/fhir/immunizations";
@@ -23,6 +24,7 @@ function PatientImmunizationsComponent({
 }: PatientImmunizationsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
+  const { featureFlags } = useCTW();
   const patientImmunizationsQuery = usePatientImmunizations();
   const openDetails = useResourceDetailsDrawer({
     header: (m) => m.description,
@@ -40,7 +42,9 @@ function PatientImmunizationsComponent({
       <div className="ctw-overflow-hidden">
         <Table
           removeLeftAndRightBorders
-          RowActions={viewRecordFHIR}
+          RowActions={
+            featureFlags?.enableViewFhirButton ? viewRecordFHIR : undefined
+          }
           stacked={breakpoints.sm}
           className="-ctw-mx-px !ctw-rounded-none"
           isLoading={patientImmunizationsQuery.isLoading}
