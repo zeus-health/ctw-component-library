@@ -44,6 +44,39 @@ type GetPatientsTableResults = {
   total: number;
 };
 
+export async function getBuilderPatientListWithSearch(
+  requestContext: CTWRequestContext,
+  paginationOptions: (number | string | undefined)[] = []
+): Promise<Omit<GetPatientsTableResults, "total">> {
+  const [pageSize, pageOffset, searchValue] = paginationOptions;
+  const offset =
+    parseInt(`${pageOffset ?? "0"}`, 10) * parseInt(`${pageSize ?? "1"}`, 10);
+
+  const searchParams = pickBy({
+    _count: pageSize,
+
+    _offset: offset,
+    ...(hasNumber(searchValue)
+      ? { identifier: searchValue }
+      : { name: searchValue }),
+  }) as SearchParams;
+
+  try {
+    const { resources } = await searchBuilderRecords(
+      "Patient",
+      requestContext,
+      searchParams
+    );
+
+    return {
+      searchParams,
+      patients: resources.map((patient) => new PatientModel(patient)),
+    };
+  } catch (e) {
+    throw errorResponse("Failed fetching patients", e);
+  }
+}
+
 export async function getBuilderPatientsList(
   requestContext: CTWRequestContext,
   paginationOptions: (number | string | undefined)[] = []

@@ -22,6 +22,7 @@ export type ComboboxFieldProps<T> = {
   enableSearchIcon?: boolean;
   onCustomSelectChange?: (e: unknown) => void;
   renderCustomOption?: (e: unknown) => JSX.Element;
+  placeholder?: string;
 };
 
 export const ComboboxField = <T,>({
@@ -35,6 +36,7 @@ export const ComboboxField = <T,>({
   enableSearchIcon = false,
   onCustomSelectChange,
   renderCustomOption,
+  placeholder = "Type to search",
 }: ComboboxFieldProps<T>) => {
   const [searchTerm, setSearchTerm] = useState(defaultSearchTerm || "");
   const [inputValue, setInputValue] = useState<unknown>({});
@@ -103,7 +105,7 @@ export const ComboboxField = <T,>({
                   e.persist();
                   debouncedSearchInputChange(e);
                 }}
-                placeholder="Type to search"
+                placeholder={placeholder}
               />
             </div>
           </Combobox.Button>
