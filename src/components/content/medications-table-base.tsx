@@ -44,7 +44,6 @@ export const MedicationsTableBase = ({
       ),
       widthPercent: 35,
       minWidth: 270,
-      sortIndices: [{ index: "display" }, { index: "dosage", dir: "asc" }],
     },
   ] as TableColumn<MedicationStatementModel>[];
 

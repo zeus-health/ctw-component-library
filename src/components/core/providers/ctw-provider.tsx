@@ -14,6 +14,7 @@ import {
   CTWState,
   CTWStateContext,
   CTWToken,
+  FeatureFlags,
 } from "./ctw-context";
 import { getFhirClient } from "@/fhir/client";
 import {
@@ -47,6 +48,7 @@ type CTWProviderProps = {
   enableTelemetry?: boolean;
   env: Env;
   headers?: Record<string, string>;
+  featureFlags?: FeatureFlags;
   theme?: Theme;
 } & (AuthTokenSpecified | AuthTokenURLSpecified);
 
@@ -68,6 +70,7 @@ declare global {
 function CTWProvider({
   children,
   enableTelemetry = false,
+  featureFlags,
   theme,
   ...ctwState
 }: CTWProviderProps) {
@@ -128,6 +131,7 @@ function CTWProvider({
   const providerState = useMemo(
     () => ({
       ...ctwState,
+      featureFlags,
       // Set our context theme to our default theme merged
       // with any of the provided theme overwrites.
       // This way consumers of useCTW can get access to
@@ -139,7 +143,7 @@ function CTWProvider({
         handleAuth,
       },
     }),
-    [ctwState, theme, handleAuth, token, ctwProviderRef]
+    [ctwState, theme, handleAuth, token, ctwProviderRef, featureFlags]
   );
 
   return (
@@ -182,6 +186,7 @@ function useCTW() {
     getRequestContext,
     theme: context.theme as Required<Theme>,
     ctwProviderRef: context.ctwProviderRef,
+    featureFlags: context.featureFlags,
   };
 }
 

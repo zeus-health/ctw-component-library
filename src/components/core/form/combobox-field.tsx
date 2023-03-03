@@ -1,9 +1,15 @@
 import { Combobox } from "@headlessui/react";
-import { ChangeEvent, useMemo, useState } from "react";
+import { SearchIcon } from "@heroicons/react/outline";
+import cx from "classnames";
+import { ChangeEvent, Fragment, useMemo, useState } from "react";
 import { debounce, isEmpty, isObject } from "@/utils/nodash";
 import { isMouseEvent } from "@/utils/types";
 
-export type ComboxboxFieldOption = { value: unknown; label: string };
+export type ComboxboxFieldOption = {
+  value: unknown;
+  label: string;
+  key?: string;
+};
 
 export type ComboboxFieldProps<T> = {
   options: ComboxboxFieldOption[];
@@ -13,6 +19,10 @@ export type ComboboxFieldProps<T> = {
   defaultSearchTerm: string;
   onSearchChange: (searchTerm: string) => void;
   readonly: boolean | undefined;
+  enableSearchIcon?: boolean;
+  onCustomSelectChange?: (e: unknown) => void;
+  renderCustomOption?: (e: unknown) => JSX.Element;
+  placeholder?: string;
 };
 
 export const ComboboxField = <T,>({
@@ -23,6 +33,10 @@ export const ComboboxField = <T,>({
   defaultValue,
   onSearchChange,
   readonly,
+  enableSearchIcon = false,
+  onCustomSelectChange,
+  renderCustomOption,
+  placeholder = "Type to search",
 }: ComboboxFieldProps<T>) => {
   const [searchTerm, setSearchTerm] = useState(defaultSearchTerm || "");
   const [inputValue, setInputValue] = useState<unknown>({});
@@ -58,12 +72,13 @@ export const ComboboxField = <T,>({
     const currentItem = options.filter((item) => item.label === eventValue)[0];
     setInputValue(currentItem.value);
     setSearchTerm(eventValue);
+    onCustomSelectChange?.(currentItem);
   };
 
   return (
     <Combobox onChange={onSelectChange} value={searchTerm} disabled={readonly}>
       {({ open }) => (
-        <div>
+        <div className="ctw-relative ctw-text-left">
           <Combobox.Button
             as="div"
             onClick={(e: unknown) => {
@@ -74,16 +89,25 @@ export const ComboboxField = <T,>({
               }
             }}
           >
-            <Combobox.Input
-              className="ctw-listbox-input ctw-w-full"
-              onChange={(e) => {
-                // Due to debounce, we have to persist the event.
-                // https://reactjs.org/docs/legacy-event-pooling.html
-                e.persist();
-                debouncedSearchInputChange(e);
-              }}
-              placeholder="Type to search"
-            />
+            <div className="ctw-relative">
+              {enableSearchIcon && (
+                <div className="ctw-search-icon-wrapper">
+                  <SearchIcon className="ctw-search-icon" />
+                </div>
+              )}
+              <Combobox.Input
+                className={cx(`ctw-listbox-input ctw-w-full`, {
+                  "ctw-pl-10": enableSearchIcon,
+                })}
+                onChange={(e) => {
+                  // Due to debounce, we have to persist the event.
+                  // https://reactjs.org/docs/legacy-event-pooling.html
+                  e.persist();
+                  debouncedSearchInputChange(e);
+                }}
+                placeholder={placeholder}
+              />
+            </div>
           </Combobox.Button>
 
           <input
@@ -97,6 +121,7 @@ export const ComboboxField = <T,>({
               options={options}
               query={searchTerm}
               isLoading={isLoading}
+              renderCustomOption={renderCustomOption}
             />
           </Combobox.Options>
         </div>
@@ -109,12 +134,14 @@ type RenderCorrectOptionsProps = {
   isLoading: boolean;
   options: ComboxboxFieldOption[];
   query: string;
+  renderCustomOption?: (e: unknown) => JSX.Element;
 };
 
 const ComboboxOptions = ({
   options,
   query,
   isLoading,
+  renderCustomOption,
 }: RenderCorrectOptionsProps) => {
   if (query.length === 0) {
     return <ComboboxOption option={{ value: "", label: "Type to search" }} />;
@@ -145,9 +172,13 @@ const ComboboxOptions = ({
 
   return (
     <>
-      {options.map((option) => (
-        <ComboboxOption option={option} key={option.label} />
-      ))}
+      {options.map((option) =>
+        renderCustomOption ? (
+          <Fragment key={option.key}>{renderCustomOption(option)} </Fragment>
+        ) : (
+          <ComboboxOption option={option} key={option.key} />
+        )
+      )}
     </>
   );
 };

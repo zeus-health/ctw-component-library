@@ -1,5 +1,44 @@
 # ctw-component-library
 
+## 0.48.7
+
+### Patch Changes
+
+- 105211fc: Remove total from patient search. Fix minor style errors in patient search.
+- e3c22aed: Remove builder tag from `_tag` filters.
+
+## 0.48.6
+
+### Patch Changes
+
+- e842bfcf: Add more info the options in patient search. Expose prop needed to make patient search work.
+
+## 0.48.5
+
+### Patch Changes
+
+- 2ab8798f: Remove Graphql to avoid build errors.
+- 97c1a1db: Add ability to manage feature toggles via ctw provider.
+
+## 0.48.4
+
+### Patch Changes
+
+- cb98edb6: Export patientSearch component.
+
+## 0.48.3
+
+### Patch Changes
+
+- d9191657: Add patient search component.
+
+## 0.48.2
+
+### Patch Changes
+
+- 01c1d0f7: Fix request records logic.
+- a51b4046: Add Request Records to ZAP and conditions components.
+
 ## 0.48.1
 
 ### Patch Changes

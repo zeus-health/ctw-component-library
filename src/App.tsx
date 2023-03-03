@@ -12,6 +12,7 @@ import { PatientImmunizations } from "./components/content/immunizations/patient
 import { PatientCareTeam } from "./components/content/care-team/patient-careteam";
 import { PatientDocuments } from "./components/content/document/patient-documents";
 import { ZusAggregatedProfile } from "@/components/content/zus-aggregated-profile/zus-aggregated-profile";
+import { PatientSearch } from "./components/content/patients/patients-search";
 
 const {
   VITE_SYSTEM_URL,
@@ -44,7 +45,14 @@ const demoComponents: DemoComponent[] = [
   { render: () => <PatientCareTeam />, title: "Patient CareTeam" },
   {
     render: () => (
-      <ZusAggregatedProfile resources={["medications", "timelines"]} />
+      <ZusAggregatedProfile
+        resources={[
+          "medications",
+          "timelines",
+          "allergies",
+          "conditions-outside",
+        ]}
+      />
     ),
     title: "ZAP",
   },
@@ -52,13 +60,17 @@ const demoComponents: DemoComponent[] = [
     render: () => <PatientMedications handleAddToRecord={() => null} />,
     title: "Patient Medications",
   },
-  { render: () => <PatientConditions />, title: "Patient Conditions 2.0" },
+  {
+    render: () => <PatientConditions />,
+    title: "Patient Conditions 2.0",
+  },
   {
     render: () => <PatientDocuments />,
     title: "Patient Documents",
   },
   { render: () => <PatientAllergies />, title: "Patient Allergies" },
   { render: () => <PatientImmunizations />, title: "Patient Immunizations" },
+  { render: () => <PatientSearch />, title: "Patient Search" },
 ];
 
 const DemoApp = ({ accessToken = "" }) => (

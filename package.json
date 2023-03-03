@@ -1,6 +1,6 @@
 {
   "name": "@zus-health/ctw-component-library",
-  "version": "0.48.1",
+  "version": "0.48.7",
   "type": "module",
   "engines": {
     "node": ">=16 <19"
@@ -118,8 +118,6 @@
     "date-fns": "^2.29.1",
     "dompurify": "^2.4.1",
     "fhir-kit-client": "^1.9.1",
-    "graphql": "^16.6.0",
-    "graphql-request": "^5.1.0",
     "jwt-decode": "^3.1.2",
     "lodash": "^4.17.21",
     "react-jason": "^1.1.2",

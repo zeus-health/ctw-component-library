@@ -5,6 +5,7 @@ import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { PatientModel } from "@/fhir/models/patient";
 import { errorResponse } from "@/utils/errors";
 import { pickBy } from "@/utils/nodash";
+import { hasNumber } from "@/utils/types";
 
 export async function getBuilderFhirPatient(
   requestContext: CTWRequestContext,
@@ -43,11 +44,44 @@ type GetPatientsTableResults = {
   total: number;
 };
 
+export async function getBuilderPatientListWithSearch(
+  requestContext: CTWRequestContext,
+  paginationOptions: (number | string | undefined)[] = []
+): Promise<Omit<GetPatientsTableResults, "total">> {
+  const [pageSize, pageOffset, searchValue] = paginationOptions;
+  const offset =
+    parseInt(`${pageOffset ?? "0"}`, 10) * parseInt(`${pageSize ?? "1"}`, 10);
+
+  const searchParams = pickBy({
+    _count: pageSize,
+
+    _offset: offset,
+    ...(hasNumber(searchValue)
+      ? { identifier: searchValue }
+      : { name: searchValue }),
+  }) as SearchParams;
+
+  try {
+    const { resources } = await searchBuilderRecords(
+      "Patient",
+      requestContext,
+      searchParams
+    );
+
+    return {
+      searchParams,
+      patients: resources.map((patient) => new PatientModel(patient)),
+    };
+  } catch (e) {
+    throw errorResponse("Failed fetching patients", e);
+  }
+}
+
 export async function getBuilderPatientsList(
   requestContext: CTWRequestContext,
   paginationOptions: (number | string | undefined)[] = []
 ): Promise<GetPatientsTableResults> {
-  const [pageSize, pageOffset, searchNameValue] = paginationOptions;
+  const [pageSize, pageOffset, searchValue] = paginationOptions;
   const offset =
     parseInt(`${pageOffset ?? "0"}`, 10) * parseInt(`${pageSize ?? "1"}`, 10);
 
@@ -55,7 +89,9 @@ export async function getBuilderPatientsList(
     _count: pageSize,
     _total: "accurate",
     _offset: offset,
-    name: searchNameValue,
+    ...(hasNumber(searchValue)
+      ? { identifier: searchValue }
+      : { name: searchValue }),
   }) as SearchParams;
 
   try {
