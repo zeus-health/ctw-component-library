@@ -2,6 +2,7 @@ import { datadogLogs } from "@datadog/browser-logs";
 import { datadogRum } from "@datadog/browser-rum-slim";
 import jwtDecode from "jwt-decode";
 import packageJson from "../../package.json";
+import { getMetricsBaseUrl } from "@/api/urls";
 import { FhirError, fhirErrorResponse } from "@/fhir/errors";
 import {
   AUTH_BUILDER_ID,
@@ -14,6 +15,7 @@ import {
   AUTH_USER_TYPE,
   ZusJWT,
 } from "@/utils/auth";
+import { compact, snakeCase, trim } from "@/utils/nodash";
 
 type TelemetryEventKey = "zusTelemetryClick" | "zusTelemetryFocus";
 
@@ -54,9 +56,9 @@ let isInitialized = false;
  * https://docs.datadoghq.com/real_user_monitoring/browser/#configuration
  */
 export class Telemetry {
-  static logger = datadogLogs.logger;
-
   private static namespaceMap = new WeakMap();
+
+  private static accessToken = "";
 
   private static eventTypes: Record<TelemetryEventKey, string> = {
     zusTelemetryClick: "click",
@@ -67,33 +69,61 @@ export class Telemetry {
     return isInitialized;
   }
 
-  static init(environment: string) {
+  private static rumLoggingIsEnabled = false;
+
+  static logger = datadogLogs.logger;
+
+  static environment = "";
+
+  /**
+   * We need to normalize environment name in order to effectively use template
+   * variables on dashboards in Datadog. Otherwise, users of the dashboard would
+   * need to know to select all variations of an environment.
+   */
+  static setEnv(environment: string) {
+    if (["dev", "development"].includes(environment.toLowerCase())) {
+      this.environment = "dev";
+    }
+    if (["prod", "production"].includes(environment.toLowerCase())) {
+      this.environment = "prod";
+    }
+    this.environment = environment;
+  }
+
+  static init(environment: string, allowDataDogRumAndLogging = false) {
+    this.rumLoggingIsEnabled = allowDataDogRumAndLogging;
+    this.setEnv(environment);
+
     if (this.telemetryIsAvailable) {
       return;
     }
 
-    datadogRum.init({
-      ...(isLocalDevelopment ? devDatadogConfig : prodDatadogConfig),
-      allowedTracingUrls: [], // No allowed tracing urls
-      defaultPrivacyLevel: "mask",
-      env: this.normalizeEnv(environment),
-      sessionReplaySampleRate: 20,
-      sessionSampleRate: 100,
-      site: "datadoghq.com",
-      trackLongTasks: true,
-      trackResources: false,
-      trackUserInteractions: false,
-      trackViewsManually: true, // url path names are useless to cwl-cl
-      version: packageJson.version,
-    });
-    datadogLogs.init({
-      ...(isLocalDevelopment ? devDatadogConfig : prodDatadogConfig),
-      env: this.normalizeEnv(environment),
-      forwardConsoleLogs: [], // No console logs to datadog.
-      forwardErrorsToLogs: false,
-      site: "datadoghq.com",
-      version: packageJson.version,
-    });
+    // Turning on RUM and Logging is conditional. However, the event handlers
+    // that explicitly send internal /report/metrics to ctw are not optional.
+    if (allowDataDogRumAndLogging) {
+      datadogRum.init({
+        ...(isLocalDevelopment ? devDatadogConfig : prodDatadogConfig),
+        allowedTracingUrls: [], // No allowed tracing urls
+        defaultPrivacyLevel: "mask",
+        env: this.environment,
+        sessionReplaySampleRate: 20,
+        sessionSampleRate: 100,
+        site: "datadoghq.com",
+        trackLongTasks: true,
+        trackResources: false,
+        trackUserInteractions: false,
+        trackViewsManually: true, // url path names are useless to cwl-cl
+        version: packageJson.version,
+      });
+      datadogLogs.init({
+        ...(isLocalDevelopment ? devDatadogConfig : prodDatadogConfig),
+        env: this.environment,
+        forwardConsoleLogs: [], // No console logs to datadog.
+        forwardErrorsToLogs: false,
+        site: "datadoghq.com",
+        version: packageJson.version,
+      });
+    }
 
     // We are listening to click events propagating to the document body as that
     // is the lowest level HTMLElement we actually know will both exist at this
@@ -128,12 +158,15 @@ export class Telemetry {
   }
 
   static setBuilder(builderId?: string) {
-    datadogLogs.setGlobalContextProperty("builderId", builderId);
-    datadogRum.setGlobalContextProperty("builderId", builderId);
+    if (this.rumLoggingIsEnabled) {
+      datadogLogs.setGlobalContextProperty("builderId", builderId);
+      datadogRum.setGlobalContextProperty("builderId", builderId);
+    }
   }
 
   static setUser(accessToken?: string) {
     if (accessToken) {
+      this.accessToken = accessToken;
       const user = jwtDecode(accessToken) as ZusJWT;
       const decodedUser = {
         id: user[AUTH_USER_ID],
@@ -145,8 +178,10 @@ export class Telemetry {
         patientId: user[AUTH_PATIENT_ID],
         isSuperOrg: user[AUTH_IS_SUPER_ORG],
       };
-      datadogLogs.setUser(decodedUser);
-      datadogRum.setUser(decodedUser);
+      if (this.rumLoggingIsEnabled) {
+        datadogLogs.setUser(decodedUser);
+        datadogRum.setUser(decodedUser);
+      }
     }
   }
 
@@ -177,13 +212,17 @@ export class Telemetry {
     namespace: string,
     action: string
   ) {
-    if (this.telemetryIsAvailable) {
+    // We log this event with namespace breadcrumbs if allowed
+    if (this.telemetryIsAvailable && this.rumLoggingIsEnabled) {
       this.logger.log(`${eventType} event: ${namespace} > ${action}`, {
         eventType,
         action,
         namespace,
       });
     }
+    // We send a generic action metric to CTW regardless
+    const leafNamespace = namespace.split(">").map(trim).pop();
+    this.countMetric(`interaction.${action}`, 1, compact([leafNamespace]));
   }
 
   /**
@@ -268,17 +307,113 @@ export class Telemetry {
   }
 
   /**
-   * We need to normalize environment name in order to effectively use template
-   * variables on dashboards in Datadog. Otherwise, users of the dashboard would
-   * need to know to select all variations of an environment.
+   * Metrics names are alphanumeric, lowercase, seperated by only "." or "_"
    */
-  private static normalizeEnv(environment: string) {
-    if (["dev", "development"].includes(environment.toLowerCase())) {
-      return "dev";
+  private static normalizeMetricName(metric: string) {
+    return metric
+      .split(".")
+      .map(snakeCase)
+      .join(".")
+      .replace(/[^a-z0-9_.]/gi, "");
+  }
+
+  /**
+   * Report a metric to CTW
+   */
+  static async reportMetric(
+    type: string,
+    metric: string,
+    value: number,
+    additionalTags: string[] = []
+  ) {
+    let user;
+    const name = this.normalizeMetricName(metric);
+    try {
+      user = jwtDecode(this.accessToken) as ZusJWT;
+    } catch {
+      user = {};
     }
-    if (["prod", "production"].includes(environment.toLowerCase())) {
-      return "prod";
+
+    const tags = compact([
+      "service:ctw-component-library",
+      `env:${this.environment}`,
+      user[AUTH_BUILDER_NAME]
+        ? `builder_name:${user[AUTH_BUILDER_NAME]}`
+        : undefined,
+      `practitioner_id:${user[AUTH_PRACTITIONER_ID] || "none"}`,
+      `is_super:${user[AUTH_IS_SUPER_ORG] || "false"}`,
+      ...additionalTags,
+    ]);
+
+    await fetch(`${getMetricsBaseUrl(this.environment)}/report/metric`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${this.accessToken}`,
+      },
+      body: JSON.stringify({ name, type, tags, value }),
+      mode: "cors",
+    });
+  }
+
+  static countMetric(name: string, value = 1, tags: string[] = []) {
+    if (value > 0) {
+      Telemetry.reportMetric("increment", name, value, tags).catch((error) =>
+        Telemetry.logError(error as Error)
+      );
+    } else {
+      Telemetry.reportMetric("decrement", name, -value, tags).catch((error) =>
+        Telemetry.logError(error as Error)
+      );
     }
-    return environment;
+  }
+
+  static timeMetric(metric: string, tags: string[] = []) {
+    const start = new Date().getTime();
+
+    // Callback should not return a promise or throw errors to the consumer
+    return function endTiming() {
+      const end = new Date().getTime();
+      Telemetry.reportMetric("timing", metric, end - start, tags).catch(
+        (error) => Telemetry.logError(error as Error)
+      );
+    };
+  }
+
+  static reportActionSuccess(metric: string, tags: string[] = []) {
+    Telemetry.countMetric(`action.${metric}.success`, 1, tags);
+  }
+
+  static reportActionFailure(metric: string, tags: string[] = []) {
+    Telemetry.countMetric(`action.${metric}.failure`, 1, tags);
   }
 }
+
+/**
+ * Wrapper to time a function
+ *
+ * @example
+ * ```
+ * withTimerMetric(async (requestContext, patient) => {
+ *   const data = await getData(requestContext, patient);
+ *   return applyTransform(data);
+ * }, "req.data_transform")
+ * ```
+ */
+export const withTimerMetric =
+  <Args extends unknown[], Return>(
+    fn: (...args: Args) => Promise<Return>,
+    name: string,
+    tags: string[] = []
+  ) =>
+  async (...args: Args) => {
+    let sendMetric;
+    try {
+      sendMetric = Telemetry.timeMetric(name, tags);
+      return await fn(...args);
+    } catch (error) {
+      sendMetric = undefined;
+      throw error;
+    } finally {
+      sendMetric?.();
+    }
+  };
