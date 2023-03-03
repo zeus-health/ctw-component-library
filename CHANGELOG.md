@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 0.48.7
+
+### Patch Changes
+
+- 105211fc: Remove total from patient search. Fix minor style errors in patient search.
+- e3c22aed: Remove builder tag from `_tag` filters.
+
 ## 0.48.6
 
 ### Patch Changes
