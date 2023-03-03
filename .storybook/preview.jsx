@@ -11,6 +11,7 @@ import {
 } from "@storybook/addon-docs";
 import { initialize, getWorker, mswDecorator } from "msw-storybook-addon";
 import "./preview.scss";
+import { rest } from "msw";
 
 // Disable caching in react query. This way mock data responses
 // won't persist across stories and multiple requests.
@@ -65,6 +66,15 @@ export const parameters = {
     matchers: {
       color: /(background|color)$/i,
       date: /Date$/,
+    },
+  },
+  msw: {
+    handlers: {
+      metrics: [
+        rest.post("*/report/metric", (_, res, ctx) =>
+          res(ctx.status(200), ctx.json({}))
+        ),
+      ],
     },
   },
 };

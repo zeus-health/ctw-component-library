@@ -6,7 +6,7 @@ import { provenances } from "./provenances";
 export function setupTimelineMocks() {
   return {
     parameters: {
-      msw: mockRequests(),
+      msw: { handlers: { mocks: mockRequests() } },
     },
   };
 }

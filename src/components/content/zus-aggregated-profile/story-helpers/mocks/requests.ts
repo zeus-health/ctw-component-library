@@ -34,15 +34,19 @@ export function setupZusAggregatedProfileMocks({
       ...medicationMocks.decorators,
     ],
     parameters: {
-      msw: [
-        ...allergyMocks.parameters.msw,
-        ...careTeamMocks.parameters.msw,
-        ...conditionMocks.parameters.msw,
-        ...documentMocks.parameters.msw,
-        ...immunizationMocks.parameters.msw,
-        ...medicationMocks.parameters.msw,
-        ...timelineMocks.parameters.msw,
-      ],
+      msw: {
+        handlers: {
+          mocks: [
+            ...allergyMocks.parameters.msw.handlers.mocks,
+            ...careTeamMocks.parameters.msw.handlers.mocks,
+            ...conditionMocks.parameters.msw.handlers.mocks,
+            ...documentMocks.parameters.msw.handlers.mocks,
+            ...immunizationMocks.parameters.msw.handlers.mocks,
+            ...medicationMocks.parameters.msw.handlers.mocks,
+            ...timelineMocks.parameters.msw.handlers.mocks,
+          ],
+        },
+      },
     },
   };
 }

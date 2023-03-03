@@ -26,7 +26,7 @@ export function setupMedicationMocks({
       },
     ],
     parameters: {
-      msw: mockRequests(),
+      msw: { handlers: { mocks: mockRequests() } },
     },
   };
 }

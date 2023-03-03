@@ -5,7 +5,7 @@ import { patient } from "./patient";
 export function setupImmunizationMocks() {
   return {
     parameters: {
-      msw: mockRequests(),
+      msw: { handlers: { mocks: mockRequests() } },
     },
   };
 }
