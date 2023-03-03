@@ -5,6 +5,7 @@ import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { PatientModel } from "@/fhir/models/patient";
 import { errorResponse } from "@/utils/errors";
 import { pickBy } from "@/utils/nodash";
+import { hasNumber } from "@/utils/types";
 
 export async function getBuilderFhirPatient(
   requestContext: CTWRequestContext,
@@ -47,7 +48,7 @@ export async function getBuilderPatientsList(
   requestContext: CTWRequestContext,
   paginationOptions: (number | string | undefined)[] = []
 ): Promise<GetPatientsTableResults> {
-  const [pageSize, pageOffset, searchNameValue] = paginationOptions;
+  const [pageSize, pageOffset, searchValue] = paginationOptions;
   const offset =
     parseInt(`${pageOffset ?? "0"}`, 10) * parseInt(`${pageSize ?? "1"}`, 10);
 
@@ -55,7 +56,9 @@ export async function getBuilderPatientsList(
     _count: pageSize,
     _total: "accurate",
     _offset: offset,
-    name: searchNameValue,
+    ...(hasNumber(searchValue)
+      ? { identifier: searchValue }
+      : { name: searchValue }),
   }) as SearchParams;
 
   try {

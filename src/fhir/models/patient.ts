@@ -1,4 +1,5 @@
 import { differenceInYears, parseISO } from "date-fns";
+import fhir4 from "fhir/r4";
 import { formatDateISOToLocal, formatPhoneNumber } from "../formatters";
 import { FHIRModel } from "./fhir-model";
 import { OrganizationModel } from "./organization";
@@ -68,6 +69,14 @@ export class PatientModel extends FHIRModel<fhir4.Patient> {
 
   get use(): fhir4.HumanName["use"] | undefined {
     return this.bestName.use;
+  }
+
+  get officialOrUsualIdentifier(): string {
+    return (
+      find(this.resource.identifier, { use: "official" })?.value ||
+      find(this.resource.identifier, { use: "usual" })?.value ||
+      ""
+    );
   }
 
   get UPID(): string {
