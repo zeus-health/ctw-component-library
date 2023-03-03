@@ -51,10 +51,7 @@ const RowActions = ({ record }: RowActionsProps<ConditionModel>) => {
         <button
           type="button"
           className="ctw-btn-default"
-          onClick={(event) => {
-            event.stopPropagation();
-            confirmDelete(record);
-          }}
+          onClick={() => confirmDelete(record)}
         >
           Remove
         </button>
@@ -63,10 +60,7 @@ const RowActions = ({ record }: RowActionsProps<ConditionModel>) => {
       <button
         type="button"
         className="ctw-btn-primary"
-        onClick={(event) => {
-          event.stopPropagation();
-          showEditConditionForm(record);
-        }}
+        onClick={() => showEditConditionForm(record)}
       >
         Edit
       </button>

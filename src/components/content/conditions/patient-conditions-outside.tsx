@@ -43,8 +43,7 @@ const RowActions = ({ record }: RowActionsProps<ConditionModel>) => {
       <button
         type="button"
         className="ctw-btn-default"
-        onClick={async (event) => {
-          event.stopPropagation();
+        onClick={async () => {
           await toggleArchive(record, await getRequestContext());
         }}
       >
@@ -54,10 +53,7 @@ const RowActions = ({ record }: RowActionsProps<ConditionModel>) => {
       <button
         type="button"
         className="ctw-btn-primary"
-        onClick={(event) => {
-          event.stopPropagation();
-          showAddConditionForm(record);
-        }}
+        onClick={() => showAddConditionForm(record)}
       >
         Add
       </button>
