@@ -8,7 +8,7 @@ import {
 } from "@/components/core/form/combobox-field";
 import { useQueryWithCTW } from "@/components/core/providers/ctw-provider";
 import { PatientModel } from "@/fhir/models";
-import { getBuilderPatientsList } from "@/fhir/patient-helper";
+import { getBuilderPatientListWithSearch } from "@/fhir/patient-helper";
 import { QUERY_KEY_PATIENTS_LIST } from "@/utils/query-keys";
 
 export function usePatientSearchList(
@@ -19,7 +19,7 @@ export function usePatientSearchList(
   return useQueryWithCTW(
     QUERY_KEY_PATIENTS_LIST,
     [pageSize, pageOffset, searchNameValue],
-    getBuilderPatientsList,
+    getBuilderPatientListWithSearch,
     !!searchNameValue
   );
 }
@@ -43,7 +43,7 @@ export const PatientSearch = withErrorBoundary(
     const [patients, setPatients] = useState<PatientModel[]>([]);
     const [searchValue, setSearchValue] = useState<string | undefined>();
     const {
-      data: { patients: responsePatients, total: responseTotal } = {},
+      data: { patients: responsePatients } = {},
       isFetching,
       isError,
     } = usePatientSearchList(pageSize, 0, searchValue);
@@ -55,7 +55,7 @@ export const PatientSearch = withErrorBoundary(
       if (!isFetching && responsePatients) {
         setPatients(responsePatients);
       }
-    }, [responsePatients, responseTotal, isError, isFetching]);
+    }, [responsePatients, isError, isFetching]);
 
     // This resets our state when there is an error fetching patients from ODS.
     useEffect(() => {
@@ -64,22 +64,24 @@ export const PatientSearch = withErrorBoundary(
       }
     }, [isError, isFetching]);
 
+    const options = patients.map((patient) => ({
+      value: patient,
+      label: patient.fullName,
+      key: patient.id,
+    }));
+
     return (
       <div className="ctw-max-w-3xl ctw-space-y-5 ctw-text-center">
         <h3 className="ctw-my-0">Search for a Patient</h3>
         {!removeBranding && (
-          <span className="ctw-block ctw-space-x-2 ctw-text-sm ctw-font-light ctw-italic ctw-text-content-light">
+          <div className="ctw-flex ctw-justify-center ctw-space-x-2 ctw-text-sm ctw-font-light ctw-italic ctw-text-content-light">
             <span>Powered by</span>
-            <img src={ZusSVG} alt="Zus" className="-ctw-mb-1.5" />
-          </span>
+            <img src={ZusSVG} alt="Zus" />
+          </div>
         )}
         <ComboboxField
           enableSearchIcon
-          options={patients.map((patient) => ({
-            value: patient,
-            label: patient.fullName,
-            key: patient.id,
-          }))}
+          options={options}
           readonly={false}
           isLoading={isFetching}
           name="patient-search"
@@ -93,6 +95,7 @@ export const PatientSearch = withErrorBoundary(
             setPatients([]);
           }}
           defaultValue={{}}
+          placeholder="Search by patient name or identifier"
         />
       </div>
     );
