@@ -3,6 +3,7 @@ import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { find, some } from "@/utils/nodash";
 import { QUERY_KEY_BINARY } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
+import { withTimerMetric } from "@/utils/telemetry";
 
 export function getBinaryId(
   provenances: Provenance[],
@@ -27,7 +28,7 @@ export function getBinaryId(
   return undefined;
 }
 
-export async function getBinaryDocument(
+async function getBinaryDocumentReq(
   requestContext: CTWRequestContext,
   binaryId: string
 ): Promise<fhir4.Binary> {
@@ -38,3 +39,8 @@ export async function getBinaryDocument(
     })
   );
 }
+
+export const getBinaryDocument = withTimerMetric(
+  getBinaryDocumentReq,
+  "req.binary_document"
+);

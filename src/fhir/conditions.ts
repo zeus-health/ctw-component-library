@@ -32,7 +32,7 @@ import {
   QUERY_KEY_PATIENT_CONDITIONS,
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
-import { Telemetry } from "@/utils/telemetry";
+import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export type VerificationStatus =
   | "unconfirmed"
@@ -76,7 +76,7 @@ export function usePatientConditions() {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_CONDITIONS,
     [],
-    async (requestContext, patient) => {
+    withTimerMetric(async (requestContext, patient) => {
       try {
         const { bundle, resources: conditions } = await searchBuilderRecords(
           "Condition",
@@ -92,7 +92,7 @@ export function usePatientConditions() {
           `Failed fetching condition information for patient: ${e}`
         );
       }
-    }
+    }, "req.patient_conditions")
   );
 }
 
@@ -100,7 +100,7 @@ export function useOtherProviderConditions() {
   return useQueryWithPatient(
     QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
     [],
-    async (requestContext, patient) => {
+    withTimerMetric(async (requestContext, patient) => {
       try {
         const { bundle, resources: conditions } = await searchSummaryRecords(
           "Condition",
@@ -120,7 +120,7 @@ export function useOtherProviderConditions() {
           `Failed fetching condition information for patient: ${e}`
         );
       }
-    }
+    }, "req.other_provider_conditions")
   );
 }
 
@@ -201,7 +201,7 @@ export function useConditionHistory(condition?: ConditionModel) {
   return useQueryWithPatient(
     QUERY_KEY_CONDITION_HISTORY,
     [condition],
-    async (requestContext, patient) => {
+    withTimerMetric(async (requestContext, patient) => {
       if (!condition) {
         return undefined;
       }
@@ -275,7 +275,7 @@ export function useConditionHistory(condition?: ConditionModel) {
           `Failed fetching condition history information for patient: ${e}`
         );
       }
-    },
+    }, "req.condition_history"),
     !!condition
   );
 }
@@ -351,7 +351,10 @@ export const deleteCondition = async (
   )) as FhirResource;
 
   if (!response.id) {
+    Telemetry.reportActionFailure("delete_condition");
     throw new Error(`Failed to edit resource with id of ${resource.id}`);
+  } else {
+    Telemetry.reportActionSuccess("delete_condition");
   }
 
   await queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]);

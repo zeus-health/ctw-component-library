@@ -3,13 +3,13 @@ import { EncounterModel } from "./models/encounter";
 import { searchCommonRecords } from "./search-helpers";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { QUERY_KEY_PATIENT_ENCOUNTERS } from "@/utils/query-keys";
-import { Telemetry } from "@/utils/telemetry";
+import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export function usePatientEncounters() {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_ENCOUNTERS,
     [],
-    async (requestContext, patient) => {
+    withTimerMetric(async (requestContext, patient) => {
       try {
         const { bundle, resources: encounters } = await searchCommonRecords(
           "Encounter",
@@ -29,7 +29,7 @@ export function usePatientEncounters() {
           `Failed fetching timeline information for patient: ${e}`
         );
       }
-    }
+    }, "req.patient_encounters")
   );
 }
 function setupEncounterModels(

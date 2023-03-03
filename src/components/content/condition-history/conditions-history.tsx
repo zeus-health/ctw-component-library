@@ -86,7 +86,10 @@ export const ConditionHistory = withErrorBoundary(
     }, [condition, getRequestContext, historyResponse.data, onEdit]);
 
     return (
-      <div className="ctw-space-y-6">
+      <div
+        className="ctw-space-y-6"
+        data-zus-telemetry-namespace="ConditionsHistory"
+      >
         <ConditionHeader condition={condition} />
         <Details
           data={conditionData(condition)}
@@ -141,6 +144,7 @@ const HistoryRecords = ({
         ...entry,
         documentButton: (
           <DocumentButton
+            data-zus-telemetry-click="DocumentButton"
             onClick={() =>
               openCCDAModal(
                 entry.binaryId as string,

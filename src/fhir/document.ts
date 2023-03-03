@@ -3,12 +3,13 @@ import { searchCommonRecords } from "./search-helpers";
 import { applyDocumentFilters } from "@/components/content/document/patient-document-filters";
 import { orderBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_DOCUMENTS } from "@/utils/query-keys";
+import { withTimerMetric } from "@/utils/telemetry";
 
 export function usePatientDocument() {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_DOCUMENTS,
     [],
-    async (requestContext, patient) => {
+    withTimerMetric(async (requestContext, patient) => {
       try {
         const { bundle, resources: documents } = await searchCommonRecords(
           "DocumentReference",
@@ -31,6 +32,6 @@ export function usePatientDocument() {
           `Failed fetching document information for patient: ${e}`
         );
       }
-    }
+    }, "req.patient_document")
   );
 }

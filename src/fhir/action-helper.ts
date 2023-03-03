@@ -18,10 +18,13 @@ export async function createOrEditFhirResource(
 ) {
   const { fhirClient } = requestContext;
   const resourceModified = resource;
+  let action = "create";
+  let response;
 
   try {
     if (resource.id) {
-      const response = await fhirClient.update({
+      action = "update";
+      response = await fhirClient.update({
         resourceType: resource.resourceType,
         id: resource.id,
         body: omitEmptyArrays(resource),
@@ -29,17 +32,20 @@ export async function createOrEditFhirResource(
       if (!isFhirError(response)) {
         await createProvenance("UPDATE", response, requestContext);
       }
-      return response;
+      Telemetry.reportActionFailure(`${resource.resourceType}.${action}`);
+    } else {
+      response = await fhirClient.create({
+        resourceType: resource.resourceType,
+        body: omitEmptyArrays(resource),
+      });
+      if (!isFhirError(response)) {
+        resourceModified.id = response.id;
+      }
     }
-    const response = await fhirClient.create({
-      resourceType: resource.resourceType,
-      body: omitEmptyArrays(resource),
-    });
-    if (!isFhirError(response)) {
-      resourceModified.id = response.id;
-    }
+    Telemetry.reportActionSuccess(`${resource.resourceType}.${action}`);
     return response;
   } catch (err) {
+    Telemetry.reportActionFailure(`${resource.resourceType}.${action}`);
     Telemetry.logError(err as Error);
     return err;
   }
