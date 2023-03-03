@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.48.8
+
+### Patch Changes
+
+- 830f888e: Lock headless ui version.
+
 ## 0.48.7
 
 ### Patch Changes
