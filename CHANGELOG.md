@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.48.6
+
+### Patch Changes
+
+- e842bfcf: Add more info the options in patient search. Expose prop needed to make patient search work.
+
 ## 0.48.5
 
 ### Patch Changes
