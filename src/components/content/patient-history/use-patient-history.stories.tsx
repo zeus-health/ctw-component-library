@@ -41,12 +41,16 @@ export default {
 
 export const Basic: StoryObj = {
   parameters: {
-    msw: [
-      mockPatientGet,
-      mockPatientHistoryGet,
-      mockPatientPut,
-      mockProvenancePost,
-      mockPatientHistoryPost,
-    ],
+    msw: {
+      handlers: {
+        mocks: [
+          mockPatientGet,
+          mockPatientHistoryGet,
+          mockPatientPut,
+          mockProvenancePost,
+          mockPatientHistoryPost,
+        ],
+      },
+    },
   },
 };

@@ -13,6 +13,7 @@ import {
   QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
   QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
 } from "@/utils/query-keys";
+import { withTimerMetric } from "@/utils/telemetry";
 
 // Gets patient medications for the builder, excluding meds where the information source is patient.
 export function useQueryGetPatientMedsForBuilder(): UseQueryResult<
@@ -26,7 +27,7 @@ export function useQueryGetPatientMedsForBuilder(): UseQueryResult<
         informationSourceNot: "Patient", // exclude medication statements where the patient is the information source
       },
     ],
-    getBuilderMedications
+    withTimerMetric(getBuilderMedications, "req.builder_medications")
   );
 }
 
@@ -41,7 +42,7 @@ export function useQueryGetSummarizedPatientMedications(): UseQueryResult<
         _revinclude: "Basic:subject",
       },
     ],
-    getActiveMedications
+    withTimerMetric(getActiveMedications, "req.active_medications")
   );
 }
 

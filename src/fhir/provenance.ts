@@ -11,6 +11,7 @@ import { claimsBuilderName } from "@/utils/auth";
 import { uniq } from "@/utils/nodash";
 import { QUERY_KEY_PROVENANCE } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
+import { Telemetry } from "@/utils/telemetry";
 
 export const ASSEMBLER_CODING = {
   system: SYSTEM_PROVENANCE_AGENT_TYPE,
@@ -70,10 +71,17 @@ export const createProvenance = async (
     ],
   };
   provenance.activity = type === "CREATE" ? CREATE_CODING : UPDATE_CODING;
-  return fhirClient.create({
-    resourceType: "Provenance",
-    body: provenance,
-  });
+  try {
+    const response = fhirClient.create({
+      resourceType: "Provenance",
+      body: provenance,
+    });
+    Telemetry.reportActionSuccess(`${resource.resourceType}.provenance`);
+    return response;
+  } catch (error) {
+    Telemetry.reportActionFailure(`${resource.resourceType}.provenance`);
+    throw error;
+  }
 };
 
 export async function searchProvenances<T extends fhir4.Resource>(

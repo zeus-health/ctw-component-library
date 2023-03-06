@@ -21,7 +21,7 @@ function mockCareTeamRequests() {
 export function setupCareTeamMocks() {
   return {
     parameters: {
-      msw: mockCareTeamRequests(),
+      msw: { handlers: { mocks: mockCareTeamRequests() } },
     },
   };
 }

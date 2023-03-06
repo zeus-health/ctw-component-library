@@ -8,6 +8,7 @@ import {
   SYSTEM_ZUS_PROFILE_ACTION,
 } from "./system-urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
+import { Telemetry } from "@/utils/telemetry";
 
 export async function recordProfileAction<T extends fhir4.Resource>(
   existingBasic: Basic | undefined,
@@ -54,8 +55,11 @@ export async function recordProfileAction<T extends fhir4.Resource>(
   )) as FhirResource;
 
   if (!response.id) {
+    Telemetry.reportActionFailure(profileAction);
     throw new Error(
       `Failed to ${profileAction} resource with id of ${model.id}`
     );
+  } else {
+    Telemetry.reportActionFailure(profileAction);
   }
 }

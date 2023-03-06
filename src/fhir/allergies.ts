@@ -3,12 +3,13 @@ import { applyAllergyFilters } from "@/components/content/allergies/allergies-fi
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { orderBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_ALLERGIES } from "@/utils/query-keys";
+import { withTimerMetric } from "@/utils/telemetry";
 
 export function usePatientAllergies(enableFqs = false) {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_ALLERGIES,
     [],
-    async (requestContext, patient) => {
+    withTimerMetric(async (requestContext, patient) => {
       try {
         const response = await searchCommonRecords(
           "AllergyIntolerance",
@@ -29,6 +30,6 @@ export function usePatientAllergies(enableFqs = false) {
           `Failed fetching allergies information for patient ${patient.UPID}`
         );
       }
-    }
+    }, "req.patient_allergies")
   );
 }
