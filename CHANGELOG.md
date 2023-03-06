@@ -1,5 +1,24 @@
 # ctw-component-library
 
+## 0.48.8
+
+### Patch Changes
+
+- 830f888e: Lock headless ui version.
+
+## 0.48.7
+
+### Patch Changes
+
+- 105211fc: Remove total from patient search. Fix minor style errors in patient search.
+- e3c22aed: Remove builder tag from `_tag` filters.
+
+## 0.48.6
+
+### Patch Changes
+
+- e842bfcf: Add more info the options in patient search. Expose prop needed to make patient search work.
+
 ## 0.48.5
 
 ### Patch Changes

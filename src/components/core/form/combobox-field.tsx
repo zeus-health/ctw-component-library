@@ -1,7 +1,7 @@
 import { Combobox } from "@headlessui/react";
 import { SearchIcon } from "@heroicons/react/outline";
 import cx from "classnames";
-import { ChangeEvent, useMemo, useState } from "react";
+import { ChangeEvent, Fragment, useMemo, useState } from "react";
 import { debounce, isEmpty, isObject } from "@/utils/nodash";
 import { isMouseEvent } from "@/utils/types";
 
@@ -20,7 +20,9 @@ export type ComboboxFieldProps<T> = {
   onSearchChange: (searchTerm: string) => void;
   readonly: boolean | undefined;
   enableSearchIcon?: boolean;
-  onCustomChange?: (e: unknown) => void;
+  onCustomSelectChange?: (e: unknown) => void;
+  renderCustomOption?: (e: unknown) => JSX.Element;
+  placeholder?: string;
 };
 
 export const ComboboxField = <T,>({
@@ -32,7 +34,9 @@ export const ComboboxField = <T,>({
   onSearchChange,
   readonly,
   enableSearchIcon = false,
-  onCustomChange,
+  onCustomSelectChange,
+  renderCustomOption,
+  placeholder = "Type to search",
 }: ComboboxFieldProps<T>) => {
   const [searchTerm, setSearchTerm] = useState(defaultSearchTerm || "");
   const [inputValue, setInputValue] = useState<unknown>({});
@@ -68,7 +72,7 @@ export const ComboboxField = <T,>({
     const currentItem = options.filter((item) => item.label === eventValue)[0];
     setInputValue(currentItem.value);
     setSearchTerm(eventValue);
-    onCustomChange?.(currentItem);
+    onCustomSelectChange?.(currentItem);
   };
 
   return (
@@ -101,7 +105,7 @@ export const ComboboxField = <T,>({
                   e.persist();
                   debouncedSearchInputChange(e);
                 }}
-                placeholder="Type to search"
+                placeholder={placeholder}
               />
             </div>
           </Combobox.Button>
@@ -117,6 +121,7 @@ export const ComboboxField = <T,>({
               options={options}
               query={searchTerm}
               isLoading={isLoading}
+              renderCustomOption={renderCustomOption}
             />
           </Combobox.Options>
         </div>
@@ -129,12 +134,14 @@ type RenderCorrectOptionsProps = {
   isLoading: boolean;
   options: ComboxboxFieldOption[];
   query: string;
+  renderCustomOption?: (e: unknown) => JSX.Element;
 };
 
 const ComboboxOptions = ({
   options,
   query,
   isLoading,
+  renderCustomOption,
 }: RenderCorrectOptionsProps) => {
   if (query.length === 0) {
     return <ComboboxOption option={{ value: "", label: "Type to search" }} />;
@@ -165,9 +172,13 @@ const ComboboxOptions = ({
 
   return (
     <>
-      {options.map((option) => (
-        <ComboboxOption option={option} key={option.key} />
-      ))}
+      {options.map((option) =>
+        renderCustomOption ? (
+          <Fragment key={option.key}>{renderCustomOption(option)} </Fragment>
+        ) : (
+          <ComboboxOption option={option} key={option.key} />
+        )
+      )}
     </>
   );
 };
