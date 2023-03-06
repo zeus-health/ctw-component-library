@@ -31,6 +31,8 @@ export { default as partition } from "lodash/partition";
 export { default as pickBy } from "lodash/pickBy";
 export { default as some } from "lodash/some";
 export { default as sortBy } from "lodash/sortBy";
+export { default as snakeCase } from "lodash/snakeCase";
 export { default as startCase } from "lodash/startCase";
+export { default as trim } from "lodash/trim";
 export { default as uniq } from "lodash/uniq";
 export { default as uniqWith } from "lodash/uniqWith";

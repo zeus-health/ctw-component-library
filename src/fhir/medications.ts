@@ -46,6 +46,7 @@ import {
 } from "@/utils/nodash/fp";
 import { QUERY_KEY_MEDICATION_HISTORY } from "@/utils/query-keys";
 import { sort } from "@/utils/sort";
+import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export type InformationSource =
   | "Patient"
@@ -135,6 +136,7 @@ export async function getActiveMedications(
   const [searchFilters = {}] = keys;
 
   try {
+    const sendMetric = Telemetry.timeMetric("req.active_medications");
     const response = await searchLensRecords(
       "MedicationStatement",
       requestContext,
@@ -152,6 +154,7 @@ export async function getActiveMedications(
       true
     );
 
+    sendMetric();
     return { bundle: response.bundle, medications };
   } catch (e) {
     throw errorResponse("Failed fetching medications for patient", e);
@@ -251,7 +254,7 @@ export function useMedicationHistory(medication?: fhir4.MedicationStatement) {
   return useQueryWithPatient(
     QUERY_KEY_MEDICATION_HISTORY,
     [medication?.id || "empty"],
-    async (requestContext, patient) => {
+    withTimerMetric(async (requestContext, patient) => {
       try {
         if (!medication) {
           return {
@@ -327,7 +330,7 @@ export function useMedicationHistory(medication?: fhir4.MedicationStatement) {
           `Failed fetching medication history for medication ${medication?.id}: ${e}`
         );
       }
-    }
+    }, "req.medication_history")
   );
 }
 

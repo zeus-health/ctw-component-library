@@ -119,13 +119,11 @@ function CTWProvider({
   }, [token, ctwState]);
 
   useEffect(() => {
-    if (enableTelemetry) {
-      Telemetry.init(ctwState.env);
-      Telemetry.setBuilder(ctwState.builderId);
-      handleAuth()
-        .then((accessToken) => Telemetry.setUser(accessToken))
-        .catch(() => Telemetry.clearUser());
-    }
+    Telemetry.init(ctwState.env, enableTelemetry);
+    Telemetry.setBuilder(ctwState.builderId);
+    handleAuth()
+      .then((accessToken) => Telemetry.setUser(accessToken))
+      .catch(() => Telemetry.clearUser());
   }, [ctwState.builderId, ctwState.env, enableTelemetry, handleAuth, token]);
 
   const providerState = useMemo(

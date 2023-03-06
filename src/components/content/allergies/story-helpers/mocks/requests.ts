@@ -16,7 +16,7 @@ export function setupAllergiesMocks({
       },
     ],
     parameters: {
-      msw: mockRequests(),
+      msw: { handlers: { mocks: mockRequests() } },
     },
   };
 }
