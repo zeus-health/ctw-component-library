@@ -38,9 +38,13 @@ function TabGroupComponent({
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const isVertical = !forceHorizontalTabs && breakpoints.sm;
+  // Work around for not wanting to pre-mount all tabs.
+  // https://github.com/tailwindlabs/headlessui/issues/2276#issuecomment-1456537475
+  const [shown, setShown] = useState<Record<number, boolean>>({ 0: true });
 
   const handleOnChange = (index: number) => {
     setSelectedTabIndex(index);
+    setShown({ ...shown, [index]: true });
     if (onChange) {
       onChange(index);
     }
@@ -96,12 +100,16 @@ function TabGroupComponent({
 
         {/* Renders body of each tab using "render()" */}
         <Tab.Panels>
-          {content.map((item) => (
+          {content.map((item, index) => (
             <Tab.Panel
               key={item.key}
               className={cx(item.getPanelClassName?.(breakpoints.sm))}
+              // Don't unmount our tabs. This fixes an issue
+              // where ZAP filters/sort selections would get reset
+              // when switching to a new tab and back again.
+              unmount={false}
             >
-              {item.render(breakpoints.sm)}
+              {shown[index] && item.render(breakpoints.sm)}
             </Tab.Panel>
           ))}
         </Tab.Panels>
