@@ -1,6 +1,7 @@
 import { PatientHistoryAction } from "../patient-history/patient-history-action";
 import { useAddConditionForm } from "./helpers/modal-hooks";
 import { PatientConditionsBase } from "./helpers/patient-conditions-base";
+import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { RowActionsProps } from "@/components/core/table/table";
 import { toggleArchive, usePatientConditionsOutside } from "@/fhir/conditions";
@@ -12,7 +13,7 @@ export type PatientConditionsOutsideProps = {
   readOnly?: boolean;
 };
 
-export const PatientConditionsOutside = ({
+const PatientConditionsOutsideComponent = ({
   className,
   hideRequestRecords = false,
   readOnly = false,
@@ -33,6 +34,11 @@ export const PatientConditionsOutside = ({
     />
   );
 };
+
+export const PatientConditionsOutside = withErrorBoundary(
+  PatientConditionsOutsideComponent,
+  "PatientConditions"
+);
 
 const RowActions = ({ record }: RowActionsProps<ConditionModel>) => {
   const showAddConditionForm = useAddConditionForm();

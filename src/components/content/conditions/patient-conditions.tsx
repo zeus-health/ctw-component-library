@@ -4,6 +4,7 @@ import {
   useEditConditionForm,
 } from "./helpers/modal-hooks";
 import { PatientConditionsBase } from "./helpers/patient-conditions-base";
+import { withErrorBoundary } from "@/components/core/error-boundary";
 import { RowActionsProps } from "@/components/core/table/table";
 import { usePatientConditions } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models";
@@ -13,7 +14,7 @@ export type PatientConditionsProps = {
   readOnly?: boolean;
 };
 
-export const PatientConditions = ({
+const PatientConditionsComponent = ({
   className,
   readOnly = false,
 }: PatientConditionsProps) => {
@@ -40,6 +41,11 @@ export const PatientConditions = ({
     />
   );
 };
+
+export const PatientConditions = withErrorBoundary(
+  PatientConditionsComponent,
+  "PatientConditions"
+);
 
 const RowActions = ({ record }: RowActionsProps<ConditionModel>) => {
   const showEditConditionForm = useEditConditionForm();
