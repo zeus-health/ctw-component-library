@@ -118,8 +118,6 @@ export const PatientsTable = withErrorBoundary(
         </CTWBox.Heading>
         <div className="ctw-overflow-hidden">
           <Table
-            removeLeftAndRightBorders
-            className="-ctw-mx-px !ctw-rounded-none"
             records={patients}
             columns={columns}
             handleRowClick={handleRowClick}

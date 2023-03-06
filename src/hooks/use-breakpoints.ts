@@ -31,6 +31,13 @@ export function useBreakpoints<T extends HTMLElement>(target: RefObject<T>) {
     if (!targetEl) return;
     const { width } = targetEl.getBoundingClientRect();
 
+    // Fix bug where display: none / hidden would cause
+    // a component to have 0 width. In this case we don't want
+    // to update our breakpoints. This fixes an issue with TabGroup
+    // where switching tabs in ZAP would cause a flash as
+    // the component was initially "stacked" due to 0 width.
+    if (width === 0) return;
+
     const breakpointsTmp = {} as Breakpoints;
     Object.entries(theme.breakpoints).forEach(([key, value]) => {
       breakpointsTmp[key as keyof Breakpoints] = width < value;

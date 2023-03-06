@@ -41,12 +41,10 @@ function PatientImmunizationsComponent({
     >
       <div className="ctw-overflow-hidden">
         <Table
-          removeLeftAndRightBorders
           RowActions={
             featureFlags?.enableViewFhirButton ? viewRecordFHIR : undefined
           }
           stacked={breakpoints.sm}
-          className="-ctw-mx-px !ctw-rounded-none"
           isLoading={patientImmunizationsQuery.isLoading}
           records={patientImmunizationsQuery.data ?? []}
           columns={patientImmunizationsColumns}

@@ -39,7 +39,6 @@ export default {
     hidePagination: undefined,
     isLoading: undefined,
     records: undefined,
-    removeLeftAndRightBorders: undefined,
     showTableHead: undefined,
     stacked: undefined,
   },
@@ -64,10 +63,6 @@ const columns: TableColumn<Record>[] = [
       </div>
     ),
     className: "ctw-w-[30%]",
-  },
-  {
-    className: "ctw-table-action-column",
-    render: (row: Record) => <div>...</div>,
   },
 ];
 

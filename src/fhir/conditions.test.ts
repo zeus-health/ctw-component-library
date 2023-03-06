@@ -1,11 +1,11 @@
-import { filterOtherConditions } from "./helpers";
+import { filterOtherConditions } from "./conditions";
 import { ConditionModel } from "@/fhir/models";
 import {
   SYSTEM_CONDITION_VERIFICATION_STATUS,
   SYSTEM_SNOMED,
 } from "@/fhir/system-urls";
 
-describe("Condition Helpers", () => {
+describe("FHIR Condition", () => {
   describe("filterOtherConditions", () => {
     it("should filter out when there's a match and other record has no date", () => {
       const { others, patients } = setupConditions();
