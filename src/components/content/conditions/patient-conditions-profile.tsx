@@ -1,7 +1,7 @@
 import { ZusAggregatedProfile } from "../zus-aggregated-profile/zus-aggregated-profile";
 
 export type PatientConditionsProfileProps = {
-  hideRequestRecords: boolean;
+  hideRequestRecords?: boolean;
   readOnly?: boolean;
 };
 
