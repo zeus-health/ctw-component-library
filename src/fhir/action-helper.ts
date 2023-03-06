@@ -32,7 +32,6 @@ export async function createOrEditFhirResource(
       if (!isFhirError(response)) {
         await createProvenance("UPDATE", response, requestContext);
       }
-      Telemetry.reportActionFailure(`${resource.resourceType}.${action}`);
     } else {
       response = await fhirClient.create({
         resourceType: resource.resourceType,
