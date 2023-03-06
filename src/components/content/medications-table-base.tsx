@@ -109,8 +109,6 @@ export const MedicationsTableBase = ({
       <div className="ctw-overflow-hidden">
         <Table
           showTableHead={!breakpoints.sm}
-          removeLeftAndRightBorders
-          className="-ctw-mx-px !ctw-rounded-none"
           stacked={breakpoints.sm}
           records={medicationStatements}
           columns={breakpoints.sm ? columnsStacked : columns}

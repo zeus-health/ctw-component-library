@@ -82,7 +82,13 @@ export const TableRows = <T extends MinRecordItem>({
             />
           ))}
           {RowActions && (
-            <td className="ctw-table-row-actions group-hover:ctw-visible">
+            // Add onClick here to prevent clicks from propagating to
+            // the to the tr's onClick for onRowClick.
+            // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events
+            <td
+              className="ctw-table-row-actions group-hover:ctw-visible"
+              onClick={(event) => event.stopPropagation()}
+            >
               <RowActions record={record} />
             </td>
           )}
