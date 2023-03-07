@@ -41,7 +41,7 @@ export const patientConditionsColumns: TableColumn<ConditionModel>[] = [
           &bull;
         </div>
         <div className="ctw-pc-status-and-extra">
-          <div className="ctw-pc-status">{condition.displayStatus}</div>
+          <div>{condition.displayStatus}</div>
           <div>
             Last Updated:{" "}
             {compact([
