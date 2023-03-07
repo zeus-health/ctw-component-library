@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 0.49.1
+
+### Patch Changes
+
+- 6b704286: Fix CSS issue in Safari that prevented certain buttons/links from being visible (like the "Add Patient" link).
+- a6d57c50: Cache requests for authTokenURL. This fixes a race condition where on page load we could send multiple redundant requests.
+
 ## 0.49.0
 
 ### Minor Changes
