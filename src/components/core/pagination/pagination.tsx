@@ -137,7 +137,7 @@ const Page = ({
       disabled={disabled}
       onClick={() => setCurrentPage(page)}
       className={cx(className, "ctw-pagination-page-btn", { active, disabled })}
-      data-zus-telemetry-click={`paginate(${page})`}
+      data-zus-telemetry-click="paginate"
     >
       {children || page}
     </button>
