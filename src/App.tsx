@@ -62,7 +62,7 @@ const demoComponents: DemoComponent[] = [
   },
   {
     render: () => <PatientConditions />,
-    title: "Patient Conditions 2.0",
+    title: "Patient Conditions",
   },
   {
     render: () => <PatientDocuments />,

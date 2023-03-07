@@ -36,7 +36,7 @@ export function setupConditionMocks({
     ],
 
     parameters: {
-      msw: mockRequests(),
+      msw: { handlers: { mocks: mockRequests() } },
     },
   };
 }

@@ -7,7 +7,7 @@ import {
 import { useCTW } from "../../core/providers/ctw-provider";
 import { DocumentButton } from "../CCDA/document-button";
 import { useCCDAModal } from "../CCDA/modal-ccda";
-import { ConditionHeader } from "../conditions/condition-header";
+import { ConditionHeader } from "../conditions/helpers/condition-header";
 import { applyConditionHistoryFilters } from "./condition-history-filters";
 import { conditionData, setupData } from "./condition-history-schema";
 import { withErrorBoundary } from "@/components/core/error-boundary";
@@ -86,7 +86,10 @@ export const ConditionHistory = withErrorBoundary(
     }, [condition, getRequestContext, historyResponse.data, onEdit]);
 
     return (
-      <div className="ctw-space-y-6">
+      <div
+        className="ctw-space-y-6"
+        data-zus-telemetry-namespace="ConditionsHistory"
+      >
         <ConditionHeader condition={condition} />
         <Details
           data={conditionData(condition)}
@@ -141,6 +144,7 @@ const HistoryRecords = ({
         ...entry,
         documentButton: (
           <DocumentButton
+            data-zus-telemetry-click="DocumentButton"
             onClick={() =>
               openCCDAModal(
                 entry.binaryId as string,

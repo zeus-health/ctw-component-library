@@ -6,7 +6,7 @@ import { mockBinaryGet } from "@/components/content/story-helpers/mocks/requests
 export function setupDocumentMocks() {
   return {
     parameters: {
-      msw: mockRequests(),
+      msw: { handlers: { mocks: mockRequests() } },
     },
   };
 }

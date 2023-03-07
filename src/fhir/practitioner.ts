@@ -3,8 +3,9 @@ import { searchBuilderRecords } from "./search-helpers";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { PractitionerModel } from "@/fhir/models/practitioner";
 import { claimsAuthEmail, claimsPractitionerId } from "@/utils/auth";
+import { withTimerMetric } from "@/utils/telemetry";
 
-export const getPractitioner = async (
+const getPractitioner = async (
   practitionerId: string,
   requestContext: CTWRequestContext
 ) => {
@@ -36,7 +37,7 @@ export const getPractitioner = async (
 // up the practitioner from the user's claims data.
 // If the user does not have an associated practitioner, then we
 // use their email address as the display in the reference.
-export async function getUsersPractitionerReference(
+async function getUsersPractitionerReferenceReq(
   requestContext: CTWRequestContext
 ): Promise<Reference> {
   const practitionerId = claimsPractitionerId(requestContext.authToken);
@@ -53,3 +54,8 @@ export async function getUsersPractitionerReference(
     display: claimsAuthEmail(requestContext.authToken),
   };
 }
+
+export const getUsersPractitionerReference = withTimerMetric(
+  getUsersPractitionerReferenceReq,
+  "req.get_users_practitioner_reference"
+);

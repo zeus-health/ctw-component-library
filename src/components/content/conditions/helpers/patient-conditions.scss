@@ -1,24 +1,24 @@
-.ctw-patient-conditions-stacked {
-  tr {
-    @apply ctw-space-y-2;
-  }
+.ctw-patient-conditions {
+  .ctw-table-stacked {
+    tr {
+      @apply ctw-space-y-2;
+    }
 
-  .ctw-pc-status-and-extra {
-    margin-left: 0 !important;
-  }
+    .ctw-pc-status-and-extra {
+      margin-left: 0 !important;
+    }
 
-  .ctw-pc-status-dot {
-    display: none;
-  }
+    .ctw-pc-status-dot {
+      display: none;
+    }
 
-  .ctw-pc-onset-notes {
-    @apply ctw-text-content-black;
+    .ctw-pc-onset-notes {
+      @apply ctw-text-content-black;
+    }
   }
 }
 
 .ctw-patient-conditions {
-  @apply ctw-bg-white;
-
   .ctw-pc-chapter {
     @apply ctw-font-normal;
   }

@@ -1,13 +1,13 @@
 import {
   createOrEditCondition,
   getAddConditionWithDefaults,
-} from "../forms/actions/conditions";
+} from "../../forms/actions/conditions";
 import {
   conditionAddSchema,
   conditionEditSchema,
   getAddConditionData,
   getEditingPatientConditionData,
-} from "../forms/schemas/condition-schema";
+} from "../../forms/schemas/condition-schema";
 import { ConditionHeader } from "./condition-header";
 import { DrawerFormWithFields } from "@/components/core/form/drawer-form-with-fields";
 import { ModalConfirmDelete } from "@/components/core/modal-confirm-delete";

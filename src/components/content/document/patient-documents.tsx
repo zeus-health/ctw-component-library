@@ -37,8 +37,6 @@ function PatientDocumentsComponent({ className }: PatientDocumentProps) {
       <div className="ctw-overflow-hidden">
         <Table
           stacked={breakpoints.sm}
-          removeLeftAndRightBorders
-          className="-ctw-mx-px !ctw-rounded-none"
           isLoading={isLoading}
           records={document}
           columns={patientDocumentColumns(featureFlags?.enableViewFhirButton)}

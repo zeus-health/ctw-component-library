@@ -17,7 +17,6 @@ import {
   SYSTEM_ICD9_CM,
   SYSTEM_SNOMED,
 } from "./system-urls";
-import { filterOtherConditions } from "@/components/content/conditions/helpers";
 import {
   getAddConditionWithDefaults,
   getClincalAndVerificationStatus,
@@ -32,7 +31,7 @@ import {
   QUERY_KEY_PATIENT_CONDITIONS,
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
-import { Telemetry } from "@/utils/telemetry";
+import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export type VerificationStatus =
   | "unconfirmed"
@@ -76,7 +75,7 @@ export function usePatientConditions() {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_CONDITIONS,
     [],
-    async (requestContext, patient) => {
+    withTimerMetric(async (requestContext, patient) => {
       try {
         const { bundle, resources: conditions } = await searchBuilderRecords(
           "Condition",
@@ -92,15 +91,15 @@ export function usePatientConditions() {
           `Failed fetching condition information for patient: ${e}`
         );
       }
-    }
+    }, "req.patient_conditions")
   );
 }
 
-export function useOtherProviderConditions() {
+function usePatientConditionsOutsideDuped() {
   return useQueryWithPatient(
     QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
     [],
-    async (requestContext, patient) => {
+    withTimerMetric(async (requestContext, patient) => {
       try {
         const { bundle, resources: conditions } = await searchSummaryRecords(
           "Condition",
@@ -120,14 +119,14 @@ export function useOtherProviderConditions() {
           `Failed fetching condition information for patient: ${e}`
         );
       }
-    }
+    }, "req.other_provider_conditions")
   );
 }
 
-export function useOtherProviderConditionsDeduped() {
+export function usePatientConditionsOutside() {
   const [conditions, setConditions] = useState<ConditionModel[]>([]);
   const patientConditionsQuery = usePatientConditions();
-  const otherConditionsQuery = useOtherProviderConditions();
+  const otherConditionsQuery = usePatientConditionsOutsideDuped();
 
   useEffect(() => {
     const patientConditions = patientConditionsQuery.data ?? [];
@@ -201,7 +200,7 @@ export function useConditionHistory(condition?: ConditionModel) {
   return useQueryWithPatient(
     QUERY_KEY_CONDITION_HISTORY,
     [condition],
-    async (requestContext, patient) => {
+    withTimerMetric(async (requestContext, patient) => {
       if (!condition) {
         return undefined;
       }
@@ -275,7 +274,7 @@ export function useConditionHistory(condition?: ConditionModel) {
           `Failed fetching condition history information for patient: ${e}`
         );
       }
-    },
+    }, "req.condition_history"),
     !!condition
   );
 }
@@ -351,8 +350,46 @@ export const deleteCondition = async (
   )) as FhirResource;
 
   if (!response.id) {
+    Telemetry.reportActionFailure("delete_condition");
     throw new Error(`Failed to edit resource with id of ${resource.id}`);
+  } else {
+    Telemetry.reportActionSuccess("delete_condition");
   }
 
   await queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]);
 };
+
+// Filter out other conditions where:
+//  1. Condition is archived and includeArchived is false.
+//  2. CCS Category code starts with FAC or XXX.
+//  3. There is an existing patient condition with a matching known code.
+//     AND The other condition is older than the patient condition OR they
+//     have the same status.
+export const filterOtherConditions = (
+  otherConditions: ConditionModel[],
+  patientConditions: ConditionModel[],
+  includeArchived: boolean
+): ConditionModel[] =>
+  otherConditions.filter((otherCondition) => {
+    if (otherCondition.isArchived && !includeArchived) return false;
+
+    if (["FAC", "XXX"].includes(otherCondition.ccsChapterCode ?? "")) {
+      return false;
+    }
+
+    return !patientConditions.some((patientCondition) => {
+      const otherRecordedDate = otherCondition.resource.recordedDate;
+      const patientRecordedDate = patientCondition.resource.recordedDate;
+      const isMatch = otherCondition.knownCodingsMatch(patientCondition);
+      const isEnteredInError =
+        patientCondition.verificationStatus === "entered-in-error";
+
+      const isOlder =
+        !otherRecordedDate ||
+        (patientRecordedDate && otherRecordedDate <= patientRecordedDate);
+      const hasSameStatus =
+        otherCondition.clinicalStatus === patientCondition.clinicalStatus;
+
+      return isMatch && !isEnteredInError && (isOlder || hasSameStatus);
+    });
+  });

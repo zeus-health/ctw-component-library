@@ -1,5 +1,15 @@
 # ctw-component-library
 
+## 0.49.0
+
+### Minor Changes
+
+- a174c79d: Large refactor of conditions component using new naming scheme and a few generic helpers.
+
+### Patch Changes
+
+- 0b4cc18c: Add new method to `Telemetry.reportMetric` that will send metrics with tags to CTW /report/metric endpoint.Add async wrapper `withTimerMetric` that will report the performance of an async function.
+
 ## 0.48.8
 
 ### Patch Changes

@@ -3,12 +3,13 @@ import { applyImmunizationFilters } from "@/components/content/immunizations/pat
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { orderBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_IMMUNIZATIONS } from "@/utils/query-keys";
+import { withTimerMetric } from "@/utils/telemetry";
 
 export function usePatientImmunizations() {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_IMMUNIZATIONS,
     [],
-    async (requestContext, patient) => {
+    withTimerMetric(async (requestContext, patient) => {
       try {
         const { bundle, resources: immunizations } = await searchCommonRecords(
           "Immunization",
@@ -27,6 +28,6 @@ export function usePatientImmunizations() {
           `Failed fetching immunization information for patient: ${e}`
         );
       }
-    }
+    }, "req.patient_immunizations")
   );
 }
