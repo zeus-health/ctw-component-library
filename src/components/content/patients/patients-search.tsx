@@ -31,7 +31,7 @@ type CustomPatientOptionValue = Omit<ComboxboxFieldOption, "value"> & {
 export type PatientSearchProps = {
   pageSize?: number;
   removeBranding?: boolean;
-  title: string;
+  title?: string;
   onSearchClick?: (e: unknown) => void;
 };
 
