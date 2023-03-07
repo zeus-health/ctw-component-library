@@ -3,6 +3,9 @@ import { QueryClient } from "@tanstack/react-query";
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      // NOTE: Stale time must be kept less than what we'd expect auth token
+      // expiration to be. This ensures that if the token expires and we go to
+      // fetch a fresh one, we don't get a stale token from react-query cache.
       staleTime: 1000 * 30, // 30s.
       refetchOnWindowFocus: false,
     },
