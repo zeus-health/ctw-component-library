@@ -4,7 +4,7 @@ import * as RadixDropdownMenu from "@radix-ui/react-dropdown-menu";
 import cx from "classnames";
 import { ReactNode, useState } from "react";
 import { useCTW } from "./providers/ctw-provider";
-import "./dropdown-menu.scss";
+import "./dropdown-action-menu.scss";
 
 export type MenuItem = {
   action: () => void;
