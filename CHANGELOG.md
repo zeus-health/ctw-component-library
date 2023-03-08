@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.49.3
+
+### Patch Changes
+
+- cfdca38a: Adjust display values for columns in conditions component.
+
 ## 0.49.2
 
 ### Patch Changes
