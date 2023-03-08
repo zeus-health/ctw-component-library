@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.49.2
+
+### Patch Changes
+
+- cb384ccf: Paginate metric is not unique by page
+
 ## 0.49.1
 
 ### Patch Changes
