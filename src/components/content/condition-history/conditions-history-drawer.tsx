@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { ConditionModel } from "../../../fhir/models/condition";
 import { Drawer } from "../../core/drawer";
 import { useEditConditionForm } from "../conditions/helpers/modal-hooks";
@@ -42,10 +43,14 @@ export function ConditionHistoryDrawer({
   onClose,
   onEdit,
 }: ConditionHistoryDrawerProps) {
+  const { t } = useTranslation();
+
   return (
     <Drawer
       className={className}
-      title="Condition History"
+      title={t("resource.history.heading", {
+        resource: t("glossary:condition_one"),
+      })}
       isOpen={isOpen}
       onClose={onClose}
       showCloseFooter

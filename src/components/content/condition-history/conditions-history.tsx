@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Details } from "../../core/collapsible-data-list-details";
 import {
   CollapsibleDataListStack,
@@ -122,6 +123,7 @@ const HistoryRecords = ({
   historyIsLoading,
 }: HistoryRecordsProps) => {
   const openCCDAModal = useCCDAModal();
+  const { t } = useTranslation();
 
   if (
     conditionsWithDate.length === 0 &&
@@ -131,7 +133,13 @@ const HistoryRecords = ({
     return <div>No history found.</div>;
   }
   if (historyIsLoading) {
-    return <Loading message="Loading condition history..." />;
+    return (
+      <Loading
+        message={t("resource.history.loading", {
+          resource: t("glossary:condition_one"),
+        })}
+      />
+    );
   }
 
   function maybeAddDocumentButtons(entries: CollapsibleDataListStackEntries) {

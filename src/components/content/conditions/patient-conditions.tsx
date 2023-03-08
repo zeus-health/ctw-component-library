@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import {
   useAddConditionForm,
   useConfirmDeleteCondition,
@@ -20,6 +21,7 @@ const PatientConditionsComponent = ({
 }: PatientConditionsProps) => {
   const query = usePatientConditions();
   const showAddConditionForm = useAddConditionForm();
+  const { t } = useTranslation();
 
   const action = !readOnly && (
     <button
@@ -27,7 +29,7 @@ const PatientConditionsComponent = ({
       className="ctw-btn-primary"
       onClick={() => showAddConditionForm()}
     >
-      Add Condition
+      {t("resource.add", { resource: t("glossary:condition_one") })}
     </button>
   );
 
