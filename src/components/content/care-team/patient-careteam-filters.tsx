@@ -1,29 +1,60 @@
 import { CareTeamModel } from "@/fhir/models/careteam";
+import { CareTeamPractitionerModel } from "@/fhir/models/careteam-practitioner";
 import { ResourceMap } from "@/fhir/types";
-import { isEqual, uniqWith } from "@/utils/nodash";
+import { compact, maxBy } from "@/utils/nodash";
 
 export const applyCareTeamFilters = (
   data: fhir4.CareTeam[],
   includedResources: ResourceMap
 ) => {
-  const careTeamModel = data.map(
+  const careTeamModels = data.map(
     (careteam) => new CareTeamModel(careteam, includedResources)
   );
-  // Only want to obtain records that have a period.start but no period.end
-  const currentCareTeam = careTeamModel.filter(
-    (careTeam) => !careTeam.periodEnd
-  );
-  const careTeamData = uniqWith(currentCareTeam, (a, b) =>
-    isEqual(valuesToDedupeOn(a), valuesToDedupeOn(b))
-  );
 
-  return careTeamData;
+  const careTeamMemberMap = new Map<
+    string,
+    CareTeamPractitionerModel | undefined
+  >();
+
+  careTeamModels.forEach((careTeamObject) => {
+    careTeamObject.resource.participant?.forEach((participant) => {
+      if (participant.member?.reference) {
+        const careTeamPractitioner = new CareTeamPractitionerModel(
+          careTeamObject,
+          participant.member.reference
+        );
+        if (careTeamMemberMap.has(participant.member.reference)) {
+          const latestPractitioner = careTeamMemberMap.get(
+            participant.member.reference
+          );
+          if (latestPractitioner && careTeamPractitioner.effectiveStartDate) {
+            careTeamMemberMap.set(
+              participant.member.reference,
+              maxBy(
+                [careTeamPractitioner, latestPractitioner],
+                "effectiveStartDate"
+              )
+            );
+          } else {
+            careTeamMemberMap.set(
+              participant.member.reference,
+              careTeamPractitioner
+            );
+          }
+        } else {
+          careTeamMemberMap.set(
+            participant.member.reference,
+            careTeamPractitioner
+          );
+        }
+      }
+    });
+  });
+
+  console.log("CareTeamMemberMap", careTeamMemberMap);
+
+  console.log("CareTeamModel", careTeamModels);
+  // Create a custom model that would be
+
+  return compact([...careTeamMemberMap.values()]);
 };
-
-const valuesToDedupeOn = (careteam: CareTeamModel) => [
-  careteam.status,
-  careteam.periodStart,
-  careteam.role,
-  careteam.practitionerQualification,
-  careteam.includedPerformer,
-];

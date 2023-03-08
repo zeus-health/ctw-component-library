@@ -1,11 +1,10 @@
 import cx from "classnames";
 import { useRef } from "react";
-import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { patientCareTeamColumns } from "./patient-careteam-columns";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { Table } from "@/components/core/table/table";
 import { usePatientCareTeam } from "@/fhir/care-team";
-import { CareTeamModel } from "@/fhir/models/careteam";
+import { CareTeamPractitionerModel } from "@/fhir/models/careteam-practitioner";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 
 export type PatientCareTeamProps = {
@@ -15,7 +14,7 @@ export type PatientCareTeamProps = {
 
 export type CareTeamDetailsDrawerProps = {
   className?: string;
-  careteam: CareTeamModel;
+  careteam: CareTeamPractitionerModel;
   isOpen: boolean;
   onClose: () => void;
 };
@@ -29,10 +28,10 @@ export function PatientCareTeam({
   const { featureFlags } = useCTW();
   const patientCareTeamQuery = usePatientCareTeam();
 
-  const openDetails = useResourceDetailsDrawer({
-    header: (m) => m.periodStart,
-    details: careTeamData,
-  });
+  // const openDetails = useResourceDetailsDrawer({
+  //   header: (m) => m.id,
+  //   details: careTeamData,
+  // });
 
   return (
     <div
@@ -50,16 +49,18 @@ export function PatientCareTeam({
         isLoading={patientCareTeamQuery.isLoading}
         records={patientCareTeamQuery.data ?? []}
         columns={patientCareTeamColumns(featureFlags?.enableViewFhirButton)}
-        handleRowClick={openDetails}
+        // handleRowClick={openDetails}
       />
     </div>
   );
 }
 
-export const careTeamData = (careTeam: CareTeamModel) => [
-  { label: "Organization", value: careTeam.managingOrganization },
-  { label: "Practitioner", value: careTeam.includedPerformer },
-  { label: "CareTeam Telecom", value: careTeam.careTeamTelecom },
-  { label: "Role", value: careTeam.role },
-  { label: "Status", value: careTeam.status },
+export const careTeamData = (
+  careTeamPractitioner: CareTeamPractitionerModel
+) => [
+  // { label: "Organization", value: careTeamPractitioner.managingOrganization },
+  { label: "Practitioner", value: careTeamPractitioner.PractitionerName },
+  // { label: "CareTeam Telecom", value: careTeamPractitioner.careTeamTelecom },
+  // { label: "Role", value: careTeamPractitioner.role },
+  // { label: "Status", value: careTeamPractitioner.status },
 ];

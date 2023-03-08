@@ -5,19 +5,19 @@ import { FHIRModel } from "./fhir-model";
 import { PractitionerModel } from "./practitioner";
 
 export class CareTeamModel extends FHIRModel<fhir4.CareTeam> {
-  get status(): string | undefined {
+  get status() {
     return this.resource.status;
   }
 
-  get periodStart(): string | undefined {
+  get periodStart() {
     return formatDateISOToLocal(this.resource.period?.start);
   }
 
-  get periodEnd(): string | undefined {
+  get periodEnd() {
     return this.resource.period?.end;
   }
 
-  get includedPerformer(): string | undefined {
+  get includedPerformer() {
     const reference = this.resource.participant?.[0]?.member?.reference;
 
     const practitioner = findReference(
@@ -33,19 +33,23 @@ export class CareTeamModel extends FHIRModel<fhir4.CareTeam> {
     return this.resource.participant?.[0]?.member?.display;
   }
 
-  get careTeamTelecom(): string | undefined {
+  get particpants() {
+    return this.resource.participant;
+  }
+
+  get careTeamTelecom() {
     return this.resource.telecom?.[0].value;
   }
 
-  get managingOrganization(): string | undefined {
+  get managingOrganization() {
     return this.resource.participant?.[0].onBehalfOf?.display;
   }
 
-  get role(): string | undefined {
+  get role() {
     return codeableConceptLabel(this.resource.participant?.[0].role?.[0]);
   }
 
-  get practitionerQualification(): string | undefined {
+  get practitionerQualification() {
     const reference = this.resource.participant?.[0]?.member?.reference;
 
     const practitioner = findReference(
