@@ -5,7 +5,11 @@
     }
 
     .ctw-pc-status-and-extra {
-      margin-left: 0 !important;
+      grid-area: 2 / 2;
+    }
+
+    .ctw-pc-status-container {
+      display: initial;
     }
 
     .ctw-pc-status-dot {
@@ -16,6 +20,10 @@
       @apply ctw-text-content-black;
     }
   }
+
+  .ctw-pc-status-and-extra {
+    grid-area: 2 / 2;
+  }
 }
 
 .ctw-patient-conditions {
@@ -24,11 +32,13 @@
   }
 
   .ctw-pc-status-container {
-    @apply ctw-flex ctw-space-x-2;
+    @apply ctw-grid ctw-items-center;
+    grid-template-columns: 1rem auto;
+    grid-template-rows: 2;
   }
 
   .ctw-pc-status-dot {
-    @apply ctw-text-base;
+    @apply ctw-text-xl;
   }
 
   .ctw-pc-status {
