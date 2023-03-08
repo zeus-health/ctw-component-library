@@ -38,21 +38,15 @@ export const patientConditionsColumns: TableColumn<ConditionModel>[] = [
         >
           &bull;
         </div>
-        <div className="ctw-pc-status">{condition.displayStatus}</div>
-
+        <div>{condition.displayStatus}</div>
         <div className="ctw-pc-status-and-extra">
-          {condition.isSummaryResource ? (
-            <div>
-              {compact([
-                condition.patient?.organization?.name,
-                condition.recordedDate,
-              ]).join(" ")}
-            </div>
-          ) : (
-            <div>
-              {compact([condition.recorder, condition.recordedDate]).join(" ")}
-            </div>
-          )}
+          <div>
+            Last Updated:{" "}
+            {compact([
+              condition.recordedDate,
+              condition.recorder ? `(${condition.recorder})` : "",
+            ]).join(" ")}
+          </div>
         </div>
       </div>
     ),
