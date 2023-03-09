@@ -35,9 +35,5 @@ const valuesToDedupeOn = (condition: ConditionModel) => [
   condition.onset,
   condition.abatement,
   condition.encounter,
-  condition.knownCodings.map((coding) => [
-    coding.display,
-    coding.system,
-    coding.code,
-  ]),
+  condition.knownCodings.map((coding) => [coding.system, coding.code]),
 ];
