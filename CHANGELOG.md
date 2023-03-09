@@ -1,5 +1,14 @@
 # ctw-component-library
 
+## 0.49.4
+
+### Patch Changes
+
+- 0db1341a: Remove condition display from dedupe logic in condition history.
+- 7ee58623: Fix alignment and size of status dots. Add underline on display when hovering on items in medication table.
+- 46e0288d: Minor ui changes to patient search.
+- df8be0d2: Disable metrics to ctw from localhost:3000.
+
 ## 0.49.3
 
 ### Patch Changes
