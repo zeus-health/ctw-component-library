@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 // Should match all valid formats.
-// See https://stackoverflow.com/a/16699507/1652396
+// See https://stackoverflow.com/a/56450924/1652396
 export const phoneNumberRegex =
-  /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
+  /^(\+\d{1,2}\s?)?1?-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
 
 export const zipCodeRegex = /^\d{5}(-\d{4})?$/;
 
