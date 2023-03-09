@@ -46,6 +46,10 @@
 
 - a174c79d: Large refactor of conditions component using new naming scheme and a few generic helpers.
 
+#### Breaking Changes
+
+`PatientConditions` component has been renamed `PatientConditionsProfile`. This component shows two tabs, one for patient record and one for outside records. To get a table of just the patient record, you can now use the new `PatientConditions` component.
+
 ### Patch Changes
 
 - 0b4cc18c: Add new method to `Telemetry.reportMetric` that will send metrics with tags to CTW /report/metric endpoint.Add async wrapper `withTimerMetric` that will report the performance of an async function.
