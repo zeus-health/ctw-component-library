@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.49.6
+
+### Patch Changes
+
+- 1cfea1b5: Display Zus status instead of clinical and verification status.
+
 ## 0.49.5
 
 ### Patch Changes
