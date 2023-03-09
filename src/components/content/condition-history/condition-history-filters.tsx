@@ -15,7 +15,7 @@ export const applyConditionHistoryFilters = (
   // We sort by hasEnrichment as well because we want enriched records to be preferred in uniqWith function.
   const sortedConditions = orderBy(
     conditionModels,
-    [(c) => c.resource.recordedDate ?? "", (c) => c.hasEnrichment],
+    ["resource.recordedDate", "hasEnrichment"],
     "desc"
   );
 
