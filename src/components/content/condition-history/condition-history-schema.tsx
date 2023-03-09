@@ -66,11 +66,7 @@ export const conditionData = (condition: ConditionModel) => [
     label: "Provider Organization",
     value: condition.patient?.organization?.name,
   },
-  { label: "Clinical Status", value: capitalize(condition.clinicalStatus) },
-  {
-    label: "Verification Status",
-    value: capitalize(condition.verificationStatus),
-  },
+  { label: "Status", value: capitalize(condition.displayStatus) },
   { label: "Onset Date", value: condition.onset },
   { label: "Abatement Date", value: condition.abatement },
   {
