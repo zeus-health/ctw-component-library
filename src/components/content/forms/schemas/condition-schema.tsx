@@ -2,6 +2,7 @@ import type { FormEntry } from "../../../core/form/drawer-form-with-fields";
 import Zod, { RefinementCtx, z } from "zod";
 import { ConditionsAutoComplete } from "../conditions-autocomplete";
 import { ConditionModel } from "@/fhir/models/condition";
+import i18next from "@/i18n";
 
 export const getAddConditionData = ({
   condition,
@@ -9,7 +10,7 @@ export const getAddConditionData = ({
   condition: ConditionModel;
 }): FormEntry[] => [
   {
-    label: "Condition",
+    label: i18next.t("glossary:condition_one"),
     field: "condition",
     value: condition.display,
     readonly: false,

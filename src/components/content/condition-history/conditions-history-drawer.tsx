@@ -3,6 +3,7 @@ import { Drawer } from "../../core/drawer";
 import { useEditConditionForm } from "../conditions/helpers/modal-hooks";
 import { ConditionHistory } from "./conditions-history";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
+import { useBaseTranslations } from "@/i18n";
 
 export function useConditionHistory() {
   const { openDrawer } = useDrawer();
@@ -42,10 +43,14 @@ export function ConditionHistoryDrawer({
   onClose,
   onEdit,
 }: ConditionHistoryDrawerProps) {
+  const { t } = useBaseTranslations();
+
   return (
     <Drawer
       className={className}
-      title="Condition History"
+      title={t("resource.history.heading", {
+        resource: t("glossary:condition_one"),
+      })}
       isOpen={isOpen}
       onClose={onClose}
       showCloseFooter

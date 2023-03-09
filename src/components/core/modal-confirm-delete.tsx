@@ -1,12 +1,12 @@
-import { Resource } from "fhir/r4";
 import { useState } from "react";
+import { Trans, useTranslation } from "react-i18next";
 import { ErrorAlert } from "./alert";
 import { Modal, ModalProps } from "./modal";
 import { Spinner } from "./spinner";
 import { Telemetry } from "@/utils/telemetry";
 
 export type ModalConfirmDeleteProps = {
-  resource: Resource;
+  resource: string;
   resourceName: string;
   onDelete: () => Promise<void>;
   onClose: () => void;
@@ -21,6 +21,7 @@ export const ModalConfirmDelete = ({
 }: ModalConfirmDeleteProps) => {
   const [alert, setAlert] = useState<string>();
   const [isDeleting, setIsDeleting] = useState(false);
+  const { t } = useTranslation();
 
   const onConfirm = async () => {
     try {
@@ -36,8 +37,6 @@ export const ModalConfirmDelete = ({
     }
   };
 
-  const resourceType = resource.resourceType.toLowerCase();
-
   return (
     <Modal onAfterClosed={() => setAlert(undefined)} {...modalProps}>
       {alert && <ErrorAlert header={alert} />}
@@ -46,12 +45,14 @@ export const ModalConfirmDelete = ({
         data-zus-telemetry-namespace="ModalConfirmDelete"
       >
         <span className="ctw-text-left ctw-text-lg ctw-font-medium ctw-text-content-black">
-          {`Remove this ${resourceType}?`}
+          {t("resource.remove.heading", { resource })}
         </span>
         <span className="ctw-subtext ctw-max-w-sm ctw-text-left ctw-text-content-light">
-          This will remove{" "}
-          <span className="ctw-font-medium">{resourceName}</span> from this
-          patient&apos;s {resourceType} list.
+          <Trans i18nKey="resource.remove.body">
+            This will remove{" "}
+            <span className="ctw-font-medium">{{ resourceName }}</span> from
+            this patient&apos;s {{ resource }} list.
+          </Trans>
         </span>
       </div>
       <div className="ctw-flex ctw-w-full ctw-space-x-4">
