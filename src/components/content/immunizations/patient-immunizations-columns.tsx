@@ -4,7 +4,9 @@ import { ImmunizationModel } from "@/fhir/models/immunization";
 export const patientImmunizationsColumns: TableColumn<ImmunizationModel>[] = [
   {
     title: "Date",
-    dataIndex: "occurrence",
+    render: (immunization) => (
+      <div className="group-hover:ctw-underline">{immunization.occurrence}</div>
+    ),
   },
   {
     title: "Description",
