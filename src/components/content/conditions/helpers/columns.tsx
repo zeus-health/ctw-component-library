@@ -21,9 +21,7 @@ export const patientConditionsColumns: TableColumn<ConditionModel>[] = [
     minWidth: 320,
     render: (condition) => (
       <div>
-        <div className="ctw-pc-title group-hover:ctw-underline">
-          {condition.display}
-        </div>
+        <div className="group-hover:ctw-underline">{condition.display}</div>
         <div className="ctw-pc-chapter">{condition.ccsChapter}</div>
       </div>
     ),
@@ -40,21 +38,15 @@ export const patientConditionsColumns: TableColumn<ConditionModel>[] = [
         >
           &bull;
         </div>
+        <div>{condition.displayStatus}</div>
         <div className="ctw-pc-status-and-extra">
-          <div className="ctw-pc-status">{condition.displayStatus}</div>
-
-          {condition.isSummaryResource ? (
-            <div>
-              {compact([
-                condition.patient?.organization?.name,
-                condition.recordedDate,
-              ]).join(" ")}
-            </div>
-          ) : (
-            <div>
-              {compact([condition.recorder, condition.recordedDate]).join(" ")}
-            </div>
-          )}
+          <div>
+            Last Updated:{" "}
+            {compact([
+              condition.recordedDate,
+              condition.recorder ? `(${condition.recorder})` : "",
+            ]).join(" ")}
+          </div>
         </div>
       </div>
     ),
