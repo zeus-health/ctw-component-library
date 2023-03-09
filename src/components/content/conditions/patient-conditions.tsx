@@ -1,4 +1,3 @@
-import { useTranslation } from "react-i18next";
 import {
   useAddConditionForm,
   useConfirmDeleteCondition,
@@ -9,6 +8,7 @@ import { withErrorBoundary } from "@/components/core/error-boundary";
 import { RowActionsProps } from "@/components/core/table/table";
 import { usePatientConditions } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models";
+import { useBaseTranslations } from "@/i18n";
 
 export type PatientConditionsProps = {
   className?: string;
@@ -21,7 +21,7 @@ const PatientConditionsComponent = ({
 }: PatientConditionsProps) => {
   const query = usePatientConditions();
   const showAddConditionForm = useAddConditionForm();
-  const { t } = useTranslation();
+  const { t } = useBaseTranslations();
 
   const action = !readOnly && (
     <button

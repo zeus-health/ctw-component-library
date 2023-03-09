@@ -1,9 +1,9 @@
-import { useTranslation } from "react-i18next";
 import { ConditionModel } from "../../../fhir/models/condition";
 import { Drawer } from "../../core/drawer";
 import { useEditConditionForm } from "../conditions/helpers/modal-hooks";
 import { ConditionHistory } from "./conditions-history";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
+import { useBaseTranslations } from "@/i18n";
 
 export function useConditionHistory() {
   const { openDrawer } = useDrawer();
@@ -43,7 +43,7 @@ export function ConditionHistoryDrawer({
   onClose,
   onEdit,
 }: ConditionHistoryDrawerProps) {
-  const { t } = useTranslation();
+  const { t } = useBaseTranslations();
 
   return (
     <Drawer

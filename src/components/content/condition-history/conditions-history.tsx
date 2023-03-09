@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { Details } from "../../core/collapsible-data-list-details";
 import {
   CollapsibleDataListStack,
@@ -18,6 +17,7 @@ import { getIncludedResources } from "@/fhir/bundle";
 import { useConditionHistory } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models/condition";
 import { searchProvenances } from "@/fhir/provenance";
+import { useBaseTranslations } from "@/i18n";
 
 const CONDITION_HISTORY_LIMIT = 10;
 
@@ -123,7 +123,7 @@ const HistoryRecords = ({
   historyIsLoading,
 }: HistoryRecordsProps) => {
   const openCCDAModal = useCCDAModal();
-  const { t } = useTranslation();
+  const { t } = useBaseTranslations();
 
   if (
     conditionsWithDate.length === 0 &&

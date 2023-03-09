@@ -1,6 +1,8 @@
 import i18n from "i18next";
-import { initReactI18next } from "react-i18next";
+import { initReactI18next, useTranslation } from "react-i18next";
 import { DeepPartial } from "../utils/types";
+
+export const useBaseTranslations = () => useTranslation(["main", "glossary"]);
 
 export const resources = {
   en: {
@@ -29,7 +31,8 @@ void i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
     ns: ["glossary", "main"],
-    defaultNS: "main",
+    returnNull: false,
+    defaultNS: ["main", "glossary"],
     resources,
     lng: "en", // language to use, more information here: https://www.i18next.com/overview/configuration-options#languages-namespaces-resources
     interpolation: {

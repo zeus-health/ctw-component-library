@@ -1,4 +1,3 @@
-import { useTranslation } from "react-i18next";
 import {
   createOrEditCondition,
   getAddConditionWithDefaults,
@@ -16,11 +15,12 @@ import { useDrawer } from "@/components/core/providers/drawer-provider";
 import { useModal } from "@/components/core/providers/modal-provider";
 import { usePatient } from "@/components/core/providers/patient-provider";
 import { deleteCondition, getNewCondition } from "@/fhir/conditions";
+import { useBaseTranslations } from "@/i18n";
 import { ConditionModel, useCTW } from "@/index";
 import { curry } from "@/utils/nodash";
 
 export function useAddConditionForm() {
-  const { t } = useTranslation();
+  const { t } = useBaseTranslations();
   const { openDrawer } = useDrawer();
   const patientResponse = usePatient();
   const patientId = patientResponse.data?.id ?? "";
@@ -47,7 +47,7 @@ export function useAddConditionForm() {
 }
 
 export function useEditConditionForm() {
-  const { t } = useTranslation();
+  const { t } = useBaseTranslations();
   const { openDrawer } = useDrawer();
   const patientResponse = usePatient();
   const patientId = patientResponse.data?.id ?? "";
@@ -69,9 +69,9 @@ export function useEditConditionForm() {
 }
 
 export function useConfirmDeleteCondition() {
+  const { t } = useBaseTranslations();
   const { openModal } = useModal();
   const { getRequestContext } = useCTW();
-  const { t } = useTranslation();
 
   return (condition: ConditionModel) => {
     const name =
