@@ -8,7 +8,9 @@ export const patientDocumentColumns = (includeViewFhirResource = true) => {
       widthPercent: 20,
       minWidth: 100,
       title: "Date Created",
-      render: (document) => <div>{document.dateCreated}</div>,
+      render: (document) => (
+        <div className="group-hover:ctw-underline">{document.dateCreated}</div>
+      ),
     },
     {
       widthPercent: 30,

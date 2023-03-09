@@ -326,6 +326,14 @@ export class Telemetry {
     value: number,
     additionalTags: string[] = []
   ) {
+    if (
+      process.env.NODE_ENV !== "test" &&
+      ["http://localhost:3000", "http://127.0.0.1:3000"].includes(
+        window.location.origin
+      )
+    ) {
+      return;
+    }
     let user;
     const name = this.normalizeMetricName(metric);
     try {

@@ -4,7 +4,9 @@ import { AllergyModel } from "@/fhir/models/allergies";
 export const patientAllergiesColumns: TableColumn<AllergyModel>[] = [
   {
     title: "Onset",
-    dataIndex: "onset",
+    render: (allergy) => (
+      <div className="group-hover:ctw-underline">{allergy.onset}</div>
+    ),
   },
   {
     title: "Description",
