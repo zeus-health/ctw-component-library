@@ -145,6 +145,19 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
     return this.verificationStatusCode === "entered-in-error";
   }
 
+  get hasEnrichment(): boolean {
+    const enrichmentCodes = CONDITION_CODE_PREFERENCE_ORDER.filter(
+      (codePreference) => codePreference.checkForEnrichment === true
+    );
+    const codings = compact(
+      enrichmentCodes.map((code) =>
+        findCodingWithEnrichment(code.system, this.resource.code)
+      )
+    );
+
+    return codings.length > 0;
+  }
+
   get knownCodings(): fhir4.Coding[] {
     const codings = compact(
       CONDITION_CODE_PREFERENCE_ORDER.map((code) => {

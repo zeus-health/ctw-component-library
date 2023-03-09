@@ -1,3 +1,4 @@
+export const QUERY_KEY_AUTH_TOKEN = "auth-token";
 export const QUERY_KEY_BINARY = "binary";
 export const QUERY_KEY_CONDITION_HISTORY = "conditionHistory";
 export const QUERY_KEY_MEDICATION_HISTORY = "medication-history";

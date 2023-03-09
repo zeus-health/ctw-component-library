@@ -1,10 +1,54 @@
 # ctw-component-library
 
+## 0.49.6
+
+### Patch Changes
+
+- 1cfea1b5: Display Zus status instead of clinical and verification status.
+
+## 0.49.5
+
+### Patch Changes
+
+- c60802d1: Re-add builder `_tag` to filters to fix issue with CPR records being duplicated.
+
+## 0.49.4
+
+### Patch Changes
+
+- 0db1341a: Remove condition display from dedupe logic in condition history.
+- 7ee58623: Fix alignment and size of status dots. Add underline on display when hovering on items in medication table.
+- 46e0288d: Minor ui changes to patient search.
+- df8be0d2: Disable metrics to ctw from localhost:3000.
+
+## 0.49.3
+
+### Patch Changes
+
+- cfdca38a: Adjust display values for columns in conditions component.
+
+## 0.49.2
+
+### Patch Changes
+
+- cb384ccf: Paginate metric is not unique by page
+
+## 0.49.1
+
+### Patch Changes
+
+- 6b704286: Fix CSS issue in Safari that prevented certain buttons/links from being visible (like the "Add Patient" link).
+- a6d57c50: Cache requests for authTokenURL. This fixes a race condition where on page load we could send multiple redundant requests.
+
 ## 0.49.0
 
 ### Minor Changes
 
 - a174c79d: Large refactor of conditions component using new naming scheme and a few generic helpers.
+
+#### Breaking Changes
+
+`PatientConditions` component has been renamed `PatientConditionsProfile`. This component shows two tabs, one for patient record and one for outside records. To get a table of just the patient record, you can now use the new `PatientConditions` component.
 
 ### Patch Changes
 

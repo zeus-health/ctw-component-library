@@ -17,6 +17,7 @@ import {
   FeatureFlags,
 } from "./ctw-context";
 import { getFhirClient } from "@/fhir/client";
+import i18next, { Locals } from "@/i18n";
 import {
   DefaultTheme,
   EmptyTailwindCSSVars,
@@ -25,6 +26,7 @@ import {
 } from "@/styles/tailwind.theme";
 import { claimsBuilderId, claimsExp } from "@/utils/auth";
 import { merge } from "@/utils/nodash";
+import { QUERY_KEY_AUTH_TOKEN } from "@/utils/query-keys";
 import { ctwFetch, queryClient } from "@/utils/request";
 import { Telemetry } from "@/utils/telemetry";
 import "../main.scss";
@@ -50,6 +52,7 @@ type CTWProviderProps = {
   headers?: Record<string, string>;
   featureFlags?: FeatureFlags;
   theme?: Theme;
+  locals?: Locals;
 } & (AuthTokenSpecified | AuthTokenURLSpecified);
 
 declare global {
@@ -71,6 +74,7 @@ function CTWProvider({
   children,
   enableTelemetry = false,
   featureFlags,
+  locals,
   theme,
   ...ctwState
 }: CTWProviderProps) {
@@ -101,6 +105,17 @@ function CTWProvider({
 
     ctwProviderRef.current?.setAttribute("style", style);
   }, [ctwProviderRef, theme]);
+
+  // Overwrite our i18next resources with any provided to CTWProvider.
+  useEffect(() => {
+    if (locals) {
+      Object.entries(locals).forEach(([lang, namespaces]) => {
+        Object.entries(namespaces).forEach(([namespace, resources]) => {
+          i18next.addResourceBundle(lang, namespace, resources);
+        });
+      });
+    }
+  }, [locals]);
 
   const handleAuth = useCallback(async () => {
     if (ctwState.authToken) {
@@ -212,9 +227,10 @@ async function checkOrRefreshAuth(
   headers?: Record<string, string>
 ): Promise<CTWToken> {
   if (!token || Date.now() >= token.expiresAt + EXPIRY_PADDING_MS) {
-    const response = await ctwFetch(url as string, {
-      headers,
-    });
+    const response = await queryClient.fetchQuery(
+      [QUERY_KEY_AUTH_TOKEN, url],
+      async () => ctwFetch(url as string, { headers })
+    );
     const newToken = await response.json();
     return {
       accessToken: newToken.access_token,

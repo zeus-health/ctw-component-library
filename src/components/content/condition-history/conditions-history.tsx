@@ -17,6 +17,7 @@ import { getIncludedResources } from "@/fhir/bundle";
 import { useConditionHistory } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models/condition";
 import { searchProvenances } from "@/fhir/provenance";
+import { useBaseTranslations } from "@/i18n";
 
 const CONDITION_HISTORY_LIMIT = 10;
 
@@ -122,6 +123,7 @@ const HistoryRecords = ({
   historyIsLoading,
 }: HistoryRecordsProps) => {
   const openCCDAModal = useCCDAModal();
+  const { t } = useBaseTranslations();
 
   if (
     conditionsWithDate.length === 0 &&
@@ -131,7 +133,13 @@ const HistoryRecords = ({
     return <div>No history found.</div>;
   }
   if (historyIsLoading) {
-    return <Loading message="Loading condition history..." />;
+    return (
+      <Loading
+        message={t("resource.history.loading", {
+          resource: t("glossary:condition_one"),
+        })}
+      />
+    );
   }
 
   function maybeAddDocumentButtons(entries: CollapsibleDataListStackEntries) {
