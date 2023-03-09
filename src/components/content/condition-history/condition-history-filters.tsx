@@ -12,6 +12,7 @@ export const applyConditionHistoryFilters = (
     (c) => new ConditionModel(c, includedResources)
   );
 
+  // We sort by hasEnrichment as well because we want enriched records to be preferred in uniqWith function.
   const sortedConditions = orderBy(
     conditionModels,
     [(c) => c.resource.recordedDate ?? "", (c) => c.hasEnrichment],
@@ -22,6 +23,7 @@ export const applyConditionHistoryFilters = (
     isEqual(valuesToDedupeOn(a), valuesToDedupeOn(b))
   );
 
+  // Sort by recordedDate and then version id because recorded date is can be a flat date.
   return orderBy(
     conditionsDataDeduped,
     [(c) => c.resource.recordedDate ?? "", (c) => c.resource.meta?.versionId],
