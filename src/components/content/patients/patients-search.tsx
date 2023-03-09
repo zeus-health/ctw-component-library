@@ -31,6 +31,7 @@ type CustomPatientOptionValue = Omit<ComboxboxFieldOption, "value"> & {
 export type PatientSearchProps = {
   pageSize?: number;
   removeBranding?: boolean;
+  title?: string;
   onSearchClick?: (e: unknown) => void;
 };
 
@@ -38,6 +39,7 @@ export const PatientSearch = withErrorBoundary(
   ({
     pageSize = 250,
     removeBranding = false,
+    title = "Search Your Patients",
     onSearchClick,
   }: PatientSearchProps) => {
     const [patients, setPatients] = useState<PatientModel[]>([]);
@@ -72,7 +74,7 @@ export const PatientSearch = withErrorBoundary(
 
     return (
       <div className="ctw-max-w-3xl ctw-space-y-5 ctw-text-center">
-        <h3 className="ctw-my-0">Search for a Patient</h3>
+        <h3 className="ctw-my-0 ctw-text-2xl ctw-font-medium">{title}</h3>
         {!removeBranding && (
           <div className="ctw-flex ctw-justify-center ctw-space-x-2 ctw-text-sm ctw-font-light ctw-italic ctw-text-content-light">
             <span>Powered by</span>
