@@ -4,30 +4,35 @@ import { CareTeamPractitionerModel } from "@/fhir/models/careteam-practitioner";
 
 export const patientCareTeamColumns = (includeViewFhirResource = true) => {
   const careTeamColumns: TableColumn<CareTeamPractitionerModel>[] = [
-    // {
-    //   widthPercent: 20,
-    //   minWidth: 150,
-    //   title: "Start Date",
-    //   render: (careTeam) => <div>{careTeam.periodStart}</div>,
-    // },
     {
       widthPercent: 20,
       minWidth: 150,
       title: "Practitioner",
-      render: (careTeam) => <div>{careTeam.PractitionerName}</div>,
+      render: (careTeam) => (
+        <>
+          <div>{careTeam.PractitionerName}</div>
+          <div>{careTeam.managingOrganization}</div>
+        </>
+      ),
     },
-    // {
-    //   widthPercent: 20,
-    //   minWidth: 150,
-    //   title: "Role",
-    //   render: (careTeam) => <div>{careTeam.role}</div>,
-    // },
-    // {
-    //   widthPercent: 20,
-    //   minWidth: 150,
-    //   title: "Qualification",
-    //   render: (careTeam) => <div>{careTeam.practitionerQualification}</div>,
-    // },
+    {
+      widthPercent: 20,
+      minWidth: 150,
+      title: "Role",
+      render: (careTeam) => <div>{careTeam.role}</div>,
+    },
+    {
+      widthPercent: 20,
+      minWidth: 150,
+      title: "Qualification",
+      render: (careTeam) => <div>{careTeam.qualification}</div>,
+    },
+    {
+      widthPercent: 20,
+      minWidth: 150,
+      title: "Last Seen",
+      render: (careTeam) => <div>{careTeam.effectiveStartDate}</div>,
+    },
   ];
 
   if (includeViewFhirResource) {

@@ -3,6 +3,7 @@ import { formatDateISOToLocal } from "../formatters";
 import { findReference } from "../resource-helper";
 import { FHIRModel } from "./fhir-model";
 import { PractitionerModel } from "./practitioner";
+import { find } from "@/utils/nodash";
 
 export class CareTeamModel extends FHIRModel<fhir4.CareTeam> {
   get status() {
@@ -17,32 +18,18 @@ export class CareTeamModel extends FHIRModel<fhir4.CareTeam> {
     return this.resource.period?.end;
   }
 
-  get includedPerformer() {
-    const reference = this.resource.participant?.[0]?.member?.reference;
-
-    const practitioner = findReference(
-      "Practitioner",
-      this.resource.contained,
-      this.includedResources,
-      reference
-    );
-
-    if (practitioner) {
-      return new PractitionerModel(practitioner).fullName;
-    }
-    return this.resource.participant?.[0]?.member?.display;
-  }
-
   get particpants() {
     return this.resource.participant;
   }
 
   get careTeamTelecom() {
-    return this.resource.telecom?.[0].value;
+    return this.resource.telecom;
   }
 
   get managingOrganization() {
-    return this.resource.participant?.[0].onBehalfOf?.display;
+    const behalfOf = find(this.resource.participant, "onBehalfOf")?.onBehalfOf
+      ?.reference;
+    return behalfOf;
   }
 
   get role() {
@@ -65,5 +52,14 @@ export class CareTeamModel extends FHIRModel<fhir4.CareTeam> {
       );
     }
     return undefined;
+  }
+
+  getPractitionerByID(reference: string | undefined) {
+    return findReference(
+      "Practitioner",
+      this.resource.contained,
+      this.includedResources,
+      reference
+    );
   }
 }

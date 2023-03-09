@@ -18,43 +18,35 @@ export const applyCareTeamFilters = (
 
   careTeamModels.forEach((careTeamObject) => {
     careTeamObject.resource.participant?.forEach((participant) => {
-      if (participant.member?.reference) {
-        const careTeamPractitioner = new CareTeamPractitionerModel(
-          careTeamObject,
-          participant.member.reference
-        );
-        if (careTeamMemberMap.has(participant.member.reference)) {
-          const latestPractitioner = careTeamMemberMap.get(
-            participant.member.reference
+      const practitioner = careTeamObject.getPractitionerByID(
+        participant.member?.reference as string
+      );
+      if (practitioner?.id) {
+        if (participant.member?.reference) {
+          const careTeamPractitioner = new CareTeamPractitionerModel(
+            careTeamObject,
+            practitioner
           );
-          if (latestPractitioner && careTeamPractitioner.effectiveStartDate) {
-            careTeamMemberMap.set(
-              participant.member.reference,
-              maxBy(
-                [careTeamPractitioner, latestPractitioner],
-                "effectiveStartDate"
-              )
-            );
+          if (careTeamMemberMap.has(practitioner.id)) {
+            const latestPractitioner = careTeamMemberMap.get(practitioner.id);
+            if (latestPractitioner && careTeamPractitioner.effectiveStartDate) {
+              careTeamMemberMap.set(
+                practitioner.id,
+                maxBy(
+                  [careTeamPractitioner, latestPractitioner],
+                  "effectiveStartDate"
+                )
+              );
+            } else {
+              careTeamMemberMap.set(practitioner.id, careTeamPractitioner);
+            }
           } else {
-            careTeamMemberMap.set(
-              participant.member.reference,
-              careTeamPractitioner
-            );
+            careTeamMemberMap.set(practitioner.id, careTeamPractitioner);
           }
-        } else {
-          careTeamMemberMap.set(
-            participant.member.reference,
-            careTeamPractitioner
-          );
         }
       }
     });
   });
-
-  console.log("CareTeamMemberMap", careTeamMemberMap);
-
-  console.log("CareTeamModel", careTeamModels);
-  // Create a custom model that would be
 
   return compact([...careTeamMemberMap.values()]);
 };

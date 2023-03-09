@@ -1,5 +1,6 @@
 import cx from "classnames";
 import { useRef } from "react";
+import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { patientCareTeamColumns } from "./patient-careteam-columns";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { Table } from "@/components/core/table/table";
@@ -28,10 +29,11 @@ export function PatientCareTeam({
   const { featureFlags } = useCTW();
   const patientCareTeamQuery = usePatientCareTeam();
 
-  // const openDetails = useResourceDetailsDrawer({
-  //   header: (m) => m.id,
-  //   details: careTeamData,
-  // });
+  const openDetails = useResourceDetailsDrawer({
+    header: (m) => m.PractitionerName,
+    subHeader: (m) => m.qualification,
+    details: careTeamData,
+  });
 
   return (
     <div
@@ -49,7 +51,7 @@ export function PatientCareTeam({
         isLoading={patientCareTeamQuery.isLoading}
         records={patientCareTeamQuery.data ?? []}
         columns={patientCareTeamColumns(featureFlags?.enableViewFhirButton)}
-        // handleRowClick={openDetails}
+        handleRowClick={openDetails}
       />
     </div>
   );
@@ -58,9 +60,18 @@ export function PatientCareTeam({
 export const careTeamData = (
   careTeamPractitioner: CareTeamPractitionerModel
 ) => [
-  // { label: "Organization", value: careTeamPractitioner.managingOrganization },
-  { label: "Practitioner", value: careTeamPractitioner.PractitionerName },
-  // { label: "CareTeam Telecom", value: careTeamPractitioner.careTeamTelecom },
-  // { label: "Role", value: careTeamPractitioner.role },
-  // { label: "Status", value: careTeamPractitioner.status },
+  { label: "Organization", value: careTeamPractitioner.managingOrganization },
+  {
+    label: "CareTeam Telecom",
+    value: careTeamPractitioner.telecom && (
+      <div>
+        {careTeamPractitioner.telecom.map((item, index) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <div key={index}>{item.value}</div>
+        ))}
+      </div>
+    ),
+  },
+  { label: "Role", value: careTeamPractitioner.role },
+  { label: "Status", value: careTeamPractitioner.status },
 ];
