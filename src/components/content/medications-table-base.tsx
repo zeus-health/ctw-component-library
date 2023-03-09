@@ -38,7 +38,9 @@ export const MedicationsTableBase = ({
       title: "Medication Name",
       render: (medication) => (
         <>
-          <div className="ctw-font-medium">{medication.display}</div>
+          <div className="ctw-font-medium group-hover:ctw-underline">
+            {medication.display}
+          </div>
           <div className="ctw-font-light">{medication.dosage}</div>
         </>
       ),
