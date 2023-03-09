@@ -14,7 +14,7 @@ export const applyConditionHistoryFilters = (
 
   const sortedConditions = orderBy(
     conditionModels,
-    (c) => c.resource.recordedDate ?? "",
+    [(c) => c.resource.recordedDate ?? "", (c) => c.hasEnrichment],
     "desc"
   );
 
@@ -22,7 +22,11 @@ export const applyConditionHistoryFilters = (
     isEqual(valuesToDedupeOn(a), valuesToDedupeOn(b))
   );
 
-  return conditionsDataDeduped;
+  return orderBy(
+    conditionsDataDeduped,
+    [(c) => c.resource.recordedDate ?? "", (c) => c.resource.meta?.versionId],
+    ["desc", "desc"]
+  );
 };
 
 const valuesToDedupeOn = (condition: ConditionModel) => [
