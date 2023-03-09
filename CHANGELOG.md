@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.49.5
+
+### Patch Changes
+
+- c60802d1: Re-add builder `_tag` to filters to fix issue with CPR records being duplicated.
+
 ## 0.49.4
 
 ### Patch Changes
