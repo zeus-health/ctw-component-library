@@ -30,7 +30,7 @@ export const patientCareTeamColumns = (includeViewFhirResource = true) => {
     {
       widthPercent: 20,
       minWidth: 150,
-      title: "Last Seen",
+      title: "Last Recorded",
       render: (careTeam) => <div>{careTeam.effectiveStartDate}</div>,
     },
   ];
