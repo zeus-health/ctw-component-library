@@ -10,7 +10,7 @@ export const patientCareTeamColumns = (includeViewFhirResource = true) => {
       title: "Practitioner",
       render: (careTeam) => (
         <>
-          <div>{careTeam.PractitionerName}</div>
+          <div>{careTeam.practitionerName}</div>
           <div>{careTeam.managingOrganization}</div>
         </>
       ),

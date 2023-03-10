@@ -10,7 +10,7 @@ export class CareTeamPractitionerModel extends FHIRModel<fhir4.Practitioner> {
 
   careTeam: CareTeamModel;
 
-  get PractitionerName() {
+  get practitionerName() {
     return new PractitionerModel(this.resource).fullName;
   }
 

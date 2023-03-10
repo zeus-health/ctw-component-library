@@ -30,7 +30,7 @@ export function PatientCareTeam({
   const patientCareTeamQuery = usePatientCareTeam();
 
   const openDetails = useResourceDetailsDrawer({
-    header: (m) => m.PractitionerName,
+    header: (m) => m.practitionerName,
     subHeader: (m) => m.qualification,
     details: careTeamData,
   });
