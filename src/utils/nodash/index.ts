@@ -36,4 +36,3 @@ export { default as startCase } from "lodash/startCase";
 export { default as trim } from "lodash/trim";
 export { default as uniq } from "lodash/uniq";
 export { default as uniqWith } from "lodash/uniqWith";
-export { default as maxBy } from "lodash/maxBy";
