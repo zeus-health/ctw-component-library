@@ -52,7 +52,7 @@ export function ListBox<T extends MinListBoxItem>({
   };
 
   return (
-    <div className="ctw-inline-block">
+    <div className="ctw-relative ctw-inline-block">
       <Listbox
         value={selectedTabIndex}
         onChange={(index: number) => {
