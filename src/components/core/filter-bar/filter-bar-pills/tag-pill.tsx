@@ -1,8 +1,8 @@
-import { XIcon } from "@heroicons/react/solid";
+import { faX } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cx from "classnames";
 import { FilterItem } from "@/components/core/filter-bar/filter-bar-types";
 import { displayFilterItem } from "@/components/core/filter-bar/filter-bar-utils";
-import { set } from "@/utils/nodash/fp";
 
 type FilterBarTagPillProps = {
   filter: FilterItem;
@@ -10,18 +10,18 @@ type FilterBarTagPillProps = {
 };
 
 const buttonClassName =
-  "ctw-flex ctw-items-center ctw-max-w-[15rem] ctw-capitalize ctw-text-content-black ctw-bg-bg-dark ctw-text-sm ctw-rounded ctw-my-2 ctw-py-2 ctw-px-3 ctw-relative ctw-mr-1 ctw-cursor-pointer ctw-border-0 ctw-border-transparent";
+  "ctw-flex ctw-items-center ctw-max-w-[15rem] ctw-capitalize ctw-text-content-black ctw-bg-bg-dark ctw-text-sm ctw-rounded ctw-py-2 ctw-px-3 ctw-relative ctw-cursor-pointer ctw-border-0 ctw-border-transparent";
 
 export function FilterBarTagPill({ filter, onRemove }: FilterBarTagPillProps) {
   return (
     <button
       key={filter.key}
       type="button"
-      className={cx(buttonClassName, filter.className)}
+      className={cx(buttonClassName, filter.className, "ctw-space-x-2")}
       onClick={onRemove}
     >
-      {displayFilterItem(set("icon", null, filter), { active: true })}
-      <XIcon className="ctw-ml-1 ctw-h-3.5 ctw-text-content-light" />
+      <div>{displayFilterItem(filter, { active: true })}</div>
+      <FontAwesomeIcon icon={faX} className="ctw-w-2 ctw-text-content-light" />
     </button>
   );
 }

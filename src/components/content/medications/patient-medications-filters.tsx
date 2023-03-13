@@ -1,3 +1,4 @@
+import { faEye, faUser } from "@fortawesome/free-solid-svg-icons";
 import {
   FilterChangeEvent,
   FilterItem,
@@ -22,7 +23,7 @@ export function medicationFilters(
     {
       key: "isArchived",
       type: "tag",
-      icon: "eye",
+      icon: faEye,
       display: ({ active }) =>
         active ? "dismissed records" : "show dismissed records",
     },
@@ -31,7 +32,7 @@ export function medicationFilters(
       : {
           key: "lastPrescriber",
           type: "checkbox",
-          icon: "clipboard",
+          icon: faUser,
           values: prescriberNames,
           display: "prescriber",
         },
