@@ -68,7 +68,11 @@ export function ListBox<T extends MinListBoxItem>({
             "ctw-relative ctw-cursor-pointer ctw-justify-between ctw-space-x-2 ctw-border-0 ctw-border-transparent"
           )}
         >
-          {children || renderDisplay(selectedItem, { listView: false })}
+          {/* Wrap in div here so our horizontal spacing affects these two elements
+              and not any elements the children may have. */}
+          <div>
+            {children || renderDisplay(selectedItem, { listView: false })}
+          </div>
           {!useBasicStyles && (
             <FontAwesomeIcon icon={faChevronDown} className="ctw-w-2" />
           )}
