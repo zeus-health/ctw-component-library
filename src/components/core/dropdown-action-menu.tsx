@@ -1,15 +1,17 @@
+import { faCheck, IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Menu } from "@headlessui/react";
-import { CheckIcon } from "@heroicons/react/solid";
 import * as RadixDropdownMenu from "@radix-ui/react-dropdown-menu";
 import cx from "classnames";
 import { ReactNode, useState } from "react";
+import { MenuItem } from "./menu/menu-item";
 import { useCTW } from "./providers/ctw-provider";
 import "./dropdown-action-menu.scss";
 
 export type MenuItem = {
   action: () => void;
   className?: string;
-  decoration?: ReactNode;
+  icon?: IconDefinition;
   name: string;
 };
 
@@ -102,7 +104,7 @@ export function DropdownMenuAction({
                       "ctw-dropdown-action-menu-item"
                     )}
                   >
-                    {menuItem.decoration} {menuItem.name}
+                    <MenuItem icon={menuItem.icon}>{menuItem.name}</MenuItem>
                   </RadixDropdownMenu.Item>
                 ))}
               </>
@@ -131,10 +133,11 @@ const RenderCorrectFieldType = ({
         <div>
           <label
             htmlFor={menuItem.name}
-            className="ctw-flex ctw-cursor-pointer ctw-items-baseline ctw-space-x-2"
+            className="ctw-flex ctw-cursor-pointer ctw-items-center ctw-space-x-3"
           >
             <input
               type="checkbox"
+              className="ctw-m-0 ctw-mb-px ctw-w-4"
               name={menuItem.name}
               onClick={(e) => {
                 onClick({
@@ -156,11 +159,14 @@ const RenderCorrectFieldType = ({
     case "select":
       return (
         <div className="ctw-flex ctw-w-full ctw-justify-between">
-          <span>{menuItem.name}</span>
+          <span className={cx({ "ctw-font-semibold": menuItem.isSelected })}>
+            {menuItem.name}
+          </span>
           {menuItem.isSelected && (
-            <div>
-              <CheckIcon className="ctw-inline-block ctw-h-5 ctw-items-center  ctw-fill-primary-dark ctw-stroke-0" />
-            </div>
+            <FontAwesomeIcon
+              icon={faCheck}
+              className="ctw-inline-block ctw-h-4 ctw-stroke-0 ctw-align-middle ctw-text-primary-dark"
+            />
           )}
         </div>
       );

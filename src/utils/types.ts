@@ -15,3 +15,7 @@ export const isEmptyValue = (value: unknown) =>
   Number.isNaN(value) ||
   (typeof value === "object" && Object.keys(value).length === 0) ||
   (typeof value === "string" && value.trim().length === 0);
+
+export type DeepPartial<T> = {
+  [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K];
+};

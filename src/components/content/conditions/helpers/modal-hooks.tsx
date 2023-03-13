@@ -15,10 +15,12 @@ import { useDrawer } from "@/components/core/providers/drawer-provider";
 import { useModal } from "@/components/core/providers/modal-provider";
 import { usePatient } from "@/components/core/providers/patient-provider";
 import { deleteCondition, getNewCondition } from "@/fhir/conditions";
+import { useBaseTranslations } from "@/i18n";
 import { ConditionModel, useCTW } from "@/index";
 import { curry } from "@/utils/nodash";
 
 export function useAddConditionForm() {
+  const { t } = useBaseTranslations();
   const { openDrawer } = useDrawer();
   const patientResponse = usePatient();
   const patientId = patientResponse.data?.id ?? "";
@@ -33,7 +35,7 @@ export function useAddConditionForm() {
     openDrawer({
       component: (props) => (
         <DrawerFormWithFields
-          title="Add Condition"
+          title={t("resource.add", { resource: t("glossary:condition_one") })}
           schema={conditionAddSchema}
           action={curry(createOrEditCondition)(condition, patientId)}
           data={getAddConditionData({ condition })}
@@ -45,6 +47,7 @@ export function useAddConditionForm() {
 }
 
 export function useEditConditionForm() {
+  const { t } = useBaseTranslations();
   const { openDrawer } = useDrawer();
   const patientResponse = usePatient();
   const patientId = patientResponse.data?.id ?? "";
@@ -53,7 +56,7 @@ export function useEditConditionForm() {
     openDrawer({
       component: (props) => (
         <DrawerFormWithFields
-          title="Edit Condition"
+          title={t("resource.edit", { resource: t("glossary:condition_one") })}
           header={<ConditionHeader condition={condition} />}
           schema={conditionEditSchema}
           action={curry(createOrEditCondition)(condition, patientId)}
@@ -66,15 +69,22 @@ export function useEditConditionForm() {
 }
 
 export function useConfirmDeleteCondition() {
+  const { t } = useBaseTranslations();
   const { openModal } = useModal();
   const { getRequestContext } = useCTW();
 
   return (condition: ConditionModel) => {
+    const name =
+      condition.display ??
+      t("resource.unamed", {
+        resource: t("glossary:condition_one"),
+      });
+
     openModal({
       component: (props) => (
         <ModalConfirmDelete
-          resource={condition.resource}
-          resourceName={condition.display ?? "unnamed condition"}
+          resource={t("glossary:condition_one")}
+          resourceName={name}
           onDelete={async () => {
             const requestContext = await getRequestContext();
             await deleteCondition(condition.resource, requestContext);

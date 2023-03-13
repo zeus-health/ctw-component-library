@@ -17,6 +17,7 @@ import {
   FeatureFlags,
 } from "./ctw-context";
 import { getFhirClient } from "@/fhir/client";
+import i18next, { Locals } from "@/i18n";
 import {
   DefaultTheme,
   EmptyTailwindCSSVars,
@@ -51,6 +52,7 @@ type CTWProviderProps = {
   headers?: Record<string, string>;
   featureFlags?: FeatureFlags;
   theme?: Theme;
+  locals?: Locals;
 } & (AuthTokenSpecified | AuthTokenURLSpecified);
 
 declare global {
@@ -72,6 +74,7 @@ function CTWProvider({
   children,
   enableTelemetry = false,
   featureFlags,
+  locals,
   theme,
   ...ctwState
 }: CTWProviderProps) {
@@ -102,6 +105,17 @@ function CTWProvider({
 
     ctwProviderRef.current?.setAttribute("style", style);
   }, [ctwProviderRef, theme]);
+
+  // Overwrite our i18next resources with any provided to CTWProvider.
+  useEffect(() => {
+    if (locals) {
+      Object.entries(locals).forEach(([lang, namespaces]) => {
+        Object.entries(namespaces).forEach(([namespace, resources]) => {
+          i18next.addResourceBundle(lang, namespace, resources);
+        });
+      });
+    }
+  }, [locals]);
 
   const handleAuth = useCallback(async () => {
     if (ctwState.authToken) {
