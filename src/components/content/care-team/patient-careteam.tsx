@@ -10,7 +10,6 @@ import { useBreakpoints } from "@/hooks/use-breakpoints";
 
 export type PatientCareTeamProps = {
   className?: string;
-  includeViewFhirResource?: boolean;
 };
 
 export type CareTeamDetailsDrawerProps = {
@@ -20,10 +19,7 @@ export type CareTeamDetailsDrawerProps = {
   onClose: () => void;
 };
 
-export function PatientCareTeam({
-  className,
-  includeViewFhirResource,
-}: PatientCareTeamProps) {
+export function PatientCareTeam({ className }: PatientCareTeamProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const { featureFlags } = useCTW();
