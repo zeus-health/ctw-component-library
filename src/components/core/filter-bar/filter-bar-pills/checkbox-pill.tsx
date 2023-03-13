@@ -1,15 +1,18 @@
+import {
+  faChevronDown,
+  faRefresh,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cx from "classnames";
 import { DropdownMenuAction } from "@/components/core/dropdown-action-menu";
 import {
   FilterOptionCheckbox,
   FilterValuesRecord,
 } from "@/components/core/filter-bar/filter-bar-types";
-import {
-  displayFilterItem,
-  getIcon,
-} from "@/components/core/filter-bar/filter-bar-utils";
+import { displayFilterItem } from "@/components/core/filter-bar/filter-bar-utils";
 import { isString } from "@/utils/nodash";
-import { compact, omit } from "@/utils/nodash/fp";
+import { compact } from "@/utils/nodash/fp";
 
 type FilterBarCheckboxPillProps = {
   filter: FilterOptionCheckbox;
@@ -21,7 +24,7 @@ type FilterBarCheckboxPillProps = {
 };
 
 const buttonClassName =
-  "ctw-flex ctw-items-center ctw-max-w-[15rem] ctw-space-x-1 ctw-capitalize ctw-text-content-black ctw-bg-bg-dark ctw-text-sm ctw-rounded ctw-my-2 ctw-py-2 ctw-px-3 ctw-relative ctw-mr-1 ctw-cursor-pointer ctw-border-0 ctw-border-transparent  ctw-whitespace-nowrap";
+  "ctw-flex ctw-items-center ctw-max-w-[15rem] ctw-space-x-2 ctw-capitalize ctw-text-content-black ctw-bg-bg-dark ctw-text-sm ctw-rounded ctw-py-2 ctw-px-3 ctw-relative ctw-cursor-pointer ctw-border-0 ctw-border-transparent  ctw-whitespace-nowrap";
 
 export function FilterBarCheckboxPill({
   filter,
@@ -48,9 +51,16 @@ export function FilterBarCheckboxPill({
       items={items}
       type="checkbox"
       pinnedActions={compact([
+        onReset
+          ? {
+              icon: faRefresh,
+              name: "Reset Filter",
+              action: onReset,
+            }
+          : null,
         onRemove
           ? {
-              decoration: getIcon("trash"),
+              icon: faTrash,
               name: "Remove Filter",
               action: onRemove,
             }
@@ -59,15 +69,14 @@ export function FilterBarCheckboxPill({
       buttonClassName={cx(filter.className, buttonClassName)}
       onItemSelect={(item) => onChange(item.key, item.value)}
     >
-      <span className="ctw-min-w-fit ctw-font-medium ctw-text-content-black">
-        {displayFilterItem(omit("icon", filter), { active: true })}
-        {selectedItems.length > 0 && ": "}
-      </span>
-      <span className="ctw-inline-block ctw-overflow-hidden ctw-text-ellipsis ctw-whitespace-nowrap ctw-text-left ctw-font-normal">
-        {selectedItems.join(",")}
-      </span>
+      <div className="ctw-truncate ctw-font-medium ctw-text-content-black">
+        {displayFilterItem(filter, { active: true })}
+        {selectedItems.length > 0 && (
+          <span className="ctw-font-normal">: {selectedItems.join(",")}</span>
+        )}
+      </div>
 
-      <div className="ctw-flex">{getIcon("chevron-down")}</div>
+      <FontAwesomeIcon icon={faChevronDown} className="ctw-w-2" />
     </DropdownMenuAction>
   );
 }

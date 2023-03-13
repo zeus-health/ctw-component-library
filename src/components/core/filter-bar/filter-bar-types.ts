@@ -1,5 +1,7 @@
+import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import cx from "classnames";
 import { ReactNode } from "react";
+import { ListBoxOptionStatus } from "../list-box/list-box";
 
 export type FilterBarProps = {
   className?: cx.Argument;
@@ -8,15 +10,11 @@ export type FilterBarProps = {
   defaultState?: FilterChangeEvent;
 };
 
-export type FilterItemStatus = {
-  active: boolean;
-};
-
 export type MinFilterItem = {
   belowTheFold?: boolean; // should the filter be below divider in main menu?
   className?: cx.Argument;
-  display: string | ((status: FilterItemStatus) => ReactNode | string);
-  icon?: string;
+  display: string | ((status: ListBoxOptionStatus) => ReactNode | string);
+  icon?: IconDefinition;
   key: string;
   type: "tag";
 };
