@@ -24,8 +24,8 @@ export function medicationFilters(
       key: "isArchived",
       type: "tag",
       icon: faEye,
-      display: ({ active }) =>
-        active ? "dismissed records" : "show dismissed records",
+      display: ({ listView }) =>
+        listView ? "show dismissed records" : "dismissed records",
     },
     prescriberNames.length < 2
       ? null
