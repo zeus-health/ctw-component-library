@@ -1,5 +1,13 @@
 # ctw-component-library
 
+## 0.49.7
+
+### Patch Changes
+
+- d96d0513: Initial setup of i18n using the i18next library. At first, we allow overwriting the term "condition" via the new "locals" prop on `CTWProvider`. Future versions will allow for more customizations around text/copy/strings.
+- da22b889: Clean up sort & filter dropdown UI. Align styles across dropdowns, switch icons, and a handful of general cleanup tweaks.
+- 487f0ed2: Allow phone numbers to have a leading 1 and country codes.
+
 ## 0.49.6
 
 ### Patch Changes
