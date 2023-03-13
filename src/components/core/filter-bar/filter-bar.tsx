@@ -207,27 +207,29 @@ export const FilterBar = ({
   }
 
   return (
-    <div className={cx(className, "ctw-flex ctw-items-center")}>
-      <div className="ctw-relative ctw-flex ctw-space-x-2">
-        {activeFilters.map((filter) => (
-          <FilterBarPill
-            isOpen={recentlyAdded === filter.key}
-            key={filter.key}
-            filter={filter}
-            filterValues={activeFilterValues}
-            handleAddOrRemoveFilter={addOrRemoveFilter}
-            handleClearFilter={clearFilter}
-            updateSelectedFilterValues={(
-              valueKey: string,
-              isSelected: boolean
-            ) => updateSelectedFilter(filter.key, valueKey, isSelected)}
-          />
-        ))}
-      </div>
+    <div
+      className={cx(
+        className,
+        "ctw-relative ctw-flex ctw-items-center ctw-space-x-2"
+      )}
+    >
+      {activeFilters.map((filter) => (
+        <FilterBarPill
+          isOpen={recentlyAdded === filter.key}
+          key={filter.key}
+          filter={filter}
+          filterValues={activeFilterValues}
+          handleAddOrRemoveFilter={addOrRemoveFilter}
+          handleClearFilter={clearFilter}
+          updateSelectedFilterValues={(valueKey: string, isSelected: boolean) =>
+            updateSelectedFilter(filter.key, valueKey, isSelected)
+          }
+        />
+      ))}
 
       <ListBox
         useBasicStyles
-        btnClassName="ctw-bg-transparent ctw-text-content-light ctw-flex ctw-items-center"
+        btnClassName="!ctw-text-content-light ctw-btn-clear ctw-space-x-1 !ctw-font-normal"
         items={inactiveFilterMenuItems}
         onChange={(_index, item) => {
           switch (item.key) {
@@ -240,7 +242,8 @@ export const FilterBar = ({
           }
         }}
       >
-        <FontAwesomeIcon icon={faPlus} className="ctw-w-4" /> Add Filters
+        <FontAwesomeIcon icon={faPlus} className="ctw-w-4" />
+        <span>Add Filters</span>
       </ListBox>
     </div>
   );

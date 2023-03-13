@@ -72,7 +72,7 @@ export function FilterBarCheckboxPill({
       <div className="ctw-truncate ctw-font-medium ctw-text-content-black">
         {displayFilterItem(filter, { active: true })}
         {selectedItems.length > 0 && (
-          <span className="ctw-font-normal">: {selectedItems.join(",")}</span>
+          <span className="ctw-font-normal">: {selectedItems.join(", ")}</span>
         )}
       </div>
 
