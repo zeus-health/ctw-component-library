@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.49.8
+
+### Patch Changes
+
+- 97724c64: Fix a few more style issues for filters.
+
 ## 0.49.7
 
 ### Patch Changes
