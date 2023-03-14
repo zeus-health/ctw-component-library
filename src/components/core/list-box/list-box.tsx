@@ -80,7 +80,6 @@ export function ListBox<T extends MinListBoxItem>({
                 <li
                   className={cx(
                     "ctw-flex ctw-cursor-pointer ctw-justify-between ctw-px-3 ctw-py-2",
-                    "first:ctw-pt-3 last:ctw-pb-3",
                     "hover:ctw-bg-bg-lighter",
                     item.className,
                     {
