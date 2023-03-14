@@ -150,7 +150,10 @@ export function useShowPatientHistoryRequestButton() {
   const patientHistoryQuery = usePatientHistoryDetails();
   const otherRecordsExist = query.data.length === 0;
 
-  return (
-    patientHistoryQuery.data?.lastRetrievedAt === undefined && otherRecordsExist
-  );
+  return {
+    data:
+      patientHistoryQuery.data?.lastRetrievedAt === undefined &&
+      otherRecordsExist,
+    isLoading: query.isLoading || patientHistoryQuery.isLoading,
+  };
 }

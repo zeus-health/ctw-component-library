@@ -21,9 +21,10 @@ const PatientConditionsOutsideComponent = ({
   readOnly = false,
 }: PatientConditionsOutsideProps) => {
   const query = usePatientConditionsOutside();
-  const showRequestRecordsRequestButton = useShowPatientHistoryRequestButton();
+  const showRequestRecordsRequestButtonQuery =
+    useShowPatientHistoryRequestButton();
 
-  const emptyMessage = showRequestRecordsRequestButton ? (
+  const emptyMessage = showRequestRecordsRequestButtonQuery.data ? (
     <div className="ctw-flex ctw-space-x-1">
       <div>Retrieve patient clinical history.</div>
       <RequestRecordsButton />
@@ -42,6 +43,7 @@ const PatientConditionsOutsideComponent = ({
       readOnly={readOnly}
       rowActions={readOnly ? undefined : RowActions}
       emptyMessage={emptyMessage}
+      isLoading={showRequestRecordsRequestButtonQuery.isLoading}
     />
   );
 };

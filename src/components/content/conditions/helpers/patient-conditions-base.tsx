@@ -22,6 +22,7 @@ export type PatientConditionsTableProps = {
   readOnly?: boolean;
   rowActions?: ResourceTableProps<ConditionModel>["rowActions"];
   emptyMessage?: string | ReactElement;
+  isLoading?: boolean;
 };
 
 export const PatientConditionsBase = ({
@@ -31,6 +32,7 @@ export const PatientConditionsBase = ({
   readOnly = false,
   rowActions,
   emptyMessage = "There are no condition records available.",
+  isLoading,
 }: PatientConditionsTableProps) => {
   const showConditionHistory = useConditionHistory();
   const { data, setFilters, setSort } = useFilteredSortedData({
@@ -60,7 +62,7 @@ export const PatientConditionsBase = ({
         columns={patientConditionsColumns}
         data={data}
         emptyMessage={emptyMessage}
-        isLoading={query.isLoading}
+        isLoading={isLoading || query.isLoading}
         onRowClick={(condition) =>
           showConditionHistory({
             condition,

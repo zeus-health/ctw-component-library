@@ -9,12 +9,13 @@ export type PatientHistoryActionProps = {
 export const PatientHistoryAction = ({
   hideRequestRecords = false,
 }: PatientHistoryActionProps) => {
-  const showRequestRecordsRequestButton = useShowPatientHistoryRequestButton();
+  const showRequestRecordsRequestButtonQuery =
+    useShowPatientHistoryRequestButton();
 
   return (
     <div className="ctw-flex ctw-space-x-1">
       <PatientHistoryLastRetrieved />
-      {!hideRequestRecords && !showRequestRecordsRequestButton && (
+      {!hideRequestRecords && !showRequestRecordsRequestButtonQuery.data && (
         <RequestRecordsButton />
       )}
     </div>
