@@ -1,7 +1,7 @@
 import { CareTeamModel } from "@/fhir/models/careteam";
 import { CareTeamPractitionerModel } from "@/fhir/models/careteam-practitioner";
 import { ResourceMap } from "@/fhir/types";
-import { isEqual, orderBy, uniqWith } from "@/utils/nodash";
+import { orderBy, uniqBy } from "@/utils/nodash";
 
 export const applyCareTeamFilters = (
   data: fhir4.CareTeam[],
@@ -31,11 +31,9 @@ export const applyCareTeamFilters = (
 
   const sortedCareTeamPractitionerModels = orderBy(
     careTeamPractitionerModels,
-    [(c) => c.effectiveStartDate, (c) => c.id],
+    ["effectiveStartDate", "id"],
     ["desc", "desc"]
   );
 
-  return uniqWith(sortedCareTeamPractitionerModels, (a, b) =>
-    isEqual(a.id, b.id)
-  );
+  return uniqBy(sortedCareTeamPractitionerModels, "id");
 };
