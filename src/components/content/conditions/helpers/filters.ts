@@ -9,14 +9,26 @@ import {
 import { ConditionModel } from "@/fhir/models";
 import { uniqueValues } from "@/utils/filters";
 
-export function conditionFilters(conditions: ConditionModel[]): FilterItem[] {
+export function conditionFilters(
+  conditions: ConditionModel[],
+  outside: boolean
+): FilterItem[] {
   return [
     {
       key: "displayStatus",
       type: "checkbox",
       icon: faClipboardCheck,
       display: "Status",
-      values: uniqueValues(conditions, "displayStatus"),
+      values: outside
+        ? ["Active", "Inactive", "Unknown"]
+        : [
+            "Active",
+            "Inactive",
+            "Entered in Error",
+            "Pending",
+            "Refuted",
+            "Unknown",
+          ],
     },
     {
       key: "ccsChapter",
