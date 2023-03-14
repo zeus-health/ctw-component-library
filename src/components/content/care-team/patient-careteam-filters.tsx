@@ -7,10 +7,6 @@ export const applyCareTeamFilters = (
   data: fhir4.CareTeam[],
   includedResources: ResourceMap
 ) => {
-  // 1. Make a list of CareTeamPractitionerModel and filter out any practioners that dont have an id.
-  // 2. Sort effectiveStartDate and practitionerId to ensure we remove older records.
-  // 3. UniqWith of the practioners to remove dupe records.
-
   const careTeamModels = data.map(
     (careteam) => new CareTeamModel(careteam, includedResources)
   );
