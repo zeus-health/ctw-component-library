@@ -1,6 +1,6 @@
-import { PatientHistoryTableHeaderMessage } from "./patient-history-table-header";
+import { PatientHistoryLastRetrieved } from "./patient-history-last-retrieved";
 import { RequestRecordsButton } from "./request-records-button";
-import { usePatientHistory } from "./use-patient-history";
+import { useShowPatientHistoryRequestButton } from "./use-patient-history";
 
 export type PatientHistoryActionProps = {
   hideRequestRecords: boolean;
@@ -9,18 +9,14 @@ export type PatientHistoryActionProps = {
 export const PatientHistoryAction = ({
   hideRequestRecords = false,
 }: PatientHistoryActionProps) => {
-  const patientHistory = usePatientHistory();
+  const showRequestRecordsRequestButton = useShowPatientHistoryRequestButton();
 
   return (
-    <div>
-      {patientHistory.lastRetrievedAt && (
-        <PatientHistoryTableHeaderMessage
-          patientHistory={patientHistory}
-          message="Last Retrieved"
-        />
+    <div className="ctw-flex ctw-space-x-1">
+      <PatientHistoryLastRetrieved />
+      {!hideRequestRecords && !showRequestRecordsRequestButton && (
+        <RequestRecordsButton />
       )}
-
-      {!hideRequestRecords && <RequestRecordsButton />}
     </div>
   );
 };

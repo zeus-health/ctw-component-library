@@ -1,3 +1,4 @@
+import { ReactElement } from "react";
 import { useConditionHistory } from "../../condition-history/conditions-history-drawer";
 import {
   ResourceTable,
@@ -20,6 +21,7 @@ export type PatientConditionsTableProps = {
   query: { data?: ConditionModel[]; isLoading: boolean };
   readOnly?: boolean;
   rowActions?: ResourceTableProps<ConditionModel>["rowActions"];
+  emptyMessage?: string | ReactElement;
 };
 
 export const PatientConditionsBase = ({
@@ -28,6 +30,7 @@ export const PatientConditionsBase = ({
   query,
   readOnly = false,
   rowActions,
+  emptyMessage = "There are no condition records available.",
 }: PatientConditionsTableProps) => {
   const showConditionHistory = useConditionHistory();
   const { data, setFilters, setSort } = useFilteredSortedData({
@@ -56,7 +59,7 @@ export const PatientConditionsBase = ({
         className="ctw-patient-conditions"
         columns={patientConditionsColumns}
         data={data}
-        emptyMessage="There are no condition records available."
+        emptyMessage={emptyMessage}
         isLoading={query.isLoading}
         onRowClick={(condition) =>
           showConditionHistory({

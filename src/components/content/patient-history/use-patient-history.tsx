@@ -8,6 +8,7 @@ import {
   usePatientPromise,
   useQueryWithPatient,
 } from "@/components/core/providers/patient-provider";
+import { usePatientConditionsOutside } from "@/fhir/conditions";
 import { PatientRefreshHistoryMessage } from "@/services/patient-history/patient-history-types";
 import { errorResponse } from "@/utils/errors";
 import { find } from "@/utils/nodash";
@@ -106,7 +107,7 @@ async function getPatientRefreshHistoryMessages(
   }
 }
 
-function usePatientHistoryDetails() {
+export function usePatientHistoryDetails() {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_HISTORY_DETAILS,
     [],
@@ -141,5 +142,15 @@ function usePatientHistoryDetails() {
         );
       }
     }
+  );
+}
+
+export function useShowPatientHistoryRequestButton() {
+  const query = usePatientConditionsOutside();
+  const patientHistoryQuery = usePatientHistoryDetails();
+  const otherRecordsExist = query.data.length === 0;
+
+  return (
+    patientHistoryQuery.data?.lastRetrievedAt === undefined && otherRecordsExist
   );
 }

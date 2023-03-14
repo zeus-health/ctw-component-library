@@ -8,6 +8,7 @@ export * from "@/components/content/care-team/patient-careteam";
 export * from "@/components/content/document/patient-documents";
 export * from "@/components/content/medications/patient-medications";
 export * from "@/components/content/patient-history/use-patient-history";
+export * from "@/components/content/patient-history/patient-history-last-retrieved";
 export * from "@/components/content/patients/patients-table";
 export * from "@/components/content/patients/patients-search";
 export * from "@/components/content/timeline/patient-timeline";
