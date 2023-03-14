@@ -229,7 +229,7 @@ export const FilterBar = ({
 
       <ListBox
         useBasicStyles
-        btnClassName="!ctw-text-content-light ctw-btn-clear ctw-space-x-1 !ctw-font-normal"
+        btnClassName="!ctw-text-content-light ctw-btn-clear !ctw-font-normal !ctw-py-2"
         items={inactiveFilterMenuItems}
         onChange={(_index, item) => {
           switch (item.key) {
@@ -242,8 +242,10 @@ export const FilterBar = ({
           }
         }}
       >
-        <FontAwesomeIcon icon={faPlus} className="ctw-w-4" />
-        <span>Add Filters</span>
+        <div className="ctw-space-x-1">
+          <FontAwesomeIcon icon={faPlus} className="ctw-w-4" />
+          <span>Add Filters</span>
+        </div>
       </ListBox>
     </div>
   );
