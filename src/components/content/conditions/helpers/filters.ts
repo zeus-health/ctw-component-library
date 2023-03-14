@@ -20,7 +20,7 @@ export function conditionFilters(
       icon: faClipboardCheck,
       display: "Status",
       values: outside
-        ? ["Active", "Inactive", "Unknown"]
+        ? ["Active", "Inactive", "Dismissed", "Unknown"]
         : [
             "Active",
             "Inactive",
