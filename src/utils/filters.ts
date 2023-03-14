@@ -16,9 +16,7 @@ export const applyFilters = <T extends object>(
 
         const targetFilter = entry[filterItem.key as keyof T];
 
-        return (
-          filteredList.length < 1 || filteredList.includes(String(targetFilter))
-        );
+        return filteredList.includes(String(targetFilter));
       }
 
       return true;
