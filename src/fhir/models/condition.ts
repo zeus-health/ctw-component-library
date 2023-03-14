@@ -278,7 +278,7 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
     );
   }
 
-  get displayStatus(): string {
+  get displayStatus(): ConditionStatuses {
     function clinicalStatusMap(code: ClinicalStatus | undefined) {
       switch (code) {
         case "active":
@@ -359,3 +359,23 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
     })?.code as VerificationStatus | undefined;
   }
 }
+
+export const conditionStatuses = [
+  "Active",
+  "Inactive",
+  "Entered in Error",
+  "Pending",
+  "Refuted",
+  "Unknown",
+] as const;
+
+export const outsideConditionStatuses = [
+  "Active",
+  "Inactive",
+  "Dismissed",
+  "Unknown",
+] as const;
+
+export type ConditionStatuses =
+  | typeof conditionStatuses[number]
+  | typeof outsideConditionStatuses[number];

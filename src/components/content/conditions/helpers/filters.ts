@@ -7,6 +7,10 @@ import {
   FilterItem,
 } from "@/components/core/filter-bar/filter-bar-types";
 import { ConditionModel } from "@/fhir/models";
+import {
+  conditionStatuses,
+  outsideConditionStatuses,
+} from "@/fhir/models/condition";
 import { uniqueValues } from "@/utils/filters";
 
 export function conditionFilters(
@@ -19,16 +23,8 @@ export function conditionFilters(
       type: "checkbox",
       icon: faClipboardCheck,
       display: "Status",
-      values: outside
-        ? ["Active", "Inactive", "Dismissed", "Unknown"]
-        : [
-            "Active",
-            "Inactive",
-            "Entered in Error",
-            "Pending",
-            "Refuted",
-            "Unknown",
-          ],
+      // Create new array as these other ones are readonly.
+      values: [...(outside ? outsideConditionStatuses : conditionStatuses)],
     },
     {
       key: "ccsChapter",
