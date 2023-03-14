@@ -6,7 +6,7 @@ import type {
 import { faPlus, faRefresh, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cx from "classnames";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   filterChangeEvent,
   filterChangeEventToValuesRecord,
@@ -91,13 +91,6 @@ export const FilterBar = ({
       filterChangeEvent(filters, Object.keys(initialState), initialState)
     );
   };
-
-  const clearFilter = useCallback(
-    (key: string) => {
-      setActiveFilterValues({ ...activeFilterValues, [key]: [] });
-    },
-    [activeFilterValues]
-  );
 
   // Add or remove a filter from the activated filters list
   const addOrRemoveFilter = (key: string, remove = false) => {
@@ -220,7 +213,6 @@ export const FilterBar = ({
           filter={filter}
           filterValues={activeFilterValues}
           handleAddOrRemoveFilter={addOrRemoveFilter}
-          handleClearFilter={clearFilter}
           updateSelectedFilterValues={(valueKey: string, isSelected: boolean) =>
             updateSelectedFilter(filter.key, valueKey, isSelected)
           }
