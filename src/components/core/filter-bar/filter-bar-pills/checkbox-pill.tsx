@@ -1,8 +1,4 @@
-import {
-  faChevronDown,
-  faRefresh,
-  faTrash,
-} from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cx from "classnames";
 import { DropdownMenuAction } from "@/components/core/dropdown-action-menu";
@@ -20,7 +16,6 @@ type FilterBarCheckboxPillProps = {
   isOpen: boolean;
   onChange: (key: string, isSelected: boolean) => void;
   onRemove?: () => void;
-  onReset?: () => void;
 };
 
 const buttonClassName =
@@ -32,7 +27,6 @@ export function FilterBarCheckboxPill({
   isOpen,
   onRemove,
   onChange,
-  onReset,
 }: FilterBarCheckboxPillProps) {
   const selected = filter.key in filterValues ? filterValues[filter.key] : [];
   const items = filter.values.map((item) => ({
@@ -51,13 +45,6 @@ export function FilterBarCheckboxPill({
       items={items}
       type="checkbox"
       pinnedActions={compact([
-        onReset
-          ? {
-              icon: faRefresh,
-              name: "Reset Filter",
-              action: onReset,
-            }
-          : null,
         onRemove
           ? {
               icon: faTrash,

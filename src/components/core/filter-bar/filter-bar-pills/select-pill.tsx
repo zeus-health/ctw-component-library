@@ -1,8 +1,4 @@
-import {
-  faRefresh,
-  faTrash,
-  IconDefinition,
-} from "@fortawesome/free-solid-svg-icons";
+import { faTrash, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import cx from "classnames";
 import { ReactNode } from "react";
 import { MenuItem } from "../../menu/menu-item";
@@ -34,7 +30,6 @@ const builtInButton = (name: string, key: string, icon: IconDefinition) => ({
       filter && renderDisplay(filter.display)
     ),
 });
-const resetButton = builtInButton("reset filter", "_reset", faRefresh);
 const removeButton = builtInButton("remove filter", "_remove", faTrash);
 
 export function FilterBarSelectPill({
@@ -45,7 +40,7 @@ export function FilterBarSelectPill({
   const filterNames = filter.values.map((value) =>
     isString(value) ? value : value.display
   );
-  const items = [...filterNames, resetButton, removeButton];
+  const items = [...filterNames, removeButton];
   return (
     <ListBox
       defaultIndex={items.length - 1} // clear index
@@ -54,7 +49,7 @@ export function FilterBarSelectPill({
       items={items.map((item) => ({
         // eslint-disable-next-line react/no-unstable-nested-components
         display: ({ listView }: ListBoxOptionStatus) => {
-          if (item === resetButton || item === removeButton) {
+          if (item === removeButton) {
             return item.display({ listView, filter });
           }
           return listView ? (
@@ -69,7 +64,7 @@ export function FilterBarSelectPill({
         key: isString(item) ? item : item.key,
         className: cx("ctw-capitalize", {
           "ctw-border ctw-capitalize ctw-border-solid ctw-border-divider-light ctw-border-0 ctw-border-t":
-            item === resetButton,
+            item === removeButton,
         }),
       }))}
       onChange={(index, item) => {
