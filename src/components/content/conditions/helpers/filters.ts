@@ -1,4 +1,8 @@
 import {
+  faClipboardCheck,
+  faClipboardList,
+} from "@fortawesome/free-solid-svg-icons";
+import {
   FilterChangeEvent,
   FilterItem,
 } from "@/components/core/filter-bar/filter-bar-types";
@@ -10,14 +14,14 @@ export function conditionFilters(conditions: ConditionModel[]): FilterItem[] {
     {
       key: "displayStatus",
       type: "checkbox",
-      icon: "eye",
+      icon: faClipboardCheck,
       display: "Status",
       values: uniqueValues(conditions, "displayStatus"),
     },
     {
       key: "ccsChapter",
       type: "checkbox",
-      icon: "eye",
+      icon: faClipboardList,
       display: "Category",
       values: uniqueValues(conditions, "ccsChapter"),
     },
