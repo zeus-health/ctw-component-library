@@ -20,8 +20,8 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
     this.revIncludes = revIncludes;
   }
 
-  get id(): string {
-    return this.resource.id || "";
+  get id() {
+    return this.resource.id;
   }
 
   // Returns true if this resource is a summary/lens resource.

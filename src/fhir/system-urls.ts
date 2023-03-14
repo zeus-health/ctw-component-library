@@ -7,6 +7,8 @@ export const SYSTEM_CONDITION_CLINICAL =
   "http://terminology.hl7.org/CodeSystem/condition-clinical";
 export const SYSTEM_CONDITION_VERIFICATION_STATUS =
   "http://terminology.hl7.org/CodeSystem/condition-ver-status";
+export const SYSTEM_DIAGNOSTIC_SERVICE_SECTION_ID =
+  "http://terminology.hl7.org/CodeSystem/v2-0074";
 export const SYSTEM_MARITAL_STATUS =
   "http://terminology.hl7.org/CodeSystem/v3-MaritalStatus";
 export const SYSTEM_NULL_FLAVOR =
