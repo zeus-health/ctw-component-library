@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.50.1
+
+### Patch Changes
+
+- 99427304: Fix view fhir to default to false.
+
 ## 0.50.0
 
 ### Minor Changes
