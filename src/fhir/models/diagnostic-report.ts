@@ -52,6 +52,10 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
     return this.effectiveStart;
   }
 
+  get identifier() {
+    return this.resource.identifier?.[0].value ?? "";
+  }
+
   get effectiveStart() {
     return formatDateISOToLocal(
       this.resource.effectivePeriod?.start || this.resource.effectiveDateTime

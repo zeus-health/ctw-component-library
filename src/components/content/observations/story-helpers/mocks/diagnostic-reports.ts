@@ -78,7 +78,7 @@ export const createDiagnosticReportsBundle = () => ({
   ],
 });
 
-export function createMockDiagnosticReportBundleEntry(
+function createMockDiagnosticReportBundleEntry(
   partialResource: Partial<fhir4.DiagnosticReport>
 ): fhir4.BundleEntry<fhir4.DiagnosticReport> {
   const resourceId = faker.datatype.uuid();

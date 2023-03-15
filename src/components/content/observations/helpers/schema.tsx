@@ -8,7 +8,7 @@ export function setupData(
   const detailData = [
     {
       label: "Identifier",
-      value: observation.resource.identifier?.[0].value,
+      value: observation.identifier,
     },
     {
       label: "Service category",
@@ -43,7 +43,7 @@ export const diagnosticReportData = (
   { label: "Organization", value: diagnosticReport.performer },
   {
     label: "Identifier",
-    value: diagnosticReport.resource.identifier?.[0].value,
+    value: diagnosticReport.identifier,
   },
   {
     label: "Service category",

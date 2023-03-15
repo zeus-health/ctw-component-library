@@ -22,6 +22,10 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
     );
   }
 
+  get identifier() {
+    return this.resource.identifier?.[0].value ?? "";
+  }
+
   get performer() {
     return this.resource.performer?.[0].display;
   }
