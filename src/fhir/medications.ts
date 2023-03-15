@@ -20,7 +20,7 @@ import {
   SYSTEM_ZUS_UNIVERSAL_ID,
 } from "./system-urls";
 import { ResourceTypeString } from "./types";
-import { handleMedicationDismissal } from "@/components/content/medications/medication-actions";
+import { handleMedicationDismissal } from "@/components/content/medications/helpers/medication-actions";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";

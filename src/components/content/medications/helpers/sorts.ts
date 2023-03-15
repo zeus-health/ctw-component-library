@@ -11,20 +11,6 @@ export const medicationSortOptions: SortOption<MedicationStatementModel>[] = [
     sorts: [{ key: "display", dir: "desc" }],
   },
   {
-    display: "Status (A-Z)",
-    sorts: [
-      { key: "status", dir: "asc" },
-      { key: "dateAsserted", dir: "desc" },
-    ],
-  },
-  {
-    display: "Status (Z-A)",
-    sorts: [
-      { key: "status", dir: "desc" },
-      { key: "dateAsserted", dir: "desc" },
-    ],
-  },
-  {
     display: "Last Fill Date (Oldest to Newest)",
     sorts: [{ key: "lastFillDate", dir: "desc", isDate: true }],
   },

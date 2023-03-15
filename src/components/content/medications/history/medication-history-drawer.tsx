@@ -1,4 +1,4 @@
-import { MedicationDrawer } from "@/components/content/medication-drawer";
+import { MedicationDrawer } from "@/components/content/medications/history/medication-drawer";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
 import { MedicationStatementModel } from "@/fhir/models";
 
