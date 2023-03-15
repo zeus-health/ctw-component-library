@@ -48,10 +48,10 @@ export const createDiagnosticReportsBundle = () => ({
   type: "searchset",
   link: fakerFakeBundleLinks("DiagnosticReport", {
     "_tag:not": [
-      `https://zusapi.com/lens/ActiveMedications`,
-      `https://zusapi.com/lens/ChronicConditions`,
-      `https://zusapi.com/summary/Common`,
-      `https://zusapi.com/fhir%2Ftag%2Fupi-record-type%7Cuniversal`,
+      "https://zusapi.com/lens/ActiveMedications",
+      "https://zusapi.com/lens/ChronicConditions",
+      "https://zusapi.com/summary/Common",
+      "https://zusapi.com/fhir%2Ftag%2Fupi-record-type%7Cuniversal",
     ],
     "patient.identifier":
       "https://zusapi.com/fhir/identifier/universal-id|u12345",

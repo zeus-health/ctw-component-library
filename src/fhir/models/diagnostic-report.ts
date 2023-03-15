@@ -8,7 +8,6 @@ import {
   isNullFlavorSystem,
   NullFlavorSystem,
 } from "@/fhir/mappings/null-flavor";
-import { ObservationModel } from "@/fhir/models/observation";
 import { findReference } from "@/fhir/resource-helper";
 import {
   SYSTEM_DIAGNOSTIC_SERVICE_SECTION_ID,
@@ -18,33 +17,21 @@ import { find, get } from "@/utils/nodash";
 
 export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
   get category() {
-    const code = this.resource.category?.[0].coding?.[0];
-    if (code) {
-      return code.display ?? code.code;
+    const category =
+      codeableConceptLabel(this.resource.category?.[0]) || this.reportCategory;
+    if (category) {
+      return category;
     }
-    const reportCategory =
-      findCodingByOrderOfPreference(
-        [
-          { system: SYSTEM_DIAGNOSTIC_SERVICE_SECTION_ID },
-          { system: SYSTEM_SNOMED },
-        ],
-        this.resource.code
-      )?.display ?? codeableConceptLabel(this.resource.code);
-    if (reportCategory) {
-      return reportCategory;
-    }
+
     const label = codeableConceptLabel(this.resource.category?.[0]);
-    const fallback = `No display value found ${label ? " for " : ""}${label}`;
-    const observation = findReference(
-      "Observation",
-      undefined,
-      this.includedResources,
-      this.resource.result?.[0].reference
+    return (
+      findReference(
+        "Observation",
+        undefined,
+        this.includedResources,
+        this.resource.result?.[0].reference
+      )?.category ?? `No display value found ${label ? " for " : ""}${label}`
     );
-    if (observation) {
-      return new ObservationModel(observation).category || fallback;
-    }
-    return fallback;
   }
 
   get displayName() {
@@ -82,6 +69,18 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
   get organization() {
     const performer = this.resource.performer ?? [];
     return find(performer, { type: "Organization" });
+  }
+
+  get reportCategory() {
+    return (
+      findCodingByOrderOfPreference(
+        [
+          { system: SYSTEM_DIAGNOSTIC_SERVICE_SECTION_ID },
+          { system: SYSTEM_SNOMED },
+        ],
+        this.resource.code
+      )?.display ?? codeableConceptLabel(this.resource.code)
+    );
   }
 
   get results() {

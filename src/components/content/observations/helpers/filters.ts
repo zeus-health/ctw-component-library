@@ -1,3 +1,4 @@
+import { faEye } from "@fortawesome/free-solid-svg-icons";
 import {
   FilterChangeEvent,
   FilterItem,
@@ -12,7 +13,7 @@ export function diagnosticReportFilters(
     {
       key: "category",
       type: "checkbox",
-      icon: "eye",
+      icon: faEye,
       display: "Category",
       values: uniqueValues(model, "category"),
     },

@@ -1,7 +1,6 @@
 import { ResourceTable } from "../../resource/resource-table";
 import { observationsColumns } from "@/components/content/observations/helpers/columns";
 import { ObservationModel } from "@/fhir/models";
-import "./styles.scss";
 
 export type ObservationsTableProps = {
   className?: string;

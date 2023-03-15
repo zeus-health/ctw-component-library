@@ -15,7 +15,6 @@ import {
 } from "@/components/content/observations/helpers/filters";
 import { DiagnosticReportModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
-import "./styles.scss";
 
 export type PatientObservationsTableProps = {
   action?: ResourceTableActionsProps<DiagnosticReportModel>["action"];
