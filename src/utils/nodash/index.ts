@@ -35,4 +35,5 @@ export { default as snakeCase } from "lodash/snakeCase";
 export { default as startCase } from "lodash/startCase";
 export { default as trim } from "lodash/trim";
 export { default as uniq } from "lodash/uniq";
+export { default as uniqBy } from "lodash/uniqBy";
 export { default as uniqWith } from "lodash/uniqWith";

@@ -5,32 +5,29 @@ import { patientCareTeamColumns } from "./patient-careteam-columns";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { Table } from "@/components/core/table/table";
 import { usePatientCareTeam } from "@/fhir/care-team";
-import { CareTeamModel } from "@/fhir/models/careteam";
+import { CareTeamPractitionerModel } from "@/fhir/models/careteam-practitioner";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 
 export type PatientCareTeamProps = {
   className?: string;
-  includeViewFhirResource?: boolean;
 };
 
 export type CareTeamDetailsDrawerProps = {
   className?: string;
-  careteam: CareTeamModel;
+  careteam: CareTeamPractitionerModel;
   isOpen: boolean;
   onClose: () => void;
 };
 
-export function PatientCareTeam({
-  className,
-  includeViewFhirResource,
-}: PatientCareTeamProps) {
+export function PatientCareTeam({ className }: PatientCareTeamProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const { featureFlags } = useCTW();
   const patientCareTeamQuery = usePatientCareTeam();
 
   const openDetails = useResourceDetailsDrawer({
-    header: (m) => m.periodStart,
+    header: (m) => m.practitionerName,
+    subHeader: (m) => m.qualification,
     details: careTeamData,
   });
 
@@ -56,10 +53,21 @@ export function PatientCareTeam({
   );
 }
 
-export const careTeamData = (careTeam: CareTeamModel) => [
-  { label: "Organization", value: careTeam.managingOrganization },
-  { label: "Practitioner", value: careTeam.includedPerformer },
-  { label: "CareTeam Telecom", value: careTeam.careTeamTelecom },
-  { label: "Role", value: careTeam.role },
-  { label: "Status", value: careTeam.status },
+export const careTeamData = (
+  careTeamPractitioner: CareTeamPractitionerModel
+) => [
+  { label: "Organization", value: careTeamPractitioner.managingOrganization },
+  {
+    label: "CareTeam Telecom",
+    value: careTeamPractitioner.telecom && (
+      <div>
+        {careTeamPractitioner.telecom.map((item, index) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <div key={index}>{item.value}</div>
+        ))}
+      </div>
+    ),
+  },
+  { label: "Role", value: careTeamPractitioner.role },
+  { label: "Status", value: careTeamPractitioner.status },
 ];

@@ -19,6 +19,7 @@ export type PatientConditionsTableProps = {
   action?: ResourceTableActionsProps<ConditionModel>["action"];
   className?: string;
   query: { data?: ConditionModel[]; isLoading: boolean };
+  outside?: boolean;
   readOnly?: boolean;
   rowActions?: ResourceTableProps<ConditionModel>["rowActions"];
   emptyMessage?: string | ReactElement;
@@ -29,6 +30,7 @@ export const PatientConditionsBase = ({
   action,
   className,
   query,
+  outside = false,
   readOnly = false,
   rowActions,
   emptyMessage = "There are no condition records available.",
@@ -47,7 +49,7 @@ export const PatientConditionsBase = ({
         filterOptions={{
           onChange: setFilters,
           defaultState: defaultConditionFilters,
-          filters: conditionFilters(query.data ?? []),
+          filters: conditionFilters(query.data ?? [], outside),
         }}
         sortOptions={{
           defaultSort: defaultConditionSort,

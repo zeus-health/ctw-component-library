@@ -7,7 +7,6 @@ type FilterBarPillProps = {
   handleAddOrRemoveFilter: (key: string, remove: boolean) => void;
   filter: FilterItem;
   filterValues: FilterValuesRecord;
-  handleClearFilter: (key: string) => void;
   isOpen: boolean;
   updateSelectedFilterValues: (valueKey: string, isSelected: boolean) => void;
 };
@@ -19,7 +18,6 @@ type FilterBarPillProps = {
  */
 export function FilterBarPill({
   handleAddOrRemoveFilter,
-  handleClearFilter,
   filter,
   filterValues,
   isOpen,
@@ -45,7 +43,6 @@ export function FilterBarPill({
           filterValues={filterValues}
           onRemove={handleRemove}
           onChange={updateSelectedFilterValues}
-          onReset={() => handleClearFilter(filter.key)}
         />
       );
     default:

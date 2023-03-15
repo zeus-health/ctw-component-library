@@ -37,6 +37,7 @@ const PatientConditionsOutsideComponent = ({
 
   return (
     <PatientConditionsBase
+      outside
       action={action}
       className={className}
       query={query}
