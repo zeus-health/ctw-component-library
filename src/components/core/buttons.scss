@@ -8,11 +8,11 @@
 }
 
 .ctw-btn-default {
-  @apply ctw-btn ctw-border ctw-border-solid ctw-border-divider-main ctw-bg-white ctw-text-content-light hover:ctw-bg-bg-lighter;
+  @apply ctw-btn ctw-border ctw-border-solid ctw-border-divider-main ctw-bg-white ctw-capitalize ctw-text-content-light hover:ctw-bg-bg-lighter;
 }
 
 .ctw-btn-primary {
-  @apply ctw-btn ctw-border-0 ctw-bg-primary-main ctw-text-white hover:ctw-bg-primary-dark;
+  @apply ctw-btn ctw-border-0 ctw-bg-primary-main ctw-capitalize ctw-text-white hover:ctw-bg-primary-dark;
 }
 
 .ctw-btn-icon {

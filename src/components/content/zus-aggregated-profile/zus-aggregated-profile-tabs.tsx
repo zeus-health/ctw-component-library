@@ -47,6 +47,7 @@ import {
 } from "@/components/content/timeline/patient-timeline";
 import { ZAPResourceName } from "@/components/content/zus-aggregated-profile/zus-aggregated-profile";
 import { TabGroupItem } from "@/components/core/tab-group/tab-group";
+import i18next from "@/i18n";
 
 export type ZusAggregatedProfileTabs = Record<
   ZAPResourceName,
@@ -69,7 +70,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
 
   conditions: (props: PatientConditionsProps = {}) => ({
     key: "conditions",
-    display: () => "conditions list",
+    display: () => i18next.t("zap.tabs.conditions"),
     render: () => <PatientConditions {...props} />,
   }),
 
@@ -77,7 +78,9 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     key: "conditions-outside",
     display: () => (
       <>
-        <span className="ctw-pr-2 ctw-capitalize">outside conditions</span>
+        <span className="ctw-pr-2 ctw-capitalize">
+          {i18next.t("zap.tabs.conditionsOutside")}
+        </span>
         <PatientConditionsOutsideBadge />
       </>
     ),

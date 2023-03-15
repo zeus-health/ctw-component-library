@@ -1,23 +1,35 @@
 import {
+  faClipboardCheck,
+  faClipboardList,
+} from "@fortawesome/free-solid-svg-icons";
+import {
   FilterChangeEvent,
   FilterItem,
 } from "@/components/core/filter-bar/filter-bar-types";
 import { ConditionModel } from "@/fhir/models";
+import {
+  conditionStatuses,
+  outsideConditionStatuses,
+} from "@/fhir/models/condition";
 import { uniqueValues } from "@/utils/filters";
 
-export function conditionFilters(conditions: ConditionModel[]): FilterItem[] {
+export function conditionFilters(
+  conditions: ConditionModel[],
+  outside: boolean
+): FilterItem[] {
   return [
     {
       key: "displayStatus",
       type: "checkbox",
-      icon: "eye",
+      icon: faClipboardCheck,
       display: "Status",
-      values: uniqueValues(conditions, "displayStatus"),
+      // Create new array as these other ones are readonly.
+      values: [...(outside ? outsideConditionStatuses : conditionStatuses)],
     },
     {
       key: "ccsChapter",
       type: "checkbox",
-      icon: "eye",
+      icon: faClipboardList,
       display: "Category",
       values: uniqueValues(conditions, "ccsChapter"),
     },

@@ -9,7 +9,9 @@ export const patientTimelineColumns = (includeViewFhirResource = true) => {
       title: "Date",
       widthPercent: 10,
       minWidth: 120,
-      dataIndex: "periodStart",
+      render: (encounter) => (
+        <div className="group-hover:ctw-underline">{encounter.periodStart}</div>
+      ),
     },
     {
       title: "Type",

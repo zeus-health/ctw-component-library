@@ -1,5 +1,50 @@
 # ctw-component-library
 
+## 0.50.0
+
+### Minor Changes
+
+- d5270538: Update CareTeams to each row being an individual practitioner and then the drawer having details about the practitioner.
+
+### Patch Changes
+
+- bf27c1ed: Add all condition statuses as filter options and ensure we can filter on "Unknown" status for both patient records and outside records.
+
+## 0.49.8
+
+### Patch Changes
+
+- 97724c64: Fix a few more style issues for filters.
+
+## 0.49.7
+
+### Patch Changes
+
+- d96d0513: Initial setup of i18n using the i18next library. At first, we allow overwriting the term "condition" via the new "locals" prop on `CTWProvider`. Future versions will allow for more customizations around text/copy/strings.
+- da22b889: Clean up sort & filter dropdown UI. Align styles across dropdowns, switch icons, and a handful of general cleanup tweaks.
+- 487f0ed2: Allow phone numbers to have a leading 1 and country codes.
+
+## 0.49.6
+
+### Patch Changes
+
+- 1cfea1b5: Display Zus status instead of clinical and verification status.
+
+## 0.49.5
+
+### Patch Changes
+
+- c60802d1: Re-add builder `_tag` to filters to fix issue with CPR records being duplicated.
+
+## 0.49.4
+
+### Patch Changes
+
+- 0db1341a: Remove condition display from dedupe logic in condition history.
+- 7ee58623: Fix alignment and size of status dots. Add underline on display when hovering on items in medication table.
+- 46e0288d: Minor ui changes to patient search.
+- df8be0d2: Disable metrics to ctw from localhost:3000.
+
 ## 0.49.3
 
 ### Patch Changes
@@ -24,6 +69,10 @@
 ### Minor Changes
 
 - a174c79d: Large refactor of conditions component using new naming scheme and a few generic helpers.
+
+#### Breaking Changes
+
+`PatientConditions` component has been renamed `PatientConditionsProfile`. This component shows two tabs, one for patient record and one for outside records. To get a table of just the patient record, you can now use the new `PatientConditions` component.
 
 ### Patch Changes
 

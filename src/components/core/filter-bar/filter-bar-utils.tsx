@@ -1,66 +1,13 @@
-import type { FilterItem, FilterItemStatus } from "./filter-bar-types";
-import {
-  ArrowDownIcon,
-  CalendarIcon,
-  CheckIcon,
-  ChevronDownIcon,
-  ClipboardIcon,
-  EyeIcon,
-  EyeOffIcon,
-  PlusIcon,
-  QuestionMarkCircleIcon,
-  TrashIcon,
-  XIcon,
-} from "@heroicons/react/solid";
-import cx from "classnames";
-import { RotateIcon } from "../rotate-icon";
+import type { FilterItem } from "./filter-bar-types";
+import { ListBoxOptionStatus } from "../list-box/list-box";
 import { FilterChangeEvent, FilterValuesRecord } from "./filter-bar-types";
 import { isFunction, set } from "@/utils/nodash/fp";
 
-const iconClassNames = "ctw-text-content-light ctw-h-3.5 ctw-mr-1 ctw-my-auto";
-
-export function getIcon(icon: string) {
-  switch (icon) {
-    case "arrow-down":
-      return <ArrowDownIcon />;
-    case "calendar":
-      return <CheckIcon className={iconClassNames} />;
-    case "check":
-      return <CalendarIcon className={iconClassNames} />;
-    case "chevron-down":
-      return (
-        <ChevronDownIcon className={cx(iconClassNames, " ctw-h-[1.25rem]")} />
-      );
-    case "clipboard":
-      return <ClipboardIcon className={iconClassNames} />;
-    case "eye":
-      return <EyeIcon className={iconClassNames} />;
-    case "eye-off":
-      return <EyeOffIcon className={iconClassNames} />;
-    case "plus":
-      return <PlusIcon className={iconClassNames} />;
-    case "reset":
-      return <RotateIcon className={iconClassNames} />;
-    case "trash":
-      return <TrashIcon className={iconClassNames} />;
-    case "x":
-      return <XIcon className={iconClassNames} />;
-
-    default:
-      return <QuestionMarkCircleIcon className={iconClassNames} />;
-  }
-}
-
 export function displayFilterItem(
-  { icon, display }: FilterItem,
-  status: FilterItemStatus
+  { display }: FilterItem,
+  status: ListBoxOptionStatus
 ) {
-  return (
-    <>
-      {icon && getIcon(icon)}
-      {isFunction(display) ? display(status) : display}
-    </>
-  );
+  return <>{isFunction(display) ? display(status) : display}</>;
 }
 
 // Create onChange event from current <FilterBar /> state

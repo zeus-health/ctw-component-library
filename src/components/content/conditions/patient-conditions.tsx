@@ -8,6 +8,7 @@ import { withErrorBoundary } from "@/components/core/error-boundary";
 import { RowActionsProps } from "@/components/core/table/table";
 import { usePatientConditions } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models";
+import { useBaseTranslations } from "@/i18n";
 
 export type PatientConditionsProps = {
   className?: string;
@@ -20,6 +21,7 @@ const PatientConditionsComponent = ({
 }: PatientConditionsProps) => {
   const query = usePatientConditions();
   const showAddConditionForm = useAddConditionForm();
+  const { t } = useBaseTranslations();
 
   const action = !readOnly && (
     <button
@@ -27,7 +29,7 @@ const PatientConditionsComponent = ({
       className="ctw-btn-primary"
       onClick={() => showAddConditionForm()}
     >
-      Add Condition
+      {t("resource.add", { resource: t("glossary:condition_one") })}
     </button>
   );
 

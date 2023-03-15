@@ -8,7 +8,9 @@ export const FormFieldLabel = ({
   required: boolean | undefined;
 }) => (
   <div className="ctw-flex ctw-items-center ctw-justify-between">
-    <label htmlFor={name}>{label}</label>
+    <label htmlFor={name} className="ctw-capitalize">
+      {label}
+    </label>
     {!required && (
       <span className="ctw-right-0 ctw-inline-block ctw-text-xs ctw-text-content-light">
         Optional

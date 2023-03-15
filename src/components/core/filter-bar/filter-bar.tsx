@@ -3,16 +3,16 @@ import type {
   FilterItem,
   FilterValuesRecord,
 } from "@/components/core/filter-bar/filter-bar-types";
+import { faPlus, faRefresh, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cx from "classnames";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  displayFilterItem,
   filterChangeEvent,
   filterChangeEventToValuesRecord,
-  getIcon,
 } from "./filter-bar-utils";
 import { FilterBarPill } from "@/components/core/filter-bar/filter-bar-pills";
-import { ListBox } from "@/components/core/list-box/list-box";
+import { ListBox, MinListBoxItem } from "@/components/core/list-box/list-box";
 import { omit, partition, uniq } from "@/utils/nodash/fp";
 
 const INTERNAL_KEYS = ["_remove", "_reset"];
@@ -92,13 +92,6 @@ export const FilterBar = ({
     );
   };
 
-  const clearFilter = useCallback(
-    (key: string) => {
-      setActiveFilterValues({ ...activeFilterValues, [key]: [] });
-    },
-    [activeFilterValues]
-  );
-
   // Add or remove a filter from the activated filters list
   const addOrRemoveFilter = (key: string, remove = false) => {
     if (!remove) {
@@ -157,8 +150,9 @@ export const FilterBar = ({
     onChange(filterChangeEvent(filters, activeFilterKeys, activeValues));
   };
 
-  const toFilterMenuItem = (filter: FilterItem) => ({
-    display: () => displayFilterItem(filter, { active: false }),
+  const toFilterMenuItem = (filter: FilterItem): MinListBoxItem => ({
+    display: filter.display,
+    icon: filter.icon,
     key: filter.key,
     className: cx("ctw-capitalize", filter.className),
   });
@@ -179,27 +173,25 @@ export const FilterBar = ({
     };
   }
   // Creates the main filter list dropdown
-  const inactiveFilterMenuItems = [
+  const inactiveFilterMenuItems: MinListBoxItem[] = [
     ...aboveTheFold.map(toFilterMenuItem),
     // Need to add class for the first menu item under the fold
     ...belowTheFold.slice(0, 1).map(toFilterMenuItem),
     ...belowTheFold.slice(1).map(toFilterMenuItem),
 
     {
-      // eslint-disable-next-line react/no-unstable-nested-components
-      display: () => <>{getIcon("trash")} remove all filters</>,
+      display: "remove all filters",
+      icon: faTrash,
       key: "_remove",
-      icon: "trash",
-      className: cx("ctw-capitalize"),
+      className: "ctw-capitalize",
     },
   ];
 
   if ([initialState].filter((filter) => filter.type !== "tag").length > 0) {
     inactiveFilterMenuItems.splice(-1, 0, {
-      // eslint-disable-next-line react/no-unstable-nested-components
-      display: () => <>{getIcon("reset")} reset filters</>,
+      display: "reset filters",
+      icon: faRefresh,
       key: "_reset",
-      icon: "reset",
       className: cx("ctw-capitalize", {
         // This adds divider to this item if needed
         "ctw-border-top first-of-type:ctw-border-none": !hasBelowTheFoldItems,
@@ -208,40 +200,44 @@ export const FilterBar = ({
   }
 
   return (
-    <div className={cx(className, "ctw-flex ctw-items-center")}>
-      <div className="ctw-relative ctw-flex">
-        {activeFilters.map((filter) => (
-          <FilterBarPill
-            isOpen={recentlyAdded === filter.key}
-            key={filter.key}
-            filter={filter}
-            filterValues={activeFilterValues}
-            handleAddOrRemoveFilter={addOrRemoveFilter}
-            handleClearFilter={clearFilter}
-            updateSelectedFilterValues={(
-              valueKey: string,
-              isSelected: boolean
-            ) => updateSelectedFilter(filter.key, valueKey, isSelected)}
-          />
-        ))}
-      </div>
+    <div
+      className={cx(
+        className,
+        "ctw-relative ctw-flex ctw-items-center ctw-space-x-2"
+      )}
+    >
+      {activeFilters.map((filter) => (
+        <FilterBarPill
+          isOpen={recentlyAdded === filter.key}
+          key={filter.key}
+          filter={filter}
+          filterValues={activeFilterValues}
+          handleAddOrRemoveFilter={addOrRemoveFilter}
+          updateSelectedFilterValues={(valueKey: string, isSelected: boolean) =>
+            updateSelectedFilter(filter.key, valueKey, isSelected)
+          }
+        />
+      ))}
 
       <ListBox
         useBasicStyles
-        btnClassName="ctw-capitalize ctw-bg-transparent ctw-rounded ctw-text-content-light ctw-my-2 ctw-py-2 ctw-px-3 ctw-flex"
-        optionsClassName="ctw-capitalize"
+        btnClassName="!ctw-text-content-light ctw-btn-clear !ctw-font-normal !ctw-py-2"
         items={inactiveFilterMenuItems}
-        onChange={(index, item) => {
-          if (item.key === "_remove") {
-            clearAllFilters();
-          } else if (item.key === "_reset") {
-            resetAllFilters();
-          } else {
-            addOrRemoveFilter(item.key, false);
+        onChange={(_index, item) => {
+          switch (item.key) {
+            case "_remove":
+              return clearAllFilters();
+            case "_reset":
+              return resetAllFilters();
+            default:
+              return addOrRemoveFilter(item.key, false);
           }
         }}
       >
-        {getIcon("plus")} Add Filters
+        <div className="ctw-space-x-1">
+          <FontAwesomeIcon icon={faPlus} className="ctw-w-4" />
+          <span>Add Filters</span>
+        </div>
       </ListBox>
     </div>
   );
