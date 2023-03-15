@@ -14,6 +14,26 @@ import { mapValues, mergeWith } from "@/utils/nodash";
 
 const MAX_COUNT = 250;
 
+function resourceTags<T extends ResourceTypeString>(resourceType: T): string[] {
+  switch (resourceType) {
+    case "MedicationDispense":
+    case "MedicationRequest":
+    case "MedicationStatement":
+      return [...LENS_TAGS, ...SUMMARY_TAGS, ...UPI_TAGS];
+    case "Coverage":
+    case "AllergyIntolerance":
+    case "CareTeam":
+    case "Condition":
+    case "DocumentReference":
+    case "Encounter":
+    case "Immunization":
+    case "MedicationAdministration":
+    case "Patient":
+    default:
+      return [...LENS_TAGS, ...SUMMARY_TAGS, ...UPI_TAGS];
+  }
+}
+
 // Enumerating ALL of the third party tags.
 const THIRD_PARTY_TAGS = [
   `${SYSTEM_ZUS_THIRD_PARTY}|surescripts`,
