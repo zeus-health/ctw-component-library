@@ -16,6 +16,7 @@ const MAX_COUNT = 250;
 
 function resourceTags<T extends ResourceTypeString>(resourceType: T): string[] {
   switch (resourceType) {
+    case "Condition":
     case "MedicationDispense":
     case "MedicationRequest":
     case "MedicationStatement":
@@ -23,14 +24,13 @@ function resourceTags<T extends ResourceTypeString>(resourceType: T): string[] {
     case "Coverage":
     case "AllergyIntolerance":
     case "CareTeam":
-    case "Condition":
     case "DocumentReference":
     case "Encounter":
     case "Immunization":
     case "MedicationAdministration":
     case "Patient":
     default:
-      return [...LENS_TAGS, ...SUMMARY_TAGS, ...UPI_TAGS];
+      return [];
   }
 }
 
@@ -186,9 +186,12 @@ export async function searchCommonRecords<T extends ResourceTypeString>(
   requestContext: CTWRequestContext,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
-  const params = mergeParams(searchParams, {
-    "_tag:not": [...LENS_TAGS, ...SUMMARY_TAGS, ...UPI_TAGS],
-  });
+  const tags = resourceTags(resourceType);
+  const params = mergeParams(
+    searchParams,
+    tags.length ? { "_tag:not": tags } : {}
+  );
+
   return searchAllRecords(resourceType, requestContext, params);
 }
 
