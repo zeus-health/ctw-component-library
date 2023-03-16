@@ -5,11 +5,6 @@
 import { SYSTEM_ENRICHMENT } from "./system-urls";
 import { find } from "@/utils/nodash";
 
-// concept that has a code of "C".
-export const codeableConceptPredicate = (code: string) => [
-  { coding: [{ code }] },
-];
-
 export const codeableConceptLabel = (concept?: fhir4.CodeableConcept): string =>
   concept?.text ??
   concept?.coding?.[0]?.display ??
