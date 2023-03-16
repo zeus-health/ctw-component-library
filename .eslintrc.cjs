@@ -90,12 +90,14 @@ module.exports = {
       },
     ],
   },
-  overrides: [{
-    files: ["src/utils/nodash/*.ts"],
-    rules: {
-      "sort-exports/sort-exports": ["error", { sortDir: "asc" }],
-    }
-  }],
+  overrides: [
+    {
+      files: ["src/utils/nodash/*.ts"],
+      rules: {
+        "sort-exports/sort-exports": ["error", { sortDir: "asc" }],
+      },
+    },
+  ],
   // we're using vitest which has a very similar API to jest
   // (so the linting plugins work nicely), but it we have to explicitly
   // set the jest version.
