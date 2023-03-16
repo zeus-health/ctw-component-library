@@ -28,7 +28,7 @@ export const applyCareTeamFilters = (
   const sortedCareTeamPractitionerModels = orderBy(
     careTeamPractitionerModels,
     ["effectiveStartDate", "id"],
-    ["asc", "desc"]
+    ["desc", "desc"]
   );
 
   return uniqWith(sortedCareTeamPractitionerModels, (a, b) =>
