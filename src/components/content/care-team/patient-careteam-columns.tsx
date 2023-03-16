@@ -2,7 +2,7 @@ import { TableColumn } from "@/components/core/table/table-helpers";
 import { ViewFHIR } from "@/components/core/view-fhir";
 import { CareTeamPractitionerModel } from "@/fhir/models/careteam-practitioner";
 
-export const patientCareTeamColumns = (includeViewFhirResource = true) => {
+export const patientCareTeamColumns = (includeViewFhirResource = false) => {
   const careTeamColumns: TableColumn<CareTeamPractitionerModel>[] = [
     {
       widthPercent: 20,

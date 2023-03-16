@@ -194,12 +194,14 @@ export class Telemetry {
     datadogRum.startView(viewName);
   }
 
-  static logError(error: Error, overrideMessage?: string) {
-    this.logger.error(overrideMessage || error.message, {
+  static logError(error: Error, overrideMessage?: string): Error {
+    const err = new Error(overrideMessage ?? error.message);
+    this.logger.error(err.message, {
       error: {
         stack: error.stack,
       },
     });
+    return err;
   }
 
   static logFhirError(error: FhirError, message: string) {

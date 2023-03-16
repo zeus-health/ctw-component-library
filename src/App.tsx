@@ -1,18 +1,20 @@
 import type { ReactNode } from "react";
 import { Auth0Provider } from "@auth0/auth0-react";
-import "./App.css";
-import { CTWProvider } from "./components/core/providers/ctw-provider";
-import { PatientProvider } from "./components/core/providers/patient-provider";
 import { ErrorBoundary } from "./error-boundary";
-import { SecuredApp } from "./SecuredApp";
-import { PatientConditions } from "./components/content/conditions/patient-conditions";
-import { PatientMedications } from "./components/content/medications/patient-medications";
-import { PatientAllergies } from "@/components/content/allergies/patient-allergies";
-import { PatientImmunizations } from "./components/content/immunizations/patient-immunizations";
-import { PatientCareTeam } from "./components/content/care-team/patient-careteam";
-import { PatientDocuments } from "./components/content/document/patient-documents";
-import { ZusAggregatedProfile } from "@/components/content/zus-aggregated-profile/zus-aggregated-profile";
-import { PatientSearch } from "./components/content/patients/patients-search";
+import { SecuredApp } from "@/SecuredApp";
+import {
+  CTWProvider,
+  PatientAllergies,
+  PatientCareTeam,
+  PatientConditions,
+  PatientDocuments,
+  PatientImmunizations,
+  PatientMedications,
+  PatientProvider,
+  PatientSearch,
+  ZusAggregatedProfile,
+} from ".";
+import "./App.css";
 
 const {
   VITE_SYSTEM_URL,
@@ -30,8 +32,8 @@ const {
 const theme = {
   colors: {
     notification: {
-      main: "#FFFFFF",
-      light: "#BD0B00",
+      main: "#a855f7",
+      light: "#f3e8ff",
     },
   },
 };
@@ -42,6 +44,15 @@ type DemoComponent = {
   note?: string;
 };
 const demoComponents: DemoComponent[] = [
+  {
+    render: () => (
+      <ZusAggregatedProfile
+        resources={["observations-outside", "observations"]}
+        title="Observations"
+      />
+    ),
+    title: "Patient Observations",
+  },
   { render: () => <PatientCareTeam />, title: "Patient CareTeam" },
   {
     render: () => (
