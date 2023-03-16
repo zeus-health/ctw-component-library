@@ -7,7 +7,7 @@ module.exports = {
     "prettier",
     "plugin:storybook/recommended",
   ],
-  plugins: ["unused-imports"],
+  plugins: ["unused-imports", "sort-exports"],
   // Ignore js files as we now have typescript parsing rules.
   // See https://stackoverflow.com/a/65063702 for more.
   ignorePatterns: [
@@ -90,6 +90,12 @@ module.exports = {
       },
     ],
   },
+  overrides: [{
+    files: ["src/utils/nodash/*.ts"],
+    rules: {
+      "sort-exports/sort-exports": ["error", { sortDir: "asc" }],
+    }
+  }],
   // we're using vitest which has a very similar API to jest
   // (so the linting plugins work nicely), but it we have to explicitly
   // set the jest version.
