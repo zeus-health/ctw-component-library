@@ -1,5 +1,13 @@
 # ctw-component-library
 
+## 0.50.2
+
+### Patch Changes
+
+- 54c1bbdf: Filter builder tagged records client side in bid to improve performance.
+- bd7be90e: Add PatientObservations component (POC)
+- 148b35ad: Add rule to sort nodash exports
+
 ## 0.50.1
 
 ### Patch Changes
