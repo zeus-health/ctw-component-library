@@ -1,3 +1,4 @@
+import cx from "classnames";
 import { PatientConditionsOutsideProps } from "../conditions/patient-conditions-outside";
 import ZusSVG from "@/assets/zus.svg";
 import { PatientAllergiesProps } from "@/components/content/allergies/patient-allergies";
@@ -12,7 +13,7 @@ import {
   ZusAggregatedProfileTabs,
   zusAggregatedProfileTabs,
 } from "@/components/content/zus-aggregated-profile/zus-aggregated-profile-tabs";
-import { Title } from "@/components/core/ctw-box";
+import { ScrollableContainer, Title } from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { TabGroup } from "@/components/core/tab-group/tab-group";
 
@@ -31,6 +32,7 @@ export type ZusAggregatedProfileProps = {
   resources: ZAPResourceName[];
   forceHorizontalTabs?: boolean;
   title?: string;
+  height?: string;
   hideTitle?: boolean;
   removeBranding?: boolean;
 } & SubComponentProps;
@@ -59,8 +61,9 @@ const zusAggregatedProfile = ({
   medicationsOutsideProps,
   timelineProps,
   resources,
-  title = "Outside Records",
   hideTitle = false,
+  height,
+  title = "Outside Records",
   removeBranding = false,
 }: ZusAggregatedProfileProps) => {
   // Get the configuration for each tab group by resource type
@@ -78,29 +81,38 @@ const zusAggregatedProfile = ({
 
   const tabbedContent = resources.map((tabName) => {
     const props = subcomponentProps[tabName] ?? {};
-    return zusAggregatedProfileTabs[tabName](props);
+    return zusAggregatedProfileTabs[tabName]({
+      ...props,
+      scrollingEnabled: !!height,
+    });
   });
 
   return (
-    <div className="ctw-zus-aggregated-profile">
-      {!hideTitle && (
-        <Title className="ctw-border-b-2 ctw-border-r-0 ctw-border-l-0 ctw-border-t-0 ctw-border-solid ctw-border-divider-light">
-          <h3 className="ctw-m-0 ctw-inline-block ctw-p-0 ctw-pb-3 ctw-text-lg ctw-font-medium">
-            {title}{" "}
-            {!removeBranding && (
-              <span className="ctw-text-sm ctw-font-light ctw-italic ctw-text-content-light">
-                Powered by{" "}
-                <img src={ZusSVG} alt="Zus" className="-ctw-mb-1.5" />
-              </span>
-            )}
-          </h3>
-        </Title>
-      )}
-      <TabGroup
-        content={tabbedContent}
-        forceHorizontalTabs={forceHorizontalTabs}
-      />
-    </div>
+    <ScrollableContainer
+      height={height}
+      className={cx("ctw-zus-aggregated-profile", { "ctw-relative": !height })}
+    >
+      <ScrollableContainer scrollingEnabled={!!height}>
+        {!hideTitle && (
+          <Title className="ctw-border-b-2 ctw-border-r-0 ctw-border-l-0 ctw-border-t-0 ctw-border-solid ctw-border-divider-light">
+            <h3 className="ctw-m-0 ctw-inline-block ctw-p-0 ctw-pb-3 ctw-text-lg ctw-font-medium">
+              {title}{" "}
+              {!removeBranding && (
+                <span className="ctw-text-sm ctw-font-light ctw-italic ctw-text-content-light">
+                  Powered by{" "}
+                  <img src={ZusSVG} alt="Zus" className="-ctw-mb-1.5" />
+                </span>
+              )}
+            </h3>
+          </Title>
+        )}
+        <TabGroup
+          scrollingEnabled={!!height}
+          content={tabbedContent}
+          forceHorizontalTabs={forceHorizontalTabs}
+        />
+      </ScrollableContainer>
+    </ScrollableContainer>
   );
 };
 
