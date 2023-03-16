@@ -1,7 +1,11 @@
 import cx from "classnames";
-import { useRef } from "react";
+import React, { useRef } from "react";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { patientCareTeamColumns } from "./patient-careteam-columns";
+import {
+  ScrollableContainer,
+  ScrollingContainerProps,
+} from "@/components/core/ctw-box";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { Table } from "@/components/core/table/table";
 import { usePatientCareTeam } from "@/fhir/care-team";
@@ -10,7 +14,7 @@ import { useBreakpoints } from "@/hooks/use-breakpoints";
 
 export type PatientCareTeamProps = {
   className?: string;
-};
+} & ScrollingContainerProps;
 
 export type CareTeamDetailsDrawerProps = {
   className?: string;
@@ -19,7 +23,11 @@ export type CareTeamDetailsDrawerProps = {
   onClose: () => void;
 };
 
-export function PatientCareTeam({ className }: PatientCareTeamProps) {
+export function PatientCareTeam({
+  className,
+  scrollingEnabled = false,
+  height,
+}: PatientCareTeamProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const { featureFlags } = useCTW();
@@ -32,7 +40,9 @@ export function PatientCareTeam({ className }: PatientCareTeamProps) {
   });
 
   return (
-    <div
+    <ScrollableContainer
+      height={height}
+      scrollingEnabled={scrollingEnabled}
       ref={containerRef}
       className={cx(
         "ctw-border ctw-border-solid ctw-border-divider-light ctw-bg-white",
@@ -48,8 +58,9 @@ export function PatientCareTeam({ className }: PatientCareTeamProps) {
         records={patientCareTeamQuery.data ?? []}
         columns={patientCareTeamColumns(featureFlags?.enableViewFhirButton)}
         handleRowClick={openDetails}
+        scrollingEnabled={scrollingEnabled || !!height}
       />
-    </div>
+    </ScrollableContainer>
   );
 }
 
