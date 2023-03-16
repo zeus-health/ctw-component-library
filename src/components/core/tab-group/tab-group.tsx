@@ -1,6 +1,7 @@
 import { Tab } from "@headlessui/react";
 import cx from "classnames";
 import { ReactNode, useRef, useState } from "react";
+import { ScrollableContainer } from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { ListBox } from "@/components/core/list-box/list-box";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
@@ -12,6 +13,7 @@ export type TabGroupProps = {
   content: TabGroupItem[];
   forceHorizontalTabs?: boolean;
   onChange?: (index: number) => void; // optional event
+  scrollingEnabled?: boolean;
 };
 
 export type TabGroupItem = {
@@ -33,8 +35,9 @@ function TabGroupComponent({
   forceHorizontalTabs = false,
   content,
   onChange,
+  scrollingEnabled = false,
 }: TabGroupProps) {
-  const [selectedTabIndex, setSelectedTabIndex] = useState(0);
+  const [_, setSelectedTabIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const isVertical = !forceHorizontalTabs && breakpoints.sm;
@@ -51,11 +54,12 @@ function TabGroupComponent({
   };
 
   return (
-    <div
+    <ScrollableContainer
+      scrollingEnabled={scrollingEnabled}
       ref={containerRef}
       className={cx(className, "ctw-tab-group ctw-relative ctw-w-full")}
     >
-      <Tab.Group selectedIndex={selectedTabIndex} onChange={handleOnChange}>
+      <Tab.Group>
         {isVertical && (
           <ListBox
             btnClassName="ctw-tab ctw-capitalize"
@@ -99,11 +103,15 @@ function TabGroupComponent({
         {children}
 
         {/* Renders body of each tab using "render()" */}
-        <Tab.Panels>
+        <Tab.Panels
+          className={cx({ "ctw-scrollable-container": scrollingEnabled })}
+        >
           {content.map((item, index) => (
             <Tab.Panel
               key={item.key}
-              className={cx(item.getPanelClassName?.(breakpoints.sm))}
+              className={cx(item.getPanelClassName?.(breakpoints.sm), {
+                "ctw-scrollable-container": scrollingEnabled,
+              })}
               // Don't unmount our tabs. This fixes an issue
               // where ZAP filters/sort selections would get reset
               // when switching to a new tab and back again.
@@ -114,7 +122,7 @@ function TabGroupComponent({
           ))}
         </Tab.Panels>
       </Tab.Group>
-    </div>
+    </ScrollableContainer>
   );
 }
 

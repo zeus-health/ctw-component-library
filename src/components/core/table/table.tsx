@@ -9,20 +9,25 @@ import { TableHead } from "./table-head";
 import { MinRecordItem, TableColumn } from "./table-helpers";
 import { TableRows, TableRowsProps } from "./table-rows";
 import "./table.scss";
+import {
+  ScrollableContainer,
+  ScrollableContent,
+} from "@/components/core/ctw-box";
 
 export type RowActionsProps<T extends MinRecordItem> = { record: T };
 
 export type TableProps<T extends MinRecordItem> = {
+  children?: ReactNode;
   className?: cx.Argument;
-  records: T[];
   columns: TableColumn<T>[];
-  isLoading?: boolean;
   /** Displayed when we have 0 records. */
   emptyMessage?: string | ReactElement;
+  hidePagination?: boolean;
+  isLoading?: boolean;
+  records: T[];
+  scrollingEnabled?: boolean;
   showTableHead?: boolean;
   stacked?: boolean;
-  hidePagination?: boolean;
-  children?: ReactNode;
 } & Pick<
   TableRowsProps<T>,
   "handleRowClick" | "RowActions" | "getRowClassName"
@@ -45,6 +50,7 @@ export const Table = <T extends MinRecordItem>({
   RowActions,
   getRowClassName,
   hidePagination = false,
+  scrollingEnabled = false,
   children,
 }: TableProps<T>) => {
   const tableRef = useRef<HTMLTableElement>(null);
@@ -82,44 +88,53 @@ export const Table = <T extends MinRecordItem>({
   const hasData = !isLoading && records.length > 0;
 
   return (
-    <div
+    <ScrollableContainer
       data-zus-telemetry-namespace="Table"
+      scrollingEnabled={scrollingEnabled}
       className={cx("ctw-space-y-4", {
         "ctw-table-stacked": stacked,
       })}
     >
-      <div
+      <ScrollableContainer
+        scrollingEnabled={scrollingEnabled}
         className={cx("ctw-table-container", className, {
           "ctw-table-scroll-left-shadow": showLeftShadow,
           "ctw-table-scroll-right-shadow": showRightShadow,
         })}
       >
-        <div className="ctw-scrollbar" ref={scrollContainerRef}>
-          <table ref={tableRef}>
-            {hasData && <TableColGroup columns={columns} />}
-            {showTableHead && hasData && <TableHead columns={columns} />}
-            <tbody className={cx({ "ctw-h-[7rem]": records.length === 0 })}>
-              <TableRows
-                getRowClassName={getRowClassName}
-                records={records.slice(0, count)}
-                handleRowClick={handleRowClick}
-                RowActions={RowActions}
-                columns={columns}
-                isLoading={isLoading}
-                emptyMessage={message}
-              />
-            </tbody>
-          </table>
-        </div>
-      </div>
-      {!hidePagination && !isLoading && (
-        <PaginationList
-          total={records.length}
-          count={count}
-          changeCount={setCount}
-        />
-      )}
+        <ScrollableContainer scrollingEnabled={scrollingEnabled}>
+          <ScrollableContent
+            className={cx({
+              "ctw-scrollbar": scrollingEnabled,
+            })}
+            ref={scrollContainerRef}
+          >
+            <table ref={tableRef}>
+              {hasData && <TableColGroup columns={columns} />}
+              {showTableHead && hasData && <TableHead columns={columns} />}
+              <tbody className={cx({ "ctw-h-[7rem]": records.length === 0 })}>
+                <TableRows
+                  getRowClassName={getRowClassName}
+                  records={records.slice(0, count)}
+                  handleRowClick={handleRowClick}
+                  RowActions={RowActions}
+                  columns={columns}
+                  isLoading={isLoading}
+                  emptyMessage={message}
+                />
+              </tbody>
+            </table>
+          </ScrollableContent>
+        </ScrollableContainer>
+        {!hidePagination && !isLoading && (
+          <PaginationList
+            total={records.length}
+            count={count}
+            changeCount={setCount}
+          />
+        )}
+      </ScrollableContainer>
       {children}
-    </div>
+    </ScrollableContainer>
   );
 };
