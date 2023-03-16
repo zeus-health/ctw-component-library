@@ -7,20 +7,27 @@ export const applyFilters = <T extends object>(
 ) =>
   data.filter((entry) =>
     Object.entries(filters).every(([_, filterItem]) => {
-      if (filterItem?.type === "checkbox" && isArray(filterItem.selected)) {
-        const filteredList = filterItem.selected.filter((item) =>
-          compact(uniq(data.map((c) => c[filterItem.key as keyof T]))).includes(
-            item as T[keyof T]
-          )
-        );
+      if (!filterItem) return true;
 
-        const targetFilter = entry[filterItem.key as keyof T];
+      const targetFilter = String(entry[filterItem.key as keyof T]);
 
-        return (
-          filteredList.length < 1 || filteredList.includes(String(targetFilter))
-        );
+      switch (filterItem.type) {
+        case "checkbox":
+          if (isArray(filterItem.selected)) {
+            const filteredList = filterItem.selected.filter((item) =>
+              compact(
+                uniq(data.map((c) => c[filterItem.key as keyof T]))
+              ).includes(item as T[keyof T])
+            );
+
+            return filteredList.includes(targetFilter);
+          }
+          break;
+        case "select":
+          return targetFilter === filterItem.selected;
+        case "tag":
+        default:
       }
-
       return true;
     })
   );

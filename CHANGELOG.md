@@ -1,5 +1,21 @@
 # ctw-component-library
 
+## 0.50.1
+
+### Patch Changes
+
+- 99427304: Fix view fhir to default to false.
+
+## 0.50.0
+
+### Minor Changes
+
+- d5270538: Update CareTeams to each row being an individual practitioner and then the drawer having details about the practitioner.
+
+### Patch Changes
+
+- bf27c1ed: Add all condition statuses as filter options and ensure we can filter on "Unknown" status for both patient records and outside records.
+
 ## 0.49.8
 
 ### Patch Changes

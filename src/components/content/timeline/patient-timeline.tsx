@@ -10,7 +10,6 @@ import { capitalize, orderBy } from "@/utils/nodash";
 
 export type PatientTimelineProps = {
   className?: cx.Argument;
-  includeViewFhirResource?: boolean;
 };
 
 export function PatientTimeline({ className }: PatientTimelineProps) {
