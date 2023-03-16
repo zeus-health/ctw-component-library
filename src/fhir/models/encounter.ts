@@ -1,8 +1,8 @@
 import { Coding } from "fhir/r4";
 import { codeableConceptLabel } from "../codeable-concept";
 import { formatDateISOToLocal } from "../formatters";
-import { SYSTEM_NULL_FLAVOR } from "../system-urls";
 import { FHIRModel } from "./fhir-model";
+import { isNullFlavorSystem } from "@/fhir/mappings/null-flavor";
 import { compact, flatten } from "@/utils/nodash";
 
 export class EncounterModel extends FHIRModel<fhir4.Encounter> {
@@ -71,7 +71,7 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
 
     // Grab our code and display, first from class if valid, otherwise from
     // first type coding.
-    const isNullFlavor = classSystem === SYSTEM_NULL_FLAVOR;
+    const isNullFlavor = isNullFlavorSystem(classSystem);
     const code = isNullFlavor ? typeCode : classCode;
     let display = isNullFlavor ? typeText : classDisplay;
 

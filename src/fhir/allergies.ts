@@ -20,11 +20,7 @@ export function usePatientAllergies(enableFqs = false) {
         );
         const data = response.resources;
 
-        return orderBy(
-          applyAllergyFilters(data),
-          [(allergy) => allergy.onset],
-          ["desc"]
-        );
+        return orderBy(applyAllergyFilters(data), "onset", ["desc"]);
       } catch (e) {
         throw new Error(
           `Failed fetching allergies information for patient ${patient.UPID}`
