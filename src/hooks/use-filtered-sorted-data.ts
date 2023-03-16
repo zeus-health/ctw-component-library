@@ -7,11 +7,11 @@ import { applySorts } from "@/utils/sort";
 export type UseFilteredSortedDataProps<T extends object> = {
   records?: T[];
   defaultSort: SortOption<T>;
-  defaultFilters: FilterChangeEvent;
+  defaultFilters?: FilterChangeEvent;
 };
 
 export function useFilteredSortedData<T extends object>({
-  defaultFilters,
+  defaultFilters = {},
   defaultSort,
   records,
 }: UseFilteredSortedDataProps<T>) {

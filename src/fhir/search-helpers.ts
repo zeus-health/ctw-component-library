@@ -200,12 +200,14 @@ function patientSearchParams(
     case "CareTeam":
     case "Condition":
     case "DocumentReference":
+    case "DiagnosticReport":
     case "Encounter":
     case "Immunization":
     case "MedicationAdministration":
     case "MedicationDispense":
     case "MedicationRequest":
     case "MedicationStatement":
+    case "Observation":
       return { "patient.identifier": identifier };
     case "Patient":
       return { identifier };

@@ -33,6 +33,15 @@ import {
   ProviderMedsTableProps,
 } from "@/components/content/medications/provider-meds-table";
 import {
+  PatientObservations,
+  PatientObservationsProps,
+} from "@/components/content/observations/patient-observations";
+import {
+  PatientObservationsOutside,
+  PatientObservationsOutsideBadge,
+  PatientObservationsOutsideProps,
+} from "@/components/content/observations/patient-observations-outside";
+import {
   PatientTimeline,
   PatientTimelineProps,
 } from "@/components/content/timeline/patient-timeline";
@@ -47,7 +56,7 @@ export type ZusAggregatedProfileTabs = Record<
 
 export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
   allergies: (props: PatientAllergiesProps = {}) => ({
-    key: "allergies-builder-records",
+    key: "allergies",
     getPanelClassName: () => "ctw-pt-5",
     display: () => "allergy list",
     render: () => <PatientAllergies {...props} />,
@@ -60,13 +69,13 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
   }),
 
   conditions: (props: PatientConditionsProps = {}) => ({
-    key: "condition-provider-records",
+    key: "conditions",
     display: () => i18next.t("zap.tabs.conditions"),
     render: () => <PatientConditions {...props} />,
   }),
 
   "conditions-outside": (props: PatientConditionsOutsideProps = {}) => ({
-    key: "condition-outside-records",
+    key: "conditions-outside",
     display: () => (
       <>
         <span className="ctw-pr-2 ctw-capitalize">
@@ -86,21 +95,20 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
   }),
 
   immunizations: (props: PatientImmunizationsProps = {}) => ({
-    key: "immunization-outside-records",
+    key: "immunizations",
     getPanelClassName: () => "ctw-pt-5",
     display: () => "immunizations",
     render: () => <PatientImmunizations {...props} />,
   }),
 
   medications: (props: ProviderMedsTableProps = {}) => ({
-    key: "medication-builder-records",
-    getPanelClassName: () => "ctw-pt-5",
+    key: "medications",
     display: () => "medication list",
     render: () => <ProviderMedsTable {...props} />,
   }),
 
   "medications-outside": (props: OtherProviderMedsTableProps = {}) => ({
-    key: "other-provider-records",
+    key: "medications-outside",
     display: () => (
       <>
         <span className="ctw-pr-2 ctw-capitalize">outside medications</span>
@@ -108,6 +116,23 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
       </>
     ),
     render: () => <OtherProviderMedsTableTab {...props} />,
+  }),
+
+  observations: (props: PatientObservationsProps = {}) => ({
+    key: "observations",
+    display: () => "observations",
+    render: () => <PatientObservations {...props} />,
+  }),
+
+  "observations-outside": (props: PatientObservationsOutsideProps = {}) => ({
+    key: "observations-outside",
+    display: () => (
+      <>
+        <span className="ctw-pr-2 ctw-capitalize">outside observations</span>
+        <PatientObservationsOutsideBadge />
+      </>
+    ),
+    render: () => <PatientObservationsOutside {...props} />,
   }),
 
   timelines: (props: PatientTimelineProps = {}) => ({
