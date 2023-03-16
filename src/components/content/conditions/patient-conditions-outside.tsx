@@ -4,8 +4,10 @@ import { PatientConditionsBase } from "./helpers/patient-conditions-base";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { RowActionsProps } from "@/components/core/table/table";
-import { toggleArchive, usePatientConditionsOutside } from "@/fhir/conditions";
+import { toggleArchive } from "@/fhir/basic";
+import { usePatientConditionsOutside } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models";
+import { QUERY_KEY_OTHER_PROVIDER_CONDITIONS } from "@/utils/query-keys";
 
 export type PatientConditionsOutsideProps = {
   className?: string;
@@ -51,7 +53,9 @@ const RowActions = ({ record }: RowActionsProps<ConditionModel>) => {
         type="button"
         className="ctw-btn-default"
         onClick={async () => {
-          await toggleArchive(record, await getRequestContext());
+          await toggleArchive(record, await getRequestContext(), [
+            QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
+          ]);
         }}
       >
         {record.isArchived ? "Restore" : "Dismiss"}

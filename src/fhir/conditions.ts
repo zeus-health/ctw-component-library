@@ -1,7 +1,6 @@
 import { FhirResource, SearchParams } from "fhir-kit-client";
 import { useEffect, useState } from "react";
 import { createOrEditFhirResource } from "./action-helper";
-import { recordProfileAction } from "./basic";
 import { getIncludedBasics } from "./bundle";
 import { CodePreference } from "./codeable-concept";
 import {
@@ -301,27 +300,6 @@ function filterAndSort(conditions: ConditionModel[]): ConditionModel[] {
     ["desc"]
   );
 }
-
-export const toggleArchive = async (
-  condition: ConditionModel,
-  requestContext: CTWRequestContext
-) => {
-  const existingBasic =
-    condition.getBasicResourceByAction("archive") ||
-    condition.getBasicResourceByAction("unarchive");
-  const profileAction = condition.isArchived ? "unarchive" : "archive";
-
-  await recordProfileAction(
-    existingBasic,
-    condition,
-    requestContext,
-    profileAction
-  );
-
-  // Refresh our data (this is really just needed to update
-  // otherProviderRecord state).
-  await queryClient.invalidateQueries([QUERY_KEY_OTHER_PROVIDER_CONDITIONS]);
-};
 
 export const deleteCondition = async (
   resource: fhir4.Condition,

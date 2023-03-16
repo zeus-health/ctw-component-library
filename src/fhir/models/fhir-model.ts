@@ -24,6 +24,10 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
     return this.resource.id || "";
   }
 
+  get isArchived(): boolean {
+    return this.getBasicResourceByAction("archive") !== undefined;
+  }
+
   // Returns true if this resource is a summary/lens resource.
   get isSummaryResource(): boolean {
     return (
