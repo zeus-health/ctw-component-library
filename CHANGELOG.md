@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 0.50.2
+
+### Patch Changes
+
+- 54c1bbdf: Filter builder tagged records client side in bid to improve performance.
+- bd7be90e: Add PatientObservations component (POC)
+
 ## 0.50.1
 
 ### Patch Changes
