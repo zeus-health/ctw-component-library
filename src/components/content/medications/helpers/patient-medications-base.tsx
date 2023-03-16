@@ -6,6 +6,7 @@ import {
   ResourceTableActions,
   ResourceTableActionsProps,
 } from "../../resource/resource-table-actions";
+import { useMedicationHistory } from "../history/medication-history-drawer";
 import { patientMedicationColumns } from "./columns";
 import { defaultMedicationFilters, medicationFilters } from "./filters";
 import { defaultMedicationSort, medicationSortOptions } from "./sorts";
@@ -30,7 +31,7 @@ export const PatientMedicationsBase = ({
   readOnly = false,
   rowActions,
 }: PatientMedicationsTableProps) => {
-  // const showConditionHistory = useConditionHistory();
+  const showMedicationHistory = useMedicationHistory();
   const { data, setFilters, setSort } = useFilteredSortedData({
     defaultFilters: defaultMedicationFilters,
     defaultSort: defaultMedicationSort,
@@ -59,12 +60,7 @@ export const PatientMedicationsBase = ({
         data={data}
         emptyMessage="There are no medication records available."
         isLoading={query.isLoading}
-        // onRowClick={(medication) =>
-        //   // showConditionHistory({
-        //   //   condition,
-        //   //   readOnly,
-        //   // })
-        // }
+        onRowClick={(medication) => showMedicationHistory({ medication })}
         rowActions={rowActions}
       />
     </div>
