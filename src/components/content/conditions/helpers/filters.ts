@@ -1,6 +1,7 @@
 import {
   faClipboardCheck,
   faClipboardList,
+  faEye,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   FilterChangeEvent,
@@ -17,7 +18,19 @@ export function conditionFilters(
   conditions: ConditionModel[],
   outside: boolean
 ): FilterItem[] {
-  return [
+  const filters: FilterItem[] = [];
+
+  if (outside) {
+    filters.push({
+      key: "isArchived",
+      type: "tag",
+      icon: faEye,
+      display: ({ listView }) =>
+        listView ? "show dismissed records" : "dismissed records",
+    });
+  }
+
+  filters.push(
     {
       key: "displayStatus",
       type: "checkbox",
@@ -32,8 +45,10 @@ export function conditionFilters(
       icon: faClipboardList,
       display: "Category",
       values: uniqueValues(conditions, "ccsChapter"),
-    },
-  ];
+    }
+  );
+
+  return filters;
 }
 
 export const defaultConditionFilters: FilterChangeEvent = {

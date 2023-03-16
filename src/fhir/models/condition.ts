@@ -309,10 +309,6 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
 
     // What to show if lens or summary resource.
     if (this.isSummaryResource) {
-      if (this.isArchived) {
-        return "Dismissed";
-      }
-
       return clinicalStatusMap(this.clinicalStatusCode) || "Unknown";
     }
 
@@ -368,7 +364,6 @@ export const conditionStatuses = [
 export const outsideConditionStatuses = [
   "Active",
   "Inactive",
-  "Dismissed",
   "Unknown",
 ] as const;
 
