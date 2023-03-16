@@ -8,6 +8,7 @@ import { medicationDispense } from "./medication-dispense";
 import { medicationRequest } from "./medication-request";
 import { patient } from "./patient";
 import { cloneDeep, find } from "@/utils/nodash/fp";
+import { SYSTEM_ZUS_OWNER } from "@/fhir/system-urls";
 
 let patientProviderMedsCache: fhir4.Bundle;
 let patientOtherProviderMedsCache: fhir4.Bundle;
@@ -110,14 +111,22 @@ function mockRequests() {
   const mockBasicPost = rest.post(
     "https://api.dev.zusapi.com/fhir/Basic",
     async (req, res, ctx) => {
-      const newBasicResource = await req.json();
-      if (newBasicResource.subject.type !== "MedicationStatement") {
+      const newBasicResource = (await req.json()) as fhir4.Basic;
+      if (newBasicResource.subject?.type !== "MedicationStatement") {
         // The ZusAggregatedProfile component has multiple tabs mocking fhir
         // Basic resources. We only want to handle medications here.
         return undefined;
       }
-      newBasicResource.search = { mode: "include" };
       newBasicResource.id = uuidv4();
+      newBasicResource.meta = {
+        tag: [
+          {
+            system: SYSTEM_ZUS_OWNER,
+            code: "builder/12345",
+            display: "Storybook Builder",
+          },
+        ],
+      };
       patientOtherProviderMedsCache.entry?.push({
         resource: newBasicResource,
         search: { mode: "include" },

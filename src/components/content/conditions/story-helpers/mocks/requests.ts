@@ -11,7 +11,7 @@ import { patient } from "./patient";
 import { patientHistoryMessage } from "./patient-history-message";
 import { ProvenanceCondition } from "./provenance-conditions";
 import { mockBinaryGet } from "@/components/content/story-helpers/mocks/requests";
-import { SYSTEM_SUMMARY } from "@/fhir/system-urls";
+import { SYSTEM_SUMMARY, SYSTEM_ZUS_OWNER } from "@/fhir/system-urls";
 import { cloneDeep } from "@/utils/nodash";
 
 let patientConditionsCache: fhir4.Bundle;
@@ -134,6 +134,7 @@ function mockRequests() {
       // Search for either patient or other provider conditions.
       const tagParam = req.url.searchParams.get("_tag");
       const other = tagParam === `${SYSTEM_SUMMARY}|Common`;
+
       return res(
         ctx.status(200),
         ctx.json(other ? otherConditionsCache : patientConditionsCache)
@@ -144,14 +145,22 @@ function mockRequests() {
   const mockConditionsBasic = rest.post(
     "https://api.dev.zusapi.com/fhir/Basic",
     async (req, res, ctx) => {
-      const newBasicResource = await req.json();
-      if (newBasicResource.subject.type !== "Condition") {
+      const newBasicResource = (await req.json()) as fhir4.Basic;
+      if (newBasicResource.subject?.type !== "Condition") {
         // The ZusAggregatedProfile component has multiple tabs mocking fhir
         // Basic resources. We only want to handle conditions here.
         return undefined;
       }
-      newBasicResource.search = { mode: "include" };
       newBasicResource.id = uuidv4();
+      newBasicResource.meta = {
+        tag: [
+          {
+            system: SYSTEM_ZUS_OWNER,
+            code: "builder/b123",
+            display: "Storybook Builder",
+          },
+        ],
+      };
       otherConditionsCache.entry?.push({
         resource: newBasicResource,
         search: { mode: "include" },
