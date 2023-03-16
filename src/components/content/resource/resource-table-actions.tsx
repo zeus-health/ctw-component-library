@@ -35,7 +35,9 @@ export const ResourceTableActions = <T extends MinRecordItem>({
     >
       <div className="ctw-flex ctw-flex-wrap ctw-gap-x-2">
         {sortOptions && <SortButton {...sortOptions} />}
-        {filterOptions && <FilterBar {...filterOptions} />}
+        {filterOptions && filterOptions?.filters.length > 0 && (
+          <FilterBar {...filterOptions} />
+        )}
       </div>
 
       {action}
