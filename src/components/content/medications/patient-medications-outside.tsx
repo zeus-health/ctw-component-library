@@ -25,8 +25,8 @@ const PatientMedicationsOutsideComponent = ({
   return (
     <PatientMedicationsBase
       className={className}
+      outside
       query={{ data: otherProviderMedications, isLoading }}
-      readOnly={readOnly}
       rowActions={readOnly ? undefined : getRowActions({ onAddToRecord })}
     />
   );

@@ -19,7 +19,6 @@ export type PatientMedicationsTableProps = {
   className?: string;
   query: { data?: MedicationStatementModel[]; isLoading: boolean };
   outside?: boolean;
-  readOnly?: boolean;
   rowActions?: ResourceTableProps<MedicationStatementModel>["rowActions"];
 };
 
@@ -28,7 +27,6 @@ export const PatientMedicationsBase = ({
   className,
   query,
   outside = false,
-  readOnly = false,
   rowActions,
 }: PatientMedicationsTableProps) => {
   const showMedicationHistory = useMedicationHistory();
