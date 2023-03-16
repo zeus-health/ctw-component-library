@@ -85,9 +85,9 @@ export function usePatientConditions() {
         );
         return filterAndSort(setupConditionModels(conditions, bundle));
       } catch (e) {
-        Telemetry.logError(e as Error, "Failed fetching condition information");
-        throw new Error(
-          `Failed fetching condition information for patient: ${e}`
+        throw Telemetry.logError(
+          e as Error,
+          `Failed fetching conditions for patient: ${patient.UPID}`
         );
       }
     }, "req.patient_conditions")
@@ -110,12 +110,9 @@ function usePatientConditionsOutsideDuped() {
         );
         return filterAndSort(setupConditionModels(conditions, bundle));
       } catch (e) {
-        Telemetry.logError(
+        throw Telemetry.logError(
           e as Error,
-          `Failed fetching condition information for patient: ${e}`
-        );
-        throw new Error(
-          `Failed fetching condition information for patient: ${e}`
+          `Failed fetching conditions outside for patient: ${patient.UPID}`
         );
       }
     }, "req.other_provider_conditions")
@@ -265,12 +262,9 @@ export function useConditionHistory(condition?: ConditionModel) {
           bundle,
         };
       } catch (e) {
-        Telemetry.logError(
+        throw Telemetry.logError(
           e as Error,
-          "Failed fetching condition history information for patient"
-        );
-        throw new Error(
-          `Failed fetching condition history information for patient: ${e}`
+          `Failed fetching condition history for patient: ${patient.UPID}}`
         );
       }
     }, "req.condition_history"),
@@ -293,10 +287,7 @@ function filterAndSort(conditions: ConditionModel[]): ConditionModel[] {
     conditions.filter(
       (condition) => condition.resource.asserter?.type !== "Patient"
     ),
-    [
-      (condition) => condition.resource.recordedDate ?? "",
-      (condition) => condition.display,
-    ],
+    ["resource.recordedDate", "display"],
     ["desc"]
   );
 }

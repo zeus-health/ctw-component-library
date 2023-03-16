@@ -15,6 +15,8 @@ import {
 import { Title } from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { TabGroup } from "@/components/core/tab-group/tab-group";
+import { PatientObservationsProps } from "../observations/patient-observations";
+import { PatientObservationsOutsideProps } from "../observations/patient-observations-outside";
 
 export type ZAPResourceName =
   | "allergies"
@@ -25,6 +27,8 @@ export type ZAPResourceName =
   | "immunizations"
   | "medications"
   | "medications-outside"
+  | "observations"
+  | "observations-outside"
   | "timelines";
 
 export type ZusAggregatedProfileProps = {
@@ -44,6 +48,8 @@ type SubComponentProps = Partial<{
   immunizationsProps: PatientImmunizationsProps;
   medicationsProps: PatientMedicationsProps;
   medicationsOutsideProps: PatientMedicationsOutsideProps;
+  observationsProps: PatientObservationsProps;
+  observationsOutsideProps: PatientObservationsOutsideProps;
   timelineProps: PatientTimelineProps;
 }>;
 
@@ -57,6 +63,8 @@ const zusAggregatedProfile = ({
   immunizationsProps,
   medicationsProps,
   medicationsOutsideProps,
+  observationsProps,
+  observationsOutsideProps,
   timelineProps,
   resources,
   title = "Outside Records",
@@ -70,10 +78,12 @@ const zusAggregatedProfile = ({
     conditions: conditionsProps,
     "conditions-outside": conditionsOutsideProps,
     documents: documentsProps,
-    timelines: timelineProps,
     immunizations: immunizationsProps,
     medications: medicationsProps,
     "medications-outside": medicationsOutsideProps,
+    observations: observationsProps,
+    "observations-outside": observationsOutsideProps,
+    timelines: timelineProps,
   };
 
   const tabbedContent = resources.map((tabName) => {
@@ -127,7 +137,8 @@ const zusAggregatedProfile = ({
  * ```
  * The complete set of available resources in the ZusAggregatedProfile are
  * "allergies", "care-team", "conditions", "documents", "conditions-outside",
- * "immunizations", "medications", "medications-outside" and "timelines".
+ * "immunizations", "medications", "medications-outside", "observations",
+ * "observations-outside" and "timelines".
  */
 export const ZusAggregatedProfile = withErrorBoundary(
   zusAggregatedProfile,
