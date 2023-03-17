@@ -1,6 +1,10 @@
 import { useRef } from "react";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { patientAllergiesColumns } from "@/components/content/allergies/patient-allergies-column";
+import {
+  ScrollableContainer,
+  ScrollingContainerProps,
+} from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Table } from "@/components/core/table/table";
 import { usePatientAllergies } from "@/fhir/allergies";
@@ -10,11 +14,13 @@ import { useBreakpoints } from "@/hooks/use-breakpoints";
 export type PatientAllergiesProps = {
   className?: string;
   enableFqs?: boolean;
-};
+} & ScrollingContainerProps;
 
 function PatientAllergiesComponent({
   className,
   enableFqs,
+  height,
+  scrollingEnabled = false,
 }: PatientAllergiesProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
@@ -27,23 +33,30 @@ function PatientAllergiesComponent({
   // Get our allergies.
   const allergies = patientAllergiesQuery.data ?? [];
   const { isLoading } = patientAllergiesQuery;
+  const isScrollingEnabled = !!(scrollingEnabled || height);
 
   return (
-    <div
+    <ScrollableContainer
+      height={height}
+      scrollingEnabled={scrollingEnabled}
       className={className}
       ref={containerRef}
       data-zus-telemetry-namespace="Allergies"
     >
-      <div className="ctw-overflow-hidden">
+      <ScrollableContainer
+        className="ctw-overflow-hidden"
+        scrollingEnabled={isScrollingEnabled}
+      >
         <Table
           stacked={breakpoints.sm}
           isLoading={isLoading}
           records={allergies}
           columns={patientAllergiesColumns}
           handleRowClick={openDetails}
+          scrollingEnabled={isScrollingEnabled}
         />
-      </div>
-    </div>
+      </ScrollableContainer>
+    </ScrollableContainer>
   );
 }
 

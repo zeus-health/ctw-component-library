@@ -3,6 +3,10 @@ import { useRef } from "react";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { patientImmunizationsColumns } from "./patient-immunizations-columns";
 import { CodingList } from "@/components/core/coding-list";
+import {
+  ScrollableContainer,
+  ScrollingContainerProps,
+} from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { Table } from "@/components/core/table/table";
@@ -13,7 +17,7 @@ import { useBreakpoints } from "@/hooks/use-breakpoints";
 
 export type PatientImmunizationsProps = {
   className?: string;
-};
+} & ScrollingContainerProps;
 
 const viewRecordFHIR = ({ record }: { record: ImmunizationModel }) => (
   <ViewFHIR name="Immunization Resource" resource={record.resource} />
@@ -21,6 +25,8 @@ const viewRecordFHIR = ({ record }: { record: ImmunizationModel }) => (
 
 function PatientImmunizationsComponent({
   className,
+  height,
+  scrollingEnabled = false,
 }: PatientImmunizationsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
@@ -30,16 +36,23 @@ function PatientImmunizationsComponent({
     header: (m) => m.description,
     details: immunizationData,
   });
+  const isScrollingEnabled = !!(height || scrollingEnabled);
 
   return (
-    <div
+    <ScrollableContainer
+      height={height}
+      scrollingEnabled={scrollingEnabled}
       ref={containerRef}
       data-zus-telemetry-namespace="Immunizations"
       className={cx("ctw-patient-immunizations ctw-bg-white", className, {
         "ctw-stacked": breakpoints.sm,
       })}
     >
-      <div className="ctw-overflow-hidden">
+      <ScrollableContainer
+        className="ctw-overflow-hidden"
+        height={height}
+        scrollingEnabled={isScrollingEnabled}
+      >
         <Table
           RowActions={
             featureFlags?.enableViewFhirButton ? viewRecordFHIR : undefined
@@ -49,9 +62,10 @@ function PatientImmunizationsComponent({
           records={patientImmunizationsQuery.data ?? []}
           columns={patientImmunizationsColumns}
           handleRowClick={openDetails}
+          scrollingEnabled={isScrollingEnabled}
         />
-      </div>
-    </div>
+      </ScrollableContainer>
+    </ScrollableContainer>
   );
 }
 
