@@ -12,6 +12,7 @@ import {
   PatientMedications,
   PatientProvider,
   PatientSearch,
+  PatientsTable,
   ZusAggregatedProfile,
 } from ".";
 import "./App.css";
@@ -81,6 +82,16 @@ const demoComponents: DemoComponent[] = [
   },
   { render: () => <PatientAllergies />, title: "Patient Allergies" },
   { render: () => <PatientImmunizations />, title: "Patient Immunizations" },
+  {
+    render: () => (
+      <PatientsTable
+        pageSize={10}
+        handleRowClick={(e) => console.log("e", e)}
+      />
+    ),
+    title: "Patient List",
+  },
+
   { render: () => <PatientSearch />, title: "Patient Search" },
 ];
 

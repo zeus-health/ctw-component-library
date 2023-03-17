@@ -121,6 +121,7 @@ export const PatientsTable = withErrorBoundary(
             records={patients}
             columns={columns}
             handleRowClick={handleRowClick}
+            pageSize={pageSize}
             hidePagination
           >
             <Pagination
