@@ -38,6 +38,20 @@ const theme = {
   },
 };
 
+// Glossary for translation
+const locals = {
+  en: {
+    glossary: {
+      condition_one: "problem",
+      condition_other: "problems",
+    },
+    main: {
+      "zap.tabs.conditionsOutside": "problems",
+      "zap.tabs.medicationsOutside": "medications",
+    },
+  },
+};
+
 type DemoComponent = {
   render: () => ReactNode;
   title: string;
@@ -58,11 +72,21 @@ const demoComponents: DemoComponent[] = [
     render: () => (
       <ZusAggregatedProfile
         resources={[
-          "medications",
-          "timelines",
-          "allergies",
           "conditions-outside",
+          "medications-outside",
+          "allergies",
+          "immunizations",
+          "documents",
+          "care-team",
+          "timelines",
         ]}
+        conditionsOutsideProps={{
+          hideRequestRecords: true,
+          readOnly: true,
+        }}
+        medicationsOutsideProps={{
+          hideAddToRecord: true,
+        }}
       />
     ),
     title: "ZAP",
@@ -91,6 +115,7 @@ const DemoApp = ({ accessToken = "" }) => (
     builderId={VITE_BUILDER_ID}
     enableTelemetry
     theme={theme}
+    locals={locals}
   >
     <PatientProvider patientID={VITE_PATIENT_ID} systemURL={VITE_SYSTEM_URL}>
       <div className="App">

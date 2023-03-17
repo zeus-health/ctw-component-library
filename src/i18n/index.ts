@@ -19,6 +19,7 @@ export const resources = {
         "This will remove <2>{{resourceName}}</2> from this patient's {{resource}} list.",
       "resource.remove.heading": "Remove this {{resource}}?",
       "resource.unamed": "unamed {{resource}}",
+      "zap.tabs.medicationsOutside": "medications",
       "zap.tabs.conditions": "$t(glossary:condition_other) list",
       "zap.tabs.conditionsOutside": "outside $t(glossary:condition_other)",
     },
