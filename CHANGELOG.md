@@ -1,5 +1,13 @@
 # ctw-component-library
 
+## 0.50.3
+
+### Patch Changes
+
+- 2355541e: Change allergy label and add option to override outside medications tab name
+- aa249a7c: Fix bug where patient list wasn't always showing all patients for some consumers.
+- 81e86724: Fix the use of tag:not filtering for resources.
+
 ## 0.50.2
 
 ### Patch Changes
