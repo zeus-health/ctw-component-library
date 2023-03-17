@@ -1,5 +1,6 @@
 import type { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { ReactNode, useRef } from "react";
+import { ScrollableContainer } from "@/components/core/ctw-box";
 import { Table, TableBaseProps } from "@/components/core/table/table";
 import {
   MinRecordItem,
@@ -28,6 +29,7 @@ export const MedicationsTableBase = ({
   hideMenu = false,
   medicationStatements,
   telemetryNamespace,
+  scrollingEnabled = false,
   ...tableProps
 }: MedicationsTableBaseProps<MedicationStatementModel>) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -103,22 +105,22 @@ export const MedicationsTableBase = ({
   ] as TableColumn<MedicationStatementModel>[];
 
   return (
-    <div
+    <ScrollableContainer
+      scrollingEnabled={scrollingEnabled}
       className={className}
       ref={containerRef}
       data-zus-telemetry-namespace={telemetryNamespace}
     >
-      <div className="ctw-overflow-hidden">
-        <Table
-          showTableHead={!breakpoints.sm}
-          stacked={breakpoints.sm}
-          records={medicationStatements}
-          columns={breakpoints.sm ? columnsStacked : columns}
-          emptyMessage={emptyMessage}
-          {...tableProps}
-        />
-      </div>
+      <Table
+        showTableHead={!breakpoints.sm}
+        stacked={breakpoints.sm}
+        records={medicationStatements}
+        columns={breakpoints.sm ? columnsStacked : columns}
+        emptyMessage={emptyMessage}
+        scrollingEnabled={scrollingEnabled}
+        {...tableProps}
+      />
       {children}
-    </div>
+    </ScrollableContainer>
   );
 };

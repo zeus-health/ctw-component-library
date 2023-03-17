@@ -6,6 +6,10 @@ import {
 } from "@/components/content/medications-table-base";
 import { AddNewMedDrawer } from "@/components/content/medications/add-new-med-drawer";
 import { Badge } from "@/components/core/badge";
+import {
+  ScrollableContainer,
+  ScrollingContainerProps,
+} from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useDismissMedication } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
@@ -19,7 +23,8 @@ export type OtherProviderMedsTableProps = {
   showDismissed?: boolean;
   showInactive?: boolean;
   records?: MedicationStatementModel[];
-} & MedsHistoryTempProps;
+} & MedsHistoryTempProps &
+  ScrollingContainerProps;
 
 /**
  * Displays a table of medications that are not scoped to the current builder.
@@ -34,9 +39,11 @@ export const OtherProviderMedsTable = withErrorBoundary(
     showInactive = false,
     hideAddToRecord = false,
     handleAddToRecord,
+    height,
     records,
     onAfterOpenHistoryDrawer,
     onOpenHistoryDrawer,
+    scrollingEnabled = false,
   }: OtherProviderMedsTableProps) => {
     const dismissMedication = useDismissMedication();
     const openMedHistoryDrawer = useMedicationHistory();
@@ -92,7 +99,11 @@ export const OtherProviderMedsTable = withErrorBoundary(
     ]);
 
     return (
-      <div data-zus-telemetry-namespace="OtherProviderMedsTable">
+      <ScrollableContainer
+        height={height}
+        scrollingEnabled={scrollingEnabled}
+        data-zus-telemetry-namespace="OtherProviderMedsTable"
+      >
         <MedicationsTableBase
           getRowClassName={(medication) => ({
             "ctw-tr-archived": medication.isArchived,
@@ -102,6 +113,7 @@ export const OtherProviderMedsTable = withErrorBoundary(
           medicationStatements={medicationModels}
           isLoading={isLoading}
           handleRowClick={openHistoryDrawer}
+          scrollingEnabled={scrollingEnabled}
           RowActions={
             hasZeroRowActions
               ? undefined
@@ -148,7 +160,7 @@ export const OtherProviderMedsTable = withErrorBoundary(
           isOpen={addNewMedDrawerOpen}
           handleOnClose={() => setAddNewMedDrawerOpen(false)}
         />
-      </div>
+      </ScrollableContainer>
     );
   },
   "OtherProviderMedsTable"
