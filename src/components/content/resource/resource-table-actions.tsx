@@ -7,21 +7,24 @@ import {
   SortButtonProps,
 } from "@/components/core/sort-button/sort-button";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
+import { ViewButton, ViewButtonProps, ViewOption } from "./helpers/view-button";
 
 export type ResourceTableActionsProps<T extends MinRecordItem> = {
-  className?: string;
-  sortOptions?: SortButtonProps<T>;
-  filterOptions?: FilterBarProps;
   action?: ReactNode;
+  className?: string;
+  filterOptions?: FilterBarProps;
+  sortOptions?: SortButtonProps<T>;
+  viewOptions?: ViewButtonProps;
 };
 
 export const ResourceTableActions = <T extends MinRecordItem>({
-  className,
-  sortOptions,
-  filterOptions,
   action,
+  className,
+  filterOptions,
+  sortOptions,
+  viewOptions,
 }: ResourceTableActionsProps<T>) => {
-  const isEmpty = !sortOptions && !filterOptions && !action;
+  const isEmpty = !viewOptions && !sortOptions && !filterOptions && !action;
   if (isEmpty) {
     return null;
   }
@@ -34,6 +37,7 @@ export const ResourceTableActions = <T extends MinRecordItem>({
       )}
     >
       <div className="ctw-flex ctw-flex-wrap ctw-gap-x-2">
+        {viewOptions && <ViewButton {...viewOptions} />}
         {sortOptions && <SortButton {...sortOptions} />}
         {filterOptions && filterOptions?.filters.length > 0 && (
           <FilterBar {...filterOptions} />

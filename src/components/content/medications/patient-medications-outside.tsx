@@ -7,6 +7,7 @@ import { MedicationStatementModel } from "@/fhir/models";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { useCTW } from "@/index";
 import { QUERY_KEY_OTHER_PROVIDER_MEDICATIONS } from "@/utils/query-keys";
+import { medicationFilters } from "./helpers/filters";
 
 export type PatientMedicationsOutsideProps = {
   className?: string;
@@ -25,8 +26,8 @@ const PatientMedicationsOutsideComponent = ({
   return (
     <PatientMedicationsBase
       className={className}
-      outside
       query={{ data: otherProviderMedications, isLoading }}
+      filters={medicationFilters(otherProviderMedications ?? [], true)}
       rowActions={readOnly ? undefined : getRowActions({ onAddToRecord })}
     />
   );

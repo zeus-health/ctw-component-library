@@ -38,9 +38,7 @@ export type FilterItem =
 
 export type FilterValuesRecord = Record<string, string | string[]>;
 
-export type FilterChangeEvent = Record<
-  string,
-  | undefined
+export type Filter =
   | {
       key: string;
       selected: boolean;
@@ -55,5 +53,6 @@ export type FilterChangeEvent = Record<
       key: string;
       selected: string;
       type: "select";
-    }
->;
+    };
+
+export type FilterChangeEvent = Record<string, Filter>;

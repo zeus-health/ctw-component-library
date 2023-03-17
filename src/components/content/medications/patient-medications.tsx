@@ -1,6 +1,8 @@
 import { PatientMedicationsBase } from "./helpers/patient-medications-base";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
+import { medicationFilters } from "./helpers/filters";
+import { defaultMedicationView, medicationViews } from "./helpers/views";
 
 export type PatientMedicationsProps = {
   className?: string;
@@ -12,13 +14,14 @@ const PatientMedicationsComponent = ({
   readOnly = false,
 }: PatientMedicationsProps) => {
   const { builderMedications, isLoading } = useQueryAllPatientMedications();
-  // const showAddConditionForm = useAddConditionForm();
 
   return (
     <PatientMedicationsBase
       className={className}
       query={{ data: builderMedications, isLoading }}
-      readOnly={readOnly}
+      filters={medicationFilters(builderMedications ?? [], false)}
+      views={medicationViews}
+      defaultView={defaultMedicationView}
     />
   );
 };

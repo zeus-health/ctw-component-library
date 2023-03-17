@@ -8,29 +8,36 @@ import {
 } from "../../resource/resource-table-actions";
 import { useMedicationHistory } from "../history/medication-history-drawer";
 import { patientMedicationColumns } from "./columns";
-import { defaultMedicationFilters, medicationFilters } from "./filters";
+import { defaultMedicationFilters } from "./filters";
 import { defaultMedicationSort, medicationSortOptions } from "./sorts";
 import { MedicationStatementModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import "./patient-medications.scss";
+import { FilterItem } from "@/components/core/filter-bar/filter-bar-types";
+import { ViewOption } from "../../resource/helpers/view-button";
 
 export type PatientMedicationsTableProps = {
   action?: ResourceTableActionsProps<MedicationStatementModel>["action"];
   className?: string;
   query: { data?: MedicationStatementModel[]; isLoading: boolean };
-  outside?: boolean;
   rowActions?: ResourceTableProps<MedicationStatementModel>["rowActions"];
+  filters: FilterItem[];
+  defaultView?: ViewOption;
+  views?: ViewOption[];
 };
 
 export const PatientMedicationsBase = ({
   action,
   className,
   query,
-  outside = false,
   rowActions,
+  filters,
+  defaultView,
+  views,
 }: PatientMedicationsTableProps) => {
   const showMedicationHistory = useMedicationHistory();
-  const { data, setFilters, setSort } = useFilteredSortedData({
+  const { data, setFilters, setSort, setViewOption } = useFilteredSortedData({
+    defaultView,
     defaultFilters: defaultMedicationFilters,
     defaultSort: defaultMedicationSort,
     records: query.data,
@@ -39,10 +46,19 @@ export const PatientMedicationsBase = ({
   return (
     <div className={className}>
       <ResourceTableActions
+        viewOptions={
+          defaultView && views
+            ? {
+                onChange: setViewOption,
+                defaultView,
+                options: views,
+              }
+            : undefined
+        }
         filterOptions={{
           onChange: setFilters,
           defaultState: defaultMedicationFilters,
-          filters: medicationFilters(query.data ?? [], outside),
+          filters,
         }}
         sortOptions={{
           defaultSort: defaultMedicationSort,
