@@ -37,7 +37,7 @@ function TabGroupComponent({
   onChange,
   scrollingEnabled = false,
 }: TabGroupProps) {
-  const [_, setSelectedTabIndex] = useState(0);
+  const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const isVertical = !forceHorizontalTabs && breakpoints.sm;
@@ -59,7 +59,7 @@ function TabGroupComponent({
       ref={containerRef}
       className={cx(className, "ctw-tab-group ctw-relative ctw-w-full")}
     >
-      <Tab.Group>
+      <Tab.Group selectedIndex={selectedTabIndex} onChange={handleOnChange}>
         {isVertical && (
           <ListBox
             btnClassName="ctw-tab ctw-capitalize"
@@ -109,9 +109,12 @@ function TabGroupComponent({
           {content.map((item, index) => (
             <Tab.Panel
               key={item.key}
-              className={cx(item.getPanelClassName?.(breakpoints.sm), {
-                "ctw-scrollable-container": scrollingEnabled,
-              })}
+              className={cx(
+                {
+                  "ctw-scrollable-container": scrollingEnabled,
+                },
+                item.getPanelClassName?.(breakpoints.sm)
+              )}
               // Don't unmount our tabs. This fixes an issue
               // where ZAP filters/sort selections would get reset
               // when switching to a new tab and back again.
