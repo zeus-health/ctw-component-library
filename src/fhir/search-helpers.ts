@@ -14,6 +14,30 @@ import { filter, find, mapValues, mergeWith } from "@/utils/nodash";
 
 const MAX_COUNT = 250;
 
+function excludeTagsinPatientRecordSearch<T extends ResourceTypeString>(
+  resourceType: T
+): string[] {
+  switch (resourceType) {
+    case "Patient":
+      return [...UPI_TAGS];
+    case "Condition":
+      return [...CONDITIONS_LENS_TAGS, ...SUMMARY_TAGS];
+    case "MedicationStatement":
+      return [...MEDICATION_LENS_TAGS, ...SUMMARY_TAGS];
+    case "Coverage":
+    case "AllergyIntolerance":
+    case "CareTeam":
+    case "DocumentReference":
+    case "Encounter":
+    case "Immunization":
+    case "MedicationAdministration":
+    case "MedicationDispense":
+    case "MedicationRequest":
+    default:
+      return [];
+  }
+}
+
 // Enumerating ALL of the third party tags.
 const THIRD_PARTY_TAGS = [
   `${SYSTEM_ZUS_THIRD_PARTY}|surescripts`,
@@ -23,11 +47,11 @@ const THIRD_PARTY_TAGS = [
   `${SYSTEM_ZUS_THIRD_PARTY}|quest`,
 ];
 
-// Enumerating ALL of the lens tags.
-const LENS_TAGS = [
-  `${SYSTEM_ZUS_LENS}|ActiveMedications`,
-  `${SYSTEM_ZUS_LENS}|ChronicConditions`,
-];
+// Enumerating Medication-specific lens tags.
+const MEDICATION_LENS_TAGS = [`${SYSTEM_ZUS_LENS}|ActiveMedications`];
+
+// Enumerating Condition-specific lens tags.
+const CONDITIONS_LENS_TAGS = [`${SYSTEM_ZUS_LENS}|ChronicConditions`];
 
 const UPI_TAGS = [`${SYSTEM_ZUS_UPI_RECORD_TYPE}|universal`];
 
@@ -85,7 +109,8 @@ export async function searchBuilderRecords<T extends ResourceTypeString>(
 ): Promise<SearchReturn<T>> {
   const nonBuilderTags = [
     ...THIRD_PARTY_TAGS,
-    ...LENS_TAGS,
+    ...MEDICATION_LENS_TAGS,
+    ...CONDITIONS_LENS_TAGS,
     ...SUMMARY_TAGS,
     ...UPI_TAGS,
   ];
@@ -166,9 +191,12 @@ export async function searchCommonRecords<T extends ResourceTypeString>(
   requestContext: CTWRequestContext,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
-  const params = mergeParams(searchParams, {
-    "_tag:not": [...LENS_TAGS, ...SUMMARY_TAGS, ...UPI_TAGS],
-  });
+  const tags = excludeTagsinPatientRecordSearch(resourceType);
+  const params = mergeParams(
+    searchParams,
+    tags.length ? { "_tag:not": tags } : {}
+  );
+
   return searchAllRecords(resourceType, requestContext, params);
 }
 
