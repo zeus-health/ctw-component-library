@@ -82,15 +82,6 @@ const demoComponents: DemoComponent[] = [
   },
   { render: () => <PatientAllergies />, title: "Patient Allergies" },
   { render: () => <PatientImmunizations />, title: "Patient Immunizations" },
-  {
-    render: () => (
-      <PatientsTable
-        pageSize={10}
-        handleRowClick={(e) => console.log("e", e)}
-      />
-    ),
-    title: "Patient List",
-  },
 
   { render: () => <PatientSearch />, title: "Patient Search" },
 ];
