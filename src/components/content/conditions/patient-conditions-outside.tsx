@@ -1,6 +1,6 @@
 import { PatientHistoryAction } from "../patient-history/patient-history-action";
 import { RequestRecordsButton } from "../patient-history/request-records-button";
-import { useShowPatientHistoryRequestButton } from "../patient-history/use-patient-history";
+import { useHasOtherRecordData } from "../patient-history/use-patient-history";
 import { useAddConditionForm } from "./helpers/modal-hooks";
 import { PatientConditionsBase } from "./helpers/patient-conditions-base";
 import { withErrorBoundary } from "@/components/core/error-boundary";
@@ -21,10 +21,9 @@ const PatientConditionsOutsideComponent = ({
   readOnly = false,
 }: PatientConditionsOutsideProps) => {
   const query = usePatientConditionsOutside();
-  const showRequestRecordsRequestButtonQuery =
-    useShowPatientHistoryRequestButton();
+  const showRequestRecordsRequestButtonQuery = useHasOtherRecordData();
 
-  const emptyMessage = showRequestRecordsRequestButtonQuery.data ? (
+  const emptyMessage = showRequestRecordsRequestButtonQuery.hasNoOutsideData ? (
     <div className="ctw-flex ctw-space-x-1">
       <div>Retrieve patient clinical history.</div>
       <RequestRecordsButton />
