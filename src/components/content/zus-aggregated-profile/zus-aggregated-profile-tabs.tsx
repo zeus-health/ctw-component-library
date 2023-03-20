@@ -11,6 +11,16 @@ import {
   PatientMedicationsOutside,
   PatientMedicationsOutsideProps,
 } from "../medications/patient-medications-outside";
+import { PatientMedicationsOutsideBadge } from "../medications/patient-medications-outside-badge";
+import {
+  PatientObservations,
+  PatientObservationsProps,
+} from "../observations/patient-observations";
+import {
+  PatientObservationsOutside,
+  PatientObservationsOutsideBadge,
+  PatientObservationsOutsideProps,
+} from "../observations/patient-observations-outside";
 import {
   PatientAllergies,
   PatientAllergiesProps,
@@ -38,16 +48,6 @@ import {
 import { ZAPResourceName } from "@/components/content/zus-aggregated-profile/zus-aggregated-profile";
 import { TabGroupItem } from "@/components/core/tab-group/tab-group";
 import i18next from "@/i18n";
-import { PatientMedicationsOutsideBadge } from "../medications/patient-medications-outside-badge";
-import {
-  PatientObservationsProps,
-  PatientObservations,
-} from "../observations/patient-observations";
-import {
-  PatientObservationsOutsideProps,
-  PatientObservationsOutsideBadge,
-  PatientObservationsOutside,
-} from "../observations/patient-observations-outside";
 
 export type ZusAggregatedProfileTabs = Record<
   ZAPResourceName,

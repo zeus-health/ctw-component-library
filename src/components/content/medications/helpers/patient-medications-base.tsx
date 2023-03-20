@@ -1,3 +1,4 @@
+import { ViewOption } from "../../resource/helpers/view-button";
 import {
   ResourceTable,
   ResourceTableProps,
@@ -10,11 +11,10 @@ import { useMedicationHistory } from "../history/medication-history-drawer";
 import { patientMedicationColumns } from "./columns";
 import { defaultMedicationFilters } from "./filters";
 import { defaultMedicationSort, medicationSortOptions } from "./sorts";
+import { FilterItem } from "@/components/core/filter-bar/filter-bar-types";
 import { MedicationStatementModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import "./patient-medications.scss";
-import { FilterItem } from "@/components/core/filter-bar/filter-bar-types";
-import { ViewOption } from "../../resource/helpers/view-button";
 
 export type PatientMedicationsTableProps = {
   action?: ResourceTableActionsProps<MedicationStatementModel>["action"];
