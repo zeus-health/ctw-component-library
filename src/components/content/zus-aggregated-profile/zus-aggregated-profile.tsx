@@ -37,9 +37,9 @@ export type ZusAggregatedProfileProps = {
   title?: string;
   hideTitle?: boolean;
   removeBranding?: boolean;
-} & SubComponentProps;
+} & ZusAggregatedProfileSubComponentProps;
 
-type SubComponentProps = Partial<{
+export type ZusAggregatedProfileSubComponentProps = Partial<{
   allergiesProps: PatientAllergiesProps;
   careTeamProps: PatientCareTeamProps;
   conditionsProps: PatientConditionsProps;
@@ -136,9 +136,17 @@ const zusAggregatedProfile = ({
  * />
  * ```
  * The complete set of available resources in the ZusAggregatedProfile are
- * "allergies", "care-team", "conditions", "documents", "conditions-outside",
- * "immunizations", "medications", "medications-outside", "observations",
- * "observations-outside" and "timelines".
+ * "allergies",
+ * "care-team",
+ * "conditions",
+ * "conditions-outside",
+ * "documents",
+ * "immunizations",
+ * "medications",
+ * "medications-outside",
+ * "observations",
+ * "observations-outside",
+ * "timelines".
  */
 export const ZusAggregatedProfile = withErrorBoundary(
   zusAggregatedProfile,

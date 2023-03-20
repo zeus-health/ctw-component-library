@@ -3,17 +3,6 @@ import { TableColumn } from "@/components/core/table/table-helpers";
 import { ConditionModel } from "@/fhir/models";
 import { compact } from "@/utils/nodash";
 
-function statusToColor(status: string) {
-  switch (status) {
-    case "Active":
-      return "ctw-text-success-main";
-    case "Pending":
-      return "ctw-text-caution-main";
-    default:
-      return "ctw-text-content-lighter";
-  }
-}
-
 export const patientConditionsColumns: TableColumn<ConditionModel>[] = [
   {
     title: "Name",
@@ -75,3 +64,14 @@ export const patientConditionsColumns: TableColumn<ConditionModel>[] = [
     },
   },
 ];
+
+function statusToColor(status: string) {
+  switch (status) {
+    case "Active":
+      return "ctw-text-success-main";
+    case "Pending":
+      return "ctw-text-caution-main";
+    default:
+      return "ctw-text-content-lighter";
+  }
+}

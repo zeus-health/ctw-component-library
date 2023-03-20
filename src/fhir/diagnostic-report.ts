@@ -10,6 +10,23 @@ import {
 import { Telemetry } from "@/utils/telemetry";
 
 type SearchType = "builder" | "outside";
+
+export function usePatientDiagnosticReports() {
+  return useQueryWithPatient(
+    QUERY_KEY_PATIENT_DIAGNOSTIC_REPORTS,
+    [],
+    diagnosticReportsFetcher("builder")
+  );
+}
+
+export function usePatientDiagnosticReportsOutside() {
+  return useQueryWithPatient(
+    QUERY_KEY_OTHER_PROVIDER_DIAGNOSTIC_REPORTS,
+    [],
+    diagnosticReportsFetcher("outside")
+  );
+}
+
 function diagnosticReportsFetcher(searchType: SearchType) {
   const fetchFunction =
     searchType === "builder" ? searchBuilderRecords : searchCommonRecords;
@@ -34,20 +51,4 @@ function diagnosticReportsFetcher(searchType: SearchType) {
       );
     }
   };
-}
-
-export function usePatientDiagnosticReports() {
-  return useQueryWithPatient(
-    QUERY_KEY_PATIENT_DIAGNOSTIC_REPORTS,
-    [],
-    diagnosticReportsFetcher("builder")
-  );
-}
-
-export function usePatientDiagnosticReportsOutside() {
-  return useQueryWithPatient(
-    QUERY_KEY_OTHER_PROVIDER_DIAGNOSTIC_REPORTS,
-    [],
-    diagnosticReportsFetcher("outside")
-  );
 }
