@@ -1,4 +1,5 @@
-import { ChevronDownIcon } from "@heroicons/react/outline";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cx from "classnames";
 import { useState } from "react";
 import { DropdownMenuAction } from "@/components/core/dropdown-action-menu";
@@ -44,9 +45,11 @@ export const SortButton = <T extends object>({
         isSelected: selected.display === option.display,
       }))}
     >
-      <div className="ctw-btn-default ctw-flex ctw-items-center ctw-space-x-1">
-        <span>Sort: {selected.display}</span>
-        <ChevronDownIcon className="ctw-h-4" />
+      <div className="ctw-btn-default ctw-flex ctw-items-center ctw-space-x-2">
+        <span>
+          Sort: <span className="ctw-font-normal">{selected.display}</span>{" "}
+        </span>
+        <FontAwesomeIcon icon={faChevronDown} className="ctw-w-2" />
       </div>
     </DropdownMenuAction>
   );

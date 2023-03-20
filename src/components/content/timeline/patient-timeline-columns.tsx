@@ -3,7 +3,7 @@ import { TableColumn } from "@/components/core/table/table-helpers";
 import { ViewFHIR } from "@/components/core/view-fhir";
 import { EncounterModel } from "@/fhir/models/encounter";
 
-export const patientTimelineColumns = (includeViewFhirResource = true) => {
+export const patientTimelineColumns = (includeViewFhirResource = false) => {
   const timellineColumns: TableColumn<EncounterModel>[] = [
     {
       title: "Date",

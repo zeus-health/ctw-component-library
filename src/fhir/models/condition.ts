@@ -278,7 +278,7 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
     );
   }
 
-  get displayStatus(): string {
+  get displayStatus(): ConditionStatuses {
     function clinicalStatusMap(code: ClinicalStatus | undefined) {
       switch (code) {
         case "active":
@@ -311,10 +311,6 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
       }
     }
 
-    const concatenation =
-      verificationStatusMap(this.verificationStatusCode) +
-      clinicalStatusMap(this.clinicalStatusCode).toLowerCase();
-
     // What to show if lens or summary resource.
     if (this.isSummaryResource) {
       if (this.isArchived) {
@@ -323,6 +319,10 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
 
       return clinicalStatusMap(this.clinicalStatusCode) || "Unknown";
     }
+
+    const concatenation =
+      verificationStatusMap(this.verificationStatusCode) +
+      clinicalStatusMap(this.clinicalStatusCode).toLowerCase();
 
     // What to show if patient record resource.
     switch (concatenation) {
@@ -359,3 +359,23 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
     })?.code as VerificationStatus | undefined;
   }
 }
+
+export const conditionStatuses = [
+  "Active",
+  "Inactive",
+  "Entered in Error",
+  "Pending",
+  "Refuted",
+  "Unknown",
+] as const;
+
+export const outsideConditionStatuses = [
+  "Active",
+  "Inactive",
+  "Dismissed",
+  "Unknown",
+] as const;
+
+export type ConditionStatuses =
+  | typeof conditionStatuses[number]
+  | typeof outsideConditionStatuses[number];

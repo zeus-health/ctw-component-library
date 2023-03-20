@@ -7,6 +7,8 @@ import { PatientDocumentProps } from "@/components/content/document/patient-docu
 import { PatientImmunizationsProps } from "@/components/content/immunizations/patient-immunizations";
 import { OtherProviderMedsTableProps } from "@/components/content/medications/other-provider-meds-table";
 import { ProviderMedsTableProps } from "@/components/content/medications/provider-meds-table";
+import { PatientObservationsProps } from "@/components/content/observations/patient-observations";
+import { PatientObservationsOutsideProps } from "@/components/content/observations/patient-observations-outside";
 import { PatientTimelineProps } from "@/components/content/timeline/patient-timeline";
 import {
   ZusAggregatedProfileTabs,
@@ -25,6 +27,8 @@ export type ZAPResourceName =
   | "immunizations"
   | "medications"
   | "medications-outside"
+  | "observations"
+  | "observations-outside"
   | "timelines";
 
 export type ZusAggregatedProfileProps = {
@@ -44,6 +48,8 @@ type SubComponentProps = Partial<{
   immunizationsProps: PatientImmunizationsProps;
   medicationsProps: ProviderMedsTableProps;
   medicationsOutsideProps: OtherProviderMedsTableProps;
+  observationsProps: PatientObservationsProps;
+  observationsOutsideProps: PatientObservationsOutsideProps;
   timelineProps: PatientTimelineProps;
 }>;
 
@@ -57,6 +63,8 @@ const zusAggregatedProfile = ({
   immunizationsProps,
   medicationsProps,
   medicationsOutsideProps,
+  observationsProps,
+  observationsOutsideProps,
   timelineProps,
   resources,
   title = "Outside Records",
@@ -70,10 +78,12 @@ const zusAggregatedProfile = ({
     conditions: conditionsProps,
     "conditions-outside": conditionsOutsideProps,
     documents: documentsProps,
-    timelines: timelineProps,
     immunizations: immunizationsProps,
     medications: medicationsProps,
     "medications-outside": medicationsOutsideProps,
+    observations: observationsProps,
+    "observations-outside": observationsOutsideProps,
+    timelines: timelineProps,
   };
 
   const tabbedContent = resources.map((tabName) => {
@@ -127,7 +137,8 @@ const zusAggregatedProfile = ({
  * ```
  * The complete set of available resources in the ZusAggregatedProfile are
  * "allergies", "care-team", "conditions", "documents", "conditions-outside",
- * "immunizations", "medications", "medications-outside" and "timelines".
+ * "immunizations", "medications", "medications-outside", "observations",
+ * "observations-outside" and "timelines".
  */
 export const ZusAggregatedProfile = withErrorBoundary(
   zusAggregatedProfile,

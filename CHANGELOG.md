@@ -1,5 +1,51 @@
 # ctw-component-library
 
+## 0.50.3
+
+### Patch Changes
+
+- 2355541e: Change allergy label and add option to override outside medications tab name
+- aa249a7c: Fix bug where patient list wasn't always showing all patients for some consumers.
+- 81e86724: Fix the use of tag:not filtering for resources.
+
+## 0.50.2
+
+### Patch Changes
+
+- 54c1bbdf: Filter builder tagged records client side in bid to improve performance.
+- bd7be90e: Add PatientObservations component (POC)
+- 148b35ad: Add rule to sort nodash exports
+
+## 0.50.1
+
+### Patch Changes
+
+- 99427304: Fix view fhir to default to false.
+
+## 0.50.0
+
+### Minor Changes
+
+- d5270538: Update CareTeams to each row being an individual practitioner and then the drawer having details about the practitioner.
+
+### Patch Changes
+
+- bf27c1ed: Add all condition statuses as filter options and ensure we can filter on "Unknown" status for both patient records and outside records.
+
+## 0.49.8
+
+### Patch Changes
+
+- 97724c64: Fix a few more style issues for filters.
+
+## 0.49.7
+
+### Patch Changes
+
+- d96d0513: Initial setup of i18n using the i18next library. At first, we allow overwriting the term "condition" via the new "locals" prop on `CTWProvider`. Future versions will allow for more customizations around text/copy/strings.
+- da22b889: Clean up sort & filter dropdown UI. Align styles across dropdowns, switch icons, and a handful of general cleanup tweaks.
+- 487f0ed2: Allow phone numbers to have a leading 1 and country codes.
+
 ## 0.49.6
 
 ### Patch Changes

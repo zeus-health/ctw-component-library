@@ -2,7 +2,6 @@ import { getIncludedResources } from "./bundle";
 import { searchCommonRecords } from "./search-helpers";
 import { applyCareTeamFilters } from "@/components/content/care-team/patient-careteam-filters";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
-import { orderBy } from "@/utils/nodash";
 import { QUERY_KEY_CARETEAM } from "@/utils/query-keys";
 import { withTimerMetric } from "@/utils/telemetry";
 
@@ -22,11 +21,7 @@ export function usePatientCareTeam() {
             }
           );
           const includedResources = getIncludedResources(bundle);
-          return orderBy(
-            applyCareTeamFilters(careteam, includedResources),
-            [(ct) => ct.resource.period?.start || ""],
-            ["desc"]
-          );
+          return applyCareTeamFilters(careteam, includedResources);
         } catch (e) {
           throw new Error(
             `Failed fetching care team information for patient: ${e}`

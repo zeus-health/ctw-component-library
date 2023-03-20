@@ -1,21 +1,13 @@
-import { faker } from "@faker-js/faker";
-
-const FAKER_SEED = 1; // Any positive number, ensures consistent mocks.
-faker.seed(FAKER_SEED);
+import {
+  faker,
+  fakerFakeBundleLinks,
+  fakerFakeMockSourceId,
+} from "@/components/content/story-helpers/faker";
 
 const EARLIEST_DATE = new Date("2020-11-11");
 const LATEST_DATE = new Date();
 const BUILDER_UUID = faker.datatype.uuid();
-const SOURCE_IDS = Array.from({ length: 5 }).map(createMockSourceId);
-
-function createMockSourceId() {
-  const id = faker.random.alpha({
-    count: 16,
-    casing: "upper",
-    bannedChars: [],
-  });
-  return `#${id}`;
-}
+const SOURCE_IDS = Array.from({ length: 5 }).map(fakerFakeMockSourceId);
 
 type PatientEntry = fhir4.BundleEntry<fhir4.Patient>;
 
@@ -34,16 +26,18 @@ export function createMockPatientBundle(
       lastUpdated: faker.date.past().toISOString(),
     },
     type: "searchset",
-    link: [
-      {
-        relation: "self",
-        url: `https://api.storybook.zusapi.com/fhir/Patient?_count=${pageCount}&_tag=https%3A%2F%2Fzusapi.com%2Faccesscontrol%2Fowner%7Cbuilder%2F${BUILDER_UUID}&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fthirdparty%2Fsource%7Csurescripts&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fthirdparty%2Fsource%7Ccommonwell&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fthirdparty%2Fsource%7Celation&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Flens%7CActiveMedications&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Flens%7CChronicConditions&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fsummary%7CCommon&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Ffhir%2Ftag%2Fupi-record-type%7Cuniversal&_total=accurate`,
-      },
-      {
-        relation: "next",
-        url: `https://api.storybook.zusapi.com/fhir/Patient?_count=${pageCount}&_offset=${pageOffset}&_tag=https%3A%2F%2Fzusapi.com%2Faccesscontrol%2Fowner%7Cbuilder%2F${BUILDER_UUID}&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fthirdparty%2Fsource%7Csurescripts&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fthirdparty%2Fsource%7Ccommonwell&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fthirdparty%2Fsource%7Celation&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Flens%7CActiveMedications&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Flens%7CChronicConditions&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Fsummary%7CCommon&_tag%3Anot=https%3A%2F%2Fzusapi.com%2Ffhir%2Ftag%2Fupi-record-type%7Cuniversal&_total=accurate`,
-      },
-    ],
+    link: fakerFakeBundleLinks("Patient", {
+      _tag: `https://zusapi.com/accesscontrol/owner|builder/${BUILDER_UUID}`,
+      "_tag:not": [
+        "https://zusapi.com/thirdparty/source|surescripts",
+        "https://zusapi.com/thirdparty/source|commonwell",
+        "https://zusapi.com/thirdparty/source|elation",
+        "https://zusapi.com/lens|ActiveMedications",
+        "https://zusapi.com/lens|ChronicConditions",
+        "https://zusapi.com/summary|Common",
+        "https://zusapi.com/fhir/tag/upi-record-type|universal",
+      ],
+    }),
   };
 }
 

@@ -2,7 +2,7 @@ import { TableColumn } from "@/components/core/table/table-helpers";
 import { ViewFHIR } from "@/components/core/view-fhir";
 import { DocumentModel } from "@/fhir/models/document";
 
-export const patientDocumentColumns = (includeViewFhirResource = true) => {
+export const patientDocumentColumns = (includeViewFhirResource = false) => {
   const documentColumns: TableColumn<DocumentModel>[] = [
     {
       widthPercent: 20,

@@ -10,9 +10,33 @@ import {
 } from "./system-urls";
 import { ResourceType, ResourceTypeString } from "./types";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { mapValues, mergeWith } from "@/utils/nodash";
+import { filter, find, mapValues, mergeWith } from "@/utils/nodash";
 
 const MAX_COUNT = 250;
+
+function excludeTagsinPatientRecordSearch<T extends ResourceTypeString>(
+  resourceType: T
+): string[] {
+  switch (resourceType) {
+    case "Patient":
+      return [...UPI_TAGS];
+    case "Condition":
+      return [...CONDITIONS_LENS_TAGS, ...SUMMARY_TAGS];
+    case "MedicationStatement":
+      return [...MEDICATION_LENS_TAGS, ...SUMMARY_TAGS];
+    case "Coverage":
+    case "AllergyIntolerance":
+    case "CareTeam":
+    case "DocumentReference":
+    case "Encounter":
+    case "Immunization":
+    case "MedicationAdministration":
+    case "MedicationDispense":
+    case "MedicationRequest":
+    default:
+      return [];
+  }
+}
 
 // Enumerating ALL of the third party tags.
 const THIRD_PARTY_TAGS = [
@@ -23,11 +47,11 @@ const THIRD_PARTY_TAGS = [
   `${SYSTEM_ZUS_THIRD_PARTY}|quest`,
 ];
 
-// Enumerating ALL of the lens tags.
-const LENS_TAGS = [
-  `${SYSTEM_ZUS_LENS}|ActiveMedications`,
-  `${SYSTEM_ZUS_LENS}|ChronicConditions`,
-];
+// Enumerating Medication-specific lens tags.
+const MEDICATION_LENS_TAGS = [`${SYSTEM_ZUS_LENS}|ActiveMedications`];
+
+// Enumerating Condition-specific lens tags.
+const CONDITIONS_LENS_TAGS = [`${SYSTEM_ZUS_LENS}|ChronicConditions`];
 
 const UPI_TAGS = [`${SYSTEM_ZUS_UPI_RECORD_TYPE}|universal`];
 
@@ -85,19 +109,17 @@ export async function searchBuilderRecords<T extends ResourceTypeString>(
 ): Promise<SearchReturn<T>> {
   const nonBuilderTags = [
     ...THIRD_PARTY_TAGS,
-    ...LENS_TAGS,
+    ...MEDICATION_LENS_TAGS,
+    ...CONDITIONS_LENS_TAGS,
     ...SUMMARY_TAGS,
     ...UPI_TAGS,
   ];
-  const builderTag = `${SYSTEM_ZUS_OWNER}|builder/${requestContext.builderId}`;
   type FirstPartyParams = {
     _tag?: string[];
     firstparty?: boolean;
     "_tag:not"?: string[];
   };
-  const firstPartyParams: FirstPartyParams = {
-    _tag: [builderTag],
-  };
+  const firstPartyParams: FirstPartyParams = {};
 
   if (FIRST_PARTY_TAG_SUPPORTED_RESOURCES.includes(resourceType)) {
     firstPartyParams.firstparty = true;
@@ -118,14 +140,23 @@ export async function searchLensRecords<T extends ResourceTypeString>(
   lensTag: LensTag,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
-  const tagFilter = [
-    `${SYSTEM_ZUS_LENS}|${lensTag}`,
-    `${SYSTEM_ZUS_OWNER}|builder/${requestContext.builderId}`,
-  ];
+  const tagFilter = [`${SYSTEM_ZUS_LENS}|${lensTag}`];
   const params = mergeParams(searchParams, {
     _tag: tagFilter,
   });
-  return searchAllRecords(resourceType, requestContext, params);
+  const records = await searchAllRecords(resourceType, requestContext, params);
+
+  const { entry, resources } = filterSearchReturnByBuilderId(
+    records,
+    requestContext.builderId
+  );
+
+  records.resources = resources;
+  records.bundle.entry = entry;
+  records.bundle.total = entry.length;
+  records.total = resources.length;
+
+  return records;
 }
 
 // Like searchAllRecords, but filters down to only summary records.
@@ -134,14 +165,24 @@ export async function searchSummaryRecords<T extends ResourceTypeString>(
   requestContext: CTWRequestContext,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
-  const tagFilter = [
-    ...SUMMARY_TAGS,
-    `${SYSTEM_ZUS_OWNER}|builder/${requestContext.builderId}`,
-  ];
+  const tagFilter = [...SUMMARY_TAGS];
   const params = mergeParams(searchParams, {
     _tag: tagFilter,
   });
-  return searchAllRecords(resourceType, requestContext, params);
+
+  const records = await searchAllRecords(resourceType, requestContext, params);
+
+  const { entry, resources } = filterSearchReturnByBuilderId(
+    records,
+    requestContext.builderId
+  );
+
+  records.resources = resources;
+  records.bundle.entry = entry;
+  records.bundle.total = entry.length;
+  records.total = resources.length;
+
+  return records;
 }
 
 // Like searchAllRecords, but filters out lens resources.
@@ -150,9 +191,12 @@ export async function searchCommonRecords<T extends ResourceTypeString>(
   requestContext: CTWRequestContext,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
-  const params = mergeParams(searchParams, {
-    "_tag:not": [...LENS_TAGS, ...SUMMARY_TAGS, ...UPI_TAGS],
-  });
+  const tags = excludeTagsinPatientRecordSearch(resourceType);
+  const params = mergeParams(
+    searchParams,
+    tags.length ? { "_tag:not": tags } : {}
+  );
+
   return searchAllRecords(resourceType, requestContext, params);
 }
 
@@ -200,12 +244,14 @@ function patientSearchParams(
     case "CareTeam":
     case "Condition":
     case "DocumentReference":
+    case "DiagnosticReport":
     case "Encounter":
     case "Immunization":
     case "MedicationAdministration":
     case "MedicationDispense":
     case "MedicationRequest":
     case "MedicationStatement":
+    case "Observation":
       return { "patient.identifier": identifier };
     case "Patient":
       return { identifier };
@@ -215,3 +261,28 @@ function patientSearchParams(
       );
   }
 }
+
+export const filterSearchReturnByBuilderId = <T extends ResourceTypeString>(
+  searchReturn: SearchReturn<T>,
+  builderID: string
+) => {
+  const resources = filter(
+    searchReturn.resources,
+    (record) =>
+      !!find(record.meta?.tag, {
+        system: SYSTEM_ZUS_OWNER,
+        code: `builder/${builderID}`,
+      })
+  );
+
+  const entry = filter(
+    searchReturn.bundle.entry,
+    (record) =>
+      !!find(record.resource?.meta?.tag, {
+        system: SYSTEM_ZUS_OWNER,
+        code: `builder/${builderID}`,
+      })
+  );
+
+  return { resources, entry };
+};

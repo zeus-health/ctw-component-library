@@ -1,29 +1,44 @@
 import { CareTeamModel } from "@/fhir/models/careteam";
+import { CareTeamPractitionerModel } from "@/fhir/models/careteam-practitioner";
 import { ResourceMap } from "@/fhir/types";
-import { isEqual, uniqWith } from "@/utils/nodash";
+import { isEqual, orderBy, uniqWith } from "@/utils/nodash";
 
 export const applyCareTeamFilters = (
   data: fhir4.CareTeam[],
   includedResources: ResourceMap
 ) => {
-  const careTeamModel = data.map(
+  const careTeamModels = data.map(
     (careteam) => new CareTeamModel(careteam, includedResources)
   );
-  // Only want to obtain records that have a period.start but no period.end
-  const currentCareTeam = careTeamModel.filter(
-    (careTeam) => !careTeam.periodEnd
+
+  const careTeamPractitionerModels: CareTeamPractitionerModel[] = [];
+  careTeamModels.forEach((careTeam) =>
+    careTeam.resource.participant?.forEach((participant) => {
+      const practitioner = careTeam.getPractitionerByID(
+        participant.member?.reference as string
+      );
+      if (practitioner?.id && participant.member?.reference) {
+        careTeamPractitionerModels.push(
+          new CareTeamPractitionerModel(careTeam, practitioner)
+        );
+      }
+    })
   );
-  const careTeamData = uniqWith(currentCareTeam, (a, b) =>
+
+  const sortedCareTeamPractitionerModels = orderBy(
+    careTeamPractitionerModels,
+    ["effectiveStartDate", "id"],
+    ["desc", "desc"]
+  );
+
+  return uniqWith(sortedCareTeamPractitionerModels, (a, b) =>
     isEqual(valuesToDedupeOn(a), valuesToDedupeOn(b))
   );
-
-  return careTeamData;
 };
 
-const valuesToDedupeOn = (careteam: CareTeamModel) => [
-  careteam.status,
-  careteam.periodStart,
-  careteam.role,
-  careteam.practitionerQualification,
-  careteam.includedPerformer,
+const valuesToDedupeOn = (careTeam: CareTeamPractitionerModel) => [
+  careTeam.effectiveStartDate,
+  careTeam.role,
+  careTeam.qualification,
+  careTeam.practitionerName,
 ];
