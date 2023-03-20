@@ -1,5 +1,6 @@
 import { Filter } from "@/components/core/filter-bar/filter-bar-types";
 import { compact, find, isArray, uniq } from "@/utils/nodash/";
+
 export const applyFilters = <T extends object>(
   data: T[],
   filters?: Filter[]
@@ -7,7 +8,6 @@ export const applyFilters = <T extends object>(
   if (!filters) return data;
 
   return data.filter((entry) => {
-    console.log(filters);
     const showArchived = find(filters, { key: "isArchived" })?.selected;
     const isArchived = Boolean(entry["isArchived" as keyof T]);
 
@@ -16,8 +16,6 @@ export const applyFilters = <T extends object>(
     }
 
     return Object.entries(filters).every(([_, filterItem]) => {
-      if (!filterItem) return true;
-
       const targetFilter = String(entry[filterItem.key as keyof T]);
 
       switch (filterItem.type) {

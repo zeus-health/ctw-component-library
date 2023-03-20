@@ -7,8 +7,8 @@ import { medicationAdministration } from "./medication-administration";
 import { medicationDispense } from "./medication-dispense";
 import { medicationRequest } from "./medication-request";
 import { patient } from "./patient";
-import { cloneDeep, find } from "@/utils/nodash/fp";
 import { SYSTEM_ZUS_OWNER } from "@/fhir/system-urls";
+import { cloneDeep, find } from "@/utils/nodash/fp";
 
 let patientProviderMedsCache: fhir4.Bundle;
 let patientOtherProviderMedsCache: fhir4.Bundle;
@@ -90,6 +90,11 @@ function mockRequests() {
     (req, res, ctx) => res(ctx.status(200), ctx.json(medicationAdministration))
   );
 
+  const mockProvenancePost = rest.post(
+    "https://api.dev.zusapi.com/fhir/Provenance",
+    (_, res, ctx) => res(ctx.status(200))
+  );
+
   const mockTerminologyDosageGet = rest.get(
     "https://api.dev.zusapi.com/forms-data/terminology/dosages",
     (req, res, ctx) => {
@@ -138,6 +143,20 @@ function mockRequests() {
     }
   );
 
+  const mockBasicPut = rest.put(
+    "https://api.dev.zusapi.com/fhir/Basic/:basicId",
+    async (req, res, ctx) => {
+      const basic = await req.json();
+      const index = patientOtherProviderMedsCache.entry?.findIndex(
+        (entry) => entry.resource?.id === basic.id
+      );
+      if (index !== undefined && patientOtherProviderMedsCache.entry?.[index]) {
+        patientOtherProviderMedsCache.entry[index].resource = basic;
+      }
+      return res(ctx.status(200), ctx.json(basic));
+    }
+  );
+
   return [
     mockPatientGet,
     mockTerminologyDosageGet,
@@ -146,6 +165,8 @@ function mockRequests() {
     mockMedicationRequestGet,
     mockMedicationDispenseGet,
     mockMedicationAdministrationGet,
+    mockProvenancePost,
     mockBasicPost,
+    mockBasicPut,
   ];
 }
