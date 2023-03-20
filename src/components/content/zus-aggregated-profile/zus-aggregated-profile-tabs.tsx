@@ -58,7 +58,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
   allergies: (props: PatientAllergiesProps = {}) => ({
     key: "allergies",
     getPanelClassName: () => "ctw-pt-5",
-    display: () => "allergy list",
+    display: () => "allergies",
     render: () => <PatientAllergies {...props} />,
   }),
 
@@ -111,7 +111,9 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     key: "medications-outside",
     display: () => (
       <div className="ctw-space-x-2">
-        <span className="ctw-capitalize">outside medications</span>
+        <span className="ctw-capitalize">
+          {i18next.t("zap.tabs.medicationsOutside")}
+        </span>
         <PatientMedicationsOutsideBadge />
       </div>
     ),
