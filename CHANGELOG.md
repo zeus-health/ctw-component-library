@@ -1,5 +1,27 @@
 # ctw-component-library
 
+## 0.50.3
+
+### Patch Changes
+
+- 2355541e: Change allergy label and add option to override outside medications tab name
+- aa249a7c: Fix bug where patient list wasn't always showing all patients for some consumers.
+- 81e86724: Fix the use of tag:not filtering for resources.
+
+## 0.50.2
+
+### Patch Changes
+
+- 54c1bbdf: Filter builder tagged records client side in bid to improve performance.
+- bd7be90e: Add PatientObservations component (POC)
+- 148b35ad: Add rule to sort nodash exports
+
+## 0.50.1
+
+### Patch Changes
+
+- 99427304: Fix view fhir to default to false.
+
 ## 0.50.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "@zus-health/ctw-component-library",
-  "version": "0.50.0",
+  "version": "0.50.3",
   "type": "module",
   "engines": {
     "node": ">=16 <19"
@@ -84,6 +84,7 @@
     "eslint": "^8.25.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-sort-exports": "^0.8.0",
     "eslint-plugin-storybook": "^0.6.10",
     "eslint-plugin-unused-imports": "^2.0.0",
     "jsdom": "^20.0.1",
