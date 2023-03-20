@@ -19,28 +19,39 @@ export const patientMedicationColumns: TableColumn<MedicationStatementModel>[] =
     {
       title: "Dispensed",
       render: (medication) => (
-        <>
+        <div className="ctw-stacked-concat">
           {medication.quantity && <div>{medication.quantity}</div>}
           {medication.refills && <div>{medication.refills} refills</div>}
-        </>
+        </div>
       ),
       widthPercent: 14,
     },
     {
       title: "Last Filled",
-      dataIndex: "lastFillDate",
+      render: (medication) =>
+        medication.lastFillDate && (
+          <div>
+            <span className="ctw-stacked-only">Last Filled: </span>
+            {medication.lastFillDate}
+          </div>
+        ),
       widthPercent: 18,
     },
     {
       title: "Last Prescribed",
-      render: (medication) => (
-        <>
-          {medication.lastPrescribedDate && (
-            <div>{medication.lastPrescribedDate}</div>
-          )}
-          {medication.lastPrescriber && <div>{medication.lastPrescriber}</div>}
-        </>
-      ),
+      render: (medication) => {
+        const { lastPrescribedDate, lastPrescriber } = medication;
+
+        if (!lastPrescribedDate && !lastPrescriber) return null;
+
+        return (
+          <div className="ctw-stacked-concat">
+            <span className="ctw-stacked-only">Last Prescribed: </span>
+            {lastPrescribedDate && <div>{lastPrescribedDate}</div>}
+            {lastPrescriber && <div>{lastPrescriber}</div>}
+          </div>
+        );
+      },
       widthPercent: 18,
       minWidth: "90px",
     },
