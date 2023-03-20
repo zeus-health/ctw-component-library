@@ -1,5 +1,6 @@
 import cx from "classnames";
 import { ReactNode } from "react";
+import { ViewButton, ViewButtonProps } from "./helpers/view-button";
 import { FilterBar } from "@/components/core/filter-bar/filter-bar";
 import { FilterBarProps } from "@/components/core/filter-bar/filter-bar-types";
 import {
@@ -7,7 +8,6 @@ import {
   SortButtonProps,
 } from "@/components/core/sort-button/sort-button";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
-import { ViewButton, ViewButtonProps, ViewOption } from "./helpers/view-button";
 
 export type ResourceTableActionsProps<T extends MinRecordItem> = {
   action?: ReactNode;
@@ -39,7 +39,7 @@ export const ResourceTableActions = <T extends MinRecordItem>({
       <div className="ctw-flex ctw-flex-wrap ctw-gap-x-2">
         {viewOptions && <ViewButton {...viewOptions} />}
         {sortOptions && <SortButton {...sortOptions} />}
-        {filterOptions && filterOptions?.filters.length > 0 && (
+        {filterOptions && filterOptions.filters.length > 0 && (
           <FilterBar {...filterOptions} />
         )}
       </div>

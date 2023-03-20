@@ -1,6 +1,8 @@
 import { PatientConditionsOutsideProps } from "../conditions/patient-conditions-outside";
 import { PatientMedicationsProps } from "../medications/patient-medications";
 import { PatientMedicationsOutsideProps } from "../medications/patient-medications-outside";
+import { PatientObservationsProps } from "../observations/patient-observations";
+import { PatientObservationsOutsideProps } from "../observations/patient-observations-outside";
 import ZusSVG from "@/assets/zus.svg";
 import { PatientAllergiesProps } from "@/components/content/allergies/patient-allergies";
 import { PatientCareTeamProps } from "@/components/content/care-team/patient-careteam";
@@ -15,8 +17,6 @@ import {
 import { Title } from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { TabGroup } from "@/components/core/tab-group/tab-group";
-import { PatientObservationsProps } from "../observations/patient-observations";
-import { PatientObservationsOutsideProps } from "../observations/patient-observations-outside";
 
 export type ZAPResourceName =
   | "allergies"

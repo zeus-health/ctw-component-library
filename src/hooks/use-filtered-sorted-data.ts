@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
+import { ViewOption } from "@/components/content/resource/helpers/view-button";
 import { FilterChangeEvent } from "@/components/core/filter-bar/filter-bar-types";
 import { SortOption } from "@/components/core/sort-button/sort-button";
 import { applyFilters } from "@/utils/filters";
 import { applySorts } from "@/utils/sort";
-import { ViewOption } from "@/components/content/resource/helpers/view-button";
 
 export type UseFilteredSortedDataProps<T extends object> = {
   records?: T[];
@@ -25,7 +25,7 @@ export function useFilteredSortedData<T extends object>({
 
   useEffect(() => {
     let filteredData = applyFilters(records ?? [], Object.values(filters));
-    filteredData = applyFilters(filteredData ?? [], viewOption?.filters);
+    filteredData = applyFilters(filteredData, viewOption?.filters);
     const filteredAndSortedData = applySorts(filteredData, sortOption.sorts);
     setData(filteredAndSortedData);
   }, [filters, sortOption, records, viewOption]);

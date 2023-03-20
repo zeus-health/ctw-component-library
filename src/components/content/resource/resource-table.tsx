@@ -1,9 +1,9 @@
-import { useRef } from "react";
 import cx from "classnames";
+import { useRef } from "react";
 import { Table, TableProps } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
-import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { FHIRModel } from "@/fhir/models/fhir-model";
+import { useBreakpoints } from "@/hooks/use-breakpoints";
 import "./resource-table.scss";
 
 export type ResourceTableProps<T extends MinRecordItem> = {
