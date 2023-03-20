@@ -1,4 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import { action } from "@storybook/addon-actions";
+import { Meta, StoryObj } from "@storybook/react";
 import { PatientMedicationsProfile } from "./patient-medications-profile";
 import { setupMedicationMocks } from "./story-helpers/mocks/requests";
 import { PatientMedicationsProps } from "@/components/content/medications/patient-medications";
@@ -22,11 +23,21 @@ export default {
       </CTWProvider>
     ),
   ],
+  argTypes: {
+    onOpenHistoryDrawer: { action: "open history drawer" },
+    onAddToRecord: {
+      options: ["Drawer", "Log Action"],
+      control: "select",
+      mapping: {
+        Drawer: undefined,
+        "Log Action": action("add to record"),
+      },
+    },
+  },
   args: {
-    hideAddToRecord: undefined,
-    forceHorizontalTabs: undefined,
-    onAfterOpenHistoryDrawer: undefined,
-    onOpenHistoryDrawer: undefined,
+    readOnly: false,
+    forceHorizontalTabs: false,
+    onAddToRecord: "Drawer",
   },
 } as Meta<Props>;
 

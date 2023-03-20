@@ -1,4 +1,5 @@
 import { useAddMedicationForm } from "./helpers/add-new-med-drawer";
+import { medicationFilters } from "./helpers/filters";
 import { PatientMedicationsBase } from "./helpers/patient-medications-base";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { RowActionsProps } from "@/components/core/table/table";
@@ -7,10 +8,10 @@ import { MedicationStatementModel } from "@/fhir/models";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { useCTW } from "@/index";
 import { QUERY_KEY_OTHER_PROVIDER_MEDICATIONS } from "@/utils/query-keys";
-import { medicationFilters } from "./helpers/filters";
 
 export type PatientMedicationsOutsideProps = {
   className?: string;
+  onOpenHistoryDrawer?: () => void;
   onAddToRecord?: (record: MedicationStatementModel) => void;
   readOnly?: boolean;
 };
@@ -19,6 +20,7 @@ const PatientMedicationsOutsideComponent = ({
   className,
   onAddToRecord,
   readOnly = false,
+  onOpenHistoryDrawer,
 }: PatientMedicationsOutsideProps) => {
   const { otherProviderMedications, isLoading } =
     useQueryAllPatientMedications();
@@ -29,6 +31,7 @@ const PatientMedicationsOutsideComponent = ({
       query={{ data: otherProviderMedications, isLoading }}
       filters={medicationFilters(otherProviderMedications ?? [], true)}
       rowActions={readOnly ? undefined : getRowActions({ onAddToRecord })}
+      onOpenHistoryDrawer={onOpenHistoryDrawer}
     />
   );
 };

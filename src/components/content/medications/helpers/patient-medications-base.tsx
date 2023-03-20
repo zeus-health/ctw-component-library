@@ -16,7 +16,7 @@ import { MedicationStatementModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import "./patient-medications.scss";
 
-export type PatientMedicationsTableProps = {
+export type PatientMedicationsBaseProps = {
   action?: ResourceTableActionsProps<MedicationStatementModel>["action"];
   className?: string;
   query: { data?: MedicationStatementModel[]; isLoading: boolean };
@@ -24,6 +24,8 @@ export type PatientMedicationsTableProps = {
   filters: FilterItem[];
   defaultView?: ViewOption;
   views?: ViewOption[];
+
+  onOpenHistoryDrawer?: () => void;
 };
 
 export const PatientMedicationsBase = ({
@@ -34,7 +36,8 @@ export const PatientMedicationsBase = ({
   filters,
   defaultView,
   views,
-}: PatientMedicationsTableProps) => {
+  onOpenHistoryDrawer,
+}: PatientMedicationsBaseProps) => {
   const showMedicationHistory = useMedicationHistory();
   const { data, setFilters, setSort, setViewOption } = useFilteredSortedData({
     defaultView,
@@ -42,6 +45,11 @@ export const PatientMedicationsBase = ({
     defaultSort: defaultMedicationSort,
     records: query.data,
   });
+
+  function handleRowClick(medication: MedicationStatementModel) {
+    onOpenHistoryDrawer?.();
+    showMedicationHistory({ medication });
+  }
 
   return (
     <div className={className}>
@@ -74,7 +82,7 @@ export const PatientMedicationsBase = ({
         data={data}
         emptyMessage="There are no medication records available."
         isLoading={query.isLoading}
-        onRowClick={(medication) => showMedicationHistory({ medication })}
+        onRowClick={handleRowClick}
         rowActions={rowActions}
       />
     </div>
