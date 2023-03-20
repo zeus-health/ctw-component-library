@@ -1,3 +1,4 @@
+import cx from "classnames";
 import {
   ResourceTable,
   ResourceTableProps,
@@ -6,12 +7,12 @@ import {
   ResourceTableActions,
   ResourceTableActionsProps,
 } from "../../resource/resource-table-actions";
-import { patientObservationsColumns } from "./columns";
+import { diagnosticReportColumns } from "./columns";
 import { defaultObservationSort, observationSortOptions } from "./sorts";
 import { useObservationsDetailsDrawer } from "@/components/content/observations/helpers/drawer";
 import {
-  defaultObservationFilters,
-  diagnosticReportFilters,
+  defaultFilters,
+  filters,
 } from "@/components/content/observations/helpers/filters";
 import { ScrollableContainer } from "@/components/core/ctw-box";
 import { DiagnosticReportModel } from "@/fhir/models";
@@ -19,7 +20,7 @@ import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 
 export type PatientObservationsTableProps = {
   action?: ResourceTableActionsProps<DiagnosticReportModel>["action"];
-  className?: string;
+  className?: cx.Argument;
   query: { data?: DiagnosticReportModel[]; isLoading: boolean };
   rowActions?: ResourceTableProps<DiagnosticReportModel>["rowActions"];
   scrollingEnabled?: boolean;
@@ -36,19 +37,23 @@ export const PatientObservationsBase = ({
   const { data, setFilters, setSort } = useFilteredSortedData({
     defaultSort: defaultObservationSort,
     records: query.data,
-    defaultFilters: defaultObservationFilters,
+    defaultFilters,
   });
 
   return (
+<<<<<<< HEAD
     <ScrollableContainer
       scrollingEnabled={scrollingEnabled}
       className={className}
     >
+=======
+    <div className={cx(className)}>
+>>>>>>> main
       <ResourceTableActions
         filterOptions={{
           onChange: setFilters,
-          defaultState: defaultObservationFilters,
-          filters: diagnosticReportFilters(query.data ?? []),
+          defaultState: defaultFilters,
+          filters: filters(query.data ?? []),
         }}
         sortOptions={{
           defaultSort: defaultObservationSort,
@@ -60,7 +65,7 @@ export const PatientObservationsBase = ({
 
       <ResourceTable
         className="ctw-patient-observations"
-        columns={patientObservationsColumns}
+        columns={diagnosticReportColumns}
         data={data}
         emptyMessage="There are no observation records available."
         isLoading={query.isLoading}
