@@ -75,6 +75,7 @@ export function usePatientHistory() {
     lastRetrievedAt: patientHistoryDetails?.lastRetrievedAt,
     lastStatus: patientHistoryDetails?.status,
     dateCreatedAt: patientHistoryDetails?.dateCreated,
+    isLoading: patientHistoryInformation.isLoading,
   };
 }
 
@@ -145,15 +146,14 @@ export function usePatientHistoryDetails() {
   );
 }
 
-export function useShowPatientHistoryRequestButton() {
+export function useHasOtherRecordData() {
   const query = usePatientConditionsOutside();
-  const patientHistoryQuery = usePatientHistoryDetails();
-  const otherRecordsExist = query.data.length === 0;
+  const patientHistoryQuery = usePatientHistory();
+  const noOtherRecords = query.data.length === 0;
 
   return {
-    data:
-      patientHistoryQuery.data?.lastRetrievedAt === undefined &&
-      otherRecordsExist,
+    hasNoOutsideData:
+      patientHistoryQuery.lastRetrievedAt === undefined && noOtherRecords,
     isLoading: query.isLoading || patientHistoryQuery.isLoading,
   };
 }
