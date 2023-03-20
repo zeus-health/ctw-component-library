@@ -22,6 +22,7 @@ export type TableProps<T extends MinRecordItem> = {
   showTableHead?: boolean;
   stacked?: boolean;
   hidePagination?: boolean;
+  pageSize?: number;
   children?: ReactNode;
 } & Pick<
   TableRowsProps<T>,
@@ -36,6 +37,7 @@ export type TableBaseProps<T extends MinRecordItem> = Omit<
 export const Table = <T extends MinRecordItem>({
   className,
   columns,
+
   records,
   isLoading = false,
   emptyMessage: message = "No records found",
@@ -45,13 +47,14 @@ export const Table = <T extends MinRecordItem>({
   RowActions,
   getRowClassName,
   hidePagination = false,
+  pageSize = DEFAULT_PAGE_SIZE,
   children,
 }: TableProps<T>) => {
   const tableRef = useRef<HTMLTableElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showLeftShadow, setShowLeftShadow] = useState(false);
   const [showRightShadow, setShowRightShadow] = useState(false);
-  const [count, setCount] = useState(DEFAULT_PAGE_SIZE);
+  const [count, setCount] = useState(pageSize);
 
   const updateShadows = () => {
     const container = scrollContainerRef.current;
