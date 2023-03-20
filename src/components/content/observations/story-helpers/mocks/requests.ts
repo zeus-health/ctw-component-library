@@ -22,6 +22,7 @@ function mockRequests() {
     (req, res, ctx) => res(ctx.delay(750), ctx.status(200), ctx.json(patient))
   );
 
+  // This GET returns the same observations for both builder and outside records
   const mockDiagnosticReportGet = rest.get(
     "https://api.dev.zusapi.com/fhir/DiagnosticReport",
     (req, res, ctx) =>

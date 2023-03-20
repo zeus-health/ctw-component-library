@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Details } from "../../core/collapsible-data-list-details";
-import { ObservationsDetails } from "@/components/content/observations/helpers/details";
+import { ObservationsTable } from "@/components/content/observations/helpers/observations-table";
 import { diagnosticReportData } from "@/components/content/observations/helpers/schema";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { DiagnosticReportModel, ObservationModel } from "@/fhir/models";
@@ -44,7 +44,7 @@ export const Component = ({ diagnosticReport }: ObservationDetailsProps) => {
       </div>
 
       <Details data={diagnosticReportData(diagnosticReport)} />
-      <ObservationsDetails data={observationEntries} />
+      <ObservationsTable data={observationEntries} />
     </div>
   );
 };

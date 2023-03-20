@@ -11,9 +11,7 @@ const Component = ({ className }: PatientObservationsProps) => {
   const diagnosticReports = usePatientDiagnosticReports();
 
   return (
-    <div className={cx(className, "ctw-patient-observations")}>
-      <PatientObservationsBase query={diagnosticReports} />
-    </div>
+    <PatientObservationsBase className={className} query={diagnosticReports} />
   );
 };
 
