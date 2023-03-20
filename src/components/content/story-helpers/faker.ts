@@ -1,5 +1,7 @@
 import { faker as fakerNamespace } from "@faker-js/faker";
 
+// To import, export and use faker in this file, we had to first rename the
+// faker import to "fakerNamespace" and then export a const named "faker"
 export const faker = fakerNamespace;
 
 faker.seed(1); // Any positive number should ensure consistent mocks

@@ -6,9 +6,7 @@ import {
 import { DiagnosticReportModel } from "@/fhir/models";
 import { uniqueValues } from "@/utils/filters";
 
-export function diagnosticReportFilters(
-  model: DiagnosticReportModel[]
-): FilterItem[] {
+export function filters(model: DiagnosticReportModel[]): FilterItem[] {
   return [
     {
       key: "category",
@@ -20,4 +18,4 @@ export function diagnosticReportFilters(
   ];
 }
 
-export const defaultObservationFilters: FilterChangeEvent = {};
+export const defaultFilters: FilterChangeEvent = {};

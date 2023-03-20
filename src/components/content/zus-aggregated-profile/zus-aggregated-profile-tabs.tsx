@@ -38,9 +38,9 @@ import {
 } from "@/components/content/observations/patient-observations";
 import {
   PatientObservationsOutside,
-  PatientObservationsOutsideBadge,
   PatientObservationsOutsideProps,
 } from "@/components/content/observations/patient-observations-outside";
+import { PatientObservationsOutsideBadge } from "@/components/content/observations/patient-observations-outside-badge";
 import {
   PatientTimeline,
   PatientTimelineProps,
