@@ -145,15 +145,3 @@ export function usePatientHistoryDetails() {
     }
   );
 }
-
-export function useHasOtherRecordData() {
-  const query = usePatientConditionsOutside();
-  const patientHistoryQuery = usePatientHistory();
-  const noOtherRecords = query.data.length === 0;
-
-  return {
-    hasNoOutsideData:
-      patientHistoryQuery.lastRetrievedAt === undefined && noOtherRecords,
-    isLoading: query.isLoading || patientHistoryQuery.isLoading,
-  };
-}

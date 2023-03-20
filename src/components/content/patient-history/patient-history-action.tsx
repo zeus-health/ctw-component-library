@@ -1,6 +1,6 @@
+import { useHasOtherRecordData } from "../conditions/patient-conditions";
 import { PatientHistoryLastRetrieved } from "./patient-history-last-retrieved";
 import { RequestRecordsButton } from "./request-records-button";
-import { useHasOtherRecordData } from "./use-patient-history";
 
 export type PatientHistoryActionProps = {
   hideRequestRecords: boolean;

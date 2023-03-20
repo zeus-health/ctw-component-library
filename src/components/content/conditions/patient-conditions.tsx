@@ -6,9 +6,13 @@ import {
 import { PatientConditionsBase } from "./helpers/patient-conditions-base";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { RowActionsProps } from "@/components/core/table/table";
-import { usePatientConditions } from "@/fhir/conditions";
+import {
+  usePatientConditions,
+  usePatientConditionsOutside,
+} from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models";
 import { useBaseTranslations } from "@/i18n";
+import { usePatientHistory } from "../patient-history/use-patient-history";
 
 export type PatientConditionsProps = {
   className?: string;
@@ -75,3 +79,15 @@ const RowActions = ({ record }: RowActionsProps<ConditionModel>) => {
     </div>
   );
 };
+
+export function useHasOtherRecordData() {
+  const query = usePatientConditionsOutside();
+  const patientHistoryQuery = usePatientHistory();
+  const noOtherRecords = query.data.length === 0;
+
+  return {
+    hasNoOutsideData:
+      patientHistoryQuery.lastRetrievedAt === undefined && noOtherRecords,
+    isLoading: query.isLoading || patientHistoryQuery.isLoading,
+  };
+}
