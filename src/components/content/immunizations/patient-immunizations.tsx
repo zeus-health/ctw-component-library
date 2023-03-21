@@ -35,22 +35,24 @@ function PatientImmunizationsComponent({
     <div
       ref={containerRef}
       data-zus-telemetry-namespace="Immunizations"
-      className={cx("ctw-patient-immunizations ctw-bg-white", className, {
-        "ctw-stacked": breakpoints.sm,
-      })}
+      className={cx(
+        "ctw-patient-immunizations ctw-scrollable-pass-through-height ctw-bg-white",
+        className,
+        {
+          "ctw-stacked": breakpoints.sm,
+        }
+      )}
     >
-      <div className="ctw-overflow-hidden">
-        <Table
-          RowActions={
-            featureFlags?.enableViewFhirButton ? viewRecordFHIR : undefined
-          }
-          stacked={breakpoints.sm}
-          isLoading={patientImmunizationsQuery.isLoading}
-          records={patientImmunizationsQuery.data ?? []}
-          columns={patientImmunizationsColumns}
-          handleRowClick={openDetails}
-        />
-      </div>
+      <Table
+        RowActions={
+          featureFlags?.enableViewFhirButton ? viewRecordFHIR : undefined
+        }
+        stacked={breakpoints.sm}
+        isLoading={patientImmunizationsQuery.isLoading}
+        records={patientImmunizationsQuery.data ?? []}
+        columns={patientImmunizationsColumns}
+        handleRowClick={openDetails}
+      />
     </div>
   );
 }

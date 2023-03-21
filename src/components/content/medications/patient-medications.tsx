@@ -81,9 +81,8 @@ export function OtherProviderMedsTableTab({
     defaultSort: defaultMedicationSort,
     records: otherProviderMedications,
   });
-
   return (
-    <>
+    <div className="ctw-scrollable-pass-through-height">
       <div className="ctw-flex ctw-flex-wrap ctw-gap-x-2">
         <SortButton
           className="ctw-my-2"
@@ -97,16 +96,17 @@ export function OtherProviderMedsTableTab({
           defaultState={{}}
         />
       </div>
-
-      <OtherProviderMedsTable
-        records={data}
-        showDismissed={!!filters.isArchived}
-        handleAddToRecord={handleAddToRecord}
-        hideAddToRecord={hideAddToRecord}
-        onOpenHistoryDrawer={onOpenHistoryDrawer}
-        onAfterOpenHistoryDrawer={onAfterOpenHistoryDrawer}
-      />
-    </>
+      <div className="ctw-scrollable-pass-through-height ctw-w-full">
+        <OtherProviderMedsTable
+          records={data}
+          showDismissed={!!filters.isArchived}
+          handleAddToRecord={handleAddToRecord}
+          hideAddToRecord={hideAddToRecord}
+          onOpenHistoryDrawer={onOpenHistoryDrawer}
+          onAfterOpenHistoryDrawer={onAfterOpenHistoryDrawer}
+        />
+      </div>
+    </div>
   );
 }
 
@@ -129,7 +129,7 @@ export function PatientMedications({
   return (
     <CTWBox.StackedWrapper
       className={cx(
-        "ctw-patient-medications ctw-space-y-3 ctw-bg-white",
+        "ctw-patient-medications ctw-scrollable-pass-through-height ctw-space-y-3 ctw-bg-white",
         className
       )}
     >

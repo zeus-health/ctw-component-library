@@ -90,6 +90,7 @@ function createMockDiagnosticReportBundleEntry(
     fullUrl: `https://api.storybook.zusapi.com/fhir/DiagnosticReport/${resourceId}`,
     id: faker.datatype.uuid(),
     resource: {
+      id: faker.datatype.uuid(),
       resourceType: "DiagnosticReport",
       meta: {
         extension: [

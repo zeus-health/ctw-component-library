@@ -53,7 +53,10 @@ function TabGroupComponent({
   return (
     <div
       ref={containerRef}
-      className={cx(className, "ctw-tab-group ctw-relative ctw-w-full")}
+      className={cx(
+        className,
+        "ctw-tab-group ctw-scrollable-pass-through-height ctw-w-full"
+      )}
     >
       <Tab.Group selectedIndex={selectedTabIndex} onChange={handleOnChange}>
         {isVertical && (
@@ -99,11 +102,14 @@ function TabGroupComponent({
         {children}
 
         {/* Renders body of each tab using "render()" */}
-        <Tab.Panels>
+        <Tab.Panels className="ctw-scrollable-pass-through-height">
           {content.map((item, index) => (
             <Tab.Panel
               key={item.key}
-              className={cx(item.getPanelClassName?.(breakpoints.sm))}
+              className={cx(
+                "ctw-scrollable-pass-through-height",
+                item.getPanelClassName?.(breakpoints.sm)
+              )}
               // Don't unmount our tabs. This fixes an issue
               // where ZAP filters/sort selections would get reset
               // when switching to a new tab and back again.

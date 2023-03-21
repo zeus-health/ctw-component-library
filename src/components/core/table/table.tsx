@@ -13,17 +13,17 @@ import "./table.scss";
 export type RowActionsProps<T extends MinRecordItem> = { record: T };
 
 export type TableProps<T extends MinRecordItem> = {
+  children?: ReactNode;
   className?: cx.Argument;
-  records: T[];
   columns: TableColumn<T>[];
-  isLoading?: boolean;
   /** Displayed when we have 0 records. */
   emptyMessage?: string | ReactElement;
+  hidePagination?: boolean;
+  isLoading?: boolean;
+  pageSize?: number;
+  records: T[];
   showTableHead?: boolean;
   stacked?: boolean;
-  hidePagination?: boolean;
-  pageSize?: number;
-  children?: ReactNode;
 } & Pick<
   TableRowsProps<T>,
   "handleRowClick" | "RowActions" | "getRowClassName"
@@ -87,17 +87,24 @@ export const Table = <T extends MinRecordItem>({
   return (
     <div
       data-zus-telemetry-namespace="Table"
-      className={cx("ctw-space-y-4", {
+      className={cx("ctw-scrollable-pass-through-height ctw-space-y-4", {
         "ctw-table-stacked": stacked,
       })}
     >
       <div
-        className={cx("ctw-table-container", className, {
-          "ctw-table-scroll-left-shadow": showLeftShadow,
-          "ctw-table-scroll-right-shadow": showRightShadow,
-        })}
+        className={cx(
+          "ctw-table-container ctw-scrollable-pass-through-height",
+          className,
+          {
+            "ctw-table-scroll-left-shadow": showLeftShadow,
+            "ctw-table-scroll-right-shadow": showRightShadow,
+          }
+        )}
       >
-        <div className="ctw-scrollbar" ref={scrollContainerRef}>
+        <div
+          className={cx("ctw-scrollbar ctw-scrollable-content")}
+          ref={scrollContainerRef}
+        >
           <table ref={tableRef}>
             {hasData && <TableColGroup columns={columns} />}
             {showTableHead && hasData && <TableHead columns={columns} />}

@@ -92,7 +92,10 @@ export const OtherProviderMedsTable = withErrorBoundary(
     ]);
 
     return (
-      <div data-zus-telemetry-namespace="OtherProviderMedsTable">
+      <div
+        className="ctw-scrollable-pass-through-height"
+        data-zus-telemetry-namespace="OtherProviderMedsTable"
+      >
         <MedicationsTableBase
           getRowClassName={(medication) => ({
             "ctw-tr-archived": medication.isArchived,

@@ -1,3 +1,4 @@
+import cx from "classnames";
 import { useRef } from "react";
 import { Table, TableProps } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
@@ -26,7 +27,10 @@ export const ResourceTable = <T extends MinRecordItem>({
   const breakpoints = useBreakpoints(containerRef);
 
   return (
-    <div className={className} ref={containerRef}>
+    <div
+      ref={containerRef}
+      className={cx(className, "ctw-scrollable-pass-through-height")}
+    >
       <Table
         showTableHead={!breakpoints.sm}
         stacked={breakpoints.sm}

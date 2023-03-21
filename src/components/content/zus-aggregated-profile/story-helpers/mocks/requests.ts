@@ -4,6 +4,7 @@ import { setupConditionMocks } from "@/components/content/conditions/story-helpe
 import { setupDocumentMocks } from "@/components/content/document/story-helpers/mocks/requests";
 import { setupImmunizationMocks } from "@/components/content/immunizations/story-helpers/mocks/requests";
 import { setupMedicationMocks } from "@/components/content/medications/story-helpers/mocks/requests";
+import { setupObservationMocks } from "@/components/content/observations/story-helpers/mocks/requests";
 import { setupTimelineMocks } from "@/components/content/timeline/story-helpers/mocks/requests";
 
 export function setupZusAggregatedProfileMocks({
@@ -25,6 +26,7 @@ export function setupZusAggregatedProfileMocks({
     providerMedications,
     otherProviderMedications,
   });
+  const observationMocks = setupObservationMocks();
   const timelineMocks = setupTimelineMocks();
 
   return {
@@ -43,6 +45,7 @@ export function setupZusAggregatedProfileMocks({
             ...documentMocks.parameters.msw.handlers.mocks,
             ...immunizationMocks.parameters.msw.handlers.mocks,
             ...medicationMocks.parameters.msw.handlers.mocks,
+            ...observationMocks.parameters.msw.handlers.mocks,
             ...timelineMocks.parameters.msw.handlers.mocks,
           ],
         },
