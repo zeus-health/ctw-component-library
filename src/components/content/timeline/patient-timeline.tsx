@@ -29,7 +29,12 @@ export function PatientTimeline({ className }: PatientTimelineProps) {
   );
 
   return (
-    <div className={cx(className, "ctw-overflow-hidden")}>
+    <div
+      className={cx(
+        className,
+        "ctw-scrollable-pass-through-height ctw-overflow-hidden"
+      )}
+    >
       <Table
         isLoading={patientEncounterQuery.isLoading}
         records={encounters}
