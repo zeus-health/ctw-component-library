@@ -1,5 +1,5 @@
 import cx from "classnames";
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { patientCareTeamColumns } from "./patient-careteam-columns";
 import { useCTW } from "@/components/core/providers/ctw-provider";

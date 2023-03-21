@@ -20,10 +20,10 @@ export type TableProps<T extends MinRecordItem> = {
   emptyMessage?: string | ReactElement;
   hidePagination?: boolean;
   isLoading?: boolean;
+  pageSize?: number;
   records: T[];
   showTableHead?: boolean;
   stacked?: boolean;
-  pageSize?: number;
 } & Pick<
   TableRowsProps<T>,
   "handleRowClick" | "RowActions" | "getRowClassName"
@@ -101,36 +101,34 @@ export const Table = <T extends MinRecordItem>({
           }
         )}
       >
-        <div className="ctw-scrollable-pass-through-height">
-          <div
-            className={cx("ctw-scrollbar ctw-scrollable-content")}
-            ref={scrollContainerRef}
-          >
-            <table ref={tableRef}>
-              {hasData && <TableColGroup columns={columns} />}
-              {showTableHead && hasData && <TableHead columns={columns} />}
-              <tbody className={cx({ "ctw-h-[7rem]": records.length === 0 })}>
-                <TableRows
-                  getRowClassName={getRowClassName}
-                  records={records.slice(0, count)}
-                  handleRowClick={handleRowClick}
-                  RowActions={RowActions}
-                  columns={columns}
-                  isLoading={isLoading}
-                  emptyMessage={message}
-                />
-              </tbody>
-            </table>
-          </div>
+        <div
+          className={cx("ctw-scrollbar ctw-scrollable-content")}
+          ref={scrollContainerRef}
+        >
+          <table ref={tableRef}>
+            {hasData && <TableColGroup columns={columns} />}
+            {showTableHead && hasData && <TableHead columns={columns} />}
+            <tbody className={cx({ "ctw-h-[7rem]": records.length === 0 })}>
+              <TableRows
+                getRowClassName={getRowClassName}
+                records={records.slice(0, count)}
+                handleRowClick={handleRowClick}
+                RowActions={RowActions}
+                columns={columns}
+                isLoading={isLoading}
+                emptyMessage={message}
+              />
+            </tbody>
+          </table>
         </div>
-        {!hidePagination && !isLoading && (
-          <PaginationList
-            total={records.length}
-            count={count}
-            changeCount={setCount}
-          />
-        )}
       </div>
+      {!hidePagination && !isLoading && (
+        <PaginationList
+          total={records.length}
+          count={count}
+          changeCount={setCount}
+        />
+      )}
       {children}
     </div>
   );

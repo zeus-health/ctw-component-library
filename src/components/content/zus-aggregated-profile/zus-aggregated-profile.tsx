@@ -93,25 +93,23 @@ const zusAggregatedProfile = ({
 
   return (
     <div className="ctw-zus-aggregated-profile ctw-scrollable-pass-through-height">
-      <div className="ctw-scrollable-pass-through-height">
-        {!hideTitle && (
-          <Title className="ctw-border-b-2 ctw-border-r-0 ctw-border-l-0 ctw-border-t-0 ctw-border-solid ctw-border-divider-light">
-            <h3 className="ctw-m-0 ctw-inline-block ctw-p-0 ctw-pb-3 ctw-text-lg ctw-font-medium">
-              {title}{" "}
-              {!removeBranding && (
-                <span className="ctw-text-sm ctw-font-light ctw-italic ctw-text-content-light">
-                  Powered by{" "}
-                  <img src={ZusSVG} alt="Zus" className="-ctw-mb-1.5" />
-                </span>
-              )}
-            </h3>
-          </Title>
-        )}
-        <TabGroup
-          content={tabbedContent}
-          forceHorizontalTabs={forceHorizontalTabs}
-        />
-      </div>
+      {!hideTitle && (
+        <Title className="ctw-border-b-2 ctw-border-r-0 ctw-border-l-0 ctw-border-t-0 ctw-border-solid ctw-border-divider-light">
+          <h3 className="ctw-m-0 ctw-inline-block ctw-p-0 ctw-pb-3 ctw-text-lg ctw-font-medium">
+            {title}{" "}
+            {!removeBranding && (
+              <span className="ctw-text-sm ctw-font-light ctw-italic ctw-text-content-light">
+                Powered by{" "}
+                <img src={ZusSVG} alt="Zus" className="-ctw-mb-1.5" />
+              </span>
+            )}
+          </h3>
+        </Title>
+      )}
+      <TabGroup
+        content={tabbedContent}
+        forceHorizontalTabs={forceHorizontalTabs}
+      />
     </div>
   );
 };

@@ -41,35 +41,33 @@ export const PatientConditionsBase = ({
 
   return (
     <div className={cx(className, "ctw-scrollable-pass-through-height")}>
-      <div className="ctw-scrollable-pass-through-height">
-        <ResourceTableActions
-          filterOptions={{
-            onChange: setFilters,
-            defaultState: defaultConditionFilters,
-            filters: conditionFilters(query.data ?? [], outside),
-          }}
-          sortOptions={{
-            defaultSort: defaultConditionSort,
-            options: conditionSortOptions,
-            onChange: setSort,
-          }}
-          action={action}
-        />
-        <ResourceTable
-          className="ctw-patient-conditions"
-          columns={patientConditionsColumns}
-          data={data}
-          emptyMessage="There are no condition records available."
-          isLoading={query.isLoading}
-          onRowClick={(condition) =>
-            showConditionHistory({
-              condition,
-              readOnly,
-            })
-          }
-          rowActions={rowActions}
-        />
-      </div>
+      <ResourceTableActions
+        filterOptions={{
+          onChange: setFilters,
+          defaultState: defaultConditionFilters,
+          filters: conditionFilters(query.data ?? [], outside),
+        }}
+        sortOptions={{
+          defaultSort: defaultConditionSort,
+          options: conditionSortOptions,
+          onChange: setSort,
+        }}
+        action={action}
+      />
+      <ResourceTable
+        className="ctw-patient-conditions"
+        columns={patientConditionsColumns}
+        data={data}
+        emptyMessage="There are no condition records available."
+        isLoading={query.isLoading}
+        onRowClick={(condition) =>
+          showConditionHistory({
+            condition,
+            readOnly,
+          })
+        }
+        rowActions={rowActions}
+      />
     </div>
   );
 };

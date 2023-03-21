@@ -78,7 +78,7 @@ export const ProviderMedsTable = withErrorBoundary(
     }, [data, sortColumn, sortOrder, showInactive]);
 
     return (
-      <div>
+      <>
         <div className="ctw-flex ctw-flex-wrap ctw-gap-x-2">
           <SortButton
             className="ctw-my-2"
@@ -94,7 +94,7 @@ export const ProviderMedsTable = withErrorBoundary(
           isLoading={isLoading}
           handleRowClick={openHistoryDrawer}
         />
-      </div>
+      </>
     );
   },
   "ProviderMedsTable"

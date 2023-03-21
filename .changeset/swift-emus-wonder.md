@@ -2,4 +2,5 @@
 "@zus-health/ctw-component-library": patch
 ---
 
-ScrollableContainer and ScrollableContent internal components added
+Added .ctw-scrollable-pass-through-height and .ctw-scrollable-content classes.
+Added scrolling to all current components used in ZusAggregatedProfile.
