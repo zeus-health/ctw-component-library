@@ -1,4 +1,4 @@
-import { ObservationDetails } from "@/components/content/observations/observations-details";
+import { ObservationDetails } from "@/components/content/observations/helpers/details";
 import { Drawer } from "@/components/core/drawer";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
 import { DiagnosticReportModel } from "@/fhir/models";

@@ -1,3 +1,4 @@
+import cx from "classnames";
 import {
   useAddConditionForm,
   useConfirmDeleteCondition,
@@ -15,7 +16,7 @@ import { useBaseTranslations } from "@/i18n";
 import { usePatientHistory } from "../patient-history/use-patient-history";
 
 export type PatientConditionsProps = {
-  className?: string;
+  className?: cx.Argument;
   readOnly?: boolean;
 };
 
@@ -40,7 +41,7 @@ const PatientConditionsComponent = ({
   return (
     <PatientConditionsBase
       action={action}
-      className={className}
+      className={cx(className)}
       query={query}
       readOnly={readOnly}
       rowActions={readOnly ? undefined : RowActions}

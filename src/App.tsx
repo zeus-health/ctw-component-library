@@ -12,7 +12,6 @@ import {
   PatientMedications,
   PatientProvider,
   PatientSearch,
-  PatientsTable,
   ZusAggregatedProfile,
 } from ".";
 import "./App.css";
