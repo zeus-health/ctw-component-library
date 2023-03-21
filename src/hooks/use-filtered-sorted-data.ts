@@ -24,8 +24,10 @@ export function useFilteredSortedData<T extends object>({
   const [data, setData] = useState(records ?? []);
 
   useEffect(() => {
-    let filteredData = applyFilters(records ?? [], Object.values(filters));
-    filteredData = applyFilters(filteredData, viewOption?.filters);
+    const filteredData = applyFilters(records ?? [], [
+      ...Object.values(filters),
+      ...(viewOption?.filters ?? []),
+    ]);
     const filteredAndSortedData = applySorts(filteredData, sortOption.sorts);
     setData(filteredAndSortedData);
   }, [filters, sortOption, records, viewOption]);
