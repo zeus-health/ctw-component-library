@@ -1,4 +1,6 @@
 import { PatientHistoryAction } from "../patient-history/patient-history-action";
+import { RequestRecordsButton } from "../patient-history/request-records-button";
+import { usePatientHistory } from "../patient-history/use-patient-history";
 import { useAddConditionForm } from "./helpers/modal-hooks";
 import { PatientConditionsBase } from "./helpers/patient-conditions-base";
 import { withErrorBoundary } from "@/components/core/error-boundary";
@@ -19,9 +21,26 @@ const PatientConditionsOutsideComponent = ({
   readOnly = false,
 }: PatientConditionsOutsideProps) => {
   const query = usePatientConditionsOutside();
+  const patientHistoryQuery = usePatientHistory();
+  const hasNoOutsideDataAndHasNeverRequestedPatientHistory =
+    patientHistoryQuery.lastRetrievedAt === undefined &&
+    query.data.length === 0;
+
+  const emptyMessage = !patientHistoryQuery.lastRetrievedAt ? (
+    <div className="ctw-flex ctw-space-x-1">
+      <div>Retrieve patient clinical history.</div>
+      <RequestRecordsButton />
+    </div>
+  ) : undefined;
 
   const action = (
-    <PatientHistoryAction hideRequestRecords={hideRequestRecords || readOnly} />
+    <PatientHistoryAction
+      hideRequestRecords={
+        hideRequestRecords ||
+        hasNoOutsideDataAndHasNeverRequestedPatientHistory ||
+        readOnly
+      }
+    />
   );
 
   return (
@@ -32,6 +51,8 @@ const PatientConditionsOutsideComponent = ({
       query={query}
       readOnly={readOnly}
       rowActions={readOnly ? undefined : RowActions}
+      emptyMessage={emptyMessage}
+      isLoading={patientHistoryQuery.isLoading}
     />
   );
 };

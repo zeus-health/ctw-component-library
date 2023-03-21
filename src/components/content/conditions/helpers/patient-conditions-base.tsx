@@ -1,4 +1,5 @@
 import cx from "classnames";
+import { ReactElement } from "react";
 import { useConditionHistory } from "../../condition-history/conditions-history-drawer";
 import {
   ResourceTable,
@@ -22,6 +23,8 @@ export type PatientConditionsTableProps = {
   outside?: boolean;
   readOnly?: boolean;
   rowActions?: ResourceTableProps<ConditionModel>["rowActions"];
+  emptyMessage?: string | ReactElement;
+  isLoading?: boolean;
 };
 
 export const PatientConditionsBase = ({
@@ -31,6 +34,8 @@ export const PatientConditionsBase = ({
   outside = false,
   readOnly = false,
   rowActions,
+  emptyMessage = "There are no condition records available.",
+  isLoading,
 }: PatientConditionsTableProps) => {
   const showConditionHistory = useConditionHistory();
   const { data, setFilters, setSort } = useFilteredSortedData({
@@ -58,8 +63,8 @@ export const PatientConditionsBase = ({
         className="ctw-patient-conditions"
         columns={patientConditionsColumns}
         data={data}
-        emptyMessage="There are no condition records available."
-        isLoading={query.isLoading}
+        emptyMessage={emptyMessage}
+        isLoading={isLoading || query.isLoading}
         onRowClick={(condition) =>
           showConditionHistory({
             condition,
