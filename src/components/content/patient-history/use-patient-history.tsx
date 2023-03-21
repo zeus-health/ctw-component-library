@@ -9,17 +9,22 @@ import {
   useQueryWithPatient,
 } from "@/components/core/providers/patient-provider";
 import { formatISODateStringToDate } from "@/fhir/formatters";
+import { getBuilderPatientsListByIdentifier } from "@/fhir/patient-helper";
 import { PatientRefreshHistoryMessage } from "@/services/patient-history/patient-history-types";
 import { errorResponse } from "@/utils/errors";
-import { find } from "@/utils/nodash";
-import { QUERY_KEY_PATIENT_HISTORY_DETAILS } from "@/utils/query-keys";
+import { compact, find } from "@/utils/nodash";
+import {
+  QUERY_KEY_PATIENT_HISTORY_DETAILS,
+  QUERY_KEY_PATIENT_HISTORY_LIST,
+} from "@/utils/query-keys";
 import { ctwFetch } from "@/utils/request";
 import { Telemetry } from "@/utils/telemetry";
 
-type PatientHistoryDetails = Partial<{
+type PatientHistoryResponse = Partial<{
   lastRetrievedAt: string;
   status: string;
   dateCreated: string;
+  initialData?: { patientId?: string };
 }>;
 
 export function usePatientHistory() {
@@ -27,7 +32,7 @@ export function usePatientHistory() {
   const { getPatient } = usePatientPromise();
   const patientHistoryInformation = usePatientHistoryDetails();
   const [patientHistoryDetails, setPatientHistoryDetails] =
-    useState<PatientHistoryDetails>();
+    useState<PatientHistoryResponse>();
 
   const [patientHistoryRequestPromise, setPatientHistoryRequestPromise] =
     useState<Promise<void>>();
@@ -108,6 +113,87 @@ async function getPatientRefreshHistoryMessages(
       err
     );
   }
+}
+
+async function getBuilderRefreshHistoryMessages(
+  requestContext: CTWRequestContext
+) {
+  const builderIdParam = requestContext.contextBuilderId
+    ? `?builder-id=${requestContext.contextBuilderId}`
+    : "";
+  const endpointUrl = `${getZusApiBaseUrl(
+    requestContext.env
+  )}/patient-history/messages?${builderIdParam}`;
+
+  try {
+    const response = await ctwFetch(endpointUrl, {
+      headers: {
+        Authorization: `Bearer ${requestContext.authToken}`,
+        ...(requestContext.contextBuilderId && {
+          "Zus-Account": requestContext.contextBuilderId,
+        }),
+      },
+    });
+
+    return await response.json();
+  } catch (err) {
+    throw errorResponse(
+      "Failed fetching patient refresh history messages",
+      err
+    );
+  }
+}
+
+export function useBuilderPatientHistoryList(
+  pageSize: number,
+  pageOffset: number
+) {
+  return useQueryWithPatient(
+    QUERY_KEY_PATIENT_HISTORY_LIST,
+    [pageSize, pageOffset],
+    async (requestContext) => {
+      try {
+        const messages = (
+          await getBuilderRefreshHistoryMessages(requestContext)
+        ).data as PatientHistoryResponse[];
+        console.log("messages", messages);
+
+        const patientsIds = compact(
+          messages.map((message) => message.initialData?.patientId)
+        );
+        console.log("patients", patientsIds);
+
+        const response = getBuilderPatientsListByIdentifier(
+          requestContext,
+          undefined,
+          patientsIds
+        );
+
+        const latestDone = find(messages, {
+          _messages: [
+            {
+              status: "done",
+            },
+          ],
+        }) as PatientRefreshHistoryMessage | undefined;
+        return {
+          // eslint-disable-next-line no-underscore-dangle
+          lastRetrievedAt: latestDone?._createdAt,
+          status: messages[0]?.status,
+          // eslint-disable-next-line no-underscore-dangle
+          dateCreated: messages[0]?._createdAt,
+        };
+      } catch (e) {
+        Telemetry.logError(
+          e as Error,
+          "Failed fetching patient history details"
+        );
+        throw new Error(
+          `Failed fetching patient history details for patient: ${e}`
+        );
+      }
+    }
+  );
 }
 
 export function usePatientHistoryDetails() {

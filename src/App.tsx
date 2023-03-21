@@ -15,6 +15,7 @@ import {
   ZusAggregatedProfile,
 } from ".";
 import "./App.css";
+import { PatientHistoryTable } from "./components/content/patient-history/patient-history-table";
 
 const {
   VITE_SYSTEM_URL,
@@ -106,6 +107,7 @@ const demoComponents: DemoComponent[] = [
   { render: () => <PatientAllergies />, title: "Patient Allergies" },
   { render: () => <PatientImmunizations />, title: "Patient Immunizations" },
   { render: () => <PatientSearch />, title: "Patient Search" },
+  { render: () => <PatientHistoryTable />, title: "Patient History Table" },
 ];
 
 const DemoApp = ({ accessToken = "" }) => (
