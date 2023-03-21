@@ -4,25 +4,33 @@ import { ReactElement } from "react";
 import {
   getMedicationFormData,
   medicationStatementSchema,
-} from "../forms/schemas/medication-schema";
+} from "../../forms/schemas/medication-schema";
 import { createMedicationStatement } from "@/components/content/forms/actions/medications";
 import { DrawerFormWithFields } from "@/components/core/form/drawer-form-with-fields";
+import { useDrawer } from "@/components/core/providers/drawer-provider";
 import { usePatient } from "@/components/core/providers/patient-provider";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 
+export function useAddMedicationForm() {
+  const { openDrawer } = useDrawer();
+
+  return (medication: MedicationStatementModel) => {
+    openDrawer({
+      component: (props) => (
+        <AddNewMedDrawer medication={medication.resource} {...props} />
+      ),
+    });
+  };
+}
+
 type Props = {
   isOpen: boolean;
-  handleOnClose: () => void;
+  onClose: () => void;
   children?: ReactElement;
   medication?: MedicationStatement;
 };
 
-export const AddNewMedDrawer = ({
-  isOpen,
-  handleOnClose,
-  medication,
-  children,
-}: Props) => {
+const AddNewMedDrawer = ({ isOpen, onClose, medication }: Props) => {
   const patient = usePatient();
 
   const patientSubjectRef = {
@@ -53,16 +61,13 @@ export const AddNewMedDrawer = ({
   );
 
   return (
-    <>
-      {children}
-      <DrawerFormWithFields
-        title="Add Medication"
-        action={createMedicationStatement}
-        data={createMedData}
-        schema={medicationStatementSchema}
-        isOpen={isOpen}
-        onClose={() => handleOnClose()}
-      />
-    </>
+    <DrawerFormWithFields
+      title="Add Medication"
+      action={createMedicationStatement}
+      data={createMedData}
+      schema={medicationStatementSchema}
+      isOpen={isOpen}
+      onClose={onClose}
+    />
   );
 };

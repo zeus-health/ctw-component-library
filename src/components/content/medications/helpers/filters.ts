@@ -5,36 +5,35 @@ import {
 } from "@/components/core/filter-bar/filter-bar-types";
 import { MedicationStatementModel } from "@/fhir/models";
 import { uniqueValues } from "@/utils/filters";
-import { compact } from "@/utils/nodash";
-
-export type FilterCollection = "patient" | "other";
-
-export type Filters = {
-  patient: FilterChangeEvent;
-  other: FilterChangeEvent;
-};
 
 export function medicationFilters(
-  medications: MedicationStatementModel[]
+  medications: MedicationStatementModel[],
+  outside: boolean
 ): FilterItem[] {
   const prescriberNames = uniqueValues(medications, "lastPrescriber");
+  const filters: FilterItem[] = [];
 
-  return compact([
-    {
+  if (outside) {
+    filters.push({
       key: "isArchived",
       type: "tag",
       icon: faEye,
       display: ({ listView }) =>
         listView ? "show dismissed records" : "dismissed records",
-    },
-    prescriberNames.length < 2
-      ? null
-      : {
-          key: "lastPrescriber",
-          type: "checkbox",
-          icon: faUser,
-          values: prescriberNames,
-          display: "prescriber",
-        },
-  ]);
+    });
+  }
+
+  if (prescriberNames.length > 1) {
+    filters.push({
+      key: "lastPrescriber",
+      type: "checkbox",
+      icon: faUser,
+      values: prescriberNames,
+      display: "prescriber",
+    });
+  }
+
+  return filters;
 }
+
+export const defaultMedicationFilters: FilterChangeEvent = {};

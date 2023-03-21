@@ -7,6 +7,8 @@ export * from "@/components/content/immunizations/patient-immunizations";
 export * from "@/components/content/care-team/patient-careteam";
 export * from "@/components/content/document/patient-documents";
 export * from "@/components/content/medications/patient-medications";
+export * from "@/components/content/medications/patient-medications-outside";
+export * from "@/components/content/medications/patient-medications-profile";
 export * from "@/components/content/observations/patient-observations";
 export * from "@/components/content/observations/patient-observations-outside";
 export * from "@/components/content/observations/patient-observations-outside-badge";

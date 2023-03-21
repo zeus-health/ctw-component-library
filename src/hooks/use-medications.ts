@@ -52,10 +52,12 @@ export function useQueryGetSummarizedPatientMedications(): UseQueryResult<
  * useful when creating content such as the <PatientMedications /> component.
  */
 export function useQueryAllPatientMedications() {
-  const [builderMedications, setBuilderMedications] =
-    useState<MedicationStatementModel[]>();
-  const [otherProviderMedications, setOtherProviderMedications] =
-    useState<MedicationStatementModel[]>();
+  const [builderMedications, setBuilderMedications] = useState<
+    MedicationStatementModel[]
+  >([]);
+  const [otherProviderMedications, setOtherProviderMedications] = useState<
+    MedicationStatementModel[]
+  >([]);
 
   const summarizedMedicationsQuery = useQueryGetSummarizedPatientMedications();
   const builderMedicationsQuery = useQueryGetPatientMedsForBuilder();

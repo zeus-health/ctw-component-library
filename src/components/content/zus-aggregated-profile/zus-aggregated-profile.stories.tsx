@@ -40,27 +40,25 @@ export default {
   },
 } as Meta<Props>;
 
+const { decorators, parameters } = setupZusAggregatedProfileMocks({
+  allergyIntolerance,
+  otherConditions,
+  otherProviderMedications,
+  patientConditions,
+  providerMedications,
+});
+
 export const OutsideRecords: StoryObj<Props> = {
-  ...setupZusAggregatedProfileMocks({
-    allergyIntolerance,
-    otherConditions,
-    otherProviderMedications,
-    patientConditions,
-    providerMedications,
-  }),
+  decorators,
+  parameters,
   args: {
     resources: ["conditions-outside", "medications-outside"],
   },
 };
 
 export const ConditionsAndMedications: StoryObj<Props> = {
-  ...setupZusAggregatedProfileMocks({
-    allergyIntolerance,
-    otherConditions,
-    otherProviderMedications,
-    patientConditions,
-    providerMedications,
-  }),
+  decorators,
+  parameters,
   args: {
     resources: [
       "conditions",
@@ -72,26 +70,16 @@ export const ConditionsAndMedications: StoryObj<Props> = {
 };
 
 export const ProblemsAndDocuments: StoryObj<Props> = {
-  ...setupZusAggregatedProfileMocks({
-    allergyIntolerance,
-    otherConditions,
-    otherProviderMedications,
-    patientConditions,
-    providerMedications,
-  }),
+  decorators,
+  parameters,
   args: {
     resources: ["allergies", "conditions", "immunizations", "documents"],
   },
 };
 
 export const Everything: StoryObj<Props> = {
-  ...setupZusAggregatedProfileMocks({
-    allergyIntolerance,
-    otherConditions,
-    otherProviderMedications,
-    patientConditions,
-    providerMedications,
-  }),
+  decorators,
+  parameters,
   args: {
     resources: [
       "allergies",
@@ -108,13 +96,7 @@ export const Everything: StoryObj<Props> = {
 };
 
 export const ScrollbarsOnOverflowZap: StoryObj<Props> = {
-  ...setupZusAggregatedProfileMocks({
-    allergyIntolerance,
-    otherConditions,
-    otherProviderMedications,
-    patientConditions,
-    providerMedications,
-  }),
+  parameters,
   args: {
     resources: [
       "allergies",
@@ -131,6 +113,7 @@ export const ScrollbarsOnOverflowZap: StoryObj<Props> = {
     ],
   },
   decorators: [
+    ...decorators,
     (Story, { args }) => (
       <div className="ctw-border-solid ctw-border-divider-light ctw-p-2">
         <h3>Fixed height container</h3>
