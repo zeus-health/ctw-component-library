@@ -3,7 +3,6 @@ import { RequestRecordsButton } from "../patient-history/request-records-button"
 import { usePatientHistory } from "../patient-history/use-patient-history";
 import { useAddConditionForm } from "./helpers/modal-hooks";
 import { PatientConditionsBase } from "./helpers/patient-conditions-base";
-import { useHasOtherRecordData } from "./patient-conditions";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { RowActionsProps } from "@/components/core/table/table";
@@ -23,7 +22,9 @@ const PatientConditionsOutsideComponent = ({
 }: PatientConditionsOutsideProps) => {
   const query = usePatientConditionsOutside();
   const patientHistoryQuery = usePatientHistory();
-  const showRequestRecordsRequestButtonQuery = useHasOtherRecordData();
+  const hasNoOutsideDataAndHasNeverRequestedPatientHistory =
+    patientHistoryQuery.lastRetrievedAt === undefined &&
+    query.data.length === 0;
 
   const emptyMessage = !patientHistoryQuery.lastRetrievedAt ? (
     <div className="ctw-flex ctw-space-x-1">
@@ -36,7 +37,7 @@ const PatientConditionsOutsideComponent = ({
     <PatientHistoryAction
       hideRequestRecords={
         (hideRequestRecords &&
-          showRequestRecordsRequestButtonQuery.hasNoOutsideDataAndHasNeverRequestedPatientHistory) ||
+          hasNoOutsideDataAndHasNeverRequestedPatientHistory) ||
         readOnly
       }
     />
