@@ -134,7 +134,9 @@ export const ScrollbarsOnOverflowZap: StoryObj<Props> = {
     (Story, { args }) => (
       <div className="ctw-border-solid ctw-border-divider-light ctw-p-2">
         <h3>Fixed height container</h3>
-        <pre>{"// CSS\n.ctw-zus-aggregated-profile { height: 450px }"}</pre>
+        <code className="language-jsx css-1lwmlsb">
+          {"// CSS\n.ctw-zus-aggregated-profile { height: 450px }"}
+        </code>
         <style>{".ctw-zus-aggregated-profile { height: 450px }"}</style>
         <Story args={args} />
       </div>

@@ -97,16 +97,14 @@
   }
 
   /* Scrollable container pattern */
-  .ctw-scrollable {
-    /* element that will have content which may need scrollbars */
-    &-content {
-      flex-grow: 1;
-      overflow: auto;
-      /* Need to keep min-height for Firefox */
-      min-height: 0;
-    }
+  .ctw-scrollable-content {
+    flex-grow: 1;
+    overflow: auto;
+    /* Need to keep min-height for Firefox */
+    min-height: 0;
+
     /* all ascendants of "ctw-scrollable-content" (without explicit height) need .ctw-scrollable-pass-through-height */
-    &-pass-through-height {
+    .ctw-scrollable-pass-through-height {
       display: flex;
       flex-direction: column;
       flex-grow: 1;
