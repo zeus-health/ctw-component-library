@@ -1,3 +1,4 @@
+import cx from "classnames";
 import { ViewOption } from "../../resource/helpers/view-button";
 import {
   ResourceTable,
@@ -52,7 +53,7 @@ export const PatientMedicationsBase = ({
   }
 
   return (
-    <div className={className}>
+    <div className={cx("ctw-scrollable-pass-through-height", className)}>
       <ResourceTableActions
         viewOptions={
           defaultView && views
