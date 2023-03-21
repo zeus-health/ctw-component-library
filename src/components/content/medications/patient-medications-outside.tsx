@@ -29,7 +29,7 @@ const PatientMedicationsOutsideComponent = ({
     <PatientMedicationsBase
       className={className}
       query={{ data: otherProviderMedications, isLoading }}
-      filters={medicationFilters(otherProviderMedications ?? [], true)}
+      filters={medicationFilters(otherProviderMedications, true)}
       rowActions={readOnly ? undefined : getRowActions({ onAddToRecord })}
       onOpenHistoryDrawer={onOpenHistoryDrawer}
     />

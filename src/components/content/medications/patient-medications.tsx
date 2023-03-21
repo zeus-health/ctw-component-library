@@ -6,13 +6,11 @@ import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 
 export type PatientMedicationsProps = {
   className?: string;
-  readOnly?: boolean;
   onOpenHistoryDrawer?: () => void;
 };
 
 const PatientMedicationsComponent = ({
   className,
-  readOnly = false,
   onOpenHistoryDrawer,
 }: PatientMedicationsProps) => {
   const { builderMedications, isLoading } = useQueryAllPatientMedications();
@@ -21,7 +19,7 @@ const PatientMedicationsComponent = ({
     <PatientMedicationsBase
       className={className}
       query={{ data: builderMedications, isLoading }}
-      filters={medicationFilters(builderMedications ?? [], false)}
+      filters={medicationFilters(builderMedications, false)}
       views={medicationViews}
       defaultView={defaultMedicationView}
       onOpenHistoryDrawer={onOpenHistoryDrawer}
