@@ -36,8 +36,8 @@ const PatientConditionsOutsideComponent = ({
   const action = (
     <PatientHistoryAction
       hideRequestRecords={
-        (hideRequestRecords &&
-          hasNoOutsideDataAndHasNeverRequestedPatientHistory) ||
+        hideRequestRecords ||
+        hasNoOutsideDataAndHasNeverRequestedPatientHistory ||
         readOnly
       }
     />
