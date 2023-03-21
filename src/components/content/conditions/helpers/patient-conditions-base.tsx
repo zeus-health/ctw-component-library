@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import cx from "classnames";
 import { useConditionHistory } from "../../condition-history/conditions-history-drawer";
 import {
   ResourceTable,
@@ -14,6 +14,7 @@ import { conditionSortOptions, defaultConditionSort } from "./sorts";
 import "./patient-conditions.scss";
 import { ConditionModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
+import { ReactElement } from "react";
 
 export type PatientConditionsTableProps = {
   action?: ResourceTableActionsProps<ConditionModel>["action"];
@@ -44,7 +45,7 @@ export const PatientConditionsBase = ({
   });
 
   return (
-    <div className={className}>
+    <div className={cx(className, "ctw-scrollable-pass-through-height")}>
       <ResourceTableActions
         filterOptions={{
           onChange: setFilters,
@@ -58,7 +59,6 @@ export const PatientConditionsBase = ({
         }}
         action={action}
       />
-
       <ResourceTable
         className="ctw-patient-conditions"
         columns={patientConditionsColumns}

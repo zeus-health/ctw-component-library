@@ -1,4 +1,5 @@
 import type { MedicationStatementModel } from "@/fhir/models/medication-statement";
+import cx from "classnames";
 import { ReactNode, useRef } from "react";
 import { Table, TableBaseProps } from "@/components/core/table/table";
 import {
@@ -14,7 +15,7 @@ export type MedsHistoryTempProps = Partial<{
 
 export type MedicationsTableBaseProps<T extends MinRecordItem> = {
   children?: ReactNode;
-  className?: string;
+  className?: cx.Argument;
   emptyMessage?: string;
   hideMenu?: boolean;
   medicationStatements: MedicationStatementModel[];
@@ -104,20 +105,18 @@ export const MedicationsTableBase = ({
 
   return (
     <div
-      className={className}
+      className={cx(className, "ctw-scrollable-pass-through-height")}
       ref={containerRef}
       data-zus-telemetry-namespace={telemetryNamespace}
     >
-      <div className="ctw-overflow-hidden">
-        <Table
-          showTableHead={!breakpoints.sm}
-          stacked={breakpoints.sm}
-          records={medicationStatements}
-          columns={breakpoints.sm ? columnsStacked : columns}
-          emptyMessage={emptyMessage}
-          {...tableProps}
-        />
-      </div>
+      <Table
+        showTableHead={!breakpoints.sm}
+        stacked={breakpoints.sm}
+        records={medicationStatements}
+        columns={breakpoints.sm ? columnsStacked : columns}
+        emptyMessage={emptyMessage}
+        {...tableProps}
+      />
       {children}
     </div>
   );

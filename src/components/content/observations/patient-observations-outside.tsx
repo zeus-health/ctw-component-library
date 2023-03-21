@@ -11,9 +11,10 @@ const Component = ({ className }: PatientObservationsOutsideProps) => {
   const diagnosticReports = usePatientDiagnosticReportsOutside();
 
   return (
-    <div className={cx(className, "ctw-patient-observations")}>
-      <PatientObservationsBase query={diagnosticReports} />
-    </div>
+    <PatientObservationsBase
+      query={diagnosticReports}
+      className={cx(className, "ctw-scrollable-pass-through-height")}
+    />
   );
 };
 

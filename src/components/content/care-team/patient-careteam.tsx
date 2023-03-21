@@ -35,7 +35,7 @@ export function PatientCareTeam({ className }: PatientCareTeamProps) {
     <div
       ref={containerRef}
       className={cx(
-        "ctw-border ctw-border-solid ctw-border-divider-light ctw-bg-white",
+        "ctw-scrollable-pass-through-height ctw-border ctw-border-solid ctw-border-divider-light ctw-bg-white",
         className,
         {
           "ctw-stacked": breakpoints.sm,

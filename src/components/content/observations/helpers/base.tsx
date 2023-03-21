@@ -38,7 +38,7 @@ export const PatientObservationsBase = ({
   });
 
   return (
-    <div className={cx(className)}>
+    <div className={cx(className, "ctw-scrollable-pass-through-height")}>
       <ResourceTableActions
         filterOptions={{
           onChange: setFilters,
