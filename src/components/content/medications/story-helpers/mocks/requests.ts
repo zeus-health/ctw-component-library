@@ -7,6 +7,7 @@ import { medicationAdministration } from "./medication-administration";
 import { medicationDispense } from "./medication-dispense";
 import { medicationRequest } from "./medication-request";
 import { patient } from "./patient";
+import { SYSTEM_ZUS_OWNER } from "@/fhir/system-urls";
 import { cloneDeep, find } from "@/utils/nodash/fp";
 
 let patientProviderMedsCache: fhir4.Bundle;
@@ -89,6 +90,11 @@ function mockRequests() {
     (req, res, ctx) => res(ctx.status(200), ctx.json(medicationAdministration))
   );
 
+  const mockProvenancePost = rest.post(
+    "https://api.dev.zusapi.com/fhir/Provenance",
+    (_, res, ctx) => res(ctx.status(200))
+  );
+
   const mockTerminologyDosageGet = rest.get(
     "https://api.dev.zusapi.com/forms-data/terminology/dosages",
     (req, res, ctx) => {
@@ -110,14 +116,22 @@ function mockRequests() {
   const mockBasicPost = rest.post(
     "https://api.dev.zusapi.com/fhir/Basic",
     async (req, res, ctx) => {
-      const newBasicResource = await req.json();
-      if (newBasicResource.subject.type !== "MedicationStatement") {
+      const newBasicResource = (await req.json()) as fhir4.Basic;
+      if (newBasicResource.subject?.type !== "MedicationStatement") {
         // The ZusAggregatedProfile component has multiple tabs mocking fhir
         // Basic resources. We only want to handle medications here.
         return undefined;
       }
-      newBasicResource.search = { mode: "include" };
       newBasicResource.id = uuidv4();
+      newBasicResource.meta = {
+        tag: [
+          {
+            system: SYSTEM_ZUS_OWNER,
+            code: "builder/12345",
+            display: "Storybook Builder",
+          },
+        ],
+      };
       patientOtherProviderMedsCache.entry?.push({
         resource: newBasicResource,
         search: { mode: "include" },
@@ -129,6 +143,20 @@ function mockRequests() {
     }
   );
 
+  const mockBasicPut = rest.put(
+    "https://api.dev.zusapi.com/fhir/Basic/:basicId",
+    async (req, res, ctx) => {
+      const basic = await req.json();
+      const index = patientOtherProviderMedsCache.entry?.findIndex(
+        (entry) => entry.resource?.id === basic.id
+      );
+      if (index !== undefined && patientOtherProviderMedsCache.entry?.[index]) {
+        patientOtherProviderMedsCache.entry[index].resource = basic;
+      }
+      return res(ctx.status(200), ctx.json(basic));
+    }
+  );
+
   return [
     mockPatientGet,
     mockTerminologyDosageGet,
@@ -137,6 +165,8 @@ function mockRequests() {
     mockMedicationRequestGet,
     mockMedicationDispenseGet,
     mockMedicationAdministrationGet,
+    mockProvenancePost,
     mockBasicPost,
+    mockBasicPut,
   ];
 }

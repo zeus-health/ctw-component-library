@@ -1,9 +1,8 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import { action } from "@storybook/addon-actions";
+import { Meta, StoryObj } from "@storybook/react";
+import { PatientMedicationsProfile } from "./patient-medications-profile";
 import { setupMedicationMocks } from "./story-helpers/mocks/requests";
-import {
-  PatientMedications,
-  PatientMedicationsProps,
-} from "@/components/content/medications/patient-medications";
+import { PatientMedicationsProps } from "@/components/content/medications/patient-medications";
 import { otherProviderMedications } from "@/components/content/medications/story-helpers/mocks/other-provider-medications";
 import { providerMedications } from "@/components/content/medications/story-helpers/mocks/provider-medications";
 import { CTWProvider } from "@/components/core/providers/ctw-provider";
@@ -14,7 +13,7 @@ type Props = PatientMedicationsProps;
 
 export default {
   tags: ["autodocs"],
-  component: PatientMedications,
+  component: PatientMedicationsProfile,
   decorators: [
     (Story, { args }) => (
       <CTWProvider env="dev" authToken="ey.12345" builderId="12345">
@@ -24,28 +23,24 @@ export default {
       </CTWProvider>
     ),
   ],
+  argTypes: {
+    onOpenHistoryDrawer: { action: "open history drawer" },
+    onAddToRecord: {
+      options: ["Drawer", "Log Action"],
+      control: "select",
+      mapping: {
+        Drawer: undefined,
+        "Log Action": action("add to record"),
+      },
+    },
+  },
   args: {
-    hideAddToRecord: undefined,
-    forceHorizontalTabs: undefined,
-    onAfterOpenHistoryDrawer: undefined,
-    onOpenHistoryDrawer: undefined,
+    readOnly: false,
+    forceHorizontalTabs: false,
+    onAddToRecord: "Drawer",
   },
 } as Meta<Props>;
 
 export const Basic: StoryObj<Props> = {
   ...setupMedicationMocks({ providerMedications, otherProviderMedications }),
-};
-
-export const ForceHorizontalTabs: StoryObj<Props> = {
-  ...Basic,
-  args: {
-    forceHorizontalTabs: true,
-  },
-};
-
-export const HideAddToRecord: StoryObj<Props> = {
-  ...Basic,
-  args: {
-    hideAddToRecord: true,
-  },
 };

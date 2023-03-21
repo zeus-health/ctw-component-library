@@ -85,14 +85,14 @@ const demoComponents: DemoComponent[] = [
           readOnly: true,
         }}
         medicationsOutsideProps={{
-          hideAddToRecord: true,
+          readOnly: true,
         }}
       />
     ),
     title: "ZAP",
   },
   {
-    render: () => <PatientMedications handleAddToRecord={() => null} />,
+    render: () => <PatientMedications />,
     title: "Patient Medications",
   },
   {

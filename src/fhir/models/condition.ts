@@ -56,10 +56,6 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
       : false;
   }
 
-  get isArchived(): boolean {
-    return this.getBasicResourceByAction("archive") !== undefined;
-  }
-
   get asserter(): string | undefined {
     return this.resource.asserter?.display;
   }
@@ -313,10 +309,6 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
 
     // What to show if lens or summary resource.
     if (this.isSummaryResource) {
-      if (this.isArchived) {
-        return "Dismissed";
-      }
-
       return clinicalStatusMap(this.clinicalStatusCode) || "Unknown";
     }
 
@@ -372,7 +364,6 @@ export const conditionStatuses = [
 export const outsideConditionStatuses = [
   "Active",
   "Inactive",
-  "Dismissed",
   "Unknown",
 ] as const;
 

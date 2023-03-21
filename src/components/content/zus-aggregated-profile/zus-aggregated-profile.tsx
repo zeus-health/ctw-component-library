@@ -1,14 +1,14 @@
 import { PatientConditionsOutsideProps } from "../conditions/patient-conditions-outside";
+import { PatientMedicationsProps } from "../medications/patient-medications";
+import { PatientMedicationsOutsideProps } from "../medications/patient-medications-outside";
+import { PatientObservationsProps } from "../observations/patient-observations";
+import { PatientObservationsOutsideProps } from "../observations/patient-observations-outside";
 import ZusSVG from "@/assets/zus.svg";
 import { PatientAllergiesProps } from "@/components/content/allergies/patient-allergies";
 import { PatientCareTeamProps } from "@/components/content/care-team/patient-careteam";
 import { PatientConditionsProps } from "@/components/content/conditions/patient-conditions";
 import { PatientDocumentProps } from "@/components/content/document/patient-documents";
 import { PatientImmunizationsProps } from "@/components/content/immunizations/patient-immunizations";
-import { OtherProviderMedsTableProps } from "@/components/content/medications/other-provider-meds-table";
-import { ProviderMedsTableProps } from "@/components/content/medications/provider-meds-table";
-import { PatientObservationsProps } from "@/components/content/observations/patient-observations";
-import { PatientObservationsOutsideProps } from "@/components/content/observations/patient-observations-outside";
 import { PatientTimelineProps } from "@/components/content/timeline/patient-timeline";
 import {
   ZusAggregatedProfileTabs,
@@ -46,8 +46,8 @@ export type ZusAggregatedProfileSubComponentProps = Partial<{
   conditionsOutsideProps: PatientConditionsOutsideProps;
   documentsProps: PatientDocumentProps;
   immunizationsProps: PatientImmunizationsProps;
-  medicationsProps: ProviderMedsTableProps;
-  medicationsOutsideProps: OtherProviderMedsTableProps;
+  medicationsProps: PatientMedicationsProps;
+  medicationsOutsideProps: PatientMedicationsOutsideProps;
   observationsProps: PatientObservationsProps;
   observationsOutsideProps: PatientObservationsOutsideProps;
   timelineProps: PatientTimelineProps;
