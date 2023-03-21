@@ -1,4 +1,3 @@
-import { useHasOtherRecordData } from "../conditions/patient-conditions";
 import { PatientHistoryLastRetrieved } from "./patient-history-last-retrieved";
 import { RequestRecordsButton } from "./request-records-button";
 
@@ -8,11 +7,9 @@ export type PatientHistoryActionProps = {
 
 export const PatientHistoryAction = ({
   hideRequestRecords = false,
-}: PatientHistoryActionProps) => {
-  return (
-    <div className="ctw-flex ctw-space-x-1">
-      <PatientHistoryLastRetrieved />
-      {!hideRequestRecords && <RequestRecordsButton />}
-    </div>
-  );
-};
+}: PatientHistoryActionProps) => (
+  <div className="ctw-flex ctw-space-x-1">
+    <PatientHistoryLastRetrieved />
+    {!hideRequestRecords && <RequestRecordsButton />}
+  </div>
+);

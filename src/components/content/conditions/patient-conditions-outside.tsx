@@ -3,12 +3,12 @@ import { RequestRecordsButton } from "../patient-history/request-records-button"
 import { usePatientHistory } from "../patient-history/use-patient-history";
 import { useAddConditionForm } from "./helpers/modal-hooks";
 import { PatientConditionsBase } from "./helpers/patient-conditions-base";
+import { useHasOtherRecordData } from "./patient-conditions";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { RowActionsProps } from "@/components/core/table/table";
 import { toggleArchive, usePatientConditionsOutside } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models";
-import { useHasOtherRecordData } from "./patient-conditions";
 
 export type PatientConditionsOutsideProps = {
   className?: string;

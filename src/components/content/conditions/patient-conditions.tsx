@@ -1,4 +1,5 @@
 import cx from "classnames";
+import { usePatientHistory } from "../patient-history/use-patient-history";
 import {
   useAddConditionForm,
   useConfirmDeleteCondition,
@@ -13,7 +14,6 @@ import {
 } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models";
 import { useBaseTranslations } from "@/i18n";
-import { usePatientHistory } from "../patient-history/use-patient-history";
 
 export type PatientConditionsProps = {
   className?: cx.Argument;

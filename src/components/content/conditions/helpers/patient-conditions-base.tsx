@@ -1,4 +1,5 @@
 import cx from "classnames";
+import { ReactElement } from "react";
 import { useConditionHistory } from "../../condition-history/conditions-history-drawer";
 import {
   ResourceTable,
@@ -14,7 +15,6 @@ import { conditionSortOptions, defaultConditionSort } from "./sorts";
 import "./patient-conditions.scss";
 import { ConditionModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
-import { ReactElement } from "react";
 
 export type PatientConditionsTableProps = {
   action?: ResourceTableActionsProps<ConditionModel>["action"];
