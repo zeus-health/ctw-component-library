@@ -8,13 +8,13 @@ import {
   usePatientPromise,
   useQueryWithPatient,
 } from "@/components/core/providers/patient-provider";
-import { usePatientConditionsOutside } from "@/fhir/conditions";
 import { PatientRefreshHistoryMessage } from "@/services/patient-history/patient-history-types";
 import { errorResponse } from "@/utils/errors";
 import { find } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_HISTORY_DETAILS } from "@/utils/query-keys";
 import { ctwFetch } from "@/utils/request";
 import { Telemetry } from "@/utils/telemetry";
+import { formatISODateStringToDate } from "@/fhir/formatters";
 
 type PatientHistoryDetails = Partial<{
   lastRetrievedAt: string;
@@ -72,7 +72,9 @@ export function usePatientHistory() {
         ),
       });
     },
-    lastRetrievedAt: patientHistoryDetails?.lastRetrievedAt,
+    lastRetrievedAt: formatISODateStringToDate(
+      patientHistoryDetails?.lastRetrievedAt
+    ),
     lastStatus: patientHistoryDetails?.status,
     dateCreatedAt: patientHistoryDetails?.dateCreated,
     isLoading: patientHistoryInformation.isLoading,

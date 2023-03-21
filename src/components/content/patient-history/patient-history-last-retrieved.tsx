@@ -1,4 +1,3 @@
-import { PatientHistoryTableHeaderMessage } from "./patient-history-table-header";
 import { usePatientHistory } from "./use-patient-history";
 
 export const PatientHistoryLastRetrieved = () => {
@@ -7,10 +6,9 @@ export const PatientHistoryLastRetrieved = () => {
   return (
     <>
       {patientHistory.lastRetrievedAt && (
-        <PatientHistoryTableHeaderMessage
-          patientHistory={patientHistory}
-          message="Last Retrieved"
-        />
+        <div className="ctw-text-sm ctw-italic ctw-text-black">
+          Last Retrieved {patientHistory.lastRetrievedAt}
+        </div>
       )}
     </>
   );

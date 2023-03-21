@@ -86,7 +86,7 @@ export function useHasOtherRecordData() {
   const noOtherRecords = query.data.length === 0;
 
   return {
-    hasNoOutsideData:
+    hasNoOutsideDataAndHasNeverRequestedPatientHistory:
       patientHistoryQuery.lastRetrievedAt === undefined && noOtherRecords,
     isLoading: query.isLoading || patientHistoryQuery.isLoading,
   };

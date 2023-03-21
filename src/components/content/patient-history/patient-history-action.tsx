@@ -15,7 +15,7 @@ export const PatientHistoryAction = ({
     <div className="ctw-flex ctw-space-x-1">
       <PatientHistoryLastRetrieved />
       {!hideRequestRecords &&
-        !showRequestRecordsRequestButtonQuery.hasNoOutsideData && (
+        !showRequestRecordsRequestButtonQuery.hasNoOutsideDataAndHasNeverRequestedPatientHistory && (
           <RequestRecordsButton />
         )}
     </div>

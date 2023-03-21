@@ -23,7 +23,7 @@ const PatientConditionsOutsideComponent = ({
   const query = usePatientConditionsOutside();
   const patientHistoryQuery = usePatientHistory();
 
-  const emptyMessage = patientHistoryQuery.lastRetrievedAt ? (
+  const emptyMessage = !patientHistoryQuery.lastRetrievedAt ? (
     <div className="ctw-flex ctw-space-x-1">
       <div>Retrieve patient clinical history.</div>
       <RequestRecordsButton />
