@@ -8,6 +8,7 @@ import { useCTW } from "@/components/core/providers/ctw-provider";
 import { RowActionsProps } from "@/components/core/table/table";
 import { toggleArchive, usePatientConditionsOutside } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models";
+import { useHasOtherRecordData } from "./patient-conditions";
 
 export type PatientConditionsOutsideProps = {
   className?: string;
@@ -22,6 +23,7 @@ const PatientConditionsOutsideComponent = ({
 }: PatientConditionsOutsideProps) => {
   const query = usePatientConditionsOutside();
   const patientHistoryQuery = usePatientHistory();
+  const showRequestRecordsRequestButtonQuery = useHasOtherRecordData();
 
   const emptyMessage = !patientHistoryQuery.lastRetrievedAt ? (
     <div className="ctw-flex ctw-space-x-1">
@@ -31,7 +33,13 @@ const PatientConditionsOutsideComponent = ({
   ) : undefined;
 
   const action = (
-    <PatientHistoryAction hideRequestRecords={hideRequestRecords || readOnly} />
+    <PatientHistoryAction
+      hideRequestRecords={
+        (hideRequestRecords &&
+          showRequestRecordsRequestButtonQuery.hasNoOutsideDataAndHasNeverRequestedPatientHistory) ||
+        readOnly
+      }
+    />
   );
 
   return (
