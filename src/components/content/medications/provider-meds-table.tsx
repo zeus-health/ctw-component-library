@@ -8,10 +8,6 @@ import {
   defaultMedicationSort,
   medicationSortOptions,
 } from "@/components/content/medications/patient-medications-sort";
-import {
-  ScrollableContainer,
-  ScrollingContainerProps,
-} from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { SortButton } from "@/components/core/sort-button/sort-button";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
@@ -25,8 +21,7 @@ export type ProviderMedsTableProps = {
   showInactive?: boolean;
   sortColumn?: keyof MedicationStatementModel;
   sortOrder?: SortDir;
-} & MedsHistoryTempProps &
-  ScrollingContainerProps;
+} & MedsHistoryTempProps;
 
 /**
  * Displays a table of medications that are scoped to the CTWContext builder
@@ -38,13 +33,11 @@ export type ProviderMedsTableProps = {
  */
 export const ProviderMedsTable = withErrorBoundary(
   ({
-    height,
     showInactive = false,
     sortColumn = "display",
     sortOrder = "asc",
     onAfterOpenHistoryDrawer,
     onOpenHistoryDrawer,
-    scrollingEnabled = false,
   }: ProviderMedsTableProps) => {
     const [medicationModels, setMedicationModels] = useState<
       MedicationStatementModel[]
@@ -85,7 +78,7 @@ export const ProviderMedsTable = withErrorBoundary(
     }, [data, sortColumn, sortOrder, showInactive]);
 
     return (
-      <ScrollableContainer height={height} scrollingEnabled={scrollingEnabled}>
+      <div>
         <div className="ctw-flex ctw-flex-wrap ctw-gap-x-2">
           <SortButton
             className="ctw-my-2"
@@ -100,9 +93,8 @@ export const ProviderMedsTable = withErrorBoundary(
           telemetryNamespace="ProviderMedsTable"
           isLoading={isLoading}
           handleRowClick={openHistoryDrawer}
-          scrollingEnabled={!!(height || scrollingEnabled)}
         />
-      </ScrollableContainer>
+      </div>
     );
   },
   "ProviderMedsTable"

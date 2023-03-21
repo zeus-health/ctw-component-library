@@ -106,3 +106,38 @@ export const Everything: StoryObj<Props> = {
     ],
   },
 };
+
+export const ScrollbarsOnOverflowZap: StoryObj<Props> = {
+  ...setupZusAggregatedProfileMocks({
+    allergyIntolerance,
+    otherConditions,
+    otherProviderMedications,
+    patientConditions,
+    providerMedications,
+  }),
+  args: {
+    resources: [
+      "allergies",
+      "conditions",
+      "conditions-outside",
+      "documents",
+      "immunizations",
+      "observations",
+      "observations-outside",
+      "medications",
+      "medications-outside",
+      "care-team",
+      "timelines",
+    ],
+  },
+  decorators: [
+    (Story, { args }) => (
+      <div className="ctw-border-solid ctw-border-divider-light ctw-p-2">
+        <h3>Fixed height container</h3>
+        <pre>{"// CSS\n.ctw-zus-aggregated-profile { height: 450px }"}</pre>
+        <style>{".ctw-zus-aggregated-profile { height: 450px }"}</style>
+        <Story args={args} />
+      </div>
+    ),
+  ],
+};

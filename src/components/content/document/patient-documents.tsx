@@ -2,10 +2,6 @@ import cx from "classnames";
 import { useRef } from "react";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { patientDocumentColumns } from "./patient-document-columns";
-import {
-  ScrollableContainer,
-  ScrollingContainerProps,
-} from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { Table } from "@/components/core/table/table";
@@ -15,13 +11,9 @@ import { useBreakpoints } from "@/hooks/use-breakpoints";
 
 export type PatientDocumentProps = {
   className?: string;
-} & ScrollingContainerProps;
+};
 
-function PatientDocumentsComponent({
-  className,
-  height,
-  scrollingEnabled = false,
-}: PatientDocumentProps) {
+function PatientDocumentsComponent({ className }: PatientDocumentProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const patientDocumentQuery = usePatientDocument();
@@ -33,29 +25,27 @@ function PatientDocumentsComponent({
 
   const document = patientDocumentQuery.data ?? [];
   const { isLoading } = patientDocumentQuery;
-  const isScrollingEnabled = !!(height || scrollingEnabled);
 
   return (
-    <ScrollableContainer
+    <div
       ref={containerRef}
-      height={height}
-      scrollingEnabled={scrollingEnabled}
       data-zus-telemetry-namespace="Documents"
-      className={cx("ctw-patient-documents ctw-bg-white", className, {
-        "ctw-stacked": breakpoints.sm,
-      })}
+      className={cx(
+        "ctw-patient-documents ctw-scrollable-pass-through-height ctw-bg-white",
+        className,
+        {
+          "ctw-stacked": breakpoints.sm,
+        }
+      )}
     >
-      <ScrollableContainer scrollingEnabled={isScrollingEnabled}>
-        <Table
-          stacked={breakpoints.sm}
-          isLoading={isLoading}
-          records={document}
-          columns={patientDocumentColumns(featureFlags?.enableViewFhirButton)}
-          handleRowClick={openDetails}
-          scrollingEnabled={isScrollingEnabled}
-        />
-      </ScrollableContainer>
-    </ScrollableContainer>
+      <Table
+        stacked={breakpoints.sm}
+        isLoading={isLoading}
+        records={document}
+        columns={patientDocumentColumns(featureFlags?.enableViewFhirButton)}
+        handleRowClick={openDetails}
+      />
+    </div>
   );
 }
 

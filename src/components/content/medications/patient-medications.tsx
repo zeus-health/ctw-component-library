@@ -1,4 +1,3 @@
-import type { ScrollingContainerProps } from "@/components/core/ctw-box";
 import cx from "classnames";
 import { MedsHistoryTempProps } from "@/components/content/medications-table-base";
 import {
@@ -14,7 +13,6 @@ import {
 import { ProviderInactiveMedicationsTable } from "@/components/content/medications/provider-inactive-medications-table";
 import { ProviderMedsTable } from "@/components/content/medications/provider-meds-table";
 import * as CTWBox from "@/components/core/ctw-box";
-import { ScrollableContainer } from "@/components/core/ctw-box";
 import { FilterBar } from "@/components/core/filter-bar/filter-bar";
 import { SortButton } from "@/components/core/sort-button/sort-button";
 import { TabGroup, TabGroupItem } from "@/components/core/tab-group/tab-group";
@@ -25,8 +23,7 @@ import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 export type PatientMedicationsProps = {
   className?: string;
   forceHorizontalTabs?: boolean;
-} & TabbedContentProps &
-  ScrollingContainerProps;
+} & TabbedContentProps;
 
 type TabbedContentProps = Pick<
   OtherProviderMedsTableProps,
@@ -75,10 +72,8 @@ const tabbedContent = (
 export function OtherProviderMedsTableTab({
   handleAddToRecord,
   hideAddToRecord,
-  height,
   onOpenHistoryDrawer,
   onAfterOpenHistoryDrawer,
-  scrollingEnabled = false,
 }: PatientMedicationsProps) {
   const { otherProviderMedications } = useQueryAllPatientMedications();
   const { data, filters, setFilters, setSort } = useFilteredSortedData({
@@ -86,13 +81,9 @@ export function OtherProviderMedsTableTab({
     defaultSort: defaultMedicationSort,
     records: otherProviderMedications,
   });
-  const isScrollingEnabled = !!(height || scrollingEnabled);
   return (
-    <ScrollableContainer height={height} scrollingEnabled={scrollingEnabled}>
-      <ScrollableContainer
-        scrollingEnabled={isScrollingEnabled}
-        className="ctw-flex ctw-flex-wrap ctw-gap-x-2"
-      >
+    <div className="ctw-scrollable-pass-through-height">
+      <div className="ctw-flex ctw-flex-wrap ctw-gap-x-2">
         <SortButton
           className="ctw-my-2"
           options={medicationSortOptions}
@@ -104,6 +95,8 @@ export function OtherProviderMedsTableTab({
           onChange={setFilters}
           defaultState={{}}
         />
+      </div>
+      <div className="ctw-scrollable-pass-through-height ctw-w-full">
         <OtherProviderMedsTable
           records={data}
           showDismissed={!!filters.isArchived}
@@ -111,10 +104,9 @@ export function OtherProviderMedsTableTab({
           hideAddToRecord={hideAddToRecord}
           onOpenHistoryDrawer={onOpenHistoryDrawer}
           onAfterOpenHistoryDrawer={onAfterOpenHistoryDrawer}
-          scrollingEnabled={isScrollingEnabled}
         />
-      </ScrollableContainer>
-    </ScrollableContainer>
+      </div>
+    </div>
   );
 }
 
@@ -137,7 +129,7 @@ export function PatientMedications({
   return (
     <CTWBox.StackedWrapper
       className={cx(
-        "ctw-patient-medications ctw-space-y-3 ctw-bg-white",
+        "ctw-patient-medications ctw-scrollable-pass-through-height ctw-space-y-3 ctw-bg-white",
         className
       )}
     >

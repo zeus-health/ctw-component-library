@@ -1,4 +1,3 @@
-import cx from "classnames";
 import { PatientConditionsOutsideProps } from "../conditions/patient-conditions-outside";
 import ZusSVG from "@/assets/zus.svg";
 import { PatientAllergiesProps } from "@/components/content/allergies/patient-allergies";
@@ -15,7 +14,7 @@ import {
   ZusAggregatedProfileTabs,
   zusAggregatedProfileTabs,
 } from "@/components/content/zus-aggregated-profile/zus-aggregated-profile-tabs";
-import { ScrollableContainer, Title } from "@/components/core/ctw-box";
+import { Title } from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { TabGroup } from "@/components/core/tab-group/tab-group";
 
@@ -36,7 +35,6 @@ export type ZusAggregatedProfileProps = {
   resources: ZAPResourceName[];
   forceHorizontalTabs?: boolean;
   title?: string;
-  height?: string;
   hideTitle?: boolean;
   removeBranding?: boolean;
 } & ZusAggregatedProfileSubComponentProps;
@@ -70,7 +68,6 @@ const zusAggregatedProfile = ({
   timelineProps,
   resources,
   hideTitle = false,
-  height,
   title = "Outside Records",
   removeBranding = false,
 }: ZusAggregatedProfileProps) => {
@@ -91,18 +88,12 @@ const zusAggregatedProfile = ({
 
   const tabbedContent = resources.map((tabName) => {
     const props = subcomponentProps[tabName] ?? {};
-    return zusAggregatedProfileTabs[tabName]({
-      ...props,
-      scrollingEnabled: !!height,
-    });
+    return zusAggregatedProfileTabs[tabName](props);
   });
 
   return (
-    <ScrollableContainer
-      height={height}
-      className={cx("ctw-zus-aggregated-profile", { "ctw-relative": !height })}
-    >
-      <ScrollableContainer scrollingEnabled={!!height}>
+    <div className="ctw-zus-aggregated-profile ctw-scrollable-pass-through-height">
+      <div className="ctw-scrollable-pass-through-height">
         {!hideTitle && (
           <Title className="ctw-border-b-2 ctw-border-r-0 ctw-border-l-0 ctw-border-t-0 ctw-border-solid ctw-border-divider-light">
             <h3 className="ctw-m-0 ctw-inline-block ctw-p-0 ctw-pb-3 ctw-text-lg ctw-font-medium">
@@ -117,12 +108,11 @@ const zusAggregatedProfile = ({
           </Title>
         )}
         <TabGroup
-          scrollingEnabled={!!height}
           content={tabbedContent}
           forceHorizontalTabs={forceHorizontalTabs}
         />
-      </ScrollableContainer>
-    </ScrollableContainer>
+      </div>
+    </div>
   );
 };
 

@@ -14,7 +14,6 @@ import {
   defaultFilters,
   filters,
 } from "@/components/content/observations/helpers/filters";
-import { ScrollableContainer } from "@/components/core/ctw-box";
 import { DiagnosticReportModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 
@@ -23,7 +22,6 @@ export type PatientObservationsTableProps = {
   className?: cx.Argument;
   query: { data?: DiagnosticReportModel[]; isLoading: boolean };
   rowActions?: ResourceTableProps<DiagnosticReportModel>["rowActions"];
-  scrollingEnabled?: boolean;
 };
 
 export const PatientObservationsBase = ({
@@ -31,7 +29,6 @@ export const PatientObservationsBase = ({
   className,
   query,
   rowActions,
-  scrollingEnabled = false,
 }: PatientObservationsTableProps) => {
   const openDrawer = useObservationsDetailsDrawer();
   const { data, setFilters, setSort } = useFilteredSortedData({
@@ -41,14 +38,7 @@ export const PatientObservationsBase = ({
   });
 
   return (
-<<<<<<< HEAD
-    <ScrollableContainer
-      scrollingEnabled={scrollingEnabled}
-      className={className}
-    >
-=======
-    <div className={cx(className)}>
->>>>>>> main
+    <div className={cx(className, "ctw-scrollable-pass-through-height")}>
       <ResourceTableActions
         filterOptions={{
           onChange: setFilters,
@@ -71,8 +61,7 @@ export const PatientObservationsBase = ({
         isLoading={query.isLoading}
         rowActions={rowActions}
         onRowClick={openDrawer}
-        scrollingEnabled={scrollingEnabled}
       />
-    </ScrollableContainer>
+    </div>
   );
 };

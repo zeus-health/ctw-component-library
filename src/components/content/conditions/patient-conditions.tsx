@@ -5,7 +5,6 @@ import {
   useEditConditionForm,
 } from "./helpers/modal-hooks";
 import { PatientConditionsBase } from "./helpers/patient-conditions-base";
-import { ScrollingContainerProps } from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { RowActionsProps } from "@/components/core/table/table";
 import { usePatientConditions } from "@/fhir/conditions";
@@ -15,13 +14,11 @@ import { useBaseTranslations } from "@/i18n";
 export type PatientConditionsProps = {
   className?: cx.Argument;
   readOnly?: boolean;
-} & ScrollingContainerProps;
+};
 
 const PatientConditionsComponent = ({
   className,
   readOnly = false,
-  height,
-  scrollingEnabled = false,
 }: PatientConditionsProps) => {
   const query = usePatientConditions();
   const showAddConditionForm = useAddConditionForm();
@@ -41,11 +38,9 @@ const PatientConditionsComponent = ({
     <PatientConditionsBase
       action={action}
       className={cx(className)}
-      height={height}
       query={query}
       readOnly={readOnly}
       rowActions={readOnly ? undefined : RowActions}
-      scrollingEnabled={scrollingEnabled}
     />
   );
 };

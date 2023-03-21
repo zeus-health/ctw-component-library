@@ -1,5 +1,5 @@
+import cx from "classnames";
 import { useRef } from "react";
-import { ScrollableContainer } from "@/components/core/ctw-box";
 import { Table, TableProps } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
@@ -12,7 +12,6 @@ export type ResourceTableProps<T extends MinRecordItem> = {
   isLoading: boolean;
   onRowClick?: TableProps<T>["handleRowClick"];
   rowActions?: TableProps<T>["RowActions"];
-  scrollingEnabled?: boolean;
 };
 
 export const ResourceTable = <T extends MinRecordItem>({
@@ -23,19 +22,16 @@ export const ResourceTable = <T extends MinRecordItem>({
   isLoading,
   onRowClick,
   rowActions,
-  scrollingEnabled = false,
 }: ResourceTableProps<T>) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
 
   return (
-    <ScrollableContainer
-      scrollingEnabled={scrollingEnabled}
-      className={className}
+    <div
       ref={containerRef}
+      className={cx(className, "ctw-scrollable-pass-through-height")}
     >
       <Table
-        scrollingEnabled={scrollingEnabled}
         showTableHead={!breakpoints.sm}
         stacked={breakpoints.sm}
         emptyMessage={emptyMessage}
@@ -45,6 +41,6 @@ export const ResourceTable = <T extends MinRecordItem>({
         columns={columns}
         handleRowClick={onRowClick}
       />
-    </ScrollableContainer>
+    </div>
   );
 };

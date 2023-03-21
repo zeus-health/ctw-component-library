@@ -5,11 +5,9 @@ import { usePatientDiagnosticReports } from "@/fhir/diagnostic-report";
 
 export type PatientObservationsProps = {
   className?: cx.Argument;
-} & ScrollingContainerProps;
+};
 
-const Component = ({
-  className,
-}: PatientObservationsProps) => {
+const Component = ({ className }: PatientObservationsProps) => {
   const diagnosticReports = usePatientDiagnosticReports();
 
   return (

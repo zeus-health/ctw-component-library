@@ -1,10 +1,7 @@
+import cx from "classnames";
 import { useRef } from "react";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { patientAllergiesColumns } from "@/components/content/allergies/patient-allergies-column";
-import {
-  ScrollableContainer,
-  ScrollingContainerProps,
-} from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Table } from "@/components/core/table/table";
 import { usePatientAllergies } from "@/fhir/allergies";
@@ -14,13 +11,11 @@ import { useBreakpoints } from "@/hooks/use-breakpoints";
 export type PatientAllergiesProps = {
   className?: string;
   enableFqs?: boolean;
-} & ScrollingContainerProps;
+};
 
 function PatientAllergiesComponent({
   className,
   enableFqs,
-  height,
-  scrollingEnabled = false,
 }: PatientAllergiesProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
@@ -33,30 +28,23 @@ function PatientAllergiesComponent({
   // Get our allergies.
   const allergies = patientAllergiesQuery.data ?? [];
   const { isLoading } = patientAllergiesQuery;
-  const isScrollingEnabled = !!(scrollingEnabled || height);
 
   return (
-    <ScrollableContainer
-      height={height}
-      scrollingEnabled={scrollingEnabled}
-      className={className}
+    <div
+      className={cx(className, "ctw-scrollable-pass-through-height")}
       ref={containerRef}
       data-zus-telemetry-namespace="Allergies"
     >
-      <ScrollableContainer
-        className="ctw-overflow-hidden"
-        scrollingEnabled={isScrollingEnabled}
-      >
+      <div className="ctw-scrollable-pass-through-height">
         <Table
           stacked={breakpoints.sm}
           isLoading={isLoading}
           records={allergies}
           columns={patientAllergiesColumns}
           handleRowClick={openDetails}
-          scrollingEnabled={isScrollingEnabled}
         />
-      </ScrollableContainer>
-    </ScrollableContainer>
+      </div>
+    </div>
   );
 }
 

@@ -3,10 +3,6 @@ import { useRef } from "react";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { patientImmunizationsColumns } from "./patient-immunizations-columns";
 import { CodingList } from "@/components/core/coding-list";
-import {
-  ScrollableContainer,
-  ScrollingContainerProps,
-} from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { Table } from "@/components/core/table/table";
@@ -17,7 +13,7 @@ import { useBreakpoints } from "@/hooks/use-breakpoints";
 
 export type PatientImmunizationsProps = {
   className?: string;
-} & ScrollingContainerProps;
+};
 
 const viewRecordFHIR = ({ record }: { record: ImmunizationModel }) => (
   <ViewFHIR name="Immunization Resource" resource={record.resource} />
@@ -25,8 +21,6 @@ const viewRecordFHIR = ({ record }: { record: ImmunizationModel }) => (
 
 function PatientImmunizationsComponent({
   className,
-  height,
-  scrollingEnabled = false,
 }: PatientImmunizationsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
@@ -36,36 +30,30 @@ function PatientImmunizationsComponent({
     header: (m) => m.description,
     details: immunizationData,
   });
-  const isScrollingEnabled = !!(height || scrollingEnabled);
 
   return (
-    <ScrollableContainer
-      height={height}
-      scrollingEnabled={scrollingEnabled}
+    <div
       ref={containerRef}
       data-zus-telemetry-namespace="Immunizations"
-      className={cx("ctw-patient-immunizations ctw-bg-white", className, {
-        "ctw-stacked": breakpoints.sm,
-      })}
+      className={cx(
+        "ctw-patient-immunizations ctw-scrollable-pass-through-height ctw-bg-white",
+        className,
+        {
+          "ctw-stacked": breakpoints.sm,
+        }
+      )}
     >
-      <ScrollableContainer
-        className="ctw-overflow-hidden"
-        height={height}
-        scrollingEnabled={isScrollingEnabled}
-      >
-        <Table
-          RowActions={
-            featureFlags?.enableViewFhirButton ? viewRecordFHIR : undefined
-          }
-          stacked={breakpoints.sm}
-          isLoading={patientImmunizationsQuery.isLoading}
-          records={patientImmunizationsQuery.data ?? []}
-          columns={patientImmunizationsColumns}
-          handleRowClick={openDetails}
-          scrollingEnabled={isScrollingEnabled}
-        />
-      </ScrollableContainer>
-    </ScrollableContainer>
+      <Table
+        RowActions={
+          featureFlags?.enableViewFhirButton ? viewRecordFHIR : undefined
+        }
+        stacked={breakpoints.sm}
+        isLoading={patientImmunizationsQuery.isLoading}
+        records={patientImmunizationsQuery.data ?? []}
+        columns={patientImmunizationsColumns}
+        handleRowClick={openDetails}
+      />
+    </div>
   );
 }
 

@@ -1,6 +1,6 @@
 import type { MedicationStatementModel } from "@/fhir/models/medication-statement";
+import cx from "classnames";
 import { ReactNode, useRef } from "react";
-import { ScrollableContainer } from "@/components/core/ctw-box";
 import { Table, TableBaseProps } from "@/components/core/table/table";
 import {
   MinRecordItem,
@@ -15,7 +15,7 @@ export type MedsHistoryTempProps = Partial<{
 
 export type MedicationsTableBaseProps<T extends MinRecordItem> = {
   children?: ReactNode;
-  className?: string;
+  className?: cx.Argument;
   emptyMessage?: string;
   hideMenu?: boolean;
   medicationStatements: MedicationStatementModel[];
@@ -29,7 +29,6 @@ export const MedicationsTableBase = ({
   hideMenu = false,
   medicationStatements,
   telemetryNamespace,
-  scrollingEnabled = false,
   ...tableProps
 }: MedicationsTableBaseProps<MedicationStatementModel>) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -105,9 +104,8 @@ export const MedicationsTableBase = ({
   ] as TableColumn<MedicationStatementModel>[];
 
   return (
-    <ScrollableContainer
-      scrollingEnabled={scrollingEnabled}
-      className={className}
+    <div
+      className={cx(className, "ctw-scrollable-pass-through-height")}
       ref={containerRef}
       data-zus-telemetry-namespace={telemetryNamespace}
     >
@@ -117,10 +115,9 @@ export const MedicationsTableBase = ({
         records={medicationStatements}
         columns={breakpoints.sm ? columnsStacked : columns}
         emptyMessage={emptyMessage}
-        scrollingEnabled={scrollingEnabled}
         {...tableProps}
       />
       {children}
-    </ScrollableContainer>
+    </div>
   );
 };

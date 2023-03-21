@@ -1,7 +1,6 @@
 import { Tab } from "@headlessui/react";
 import cx from "classnames";
 import { ReactNode, useRef, useState } from "react";
-import { ScrollableContainer } from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { ListBox } from "@/components/core/list-box/list-box";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
@@ -13,7 +12,6 @@ export type TabGroupProps = {
   content: TabGroupItem[];
   forceHorizontalTabs?: boolean;
   onChange?: (index: number) => void; // optional event
-  scrollingEnabled?: boolean;
 };
 
 export type TabGroupItem = {
@@ -35,7 +33,6 @@ function TabGroupComponent({
   forceHorizontalTabs = false,
   content,
   onChange,
-  scrollingEnabled = false,
 }: TabGroupProps) {
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -54,10 +51,12 @@ function TabGroupComponent({
   };
 
   return (
-    <ScrollableContainer
-      scrollingEnabled={scrollingEnabled}
+    <div
       ref={containerRef}
-      className={cx(className, "ctw-tab-group ctw-relative ctw-w-full")}
+      className={cx(
+        className,
+        "ctw-tab-group ctw-scrollable-pass-through-height ctw-w-full"
+      )}
     >
       <Tab.Group selectedIndex={selectedTabIndex} onChange={handleOnChange}>
         {isVertical && (
@@ -103,16 +102,12 @@ function TabGroupComponent({
         {children}
 
         {/* Renders body of each tab using "render()" */}
-        <Tab.Panels
-          className={cx({ "ctw-scrollable-container": scrollingEnabled })}
-        >
+        <Tab.Panels className="ctw-scrollable-pass-through-height">
           {content.map((item, index) => (
             <Tab.Panel
               key={item.key}
               className={cx(
-                {
-                  "ctw-scrollable-container": scrollingEnabled,
-                },
+                "ctw-scrollable-pass-through-height",
                 item.getPanelClassName?.(breakpoints.sm)
               )}
               // Don't unmount our tabs. This fixes an issue
@@ -125,7 +120,7 @@ function TabGroupComponent({
           ))}
         </Tab.Panels>
       </Tab.Group>
-    </ScrollableContainer>
+    </div>
   );
 }
 

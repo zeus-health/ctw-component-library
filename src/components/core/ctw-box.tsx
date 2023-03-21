@@ -1,13 +1,5 @@
 import cx from "classnames";
-import {
-  DetailedHTMLProps,
-  forwardRef,
-  HTMLAttributes,
-  PropsWithChildren,
-  ReactElement,
-  ReactNode,
-  useRef,
-} from "react";
+import { ReactElement, ReactNode, useRef } from "react";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 
 type ContainerProps = {
@@ -25,21 +17,6 @@ type TitleContainerProps = ContainerProps & {
 };
 
 type HeadingContainerProps = TitleContainerProps;
-
-export type ScrollingContainerProps = {
-  height?: string;
-  scrollingEnabled?: boolean;
-};
-
-type DivProps = PropsWithChildren<
-  DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>
->;
-
-type ContainerScrollablePatternProps = ScrollingContainerProps &
-  DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> &
-  DivProps;
-
-type ScrollableContentProps = DivProps;
 
 export function Wrapper({ className, children }: ContainerProps) {
   return <div className={cx("ctw-container", className)}>{children}</div>;
@@ -97,62 +74,3 @@ export function Body({
     </div>
   );
 }
-
-export const Box = forwardRef<HTMLDivElement, DivProps>(
-  ({ children, ...props }, ref) => (
-    <div {...props} ref={ref}>
-      {children}
-    </div>
-  )
-);
-
-/**
- * This container will allow for a (deeply) nested element to have scrollbars
- * while still controlling the height of the overall component. For example below
- * we set the height on the top-level component and our ScrollableContent
- * will fill to the remaining height of the element after taking into
- * consideration the height of all the other content in ScrollableContainers.
- * ```tsx
- * <ScrollableContainer height="30rem">
- *   <ScrollableContainer>
- *     <ScrollableContainer>
- *       <h1>Some title</h1>
- *       <img src="./100px-tall-image.src" />
- *     </ScrollableContainer>
- *     <ScrollableContent>
- *       {..tons of content...}
- *     </ScrollableContent>
- *   </ScrollableContainer>
- * </ScrollableContainer>
- * ```
- */
-export const ScrollableContainer = forwardRef<
-  HTMLDivElement,
-  ContainerScrollablePatternProps
->(({ children, className, scrollingEnabled = true, height, ...props }, ref) => {
-  const isScrollablePattern = !!(scrollingEnabled || height);
-  const style = height && isScrollablePattern ? { height } : {};
-  const scrollableClassName = height
-    ? "ctw-relative"
-    : "ctw-scrollable-container";
-
-  return (
-    <Box
-      {...props}
-      ref={ref}
-      style={style}
-      className={cx(className, { [scrollableClassName]: isScrollablePattern })}
-    >
-      {children}
-    </Box>
-  );
-});
-
-export const ScrollableContent = forwardRef<
-  HTMLDivElement,
-  ScrollableContentProps
->(({ children, className, ...props }, ref) => (
-  <div ref={ref} {...props} className={cx(className, "ctw-scrollable-content")}>
-    {children}
-  </div>
-));

@@ -9,10 +9,6 @@ import { TableHead } from "./table-head";
 import { MinRecordItem, TableColumn } from "./table-helpers";
 import { TableRows, TableRowsProps } from "./table-rows";
 import "./table.scss";
-import {
-  ScrollableContainer,
-  ScrollableContent,
-} from "@/components/core/ctw-box";
 
 export type RowActionsProps<T extends MinRecordItem> = { record: T };
 
@@ -25,7 +21,6 @@ export type TableProps<T extends MinRecordItem> = {
   hidePagination?: boolean;
   isLoading?: boolean;
   records: T[];
-  scrollingEnabled?: boolean;
   showTableHead?: boolean;
   stacked?: boolean;
   pageSize?: number;
@@ -52,7 +47,6 @@ export const Table = <T extends MinRecordItem>({
   RowActions,
   getRowClassName,
   hidePagination = false,
-  scrollingEnabled = false,
   pageSize = DEFAULT_PAGE_SIZE,
   children,
 }: TableProps<T>) => {
@@ -91,25 +85,25 @@ export const Table = <T extends MinRecordItem>({
   const hasData = !isLoading && records.length > 0;
 
   return (
-    <ScrollableContainer
+    <div
       data-zus-telemetry-namespace="Table"
-      scrollingEnabled={scrollingEnabled}
-      className={cx("ctw-space-y-4", {
+      className={cx("ctw-scrollable-pass-through-height ctw-space-y-4", {
         "ctw-table-stacked": stacked,
       })}
     >
-      <ScrollableContainer
-        scrollingEnabled={scrollingEnabled}
-        className={cx("ctw-table-container", className, {
-          "ctw-table-scroll-left-shadow": showLeftShadow,
-          "ctw-table-scroll-right-shadow": showRightShadow,
-        })}
+      <div
+        className={cx(
+          "ctw-table-container ctw-scrollable-pass-through-height",
+          className,
+          {
+            "ctw-table-scroll-left-shadow": showLeftShadow,
+            "ctw-table-scroll-right-shadow": showRightShadow,
+          }
+        )}
       >
-        <ScrollableContainer scrollingEnabled={scrollingEnabled}>
-          <ScrollableContent
-            className={cx({
-              "ctw-scrollbar": scrollingEnabled,
-            })}
+        <div className="ctw-scrollable-pass-through-height">
+          <div
+            className={cx("ctw-scrollbar ctw-scrollable-content")}
             ref={scrollContainerRef}
           >
             <table ref={tableRef}>
@@ -127,8 +121,8 @@ export const Table = <T extends MinRecordItem>({
                 />
               </tbody>
             </table>
-          </ScrollableContent>
-        </ScrollableContainer>
+          </div>
+        </div>
         {!hidePagination && !isLoading && (
           <PaginationList
             total={records.length}
@@ -136,8 +130,8 @@ export const Table = <T extends MinRecordItem>({
             changeCount={setCount}
           />
         )}
-      </ScrollableContainer>
+      </div>
       {children}
-    </ScrollableContainer>
+    </div>
   );
 };

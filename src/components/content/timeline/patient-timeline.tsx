@@ -2,10 +2,6 @@ import cx from "classnames";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { patientTimelineColumns } from "./patient-timeline-columns";
 import { CodingList } from "@/components/core/coding-list";
-import {
-  ScrollableContainer,
-  ScrollingContainerProps,
-} from "@/components/core/ctw-box";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { Table } from "@/components/core/table/table";
 import { usePatientEncounters } from "@/fhir/encounters";
@@ -14,13 +10,9 @@ import { capitalize, orderBy } from "@/utils/nodash";
 
 export type PatientTimelineProps = {
   className?: cx.Argument;
-} & ScrollingContainerProps;
+};
 
-export function PatientTimeline({
-  className,
-  height,
-  scrollingEnabled = false,
-}: PatientTimelineProps) {
+export function PatientTimeline({ className }: PatientTimelineProps) {
   const patientEncounterQuery = usePatientEncounters();
   const { featureFlags } = useCTW();
   const openDetails = useResourceDetailsDrawer({
@@ -37,19 +29,14 @@ export function PatientTimeline({
   );
 
   return (
-    <ScrollableContainer
-      className={cx(className, "ctw-overflow-hidden")}
-      height={height}
-      scrollingEnabled={scrollingEnabled}
-    >
+    <div className={cx(className, "ctw-overflow-hidden")}>
       <Table
         isLoading={patientEncounterQuery.isLoading}
         records={encounters}
         columns={patientTimelineColumns(featureFlags?.enableViewFhirButton)}
         handleRowClick={openDetails}
-        scrollingEnabled={!!(height || scrollingEnabled)}
       />
-    </ScrollableContainer>
+    </div>
   );
 }
 

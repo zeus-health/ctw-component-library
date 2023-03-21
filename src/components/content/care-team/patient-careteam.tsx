@@ -2,10 +2,6 @@ import cx from "classnames";
 import React, { useRef } from "react";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { patientCareTeamColumns } from "./patient-careteam-columns";
-import {
-  ScrollableContainer,
-  ScrollingContainerProps,
-} from "@/components/core/ctw-box";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { Table } from "@/components/core/table/table";
 import { usePatientCareTeam } from "@/fhir/care-team";
@@ -14,7 +10,7 @@ import { useBreakpoints } from "@/hooks/use-breakpoints";
 
 export type PatientCareTeamProps = {
   className?: string;
-} & ScrollingContainerProps;
+};
 
 export type CareTeamDetailsDrawerProps = {
   className?: string;
@@ -23,11 +19,7 @@ export type CareTeamDetailsDrawerProps = {
   onClose: () => void;
 };
 
-export function PatientCareTeam({
-  className,
-  scrollingEnabled = false,
-  height,
-}: PatientCareTeamProps) {
+export function PatientCareTeam({ className }: PatientCareTeamProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const { featureFlags } = useCTW();
@@ -40,12 +32,10 @@ export function PatientCareTeam({
   });
 
   return (
-    <ScrollableContainer
-      height={height}
-      scrollingEnabled={scrollingEnabled}
+    <div
       ref={containerRef}
       className={cx(
-        "ctw-border ctw-border-solid ctw-border-divider-light ctw-bg-white",
+        "ctw-scrollable-pass-through-height ctw-border ctw-border-solid ctw-border-divider-light ctw-bg-white",
         className,
         {
           "ctw-stacked": breakpoints.sm,
@@ -58,9 +48,8 @@ export function PatientCareTeam({
         records={patientCareTeamQuery.data ?? []}
         columns={patientCareTeamColumns(featureFlags?.enableViewFhirButton)}
         handleRowClick={openDetails}
-        scrollingEnabled={scrollingEnabled || !!height}
       />
-    </ScrollableContainer>
+    </div>
   );
 }
 
