@@ -5,7 +5,7 @@ type ConditionHeaderProp = {
 };
 
 export const ConditionHeader = ({ condition }: ConditionHeaderProp) => (
-  <div className="ctw-py-2">
+  <div>
     <div className="ctw-text-2xl">
       {condition.display} ({condition.preferredCoding?.code})
     </div>

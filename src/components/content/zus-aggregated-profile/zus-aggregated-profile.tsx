@@ -37,9 +37,9 @@ export type ZusAggregatedProfileProps = {
   title?: string;
   hideTitle?: boolean;
   removeBranding?: boolean;
-} & SubComponentProps;
+} & ZusAggregatedProfileSubComponentProps;
 
-type SubComponentProps = Partial<{
+export type ZusAggregatedProfileSubComponentProps = Partial<{
   allergiesProps: PatientAllergiesProps;
   careTeamProps: PatientCareTeamProps;
   conditionsProps: PatientConditionsProps;
@@ -67,8 +67,8 @@ const zusAggregatedProfile = ({
   observationsOutsideProps,
   timelineProps,
   resources,
-  title = "Outside Records",
   hideTitle = false,
+  title = "Outside Records",
   removeBranding = false,
 }: ZusAggregatedProfileProps) => {
   // Get the configuration for each tab group by resource type
@@ -92,7 +92,7 @@ const zusAggregatedProfile = ({
   });
 
   return (
-    <div className="ctw-zus-aggregated-profile">
+    <div className="ctw-zus-aggregated-profile ctw-scrollable-pass-through-height">
       {!hideTitle && (
         <Title className="ctw-border-b-2 ctw-border-r-0 ctw-border-l-0 ctw-border-t-0 ctw-border-solid ctw-border-divider-light">
           <h3 className="ctw-m-0 ctw-inline-block ctw-p-0 ctw-pb-3 ctw-text-lg ctw-font-medium">
@@ -136,9 +136,17 @@ const zusAggregatedProfile = ({
  * />
  * ```
  * The complete set of available resources in the ZusAggregatedProfile are
- * "allergies", "care-team", "conditions", "documents", "conditions-outside",
- * "immunizations", "medications", "medications-outside", "observations",
- * "observations-outside" and "timelines".
+ * "allergies",
+ * "care-team",
+ * "conditions",
+ * "conditions-outside",
+ * "documents",
+ * "immunizations",
+ * "medications",
+ * "medications-outside",
+ * "observations",
+ * "observations-outside",
+ * "timelines".
  */
 export const ZusAggregatedProfile = withErrorBoundary(
   zusAggregatedProfile,

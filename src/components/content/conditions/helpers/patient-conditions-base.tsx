@@ -1,3 +1,4 @@
+import cx from "classnames";
 import { useConditionHistory } from "../../condition-history/conditions-history-drawer";
 import {
   ResourceTable,
@@ -39,7 +40,7 @@ export const PatientConditionsBase = ({
   });
 
   return (
-    <div className={className}>
+    <div className={cx(className, "ctw-scrollable-pass-through-height")}>
       <ResourceTableActions
         filterOptions={{
           onChange: setFilters,
@@ -53,7 +54,6 @@ export const PatientConditionsBase = ({
         }}
         action={action}
       />
-
       <ResourceTable
         className="ctw-patient-conditions"
         columns={patientConditionsColumns}

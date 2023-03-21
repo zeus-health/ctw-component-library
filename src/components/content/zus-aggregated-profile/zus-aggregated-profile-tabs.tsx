@@ -18,9 +18,9 @@ import {
 } from "../observations/patient-observations";
 import {
   PatientObservationsOutside,
-  PatientObservationsOutsideBadge,
   PatientObservationsOutsideProps,
 } from "../observations/patient-observations-outside";
+import { PatientObservationsOutsideBadge } from "../observations/patient-observations-outside-badge";
 import {
   PatientAllergies,
   PatientAllergiesProps,

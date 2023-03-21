@@ -32,7 +32,13 @@ export const ResourceTable = <
   const breakpoints = useBreakpoints(containerRef);
 
   return (
-    <div className={cx(className, "ctw-resource-table")} ref={containerRef}>
+    <div
+      ref={containerRef}
+      className={cx(
+        className,
+        "ctw-scrollable-pass-through-height ctw-resource-table"
+      )}
+    >
       <Table
         getRowClassName={(record) => ({
           "ctw-tr-archived": record.isArchived,
