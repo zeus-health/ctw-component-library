@@ -102,15 +102,15 @@
     overflow: auto;
     /* Need to keep min-height for Firefox */
     min-height: 0;
+  }
 
-    /* all ascendants of "ctw-scrollable-content" (without explicit height) need .ctw-scrollable-pass-through-height */
-    .ctw-scrollable-pass-through-height {
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-      /* Need to keep min-height for Firefox */
-      min-height: 0;
-    }
+  /* all ascendants of "ctw-scrollable-content" (without explicit height) need .ctw-scrollable-pass-through-height */
+  .ctw-scrollable-pass-through-height {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    /* Need to keep min-height for Firefox */
+    min-height: 0;
   }
 
   .ctw-stacked {

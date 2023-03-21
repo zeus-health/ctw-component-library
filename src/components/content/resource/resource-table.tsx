@@ -1,5 +1,5 @@
 import cx from "classnames";
-import { useRef } from "react";
+import { ReactElement, useRef } from "react";
 import { Table, TableProps } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
 import { FHIRModel } from "@/fhir/models/fhir-model";
@@ -10,7 +10,7 @@ export type ResourceTableProps<T extends MinRecordItem> = {
   className?: string;
   columns: TableProps<T>["columns"];
   data: T[];
-  emptyMessage?: string;
+  emptyMessage?: string | ReactElement;
   isLoading: boolean;
   onRowClick?: TableProps<T>["handleRowClick"];
   rowActions?: TableProps<T>["RowActions"];

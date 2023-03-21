@@ -14,6 +14,7 @@ export * from "@/components/content/observations/patient-observations-outside";
 export * from "@/components/content/observations/patient-observations-outside-badge";
 export * from "@/components/content/observations/patient-observations-profile";
 export * from "@/components/content/patient-history/use-patient-history";
+export * from "@/components/content/patient-history/patient-history-last-retrieved";
 export * from "@/components/content/patients/patients-table";
 export * from "@/components/content/patients/patients-search";
 export * from "@/components/content/timeline/patient-timeline";

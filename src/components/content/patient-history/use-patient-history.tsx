@@ -8,6 +8,7 @@ import {
   usePatientPromise,
   useQueryWithPatient,
 } from "@/components/core/providers/patient-provider";
+import { formatISODateStringToDate } from "@/fhir/formatters";
 import { PatientRefreshHistoryMessage } from "@/services/patient-history/patient-history-types";
 import { errorResponse } from "@/utils/errors";
 import { find } from "@/utils/nodash";
@@ -71,9 +72,12 @@ export function usePatientHistory() {
         ),
       });
     },
-    lastRetrievedAt: patientHistoryDetails?.lastRetrievedAt,
+    lastRetrievedAt: formatISODateStringToDate(
+      patientHistoryDetails?.lastRetrievedAt
+    ),
     lastStatus: patientHistoryDetails?.status,
     dateCreatedAt: patientHistoryDetails?.dateCreated,
+    isLoading: patientHistoryInformation.isLoading,
   };
 }
 
@@ -106,7 +110,7 @@ async function getPatientRefreshHistoryMessages(
   }
 }
 
-function usePatientHistoryDetails() {
+export function usePatientHistoryDetails() {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_HISTORY_DETAILS,
     [],
