@@ -1,5 +1,14 @@
 # ctw-component-library
 
+## 0.50.4
+
+### Patch Changes
+
+- e8455bcd: Add PatientObservations component (POC)
+- 6f9aaf18: Added .ctw-scrollable-pass-through-height and .ctw-scrollable-content classes.
+  Added scrolling to all current components used in ZusAggregatedProfile.
+- e8455bcd: Cleanup refactor of Observations POC
+
 ## 0.50.3
 
 ### Patch Changes
