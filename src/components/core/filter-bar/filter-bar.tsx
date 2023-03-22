@@ -168,30 +168,35 @@ export const FilterBar = ({
 
   const activeFiltersWithToggle = activeFilters.filter((f) => f.toggleDisplay);
 
-  const [aboveTheFold, belowTheFold] = partition(
-    (filter) => !filter.belowTheFold,
+  const [aboveDivider, belowDivider] = partition(
+    (filter) => !filter.belowDivider,
     [...inactiveFilters, ...activeFiltersWithToggle]
   );
 
   if (!isEmptyValue(initialState)) {
-    belowTheFold.push({
+    belowDivider.push({
       display: "reset filters",
       icon: faRefresh,
       key: "_reset",
       type: "tag",
     });
   }
-  belowTheFold.push({
+  belowDivider.push({
     display: "remove all filters",
     icon: faTrash,
     key: "_remove",
     type: "tag",
   });
 
+  // Add a divider only if there are both items above
+  // and below the divider.
+  const maybeDivider: { divider: true }[] =
+    aboveDivider.length && belowDivider.length ? [{ divider: true }] : [];
+
   const menuItems: MinListBoxItem[] = [
-    ...aboveTheFold.map(toFilterMenuItem),
-    { divider: true },
-    ...belowTheFold.map(toFilterMenuItem),
+    ...aboveDivider.map(toFilterMenuItem),
+    ...maybeDivider,
+    ...belowDivider.map(toFilterMenuItem),
   ];
 
   return (

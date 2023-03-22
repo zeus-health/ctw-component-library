@@ -4,7 +4,7 @@ import { FilterItem } from "@/components/core/filter-bar/filter-bar-types";
 export const dismissFilter: FilterItem = {
   key: "isArchived",
   type: "tag",
-  belowTheFold: true,
+  belowDivider: true,
   display: ({ listView }) =>
     listView ? "show dismissed records" : "dismissed records",
   icon: faEye,

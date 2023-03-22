@@ -11,7 +11,7 @@ export type FilterBarProps = {
 };
 
 type MinFilterItem = {
-  belowTheFold?: boolean; // should the filter be below divider in main menu?
+  belowDivider?: boolean; // Should the filter be below divider in main menu?
   className?: cx.Argument;
   display: string | ((status: ListBoxOptionStatus) => ReactNode | string);
   icon?: IconDefinition;
