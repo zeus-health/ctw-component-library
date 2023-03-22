@@ -24,6 +24,7 @@ export function conditionFilters(
     filters.push({
       key: "isArchived",
       type: "tag",
+      belowTheFold: true,
       icon: faEye,
       display: ({ listView }) =>
         listView ? "show dismissed records" : "dismissed records",
