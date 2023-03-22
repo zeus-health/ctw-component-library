@@ -8,3 +8,4 @@
 5. Side Panel
 6. Create Mock storybook data
 7. Storybook Tests
+8. subType function for MedicationRequest and Dispense models to get medication name.

@@ -1,10 +1,17 @@
 import type { FhirResource, MedicationStatement } from "fhir/r4";
 import { useEffect, useState } from "react";
-import { bundleToResourceMap, getMergedIncludedResources } from "./bundle";
+import {
+  bundleToResourceMap,
+  getIncludedResources,
+  getMergedIncludedResources,
+} from "./bundle";
 import { getIdentifyingRxNormCode } from "./medication";
+import { MedicationDispenseModel } from "./models";
+import { MedicationRequestModel } from "./models/medication-request";
 import {
   searchAllRecords,
   searchBuilderRecords,
+  searchCommonRecords,
   searchLensRecords,
   SearchReturn,
 } from "./search-helpers";
@@ -119,6 +126,56 @@ export async function getBuilderMedications(
     );
 
     return { bundle: response.bundle, medications };
+  } catch (e) {
+    throw errorResponse("Failed fetching medications for patient", e);
+  }
+}
+
+export async function getMedicationRequestCommon(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  keys: object[] = []
+) {
+  const [searchFilters = {}] = keys;
+
+  try {
+    const { bundle, resources } = await searchCommonRecords(
+      "MedicationRequest",
+      requestContext,
+      {
+        patientUPID: patient.UPID,
+        ...omitClientFilters(searchFilters),
+      }
+    );
+
+    return resources.map(
+      (r) => new MedicationRequestModel(r, getIncludedResources(bundle))
+    );
+  } catch (e) {
+    throw errorResponse("Failed fetching medications for patient", e);
+  }
+}
+
+export async function getMedicationDispnseCommon(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  keys: object[] = []
+) {
+  const [searchFilters = {}] = keys;
+
+  try {
+    const { bundle, resources } = await searchCommonRecords(
+      "MedicationDispense",
+      requestContext,
+      {
+        patientUPID: patient.UPID,
+        ...omitClientFilters(searchFilters),
+      }
+    );
+
+    return resources.map(
+      (r) => new MedicationDispenseModel(r, getIncludedResources(bundle))
+    );
   } catch (e) {
     throw errorResponse("Failed fetching medications for patient", e);
   }

@@ -4,6 +4,7 @@ export { default as chunk } from "lodash/chunk";
 export { default as clone } from "lodash/clone";
 export { default as cloneDeep } from "lodash/cloneDeep";
 export { default as compact } from "lodash/compact";
+export { default as concat } from "lodash/concat";
 export { default as curry } from "lodash/curry";
 export { default as debounce } from "lodash/debounce";
 export { default as escapeRegExp } from "lodash/escapeRegExp";

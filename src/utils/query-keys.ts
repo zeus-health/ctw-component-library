@@ -10,6 +10,10 @@ export const QUERY_KEY_OTHER_PROVIDER_MEDICATIONS =
   "other_provider_medications";
 export const QUERY_KEY_PATIENT = "patient";
 export const QUERY_KEY_PATIENT_ALLERGIES = "patient_allergies";
+export const QUERY_KEY_PATIENT_MEDICATION_REQUESTS_COMMON =
+  "patient_medication_requests_common";
+export const QUERY_KEY_PATIENT_MEDICATION_DISPENSE_COMMON =
+  "patient_medication_dispense_common";
 export const QUERY_KEY_PATIENT_BUILDER_MEDICATIONS =
   "patient_builder_medications";
 export const QUERY_KEY_PATIENT_CONDITIONS = "patient_conditions";

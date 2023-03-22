@@ -5,6 +5,8 @@ import { getIncludedBasics, getMergedIncludedResources } from "@/fhir/bundle";
 import {
   getActiveMedications,
   getBuilderMedications,
+  getMedicationDispnseCommon,
+  getMedicationRequestCommon,
   MedicationResults,
   splitMedications,
 } from "@/fhir/medications";
@@ -12,6 +14,7 @@ import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import {
   QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
   QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
+  QUERY_KEY_PATIENT_MEDICATION_REQUESTS_COMMON,
 } from "@/utils/query-keys";
 import { withTimerMetric } from "@/utils/telemetry";
 
@@ -43,6 +46,38 @@ export function useQueryGetSummarizedPatientMedications(): UseQueryResult<
       },
     ],
     withTimerMetric(getActiveMedications, "req.active_medications")
+  );
+}
+
+// Gets patient medications for the builder, excluding meds where the information source is patient.
+export function useQueryGetPatientMedRequestsCommon() {
+  return useQueryWithPatient(
+    QUERY_KEY_PATIENT_MEDICATION_REQUESTS_COMMON,
+    [
+      {
+        informationSourceNot: "Patient", // exclude medication statements where the patient is the information source
+      },
+    ],
+    withTimerMetric(
+      getMedicationRequestCommon,
+      "req.medication_requests_common"
+    )
+  );
+}
+
+// Gets patient medications for the builder, excluding meds where the information source is patient.
+export function useQueryGetPatientMedDispenseCommon() {
+  return useQueryWithPatient(
+    QUERY_KEY_PATIENT_MEDICATION_REQUESTS_COMMON,
+    [
+      {
+        informationSourceNot: "Patient", // exclude medication statements where the patient is the information source
+      },
+    ],
+    withTimerMetric(
+      getMedicationDispnseCommon,
+      "req.medication_dispense_common"
+    )
   );
 }
 
@@ -119,3 +154,72 @@ export function useQueryAllPatientMedications() {
     otherProviderMedications,
   };
 }
+
+// export function useQueryAllPatientMedications() {
+//   const [builderMedications, setBuilderMedications] = useState<
+//     MedicationStatementModel[]
+//   >([]);
+//   const [otherProviderMedications, setOtherProviderMedications] = useState<
+//     MedicationStatementModel[]
+//   >([]);
+
+//   const summarizedMedicationsQuery = useQueryGetSummarizedPatientMedications();
+//   const builderMedicationsQuery = useQueryGetPatientMedsForBuilder();
+
+//   useEffect(() => {
+//     if (
+//       summarizedMedicationsQuery.data?.bundle &&
+//       builderMedicationsQuery.data?.bundle
+//     ) {
+//       const { medications: summarizedMedications, bundle: summarizedBundle } =
+//         summarizedMedicationsQuery.data;
+//       const { medications: allMedicationsForBuilder } =
+//         builderMedicationsQuery.data;
+
+//       const basicsMap = getIncludedBasics(summarizedBundle);
+//       // Get included resources from both bundles so that we can reference them for contained medications.
+//       const includedResources = getMergedIncludedResources([
+//         summarizedMedicationsQuery.data.bundle,
+//         builderMedicationsQuery.data.bundle,
+//       ]);
+
+//       // Split the summarized medications into those known/unknown to the builder
+//       const splitData = splitMedications(
+//         summarizedMedications.map(
+//           (m) =>
+//             new MedicationStatementModel(
+//               m,
+//               includedResources,
+//               basicsMap.get(m.id ?? "")
+//             )
+//         ),
+//         allMedicationsForBuilder.map(
+//           (m) =>
+//             new MedicationStatementModel(
+//               m,
+//               includedResources,
+//               basicsMap.get(m.id ?? "")
+//             )
+//         )
+//       );
+
+//       setBuilderMedications(splitData.builderMedications);
+//       setOtherProviderMedications(splitData.otherProviderMedications);
+//     }
+//   }, [summarizedMedicationsQuery.data, builderMedicationsQuery.data]);
+
+//   const isLoading =
+//     builderMedicationsQuery.isLoading || summarizedMedicationsQuery.isLoading;
+//   const isFetching =
+//     builderMedicationsQuery.isFetching || summarizedMedicationsQuery.isFetching;
+//   const isError =
+//     builderMedicationsQuery.isError || summarizedMedicationsQuery.isError;
+
+//   return {
+//     isFetching,
+//     isLoading,
+//     isError,
+//     builderMedications,
+//     otherProviderMedications,
+//   };
+// }

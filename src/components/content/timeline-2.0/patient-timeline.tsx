@@ -1,32 +1,24 @@
 import cx from "classnames";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { patientTimelineColumns } from "./patient-timeline-columns";
-import { CodingList } from "@/components/core/coding-list";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { Table } from "@/components/core/table/table";
-import { usePatientEncounters } from "@/fhir/encounters";
-import { EncounterModel } from "@/fhir/models/encounter";
-import { capitalize, orderBy } from "@/utils/nodash";
+import { TimelineEventModel } from "@/fhir/models/timeline-event";
+import { useTimelineEvents } from "@/fhir/timeline-event";
 
 export type PatientTimelineProps = {
   className?: cx.Argument;
 };
 
-export function PatientTimelinV2({ className }: PatientTimelineProps) {
-  const patientEncounterQuery = usePatientEncounters();
+export function PatientTimelineV2({ className }: PatientTimelineProps) {
+  const timelineEventsQuery = useTimelineEvents();
   const { featureFlags } = useCTW();
   const openDetails = useResourceDetailsDrawer({
-    header: (m) => `${m.periodStart} - ${m.periodEnd}`,
-    subHeader: (m) => m.typeDisplay,
-    getSourceDocument: true,
-    details: encounterData,
-  });
+    header: (m) => `${m.eventDate}`,
 
-  const encounters = orderBy(
-    patientEncounterQuery.data ?? [],
-    [(encounter) => encounter.resource.period?.start ?? ""],
-    ["desc"]
-  );
+    getSourceDocument: true,
+    details: timelineEventData,
+  });
 
   return (
     <div
@@ -36,29 +28,15 @@ export function PatientTimelinV2({ className }: PatientTimelineProps) {
       )}
     >
       <Table
-        isLoading={patientEncounterQuery.isLoading}
-        records={encounters}
-        columns={patientTimelineColumns(featureFlags?.enableViewFhirButton)}
+        isLoading={timelineEventsQuery.isLoading}
+        records={timelineEventsQuery.data}
+        columns={patientTimelineColumns(true)}
         handleRowClick={openDetails}
       />
     </div>
   );
 }
 
-const encounterData = (encounter: EncounterModel) => [
-  { label: "Period Start", value: encounter.periodStart },
-  { label: "Period End", value: encounter.periodEnd },
-  { label: "Status", value: capitalize(encounter.status) },
-  { label: "Class", value: encounter.class },
-  {
-    label: "Type",
-    value: encounter.typeCodings.length ? (
-      <CodingList codings={encounter.typeCodings} />
-    ) : undefined,
-  },
-  { label: "Location", value: encounter.location },
-  { label: "Participants", value: encounter.participants },
-  { label: "Reason", value: encounter.reason },
-  { label: "Diagnosis", value: encounter.diagnosis },
-  { label: "Discharge Disposition", value: encounter.dischargeDisposition },
+const timelineEventData = (encounter: TimelineEventModel) => [
+  { label: "Event Date", value: encounter.eventDate },
 ];
