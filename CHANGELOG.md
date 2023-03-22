@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.0.0
+
+### Major Changes
+
+- 8f638ef9: Given where we are with maturity and stability we are now ready to release 1.0!
+
 ## 0.51.1
 
 ### Patch Changes
