@@ -1,5 +1,19 @@
 # ctw-component-library
 
+## 0.51.0
+
+### Minor Changes
+
+- 0aeecb51: Refactor medication components. PatientMedications is now PatientMedicationsProfile which will show both the patient record and the outside medication tables.
+
+### Patch Changes
+
+- 0aeecb51: Patient medications now has a "view" selector where you can view "Current", "Past", or "All" medications.
+- 1b819762: Added ctw-scrollable-pass-through-height class to medications component.
+- 0aeecb51: Dismissed conditions will now render faded and still show their original status (e.g. "Active").
+- bd4e3503: Request records now appears in empty table state when patient has never made request to patient history api.
+- 0aeecb51: Medication tables will now show all information when stacked view for responsive/small width.
+
 ## 0.50.4
 
 ### Patch Changes
