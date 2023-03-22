@@ -1,8 +1,8 @@
 import {
   faClipboardCheck,
   faClipboardList,
-  faEye,
 } from "@fortawesome/free-solid-svg-icons";
+import { dismissFilter } from "../../resource/filters";
 import {
   FilterChangeEvent,
   FilterItem,
@@ -21,14 +21,7 @@ export function conditionFilters(
   const filters: FilterItem[] = [];
 
   if (outside) {
-    filters.push({
-      key: "isArchived",
-      type: "tag",
-      belowTheFold: true,
-      icon: faEye,
-      display: ({ listView }) =>
-        listView ? "show dismissed records" : "dismissed records",
-    });
+    filters.push(dismissFilter);
   }
 
   filters.push(

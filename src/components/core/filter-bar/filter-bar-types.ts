@@ -16,6 +16,10 @@ type MinFilterItem = {
   display: string | ((status: ListBoxOptionStatus) => ReactNode | string);
   icon?: IconDefinition;
   key: string;
+  // These allow the filter to still show up in the main filter menu
+  // but with a different display and or icon.
+  toggleDisplay?: string;
+  toggleIcon?: IconDefinition;
 };
 
 export type FilterOptionSelect = {

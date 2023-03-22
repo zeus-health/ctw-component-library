@@ -1,4 +1,5 @@
-import { faEye, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { dismissFilter } from "../../resource/filters";
 import {
   FilterChangeEvent,
   FilterItem,
@@ -14,14 +15,7 @@ export function medicationFilters(
   const filters: FilterItem[] = [];
 
   if (outside) {
-    filters.push({
-      key: "isArchived",
-      type: "tag",
-      belowTheFold: true,
-      icon: faEye,
-      display: ({ listView }) =>
-        listView ? "show dismissed records" : "dismissed records",
-    });
+    filters.push(dismissFilter);
   }
 
   if (prescriberNames.length > 1) {

@@ -64,12 +64,6 @@ export const FilterBar = ({
     filterChangeEventToValuesRecord(defaultState)
   );
 
-  // Split the filters up by which are active (selected) or inactive (main menu)
-  const [activeFilters, inactiveFilters] = partition(
-    ({ key }) => activeFilterKeys.includes(key),
-    filters
-  );
-
   useEffect(() => {
     // Validating that the "_remove" filter is never passed in from parent
     if (filters.some(({ key }) => INTERNAL_KEYS.includes(key))) {
@@ -94,7 +88,9 @@ export const FilterBar = ({
   };
 
   // Add or remove a filter from the activated filters list
-  const addOrRemoveFilter = (key: string, remove = false) => {
+  const toggleFilter = (key: string) => {
+    const remove = activeFilterKeys.includes(key);
+
     if (!remove) {
       setRecentlyAdded(key);
     }
@@ -151,16 +147,30 @@ export const FilterBar = ({
     onChange(filterChangeEvent(filters, activeFilterKeys, activeValues));
   };
 
-  const toFilterMenuItem = (filter: FilterItem): MinListBoxItem => ({
-    display: filter.display,
-    icon: filter.icon,
-    key: filter.key,
-    className: cx("ctw-capitalize", filter.className),
-  });
+  const toFilterMenuItem = (filter: FilterItem): MinListBoxItem => {
+    const isActive = activeFilterKeys.includes(filter.key);
+    return {
+      display:
+        isActive && filter.toggleDisplay
+          ? filter.toggleDisplay
+          : filter.display,
+      icon: isActive && filter.toggleIcon ? filter.toggleIcon : filter.icon,
+      key: filter.key,
+      className: cx("ctw-capitalize", filter.className),
+    };
+  };
+
+  // Split the filters up by which are active (selected) or inactive (main menu)
+  const [activeFilters, inactiveFilters] = partition(
+    ({ key }) => activeFilterKeys.includes(key),
+    filters
+  );
+
+  const activeFiltersWithToggle = activeFilters.filter((f) => f.toggleDisplay);
 
   const [aboveTheFold, belowTheFold] = partition(
     (filter) => !filter.belowTheFold,
-    inactiveFilters
+    [...inactiveFilters, ...activeFiltersWithToggle]
   );
 
   if (!isEmptyValue(initialState)) {
@@ -197,7 +207,7 @@ export const FilterBar = ({
           key={filter.key}
           filter={filter}
           filterValues={activeFilterValues}
-          handleAddOrRemoveFilter={addOrRemoveFilter}
+          onRemove={toggleFilter}
           updateSelectedFilterValues={(valueKey: string, isSelected: boolean) =>
             updateSelectedFilter(filter.key, valueKey, isSelected)
           }
@@ -215,7 +225,7 @@ export const FilterBar = ({
             case "_reset":
               return resetAllFilters();
             default:
-              return addOrRemoveFilter(item.key, false);
+              return toggleFilter(item.key);
           }
         }}
       >
