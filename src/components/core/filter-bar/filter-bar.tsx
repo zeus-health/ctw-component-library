@@ -14,6 +14,7 @@ import {
 import { FilterBarPill } from "@/components/core/filter-bar/filter-bar-pills";
 import { ListBox, MinListBoxItem } from "@/components/core/list-box/list-box";
 import { omit, partition, uniq } from "@/utils/nodash/fp";
+import { isEmptyValue } from "@/utils/types";
 
 const INTERNAL_KEYS = ["_remove", "_reset"];
 const removeInternalKeys = (keys: string[]) =>
@@ -63,12 +64,6 @@ export const FilterBar = ({
     filterChangeEventToValuesRecord(defaultState)
   );
 
-  // Split the filters up by which are active (selected) or inactive (main menu)
-  const [activeFilters, inactiveFilters] = partition(
-    ({ key }) => activeFilterKeys.includes(key),
-    filters
-  );
-
   useEffect(() => {
     // Validating that the "_remove" filter is never passed in from parent
     if (filters.some(({ key }) => INTERNAL_KEYS.includes(key))) {
@@ -93,7 +88,9 @@ export const FilterBar = ({
   };
 
   // Add or remove a filter from the activated filters list
-  const addOrRemoveFilter = (key: string, remove = false) => {
+  const toggleFilter = (key: string) => {
+    const remove = activeFilterKeys.includes(key);
+
     if (!remove) {
       setRecentlyAdded(key);
     }
@@ -150,54 +147,57 @@ export const FilterBar = ({
     onChange(filterChangeEvent(filters, activeFilterKeys, activeValues));
   };
 
-  const toFilterMenuItem = (filter: FilterItem): MinListBoxItem => ({
-    display: filter.display,
-    icon: filter.icon,
-    key: filter.key,
-    className: cx("ctw-capitalize", filter.className),
-  });
-
-  const [aboveTheFold, belowTheFold] = partition(
-    (filter) => !filter.belowTheFold,
-    inactiveFilters
-  );
-  const hasBelowTheFoldItems = belowTheFold.length > 0;
-  if (hasBelowTheFoldItems) {
-    // We need to add the ccs border top divider to first item under fold
-    belowTheFold[0] = {
-      ...belowTheFold[0],
-      className: cx(
-        belowTheFold[0].className,
-        "ctw-border-solid ctw-border-divider-light ctw-border-b-0"
-      ),
+  const toFilterMenuItem = (filter: FilterItem): MinListBoxItem => {
+    const isActive = activeFilterKeys.includes(filter.key);
+    return {
+      display:
+        isActive && filter.toggleDisplay
+          ? filter.toggleDisplay
+          : filter.display,
+      icon: isActive && filter.toggleIcon ? filter.toggleIcon : filter.icon,
+      key: filter.key,
+      className: cx("ctw-capitalize", filter.className),
     };
-  }
-  // Creates the main filter list dropdown
-  const inactiveFilterMenuItems: MinListBoxItem[] = [
-    ...aboveTheFold.map(toFilterMenuItem),
-    // Need to add class for the first menu item under the fold
-    ...belowTheFold.slice(0, 1).map(toFilterMenuItem),
-    ...belowTheFold.slice(1).map(toFilterMenuItem),
+  };
 
-    {
-      display: "remove all filters",
-      icon: faTrash,
-      key: "_remove",
-      className: "ctw-capitalize",
-    },
-  ];
+  // Split the filters up by which are active (selected) or inactive (main menu)
+  const [activeFilters, inactiveFilters] = partition(
+    ({ key }) => activeFilterKeys.includes(key),
+    filters
+  );
 
-  if ([initialState].filter((filter) => filter.type !== "tag").length > 0) {
-    inactiveFilterMenuItems.splice(-1, 0, {
+  const activeFiltersWithToggle = activeFilters.filter((f) => f.toggleDisplay);
+
+  const [aboveDivider, belowDivider] = partition(
+    (filter) => !filter.belowDivider,
+    [...inactiveFilters, ...activeFiltersWithToggle]
+  );
+
+  if (!isEmptyValue(initialState)) {
+    belowDivider.push({
       display: "reset filters",
       icon: faRefresh,
       key: "_reset",
-      className: cx("ctw-capitalize", {
-        // This adds divider to this item if needed
-        "ctw-border-top first-of-type:ctw-border-none": !hasBelowTheFoldItems,
-      }),
+      type: "tag",
     });
   }
+  belowDivider.push({
+    display: "remove all filters",
+    icon: faTrash,
+    key: "_remove",
+    type: "tag",
+  });
+
+  // Add a divider only if there are both items above
+  // and below the divider.
+  const maybeDivider: { divider: true }[] =
+    aboveDivider.length && belowDivider.length ? [{ divider: true }] : [];
+
+  const menuItems: MinListBoxItem[] = [
+    ...aboveDivider.map(toFilterMenuItem),
+    ...maybeDivider,
+    ...belowDivider.map(toFilterMenuItem),
+  ];
 
   return (
     <div
@@ -212,7 +212,7 @@ export const FilterBar = ({
           key={filter.key}
           filter={filter}
           filterValues={activeFilterValues}
-          handleAddOrRemoveFilter={addOrRemoveFilter}
+          onRemove={toggleFilter}
           updateSelectedFilterValues={(valueKey: string, isSelected: boolean) =>
             updateSelectedFilter(filter.key, valueKey, isSelected)
           }
@@ -222,7 +222,7 @@ export const FilterBar = ({
       <ListBox
         useBasicStyles
         btnClassName="!ctw-text-content-light ctw-btn-clear !ctw-font-normal !ctw-py-2"
-        items={inactiveFilterMenuItems}
+        items={menuItems}
         onChange={(_index, item) => {
           switch (item.key) {
             case "_remove":
@@ -230,7 +230,7 @@ export const FilterBar = ({
             case "_reset":
               return resetAllFilters();
             default:
-              return addOrRemoveFilter(item.key, false);
+              return toggleFilter(item.key);
           }
         }}
       >
