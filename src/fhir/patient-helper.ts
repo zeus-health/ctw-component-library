@@ -121,7 +121,7 @@ export async function getBuilderPatientsListByIdentifier(
     parseInt(`${pageOffset ?? "0"}`, 10) * parseInt(`${pageSize ?? "1"}`, 10);
 
   const searchParams = pickBy({
-    identifier: identifiers.join(","),
+    _id: identifiers.join(","),
     _count: pageSize,
     _total: "accurate",
     _offset: offset,
@@ -133,8 +133,6 @@ export async function getBuilderPatientsListByIdentifier(
       requestContext,
       searchParams
     );
-
-    console.log("resources", resources);
 
     return {
       searchParams,

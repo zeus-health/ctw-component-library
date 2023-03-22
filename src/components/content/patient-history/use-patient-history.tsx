@@ -156,41 +156,24 @@ export function useBuilderPatientHistoryList(
         const messages = (
           await getBuilderRefreshHistoryMessages(requestContext)
         ).data as PatientHistoryResponse[];
-        console.log("messages", messages);
 
         const patientsIds = compact(
           messages.map((message) => message.initialData?.patientId)
         );
-        console.log("patients", patientsIds);
 
-        const response = getBuilderPatientsListByIdentifier(
+        const patients = getBuilderPatientsListByIdentifier(
           requestContext,
           undefined,
           patientsIds
         );
 
-        const latestDone = find(messages, {
-          _messages: [
-            {
-              status: "done",
-            },
-          ],
-        }) as PatientRefreshHistoryMessage | undefined;
-        return {
-          // eslint-disable-next-line no-underscore-dangle
-          lastRetrievedAt: latestDone?._createdAt,
-          status: messages[0]?.status,
-          // eslint-disable-next-line no-underscore-dangle
-          dateCreated: messages[0]?._createdAt,
-        };
+        return patients;
       } catch (e) {
         Telemetry.logError(
           e as Error,
-          "Failed fetching patient history details"
+          "Failed fetching patient history patients."
         );
-        throw new Error(
-          `Failed fetching patient history details for patient: ${e}`
-        );
+        throw new Error(`Failed fetching patient history patients: ${e}`);
       }
     }
   );

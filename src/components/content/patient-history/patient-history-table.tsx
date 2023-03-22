@@ -1,10 +1,10 @@
 import { SearchIcon } from "@heroicons/react/outline";
 import cx from "classnames";
-import { useState } from "react";
-import { Table } from "../CCDA/ccda_viewer/components/Table/Table";
+import { useEffect, useState } from "react";
 import { TableOptionProps } from "../patients/patients-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Pagination } from "@/components/core/pagination/pagination";
+import { Table } from "@/components/core/table/table";
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { PatientModel } from "@/fhir/models";
 import { CTWBox, useBuilderPatientHistoryList } from "@/index";
@@ -26,11 +26,29 @@ export const PatientHistoryTable = withErrorBoundary(
     const [total, setTotal] = useState(0);
     const [patients, setPatients] = useState<PatientModel[]>([]);
 
-    const { data, isFetching, isError } = useBuilderPatientHistoryList(
-      pageSize,
-      currentPage - 1
-    );
-    console.log("hello");
+    const {
+      data: { patients: responsePatients, total: responseTotal } = {},
+      isFetching,
+      isError,
+    } = useBuilderPatientHistoryList(pageSize, currentPage - 1);
+
+    // Here we are setting the total and patients only when we know that useQuery
+    // isn't fetching. This will prevent empty intermediate states where there
+    // is no data because the value of `usePatientsTable()` hasn't settled yet.
+    useEffect(() => {
+      if (!isFetching && responsePatients) {
+        setTotal(responseTotal ?? 0);
+        setPatients(responsePatients);
+      }
+    }, [responsePatients, responseTotal, isError, isFetching]);
+
+    // This resets our state when there is an error fetching patients from ODS.
+    useEffect(() => {
+      if (isError) {
+        setTotal(0);
+        setPatients([]);
+      }
+    }, [isError, isFetching]);
 
     return (
       <CTWBox.StackedWrapper
@@ -79,7 +97,7 @@ const columns: TableColumn<PatientModel>[] = [
   },
 ];
 
-const PatientNameColumn = ({ patient }) => (
+const PatientNameColumn = ({ patient }: { patient: PatientModel }) => (
   <div className="ctw-flex ctw-items-center">
     <div className="ctw-ml-4">
       <div className="ctw-flex ctw-font-medium">
