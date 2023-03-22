@@ -6,3 +6,5 @@
 3. Create hooks to retrieve data
 4. Create table
 5. Side Panel
+6. Create Mock storybook data
+7. Storybook Tests
