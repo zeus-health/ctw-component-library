@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 0.51.1
+
+### Patch Changes
+
+- a2451acb: Tweak "Show Dismissed Records" filter to be below divider and to then show up as "Hide Dismissed Records" when it has been applied.
+
 ## 0.51.0
 
 ### Minor Changes
