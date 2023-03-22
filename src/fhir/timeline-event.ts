@@ -47,6 +47,7 @@ export function useTimelineEvents() {
     patientEncountersQuery.data,
     diagnosticReportQuery.data,
     medicaitonRequestCommon.data,
+    medicaitonDispenseCommon.data,
   ]);
 
   const isLoading =

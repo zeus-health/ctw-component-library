@@ -1,11 +1,6 @@
-1. Seed Data
-2. FHIR Model that encompasses the different types
-
-   - Medication is a good example of where we do this already
-
-3. Create hooks to retrieve data
-4. Create table
-5. Side Panel
-6. Create Mock storybook data
-7. Storybook Tests
-8. subType function for MedicationRequest and Dispense models to get medication name.
+1. Side Panel
+2. Create Mock storybook data
+3. Storybook Tests
+4. subType function for MedicationRequest and Dispense models to get medication name.
+5. Fix date formatting
+6. Make sure we are iterating over the models at the same time, instead of repeating work

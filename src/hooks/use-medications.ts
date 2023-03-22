@@ -14,6 +14,7 @@ import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import {
   QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
   QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
+  QUERY_KEY_PATIENT_MEDICATION_DISPENSE_COMMON,
   QUERY_KEY_PATIENT_MEDICATION_REQUESTS_COMMON,
 } from "@/utils/query-keys";
 import { withTimerMetric } from "@/utils/telemetry";
@@ -68,7 +69,7 @@ export function useQueryGetPatientMedRequestsCommon() {
 // Gets patient medications for the builder, excluding meds where the information source is patient.
 export function useQueryGetPatientMedDispenseCommon() {
   return useQueryWithPatient(
-    QUERY_KEY_PATIENT_MEDICATION_REQUESTS_COMMON,
+    QUERY_KEY_PATIENT_MEDICATION_DISPENSE_COMMON,
     [
       {
         informationSourceNot: "Patient", // exclude medication statements where the patient is the information source
