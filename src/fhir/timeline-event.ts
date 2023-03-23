@@ -7,13 +7,12 @@ import {
 } from "..";
 import { usePatientDiagnosticReportsOutside } from "./diagnostic-report";
 import { usePatientEncounters } from "./encounters";
-<<<<<<< HEAD
 import {
   TimelineEventModel,
   TimelineEventResource,
 } from "./models/timeline-event";
 import { ResourceMap } from "@/fhir/types";
-import { compact, concat, every, orderBy } from "@/utils/nodash";
+import { compact, concat, every } from "@/utils/nodash";
 import { sort } from "@/utils/sort";
 
 type TimelineEventModelParams = {
@@ -21,11 +20,6 @@ type TimelineEventModelParams = {
   includedResources?: ResourceMap;
   revIncludes?: Resource[];
 };
-=======
-import { TimelineEventModel } from "./models/timeline-event";
-import { compact, concat } from "@/utils/nodash";
-import { sort } from "@/utils/sort";
->>>>>>> timeline-2.0
 
 export function useTimelineEvents() {
   const [timelineEvents, setTimelineEvents] = useState<TimelineEventModel[]>();
