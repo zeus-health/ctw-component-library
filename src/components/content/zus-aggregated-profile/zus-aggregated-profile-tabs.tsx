@@ -58,7 +58,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
   allergies: (props: PatientAllergiesProps = {}) => ({
     key: "allergies",
     getPanelClassName: () => "ctw-pt-5",
-    display: () => "allergy list",
+    display: () => "allergy",
     render: () => <PatientAllergies {...props} />,
   }),
 
