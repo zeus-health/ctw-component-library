@@ -1,6 +1,7 @@
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { ViewFHIR } from "@/components/core/view-fhir";
 import { TimelineEventModel } from "@/fhir/models/timeline-event";
+import { m } from "msw/lib/SetupApi-75fbec12";
 
 export const patientTimelineColumns = (includeViewFhirResource = false) => {
   const timellineColumns: TableColumn<TimelineEventModel>[] = [
@@ -29,7 +30,9 @@ export const patientTimelineColumns = (includeViewFhirResource = false) => {
       minWidth: 150,
       render: (timelineEvent) => (
         <div>
-          <div>{timelineEvent.actor}</div>
+          {timelineEvent.actor.map((row) => (
+            <div>{row}</div>
+          ))}
         </div>
       ),
     },
