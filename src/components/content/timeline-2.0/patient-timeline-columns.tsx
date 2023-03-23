@@ -6,6 +6,7 @@ import { TimelineEventModel } from "@/fhir/models/timeline-event";
 export const patientTimelineColumns = (includeViewFhirResource = false) => {
   const timelineColumns: TableColumn<TimelineEventModel>[] = [
     {
+      title: "Date",
       widthPercent: 10,
       minWidth: 120,
       render: (timelineEvent) => (
@@ -13,6 +14,7 @@ export const patientTimelineColumns = (includeViewFhirResource = false) => {
       ),
     },
     {
+      title: "Type",
       render: (timelineEvent) => (
         <div>
           <div className="ctw-font-medium">{timelineEvent.type}</div>
@@ -21,15 +23,17 @@ export const patientTimelineColumns = (includeViewFhirResource = false) => {
       ),
     },
     {
+      title: "Actor",
       render: (timelineEvent) => (
-        <div>
+        <>
           {timelineEvent.actor.map((row) => (
-            <div className="ctw-capitalize">{row.toLocaleLowerCase()}</div>
+            <div className="ctw-capitalize" key={row}>{row.toLocaleLowerCase()}</div>
           ))}
-        </div>
+        </>
       ),
     },
     {
+      title: "Modifiers",
       render: (timelineEvent) => (
         <div>
           <SimpleMoreList
