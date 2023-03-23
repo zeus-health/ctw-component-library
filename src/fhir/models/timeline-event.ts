@@ -5,6 +5,7 @@ import { EncounterModel } from "./encounter";
 import { FHIRModel } from "./fhir-model";
 import { MedicationDispenseModel } from "./medication-dispense";
 import { MedicationRequestModel } from "./medication-request";
+import { compact } from "lodash";
 
 export type TimelineEvent =
   | fhir4.Encounter
@@ -112,20 +113,24 @@ export class TimelineEventModel extends FHIRModel<TimelineEvent> {
     return undefined;
   }
 
-  get actor() {
+  get actor(): string[] {
     if (this.model.constructor === EncounterModel) {
-      return this.model.participants;
+      return compact([this.model.participants]);
     }
     if (this.model.constructor === DiagnosticReportModel) {
-      return this.model.performer;
+      return compact([this.model.performer]);
     }
     if (this.model.constructor === MedicationRequestModel) {
-      return this.model.prescriber;
+      return compact([this.model.prescriber]);
     }
     if (this.model.constructor === MedicationDispenseModel) {
-      return this.model.performer;
+      return compact([
+        this.model.performerDetails.name,
+        this.model.performerDetails.address,
+        this.model.performerDetails.telecom,
+      ]);
     }
 
-    return undefined;
+    return [];
   }
 }

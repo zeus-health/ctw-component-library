@@ -172,7 +172,10 @@ export async function getMedicationDispnseCommon(
       {
         patientUPID: patient.UPID,
         ...omitClientFilters(searchFilters),
-        _include: "MedicationRequest:medication",
+        _include: [
+          "MedicationRequest:medication",
+          "MedicationDispense:performer",
+        ],
       }
     );
 
@@ -190,7 +193,6 @@ export async function getMedicationStatement(
   keys: string[] = []
 ) {
   const [rxNorm = ""] = keys;
-  // debugger;
 
   try {
     if (!rxNorm) {
