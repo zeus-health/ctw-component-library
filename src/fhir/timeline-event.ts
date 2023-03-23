@@ -6,7 +6,8 @@ import {
 import { usePatientDiagnosticReportsOutside } from "./diagnostic-report";
 import { usePatientEncounters } from "./encounters";
 import { TimelineEventModel } from "./models/timeline-event";
-import { compact, concat, orderBy } from "@/utils/nodash";
+import { compact, concat } from "@/utils/nodash";
+import { sort } from "@/utils/sort";
 
 export function useTimelineEvents() {
   const [timelineEvents, setTimelineEvents] = useState<TimelineEventModel[]>();
@@ -42,7 +43,7 @@ export function useTimelineEvents() {
         medicaitonDispenseCommonModels
       )
     );
-    setTimelineEvents(orderBy(mergedModels, "eventDate", "desc"));
+    setTimelineEvents(sort(mergedModels, "date", "desc", true));
   }, [
     patientEncountersQuery.data,
     diagnosticReportQuery.data,

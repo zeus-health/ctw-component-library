@@ -12,6 +12,7 @@ import {
   PatientMedications,
   PatientProvider,
   PatientSearch,
+  PatientTimeline,
   ZusAggregatedProfile,
 } from ".";
 import "./App.css";

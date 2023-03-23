@@ -5,7 +5,7 @@ import {
 import { FHIRModel } from "./fhir-model";
 import { PractitionerModel } from "@/fhir/models/practitioner";
 import { findReference } from "@/fhir/resource-helper";
-import { compact, get } from "@/utils/nodash/fp";
+import { compact } from "@/utils/nodash/fp";
 
 export class MedicationRequestModel extends FHIRModel<fhir4.MedicationRequest> {
   get includedRequester() {
@@ -57,10 +57,6 @@ export class MedicationRequestModel extends FHIRModel<fhir4.MedicationRequest> {
       };
     }
     return { name: display };
-  }
-
-  get prescriber() {
-    return this.includedRequester;
   }
 
   get rxNorm(): string | undefined {
