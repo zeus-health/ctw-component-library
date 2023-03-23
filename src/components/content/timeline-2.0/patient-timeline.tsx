@@ -32,6 +32,7 @@ export function PatientTimelineV2({ className }: PatientTimelineProps) {
       )}
     >
       <Table
+        showTableHead={false}
         isLoading={timelineEventsQuery.isLoading}
         records={timelineEventsQuery.data}
         columns={patientTimelineColumns(true)}

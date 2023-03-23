@@ -11,11 +11,8 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
     return display ?? code !== "UNK" ? code : undefined;
   }
 
-  get diagnosis(): string | undefined {
-    const diagnoses = compact(
-      this.resource.diagnosis?.map((d) => d.condition.display)
-    );
-    return diagnoses.length ? diagnoses.join(", ") : undefined;
+  get diagnoses(): string[] | undefined {
+    return compact(this.resource.diagnosis?.map((d) => d.condition.display));
   }
 
   get dischargeDisposition(): string | undefined {

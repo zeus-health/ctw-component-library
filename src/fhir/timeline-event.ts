@@ -7,18 +7,25 @@ import {
 } from "..";
 import { usePatientDiagnosticReportsOutside } from "./diagnostic-report";
 import { usePatientEncounters } from "./encounters";
+<<<<<<< HEAD
 import {
   TimelineEventModel,
   TimelineEventResource,
 } from "./models/timeline-event";
 import { ResourceMap } from "@/fhir/types";
 import { compact, concat, every, orderBy } from "@/utils/nodash";
+import { sort } from "@/utils/sort";
 
 type TimelineEventModelParams = {
   resource: TimelineEventResource;
   includedResources?: ResourceMap;
   revIncludes?: Resource[];
 };
+=======
+import { TimelineEventModel } from "./models/timeline-event";
+import { compact, concat } from "@/utils/nodash";
+import { sort } from "@/utils/sort";
+>>>>>>> timeline-2.0
 
 export function useTimelineEvents() {
   const [timelineEvents, setTimelineEvents] = useState<TimelineEventModel[]>();
@@ -65,7 +72,6 @@ export function useTimelineEvents() {
       const medicationDispenseCommonModels = medicationDispenseCommon.data?.map(
         createTimelineEventModel
       );
-
       const mergedModels = compact(
         concat(
           diagnosticReportModels,
@@ -74,7 +80,7 @@ export function useTimelineEvents() {
           medicationDispenseCommonModels
         )
       );
-      setTimelineEvents(orderBy(mergedModels, "eventDate", "desc"));
+      setTimelineEvents(sort(mergedModels, "date", "desc", true));
     }
   }, [
     queriesFinished,

@@ -1,3 +1,4 @@
+import { SimpleMoreList } from "@/components/core/simple-more-list";
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { ViewFHIR } from "@/components/core/view-fhir";
 import { TimelineEventModel } from "@/fhir/models/timeline-event";
@@ -5,7 +6,6 @@ import { TimelineEventModel } from "@/fhir/models/timeline-event";
 export const patientTimelineColumns = (includeViewFhirResource = false) => {
   const timelineColumns: TableColumn<TimelineEventModel>[] = [
     {
-      title: "WHEN",
       widthPercent: 10,
       minWidth: 120,
       render: (timelineEvent) => (
@@ -13,25 +13,30 @@ export const patientTimelineColumns = (includeViewFhirResource = false) => {
       ),
     },
     {
-      title: "WHAT",
-      widthPercent: 20,
-      minWidth: 150,
       render: (timelineEvent) => (
         <div>
-          <div>{timelineEvent.type}</div>
+          <div className="ctw-font-medium">{timelineEvent.type}</div>
           <div>{timelineEvent.subtype}</div>
         </div>
       ),
     },
     {
-      title: "WHO",
-      widthPercent: 20,
-      minWidth: 150,
       render: (timelineEvent) => (
         <div>
           {timelineEvent.actor.map((row) => (
             <div>{row}</div>
           ))}
+        </div>
+      ),
+    },
+    {
+      render: (timelineEvent) => (
+        <div>
+          <SimpleMoreList
+            items={timelineEvent.modifiers}
+            limit={3}
+            total={timelineEvent.modifiers.length}
+          />
         </div>
       ),
     },

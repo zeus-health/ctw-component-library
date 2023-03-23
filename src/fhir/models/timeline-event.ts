@@ -1,4 +1,6 @@
 import { Resource } from "fhir/r4";
+import { codeableConceptLabel } from "../codeable-concept";
+import { formatDateISOToLocal } from "../formatters";
 import { ResourceMap } from "../types";
 import { DiagnosticReportModel } from "./diagnostic-report";
 import { EncounterModel } from "./encounter";
@@ -68,10 +70,10 @@ export class TimelineEventModel extends FHIRModel<TimelineEventResource> {
       return this.model.effectiveStart;
     }
     if (this.model.constructor === MedicationRequestModel) {
-      return this.model.resource.authoredOn;
+      return formatDateISOToLocal(this.model.resource.authoredOn);
     }
     if (this.model.constructor === MedicationDispenseModel) {
-      return (
+      return formatDateISOToLocal(
         this.model.resource.whenHandedOver || this.model.resource.whenPrepared
       );
     }
@@ -90,7 +92,7 @@ export class TimelineEventModel extends FHIRModel<TimelineEventResource> {
       return "Prescription";
     }
     if (this.model.constructor === MedicationDispenseModel) {
-      return "Fill";
+      return "Medication Fill";
     }
 
     return undefined;
@@ -115,19 +117,44 @@ export class TimelineEventModel extends FHIRModel<TimelineEventResource> {
 
   get actor(): string[] {
     if (this.model.constructor === EncounterModel) {
-      return compact([this.model.participants]);
+      return compact([this.model.participants, this.model.location]);
     }
     if (this.model.constructor === DiagnosticReportModel) {
       return compact([this.model.performer]);
     }
     if (this.model.constructor === MedicationRequestModel) {
-      return compact([this.model.prescriber]);
+      return compact([this.model.includedRequester]);
     }
     if (this.model.constructor === MedicationDispenseModel) {
       return compact([
         this.model.performerDetails.name,
         this.model.performerDetails.address,
         this.model.performerDetails.telecom,
+      ]);
+    }
+
+    return [];
+  }
+
+  get modifiers(): string[] {
+    if (this.model.constructor === EncounterModel) {
+      return compact(this.model.diagnoses);
+    }
+    if (this.model.constructor === DiagnosticReportModel) {
+      return compact(this.model.results.map((r) => r.display));
+    }
+    if (this.model.constructor === MedicationRequestModel) {
+      return compact([
+        codeableConceptLabel(this.model.resource.dosageInstruction?.[0]),
+      ]);
+    }
+    if (this.model.constructor === MedicationDispenseModel) {
+      const daysSupply = this.model.resource.daysSupply?.value;
+      const quantity = this.model.resource.quantity?.value;
+      return compact([
+        codeableConceptLabel(this.model.resource.dosageInstruction?.[0]),
+        daysSupply ? `Days supply: ${daysSupply}` : "",
+        quantity ? `Quantity: ${quantity}` : "",
       ]);
     }
 

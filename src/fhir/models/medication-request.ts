@@ -59,10 +59,6 @@ export class MedicationRequestModel extends FHIRModel<fhir4.MedicationRequest> {
     return { name: display };
   }
 
-  get prescriber() {
-    return this.includedRequester;
-  }
-
   get rxNorm(): string | undefined {
     return getIdentifyingRxNormCode(this.resource, this.includedResources);
   }
