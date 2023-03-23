@@ -1,6 +1,7 @@
 import { FHIRModel } from "./fhir-model";
 import {
   getMedicationDisplayName,
+  getIdentifyingRxNormCode,
   getPerformingOrganization,
 } from "@/fhir/medication";
 import { PractitionerModel } from "@/fhir/models/practitioner";
@@ -43,6 +44,10 @@ export class MedicationDispenseModel extends FHIRModel<fhir4.MedicationDispense>
   get quantityDisplay(): string | undefined {
     const { value, unit = "units" } = this.resource.quantity || {};
     return value ? `${value} ${unit}` : undefined;
+  }
+
+  get rxNorm(): string | undefined {
+    return getIdentifyingRxNormCode(this.resource, this.includedResources);
   }
 
   get supplied(): string | undefined {

@@ -24,6 +24,7 @@ import {
   LENS_EXTENSION_MEDICATION_LAST_PRESCRIBER,
   LENS_EXTENSION_MEDICATION_QUANTITY,
   LENS_EXTENSION_MEDICATION_REFILLS,
+  SYSTEM_RXNORM,
   SYSTEM_ZUS_UNIVERSAL_ID,
 } from "./system-urls";
 import { ResourceTypeString } from "./types";
@@ -170,6 +171,7 @@ export async function getMedicationDispnseCommon(
       {
         patientUPID: patient.UPID,
         ...omitClientFilters(searchFilters),
+        _include: "MedicationRequest:medication",
       }
     );
 
@@ -178,6 +180,35 @@ export async function getMedicationDispnseCommon(
     );
   } catch (e) {
     throw errorResponse("Failed fetching medications for patient", e);
+  }
+}
+
+export async function getMedicationStatement(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  keys: object[] = []
+) {
+  const [rxNorm = {}] = keys;
+
+  try {
+    if (!rxNorm) {
+      return [];
+    }
+
+    const { bundle, resources } = await searchCommonRecords(
+      "MedicationStatement",
+      requestContext,
+      {
+        patientUPID: patient.UPID,
+        code: `${SYSTEM_RXNORM}|${rxNorm}`,
+      }
+    );
+
+    return resources.map(
+      (r) => new MedicationStatementModel(r, getIncludedResources(bundle))
+    );
+  } catch (e) {
+    throw errorResponse("Failed fetching medication statements for patient", e);
   }
 }
 

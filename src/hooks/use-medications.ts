@@ -7,6 +7,7 @@ import {
   getBuilderMedications,
   getMedicationDispnseCommon,
   getMedicationRequestCommon,
+  getMedicationStatement,
   MedicationResults,
   splitMedications,
 } from "@/fhir/medications";
@@ -16,6 +17,7 @@ import {
   QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
   QUERY_KEY_PATIENT_MEDICATION_DISPENSE_COMMON,
   QUERY_KEY_PATIENT_MEDICATION_REQUESTS_COMMON,
+  QUERY_KEY_PATIENT_MEDICATION_STATEMENT,
 } from "@/utils/query-keys";
 import { withTimerMetric } from "@/utils/telemetry";
 
@@ -80,6 +82,21 @@ export function useQueryGetPatientMedDispenseCommon() {
       "req.medication_dispense_common"
     )
   );
+}
+
+export function useQueryMedicationStatement(rxNorm: string | undefined) {
+  if (rxNorm) {
+    return useQueryWithPatient(
+      QUERY_KEY_PATIENT_MEDICATION_STATEMENT,
+      [
+        {
+          informationSourceNot: "Patient", // exclude medication statements where the patient is the information source
+        },
+      ],
+      withTimerMetric(getMedicationStatement, "req.medication_statement")
+    );
+  }
+  return undefined;
 }
 
 /**
