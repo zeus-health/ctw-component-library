@@ -1,10 +1,9 @@
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { ViewFHIR } from "@/components/core/view-fhir";
 import { TimelineEventModel } from "@/fhir/models/timeline-event";
-import { m } from "msw/lib/SetupApi-75fbec12";
 
 export const patientTimelineColumns = (includeViewFhirResource = false) => {
-  const timellineColumns: TableColumn<TimelineEventModel>[] = [
+  const timelineColumns: TableColumn<TimelineEventModel>[] = [
     {
       title: "WHEN",
       widthPercent: 10,
@@ -39,7 +38,7 @@ export const patientTimelineColumns = (includeViewFhirResource = false) => {
   ];
 
   if (includeViewFhirResource) {
-    timellineColumns.push({
+    timelineColumns.push({
       widthPercent: 10,
       minWidth: 200,
       render: (encounter) => (
@@ -48,5 +47,5 @@ export const patientTimelineColumns = (includeViewFhirResource = false) => {
     });
   }
 
-  return timellineColumns;
+  return timelineColumns;
 };

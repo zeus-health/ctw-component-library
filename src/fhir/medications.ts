@@ -190,15 +190,13 @@ export async function getMedicationDispnseCommon(
 export async function getMedicationStatement(
   requestContext: CTWRequestContext,
   patient: PatientModel,
-  keys: string[] = []
+  keys: string | undefined[] = []
 ) {
   const [rxNorm = ""] = keys;
-
+  if (!rxNorm) {
+    return [];
+  }
   try {
-    if (!rxNorm) {
-      return [];
-    }
-
     const { bundle, resources } = await searchSummaryRecords(
       "MedicationStatement",
       requestContext,

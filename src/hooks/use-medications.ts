@@ -85,13 +85,11 @@ export function useQueryGetPatientMedDispenseCommon() {
 }
 
 export function useQueryMedicationStatement(rxNorm: string | undefined) {
-  if (rxNorm) {
-    return useQueryWithPatient(
-      QUERY_KEY_PATIENT_MEDICATION_STATEMENT,
-      [rxNorm],
-      withTimerMetric(getMedicationStatement, "req.medication_statement")
-    );
-  }
+  return useQueryWithPatient(
+    QUERY_KEY_PATIENT_MEDICATION_STATEMENT,
+    [rxNorm],
+    withTimerMetric(getMedicationStatement, "req.medication_statement")
+  );
   return undefined;
 }
 
