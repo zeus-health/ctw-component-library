@@ -1,4 +1,4 @@
-1. Side Panel
+1. Side Panel - populate
 2. Create Mock storybook data
 3. Storybook Tests
 4. subType function for MedicationRequest and Dispense models to get medication name.
