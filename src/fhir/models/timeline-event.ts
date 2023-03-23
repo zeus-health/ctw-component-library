@@ -141,7 +141,11 @@ export class TimelineEventModel extends FHIRModel<TimelineEventResource> {
       return compact(this.model.diagnoses);
     }
     if (this.model.constructor === DiagnosticReportModel) {
-      return compact(this.model.results.map((r) => r.display));
+      return [
+        this.model.results.length > 0
+          ? `${this.model.results.length} results available`
+          : "",
+      ];
     }
     if (this.model.constructor === MedicationRequestModel) {
       return compact([

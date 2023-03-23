@@ -13,7 +13,7 @@ import {
 } from "./models/timeline-event";
 import { ResourceMap } from "@/fhir/types";
 import { compact, concat, every } from "@/utils/nodash";
-import { sort } from "@/utils/sort";
+import { applySorts } from "@/utils/sort";
 
 type TimelineEventModelParams = {
   resource: TimelineEventResource;
@@ -74,7 +74,12 @@ export function useTimelineEvents() {
           medicationDispenseCommonModels
         )
       );
-      setTimelineEvents(sort(mergedModels, "date", "desc", true));
+      setTimelineEvents(
+        applySorts(mergedModels, [
+          { dir: "desc", key: "date", isDate: true },
+          { dir: "desc", key: "type", isDate: true },
+        ])
+      );
     }
   }, [
     queriesFinished,

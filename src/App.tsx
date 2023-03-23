@@ -60,15 +60,15 @@ type DemoComponent = {
   note?: string;
 };
 const demoComponents: DemoComponent[] = [
-  {
-    render: () => (
-      <ZusAggregatedProfile
-        resources={["observations-outside", "observations"]}
-        title="Observations"
-      />
-    ),
-    title: "Patient Observations",
-  },
+  // {
+  //   render: () => (
+  //     <ZusAggregatedProfile
+  //       resources={["observations-outside", "observations"]}
+  //       title="Observations"
+  //     />
+  //   ),
+  //   title: "Patient Observations",
+  // },
   // { render: () => <PatientCareTeam />, title: "Patient CareTeam" },
   // {
   //   render: () => (
