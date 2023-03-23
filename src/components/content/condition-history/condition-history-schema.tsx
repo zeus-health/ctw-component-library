@@ -1,10 +1,10 @@
+import { HistoryEntryProps } from "../resource/helpers/history-entry";
 import { CodingList } from "@/components/core/coding-list";
-import { CollapsibleDataListProps } from "@/components/core/collapsible-data-list";
 import { NotesList } from "@/components/core/notes-list";
 import { ConditionModel } from "@/fhir/models";
 import { capitalize, startCase } from "@/utils/nodash";
 
-export function setupData(condition: ConditionModel): CollapsibleDataListProps {
+export function setupData(condition: ConditionModel): HistoryEntryProps {
   const detailData = [
     {
       label: "Recorder",
@@ -55,7 +55,7 @@ export function setupData(condition: ConditionModel): CollapsibleDataListProps {
     date: condition.recordedDate,
     title: startCase(condition.categories[0]),
     subtitle: condition.patient?.organization?.name,
-    data: detailData,
+    details: detailData,
   };
 }
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ObservationsTable } from "@/components/content/observations/helpers/observations-table";
-import { Details } from "@/components/core/collapsible-data-list-details";
+import { DetailsCard } from "@/components/content/resource/helpers/details-card";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { DiagnosticReportModel, ObservationModel } from "@/fhir/models";
 import { findReference } from "@/fhir/resource-helper";
@@ -58,7 +58,7 @@ export const Component = ({ diagnosticReport }: ObservationDetailsProps) => {
     <div className="ctw-space-y-6" data-zus-telemetry-namespace="Observations">
       <div className="ctw-text-2xl">{diagnosticReport.displayName}</div>
 
-      <Details data={diagnosticReportData(diagnosticReport)} />
+      <DetailsCard details={diagnosticReportData(diagnosticReport)} />
       <ObservationsTable data={observationEntries} />
     </div>
   );

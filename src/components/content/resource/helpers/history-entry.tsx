@@ -1,34 +1,33 @@
 import { ChevronRightIcon } from "@heroicons/react/outline";
 import cx from "classnames";
 import { ReactNode, useState } from "react";
-import { Details } from "./collapsible-data-list-details";
-import "./collapsible-data-list.scss";
+import { DetailsCard } from "./details-card";
 import { DocumentIcon } from "@/components/core/document-icon";
 
-export type CollapsibleDataListEntry = {
+export type DetailEntry = {
   label: string;
   value: ReactNode;
 };
 
-export type CollapsibleDataListProps = {
+export type HistoryEntryProps = {
   id: string;
   date?: string;
   title?: string;
   subtitle?: string;
-  data: CollapsibleDataListEntry[];
+  details: DetailEntry[];
   hideEmpty?: boolean;
   documentButton?: ReactNode;
   binaryId?: string;
 };
 
-export const CollapsibleDataList = ({
+export const HistoryEntry = ({
   date,
   title,
   subtitle,
-  data,
+  details,
   hideEmpty,
   documentButton,
-}: CollapsibleDataListProps) => {
+}: HistoryEntryProps) => {
   const [isDetailShown, setIsDetailShown] = useState(false);
 
   return (
@@ -45,8 +44,8 @@ export const CollapsibleDataList = ({
         hasDocument={!!documentButton}
       />
       {isDetailShown && (
-        <Details
-          data={data}
+        <DetailsCard
+          details={details}
           hideEmpty={hideEmpty}
           documentButton={documentButton}
         />

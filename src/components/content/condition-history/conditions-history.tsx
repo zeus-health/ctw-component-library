@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
-import { Details } from "../../core/collapsible-data-list-details";
-import {
-  CollapsibleDataListStack,
-  CollapsibleDataListStackEntries,
-} from "../../core/collapsible-data-list-stack";
 import { useCTW } from "../../core/providers/ctw-provider";
 import { DocumentButton } from "../CCDA/document-button";
 import { useCCDAModal } from "../CCDA/modal-ccda";
 import { ConditionHeader } from "../conditions/helpers/condition-header";
+import { DetailsCard } from "../resource/helpers/details-card";
+import { History, HistoryEntries } from "../resource/helpers/history";
 import { applyConditionHistoryFilters } from "./condition-history-filters";
 import { conditionData, setupData } from "./condition-history-schema";
 import { withErrorBoundary } from "@/components/core/error-boundary";
@@ -31,9 +28,9 @@ export const ConditionHistory = withErrorBoundary(
   ({ condition, onClose, onEdit }: ConditionHistoryProps) => {
     // State
     const [conditionsWithDate, setConditionsWithDate] =
-      useState<CollapsibleDataListStackEntries>([]);
+      useState<HistoryEntries>([]);
     const [conditionsWithoutDate, setConditionsWithoutDate] =
-      useState<CollapsibleDataListStackEntries>([]);
+      useState<HistoryEntries>([]);
     const [isHistoryLoading, setIsHistoryLoading] = useState(true);
 
     // Fetching
@@ -92,8 +89,8 @@ export const ConditionHistory = withErrorBoundary(
         data-zus-telemetry-namespace="ConditionsHistory"
       >
         <ConditionHeader condition={condition} />
-        <Details
-          data={conditionData(condition)}
+        <DetailsCard
+          details={conditionData(condition)}
           readOnly={!onEdit}
           onEdit={() => {
             onClose();
@@ -112,8 +109,8 @@ export const ConditionHistory = withErrorBoundary(
 );
 
 type HistoryRecordsProps = {
-  conditionsWithDate: CollapsibleDataListStackEntries;
-  conditionsWithoutDate: CollapsibleDataListStackEntries;
+  conditionsWithDate: HistoryEntries;
+  conditionsWithoutDate: HistoryEntries;
   historyIsLoading: boolean;
 };
 
@@ -142,7 +139,7 @@ const HistoryRecords = ({
     );
   }
 
-  function maybeAddDocumentButtons(entries: CollapsibleDataListStackEntries) {
+  function maybeAddDocumentButtons(entries: HistoryEntries) {
     return entries.map((entry) => {
       if (!entry.binaryId) {
         return entry;
@@ -168,7 +165,7 @@ const HistoryRecords = ({
 
   return (
     <>
-      <CollapsibleDataListStack
+      <History
         entries={maybeAddDocumentButtons(conditionsWithDate)}
         limit={CONDITION_HISTORY_LIMIT}
       />
@@ -176,7 +173,7 @@ const HistoryRecords = ({
       {conditionsWithoutDate.length !== 0 && (
         <div className="ctw-space-y-2">
           <div className="ctw-font-medium">Records with no date:</div>
-          <CollapsibleDataListStack
+          <History
             entries={maybeAddDocumentButtons(conditionsWithoutDate)}
             limit={CONDITION_HISTORY_LIMIT}
           />

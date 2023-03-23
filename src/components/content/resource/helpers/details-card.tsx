@@ -1,17 +1,17 @@
-import type { CollapsibleDataListEntry } from "./collapsible-data-list";
+import type { DetailEntry } from "./history-entry";
 import { PencilIcon } from "@heroicons/react/solid";
 import { ReactNode } from "react";
 
 export type DetailsProps = {
   hideEmpty?: boolean;
-  data: CollapsibleDataListEntry[];
+  details: DetailEntry[];
   readOnly?: boolean;
   onEdit?: () => void;
   documentButton?: ReactNode;
 };
 
-export const Details = ({
-  data,
+export const DetailsCard = ({
+  details,
   hideEmpty = true,
   readOnly = true,
   onEdit,
@@ -39,7 +39,7 @@ export const Details = ({
           )}
         </div>
       </div>
-      {data
+      {details
         .filter((d) => !hideEmpty || d.value || d.value === 0)
         .map(({ label, value }) => (
           <div

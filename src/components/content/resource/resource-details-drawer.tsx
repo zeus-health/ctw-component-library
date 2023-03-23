@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { DocumentButton } from "../CCDA/document-button";
 import { useCCDAModal } from "../CCDA/modal-ccda";
 import {
-  Details,
+  DetailsCard,
   DetailsProps,
-} from "@/components/core/collapsible-data-list-details";
+} from "@/components/content/resource/helpers/details-card";
 import { Drawer } from "@/components/core/drawer";
 import { Loading } from "@/components/core/loading";
 import { useCTW } from "@/components/core/providers/ctw-provider";
@@ -46,7 +46,7 @@ export type ResourceDetailsDrawerProps<
   header: (model: M) => string | undefined;
   subHeader?: (model: M) => string | undefined;
   getSourceDocument?: boolean;
-  details: (model: M) => DetailsProps["data"];
+  details: (model: M) => DetailsProps["details"];
   isOpen: boolean;
   onClose: () => void;
 };
@@ -106,8 +106,8 @@ export function ResourceDetailsDrawer<
         {isLoading ? (
           <Loading message="Loading data..." />
         ) : (
-          <Details
-            data={details(model)}
+          <DetailsCard
+            details={details(model)}
             documentButton={
               binaryId && (
                 <DocumentButton

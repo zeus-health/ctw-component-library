@@ -1,20 +1,14 @@
 import { useState } from "react";
-import {
-  CollapsibleDataList,
-  CollapsibleDataListProps,
-} from "./collapsible-data-list";
+import { HistoryEntry, HistoryEntryProps } from "./history-entry";
 
-export type CollapsibleDataListStackEntries = CollapsibleDataListProps[];
+export type HistoryEntries = HistoryEntryProps[];
 
-export type CollapsibleListProp = {
-  entries: CollapsibleDataListStackEntries;
+export type HistoryProps = {
+  entries: HistoryEntries;
   limit?: number;
 };
 
-export const CollapsibleDataListStack = ({
-  entries,
-  limit,
-}: CollapsibleListProp) => {
+export const History = ({ entries, limit }: HistoryProps) => {
   const [showAll, setShowAll] = useState(!limit || entries.length <= limit);
   const displayedEntries =
     showAll || !limit ? entries : entries.slice(0, limit);
@@ -30,12 +24,12 @@ export const CollapsibleDataListStack = ({
         // We can have multiple items with the same condition id
         // eslint-disable-next-line react/no-array-index-key
         <div key={`${entry.id}-${idx}`}>
-          <CollapsibleDataList
+          <HistoryEntry
             id={entry.id}
             date={entry.date}
             title={entry.title}
             subtitle={entry.subtitle}
-            data={entry.data}
+            details={entry.details}
             hideEmpty={entry.hideEmpty}
             documentButton={entry.documentButton}
           />
