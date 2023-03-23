@@ -9,9 +9,7 @@ export const patientTimelineColumns = (includeViewFhirResource = false) => {
       title: "Date",
       widthPercent: 10,
       minWidth: 120,
-      render: (timelineEvent) => (
-        <div className="group-hover:ctw-underline">{timelineEvent.date}</div>
-      ),
+      dataIndex: "date",
     },
     {
       title: "Type",
@@ -27,7 +25,9 @@ export const patientTimelineColumns = (includeViewFhirResource = false) => {
       render: (timelineEvent) => (
         <>
           {timelineEvent.actor.map((row) => (
-            <div className="ctw-capitalize" key={row}>{row.toLocaleLowerCase()}</div>
+            <div className="ctw-capitalize" key={row}>
+              {row.toLocaleLowerCase()}
+            </div>
           ))}
         </>
       ),
