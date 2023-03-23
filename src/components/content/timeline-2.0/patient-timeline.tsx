@@ -47,7 +47,10 @@ export function PatientTimelineV2({ className }: PatientTimelineProps) {
             openEncounterDetails(record.model);
           } else if (record.model.constructor === DiagnosticReportModel) {
             openDiagnosticReportDetails(record.model);
-          } else if (record.model.constructor === MedicationDispenseModel) {
+          } else if (
+            record.model.constructor === MedicationDispenseModel ||
+            record.model.constructor === MedicationRequestModel
+          ) {
             openMedicationDispenseDetails(record.model);
           }
         }}
@@ -59,11 +62,13 @@ export function PatientTimelineV2({ className }: PatientTimelineProps) {
 export function useMedicationStatementDetailsDrawer() {
   const { openDrawer } = useDrawer();
 
-  return (medicationDispense: MedicationDispenseModel) => {
+  return (
+    medicationModel: MedicationDispenseModel | MedicationRequestModel
+  ) => {
     openDrawer({
       component: (props) => (
         <MedicationDrawerComponent
-          medicationEventModel={medicationDispense}
+          medicationEventModel={medicationModel}
           {...props}
         />
       ),
@@ -82,5 +87,5 @@ const MedicationDrawerComponent = (props: MedicationDrawerComponentProps) => {
   if (medStatement?.data?.length) {
     return <MedicationDrawer medication={medStatement.data?.[0]} {...props} />;
   }
-  return <>Test Test</>;
+  return <></>;
 };

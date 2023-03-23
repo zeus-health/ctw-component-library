@@ -14,6 +14,7 @@ import {
   searchCommonRecords,
   searchLensRecords,
   SearchReturn,
+  searchSummaryRecords,
 } from "./search-helpers";
 import {
   CTW_EXTENSION_LENS_AGGREGATED_FROM,
@@ -186,16 +187,17 @@ export async function getMedicationDispnseCommon(
 export async function getMedicationStatement(
   requestContext: CTWRequestContext,
   patient: PatientModel,
-  keys: object[] = []
+  keys: string[] = []
 ) {
-  const [rxNorm = {}] = keys;
+  const [rxNorm = ""] = keys;
+  // debugger;
 
   try {
     if (!rxNorm) {
       return [];
     }
 
-    const { bundle, resources } = await searchCommonRecords(
+    const { bundle, resources } = await searchSummaryRecords(
       "MedicationStatement",
       requestContext,
       {

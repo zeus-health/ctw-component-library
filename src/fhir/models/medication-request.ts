@@ -1,4 +1,7 @@
-import { getMedicationDisplayName } from "../medication";
+import {
+  getIdentifyingRxNormCode,
+  getMedicationDisplayName,
+} from "../medication";
 import { FHIRModel } from "./fhir-model";
 import { PractitionerModel } from "@/fhir/models/practitioner";
 import { findReference } from "@/fhir/resource-helper";
@@ -59,7 +62,8 @@ export class MedicationRequestModel extends FHIRModel<fhir4.MedicationRequest> {
   get prescriber() {
     return this.includedRequester;
   }
-  get rxNorm() {
-    return "todo:";
+
+  get rxNorm(): string | undefined {
+    return getIdentifyingRxNormCode(this.resource, this.includedResources);
   }
 }

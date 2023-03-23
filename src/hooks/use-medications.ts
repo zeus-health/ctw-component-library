@@ -88,11 +88,7 @@ export function useQueryMedicationStatement(rxNorm: string | undefined) {
   if (rxNorm) {
     return useQueryWithPatient(
       QUERY_KEY_PATIENT_MEDICATION_STATEMENT,
-      [
-        {
-          informationSourceNot: "Patient", // exclude medication statements where the patient is the information source
-        },
-      ],
+      [rxNorm],
       withTimerMetric(getMedicationStatement, "req.medication_statement")
     );
   }
