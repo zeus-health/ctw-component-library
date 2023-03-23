@@ -1,7 +1,15 @@
 import cx from "classnames";
+import { defaultConditionFilters } from "../conditions/helpers/filters";
 import { MedicationDrawer } from "../medications/history/medication-drawer";
 import { useObservationsDetailsDrawer } from "../observations/helpers/drawer";
+import { ResourceTableActions } from "../resource/resource-table-actions";
 import { usePatientEncounterDetailsDrawer } from "../timeline/patient-timeline";
+import {
+  defaultTimelineFilters,
+  defaultTimelineSort,
+  timelineFilters,
+  timelineSortOptions,
+} from "./helpers/filters";
 import { patientTimelineColumns } from "./patient-timeline-columns";
 import { DrawerProps } from "@/components/core/drawer";
 import { useCTW } from "@/components/core/providers/ctw-provider";
@@ -11,6 +19,7 @@ import { DiagnosticReportModel, MedicationDispenseModel } from "@/fhir/models";
 import { EncounterModel } from "@/fhir/models/encounter";
 import { MedicationRequestModel } from "@/fhir/models/medication-request";
 import { useTimelineEvents } from "@/fhir/timeline-event";
+import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { useQueryMedicationStatement } from "@/hooks/use-medications";
 
 export type PatientTimelineProps = {
@@ -20,6 +29,11 @@ export type PatientTimelineProps = {
 export function PatientTimelineV2({ className }: PatientTimelineProps) {
   const timelineEventsQuery = useTimelineEvents();
   const { featureFlags } = useCTW();
+  const { data, setFilters, setSort } = useFilteredSortedData({
+    defaultFilters: defaultTimelineFilters,
+    defaultSort: defaultTimelineSort,
+    records: timelineEventsQuery.data,
+  });
   const openEncounterDetails = usePatientEncounterDetailsDrawer();
   const openDiagnosticReportDetails = useObservationsDetailsDrawer();
   const openMedicationDispenseDetails = useMedicationStatementDetailsDrawer();
@@ -31,10 +45,22 @@ export function PatientTimelineV2({ className }: PatientTimelineProps) {
         "ctw-scrollable-pass-through-height ctw-overflow-hidden"
       )}
     >
+      <ResourceTableActions
+        filterOptions={{
+          onChange: setFilters,
+          defaultState: defaultConditionFilters,
+          filters: timelineFilters(timelineEventsQuery.data),
+        }}
+        sortOptions={{
+          defaultSort: defaultTimelineSort,
+          options: timelineSortOptions,
+          onChange: setSort,
+        }}
+      />
       <Table
         showTableHead={false}
         isLoading={timelineEventsQuery.isLoading}
-        records={timelineEventsQuery.data}
+        records={data}
         columns={patientTimelineColumns(true)}
         handleRowClick={(record) => {
           if (record.model.constructor === EncounterModel) {
