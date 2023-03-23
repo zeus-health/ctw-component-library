@@ -90,7 +90,6 @@ export function useQueryMedicationStatement(rxNorm: string | undefined) {
     [rxNorm],
     withTimerMetric(getMedicationStatement, "req.medication_statement")
   );
-  return undefined;
 }
 
 /**

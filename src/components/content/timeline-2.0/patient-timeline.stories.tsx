@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { PatientTimeline, PatientTimelineProps } from "./patient-timeline";
+import { PatientTimelineProps, PatientTimelineV2 } from "./patient-timeline";
 import { setupTimelineMocks } from "./story-helpers/mocks/requests";
 import { CTWProvider } from "@/components/core/providers/ctw-provider";
 import { PatientProvider } from "@/components/core/providers/patient-provider";
@@ -8,7 +8,7 @@ import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 type Props = PatientTimelineProps;
 
 export default {
-  component: PatientTimeline,
+  component: PatientTimelineV2,
   tags: ["autodocs"],
   argTypes: {
     className: {
