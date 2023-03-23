@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { DocumentButton } from "../CCDA/document-button";
 import { useCCDAModal } from "../CCDA/modal-ccda";
 import {
@@ -43,8 +43,8 @@ export type ResourceDetailsDrawerProps<
 > = {
   className?: string;
   model: M;
-  header: (model: M) => string | undefined;
-  subHeader?: (model: M) => string | undefined;
+  header: (model: M) => ReactNode;
+  subHeader?: (model: M) => ReactNode;
   getSourceDocument?: boolean;
   details: (model: M) => DetailsProps["details"];
   isOpen: boolean;
@@ -92,7 +92,7 @@ export function ResourceDetailsDrawer<
   return (
     <Drawer
       className={className}
-      title={`${model.resourceTypeTitle} Details`}
+      title={model.resourceTypeTitle}
       isOpen={isOpen}
       onClose={onClose}
       showCloseFooter

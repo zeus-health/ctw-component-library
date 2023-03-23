@@ -1,0 +1,29 @@
+import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
+import { NotesList } from "@/components/core/notes-list";
+import { ConditionModel } from "@/fhir/models";
+import { capitalize } from "@/utils/nodash";
+
+export const useConditionDetailsDrawer = () =>
+  useResourceDetailsDrawer({
+    header: (condition: ConditionModel) =>
+      `${condition.display} (${condition.preferredCoding?.code})`,
+    subHeader: (condition: ConditionModel) => condition.ccsChapter,
+    getSourceDocument: true,
+    details: (condition: ConditionModel) => [
+      { label: "Recorder", value: condition.recorder },
+      { label: "Recorded Date", value: condition.recordedDate },
+      {
+        label: "Provider Organization",
+        value: condition.patient?.organization?.name,
+      },
+      { label: "Status", value: capitalize(condition.displayStatus) },
+      { label: "Onset Date", value: condition.onset },
+      { label: "Abatement Date", value: condition.abatement },
+      {
+        label: "Note",
+        value: condition.notes.length !== 0 && (
+          <NotesList notes={condition.notes} />
+        ),
+      },
+    ],
+  });
