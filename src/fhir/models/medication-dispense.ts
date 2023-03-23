@@ -1,7 +1,7 @@
 import { FHIRModel } from "./fhir-model";
 import {
-  getMedicationDisplayName,
   getIdentifyingRxNormCode,
+  getMedicationDisplayName,
   getPerformingOrganization,
 } from "@/fhir/medication";
 import { PractitionerModel } from "@/fhir/models/practitioner";

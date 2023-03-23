@@ -1,5 +1,4 @@
 import { Resource } from "fhir/r4";
-import { compact } from "lodash";
 import { codeableConceptLabel } from "../codeable-concept";
 import { formatDateISOToLocal } from "../formatters";
 import { ResourceMap } from "../types";
@@ -8,14 +7,15 @@ import { EncounterModel } from "./encounter";
 import { FHIRModel } from "./fhir-model";
 import { MedicationDispenseModel } from "./medication-dispense";
 import { MedicationRequestModel } from "./medication-request";
+import { compact } from "@/utils/nodash";
 
-export type TimelineEvent =
+export type TimelineEventResource =
   | fhir4.Encounter
   | fhir4.DiagnosticReport
   | fhir4.MedicationRequest
   | fhir4.MedicationDispense;
 
-export class TimelineEventModel extends FHIRModel<TimelineEvent> {
+export class TimelineEventModel extends FHIRModel<TimelineEventResource> {
   public model:
     | EncounterModel
     | DiagnosticReportModel
@@ -23,7 +23,7 @@ export class TimelineEventModel extends FHIRModel<TimelineEvent> {
     | MedicationDispenseModel;
 
   constructor(
-    resource: TimelineEvent,
+    resource: TimelineEventResource,
     includedResources?: ResourceMap,
     revIncludes?: Resource[]
   ) {
