@@ -1,4 +1,3 @@
-import { UseQueryResult } from "@tanstack/react-query";
 import { Resource } from "fhir/r4";
 import { useEffect, useState } from "react";
 import {
@@ -12,7 +11,7 @@ import {
   TimelineEventResource,
 } from "./models/timeline-event";
 import { ResourceMap } from "@/fhir/types";
-import { compact, concat, every } from "@/utils/nodash";
+import { compact, concat } from "@/utils/nodash";
 import { applySorts } from "@/utils/sort";
 
 type TimelineEventModelParams = {
@@ -27,62 +26,35 @@ export function useTimelineEvents() {
   const diagnosticReportQuery = usePatientDiagnosticReportsOutside();
   const medicationRequestCommon = useQueryGetPatientMedRequestsCommon();
   const medicationDispenseCommon = useQueryGetPatientMedDispenseCommon();
-  const [queriesFinished, setQueriesFinished] = useState(false);
-  const allSuccessful = (n: { isSuccess: boolean }[]) =>
-    every(n, ({ isSuccess }: UseQueryResult) => isSuccess);
-  const allDoneFetching = (n: { isSuccess: boolean }[]) =>
-    every(n, ({ isFetching }: UseQueryResult) => !isFetching);
 
   useEffect(() => {
-    const queries = [
-      patientEncountersQuery,
-      diagnosticReportQuery,
-      medicationRequestCommon,
-      medicationDispenseCommon,
-    ];
-    if (allDoneFetching(queries)) {
-      setQueriesFinished(allSuccessful(queries));
-    } else {
-      setQueriesFinished(false);
-    }
+    const patientEncounterModels = patientEncountersQuery.data?.map(
+      createTimelineEventModel
+    );
+    const diagnosticReportModels = diagnosticReportQuery.data?.map(
+      createTimelineEventModel
+    );
+    const medicationRequestCommonModels = medicationRequestCommon.data?.map(
+      createTimelineEventModel
+    );
+    const medicationDispenseCommonModels = medicationDispenseCommon.data?.map(
+      createTimelineEventModel
+    );
+    const mergedModels = compact(
+      concat(
+        diagnosticReportModels,
+        patientEncounterModels,
+        medicationRequestCommonModels,
+        medicationDispenseCommonModels
+      )
+    );
+    setTimelineEvents(
+      applySorts(mergedModels, [
+        { dir: "desc", key: "date", isDate: true },
+        { dir: "desc", key: "type", isDate: true },
+      ])
+    );
   }, [
-    diagnosticReportQuery,
-    medicationDispenseCommon,
-    medicationRequestCommon,
-    patientEncountersQuery,
-  ]);
-
-  useEffect(() => {
-    if (queriesFinished) {
-      const patientEncounterModels = patientEncountersQuery.data?.map(
-        createTimelineEventModel
-      );
-      const diagnosticReportModels = diagnosticReportQuery.data?.map(
-        createTimelineEventModel
-      );
-      const medicationRequestCommonModels = medicationRequestCommon.data?.map(
-        createTimelineEventModel
-      );
-      const medicationDispenseCommonModels = medicationDispenseCommon.data?.map(
-        createTimelineEventModel
-      );
-      const mergedModels = compact(
-        concat(
-          diagnosticReportModels,
-          patientEncounterModels,
-          medicationRequestCommonModels,
-          medicationDispenseCommonModels
-        )
-      );
-      setTimelineEvents(
-        applySorts(mergedModels, [
-          { dir: "desc", key: "date", isDate: true },
-          { dir: "desc", key: "type", isDate: true },
-        ])
-      );
-    }
-  }, [
-    queriesFinished,
     patientEncountersQuery.data,
     diagnosticReportQuery.data,
     medicationRequestCommon.data,
