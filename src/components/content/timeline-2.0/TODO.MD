@@ -1,4 +1,4 @@
-- Storybook
-- Finish filters
-- Clean up seed data
-- Put in CTW
+- Storybook (Priyank)
+- Finish filters (Mike)
+- Clean up seed data (Gunther)
+- Put in CTW w/ feature flags
