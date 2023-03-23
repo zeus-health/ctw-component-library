@@ -108,7 +108,7 @@ const demoComponents: DemoComponent[] = [
   // { render: () => <PatientAllergies />, title: "Patient Allergies" },
   // { render: () => <PatientImmunizations />, title: "Patient Immunizations" },
   // { render: () => <PatientSearch />, title: "Patient Search" },
-  { render: () => <PatientTimelineV2 />, title: "WOOOOOO THIS TOOK 3 Weeks" },
+  { render: () => <PatientTimelineV2 />, title: "Patient Timeline" },
 ];
 
 const DemoApp = ({ accessToken = "" }) => (
