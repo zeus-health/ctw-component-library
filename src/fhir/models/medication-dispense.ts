@@ -1,5 +1,8 @@
 import { FHIRModel } from "./fhir-model";
-import { getPerformingOrganization } from "@/fhir/medication";
+import {
+  getMedicationDisplayName,
+  getPerformingOrganization,
+} from "@/fhir/medication";
 import { PractitionerModel } from "@/fhir/models/practitioner";
 import { findReference } from "@/fhir/resource-helper";
 
@@ -45,5 +48,9 @@ export class MedicationDispenseModel extends FHIRModel<fhir4.MedicationDispense>
   get supplied(): string | undefined {
     const { value, unit = "days" } = this.resource.daysSupply || {};
     return value ? `${value} ${unit}` : undefined;
+  }
+
+  get medicationDisplayName() {
+    return getMedicationDisplayName(this.resource, this.includedResources);
   }
 }

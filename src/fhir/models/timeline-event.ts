@@ -59,7 +59,7 @@ export class TimelineEventModel extends FHIRModel<TimelineEvent> {
     }
   }
 
-  get eventDate() {
+  get date() {
     if (this.model.constructor === EncounterModel) {
       return this.model.periodStart;
     }
@@ -78,7 +78,7 @@ export class TimelineEventModel extends FHIRModel<TimelineEvent> {
     return undefined;
   }
 
-  get display() {
+  get type() {
     if (this.model.constructor === EncounterModel) {
       return "Encounter";
     }
@@ -95,7 +95,7 @@ export class TimelineEventModel extends FHIRModel<TimelineEvent> {
     return undefined;
   }
 
-  get eventSubtype() {
+  get subtype() {
     if (this.model.constructor === EncounterModel) {
       return this.model.typeDisplay;
     }
@@ -103,10 +103,27 @@ export class TimelineEventModel extends FHIRModel<TimelineEvent> {
       return this.model.category;
     }
     if (this.model.constructor === MedicationRequestModel) {
-      return;
+      return this.model.medicationDisplayName;
     }
     if (this.model.constructor === MedicationDispenseModel) {
-      return "";
+      return this.model.medicationDisplayName;
+    }
+
+    return undefined;
+  }
+
+  get actor() {
+    if (this.model.constructor === EncounterModel) {
+      return this.model.participants;
+    }
+    if (this.model.constructor === DiagnosticReportModel) {
+      return this.model.performer;
+    }
+    if (this.model.constructor === MedicationRequestModel) {
+      return this.model.prescriber;
+    }
+    if (this.model.constructor === MedicationDispenseModel) {
+      return this.model.performer;
     }
 
     return undefined;

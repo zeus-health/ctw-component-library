@@ -14,7 +14,7 @@ export function PatientTimelineV2({ className }: PatientTimelineProps) {
   const timelineEventsQuery = useTimelineEvents();
   const { featureFlags } = useCTW();
   const openDetails = useResourceDetailsDrawer({
-    header: (m) => `${m.eventDate}`,
+    header: (m) => `${m.date}`,
 
     getSourceDocument: true,
     details: timelineEventData,
@@ -38,5 +38,5 @@ export function PatientTimelineV2({ className }: PatientTimelineProps) {
 }
 
 const timelineEventData = (encounter: TimelineEventModel) => [
-  { label: "Event Date", value: encounter.eventDate },
+  { label: "Event Date", value: encounter.date },
 ];

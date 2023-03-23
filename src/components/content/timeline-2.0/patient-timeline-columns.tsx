@@ -5,23 +5,31 @@ import { TimelineEventModel } from "@/fhir/models/timeline-event";
 export const patientTimelineColumns = (includeViewFhirResource = false) => {
   const timellineColumns: TableColumn<TimelineEventModel>[] = [
     {
-      title: "Date",
+      title: "WHEN",
       widthPercent: 10,
       minWidth: 120,
       render: (timelineEvent) => (
-        <div className="group-hover:ctw-underline">
-          {timelineEvent.eventDate}
-        </div>
+        <div className="group-hover:ctw-underline">{timelineEvent.date}</div>
       ),
     },
     {
-      title: "Type",
+      title: "WHAT",
       widthPercent: 20,
       minWidth: 150,
       render: (timelineEvent) => (
         <div>
-          <div>{timelineEvent.display}</div>
-          <div>{timelineEvent.eventSubtype}</div>
+          <div>{timelineEvent.type}</div>
+          <div>{timelineEvent.subtype}</div>
+        </div>
+      ),
+    },
+    {
+      title: "WHO",
+      widthPercent: 20,
+      minWidth: 150,
+      render: (timelineEvent) => (
+        <div>
+          <div>{timelineEvent.actor}</div>
         </div>
       ),
     },

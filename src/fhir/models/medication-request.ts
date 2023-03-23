@@ -1,3 +1,4 @@
+import { getMedicationDisplayName } from "../medication";
 import { FHIRModel } from "./fhir-model";
 import { PractitionerModel } from "@/fhir/models/practitioner";
 import { findReference } from "@/fhir/resource-helper";
@@ -18,6 +19,10 @@ export class MedicationRequestModel extends FHIRModel<fhir4.MedicationRequest> {
       return new PractitionerModel(practitioner).fullName;
     }
     return this.resource.requester?.display;
+  }
+
+  get medicationDisplayName() {
+    return getMedicationDisplayName(this.resource, this.includedResources);
   }
 
   get pharmacy() {
@@ -49,5 +54,9 @@ export class MedicationRequestModel extends FHIRModel<fhir4.MedicationRequest> {
       };
     }
     return { name: display };
+  }
+
+  get prescriber() {
+    return this.includedRequester;
   }
 }
