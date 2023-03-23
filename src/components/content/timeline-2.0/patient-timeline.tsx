@@ -5,6 +5,12 @@ import { useCTW } from "@/components/core/providers/ctw-provider";
 import { Table } from "@/components/core/table/table";
 import { TimelineEventModel } from "@/fhir/models/timeline-event";
 import { useTimelineEvents } from "@/fhir/timeline-event";
+import { useState } from "react";
+import { CollapsibleDataListEntry } from "@/components/core/collapsible-data-list";
+import { usePatientEncounterDetailsDrawer } from "../timeline/patient-timeline";
+import { EncounterModel } from "@/fhir/models/encounter";
+import { useObservationsDetailsDrawer } from "../observations/helpers/drawer";
+import { DiagnosticReportModel } from "@/fhir/models";
 
 export type PatientTimelineProps = {
   className?: cx.Argument;
@@ -13,12 +19,8 @@ export type PatientTimelineProps = {
 export function PatientTimelineV2({ className }: PatientTimelineProps) {
   const timelineEventsQuery = useTimelineEvents();
   const { featureFlags } = useCTW();
-  const openDetails = useResourceDetailsDrawer({
-    header: (m) => `${m.eventDate}`,
-
-    getSourceDocument: true,
-    details: timelineEventData,
-  });
+  const openEncounterDetails = usePatientEncounterDetailsDrawer();
+  const openDiagnosticReportDetails = useObservationsDetailsDrawer();
 
   return (
     <div
@@ -31,12 +33,14 @@ export function PatientTimelineV2({ className }: PatientTimelineProps) {
         isLoading={timelineEventsQuery.isLoading}
         records={timelineEventsQuery.data}
         columns={patientTimelineColumns(true)}
-        handleRowClick={openDetails}
+        handleRowClick={(record) => {
+          if (record.model.constructor === EncounterModel) {
+            openEncounterDetails(record.model);
+          } else if (record.model.constructor === DiagnosticReportModel) {
+            openDiagnosticReportDetails(record.model);
+          }
+        }}
       />
     </div>
   );
 }
-
-const timelineEventData = (encounter: TimelineEventModel) => [
-  { label: "Event Date", value: encounter.eventDate },
-];

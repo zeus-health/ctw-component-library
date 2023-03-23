@@ -15,13 +15,7 @@ export type PatientTimelineProps = {
 export function PatientTimeline({ className }: PatientTimelineProps) {
   const patientEncounterQuery = usePatientEncounters();
   const { featureFlags } = useCTW();
-  const openDetails = useResourceDetailsDrawer({
-    header: (m) => `${m.periodStart} - ${m.periodEnd}`,
-    subHeader: (m) => m.typeDisplay,
-    getSourceDocument: true,
-    details: encounterData,
-  });
-
+  const openDetails = usePatientEncounterDetailsDrawer();
   const encounters = orderBy(
     patientEncounterQuery.data ?? [],
     [(encounter) => encounter.resource.period?.start ?? ""],
@@ -45,7 +39,7 @@ export function PatientTimeline({ className }: PatientTimelineProps) {
   );
 }
 
-const encounterData = (encounter: EncounterModel) => [
+export const encounterData = (encounter: EncounterModel) => [
   { label: "Period Start", value: encounter.periodStart },
   { label: "Period End", value: encounter.periodEnd },
   { label: "Status", value: capitalize(encounter.status) },
@@ -62,3 +56,12 @@ const encounterData = (encounter: EncounterModel) => [
   { label: "Diagnosis", value: encounter.diagnosis },
   { label: "Discharge Disposition", value: encounter.dischargeDisposition },
 ];
+
+export function usePatientEncounterDetailsDrawer() {
+  return useResourceDetailsDrawer({
+    header: (m) => `${m.periodStart} - ${m.periodEnd}`,
+    subHeader: (m) => m.typeDisplay,
+    getSourceDocument: true,
+    details: encounterData,
+  });
+}
