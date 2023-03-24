@@ -24,9 +24,9 @@ export const patientTimelineColumns = (includeViewFhirResource = false) => {
       title: "Actor",
       render: (timelineEvent) => (
         <>
-          {timelineEvent.actor.map((row) => (
-            <div className="ctw-capitalize" key={row}>
-              {row.toLocaleLowerCase()}
+          {timelineEvent.actor.map((detail) => (
+            <div className="ctw-capitalize" key={detail}>
+              {detail.toLocaleLowerCase()}
             </div>
           ))}
         </>
