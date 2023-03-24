@@ -6,8 +6,8 @@ import {
 import { MedicationDrawer } from "../medications/history/medication-drawer";
 import { useObservationsDetailsDrawer } from "../observations/helpers/drawer";
 import { ResourceTableActions } from "../resource/resource-table-actions";
-import { usePatientEncounterDetailsDrawer } from "../timeline/patient-timeline";
 import { defaultTimelineFilters, timelineFilters } from "./helpers/filters";
+import { usePatientEncounterDetailsDrawer } from "./helpers/modal-hooks";
 import { patientTimelineColumns } from "./patient-timeline-columns";
 import { DrawerProps } from "@/components/core/drawer";
 import { useCTW } from "@/components/core/providers/ctw-provider";
