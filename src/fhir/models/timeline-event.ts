@@ -82,86 +82,80 @@ export class TimelineEventModel extends FHIRModel<TimelineEventResource> {
   }
 
   get type() {
-    if (this.model.constructor === EncounterModel) {
-      return "Encounter";
+    switch (this.model.kind) {
+      case "Encounter":
+        return "Encounter";
+      case "DiagnosticReport":
+        return "Diagnostic Report";
+      case "MedicationRequest":
+        return "Prescription";
+      case "MedicationDispense":
+        return "Medication Fill";
+      default:
+        return undefined;
     }
-    if (this.model.constructor === DiagnosticReportModel) {
-      return "Diagnostic Report";
-    }
-    if (this.model.constructor === MedicationRequestModel) {
-      return "Prescription";
-    }
-    if (this.model.constructor === MedicationDispenseModel) {
-      return "Medication Fill";
-    }
-
-    return undefined;
   }
 
   get subtype() {
-    if (this.model.constructor === EncounterModel) {
-      return this.model.typeDisplay;
+    switch (this.model.kind) {
+      case "Encounter":
+        return this.model.typeDisplay;
+      case "DiagnosticReport":
+        return this.model.category;
+      case "MedicationRequest":
+        return this.model.medicationDisplayName;
+      case "MedicationDispense":
+        return this.model.medicationDisplayName;
+      default:
+        return undefined;
     }
-    if (this.model.constructor === DiagnosticReportModel) {
-      return this.model.category;
-    }
-    if (this.model.constructor === MedicationRequestModel) {
-      return this.model.medicationDisplayName;
-    }
-    if (this.model.constructor === MedicationDispenseModel) {
-      return this.model.medicationDisplayName;
-    }
-
-    return undefined;
   }
 
   get actorDetails(): string[] {
-    if (this.model.constructor === EncounterModel) {
-      return compact([this.model.participants, this.model.location]);
+    switch (this.model.kind) {
+      case "Encounter":
+        return compact([this.model.participants, this.model.location]);
+      case "DiagnosticReport":
+        return compact([this.model.performer]);
+      case "MedicationRequest":
+        return compact([this.model.includedRequester]);
+      case "MedicationDispense":
+        return compact([
+          this.model.performerDetails.name,
+          this.model.performerDetails.address,
+          this.model.performerDetails.telecom,
+        ]);
+      default:
+        return [];
     }
-    if (this.model.constructor === DiagnosticReportModel) {
-      return compact([this.model.performer]);
-    }
-    if (this.model.constructor === MedicationRequestModel) {
-      return compact([this.model.includedRequester]);
-    }
-    if (this.model.constructor === MedicationDispenseModel) {
-      return compact([
-        this.model.performerDetails.name,
-        this.model.performerDetails.address,
-        this.model.performerDetails.telecom,
-      ]);
-    }
-
-    return [];
   }
 
   get modifiers(): string[] {
-    if (this.model.constructor === EncounterModel) {
-      return compact(this.model.diagnoses);
+    switch (this.model.kind) {
+      case "Encounter":
+        return compact(this.model.diagnoses);
+      case "DiagnosticReport":
+        return [
+          this.model.results.length > 0
+            ? `${this.model.results.length} results available`
+            : "",
+        ];
+      case "MedicationRequest":
+        return compact([
+          codeableConceptLabel(this.model.resource.dosageInstruction?.[0]),
+        ]);
+      case "MedicationDispense":
+        return compact([
+          codeableConceptLabel(this.model.resource.dosageInstruction?.[0]),
+          this.model.resource.daysSupply?.value
+            ? `Days supply: ${this.model.resource.daysSupply?.value}`
+            : "",
+          this.model.resource.quantity?.value
+            ? `Quantity: ${this.model.resource.quantity?.value}`
+            : "",
+        ]);
+      default:
+        return [];
     }
-    if (this.model.constructor === DiagnosticReportModel) {
-      return [
-        this.model.results.length > 0
-          ? `${this.model.results.length} results available`
-          : "",
-      ];
-    }
-    if (this.model.constructor === MedicationRequestModel) {
-      return compact([
-        codeableConceptLabel(this.model.resource.dosageInstruction?.[0]),
-      ]);
-    }
-    if (this.model.constructor === MedicationDispenseModel) {
-      const daysSupply = this.model.resource.daysSupply?.value;
-      const quantity = this.model.resource.quantity?.value;
-      return compact([
-        codeableConceptLabel(this.model.resource.dosageInstruction?.[0]),
-        daysSupply ? `Days supply: ${daysSupply}` : "",
-        quantity ? `Quantity: ${quantity}` : "",
-      ]);
-    }
-
-    return [];
   }
 }
