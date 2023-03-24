@@ -35,13 +35,11 @@ export const patientTimelineColumns = (includeViewFhirResource = false) => {
     {
       title: "Modifiers",
       render: (timelineEvent) => (
-        <div>
-          <SimpleMoreList
-            items={timelineEvent.modifiers}
-            limit={3}
-            total={timelineEvent.modifiers.length}
-          />
-        </div>
+        <SimpleMoreList
+          items={timelineEvent.modifiers}
+          limit={3}
+          total={timelineEvent.modifiers.length}
+        />
       ),
     },
   ];
