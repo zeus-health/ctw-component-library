@@ -37,12 +37,7 @@ export function PatientTimelineV2({ className }: PatientTimelineProps) {
   const openMedicationDispenseDetails = useMedicationStatementDetailsDrawer();
 
   return (
-    <div
-      className={cx(
-        className,
-        "ctw-scrollable-pass-through-height ctw-overflow-hidden"
-      )}
-    >
+    <div className={cx(className, "ctw-scrollable-pass-through-height")}>
       <ResourceTableActions
         filterOptions={{
           onChange: setFilters,
