@@ -21,6 +21,8 @@ export const MaritalStatuses = [
 ] as const;
 
 export class PatientModel extends FHIRModel<fhir4.Patient> {
+  kind = "Patient" as const;
+
   get active(): boolean | undefined {
     return this.resource.active;
   }

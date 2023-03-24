@@ -16,6 +16,8 @@ import {
 import { find, get } from "@/utils/nodash";
 
 export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
+  kind = "DiagnosticReport" as const;
+
   get category() {
     const category =
       codeableConceptLabel(this.resource.category?.[0]) || this.reportCategory;

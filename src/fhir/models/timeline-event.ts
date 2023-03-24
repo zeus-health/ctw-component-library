@@ -16,6 +16,8 @@ export type TimelineEventResource =
   | fhir4.MedicationDispense;
 
 export class TimelineEventModel extends FHIRModel<TimelineEventResource> {
+  kind = "TimelineEvent" as const;
+
   public model:
     | EncounterModel
     | DiagnosticReportModel
@@ -63,22 +65,20 @@ export class TimelineEventModel extends FHIRModel<TimelineEventResource> {
   }
 
   get date() {
-    if (this.model.constructor === EncounterModel) {
-      return this.model.periodStart;
+    switch (this.model.kind) {
+      case "Encounter":
+        return this.model.periodStart;
+      case "DiagnosticReport":
+        return this.model.effectiveStart;
+      case "MedicationRequest":
+        return formatDateISOToLocal(this.model.resource.authoredOn);
+      case "MedicationDispense":
+        return formatDateISOToLocal(
+          this.model.resource.whenHandedOver || this.model.resource.whenPrepared
+        );
+      default:
+        return undefined;
     }
-    if (this.model.constructor === DiagnosticReportModel) {
-      return this.model.effectiveStart;
-    }
-    if (this.model.constructor === MedicationRequestModel) {
-      return formatDateISOToLocal(this.model.resource.authoredOn);
-    }
-    if (this.model.constructor === MedicationDispenseModel) {
-      return formatDateISOToLocal(
-        this.model.resource.whenHandedOver || this.model.resource.whenPrepared
-      );
-    }
-
-    return undefined;
   }
 
   get type() {

@@ -3,6 +3,8 @@ import { codeableConceptLabel } from "@/fhir/codeable-concept";
 import { displayOnset } from "@/fhir/display-onset";
 
 export class AllergyModel extends FHIRModel<fhir4.AllergyIntolerance> {
+  kind = "Allergy" as const;
+
   get categories(): string | undefined {
     return this.resource.category?.join(", ");
   }

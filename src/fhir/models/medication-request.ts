@@ -8,6 +8,8 @@ import { findReference } from "@/fhir/resource-helper";
 import { compact } from "@/utils/nodash/fp";
 
 export class MedicationRequestModel extends FHIRModel<fhir4.MedicationRequest> {
+  kind = "MedicationRequest" as const;
+
   get includedRequester() {
     const reference = this.resource.requester?.reference;
 

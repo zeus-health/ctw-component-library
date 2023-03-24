@@ -6,6 +6,8 @@ import { isNullFlavorSystem } from "@/fhir/mappings/null-flavor";
 import { compact, flatten, uniq } from "@/utils/nodash";
 
 export class EncounterModel extends FHIRModel<fhir4.Encounter> {
+  kind = "Encounter" as const;
+
   get class(): string | undefined {
     const { display, code } = this.resource.class;
     return display ?? code !== "UNK" ? code : undefined;
