@@ -11,7 +11,7 @@ import {
   TimelineEventResource,
 } from "./models/timeline-event";
 import { ResourceMap } from "@/fhir/types";
-import { compact, concat } from "@/utils/nodash";
+import { compact, concat, flatten, some } from "@/utils/nodash";
 import { applySorts } from "@/utils/sort";
 
 type TimelineEventModelParams = {
@@ -27,33 +27,30 @@ export function useTimelineEvents() {
   const medicationRequestCommon = useQueryGetPatientMedRequestsCommon();
   const medicationDispenseCommon = useQueryGetPatientMedDispenseCommon();
 
+  const queries = [
+    patientEncountersQuery,
+    diagnosticReportQuery,
+    medicationRequestCommon,
+    medicationDispenseCommon,
+  ];
+
   useEffect(() => {
-    const patientEncounterModels = patientEncountersQuery.data?.map(
-      createTimelineEventModel
-    );
-    const diagnosticReportModels = diagnosticReportQuery.data?.map(
-      createTimelineEventModel
-    );
-    const medicationRequestCommonModels = medicationRequestCommon.data?.map(
-      createTimelineEventModel
-    );
-    const medicationDispenseCommonModels = medicationDispenseCommon.data?.map(
-      createTimelineEventModel
-    );
-    const mergedModels = compact(
-      concat(
-        diagnosticReportModels,
-        patientEncounterModels,
-        medicationRequestCommonModels,
-        medicationDispenseCommonModels
+    const models = compact(
+      flatten(
+        concat(
+          queries.map((query) => query.data?.map(createTimelineEventModel))
+        )
       )
     );
+
     setTimelineEvents(
-      applySorts(mergedModels, [
+      applySorts(models, [
         { dir: "desc", key: "date", isDate: true },
         { dir: "desc", key: "type" },
       ])
     );
+    // Disabling because including queries will cause infinite loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     patientEncountersQuery.data,
     diagnosticReportQuery.data,
@@ -61,12 +58,9 @@ export function useTimelineEvents() {
     medicationDispenseCommon.data,
   ]);
 
-  const isLoading =
-    patientEncountersQuery.isLoading || diagnosticReportQuery.isLoading;
-  const isFetching =
-    patientEncountersQuery.isFetching || diagnosticReportQuery.isFetching;
-  const isError =
-    patientEncountersQuery.isError || diagnosticReportQuery.isError;
+  const isLoading = some(queries, "isLoading");
+  const isFetching = some(queries, "isFetching");
+  const isError = some(queries, "isError");
 
   return {
     isFetching,
