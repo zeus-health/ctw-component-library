@@ -115,7 +115,7 @@ export class TimelineEventModel extends FHIRModel<TimelineEventResource> {
     return undefined;
   }
 
-  get actor(): string[] {
+  get actorDetails(): string[] {
     if (this.model.constructor === EncounterModel) {
       return compact([this.model.participants, this.model.location]);
     }
