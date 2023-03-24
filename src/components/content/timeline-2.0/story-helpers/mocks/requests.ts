@@ -1,9 +1,9 @@
 import { rest } from "msw";
+import { medicationDispense } from "../../../medications/story-helpers/mocks/medication-dispense";
+import { medicationRequest } from "../../../medications/story-helpers/mocks/medication-request";
 import { encounters } from "../../../timeline/story-helpers/mocks/encounters";
 import { patient } from "../../../timeline/story-helpers/mocks/patient";
 import { provenances } from "../../../timeline/story-helpers/mocks/provenances";
-import { medicationDispense } from "../../../medications/story-helpers/mocks/medication-dispense";
-import { medicationRequest } from "../../../medications/story-helpers/mocks/medication-request";
 import { medicationStatement } from "./medication-statement";
 
 export function setupTimelineMocks() {

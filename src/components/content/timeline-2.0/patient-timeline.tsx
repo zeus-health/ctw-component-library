@@ -103,7 +103,7 @@ type MedicationDrawerComponentProps = {
 const MedicationDrawerComponent = (props: MedicationDrawerComponentProps) => {
   const { medicationEventModel } = props;
   const medStatement = useQueryMedicationStatement(medicationEventModel.rxNorm);
-  if (medStatement?.data?.length) {
+  if (medStatement.data?.length) {
     return <MedicationDrawer medication={medStatement.data[0]} {...props} />;
   }
   return <></>;
