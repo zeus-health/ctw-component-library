@@ -133,7 +133,7 @@ export async function getBuilderMedications(
   }
 }
 
-export async function getMedicationRequestCommon(
+export async function getCommonMedicationRequests(
   requestContext: CTWRequestContext,
   patient: PatientModel,
   keys: object[] = []
