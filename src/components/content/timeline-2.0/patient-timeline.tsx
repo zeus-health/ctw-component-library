@@ -54,7 +54,7 @@ export function PatientTimelineV2({ className }: PatientTimelineProps) {
         showTableHead={false}
         isLoading={timelineEventsQuery.isLoading}
         records={data}
-        columns={patientTimelineColumns(true)}
+        columns={patientTimelineColumns(featureFlags?.enableViewFhirButton)}
         handleRowClick={(record) => {
           if (record.model.constructor === EncounterModel) {
             openEncounterDetails(record.model);
