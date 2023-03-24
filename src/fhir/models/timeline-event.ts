@@ -148,10 +148,10 @@ export class TimelineEventModel extends FHIRModel<TimelineEventResource> {
         return compact([
           codeableConceptLabel(this.model.resource.dosageInstruction?.[0]),
           this.model.resource.daysSupply?.value
-            ? `Days supply: ${this.model.resource.daysSupply?.value}`
+            ? `Days supply: ${this.model.resource.daysSupply.value}`
             : "",
           this.model.resource.quantity?.value
-            ? `Quantity: ${this.model.resource.quantity?.value}`
+            ? `Quantity: ${this.model.resource.quantity.value}`
             : "",
         ]);
       default:
