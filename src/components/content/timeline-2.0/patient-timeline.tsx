@@ -1,5 +1,4 @@
 import cx from "classnames";
-import { defaultConditionFilters } from "../conditions/helpers/filters";
 import { MedicationDrawer } from "../medications/history/medication-drawer";
 import { useObservationsDetailsDrawer } from "../observations/helpers/drawer";
 import { ResourceTableActions } from "../resource/resource-table-actions";
@@ -48,7 +47,7 @@ export function PatientTimelineV2({ className }: PatientTimelineProps) {
       <ResourceTableActions
         filterOptions={{
           onChange: setFilters,
-          defaultState: defaultConditionFilters,
+          defaultState: defaultTimelineFilters,
           filters: timelineFilters(timelineEventsQuery.data),
         }}
         sortOptions={{
