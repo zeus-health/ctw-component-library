@@ -5,7 +5,7 @@ import { getIncludedBasics, getMergedIncludedResources } from "@/fhir/bundle";
 import {
   getActiveMedications,
   getBuilderMedications,
-  getMedicationDispnseCommon,
+  getMedicationDispenseCommon,
   getMedicationRequestCommon,
   getMedicationStatement,
   MedicationResults,
@@ -78,7 +78,7 @@ export function useQueryGetPatientMedDispenseCommon() {
       },
     ],
     withTimerMetric(
-      getMedicationDispnseCommon,
+      getMedicationDispenseCommon,
       "req.medication_dispense_common"
     )
   );
@@ -165,72 +165,3 @@ export function useQueryAllPatientMedications() {
     otherProviderMedications,
   };
 }
-
-// export function useQueryAllPatientMedications() {
-//   const [builderMedications, setBuilderMedications] = useState<
-//     MedicationStatementModel[]
-//   >([]);
-//   const [otherProviderMedications, setOtherProviderMedications] = useState<
-//     MedicationStatementModel[]
-//   >([]);
-
-//   const summarizedMedicationsQuery = useQueryGetSummarizedPatientMedications();
-//   const builderMedicationsQuery = useQueryGetPatientMedsForBuilder();
-
-//   useEffect(() => {
-//     if (
-//       summarizedMedicationsQuery.data?.bundle &&
-//       builderMedicationsQuery.data?.bundle
-//     ) {
-//       const { medications: summarizedMedications, bundle: summarizedBundle } =
-//         summarizedMedicationsQuery.data;
-//       const { medications: allMedicationsForBuilder } =
-//         builderMedicationsQuery.data;
-
-//       const basicsMap = getIncludedBasics(summarizedBundle);
-//       // Get included resources from both bundles so that we can reference them for contained medications.
-//       const includedResources = getMergedIncludedResources([
-//         summarizedMedicationsQuery.data.bundle,
-//         builderMedicationsQuery.data.bundle,
-//       ]);
-
-//       // Split the summarized medications into those known/unknown to the builder
-//       const splitData = splitMedications(
-//         summarizedMedications.map(
-//           (m) =>
-//             new MedicationStatementModel(
-//               m,
-//               includedResources,
-//               basicsMap.get(m.id ?? "")
-//             )
-//         ),
-//         allMedicationsForBuilder.map(
-//           (m) =>
-//             new MedicationStatementModel(
-//               m,
-//               includedResources,
-//               basicsMap.get(m.id ?? "")
-//             )
-//         )
-//       );
-
-//       setBuilderMedications(splitData.builderMedications);
-//       setOtherProviderMedications(splitData.otherProviderMedications);
-//     }
-//   }, [summarizedMedicationsQuery.data, builderMedicationsQuery.data]);
-
-//   const isLoading =
-//     builderMedicationsQuery.isLoading || summarizedMedicationsQuery.isLoading;
-//   const isFetching =
-//     builderMedicationsQuery.isFetching || summarizedMedicationsQuery.isFetching;
-//   const isError =
-//     builderMedicationsQuery.isError || summarizedMedicationsQuery.isError;
-
-//   return {
-//     isFetching,
-//     isLoading,
-//     isError,
-//     builderMedications,
-//     otherProviderMedications,
-//   };
-// }

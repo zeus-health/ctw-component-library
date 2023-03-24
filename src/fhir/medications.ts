@@ -158,7 +158,7 @@ export async function getMedicationRequestCommon(
   }
 }
 
-export async function getMedicationDispnseCommon(
+export async function getMedicationDispenseCommon(
   requestContext: CTWRequestContext,
   patient: PatientModel,
   keys: object[] = []
@@ -190,9 +190,9 @@ export async function getMedicationDispnseCommon(
 export async function getMedicationStatement(
   requestContext: CTWRequestContext,
   patient: PatientModel,
-  keys: string | undefined[] = []
+  keys: (string | undefined)[] = []
 ) {
-  const [rxNorm = ""] = keys;
+  const [rxNorm] = keys;
   if (!rxNorm) {
     return [];
   }
