@@ -1,14 +1,13 @@
 import cx from "classnames";
+import {
+  defaultTimelineSort,
+  timelineSortOptions,
+} from "../conditions/helpers/sorts";
 import { MedicationDrawer } from "../medications/history/medication-drawer";
 import { useObservationsDetailsDrawer } from "../observations/helpers/drawer";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { usePatientEncounterDetailsDrawer } from "../timeline/patient-timeline";
-import {
-  defaultTimelineFilters,
-  defaultTimelineSort,
-  timelineFilters,
-  timelineSortOptions,
-} from "./helpers/filters";
+import { defaultTimelineFilters, timelineFilters } from "./helpers/filters";
 import { patientTimelineColumns } from "./patient-timeline-columns";
 import { DrawerProps } from "@/components/core/drawer";
 import { useCTW } from "@/components/core/providers/ctw-provider";

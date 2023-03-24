@@ -3,14 +3,8 @@ import {
   FilterChangeEvent,
   FilterItem,
 } from "@/components/core/filter-bar/filter-bar-types";
-import { SortOption } from "@/components/core/sort-button/sort-button";
 import { TimelineEventModel } from "@/fhir/models/timeline-event";
 import { compact, uniq } from "@/utils/nodash/fp";
-
-export const defaultTimelineSort: SortOption<TimelineEventModel> = {
-  display: "Date (New to Old)",
-  sorts: [{ key: "date", dir: "desc", isDate: true }],
-};
 
 export function timelineFilters(
   timelineEvents: TimelineEventModel[]
@@ -40,11 +34,3 @@ export const defaultTimelineFilters: FilterChangeEvent = {
     type: "checkbox",
   },
 };
-
-export const timelineSortOptions: SortOption<TimelineEventModel>[] = [
-  defaultTimelineSort,
-  {
-    display: "Date (Old to New)",
-    sorts: [{ key: "date", dir: "asc", isDate: true }],
-  },
-];
