@@ -5,6 +5,7 @@ import {
 } from "../conditions/helpers/sorts";
 import { MedicationDrawer } from "../medications/history/medication-drawer";
 import { useObservationsDetailsDrawer } from "../observations/helpers/drawer";
+import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { usePatientEncounterDetailsDrawer } from "../timeline/patient-timeline";
 import { defaultTimelineFilters, timelineFilters } from "./helpers/filters";
@@ -12,7 +13,6 @@ import { patientTimelineColumns } from "./patient-timeline-columns";
 import { DrawerProps } from "@/components/core/drawer";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
-import { Table } from "@/components/core/table/table";
 import { DiagnosticReportModel, MedicationDispenseModel } from "@/fhir/models";
 import { EncounterModel } from "@/fhir/models/encounter";
 import { MedicationRequestModel } from "@/fhir/models/medication-request";
@@ -50,12 +50,12 @@ export function PatientTimelineV2({ className }: PatientTimelineProps) {
           onChange: setSort,
         }}
       />
-      <Table
+      <ResourceTable
         showTableHead={false}
         isLoading={timelineEventsQuery.isLoading}
         records={data}
         columns={patientTimelineColumns(featureFlags?.enableViewFhirButton)}
-        handleRowClick={(record) => {
+        onRowClick={(record) => {
           if (record.model.constructor === EncounterModel) {
             openEncounterDetails(record.model);
           } else if (record.model.constructor === DiagnosticReportModel) {
