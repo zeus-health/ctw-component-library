@@ -51,7 +51,7 @@ export function useTimelineEvents() {
     setTimelineEvents(
       applySorts(mergedModels, [
         { dir: "desc", key: "date", isDate: true },
-        { dir: "desc", key: "type", isDate: true },
+        { dir: "desc", key: "type" },
       ])
     );
   }, [
