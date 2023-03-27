@@ -91,10 +91,8 @@ function getHistoryEntry(condition: ConditionModel): HistoryEntryProps {
   return {
     id: condition.id,
     date: condition.recordedDate,
-    versionId: condition.resource.meta?.versionId,
-    title: `${startCase(condition.categories[0])} -- ${
-      condition.resource.meta?.versionId
-    }`,
+    versionId: condition.versionId,
+    title: startCase(condition.categories[0]),
     subtitle: condition.patient?.organization?.name,
     details: detailData,
   };

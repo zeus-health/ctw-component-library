@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { HistoryEntry, HistoryEntryProps } from "./history-entry";
+import { orderBy } from "@/utils/nodash";
 
 export type HistoryEntries = HistoryEntryProps[];
 
@@ -10,8 +11,19 @@ export type HistoryProps = {
 
 export const History = ({ entries, limit }: HistoryProps) => {
   const [showAll, setShowAll] = useState(!limit || entries.length <= limit);
+
+  // Sort by date descending, then by version descending
+  // We convert the date string to a Date object so that
+  // it sorts correctly.
+  const sortedEntries = orderBy(
+    entries,
+    [(e) => (e.date ? new Date(e.date) : ""), "versionId"],
+    ["desc", "desc"]
+  );
+
   const displayedEntries =
-    showAll || !limit ? entries : entries.slice(0, limit);
+    showAll || !limit ? sortedEntries : sortedEntries.slice(0, limit);
+
   return (
     <div
       className="ctw-space-y-3"
@@ -44,7 +56,7 @@ export const History = ({ entries, limit }: HistoryProps) => {
           >
             {/* We know limit must be set if showAll is false. */}
             {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
-            Load {entries.length - limit!} More
+            Load {sortedEntries.length - limit!} More
           </button>
         </div>
       )}

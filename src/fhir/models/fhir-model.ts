@@ -28,6 +28,10 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
     return this.resource.id || "";
   }
 
+  get versionId(): string {
+    return this.resource.meta?.versionId || "";
+  }
+
   get isArchived(): boolean {
     return this.getBasicResourceByAction("archive") !== undefined;
   }
