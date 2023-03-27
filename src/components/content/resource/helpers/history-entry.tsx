@@ -12,6 +12,7 @@ export type DetailEntry = {
 export type HistoryEntryProps = {
   id: string;
   date?: string;
+  versionId?: string;
   title?: string;
   subtitle?: string;
   details: DetailEntry[];

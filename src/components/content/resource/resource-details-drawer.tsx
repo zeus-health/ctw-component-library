@@ -1,6 +1,8 @@
+import { UseQueryResult } from "@tanstack/react-query";
 import { ReactNode, useEffect, useState } from "react";
 import { DocumentButton } from "../CCDA/document-button";
 import { useCCDAModal } from "../CCDA/modal-ccda";
+import { History, HistoryEntries } from "./helpers/history";
 import {
   DetailsCard,
   DetailsProps,
@@ -14,12 +16,14 @@ import { DocumentModel } from "@/fhir/models/document";
 import { FHIRModel } from "@/fhir/models/fhir-model";
 import { searchProvenances } from "@/fhir/provenance";
 
+const HISTORY_PAGE_LIMIT = 10;
+
 export type UseResourceDetailsDrawerProps<
   T extends fhir4.Resource,
   M extends FHIRModel<T>
 > = Pick<
   ResourceDetailsDrawerProps<T, M>,
-  "header" | "subHeader" | "getSourceDocument" | "details"
+  "header" | "subHeader" | "getSourceDocument" | "details" | "getHistory"
 >;
 
 export function useResourceDetailsDrawer<
@@ -37,7 +41,7 @@ export function useResourceDetailsDrawer<
   };
 }
 
-export type ResourceDetailsDrawerProps<
+type ResourceDetailsDrawerProps<
   T extends fhir4.Resource,
   M extends FHIRModel<T>
 > = {
@@ -47,11 +51,12 @@ export type ResourceDetailsDrawerProps<
   subHeader?: (model: M) => ReactNode;
   getSourceDocument?: boolean;
   details: (model: M) => DetailsProps["details"];
+  getHistory?: (model: M) => UseQueryResult<HistoryEntries | undefined>;
   isOpen: boolean;
   onClose: () => void;
 };
 
-export function ResourceDetailsDrawer<
+function ResourceDetailsDrawer<
   T extends fhir4.Resource,
   M extends FHIRModel<T>
 >({
@@ -60,6 +65,7 @@ export function ResourceDetailsDrawer<
   details,
   header,
   subHeader,
+  getHistory,
   getSourceDocument,
   isOpen,
   onClose,
@@ -68,6 +74,7 @@ export function ResourceDetailsDrawer<
   const [isLoading, setIsLoading] = useState(false);
   const [binaryId, setBinaryId] = useState<string>();
   const { getRequestContext } = useCTW();
+  const history = getHistory && getHistory(model);
 
   // We optionally look for any associated binary CCDAs
   // if getSourceDocument is true.
@@ -120,6 +127,13 @@ export function ResourceDetailsDrawer<
             }
           />
         )}
+
+        {history &&
+          (history.isLoading ? (
+            <Loading message="Loading history..." />
+          ) : (
+            <History entries={history.data ?? []} limit={HISTORY_PAGE_LIMIT} />
+          ))}
       </Drawer.Body>
     </Drawer>
   );

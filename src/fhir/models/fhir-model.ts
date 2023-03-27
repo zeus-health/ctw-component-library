@@ -1,5 +1,9 @@
 import { Basic, Resource } from "fhir/r4";
-import { SYSTEM_SUMMARY, SYSTEM_ZUS_PROFILE_ACTION } from "../system-urls";
+import {
+  SYSTEM_ENRICHMENT,
+  SYSTEM_SUMMARY,
+  SYSTEM_ZUS_PROFILE_ACTION,
+} from "../system-urls";
 import { ResourceMap } from "../types";
 import { find, startCase } from "@/utils/nodash";
 
@@ -50,6 +54,12 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
         coding: [{ system: SYSTEM_ZUS_PROFILE_ACTION, code: profileAction }],
       },
     }) as Basic | undefined;
+  }
+
+  // Returns true if this resource is enriched with additional data
+  // from Zus enrichment.
+  isEnriched(): boolean {
+    return JSON.stringify(this.resource).includes(SYSTEM_ENRICHMENT);
   }
 
   // Returns a string that would setup this model.
