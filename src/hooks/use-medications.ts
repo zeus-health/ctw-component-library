@@ -5,10 +5,10 @@ import { getIncludedBasics, getMergedIncludedResources } from "@/fhir/bundle";
 import {
   getActiveMedications,
   getBuilderMedications,
+  getCommonMedicationDispenses,
   getCommonMedicationRequests,
   MedicationResults,
   splitMedications,
-  getCommonMedicationDispenses,
   getMedicationStatements,
 } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";

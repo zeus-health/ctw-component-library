@@ -1,9 +1,9 @@
+import { MedicationDrawer } from "../../medications/history/medication-drawer";
 import { DrawerProps } from "@/components/core/drawer";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
 import { MedicationDispenseModel } from "@/fhir/models";
 import { MedicationRequestModel } from "@/fhir/models/medication-request";
 import { useQueryMedicationStatement } from "@/hooks/use-medications";
-import { MedicationDrawer } from "../../medications/history/medication-drawer";
 
 export function useMedicationStatementDetailsDrawer() {
   const { openDrawer } = useDrawer();

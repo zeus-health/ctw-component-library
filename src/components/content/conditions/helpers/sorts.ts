@@ -1,6 +1,5 @@
 import { SortOption } from "@/components/core/sort-button/sort-button";
 import { ConditionModel } from "@/fhir/models";
-import { TimelineEventModel } from "@/fhir/models/timeline-event";
 
 export const defaultConditionSort: SortOption<ConditionModel> = {
   display: "Last Updated (New to Old)",

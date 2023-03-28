@@ -2,11 +2,11 @@ import {
   getIdentifyingRxNormCode,
   getMedicationDisplayName,
 } from "../medication";
+import { formatDateISOToLocal } from "../formatters";
 import { FHIRModel } from "./fhir-model";
 import { PractitionerModel } from "@/fhir/models/practitioner";
 import { findReference } from "@/fhir/resource-helper";
 import { compact } from "@/utils/nodash/fp";
-import { formatDateISOToLocal } from "../formatters";
 
 export class MedicationRequestModel extends FHIRModel<fhir4.MedicationRequest> {
   kind = "MedicationRequest" as const;

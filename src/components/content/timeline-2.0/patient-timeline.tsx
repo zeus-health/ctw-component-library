@@ -2,6 +2,7 @@ import cx from "classnames";
 import { useObservationsDetailsDrawer } from "../observations/helpers/drawer";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { defaultTimelineFilters, timelineFilters } from "./helpers/filters";
+import { useMedicationStatementDetailsDrawer } from "./helpers/medication-detail";
 import { usePatientEncounterDetailsDrawer } from "./helpers/modal-hooks";
 import { defaultTimelineSort, timelineSortOptions } from "./helpers/sorts";
 import { patientTimelineColumns } from "./patient-timeline-columns";
@@ -12,7 +13,6 @@ import { EncounterModel } from "@/fhir/models/encounter";
 import { MedicationRequestModel } from "@/fhir/models/medication-request";
 import { useTimelineEvents } from "@/fhir/timeline-event";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
-import { useMedicationStatementDetailsDrawer } from "./helpers/medication-detail";
 
 export type PatientTimelineProps = {
   className?: cx.Argument;
