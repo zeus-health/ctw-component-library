@@ -63,5 +63,5 @@ const MedicationDrawerComponent = (props: MedicationDrawerComponentProps) => {
   if (medStatement.data?.length) {
     return <MedicationDrawer medication={medStatement.data[0]} {...props} />;
   }
-  return <></>;
+  return null;
 };
