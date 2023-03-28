@@ -1,3 +1,4 @@
+import { MedicationDrawer } from "../../medications/history/medication-drawer";
 import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
 import { CodingList } from "@/components/core/coding-list";
 import { DrawerProps } from "@/components/core/drawer";
@@ -7,7 +8,6 @@ import { EncounterModel } from "@/fhir/models/encounter";
 import { MedicationRequestModel } from "@/fhir/models/medication-request";
 import { useQueryMedicationStatement } from "@/hooks/use-medications";
 import { capitalize } from "@/utils/nodash/fp";
-import { MedicationDrawer } from "../../medications/history/medication-drawer";
 
 export function usePatientEncounterDetailsDrawer() {
   return useResourceDetailsDrawer({
