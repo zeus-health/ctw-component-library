@@ -12,9 +12,11 @@ import {
   PatientMedications,
   PatientProvider,
   PatientSearch,
+  PatientTimeline,
   ZusAggregatedProfile,
 } from ".";
 import "./App.css";
+import { PatientTimelineV2 } from "./components/content/timeline-2.0/patient-timeline";
 
 const {
   VITE_SYSTEM_URL,
@@ -106,6 +108,7 @@ const demoComponents: DemoComponent[] = [
   { render: () => <PatientAllergies />, title: "Patient Allergies" },
   { render: () => <PatientImmunizations />, title: "Patient Immunizations" },
   { render: () => <PatientSearch />, title: "Patient Search" },
+  { render: () => <PatientTimelineV2 />, title: "Patient Timeline" },
 ];
 
 const DemoApp = ({ accessToken = "" }) => (

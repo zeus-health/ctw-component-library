@@ -1,9 +1,16 @@
+import { formatDateISOToLocal } from "../formatters";
 import { FHIRModel } from "./fhir-model";
-import { getPerformingOrganization } from "@/fhir/medication";
+import {
+  getIdentifyingRxNormCode,
+  getMedicationDisplayName,
+  getPerformingOrganization,
+} from "@/fhir/medication";
 import { PractitionerModel } from "@/fhir/models/practitioner";
 import { findReference } from "@/fhir/resource-helper";
 
 export class MedicationDispenseModel extends FHIRModel<fhir4.MedicationDispense> {
+  kind = "MedicationDispense" as const;
+
   get includedPerformer(): string | undefined {
     const reference = this.resource.performer?.[0]?.actor.reference;
 
@@ -42,8 +49,24 @@ export class MedicationDispenseModel extends FHIRModel<fhir4.MedicationDispense>
     return value ? `${value} ${unit}` : undefined;
   }
 
+  get rxNorm(): string | undefined {
+    return getIdentifyingRxNormCode(this.resource, this.includedResources);
+  }
+
   get supplied(): string | undefined {
     const { value, unit = "days" } = this.resource.daysSupply || {};
     return value ? `${value} ${unit}` : undefined;
+  }
+
+  get medicationDisplayName() {
+    return getMedicationDisplayName(this.resource, this.includedResources);
+  }
+
+  get whenHandedOver() {
+    return formatDateISOToLocal(this.resource.whenHandedOver);
+  }
+
+  get whenPrepared() {
+    return formatDateISOToLocal(this.resource.whenPrepared);
   }
 }

@@ -75,10 +75,9 @@ export const TableRows = <T extends MinRecordItem>({
         >
           {columns.map((column, index) => (
             <TableDataCell
-              key={column.title ?? index}
+              key={`${record.id}_${column.title ?? index}`}
               column={column}
               record={record}
-              index={index}
             />
           ))}
           {RowActions && (
