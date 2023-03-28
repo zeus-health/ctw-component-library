@@ -170,7 +170,7 @@ export const historyGeneralizedAnxietyVersions: fhir4.Bundle = {
               onsetDateTime: "2023-03-20",
               recordedDate: "2023-03-27",
               recorder: {
-                display: "wreitzfeld@zushealth.com",
+                display: "Carlos Mendoza",
               },
               note: [
                 {
@@ -324,7 +324,7 @@ export const historyGeneralizedAnxietyVersions: fhir4.Bundle = {
               onsetDateTime: "2023-03-20",
               recordedDate: "2023-03-27",
               recorder: {
-                display: "wreitzfeld@zushealth.com",
+                display: "Carlos Mendoza",
               },
               note: [
                 {
