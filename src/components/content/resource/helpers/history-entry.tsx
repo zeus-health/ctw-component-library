@@ -86,7 +86,7 @@ const DetailSummary = ({
     onClick={() => setIsDetailShown(!isDetailShown)}
     data-zus-telemetry-namespace="DetailSummary"
     data-zus-telemetry-click={isDetailShown ? "Collapse" : "Expand"}
-    className="ctw-w-full ctw-cursor-pointer ctw-border-none ctw-bg-transparent ctw-p-0 ctw-text-base ctw-outline-none"
+    className="ctw-btn-clean"
   >
     <div className="ctw-flex ctw-items-center ctw-justify-between ctw-rounded-lg ctw-bg-bg-white ctw-p-3 ctw-text-left ctw-outline ctw-outline-1 ctw-outline-bg-dark">
       <div className="ctw-flex ctw-space-x-3">
