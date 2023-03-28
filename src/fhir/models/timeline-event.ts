@@ -1,6 +1,5 @@
 import { Resource } from "fhir/r4";
 import { codeableConceptLabel } from "../codeable-concept";
-import { formatDateISOToLocal } from "../formatters";
 import { ResourceMap } from "../types";
 import { DiagnosticReportModel } from "./diagnostic-report";
 import { EncounterModel } from "./encounter";
