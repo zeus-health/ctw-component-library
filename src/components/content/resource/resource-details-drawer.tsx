@@ -117,39 +117,41 @@ function ResourceDetailsDrawer<
       onClose={onClose}
     >
       <Drawer.Body>
-        <div className="ctw-py-2">
-          <div className="ctw-text-2xl">{header(model)}</div>
-          {subHeader && <div className="ctw-text-sm">{subHeader(model)}</div>}
-        </div>
+        <div className="ctw-space-y-4">
+          <div className="ctw-space-y-2">
+            <div className="ctw-text-3xl">{header(model)}</div>
+            {subHeader && <div>{subHeader(model)}</div>}
+          </div>
 
-        {isLoading ? (
-          <Loading message="Loading data..." />
-        ) : (
-          <DetailsCard
-            details={details(model)}
-            documentButton={
-              binaryId && (
-                <DocumentButton
-                  onClick={() =>
-                    openCCDAModal(binaryId, model.resourceTypeTitle)
-                  }
-                  text="Source Document"
-                />
-              )
-            }
-          />
-        )}
-
-        {history &&
-          (history.isLoading ? (
-            <Loading message="Loading history..." />
+          {isLoading ? (
+            <Loading message="Loading data..." />
           ) : (
-            <History
-              entries={history.data ?? []}
-              limit={HISTORY_PAGE_LIMIT}
-              resourceTypeTitle={model.resourceTypeTitle}
+            <DetailsCard
+              details={details(model)}
+              documentButton={
+                binaryId && (
+                  <DocumentButton
+                    onClick={() =>
+                      openCCDAModal(binaryId, model.resourceTypeTitle)
+                    }
+                    text="Source Document"
+                  />
+                )
+              }
             />
-          ))}
+          )}
+
+          {history &&
+            (history.isLoading ? (
+              <Loading message="Loading history..." />
+            ) : (
+              <History
+                entries={history.data ?? []}
+                limit={HISTORY_PAGE_LIMIT}
+                resourceTypeTitle={model.resourceTypeTitle}
+              />
+            ))}
+        </div>
       </Drawer.Body>
       <Drawer.Footer>
         <div className="ctw-flex ctw-justify-between">

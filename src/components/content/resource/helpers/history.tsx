@@ -30,13 +30,8 @@ export const History = ({
     showAll || !limit ? sortedEntries : sortedEntries.slice(0, limit);
 
   return (
-    <div
-      className="ctw-space-y-3"
-      data-zus-telemetry-namespace="CollapsibleDataListStack"
-    >
-      <div className="ctw-text-base ctw-font-medium ctw-uppercase ctw-text-content-light">
-        History
-      </div>
+    <div className="ctw-space-y-4" data-zus-telemetry-namespace="History">
+      <div className="ctw-text-lg ctw-font-semibold">History</div>
       {displayedEntries.map((entry, idx) => (
         // We can have multiple items with the same condition id
         // eslint-disable-next-line react/no-array-index-key

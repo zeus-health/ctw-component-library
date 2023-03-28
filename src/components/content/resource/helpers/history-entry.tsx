@@ -1,10 +1,11 @@
-import { ChevronRightIcon } from "@heroicons/react/outline";
+import { faFileLines } from "@fortawesome/free-regular-svg-icons";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cx from "classnames";
 import { ReactNode, useState } from "react";
 import { DocumentButton } from "../../CCDA/document-button";
 import { useCCDAModal } from "../../CCDA/modal-ccda";
 import { DetailsCard } from "./details-card";
-import { DocumentIcon } from "@/components/core/document-icon";
 
 export type DetailEntry = {
   label: string;
@@ -37,10 +38,7 @@ export const HistoryEntry = ({
   const openCCDAModal = useCCDAModal();
 
   return (
-    <div
-      className="ctw-collapsible-data-list ctw-space-y-1"
-      data-zus-telemetry-namespace="CollapsibleDataList"
-    >
+    <div className="ctw-space-y-1" data-zus-telemetry-namespace="HistoryEntry">
       <DetailSummary
         date={date}
         title={title}
@@ -102,14 +100,15 @@ const DetailSummary = ({
       </div>
       <div className="ctw-flex ctw-items-center ctw-space-x-3">
         {hasDocument && (
-          <DocumentIcon
-            className="ctw-fill-content-light hover:ctw-fill-content-light"
-            height={16}
+          <FontAwesomeIcon
+            icon={faFileLines}
+            className="ctw-h-5 ctw-text-content-light"
           />
         )}
         <div className="ctw-justify-right ctw-flex">
-          <ChevronRightIcon
-            className={cx("ctw-h-5 ctw-w-5 ctw-text-primary-dark", {
+          <FontAwesomeIcon
+            icon={faChevronRight}
+            className={cx("ctw-h-3 ctw-w-3 ctw-text-content-lighter", {
               "ctw-rotate-90": isDetailShown,
             })}
           />

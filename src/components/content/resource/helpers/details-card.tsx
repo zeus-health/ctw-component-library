@@ -16,9 +16,9 @@ export const DetailsCard = ({
     className="ctw-rounded-lg ctw-bg-bg-lighter"
     data-zus-telemetry-namespace="Details"
   >
-    <dl className="ctw-space-y-2 ctw-p-4">
+    <dl className="ctw-m-0 ctw-space-y-2 ctw-px-4 ctw-py-6">
       <div className="ctw-flex ctw-justify-between ctw-space-x-2 ctw-text-sm ctw-uppercase ctw-text-content-light">
-        <div className="ctw-title-container">Details</div>
+        <div className="ctw-title-container">Summary</div>
         <div className="ctw-flex">{documentButton}</div>
       </div>
       {details

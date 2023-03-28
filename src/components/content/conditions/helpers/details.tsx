@@ -16,8 +16,7 @@ export const useConditionDetailsDrawer = ({
   const confirmDelete = useConfirmDeleteCondition();
 
   return useResourceDetailsDrawer({
-    header: (condition: ConditionModel) =>
-      `${condition.display} (${condition.preferredCoding?.code})`,
+    header: (condition: ConditionModel) => condition.display,
     subHeader: (condition: ConditionModel) => condition.ccsChapter,
     getSourceDocument: true,
     readOnly: !canEdit,
