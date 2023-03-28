@@ -4,18 +4,18 @@ import { useObservationsDetailsDrawer } from "../observations/helpers/drawer";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { defaultTimelineFilters, timelineFilters } from "./helpers/filters";
 import { usePatientEncounterDetailsDrawer } from "./helpers/modal-hooks";
+import { defaultTimelineSort, timelineSortOptions } from "./helpers/sorts";
 import { patientTimelineColumns } from "./patient-timeline-columns";
+import { ResourceTable } from "@/components/content/resource/resource-table";
 import { DrawerProps } from "@/components/core/drawer";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
-import { Table } from "@/components/core/table/table";
 import { DiagnosticReportModel, MedicationDispenseModel } from "@/fhir/models";
 import { EncounterModel } from "@/fhir/models/encounter";
 import { MedicationRequestModel } from "@/fhir/models/medication-request";
 import { useTimelineEvents } from "@/fhir/timeline-event";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { useQueryMedicationStatement } from "@/hooks/use-medications";
-import { defaultTimelineSort, timelineSortOptions } from "./helpers/sorts";
 
 export type PatientTimelineProps = {
   className?: cx.Argument;
@@ -47,13 +47,13 @@ export function PatientTimelineV2({ className }: PatientTimelineProps) {
           onChange: setSort,
         }}
       />
-      <Table
+      <ResourceTable
         showTableHead={false}
         isLoading={timelineEventsQuery.isLoading}
-        records={data}
+        data={data}
         emptyMessage="There are no timeline records available."
         columns={patientTimelineColumns(featureFlags?.enableViewFhirButton)}
-        handleRowClick={(record) => {
+        onRowClick={(record) => {
           if (record.model.constructor === EncounterModel) {
             openEncounterDetails(record.model);
           } else if (record.model.constructor === DiagnosticReportModel) {
