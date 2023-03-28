@@ -1,5 +1,4 @@
 import cx from "classnames";
-import { MedicationDrawer } from "../medications/history/medication-drawer";
 import { useObservationsDetailsDrawer } from "../observations/helpers/drawer";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { defaultTimelineFilters, timelineFilters } from "./helpers/filters";
@@ -7,15 +6,13 @@ import { usePatientEncounterDetailsDrawer } from "./helpers/modal-hooks";
 import { defaultTimelineSort, timelineSortOptions } from "./helpers/sorts";
 import { patientTimelineColumns } from "./patient-timeline-columns";
 import { ResourceTable } from "@/components/content/resource/resource-table";
-import { DrawerProps } from "@/components/core/drawer";
 import { useCTW } from "@/components/core/providers/ctw-provider";
-import { useDrawer } from "@/components/core/providers/drawer-provider";
 import { DiagnosticReportModel, MedicationDispenseModel } from "@/fhir/models";
 import { EncounterModel } from "@/fhir/models/encounter";
 import { MedicationRequestModel } from "@/fhir/models/medication-request";
 import { useTimelineEvents } from "@/fhir/timeline-event";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
-import { useQueryMedicationStatement } from "@/hooks/use-medications";
+import { useMedicationStatementDetailsDrawer } from "./helpers/medication-detail";
 
 export type PatientTimelineProps = {
   className?: cx.Argument;
@@ -69,33 +66,3 @@ export function PatientTimelineV2({ className }: PatientTimelineProps) {
     </div>
   );
 }
-
-export function useMedicationStatementDetailsDrawer() {
-  const { openDrawer } = useDrawer();
-
-  return (
-    medicationModel: MedicationDispenseModel | MedicationRequestModel
-  ) => {
-    openDrawer({
-      component: (props) => (
-        <MedicationDrawerComponent
-          medicationEventModel={medicationModel}
-          {...props}
-        />
-      ),
-    });
-  };
-}
-
-type MedicationDrawerComponentProps = {
-  medicationEventModel: MedicationDispenseModel | MedicationRequestModel;
-} & Pick<DrawerProps, "isOpen" | "onClose" | "onOpen" | "onAfterOpen">;
-
-const MedicationDrawerComponent = (props: MedicationDrawerComponentProps) => {
-  const { medicationEventModel } = props;
-  const medStatement = useQueryMedicationStatement(medicationEventModel.rxNorm);
-  if (medStatement.data?.length) {
-    return <MedicationDrawer medication={medStatement.data[0]} {...props} />;
-  }
-  return <></>;
-};
