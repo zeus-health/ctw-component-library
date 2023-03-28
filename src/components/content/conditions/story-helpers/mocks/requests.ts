@@ -93,7 +93,7 @@ function mockRequests() {
   );
 
   const mockConditionProvenance = rest.get(
-    "https://api.dev.zusapi.com/fhir/Provenance?target=Condition/:Condition",
+    "https://api.dev.zusapi.com/fhir/Provenance",
     async (_, res, ctx) => res(ctx.status(200), ctx.json(ProvenanceCondition))
   );
 
