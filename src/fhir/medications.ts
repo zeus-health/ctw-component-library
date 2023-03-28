@@ -154,11 +154,11 @@ export async function getCommonMedicationRequests(
       (r) => new MedicationRequestModel(r, getIncludedResources(bundle))
     );
   } catch (e) {
-    throw errorResponse("Failed fetching medications for patient", e);
+    throw errorResponse("Failed fetching medication requests for patient", e);
   }
 }
 
-export async function getMedicationDispenseCommon(
+export async function getCommonMedicationDispenses(
   requestContext: CTWRequestContext,
   patient: PatientModel,
   keys: object[] = []
@@ -183,11 +183,11 @@ export async function getMedicationDispenseCommon(
       (r) => new MedicationDispenseModel(r, getIncludedResources(bundle))
     );
   } catch (e) {
-    throw errorResponse("Failed fetching medications for patient", e);
+    throw errorResponse("Failed fetching medication dispenses for patient", e);
   }
 }
 
-export async function getMedicationStatement(
+export async function getMedicationStatements(
   requestContext: CTWRequestContext,
   patient: PatientModel,
   keys: (string | undefined)[] = []

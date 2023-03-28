@@ -71,11 +71,9 @@ export class TimelineEventModel extends FHIRModel<TimelineEventResource> {
       case "DiagnosticReport":
         return this.model.effectiveStart;
       case "MedicationRequest":
-        return formatDateISOToLocal(this.model.resource.authoredOn);
+        return this.model.authoredOn;
       case "MedicationDispense":
-        return formatDateISOToLocal(
-          this.model.resource.whenHandedOver || this.model.resource.whenPrepared
-        );
+        return this.model.whenHandedOver || this.model.whenPrepared;
       default:
         return undefined;
     }

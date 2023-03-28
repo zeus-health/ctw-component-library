@@ -1,8 +1,4 @@
 import cx from "classnames";
-import {
-  defaultTimelineSort,
-  timelineSortOptions,
-} from "../conditions/helpers/sorts";
 import { MedicationDrawer } from "../medications/history/medication-drawer";
 import { useObservationsDetailsDrawer } from "../observations/helpers/drawer";
 import { ResourceTableActions } from "../resource/resource-table-actions";
@@ -19,6 +15,7 @@ import { MedicationRequestModel } from "@/fhir/models/medication-request";
 import { useTimelineEvents } from "@/fhir/timeline-event";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { useQueryMedicationStatement } from "@/hooks/use-medications";
+import { defaultTimelineSort, timelineSortOptions } from "./helpers/sorts";
 
 export type PatientTimelineProps = {
   className?: cx.Argument;
@@ -54,6 +51,7 @@ export function PatientTimelineV2({ className }: PatientTimelineProps) {
         showTableHead={false}
         isLoading={timelineEventsQuery.isLoading}
         records={data}
+        emptyMessage="There are no timeline records available."
         columns={patientTimelineColumns(featureFlags?.enableViewFhirButton)}
         handleRowClick={(record) => {
           if (record.model.constructor === EncounterModel) {

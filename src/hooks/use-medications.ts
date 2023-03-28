@@ -6,10 +6,10 @@ import {
   getActiveMedications,
   getBuilderMedications,
   getCommonMedicationRequests,
-  getMedicationDispenseCommon,
-  getMedicationStatement,
   MedicationResults,
   splitMedications,
+  getCommonMedicationDispenses,
+  getMedicationStatements,
 } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import {
@@ -52,13 +52,12 @@ export function useQueryGetSummarizedPatientMedications(): UseQueryResult<
   );
 }
 
-// Gets patient medications for the builder, excluding meds where the information source is patient.
 export function useQueryGetPatientMedRequestsCommon() {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_MEDICATION_REQUESTS_COMMON,
     [
       {
-        informationSourceNot: "Patient", // exclude medication statements where the patient is the information source
+        informationSourceNot: "Patient",
       },
     ],
     withTimerMetric(
@@ -68,17 +67,16 @@ export function useQueryGetPatientMedRequestsCommon() {
   );
 }
 
-// Gets patient medications for the builder, excluding meds where the information source is patient.
 export function useQueryGetPatientMedDispenseCommon() {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_MEDICATION_DISPENSE_COMMON,
     [
       {
-        informationSourceNot: "Patient", // exclude medication statements where the patient is the information source
+        informationSourceNot: "Patient",
       },
     ],
     withTimerMetric(
-      getMedicationDispenseCommon,
+      getCommonMedicationDispenses,
       "req.medication_dispense_common"
     )
   );
@@ -88,7 +86,7 @@ export function useQueryMedicationStatement(rxNorm: string | undefined) {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_MEDICATION_STATEMENT,
     [rxNorm],
-    withTimerMetric(getMedicationStatement, "req.medication_statement")
+    withTimerMetric(getMedicationStatements, "req.medication_statement")
   );
 }
 

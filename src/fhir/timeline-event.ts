@@ -51,12 +51,7 @@ export function useTimelineEvents() {
     );
     // Disabling because including queries will cause infinite loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    patientEncountersQuery.data,
-    diagnosticReportQuery.data,
-    medicationRequestCommon.data,
-    medicationDispenseCommon.data,
-  ]);
+  }, [queries.map((q) => q.data)]);
 
   const isLoading = some(queries, "isLoading");
   const isFetching = some(queries, "isFetching");

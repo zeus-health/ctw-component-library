@@ -6,6 +6,7 @@ import {
 } from "@/fhir/medication";
 import { PractitionerModel } from "@/fhir/models/practitioner";
 import { findReference } from "@/fhir/resource-helper";
+import { formatDateISOToLocal } from "../formatters";
 
 export class MedicationDispenseModel extends FHIRModel<fhir4.MedicationDispense> {
   kind = "MedicationDispense" as const;
@@ -59,5 +60,13 @@ export class MedicationDispenseModel extends FHIRModel<fhir4.MedicationDispense>
 
   get medicationDisplayName() {
     return getMedicationDisplayName(this.resource, this.includedResources);
+  }
+
+  get whenHandedOver() {
+    return formatDateISOToLocal(this.resource.whenHandedOver);
+  }
+
+  get whenPrepared() {
+    return formatDateISOToLocal(this.resource.whenPrepared);
   }
 }

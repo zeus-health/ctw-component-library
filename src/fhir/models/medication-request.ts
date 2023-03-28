@@ -6,9 +6,14 @@ import { FHIRModel } from "./fhir-model";
 import { PractitionerModel } from "@/fhir/models/practitioner";
 import { findReference } from "@/fhir/resource-helper";
 import { compact } from "@/utils/nodash/fp";
+import { formatDateISOToLocal } from "../formatters";
 
 export class MedicationRequestModel extends FHIRModel<fhir4.MedicationRequest> {
   kind = "MedicationRequest" as const;
+
+  get authoredOn() {
+    return formatDateISOToLocal(this.resource.authoredOn);
+  }
 
   get includedRequester() {
     const reference = this.resource.requester?.reference;
