@@ -2,8 +2,10 @@ import cx from "classnames";
 import { useObservationsDetailsDrawer } from "../observations/helpers/drawer";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { defaultTimelineFilters, timelineFilters } from "./helpers/filters";
-import { useMedicationStatementDetailsDrawer } from "./helpers/medication-detail";
-import { usePatientEncounterDetailsDrawer } from "./helpers/modal-hooks";
+import {
+  useMedicationStatementDetailsDrawer,
+  usePatientEncounterDetailsDrawer,
+} from "./helpers/modal-hooks";
 import { defaultTimelineSort, timelineSortOptions } from "./helpers/sorts";
 import { patientTimelineColumns } from "./patient-timeline-columns";
 import { ResourceTable } from "@/components/content/resource/resource-table";

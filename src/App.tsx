@@ -60,54 +60,54 @@ type DemoComponent = {
   note?: string;
 };
 const demoComponents: DemoComponent[] = [
-  // {
-  //   render: () => (
-  //     <ZusAggregatedProfile
-  //       resources={["observations-outside", "observations"]}
-  //       title="Observations"
-  //     />
-  //   ),
-  //   title: "Patient Observations",
-  // },
-  // { render: () => <PatientCareTeam />, title: "Patient CareTeam" },
-  // {
-  //   render: () => (
-  //     <ZusAggregatedProfile
-  //       resources={[
-  //         "conditions-outside",
-  //         "medications-outside",
-  //         "allergies",
-  //         "immunizations",
-  //         "documents",
-  //         "care-team",
-  //         "timelines",
-  //       ]}
-  //       conditionsOutsideProps={{
-  //         hideRequestRecords: true,
-  //         readOnly: true,
-  //       }}
-  //       medicationsOutsideProps={{
-  //         readOnly: true,
-  //       }}
-  //     />
-  //   ),
-  //   title: "ZAP",
-  // },
-  // {
-  //   render: () => <PatientMedications />,
-  //   title: "Patient Medications",
-  // },
-  // {
-  //   render: () => <PatientConditions />,
-  //   title: "Patient Conditions",
-  // },
-  // {
-  //   render: () => <PatientDocuments />,
-  //   title: "Patient Documents",
-  // },
-  // { render: () => <PatientAllergies />, title: "Patient Allergies" },
-  // { render: () => <PatientImmunizations />, title: "Patient Immunizations" },
-  // { render: () => <PatientSearch />, title: "Patient Search" },
+  {
+    render: () => (
+      <ZusAggregatedProfile
+        resources={["observations-outside", "observations"]}
+        title="Observations"
+      />
+    ),
+    title: "Patient Observations",
+  },
+  { render: () => <PatientCareTeam />, title: "Patient CareTeam" },
+  {
+    render: () => (
+      <ZusAggregatedProfile
+        resources={[
+          "conditions-outside",
+          "medications-outside",
+          "allergies",
+          "immunizations",
+          "documents",
+          "care-team",
+          "timelines",
+        ]}
+        conditionsOutsideProps={{
+          hideRequestRecords: true,
+          readOnly: true,
+        }}
+        medicationsOutsideProps={{
+          readOnly: true,
+        }}
+      />
+    ),
+    title: "ZAP",
+  },
+  {
+    render: () => <PatientMedications />,
+    title: "Patient Medications",
+  },
+  {
+    render: () => <PatientConditions />,
+    title: "Patient Conditions",
+  },
+  {
+    render: () => <PatientDocuments />,
+    title: "Patient Documents",
+  },
+  { render: () => <PatientAllergies />, title: "Patient Allergies" },
+  { render: () => <PatientImmunizations />, title: "Patient Immunizations" },
+  { render: () => <PatientSearch />, title: "Patient Search" },
   { render: () => <PatientTimelineV2 />, title: "Patient Timeline" },
 ];
 
