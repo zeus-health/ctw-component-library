@@ -37,7 +37,10 @@ export const PatientConditionsBase = ({
   emptyMessage = "There are no condition records available.",
   isLoading,
 }: PatientConditionsTableProps) => {
-  const openDetailsDrawer = useConditionDetailsDrawer();
+  const openDetailsDrawer = useConditionDetailsDrawer({
+    canRemove: !readOnly && !outside,
+    canEdit: !readOnly && !outside,
+  });
 
   const { data, setFilters, setSort } = useFilteredSortedData({
     defaultFilters: defaultConditionFilters,

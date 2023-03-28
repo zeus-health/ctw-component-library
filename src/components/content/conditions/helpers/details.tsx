@@ -1,15 +1,28 @@
 import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
 import { useConditionHistory } from "./history";
+import { useConfirmDeleteCondition, useEditConditionForm } from "./modal-hooks";
 import { NotesList } from "@/components/core/notes-list";
 import { ConditionModel } from "@/fhir/models";
 import { capitalize } from "@/utils/nodash";
 
-export const useConditionDetailsDrawer = () =>
-  useResourceDetailsDrawer({
+export const useConditionDetailsDrawer = ({
+  canEdit,
+  canRemove,
+}: {
+  canEdit: boolean;
+  canRemove: boolean;
+}) => {
+  const showEditConditionForm = useEditConditionForm();
+  const confirmDelete = useConfirmDeleteCondition();
+
+  return useResourceDetailsDrawer({
     header: (condition: ConditionModel) =>
       `${condition.display} (${condition.preferredCoding?.code})`,
     subHeader: (condition: ConditionModel) => condition.ccsChapter,
     getSourceDocument: true,
+    readOnly: !canEdit,
+    onEdit: showEditConditionForm,
+    onRemove: confirmDelete,
     details: (condition: ConditionModel) => [
       { label: "Recorder", value: condition.recorder },
       { label: "Recorded Date", value: condition.recordedDate },
@@ -29,3 +42,4 @@ export const useConditionDetailsDrawer = () =>
     ],
     getHistory: useConditionHistory,
   });
+};

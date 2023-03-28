@@ -111,7 +111,9 @@ export function Drawer({
 
                     {children}
                     {showCloseFooter && (
-                      <Drawer.CloseFooter onClose={onClose} />
+                      <Drawer.Footer>
+                        <Drawer.CloseButton label="Close" onClose={onClose} />
+                      </Drawer.Footer>
                     )}
                   </div>
                 </Dialog.Panel>
@@ -125,24 +127,24 @@ export function Drawer({
 }
 
 Drawer.Footer = ({ children }: { children: ReactNode }) => (
-  <div className="ctw-border-default ctw-border-t ctw-px-6 ctw-py-4">
-    {children}
-  </div>
+  <div className="ctw-border-default ctw-border-t ctw-p-6">{children}</div>
 );
 
-Drawer.CloseFooter = ({ onClose }: { onClose: () => void }) => (
-  <Drawer.Footer>
-    <div className="ctw-flex ctw-justify-end ctw-space-x-3 ctw-text-black ">
-      <button
-        type="button"
-        className="ctw-btn-default ctw-font-semibold ctw-outline-bg-light"
-        data-zus-telemetry-click="Close button"
-        onClick={onClose}
-      >
-        Close
-      </button>
-    </div>
-  </Drawer.Footer>
+Drawer.CloseButton = ({
+  label,
+  onClose,
+}: {
+  label: string;
+  onClose: () => void;
+}) => (
+  <button
+    type="button"
+    className="ctw-btn-clear !ctw-px-4 !ctw-py-2"
+    data-zus-telemetry-click={`${label} button`}
+    onClick={onClose}
+  >
+    {label}
+  </button>
 );
 
 Drawer.Body = ({ children }: { children: ReactNode }) => (

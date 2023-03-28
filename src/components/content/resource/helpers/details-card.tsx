@@ -1,20 +1,15 @@
 import type { DetailEntry } from "./history-entry";
-import { PencilIcon } from "@heroicons/react/solid";
 import { ReactNode } from "react";
 
 export type DetailsProps = {
   hideEmpty?: boolean;
   details: DetailEntry[];
-  readOnly?: boolean;
-  onEdit?: () => void;
   documentButton?: ReactNode;
 };
 
 export const DetailsCard = ({
   details,
   hideEmpty = true,
-  readOnly = true,
-  onEdit,
   documentButton,
 }: DetailsProps) => (
   <div
@@ -24,20 +19,7 @@ export const DetailsCard = ({
     <dl className="ctw-space-y-2 ctw-p-4">
       <div className="ctw-flex ctw-justify-between ctw-space-x-2 ctw-text-sm ctw-uppercase ctw-text-content-light">
         <div className="ctw-title-container">Details</div>
-        <div className="ctw-flex">
-          {documentButton}
-          {!readOnly && (
-            <button
-              type="button"
-              className="ctw-btn-default ctw-flex ctw-space-x-2 ctw-align-middle"
-              onClick={onEdit}
-              data-zus-telemetry-click="Update"
-            >
-              <PencilIcon className="ctw-h-4 ctw-w-4" />
-              <span>Update</span>
-            </button>
-          )}
-        </div>
+        <div className="ctw-flex">{documentButton}</div>
       </div>
       {details
         .filter((d) => !hideEmpty || d.value || d.value === 0)

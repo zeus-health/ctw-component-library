@@ -23,7 +23,14 @@ export type UseResourceDetailsDrawerProps<
   M extends FHIRModel<T>
 > = Pick<
   ResourceDetailsDrawerProps<T, M>,
-  "header" | "subHeader" | "getSourceDocument" | "details" | "getHistory"
+  | "header"
+  | "subHeader"
+  | "getSourceDocument"
+  | "details"
+  | "getHistory"
+  | "readOnly"
+  | "onEdit"
+  | "onRemove"
 >;
 
 export function useResourceDetailsDrawer<
@@ -46,14 +53,17 @@ type ResourceDetailsDrawerProps<
   M extends FHIRModel<T>
 > = {
   className?: string;
-  model: M;
-  header: (model: M) => ReactNode;
-  subHeader?: (model: M) => ReactNode;
-  getSourceDocument?: boolean;
   details: (model: M) => DetailsProps["details"];
   getHistory?: (model: M) => UseQueryResult<HistoryEntries | undefined>;
+  getSourceDocument?: boolean;
+  header: (model: M) => ReactNode;
   isOpen: boolean;
+  model: M;
   onClose: () => void;
+  onEdit?: (model: M) => void;
+  onRemove?: (model: M, onDelete?: (model: M) => void) => void;
+  readOnly?: boolean;
+  subHeader?: (model: M) => ReactNode;
 };
 
 function ResourceDetailsDrawer<
@@ -61,14 +71,17 @@ function ResourceDetailsDrawer<
   M extends FHIRModel<T>
 >({
   className,
-  model,
   details,
-  header,
-  subHeader,
   getHistory,
   getSourceDocument,
+  header,
   isOpen,
+  model,
   onClose,
+  onEdit,
+  onRemove,
+  readOnly,
+  subHeader,
 }: ResourceDetailsDrawerProps<T, M>) {
   const openCCDAModal = useCCDAModal();
   const [isLoading, setIsLoading] = useState(false);
@@ -102,7 +115,6 @@ function ResourceDetailsDrawer<
       title={model.resourceTypeTitle}
       isOpen={isOpen}
       onClose={onClose}
-      showCloseFooter
     >
       <Drawer.Body>
         <div className="ctw-py-2">
@@ -139,6 +151,42 @@ function ResourceDetailsDrawer<
             />
           ))}
       </Drawer.Body>
+      <Drawer.Footer>
+        <div className="ctw-flex ctw-justify-between">
+          <Drawer.CloseButton onClose={onClose} label="Close" />
+          <div className="ctw-space-x-3">
+            {!readOnly && onRemove && (
+              <button
+                type="button"
+                className="ctw-btn-default ctw-w-24"
+                data-zus-telemetry-click="Remove button"
+                onClick={() => {
+                  // Leave the drawer open while the remove
+                  // confirmation modal is open.
+                  // And close the drawer if resource is removed.
+                  onRemove(model, onClose);
+                }}
+              >
+                Remove
+              </button>
+            )}
+
+            {!readOnly && onEdit && (
+              <button
+                type="button"
+                className="ctw-btn-primary ctw-w-24"
+                data-zus-telemetry-click="Edit button"
+                onClick={() => {
+                  onClose();
+                  onEdit(model);
+                }}
+              >
+                Edit
+              </button>
+            )}
+          </div>
+        </div>
+      </Drawer.Footer>
     </Drawer>
   );
 }
