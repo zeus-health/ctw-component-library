@@ -7,9 +7,9 @@ import {
   getBuilderMedications,
   getCommonMedicationDispenses,
   getCommonMedicationRequests,
+  getMedicationStatements,
   MedicationResults,
   splitMedications,
-  getMedicationStatements,
 } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import {
