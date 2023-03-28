@@ -49,7 +49,11 @@ export const MedicationHistory = withErrorBoundary(
       <>
         <h2 className="ctw-text-lg ctw-font-semibold">Medication History</h2>
         {entries.length ? (
-          <History entries={entries} limit={MEDICATION_HISTORY_LIMIT} />
+          <History
+            entries={entries}
+            limit={MEDICATION_HISTORY_LIMIT}
+            resourceTypeTitle={medication.resourceTypeTitle}
+          />
         ) : (
           <span>No history available for this medication.</span>
         )}

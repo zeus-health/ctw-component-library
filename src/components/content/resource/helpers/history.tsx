@@ -7,9 +7,14 @@ export type HistoryEntries = HistoryEntryProps[];
 export type HistoryProps = {
   entries: HistoryEntries;
   limit?: number;
+  resourceTypeTitle: string;
 };
 
-export const History = ({ entries, limit }: HistoryProps) => {
+export const History = ({
+  entries,
+  limit,
+  resourceTypeTitle,
+}: HistoryProps) => {
   const [showAll, setShowAll] = useState(!limit || entries.length <= limit);
 
   // Sort by date descending, then by version descending
@@ -43,7 +48,8 @@ export const History = ({ entries, limit }: HistoryProps) => {
             subtitle={entry.subtitle}
             details={entry.details}
             hideEmpty={entry.hideEmpty}
-            documentButton={entry.documentButton}
+            binaryId={entry.binaryId}
+            resourceTypeTitle={resourceTypeTitle}
           />
         </div>
       ))}

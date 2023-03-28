@@ -1,6 +1,8 @@
 import { ChevronRightIcon } from "@heroicons/react/outline";
 import cx from "classnames";
 import { ReactNode, useState } from "react";
+import { DocumentButton } from "../../CCDA/document-button";
+import { useCCDAModal } from "../../CCDA/modal-ccda";
 import { DetailsCard } from "./details-card";
 import { DocumentIcon } from "@/components/core/document-icon";
 
@@ -10,26 +12,29 @@ export type DetailEntry = {
 };
 
 export type HistoryEntryProps = {
-  id: string;
+  binaryId?: string;
   date?: string;
-  versionId?: string;
-  title?: string;
-  subtitle?: string;
   details: DetailEntry[];
   hideEmpty?: boolean;
-  documentButton?: ReactNode;
-  binaryId?: string;
+  id: string;
+  subtitle?: string;
+  title?: string;
+  versionId?: string;
 };
 
+type Props = HistoryEntryProps & { resourceTypeTitle: string };
+
 export const HistoryEntry = ({
+  binaryId,
   date,
-  title,
-  subtitle,
   details,
   hideEmpty,
-  documentButton,
-}: HistoryEntryProps) => {
+  subtitle,
+  title,
+  resourceTypeTitle,
+}: Props) => {
   const [isDetailShown, setIsDetailShown] = useState(false);
+  const openCCDAModal = useCCDAModal();
 
   return (
     <div
@@ -42,13 +47,20 @@ export const HistoryEntry = ({
         subtitle={subtitle}
         isDetailShown={isDetailShown}
         setIsDetailShown={setIsDetailShown}
-        hasDocument={!!documentButton}
+        hasDocument={!!binaryId}
       />
       {isDetailShown && (
         <DetailsCard
           details={details}
           hideEmpty={hideEmpty}
-          documentButton={documentButton}
+          documentButton={
+            binaryId && (
+              <DocumentButton
+                onClick={() => openCCDAModal(binaryId, resourceTypeTitle)}
+                text="Source Document"
+              />
+            )
+          }
         />
       )}
     </div>

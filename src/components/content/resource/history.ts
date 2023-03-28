@@ -2,8 +2,10 @@ import { SearchParams } from "fhir-kit-client";
 import { HistoryEntryProps } from "./helpers/history-entry";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
+import { getBinaryId } from "@/fhir/binaries";
 import { getIncludedResources, getResources } from "@/fhir/bundle";
 import { FHIRModel } from "@/fhir/models/fhir-model";
+import { searchProvenances } from "@/fhir/provenance";
 import {
   searchBuilderRecords,
   searchCommonRecords,
@@ -66,7 +68,18 @@ export function useHistory<
           (c) => new constructor(c, includedResources)
         );
 
-        return dedupeHistory(models, valuesToDedupeOn).map(getHistoryEntry);
+        const entries = dedupeHistory(models, valuesToDedupeOn).map(
+          getHistoryEntry
+        );
+
+        // Fetch provenances and add binaryId to each entry.
+        const provenances = await searchProvenances(requestContext, models);
+        entries.forEach((entry) => {
+          // eslint-disable-next-line no-param-reassign
+          entry.binaryId = getBinaryId(provenances, entry.id);
+        });
+
+        return entries;
       } catch (e) {
         throw Telemetry.logError(
           e as Error,

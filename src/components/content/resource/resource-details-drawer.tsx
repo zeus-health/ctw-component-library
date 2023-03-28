@@ -132,7 +132,11 @@ function ResourceDetailsDrawer<
           (history.isLoading ? (
             <Loading message="Loading history..." />
           ) : (
-            <History entries={history.data ?? []} limit={HISTORY_PAGE_LIMIT} />
+            <History
+              entries={history.data ?? []}
+              limit={HISTORY_PAGE_LIMIT}
+              resourceTypeTitle={model.resourceTypeTitle}
+            />
           ))}
       </Drawer.Body>
     </Drawer>
