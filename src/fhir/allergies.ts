@@ -1,4 +1,4 @@
-import { createGraphClient } from "./models/fqs";
+import { createGraphqlClient } from "./models/fqs";
 import { getAllergiesQuery } from "./queries/allergies";
 import { searchCommonRecords } from "./search-helpers";
 import { applyAllergyFilters } from "@/components/content/allergies/allergies-filter";
@@ -19,7 +19,7 @@ export function usePatientAllergies(enableFqs = false) {
       try {
         let data;
         if (enableFqs) {
-          const graphClient = createGraphClient(requestContext);
+          const graphClient = createGraphqlClient(requestContext);
           data = (await graphClient.request(
             getAllergiesQuery(patient.UPID)
           )) as AllergyIntolerance;

@@ -1,7 +1,7 @@
 import { GraphQLClient } from "graphql-request";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 
-export const createGraphClient = (requestContext: CTWRequestContext) => {
+export const createGraphqlClient = (requestContext: CTWRequestContext) => {
   const endpoint =
     requestContext.env === "production"
       ? `https://fqs.api.zusapi.com/query`
