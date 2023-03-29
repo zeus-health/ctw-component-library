@@ -1,6 +1,6 @@
 {
   "name": "@zus-health/ctw-component-library",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "type": "module",
   "engines": {
     "node": ">=16 <19"
@@ -41,7 +41,8 @@
     "storybook": "npm run generate:theme-cjs && storybook dev -p 6006",
     "build-storybook": "npm run generate:theme-cjs && storybook build",
     "test-storybook": "test-storybook",
-    "test-storybook:watch": "test-storybook --watch"
+    "test-storybook:watch": "test-storybook --watch",
+    "prepare": "relative-deps"
   },
   "prettier": {},
   "repository": {
@@ -96,6 +97,7 @@
     "prettier-plugin-tailwindcss": "^0.1.13",
     "react": "^16.14.0",
     "react-dom": "^16.9.8",
+    "relative-deps": "^1.0.7",
     "rename-css-selectors": "^4.1.0",
     "sass": "^1.55.0",
     "storybook": "^7.0.0-beta.45",
@@ -110,8 +112,9 @@
   "dependencies": {
     "@datadog/browser-logs": "^4.30.1",
     "@datadog/browser-rum-slim": "^4.30.1",
-    "@fortawesome/fontawesome-svg-core": "^6.3.0",
-    "@fortawesome/free-solid-svg-icons": "^6.3.0",
+    "@fortawesome/fontawesome-svg-core": "^6.4.0",
+    "@fortawesome/free-solid-svg-icons": "^6.4.0",
+    "@fortawesome/free-regular-svg-icons": "^6.4.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@headlessui/react": "1.7.3",
     "@heroicons/react": "^1.0.6",
@@ -120,6 +123,7 @@
     "@storybook/addon-actions": "^7.0.0-beta.45",
     "@tanstack/react-query": "^4.3.9",
     "@xmldom/xmldom": "^0.8.6",
+    "@zus-health/ctw-component-library": "^1.1.0",
     "date-fns": "^2.29.1",
     "dompurify": "^2.4.1",
     "fhir-kit-client": "^1.9.1",
@@ -138,5 +142,6 @@
   },
   "msw": {
     "workerDirectory": "public"
-  }
+  },
+  "relativeDependencies": {}
 }
