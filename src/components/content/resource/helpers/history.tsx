@@ -1,43 +1,50 @@
 import { useState } from "react";
-import {
-  CollapsibleDataList,
-  CollapsibleDataListProps,
-} from "./collapsible-data-list";
+import { HistoryEntry, HistoryEntryProps } from "./history-entry";
+import { orderBy } from "@/utils/nodash";
 
-export type CollapsibleDataListStackEntries = CollapsibleDataListProps[];
+export type HistoryEntries = HistoryEntryProps[];
 
-export type CollapsibleListProp = {
-  entries: CollapsibleDataListStackEntries;
+export type HistoryProps = {
+  entries: HistoryEntries;
   limit?: number;
+  resourceTypeTitle: string;
 };
 
-export const CollapsibleDataListStack = ({
+export const History = ({
   entries,
   limit,
-}: CollapsibleListProp) => {
+  resourceTypeTitle,
+}: HistoryProps) => {
   const [showAll, setShowAll] = useState(!limit || entries.length <= limit);
+
+  // Sort by date descending, then by version descending
+  // We convert the date string to a Date object so that
+  // it sorts correctly.
+  const sortedEntries = orderBy(
+    entries,
+    [(e) => (e.date ? new Date(e.date) : ""), "versionId"],
+    ["desc", "desc"]
+  );
+
   const displayedEntries =
-    showAll || !limit ? entries : entries.slice(0, limit);
+    showAll || !limit ? sortedEntries : sortedEntries.slice(0, limit);
+
   return (
-    <div
-      className="ctw-space-y-3"
-      data-zus-telemetry-namespace="CollapsibleDataListStack"
-    >
-      <div className="ctw-text-base ctw-font-medium ctw-uppercase ctw-text-content-light">
-        History
-      </div>
+    <div className="ctw-space-y-4" data-zus-telemetry-namespace="History">
+      <div className="ctw-text-lg ctw-font-semibold">History</div>
       {displayedEntries.map((entry, idx) => (
         // We can have multiple items with the same condition id
         // eslint-disable-next-line react/no-array-index-key
         <div key={`${entry.id}-${idx}`}>
-          <CollapsibleDataList
+          <HistoryEntry
             id={entry.id}
             date={entry.date}
             title={entry.title}
             subtitle={entry.subtitle}
-            data={entry.data}
+            details={entry.details}
             hideEmpty={entry.hideEmpty}
-            documentButton={entry.documentButton}
+            binaryId={entry.binaryId}
+            resourceTypeTitle={resourceTypeTitle}
           />
         </div>
       ))}
@@ -50,7 +57,7 @@ export const CollapsibleDataListStack = ({
           >
             {/* We know limit must be set if showAll is false. */}
             {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
-            Load {entries.length - limit!} More
+            Load {sortedEntries.length - limit!} More
           </button>
         </div>
       )}

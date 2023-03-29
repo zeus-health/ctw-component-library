@@ -6,7 +6,6 @@ import { Drawer } from "../../../core/drawer";
 import { MedicationHistory } from "./medication-history";
 import { Loading } from "@/components/core/loading";
 import { useLastPrescriber } from "@/fhir/medications";
-import { isFunction } from "@/utils/nodash/fp";
 
 export type MedicationDrawerProps = {
   medication?: MedicationStatementModel;
@@ -34,7 +33,6 @@ function getDataEntriesFromMedicationStatement(
 
 export const MedicationDrawer = ({
   medication,
-  onDismissal,
   ...drawerProps
 }: MedicationDrawerProps) => {
   const { lastPrescriber, isLoading } = useLastPrescriber(medication?.resource);
@@ -43,7 +41,7 @@ export const MedicationDrawer = ({
     lastPrescriber
   );
   return (
-    <Drawer title="Medication Details" {...drawerProps}>
+    <Drawer title="Medication Details" {...drawerProps} showCloseFooter>
       <Drawer.Body>
         <div className="ctw-space-y-5">
           <div className="ctw-flex ctw-justify-between ctw-space-x-8">
@@ -56,31 +54,6 @@ export const MedicationDrawer = ({
           {medication && <MedicationHistory medication={medication} />}
         </div>
       </Drawer.Body>
-      <Drawer.Footer>
-        <div className="ctw-flex ctw-justify-end ctw-space-x-2">
-          {isFunction(onDismissal) && !medication?.isArchived && (
-            <button
-              type="button"
-              className="ctw-btn-primary"
-              onClick={() => {
-                onDismissal(medication);
-                drawerProps.onClose();
-              }}
-              data-zus-telemetry-click="Dismiss"
-            >
-              Dismiss
-            </button>
-          )}
-          <button
-            type="button"
-            className="ctw-btn-default"
-            onClick={drawerProps.onClose}
-            data-zus-telemetry-click="Close"
-          >
-            Close
-          </button>
-        </div>
-      </Drawer.Footer>
     </Drawer>
   );
 };

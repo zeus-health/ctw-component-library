@@ -5,6 +5,7 @@ import { heartConditions } from "./forms-data-conditions-search";
 import { historyChronsDisease } from "./history-crohns-disease";
 import { historyDermatitis } from "./history-dermatitis";
 import { historyGeneralizedAnxiety } from "./history-generalized-anxiety";
+import { historyGeneralizedAnxietyVersions } from "./history-generalized-anxiety-versions";
 import { historyIronDeficiency } from "./history-iron-deficiency";
 import { historyOralContraception } from "./history-oral-contraception";
 import { patient } from "./patient";
@@ -41,7 +42,7 @@ export function setupConditionMocks({
   };
 }
 
-const hasHistoryMatch = (param: string) => {
+const getHistory = (param: string) => {
   const histories = {
     "34000006": historyChronsDisease,
     "4979002": historyDermatitis,
@@ -50,7 +51,27 @@ const hasHistoryMatch = (param: string) => {
     "5935008": historyOralContraception,
   };
 
-  return Object.entries(histories).find((entry) => param.includes(entry[0]));
+  const match = Object.entries(histories).find(([key]) => param.includes(key));
+  return match?.[1] ?? [];
+};
+
+// Version history requests will be a bundle of requests
+// for specific resource ids. Here we simplify and just match
+// the first request url to a specific history bundle.
+const getHistoryVersionsBundle = (requestUrls: string[]) => {
+  const historyVersionBundles: Record<string, fhir4.Bundle | undefined> = {
+    "/Condition/7000a33a-808f-4c94-8125-1af140ce6fbe/_history":
+      historyGeneralizedAnxietyVersions,
+  };
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const requestUrl of requestUrls) {
+    if (historyVersionBundles[requestUrl]) {
+      return historyVersionBundles[requestUrl];
+    }
+  }
+
+  return {};
 };
 
 function mockRequests() {
@@ -72,7 +93,7 @@ function mockRequests() {
   );
 
   const mockConditionProvenance = rest.get(
-    "https://api.dev.zusapi.com/fhir/Provenance?target=Condition/:Condition",
+    "https://api.dev.zusapi.com/fhir/Provenance",
     async (_, res, ctx) => res(ctx.status(200), ctx.json(ProvenanceCondition))
   );
 
@@ -124,11 +145,8 @@ function mockRequests() {
 
       // Search by code is used for condition history.
       if (codeParam) {
-        const historyMatch = hasHistoryMatch(codeParam);
-        if (historyMatch) {
-          return res(ctx.status(200), ctx.json(historyMatch[1]));
-        }
-        return res(ctx.status(200), ctx.json([]));
+        const historyMatch = getHistory(codeParam);
+        return res(ctx.status(200), ctx.json(historyMatch));
       }
 
       // Search for either patient or other provider conditions.
@@ -175,24 +193,12 @@ function mockRequests() {
   const mockConditionVersionHistoryBundle = rest.post(
     "https://api.dev.zusapi.com/fhir",
     async (req, res, ctx) => {
-      const codeParam = req.url.searchParams.get("code");
-
-      // Search by code is used for condition history.
-      if (codeParam) {
-        const historyMatch = hasHistoryMatch(codeParam);
-
-        if (historyMatch) {
-          return res(ctx.status(200), ctx.json(historyMatch[1]));
-        }
-        return res(ctx.status(200), ctx.json([]));
-      }
-
-      // Search for either patient or other provider conditions.
-      const tagParam = req.url.searchParams.get("_tag");
-      const other = tagParam === `${SYSTEM_SUMMARY}|Common`;
+      const r = await req.json();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const requestUrls = r.entry?.map((entry: any) => entry.request.url) ?? [];
       return res(
         ctx.status(200),
-        ctx.json(other ? otherConditionsCache : patientConditionsCache)
+        ctx.json(getHistoryVersionsBundle(requestUrls))
       );
     }
   );
