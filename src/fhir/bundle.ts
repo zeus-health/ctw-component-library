@@ -21,6 +21,9 @@ export function getResources<T extends ResourceTypeString>(
     bundle.entry?.forEach((entry) => {
       if (entry.resource?.resourceType === resourceType) {
         resources.push(entry.resource);
+      } else if (entry.resource?.resourceType === "Bundle") {
+        // Recursively search for resources in nested bundles.
+        resources.push(...getResources(entry.resource, resourceType));
       }
     });
   }

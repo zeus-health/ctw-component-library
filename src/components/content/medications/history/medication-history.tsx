@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { sortMedHistory } from "./helpers";
-import { CollapsibleDataListProps } from "@/components/core/collapsible-data-list";
-import { CollapsibleDataListStack } from "@/components/core/collapsible-data-list-stack";
+import { History } from "@/components/content/resource/helpers/history";
+import { HistoryEntryProps } from "@/components/content/resource/helpers/history-entry";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Loading } from "@/components/core/loading";
 import { useMedicationHistory } from "@/fhir/medications";
@@ -23,7 +23,7 @@ export type MedicationHistoryProps = {
  */
 export const MedicationHistory = withErrorBoundary(
   ({ medication }: MedicationHistoryProps) => {
-    const [entries, setEntries] = useState<CollapsibleDataListProps[]>([]);
+    const [entries, setEntries] = useState<HistoryEntryProps[]>([]);
     const medHistoryQuery = useMedicationHistory(medication.resource);
     const loading = medHistoryQuery.isLoading;
 
@@ -49,9 +49,10 @@ export const MedicationHistory = withErrorBoundary(
       <>
         <h2 className="ctw-text-lg ctw-font-semibold">Medication History</h2>
         {entries.length ? (
-          <CollapsibleDataListStack
+          <History
             entries={entries}
             limit={MEDICATION_HISTORY_LIMIT}
+            resourceTypeTitle={medication.resourceTypeTitle}
           />
         ) : (
           <span>No history available for this medication.</span>
@@ -75,7 +76,7 @@ function createMedicationStatementCard(medication: MedicationModel) {
     title: "Medication Reviewed",
     hideEmpty: false,
     subtitle: medStatement.patient?.organization?.name,
-    data: [
+    details: [
       {
         label: "Status",
         value: capitalize(medStatement.displayStatus),
@@ -90,7 +91,7 @@ function createMedicationStatementCard(medication: MedicationModel) {
 
 function createMedicationDetailsCard(
   medication: MedicationModel
-): CollapsibleDataListProps {
+): HistoryEntryProps {
   if (medication.resourceType === "MedicationStatement") {
     return createMedicationStatementCard(medication);
   }
@@ -128,7 +129,7 @@ function createMedicationRequestCard(medication: MedicationModel) {
     title: "Prescription Ordered",
     subtitle: prescriber,
     hideEmpty: false,
-    data: [
+    details: [
       { label: "Quantity", value: [value, unit].join(" ") },
       {
         label: "Refills Allowed",
@@ -172,7 +173,7 @@ function createMedicationDispenseCard(medication: MedicationModel) {
       quantityDisplay,
       supplied ? `${supplied} supplied` : null,
     ]).join(", "),
-    data: [
+    details: [
       { label: "Quantity", value: quantityDisplay },
       {
         label: "Days supply",
@@ -207,7 +208,7 @@ function createMedicationAdminCard(medication: MedicationModel) {
     subtitle: compact([medAdmin.dosageDisplay, medAdmin.dosageRoute]).join(
       ", "
     ),
-    data: [
+    details: [
       { label: "Dosage", value: medAdmin.dosageDisplay },
       {
         label: "Route",
