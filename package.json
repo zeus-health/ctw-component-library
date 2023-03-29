@@ -41,7 +41,8 @@
     "storybook": "npm run generate:theme-cjs && storybook dev -p 6006",
     "build-storybook": "npm run generate:theme-cjs && storybook build",
     "test-storybook": "test-storybook",
-    "test-storybook:watch": "test-storybook --watch"
+    "test-storybook:watch": "test-storybook --watch",
+    "prepare": "relative-deps"
   },
   "prettier": {},
   "repository": {
@@ -96,6 +97,7 @@
     "prettier-plugin-tailwindcss": "^0.1.13",
     "react": "^16.14.0",
     "react-dom": "^16.9.8",
+    "relative-deps": "^1.0.7",
     "rename-css-selectors": "^4.1.0",
     "sass": "^1.55.0",
     "storybook": "^7.0.0-beta.45",
@@ -121,9 +123,12 @@
     "@storybook/addon-actions": "^7.0.0-beta.45",
     "@tanstack/react-query": "^4.3.9",
     "@xmldom/xmldom": "^0.8.6",
+    "@zus-health/ctw-component-library": "^1.1.0",
     "date-fns": "^2.29.1",
     "dompurify": "^2.4.1",
     "fhir-kit-client": "^1.9.1",
+    "graphql": "^16.6.0",
+    "graphql-request": "^5.2.0",
     "i18next": "^22.4.11",
     "jwt-decode": "^3.1.2",
     "lodash": "^4.17.21",
@@ -137,5 +142,8 @@
   },
   "msw": {
     "workerDirectory": "public"
+  },
+  "relativeDependencies": {
+    "@zus-health/ctw-component-library": "../ctw-component-library"
   }
 }

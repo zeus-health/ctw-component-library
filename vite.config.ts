@@ -3,6 +3,8 @@ import { resolve } from "path";
 import { defineConfig } from "vite";
 import { dependencies, peerDependencies } from "./package.json";
 
+const DEPS_TO_BUNDLE = ["graphql-request", "graphql"];
+
 export default defineConfig({
   plugins: [
     plugin({
@@ -24,7 +26,9 @@ export default defineConfig({
     rollupOptions: {
       external: [
         ...Object.keys(peerDependencies),
-        ...Object.keys(dependencies),
+        ...Object.keys(dependencies).filter(
+          (dep) => !DEPS_TO_BUNDLE.includes(dep)
+        ),
       ],
     },
     target: "es2015",
