@@ -16,11 +16,11 @@ import { MedicationRequestModel } from "@/fhir/models/medication-request";
 import { useTimelineEvents } from "@/fhir/timeline-event";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 
-export type PatientTimelineProps = {
+export type PatientTimelineV2Props = {
   className?: cx.Argument;
 };
 
-export function PatientTimelineV2({ className }: PatientTimelineProps) {
+export function PatientTimelineV2({ className }: PatientTimelineV2Props) {
   const timelineEventsQuery = useTimelineEvents();
   const { featureFlags } = useCTW();
   const { data, setFilters, setSort } = useFilteredSortedData({
