@@ -3,6 +3,8 @@ import { formatISODateStringToDate } from "../formatters";
 import { FHIRModel } from "./fhir-model";
 
 export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
+  kind = "Document" as const;
+
   get status(): string {
     return this.resource.status;
   }

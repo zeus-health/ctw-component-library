@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.1.0
+
+### Minor Changes
+
+- bbe3c9ab: Add Multi-resource timeline component.
+
 ## 1.0.0
 
 ### Major Changes

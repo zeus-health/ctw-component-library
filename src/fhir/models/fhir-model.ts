@@ -10,6 +10,10 @@ import { find, startCase } from "@/utils/nodash";
 export abstract class FHIRModel<T extends fhir4.Resource> {
   public resource: T;
 
+  // This is a string that is used to identify the type of model and
+  // allows us to use a switch statement to determine the type of model.
+  abstract readonly kind: string;
+
   readonly includedResources?: ResourceMap;
 
   readonly revIncludes?: Resource[];

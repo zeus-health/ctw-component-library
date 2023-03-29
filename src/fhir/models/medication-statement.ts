@@ -23,6 +23,8 @@ import {
 import { capitalize, compact, find, get } from "@/utils/nodash/fp";
 
 export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatement> {
+  kind = "MedicationStatement" as const;
+
   readonly builderPatientRxNormStatus?: Record<string, string>;
 
   get basedOn(): string | undefined {
@@ -108,7 +110,7 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
     return patientStatus(this.builderPatientRxNormStatus?.[this.rxNorm ?? ""]);
   }
 
-  get rxNorm(): string | undefined {
+  get rxNorm() {
     return getIdentifyingRxNormCode(this.resource, this.includedResources);
   }
 

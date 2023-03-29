@@ -11,6 +11,8 @@ import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { findReference } from "@/fhir/resource-helper";
 
 export class MedicationModel extends FHIRModel<Medication> {
+  kind = "Medication" as const;
+
   get performer(): string | undefined {
     return getPerformingOrganization(this.resource, this.includedResources)
       ?.name;

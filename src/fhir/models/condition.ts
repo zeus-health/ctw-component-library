@@ -24,6 +24,8 @@ import { findReference } from "@/fhir/resource-helper";
 import { compact, find, intersectionWith, uniqWith } from "@/utils/nodash";
 
 export class ConditionModel extends FHIRModel<fhir4.Condition> {
+  kind = "Condition" as const;
+
   get abatement(): string | undefined {
     if (this.resource.abatementAge) {
       return this.resource.abatementAge.value?.toString();

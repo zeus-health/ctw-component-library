@@ -14,6 +14,7 @@ export type ResourceTableProps<T extends MinRecordItem> = {
   isLoading: boolean;
   onRowClick?: TableProps<T>["handleRowClick"];
   rowActions?: TableProps<T>["RowActions"];
+  showTableHead?: boolean;
 };
 
 export const ResourceTable = <
@@ -27,9 +28,12 @@ export const ResourceTable = <
   isLoading,
   onRowClick,
   rowActions,
+  showTableHead,
 }: ResourceTableProps<M>) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
+  const shouldShowTableHead =
+    typeof showTableHead === "boolean" ? showTableHead : !breakpoints.sm;
 
   return (
     <div
@@ -43,7 +47,7 @@ export const ResourceTable = <
         getRowClassName={(record) => ({
           "ctw-tr-archived": record.isArchived,
         })}
-        showTableHead={!breakpoints.sm}
+        showTableHead={shouldShowTableHead}
         stacked={breakpoints.sm}
         emptyMessage={emptyMessage}
         isLoading={isLoading}

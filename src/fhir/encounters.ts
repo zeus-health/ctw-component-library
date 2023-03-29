@@ -18,8 +18,7 @@ export function usePatientEncounters() {
             patientUPID: patient.UPID,
           }
         );
-        const models = setupEncounterModels(encounters, bundle);
-        return models;
+        return setupEncounterModels(encounters, bundle);
       } catch (e) {
         Telemetry.logError(
           e as Error,
