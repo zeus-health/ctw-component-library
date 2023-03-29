@@ -1,3 +1,10 @@
+@mixin focus-visible {
+  &:focus-visible {
+    outline-offset: 2px;
+    @apply ctw-outline ctw-outline-2 ctw-outline-primary-main;
+  }
+}
+
 .ctw-btn {
   @apply ctw-cursor-pointer ctw-rounded-md ctw-py-2 ctw-px-4 ctw-text-sm ctw-font-medium ctw-shadow-sm;
 }
@@ -5,19 +12,28 @@
 .ctw-btn-clear {
   @apply ctw-cursor-pointer ctw-border-0 ctw-bg-transparent ctw-p-0 ctw-text-sm ctw-font-medium ctw-text-primary-dark ctw-outline-none hover:ctw-text-primary-main;
   line-height: 1;
+  @include focus-visible;
+}
+
+.ctw-btn-clean {
+  @apply ctw-w-full ctw-cursor-pointer ctw-border-none ctw-bg-transparent ctw-p-0 ctw-text-base ctw-outline-none;
+  @include focus-visible;
 }
 
 .ctw-btn-default {
   @apply ctw-btn ctw-border ctw-border-solid ctw-border-divider-main ctw-bg-white ctw-capitalize ctw-text-content-light hover:ctw-bg-bg-lighter;
+  @include focus-visible;
 }
 
 .ctw-btn-primary {
   @apply ctw-btn ctw-border-0 ctw-bg-primary-main ctw-capitalize ctw-text-white hover:ctw-bg-primary-dark;
+  @include focus-visible;
 }
 
 .ctw-btn-icon {
   @apply ctw-btn-primary;
   @apply ctw-flex ctw-items-center ctw-justify-center ctw-rounded-full ctw-p-2;
+  @include focus-visible;
 }
 
 .ctw-btn-group button {

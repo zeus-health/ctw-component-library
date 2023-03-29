@@ -1,10 +1,8 @@
-import { CollapsibleDataListProps } from "@/components/core/collapsible-data-list";
+import { HistoryEntryProps } from "../../resource/helpers/history-entry";
 import { DiagnosticReportModel, ObservationModel } from "@/fhir/models";
 import { capitalize, startCase } from "@/utils/nodash";
 
-export function setupData(
-  observation: ObservationModel
-): CollapsibleDataListProps {
+export function setupData(observation: ObservationModel): HistoryEntryProps {
   const detailData = [
     {
       label: "Identifier",
@@ -33,7 +31,7 @@ export function setupData(
     date: observation.effectiveStart,
     title: startCase(observation.category),
     subtitle: observation.display,
-    data: detailData,
+    details: detailData,
   };
 }
 

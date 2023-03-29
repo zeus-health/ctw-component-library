@@ -144,23 +144,13 @@ export const DrawerForm = <T,>({
         </Drawer.Body>
         <Drawer.Footer>
           <div className="ctw-flex ctw-items-center ctw-justify-between">
-            <>
+            <Drawer.CloseButton label="Close" onClose={onClose} />
+            <div className="ctw-flex ctw-items-center ctw-space-x-3">
               {(errors?.requestErrors || errors?.formErrors) && (
                 <div className="ctw-text-sm ctw-font-medium ctw-text-error-text">
                   There was an error with your submission
                 </div>
               )}
-            </>
-
-            <div className="ctw-ml-auto ctw-flex ctw-h-full ctw-space-x-3 ctw-justify-self-end">
-              <button
-                type="button"
-                className="ctw-btn-default"
-                onClick={onClose}
-                data-zus-telemetry-click="Cancel form"
-              >
-                Cancel
-              </button>
               <SaveButton submitting={isSubmitting} />
             </div>
           </div>
