@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.1.1
+
+### Patch Changes
+
+- 4b55b511: Cleanup condition details/history drawer UI and fix a few minor bugs w.r.t "entered-in-error" conditions. This also sets up a generic details & history drawer to standardize other resource components.
+- eb02baaa: Add export for timeline.
+
 ## 1.1.0
 
 ### Minor Changes
