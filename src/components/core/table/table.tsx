@@ -13,16 +13,17 @@ import "./table.scss";
 export type RowActionsProps<T extends MinRecordItem> = { record: T };
 
 export type TableProps<T extends MinRecordItem> = {
+  children?: ReactNode;
   className?: cx.Argument;
-  records: T[];
   columns: TableColumn<T>[];
-  isLoading?: boolean;
   /** Displayed when we have 0 records. */
   emptyMessage?: string | ReactElement;
+  hidePagination?: boolean;
+  isLoading?: boolean;
+  pageSize?: number;
+  records: T[];
   showTableHead?: boolean;
   stacked?: boolean;
-  hidePagination?: boolean;
-  children?: ReactNode;
 } & Pick<
   TableRowsProps<T>,
   "handleRowClick" | "RowActions" | "getRowClassName"
@@ -36,6 +37,7 @@ export type TableBaseProps<T extends MinRecordItem> = Omit<
 export const Table = <T extends MinRecordItem>({
   className,
   columns,
+
   records,
   isLoading = false,
   emptyMessage: message = "No records found",
@@ -45,13 +47,14 @@ export const Table = <T extends MinRecordItem>({
   RowActions,
   getRowClassName,
   hidePagination = false,
+  pageSize = DEFAULT_PAGE_SIZE,
   children,
 }: TableProps<T>) => {
   const tableRef = useRef<HTMLTableElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showLeftShadow, setShowLeftShadow] = useState(false);
   const [showRightShadow, setShowRightShadow] = useState(false);
-  const [count, setCount] = useState(DEFAULT_PAGE_SIZE);
+  const [count, setCount] = useState(pageSize);
 
   const updateShadows = () => {
     const container = scrollContainerRef.current;
@@ -84,17 +87,24 @@ export const Table = <T extends MinRecordItem>({
   return (
     <div
       data-zus-telemetry-namespace="Table"
-      className={cx("ctw-space-y-4", {
+      className={cx("ctw-scrollable-pass-through-height ctw-space-y-4", {
         "ctw-table-stacked": stacked,
       })}
     >
       <div
-        className={cx("ctw-table-container", className, {
-          "ctw-table-scroll-left-shadow": showLeftShadow,
-          "ctw-table-scroll-right-shadow": showRightShadow,
-        })}
+        className={cx(
+          "ctw-table-container ctw-scrollable-pass-through-height",
+          className,
+          {
+            "ctw-table-scroll-left-shadow": showLeftShadow,
+            "ctw-table-scroll-right-shadow": showRightShadow,
+          }
+        )}
       >
-        <div className="ctw-scrollbar" ref={scrollContainerRef}>
+        <div
+          className={cx("ctw-scrollbar ctw-scrollable-content")}
+          ref={scrollContainerRef}
+        >
           <table ref={tableRef}>
             {hasData && <TableColGroup columns={columns} />}
             {showTableHead && hasData && <TableHead columns={columns} />}

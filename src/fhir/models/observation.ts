@@ -4,9 +4,7 @@ import { formatDateISOToLocal } from "@/fhir/formatters";
 import { compact } from "@/utils/nodash";
 
 export class ObservationModel extends FHIRModel<fhir4.Observation> {
-  get id() {
-    return this.resource.id ?? "";
-  }
+  kind = "Observation" as const;
 
   get category() {
     return codeableConceptLabel(this.resource.category?.[0]);
@@ -41,7 +39,7 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
     return codeableConceptLabel(this.resource.interpretation?.[0]);
   }
 
-  get note() {
+  get notes() {
     return this.resource.note?.[0].text ?? "";
   }
 }

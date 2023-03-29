@@ -1,14 +1,14 @@
 import { PatientConditionsOutsideProps } from "../conditions/patient-conditions-outside";
+import { PatientMedicationsProps } from "../medications/patient-medications";
+import { PatientMedicationsOutsideProps } from "../medications/patient-medications-outside";
+import { PatientObservationsProps } from "../observations/patient-observations";
+import { PatientObservationsOutsideProps } from "../observations/patient-observations-outside";
 import ZusSVG from "@/assets/zus.svg";
 import { PatientAllergiesProps } from "@/components/content/allergies/patient-allergies";
 import { PatientCareTeamProps } from "@/components/content/care-team/patient-careteam";
 import { PatientConditionsProps } from "@/components/content/conditions/patient-conditions";
 import { PatientDocumentProps } from "@/components/content/document/patient-documents";
 import { PatientImmunizationsProps } from "@/components/content/immunizations/patient-immunizations";
-import { OtherProviderMedsTableProps } from "@/components/content/medications/other-provider-meds-table";
-import { ProviderMedsTableProps } from "@/components/content/medications/provider-meds-table";
-import { PatientObservationsProps } from "@/components/content/observations/patient-observations";
-import { PatientObservationsOutsideProps } from "@/components/content/observations/patient-observations-outside";
 import { PatientTimelineProps } from "@/components/content/timeline/patient-timeline";
 import {
   ZusAggregatedProfileTabs,
@@ -37,17 +37,17 @@ export type ZusAggregatedProfileProps = {
   title?: string;
   hideTitle?: boolean;
   removeBranding?: boolean;
-} & SubComponentProps;
+} & ZusAggregatedProfileSubComponentProps;
 
-type SubComponentProps = Partial<{
+export type ZusAggregatedProfileSubComponentProps = Partial<{
   allergiesProps: PatientAllergiesProps;
   careTeamProps: PatientCareTeamProps;
   conditionsProps: PatientConditionsProps;
   conditionsOutsideProps: PatientConditionsOutsideProps;
   documentsProps: PatientDocumentProps;
   immunizationsProps: PatientImmunizationsProps;
-  medicationsProps: ProviderMedsTableProps;
-  medicationsOutsideProps: OtherProviderMedsTableProps;
+  medicationsProps: PatientMedicationsProps;
+  medicationsOutsideProps: PatientMedicationsOutsideProps;
   observationsProps: PatientObservationsProps;
   observationsOutsideProps: PatientObservationsOutsideProps;
   timelineProps: PatientTimelineProps;
@@ -67,8 +67,8 @@ const zusAggregatedProfile = ({
   observationsOutsideProps,
   timelineProps,
   resources,
-  title = "Outside Records",
   hideTitle = false,
+  title = "Outside Records",
   removeBranding = false,
 }: ZusAggregatedProfileProps) => {
   // Get the configuration for each tab group by resource type
@@ -92,7 +92,7 @@ const zusAggregatedProfile = ({
   });
 
   return (
-    <div className="ctw-zus-aggregated-profile">
+    <div className="ctw-zus-aggregated-profile ctw-scrollable-pass-through-height">
       {!hideTitle && (
         <Title className="ctw-border-b-2 ctw-border-r-0 ctw-border-l-0 ctw-border-t-0 ctw-border-solid ctw-border-divider-light">
           <h3 className="ctw-m-0 ctw-inline-block ctw-p-0 ctw-pb-3 ctw-text-lg ctw-font-medium">
@@ -136,9 +136,17 @@ const zusAggregatedProfile = ({
  * />
  * ```
  * The complete set of available resources in the ZusAggregatedProfile are
- * "allergies", "care-team", "conditions", "documents", "conditions-outside",
- * "immunizations", "medications", "medications-outside", "observations",
- * "observations-outside" and "timelines".
+ * "allergies",
+ * "care-team",
+ * "conditions",
+ * "conditions-outside",
+ * "documents",
+ * "immunizations",
+ * "medications",
+ * "medications-outside",
+ * "observations",
+ * "observations-outside",
+ * "timelines".
  */
 export const ZusAggregatedProfile = withErrorBoundary(
   zusAggregatedProfile,

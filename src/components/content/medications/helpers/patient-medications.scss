@@ -1,0 +1,15 @@
+.ctw-patient-medications {
+  @apply ctw-bg-white;
+
+  .ctw-title-container {
+    @apply ctw-flex ctw-items-center ctw-justify-between;
+  }
+
+  .ctw-heading-container {
+    @apply ctw-flex ctw-h-11 ctw-items-center ctw-justify-between ctw-bg-bg-light ctw-p-3;
+  }
+
+  .ctw-tab-list {
+    width: 312px;
+  }
+}

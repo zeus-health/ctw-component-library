@@ -92,6 +92,33 @@ export function getIdentifyingRxNormCoding(
   );
 }
 
+// Returns the best (most user friendly) display string for the medication associated with a medicationX resource
+// Prefers the "identifying" RxNorm code display value, if Zus was able to determine one for the medication.
+// Otherwise fall back to any display values.
+export function getMedicationDisplayName(
+  resource: Medication,
+  includedResources?: ResourceMap
+): string {
+  const code = getIdentifyingRxNormCoding(resource, includedResources);
+  if (code?.display) {
+    return code.display;
+  }
+
+  const medCodeableConcept = getMedicationCodeableConcept(
+    resource,
+    includedResources
+  );
+
+  if (medCodeableConcept?.text) {
+    return medCodeableConcept.text;
+  }
+
+  return (
+    medCodeableConcept?.coding?.find((x) => x.display)?.display ??
+    `${medCodeableConcept?.coding?.[0].code} (${medCodeableConcept?.coding?.[0].system})`
+  );
+}
+
 // Returns the organization name of any performer for the medication.
 export function getPerformingOrganization(
   resource: Medication,

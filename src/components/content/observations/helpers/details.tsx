@@ -1,26 +1,67 @@
-import { ResourceTable } from "../../resource/resource-table";
-import { observationsColumns } from "@/components/content/observations/helpers/columns";
-import { ObservationModel } from "@/fhir/models";
+import { useEffect, useState } from "react";
+import { ObservationsTable } from "@/components/content/observations/helpers/observations-table";
+import { DetailsCard } from "@/components/content/resource/helpers/details-card";
+import { withErrorBoundary } from "@/components/core/error-boundary";
+import { DiagnosticReportModel, ObservationModel } from "@/fhir/models";
+import { findReference } from "@/fhir/resource-helper";
+import { capitalize, compact } from "@/utils/nodash";
 
-export type ObservationsTableProps = {
-  className?: string;
-  data: ObservationModel[];
+export type ObservationDetailsProps = {
+  diagnosticReport: DiagnosticReportModel;
 };
 
-export const ObservationsDetails = ({
-  className,
-  data,
-}: ObservationsTableProps) => (
-  <div className={className}>
-    <div className="ctw-text-base ctw-font-medium ctw-uppercase ctw-text-content-light">
-      observations
+export const diagnosticReportData = (
+  diagnosticReport: DiagnosticReportModel
+) => [
+  { label: "Organization", value: diagnosticReport.performer },
+  {
+    label: "Identifier",
+    value: diagnosticReport.identifier,
+  },
+  {
+    label: "Service category",
+    value: diagnosticReport.category,
+  },
+  {
+    label: "Status",
+    value: capitalize(diagnosticReport.resource.status),
+  },
+];
+
+export const Component = ({ diagnosticReport }: ObservationDetailsProps) => {
+  const [observationEntries, setObservationsEntries] = useState<
+    ObservationModel[]
+  >([]);
+
+  useEffect(() => {
+    setObservationsEntries(
+      compact(
+        diagnosticReport.results.map((result) => {
+          const observation = findReference(
+            "Observation",
+            undefined,
+            diagnosticReport.includedResources,
+            result.reference
+          );
+          if (!observation) {
+            return undefined;
+          }
+          return new ObservationModel(observation, {
+            [diagnosticReport.id]: diagnosticReport.resource,
+          });
+        })
+      )
+    );
+  }, [diagnosticReport]);
+
+  return (
+    <div className="ctw-space-y-6" data-zus-telemetry-namespace="Observations">
+      <div className="ctw-text-2xl">{diagnosticReport.displayName}</div>
+
+      <DetailsCard details={diagnosticReportData(diagnosticReport)} />
+      <ObservationsTable data={observationEntries} />
     </div>
-    <ResourceTable
-      className="ctw-patient-observation-details"
-      columns={observationsColumns}
-      data={data}
-      isLoading={false}
-      emptyMessage="There are no observations available."
-    />
-  </div>
-);
+  );
+};
+
+export const ObservationDetails = withErrorBoundary(Component, "Observations");

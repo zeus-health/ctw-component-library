@@ -1,5 +1,6 @@
 import cx from "classnames";
 import { ReactNode } from "react";
+import { ViewButton, ViewButtonProps } from "./helpers/view-button";
 import { FilterBar } from "@/components/core/filter-bar/filter-bar";
 import { FilterBarProps } from "@/components/core/filter-bar/filter-bar-types";
 import {
@@ -9,19 +10,21 @@ import {
 import { MinRecordItem } from "@/components/core/table/table-helpers";
 
 export type ResourceTableActionsProps<T extends MinRecordItem> = {
-  className?: string;
-  sortOptions?: SortButtonProps<T>;
-  filterOptions?: FilterBarProps;
   action?: ReactNode;
+  className?: string;
+  filterOptions?: FilterBarProps;
+  sortOptions?: SortButtonProps<T>;
+  viewOptions?: ViewButtonProps;
 };
 
 export const ResourceTableActions = <T extends MinRecordItem>({
-  className,
-  sortOptions,
-  filterOptions,
   action,
+  className,
+  filterOptions,
+  sortOptions,
+  viewOptions,
 }: ResourceTableActionsProps<T>) => {
-  const isEmpty = !sortOptions && !filterOptions && !action;
+  const isEmpty = !viewOptions && !sortOptions && !filterOptions && !action;
   if (isEmpty) {
     return null;
   }
@@ -34,8 +37,11 @@ export const ResourceTableActions = <T extends MinRecordItem>({
       )}
     >
       <div className="ctw-flex ctw-flex-wrap ctw-gap-x-2">
+        {viewOptions && <ViewButton {...viewOptions} />}
         {sortOptions && <SortButton {...sortOptions} />}
-        {filterOptions && <FilterBar {...filterOptions} />}
+        {filterOptions && filterOptions.filters.length > 0 && (
+          <FilterBar {...filterOptions} />
+        )}
       </div>
 
       {action}

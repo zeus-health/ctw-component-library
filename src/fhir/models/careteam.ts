@@ -6,6 +6,8 @@ import { PractitionerModel } from "./practitioner";
 import { find } from "@/utils/nodash";
 
 export class CareTeamModel extends FHIRModel<fhir4.CareTeam> {
+  kind = "CareTeam" as const;
+
   get status() {
     return this.resource.status;
   }

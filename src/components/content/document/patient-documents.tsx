@@ -30,19 +30,21 @@ function PatientDocumentsComponent({ className }: PatientDocumentProps) {
     <div
       ref={containerRef}
       data-zus-telemetry-namespace="Documents"
-      className={cx("ctw-patient-documents ctw-bg-white", className, {
-        "ctw-stacked": breakpoints.sm,
-      })}
+      className={cx(
+        "ctw-patient-documents ctw-scrollable-pass-through-height ctw-bg-white",
+        className,
+        {
+          "ctw-stacked": breakpoints.sm,
+        }
+      )}
     >
-      <div className="ctw-overflow-hidden">
-        <Table
-          stacked={breakpoints.sm}
-          isLoading={isLoading}
-          records={document}
-          columns={patientDocumentColumns(featureFlags?.enableViewFhirButton)}
-          handleRowClick={openDetails}
-        />
-      </div>
+      <Table
+        stacked={breakpoints.sm}
+        isLoading={isLoading}
+        records={document}
+        columns={patientDocumentColumns(featureFlags?.enableViewFhirButton)}
+        handleRowClick={openDetails}
+      />
     </div>
   );
 }

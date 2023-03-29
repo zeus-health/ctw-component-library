@@ -3,6 +3,8 @@ import { FHIRModel } from "./fhir-model";
 import { PractitionerModel } from "./practitioner";
 
 export class CareTeamPractitionerModel extends FHIRModel<fhir4.Practitioner> {
+  kind = "CareTeamPractitioner" as const;
+
   constructor(careTeam: CareTeamModel, practitioner: fhir4.Practitioner) {
     super(practitioner);
     this.careTeam = careTeam;

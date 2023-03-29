@@ -1,3 +1,4 @@
+import cx from "classnames";
 import { useRef } from "react";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { patientAllergiesColumns } from "@/components/content/allergies/patient-allergies-column";
@@ -30,11 +31,11 @@ function PatientAllergiesComponent({
 
   return (
     <div
-      className={className}
+      className={cx(className, "ctw-scrollable-pass-through-height")}
       ref={containerRef}
       data-zus-telemetry-namespace="Allergies"
     >
-      <div className="ctw-overflow-hidden">
+      <div className="ctw-scrollable-pass-through-height">
         <Table
           stacked={breakpoints.sm}
           isLoading={isLoading}

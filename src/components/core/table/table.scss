@@ -4,7 +4,7 @@
 
 .ctw-table-scroll-right-shadow::after,
 .ctw-table-scroll-left-shadow::before {
-  @apply ctw-pointer-events-none ctw-absolute ctw-z-10 ctw-block ctw-h-full ctw-w-1;
+  @apply ctw-pointer-events-none ctw-absolute ctw-z-30 ctw-block ctw-h-full ctw-w-1;
   top: 0;
   content: "";
   background: linear-gradient(
@@ -25,6 +25,14 @@
 
 .ctw-table-container {
   @apply ctw-relative ctw-overflow-hidden ctw-border-y ctw-border-x-0 ctw-border-r-0 ctw-border-solid ctw-border-divider-light;
+
+  .ctw-stacked-hide {
+    display: initial;
+  }
+
+  .ctw-stacked-only {
+    display: none;
+  }
 
   .ctw-scrollbar {
     @apply ctw-overflow-x-auto;
@@ -70,6 +78,25 @@
 }
 
 .ctw-table-stacked {
+  .ctw-stacked-hide {
+    display: none;
+  }
+
+  .ctw-stacked-only {
+    display: initial;
+  }
+
+  // Get children to be inline and add ", " before any of the divs following
+  // the first one.
+  .ctw-stacked-concat {
+    > div {
+      display: inline-block;
+    }
+    > div ~ div::before {
+      content: ", ";
+    }
+  }
+
   .ctw-scrollbar {
     @apply ctw-overflow-x-hidden;
   }

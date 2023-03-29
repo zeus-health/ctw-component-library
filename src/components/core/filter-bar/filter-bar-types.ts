@@ -10,37 +10,42 @@ export type FilterBarProps = {
   defaultState?: FilterChangeEvent;
 };
 
-export type MinFilterItem = {
-  belowTheFold?: boolean; // should the filter be below divider in main menu?
+type MinFilterItem = {
+  belowDivider?: boolean; // Should the filter be below divider in main menu?
   className?: cx.Argument;
   display: string | ((status: ListBoxOptionStatus) => ReactNode | string);
   icon?: IconDefinition;
   key: string;
-  type: "tag";
+  // These allow the filter to still show up in the main filter menu
+  // but with a different display and or icon.
+  toggleDisplay?: string;
+  toggleIcon?: IconDefinition;
 };
 
 export type FilterOptionSelect = {
   type: "select";
   // Using strings in `values` will set both key and display automatically
   values: (string | { key: string; display: string })[];
-} & Omit<MinFilterItem, "type">;
+} & MinFilterItem;
 
 export type FilterOptionCheckbox = {
   type: "checkbox";
   // Using strings in `values` will set both key and display automatically
   values: (string | { key: string; display: string })[];
-} & Omit<MinFilterItem, "type">;
+} & MinFilterItem;
+
+export type FilterOptionTag = {
+  type: "tag";
+} & MinFilterItem;
 
 export type FilterItem =
-  | MinFilterItem
   | FilterOptionSelect
-  | FilterOptionCheckbox;
+  | FilterOptionCheckbox
+  | FilterOptionTag;
 
 export type FilterValuesRecord = Record<string, string | string[]>;
 
-export type FilterChangeEvent = Record<
-  string,
-  | undefined
+export type Filter =
   | {
       key: string;
       selected: boolean;
@@ -55,5 +60,6 @@ export type FilterChangeEvent = Record<
       key: string;
       selected: string;
       type: "select";
-    }
->;
+    };
+
+export type FilterChangeEvent = Record<string, Filter>;

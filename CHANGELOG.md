@@ -1,5 +1,61 @@
 # ctw-component-library
 
+## 1.1.1
+
+### Patch Changes
+
+- 4b55b511: Cleanup condition details/history drawer UI and fix a few minor bugs w.r.t "entered-in-error" conditions. This also sets up a generic details & history drawer to standardize other resource components.
+- eb02baaa: Add export for timeline.
+
+## 1.1.0
+
+### Minor Changes
+
+- bbe3c9ab: Add Multi-resource timeline component.
+
+## 1.0.0
+
+### Major Changes
+
+- 8f638ef9: Given where we are with maturity and stability we are now ready to release 1.0!
+
+## 0.51.1
+
+### Patch Changes
+
+- a2451acb: Tweak "Show Dismissed Records" filter to be below divider and to then show up as "Hide Dismissed Records" when it has been applied.
+
+## 0.51.0
+
+### Minor Changes
+
+- 0aeecb51: Refactor medication components. PatientMedications is now PatientMedicationsProfile which will show both the patient record and the outside medication tables.
+
+### Patch Changes
+
+- 0aeecb51: Patient medications now has a "view" selector where you can view "Current", "Past", or "All" medications.
+- 1b819762: Added ctw-scrollable-pass-through-height class to medications component.
+- 0aeecb51: Dismissed conditions will now render faded and still show their original status (e.g. "Active").
+- bd4e3503: Request records now appears in empty table state when patient has never made request to patient history api.
+- 0aeecb51: Medication tables will now show all information when stacked view for responsive/small width.
+
+## 0.50.4
+
+### Patch Changes
+
+- e8455bcd: Add PatientObservations component (POC)
+- 6f9aaf18: Added .ctw-scrollable-pass-through-height and .ctw-scrollable-content classes.
+  Added scrolling to all current components used in ZusAggregatedProfile.
+- e8455bcd: Cleanup refactor of Observations POC
+
+## 0.50.3
+
+### Patch Changes
+
+- 2355541e: Change allergy label and add option to override outside medications tab name
+- aa249a7c: Fix bug where patient list wasn't always showing all patients for some consumers.
+- 81e86724: Fix the use of tag:not filtering for resources.
+
 ## 0.50.2
 
 ### Patch Changes

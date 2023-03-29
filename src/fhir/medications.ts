@@ -1,12 +1,20 @@
 import type { FhirResource, MedicationStatement } from "fhir/r4";
-import { useCallback, useEffect, useState } from "react";
-import { bundleToResourceMap, getMergedIncludedResources } from "./bundle";
+import { useEffect, useState } from "react";
+import {
+  bundleToResourceMap,
+  getIncludedResources,
+  getMergedIncludedResources,
+} from "./bundle";
 import { getIdentifyingRxNormCode } from "./medication";
+import { MedicationDispenseModel } from "./models";
+import { MedicationRequestModel } from "./models/medication-request";
 import {
   searchAllRecords,
   searchBuilderRecords,
+  searchCommonRecords,
   searchLensRecords,
   SearchReturn,
+  searchSummaryRecords,
 } from "./search-helpers";
 import {
   CTW_EXTENSION_LENS_AGGREGATED_FROM,
@@ -17,12 +25,11 @@ import {
   LENS_EXTENSION_MEDICATION_LAST_PRESCRIBER,
   LENS_EXTENSION_MEDICATION_QUANTITY,
   LENS_EXTENSION_MEDICATION_REFILLS,
+  SYSTEM_RXNORM,
   SYSTEM_ZUS_UNIVERSAL_ID,
 } from "./system-urls";
 import { ResourceTypeString } from "./types";
-import { handleMedicationDismissal } from "@/components/content/medications/medication-actions";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { useCTW } from "@/components/core/providers/ctw-provider";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { MedicationModel } from "@/fhir/models/medication";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
@@ -123,6 +130,87 @@ export async function getBuilderMedications(
     return { bundle: response.bundle, medications };
   } catch (e) {
     throw errorResponse("Failed fetching medications for patient", e);
+  }
+}
+
+export async function getCommonMedicationRequests(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  keys: object[] = []
+) {
+  const [searchFilters = {}] = keys;
+
+  try {
+    const { bundle, resources } = await searchCommonRecords(
+      "MedicationRequest",
+      requestContext,
+      {
+        patientUPID: patient.UPID,
+        ...omitClientFilters(searchFilters),
+      }
+    );
+
+    return resources.map(
+      (r) => new MedicationRequestModel(r, getIncludedResources(bundle))
+    );
+  } catch (e) {
+    throw errorResponse("Failed fetching medication requests for patient", e);
+  }
+}
+
+export async function getCommonMedicationDispenses(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  keys: object[] = []
+) {
+  const [searchFilters = {}] = keys;
+
+  try {
+    const { bundle, resources } = await searchCommonRecords(
+      "MedicationDispense",
+      requestContext,
+      {
+        patientUPID: patient.UPID,
+        ...omitClientFilters(searchFilters),
+        _include: [
+          "MedicationRequest:medication",
+          "MedicationDispense:performer",
+        ],
+      }
+    );
+
+    return resources.map(
+      (r) => new MedicationDispenseModel(r, getIncludedResources(bundle))
+    );
+  } catch (e) {
+    throw errorResponse("Failed fetching medication dispenses for patient", e);
+  }
+}
+
+export async function getMedicationStatements(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  keys: (string | undefined)[] = []
+) {
+  const [rxNorm] = keys;
+  if (!rxNorm) {
+    return [];
+  }
+  try {
+    const { bundle, resources } = await searchSummaryRecords(
+      "MedicationStatement",
+      requestContext,
+      {
+        patientUPID: patient.UPID,
+        code: `${SYSTEM_RXNORM}|${rxNorm}`,
+      }
+    );
+
+    return resources.map(
+      (r) => new MedicationStatementModel(r, getIncludedResources(bundle))
+    );
+  } catch (e) {
+    throw errorResponse("Failed fetching medication statements for patient", e);
   }
 }
 
@@ -396,18 +484,4 @@ function searchWrapper<T extends ResourceTypeString>(
     });
   }
   return { resources: [], bundle: undefined };
-}
-
-/**
- * Create a callback function that dismisses a medication
- */
-export function useDismissMedication() {
-  const { getRequestContext } = useCTW();
-
-  return useCallback(
-    async (medication: MedicationStatementModel) => {
-      await handleMedicationDismissal(medication, getRequestContext);
-    },
-    [getRequestContext]
-  );
 }

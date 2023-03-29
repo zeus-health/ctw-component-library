@@ -12,9 +12,11 @@ import {
   PatientMedications,
   PatientProvider,
   PatientSearch,
+  PatientTimeline,
   ZusAggregatedProfile,
 } from ".";
 import "./App.css";
+import { PatientTimelineV2 } from "./components/content/timeline-2.0/patient-timeline";
 
 const {
   VITE_SYSTEM_URL,
@@ -34,6 +36,20 @@ const theme = {
     notification: {
       main: "#a855f7",
       light: "#f3e8ff",
+    },
+  },
+};
+
+// Glossary for translation
+const locals = {
+  en: {
+    glossary: {
+      condition_one: "problem",
+      condition_other: "problems",
+    },
+    main: {
+      "zap.tabs.conditionsOutside": "problems",
+      "zap.tabs.medicationsOutside": "medications",
     },
   },
 };
@@ -58,17 +74,27 @@ const demoComponents: DemoComponent[] = [
     render: () => (
       <ZusAggregatedProfile
         resources={[
-          "medications",
-          "timelines",
-          "allergies",
           "conditions-outside",
+          "medications-outside",
+          "allergies",
+          "immunizations",
+          "documents",
+          "care-team",
+          "timelines",
         ]}
+        conditionsOutsideProps={{
+          hideRequestRecords: true,
+          readOnly: true,
+        }}
+        medicationsOutsideProps={{
+          readOnly: true,
+        }}
       />
     ),
     title: "ZAP",
   },
   {
-    render: () => <PatientMedications handleAddToRecord={() => null} />,
+    render: () => <PatientMedications />,
     title: "Patient Medications",
   },
   {
@@ -87,6 +113,7 @@ const demoComponents: DemoComponent[] = [
   },
   { render: () => <PatientImmunizations />, title: "Patient Immunizations" },
   { render: () => <PatientSearch />, title: "Patient Search" },
+  { render: () => <PatientTimelineV2 />, title: "Patient Timeline" },
 ];
 
 const DemoApp = ({ accessToken = "" }) => (
@@ -96,6 +123,7 @@ const DemoApp = ({ accessToken = "" }) => (
     builderId={VITE_BUILDER_ID}
     enableTelemetry
     theme={theme}
+    locals={locals}
   >
     <PatientProvider patientID={VITE_PATIENT_ID} systemURL={VITE_SYSTEM_URL}>
       <div className="App">

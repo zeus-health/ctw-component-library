@@ -4,6 +4,8 @@ import { SYSTEM_CVX } from "../system-urls";
 import { FHIRModel } from "./fhir-model";
 
 export class ImmunizationModel extends FHIRModel<fhir4.Immunization> {
+  kind = "Immunization" as const;
+
   get description(): string | undefined {
     return this.resource.vaccineCode.text;
   }

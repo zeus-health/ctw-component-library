@@ -1,4 +1,5 @@
-import { useConditionHistory } from "../../condition-history/conditions-history-drawer";
+import cx from "classnames";
+import { ReactElement } from "react";
 import {
   ResourceTable,
   ResourceTableProps,
@@ -8,6 +9,7 @@ import {
   ResourceTableActionsProps,
 } from "../../resource/resource-table-actions";
 import { patientConditionsColumns } from "./columns";
+import { useConditionDetailsDrawer } from "./details";
 import { conditionFilters, defaultConditionFilters } from "./filters";
 import { conditionSortOptions, defaultConditionSort } from "./sorts";
 import "./patient-conditions.scss";
@@ -21,6 +23,8 @@ export type PatientConditionsTableProps = {
   outside?: boolean;
   readOnly?: boolean;
   rowActions?: ResourceTableProps<ConditionModel>["rowActions"];
+  emptyMessage?: string | ReactElement;
+  isLoading?: boolean;
 };
 
 export const PatientConditionsBase = ({
@@ -30,8 +34,14 @@ export const PatientConditionsBase = ({
   outside = false,
   readOnly = false,
   rowActions,
+  emptyMessage = "There are no condition records available.",
+  isLoading,
 }: PatientConditionsTableProps) => {
-  const showConditionHistory = useConditionHistory();
+  const openDetailsDrawer = useConditionDetailsDrawer({
+    canRemove: !readOnly && !outside,
+    canEdit: !readOnly && !outside,
+  });
+
   const { data, setFilters, setSort } = useFilteredSortedData({
     defaultFilters: defaultConditionFilters,
     defaultSort: defaultConditionSort,
@@ -39,7 +49,7 @@ export const PatientConditionsBase = ({
   });
 
   return (
-    <div className={className}>
+    <div className={cx(className, "ctw-scrollable-pass-through-height")}>
       <ResourceTableActions
         filterOptions={{
           onChange: setFilters,
@@ -53,19 +63,13 @@ export const PatientConditionsBase = ({
         }}
         action={action}
       />
-
       <ResourceTable
         className="ctw-patient-conditions"
         columns={patientConditionsColumns}
         data={data}
-        emptyMessage="There are no condition records available."
-        isLoading={query.isLoading}
-        onRowClick={(condition) =>
-          showConditionHistory({
-            condition,
-            readOnly,
-          })
-        }
+        emptyMessage={emptyMessage}
+        isLoading={isLoading || query.isLoading}
+        onRowClick={openDetailsDrawer}
         rowActions={rowActions}
       />
     </div>

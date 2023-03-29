@@ -3,19 +3,20 @@ import { codeableConceptLabel } from "../codeable-concept";
 import { formatDateISOToLocal } from "../formatters";
 import { FHIRModel } from "./fhir-model";
 import { isNullFlavorSystem } from "@/fhir/mappings/null-flavor";
-import { compact, flatten } from "@/utils/nodash";
+import { compact, flatten, uniq } from "@/utils/nodash";
 
 export class EncounterModel extends FHIRModel<fhir4.Encounter> {
+  kind = "Encounter" as const;
+
   get class(): string | undefined {
     const { display, code } = this.resource.class;
     return display ?? code !== "UNK" ? code : undefined;
   }
 
-  get diagnosis(): string | undefined {
-    const diagnoses = compact(
-      this.resource.diagnosis?.map((d) => d.condition.display)
+  get diagnoses(): string[] | undefined {
+    return compact(
+      uniq(this.resource.diagnosis?.map((d) => d.condition.display))
     );
-    return diagnoses.length ? diagnoses.join(", ") : undefined;
   }
 
   get dischargeDisposition(): string | undefined {
@@ -33,7 +34,7 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
 
   get participants(): string | undefined {
     const participants = compact(
-      this.resource.participant?.map((p) => p.individual?.display)
+      uniq(this.resource.participant?.map((p) => p.individual?.display))
     );
     return participants.length ? participants.join(", ") : undefined;
   }

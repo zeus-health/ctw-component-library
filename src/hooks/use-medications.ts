@@ -5,6 +5,9 @@ import { getIncludedBasics, getMergedIncludedResources } from "@/fhir/bundle";
 import {
   getActiveMedications,
   getBuilderMedications,
+  getCommonMedicationDispenses,
+  getCommonMedicationRequests,
+  getMedicationStatements,
   MedicationResults,
   splitMedications,
 } from "@/fhir/medications";
@@ -12,6 +15,9 @@ import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import {
   QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
   QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
+  QUERY_KEY_PATIENT_MEDICATION_DISPENSE_COMMON,
+  QUERY_KEY_PATIENT_MEDICATION_REQUESTS_COMMON,
+  QUERY_KEY_PATIENT_MEDICATION_STATEMENT,
 } from "@/utils/query-keys";
 import { withTimerMetric } from "@/utils/telemetry";
 
@@ -46,16 +52,56 @@ export function useQueryGetSummarizedPatientMedications(): UseQueryResult<
   );
 }
 
+export function useQueryGetPatientMedRequestsCommon() {
+  return useQueryWithPatient(
+    QUERY_KEY_PATIENT_MEDICATION_REQUESTS_COMMON,
+    [
+      {
+        informationSourceNot: "Patient",
+      },
+    ],
+    withTimerMetric(
+      getCommonMedicationRequests,
+      "req.medication_requests_common"
+    )
+  );
+}
+
+export function useQueryGetPatientMedDispenseCommon() {
+  return useQueryWithPatient(
+    QUERY_KEY_PATIENT_MEDICATION_DISPENSE_COMMON,
+    [
+      {
+        informationSourceNot: "Patient",
+      },
+    ],
+    withTimerMetric(
+      getCommonMedicationDispenses,
+      "req.medication_dispense_common"
+    )
+  );
+}
+
+export function useQueryMedicationStatement(rxNorm: string | undefined) {
+  return useQueryWithPatient(
+    QUERY_KEY_PATIENT_MEDICATION_STATEMENT,
+    [rxNorm],
+    withTimerMetric(getMedicationStatements, "req.medication_statement")
+  );
+}
+
 /**
  * This hook provides all patient medication statements reconciled into two
  * categories ("Builder Medications" and "Other Provider Medications"). This is
  * useful when creating content such as the <PatientMedications /> component.
  */
 export function useQueryAllPatientMedications() {
-  const [builderMedications, setBuilderMedications] =
-    useState<MedicationStatementModel[]>();
-  const [otherProviderMedications, setOtherProviderMedications] =
-    useState<MedicationStatementModel[]>();
+  const [builderMedications, setBuilderMedications] = useState<
+    MedicationStatementModel[]
+  >([]);
+  const [otherProviderMedications, setOtherProviderMedications] = useState<
+    MedicationStatementModel[]
+  >([]);
 
   const summarizedMedicationsQuery = useQueryGetSummarizedPatientMedications();
   const builderMedicationsQuery = useQueryGetPatientMedsForBuilder();

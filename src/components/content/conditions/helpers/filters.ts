@@ -2,6 +2,7 @@ import {
   faClipboardCheck,
   faClipboardList,
 } from "@fortawesome/free-solid-svg-icons";
+import { dismissFilter } from "../../resource/filters";
 import {
   FilterChangeEvent,
   FilterItem,
@@ -17,7 +18,13 @@ export function conditionFilters(
   conditions: ConditionModel[],
   outside: boolean
 ): FilterItem[] {
-  return [
+  const filters: FilterItem[] = [];
+
+  if (outside) {
+    filters.push(dismissFilter);
+  }
+
+  filters.push(
     {
       key: "displayStatus",
       type: "checkbox",
@@ -32,8 +39,10 @@ export function conditionFilters(
       icon: faClipboardList,
       display: "Category",
       values: uniqueValues(conditions, "ccsChapter"),
-    },
-  ];
+    }
+  );
+
+  return filters;
 }
 
 export const defaultConditionFilters: FilterChangeEvent = {

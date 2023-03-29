@@ -1,14 +1,9 @@
-import { FhirResource, SearchParams } from "fhir-kit-client";
+import { FhirResource } from "fhir-kit-client";
 import { useEffect, useState } from "react";
 import { createOrEditFhirResource } from "./action-helper";
-import { recordProfileAction } from "./basic";
 import { getIncludedBasics } from "./bundle";
 import { CodePreference } from "./codeable-concept";
-import {
-  searchBuilderRecords,
-  searchCommonRecords,
-  searchSummaryRecords,
-} from "./search-helpers";
+import { searchBuilderRecords, searchSummaryRecords } from "./search-helpers";
 import {
   SYSTEM_CONDITION_VERIFICATION_STATUS,
   SYSTEM_ICD10,
@@ -24,9 +19,8 @@ import {
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { ConditionModel } from "@/fhir/models/condition";
-import { cloneDeep, compact, orderBy } from "@/utils/nodash";
+import { cloneDeep, orderBy } from "@/utils/nodash";
 import {
-  QUERY_KEY_CONDITION_HISTORY,
   QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
   QUERY_KEY_PATIENT_CONDITIONS,
 } from "@/utils/query-keys";
@@ -150,129 +144,6 @@ export function usePatientConditionsOutside() {
   };
 }
 
-const historyRequestTemplate = (id: string) => ({
-  request: {
-    method: "GET",
-    url: `/Condition/${id}/_history`,
-  },
-});
-
-export const getConditionVersionHistory = async (
-  requestContext: CTWRequestContext,
-  searchParams: SearchParams
-) => {
-  const response = await searchBuilderRecords(
-    "Condition",
-    requestContext,
-    searchParams
-  );
-
-  const builderIds = response.resources.map(
-    // The only time that a resource does not have an id is when it is being submitted to the server using a create operation.
-    (resource) => resource.id
-  ) as string[];
-
-  if (!builderIds.length) {
-    return undefined;
-  }
-
-  const bundle: fhir4.Bundle = {
-    resourceType: "Bundle",
-    id: "bundle-history-conditions",
-    type: "batch",
-    entry: builderIds.map((id) =>
-      historyRequestTemplate(id)
-    ) as fhir4.BundleEntry<fhir4.FhirResource>[],
-  };
-
-  return requestContext.fhirClient.batch({
-    body: {
-      ...bundle,
-      type: "batch",
-    },
-  });
-};
-
-export function useConditionHistory(condition?: ConditionModel) {
-  return useQueryWithPatient(
-    QUERY_KEY_CONDITION_HISTORY,
-    [condition],
-    withTimerMetric(async (requestContext, patient) => {
-      if (!condition) {
-        return undefined;
-      }
-      if (condition.verificationStatus === "entered-in-error") {
-        return {
-          conditions: [],
-          bundle: { resourceType: "Bundle", entry: [] },
-        };
-      }
-      try {
-        const tokens = condition.knownCodings.map(
-          (coding) => `${coding.system}|${coding.code}`
-        );
-
-        const searchParams: SearchParams = {
-          patientUPID: patient.UPID,
-          _include: ["Condition:patient", "Condition:encounter"],
-          "_include:iterate": "Patient:organization",
-        };
-
-        // If we have any known codings, then do an OR search.
-        // Otherwise fall back to searching for this single condition.
-        // That way, conditions that don't have any good codes to match on
-        // will only show themselves in the history.
-        if (tokens.length > 0) {
-          searchParams.code = tokens.join(",");
-        } else {
-          // eslint-disable-next-line no-underscore-dangle
-          searchParams._id = condition.id;
-        }
-
-        const { resources: conditions, bundle } = await searchCommonRecords(
-          "Condition",
-          requestContext,
-          searchParams
-        );
-
-        const versionHistoryBundle = await getConditionVersionHistory(
-          requestContext,
-          searchParams
-        );
-
-        const conditionVersions: fhir4.BundleEntry[] = [];
-        if (versionHistoryBundle && versionHistoryBundle.entry) {
-          versionHistoryBundle.entry.forEach(
-            (bundleEntry: fhir4.BundleEntry) => {
-              const { resource } = bundleEntry;
-              if (resource?.resourceType === "Bundle" && resource.entry) {
-                conditionVersions.push(...resource.entry);
-              }
-            }
-          );
-        }
-
-        const combinedConditions = conditions.concat(
-          ...(compact(
-            conditionVersions.map((r) => r.resource)
-          ) as fhir4.Condition[])
-        );
-
-        return {
-          conditions: combinedConditions,
-          bundle,
-        };
-      } catch (e) {
-        throw Telemetry.logError(
-          e as Error,
-          `Failed fetching condition history for patient: ${patient.UPID}}`
-        );
-      }
-    }, "req.condition_history"),
-    !!condition
-  );
-}
-
 function setupConditionModels(
   conditionResources: fhir4.Condition[],
   bundle: fhir4.Bundle
@@ -292,27 +163,6 @@ function filterAndSort(conditions: ConditionModel[]): ConditionModel[] {
     ["desc"]
   );
 }
-
-export const toggleArchive = async (
-  condition: ConditionModel,
-  requestContext: CTWRequestContext
-) => {
-  const existingBasic =
-    condition.getBasicResourceByAction("archive") ||
-    condition.getBasicResourceByAction("unarchive");
-  const profileAction = condition.isArchived ? "unarchive" : "archive";
-
-  await recordProfileAction(
-    existingBasic,
-    condition,
-    requestContext,
-    profileAction
-  );
-
-  // Refresh our data (this is really just needed to update
-  // otherProviderRecord state).
-  await queryClient.invalidateQueries([QUERY_KEY_OTHER_PROVIDER_CONDITIONS]);
-};
 
 export const deleteCondition = async (
   resource: fhir4.Condition,

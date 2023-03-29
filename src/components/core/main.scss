@@ -96,6 +96,23 @@
     @apply ctw-bg-divider-main;
   }
 
+  /* Scrollable container pattern */
+  .ctw-scrollable-content {
+    flex-grow: 1;
+    overflow: auto;
+    /* Need to keep min-height for Firefox */
+    min-height: 0;
+  }
+
+  /* all ascendants of "ctw-scrollable-content" (without explicit height) need .ctw-scrollable-pass-through-height */
+  .ctw-scrollable-pass-through-height {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    /* Need to keep min-height for Firefox */
+    min-height: 0;
+  }
+
   .ctw-stacked {
     .ctw-body-container {
       @apply ctw-m-0;

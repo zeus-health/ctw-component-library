@@ -1,11 +1,15 @@
 import { PatientHistoryAction } from "../patient-history/patient-history-action";
+import { RequestRecordsButton } from "../patient-history/request-records-button";
+import { usePatientHistory } from "../patient-history/use-patient-history";
 import { useAddConditionForm } from "./helpers/modal-hooks";
 import { PatientConditionsBase } from "./helpers/patient-conditions-base";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { RowActionsProps } from "@/components/core/table/table";
-import { toggleArchive, usePatientConditionsOutside } from "@/fhir/conditions";
+import { toggleArchive } from "@/fhir/basic";
+import { usePatientConditionsOutside } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models";
+import { QUERY_KEY_OTHER_PROVIDER_CONDITIONS } from "@/utils/query-keys";
 
 export type PatientConditionsOutsideProps = {
   className?: string;
@@ -19,9 +23,26 @@ const PatientConditionsOutsideComponent = ({
   readOnly = false,
 }: PatientConditionsOutsideProps) => {
   const query = usePatientConditionsOutside();
+  const patientHistoryQuery = usePatientHistory();
+  const hasNoOutsideDataAndHasNeverRequestedPatientHistory =
+    patientHistoryQuery.lastRetrievedAt === undefined &&
+    query.data.length === 0;
+
+  const emptyMessage = !patientHistoryQuery.lastRetrievedAt ? (
+    <div className="ctw-flex ctw-space-x-1">
+      <div>Retrieve patient clinical history.</div>
+      <RequestRecordsButton />
+    </div>
+  ) : undefined;
 
   const action = (
-    <PatientHistoryAction hideRequestRecords={hideRequestRecords || readOnly} />
+    <PatientHistoryAction
+      hideRequestRecords={
+        hideRequestRecords ||
+        hasNoOutsideDataAndHasNeverRequestedPatientHistory ||
+        readOnly
+      }
+    />
   );
 
   return (
@@ -32,6 +53,8 @@ const PatientConditionsOutsideComponent = ({
       query={query}
       readOnly={readOnly}
       rowActions={readOnly ? undefined : RowActions}
+      emptyMessage={emptyMessage}
+      isLoading={patientHistoryQuery.isLoading}
     />
   );
 };
@@ -51,7 +74,9 @@ const RowActions = ({ record }: RowActionsProps<ConditionModel>) => {
         type="button"
         className="ctw-btn-default"
         onClick={async () => {
-          await toggleArchive(record, await getRequestContext());
+          await toggleArchive(record, await getRequestContext(), [
+            QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
+          ]);
         }}
       >
         {record.isArchived ? "Restore" : "Dismiss"}
