@@ -3,6 +3,8 @@ import { formatDateISOToLocal } from "@/fhir/formatters";
 import { compact } from "@/utils/nodash/fp";
 
 export class MedicationAdministrationModel extends FHIRModel<fhir4.MedicationAdministration> {
+  kind = "MedicationAdministration" as const;
+
   get dosageDisplay(): string {
     const { text, route, dose } = this.resource.dosage || {};
     if (text) {

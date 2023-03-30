@@ -4,6 +4,8 @@ import { formatDateISOToLocal } from "@/fhir/formatters";
 import { compact } from "@/utils/nodash";
 
 export class ObservationModel extends FHIRModel<fhir4.Observation> {
+  kind = "Observation" as const;
+
   get category() {
     return codeableConceptLabel(this.resource.category?.[0]);
   }

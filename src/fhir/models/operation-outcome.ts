@@ -1,11 +1,8 @@
+import { FHIRModel } from "./fhir-model";
 import { OperationOutcomeIssueModel } from "./operation-outcome-issue";
 
-export class OperationOutcomeModel {
-  public resource: fhir4.OperationOutcome;
-
-  constructor(outcome: fhir4.OperationOutcome) {
-    this.resource = outcome;
-  }
+export class OperationOutcomeModel extends FHIRModel<fhir4.OperationOutcome> {
+  kind = "OperationOutcome" as const;
 
   // Condense the errors into one string.
   get display(): string {
@@ -28,9 +25,5 @@ export class OperationOutcomeModel {
     return this.resource.issue.map(
       (issue) => new OperationOutcomeIssueModel(issue)
     );
-  }
-
-  get resourceType(): string {
-    return this.resource.resourceType;
   }
 }

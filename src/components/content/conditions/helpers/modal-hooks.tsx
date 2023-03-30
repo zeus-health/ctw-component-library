@@ -73,7 +73,10 @@ export function useConfirmDeleteCondition() {
   const { openModal } = useModal();
   const { getRequestContext } = useCTW();
 
-  return (condition: ConditionModel) => {
+  return (
+    condition: ConditionModel,
+    onDelete?: (condition: ConditionModel) => void
+  ) => {
     const name =
       condition.display ??
       t("resource.unamed", {
@@ -88,6 +91,7 @@ export function useConfirmDeleteCondition() {
           onDelete={async () => {
             const requestContext = await getRequestContext();
             await deleteCondition(condition.resource, requestContext);
+            onDelete?.(condition);
           }}
           {...props}
         />

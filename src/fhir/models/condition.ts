@@ -24,6 +24,8 @@ import { findReference } from "@/fhir/resource-helper";
 import { compact, find, intersectionWith, uniqWith } from "@/utils/nodash";
 
 export class ConditionModel extends FHIRModel<fhir4.Condition> {
+  kind = "Condition" as const;
+
   get abatement(): string | undefined {
     if (this.resource.abatementAge) {
       return this.resource.abatementAge.value?.toString();
@@ -139,19 +141,6 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
 
   get isDeleted(): boolean {
     return this.verificationStatusCode === "entered-in-error";
-  }
-
-  get hasEnrichment(): boolean {
-    const enrichmentCodes = CONDITION_CODE_PREFERENCE_ORDER.filter(
-      (codePreference) => codePreference.checkForEnrichment === true
-    );
-    const codings = compact(
-      enrichmentCodes.map((code) =>
-        findCodingWithEnrichment(code.system, this.resource.code)
-      )
-    );
-
-    return codings.length > 0;
   }
 
   get knownCodings(): fhir4.Coding[] {

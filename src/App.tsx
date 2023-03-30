@@ -16,6 +16,7 @@ import {
 } from ".";
 import "./App.css";
 import { PatientHistoryTable } from "./components/content/patient-history/patient-history-table";
+import { PatientTimelineV2 } from "./components/content/timeline-2.0/patient-timeline";
 
 const {
   VITE_SYSTEM_URL,
@@ -108,6 +109,7 @@ const demoComponents: DemoComponent[] = [
   { render: () => <PatientImmunizations />, title: "Patient Immunizations" },
   { render: () => <PatientSearch />, title: "Patient Search" },
   { render: () => <PatientHistoryTable />, title: "Patient History Table" },
+  { render: () => <PatientTimelineV2 />, title: "Patient Timeline" },
 ];
 
 const DemoApp = ({ accessToken = "" }) => (

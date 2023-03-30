@@ -1,6 +1,5 @@
 import cx from "classnames";
 import { ReactElement } from "react";
-import { useConditionHistory } from "../../condition-history/conditions-history-drawer";
 import {
   ResourceTable,
   ResourceTableProps,
@@ -10,6 +9,7 @@ import {
   ResourceTableActionsProps,
 } from "../../resource/resource-table-actions";
 import { patientConditionsColumns } from "./columns";
+import { useConditionDetailsDrawer } from "./details";
 import { conditionFilters, defaultConditionFilters } from "./filters";
 import { conditionSortOptions, defaultConditionSort } from "./sorts";
 import "./patient-conditions.scss";
@@ -37,7 +37,11 @@ export const PatientConditionsBase = ({
   emptyMessage = "There are no condition records available.",
   isLoading,
 }: PatientConditionsTableProps) => {
-  const showConditionHistory = useConditionHistory();
+  const openDetailsDrawer = useConditionDetailsDrawer({
+    canRemove: !readOnly && !outside,
+    canEdit: !readOnly && !outside,
+  });
+
   const { data, setFilters, setSort } = useFilteredSortedData({
     defaultFilters: defaultConditionFilters,
     defaultSort: defaultConditionSort,
@@ -65,12 +69,7 @@ export const PatientConditionsBase = ({
         data={data}
         emptyMessage={emptyMessage}
         isLoading={isLoading || query.isLoading}
-        onRowClick={(condition) =>
-          showConditionHistory({
-            condition,
-            readOnly,
-          })
-        }
+        onRowClick={openDetailsDrawer}
         rowActions={rowActions}
       />
     </div>

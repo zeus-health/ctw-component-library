@@ -1,4 +1,5 @@
 import { MedicationStatement } from "fhir/r4";
+import { getMedicationDisplayName } from "./medication";
 import {
   filterMedicationsWithNoRxNorms,
   splitMedications,
@@ -143,5 +144,62 @@ describe("filterMedicationsWithNoRxNorms", () => {
       "0.medicationCodeableConcept.coding.0.code",
       "rxnorm-code"
     );
+  });
+});
+
+describe("getMedicationDisplayName", () => {
+  test("prefers RxNorm codes", () => {
+    const med: fhir4.MedicationStatement = {
+      resourceType: "MedicationStatement",
+      status: "active",
+      subject: {
+        reference: "Test",
+      },
+      medicationCodeableConcept: {
+        coding: [
+          {
+            system: SYSTEM_RXNORM,
+            code: "rxnorm-code",
+            display: "test",
+          },
+          {
+            system: "system",
+            code: "code",
+            display: "display",
+          },
+        ],
+      },
+    };
+
+    const displayName = getMedicationDisplayName(med);
+
+    expect(displayName).toBe("test");
+  });
+
+  test("falls back to first available display value", () => {
+    const med: fhir4.MedicationStatement = {
+      resourceType: "MedicationStatement",
+      status: "active",
+      subject: {
+        reference: "Test",
+      },
+      medicationCodeableConcept: {
+        coding: [
+          {
+            system: "system1",
+            code: "code1",
+          },
+          {
+            system: "system2",
+            code: "code2",
+            display: "display",
+          },
+        ],
+      },
+    };
+
+    const displayName = getMedicationDisplayName(med);
+
+    expect(displayName).toBe("display");
   });
 });
