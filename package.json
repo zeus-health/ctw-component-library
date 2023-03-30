@@ -143,7 +143,5 @@
   "msw": {
     "workerDirectory": "public"
   },
-  "relativeDependencies": {
-    "@zus-health/ctw-component-library": "../ctw-component-library"
-  }
+  "relativeDependencies": {}
 }
