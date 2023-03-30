@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.1.2
+
+### Patch Changes
+
+- 207f994f: Remove relative deps from package json.
+- 4973f8e3: Add flag to enable FQS on allergies.
+
 ## 1.1.1
 
 ### Patch Changes
