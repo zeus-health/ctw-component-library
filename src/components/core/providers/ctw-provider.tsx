@@ -79,6 +79,7 @@ function CTWProvider({
   ...ctwState
 }: CTWProviderProps) {
   const [token, setToken] = useState<CTWToken>();
+  const [style, setStyle] = useState<string>("");
   const ctwProviderRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -87,7 +88,7 @@ function CTWProvider({
     };
   }, []);
 
-  // Manually apply our CSS theme string AND the
+  // Manually compute our CSS theme string AND the
   // fix for empty tailwind CSS vars.
   // We have to apply this manually instead of `style={style}`
   // as we want to use a string instead of an object where react would
@@ -99,12 +100,38 @@ function CTWProvider({
     };
 
     // Convert our styles into a style string.
-    const style = Object.entries(styles)
-      .map(([key, value]) => `${key}:${value}`)
-      .join(";");
-
-    ctwProviderRef.current?.setAttribute("style", style);
+    setStyle(
+      Object.entries(styles)
+        .map(([key, value]) => `${key}:${value}`)
+        .join(";")
+    );
   }, [ctwProviderRef, theme]);
+
+  // Manually apply our CSS theme string to the ctw-provider.
+  useEffect(() => {
+    ctwProviderRef.current?.setAttribute("style", style);
+  }, [ctwProviderRef, style]);
+
+  // Workaround for https://github.com/tailwindlabs/headlessui/discussions/666
+  // Note: We want the portal root to:
+  //    1. Be a child of body.
+  //    2. Have our theme styles.
+  useEffect(() => {
+    // Remove any existing portal root.
+    document.getElementById("headlessui-portal-root")?.remove();
+
+    // Create a new portal root.
+    const el = document.createElement("div");
+    el.id = "headlessui-portal-root";
+
+    // It needs at least one child, so that HeadlessUI doesn't remove this portal root workaround
+    // https://github.com/tailwindlabs/headlessui/blob/main/packages/@headlessui-react/src/components/portal/portal.tsx#L84
+    el.innerHTML = "<div/>";
+
+    // Apply our theme styles and add the portal root to the body.
+    el.setAttribute("style", style);
+    document.body.appendChild(el);
+  }, [style]);
 
   // Overwrite our i18next resources with any provided to CTWProvider.
   useEffect(() => {
@@ -166,13 +193,6 @@ function CTWProvider({
           {children}
         </QueryClientProvider>
       </CTWStateContext.Provider>
-
-      {/* Workaround for https://github.com/tailwindlabs/headlessui/discussions/666 */}
-      <div id="headlessui-portal-root">
-        {/* It needs at least one child, so that HeadlessUI doesn't remove this portal root workaround
-        ( https://github.com/tailwindlabs/headlessui/blob/main/packages/@headlessui-react/src/components/portal/portal.tsx#L84 ) */}
-        <div />
-      </div>
     </div>
   );
 }
