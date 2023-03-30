@@ -9,6 +9,7 @@ import {
   useQueryWithPatient,
 } from "@/components/core/providers/patient-provider";
 import { formatISODateStringToDate } from "@/fhir/formatters";
+import { PatientHistoryPatient } from "@/fhir/models/patient-history";
 import { getBuilderPatientsListByIdentifier } from "@/fhir/patient-helper";
 import { PatientRefreshHistoryMessage } from "@/services/patient-history/patient-history-types";
 import { errorResponse } from "@/utils/errors";
@@ -20,10 +21,10 @@ import {
 import { ctwFetch } from "@/utils/request";
 import { Telemetry } from "@/utils/telemetry";
 
-type PatientHistoryResponse = Partial<{
-  lastRetrievedAt: string;
-  status: string;
-  dateCreated: string;
+export type PatientHistoryResponse = Partial<{
+  lastRetrievedAt?: string;
+  status?: string;
+  dateCreated?: string;
   initialData?: { patientId?: string };
 }>;
 
@@ -161,13 +162,20 @@ export function useBuilderPatientHistoryList(
           messages.map((message) => message.initialData?.patientId)
         );
 
-        const patients = getBuilderPatientsListByIdentifier(
+        const patientData = await getBuilderPatientsListByIdentifier(
           requestContext,
           undefined,
           patientsIds
         );
 
-        return patients;
+        const patientHistoryPatients = patientData.patients.map((patient) => {
+          const matchingPatientId = messages.filter(
+            (message) => message.initialData?.patientId === patient.id
+          );
+          return new PatientHistoryPatient(patient, matchingPatientId[0]);
+        });
+
+        return { total: patientData.total, patients: patientHistoryPatients };
       } catch (e) {
         Telemetry.logError(
           e as Error,

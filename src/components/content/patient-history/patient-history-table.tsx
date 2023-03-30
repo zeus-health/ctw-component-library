@@ -7,6 +7,7 @@ import { Pagination } from "@/components/core/pagination/pagination";
 import { Table } from "@/components/core/table/table";
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { PatientModel } from "@/fhir/models";
+import { PatientHistoryPatient } from "@/fhir/models/patient-history";
 import { CTWBox, useBuilderPatientHistoryList } from "@/index";
 
 export type PatientsHistoryTableProps = {
@@ -24,7 +25,7 @@ export const PatientHistoryTable = withErrorBoundary(
   }: PatientsHistoryTableProps) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [total, setTotal] = useState(0);
-    const [patients, setPatients] = useState<PatientModel[]>([]);
+    const [patients, setPatients] = useState<PatientHistoryPatient[]>([]);
 
     const {
       data: { patients: responsePatients, total: responseTotal } = {},
@@ -90,10 +91,14 @@ export const PatientHistoryTable = withErrorBoundary(
   "PatientsTable"
 );
 
-const columns: TableColumn<PatientModel>[] = [
+const columns: TableColumn<PatientHistoryPatient>[] = [
   {
     title: "Name",
     render: (patient) => <PatientNameColumn patient={patient} />,
+  },
+  {
+    title: "Last Retrieved",
+    render: (patient) => <div>{patient.lastRetrievedAt}</div>,
   },
 ];
 
