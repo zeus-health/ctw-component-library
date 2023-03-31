@@ -3,7 +3,7 @@ import { Table, TableProps } from "./table";
 import { TableColumn } from "./table-helpers";
 
 type Record = {
-  id: string;
+  key: string;
   name: string;
 };
 
