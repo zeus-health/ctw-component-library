@@ -1,11 +1,13 @@
-import { searchCommonRecords } from "./search-helpers";
 import { applyAllergyFilters } from "@/components/content/allergies/allergies-filter";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { orderBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_ALLERGIES } from "@/utils/query-keys";
 import { withTimerMetric } from "@/utils/telemetry";
+import { CodePreference } from "./codeable-concept";
+import { searchCommonRecords } from "./search-helpers";
+import { SYSTEM_NDC, SYSTEM_RXNORM, SYSTEM_SNOMED } from "./system-urls";
 
-export function usePatientAllergies(enableFqs = false) {
+export function usePatientAllergies() {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_ALLERGIES,
     [],
@@ -29,3 +31,9 @@ export function usePatientAllergies(enableFqs = false) {
     }, "req.patient_allergies")
   );
 }
+
+export const ALLERGY_CODE_PREFERENCE_ORDER: CodePreference[] = [
+  { system: SYSTEM_RXNORM },
+  { system: SYSTEM_NDC },
+  { system: SYSTEM_SNOMED },
+];

@@ -1,12 +1,16 @@
+import { patientAllergiesColumns } from "@/components/content/allergies/patient-allergies-column";
+import { withErrorBoundary } from "@/components/core/error-boundary";
+import { usePatientAllergies } from "@/fhir/allergies";
+import { AllergyModel } from "@/fhir/models/allergies";
 import cx from "classnames";
 import { useRef } from "react";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
-import { patientAllergiesColumns } from "@/components/content/allergies/patient-allergies-column";
-import { withErrorBoundary } from "@/components/core/error-boundary";
-import { Table } from "@/components/core/table/table";
-import { usePatientAllergies } from "@/fhir/allergies";
-import { AllergyModel } from "@/fhir/models/allergies";
-import { useBreakpoints } from "@/hooks/use-breakpoints";
+import { ResourceTable } from "../resource/resource-table";
+import { useAllergiesHistory } from "./helpers/history";
+import { allergySortOptions, defaultAllergySort } from "./helpers/sort";
+import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
+import { ResourceTableActions } from "../resource/resource-table-actions";
+import { defaultAllergyFilters, allergyFilter } from "./helpers/filters";
 
 export type PatientAllergiesProps = {
   className?: string;
@@ -18,15 +22,19 @@ function PatientAllergiesComponent({
   enableFqs,
 }: PatientAllergiesProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const breakpoints = useBreakpoints(containerRef);
-  const patientAllergiesQuery = usePatientAllergies(enableFqs);
+  const patientAllergiesQuery = usePatientAllergies();
+  const { data, setFilters, setSort } = useFilteredSortedData({
+    defaultFilters: defaultAllergyFilters,
+    defaultSort: defaultAllergySort,
+    records: patientAllergiesQuery.data,
+  });
   const openDetails = useResourceDetailsDrawer({
     header: (m) => m.display,
     details: allergyData,
+    getHistory: useAllergiesHistory,
   });
 
   // Get our allergies.
-  const allergies = patientAllergiesQuery.data ?? [];
   const { isLoading } = patientAllergiesQuery;
 
   return (
@@ -35,13 +43,25 @@ function PatientAllergiesComponent({
       ref={containerRef}
       data-zus-telemetry-namespace="Allergies"
     >
+      <ResourceTableActions
+        filterOptions={{
+          onChange: setFilters,
+          defaultState: defaultAllergyFilters,
+          filters: allergyFilter(patientAllergiesQuery.data),
+        }}
+        sortOptions={{
+          defaultSort: defaultAllergySort,
+          options: allergySortOptions,
+          onChange: setSort,
+        }}
+      />
       <div className="ctw-scrollable-pass-through-height">
-        <Table
-          stacked={breakpoints.sm}
+        <ResourceTable
+          showTableHead={true}
           isLoading={isLoading}
-          records={allergies}
+          data={data}
           columns={patientAllergiesColumns}
-          handleRowClick={openDetails}
+          onRowClick={openDetails}
         />
       </div>
     </div>
