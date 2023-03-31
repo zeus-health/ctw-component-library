@@ -1,5 +1,15 @@
 # ctw-component-library
 
+## 1.1.3
+
+### Patch Changes
+
+- 6f6498c6: Fix graphql dependencies to work for SSR.
+- 0402578c: Show request records button in top right of ZAP.
+  Fix issue where tables show infinite loading spinner when patient is not found.
+- c3d7fb5b: Rework how we attach modals/drawers to the document. We now setup headlessui-portal-root to be a direct child of body instead of a child of CTWProvider.
+- eb9941d9: CareTeamPractitionerModel now uses "key" for table row identification.
+
 ## 1.1.2
 
 ### Patch Changes
