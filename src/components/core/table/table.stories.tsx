@@ -47,7 +47,7 @@ export default {
 const columns: TableColumn<Record>[] = [
   {
     title: "Id",
-    dataIndex: "id",
+    dataIndex: "key",
     className: "ctw-w-[20%]",
   },
   {
@@ -59,7 +59,7 @@ const columns: TableColumn<Record>[] = [
     title: "With Render",
     render: (row: Record) => (
       <div>
-        Render function for row {row.id}: <b>{row.name.split(" ")[0]}</b>
+        Render function for row {row.key}: <b>{row.name.split(" ")[0]}</b>
       </div>
     ),
     className: "ctw-w-[30%]",
@@ -67,10 +67,10 @@ const columns: TableColumn<Record>[] = [
 ];
 
 const records: Record[] = [
-  { id: "one", name: "First record" },
-  { id: "two", name: "Second record" },
-  { id: "three", name: "Third record" },
-  { id: "four", name: "Fourth record" },
+  { key: "one", name: "First record" },
+  { key: "two", name: "Second record" },
+  { key: "three", name: "Third record" },
+  { key: "four", name: "Fourth record" },
 ];
 
 export const Basic: StoryObj<Props> = {
@@ -82,7 +82,7 @@ export const Basic: StoryObj<Props> = {
 
 const manyRecords = [...records];
 for (let i = records.length + 1; i <= 35; i += 1) {
-  manyRecords.push({ id: `${i}`, name: `${i} Record` });
+  manyRecords.push({ key: `${i}`, name: `${i} Record` });
 }
 export const Paging: StoryObj<Props> = {
   args: {
