@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { sortMedHistory } from "./helpers";
+import { sortMedHistory } from "../history/helpers";
 import { History } from "@/components/content/resource/helpers/history";
 import { HistoryEntryProps } from "@/components/content/resource/helpers/history-entry";
 import { withErrorBoundary } from "@/components/core/error-boundary";
