@@ -32,6 +32,11 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
     return this.resource.id || "";
   }
 
+  // key is used to uniquely identify rows in our resource table
+  get key(): string {
+    return this.id;
+  }
+
   get versionId(): string {
     return this.resource.meta?.versionId || "";
   }
