@@ -1,16 +1,25 @@
+import cx from "classnames";
 import { usePatientHistory } from "./use-patient-history";
+import { withErrorBoundary } from "@/components/core/error-boundary";
 
-export const RequestRecordsButton = () => {
-  const { openHistoryRequestDrawer } = usePatientHistory();
-
-  return (
-    <button
-      type="button"
-      className="ctw-btn-clear ctw-link"
-      onClick={openHistoryRequestDrawer}
-      data-zus-telemetry-click="Request records"
-    >
-      Request Records
-    </button>
-  );
+type RequestRecordsButtonProps = {
+  className?: cx.Argument;
 };
+
+export const RequestRecordsButton = withErrorBoundary(
+  ({ className }: RequestRecordsButtonProps) => {
+    const { openHistoryRequestDrawer } = usePatientHistory();
+
+    return (
+      <button
+        type="button"
+        className={cx("ctw-btn-clear ctw-link", className)}
+        onClick={openHistoryRequestDrawer}
+        data-zus-telemetry-click="Request records"
+      >
+        Request Records
+      </button>
+    );
+  },
+  "RequestRecordsButton"
+);
