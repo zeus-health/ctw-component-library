@@ -1,4 +1,5 @@
 import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
+import { useMedicationHistoryEntries } from "./history";
 import { entryFromArray } from "@/components/core/data-list";
 import { Loading } from "@/components/core/loading";
 import { useLastPrescriber } from "@/fhir/medications";
@@ -7,6 +8,7 @@ import { MedicationStatementModel } from "@/fhir/models";
 export const useMedicationDetailsDrawer = () =>
   useResourceDetailsDrawer({
     header: (medication: MedicationStatementModel) => medication.display,
+    getHistory: useMedicationHistoryEntries,
     details: (medication: MedicationStatementModel) => [
       { label: "Status", value: medication.displayStatus },
       { label: "Last Fill Date", value: medication.lastFillDate },

@@ -44,14 +44,10 @@ function mockRequests() {
     "https://api.dev.zusapi.com/fhir/MedicationStatement",
     (req, res, ctx) => {
       if (req.url.searchParams.get("firstparty")) {
-        return res(
-          ctx.delay(2750),
-          ctx.status(200),
-          ctx.json(patientProviderMedsCache)
-        );
+        return res(ctx.status(200), ctx.json(patientProviderMedsCache));
       }
       return res(
-        ctx.delay(2750),
+        ctx.delay(750),
         ctx.status(200),
         ctx.json(patientOtherProviderMedsCache)
       );
