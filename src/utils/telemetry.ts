@@ -85,7 +85,7 @@ export class Telemetry {
       this.environment = "dev";
     }
     if (["prod", "production"].includes(environment.toLowerCase())) {
-      this.environment = "prod";
+      this.environment = "production";
     }
     this.environment = environment;
   }
