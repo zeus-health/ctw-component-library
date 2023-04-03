@@ -12,6 +12,7 @@ import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { defaultAllergyFilters, allergyFilter } from "./helpers/filters";
 import { useCTW } from "@/components/core/providers/ctw-provider";
+import { capitalize } from "@/utils/nodash";
 
 export type PatientAllergiesProps = {
   className?: string;
@@ -31,7 +32,7 @@ function PatientAllergiesComponent({
     records: patientAllergiesQuery.data,
   });
   const openDetails = useResourceDetailsDrawer({
-    header: (m) => m.display,
+    header: (m) => capitalize(m.display),
     details: allergyData,
     getHistory: useAllergiesHistory,
   });
@@ -76,14 +77,13 @@ export const PatientAllergies = withErrorBoundary(
 );
 
 const allergyData = (allergy: AllergyModel) => [
-  { label: "Allergy Name", value: allergy.display },
   { label: "Recorded Date", value: allergy.recordedDate },
-  { label: "Managing Organization", value: allergy.managingOrganization },
+  { label: "Recording Organization", value: allergy.managingOrganization },
   { label: "Status", value: allergy.clinicalStatus },
-  { label: "Type", value: allergy.type },
-  { label: "Category", value: allergy.categories },
+  { label: "Type", value: capitalize(allergy.type) },
+  { label: "Category", value: capitalize(allergy.categories) },
   { label: "Onset", value: allergy.onset },
-  { label: "Manifestation", value: allergy.manifestations },
-  { label: "Severity", value: allergy.severity },
+  { label: "Manifestation", value: capitalize(allergy.manifestations) },
+  { label: "Severity", value: capitalize(allergy.severity) },
   { label: "Note", value: allergy.note },
 ];

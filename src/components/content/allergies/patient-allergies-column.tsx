@@ -1,28 +1,36 @@
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { ViewFHIR } from "@/components/core/view-fhir";
 import { AllergyModel } from "@/fhir/models/allergies";
+import { capitalize } from "@/utils/nodash";
 
-export const patientAllergiesColumns = (includeViewFhirResource = true) => {
+export const patientAllergiesColumns = (includeViewFhirResource = false) => {
   const allergyColumns: TableColumn<AllergyModel>[] = [
     {
       title: "Name",
-      dataIndex: "display",
+      render: (allergy) => (
+        <div>
+          <div className="ctw-font-medium">{capitalize(allergy.display)} </div>
+        </div>
+      ),
     },
     {
       title: "Last Updated",
-      dataIndex: "recordedDate",
-    },
-    {
-      title: "Managing Organization",
-      dataIndex: "managingOrganization",
+      render: (allergy) => (
+        <div>
+          <div className="ctw-font-medium">{allergy.recordedDate} </div>
+          <div>{allergy.managingOrganization}</div>
+        </div>
+      ),
     },
     {
       title: "Details",
       render: (allergy) => (
         <div>
-          <div className="ctw-font-medium">
-            Reaction: {allergy.manifestations}
-          </div>
+          {!!allergy.manifestations && allergy.manifestations !== "unknown" && (
+            <div className="ctw-font-medium">
+              Reaction: {capitalize(allergy.manifestations)}
+            </div>
+          )}
         </div>
       ),
     },

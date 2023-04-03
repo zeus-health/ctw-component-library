@@ -3,6 +3,7 @@ import { HistoryEntryProps } from "../../resource/helpers/history-entry";
 import { useHistory } from "../../resource/history";
 import { AllergyModel } from "@/fhir/models/allergies";
 import { QUERY_KEY_ALLERGY_HISTORY } from "@/utils/query-keys";
+import { capitalize } from "@/utils/nodash";
 
 export function useAllergiesHistory(allergy: AllergyModel) {
   return useHistory({
@@ -41,24 +42,21 @@ function getSearchParams(allergy: AllergyModel) {
 
 function getHistoryEntry(allergy: AllergyModel): HistoryEntryProps {
   const detailData = [
-    {
-      label: "Name",
-      value: allergy.display,
-    },
-    {
-      label: "Recorded Date",
-      value: allergy.recordedDate,
-    },
-    {
-      label: "Managing Organization",
-      value: allergy.managingOrganization,
-    },
+    { label: "Recorded Date", value: allergy.recordedDate },
+    { label: "Status", value: allergy.clinicalStatus },
+    { label: "Type", value: capitalize(allergy.type) },
+    { label: "Category", value: capitalize(allergy.categories) },
+    { label: "Onset", value: allergy.onset },
+    { label: "Manifestation", value: capitalize(allergy.manifestations) },
+    { label: "Severity", value: capitalize(allergy.severity) },
+    { label: "Note", value: allergy.note },
   ];
 
   return {
     id: allergy.id,
     date: allergy.recordedDate,
     versionId: allergy.versionId,
+    title: allergy.managingOrganization,
     details: detailData,
   };
 }
