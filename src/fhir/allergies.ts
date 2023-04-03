@@ -1,4 +1,4 @@
-import { createGraphqlClient } from "./models/fqs";
+import { createGraphqlClient } from "../services/fqs/client";
 import { getAllergiesQuery } from "./queries/allergies";
 import { searchCommonRecords } from "./search-helpers";
 import { applyAllergyFilters } from "@/components/content/allergies/allergies-filter";

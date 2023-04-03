@@ -1,5 +1,7 @@
 import cx from "classnames";
 import { ReactElement, useRef } from "react";
+import { RequestRecordsButton } from "@/components/content/patient-history/request-records-button";
+import { usePatient } from "@/components/core/providers/patient-provider";
 import { Table, TableProps } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
 import { FHIRModel } from "@/fhir/models/fhir-model";
@@ -30,10 +32,19 @@ export const ResourceTable = <
   rowActions,
   showTableHead,
 }: ResourceTableProps<M>) => {
+  const patient = usePatient();
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const shouldShowTableHead =
     typeof showTableHead === "boolean" ? showTableHead : !breakpoints.sm;
+  const emptyMessageWithRequestRecords = patient.data ? (
+    emptyMessage
+  ) : (
+    <div className="ctw-space-y-4">
+      Patient not found. Please fill out a short form to{" "}
+      <RequestRecordsButton className="ctw-lowercase" />.
+    </div>
+  );
 
   return (
     <div
@@ -49,8 +60,8 @@ export const ResourceTable = <
         })}
         showTableHead={shouldShowTableHead}
         stacked={breakpoints.sm}
-        emptyMessage={emptyMessage}
-        isLoading={isLoading}
+        emptyMessage={emptyMessageWithRequestRecords}
+        isLoading={!!patient.data && isLoading}
         records={data}
         RowActions={rowActions}
         columns={columns}

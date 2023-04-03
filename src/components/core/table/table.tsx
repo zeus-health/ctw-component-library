@@ -37,7 +37,6 @@ export type TableBaseProps<T extends MinRecordItem> = Omit<
 export const Table = <T extends MinRecordItem>({
   className,
   columns,
-
   records,
   isLoading = false,
   emptyMessage: message = "No records found",
