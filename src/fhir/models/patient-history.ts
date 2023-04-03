@@ -1,3 +1,4 @@
+import { formatISODateStringToDate } from "../formatters";
 import { ResourceMap } from "../types";
 import { FHIRModel } from "./fhir-model";
 import { PatientModel } from "./patient";
@@ -20,7 +21,7 @@ export class PatientHistoryPatient extends FHIRModel<PatientModel> {
 
   get lastRetrievedAt() {
     // eslint-disable-next-line no-underscore-dangle
-    return this.historyInfo?._lastUpdated;
+    return formatISODateStringToDate(this.historyInfo?._lastUpdated);
   }
 
   get retrievedStatus() {
