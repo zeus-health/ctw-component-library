@@ -9,15 +9,10 @@ import {
   useQueryWithPatient,
 } from "@/components/core/providers/patient-provider";
 import { formatISODateStringToDate } from "@/fhir/formatters";
-import { PatientHistoryPatient } from "@/fhir/models/patient-history";
-import { getBuilderPatientsListByIdentifier } from "@/fhir/patient-helper";
 import { PatientRefreshHistoryMessage } from "@/services/patient-history/patient-history-types";
 import { errorResponse } from "@/utils/errors";
-import { compact, find } from "@/utils/nodash";
-import {
-  QUERY_KEY_PATIENT_HISTORY_DETAILS,
-  QUERY_KEY_PATIENT_HISTORY_LIST,
-} from "@/utils/query-keys";
+import { find } from "@/utils/nodash";
+import { QUERY_KEY_PATIENT_HISTORY_DETAILS } from "@/utils/query-keys";
 import { ctwFetch } from "@/utils/request";
 import { Telemetry } from "@/utils/telemetry";
 
@@ -116,7 +111,7 @@ async function getPatientRefreshHistoryMessages(
   }
 }
 
-async function getBuilderRefreshHistoryMessages(
+export async function getBuilderRefreshHistoryMessages(
   requestContext: CTWRequestContext
 ) {
   const builderIdParam = requestContext.contextBuilderId
@@ -143,48 +138,6 @@ async function getBuilderRefreshHistoryMessages(
       err
     );
   }
-}
-
-export function useBuilderPatientHistoryList(
-  pageSize: number,
-  pageOffset: number
-) {
-  return useQueryWithPatient(
-    QUERY_KEY_PATIENT_HISTORY_LIST,
-    [pageSize, pageOffset],
-    async (requestContext) => {
-      try {
-        const messages = (
-          await getBuilderRefreshHistoryMessages(requestContext)
-        ).data as PatientHistoryResponse[];
-
-        const patientsIds = compact(
-          messages.map((message) => message.initialData?.patientId)
-        );
-
-        const patientData = await getBuilderPatientsListByIdentifier(
-          requestContext,
-          undefined,
-          patientsIds
-        );
-
-        const patientHistoryPatients = patientData.patients.map((patient) => {
-          const matchingPatientId = messages.filter(
-            (message) => message.initialData?.patientId === patient.id
-          );
-          return new PatientHistoryPatient(patient, matchingPatientId[0]);
-        });
-
-        return { total: patientData.total, patients: patientHistoryPatients };
-      } catch (e) {
-        Telemetry.logError(
-          e as Error,
-          "Failed fetching patient history patients."
-        );
-        throw new Error(`Failed fetching patient history patients: ${e}`);
-      }
-    }
-  );
 }
 
 export function usePatientHistoryDetails() {

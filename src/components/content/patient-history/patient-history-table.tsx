@@ -2,13 +2,14 @@ import { SearchIcon } from "@heroicons/react/outline";
 import cx from "classnames";
 import { useEffect, useState } from "react";
 import { TableOptionProps } from "../patients/patients-table";
+import { useBuilderPatientHistoryList } from "./use-builder-patient-history-list";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Pagination } from "@/components/core/pagination/pagination";
 import { Table } from "@/components/core/table/table";
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { PatientModel } from "@/fhir/models";
 import { PatientHistoryPatient } from "@/fhir/models/patient-history";
-import { CTWBox, useBuilderPatientHistoryList } from "@/index";
+import { CTWBox } from "@/index";
 
 export type PatientsHistoryTableProps = {
   className?: cx.Argument;
@@ -26,8 +27,6 @@ export const PatientHistoryTable = withErrorBoundary(
     const [currentPage, setCurrentPage] = useState(1);
     const [total, setTotal] = useState(0);
     const [patients, setPatients] = useState<PatientHistoryPatient[]>([]);
-
-    console.log("patients", patients);
 
     const {
       data: { patients: responsePatients, total: responseTotal } = {},
