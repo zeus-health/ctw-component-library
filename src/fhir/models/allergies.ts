@@ -48,7 +48,14 @@ export class AllergyModel extends FHIRModel<fhir4.AllergyIntolerance> {
   }
 
   get note(): string | undefined {
-    return this.resource.note?.join(", ");
+    let concatenatedString;
+    if (this.resource.note) {
+      concatenatedString = this.resource.note
+        .map((note) => codeableConceptLabel(note))
+        .join(", ");
+    }
+
+    return concatenatedString;
   }
 
   get severity(): string | undefined {
