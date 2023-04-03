@@ -1,8 +1,8 @@
-import { useQueryWithPatient } from "@zus-health/ctw-component-library";
 import {
   getBuilderRefreshHistoryMessages,
   PatientHistoryResponse,
 } from "./use-patient-history";
+import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { PatientHistoryPatient } from "@/fhir/models/patient-history";
 import { getBuilderPatientsListByIdentifier } from "@/fhir/patient-helper";
 import { compact } from "@/utils/nodash";
