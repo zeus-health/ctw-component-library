@@ -27,6 +27,8 @@ export const PatientHistoryTable = withErrorBoundary(
     const [total, setTotal] = useState(0);
     const [patients, setPatients] = useState<PatientHistoryPatient[]>([]);
 
+    console.log("patients", patients);
+
     const {
       data: { patients: responsePatients, total: responseTotal } = {},
       isFetching,
@@ -102,17 +104,17 @@ const columns: TableColumn<PatientHistoryPatient>[] = [
   },
 ];
 
-const PatientNameColumn = ({ patient }: { patient: PatientModel }) => (
+const PatientNameColumn = ({ patient }: { patient: PatientHistoryPatient }) => (
   <div className="ctw-flex ctw-items-center">
     <div className="ctw-ml-4">
       <div className="ctw-flex ctw-font-medium">
-        <div className="ctw-max-w-xs">{patient.fullName}</div>
-        {patient.gender && (
-          <div className="ctw-uppercase"> ({patient.gender[0]})</div>
+        <div className="ctw-max-w-xs">{patient.resource.fullName}</div>
+        {patient.resource.gender && (
+          <div className="ctw-uppercase"> ({patient.resource.gender[0]})</div>
         )}
       </div>
       <div className="ctw-text-content-lighter">
-        {patient.dob} ({patient.age})
+        {patient.resource.dob} ({patient.resource.age})
       </div>
     </div>
   </div>

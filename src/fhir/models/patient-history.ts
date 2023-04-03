@@ -18,7 +18,7 @@ export class PatientHistoryPatient extends FHIRModel<PatientModel> {
   }
 
   get lastRetrievedAt() {
-    return this.historyInfo.lastRetrievedAt;
+    return this.historyInfo._lastUpdated;
   }
 
   get retrievedStatus() {
