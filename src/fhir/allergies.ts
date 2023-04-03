@@ -1,6 +1,5 @@
 import { applyAllergyFilters } from "@/components/content/allergies/allergies-filter";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
-import { orderBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_ALLERGIES } from "@/utils/query-keys";
 import { withTimerMetric } from "@/utils/telemetry";
 import { CodePreference } from "./codeable-concept";
@@ -8,7 +7,11 @@ import { searchCommonRecords } from "./search-helpers";
 import { SYSTEM_NDC, SYSTEM_RXNORM, SYSTEM_SNOMED } from "./system-urls";
 import { getIncludedResources } from "./bundle";
 
-export function usePatientAllergies() {
+export type AllergyIntolerance = {
+  AllergyIntoleranceList: fhir4.AllergyIntolerance[];
+};
+
+export function usePatientAllergies(enableFqs = false) {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_ALLERGIES,
     [],
