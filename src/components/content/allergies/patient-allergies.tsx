@@ -76,9 +76,14 @@ export const PatientAllergies = withErrorBoundary(
 );
 
 const allergyData = (allergy: AllergyModel) => [
-  { label: "Onset", value: allergy.onset },
-  { label: "Description", value: allergy.display },
+  { label: "Allergy Name", value: allergy.display },
+  { label: "Recorded Date", value: allergy.recordedDate },
+  { label: "Managing Organization", value: allergy.managingOrganization },
+  { label: "Status", value: allergy.clinicalStatus },
   { label: "Type", value: allergy.type },
   { label: "Category", value: allergy.categories },
-  { label: "Manifestations", value: allergy.manifestations },
+  { label: "Onset", value: allergy.onset },
+  { label: "Manifestation", value: allergy.manifestations },
+  { label: "Severity", value: allergy.severity },
+  { label: "Note", value: allergy.note },
 ];

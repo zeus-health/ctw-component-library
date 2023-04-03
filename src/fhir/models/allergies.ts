@@ -42,6 +42,14 @@ export class AllergyModel extends FHIRModel<fhir4.AllergyIntolerance> {
     )?.managingOrganization?.display;
   }
 
+  get note(): string | undefined {
+    return this.resource.note?.join(", ");
+  }
+
+  get severity(): string | undefined {
+    return this.resource.reaction?.[0].severity;
+  }
+
   get knownCodings(): fhir4.Coding[] {
     const codings = compact(
       ALLERGY_CODE_PREFERENCE_ORDER.map((code) => {

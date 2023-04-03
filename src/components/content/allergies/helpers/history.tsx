@@ -48,6 +48,10 @@ function getHistoryEntry(allergy: AllergyModel): HistoryEntryProps {
       label: "Recorded Date",
       value: allergy.recordedDate,
     },
+    {
+      label: "Managing Organization",
+      value: allergy.managingOrganization,
+    },
   ];
 
   return {
