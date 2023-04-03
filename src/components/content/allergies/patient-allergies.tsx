@@ -1,11 +1,11 @@
 import cx from "classnames";
 import { useRef } from "react";
-import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
-import { ResourceTable } from "../resource/resource-table";
-import { ResourceTableActions } from "../resource/resource-table-actions";
 import { allergyFilter, defaultAllergyFilters } from "./helpers/filters";
 import { useAllergiesHistory } from "./helpers/history";
 import { allergySortOptions, defaultAllergySort } from "./helpers/sort";
+import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
+import { ResourceTable } from "../resource/resource-table";
+import { ResourceTableActions } from "../resource/resource-table-actions";
 import { patientAllergiesColumns } from "@/components/content/allergies/patient-allergies-column";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/ctw-provider";
