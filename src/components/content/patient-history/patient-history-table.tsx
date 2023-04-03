@@ -89,7 +89,7 @@ export const PatientHistoryTable = withErrorBoundary(
       </CTWBox.StackedWrapper>
     );
   },
-  "PatientsTable"
+  "PatientsHistoryTable"
 );
 
 const columns: TableColumn<PatientHistoryPatient>[] = [
