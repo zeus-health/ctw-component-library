@@ -11,6 +11,7 @@ import { allergySortOptions, defaultAllergySort } from "./helpers/sort";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { defaultAllergyFilters, allergyFilter } from "./helpers/filters";
+import { useCTW } from "@/components/core/providers/ctw-provider";
 
 export type PatientAllergiesProps = {
   className?: string;
@@ -22,6 +23,7 @@ function PatientAllergiesComponent({
   enableFqs,
 }: PatientAllergiesProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { featureFlags } = useCTW();
   const patientAllergiesQuery = usePatientAllergies();
   const { data, setFilters, setSort } = useFilteredSortedData({
     defaultFilters: defaultAllergyFilters,
@@ -60,7 +62,7 @@ function PatientAllergiesComponent({
           showTableHead={true}
           isLoading={isLoading}
           data={data}
-          columns={patientAllergiesColumns}
+          columns={patientAllergiesColumns(featureFlags?.enableViewFhirButton)}
           onRowClick={openDetails}
         />
       </div>

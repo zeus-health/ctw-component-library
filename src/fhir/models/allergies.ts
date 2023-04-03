@@ -3,6 +3,7 @@ import { displayOnset } from "@/fhir/display-onset";
 import { compact, uniqWith } from "lodash";
 import { ALLERGY_CODE_PREFERENCE_ORDER } from "../allergies";
 import { FHIRModel } from "./fhir-model";
+import { findReference } from "../resource-helper";
 
 export class AllergyModel extends FHIRModel<fhir4.AllergyIntolerance> {
   kind = "Allergy" as const;
@@ -29,6 +30,16 @@ export class AllergyModel extends FHIRModel<fhir4.AllergyIntolerance> {
     );
 
     return manifestations.join(", ");
+  }
+
+  get managingOrganization(): string | undefined {
+    const reference = this.resource.patient?.reference;
+    return findReference(
+      "Patient",
+      this.resource.contained,
+      this.includedResources,
+      reference
+    )?.managingOrganization?.display;
   }
 
   get knownCodings(): fhir4.Coding[] {

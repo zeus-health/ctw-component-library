@@ -6,6 +6,7 @@ import { withTimerMetric } from "@/utils/telemetry";
 import { CodePreference } from "./codeable-concept";
 import { searchCommonRecords } from "./search-helpers";
 import { SYSTEM_NDC, SYSTEM_RXNORM, SYSTEM_SNOMED } from "./system-urls";
+import { getIncludedResources } from "./bundle";
 
 export function usePatientAllergies() {
   return useQueryWithPatient(
@@ -13,16 +14,17 @@ export function usePatientAllergies() {
     [],
     withTimerMetric(async (requestContext, patient) => {
       try {
-        const response = await searchCommonRecords(
+        const { bundle, resources: allergy } = await searchCommonRecords(
           "AllergyIntolerance",
           requestContext,
           {
             patientUPID: patient.UPID,
+            _include: "AllergyIntolerance:patient",
           }
         );
-        const data = response.resources;
 
-        return orderBy(applyAllergyFilters(data), "onset", ["desc"]);
+        const includedResources = getIncludedResources(bundle);
+        return applyAllergyFilters(allergy, includedResources);
       } catch (e) {
         throw new Error(
           `Failed fetching allergies information for patient ${patient.UPID}`
