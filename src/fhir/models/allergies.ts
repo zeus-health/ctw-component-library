@@ -38,12 +38,11 @@ export class AllergyModel extends FHIRModel<fhir4.AllergyIntolerance> {
   }
 
   get managingOrganization(): string | undefined {
-    const { reference } = this.resource.patient.reference;
     return findReference(
       "Patient",
       this.resource.contained,
       this.includedResources,
-      reference
+      this.resource.patient.reference
     )?.managingOrganization?.display;
   }
 
