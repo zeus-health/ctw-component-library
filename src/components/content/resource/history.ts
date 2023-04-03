@@ -13,7 +13,6 @@ import {
 import { ResourceMap, ResourceType, ResourceTypeString } from "@/fhir/types";
 import { compact, isEqual, orderBy, some, uniqWith } from "@/utils/nodash";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
-import { versions } from "process";
 
 export type UseHistoryProps<
   T extends ResourceTypeString,

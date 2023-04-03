@@ -1,17 +1,17 @@
-import { patientAllergiesColumns } from "@/components/content/allergies/patient-allergies-column";
-import { withErrorBoundary } from "@/components/core/error-boundary";
-import { usePatientAllergies } from "@/fhir/allergies";
-import { AllergyModel } from "@/fhir/models/allergies";
 import cx from "classnames";
 import { useRef } from "react";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { ResourceTable } from "../resource/resource-table";
+import { ResourceTableActions } from "../resource/resource-table-actions";
+import { patientAllergiesColumns } from "@/components/content/allergies/patient-allergies-column";
+import { allergyFilter, defaultAllergyFilters } from "./helpers/filters";
 import { useAllergiesHistory } from "./helpers/history";
 import { allergySortOptions, defaultAllergySort } from "./helpers/sort";
-import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
-import { ResourceTableActions } from "../resource/resource-table-actions";
-import { defaultAllergyFilters, allergyFilter } from "./helpers/filters";
+import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/ctw-provider";
+import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
+import { usePatientAllergies } from "@/fhir/allergies";
+import { AllergyModel } from "@/fhir/models/allergies";
 import { capitalize } from "@/utils/nodash";
 
 export type PatientAllergiesProps = {
@@ -60,7 +60,7 @@ function PatientAllergiesComponent({
       />
       <div className="ctw-scrollable-pass-through-height">
         <ResourceTable
-          showTableHead={true}
+          showTableHead
           isLoading={isLoading}
           data={data}
           columns={patientAllergiesColumns(featureFlags?.enableViewFhirButton)}

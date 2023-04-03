@@ -1,11 +1,11 @@
+import { getIncludedResources } from "./bundle";
+import { CodePreference } from "./codeable-concept";
+import { searchCommonRecords } from "./search-helpers";
+import { SYSTEM_NDC, SYSTEM_RXNORM, SYSTEM_SNOMED } from "./system-urls";
 import { applyAllergyFilters } from "@/components/content/allergies/allergies-filter";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { QUERY_KEY_PATIENT_ALLERGIES } from "@/utils/query-keys";
 import { withTimerMetric } from "@/utils/telemetry";
-import { CodePreference } from "./codeable-concept";
-import { searchCommonRecords } from "./search-helpers";
-import { SYSTEM_NDC, SYSTEM_RXNORM, SYSTEM_SNOMED } from "./system-urls";
-import { getIncludedResources } from "./bundle";
 
 export type AllergyIntolerance = {
   AllergyIntoleranceList: fhir4.AllergyIntolerance[];
