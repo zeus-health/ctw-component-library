@@ -12,6 +12,7 @@ export type TabGroupProps = {
   content: TabGroupItem[];
   forceHorizontalTabs?: boolean;
   onChange?: (index: number) => void; // optional event
+  topRightContent?: ReactNode;
 };
 
 export type TabGroupItem = {
@@ -33,6 +34,7 @@ function TabGroupComponent({
   forceHorizontalTabs = false,
   content,
   onChange,
+  topRightContent,
 }: TabGroupProps) {
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -50,6 +52,8 @@ function TabGroupComponent({
     }
   };
 
+  const showTopRightContent = !!topRightContent;
+
   return (
     <div
       ref={containerRef}
@@ -60,12 +64,19 @@ function TabGroupComponent({
     >
       <Tab.Group selectedIndex={selectedTabIndex} onChange={handleOnChange}>
         {isVertical && (
-          <ListBox
-            btnClassName="ctw-tab ctw-capitalize"
-            optionsClassName="ctw-tab-list ctw-capitalize"
-            onChange={handleOnChange}
-            items={content}
-          />
+          <>
+            <ListBox
+              btnClassName="ctw-tab ctw-capitalize"
+              optionsClassName="ctw-tab-list ctw-capitalize"
+              onChange={handleOnChange}
+              items={content}
+            />
+            {showTopRightContent && (
+              <div className="ctw-ml-auto ctw-flex ctw-items-center ctw-px-1.5">
+                {topRightContent}
+              </div>
+            )}
+          </>
         )}
         <Tab.List
           className={cx(
@@ -96,6 +107,12 @@ function TabGroupComponent({
               {display()}
             </Tab>
           ))}
+
+          {showTopRightContent && (
+            <div className="ctw-ml-auto ctw-flex ctw-items-center ctw-px-1.5">
+              {topRightContent}
+            </div>
+          )}
         </Tab.List>
 
         {/* Children are always rendered and appear above the active panel */}

@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
 export interface MinRecordItem {
-  id: string | number;
+  key: string | number;
 }
 
 type DataIndexSpecified<T> = { dataIndex: keyof T; render?: never };
