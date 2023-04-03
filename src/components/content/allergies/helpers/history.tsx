@@ -1,8 +1,8 @@
-import { AllergyModel } from "@/fhir/models/allergies";
-import { QUERY_KEY_ALLERGY_HISTORY } from "@/utils/query-keys";
 import { SearchParams } from "fhir-kit-client";
 import { HistoryEntryProps } from "../../resource/helpers/history-entry";
 import { useHistory } from "../../resource/history";
+import { AllergyModel } from "@/fhir/models/allergies";
+import { QUERY_KEY_ALLERGY_HISTORY } from "@/utils/query-keys";
 
 export function useAllergiesHistory(allergy: AllergyModel) {
   return useHistory({
