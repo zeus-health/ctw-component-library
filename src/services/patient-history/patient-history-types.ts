@@ -6,5 +6,5 @@ export type PatientRefreshHistoryMessage = {
   };
   _errors: string[];
   _createdAt: string;
-  _updatedAt: string;
+  _lastUpdated: string;
 };

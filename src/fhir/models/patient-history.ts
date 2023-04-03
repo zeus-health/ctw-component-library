@@ -2,11 +2,12 @@ import { ResourceMap } from "../types";
 import { FHIRModel } from "./fhir-model";
 import { PatientModel } from "./patient";
 import { PatientHistoryResponse } from "@/components/content/patient-history/use-patient-history";
+import { PatientRefreshHistoryMessage } from "@/services/patient-history/patient-history-types";
 
 export class PatientHistoryPatient extends FHIRModel<PatientModel> {
   kind = "PatientHistoryPatient" as const;
 
-  historyInfo: PatientHistoryResponse = {};
+  historyInfo: PatientRefreshHistoryMessage | undefined = undefined;
 
   constructor(
     resource: PatientModel,
@@ -14,14 +15,15 @@ export class PatientHistoryPatient extends FHIRModel<PatientModel> {
     includedResources?: ResourceMap
   ) {
     super(resource, includedResources);
-    this.historyInfo = historyInfo as PatientHistoryResponse;
+    this.historyInfo = historyInfo as PatientRefreshHistoryMessage;
   }
 
   get lastRetrievedAt() {
-    return this.historyInfo._lastUpdated;
+    // eslint-disable-next-line no-underscore-dangle
+    return this.historyInfo?._lastUpdated;
   }
 
   get retrievedStatus() {
-    return this.historyInfo.status;
+    return this.historyInfo?.status;
   }
 }
