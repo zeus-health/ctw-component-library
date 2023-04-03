@@ -4,6 +4,7 @@ import { compact, uniqWith } from "lodash";
 import { ALLERGY_CODE_PREFERENCE_ORDER } from "../allergies";
 import { FHIRModel } from "./fhir-model";
 import { findReference } from "../resource-helper";
+import { formatDateISOToLocal } from "../formatters";
 
 export class AllergyModel extends FHIRModel<fhir4.AllergyIntolerance> {
   kind = "Allergy" as const;
@@ -70,7 +71,7 @@ export class AllergyModel extends FHIRModel<fhir4.AllergyIntolerance> {
   }
 
   get recordedDate(): string | undefined {
-    return this.resource.recordedDate;
+    return formatDateISOToLocal(this.resource.recordedDate);
   }
 
   get type(): string {
