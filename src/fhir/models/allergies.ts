@@ -1,7 +1,7 @@
 import { ALLERGY_CODE_PREFERENCE_ORDER } from "../allergies";
 import { formatDateISOToLocal } from "../formatters";
-import { FHIRModel } from "./fhir-model";
 import { findReference } from "../resource-helper";
+import { FHIRModel } from "./fhir-model";
 import { codeableConceptLabel, findCoding } from "@/fhir/codeable-concept";
 import { displayOnset } from "@/fhir/display-onset";
 import { compact, uniqWith } from "@/utils/nodash";
@@ -38,7 +38,7 @@ export class AllergyModel extends FHIRModel<fhir4.AllergyIntolerance> {
   }
 
   get managingOrganization(): string | undefined {
-    const reference = this.resource.patient.reference;
+    const { reference } = this.resource.patient.reference;
     return findReference(
       "Patient",
       this.resource.contained,
