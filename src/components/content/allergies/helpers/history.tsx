@@ -42,7 +42,6 @@ function getSearchParams(allergy: AllergyModel) {
 
 function getHistoryEntry(allergy: AllergyModel): HistoryEntryProps {
   const detailData = [
-    { label: "Recorded Date", value: allergy.recordedDate },
     { label: "Status", value: allergy.clinicalStatus },
     { label: "Type", value: capitalize(allergy.type) },
     { label: "Category", value: capitalize(allergy.categories) },
