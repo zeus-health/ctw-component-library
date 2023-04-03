@@ -1,10 +1,11 @@
+/* eslint-disable import/order */
 import { ALLERGY_CODE_PREFERENCE_ORDER } from "../allergies";
 import { formatDateISOToLocal } from "../formatters";
 import { findReference } from "../resource-helper";
 import { FHIRModel } from "./fhir-model";
 import { codeableConceptLabel, findCoding } from "@/fhir/codeable-concept";
 import { displayOnset } from "@/fhir/display-onset";
-import { compact, uniqWith } from "@/utils/nodash";
+import { compact, intersectionWith, uniqWith } from "@/utils/nodash";
 
 export class AllergyModel extends FHIRModel<fhir4.AllergyIntolerance> {
   kind = "Allergy" as const;
@@ -67,6 +68,16 @@ export class AllergyModel extends FHIRModel<fhir4.AllergyIntolerance> {
       (prev, next) => prev.system === next.system
     );
     return dedupedBySystemCoding;
+  }
+
+  knownCodingsMatch(allergy: AllergyModel): boolean {
+    return (
+      intersectionWith(
+        this.knownCodings,
+        allergy.knownCodings,
+        (a, b) => a.code === b.code && a.system === b.system
+      ).length > 0
+    );
   }
 
   get onset(): string | undefined {
