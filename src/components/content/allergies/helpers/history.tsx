@@ -61,5 +61,5 @@ function getHistoryEntry(allergy: AllergyModel): HistoryEntryProps {
 }
 
 const valuesToDedupeOn = (allergy: AllergyModel) => [
-  allergy.knownCodings.map((coding) => `${coding.system}|${coding.code}`),
+  allergy.knownCodings.map((coding) => [coding.system, coding.code]),
 ];
