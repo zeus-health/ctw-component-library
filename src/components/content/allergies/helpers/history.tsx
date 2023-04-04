@@ -26,10 +26,6 @@ function getSearchParams(allergy: AllergyModel) {
     _include: ["AllergyIntolerance:patient"],
   };
 
-  // If we have any known codings, then do an OR search.
-  // Otherwise fall back to searching for this single condition.
-  // That way, conditions that don't have any good codes to match on
-  // will only show themselves in the history.
   if (tokens.length > 0) {
     searchParams.code = tokens.join(",");
   } else {
@@ -62,4 +58,6 @@ function getHistoryEntry(allergy: AllergyModel): HistoryEntryProps {
 
 const valuesToDedupeOn = (allergy: AllergyModel) => [
   allergy.knownCodings.map((coding) => [coding.system, coding.code]),
+  allergy.recordedDate,
+  allergy.managingOrganization,
 ];
