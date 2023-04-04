@@ -1,6 +1,6 @@
+import { getAuthorizationData } from "./data";
 import { DocumentOnlyProps } from "../../types";
 import { Table } from "../Table/Table";
-import { getAuthorizationData } from "./data";
 import { isEmpty } from "@/utils/nodash";
 
 export const Authorization = ({ document }: DocumentOnlyProps) => {
