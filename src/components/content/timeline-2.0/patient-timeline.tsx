@@ -1,6 +1,4 @@
 import cx from "classnames";
-import { useObservationsDetailsDrawer } from "../observations/helpers/drawer";
-import { ResourceTableActions } from "../resource/resource-table-actions";
 import { defaultTimelineFilters, timelineFilters } from "./helpers/filters";
 import {
   useMedicationStatementDetailsDrawer,
@@ -8,6 +6,8 @@ import {
 } from "./helpers/modal-hooks";
 import { defaultTimelineSort, timelineSortOptions } from "./helpers/sorts";
 import { patientTimelineColumns } from "./patient-timeline-columns";
+import { useObservationsDetailsDrawer } from "../observations/helpers/drawer";
+import { ResourceTableActions } from "../resource/resource-table-actions";
 import { ResourceTable } from "@/components/content/resource/resource-table";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { DiagnosticReportModel, MedicationDispenseModel } from "@/fhir/models";

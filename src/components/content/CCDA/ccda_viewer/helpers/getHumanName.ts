@@ -1,6 +1,6 @@
 import xpath from "xpath";
-import { ModifiedHumanName } from "../types";
 import { displayForName } from "./displayForName";
+import { ModifiedHumanName } from "../types";
 import { isArray, map } from "@/utils/nodash";
 
 const humanNameUseMap: Record<string, string> = {

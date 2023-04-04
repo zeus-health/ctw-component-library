@@ -1,6 +1,6 @@
+import { FHIRModel } from "./fhir-model";
 import { codeableConceptLabel } from "../codeable-concept";
 import { formatISODateStringToDate } from "../formatters";
-import { FHIRModel } from "./fhir-model";
 
 export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
   kind = "Document" as const;

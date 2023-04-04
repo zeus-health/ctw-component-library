@@ -1,6 +1,6 @@
-import { createGraphqlClient } from "../services/fqs/client";
 import { getAllergiesQuery } from "./queries/allergies";
 import { searchCommonRecords } from "./search-helpers";
+import { createGraphqlClient } from "../services/fqs/client";
 import { applyAllergyFilters } from "@/components/content/allergies/allergies-filter";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { orderBy } from "@/utils/nodash";

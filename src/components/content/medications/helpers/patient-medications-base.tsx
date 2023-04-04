@@ -1,4 +1,7 @@
 import cx from "classnames";
+import { patientMedicationColumns } from "./columns";
+import { defaultMedicationFilters } from "./filters";
+import { defaultMedicationSort, medicationSortOptions } from "./sorts";
 import { ViewOption } from "../../resource/helpers/view-button";
 import {
   ResourceTable,
@@ -9,9 +12,6 @@ import {
   ResourceTableActionsProps,
 } from "../../resource/resource-table-actions";
 import { useMedicationHistory } from "../history/medication-history-drawer";
-import { patientMedicationColumns } from "./columns";
-import { defaultMedicationFilters } from "./filters";
-import { defaultMedicationSort, medicationSortOptions } from "./sorts";
 import { FilterItem } from "@/components/core/filter-bar/filter-bar-types";
 import { MedicationStatementModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";

@@ -1,9 +1,9 @@
 import type { DataListEntry } from "../../../core/data-list";
 import type { DrawerProps } from "../../../core/drawer";
 import type { MedicationStatementModel } from "@/fhir/models/medication-statement";
+import { MedicationHistory } from "./medication-history";
 import { DataList, entryFromArray } from "../../../core/data-list";
 import { Drawer } from "../../../core/drawer";
-import { MedicationHistory } from "./medication-history";
 import { Loading } from "@/components/core/loading";
 import { useLastPrescriber } from "@/fhir/medications";
 

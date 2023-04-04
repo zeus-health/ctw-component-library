@@ -1,8 +1,8 @@
 import { differenceInYears, parseISO } from "date-fns";
 import fhir4 from "fhir/r4";
-import { formatDateISOToLocal, formatPhoneNumber } from "../formatters";
 import { FHIRModel } from "./fhir-model";
 import { OrganizationModel } from "./organization";
+import { formatDateISOToLocal, formatPhoneNumber } from "../formatters";
 import { findReference } from "@/fhir/resource-helper";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 import { cloneDeep, find } from "@/utils/nodash";

@@ -3,9 +3,9 @@ import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cx from "classnames";
 import { ReactNode, useState } from "react";
+import { DetailsCard } from "./details-card";
 import { DocumentButton } from "../../CCDA/document-button";
 import { useCCDAModal } from "../../CCDA/modal-ccda";
-import { DetailsCard } from "./details-card";
 
 export type DetailEntry = {
   label: string;

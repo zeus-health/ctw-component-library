@@ -1,5 +1,5 @@
-import { formatDateISOToLocal } from "../formatters";
 import { FHIRModel } from "./fhir-model";
+import { formatDateISOToLocal } from "../formatters";
 import {
   getIdentifyingRxNormCode,
   getMedicationDisplayName,

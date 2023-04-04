@@ -1,4 +1,6 @@
 import cx from "classnames";
+import { diagnosticReportColumns } from "./columns";
+import { defaultObservationSort, observationSortOptions } from "./sorts";
 import {
   ResourceTable,
   ResourceTableProps,
@@ -7,8 +9,6 @@ import {
   ResourceTableActions,
   ResourceTableActionsProps,
 } from "../../resource/resource-table-actions";
-import { diagnosticReportColumns } from "./columns";
-import { defaultObservationSort, observationSortOptions } from "./sorts";
 import { useObservationsDetailsDrawer } from "@/components/content/observations/helpers/drawer";
 import {
   defaultFilters,
