@@ -81,13 +81,13 @@ export class Telemetry {
    * need to know to select all variations of an environment.
    */
   static setEnv(environment: string) {
-    if (["dev", "development"].includes(environment.toLowerCase())) {
+    this.environment = environment.toLowerCase();
+    if (["dev", "development"].includes(this.environment)) {
       this.environment = "dev";
     }
-    if (["prod", "production"].includes(environment.toLowerCase())) {
+    if (["prod", "production"].includes(this.environment)) {
       this.environment = "prod";
     }
-    this.environment = environment;
   }
 
   static init(environment: string, allowDataDogRumAndLogging = false) {

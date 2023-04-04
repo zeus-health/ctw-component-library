@@ -9,6 +9,7 @@ import { PatientCareTeamProps } from "@/components/content/care-team/patient-car
 import { PatientConditionsProps } from "@/components/content/conditions/patient-conditions";
 import { PatientDocumentProps } from "@/components/content/document/patient-documents";
 import { PatientImmunizationsProps } from "@/components/content/immunizations/patient-immunizations";
+import { RequestRecordsButton } from "@/components/content/patient-history/request-records-button";
 import { PatientTimelineProps } from "@/components/content/timeline/patient-timeline";
 import {
   ZusAggregatedProfileTabs,
@@ -37,6 +38,7 @@ export type ZusAggregatedProfileProps = {
   title?: string;
   hideTitle?: boolean;
   removeBranding?: boolean;
+  removeRequestRecords?: boolean;
 } & ZusAggregatedProfileSubComponentProps;
 
 export type ZusAggregatedProfileSubComponentProps = Partial<{
@@ -53,7 +55,7 @@ export type ZusAggregatedProfileSubComponentProps = Partial<{
   timelineProps: PatientTimelineProps;
 }>;
 
-const zusAggregatedProfile = ({
+const ZusAggregatedProfileComponent = ({
   forceHorizontalTabs = false,
   allergiesProps,
   careTeamProps,
@@ -70,6 +72,7 @@ const zusAggregatedProfile = ({
   hideTitle = false,
   title = "Outside Records",
   removeBranding = false,
+  removeRequestRecords = false,
 }: ZusAggregatedProfileProps) => {
   // Get the configuration for each tab group by resource type
   const subcomponentProps: Record<keyof ZusAggregatedProfileTabs, unknown> = {
@@ -109,6 +112,9 @@ const zusAggregatedProfile = ({
       <TabGroup
         content={tabbedContent}
         forceHorizontalTabs={forceHorizontalTabs}
+        topRightContent={
+          removeRequestRecords ? undefined : <RequestRecordsButton />
+        }
       />
     </div>
   );
@@ -149,6 +155,6 @@ const zusAggregatedProfile = ({
  * "timelines".
  */
 export const ZusAggregatedProfile = withErrorBoundary(
-  zusAggregatedProfile,
+  ZusAggregatedProfileComponent,
   "ZusAggregatedProfile"
 );
