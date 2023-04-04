@@ -22,11 +22,13 @@ export function usePatientAllergies(enableFqs = false) {
           requestContext,
           {
             patientUPID: patient.UPID,
-            _include: "AllergyIntolerance:patient",
+            _include: ["AllergyIntolerance:patient"],
+            "_include:iterate": "Patient:organization",
           }
         );
 
         const includedResources = getIncludedResources(bundle);
+
         return applyAllergyFilters(allergy, includedResources);
       } catch (e) {
         throw new Error(

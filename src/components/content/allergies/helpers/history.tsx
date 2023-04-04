@@ -24,6 +24,7 @@ function getSearchParams(allergy: AllergyModel) {
 
   const searchParams: SearchParams = {
     _include: ["AllergyIntolerance:patient"],
+    "_include:iterate": "Patient:organization",
   };
 
   if (tokens.length > 0) {
@@ -57,7 +58,13 @@ function getHistoryEntry(allergy: AllergyModel): HistoryEntryProps {
 }
 
 const valuesToDedupeOn = (allergy: AllergyModel) => [
-  allergy.knownCodings.map((coding) => [coding.system, coding.code]),
   allergy.recordedDate,
   allergy.managingOrganization,
+  allergy.clinicalStatus,
+  allergy.categories,
+  allergy.onset,
+  allergy.manifestations,
+  allergy.severity,
+  allergy.note,
+  allergy.knownCodings.map((coding) => [coding.system, coding.code]),
 ];
