@@ -27,7 +27,7 @@ export const schedulePatientHistory = async (
       headers: {
         Authorization: `Bearer ${requestContext.authToken}`,
         "practitioner-npi": resultData.npi,
-        "practitioner-role": resultData.role,
+        "practitioner-role": resultData.role.toLocaleLowerCase(),
         "practitioner-name": resultData.name,
         ...(requestContext.contextBuilderId && {
           "Zus-Account": requestContext.contextBuilderId,
