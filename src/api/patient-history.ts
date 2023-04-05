@@ -1,4 +1,4 @@
-import { getZusApiBaseUrl } from "./urls";
+import { getZusProxyApiBaseUrl } from "./urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { ctwFetch } from "@/utils/request";
 import { Telemetry } from "@/utils/telemetry";
@@ -12,14 +12,14 @@ export type PatientHistoryResponseError = {
 
 export const schedulePatientHistory = async (
   requestContext: CTWRequestContext,
-  patientIdentifiers: { id?: string; systemURL: string; patientID: string },
-  resultData: { npi: string; role: string; name: string }
+  patientIdentifiers: { systemURL: string; patientID: string },
+  resultData: { id?: string, npi: string; role: string; name: string }
 ) => {
-  const { id, systemURL, patientID } = patientIdentifiers;
-  const endpointUrl = `${getZusApiBaseUrl(
+  const { systemURL, patientID } = patientIdentifiers;
+  const endpointUrl = `${getZusProxyApiBaseUrl(
     requestContext.env
     // If patientID is empty, just pass any non-identifying string in url.
-  )}/patient-history/patient/${id ?? "NULL"}/refresh?consent=1`;
+  )}/patient-history/patient/${resultData.id ?? "NULL"}/refresh?consent=1`;
 
   try {
     const response = await ctwFetch(endpointUrl, {
@@ -27,7 +27,7 @@ export const schedulePatientHistory = async (
       headers: {
         Authorization: `Bearer ${requestContext.authToken}`,
         "practitioner-npi": resultData.npi,
-        "practitioner-role": resultData.role.toLocaleLowerCase(),
+        "practitioner-role": "",
         "practitioner-name": resultData.name,
         ...(requestContext.contextBuilderId && {
           "Zus-Account": requestContext.contextBuilderId,

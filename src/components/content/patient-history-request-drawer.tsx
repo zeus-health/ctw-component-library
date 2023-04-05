@@ -35,8 +35,9 @@ type PatientHistoryRequestDrawer<T> = Pick<
 
 export type ScheduleHistoryFormData = {
   npi: string;
-  role: string;
   name: string;
+  role: string;
+  id?: string;
 };
 
 export const PatientHistoryRequestDrawer = <T,>({

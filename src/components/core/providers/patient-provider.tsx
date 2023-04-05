@@ -99,6 +99,7 @@ export function usePatientPromise() {
   const context = usePatientContext();
 
   return {
+    context,
     getPatient: useCallback(() => {
       const { patientID, systemURL, tags } = context;
 

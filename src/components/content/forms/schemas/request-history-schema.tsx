@@ -39,6 +39,13 @@ export const getRequestData = (
       value: "",
       readonly: false,
     },
+    {
+      label: "Zus patient ID",
+      hidden: true,
+      field: "id",
+      value: patient?.id ?? "",
+      readonly: true,
+    },
   ],
   ...(!includePatientDemographicsForm
     ? []
@@ -133,7 +140,7 @@ export const requestHistorySchema = z.object({
       required_error: "NPI must be specified.",
     })
     .length(10),
-  role: z.enum(["Doctor", "Nurse", "Other"]),
+  role: z.enum(["Doctor", "Nurse", "Other"]).optional(),
 });
 
 export const savePatientAndRequestHistorySchema = requestHistorySchema.merge(

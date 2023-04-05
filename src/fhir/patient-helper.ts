@@ -1,10 +1,13 @@
 import { SearchParams } from "fhir-kit-client";
 import { getIncludedResources } from "./bundle";
 import { searchBuilderRecords } from "./search-helpers";
+import { getZusProxyApiBaseUrl } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { PatientModel } from "@/fhir/models/patient";
 import { errorResponse } from "@/utils/errors";
 import { pickBy } from "@/utils/nodash";
+import { ctwFetch } from "@/utils/request";
+import { Telemetry } from "@/utils/telemetry";
 import { hasNumber } from "@/utils/types";
 
 export async function getBuilderFhirPatient(
@@ -25,11 +28,33 @@ export async function getBuilderFhirPatient(
 
     patients = response.resources;
     bundle = response.bundle;
+    if (bundle.total === 0) {
+      const proxyPatientHistoryEndpoint = `${getZusProxyApiBaseUrl(
+        requestContext.env
+      )}`;
+
+      try {
+        await ctwFetch(proxyPatientHistoryEndpoint, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${requestContext.authToken}`,
+            ...(requestContext.contextBuilderId && {
+              "Zus-Account": requestContext.contextBuilderId,
+            }),
+          },
+        });
+      } catch (e) {
+        Telemetry.logError(
+          e as Error, "Failed to use ehr-hooks proxy to create patient"
+        );
+      }
+    }
   } catch (e) {
     throw errorResponse("Failed fetching patient", e);
   }
 
   if (!patients[0]) {
+
     throw errorResponse(
       `Failed fetching patient information for patient from patientID ${patientID} with system ${systemURL}`
     );
