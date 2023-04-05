@@ -23,7 +23,7 @@ type PatientHistoryDetails = Partial<{
   dateCreated: string;
 }>;
 
-export function usePatientHistory() {
+export function usePatientHistory(includePatientDemographicsForm?: boolean) {
   const { openDrawer } = useDrawer();
   const { getPatient } = usePatientPromise();
   const patientHistoryInformation = usePatientHistoryDetails();
@@ -59,6 +59,7 @@ export function usePatientHistory() {
       openDrawer({
         component: (props) => (
           <PatientHistoryRequestDrawer
+            includePatientDemographicsForm={includePatientDemographicsForm}
             setClinicalHistoryExists={() => {}}
             header={
               <>

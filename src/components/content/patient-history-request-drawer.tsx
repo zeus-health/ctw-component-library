@@ -46,7 +46,7 @@ export const PatientHistoryRequestDrawer = <T,>({
   isOpen,
   onClose,
   setClinicalHistoryExists,
-  includePatientDemographicsForm = false,
+  includePatientDemographicsForm = true,
 }: PatientHistoryRequestDrawer<T>) => {
   const onPatientSave = useHandlePatientSave(patient);
   const { patientID, systemURL } = usePatientContext();

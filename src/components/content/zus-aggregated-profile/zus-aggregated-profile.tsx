@@ -35,6 +35,7 @@ export type ZAPResourceName =
 export type ZusAggregatedProfileProps = {
   resources: ZAPResourceName[];
   forceHorizontalTabs?: boolean;
+  includePatientDemographicsForm?: boolean;
   title?: string;
   hideTitle?: boolean;
   removeBranding?: boolean;
@@ -57,6 +58,7 @@ export type ZusAggregatedProfileSubComponentProps = Partial<{
 
 const ZusAggregatedProfileComponent = ({
   forceHorizontalTabs = false,
+  includePatientDemographicsForm,
   allergiesProps,
   careTeamProps,
   conditionsProps,
@@ -113,7 +115,11 @@ const ZusAggregatedProfileComponent = ({
         content={tabbedContent}
         forceHorizontalTabs={forceHorizontalTabs}
         topRightContent={
-          removeRequestRecords ? undefined : <RequestRecordsButton />
+          removeRequestRecords ? undefined : (
+            <RequestRecordsButton
+              includePatientDemographicsForm={includePatientDemographicsForm}
+            />
+          )
         }
       />
     </div>
