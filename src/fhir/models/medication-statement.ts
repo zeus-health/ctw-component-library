@@ -110,6 +110,11 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
     return patientStatus(this.builderPatientRxNormStatus?.[this.rxNorm ?? ""]);
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  get resourceTypeTitle(): string {
+    return "Medication";
+  }
+
   get rxNorm() {
     return getIdentifyingRxNormCode(this.resource, this.includedResources);
   }
