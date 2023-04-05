@@ -36,6 +36,7 @@ function PatientAllergiesComponent({
     header: (m) => capitalize(m.display),
     details: allergyData,
     getHistory: useAllergiesHistory,
+    getSourceDocument: true,
   });
 
   // Get our allergies.
