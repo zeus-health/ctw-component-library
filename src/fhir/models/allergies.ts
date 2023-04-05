@@ -5,7 +5,7 @@ import { findReference } from "../resource-helper";
 import { FHIRModel } from "./fhir-model";
 import { codeableConceptLabel, findCoding } from "@/fhir/codeable-concept";
 import { displayOnset } from "@/fhir/display-onset";
-import { compact, intersectionWith, uniqWith } from "@/utils/nodash";
+import { compact, uniqWith } from "@/utils/nodash";
 
 export class AllergyModel extends FHIRModel<fhir4.AllergyIntolerance> {
   kind = "Allergy" as const;
@@ -80,22 +80,11 @@ export class AllergyModel extends FHIRModel<fhir4.AllergyIntolerance> {
       )
     );
 
-    // The order of the array matters here because that is how it determines which record to keep when dupes are found.
     const dedupedBySystemCoding = uniqWith(
       codings,
       (prev, next) => prev.system === next.system
     );
     return dedupedBySystemCoding;
-  }
-
-  knownCodingsMatch(allergy: AllergyModel): boolean {
-    return (
-      intersectionWith(
-        this.knownCodings,
-        allergy.knownCodings,
-        (a, b) => a.code === b.code && a.system === b.system
-      ).length > 0
-    );
   }
 
   get onset(): string | undefined {
