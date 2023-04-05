@@ -13,7 +13,7 @@ export type PatientHistoryResponseError = {
 export const schedulePatientHistory = async (
   requestContext: CTWRequestContext,
   patientIdentifiers: { systemURL: string; patientID: string },
-  resultData: { id?: string, npi: string; role: string; name: string }
+  resultData: { id?: string; npi: string; role: string; name: string }
 ) => {
   const { systemURL, patientID } = patientIdentifiers;
   const endpointUrl = `${getZusProxyApiBaseUrl(
@@ -27,7 +27,7 @@ export const schedulePatientHistory = async (
       headers: {
         Authorization: `Bearer ${requestContext.authToken}`,
         "practitioner-npi": resultData.npi,
-        "practitioner-role": "",
+        "practitioner-role": resultData.role,
         "practitioner-name": resultData.name,
         ...(requestContext.contextBuilderId && {
           "Zus-Account": requestContext.contextBuilderId,
@@ -42,6 +42,8 @@ export const schedulePatientHistory = async (
       e as Error,
       `Error scheduling patient history job with id of ${patientID}`
     );
-    throw Error(`Error scheduling patient history job with id of ${patientID}`);
+    return new Error(
+      `Error scheduling patient history job with id of ${patientID}`
+    );
   }
 };

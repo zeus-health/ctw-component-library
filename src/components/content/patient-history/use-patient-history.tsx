@@ -1,13 +1,12 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { PatientHistoryRequestDrawer } from "../patient-history-request-drawer";
 import { PatientHistoryStatus } from "./patient-history-message-status";
 import { getZusApiBaseUrl } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
-import { PatientContext } from "@/components/core/providers/patient-context";
 import {
   usePatientPromise,
-  useQueryWithPatient
+  useQueryWithPatient,
 } from "@/components/core/providers/patient-provider";
 import { formatISODateStringToDate } from "@/fhir/formatters";
 import { PatientModel } from "@/fhir/models";
@@ -26,8 +25,7 @@ type PatientHistoryDetails = Partial<{
 
 export function usePatientHistory() {
   const { openDrawer } = useDrawer();
-  const { getPatient} = usePatientPromise();
-  const { patientID, systemURL }  = useContext(PatientContext);
+  const { getPatient } = usePatientPromise();
   const patientHistoryInformation = usePatientHistoryDetails();
   const [patientHistoryDetails, setPatientHistoryDetails] =
     useState<PatientHistoryDetails>();
@@ -74,7 +72,7 @@ export function usePatientHistory() {
                 </div>
               </>
             }
-            patient={{ ...patient, patientID, systemURL }}
+            patient={patient}
             {...props}
           />
         ),

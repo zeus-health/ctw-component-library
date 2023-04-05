@@ -141,6 +141,7 @@ export const requestHistorySchema = z.object({
     })
     .length(10),
   role: z.enum(["Doctor", "Nurse", "Other"]).optional(),
+  id: z.string().optional(), // patient id (hidden field on form)
 });
 
 export const savePatientAndRequestHistorySchema = requestHistorySchema.merge(

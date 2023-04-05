@@ -1,3 +1,4 @@
+import cx from "classnames";
 import { Fragment, InputHTMLAttributes, ReactNode } from "react";
 import { DrawerForm, DrawerFormProps, FormErrors } from "./drawer-form";
 import { FormField } from "@/components/content/forms/form-field";
@@ -175,13 +176,18 @@ const FormFieldEntry = ({
   return (
     <div
       key={label}
-      className="ctw-flex ctw-grow ctw-basis-0 ctw-flex-col ctw-space-y-1.5 ctw-text-sm ctw-font-medium ctw-text-content-black"
+      className={cx({
+        "ctw-flex ctw-grow ctw-basis-0 ctw-flex-col ctw-space-y-1.5 ctw-text-sm ctw-font-medium ctw-text-content-black":
+          !hidden,
+      })}
     >
-      <FormFieldLabel
-        label={label}
-        name={props.name}
-        required={props["aria-required"]}
-      />
+      {!hidden && (
+        <FormFieldLabel
+          label={label}
+          name={props.name}
+          required={props["aria-required"]}
+        />
+      )}
       <FormField
         {...props}
         key={label}
