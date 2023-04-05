@@ -1,4 +1,3 @@
-import { UseQueryResult } from "@tanstack/react-query";
 import { ReactNode, useEffect, useState } from "react";
 import { DocumentButton } from "../CCDA/document-button";
 import { useCCDAModal } from "../CCDA/modal-ccda";
@@ -16,6 +15,7 @@ import { getBinaryId } from "@/fhir/binaries";
 import { DocumentModel } from "@/fhir/models/document";
 import { FHIRModel } from "@/fhir/models/fhir-model";
 import { searchProvenances } from "@/fhir/provenance";
+import { UseQueryResultBasic } from "@/utils/request";
 
 const HISTORY_PAGE_LIMIT = 10;
 
@@ -55,7 +55,7 @@ type ResourceDetailsDrawerProps<
 > = {
   className?: string;
   details: (model: M) => DetailsProps["details"];
-  getHistory?: (model: M) => UseQueryResult<HistoryEntries | undefined>;
+  getHistory?: (model: M) => UseQueryResultBasic<HistoryEntries | undefined>;
   getSourceDocument?: boolean;
   header: (model: M) => ReactNode;
   isOpen: boolean;
