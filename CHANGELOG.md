@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.1.5
+
+### Patch Changes
+
+- 685808fd: Adjust storybook/addon-actions to be dev dependency.
+
 ## 1.1.4
 
 ### Patch Changes
