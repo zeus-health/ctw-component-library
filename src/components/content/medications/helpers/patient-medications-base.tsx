@@ -8,8 +8,8 @@ import {
   ResourceTableActions,
   ResourceTableActionsProps,
 } from "../../resource/resource-table-actions";
-import { useMedicationHistory } from "../history/medication-history-drawer";
 import { patientMedicationColumns } from "./columns";
+import { useMedicationDetailsDrawer } from "./details";
 import { defaultMedicationFilters } from "./filters";
 import { defaultMedicationSort, medicationSortOptions } from "./sorts";
 import { FilterItem } from "@/components/core/filter-bar/filter-bar-types";
@@ -39,7 +39,7 @@ export const PatientMedicationsBase = ({
   views,
   onOpenHistoryDrawer,
 }: PatientMedicationsBaseProps) => {
-  const showMedicationHistory = useMedicationHistory();
+  const openDetailsDrawer = useMedicationDetailsDrawer();
   const { data, setFilters, setSort, setViewOption } = useFilteredSortedData({
     defaultView,
     defaultFilters: defaultMedicationFilters,
@@ -49,7 +49,7 @@ export const PatientMedicationsBase = ({
 
   function handleRowClick(medication: MedicationStatementModel) {
     onOpenHistoryDrawer?.();
-    showMedicationHistory({ medication });
+    openDetailsDrawer(medication);
   }
 
   return (
