@@ -4,11 +4,15 @@ import {
   DrawerFormWithFieldsProps,
 } from "../core/form/drawer-form-with-fields";
 import { CTWRequestContext } from "../core/providers/ctw-context";
-import { useHandlePatientSave } from "../core/providers/patient-provider";
+import {
+  useHandlePatientSave,
+  usePatientContext,
+} from "../core/providers/patient-provider";
 import { PatientFormData } from "./forms/actions/patients";
 import {
   getRequestData,
   requestHistorySchema,
+  savePatientAndRequestHistorySchema,
 } from "./forms/schemas/request-history-schema";
 import {
   PatientHistoryResponseError,
@@ -24,7 +28,8 @@ type PatientHistoryRequestDrawer<T> = Pick<
   DrawerFormWithFieldsProps<T>,
   "isOpen" | "onClose" | "header"
 > & {
-  patient: PatientModel;
+  includePatientDemographicsForm?: boolean;
+  patient?: PatientModel;
   setClinicalHistoryExists: Dispatch<SetStateAction<boolean | undefined>>;
 };
 
@@ -40,29 +45,21 @@ export const PatientHistoryRequestDrawer = <T,>({
   isOpen,
   onClose,
   setClinicalHistoryExists,
+  includePatientDemographicsForm = false,
 }: PatientHistoryRequestDrawer<T>) => {
   const onPatientSave = useHandlePatientSave(patient);
+  const { patientID, systemURL } = usePatientContext();
 
-  const onPatientSaveAndScheduleHistory = async (
-    data: PatientFormData & ScheduleHistoryFormData,
+  const onScheduleHistory = async (
+    data: ScheduleHistoryFormData,
     getRequestContext: () => Promise<CTWRequestContext>
   ) => {
-    try {
-      await onPatientSave(data);
-    } catch (e) {
-      const { requestErrors, responseIsSuccess } = getFormResponseErrors(e);
-      if (!responseIsSuccess) {
-        return new Error(requestErrors.join(","));
-      }
-
-      Telemetry.logError(e as Error, "Failed to save patient data.");
-      return new Error("Failed to save patient data.");
-    }
-
     const requestContext = await getRequestContext();
+    // Patient Identifiers are required for the pt hx proxy (ehr-data-hooks)
+    const patientIdentifiers = { id: patient?.id, systemURL, patientID };
     const patientHistoryResponse = await schedulePatientHistory(
       requestContext,
-      patient.id,
+      patientIdentifiers,
       data
     );
 
@@ -72,7 +69,7 @@ export const PatientHistoryRequestDrawer = <T,>({
           (err: PatientHistoryResponseError) => err.details
         ),
       ];
-      return new Error(requestErrors.join(","));
+      return new Error(requestErrors.join(", "));
     }
 
     await queryClient.invalidateQueries([QUERY_KEY_PATIENT_HISTORY_DETAILS]);
@@ -82,13 +79,39 @@ export const PatientHistoryRequestDrawer = <T,>({
 
     return patientHistoryResponse;
   };
+
+  const onPatientSaveAndScheduleHistory = async (
+    data: PatientFormData & ScheduleHistoryFormData,
+    getRequestContext: () => Promise<CTWRequestContext>
+  ) => {
+    try {
+      await onPatientSave(data);
+      return onScheduleHistory(data, getRequestContext);
+    } catch (e) {
+      const { requestErrors, responseIsSuccess } = getFormResponseErrors(e);
+      if (!responseIsSuccess) {
+        return new Error(requestErrors.join(", "));
+      }
+
+      Telemetry.logError(e as Error, "Failed to save patient data");
+      return new Error("Failed to save patient data");
+    }
+  };
+
+  const action = includePatientDemographicsForm
+    ? onPatientSaveAndScheduleHistory
+    : onScheduleHistory;
+  const schema = includePatientDemographicsForm
+    ? savePatientAndRequestHistorySchema
+    : requestHistorySchema;
+
   return (
     <DrawerFormWithFields
       header={header}
       title="Request Records"
-      action={onPatientSaveAndScheduleHistory}
-      data={getRequestData(patient)}
-      schema={requestHistorySchema}
+      action={action}
+      data={getRequestData(patient, includePatientDemographicsForm)}
+      schema={schema}
       isOpen={isOpen}
       onClose={onClose}
     />

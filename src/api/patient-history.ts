@@ -12,12 +12,14 @@ export type PatientHistoryResponseError = {
 
 export const schedulePatientHistory = async (
   requestContext: CTWRequestContext,
-  patientID: string,
+  patientIdentifiers: { id?: string; systemURL: string; patientID: string },
   resultData: { npi: string; role: string; name: string }
 ) => {
+  const { id, systemURL, patientID } = patientIdentifiers;
   const endpointUrl = `${getZusApiBaseUrl(
     requestContext.env
-  )}/patient-history/patient/${patientID}/refresh?consent=1`;
+    // If patientID is empty, just pass any non-identifying string in url.
+  )}/patient-history/patient/${id ?? "NULL"}/refresh?consent=1`;
 
   try {
     const response = await ctwFetch(endpointUrl, {
@@ -31,7 +33,9 @@ export const schedulePatientHistory = async (
           "Zus-Account": requestContext.contextBuilderId,
         }),
       },
+      body: JSON.stringify({ systemURL, patientID }),
     });
+
     return await response.json();
   } catch (e) {
     Telemetry.logError(

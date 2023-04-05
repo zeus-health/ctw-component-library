@@ -9,6 +9,7 @@ import {
   useQueryWithPatient,
 } from "@/components/core/providers/patient-provider";
 import { formatISODateStringToDate } from "@/fhir/formatters";
+import { PatientModel } from "@/fhir/models";
 import { PatientRefreshHistoryMessage } from "@/services/patient-history/patient-history-types";
 import { errorResponse } from "@/utils/errors";
 import { find } from "@/utils/nodash";
@@ -48,8 +49,13 @@ export function usePatientHistory() {
 
   return {
     openHistoryRequestDrawer: async () => {
-      await patientHistoryRequestPromise;
-      const patient = await getPatient();
+      let patient: PatientModel | undefined;
+      try {
+        await patientHistoryRequestPromise;
+        patient = await getPatient();
+      } catch (error) {
+        patient = undefined;
+      }
       openDrawer({
         component: (props) => (
           <PatientHistoryRequestDrawer
