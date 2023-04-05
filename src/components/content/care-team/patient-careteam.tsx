@@ -1,7 +1,6 @@
 import cx from "classnames";
 import { useRef } from "react";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
-// eslint-disable-next-line import/order
 import { patientCareTeamColumns } from "./patient-careteam-columns";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { Table } from "@/components/core/table/table";

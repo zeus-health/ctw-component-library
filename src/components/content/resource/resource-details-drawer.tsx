@@ -1,7 +1,6 @@
 import { ReactNode, useEffect, useState } from "react";
 import { DocumentButton } from "../CCDA/document-button";
 import { useCCDAModal } from "../CCDA/modal-ccda";
-// eslint-disable-next-line import/order
 import { History, HistoryEntries } from "./helpers/history";
 import {
   DetailsCard,

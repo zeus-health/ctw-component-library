@@ -1,7 +1,6 @@
 import cx from "classnames";
 import { useRef } from "react";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
-// eslint-disable-next-line import/order
 import { patientImmunizationsColumns } from "./patient-immunizations-columns";
 import { CodingList } from "@/components/core/coding-list";
 import { withErrorBoundary } from "@/components/core/error-boundary";
