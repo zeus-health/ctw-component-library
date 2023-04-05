@@ -1,8 +1,9 @@
 import { UseQueryResult } from "@tanstack/react-query";
 import { ReactNode, useEffect, useState } from "react";
-import { History, HistoryEntries } from "./helpers/history";
 import { DocumentButton } from "../CCDA/document-button";
 import { useCCDAModal } from "../CCDA/modal-ccda";
+// eslint-disable-next-line import/order
+import { History, HistoryEntries } from "./helpers/history";
 import {
   DetailsCard,
   DetailsProps,

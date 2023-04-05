@@ -1,7 +1,8 @@
 import cx from "classnames";
 import { useRef } from "react";
-import { patientImmunizationsColumns } from "./patient-immunizations-columns";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
+// eslint-disable-next-line import/order
+import { patientImmunizationsColumns } from "./patient-immunizations-columns";
 import { CodingList } from "@/components/core/coding-list";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/ctw-provider";
@@ -29,7 +30,6 @@ function PatientImmunizationsComponent({
   const openDetails = useResourceDetailsDrawer({
     header: (m) => m.description,
     details: immunizationData,
-    getSourceDocument: true,
   });
 
   return (
