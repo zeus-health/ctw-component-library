@@ -1,3 +1,5 @@
+import { FHIRModel } from "./fhir-model";
+import { PatientModel } from "./patient";
 import { formatDateISOToLocal, formatStringToDate } from "../formatters";
 import { CCSChapterName } from "../mappings/ccs-chapter-names";
 import {
@@ -7,8 +9,6 @@ import {
   SYSTEM_ICD10,
   SYSTEM_SNOMED,
 } from "../system-urls";
-import { FHIRModel } from "./fhir-model";
-import { PatientModel } from "./patient";
 import {
   codeableConceptLabel,
   findCoding,
@@ -357,5 +357,5 @@ export const outsideConditionStatuses = [
 ] as const;
 
 export type ConditionStatuses =
-  | typeof conditionStatuses[number]
-  | typeof outsideConditionStatuses[number];
+  | (typeof conditionStatuses)[number]
+  | (typeof outsideConditionStatuses)[number];

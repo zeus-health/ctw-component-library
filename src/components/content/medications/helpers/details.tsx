@@ -1,5 +1,5 @@
-import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
 import { useMedicationHistoryEntries } from "./history";
+import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
 import { entryFromArray } from "@/components/core/data-list";
 import { Loading } from "@/components/core/loading";
 import { useLastPrescriber } from "@/fhir/medications";

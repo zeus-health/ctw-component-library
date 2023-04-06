@@ -1,6 +1,6 @@
+import { getInFulfillmentOfData } from "./data";
 import { DocumentOnlyProps } from "../../types";
 import { Table } from "../Table/Table";
-import { getInFulfillmentOfData } from "./data";
 import { isEmpty } from "@/utils/nodash";
 
 export const InFulfillmentOf = ({ document }: DocumentOnlyProps) => {

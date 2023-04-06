@@ -1,10 +1,10 @@
 import { rest } from "msw";
+import { medicationStatement } from "./medication-statement";
 import { medicationDispense } from "../../../medications/story-helpers/mocks/medication-dispense";
 import { medicationRequest } from "../../../medications/story-helpers/mocks/medication-request";
 import { encounters } from "../../../timeline/story-helpers/mocks/encounters";
 import { patient } from "../../../timeline/story-helpers/mocks/patient";
 import { provenances } from "../../../timeline/story-helpers/mocks/provenances";
-import { medicationStatement } from "./medication-statement";
 import { createDiagnosticReportsBundle } from "@/components/content/observations/story-helpers/mocks/diagnostic-reports";
 
 export function setupTimelineMocks() {

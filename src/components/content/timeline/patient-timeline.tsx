@@ -1,6 +1,6 @@
 import cx from "classnames";
-import { usePatientEncounterDetailsDrawer } from "../timeline-2.0/helpers/modal-hooks";
 import { patientTimelineColumns } from "./patient-timeline-columns";
+import { usePatientEncounterDetailsDrawer } from "../timeline-2.0/helpers/modal-hooks";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { Table } from "@/components/core/table/table";
 import { usePatientEncounters } from "@/fhir/encounters";

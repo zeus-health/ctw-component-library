@@ -4,6 +4,6 @@ declare module "i18next" {
   interface CustomTypeOptions {
     returnNull: false;
     defaultNS: "main";
-    resources: typeof resources["en"];
+    resources: (typeof resources)["en"];
   }
 }

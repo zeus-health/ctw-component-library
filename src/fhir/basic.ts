@@ -1,5 +1,5 @@
-import { FhirResource } from "fhir-kit-client";
 import { Basic } from "fhir/r4";
+import { FhirResource } from "fhir-kit-client";
 import { createOrEditFhirResource } from "./action-helper";
 import { FHIRModel } from "./models/fhir-model";
 import { getUsersPractitionerReference } from "./practitioner";
