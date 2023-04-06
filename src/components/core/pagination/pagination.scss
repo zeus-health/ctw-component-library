@@ -9,7 +9,7 @@
 }
 
 .ctw-pagination-page-btn {
-  @apply ctw-relative ctw-inline-flex ctw-items-center ctw-border ctw-border-b ctw-border-solid ctw-border-content-light ctw-bg-white ctw-px-4 ctw-py-2 ctw-px-2 ctw-text-sm ctw-font-medium ctw-text-content-lighter ctw-text-content-light;
+  @apply ctw-relative ctw-inline-flex ctw-items-center ctw-border ctw-border-b ctw-border-solid ctw-border-content-light ctw-bg-white ctw-px-2 ctw-px-4 ctw-py-2 ctw-text-sm ctw-font-medium ctw-text-content-light ctw-text-content-lighter;
 
   &:not(.disabled):not(.active) {
     @apply ctw-cursor-pointer;

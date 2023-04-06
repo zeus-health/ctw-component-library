@@ -99,7 +99,7 @@ const ZusAggregatedProfileComponent = ({
   return (
     <div className="ctw-zus-aggregated-profile ctw-scrollable-pass-through-height">
       {!hideTitle && (
-        <Title className="ctw-border-b-2 ctw-border-r-0 ctw-border-l-0 ctw-border-t-0 ctw-border-solid ctw-border-divider-light">
+        <Title className="ctw-border-b-2 ctw-border-l-0 ctw-border-r-0 ctw-border-t-0 ctw-border-solid ctw-border-divider-light">
           <h3 className="ctw-m-0 ctw-inline-block ctw-p-0 ctw-pb-3 ctw-text-lg ctw-font-medium">
             {title}{" "}
             {!removeBranding && (

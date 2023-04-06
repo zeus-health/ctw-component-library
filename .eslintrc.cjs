@@ -32,6 +32,14 @@ module.exports = {
     "no-void": ["error", { allowAsStatement: true }],
     curly: "error",
     "import/extensions": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        argsIgnorePattern: "^_",
+        varsIgnorePattern: "^_",
+        caughtErrorsIgnorePattern: "^_",
+      },
+    ],
     "unused-imports/no-unused-imports": "error",
     "import/order": [
       "error",

@@ -6,7 +6,7 @@ export class MedicationAdministrationModel extends FHIRModel<fhir4.MedicationAdm
   kind = "MedicationAdministration" as const;
 
   get dosageDisplay(): string {
-    const { text, route, dose } = this.resource.dosage || {};
+    const { text, dose } = this.resource.dosage || {};
     if (text) {
       return text;
     }

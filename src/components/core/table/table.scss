@@ -24,7 +24,7 @@
 }
 
 .ctw-table-container {
-  @apply ctw-relative ctw-overflow-hidden ctw-border-y ctw-border-x-0 ctw-border-r-0 ctw-border-solid ctw-border-divider-light;
+  @apply ctw-relative ctw-overflow-hidden ctw-border-x-0 ctw-border-y ctw-border-r-0 ctw-border-solid ctw-border-divider-light;
 
   .ctw-stacked-hide {
     display: initial;
@@ -73,7 +73,7 @@
 
   .ctw-table-row-actions {
     background: linear-gradient(90deg, #f9fafb00 0%, #f9fafb 4.17%);
-    @apply ctw-invisible ctw-absolute ctw-top-0 ctw-right-0 ctw-z-20 ctw-flex ctw-h-full ctw-items-center ctw-space-x-2 ctw-px-4;
+    @apply ctw-invisible ctw-absolute ctw-right-0 ctw-top-0 ctw-z-20 ctw-flex ctw-h-full ctw-items-center ctw-space-x-2 ctw-px-4;
   }
 }
 

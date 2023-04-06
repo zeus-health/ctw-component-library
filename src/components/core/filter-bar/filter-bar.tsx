@@ -60,7 +60,7 @@ export const FilterBar = ({
   );
   const [activeFilterValues, setActiveFilterValues] =
     useState<FilterValuesRecord>(filterChangeEventToValuesRecord(defaultState));
-  const [initialState, _] = useState<FilterValuesRecord>(
+  const [initialState] = useState<FilterValuesRecord>(
     filterChangeEventToValuesRecord(defaultState)
   );
 

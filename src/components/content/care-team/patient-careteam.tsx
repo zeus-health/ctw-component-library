@@ -29,6 +29,7 @@ export function PatientCareTeam({ className }: PatientCareTeamProps) {
     header: (m) => m.practitionerName,
     subHeader: (m) => m.qualification,
     details: careTeamData,
+    getSourceDocument: true,
   });
 
   return (

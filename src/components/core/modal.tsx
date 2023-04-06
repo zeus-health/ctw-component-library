@@ -53,7 +53,7 @@ export const Modal = ({
           >
             <Dialog.Panel
               className={cx(
-                "ctw-min-w-fit ctw-max-w-lg ctw-transform ctw-rounded-lg ctw-bg-white ctw-py-10 ctw-px-10 ctw-align-middle ctw-shadow-xl",
+                "ctw-min-w-fit ctw-max-w-lg ctw-transform ctw-rounded-lg ctw-bg-white ctw-px-10 ctw-py-10 ctw-align-middle ctw-shadow-xl",
                 className
               )}
             >
