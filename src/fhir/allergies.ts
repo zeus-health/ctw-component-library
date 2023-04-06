@@ -1,9 +1,9 @@
-import { getAllergiesQuery } from "./queries/allergies";
+import { getIncludedResources } from "./bundle";
+import { CodePreference } from "./codeable-concept";
 import { searchCommonRecords } from "./search-helpers";
-import { createGraphqlClient } from "../services/fqs/client";
+import { SYSTEM_NDC, SYSTEM_RXNORM, SYSTEM_SNOMED } from "./system-urls";
 import { applyAllergyFilters } from "@/components/content/allergies/allergies-filter";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
-import { orderBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_ALLERGIES } from "@/utils/query-keys";
 import { withTimerMetric } from "@/utils/telemetry";
 
@@ -17,25 +17,19 @@ export function usePatientAllergies(enableFqs = false) {
     [],
     withTimerMetric(async (requestContext, patient) => {
       try {
-        let data;
-        if (enableFqs) {
-          const graphClient = createGraphqlClient(requestContext);
-          data = (await graphClient.request(
-            getAllergiesQuery(patient.UPID)
-          )) as AllergyIntolerance;
-          data = data.AllergyIntoleranceList;
-        } else {
-          const response = await searchCommonRecords(
-            "AllergyIntolerance",
-            requestContext,
-            {
-              patientUPID: patient.UPID,
-            }
-          );
-          data = response.resources;
-        }
+        const { bundle, resources: allergy } = await searchCommonRecords(
+          "AllergyIntolerance",
+          requestContext,
+          {
+            patientUPID: patient.UPID,
+            _include: ["AllergyIntolerance:patient"],
+            "_include:iterate": "Patient:organization",
+          }
+        );
 
-        return orderBy(applyAllergyFilters(data), "onset", ["desc"]);
+        const includedResources = getIncludedResources(bundle);
+
+        return applyAllergyFilters(allergy, includedResources);
       } catch (e) {
         throw new Error(
           `Failed fetching allergies information for patient ${patient.UPID}`
@@ -44,3 +38,9 @@ export function usePatientAllergies(enableFqs = false) {
     }, "req.patient_allergies")
   );
 }
+
+export const ALLERGY_CODE_PREFERENCE_ORDER: CodePreference[] = [
+  { system: SYSTEM_RXNORM },
+  { system: SYSTEM_NDC },
+  { system: SYSTEM_SNOMED },
+];
