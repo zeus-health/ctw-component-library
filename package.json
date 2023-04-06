@@ -104,13 +104,13 @@
     "relative-deps": "^1.0.7",
     "rename-css-selectors": "^4.1.0",
     "sass": "^1.55.0",
-    "storybook": "^7.0.2",
+    "storybook": "^7.0.0-beta.45",
     "tailwindcss": "^3.1.6",
     "tsc-alias": "^1.8.5",
     "typescript": "^4.7.4",
     "vite": "^4.2.1",
-    "vite-tsconfig-paths": "^4.0.8",
-    "vitest": "^0.29.8",
+    "vite-tsconfig-paths": "^3.5.1",
+    "vitest": "^0.24.5",
     "vitest-fetch-mock": "^0.2.2"
   },
   "dependencies": {
