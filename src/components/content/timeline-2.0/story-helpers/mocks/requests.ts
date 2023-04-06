@@ -5,6 +5,7 @@ import { medicationRequest } from "../../../medications/story-helpers/mocks/medi
 import { encounters } from "../../../timeline/story-helpers/mocks/encounters";
 import { patient } from "../../../timeline/story-helpers/mocks/patient";
 import { provenances } from "../../../timeline/story-helpers/mocks/provenances";
+import { createDiagnosticReportsBundle } from "@/components/content/observations/story-helpers/mocks/diagnostic-reports";
 
 export function setupTimelineMocks() {
   return {
@@ -47,6 +48,16 @@ function mockRequests() {
     async (_, res, ctx) => res(ctx.status(200), ctx.json(provenances))
   );
 
+  const mockDiagnosticReportGet = rest.get(
+    "https://api.dev.zusapi.com/fhir/DiagnosticReport",
+    (req, res, ctx) =>
+      res(
+        ctx.status(200),
+        ctx.delay(250),
+        ctx.json(createDiagnosticReportsBundle())
+      )
+  );
+
   return [
     mockPatientGet,
     mockEncounterGet,
@@ -54,5 +65,6 @@ function mockRequests() {
     mockMedicationRequestGet,
     mockMedicationDispenseGet,
     mockMedicationStatementGet,
+    mockDiagnosticReportGet,
   ];
 }

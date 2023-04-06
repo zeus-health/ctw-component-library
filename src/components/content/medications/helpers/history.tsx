@@ -1,9 +1,5 @@
-import { useEffect, useState } from "react";
-import { sortMedHistory } from "./helpers";
-import { History } from "@/components/content/resource/helpers/history";
+import { HistoryEntries } from "../../resource/helpers/history";
 import { HistoryEntryProps } from "@/components/content/resource/helpers/history-entry";
-import { withErrorBoundary } from "@/components/core/error-boundary";
-import { Loading } from "@/components/core/loading";
 import { useMedicationHistory } from "@/fhir/medications";
 import { MedicationModel } from "@/fhir/models/medication";
 import { MedicationAdministrationModel } from "@/fhir/models/medication-administration";
@@ -11,81 +7,15 @@ import { MedicationDispenseModel } from "@/fhir/models/medication-dispense";
 import { MedicationRequestModel } from "@/fhir/models/medication-request";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { capitalize, compact } from "@/utils/nodash";
+import { UseQueryResultBasic } from "@/utils/request";
 
-const MEDICATION_HISTORY_LIMIT = 10;
-
-export type MedicationHistoryProps = {
-  medication: MedicationStatementModel;
-};
-
-/**
- * Displays the history of a medication
- */
-export const MedicationHistory = withErrorBoundary(
-  ({ medication }: MedicationHistoryProps) => {
-    const [entries, setEntries] = useState<HistoryEntryProps[]>([]);
-    const medHistoryQuery = useMedicationHistory(medication.resource);
-    const loading = medHistoryQuery.isLoading;
-
-    useEffect(() => {
-      if (medHistoryQuery.data) {
-        const { medications } = medHistoryQuery.data;
-        setEntries(
-          sortMedHistory(medications).map(createMedicationDetailsCard)
-        );
-      }
-    }, [medHistoryQuery.data]);
-
-    if (loading) {
-      return (
-        <>
-          <h2 className="ctw-text-lg ctw-font-semibold">Medication History</h2>
-          <Loading message="" />
-        </>
-      );
-    }
-
-    return (
-      <>
-        <h2 className="ctw-text-lg ctw-font-semibold">Medication History</h2>
-        {entries.length ? (
-          <History
-            entries={entries}
-            limit={MEDICATION_HISTORY_LIMIT}
-            resourceTypeTitle={medication.resourceTypeTitle}
-          />
-        ) : (
-          <span>No history available for this medication.</span>
-        )}
-      </>
-    );
-  },
-  "MedicationHistory"
-);
-
-function createMedicationStatementCard(medication: MedicationModel) {
-  const resource = medication.resource as fhir4.MedicationStatement;
-  const medStatement = new MedicationStatementModel(
-    resource,
-    medication.includedResources
-  );
-
+export function useMedicationHistoryEntries(
+  medication: MedicationStatementModel
+): UseQueryResultBasic<HistoryEntries | undefined> {
+  const medHistoryQuery = useMedicationHistory(medication.resource);
   return {
-    date: medication.dateLocal,
-    id: medication.id,
-    title: "Medication Reviewed",
-    hideEmpty: false,
-    subtitle: medStatement.patient?.organization?.name,
-    details: [
-      {
-        label: "Status",
-        value: capitalize(medStatement.displayStatus),
-      },
-      {
-        label: "Instructions",
-        value: medStatement.dosage,
-      },
-    ],
+    data: medHistoryQuery.data?.medications.map(createMedicationDetailsCard),
+    isLoading: medHistoryQuery.isLoading,
   };
 }
 
@@ -112,7 +42,37 @@ function createMedicationDetailsCard(
   );
 }
 
-function createMedicationRequestCard(medication: MedicationModel) {
+function createMedicationStatementCard(
+  medication: MedicationModel
+): HistoryEntryProps {
+  const resource = medication.resource as fhir4.MedicationStatement;
+  const medStatement = new MedicationStatementModel(
+    resource,
+    medication.includedResources
+  );
+
+  return {
+    date: medication.dateLocal,
+    id: medication.id,
+    title: "Medication Reviewed",
+    hideEmpty: false,
+    subtitle: medStatement.patient?.organization?.name,
+    details: [
+      {
+        label: "Status",
+        value: capitalize(medStatement.displayStatus),
+      },
+      {
+        label: "Instructions",
+        value: medStatement.dosage,
+      },
+    ],
+  };
+}
+
+function createMedicationRequestCard(
+  medication: MedicationModel
+): HistoryEntryProps {
   const resource = medication.resource as fhir4.MedicationRequest;
   const { prescriber } = medication;
   const { name, address, telecom } = new MedicationRequestModel(
@@ -154,7 +114,9 @@ function createMedicationRequestCard(medication: MedicationModel) {
   };
 }
 
-function createMedicationDispenseCard(medication: MedicationModel) {
+function createMedicationDispenseCard(
+  medication: MedicationModel
+): HistoryEntryProps {
   const resource = medication.resource as fhir4.MedicationDispense;
   const medDispense = new MedicationDispenseModel(
     resource,
@@ -193,7 +155,9 @@ function createMedicationDispenseCard(medication: MedicationModel) {
   };
 }
 
-function createMedicationAdminCard(medication: MedicationModel) {
+function createMedicationAdminCard(
+  medication: MedicationModel
+): HistoryEntryProps {
   const resource = medication.resource as fhir4.MedicationAdministration;
   const medAdmin = new MedicationAdministrationModel(
     resource,
