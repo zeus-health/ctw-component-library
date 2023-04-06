@@ -11,7 +11,7 @@ export type AllergyIntolerance = {
   AllergyIntoleranceList: fhir4.AllergyIntolerance[];
 };
 
-export function usePatientAllergies(enableFqs = false) {
+export function usePatientAllergies() {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_ALLERGIES,
     [],

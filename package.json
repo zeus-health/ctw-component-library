@@ -58,7 +58,7 @@
     "@auth0/auth0-react": "^1.12.0",
     "@changesets/cli": "^2.24.3",
     "@faker-js/faker": "^7.6.0",
-    "@kensho-technologies/eslint-config": "^23.1.1",
+    "@kensho-technologies/eslint-config": "^26.1.1",
     "@storybook/addon-actions": "^7.0.2",
     "@storybook/addon-docs": "^7.0.2",
     "@storybook/addon-essentials": "^7.0.2",

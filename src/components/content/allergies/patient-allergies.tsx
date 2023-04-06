@@ -19,10 +19,7 @@ export type PatientAllergiesProps = {
   enableFqs?: boolean;
 };
 
-function PatientAllergiesComponent({
-  className,
-  enableFqs,
-}: PatientAllergiesProps) {
+function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { featureFlags } = useCTW();
   const patientAllergiesQuery = usePatientAllergies();
@@ -51,7 +48,7 @@ function PatientAllergiesComponent({
         filterOptions={{
           onChange: setFilters,
           defaultState: defaultAllergyFilters,
-          filters: allergyFilter(patientAllergiesQuery.data),
+          filters: allergyFilter(),
         }}
         sortOptions={{
           defaultSort: defaultAllergySort,

@@ -11,7 +11,7 @@ export function usePatientDocument() {
     [],
     withTimerMetric(async (requestContext, patient) => {
       try {
-        const { bundle, resources: documents } = await searchCommonRecords(
+        const { resources: documents } = await searchCommonRecords(
           "DocumentReference",
           requestContext,
           {
