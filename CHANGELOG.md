@@ -1,5 +1,14 @@
 # ctw-component-library
 
+## 1.1.7
+
+### Patch Changes
+
+- 61fed282: Update a few packages, including storybook to 7.0.
+- 3c2140bf: Fix linting issues.
+- ac3406e5: Update allergies table/drawers/history.
+- fc95c908: Fix lock file build issues
+
 ## 1.1.6
 
 ### Patch Changes
