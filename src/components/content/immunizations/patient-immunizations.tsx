@@ -29,6 +29,7 @@ function PatientImmunizationsComponent({
   const openDetails = useResourceDetailsDrawer({
     header: (m) => m.description,
     details: immunizationData,
+    getSourceDocument: true,
   });
 
   return (
