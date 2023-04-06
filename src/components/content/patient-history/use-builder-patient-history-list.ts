@@ -3,7 +3,7 @@ import {
   PatientHistoryResponse,
 } from "./use-patient-history";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
-import { PatientHistoryPatient } from "@/fhir/models/patient-history";
+import { PatientHistorytModel } from "@/fhir/models/patient-history";
 import { getBuilderPatientsListByIdentifier } from "@/fhir/patient-helper";
 import { compact } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_HISTORY_LIST } from "@/utils/query-keys";
@@ -36,7 +36,7 @@ export function useBuilderPatientHistoryList(
           const matchingPatientId = messages.filter(
             (message) => message.initialData?.patientId === patient.id
           );
-          return new PatientHistoryPatient(patient, matchingPatientId[0]);
+          return new PatientHistorytModel(patient, matchingPatientId[0]);
         });
 
         return { total: patientData.total, patients: patientHistoryPatients };

@@ -8,7 +8,7 @@ import { Pagination } from "@/components/core/pagination/pagination";
 import { Table } from "@/components/core/table/table";
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { PatientModel } from "@/fhir/models";
-import { PatientHistoryPatient } from "@/fhir/models/patient-history";
+import { PatientHistorytModel } from "@/fhir/models/patient-history";
 import { CTWBox } from "@/index";
 import "./patient-history-table.scss";
 
@@ -27,7 +27,7 @@ export const PatientHistoryTable = withErrorBoundary(
   }: PatientsHistoryTableProps) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [total, setTotal] = useState(0);
-    const [patients, setPatients] = useState<PatientHistoryPatient[]>([]);
+    const [patients, setPatients] = useState<PatientHistorytModel[]>([]);
 
     const {
       data: { patients: responsePatients, total: responseTotal } = {},
@@ -93,23 +93,23 @@ export const PatientHistoryTable = withErrorBoundary(
   "PatientsHistoryTable"
 );
 
-const columns: TableColumn<PatientHistoryPatient>[] = [
+const columns: TableColumn<PatientHistorytModel>[] = [
   {
     title: "Name",
-    render: (patient) => <PatientNameColumn patient={patient} />,
+    render: (data) => <PatientNameColumn data={data} />,
   },
   {
     title: "Initiated",
-    render: (patient) => <div>{patient.createdAt}</div>,
+    render: (data) => <div>{data.createdAt}</div>,
   },
   {
     title: "Status",
-    render: (patient) => (
+    render: (data) => (
       <>
-        {patient.messages?.map((message) => (
+        {data.messages?.map((message) => (
           <div
             className="ctw-status-column"
-            key={`${patient.historyInfo?.messageUuid}-${message.service}`}
+            key={`${data.historyInfo?.messageUuid}-${message.service}`}
           >
             <div className="ctw-capitalize">{message.service}</div>
             <div>-</div>
@@ -121,17 +121,19 @@ const columns: TableColumn<PatientHistoryPatient>[] = [
   },
 ];
 
-const PatientNameColumn = ({ patient }: { patient: PatientHistoryPatient }) => (
+const PatientNameColumn = ({ data }: { data: PatientHistorytModel }) => (
   <div className="ctw-flex ctw-items-center">
     <div className="ctw-ml-4">
       <div className="ctw-flex ctw-font-medium">
-        <div className="ctw-max-w-xs">{patient.resource.fullName}</div>
-        {patient.resource.gender && (
-          <div className="ctw-uppercase"> ({patient.resource.gender[0]})</div>
+        <div className="ctw-max-w-xs">{data.patient.fullName}</div>
+        {data.patient.resource.gender && (
+          <div className="ctw-uppercase">
+            ({data.patient.resource.gender[0]})
+          </div>
         )}
       </div>
       <div className="ctw-text-content-lighter">
-        {patient.resource.dob} ({patient.resource.age})
+        {data.patient.dob} ({data.patient.age})
       </div>
     </div>
   </div>
