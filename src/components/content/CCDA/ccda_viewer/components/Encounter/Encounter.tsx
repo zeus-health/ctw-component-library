@@ -1,6 +1,6 @@
+import { getEncounterData } from "./data";
 import { DocumentOnlyProps } from "../../types";
 import { Table } from "../Table/Table";
-import { getEncounterData } from "./data";
 
 export const Encounter = ({ document }: DocumentOnlyProps) => {
   const encounter = getEncounterData(document);

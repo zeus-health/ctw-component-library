@@ -1,7 +1,7 @@
+import { FHIRModel } from "./fhir-model";
 import { findCoding } from "../codeable-concept";
 import { formatDateISOToLocal } from "../formatters";
 import { SYSTEM_CVX } from "../system-urls";
-import { FHIRModel } from "./fhir-model";
 
 export class ImmunizationModel extends FHIRModel<fhir4.Immunization> {
   kind = "Immunization" as const;

@@ -2,21 +2,8 @@ import type { ReactNode } from "react";
 import { Auth0Provider } from "@auth0/auth0-react";
 import { ErrorBoundary } from "./error-boundary";
 import { SecuredApp } from "@/SecuredApp";
-import {
-  CTWProvider,
-  PatientAllergies,
-  PatientCareTeam,
-  PatientConditions,
-  PatientDocuments,
-  PatientImmunizations,
-  PatientMedications,
-  PatientProvider,
-  PatientSearch,
-  PatientTimeline,
-  ZusAggregatedProfile,
-} from ".";
+import { CTWProvider, PatientProvider, ZusAggregatedProfile } from ".";
 import "./App.css";
-import { PatientTimelineV2 } from "./components/content/timeline-2.0/patient-timeline";
 
 const {
   VITE_SYSTEM_URL,
@@ -63,52 +50,12 @@ const demoComponents: DemoComponent[] = [
   {
     render: () => (
       <ZusAggregatedProfile
-        resources={["observations-outside", "observations"]}
-        title="Observations"
+        resources={["allergies", "conditions", "conditions-outside"]}
+        title="Allergies"
       />
     ),
-    title: "Patient Observations",
+    title: "Patient Allergies",
   },
-  { render: () => <PatientCareTeam />, title: "Patient CareTeam" },
-  {
-    render: () => (
-      <ZusAggregatedProfile
-        resources={[
-          "conditions-outside",
-          "medications-outside",
-          "allergies",
-          "immunizations",
-          "documents",
-          "care-team",
-          "timelines",
-        ]}
-        conditionsOutsideProps={{
-          hideRequestRecords: true,
-          readOnly: true,
-        }}
-        medicationsOutsideProps={{
-          readOnly: true,
-        }}
-      />
-    ),
-    title: "ZAP",
-  },
-  {
-    render: () => <PatientMedications />,
-    title: "Patient Medications",
-  },
-  {
-    render: () => <PatientConditions />,
-    title: "Patient Conditions",
-  },
-  {
-    render: () => <PatientDocuments />,
-    title: "Patient Documents",
-  },
-  { render: () => <PatientAllergies />, title: "Patient Allergies" },
-  { render: () => <PatientImmunizations />, title: "Patient Immunizations" },
-  { render: () => <PatientSearch />, title: "Patient Search" },
-  { render: () => <PatientTimelineV2 />, title: "Patient Timeline" },
 ];
 
 const DemoApp = ({ accessToken = "" }) => (

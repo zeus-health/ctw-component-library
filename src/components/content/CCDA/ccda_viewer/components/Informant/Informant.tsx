@@ -1,6 +1,6 @@
+import { getInformantData } from "./data";
 import { DocumentOnlyProps } from "../../types";
 import { Table } from "../Table/Table";
-import { getInformantData } from "./data";
 import { isEmpty } from "@/utils/nodash";
 
 export const Informant = ({ document }: DocumentOnlyProps) => {

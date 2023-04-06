@@ -1,13 +1,13 @@
 import cx from "classnames";
 import { ReactElement, ReactNode, useEffect, useRef, useState } from "react";
-import {
-  DEFAULT_PAGE_SIZE,
-  PaginationList,
-} from "../pagination/pagination-list";
 import { TableColGroup } from "./table-colgroup";
 import { TableHead } from "./table-head";
 import { MinRecordItem, TableColumn } from "./table-helpers";
 import { TableRows, TableRowsProps } from "./table-rows";
+import {
+  DEFAULT_PAGE_SIZE,
+  PaginationList,
+} from "../pagination/pagination-list";
 import "./table.scss";
 
 export type RowActionsProps<T extends MinRecordItem> = { record: T };
