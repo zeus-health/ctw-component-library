@@ -35,15 +35,14 @@ export const schedulePatientHistory = async (
       },
       body: JSON.stringify({ systemURL, patientID }),
     });
-
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
     return await response.json();
   } catch (e) {
-    Telemetry.logError(
-      e as Error,
-      `Error scheduling patient history job with id of ${patientID}`
-    );
-    return new Error(
-      `Error scheduling patient history job with id of ${patientID}`
-    );
+    const err = e as Error;
+    const errorMessage = `Error scheduling patient history job with id of ${patientID}: ${err.message}`;
+    Telemetry.logError(err, errorMessage);
+    return new Error(errorMessage);
   }
 };
