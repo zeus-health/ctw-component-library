@@ -1,8 +1,7 @@
-/* eslint-disable import/order */
+import { FHIRModel } from "./fhir-model";
 import { ALLERGY_CODE_PREFERENCE_ORDER } from "../allergies";
 import { formatDateISOToLocal } from "../formatters";
 import { findReference } from "../resource-helper";
-import { FHIRModel } from "./fhir-model";
 import { codeableConceptLabel, findCoding } from "@/fhir/codeable-concept";
 import { displayOnset } from "@/fhir/display-onset";
 import { compact, uniqWith } from "@/utils/nodash";
