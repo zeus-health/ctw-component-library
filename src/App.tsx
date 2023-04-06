@@ -50,6 +50,7 @@ const demoComponents: DemoComponent[] = [
   {
     render: () => (
       <ZusAggregatedProfile
+        includePatientDemographicsForm={false}
         resources={["allergies", "conditions", "conditions-outside"]}
         title="Allergies"
       />
