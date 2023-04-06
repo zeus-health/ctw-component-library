@@ -1,11 +1,11 @@
 import { Resource } from "fhir/r4";
-import { codeableConceptLabel } from "../codeable-concept";
-import { ResourceMap } from "../types";
 import { DiagnosticReportModel } from "./diagnostic-report";
 import { EncounterModel } from "./encounter";
 import { FHIRModel } from "./fhir-model";
 import { MedicationDispenseModel } from "./medication-dispense";
 import { MedicationRequestModel } from "./medication-request";
+import { codeableConceptLabel } from "../codeable-concept";
+import { ResourceMap } from "../types";
 import { compact } from "@/utils/nodash";
 
 export type TimelineEventResource =

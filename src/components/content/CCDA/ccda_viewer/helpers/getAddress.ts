@@ -1,6 +1,6 @@
 import xpath from "xpath";
-import { ModifiedAddress } from "../types";
 import { displayForAddress } from "./displayForAddress";
+import { ModifiedAddress } from "../types";
 import { isArray, map } from "@/utils/nodash";
 
 export const addressUseMap: Record<string, string> = {

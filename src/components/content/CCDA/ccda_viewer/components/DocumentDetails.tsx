@@ -1,4 +1,3 @@
-import { DocumentOnlyProps } from "../types";
 import { Authenticator } from "./Authenticator/Authenticator";
 import { Author } from "./Author/Author";
 import { Authorization } from "./Authorization/Authorization";
@@ -13,6 +12,7 @@ import { InFulfillmentOf } from "./InFulfillmentOf/InFulfillmentOf";
 import { LegalAuthenticator } from "./LegalAuthenticator/LegalAuthenticator";
 import { Participant } from "./Participant/Participant";
 import { Patient } from "./Patient/Patient";
+import { DocumentOnlyProps } from "../types";
 import "../../styles.scss";
 
 export const DocumentDetails = ({ document }: DocumentOnlyProps) => (

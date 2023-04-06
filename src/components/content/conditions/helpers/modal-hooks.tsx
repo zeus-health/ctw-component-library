@@ -1,3 +1,4 @@
+import { ConditionHeader } from "./condition-header";
 import {
   createOrEditCondition,
   getAddConditionWithDefaults,
@@ -8,7 +9,6 @@ import {
   getAddConditionData,
   getEditingPatientConditionData,
 } from "../../forms/schemas/condition-schema";
-import { ConditionHeader } from "./condition-header";
 import { DrawerFormWithFields } from "@/components/core/form/drawer-form-with-fields";
 import { ModalConfirmDelete } from "@/components/core/modal-confirm-delete";
 import { useDrawer } from "@/components/core/providers/drawer-provider";

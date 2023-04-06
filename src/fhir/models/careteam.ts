@@ -1,8 +1,8 @@
+import { FHIRModel } from "./fhir-model";
+import { PractitionerModel } from "./practitioner";
 import { codeableConceptLabel } from "../codeable-concept";
 import { formatDateISOToLocal } from "../formatters";
 import { findReference } from "../resource-helper";
-import { FHIRModel } from "./fhir-model";
-import { PractitionerModel } from "./practitioner";
 import { find } from "@/utils/nodash";
 
 export class CareTeamModel extends FHIRModel<fhir4.CareTeam> {

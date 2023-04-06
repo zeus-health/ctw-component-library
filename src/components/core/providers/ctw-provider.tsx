@@ -8,7 +8,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { version } from "../../../../package.json";
 import {
   CTWRequestContext,
   CTWState,
@@ -16,6 +15,7 @@ import {
   CTWToken,
   FeatureFlags,
 } from "./ctw-context";
+import { version } from "../../../../package.json";
 import { getFhirClient } from "@/fhir/client";
 import i18next, { Locals } from "@/i18n";
 import {

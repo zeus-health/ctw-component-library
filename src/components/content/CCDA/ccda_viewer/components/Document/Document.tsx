@@ -1,6 +1,6 @@
+import { getDocumentData } from "./data";
 import { DocumentOnlyProps } from "../../types";
 import { Table } from "../Table/Table";
-import { getDocumentData } from "./data";
 
 export const Document = ({ document }: DocumentOnlyProps) => {
   const {
