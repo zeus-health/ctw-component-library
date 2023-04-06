@@ -1,12 +1,18 @@
 import cx from "classnames";
 import { useRef } from "react";
+import { allergyFilter, defaultAllergyFilters } from "./helpers/filters";
+import { useAllergiesHistory } from "./helpers/history";
+import { allergySortOptions, defaultAllergySort } from "./helpers/sort";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
+import { ResourceTable } from "../resource/resource-table";
+import { ResourceTableActions } from "../resource/resource-table-actions";
 import { patientAllergiesColumns } from "@/components/content/allergies/patient-allergies-column";
 import { withErrorBoundary } from "@/components/core/error-boundary";
-import { Table } from "@/components/core/table/table";
+import { useCTW } from "@/components/core/providers/ctw-provider";
 import { usePatientAllergies } from "@/fhir/allergies";
 import { AllergyModel } from "@/fhir/models/allergies";
-import { useBreakpoints } from "@/hooks/use-breakpoints";
+import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
+import { capitalize } from "@/utils/nodash";
 
 export type PatientAllergiesProps = {
   className?: string;
@@ -18,16 +24,21 @@ function PatientAllergiesComponent({
   enableFqs,
 }: PatientAllergiesProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const breakpoints = useBreakpoints(containerRef);
-  const patientAllergiesQuery = usePatientAllergies(enableFqs);
+  const { featureFlags } = useCTW();
+  const patientAllergiesQuery = usePatientAllergies();
+  const { data, setFilters, setSort } = useFilteredSortedData({
+    defaultFilters: defaultAllergyFilters,
+    defaultSort: defaultAllergySort,
+    records: patientAllergiesQuery.data,
+  });
   const openDetails = useResourceDetailsDrawer({
-    header: (m) => m.display,
+    header: (m) => capitalize(m.display),
     details: allergyData,
+    getHistory: useAllergiesHistory,
     getSourceDocument: true,
   });
 
   // Get our allergies.
-  const allergies = patientAllergiesQuery.data ?? [];
   const { isLoading } = patientAllergiesQuery;
 
   return (
@@ -36,13 +47,25 @@ function PatientAllergiesComponent({
       ref={containerRef}
       data-zus-telemetry-namespace="Allergies"
     >
+      <ResourceTableActions
+        filterOptions={{
+          onChange: setFilters,
+          defaultState: defaultAllergyFilters,
+          filters: allergyFilter(patientAllergiesQuery.data),
+        }}
+        sortOptions={{
+          defaultSort: defaultAllergySort,
+          options: allergySortOptions,
+          onChange: setSort,
+        }}
+      />
       <div className="ctw-scrollable-pass-through-height">
-        <Table
-          stacked={breakpoints.sm}
+        <ResourceTable
+          showTableHead
           isLoading={isLoading}
-          records={allergies}
-          columns={patientAllergiesColumns}
-          handleRowClick={openDetails}
+          data={data}
+          columns={patientAllergiesColumns(featureFlags?.enableViewFhirButton)}
+          onRowClick={openDetails}
         />
       </div>
     </div>
@@ -55,9 +78,13 @@ export const PatientAllergies = withErrorBoundary(
 );
 
 const allergyData = (allergy: AllergyModel) => [
+  { label: "Recorded Date", value: allergy.recordedDate },
+  { label: "Recording Organization", value: allergy.managingOrganization },
+  { label: "Status", value: allergy.clinicalStatus },
+  { label: "Type", value: capitalize(allergy.type) },
+  { label: "Category", value: capitalize(allergy.categories) },
   { label: "Onset", value: allergy.onset },
-  { label: "Description", value: allergy.display },
-  { label: "Type", value: allergy.type },
-  { label: "Category", value: allergy.categories },
-  { label: "Manifestations", value: allergy.manifestations },
+  { label: "Manifestation", value: capitalize(allergy.manifestations) },
+  { label: "Severity", value: capitalize(allergy.severity) },
+  { label: "Note", value: allergy.note },
 ];
