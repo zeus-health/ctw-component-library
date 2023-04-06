@@ -1,5 +1,9 @@
 import cx from "classnames";
 import { ReactElement } from "react";
+import { patientConditionsColumns } from "./columns";
+import { useConditionDetailsDrawer } from "./details";
+import { conditionFilters, defaultConditionFilters } from "./filters";
+import { conditionSortOptions, defaultConditionSort } from "./sorts";
 import {
   ResourceTable,
   ResourceTableProps,
@@ -8,10 +12,6 @@ import {
   ResourceTableActions,
   ResourceTableActionsProps,
 } from "../../resource/resource-table-actions";
-import { patientConditionsColumns } from "./columns";
-import { useConditionDetailsDrawer } from "./details";
-import { conditionFilters, defaultConditionFilters } from "./filters";
-import { conditionSortOptions, defaultConditionSort } from "./sorts";
 import "./patient-conditions.scss";
 import { ConditionModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";

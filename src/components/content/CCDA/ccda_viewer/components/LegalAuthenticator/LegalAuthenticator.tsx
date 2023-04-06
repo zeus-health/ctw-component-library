@@ -1,6 +1,6 @@
+import { getLegalAuthenticatorData } from "./data";
 import { DocumentOnlyProps } from "../../types";
 import { Table } from "../Table/Table";
-import { getLegalAuthenticatorData } from "./data";
 
 export const LegalAuthenticator = ({ document }: DocumentOnlyProps) => {
   const legalAuthenticator = getLegalAuthenticatorData(document);

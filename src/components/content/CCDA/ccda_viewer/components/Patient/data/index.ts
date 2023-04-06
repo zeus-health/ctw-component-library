@@ -1,6 +1,4 @@
 import xpath from "xpath";
-import { getContactDetails } from "../../../helpers";
-import { getPatient as getPatientDataFromHeader } from "../../Header/data/getPatient";
 import { getBirthPlace } from "./getBirthPlace";
 import { getEthnicity } from "./getEthnicity";
 import { getGuardian } from "./getGuardian";
@@ -9,6 +7,8 @@ import { getMaritalStatus } from "./getMaritalStatus";
 import { getProviderOrganization } from "./getProviderOrganization";
 import { getRace } from "./getRace";
 import { getReligion } from "./getReligion";
+import { getContactDetails } from "../../../helpers";
+import { getPatient as getPatientDataFromHeader } from "../../Header/data/getPatient";
 import { camelCase, isEmpty } from "@/utils/nodash";
 
 export const getPatientData = (document: Document) => {

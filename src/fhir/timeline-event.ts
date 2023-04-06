@@ -1,15 +1,15 @@
 import { Resource } from "fhir/r4";
 import { useEffect, useState } from "react";
-import {
-  useQueryGetPatientMedDispenseCommon,
-  useQueryGetPatientMedRequestsCommon,
-} from "..";
 import { usePatientDiagnosticReportsOutside } from "./diagnostic-report";
 import { usePatientEncounters } from "./encounters";
 import {
   TimelineEventModel,
   TimelineEventResource,
 } from "./models/timeline-event";
+import {
+  useQueryGetPatientMedDispenseCommon,
+  useQueryGetPatientMedRequestsCommon,
+} from "..";
 import { ResourceMap } from "@/fhir/types";
 import { compact, concat, flatten, some } from "@/utils/nodash";
 import { applySorts } from "@/utils/sort";

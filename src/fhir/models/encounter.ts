@@ -1,7 +1,7 @@
 import { Coding } from "fhir/r4";
+import { FHIRModel } from "./fhir-model";
 import { codeableConceptLabel } from "../codeable-concept";
 import { formatDateISOToLocal } from "../formatters";
-import { FHIRModel } from "./fhir-model";
 import { isNullFlavorSystem } from "@/fhir/mappings/null-flavor";
 import { compact, flatten, uniq } from "@/utils/nodash";
 

@@ -1,6 +1,6 @@
+import { getCustodianData } from "./data";
 import { DocumentOnlyProps } from "../../types";
 import { Table } from "../Table/Table";
-import { getCustodianData } from "./data";
 
 export const Custodian = ({ document }: DocumentOnlyProps) => {
   const custodian = getCustodianData(document);
