@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.1.6
+
+### Patch Changes
+
+- 00d01a45: Refactors medication details drawer and cleans up UI.
+- 813a8e30: Fix source document linking issue.
+
 ## 1.1.5
 
 ### Patch Changes
