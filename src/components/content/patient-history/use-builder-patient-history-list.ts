@@ -5,7 +5,7 @@ import {
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { PatientHistorytModel } from "@/fhir/models/patient-history";
 import { getBuilderPatientsListByIdentifier } from "@/fhir/patient-helper";
-import { compact } from "@/utils/nodash";
+import { compact, uniq } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_HISTORY_LIST } from "@/utils/query-keys";
 import { Telemetry } from "@/utils/telemetry";
 
@@ -22,8 +22,8 @@ export function useBuilderPatientHistoryList(
           await getBuilderRefreshHistoryMessages(requestContext)
         ).data as PatientHistoryResponse[];
 
-        const patientsIds = compact(
-          messages.map((message) => message.initialData?.patientId)
+        const patientsIds = uniq(
+          compact(messages.map((message) => message.initialData?.patientId))
         );
 
         const patientData = await getBuilderPatientsListByIdentifier(

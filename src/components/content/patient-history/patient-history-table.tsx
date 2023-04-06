@@ -22,7 +22,7 @@ export const PatientHistoryTable = withErrorBoundary(
   ({
     className,
 
-    pageSize = 5,
+    pageSize = 30,
     title = "Patient History Request",
   }: PatientsHistoryTableProps) => {
     const [currentPage, setCurrentPage] = useState(1);
