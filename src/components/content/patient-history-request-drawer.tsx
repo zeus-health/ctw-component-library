@@ -3,6 +3,7 @@ import { PatientFormData } from "./forms/actions/patients";
 import {
   getRequestData,
   requestHistorySchema,
+  savePatientAndRequestHistorySchema,
 } from "./forms/schemas/request-history-schema";
 import {
   DrawerFormWithFields,
@@ -13,12 +14,6 @@ import {
   useHandlePatientSave,
   usePatientContext,
 } from "../core/providers/patient-provider";
-import { PatientFormData } from "./forms/actions/patients";
-import {
-  getRequestData,
-  requestHistorySchema,
-  savePatientAndRequestHistorySchema,
-} from "./forms/schemas/request-history-schema";
 import {
   PatientHistoryResponseError,
   schedulePatientHistory,
