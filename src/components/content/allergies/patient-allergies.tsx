@@ -23,6 +23,7 @@ function PatientAllergiesComponent({
   const openDetails = useResourceDetailsDrawer({
     header: (m) => m.display,
     details: allergyData,
+    getSourceDocument: true,
   });
 
   // Get our allergies.

@@ -1,4 +1,4 @@
-import { MedicationDrawer } from "../../medications/history/medication-drawer";
+import { useMedicationDetailsDrawer } from "../../medications/helpers/details";
 import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
 import { CodingList } from "@/components/core/coding-list";
 import { DrawerProps } from "@/components/core/drawer";
@@ -36,7 +36,7 @@ export const encounterData = (encounter: EncounterModel) => [
   { label: "Discharge Disposition", value: encounter.dischargeDisposition },
 ];
 
-export function useMedicationStatementDetailsDrawer() {
+export function useDispenseRequestDetailsDrawer() {
   const { openDrawer } = useDrawer();
 
   return (
@@ -60,8 +60,9 @@ type MedicationDrawerComponentProps = {
 const MedicationDrawerComponent = (props: MedicationDrawerComponentProps) => {
   const { medicationEventModel } = props;
   const medStatement = useQueryMedicationStatement(medicationEventModel.rxNorm);
+  const openDrawer = useMedicationDetailsDrawer();
   if (medStatement.data?.length) {
-    return <MedicationDrawer medication={medStatement.data[0]} {...props} />;
+    openDrawer(medStatement.data[0]);
   }
   return null;
 };

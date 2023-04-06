@@ -1,6 +1,6 @@
 import type { FilterItem } from "./filter-bar-types";
-import { ListBoxOptionStatus } from "../list-box/list-box";
 import { FilterChangeEvent, FilterValuesRecord } from "./filter-bar-types";
+import { ListBoxOptionStatus } from "../list-box/list-box";
 import { isFunction, set } from "@/utils/nodash/fp";
 
 export function displayFilterItem(

@@ -1,6 +1,6 @@
-import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
 import { useConditionHistory } from "./history";
 import { useConfirmDeleteCondition, useEditConditionForm } from "./modal-hooks";
+import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
 import { NotesList } from "@/components/core/notes-list";
 import { ConditionModel } from "@/fhir/models";
 import { capitalize } from "@/utils/nodash";

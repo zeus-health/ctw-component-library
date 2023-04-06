@@ -1,5 +1,5 @@
-import { SYSTEM_CONDITION_CLINICAL } from "../system-urls";
 import { ConditionModel } from "./condition";
+import { SYSTEM_CONDITION_CLINICAL } from "../system-urls";
 import { clone } from "@/utils/nodash";
 
 const getConditionStatus = (

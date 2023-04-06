@@ -1,9 +1,9 @@
+import { PatientMedicationsProps } from "./patient-medications";
+import { PatientMedicationsOutsideProps } from "./patient-medications-outside";
 import {
   ZusAggregatedProfile,
   ZusAggregatedProfileProps,
 } from "../zus-aggregated-profile/zus-aggregated-profile";
-import { PatientMedicationsProps } from "./patient-medications";
-import { PatientMedicationsOutsideProps } from "./patient-medications-outside";
 
 export type PatientMedicationsProfileProps = Omit<
   ZusAggregatedProfileProps,
