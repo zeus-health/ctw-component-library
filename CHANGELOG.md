@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.1.8
+
+### Patch Changes
+
+- 35ac152c: Fix bug with source document for care teams and immunizations.
+
 ## 1.1.7
 
 ### Patch Changes
