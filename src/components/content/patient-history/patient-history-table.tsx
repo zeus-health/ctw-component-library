@@ -1,8 +1,8 @@
 import { SearchIcon } from "@heroicons/react/outline";
 import cx from "classnames";
 import { useEffect, useState } from "react";
-import { TableOptionProps } from "../patients/patients-table";
 import { useBuilderPatientHistoryList } from "./use-builder-patient-history-list";
+import { TableOptionProps } from "../patients/patients-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Pagination } from "@/components/core/pagination/pagination";
 import { Table } from "@/components/core/table/table";
@@ -10,6 +10,7 @@ import { TableColumn } from "@/components/core/table/table-helpers";
 import { PatientModel } from "@/fhir/models";
 import { PatientHistoryPatient } from "@/fhir/models/patient-history";
 import { CTWBox } from "@/index";
+import "./patient-history-table.scss";
 
 export type PatientsHistoryTableProps = {
   className?: cx.Argument;
@@ -98,8 +99,25 @@ const columns: TableColumn<PatientHistoryPatient>[] = [
     render: (patient) => <PatientNameColumn patient={patient} />,
   },
   {
-    title: "Last Retrieved",
-    render: (patient) => <div>{patient.lastRetrievedAt}</div>,
+    title: "Initiated",
+    render: (patient) => <div>{patient.createdAt}</div>,
+  },
+  {
+    title: "Status",
+    render: (patient) => (
+      <>
+        {patient.messages?.map((message) => (
+          <div
+            className="ctw-status-column"
+            key={`${patient.historyInfo?.messageUuid}-${message.service}`}
+          >
+            <div className="ctw-capitalize">{message.service}</div>
+            <div>-</div>
+            <div>{message.status}</div>
+          </div>
+        ))}
+      </>
+    ),
   },
 ];
 

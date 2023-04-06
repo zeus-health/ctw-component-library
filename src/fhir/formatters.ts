@@ -121,3 +121,12 @@ export function formatISODateStringToDate(
 
   return `${month}/${day}/${year}`;
 }
+
+export function formatDate(
+  dateStr: string | undefined,
+  pattern: string
+): string | undefined {
+  if (!dateStr) return undefined;
+
+  return format(new Date(dateStr), pattern);
+}
