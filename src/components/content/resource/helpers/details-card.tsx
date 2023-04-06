@@ -18,7 +18,7 @@ export const DetailsCard = ({
   >
     <dl className="ctw-m-0 ctw-space-y-2 ctw-px-4 ctw-py-6">
       <div className="ctw-flex ctw-justify-between ctw-space-x-2 ctw-text-sm ctw-uppercase ctw-text-content-light">
-        <div className="ctw-title-container">Summary</div>
+        <div className="ctw-title-container">Details</div>
         <div className="ctw-flex">{documentButton}</div>
       </div>
       {details

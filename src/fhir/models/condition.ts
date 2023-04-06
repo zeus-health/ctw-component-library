@@ -357,5 +357,5 @@ export const outsideConditionStatuses = [
 ] as const;
 
 export type ConditionStatuses =
-  | typeof conditionStatuses[number]
-  | typeof outsideConditionStatuses[number];
+  | (typeof conditionStatuses)[number]
+  | (typeof outsideConditionStatuses)[number];
