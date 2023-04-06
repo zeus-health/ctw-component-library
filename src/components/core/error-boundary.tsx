@@ -66,7 +66,7 @@ export class ErrorBoundary extends Component<Props, State> {
             title="Sorry, we have encountered an error."
             className="ctw-flex ctw-items-center ctw-justify-between"
           >
-            <div className="ctw-py-1 ctw-px-5">
+            <div className="ctw-px-5 ctw-py-1">
               <p>{state.error?.message || "Unknown"}</p>
               <button
                 type="button"
