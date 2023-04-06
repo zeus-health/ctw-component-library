@@ -34,6 +34,7 @@ export type ScheduleHistoryFormData = {
   name: string;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const PatientHistoryRequestDrawer = <T,>({
   patient,
   header,

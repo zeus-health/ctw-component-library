@@ -7,7 +7,6 @@ import { capitalize } from "@/utils/nodash";
 
 export const useConditionDetailsDrawer = ({
   canEdit,
-  canRemove,
 }: {
   canEdit: boolean;
   canRemove: boolean;

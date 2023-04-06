@@ -67,7 +67,7 @@ export function useHistory<
 
         const constructor = model.constructor as new (
           r: ResourceType<T>,
-          includedResources: ResourceMap
+          includedRes: ResourceMap
         ) => M;
         const models = [...resources, ...versions].map(
           (c) => new constructor(c, includedResources)
