@@ -1,7 +1,7 @@
 /* eslint-disable react/no-array-index-key */
-import { TableInfo } from "../../types";
 import { BasicRow } from "./BasicRow";
 import { TupleRow } from "./TupleRow";
+import { TableInfo } from "../../types";
 import { chunk, isArray, partition } from "@/utils/nodash";
 import "../../../styles.scss";
 

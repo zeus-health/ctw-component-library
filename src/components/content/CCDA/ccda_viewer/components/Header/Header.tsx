@@ -1,6 +1,6 @@
 /* eslint-disable react/no-array-index-key */
-import { DocumentOnlyProps, LabelValueType } from "../../types";
 import { getHeaderData } from "./data";
+import { DocumentOnlyProps, LabelValueType } from "../../types";
 import { isEmpty, map, startCase } from "@/utils/nodash";
 import "../../../styles.scss";
 

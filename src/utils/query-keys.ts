@@ -1,6 +1,7 @@
 export const QUERY_KEY_AUTH_TOKEN = "auth_token";
 export const QUERY_KEY_BINARY = "binary";
 export const QUERY_KEY_CARETEAM = "patient_care_team";
+export const QUERY_KEY_ALLERGY_HISTORY = "allergy_history";
 export const QUERY_KEY_CONDITION_HISTORY = "condition_history";
 export const QUERY_KEY_MEDICATION_HISTORY = "medication_history";
 export const QUERY_KEY_OTHER_PROVIDER_CONDITIONS = "other_provider_conditions";

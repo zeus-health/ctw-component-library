@@ -31,7 +31,7 @@ export const Base64BinaryField = ({
 
     const xmlDocument = new DOMParser({
       locator: {},
-      errorHandler: (_) => null,
+      errorHandler: () => null,
     }).parseFromString(
       Buffer.from(data, "base64").toString("utf8"),
       contentType

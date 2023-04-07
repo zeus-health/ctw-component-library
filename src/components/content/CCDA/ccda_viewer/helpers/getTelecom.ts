@@ -1,6 +1,6 @@
 import xpath from "xpath";
-import { ModifiedContactPoint } from "../types";
 import { displayForTelecom } from "./displayForTelecom";
+import { ModifiedContactPoint } from "../types";
 import { isArray } from "@/utils/nodash";
 
 export const contactPointUseMap: Record<string, string> = {

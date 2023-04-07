@@ -1,5 +1,10 @@
 import { QueryClient } from "@tanstack/react-query";
 
+export type UseQueryResultBasic<T> = {
+  data: T;
+  isLoading: boolean;
+};
+
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

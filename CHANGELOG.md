@@ -1,5 +1,39 @@
 # ctw-component-library
 
+## 1.1.8
+
+### Patch Changes
+
+- 35ac152c: Fix bug with source document for care teams and immunizations.
+
+## 1.1.7
+
+### Patch Changes
+
+- 61fed282: Update a few packages, including storybook to 7.0.
+- 3c2140bf: Fix linting issues.
+- ac3406e5: Update allergies table/drawers/history.
+- fc95c908: Fix lock file build issues
+
+## 1.1.6
+
+### Patch Changes
+
+- 00d01a45: Refactors medication details drawer and cleans up UI.
+- 813a8e30: Fix source document linking issue.
+
+## 1.1.5
+
+### Patch Changes
+
+- 685808fd: Adjust storybook/addon-actions to be dev dependency.
+
+## 1.1.4
+
+### Patch Changes
+
+- 53e4d005: Move patch-package from devDependencies to dependencies.
+
 ## 1.1.3
 
 ### Patch Changes

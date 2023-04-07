@@ -1,5 +1,5 @@
-import { useQueryWithPatient } from "..";
 import { searchCommonRecords } from "./search-helpers";
+import { useQueryWithPatient } from "..";
 import { applyDocumentFilters } from "@/components/content/document/patient-document-filters";
 import { orderBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_DOCUMENTS } from "@/utils/query-keys";
@@ -11,7 +11,7 @@ export function usePatientDocument() {
     [],
     withTimerMetric(async (requestContext, patient) => {
       try {
-        const { bundle, resources: documents } = await searchCommonRecords(
+        const { resources: documents } = await searchCommonRecords(
           "DocumentReference",
           requestContext,
           {

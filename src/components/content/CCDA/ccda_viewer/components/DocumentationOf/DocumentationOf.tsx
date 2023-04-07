@@ -1,6 +1,6 @@
+import { getDocumentationOfData } from "./data";
 import { DocumentOnlyProps } from "../../types";
 import { Table } from "../Table/Table";
-import { getDocumentationOfData } from "./data";
 import { isEmpty } from "@/utils/nodash";
 
 export const DocumentationOf = ({ document }: DocumentOnlyProps) => {

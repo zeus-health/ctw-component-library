@@ -11,7 +11,7 @@ export function usePatientImmunizations() {
     [],
     withTimerMetric(async (requestContext, patient) => {
       try {
-        const { bundle, resources: immunizations } = await searchCommonRecords(
+        const { resources: immunizations } = await searchCommonRecords(
           "Immunization",
           requestContext,
           {

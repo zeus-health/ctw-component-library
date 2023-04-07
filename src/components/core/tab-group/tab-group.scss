@@ -2,7 +2,7 @@
   .ctw-tab {
     @apply ctw-relative ctw-mr-5 ctw-flex ctw-cursor-pointer ctw-items-center ctw-border-0 ctw-border-transparent ctw-bg-transparent ctw-px-1.5 ctw-py-4;
     &:after {
-      @apply ctw-absolute ctw-left-0 ctw-bottom-0 ctw-block ctw-h-0.5 ctw-w-full;
+      @apply ctw-absolute ctw-bottom-0 ctw-left-0 ctw-block ctw-h-0.5 ctw-w-full;
       content: "";
     }
   }

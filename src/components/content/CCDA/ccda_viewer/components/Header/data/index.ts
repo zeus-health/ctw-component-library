@@ -1,4 +1,3 @@
-import { LabelValueType } from "../../../types";
 import { getAuthor } from "./getAuthor";
 import { getConsent } from "./getConsent";
 import { getDocumentationOf } from "./getDocumentationOf";
@@ -6,6 +5,7 @@ import { getEncounter } from "./getEncounter";
 import { getInFulfillmentOf } from "./getInFulfillmentOf";
 import { getPatient } from "./getPatient";
 import { getTitle } from "./getTitle";
+import { LabelValueType } from "../../../types";
 
 export const getHeaderData = (
   document: Document

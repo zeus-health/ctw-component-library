@@ -1,4 +1,8 @@
 import cx from "classnames";
+import { patientMedicationColumns } from "./columns";
+import { useMedicationDetailsDrawer } from "./details";
+import { defaultMedicationFilters } from "./filters";
+import { defaultMedicationSort, medicationSortOptions } from "./sorts";
 import { ViewOption } from "../../resource/helpers/view-button";
 import {
   ResourceTable,
@@ -8,10 +12,6 @@ import {
   ResourceTableActions,
   ResourceTableActionsProps,
 } from "../../resource/resource-table-actions";
-import { useMedicationHistory } from "../history/medication-history-drawer";
-import { patientMedicationColumns } from "./columns";
-import { defaultMedicationFilters } from "./filters";
-import { defaultMedicationSort, medicationSortOptions } from "./sorts";
 import { FilterItem } from "@/components/core/filter-bar/filter-bar-types";
 import { MedicationStatementModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
@@ -39,7 +39,7 @@ export const PatientMedicationsBase = ({
   views,
   onOpenHistoryDrawer,
 }: PatientMedicationsBaseProps) => {
-  const showMedicationHistory = useMedicationHistory();
+  const openDetailsDrawer = useMedicationDetailsDrawer();
   const { data, setFilters, setSort, setViewOption } = useFilteredSortedData({
     defaultView,
     defaultFilters: defaultMedicationFilters,
@@ -49,7 +49,7 @@ export const PatientMedicationsBase = ({
 
   function handleRowClick(medication: MedicationStatementModel) {
     onOpenHistoryDrawer?.();
-    showMedicationHistory({ medication });
+    openDetailsDrawer(medication);
   }
 
   return (

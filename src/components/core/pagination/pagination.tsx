@@ -40,7 +40,7 @@ export const Pagination = ({
 
   return (
     <div
-      className="ctw-flex ctw-justify-between ctw-py-3 ctw-px-6"
+      className="ctw-flex ctw-justify-between ctw-px-6 ctw-py-3"
       data-zus-telemetry-namespace="Pagination"
     >
       <div className="ctw-text-gray-600 ctw-text-sm">

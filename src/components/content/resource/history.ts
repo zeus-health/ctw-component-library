@@ -21,6 +21,7 @@ export type UseHistoryProps<
   resourceType: T;
   model: M;
   queryKey: string;
+  includeVersionHistory?: boolean;
   valuesToDedupeOn: (m: M) => unknown;
   getSearchParams: (m: M) => SearchParams;
   getHistoryEntry: (m: M) => HistoryEntryProps;
@@ -33,6 +34,7 @@ export function useHistory<
   resourceType,
   model,
   queryKey,
+  includeVersionHistory = true,
   valuesToDedupeOn,
   getSearchParams,
   getHistoryEntry,
@@ -54,15 +56,18 @@ export function useHistory<
         );
         const includedResources = getIncludedResources(bundle);
 
-        const versions = await getVersionHistory(
-          resourceType,
-          requestContext,
-          searchParams
-        );
+        let versions: ResourceType<T>[] = [];
+        if (includeVersionHistory) {
+          versions = await getVersionHistory(
+            resourceType,
+            requestContext,
+            searchParams
+          );
+        }
 
         const constructor = model.constructor as new (
           r: ResourceType<T>,
-          includedResources: ResourceMap
+          includedRes: ResourceMap
         ) => M;
         const models = [...resources, ...versions].map(
           (c) => new constructor(c, includedResources)

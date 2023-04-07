@@ -1,18 +1,15 @@
 import cx from "classnames";
-import { useObservationsDetailsDrawer } from "../observations/helpers/drawer";
-import { ResourceTableActions } from "../resource/resource-table-actions";
 import { defaultTimelineFilters, timelineFilters } from "./helpers/filters";
 import {
-  useMedicationStatementDetailsDrawer,
+  useDispenseRequestDetailsDrawer,
   usePatientEncounterDetailsDrawer,
 } from "./helpers/modal-hooks";
 import { defaultTimelineSort, timelineSortOptions } from "./helpers/sorts";
 import { patientTimelineColumns } from "./patient-timeline-columns";
+import { useObservationsDetailsDrawer } from "../observations/helpers/drawer";
+import { ResourceTableActions } from "../resource/resource-table-actions";
 import { ResourceTable } from "@/components/content/resource/resource-table";
 import { useCTW } from "@/components/core/providers/ctw-provider";
-import { DiagnosticReportModel, MedicationDispenseModel } from "@/fhir/models";
-import { EncounterModel } from "@/fhir/models/encounter";
-import { MedicationRequestModel } from "@/fhir/models/medication-request";
 import { useTimelineEvents } from "@/fhir/timeline-event";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 
@@ -30,7 +27,7 @@ export function PatientTimelineV2({ className }: PatientTimelineV2Props) {
   });
   const openEncounterDetails = usePatientEncounterDetailsDrawer();
   const openDiagnosticReportDetails = useObservationsDetailsDrawer();
-  const openMedicationDispenseDetails = useMedicationStatementDetailsDrawer();
+  const openDispenseRequestDetails = useDispenseRequestDetailsDrawer();
 
   return (
     <div className={cx(className, "ctw-scrollable-pass-through-height")}>
@@ -53,15 +50,18 @@ export function PatientTimelineV2({ className }: PatientTimelineV2Props) {
         emptyMessage="There are no timeline records available."
         columns={patientTimelineColumns(featureFlags?.enableViewFhirButton)}
         onRowClick={(record) => {
-          if (record.model.constructor === EncounterModel) {
-            openEncounterDetails(record.model);
-          } else if (record.model.constructor === DiagnosticReportModel) {
-            openDiagnosticReportDetails(record.model);
-          } else if (
-            record.model.constructor === MedicationDispenseModel ||
-            record.model.constructor === MedicationRequestModel
-          ) {
-            openMedicationDispenseDetails(record.model);
+          switch (record.model.kind) {
+            case "Encounter":
+              openEncounterDetails(record.model);
+              break;
+            case "DiagnosticReport":
+              openDiagnosticReportDetails(record.model);
+              break;
+            case "MedicationDispense":
+            case "MedicationRequest":
+              openDispenseRequestDetails(record.model);
+              break;
+            default:
           }
         }}
       />

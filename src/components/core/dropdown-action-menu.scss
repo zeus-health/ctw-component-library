@@ -5,7 +5,7 @@
 }
 
 .ctw-dropdown-action-menu-item {
-  @apply ctw-flex ctw-w-full ctw-cursor-pointer ctw-whitespace-pre-wrap ctw-py-2 ctw-px-3 ctw-text-sm ctw-capitalize ctw-text-content-black ctw-outline-none;
+  @apply ctw-flex ctw-w-full ctw-cursor-pointer ctw-whitespace-pre-wrap ctw-px-3 ctw-py-2 ctw-text-sm ctw-capitalize ctw-text-content-black ctw-outline-none;
 
   &.dangerous {
     @apply ctw-text-error-main;
