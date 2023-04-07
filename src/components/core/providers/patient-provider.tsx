@@ -65,14 +65,19 @@ export function PatientProvider({
   );
 }
 
-export function usePatient(): UseQueryResult<PatientModel, unknown> {
-  const { getRequestContext } = useCTW();
-
+export function usePatientContext() {
   const context = useContext(PatientContext);
-
   if (!context) {
     throw new Error("usePatient must be used within a PatientProvider");
   }
+
+  return context;
+}
+
+export function usePatient(): UseQueryResult<PatientModel, unknown> {
+  const { getRequestContext } = useCTW();
+
+  const context = usePatientContext();
 
   const { patientID, systemURL, tags } = context;
 
@@ -91,14 +96,11 @@ export function usePatient(): UseQueryResult<PatientModel, unknown> {
 export function usePatientPromise() {
   const { getRequestContext } = useCTW();
 
-  const context = useContext(PatientContext);
+  const context = usePatientContext();
 
   return {
+    context,
     getPatient: useCallback(() => {
-      if (!context) {
-        throw new Error("usePatient must be used within a PatientProvider");
-      }
-
       const { patientID, systemURL, tags } = context;
 
       return queryClient.fetchQuery(
@@ -115,23 +117,21 @@ export function usePatientPromise() {
   };
 }
 
-export function useHandlePatientSave(patient: PatientModel) {
+export function useHandlePatientSave(patient?: PatientModel) {
   const { getRequestContext } = useCTW();
-  const context = useContext(PatientContext);
-
-  if (!context) {
-    throw new Error("usePatient must be used within a PatientProvider");
-  }
+  const context = usePatientContext();
 
   const { onPatientSave } = context;
 
   return useCallback(
     async (data) => {
-      if (onPatientSave) {
-        return onPatientSave(data);
+      if (patient) {
+        if (onPatientSave) {
+          return onPatientSave(data);
+        }
+        return editPatient(patient, data, getRequestContext);
       }
-
-      return editPatient(patient, data, getRequestContext);
+      throw new Error("onPatientSave requires a patient");
     },
     [onPatientSave, patient, getRequestContext]
   );
