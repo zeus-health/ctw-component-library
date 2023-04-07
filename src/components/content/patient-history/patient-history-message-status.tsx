@@ -1,9 +1,10 @@
 import { ErrorIcon } from "@/components/core/error-icon";
 import { ProgressIcon } from "@/components/core/progress-icon";
 import { formatISODateStringToDate } from "@/fhir/formatters";
+import { PatientRefreshHistoryMessage } from "@/services/patient-history/patient-history-types";
 
 export type PatientHistoryStatusProps = {
-  status?: string;
+  status?: PatientRefreshHistoryMessage["status"];
   date?: string;
 };
 
@@ -23,20 +24,24 @@ export const PatientHistoryStatus = ({
         </div>
       );
     case "error":
-      return (
-        <div className="ctw-alert-bg ctw-rounded-md ctw-bg-error-bg">
-          <ErrorIcon className="ctw-h-5 ctw-flex-none ctw-fill-error-main" />
-          <div className="ctw-font-medium ctw-text-error-text">
-            There was an error fetching some or all records for this patient.
-            <div className="ctw-font-normal ctw-text-error-text">
-              Contact your organization’s technical support if this issue
-              persists for more than 24 hours.
-            </div>
-          </div>
-        </div>
-      );
+      return <ErrorState />;
+    case "done_with_errors":
+      return <ErrorState />;
     case "done":
     default:
       return null;
   }
 };
+
+const ErrorState = () => (
+  <div className="ctw-alert-bg ctw-rounded-md ctw-bg-error-bg">
+    <ErrorIcon className="ctw-h-5 ctw-flex-none ctw-fill-error-main" />
+    <div className="ctw-font-medium ctw-text-error-text">
+      There was an error fetching some or all records for this patient.
+      <div className="ctw-font-normal ctw-text-error-text">
+        Contact your organization’s technical support if this issue persists for
+        more than 24 hours.
+      </div>
+    </div>
+  </div>
+);

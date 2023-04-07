@@ -43,18 +43,23 @@ const locals = {
 
 type DemoComponent = {
   render: () => ReactNode;
-  title: string;
+  title?: string;
   note?: string;
 };
 const demoComponents: DemoComponent[] = [
   {
     render: () => (
       <ZusAggregatedProfile
-        resources={["allergies", "conditions", "conditions-outside"]}
+        resources={[
+          "allergies",
+          "conditions",
+          "conditions-outside",
+          "medications",
+          "medications-outside",
+        ]}
         title="Allergies"
       />
     ),
-    title: "Patient Allergies",
   },
 ];
 
@@ -74,7 +79,7 @@ const DemoApp = ({ accessToken = "" }) => (
         {demoComponents.map((demo, index) => (
           <div className="ctw-space-y-5 ctw-bg-white ctw-p-1" key={index}>
             <h3>
-              {demo.title} <small>{demo.note ?? "(default)"}</small>
+              {demo.title} <small>{demo.note}</small>
             </h3>
             <ErrorBoundary>{demo.render()}</ErrorBoundary>
           </div>

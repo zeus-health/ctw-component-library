@@ -1,5 +1,5 @@
 export type PatientRefreshHistoryMessage = {
-  status: "initialize" | "in_progress" | "done" | "error";
+  status: "initialize" | "in_progress" | "done" | "error" | "done_with_errors";
   messageUuid: string;
   initialData: {
     patientId: string;

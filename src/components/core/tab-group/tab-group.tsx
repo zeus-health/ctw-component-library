@@ -1,10 +1,13 @@
 import { Tab } from "@headlessui/react";
 import cx from "classnames";
 import { ReactNode, useRef, useState } from "react";
+import { PatientHistoryStatus } from "@/components/content/patient-history/patient-history-message-status";
+import { usePatientHistory } from "@/components/content/patient-history/use-patient-history";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { ListBox } from "@/components/core/list-box/list-box";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import "./tab-group.scss";
+import { PatientRefreshHistoryMessage } from "@/services/patient-history/patient-history-types";
 
 export type TabGroupProps = {
   children?: ReactNode;
@@ -39,6 +42,7 @@ function TabGroupComponent({
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
+  const patientHistoryDetails = usePatientHistory();
   const isVertical = !forceHorizontalTabs && breakpoints.sm;
   // Work around for not wanting to pre-mount all tabs.
   // https://github.com/tailwindlabs/headlessui/issues/2276#issuecomment-1456537475
@@ -62,6 +66,12 @@ function TabGroupComponent({
         "ctw-tab-group ctw-scrollable-pass-through-height ctw-w-full"
       )}
     >
+      <PatientHistoryStatus
+        status={
+          patientHistoryDetails.lastStatus as PatientRefreshHistoryMessage["status"]
+        }
+        date={patientHistoryDetails.lastRetrievedAt}
+      />
       <Tab.Group selectedIndex={selectedTabIndex} onChange={handleOnChange}>
         {isVertical && (
           <>

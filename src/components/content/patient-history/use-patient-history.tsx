@@ -57,7 +57,9 @@ export function usePatientHistory() {
             header={
               <>
                 <PatientHistoryStatus
-                  status={patientHistoryDetails?.status}
+                  status={
+                    patientHistoryDetails?.status as PatientRefreshHistoryMessage["status"]
+                  }
                   date={patientHistoryDetails?.dateCreated}
                 />
                 <div className="ctw-pt-0 ctw-text-base">
