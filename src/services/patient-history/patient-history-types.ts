@@ -6,7 +6,7 @@ export type PatientHistoryStatus =
 
 export type PatientRefreshHistoryMessage = {
   status: PatientHistoryStatus;
-  messageUuid: string;
+  uuid: string;
   initialData: {
     patientId: string;
   };

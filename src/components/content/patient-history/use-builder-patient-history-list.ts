@@ -22,10 +22,15 @@ export function useBuilderPatientHistoryList(
           await getBuilderRefreshHistoryMessages(requestContext)
         ).data as PatientHistoryResponse[];
 
-        const patientsIds = uniq(
-          compact(messages.map((message) => message.initialData?.patientId))
-        );
+        const start = pageOffset * pageSize;
+        const end = start + pageSize;
+        const subsetMessages = messages.slice(start, end);
 
+        const patientsIds = uniq(
+          compact(
+            subsetMessages.map((message) => message.initialData?.patientId)
+          )
+        );
         const patientData = await getBuilderPatientsListByIdentifier(
           requestContext,
           undefined,
@@ -33,13 +38,16 @@ export function useBuilderPatientHistoryList(
         );
 
         const patientHistoryPatients = patientData.patients.map((patient) => {
-          const matchingPatientId = messages.filter(
+          const matchingPatientId = subsetMessages.filter(
             (message) => message.initialData?.patientId === patient.id
           );
           return new PatientHistorytModel(patient, matchingPatientId[0]);
         });
 
-        return { total: patientData.total, patients: patientHistoryPatients };
+        return {
+          total: messages.length,
+          patients: patientHistoryPatients,
+        };
       } catch (e) {
         Telemetry.logError(
           e as Error,

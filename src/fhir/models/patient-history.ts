@@ -22,7 +22,7 @@ export class PatientHistorytModel {
 
   get key() {
     // eslint-disable-next-line no-underscore-dangle
-    return this.historyInfo?.messageUuid || "";
+    return this.historyInfo?.uuid || "";
   }
 
   get lastRetrievedAt() {

@@ -22,7 +22,7 @@ export const PatientHistoryTable = withErrorBoundary(
   ({
     className,
 
-    pageSize = 30,
+    pageSize = 20,
     title = "Patient History Request",
   }: PatientsHistoryTableProps) => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -109,7 +109,7 @@ const columns: TableColumn<PatientHistorytModel>[] = [
         {data.messages?.map((message) => (
           <div
             className="ctw-status-column"
-            key={`${data.historyInfo?.messageUuid}-${message.service}`}
+            key={`${data.historyInfo?.uuid}-${message.service}`}
           >
             <div className="ctw-capitalize">{message.service}</div>
             <div>-</div>
