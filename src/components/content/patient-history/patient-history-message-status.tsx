@@ -1,17 +1,26 @@
 import { ErrorIcon } from "@/components/core/error-icon";
 import { ProgressIcon } from "@/components/core/progress-icon";
 import { formatISODateStringToDate } from "@/fhir/formatters";
-import { PatientRefreshHistoryMessage } from "@/services/patient-history/patient-history-types";
+import {
+  PatientHistoryServiceMessage,
+  PatientRefreshHistoryMessageStatus,
+} from "@/services/patient-history/patient-history-types";
 
 export type PatientHistoryStatusProps = {
-  status?: PatientRefreshHistoryMessage["status"];
+  status?: PatientRefreshHistoryMessageStatus;
   date?: string;
+  messages: PatientHistoryServiceMessage[] | undefined;
 };
 
 export const PatientHistoryStatus = ({
   status,
   date,
+  messages,
 }: PatientHistoryStatusProps) => {
+  const servicesStatus = messages?.every(
+    (message) => message.status === "done"
+  );
+
   switch (status) {
     case "initialize":
     case "in_progress":
@@ -28,6 +37,8 @@ export const PatientHistoryStatus = ({
     case "done_with_errors":
       return <ErrorState />;
     case "done":
+      return servicesStatus ? null : <ErrorState />;
+
     default:
       return null;
   }

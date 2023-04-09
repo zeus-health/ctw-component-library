@@ -7,7 +7,7 @@ import { withErrorBoundary } from "@/components/core/error-boundary";
 import { ListBox } from "@/components/core/list-box/list-box";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import "./tab-group.scss";
-import { PatientRefreshHistoryMessage } from "@/services/patient-history/patient-history-types";
+import { PatientRefreshHistoryMessageStatus } from "@/services/patient-history/patient-history-types";
 
 export type TabGroupProps = {
   children?: ReactNode;
@@ -67,8 +67,9 @@ function TabGroupComponent({
       )}
     >
       <PatientHistoryStatus
+        messages={patientHistoryDetails.latestServiceMessages}
         status={
-          patientHistoryDetails.lastStatus as PatientRefreshHistoryMessage["status"]
+          patientHistoryDetails.lastStatus as PatientRefreshHistoryMessageStatus
         }
         date={patientHistoryDetails.lastRetrievedAt}
       />
