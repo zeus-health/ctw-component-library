@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import { useEffect, useState } from "react";
 import { PatientHistoryStatus } from "./patient-history-message-status";
 import { PatientHistoryRequestDrawer } from "../patient-history-request-drawer";
@@ -15,7 +16,7 @@ import {
   PatientRefreshHistoryMessageStatus,
 } from "@/services/patient-history/patient-history-types";
 import { errorResponse } from "@/utils/errors";
-import { find } from "@/utils/nodash";
+import { find, omitBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_HISTORY_DETAILS } from "@/utils/query-keys";
 import { ctwFetch } from "@/utils/request";
 import { Telemetry } from "@/utils/telemetry";
@@ -94,48 +95,27 @@ export function usePatientHistory(includePatientDemographicsForm?: boolean) {
   };
 }
 
-async function getPatientRefreshHistoryMessages(
-  requestContext: CTWRequestContext,
-  patientID: string
-) {
-  const builderId = requestContext.contextBuilderId
-    ? `&builder-id=${requestContext.contextBuilderId}`
-    : "";
-
-  const endpointUrl = `${getZusApiBaseUrl(
-    requestContext.env
-  )}/patient-history/messages?patient-id=${patientID}${builderId}`;
-
-  try {
-    const response = await ctwFetch(endpointUrl, {
-      headers: {
-        Authorization: `Bearer ${requestContext.authToken}`,
-        ...(requestContext.contextBuilderId && {
-          "Zus-Account": requestContext.contextBuilderId,
-        }),
-      },
-    });
-    const result = await response.json();
-
-    /* eslint no-underscore-dangle: 0 */
-    return Object.values(result.data) as PatientRefreshHistoryMessage[];
-  } catch (err) {
-    throw errorResponse(
-      "Failed fetching patient refresh history messages",
-      err
-    );
-  }
-}
-
 export async function getBuilderRefreshHistoryMessages(
-  requestContext: CTWRequestContext
+  requestContext: CTWRequestContext,
+  patientId?: string
 ) {
-  const builderIdParam = requestContext.contextBuilderId
-    ? `?builder-id=${requestContext.contextBuilderId}`
-    : "";
-  const endpointUrl = `${getZusApiBaseUrl(
-    requestContext.env
-  )}/patient-history/messages?${builderIdParam}`;
+  const baseUrl = new URL(
+    `${getZusApiBaseUrl(requestContext.env)}/patient-history/messages?`
+  );
+
+  const paramsObj = omitBy(
+    {
+      "builder-id": requestContext.contextBuilderId
+        ? `${requestContext.contextBuilderId}`
+        : "",
+      "patient-id": patientId ? `${patientId}` : "",
+    },
+    (value) => !value
+  );
+
+  const params = new URLSearchParams([...Object.entries(paramsObj)]).toString();
+
+  const endpointUrl = `${baseUrl}${params}`;
 
   try {
     const response = await ctwFetch(endpointUrl, {
@@ -162,12 +142,12 @@ export function usePatientHistoryDetails() {
     [],
     async (requestContext, patient) => {
       try {
-        const messages = await getPatientRefreshHistoryMessages(
+        const response = await getBuilderRefreshHistoryMessages(
           requestContext,
           patient.id
         );
 
-        const latestDone = find(messages, {
+        const latestDone = find(response.data, {
           _messages: [
             {
               status: "done",
@@ -177,9 +157,9 @@ export function usePatientHistoryDetails() {
 
         return {
           lastRetrievedAt: latestDone?._createdAt,
-          status: messages[0]?.status,
-          dateCreated: messages[0]?._createdAt,
-          serviceMessages: messages[0]._messages,
+          status: response.data[0]?.status,
+          dateCreated: response.data[0]?._createdAt,
+          serviceMessages: response.data[0]._messages,
         };
       } catch (e) {
         Telemetry.logError(

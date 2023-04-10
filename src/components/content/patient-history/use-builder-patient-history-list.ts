@@ -1,10 +1,8 @@
-import {
-  getBuilderRefreshHistoryMessages,
-  PatientHistoryResponse,
-} from "./use-patient-history";
+import { getBuilderRefreshHistoryMessages } from "./use-patient-history";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { PatientHistorytModel } from "@/fhir/models/patient-history";
 import { getBuilderPatientsListByIdentifier } from "@/fhir/patient-helper";
+import { PatientRefreshHistoryMessage } from "@/services/patient-history/patient-history-types";
 import { compact, uniq } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_HISTORY_LIST } from "@/utils/query-keys";
 import { Telemetry } from "@/utils/telemetry";
@@ -20,7 +18,7 @@ export function useBuilderPatientHistoryList(
       try {
         const messages = (
           await getBuilderRefreshHistoryMessages(requestContext)
-        ).data as PatientHistoryResponse[];
+        ).data as PatientRefreshHistoryMessage[];
 
         const start = pageOffset * pageSize;
         const end = start + pageSize;
@@ -28,7 +26,7 @@ export function useBuilderPatientHistoryList(
 
         const patientsIds = uniq(
           compact(
-            subsetMessages.map((message) => message.initialData?.patientId)
+            subsetMessages.map((message) => message.initialData.patientId)
           )
         );
         const patientData = await getBuilderPatientsListByIdentifier(
@@ -39,7 +37,7 @@ export function useBuilderPatientHistoryList(
 
         const patientHistoryPatients = patientData.patients.map((patient) => {
           const matchingPatientId = subsetMessages.filter(
-            (message) => message.initialData?.patientId === patient.id
+            (message) => message.initialData.patientId === patient.id
           );
           return new PatientHistorytModel(patient, matchingPatientId[0]);
         });
