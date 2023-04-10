@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.2.1
+
+### Patch Changes
+
+- fa3f2d01: Fix bug where opening successive drawers outside of zap component causes apps to crash.
+- 91c99686: Show patient history status in the ZAP. If an error occurs in the drawer before patient history status is senet off show it before closing drawer.
+
 ## 1.2.0
 
 ### Minor Changes
