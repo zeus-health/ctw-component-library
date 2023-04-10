@@ -1,6 +1,5 @@
 import cx from "classnames";
 import { ReactElement, useRef } from "react";
-import { RequestRecordsButton } from "@/components/content/patient-history/request-records-button";
 import { usePatient } from "@/components/core/providers/patient-provider";
 import { Table, TableProps } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
@@ -40,10 +39,7 @@ export const ResourceTable = <
   const emptyMessageWithRequestRecords = patient.data ? (
     emptyMessage
   ) : (
-    <div className="ctw-space-y-4">
-      Patient not found. Please fill out a short form to{" "}
-      <RequestRecordsButton className="ctw-lowercase" />.
-    </div>
+    <div className="ctw-space-y-4">Patient not found.</div>
   );
 
   return (

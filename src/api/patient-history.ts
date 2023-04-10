@@ -1,4 +1,4 @@
-import { getZusApiBaseUrl } from "./urls";
+import { getZusProxyApiBaseUrl } from "./urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { ctwFetch } from "@/utils/request";
 import { Telemetry } from "@/utils/telemetry";
@@ -12,12 +12,14 @@ export type PatientHistoryResponseError = {
 
 export const schedulePatientHistory = async (
   requestContext: CTWRequestContext,
-  patientID: string,
-  resultData: { npi: string; role: string; name: string }
+  patientIdentifiers: { systemURL: string; patientID: string },
+  resultData: { id?: string; npi: string; role: string; name: string }
 ) => {
-  const endpointUrl = `${getZusApiBaseUrl(
+  const { systemURL, patientID } = patientIdentifiers;
+  const endpointUrl = `${getZusProxyApiBaseUrl(
     requestContext.env
-  )}/patient-history/patient/${patientID}/refresh?consent=1`;
+    // If patientID is empty, just pass any non-identifying string in url.
+  )}/patient-history/patient/${resultData.id ?? "NULL"}/refresh?consent=1`;
 
   try {
     const response = await ctwFetch(endpointUrl, {
@@ -31,13 +33,16 @@ export const schedulePatientHistory = async (
           "Zus-Account": requestContext.contextBuilderId,
         }),
       },
+      body: JSON.stringify({ systemURL, patientID }),
     });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
     return await response.json();
   } catch (e) {
-    Telemetry.logError(
-      e as Error,
-      `Error scheduling patient history job with id of ${patientID}`
-    );
-    throw Error(`Error scheduling patient history job with id of ${patientID}`);
+    const err = e as Error;
+    const errorMessage = `Error scheduling patient history job with id of ${patientID}: ${err.message}`;
+    Telemetry.logError(err, errorMessage);
+    return new Error(errorMessage);
   }
 };

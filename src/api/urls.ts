@@ -5,6 +5,11 @@ export const getZusApiBaseUrl = (env: Env) =>
     ? `https://api.zusapi.com`
     : `https://api.${env}.zusapi.com`;
 
+export const getZusProxyApiBaseUrl = (env: Env) =>
+  env === "production"
+    ? `https://ehr-hooks.zusapi.com/proxy`
+    : `https://ehr-hooks.${env}.zusapi.com/proxy`;
+
 export const getFormsConditionsUrl = (env: Env) =>
   `${getZusApiBaseUrl(env)}/forms-data/terminology/conditions`;
 
