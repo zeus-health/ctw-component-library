@@ -110,3 +110,36 @@ export async function getBuilderPatientsList(
     throw errorResponse("Failed fetching patients", e);
   }
 }
+
+export async function getBuilderPatientsListByIdentifier(
+  requestContext: CTWRequestContext,
+  paginationOptions: (number | string | undefined)[] = [],
+  identifiers: string[] = []
+): Promise<GetPatientsTableResults> {
+  const [pageSize, pageOffset] = paginationOptions;
+  const offset =
+    parseInt(`${pageOffset ?? "0"}`, 10) * parseInt(`${pageSize ?? "1"}`, 10);
+
+  const searchParams = pickBy({
+    _id: identifiers.join(","),
+    _count: pageSize,
+    _total: "accurate",
+    _offset: offset,
+  }) as SearchParams;
+
+  try {
+    const { total, resources } = await searchBuilderRecords(
+      "Patient",
+      requestContext,
+      searchParams
+    );
+
+    return {
+      searchParams,
+      patients: resources.map((patient) => new PatientModel(patient)),
+      total,
+    };
+  } catch (e) {
+    throw errorResponse("Failed fetching patients", e);
+  }
+}

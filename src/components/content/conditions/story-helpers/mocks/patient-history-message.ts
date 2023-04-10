@@ -20,7 +20,6 @@ export const patientHistoryMessage = {
       ],
       _errors: [],
       _createdAt: "2022-11-28T14:29:25.509Z",
-      _updatedAt: "2022-11-28T14:29:27.436Z",
     },
   },
 };

@@ -2,8 +2,14 @@ import type { ReactNode } from "react";
 import { Auth0Provider } from "@auth0/auth0-react";
 import { ErrorBoundary } from "./error-boundary";
 import { SecuredApp } from "@/SecuredApp";
-import { CTWProvider, PatientProvider, ZusAggregatedProfile } from ".";
+import {
+  CTWProvider,
+  PatientProvider,
+  PatientSearch,
+  ZusAggregatedProfile,
+} from ".";
 import "./App.css";
+import { PatientHistoryTable } from "./components/content/patient-history/patient-history-table";
 
 const {
   VITE_SYSTEM_URL,
@@ -62,6 +68,8 @@ const demoComponents: DemoComponent[] = [
       />
     ),
   },
+  { render: () => <PatientSearch />, title: "Patient Search" },
+  { render: () => <PatientHistoryTable />, title: "Patient History Table" },
 ];
 
 const DemoApp = ({ accessToken = "" }) => (
