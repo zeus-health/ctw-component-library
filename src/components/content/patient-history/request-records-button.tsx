@@ -4,11 +4,17 @@ import { withErrorBoundary } from "@/components/core/error-boundary";
 
 type RequestRecordsButtonProps = {
   className?: cx.Argument;
+  includePatientDemographicsForm?: boolean;
 };
 
 export const RequestRecordsButton = withErrorBoundary(
-  ({ className }: RequestRecordsButtonProps) => {
-    const { openHistoryRequestDrawer } = usePatientHistory();
+  ({
+    className,
+    includePatientDemographicsForm,
+  }: RequestRecordsButtonProps) => {
+    const { openHistoryRequestDrawer } = usePatientHistory(
+      includePatientDemographicsForm
+    );
 
     return (
       <button

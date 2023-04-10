@@ -8,6 +8,7 @@ import {
   usePatientPromise,
   useQueryWithPatient,
 } from "@/components/core/providers/patient-provider";
+import { PatientModel } from "@/fhir/models";
 import {
   PatientHistoryServiceMessage,
   PatientRefreshHistoryMessage,
@@ -26,7 +27,7 @@ type PatientHistoryDetails = Partial<{
   serviceMessages: PatientHistoryServiceMessage[];
 }>;
 
-export function usePatientHistory() {
+export function usePatientHistory(includePatientDemographicsForm?: boolean) {
   const { openDrawer } = useDrawer();
   const { getPatient } = usePatientPromise();
   const patientHistoryInformation = usePatientHistoryDetails();
@@ -52,11 +53,17 @@ export function usePatientHistory() {
 
   return {
     openHistoryRequestDrawer: async () => {
-      await patientHistoryRequestPromise;
-      const patient = await getPatient();
+      let patient: PatientModel | undefined;
+      try {
+        await patientHistoryRequestPromise;
+        patient = await getPatient();
+      } catch (error) {
+        patient = undefined;
+      }
       openDrawer({
         component: (props) => (
           <PatientHistoryRequestDrawer
+            includePatientDemographicsForm={includePatientDemographicsForm}
             setClinicalHistoryExists={() => {}}
             header={
               <>
