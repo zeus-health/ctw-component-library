@@ -33,7 +33,6 @@ export const PatientHistoryStatus = ({
         </div>
       );
     case "error":
-      return <ErrorState />;
     case "done_with_errors":
       return <ErrorState />;
     case "done":
