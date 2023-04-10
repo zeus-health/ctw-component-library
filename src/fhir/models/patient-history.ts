@@ -3,7 +3,7 @@ import { formatDate, formatISODateStringToDate } from "../formatters";
 import { PatientRefreshHistoryMessage } from "@/services/patient-history/patient-history-types";
 
 export class PatientHistorytModel {
-  kind = "PatientHistorytModel" as const;
+  kind = "PatientHistory" as const;
 
   historyInfo: PatientRefreshHistoryMessage | undefined = undefined;
 
