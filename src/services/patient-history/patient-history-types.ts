@@ -6,13 +6,14 @@ export type PatientHistoryStatus =
 
 export type PatientRefreshHistoryMessage = {
   status: PatientRefreshHistoryMessageStatus;
-  messageUuid: string;
+  uuid: string;
   initialData: {
     patientId: string;
   };
   _errors: string[];
   _createdAt: string;
   _updatedAt: string;
+  _lastUpdated: string;
   _messages: PatientHistoryServiceMessage[];
 };
 

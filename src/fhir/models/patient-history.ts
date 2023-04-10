@@ -1,6 +1,5 @@
 import { PatientModel } from "./patient";
 import { formatDate, formatISODateStringToDate } from "../formatters";
-import { PatientHistoryResponse } from "@/components/content/patient-history/use-patient-history";
 import { PatientRefreshHistoryMessage } from "@/services/patient-history/patient-history-types";
 
 export class PatientHistorytModel {
@@ -10,7 +9,10 @@ export class PatientHistorytModel {
 
   patient: PatientModel;
 
-  constructor(patient: PatientModel, historyInfo: PatientHistoryResponse) {
+  constructor(
+    patient: PatientModel,
+    historyInfo: PatientRefreshHistoryMessage
+  ) {
     this.patient = patient;
     this.historyInfo = historyInfo as PatientRefreshHistoryMessage;
   }
