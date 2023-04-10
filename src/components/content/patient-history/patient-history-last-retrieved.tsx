@@ -8,7 +8,7 @@ export const PatientHistoryLastRetrieved = () => {
     <>
       {patientHistory.lastRetrievedAt && (
         <div className="ctw-text-sm ctw-italic ctw-text-black">
-          Last Retrieved{" "}
+          Last Retrieved
           {formatISODateStringToDate(patientHistory.lastRetrievedAt)}
         </div>
       )}
