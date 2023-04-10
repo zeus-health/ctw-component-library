@@ -1,9 +1,3 @@
-export type PatientHistoryStatus =
-  | "initialize"
-  | "in_progress"
-  | "done"
-  | "error";
-
 export type PatientRefreshHistoryMessage = {
   status: PatientRefreshHistoryMessageStatus;
   uuid: string;
