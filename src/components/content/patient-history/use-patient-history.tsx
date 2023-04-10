@@ -8,20 +8,23 @@ import {
   usePatientPromise,
   useQueryWithPatient,
 } from "@/components/core/providers/patient-provider";
-import { formatISODateStringToDate } from "@/fhir/formatters";
 import { PatientModel } from "@/fhir/models";
-import { PatientRefreshHistoryMessage } from "@/services/patient-history/patient-history-types";
+import {
+  PatientHistoryServiceMessage,
+  PatientRefreshHistoryMessage,
+  PatientRefreshHistoryMessageStatus,
+} from "@/services/patient-history/patient-history-types";
 import { errorResponse } from "@/utils/errors";
 import { find } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_HISTORY_DETAILS } from "@/utils/query-keys";
 import { ctwFetch } from "@/utils/request";
 import { Telemetry } from "@/utils/telemetry";
 
-export type PatientHistoryResponse = Partial<{
-  lastRetrievedAt?: string;
-  status?: string;
-  dateCreated?: string;
-  initialData?: { patientId?: string };
+type PatientHistoryDetails = Partial<{
+  lastRetrievedAt: string;
+  status: PatientRefreshHistoryMessageStatus;
+  dateCreated: string;
+  serviceMessages: PatientHistoryServiceMessage[];
 }>;
 
 export function usePatientHistory(includePatientDemographicsForm?: boolean) {
@@ -29,7 +32,7 @@ export function usePatientHistory(includePatientDemographicsForm?: boolean) {
   const { getPatient } = usePatientPromise();
   const patientHistoryInformation = usePatientHistoryDetails();
   const [patientHistoryDetails, setPatientHistoryDetails] =
-    useState<PatientHistoryResponse>();
+    useState<PatientHistoryDetails>();
 
   const [patientHistoryRequestPromise, setPatientHistoryRequestPromise] =
     useState<Promise<void>>();
@@ -65,7 +68,10 @@ export function usePatientHistory(includePatientDemographicsForm?: boolean) {
             header={
               <>
                 <PatientHistoryStatus
-                  status={patientHistoryDetails?.status}
+                  messages={patientHistoryDetails?.serviceMessages}
+                  status={
+                    patientHistoryDetails?.status as PatientRefreshHistoryMessageStatus
+                  }
                   date={patientHistoryDetails?.dateCreated}
                 />
                 <div className="ctw-pt-0 ctw-text-base">
@@ -80,9 +86,8 @@ export function usePatientHistory(includePatientDemographicsForm?: boolean) {
         ),
       });
     },
-    lastRetrievedAt: formatISODateStringToDate(
-      patientHistoryDetails?.lastRetrievedAt
-    ),
+    lastRetrievedAt: patientHistoryDetails?.lastRetrievedAt,
+    latestServiceMessages: patientHistoryDetails?.serviceMessages,
     lastStatus: patientHistoryDetails?.status,
     dateCreatedAt: patientHistoryDetails?.dateCreated,
     isLoading: patientHistoryInformation.isLoading,
@@ -93,9 +98,13 @@ async function getPatientRefreshHistoryMessages(
   requestContext: CTWRequestContext,
   patientID: string
 ) {
+  const builderId = requestContext.contextBuilderId
+    ? `&builder-id=${requestContext.contextBuilderId}`
+    : "";
+
   const endpointUrl = `${getZusApiBaseUrl(
     requestContext.env
-  )}/patient-history/messages?patient-id=${patientID}`;
+  )}/patient-history/messages?patient-id=${patientID}${builderId}`;
 
   try {
     const response = await ctwFetch(endpointUrl, {
@@ -165,12 +174,12 @@ export function usePatientHistoryDetails() {
             },
           ],
         }) as PatientRefreshHistoryMessage | undefined;
+
         return {
-          // eslint-disable-next-line no-underscore-dangle
           lastRetrievedAt: latestDone?._createdAt,
           status: messages[0]?.status,
-          // eslint-disable-next-line no-underscore-dangle
           dateCreated: messages[0]?._createdAt,
+          serviceMessages: messages[0]._messages,
         };
       } catch (e) {
         Telemetry.logError(

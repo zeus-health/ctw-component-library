@@ -5,13 +5,25 @@ export type PatientHistoryStatus =
   | "error";
 
 export type PatientRefreshHistoryMessage = {
-  status: PatientHistoryStatus;
-  uuid: string;
+  status: PatientRefreshHistoryMessageStatus;
+  messageUuid: string;
   initialData: {
     patientId: string;
   };
   _errors: string[];
   _createdAt: string;
-  _lastUpdated: string;
-  _messages: { service: string; status: PatientHistoryStatus }[];
+  _updatedAt: string;
+  _messages: PatientHistoryServiceMessage[];
+};
+
+export type PatientRefreshHistoryMessageStatus =
+  | "initialize"
+  | "in_progress"
+  | "done"
+  | "error"
+  | "done_with_errors";
+
+export type PatientHistoryServiceMessage = {
+  service: string;
+  status: PatientRefreshHistoryMessageStatus;
 };
