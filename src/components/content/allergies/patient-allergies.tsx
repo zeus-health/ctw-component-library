@@ -79,7 +79,6 @@ const allergyData = (allergy: AllergyModel) => [
   { label: "Recording Organization", value: allergy.managingOrganization },
   { label: "Status", value: allergy.clinicalStatus },
   { label: "Type", value: capitalize(allergy.type) },
-  { label: "Category", value: capitalize(allergy.categories) },
   { label: "Onset", value: allergy.onset },
   { label: "Manifestation", value: capitalize(allergy.manifestations) },
   { label: "Severity", value: capitalize(allergy.severity) },

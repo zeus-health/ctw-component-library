@@ -41,7 +41,6 @@ function getHistoryEntry(allergy: AllergyModel): HistoryEntryProps {
   const detailData = [
     { label: "Status", value: allergy.clinicalStatus },
     { label: "Type", value: capitalize(allergy.type) },
-    { label: "Category", value: capitalize(allergy.categories) },
     { label: "Onset", value: allergy.onset },
     { label: "Manifestation", value: capitalize(allergy.manifestations) },
     { label: "Severity", value: capitalize(allergy.severity) },
@@ -61,7 +60,6 @@ const valuesToDedupeOn = (allergy: AllergyModel) => [
   allergy.recordedDate,
   allergy.managingOrganization,
   allergy.clinicalStatus,
-  allergy.categories,
   allergy.onset,
   allergy.manifestations,
   allergy.severity,
