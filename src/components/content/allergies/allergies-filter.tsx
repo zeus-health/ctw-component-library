@@ -16,4 +16,4 @@ export const applyAllergyFilters = (
   return allergyData;
 };
 
-const valuesToDedupeOn = (allergy: AllergyModel) => [allergy.display];
+const valuesToDedupeOn = (allergy: AllergyModel) => [allergy.lowercaseDisplay];
