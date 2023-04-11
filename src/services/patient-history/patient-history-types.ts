@@ -11,6 +11,10 @@ export type PatientRefreshHistoryMessage = {
   _messages: PatientHistoryServiceMessage[];
 };
 
+export type PatientHistoryResponse = {
+  data: PatientRefreshHistoryMessage[];
+};
+
 export type PatientRefreshHistoryMessageStatus =
   | "initialize"
   | "in_progress"
