@@ -114,7 +114,6 @@ export async function getBuilderRefreshHistoryMessages(
   );
 
   const params = new URLSearchParams([...Object.entries(paramsObj)]).toString();
-
   const endpointUrl = `${baseUrl}${params}`;
 
   try {
@@ -159,7 +158,7 @@ export function usePatientHistoryDetails() {
           lastRetrievedAt: latestDone?._createdAt,
           status: response.data[0]?.status,
           dateCreated: response.data[0]?._createdAt,
-          serviceMessages: response.data[0]._messages,
+          serviceMessages: response.data[0]?._messages,
         };
       } catch (e) {
         Telemetry.logError(
