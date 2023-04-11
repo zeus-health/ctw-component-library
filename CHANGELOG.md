@@ -1,5 +1,16 @@
 # ctw-component-library
 
+## 1.3.0
+
+### Minor Changes
+
+- 7446b534: Add POC patient history table.
+
+### Patch Changes
+
+- 2665cb84: Sort Allergies by name
+- 93284e0f: Fix bug where multiple patient history requests are sent out.
+
 ## 1.2.1
 
 ### Patch Changes
