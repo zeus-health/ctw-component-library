@@ -2,7 +2,7 @@ import { getBuilderRefreshHistoryMessages } from "./use-patient-history";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { PatientHistorytModel } from "@/fhir/models/patient-history";
 import { getBuilderPatientsListByIdentifier } from "@/fhir/patient-helper";
-import { PatientRefreshHistoryMessage } from "@/services/patient-history/patient-history-types";
+import { PatientHistoryResponse } from "@/services/patient-history/patient-history-types";
 import { compact, uniq } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_HISTORY_LIST } from "@/utils/query-keys";
 import { Telemetry } from "@/utils/telemetry";
@@ -16,13 +16,13 @@ export function useBuilderPatientHistoryList(
     [pageSize, pageOffset],
     async (requestContext) => {
       try {
-        const messages = (
-          await getBuilderRefreshHistoryMessages(requestContext)
-        ).data as PatientRefreshHistoryMessage[];
+        const response = (await getBuilderRefreshHistoryMessages(
+          requestContext
+        )) as PatientHistoryResponse;
 
         const start = pageOffset * pageSize;
         const end = start + pageSize;
-        const subsetMessages = messages.slice(start, end);
+        const subsetMessages = response.data.slice(start, end);
 
         const patientsIds = uniq(
           compact(
@@ -43,7 +43,7 @@ export function useBuilderPatientHistoryList(
         });
 
         return {
-          total: messages.length,
+          total: response.data.length,
           patients: patientHistoryPatients,
         };
       } catch (e) {
