@@ -12,6 +12,9 @@ defaults:
   run:
     shell: bash
 
+env:
+  CI: true
+
 jobs:
   lint:
     name: ⬣ ESLint
