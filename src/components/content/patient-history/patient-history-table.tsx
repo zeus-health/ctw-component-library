@@ -14,6 +14,7 @@ import "./patient-history-table.scss";
 
 export type PatientsHistoryTableProps = {
   className?: cx.Argument;
+  handleRowClick?: (row: PatientHistorytModel) => void;
   pageSize?: number;
   title?: string;
 } & TableOptionProps<PatientModel>;
@@ -21,7 +22,7 @@ export type PatientsHistoryTableProps = {
 export const PatientHistoryTable = withErrorBoundary(
   ({
     className,
-
+    handleRowClick,
     pageSize = 20,
     title = "Patient History Request",
   }: PatientsHistoryTableProps) => {
@@ -76,6 +77,7 @@ export const PatientHistoryTable = withErrorBoundary(
             records={patients}
             columns={columns}
             pageSize={pageSize}
+            handleRowClick={handleRowClick}
             hidePagination
           >
             <Pagination
