@@ -14,7 +14,7 @@ import "./patient-history-table.scss";
 
 export type PatientsHistoryTableProps = {
   className?: cx.Argument;
-  handleRowClick: (row: PatientHistorytModel) => void;
+  handleRowClick?: (row: PatientHistorytModel) => void;
   pageSize?: number;
   title?: string;
 } & TableOptionProps<PatientModel>;
