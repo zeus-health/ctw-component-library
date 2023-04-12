@@ -14,10 +14,10 @@ export const allergySortOptions: SortOption<AllergyModel>[] = [
   },
   {
     display: "Name (A-Z)",
-    sorts: [{ key: "display", dir: "asc" }],
+    sorts: [{ key: "lowercaseDisplay", dir: "asc" }],
   },
   {
     display: "Name (Z-A)",
-    sorts: [{ key: "display", dir: "desc" }],
+    sorts: [{ key: "lowercaseDisplay", dir: "desc" }],
   },
 ];
