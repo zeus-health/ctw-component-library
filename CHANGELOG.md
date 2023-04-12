@@ -1,5 +1,13 @@
 # ctw-component-library
 
+## 1.3.2
+
+### Patch Changes
+
+- f2e2e977: Fix issue where allergies were not sorted correctly
+- d0610b37: Export patient history table. Add handleClickRow handler to table.
+- f62ec0e4: Fix last retrieved date spacing.
+
 ## 1.3.1
 
 ### Patch Changes
