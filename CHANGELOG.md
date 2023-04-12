@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.3.1
+
+### Patch Changes
+
+- 65b02800: Remove allergy category based on user feedback
+
 ## 1.3.0
 
 ### Minor Changes
