@@ -2,4 +2,4 @@
 "@zus-health/ctw-component-library": patch
 ---
 
-Use reaction consistently as opposed to manifiestation
+Use reaction consistently as opposed to manifestation.
