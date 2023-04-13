@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.3.4
+
+### Patch Changes
+
+- 66b98a02: use useQueryWithCTW instead of useQueryWithPatient in patient history table.
+
 ## 1.3.3
 
 ### Patch Changes
