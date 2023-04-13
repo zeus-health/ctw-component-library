@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.3.3
+
+### Patch Changes
+
+- 9bdb7ea0: Use reaction consistently as opposed to manifestation.
+
 ## 1.3.2
 
 ### Patch Changes
