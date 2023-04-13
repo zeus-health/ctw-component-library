@@ -1,5 +1,5 @@
 import { getBuilderRefreshHistoryMessages } from "./use-patient-history";
-import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
+import { useQueryWithCTW } from "@/components/core/providers/ctw-provider";
 import { PatientHistorytModel } from "@/fhir/models/patient-history";
 import { getBuilderPatientsListByIdentifier } from "@/fhir/patient-helper";
 import { PatientHistoryResponse } from "@/services/patient-history/patient-history-types";
@@ -11,7 +11,7 @@ export function useBuilderPatientHistoryList(
   pageSize: number,
   pageOffset: number
 ) {
-  return useQueryWithPatient(
+  return useQueryWithCTW(
     QUERY_KEY_PATIENT_HISTORY_LIST,
     [pageSize, pageOffset],
     async (requestContext) => {
