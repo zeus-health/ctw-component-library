@@ -29,6 +29,11 @@ export function useBuilderPatientHistoryList(
             subsetMessages.map((message) => message.initialData.patientId)
           )
         );
+
+        if (!patientsIds.length) {
+          return { total: 0, patients: [] };
+        }
+
         const patientData = await getBuilderPatientsListByIdentifier(
           requestContext,
           undefined,
