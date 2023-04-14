@@ -47,7 +47,7 @@ export function sort<T>(
 ) {
   const getValueFn = isString(getValue) ? get(getValue) : getValue;
   if (isDate) return sortByDate(collection, getValueFn, order);
-  return orderBy(collection, getValue, order);
+  return orderBy(collection, getValue, order) as T[];
 }
 
 function sortByDate<T>(
