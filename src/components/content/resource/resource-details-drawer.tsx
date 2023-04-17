@@ -16,7 +16,7 @@ import { FHIRModel } from "@/fhir/models/fhir-model";
 import { searchProvenances } from "@/fhir/provenance";
 import { UseQueryResultBasic } from "@/utils/request";
 
-const HISTORY_PAGE_LIMIT = 10;
+const HISTORY_PAGE_LIMIT = 20;
 
 export type UseResourceDetailsDrawerProps<
   T extends fhir4.Resource,

@@ -410,7 +410,7 @@ export function useMedicationHistory(medication?: fhir4.MedicationStatement) {
           "date",
           "desc",
           true
-        ) as MedicationModel[];
+        );
 
         return { medications, includedResources };
       } catch (e) {
