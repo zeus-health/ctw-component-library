@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.3.6
+
+### Patch Changes
+
+- 6f957227: Fix deduping on allergies.
+
 ## 1.3.5
 
 ### Patch Changes
