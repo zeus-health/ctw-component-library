@@ -3,13 +3,15 @@ import { getResources } from "./bundle";
 import {
   SYSTEM_SUMMARY,
   SYSTEM_ZUS_LENS,
+  SYSTEM_ZUS_OWNER,
   SYSTEM_ZUS_THIRD_PARTY,
   SYSTEM_ZUS_UNIVERSAL_ID,
   SYSTEM_ZUS_UPI_RECORD_TYPE,
 } from "./system-urls";
 import { ResourceType, ResourceTypeString } from "./types";
+import { getLensUrl } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { mapValues, mergeWith } from "@/utils/nodash";
+import { filter, find, mapValues, mergeWith } from "@/utils/nodash";
 
 const MAX_COUNT = 250;
 
@@ -145,15 +147,22 @@ export async function searchLensRecords<T extends ResourceTypeString>(
   });
   const records = await searchAllRecords(resourceType, requestContext, params);
 
-  // const { entry, resources } = filterSearchReturnByBuilderId(
-  //   records,
-  //   requestContext.builderId
-  // );
+  let { entry, resources } = filterSearchReturnByBuilderIdorLensId(
+    records,
+    getLensUrl(requestContext.env)
+  );
 
-  // records.resources = resources;
-  // records.bundle.entry = entry;
-  // records.bundle.total = entry.length;
-  // records.total = resources.length;
+  if (resources.length === 0 && entry.length === 0) {
+    ({ entry, resources } = filterSearchReturnByBuilderIdorLensId(
+      records,
+      requestContext.builderId
+    ));
+  }
+
+  records.resources = resources;
+  records.bundle.entry = entry;
+  records.bundle.total = entry.length;
+  records.total = resources.length;
 
   return records;
 }
@@ -171,15 +180,22 @@ export async function searchSummaryRecords<T extends ResourceTypeString>(
 
   const records = await searchAllRecords(resourceType, requestContext, params);
 
-  // const { entry, resources } = filterSearchReturnByBuilderId(
-  //   records,
-  //   requestContext.builderId
-  // );
+  let { entry, resources } = filterSearchReturnByBuilderIdorLensId(
+    records,
+    getLensUrl(requestContext.env)
+  );
 
-  // records.resources = resources;
-  // records.bundle.entry = entry;
-  // records.bundle.total = entry.length;
-  // records.total = resources.length;
+  if (resources.length === 0 || entry.length === 0) {
+    ({ entry, resources } = filterSearchReturnByBuilderIdorLensId(
+      records,
+      requestContext.builderId
+    ));
+  }
+
+  records.resources = resources;
+  records.bundle.entry = entry;
+  records.bundle.total = entry.length;
+  records.total = resources.length;
 
   return records;
 }
@@ -261,27 +277,29 @@ function patientSearchParams(
   }
 }
 
-// export const filterSearchReturnByBuilderId = <T extends ResourceTypeString>(
-//   searchReturn: SearchReturn<T>,
-//   builderID: string
-// ) => {
-//   const resources = filter(
-//     searchReturn.resources,
-//     (record) =>
-//       !!find(record.meta?.tag, {
-//         system: SYSTEM_ZUS_OWNER,
-//         code: `builder/${builderID}`,
-//       })
-//   );
+export const filterSearchReturnByBuilderIdorLensId = <
+  T extends ResourceTypeString
+>(
+  searchReturn: SearchReturn<T>,
+  builderID: string
+) => {
+  const resources = filter(
+    searchReturn.resources,
+    (record) =>
+      !!find(record.meta?.tag, {
+        system: SYSTEM_ZUS_OWNER,
+        code: `builder/${builderID}`,
+      })
+  );
 
-//   const entry = filter(
-//     searchReturn.bundle.entry,
-//     (record) =>
-//       !!find(record.resource?.meta?.tag, {
-//         system: SYSTEM_ZUS_OWNER,
-//         code: `builder/${builderID}`,
-//       })
-//   );
+  const entry = filter(
+    searchReturn.bundle.entry,
+    (record) =>
+      !!find(record.resource?.meta?.tag, {
+        system: SYSTEM_ZUS_OWNER,
+        code: `builder/${builderID}`,
+      })
+  );
 
-//   return { resources, entry };
-// };
+  return { resources, entry };
+};

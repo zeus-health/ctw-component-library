@@ -27,3 +27,16 @@ export const getMetricsBaseUrl = (env: string) => {
     ? `https://ctw.zusapi.com`
     : `https://ctw.${env}.zusapi.com`;
 };
+
+export const getLensUrl = (env: Env) => {
+  switch (env) {
+    case "dev":
+      return "bc1c791a-581c-4117-8b17-f9c59f39caf8";
+    case "sandbox":
+      return "d8ab3e86-7ff2-482d-bbed-b30df2dd7ec7";
+    case "production":
+      return "5e0f86eb-bb0b-4543-8489-262fcbf661da";
+    default:
+      throw new Error("Unknown environment");
+  }
+};
