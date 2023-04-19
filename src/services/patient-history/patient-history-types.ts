@@ -26,3 +26,26 @@ export type PatientHistoryServiceMessage = {
   service: string;
   status: PatientRefreshHistoryMessageStatus;
 };
+
+export type PatientHistoryCreateJobBody = {
+  data: {
+    type: "patient-history/jobs";
+    attributes: {
+      requestConsent?: boolean;
+      practitioner?: {
+        npi: string;
+        name: string;
+        role: string;
+      };
+      targetDate?: string;
+    };
+    relationships: {
+      patient: {
+        data: { type: "fhir/Patient"; id: string };
+      };
+      practitioner?: {
+        data: { type: "fhir/Practitioner"; id: string };
+      };
+    };
+  };
+};
