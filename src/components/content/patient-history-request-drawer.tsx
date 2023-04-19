@@ -51,12 +51,12 @@ export const PatientHistoryRequestDrawer = <T,>({
 }: PatientHistoryRequestDrawer<T>) => {
   const onPatientSave = useHandlePatientSave(patient);
   const { patientID, systemURL } = usePatientContext();
+
   const onScheduleHistory = async (
     data: ScheduleHistoryFormData,
     getRequestContext: () => Promise<CTWRequestContext>
   ) => {
     const requestContext = await getRequestContext();
-
     // Patient Identifiers are required for the pt hx proxy (ehr-data-hooks)
     const patientIdentifiers = { id: patient?.id, systemURL, patientID };
     const patientHistoryResponse = await schedulePatientHistory(
