@@ -28,14 +28,16 @@ export const getMetricsBaseUrl = (env: string) => {
     : `https://ctw.${env}.zusapi.com`;
 };
 
-export const getLensUrl = (env: Env) => {
+export const getLensBuilderId = (env: Env) => {
   switch (env) {
     case "dev":
       return "bc1c791a-581c-4117-8b17-f9c59f39caf8";
-    case "sandbox":
-      return "d8ab3e86-7ff2-482d-bbed-b30df2dd7ec7";
+    case "phitest":
+      return "186d5446-46ec-4beb-8699-9e42903a3dd2";
     case "production":
       return "5e0f86eb-bb0b-4543-8489-262fcbf661da";
+    case "sandbox":
+      return "d8ab3e86-7ff2-482d-bbed-b30df2dd7ec7";
     default:
       throw new Error("Unknown environment");
   }

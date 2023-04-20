@@ -9,7 +9,7 @@ import {
   SYSTEM_ZUS_UPI_RECORD_TYPE,
 } from "./system-urls";
 import { ResourceType, ResourceTypeString } from "./types";
-import { getLensUrl } from "@/api/urls";
+import { getLensBuilderId } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { filter, find, mapValues, mergeWith } from "@/utils/nodash";
 
@@ -146,14 +146,17 @@ export async function searchLensRecords<T extends ResourceTypeString>(
     _tag: tagFilter,
   });
   const records = await searchAllRecords(resourceType, requestContext, params);
-
-  let { entry, resources } = filterSearchReturnByBuilderIdorLensId(
+  // Filter using the lens builderID for data from the builder that exists in the post-kludge world.
+  let { entry, resources } = filterSearchReturnByBuilderId(
     records,
-    getLensUrl(requestContext.env)
+    getLensBuilderId(requestContext.env)
   );
 
+  /* Filter using the user's builderID for data from the builder that exists in the pre-kludge world.
+  This will help avoid getting duplicate results or no there is no data for the builder. 
+  Once we have been in the post-kludge world long enough we can remove this functionality. */
   if (resources.length === 0 && entry.length === 0) {
-    ({ entry, resources } = filterSearchReturnByBuilderIdorLensId(
+    ({ entry, resources } = filterSearchReturnByBuilderId(
       records,
       requestContext.builderId
     ));
@@ -180,13 +183,17 @@ export async function searchSummaryRecords<T extends ResourceTypeString>(
 
   const records = await searchAllRecords(resourceType, requestContext, params);
 
-  let { entry, resources } = filterSearchReturnByBuilderIdorLensId(
+  // Filter using the lens builderID for data from the builder that exists in the post-kludge world.
+  let { entry, resources } = filterSearchReturnByBuilderId(
     records,
-    getLensUrl(requestContext.env)
+    getLensBuilderId(requestContext.env)
   );
 
+  /* Filter using the user's builderID for data from the builder that exists in the pre-kludge world.
+  This will help avoid getting duplicate results or no there is no data for the builder. 
+  Once we have been in the post-kludge world long enough we can remove this functionality. */
   if (resources.length === 0 || entry.length === 0) {
-    ({ entry, resources } = filterSearchReturnByBuilderIdorLensId(
+    ({ entry, resources } = filterSearchReturnByBuilderId(
       records,
       requestContext.builderId
     ));
@@ -277,9 +284,7 @@ function patientSearchParams(
   }
 }
 
-export const filterSearchReturnByBuilderIdorLensId = <
-  T extends ResourceTypeString
->(
+export const filterSearchReturnByBuilderId = <T extends ResourceTypeString>(
   searchReturn: SearchReturn<T>,
   builderID: string
 ) => {
