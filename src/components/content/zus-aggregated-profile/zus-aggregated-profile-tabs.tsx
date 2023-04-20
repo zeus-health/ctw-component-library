@@ -93,12 +93,10 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     getPanelClassName: () => "ctw-pt-5",
     display: () => (
       <div className="ctw-space-x-1">
-        <span className="ctw-capitalize">
-          documents
-        </span>
+        <span className="ctw-capitalize">documents</span>
         <BetaLabel />
       </div>
-      ),
+    ),
     render: () => <PatientDocuments {...props} />,
   }),
 
@@ -107,12 +105,10 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     getPanelClassName: () => "ctw-pt-5",
     display: () => (
       <div className="ctw-space-x-1">
-        <span className="ctw-capitalize">
-          immunizations
-        </span>
+        <span className="ctw-capitalize">immunizations</span>
         <BetaLabel />
       </div>
-      ),
+    ),
     render: () => <PatientImmunizations {...props} />,
   }),
 
@@ -157,12 +153,10 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     getPanelClassName: () => "ctw-pt-5",
     display: () => (
       <div className="ctw-space-x-1">
-        <span className="ctw-capitalize">
-          encounter timeline
-        </span>
+        <span className="ctw-capitalize">encounter timeline</span>
         <BetaLabel />
       </div>
-      ),
+    ),
     render: () => <PatientTimeline {...props} />,
   }),
 };

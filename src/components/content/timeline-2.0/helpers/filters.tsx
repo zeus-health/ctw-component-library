@@ -16,8 +16,25 @@ export function timelineFilters(
     key: "type",
     type: "checkbox",
     icon: faClipboardCheck,
-    display: "Type", 
-    values: compact(uniqWith(isEqual, timelineEvents.map((te) => (te.type ? {key: te.type, name: te.type, display: te.beta ? (<span>{te.type} <BetaLabel /></span>) : undefined} : undefined)))),
+    display: "Type",
+    values: compact(
+      uniqWith(
+        isEqual,
+        timelineEvents.map((te) =>
+          te.type
+            ? {
+                key: te.type,
+                name: te.type,
+                display: te.beta ? (
+                  <span>
+                    {te.type} <BetaLabel />
+                  </span>
+                ) : undefined,
+              }
+            : undefined
+        )
+      )
+    ),
   });
 
   return filters;

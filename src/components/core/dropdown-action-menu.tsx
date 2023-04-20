@@ -15,7 +15,12 @@ export type MenuItem = {
   name: string;
 };
 
-export type OptionsItem = { key: string; name: string; display: ReactNode; isSelected?: boolean };
+export type OptionsItem = {
+  key: string;
+  name: string;
+  display: ReactNode;
+  isSelected?: boolean;
+};
 export type DropDownMenuItemType = "checkbox" | "select";
 
 export type DropdownMenuProps = {
@@ -152,7 +157,7 @@ const RenderCorrectFieldType = ({
                 e.stopPropagation();
               }}
             />
-            {menuItem.display ? menuItem.display : (<span>{menuItem.name}</span>)}
+            {menuItem.display ? menuItem.display : <span>{menuItem.name}</span>}
           </label>
         </div>
       );
