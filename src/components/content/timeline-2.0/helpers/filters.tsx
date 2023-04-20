@@ -4,19 +4,20 @@ import {
   FilterItem,
 } from "@/components/core/filter-bar/filter-bar-types";
 import { TimelineEventModel } from "@/fhir/models/timeline-event";
-import { compact, uniq } from "@/utils/nodash/fp";
+import { compact, isEqual, uniqWith } from "@/utils/nodash/fp";
+import { BetaLabel } from "@/components/core/beta-label";
 
 export function timelineFilters(
   timelineEvents: TimelineEventModel[]
 ): FilterItem[] {
   const filters: FilterItem[] = [];
-
+ 
   filters.push({
     key: "type",
     type: "checkbox",
     icon: faClipboardCheck,
-    display: "Type",
-    values: compact(uniq(timelineEvents.map((te) => te.type))),
+    display: "Type", 
+    values: compact(uniqWith(isEqual, timelineEvents.map((te) => (te.type ? {key: te.type, name: te.type, display: te.beta ? (<span>{te.type} <BetaLabel /></span>) : undefined} : undefined)))),
   });
 
   return filters;

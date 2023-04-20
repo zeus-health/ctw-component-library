@@ -25,13 +25,13 @@ type MinFilterItem = {
 export type FilterOptionSelect = {
   type: "select";
   // Using strings in `values` will set both key and display automatically
-  values: (string | { key: string; display: string })[];
+  values: (string | { key: string; name: string; display: ReactNode; })[];
 } & MinFilterItem;
 
 export type FilterOptionCheckbox = {
   type: "checkbox";
   // Using strings in `values` will set both key and display automatically
-  values: (string | { key: string; display: string })[];
+  values: (string | { key: string; name: string; display: ReactNode })[];
 } & MinFilterItem;
 
 export type FilterOptionTag = {

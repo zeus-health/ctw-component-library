@@ -93,6 +93,13 @@ export class TimelineEventModel extends FHIRModel<TimelineEventResource> {
     }
   }
 
+  get beta() {
+    switch (this.model.kind) {
+      default:
+        return false;
+    }
+  }
+
   get subtype() {
     switch (this.model.kind) {
       case "Encounter":
