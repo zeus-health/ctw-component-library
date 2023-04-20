@@ -1,11 +1,11 @@
 import { faClipboardCheck } from "@fortawesome/free-solid-svg-icons";
+import { BetaLabel } from "@/components/core/beta-label";
 import {
   FilterChangeEvent,
   FilterItem,
 } from "@/components/core/filter-bar/filter-bar-types";
 import { TimelineEventModel } from "@/fhir/models/timeline-event";
 import { compact, isEqual, uniqWith } from "@/utils/nodash/fp";
-import { BetaLabel } from "@/components/core/beta-label";
 
 export function timelineFilters(
   timelineEvents: TimelineEventModel[]

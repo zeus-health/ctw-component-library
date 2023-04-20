@@ -18,7 +18,7 @@ export type MenuItem = {
 export type OptionsItem = {
   key: string;
   name: string;
-  display: ReactNode;
+  display?: ReactNode;
   isSelected?: boolean;
 };
 export type DropDownMenuItemType = "checkbox" | "select";
