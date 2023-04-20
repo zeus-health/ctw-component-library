@@ -11,7 +11,7 @@ export function timelineFilters(
   timelineEvents: TimelineEventModel[]
 ): FilterItem[] {
   const filters: FilterItem[] = [];
- 
+
   filters.push({
     key: "type",
     type: "checkbox",
