@@ -1,8 +1,14 @@
 import { useEffect, useState } from "react";
+import { DocumentButton } from "../../CCDA/document-button";
+import { useCCDAModal } from "../../CCDA/modal-ccda";
 import { ObservationsTable } from "@/components/content/observations/helpers/observations-table";
 import { DetailsCard } from "@/components/content/resource/helpers/details-card";
 import { withErrorBoundary } from "@/components/core/error-boundary";
+import { Loading } from "@/components/core/loading";
+import { useCTW } from "@/components/core/providers/ctw-provider";
+import { getBinaryId } from "@/fhir/binaries";
 import { DiagnosticReportModel, ObservationModel } from "@/fhir/models";
+import { searchProvenances } from "@/fhir/provenance";
 import { findReference } from "@/fhir/resource-helper";
 import { capitalize, compact } from "@/utils/nodash";
 
@@ -33,6 +39,27 @@ export const Component = ({ diagnosticReport }: ObservationDetailsProps) => {
     ObservationModel[]
   >([]);
 
+  const openCCDAModal = useCCDAModal();
+  const [isLoading, setIsLoading] = useState(false);
+  const [binaryId, setBinaryId] = useState<string>();
+  const { getRequestContext } = useCTW();
+
+  // We optionally look for any associated binary CCDAs
+  // if getSourceDocument is true.
+  useEffect(() => {
+    async function load() {
+      setIsLoading(true);
+      const requestContext = await getRequestContext();
+      const provenances = await searchProvenances(requestContext, [
+        diagnosticReport,
+      ]);
+      setBinaryId(getBinaryId(provenances, diagnosticReport.id));
+      setIsLoading(false);
+    }
+
+    void load();
+  }, [diagnosticReport, getRequestContext]);
+
   useEffect(() => {
     setObservationsEntries(
       compact(
@@ -58,8 +85,26 @@ export const Component = ({ diagnosticReport }: ObservationDetailsProps) => {
     <div className="ctw-space-y-6" data-zus-telemetry-namespace="Observations">
       <div className="ctw-text-2xl">{diagnosticReport.displayName}</div>
 
-      <DetailsCard details={diagnosticReportData(diagnosticReport)} />
-      <ObservationsTable data={observationEntries} />
+      {isLoading ? (
+        <Loading message="Loading data..." />
+      ) : (
+        <>
+          <DetailsCard
+            details={diagnosticReportData(diagnosticReport)}
+            documentButton={
+              binaryId && (
+                <DocumentButton
+                  onClick={() =>
+                    openCCDAModal(binaryId, diagnosticReport.resourceTypeTitle)
+                  }
+                  text="Source Document"
+                />
+              )
+            }
+          />
+          <ObservationsTable data={observationEntries} />{" "}
+        </>
+      )}
     </div>
   );
 };
