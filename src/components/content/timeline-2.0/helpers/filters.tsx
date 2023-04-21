@@ -1,10 +1,11 @@
 import { faClipboardCheck } from "@fortawesome/free-solid-svg-icons";
+import { BetaLabel } from "@/components/core/beta-label";
 import {
   FilterChangeEvent,
   FilterItem,
 } from "@/components/core/filter-bar/filter-bar-types";
 import { TimelineEventModel } from "@/fhir/models/timeline-event";
-import { compact, uniq } from "@/utils/nodash/fp";
+import { compact, isEqual, uniqWith } from "@/utils/nodash/fp";
 
 export function timelineFilters(
   timelineEvents: TimelineEventModel[]
@@ -16,7 +17,24 @@ export function timelineFilters(
     type: "checkbox",
     icon: faClipboardCheck,
     display: "Type",
-    values: compact(uniq(timelineEvents.map((te) => te.type))),
+    values: compact(
+      uniqWith(
+        isEqual,
+        timelineEvents.map((te) =>
+          te.type
+            ? {
+                key: te.type,
+                name: te.type,
+                display: te.beta ? (
+                  <span>
+                    {te.type} <BetaLabel />
+                  </span>
+                ) : undefined,
+              }
+            : undefined
+        )
+      )
+    ),
   });
 
   return filters;
