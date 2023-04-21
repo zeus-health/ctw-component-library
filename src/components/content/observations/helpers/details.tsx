@@ -102,7 +102,7 @@ export const Component = ({ diagnosticReport }: ObservationDetailsProps) => {
               )
             }
           />
-          <ObservationsTable data={observationEntries} />{" "}
+          <ObservationsTable data={observationEntries} />
         </>
       )}
     </div>
