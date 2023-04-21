@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.4.0
+
+### Minor Changes
+
+- 64634389: Add beta tags in the ZAP and Patient Timeline V2 dropdown.
+
 ## 1.3.7
 
 ### Patch Changes
