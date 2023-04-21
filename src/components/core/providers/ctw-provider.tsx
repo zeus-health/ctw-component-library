@@ -31,7 +31,7 @@ import { ctwFetch, queryClient } from "@/utils/request";
 import { Telemetry } from "@/utils/telemetry";
 import "../main.scss";
 
-export type Env = "dev" | "sandbox" | "production";
+export type Env = "dev" | "sandbox" | "production" | "phitest";
 
 // We use an expiry padding to provide a buffer to prevent race conditions.
 // A race condition could happen in that we check if the token is expired,
