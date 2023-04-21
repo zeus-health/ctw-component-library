@@ -95,6 +95,7 @@ export class TimelineEventModel extends FHIRModel<TimelineEventResource> {
 
   get beta() {
     switch (this.model.kind) {
+      // Add cases for types that should show up as "beta" in the timeline.
       default:
         return false;
     }
