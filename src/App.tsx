@@ -6,6 +6,7 @@ import {
   CTWProvider,
   PatientProvider,
   PatientSearch,
+  PatientTimelineV2,
   ZusAggregatedProfile,
 } from ".";
 import "./App.css";
@@ -63,13 +64,16 @@ const demoComponents: DemoComponent[] = [
           "conditions-outside",
           "medications",
           "medications-outside",
+          "observations",
+          "observations-outside",
         ]}
-        title="Allergies"
+        title="ZAP"
       />
     ),
   },
   { render: () => <PatientSearch />, title: "Patient Search" },
   { render: () => <PatientHistoryTable />, title: "Patient History Table" },
+  { render: () => <PatientTimelineV2 />, title: "Patient Timeline" },
 ];
 
 const DemoApp = ({ accessToken = "" }) => (
