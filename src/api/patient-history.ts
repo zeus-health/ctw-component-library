@@ -47,8 +47,8 @@ export const schedulePatientHistory = async (
       method: "POST",
       headers: {
         "ehr-data-integration-proxy": JSON.stringify({
-          "patient-id": patientID,
-          "system-url": systemURL,
+          patientID,
+          systemURL,
         }),
         Authorization: `Bearer ${requestContext.authToken}`,
         ...(requestContext.contextBuilderId && {
