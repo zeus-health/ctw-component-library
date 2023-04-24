@@ -1,5 +1,19 @@
 # ctw-component-library
 
+## 1.4.0
+
+### Minor Changes
+
+- 64634389: Add beta tags in the ZAP and Patient Timeline V2 dropdown.
+
+## 1.3.7
+
+### Patch Changes
+
+- 5b1c0eb9: Add source document link to observation drawer
+- 93406b4c: Update search helpers to support Zus refactoring to store 3rd party data in dedicated builders.
+- 17e2143a: Make condition display value bold.
+
 ## 1.3.6
 
 ### Patch Changes

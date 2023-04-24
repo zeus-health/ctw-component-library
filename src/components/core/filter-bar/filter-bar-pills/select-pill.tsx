@@ -38,7 +38,7 @@ export function FilterBarSelectPill({
   onRemove,
 }: FilterBarSelectPillProps) {
   const filterNames = filter.values.map((value) =>
-    isString(value) ? value : value.display
+    isString(value) ? value : value.name
   );
   const items = [...filterNames, removeButton];
   return (

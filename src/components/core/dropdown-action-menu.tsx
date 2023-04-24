@@ -15,7 +15,12 @@ export type MenuItem = {
   name: string;
 };
 
-export type OptionsItem = { key: string; name: string; isSelected?: boolean };
+export type OptionsItem = {
+  key: string;
+  name: string;
+  display?: ReactNode;
+  isSelected?: boolean;
+};
 export type DropDownMenuItemType = "checkbox" | "select";
 
 export type DropdownMenuProps = {
@@ -152,7 +157,7 @@ const RenderCorrectFieldType = ({
                 e.stopPropagation();
               }}
             />
-            <span>{menuItem.name}</span>
+            {menuItem.display ? menuItem.display : <span>{menuItem.name}</span>}
           </label>
         </div>
       );
@@ -160,7 +165,7 @@ const RenderCorrectFieldType = ({
       return (
         <div className="ctw-flex ctw-w-full ctw-justify-between">
           <span className={cx({ "ctw-font-semibold": menuItem.isSelected })}>
-            {menuItem.name}
+            {menuItem.display ? menuItem.display : menuItem.name}
           </span>
           {menuItem.isSelected && (
             <FontAwesomeIcon
