@@ -1,5 +1,6 @@
 import type { Env } from "./ctw-provider";
 import Client from "fhir-kit-client";
+import { GraphQLClient } from "graphql-request";
 import { createContext, RefObject } from "react";
 import { Theme } from "@/styles/tailwind.theme";
 
@@ -33,6 +34,7 @@ export type CTWRequestContext = {
   builderId: string;
   contextBuilderId: string | undefined;
   fhirClient: Client;
+  fqsClient?: GraphQLClient;
 };
 
 export const CTWStateContext = createContext<CTWState | undefined>(undefined);

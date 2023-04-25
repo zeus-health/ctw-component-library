@@ -1,6 +1,30 @@
 import Client from "fhir-kit-client";
+import { GraphQLClient } from "graphql-request";
 import { Env } from "@/components/core/providers/ctw-provider";
 import { CTW_REQUEST_HEADER } from "@/utils/request";
+
+export function getFqsClient(
+  env: Env,
+  accessToken: string,
+  builderId?: string
+) {
+  const url =
+    env === "production"
+      ? `https://api.zusapi.com/fqs`
+      : `https://api.${env}.zusapi.com/fqs`;
+
+  const customHeaders: HeadersInit = CTW_REQUEST_HEADER;
+  if (builderId) {
+    customHeaders["Zus-Account"] = builderId;
+  }
+
+  return new GraphQLClient(url, {
+    headers: {
+      ...customHeaders,
+      Authorization: `Bearer ${accessToken}`,
+    }
+  });
+}
 
 export function getFhirClient(
   env: Env,

@@ -1,4 +1,5 @@
 import { SearchParams } from "fhir-kit-client";
+import { RequestDocument } from "graphql-request";
 import { getResources } from "./bundle";
 import {
   SYSTEM_SUMMARY,
@@ -73,6 +74,19 @@ export type SearchReturn<T extends ResourceTypeString> = {
   total: number;
   resources: ResourceType<T>[];
 };
+
+export async function searchAllRecordsViaFQS<T>(
+  requestContext: CTWRequestContext,
+  searchQuery: RequestDocument
+) : Promise<T[]> {
+  if (!requestContext.fqsClient) {
+    // eslint-disable-next-line no-console
+    console.error("fqs client not initiallzed, returning empty array")
+    return [] as T[]
+  }
+
+  return requestContext.fqsClient.request<T[]>(searchQuery)
+}
 
 // Performs a FHIR search for the given resourceType accross all resources
 // the user has access to. This can include lens and third party resources!
@@ -205,6 +219,19 @@ export async function searchSummaryRecords<T extends ResourceTypeString>(
   records.total = resources.length;
 
   return records;
+}
+
+export async function searchCommonRecordsViaFQS<T>(
+  requestContext: CTWRequestContext,
+  query: RequestDocument,
+): Promise<T[]> {
+  // const tags = excludeTagsinPatientRecordSearch(resourceType);
+  // const params = mergeParams(
+  //   searchParams,
+  //   tags.length ? { "_tag:not": tags } : {}
+  // );
+
+  return searchAllRecordsViaFQS(requestContext, query)
 }
 
 // Like searchAllRecords, but filters out lens resources.

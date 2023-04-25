@@ -9,7 +9,7 @@ import { ResourceTableActions } from "../resource/resource-table-actions";
 import { patientAllergiesColumns } from "@/components/content/allergies/patient-allergies-column";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/ctw-provider";
-import { usePatientAllergies } from "@/fhir/allergies";
+import { usePatientAllergiesViaFQS } from "@/fhir/allergies";
 import { AllergyModel } from "@/fhir/models/allergies";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { capitalize } from "@/utils/nodash";
@@ -22,7 +22,7 @@ export type PatientAllergiesProps = {
 function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { featureFlags } = useCTW();
-  const patientAllergiesQuery = usePatientAllergies();
+  const patientAllergiesQuery = usePatientAllergiesViaFQS();
   const { data, setFilters, setSort } = useFilteredSortedData({
     defaultFilters: defaultAllergyFilters,
     defaultSort: defaultAllergySort,

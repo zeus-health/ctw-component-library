@@ -16,7 +16,7 @@ import {
   FeatureFlags,
 } from "./ctw-context";
 import { version } from "../../../../package.json";
-import { getFhirClient } from "@/fhir/client";
+import { getFhirClient, getFqsClient } from "@/fhir/client";
 import i18next, { Locals } from "@/i18n";
 import {
   DefaultTheme,
@@ -211,6 +211,7 @@ function useCTW() {
       builderId: context.builderId ?? claimsBuilderId(authToken) ?? "",
       contextBuilderId: context.builderId,
       fhirClient: getFhirClient(context.env, authToken, context.builderId),
+      fqsClient: getFqsClient(context.env, authToken, context.builderId),
     };
     return requestContext;
   }, [context]);
