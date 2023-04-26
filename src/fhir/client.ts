@@ -10,8 +10,8 @@ export function getFqsClient(
 ) {
   const url =
     env === "production"
-      ? `https://api.zusapi.com/fqs`
-      : `https://api.${env}.zusapi.com/fqs`;
+      ? `https://api.zusapi.com/fqs/query`
+      : `https://api.${env}.zusapi.com/fqs/query`;
 
   const customHeaders: HeadersInit = CTW_REQUEST_HEADER;
   if (builderId) {

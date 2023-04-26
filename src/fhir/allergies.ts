@@ -1,9 +1,12 @@
 import { getIncludedResources } from "./bundle";
 import { CodePreference } from "./codeable-concept";
-import { searchCommonRecords, searchCommonRecordsViaFQS } from "./search-helpers";
+import {
+  searchCommonRecords,
+  searchCommonRecordsViaFQS,
+} from "./search-helpers";
 import { SYSTEM_NDC, SYSTEM_RXNORM, SYSTEM_SNOMED } from "./system-urls";
 import { applyAllergyFilters } from "@/components/content/allergies/allergies-filter";
-import { AllergyListForPatientQuery } from "@/components/content/allergies/helpers/graphql";
+import { AllergyGraphqlResponse, AllergyListForPatientQuery } from "@/components/content/allergies/helpers/graphql";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { QUERY_KEY_PATIENT_ALLERGIES } from "@/utils/query-keys";
 import { withTimerMetric } from "@/utils/telemetry";
@@ -18,21 +21,22 @@ export function usePatientAllergiesViaFQS() {
     [],
     withTimerMetric(async (requestContext, patient) => {
       try {
-
         // FIXME: not filtering out included resources
         // FIXME: not including iterate, patient:organization, etc
-        const data = await searchCommonRecordsViaFQS<AllergyIntolerance>( requestContext, AllergyListForPatientQuery)
-        return data.map((x) => ({
-          resource: x,
-        }) );
-
+        const response = await searchCommonRecordsViaFQS<AllergyGraphqlResponse>(
+          requestContext,
+          AllergyListForPatientQuery,
+          patient.UPID,
+        );
+        const fhirModels = response.AllergyIntoleranceConnection.edges.map((x) => x.node)
+        return applyAllergyFilters(fhirModels, {})
       } catch (e) {
         throw new Error(
-          `Failed fetching allergies information for patient ${patient.UPID}`
+          `Failed fetching allergies information for patient ${patient.UPID}: ${e}`
         );
       }
     }, "req.patient_allergies")
-  )
+  );
 }
 
 export function usePatientAllergies() {
