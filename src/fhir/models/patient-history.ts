@@ -2,7 +2,7 @@ import { PatientModel } from "./patient";
 import { formatDate, formatISODateStringToDate } from "../formatters";
 import { PatientRefreshHistoryMessage } from "@/services/patient-history/patient-history-types";
 
-export class PatientHistorytModel {
+export class PatientHistoryRequestModel {
   kind = "PatientHistory" as const;
 
   historyInfo: PatientRefreshHistoryMessage | undefined = undefined;
@@ -33,7 +33,7 @@ export class PatientHistorytModel {
     return formatDate(
       // eslint-disable-next-line no-underscore-dangle
       this.historyInfo?._createdAt,
-      "MM/dd/yy HH:mm"
+      "M/d/yy h:mm a"
     );
   }
 
