@@ -39,7 +39,7 @@ export function useBuilderPatientHistoryList(pageSize: number, pageOffset: numbe
           patientsIds
         );
 
-        const patientHistoryPatients = compact(
+        const patientHistoryRequestsWithPatientData = compact(
           patientHistoryRequests.map((m) => {
             const matchingPatient = patientData.patients.find(
               (p) => p.id === m.initialData.patientId
@@ -50,7 +50,7 @@ export function useBuilderPatientHistoryList(pageSize: number, pageOffset: numbe
 
         return {
           total: response.data.length,
-          patients: patientHistoryPatients,
+          patients: patientHistoryRequestsWithPatientData,
         };
       } catch (e) {
         Telemetry.logError(e as Error, "Failed fetching patient history patients.");
