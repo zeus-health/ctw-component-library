@@ -45,15 +45,12 @@ export const getTelecom = (telecom?: Document | Document[]): string => {
       ? contactPointTelecomMap.mailto
       : contactPointTelecomMap.tel;
 
-    const finalSystem =
-      contactPointTelecomMap[system as string] || backupSystem;
+    const finalSystem = contactPointTelecomMap[system as string] || backupSystem;
 
     const contactPoint: ModifiedContactPoint = {
       system: finalSystem,
       value,
-      use: contactPointUseMap[
-        String(xpath.select1("string(@use)", telecomXml))
-      ],
+      use: contactPointUseMap[String(xpath.select1("string(@use)", telecomXml))],
     };
     return displayForTelecom(contactPoint);
   };

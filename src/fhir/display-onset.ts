@@ -1,8 +1,4 @@
-import {
-  formatAge,
-  formatDateISOToLocal,
-  maybeFormatDateStringToLocal,
-} from "./formatters";
+import { formatAge, formatDateISOToLocal, maybeFormatDateStringToLocal } from "./formatters";
 
 export function displayOnset(
   resource: fhir4.Condition | fhir4.AllergyIntolerance

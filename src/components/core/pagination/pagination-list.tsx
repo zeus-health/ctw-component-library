@@ -6,19 +6,14 @@ export type PaginationListProps = {
   changeCount: (amount: number) => void;
 };
 
-export const PaginationList = ({
-  total,
-  count,
-  changeCount,
-}: PaginationListProps) => {
+export const PaginationList = ({ total, count, changeCount }: PaginationListProps) => {
   const allShown = count >= total || total === 0;
   const hasPages = total > DEFAULT_PAGE_SIZE;
 
   return (
     <div className="ctw-pagination !ctw-mt-1 sm:!ctw-mt-2">
       <div className="ctw-text-gray-600 ctw-text-sm">
-        Showing{" "}
-        <span className="ctw-font-medium">{Math.min(count, total)}</span> of{" "}
+        Showing <span className="ctw-font-medium">{Math.min(count, total)}</span> of{" "}
         <span className="ctw-font-medium">{total}</span> records
       </div>
 

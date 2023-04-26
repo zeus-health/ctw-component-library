@@ -12,9 +12,7 @@ export const Author = ({ document }: DocumentOnlyProps) => {
     {
       label: "Author",
       value: `${author.name || "Unknown"}${
-        author.organization.name
-          ? `, Organization: ${author.organization.name}`
-          : ""
+        author.organization.name ? `, Organization: ${author.organization.name}` : ""
       }`,
     },
     {

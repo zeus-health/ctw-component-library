@@ -11,9 +11,7 @@ export const TableDataCell = <T extends MinRecordItem>({
   column,
   record,
 }: TableColumnProps<T>): JSX.Element => {
-  const value = column.dataIndex
-    ? (record[column.dataIndex] as unknown as ReactNode)
-    : undefined;
+  const value = column.dataIndex ? (record[column.dataIndex] as unknown as ReactNode) : undefined;
 
   return (
     <td

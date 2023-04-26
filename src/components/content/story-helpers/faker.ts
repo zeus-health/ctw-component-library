@@ -8,9 +8,7 @@ faker.seed(1); // Any positive number should ensure consistent mocks
 export const FAKER_BUILDER_UUID = faker.datatype.uuid();
 
 export const fakerCreateUid = () =>
-  faker.helpers.replaceSymbolWithNumber(
-    "urn:oid:#.##.###.#.######.#.####.#.#.####.#.#.##"
-  );
+  faker.helpers.replaceSymbolWithNumber("urn:oid:#.##.###.#.######.#.####.#.#.####.#.#.##");
 
 export function fakerFakeMockSourceId() {
   const id = faker.random.alpha({
@@ -21,11 +19,7 @@ export function fakerFakeMockSourceId() {
   return `#${id}`;
 }
 
-export function fakerFakeBundleLinks(
-  resourceType: string,
-  extend = {},
-  pageCount = 250
-) {
+export function fakerFakeBundleLinks(resourceType: string, extend = {}, pageCount = 250) {
   const queryParams = {
     _count: pageCount,
     ...extend,

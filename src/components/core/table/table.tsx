@@ -4,10 +4,7 @@ import { TableColGroup } from "./table-colgroup";
 import { TableHead } from "./table-head";
 import { MinRecordItem, TableColumn } from "./table-helpers";
 import { TableRows, TableRowsProps } from "./table-rows";
-import {
-  DEFAULT_PAGE_SIZE,
-  PaginationList,
-} from "../pagination/pagination-list";
+import { DEFAULT_PAGE_SIZE, PaginationList } from "../pagination/pagination-list";
 import "./table.scss";
 
 export type RowActionsProps<T extends MinRecordItem> = { record: T };
@@ -24,15 +21,9 @@ export type TableProps<T extends MinRecordItem> = {
   records: T[];
   showTableHead?: boolean;
   stacked?: boolean;
-} & Pick<
-  TableRowsProps<T>,
-  "handleRowClick" | "RowActions" | "getRowClassName"
->;
+} & Pick<TableRowsProps<T>, "handleRowClick" | "RowActions" | "getRowClassName">;
 
-export type TableBaseProps<T extends MinRecordItem> = Omit<
-  TableProps<T>,
-  "records" | "columns"
->;
+export type TableBaseProps<T extends MinRecordItem> = Omit<TableProps<T>, "records" | "columns">;
 
 export const Table = <T extends MinRecordItem>({
   className,
@@ -91,19 +82,12 @@ export const Table = <T extends MinRecordItem>({
       })}
     >
       <div
-        className={cx(
-          "ctw-table-container ctw-scrollable-pass-through-height",
-          className,
-          {
-            "ctw-table-scroll-left-shadow": showLeftShadow,
-            "ctw-table-scroll-right-shadow": showRightShadow,
-          }
-        )}
+        className={cx("ctw-table-container ctw-scrollable-pass-through-height", className, {
+          "ctw-table-scroll-left-shadow": showLeftShadow,
+          "ctw-table-scroll-right-shadow": showRightShadow,
+        })}
       >
-        <div
-          className={cx("ctw-scrollbar ctw-scrollable-content")}
-          ref={scrollContainerRef}
-        >
+        <div className={cx("ctw-scrollbar ctw-scrollable-content")} ref={scrollContainerRef}>
           <table ref={tableRef}>
             {hasData && <TableColGroup columns={columns} />}
             {showTableHead && hasData && <TableHead columns={columns} />}
@@ -122,11 +106,7 @@ export const Table = <T extends MinRecordItem>({
         </div>
       </div>
       {!hidePagination && !isLoading && (
-        <PaginationList
-          total={records.length}
-          count={count}
-          changeCount={setCount}
-        />
+        <PaginationList total={records.length} count={count} changeCount={setCount} />
       )}
       {children}
     </div>

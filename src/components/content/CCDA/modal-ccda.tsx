@@ -14,9 +14,7 @@ export function useCCDAModal() {
     const rawBinary = await getBinaryDocument(requestContext, binaryId);
 
     openModal({
-      component: (props) => (
-        <CCDAModal fileName={title} rawBinary={rawBinary} {...props} />
-      ),
+      component: (props) => <CCDAModal fileName={title} rawBinary={rawBinary} {...props} />,
     });
   };
 }
@@ -27,12 +25,7 @@ export type CCDAModalProps = {
   onClose: () => void;
 } & Omit<ModalProps, "title" | "children">;
 
-export const CCDAModal = ({
-  rawBinary,
-  fileName,
-  onClose,
-  ...modalProps
-}: CCDAModalProps) => (
+export const CCDAModal = ({ rawBinary, fileName, onClose, ...modalProps }: CCDAModalProps) => (
   <Modal {...modalProps}>
     {rawBinary?.data && (
       <div className="ctw-flex ctw-w-full ctw-space-x-4">

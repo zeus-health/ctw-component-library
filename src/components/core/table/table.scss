@@ -7,11 +7,7 @@
   @apply ctw-pointer-events-none ctw-absolute ctw-z-30 ctw-block ctw-h-full ctw-w-1;
   top: 0;
   content: "";
-  background: linear-gradient(
-    to right,
-    rgba(99, 114, 130, 0) 0px,
-    rgba(9, 30, 66, 0.13) 100%
-  );
+  background: linear-gradient(to right, rgba(99, 114, 130, 0) 0px, rgba(9, 30, 66, 0.13) 100%);
 }
 
 .ctw-table-scroll-right-shadow::after {

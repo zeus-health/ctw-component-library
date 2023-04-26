@@ -10,9 +10,8 @@ function mockCareTeamRequests() {
     (req, res, ctx) => res(ctx.delay(750), ctx.status(200), ctx.json(patient))
   );
 
-  const mockCareTeamGet = rest.get(
-    "https://api.dev.zusapi.com/fhir/CareTeam",
-    (req, res, ctx) => res(ctx.status(200), ctx.json(careTeam))
+  const mockCareTeamGet = rest.get("https://api.dev.zusapi.com/fhir/CareTeam", (req, res, ctx) =>
+    res(ctx.status(200), ctx.json(careTeam))
   );
 
   return [mockPatientGet, mockCareTeamGet];

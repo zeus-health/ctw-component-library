@@ -3,9 +3,7 @@ import { getId } from "../../../helpers";
 import { LabelValueType } from "../../../types";
 import { isEmpty } from "@/utils/nodash";
 
-export const getConsent = (
-  document: Document
-): Record<string, LabelValueType[]> | undefined => {
+export const getConsent = (document: Document): Record<string, LabelValueType[]> | undefined => {
   const consents = xpath.select(
     "*[name()='ClinicalDocument']/*[name()='authorization']/*[name()='consent']",
     document
@@ -15,12 +13,8 @@ export const getConsent = (
 
   const result = consents.map((consent) => {
     const id = getId(xpath.select1("*[name()='id']", consent) as Document);
-    const code = String(
-      xpath.select1("string(*[name()='code']/@displayName)", consent)
-    );
-    const status = String(
-      xpath.select1("string(*[name()='statusCode']/@code)", consent)
-    );
+    const code = String(xpath.select1("string(*[name()='code']/@displayName)", consent));
+    const status = String(xpath.select1("string(*[name()='statusCode']/@code)", consent));
     return [
       { label: "ID:", value: id },
       { label: "Code:", value: code },
@@ -28,8 +22,5 @@ export const getConsent = (
     ];
   });
 
-  return result.reduce(
-    (acc, order, index) => ({ ...acc, [`consent${index + 1}`]: order }),
-    {}
-  );
+  return result.reduce((acc, order, index) => ({ ...acc, [`consent${index + 1}`]: order }), {});
 };

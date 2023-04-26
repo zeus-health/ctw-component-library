@@ -13,9 +13,8 @@ export function setupPatientHistoryMocks() {
 }
 
 function mockRequests() {
-  const mockPatientGet = rest.get(
-    "https://api.dev.zusapi.com/fhir/Patient",
-    (req, res, ctx) => res(ctx.status(200), ctx.json(patient))
+  const mockPatientGet = rest.get("https://api.dev.zusapi.com/fhir/Patient", (req, res, ctx) =>
+    res(ctx.status(200), ctx.json(patient))
   );
 
   const mockPatientHistoryGet = rest.get(

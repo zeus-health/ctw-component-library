@@ -1,9 +1,6 @@
 import { filterOtherConditions } from "./conditions";
 import { ConditionModel } from "@/fhir/models";
-import {
-  SYSTEM_CONDITION_VERIFICATION_STATUS,
-  SYSTEM_SNOMED,
-} from "@/fhir/system-urls";
+import { SYSTEM_CONDITION_VERIFICATION_STATUS, SYSTEM_SNOMED } from "@/fhir/system-urls";
 
 describe("FHIR Condition", () => {
   describe("filterOtherConditions", () => {
@@ -30,12 +27,7 @@ describe("FHIR Condition", () => {
     });
 
     it("should filter out when there's a match and patient record is older BUT they have same status", () => {
-      const { others, patients } = setupConditions(
-        "2022-11-10",
-        "2022-11-09",
-        "active",
-        "active"
-      );
+      const { others, patients } = setupConditions("2022-11-10", "2022-11-09", "active", "active");
       const filtered = filterOtherConditions(others, patients, false);
       expect(filtered).toHaveLength(2);
     });
@@ -98,12 +90,7 @@ describe("FHIR Condition", () => {
         display: "Diebetes mellitus",
       };
 
-      const otherCondition = getCondition(
-        "other",
-        otherStatus,
-        otherRecordedDate,
-        burntEarSnomed
-      );
+      const otherCondition = getCondition("other", otherStatus, otherRecordedDate, burntEarSnomed);
 
       const patientCondition = getCondition(
         "patient",
@@ -116,12 +103,7 @@ describe("FHIR Condition", () => {
         getCondition("other2"),
         otherCondition,
         getCondition("other3"),
-        getCondition(
-          "entered-in-error-other",
-          "active",
-          otherRecordedDate,
-          diabetesSnomed
-        ),
+        getCondition("entered-in-error-other", "active", otherRecordedDate, diabetesSnomed),
       ];
 
       const patients = [

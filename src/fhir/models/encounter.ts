@@ -14,21 +14,15 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
   }
 
   get diagnoses(): string[] | undefined {
-    return compact(
-      uniq(this.resource.diagnosis?.map((d) => d.condition.display))
-    );
+    return compact(uniq(this.resource.diagnosis?.map((d) => d.condition.display)));
   }
 
   get dischargeDisposition(): string | undefined {
-    return codeableConceptLabel(
-      this.resource.hospitalization?.dischargeDisposition
-    );
+    return codeableConceptLabel(this.resource.hospitalization?.dischargeDisposition);
   }
 
   get location(): string | undefined {
-    const locations = compact(
-      this.resource.location?.map((l) => l.location.display)
-    );
+    const locations = compact(this.resource.location?.map((l) => l.location.display));
     return locations.length ? locations.join(", ") : undefined;
   }
 
@@ -48,9 +42,7 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
   }
 
   get reason(): string | undefined {
-    const reasons = compact(
-      this.resource.reasonCode?.map((d) => codeableConceptLabel(d))
-    );
+    const reasons = compact(this.resource.reasonCode?.map((d) => codeableConceptLabel(d)));
 
     return reasons.length ? reasons.join(", ") : undefined;
   }

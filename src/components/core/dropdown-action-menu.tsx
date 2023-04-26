@@ -27,11 +27,7 @@ export type DropdownMenuProps = {
   buttonClassName?: cx.Argument;
   children: ReactNode;
   items: OptionsItem[];
-  onItemSelect: (clickedItem: {
-    key: string;
-    name: string;
-    value: boolean;
-  }) => void;
+  onItemSelect: (clickedItem: { key: string; name: string; value: boolean }) => void;
   type?: DropDownMenuItemType;
   customOptionRender?: (optionsItem: OptionsItem) => JSX.Element;
   pinnedActions?: MenuItem[];
@@ -56,10 +52,7 @@ export function DropdownMenuAction({
         open={isMenuOpen}
         onOpenChange={(e) => setIsMenuOpen(e)}
       >
-        <RadixDropdownMenu.Trigger
-          className={cx(buttonClassName)}
-          aria-label="dropdown"
-        >
+        <RadixDropdownMenu.Trigger className={cx(buttonClassName)} aria-label="dropdown">
           {children}
         </RadixDropdownMenu.Trigger>
         <RadixDropdownMenu.Portal container={ctwProviderRef.current}>
@@ -104,10 +97,7 @@ export function DropdownMenuAction({
                   <RadixDropdownMenu.Item
                     onClick={() => menuItem.action()}
                     key={menuItem.name}
-                    className={cx(
-                      menuItem.className,
-                      "ctw-dropdown-action-menu-item"
-                    )}
+                    className={cx(menuItem.className, "ctw-dropdown-action-menu-item")}
                   >
                     <MenuItem icon={menuItem.icon}>{menuItem.name}</MenuItem>
                   </RadixDropdownMenu.Item>
@@ -127,11 +117,7 @@ export type RenderCorrectFieldTypeProps = {
   onClick: (clickedItem: { key: string; name: string; value: boolean }) => void;
 };
 
-const RenderCorrectFieldType = ({
-  inputType,
-  menuItem,
-  onClick,
-}: RenderCorrectFieldTypeProps) => {
+const RenderCorrectFieldType = ({ inputType, menuItem, onClick }: RenderCorrectFieldTypeProps) => {
   switch (inputType) {
     case "checkbox":
       return (

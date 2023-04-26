@@ -17,11 +17,7 @@ export const Section = ({
   return (
     <div className="ctw-ccda-section-container">
       <div className="ctw-ccda-section-header-wrapper">
-        <button
-          type="button"
-          className="ctw-ccda-section-arrow"
-          onClick={handleClick}
-        >
+        <button type="button" className="ctw-ccda-section-arrow" onClick={handleClick}>
           {isOpen ? "▼" : "▶"}
         </button>
         <h3>{title}</h3>

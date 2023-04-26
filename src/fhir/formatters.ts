@@ -73,16 +73,11 @@ export function formatPhoneNumber(phoneNumber?: string): string | undefined {
 
 // Tries to format a date string from either YYYYMMDD or YYYYMMDDkkmmss
 // to MM/DD/YYYY kk:mm:ss.
-export function maybeFormatDateStringToLocal(
-  dateStr?: string
-): string | undefined {
+export function maybeFormatDateStringToLocal(dateStr?: string): string | undefined {
   if (dateStr && /^\d+$/.test(dateStr) && dateStr.length >= 8) {
     let result = "";
     try {
-      result = format(
-        parse(dateStr.substring(0, 8), "yyyyMMdd", new Date()),
-        "P"
-      );
+      result = format(parse(dateStr.substring(0, 8), "yyyyMMdd", new Date()), "P");
       // eslint-disable-next-line no-empty
     } catch {}
 
@@ -90,10 +85,7 @@ export function maybeFormatDateStringToLocal(
     // Result will be MM/DD/YYY kk:mm:ss.
     if (dateStr.length === 14) {
       try {
-        result += ` ${format(
-          parse(dateStr.substring(9, 15), "kkmmss", new Date()),
-          "kk:mm:ss"
-        )}`;
+        result += ` ${format(parse(dateStr.substring(9, 15), "kkmmss", new Date()), "kk:mm:ss")}`;
         // eslint-disable-next-line no-empty
       } catch {}
     }
@@ -110,9 +102,7 @@ export function formatAge(age: fhir4.Age): string {
 }
 
 // Formats a string ISO date to MM/DD/YYY.
-export function formatISODateStringToDate(
-  dateStr?: string
-): string | undefined {
+export function formatISODateStringToDate(dateStr?: string): string | undefined {
   if (!dateStr) return undefined;
 
   const day = dateStr.substring(8, 10);
@@ -122,10 +112,7 @@ export function formatISODateStringToDate(
   return `${month}/${day}/${year}`;
 }
 
-export function formatDate(
-  dateStr: string | undefined,
-  pattern: string
-): string | undefined {
+export function formatDate(dateStr: string | undefined, pattern: string): string | undefined {
   if (!dateStr) return undefined;
 
   return format(new Date(dateStr), pattern);

@@ -18,10 +18,7 @@ export type ResourceTableProps<T extends MinRecordItem> = {
   showTableHead?: boolean;
 };
 
-export const ResourceTable = <
-  T extends fhir4.Resource,
-  M extends FHIRModel<T>
->({
+export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>({
   className,
   columns,
   data,
@@ -34,8 +31,7 @@ export const ResourceTable = <
   const patient = usePatient();
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
-  const shouldShowTableHead =
-    typeof showTableHead === "boolean" ? showTableHead : !breakpoints.sm;
+  const shouldShowTableHead = typeof showTableHead === "boolean" ? showTableHead : !breakpoints.sm;
   const emptyMessageWithRequestRecords = patient.data ? (
     emptyMessage
   ) : (
@@ -45,10 +41,7 @@ export const ResourceTable = <
   return (
     <div
       ref={containerRef}
-      className={cx(
-        className,
-        "ctw-scrollable-pass-through-height ctw-resource-table"
-      )}
+      className={cx(className, "ctw-scrollable-pass-through-height ctw-resource-table")}
     >
       <Table
         getRowClassName={(record) => ({

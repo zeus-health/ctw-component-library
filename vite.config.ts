@@ -26,9 +26,7 @@ export default defineConfig({
     rollupOptions: {
       external: [
         ...Object.keys(peerDependencies),
-        ...Object.keys(dependencies).filter(
-          (dep) => !DEPS_TO_BUNDLE.includes(dep)
-        ),
+        ...Object.keys(dependencies).filter((dep) => !DEPS_TO_BUNDLE.includes(dep)),
       ],
     },
     target: "es2015",

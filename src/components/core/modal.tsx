@@ -10,12 +10,7 @@ export type ModalProps = {
   className?: string;
 };
 
-export const Modal = ({
-  isOpen,
-  onAfterClosed,
-  children,
-  className,
-}: ModalProps) => (
+export const Modal = ({ isOpen, onAfterClosed, children, className }: ModalProps) => (
   <Transition appear show={isOpen} as={Fragment}>
     <Dialog
       as="div"
@@ -57,9 +52,7 @@ export const Modal = ({
                 className
               )}
             >
-              <div className="ctw-flex ctw-h-full ctw-flex-col ctw-space-y-6">
-                {children}
-              </div>
+              <div className="ctw-flex ctw-h-full ctw-flex-col ctw-space-y-6">{children}</div>
             </Dialog.Panel>
           </Transition.Child>
         </div>

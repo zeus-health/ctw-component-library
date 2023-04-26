@@ -2,10 +2,7 @@ import { ConditionModel } from "./condition";
 import { SYSTEM_CONDITION_CLINICAL } from "../system-urls";
 import { clone } from "@/utils/nodash";
 
-const getConditionStatus = (
-  verificationStatus: string,
-  clinicalStatus: string
-) =>
+const getConditionStatus = (verificationStatus: string, clinicalStatus: string) =>
   new ConditionModel({
     resourceType: "Condition",
     verificationStatus: {
@@ -95,9 +92,7 @@ describe("FHIR Model: Condition", () => {
       expect(getConditionStatus("refuted", "inactive")).toBe("Refuted");
       expect(getConditionStatus("refuted", "remission")).toBe("Refuted");
       expect(getConditionStatus("refuted", "resolved")).toBe("Refuted");
-      expect(getConditionStatus("entered-in-error", "")).toBe(
-        "Entered in Error"
-      );
+      expect(getConditionStatus("entered-in-error", "")).toBe("Entered in Error");
     });
   });
 

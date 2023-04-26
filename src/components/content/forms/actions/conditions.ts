@@ -125,10 +125,7 @@ export const createOrEditCondition = async (
     note: data.note ? [{ text: data.note }] : undefined,
   };
 
-  const response = await createOrEditFhirResource(
-    fhirCondition,
-    requestContext
-  );
+  const response = await createOrEditFhirResource(fhirCondition, requestContext);
 
   await Promise.all([
     queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]),

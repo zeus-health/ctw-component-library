@@ -7,10 +7,7 @@ const replaceInXML = (
   escape = true
 ): string => {
   if (isArray(toReplace)) {
-    return toReplace.reduce(
-      (acc, val) => replaceInXML(acc, val, toReplaceWith),
-      xmlString
-    );
+    return toReplace.reduce((acc, val) => replaceInXML(acc, val, toReplaceWith), xmlString);
   }
 
   const modify: (_: string) => string = escape ? escapeRegExp : identity;

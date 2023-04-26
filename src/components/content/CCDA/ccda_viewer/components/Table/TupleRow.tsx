@@ -15,10 +15,7 @@ export const TupleRow = ({ tuple, indexKey }: TdProps): JSX.Element | null => {
       {tuple.map((singleData, index) => {
         if (!singleData.value) return null;
         let colSpan = 1;
-        if (
-          (index === 0 && !tuple[1].value) ||
-          (index === 1 && !tuple[0].value)
-        ) {
+        if ((index === 0 && !tuple[1].value) || (index === 1 && !tuple[0].value)) {
           colSpan = 3;
         }
 
@@ -28,9 +25,7 @@ export const TupleRow = ({ tuple, indexKey }: TdProps): JSX.Element | null => {
               tuple[1].label || ""
             }-${tuple[1].value}`}
           >
-            <td className="ctw-ccda-common-td1">
-              {singleData.label.replace(/:/g, "")}
-            </td>
+            <td className="ctw-ccda-common-td1">{singleData.label.replace(/:/g, "")}</td>
             <td className="ctw-ccda-common-td2" colSpan={colSpan}>
               {singleData.value}
             </td>

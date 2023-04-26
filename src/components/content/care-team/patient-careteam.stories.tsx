@@ -1,8 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import {
-  CareTeamDetailsDrawerProps,
-  PatientCareTeam,
-} from "./patient-careteam";
+import { CareTeamDetailsDrawerProps, PatientCareTeam } from "./patient-careteam";
 import { setupCareTeamMocks } from "./story-helpers/mocks/requests";
 import { CTWProvider } from "@/components/core/providers/ctw-provider";
 import { PatientProvider } from "@/components/core/providers/patient-provider";

@@ -3,10 +3,9 @@ import { displayForName, getContactDetails, getId } from "../../../helpers";
 import { GeneralInfo } from "../../../types";
 
 export const getProviderOrganization = (patientRole: Document): GeneralInfo => {
-  const providerOrganization = xpath.select1(
-    "*[name()='providerOrganization']",
-    patientRole
-  ) as Document | undefined;
+  const providerOrganization = xpath.select1("*[name()='providerOrganization']", patientRole) as
+    | Document
+    | undefined;
 
   const custodian = xpath.select1(
     "//*[name()='custodian']/*[name()='assignedCustodian']/*[name()='representedCustodianOrganization']",
@@ -15,13 +14,9 @@ export const getProviderOrganization = (patientRole: Document): GeneralInfo => {
 
   const finalProvider = providerOrganization || custodian;
 
-  const ids = (xpath.select("*[name()='id']", finalProvider) as Document[])
-    .map(getId)
-    .join(", ");
+  const ids = (xpath.select("*[name()='id']", finalProvider) as Document[]).map(getId).join(", ");
 
-  const names = displayForName(
-    xpath.select("string(*[name()='name'])", finalProvider) as string[]
-  );
+  const names = displayForName(xpath.select("string(*[name()='name'])", finalProvider) as string[]);
 
   const contactDetails = getContactDetails(
     xpath.select("*[name()='addr']", finalProvider) as Document[],

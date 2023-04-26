@@ -12,8 +12,7 @@ export type DataListStackProps = {
 export function DataListStack({ entries, limit }: DataListStackProps) {
   const [showAll, setShowAll] = useState(false);
 
-  const displayedEntries =
-    showAll || !limit ? entries : entries.slice(0, limit);
+  const displayedEntries = showAll || !limit ? entries : entries.slice(0, limit);
 
   return (
     <div className="ctw-space-y-4">
@@ -27,9 +26,7 @@ export function DataListStack({ entries, limit }: DataListStackProps) {
                 key={label + labelIndex}
                 className="ctw-text-gray-900 ctw-flex ctw-items-baseline ctw-space-x-4"
               >
-                <dt className="ctw-w-1/3 ctw-flex-shrink-0 ctw-font-medium">
-                  {label}:
-                </dt>
+                <dt className="ctw-w-1/3 ctw-flex-shrink-0 ctw-font-medium">{label}:</dt>
                 <dd className="ctw-flex-grow">{value || ""}</dd>
               </div>
             ))}
@@ -39,11 +36,7 @@ export function DataListStack({ entries, limit }: DataListStackProps) {
 
       {!showAll && limit && entries.length > limit && (
         <div className="ctw-text-center">
-          <button
-            type="button"
-            className="link-primary"
-            onClick={() => setShowAll(true)}
-          >
+          <button type="button" className="link-primary" onClick={() => setShowAll(true)}>
             Load {entries.length - limit} More
           </button>
         </div>

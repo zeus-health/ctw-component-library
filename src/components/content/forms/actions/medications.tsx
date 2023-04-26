@@ -60,11 +60,7 @@ export const createMedicationStatement = async (
     await getRequestContext()
   );
 
-  await Promise.all(
-    QUERY_KEYS.map(async (queryKey) =>
-      queryClient.invalidateQueries([queryKey])
-    )
-  );
+  await Promise.all(QUERY_KEYS.map(async (queryKey) => queryClient.invalidateQueries([queryKey])));
 
   return response;
 };

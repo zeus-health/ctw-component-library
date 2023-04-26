@@ -11,15 +11,11 @@ export async function medicationsTables(canvasElement: HTMLElement) {
   return {
     patientRecord,
     otherProvider,
-    clickAddMedication: () =>
-      userEvent.click(canvas.getByTestId("button.add-medication")),
+    clickAddMedication: () => userEvent.click(canvas.getByTestId("button.add-medication")),
   };
 }
 
-export function singleMedicationsTable(
-  canvasElement: HTMLElement,
-  tableEl: HTMLElement
-) {
+export function singleMedicationsTable(canvasElement: HTMLElement, tableEl: HTMLElement) {
   async function clickInRow(row: number, menuItemId: string) {
     userEvent.hover(getRow(row));
     userEvent.click(within(getRow(row)).getByTestId(menuItemId));
@@ -47,8 +43,7 @@ export function singleMedicationsTable(
         });
       }
     },
-    toHaveRowWithText: (row: number, text: string | RegExp) =>
-      within(getRow(row)).getByText(text),
+    toHaveRowWithText: (row: number, text: string | RegExp) => within(getRow(row)).getByText(text),
     toHaveAnyRowWithText: async (text: string | RegExp) => {
       const tbody = await within(tableEl).getAllByRole("rowgroup")[1];
       expect(

@@ -22,11 +22,7 @@ function DemoApp(props) {
   return (
     <div data-zus-telemetry-namespace="DemoApp">
       <form data-zus-telemetry-namespace="Form[Your Dinner]">
-        <input
-          type="text"
-          name="favoriteFood"
-          data-zus-telemetry-focus="favoriteFood"
-        />
+        <input type="text" name="favoriteFood" data-zus-telemetry-focus="favoriteFood" />
         <button type="submit" data-zus-telemetry-click="submit">
           Submit
         </button>

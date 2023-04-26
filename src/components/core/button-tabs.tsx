@@ -13,9 +13,7 @@ export function ButtonTabs({ tabs, children }: ButtonTabsProps) {
         {tabs.map((tab) => (
           <Tab
             key={tab}
-            className={({ selected }) =>
-              selected ? "ctw-btn-primary" : "ctw-btn-default"
-            }
+            className={({ selected }) => (selected ? "ctw-btn-primary" : "ctw-btn-default")}
           >
             {tab}
           </Tab>

@@ -5,9 +5,7 @@ import { cloneDeep } from "@/utils/nodash/fp";
 
 let patientAllergiesCache: fhir4.Bundle;
 
-export function setupAllergiesMocks({
-  allergyIntolerance,
-}: Record<string, fhir4.Bundle>) {
+export function setupAllergiesMocks({ allergyIntolerance }: Record<string, fhir4.Bundle>) {
   return {
     decorators: [
       (Story: ComponentType) => {
@@ -30,8 +28,7 @@ function mockRequests() {
 
   const mockAllergyIntolleranceGet = rest.get(
     "https://api.dev.zusapi.com/fhir/AllergyIntolerance",
-    (req, res, ctx) =>
-      res(ctx.delay(750), ctx.status(200), ctx.json(patientAllergiesCache))
+    (req, res, ctx) => res(ctx.delay(750), ctx.status(200), ctx.json(patientAllergiesCache))
   );
 
   return [mockPatientGet, mockAllergyIntolleranceGet];

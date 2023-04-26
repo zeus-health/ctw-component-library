@@ -4,11 +4,7 @@ import { ConditionsAutoComplete } from "../conditions-autocomplete";
 import { ConditionModel } from "@/fhir/models/condition";
 import i18next from "@/i18n";
 
-export const getAddConditionData = ({
-  condition,
-}: {
-  condition: ConditionModel;
-}): FormEntry[] => [
+export const getAddConditionData = ({ condition }: { condition: ConditionModel }): FormEntry[] => [
   {
     label: i18next.t("glossary:condition_one"),
     field: "condition",
@@ -51,10 +47,7 @@ const sharedFields = (condition: ConditionModel) => [
   },
   {
     label: "Status",
-    value:
-      condition.displayStatus === "Unknown"
-        ? "Select One"
-        : condition.displayStatus,
+    value: condition.displayStatus === "Unknown" ? "Select One" : condition.displayStatus,
     field: "status",
   },
 
@@ -81,21 +74,9 @@ const conditionSchema = z.object({
   subjectID: z.string({
     required_error: "Condition subjectID must be specified.",
   }),
-  status: z.enum([
-    "Active",
-    "Pending",
-    "Inactive",
-    "Refuted",
-    "Entered In Error",
-  ]),
-  onset: z
-    .date()
-    .max(new Date(), { message: "Onset cannot be a future date." })
-    .optional(),
-  abatement: z
-    .date()
-    .max(new Date(), { message: "Abatement cannot be a future date." })
-    .optional(),
+  status: z.enum(["Active", "Pending", "Inactive", "Refuted", "Entered In Error"]),
+  onset: z.date().max(new Date(), { message: "Onset cannot be a future date." }).optional(),
+  abatement: z.date().max(new Date(), { message: "Abatement cannot be a future date." }).optional(),
   note: z.string().optional(),
 });
 
@@ -110,11 +91,7 @@ export const conditionRefinement = (
       path: ["abatement"],
     });
   }
-  if (
-    condition.abatement &&
-    condition.onset &&
-    condition.abatement < condition.onset
-  ) {
+  if (condition.abatement && condition.onset && condition.abatement < condition.onset) {
     ctx.addIssue({
       code: Zod.ZodIssueCode.custom,
       message: "Abatement date must be after onset date.",
@@ -123,8 +100,8 @@ export const conditionRefinement = (
   }
 };
 
-export const conditionEditSchema = conditionSchema.superRefine(
-  (condition, refinementCtx) => conditionRefinement(condition, refinementCtx)
+export const conditionEditSchema = conditionSchema.superRefine((condition, refinementCtx) =>
+  conditionRefinement(condition, refinementCtx)
 );
 
 export const conditionAddSchema = conditionSchema
@@ -141,6 +118,4 @@ export const conditionAddSchema = conditionSchema
       system: z.string().optional(),
     }),
   })
-  .superRefine((condition, refinementCtx) =>
-    conditionRefinement(condition, refinementCtx)
-  );
+  .superRefine((condition, refinementCtx) => conditionRefinement(condition, refinementCtx));

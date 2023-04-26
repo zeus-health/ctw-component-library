@@ -47,8 +47,7 @@ export const heartConditions = {
       system: "http://snomed.info/sct",
     },
     {
-      display:
-        "Hypertensive heart disease with congestive heart failure (disorder)",
+      display: "Hypertensive heart disease with congestive heart failure (disorder)",
       code: "5148006",
       system: "http://snomed.info/sct",
     },

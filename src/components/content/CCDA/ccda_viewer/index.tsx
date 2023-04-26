@@ -13,14 +13,9 @@ export const CcdaViewer = ({ document }: DocumentOnlyProps): JSX.Element => {
 
   const texts: SectionType[] = sections.map((section) => {
     const title = String(xpath.select1("string(*[name()='title'])", section));
-    const humanReadable = xpath.select1(
-      "*[name()='text']",
-      section
-    ) as Document;
+    const humanReadable = xpath.select1("*[name()='text']", section) as Document;
 
-    const code = String(
-      xpath.select1("string(*[name()='code']/@code)", section)
-    );
+    const code = String(xpath.select1("string(*[name()='code']/@code)", section));
 
     return { title, humanReadable, code };
   });
@@ -34,11 +29,7 @@ export const CcdaViewer = ({ document }: DocumentOnlyProps): JSX.Element => {
       <Header document={document} />
       <DocumentDetails document={document} />
       {texts.map(({ title, humanReadable, code }) => (
-        <Section
-          key={`el-text-${code}`}
-          title={title}
-          humanReadable={humanReadable}
-        />
+        <Section key={`el-text-${code}`} title={title} humanReadable={humanReadable} />
       ))}
     </div>
   );

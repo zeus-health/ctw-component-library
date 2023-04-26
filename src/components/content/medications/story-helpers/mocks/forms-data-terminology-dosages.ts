@@ -32,13 +32,11 @@ export const searchDosagesALB = [
     code: "755497",
   },
   {
-    display:
-      "albuterol 0.833 MG/ML / ipratropium bromide 0.167 MG/ML Inhalation Solution",
+    display: "albuterol 0.833 MG/ML / ipratropium bromide 0.167 MG/ML Inhalation Solution",
     code: "1437702",
   },
   {
-    display:
-      "albuterol 0.833 MG/ML / ipratropium bromide 0.167 MG/ML Inhalation Solution [DuoNeb]",
+    display: "albuterol 0.833 MG/ML / ipratropium bromide 0.167 MG/ML Inhalation Solution [DuoNeb]",
     code: "1437704",
   },
   {
@@ -67,8 +65,7 @@ export const searchDosagesALB = [
   },
 
   {
-    display:
-      "Bacillus anthracis strain V770-NP1-R antigens 0.1 MG/ML Injectable Suspension",
+    display: "Bacillus anthracis strain V770-NP1-R antigens 0.1 MG/ML Injectable Suspension",
     code: "832679",
   },
   {
@@ -81,8 +78,7 @@ export const searchDosagesALB = [
     code: "1809332",
   },
   {
-    display:
-      "Bacillus coagulans 1000000000 UNT / inulin 250 MG Chewable Tablet",
+    display: "Bacillus coagulans 1000000000 UNT / inulin 250 MG Chewable Tablet",
     code: "2587753",
   },
   {
@@ -106,8 +102,7 @@ export const searchDosagesALB = [
     code: "1670414",
   },
   {
-    display:
-      "Bacillus coagulans 25000000 UNT / Lactobacillus acidophilus 35000000 UNT Oral Tablet",
+    display: "Bacillus coagulans 25000000 UNT / Lactobacillus acidophilus 35000000 UNT Oral Tablet",
     code: "1147378",
   },
   {
@@ -123,8 +118,7 @@ export const searchDosagesALB = [
     code: "2383957",
   },
   {
-    display:
-      "Bacillus subtilis 1500000000 UNT / inulin 1000 MG Chewable Tablet",
+    display: "Bacillus subtilis 1500000000 UNT / inulin 1000 MG Chewable Tablet",
     code: "2261778",
   },
   {
@@ -190,8 +184,7 @@ export const searchDosagesALB = [
     code: "1599836",
   },
   {
-    display:
-      "C1 esterase inhibitor (recombinant) 2100 UNT Injection [Ruconest]",
+    display: "C1 esterase inhibitor (recombinant) 2100 UNT Injection [Ruconest]",
     code: "1599841",
   },
   {

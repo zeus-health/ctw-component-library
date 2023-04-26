@@ -24,21 +24,12 @@ export const Toggle = ({ name, text, onChange, inputProps }: ToggleProps) => (
         htmlFor={name}
         className="ctw-relative ctw-block ctw-h-6 ctw-cursor-pointer ctw-overflow-hidden ctw-rounded-full ctw-bg-divider-light"
       >
-        <input
-          onChange={onChange}
-          {...inputProps}
-          type="checkbox"
-          name={name}
-          id={name}
-        />
+        <input onChange={onChange} {...inputProps} type="checkbox" name={name} id={name} />
         <span className="ctw-toggle-span" />
       </label>
     </div>
 
-    <label
-      htmlFor={name}
-      className="ctw-text-sm ctw-font-medium ctw-text-icon-default"
-    >
+    <label htmlFor={name} className="ctw-text-sm ctw-font-medium ctw-text-icon-default">
       {text}
     </label>
   </div>

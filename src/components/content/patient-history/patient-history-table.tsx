@@ -109,10 +109,7 @@ const columns: TableColumn<PatientHistorytModel>[] = [
     render: (data) => (
       <>
         {data.messages?.map((message) => (
-          <div
-            className="ctw-status-column"
-            key={`${data.historyInfo?.uuid}-${message.service}`}
-          >
+          <div className="ctw-status-column" key={`${data.historyInfo?.uuid}-${message.service}`}>
             <div className="ctw-capitalize">{message.service}</div>
             <div>-</div>
             <div>{message.status}</div>
@@ -129,9 +126,7 @@ const PatientNameColumn = ({ data }: { data: PatientHistorytModel }) => (
       <div className="ctw-flex ctw-font-medium">
         <div className="ctw-max-w-xs">{data.patient.fullName}</div>
         {data.patient.resource.gender && (
-          <div className="ctw-uppercase">
-            ({data.patient.resource.gender[0]})
-          </div>
+          <div className="ctw-uppercase">({data.patient.resource.gender[0]})</div>
         )}
       </div>
       <div className="ctw-text-content-lighter">

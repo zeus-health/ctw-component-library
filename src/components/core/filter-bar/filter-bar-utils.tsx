@@ -3,10 +3,7 @@ import { FilterChangeEvent, FilterValuesRecord } from "./filter-bar-types";
 import { ListBoxOptionStatus } from "../list-box/list-box";
 import { isFunction, set } from "@/utils/nodash/fp";
 
-export function displayFilterItem(
-  { display }: FilterItem,
-  status: ListBoxOptionStatus
-) {
+export function displayFilterItem({ display }: FilterItem, status: ListBoxOptionStatus) {
   return <>{isFunction(display) ? display(status) : display}</>;
 }
 
@@ -30,9 +27,7 @@ export function filterChangeEvent(
 }
 
 // Convert a FilterChangeEvent into FilterValuesRecord (setting default state)
-export function filterChangeEventToValuesRecord(
-  state: FilterChangeEvent
-): FilterValuesRecord {
+export function filterChangeEventToValuesRecord(state: FilterChangeEvent): FilterValuesRecord {
   return Object.keys(state).reduce((acc, key) => {
     const filterState = state[key];
     if (typeof filterState !== "undefined") {

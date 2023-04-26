@@ -1,9 +1,5 @@
 import { Basic, Resource } from "fhir/r4";
-import {
-  SYSTEM_ENRICHMENT,
-  SYSTEM_SUMMARY,
-  SYSTEM_ZUS_PROFILE_ACTION,
-} from "../system-urls";
+import { SYSTEM_ENRICHMENT, SYSTEM_SUMMARY, SYSTEM_ZUS_PROFILE_ACTION } from "../system-urls";
 import { ResourceMap } from "../types";
 import { find, startCase } from "@/utils/nodash";
 
@@ -18,11 +14,7 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
 
   readonly revIncludes?: Resource[];
 
-  constructor(
-    resource: T,
-    includedResources?: ResourceMap,
-    revIncludes?: Resource[]
-  ) {
+  constructor(resource: T, includedResources?: ResourceMap, revIncludes?: Resource[]) {
     this.resource = resource;
     this.includedResources = includedResources;
     this.revIncludes = revIncludes;
@@ -47,9 +39,7 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
 
   // Returns true if this resource is a summary/lens resource.
   get isSummaryResource(): boolean {
-    return (
-      find(this.resource.meta?.tag, { system: SYSTEM_SUMMARY }) !== undefined
-    );
+    return find(this.resource.meta?.tag, { system: SYSTEM_SUMMARY }) !== undefined;
   }
 
   get resourceType(): string {

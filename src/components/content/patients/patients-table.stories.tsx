@@ -1,9 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { setupPatientsTableMocks } from "./story-helpers/mocks/requests";
-import {
-  PatientsTable,
-  PatientsTableProps,
-} from "@/components/content/patients/patients-table";
+import { PatientsTable, PatientsTableProps } from "@/components/content/patients/patients-table";
 import { CTWProvider } from "@/components/core/providers/ctw-provider";
 
 type Props = PatientsTableProps;

@@ -86,9 +86,7 @@ export class PatientModel extends FHIRModel<fhir4.Patient> {
       system: SYSTEM_ZUS_UNIVERSAL_ID,
     })?.value;
     if (!upid) {
-      throw Error(
-        `Patient with ID ${this.resource.identifier} does not have a UPID`
-      );
+      throw Error(`Patient with ID ${this.resource.identifier} does not have a UPID`);
     }
     return upid;
   }

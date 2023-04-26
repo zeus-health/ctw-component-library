@@ -40,9 +40,7 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
     }
 
     if (this.resource.abatementRange) {
-      return formatDateISOToLocal(
-        this.resource.abatementRange.low?.value?.toString()
-      );
+      return formatDateISOToLocal(this.resource.abatementRange.low?.value?.toString());
     }
 
     return this.resource.abatementString;
@@ -53,9 +51,7 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
       system: SYSTEM_CONDITION_CLINICAL,
     });
 
-    return coding?.code
-      ? ["active", "recurrence", "relapse"].includes(coding.code)
-      : false;
+    return coding?.code ? ["active", "recurrence", "relapse"].includes(coding.code) : false;
   }
 
   get asserter(): string | undefined {
@@ -63,19 +59,11 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
   }
 
   get bodySites(): string[] {
-    return (
-      this.resource.bodySite?.map((bodySite) =>
-        codeableConceptLabel(bodySite)
-      ) || []
-    );
+    return this.resource.bodySite?.map((bodySite) => codeableConceptLabel(bodySite)) || [];
   }
 
   get categories(): string[] {
-    return (
-      this.resource.category?.map((category) =>
-        codeableConceptLabel(category)
-      ) || []
-    );
+    return this.resource.category?.map((category) => codeableConceptLabel(category)) || [];
   }
 
   get ccsChapter(): string | undefined {
@@ -108,10 +96,8 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
 
   get display(): string | undefined {
     return (
-      findCodingByOrderOfPreference(
-        CONDITION_CODE_PREFERENCE_ORDER,
-        this.resource.code
-      )?.display ?? codeableConceptLabel(this.resource.code)
+      findCodingByOrderOfPreference(CONDITION_CODE_PREFERENCE_ORDER, this.resource.code)?.display ??
+      codeableConceptLabel(this.resource.code)
     );
   }
 
@@ -121,9 +107,7 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
 
   get evidences(): string[] {
     return (
-      this.resource.evidence?.map((evidence) =>
-        codeableConceptLabel(evidence.code?.[0])
-      ) || []
+      this.resource.evidence?.map((evidence) => codeableConceptLabel(evidence.code?.[0])) || []
     );
   }
 
@@ -154,10 +138,7 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
     );
 
     // The order of the array matters here because that is how it determines which record to keep when dupes are found.
-    const dedupedBySystemCoding = uniqWith(
-      codings,
-      (prev, next) => prev.system === next.system
-    );
+    const dedupedBySystemCoding = uniqWith(codings, (prev, next) => prev.system === next.system);
     return dedupedBySystemCoding;
   }
 
@@ -191,9 +172,7 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
     }
 
     if (this.resource.onsetRange) {
-      return formatDateISOToLocal(
-        this.resource.onsetRange.low?.value?.toString()
-      );
+      return formatDateISOToLocal(this.resource.onsetRange.low?.value?.toString());
     }
 
     return formatStringToDate(this.resource.onsetString);
@@ -215,10 +194,7 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
   }
 
   get preferredCoding(): fhir4.Coding | undefined {
-    return findCodingByOrderOfPreference(
-      CONDITION_CODE_PREFERENCE_ORDER,
-      this.resource.code
-    );
+    return findCodingByOrderOfPreference(CONDITION_CODE_PREFERENCE_ORDER, this.resource.code);
   }
 
   get recordedDate(): string | undefined {
@@ -350,11 +326,7 @@ export const conditionStatuses = [
   "Unknown",
 ] as const;
 
-export const outsideConditionStatuses = [
-  "Active",
-  "Inactive",
-  "Unknown",
-] as const;
+export const outsideConditionStatuses = ["Active", "Inactive", "Unknown"] as const;
 
 export type ConditionStatuses =
   | (typeof conditionStatuses)[number]

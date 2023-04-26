@@ -1,9 +1,7 @@
 import { Env } from "..";
 
 export const getZusApiBaseUrl = (env: Env) =>
-  env === "production"
-    ? `https://api.zusapi.com`
-    : `https://api.${env}.zusapi.com`;
+  env === "production" ? `https://api.zusapi.com` : `https://api.${env}.zusapi.com`;
 
 export const getZusProxyApiBaseUrl = (env: Env) =>
   env === "production"

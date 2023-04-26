@@ -14,10 +14,7 @@ export const getDocumentationOf = (
   if (isEmpty(serviceEvents)) return undefined;
 
   const result = serviceEvents.map((serviceEvent) => {
-    const effectiveTime = xpath.select1(
-      "*[name()='effectiveTime']",
-      serviceEvent
-    ) as Document;
+    const effectiveTime = xpath.select1("*[name()='effectiveTime']", serviceEvent) as Document;
 
     const period = getPeriod(effectiveTime);
 
@@ -26,9 +23,7 @@ export const getDocumentationOf = (
       serviceEvent
     ) as Document[];
 
-    const performers = performerNames.map((performer) =>
-      getHumanName(performer)
-    );
+    const performers = performerNames.map((performer) => getHumanName(performer));
 
     return [
       {
@@ -47,8 +42,5 @@ export const getDocumentationOf = (
     ];
   });
 
-  return result.reduce(
-    (acc, val, index) => ({ ...acc, [`documentationOf${index + 1}`]: val }),
-    {}
-  );
+  return result.reduce((acc, val, index) => ({ ...acc, [`documentationOf${index + 1}`]: val }), {});
 };

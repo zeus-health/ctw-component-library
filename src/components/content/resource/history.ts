@@ -6,18 +6,12 @@ import { getBinaryId } from "@/fhir/binaries";
 import { getIncludedResources, getResources } from "@/fhir/bundle";
 import { FHIRModel } from "@/fhir/models/fhir-model";
 import { searchProvenances } from "@/fhir/provenance";
-import {
-  searchBuilderRecords,
-  searchCommonRecords,
-} from "@/fhir/search-helpers";
+import { searchBuilderRecords, searchCommonRecords } from "@/fhir/search-helpers";
 import { ResourceMap, ResourceType, ResourceTypeString } from "@/fhir/types";
 import { compact, isEqual, orderBy, some, uniqWith } from "@/utils/nodash";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
-export type UseHistoryProps<
-  T extends ResourceTypeString,
-  M extends FHIRModel<ResourceType<T>>
-> = {
+export type UseHistoryProps<T extends ResourceTypeString, M extends FHIRModel<ResourceType<T>>> = {
   resourceType: T;
   model: M;
   queryKey: string;
@@ -27,10 +21,7 @@ export type UseHistoryProps<
   getHistoryEntry: (m: M) => HistoryEntryProps;
 };
 
-export function useHistory<
-  T extends ResourceTypeString,
-  M extends FHIRModel<ResourceType<T>>
->({
+export function useHistory<T extends ResourceTypeString, M extends FHIRModel<ResourceType<T>>>({
   resourceType,
   model,
   queryKey,
@@ -58,11 +49,7 @@ export function useHistory<
 
         let versions: ResourceType<T>[] = [];
         if (includeVersionHistory) {
-          versions = await getVersionHistory(
-            resourceType,
-            requestContext,
-            searchParams
-          );
+          versions = await getVersionHistory(resourceType, requestContext, searchParams);
         }
 
         const constructor = model.constructor as new (
@@ -73,9 +60,7 @@ export function useHistory<
           (c) => new constructor(c, includedResources)
         );
 
-        const entries = dedupeHistory(models, valuesToDedupeOn).map(
-          getHistoryEntry
-        );
+        const entries = dedupeHistory(models, valuesToDedupeOn).map(getHistoryEntry);
 
         // Fetch provenances and add binaryId to each entry.
         const provenances = await searchProvenances(requestContext, models);
@@ -103,9 +88,7 @@ export function dedupeHistory<T extends fhir4.Resource, M extends FHIRModel<T>>(
   // We sort by isEnriched because we want enriched records to be preferred in uniqWith function.
   const enrichedFirst = orderBy(resources, ["isEnriched"], "desc");
 
-  return uniqWith(enrichedFirst, (a, b) =>
-    isEqual(valuesToDedupeOn(a), valuesToDedupeOn(b))
-  );
+  return uniqWith(enrichedFirst, (a, b) => isEqual(valuesToDedupeOn(a), valuesToDedupeOn(b)));
 }
 
 export async function getVersionHistory<T extends ResourceTypeString>(
@@ -113,11 +96,7 @@ export async function getVersionHistory<T extends ResourceTypeString>(
   requestContext: CTWRequestContext,
   searchParams: SearchParams
 ): Promise<ResourceType<T>[]> {
-  const response = await searchBuilderRecords(
-    resourceType,
-    requestContext,
-    searchParams
-  );
+  const response = await searchBuilderRecords(resourceType, requestContext, searchParams);
 
   // Filter out any resources that are currently marked as entered in error.
   const resources = response.resources.filter((r) => !wasEnteredInError(r));

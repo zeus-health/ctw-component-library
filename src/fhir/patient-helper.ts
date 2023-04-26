@@ -49,24 +49,17 @@ export async function getBuilderPatientListWithSearch(
   paginationOptions: (number | string | undefined)[] = []
 ): Promise<Omit<GetPatientsTableResults, "total">> {
   const [pageSize, pageOffset, searchValue] = paginationOptions;
-  const offset =
-    parseInt(`${pageOffset ?? "0"}`, 10) * parseInt(`${pageSize ?? "1"}`, 10);
+  const offset = parseInt(`${pageOffset ?? "0"}`, 10) * parseInt(`${pageSize ?? "1"}`, 10);
 
   const searchParams = pickBy({
     _count: pageSize,
 
     _offset: offset,
-    ...(hasNumber(searchValue)
-      ? { identifier: searchValue }
-      : { name: searchValue }),
+    ...(hasNumber(searchValue) ? { identifier: searchValue } : { name: searchValue }),
   }) as SearchParams;
 
   try {
-    const { resources } = await searchBuilderRecords(
-      "Patient",
-      requestContext,
-      searchParams
-    );
+    const { resources } = await searchBuilderRecords("Patient", requestContext, searchParams);
 
     return {
       searchParams,
@@ -82,16 +75,13 @@ export async function getBuilderPatientsList(
   paginationOptions: (number | string | undefined)[] = []
 ): Promise<GetPatientsTableResults> {
   const [pageSize, pageOffset, searchValue] = paginationOptions;
-  const offset =
-    parseInt(`${pageOffset ?? "0"}`, 10) * parseInt(`${pageSize ?? "1"}`, 10);
+  const offset = parseInt(`${pageOffset ?? "0"}`, 10) * parseInt(`${pageSize ?? "1"}`, 10);
 
   const searchParams = pickBy({
     _count: pageSize,
     _total: "accurate",
     _offset: offset,
-    ...(hasNumber(searchValue)
-      ? { identifier: searchValue }
-      : { name: searchValue }),
+    ...(hasNumber(searchValue) ? { identifier: searchValue } : { name: searchValue }),
   }) as SearchParams;
 
   try {
@@ -117,8 +107,7 @@ export async function getBuilderPatientsListByIdentifier(
   identifiers: string[] = []
 ): Promise<GetPatientsTableResults> {
   const [pageSize, pageOffset] = paginationOptions;
-  const offset =
-    parseInt(`${pageOffset ?? "0"}`, 10) * parseInt(`${pageSize ?? "1"}`, 10);
+  const offset = parseInt(`${pageOffset ?? "0"}`, 10) * parseInt(`${pageSize ?? "1"}`, 10);
 
   const searchParams = pickBy({
     _id: identifiers.join(","),

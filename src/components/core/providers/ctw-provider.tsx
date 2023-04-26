@@ -1,13 +1,5 @@
 import { QueryClientProvider, useQuery } from "@tanstack/react-query";
-import {
-  ReactNode,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import {
   CTWRequestContext,
   CTWState,
@@ -18,12 +10,7 @@ import {
 import { version } from "../../../../package.json";
 import { getFhirClient } from "@/fhir/client";
 import i18next, { Locals } from "@/i18n";
-import {
-  DefaultTheme,
-  EmptyTailwindCSSVars,
-  mapToCSSVar,
-  Theme,
-} from "@/styles/tailwind.theme";
+import { DefaultTheme, EmptyTailwindCSSVars, mapToCSSVar, Theme } from "@/styles/tailwind.theme";
 import { claimsBuilderId, claimsExp } from "@/utils/auth";
 import { merge } from "@/utils/nodash";
 import { QUERY_KEY_AUTH_TOKEN } from "@/utils/query-keys";
@@ -149,11 +136,7 @@ function CTWProvider({
       return ctwState.authToken;
     }
 
-    const newToken = await checkOrRefreshAuth(
-      token,
-      ctwState.authTokenURL,
-      ctwState.headers
-    );
+    const newToken = await checkOrRefreshAuth(token, ctwState.authTokenURL, ctwState.headers);
     if (token?.accessToken !== newToken.accessToken) {
       setToken(newToken);
     }
@@ -189,9 +172,7 @@ function CTWProvider({
   return (
     <div ref={ctwProviderRef} className="ctw-provider">
       <CTWStateContext.Provider value={providerState}>
-        <QueryClientProvider client={queryClient}>
-          {children}
-        </QueryClientProvider>
+        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
       </CTWStateContext.Provider>
     </div>
   );
@@ -247,9 +228,8 @@ async function checkOrRefreshAuth(
   headers?: Record<string, string>
 ): Promise<CTWToken> {
   if (!token || Date.now() >= token.expiresAt + EXPIRY_PADDING_MS) {
-    const response = await queryClient.fetchQuery(
-      [QUERY_KEY_AUTH_TOKEN, url],
-      async () => ctwFetch(url as string, { headers })
+    const response = await queryClient.fetchQuery([QUERY_KEY_AUTH_TOKEN, url], async () =>
+      ctwFetch(url as string, { headers })
     );
     const newToken = await response.json();
     return {

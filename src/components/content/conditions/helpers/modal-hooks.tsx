@@ -1,8 +1,5 @@
 import { ConditionHeader } from "./condition-header";
-import {
-  createOrEditCondition,
-  getAddConditionWithDefaults,
-} from "../../forms/actions/conditions";
+import { createOrEditCondition, getAddConditionWithDefaults } from "../../forms/actions/conditions";
 import {
   conditionAddSchema,
   conditionEditSchema,
@@ -73,10 +70,7 @@ export function useConfirmDeleteCondition() {
   const { openModal } = useModal();
   const { getRequestContext } = useCTW();
 
-  return (
-    condition: ConditionModel,
-    onDelete?: (condition: ConditionModel) => void
-  ) => {
+  return (condition: ConditionModel, onDelete?: (condition: ConditionModel) => void) => {
     const name =
       condition.display ??
       t("resource.unamed", {

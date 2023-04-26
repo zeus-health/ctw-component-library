@@ -2,14 +2,7 @@ import cx from "classnames";
 
 export type BadgeProps = {
   className?: string;
-  color:
-    | "primary"
-    | "gray"
-    | "info"
-    | "success"
-    | "caution"
-    | "error"
-    | "notification";
+  color: "primary" | "gray" | "info" | "success" | "caution" | "error" | "notification";
   text: string;
 };
 

@@ -48,8 +48,7 @@ export const patientConditions: fhir4.Bundle = {
         verificationStatus: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              system: "http://terminology.hl7.org/CodeSystem/condition-ver-status",
               code: "confirmed",
             },
           ],
@@ -57,8 +56,7 @@ export const patientConditions: fhir4.Bundle = {
         clinicalStatus: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              system: "http://terminology.hl7.org/CodeSystem/condition-clinical",
               code: "active",
             },
           ],
@@ -94,8 +92,7 @@ export const patientConditions: fhir4.Bundle = {
                   valueString: "CCS",
                 },
               ],
-              system:
-                "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
+              system: "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
               code: "MBD005",
               display: "Anxiety and fear-related disorders",
               userSelected: false,
@@ -107,8 +104,7 @@ export const patientConditions: fhir4.Bundle = {
                   valueString: "CCI",
                 },
               ],
-              system:
-                "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
+              system: "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
               code: "C",
               display: "Chronic",
               userSelected: false,
@@ -191,8 +187,7 @@ export const patientConditions: fhir4.Bundle = {
         verificationStatus: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              system: "http://terminology.hl7.org/CodeSystem/condition-ver-status",
               code: "unconfirmed",
             },
           ],
@@ -200,8 +195,7 @@ export const patientConditions: fhir4.Bundle = {
         clinicalStatus: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              system: "http://terminology.hl7.org/CodeSystem/condition-clinical",
               code: "active",
             },
           ],
@@ -220,8 +214,7 @@ export const patientConditions: fhir4.Bundle = {
                   valueString: "CCS",
                 },
               ],
-              system:
-                "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
+              system: "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
               code: "MBD005",
               display: "Anxiety and fear-related disorders",
               userSelected: false,
@@ -233,8 +226,7 @@ export const patientConditions: fhir4.Bundle = {
                   valueString: "CCI",
                 },
               ],
-              system:
-                "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
+              system: "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
               code: "C",
               display: "Chronic",
               userSelected: false,
@@ -318,8 +310,7 @@ export const patientConditions: fhir4.Bundle = {
         verificationStatus: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              system: "http://terminology.hl7.org/CodeSystem/condition-ver-status",
               code: "confirmed",
             },
           ],
@@ -327,8 +318,7 @@ export const patientConditions: fhir4.Bundle = {
         clinicalStatus: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              system: "http://terminology.hl7.org/CodeSystem/condition-clinical",
               code: "inactive",
             },
           ],
@@ -376,8 +366,7 @@ export const patientConditions: fhir4.Bundle = {
                   valueString: "CCS",
                 },
               ],
-              system:
-                "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
+              system: "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
               code: "DIG011",
               display: "Regional enteritis and ulcerative colitis",
               userSelected: false,
@@ -389,8 +378,7 @@ export const patientConditions: fhir4.Bundle = {
                   valueString: "CCI",
                 },
               ],
-              system:
-                "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
+              system: "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
               code: "C",
               display: "Chronic",
               userSelected: false,

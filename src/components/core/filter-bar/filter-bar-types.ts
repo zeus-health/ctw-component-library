@@ -38,10 +38,7 @@ export type FilterOptionTag = {
   type: "tag";
 } & MinFilterItem;
 
-export type FilterItem =
-  | FilterOptionSelect
-  | FilterOptionCheckbox
-  | FilterOptionTag;
+export type FilterItem = FilterOptionSelect | FilterOptionCheckbox | FilterOptionTag;
 
 export type FilterValuesRecord = Record<string, string | string[]>;
 

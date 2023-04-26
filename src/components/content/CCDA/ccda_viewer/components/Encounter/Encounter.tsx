@@ -7,17 +7,13 @@ export const Encounter = ({ document }: DocumentOnlyProps) => {
 
   if (!encounter) return null;
 
-  const { dischargeDisposition, encounterLocation, id, type, dateTime } =
-    encounter;
+  const { dischargeDisposition, encounterLocation, id, type, dateTime } = encounter;
 
   const finalData = [
     {
       label: "Encounter",
       value:
-        dateTime.value ||
-        dischargeDisposition ||
-        encounterLocation ||
-        id.value ? (
+        dateTime.value || dischargeDisposition || encounterLocation || id.value ? (
           <>
             <b>ID: </b>
             {id.value || "Unknown"}

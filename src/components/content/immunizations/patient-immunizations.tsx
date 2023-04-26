@@ -19,9 +19,7 @@ const viewRecordFHIR = ({ record }: { record: ImmunizationModel }) => (
   <ViewFHIR name="Immunization Resource" resource={record.resource} />
 );
 
-function PatientImmunizationsComponent({
-  className,
-}: PatientImmunizationsProps) {
+function PatientImmunizationsComponent({ className }: PatientImmunizationsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const { featureFlags } = useCTW();
@@ -45,9 +43,7 @@ function PatientImmunizationsComponent({
       )}
     >
       <Table
-        RowActions={
-          featureFlags?.enableViewFhirButton ? viewRecordFHIR : undefined
-        }
+        RowActions={featureFlags?.enableViewFhirButton ? viewRecordFHIR : undefined}
         stacked={breakpoints.sm}
         isLoading={patientImmunizationsQuery.isLoading}
         records={patientImmunizationsQuery.data ?? []}

@@ -111,8 +111,7 @@ export const Stacked: StoryObj<Props> = {
   parameters: {
     docs: {
       description: {
-        story:
-          "Stacked version of table, good for sidepanels and smaller screens (responsive).",
+        story: "Stacked version of table, good for sidepanels and smaller screens (responsive).",
       },
     },
   },
