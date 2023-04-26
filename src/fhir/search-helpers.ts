@@ -15,9 +15,7 @@ import { filter, find, mapValues, mergeWith } from "@/utils/nodash";
 
 const MAX_COUNT = 250;
 
-function excludeTagsinPatientRecordSearch<T extends ResourceTypeString>(
-  resourceType: T
-): string[] {
+function excludeTagsinPatientRecordSearch<T extends ResourceTypeString>(resourceType: T): string[] {
   switch (resourceType) {
     case "Patient":
       return [...UPI_TAGS];
@@ -156,10 +154,7 @@ export async function searchLensRecords<T extends ResourceTypeString>(
   This will help avoid getting duplicate results or no there is no data for the builder. 
   Once we have been in the post-kludge world long enough we can remove this functionality. */
   if (resources.length === 0 && entry.length === 0) {
-    ({ entry, resources } = filterSearchReturnByBuilderId(
-      records,
-      requestContext.builderId
-    ));
+    ({ entry, resources } = filterSearchReturnByBuilderId(records, requestContext.builderId));
   }
 
   records.resources = resources;
@@ -193,10 +188,7 @@ export async function searchSummaryRecords<T extends ResourceTypeString>(
   This will help avoid getting duplicate results or no there is no data for the builder. 
   Once we have been in the post-kludge world long enough we can remove this functionality. */
   if (resources.length === 0 || entry.length === 0) {
-    ({ entry, resources } = filterSearchReturnByBuilderId(
-      records,
-      requestContext.builderId
-    ));
+    ({ entry, resources } = filterSearchReturnByBuilderId(records, requestContext.builderId));
   }
 
   records.resources = resources;
@@ -214,10 +206,7 @@ export async function searchCommonRecords<T extends ResourceTypeString>(
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
   const tags = excludeTagsinPatientRecordSearch(resourceType);
-  const params = mergeParams(
-    searchParams,
-    tags.length ? { "_tag:not": tags } : {}
-  );
+  const params = mergeParams(searchParams, tags.length ? { "_tag:not": tags } : {});
 
   return searchAllRecords(resourceType, requestContext, params);
 }
@@ -227,19 +216,14 @@ export async function searchCommonRecords<T extends ResourceTypeString>(
 // This way we can treat array values as ORs in FHIR requests.
 // E.g. {status: ['active', 'relapse']} -> {status: "active, relapse"}.
 export function flattenArrayFilters(filters: { [key: string]: unknown }) {
-  return mapValues(filters, (value) =>
-    Array.isArray(value) ? value.join(", ") : value
-  );
+  return mapValues(filters, (value) => (Array.isArray(value) ? value.join(", ") : value));
 }
 
 // Merges two sets of params into a single set,
 // taking special care to concat any arrays.
 // E.g. mergeParams({_tag: [1], foo: "foo"}, {_tag: [2], bar: "bar"})
 //   -> {_tag: [1, 2], foo: "foo", bar: "bar"}
-function mergeParams(
-  params: SearchParams | undefined,
-  params2: SearchParams
-): SearchParams {
+function mergeParams(params: SearchParams | undefined, params2: SearchParams): SearchParams {
   return mergeWith(params, params2, (v, v2) =>
     // Concat arrays otherwise return undefined to let mergeWith handle it.
     Array.isArray(v) ? v.concat(v2) : undefined
@@ -248,10 +232,7 @@ function mergeParams(
 
 // Returns the needed search params to filter resources down to those
 // pertaining to our patientUPID.
-function patientSearchParams(
-  resourceType: ResourceTypeString,
-  patientUPID?: string
-): SearchParams {
+function patientSearchParams(resourceType: ResourceTypeString, patientUPID?: string): SearchParams {
   // No search param needed when not searching for a patientUPID.
   if (!patientUPID) {
     return {};
@@ -278,9 +259,7 @@ function patientSearchParams(
     case "Patient":
       return { identifier };
     default:
-      throw new Error(
-        `Unhandled patient search for resource type: ${resourceType}`
-      );
+      throw new Error(`Unhandled patient search for resource type: ${resourceType}`);
   }
 }
 

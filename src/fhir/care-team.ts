@@ -23,9 +23,7 @@ export function usePatientCareTeam() {
           const includedResources = getIncludedResources(bundle);
           return applyCareTeamFilters(careteam, includedResources);
         } catch (e) {
-          throw new Error(
-            `Failed fetching care team information for patient: ${e}`
-          );
+          throw new Error(`Failed fetching care team information for patient: ${e}`);
         }
       },
       "req.patient_care_team",

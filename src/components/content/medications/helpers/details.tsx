@@ -25,17 +25,11 @@ export const useMedicationDetailsDrawer = () =>
     ],
   });
 
-function LastPrescriber({
-  medication,
-}: {
-  medication: MedicationStatementModel;
-}) {
+function LastPrescriber({ medication }: { medication: MedicationStatementModel }) {
   const { lastPrescriber, isLoading } = useLastPrescriber(medication.resource);
 
   if (isLoading) {
-    return (
-      <Loading className="ctw-h-3" iconClass="!ctw-w-3 !ctw-h-3" message="" />
-    );
+    return <Loading className="ctw-h-3" iconClass="!ctw-w-3 !ctw-h-3" message="" />;
   }
   return <span>{lastPrescriber || "n/a"}</span>;
 }

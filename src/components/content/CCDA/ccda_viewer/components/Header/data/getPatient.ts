@@ -5,9 +5,7 @@ import { getHumanName, getId, parseToISOString } from "../../../helpers";
 import { LabelValueType } from "../../../types";
 import { map } from "@/utils/nodash";
 
-export const getPatient = (
-  document: Document
-): Record<string, LabelValueType[] | undefined> => {
+export const getPatient = (document: Document): Record<string, LabelValueType[] | undefined> => {
   const patientRoles = xpath.select(
     "*[name()='ClinicalDocument']/*[name()='recordTarget']/*[name()='patientRole']",
     document
@@ -20,62 +18,37 @@ export const getPatient = (
       patient: LabelValueType[];
       guardian: LabelValueType[] | undefined;
     } => {
-      const patient = xpath.select1(
-        "*[name()='patient']",
-        patientRole
-      ) as Document;
+      const patient = xpath.select1("*[name()='patient']", patientRole) as Document;
 
-      const patientName = getHumanName(
-        xpath.select1("*[name()='name']", patient) as Document
-      );
+      const patientName = getHumanName(xpath.select1("*[name()='name']", patient) as Document);
 
-      const patientIds = (
-        xpath.select("*[name()='id']", patientRole) as Document[]
-      )
+      const patientIds = (xpath.select("*[name()='id']", patientRole) as Document[])
         .map(getId)
         .join(", ");
 
       const administrativeGenderCode = String(
-        xpath.select1(
-          "string(*[name()='administrativeGenderCode']/@displayName)",
-          patient
-        )
+        xpath.select1("string(*[name()='administrativeGenderCode']/@displayName)", patient)
       );
 
       const birthTime = new Date(
-        parseToISOString(
-          String(xpath.select1("string(*[name()='birthTime']/@value)", patient))
-        )
+        parseToISOString(String(xpath.select1("string(*[name()='birthTime']/@value)", patient)))
       );
 
       const deceasedTime = new Date(
         parseToISOString(
-          String(
-            xpath.select1(
-              "string(*[name()='sdtc:deceasedTime']/@value)",
-              patient
-            )
-          )
+          String(xpath.select1("string(*[name()='sdtc:deceasedTime']/@value)", patient))
         )
       );
 
       const deceasedInd =
-        String(
-          xpath.select1("string(*[name()='sdtc:deceasedInd']/@value)", patient)
-        ) === "true";
+        String(xpath.select1("string(*[name()='sdtc:deceasedInd']/@value)", patient)) === "true";
 
       const withDeceased = deceasedInd
         ? "deceased"
-        : differenceInYears(
-            isValid(deceasedTime) ? deceasedTime : new Date(),
-            birthTime
-          );
-      const dateOfBirth = `${format(
-        birthTime,
-        "MMMM dd, yyyy"
-      )} (${withDeceased}${deceasedInd ? "" : " yr"}${
-        isValid(deceasedTime) ? " - deceased" : ""
-      })`;
+        : differenceInYears(isValid(deceasedTime) ? deceasedTime : new Date(), birthTime);
+      const dateOfBirth = `${format(birthTime, "MMMM dd, yyyy")} (${withDeceased}${
+        deceasedInd ? "" : " yr"
+      }${isValid(deceasedTime) ? " - deceased" : ""})`;
 
       const guardian = getGuardian(patientRole);
 

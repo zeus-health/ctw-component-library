@@ -43,9 +43,7 @@ export const ComboboxField = <T,>({
   const inputState = isEmpty(inputValue) ? defaultValue : inputValue;
 
   // Check if inputState is an object to determine if we should JSON.stringify.
-  const inputValueParsed = isObject(inputState)
-    ? JSON.stringify(inputState)
-    : inputState;
+  const inputValueParsed = isObject(inputState) ? JSON.stringify(inputState) : inputState;
 
   // Delay handle search input so that we don't fire a bunch of events until the user has had time to type.
   const debouncedSearchInputChange = useMemo(() => {
@@ -110,12 +108,7 @@ export const ComboboxField = <T,>({
             </div>
           </Combobox.Button>
 
-          <input
-            hidden
-            name={name}
-            value={inputValueParsed as string}
-            readOnly
-          />
+          <input hidden name={name} value={inputValueParsed as string} readOnly />
           <Combobox.Options className="ctw-listbox ctw-absolute ctw-z-10 ctw-m-0 ctw-mt-1 ctw-max-h-60 ctw-w-full ctw-list-none ctw-overflow-auto ctw-rounded-md ctw-bg-white ctw-p-0 ctw-py-1 ctw-text-base ctw-shadow-lg ctw-ring-1 ctw-ring-opacity-5 focus:ctw-outline-none sm:ctw-text-sm">
             <ComboboxOptions
               options={options}
@@ -152,11 +145,7 @@ const ComboboxOptions = ({
   }
 
   if (query.length < 2) {
-    return (
-      <ComboboxOption
-        option={{ value: "", label: "Pleae type at least two characters" }}
-      />
-    );
+    return <ComboboxOption option={{ value: "", label: "Pleae type at least two characters" }} />;
   }
 
   if (options.length === 0) {
@@ -188,9 +177,7 @@ const ComboboxOption = ({ option }: { option: ComboxboxFieldOption }) => (
     value={option.label}
     className={({ active }) =>
       `ctw-relative ctw-cursor-default ctw-select-none ctw-py-2 ctw-pl-4 ctw-pr-4 ${
-        active
-          ? "ctw-bg-primary-light ctw-text-primary-dark"
-          : "ctw-text-content-black"
+        active ? "ctw-bg-primary-light ctw-text-primary-dark" : "ctw-text-content-black"
       }`
     }
   >

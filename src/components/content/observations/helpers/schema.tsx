@@ -35,9 +35,7 @@ export function setupData(observation: ObservationModel): HistoryEntryProps {
   };
 }
 
-export const diagnosticReportData = (
-  diagnosticReport: DiagnosticReportModel
-) => [
+export const diagnosticReportData = (diagnosticReport: DiagnosticReportModel) => [
   { label: "Organization", value: diagnosticReport.performer },
   {
     label: "Identifier",

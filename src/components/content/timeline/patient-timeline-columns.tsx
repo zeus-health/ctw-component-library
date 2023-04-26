@@ -46,11 +46,7 @@ export const patientTimelineColumns = (includeViewFhirResource = false) => {
 
         return (
           <div>
-            <SimpleMoreList
-              items={items}
-              limit={6}
-              total={participant.length}
-            />
+            <SimpleMoreList items={items} limit={6} total={participant.length} />
             <div>{encounter.location}</div>
           </div>
         );
@@ -80,9 +76,7 @@ export const patientTimelineColumns = (includeViewFhirResource = false) => {
     timellineColumns.push({
       widthPercent: 10,
       minWidth: 200,
-      render: (encounter) => (
-        <ViewFHIR name="Encounter Resource" resource={encounter.resource} />
-      ),
+      render: (encounter) => <ViewFHIR name="Encounter Resource" resource={encounter.resource} />,
     });
   }
 

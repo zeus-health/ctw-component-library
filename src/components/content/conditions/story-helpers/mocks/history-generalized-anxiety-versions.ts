@@ -34,8 +34,7 @@ export const historyGeneralizedAnxietyVersions: fhir4.Bundle = {
                 extension: [
                   {
                     url: "https://zusapi.com/terminology/enrichment/sha256sum",
-                    valueBase64Binary:
-                      "EfW5IV9s3tyQH8Tk2cAdlN2MKJ9L+uqWOVoRF3He7Y4=",
+                    valueBase64Binary: "EfW5IV9s3tyQH8Tk2cAdlN2MKJ9L+uqWOVoRF3He7Y4=",
                   },
                   {
                     url: "https://zusapi.com/created-at",
@@ -62,8 +61,7 @@ export const historyGeneralizedAnxietyVersions: fhir4.Bundle = {
               clinicalStatus: {
                 coding: [
                   {
-                    system:
-                      "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                    system: "http://terminology.hl7.org/CodeSystem/condition-clinical",
                     code: "active",
                   },
                 ],
@@ -71,8 +69,7 @@ export const historyGeneralizedAnxietyVersions: fhir4.Bundle = {
               verificationStatus: {
                 coding: [
                   {
-                    system:
-                      "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                    system: "http://terminology.hl7.org/CodeSystem/condition-ver-status",
                     code: "confirmed",
                   },
                 ],
@@ -81,8 +78,7 @@ export const historyGeneralizedAnxietyVersions: fhir4.Bundle = {
                 {
                   coding: [
                     {
-                      system:
-                        "http://terminology.hl7.org/CodeSystem/condition-category",
+                      system: "http://terminology.hl7.org/CodeSystem/condition-category",
                       code: "problem-list-item",
                       display: "Problem List Item",
                     },
@@ -103,8 +99,7 @@ export const historyGeneralizedAnxietyVersions: fhir4.Bundle = {
                         valueString: "CCS",
                       },
                     ],
-                    system:
-                      "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
+                    system: "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
                     code: "MBD005",
                     display: "Anxiety and fear-related disorders",
                     userSelected: false,
@@ -141,8 +136,7 @@ export const historyGeneralizedAnxietyVersions: fhir4.Bundle = {
                         valueString: "Unknown ICD10",
                       },
                     ],
-                    system:
-                      "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
+                    system: "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
                     code: "UNK",
                     display: "unknown",
                     userSelected: false,
@@ -154,8 +148,7 @@ export const historyGeneralizedAnxietyVersions: fhir4.Bundle = {
                         valueString: "Unknown HCC",
                       },
                     ],
-                    system:
-                      "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
+                    system: "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
                     code: "UNK",
                     display: "unknown",
                     userSelected: false,
@@ -216,8 +209,7 @@ export const historyGeneralizedAnxietyVersions: fhir4.Bundle = {
               clinicalStatus: {
                 coding: [
                   {
-                    system:
-                      "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                    system: "http://terminology.hl7.org/CodeSystem/condition-clinical",
                     code: "active",
                   },
                 ],
@@ -225,8 +217,7 @@ export const historyGeneralizedAnxietyVersions: fhir4.Bundle = {
               verificationStatus: {
                 coding: [
                   {
-                    system:
-                      "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                    system: "http://terminology.hl7.org/CodeSystem/condition-ver-status",
                     code: "confirmed",
                   },
                 ],
@@ -235,8 +226,7 @@ export const historyGeneralizedAnxietyVersions: fhir4.Bundle = {
                 {
                   coding: [
                     {
-                      system:
-                        "http://terminology.hl7.org/CodeSystem/condition-category",
+                      system: "http://terminology.hl7.org/CodeSystem/condition-category",
                       code: "problem-list-item",
                       display: "Problem List Item",
                     },
@@ -257,8 +247,7 @@ export const historyGeneralizedAnxietyVersions: fhir4.Bundle = {
                         valueString: "CCS",
                       },
                     ],
-                    system:
-                      "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
+                    system: "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
                     code: "MBD005",
                     display: "Anxiety and fear-related disorders",
                     userSelected: false,
@@ -295,8 +284,7 @@ export const historyGeneralizedAnxietyVersions: fhir4.Bundle = {
                         valueString: "Unknown ICD10",
                       },
                     ],
-                    system:
-                      "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
+                    system: "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
                     code: "UNK",
                     display: "unknown",
                     userSelected: false,
@@ -308,8 +296,7 @@ export const historyGeneralizedAnxietyVersions: fhir4.Bundle = {
                         valueString: "Unknown HCC",
                       },
                     ],
-                    system:
-                      "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
+                    system: "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
                     code: "UNK",
                     display: "unknown",
                     userSelected: false,

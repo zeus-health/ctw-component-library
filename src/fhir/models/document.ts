@@ -32,9 +32,7 @@ export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
   }
 
   get dateCreated(): string | undefined {
-    return formatISODateStringToDate(
-      this.resource.content[0].attachment.creation
-    );
+    return formatISODateStringToDate(this.resource.content[0].attachment.creation);
   }
 
   get custodian(): string | undefined {
@@ -42,9 +40,6 @@ export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
   }
 
   get sectionDisplays(): string[] | undefined {
-    return (
-      this.resource.category?.map((coding) => codeableConceptLabel(coding)) ||
-      undefined
-    );
+    return this.resource.category?.map((coding) => codeableConceptLabel(coding)) || undefined;
   }
 }

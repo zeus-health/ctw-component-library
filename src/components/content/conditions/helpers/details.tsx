@@ -33,9 +33,7 @@ export const useConditionDetailsDrawer = ({
       { label: "Abatement Date", value: condition.abatement },
       {
         label: "Note",
-        value: condition.notes.length !== 0 && (
-          <NotesList notes={condition.notes} />
-        ),
+        value: condition.notes.length !== 0 && <NotesList notes={condition.notes} />,
       },
     ],
     getHistory: useConditionHistory,

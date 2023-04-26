@@ -25,20 +25,15 @@ export const getHumanName = (name?: Document | Document[]): string => {
   const parser = (nameXml: Document) => {
     const patientParsedName: ModifiedHumanName = {
       use: humanNameUseMap[String(xpath.select("string(@use)", nameXml))],
-      given: map(
-        xpath.select("(*[name()='given'])", nameXml) as Document[],
-        (n) => String(xpath.select1("string(text())", n))
+      given: map(xpath.select("(*[name()='given'])", nameXml) as Document[], (n) =>
+        String(xpath.select1("string(text())", n))
       ),
-      family: String(
-        xpath.select1("string(*[name()='family']/text())", nameXml)
+      family: String(xpath.select1("string(*[name()='family']/text())", nameXml)),
+      prefix: map(xpath.select("(*[name()='prefix'])", nameXml) as Document[], (n) =>
+        String(xpath.select1("string(text())", n))
       ),
-      prefix: map(
-        xpath.select("(*[name()='prefix'])", nameXml) as Document[],
-        (n) => String(xpath.select1("string(text())", n))
-      ),
-      suffix: map(
-        xpath.select("(*[name()='suffix'])", nameXml) as Document[],
-        (n) => String(xpath.select1("string(text())", n))
+      suffix: map(xpath.select("(*[name()='suffix'])", nameXml) as Document[], (n) =>
+        String(xpath.select1("string(text())", n))
       ),
     };
     return displayForName(patientParsedName);

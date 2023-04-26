@@ -19,9 +19,7 @@ export function useMedicationHistoryEntries(
   };
 }
 
-function createMedicationDetailsCard(
-  medication: MedicationModel
-): HistoryEntryProps {
+function createMedicationDetailsCard(medication: MedicationModel): HistoryEntryProps {
   if (medication.resourceType === "MedicationStatement") {
     return createMedicationStatementCard(medication);
   }
@@ -37,19 +35,12 @@ function createMedicationDetailsCard(
     return createMedicationAdminCard(medication);
   }
 
-  throw new Error(
-    `Unknown medication resource type "${medication.resourceType}"`
-  );
+  throw new Error(`Unknown medication resource type "${medication.resourceType}"`);
 }
 
-function createMedicationStatementCard(
-  medication: MedicationModel
-): HistoryEntryProps {
+function createMedicationStatementCard(medication: MedicationModel): HistoryEntryProps {
   const resource = medication.resource as fhir4.MedicationStatement;
-  const medStatement = new MedicationStatementModel(
-    resource,
-    medication.includedResources
-  );
+  const medStatement = new MedicationStatementModel(resource, medication.includedResources);
 
   return {
     date: medication.dateLocal,
@@ -70,17 +61,14 @@ function createMedicationStatementCard(
   };
 }
 
-function createMedicationRequestCard(
-  medication: MedicationModel
-): HistoryEntryProps {
+function createMedicationRequestCard(medication: MedicationModel): HistoryEntryProps {
   const resource = medication.resource as fhir4.MedicationRequest;
   const { prescriber } = medication;
   const { name, address, telecom } = new MedicationRequestModel(
     resource,
     medication.includedResources
   ).pharmacy;
-  const { numberOfRepeatsAllowed = "", initialFill } =
-    resource.dispenseRequest || {};
+  const { numberOfRepeatsAllowed = "", initialFill } = resource.dispenseRequest || {};
   const { value = "", unit = "" } = initialFill?.quantity || {};
 
   return {
@@ -114,14 +102,9 @@ function createMedicationRequestCard(
   };
 }
 
-function createMedicationDispenseCard(
-  medication: MedicationModel
-): HistoryEntryProps {
+function createMedicationDispenseCard(medication: MedicationModel): HistoryEntryProps {
   const resource = medication.resource as fhir4.MedicationDispense;
-  const medDispense = new MedicationDispenseModel(
-    resource,
-    medication.includedResources
-  );
+  const medDispense = new MedicationDispenseModel(resource, medication.includedResources);
 
   const { quantityDisplay, supplied, performerDetails } = medDispense;
   const { name, address, telecom } = performerDetails;
@@ -131,10 +114,7 @@ function createMedicationDispenseCard(
     hideEmpty: false,
     id: medication.id,
     title: "Medication Filled",
-    subtitle: compact([
-      quantityDisplay,
-      supplied ? `${supplied} supplied` : null,
-    ]).join(", "),
+    subtitle: compact([quantityDisplay, supplied ? `${supplied} supplied` : null]).join(", "),
     details: [
       { label: "Quantity", value: quantityDisplay },
       {
@@ -155,23 +135,16 @@ function createMedicationDispenseCard(
   };
 }
 
-function createMedicationAdminCard(
-  medication: MedicationModel
-): HistoryEntryProps {
+function createMedicationAdminCard(medication: MedicationModel): HistoryEntryProps {
   const resource = medication.resource as fhir4.MedicationAdministration;
-  const medAdmin = new MedicationAdministrationModel(
-    resource,
-    medication.includedResources
-  );
+  const medAdmin = new MedicationAdministrationModel(resource, medication.includedResources);
 
   return {
     id: medication.id,
     date: medication.dateLocal,
     hideEmpty: false,
     title: "Medication Administered",
-    subtitle: compact([medAdmin.dosageDisplay, medAdmin.dosageRoute]).join(
-      ", "
-    ),
+    subtitle: compact([medAdmin.dosageDisplay, medAdmin.dosageRoute]).join(", "),
     details: [
       { label: "Dosage", value: medAdmin.dosageDisplay },
       {

@@ -80,22 +80,12 @@ export function createMockPatientBundleEntry(): fhir4.BundleEntry<fhir4.Patient>
         {
           system: "phone",
           value: faker.phone.number(
-            faker.helpers.arrayElement([
-              "!# 555 ####!",
-              "!1-555-####!",
-              "!555-####!",
-            ])
+            faker.helpers.arrayElement(["!# 555 ####!", "!1-555-####!", "!555-####!"])
           ),
           use: faker.helpers.arrayElement(["home", "work", "mobile"]),
         },
       ],
-      gender: faker.helpers.arrayElement([
-        "female",
-        "male",
-        "female",
-        "other",
-        "unknown",
-      ]),
+      gender: faker.helpers.arrayElement(["female", "male", "female", "other", "unknown"]),
       birthDate: faker.date.birthdate().toISOString(),
     },
     search: {

@@ -48,9 +48,7 @@ export const patientTimelineColumns = (includeViewFhirResource = false) => {
     timelineColumns.push({
       widthPercent: 10,
       minWidth: 200,
-      render: (encounter) => (
-        <ViewFHIR name="Encounter Resource" resource={encounter.resource} />
-      ),
+      render: (encounter) => <ViewFHIR name="Encounter Resource" resource={encounter.resource} />,
     });
   }
 

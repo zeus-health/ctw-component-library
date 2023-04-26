@@ -38,9 +38,7 @@ if (typeof window !== "undefined") {
 }
 
 // Assume local development if origin is localhost or just an IP address
-const isLocalDevelopment = /https?:\/\/(localhost|\d+\.\d+\.\d+\.\d+)/i.test(
-  origin
-);
+const isLocalDevelopment = /https?:\/\/(localhost|\d+\.\d+\.\d+\.\d+)/i.test(origin);
 // Avoid initializing telemetry multiple times
 let isInitialized = false;
 
@@ -209,11 +207,7 @@ export class Telemetry {
     this.logger.error(message, context);
   }
 
-  static trackInteraction(
-    eventType: string,
-    namespace: string,
-    action: string
-  ) {
+  static trackInteraction(eventType: string, namespace: string, action: string) {
     // We log this event with namespace breadcrumbs if allowed
     if (this.telemetryIsAvailable && this.rumLoggingIsEnabled) {
       this.logger.log(`${eventType} event: ${namespace} > ${action}`, {
@@ -235,10 +229,7 @@ export class Telemetry {
    * in, we traverse up the DOM tree looking for `data-zus-telemetry-namespace`
    * attributes.
    */
-  private static lookupComponentNamespace(
-    target: HTMLElement,
-    namespace = ""
-  ): string {
+  private static lookupComponentNamespace(target: HTMLElement, namespace = ""): string {
     let ns = namespace;
     const closest = target.closest("[data-zus-telemetry-namespace]");
     if (closest instanceof HTMLElement) {
@@ -282,23 +273,14 @@ export class Telemetry {
     const targetName = eventTarget?.dataset[telemetryKey] ?? explicitTargetName;
     if (eventTarget && targetName) {
       if (!this.namespaceMap.has(eventTarget)) {
-        this.namespaceMap.set(
-          eventTarget,
-          this.lookupComponentNamespace(eventTarget)
-        );
+        this.namespaceMap.set(eventTarget, this.lookupComponentNamespace(eventTarget));
       }
       const namespace = this.namespaceMap.get(eventTarget);
-      this.trackInteraction(
-        this.eventTypes[telemetryKey],
-        namespace,
-        targetName
-      );
+      this.trackInteraction(this.eventTypes[telemetryKey], namespace, targetName);
     }
   }
 
-  private static closestHTMLElement(
-    target: Element | Node | null
-  ): HTMLElement | null {
+  private static closestHTMLElement(target: Element | Node | null): HTMLElement | null {
     if (!target || target instanceof HTMLElement) {
       return target;
     }
@@ -330,9 +312,7 @@ export class Telemetry {
   ) {
     if (
       process.env.NODE_ENV !== "test" &&
-      ["http://localhost:3000", "http://127.0.0.1:3000"].includes(
-        window.location.origin
-      )
+      ["http://localhost:3000", "http://127.0.0.1:3000"].includes(window.location.origin)
     ) {
       return;
     }
@@ -347,9 +327,7 @@ export class Telemetry {
     const tags = compact([
       "service:ctw-component-library",
       `env:${this.environment}`,
-      user[AUTH_BUILDER_NAME]
-        ? `builder_name:${user[AUTH_BUILDER_NAME]}`
-        : undefined,
+      user[AUTH_BUILDER_NAME] ? `builder_name:${user[AUTH_BUILDER_NAME]}` : undefined,
       `practitioner_id:${user[AUTH_PRACTITIONER_ID] || "none"}`,
       `is_super:${user[AUTH_IS_SUPER_ORG] || "false"}`,
       ...additionalTags,
@@ -383,8 +361,8 @@ export class Telemetry {
     // Callback should not return a promise or throw errors to the consumer
     return function endTiming() {
       const end = new Date().getTime();
-      Telemetry.reportMetric("timing", metric, end - start, tags).catch(
-        (error) => Telemetry.logError(error as Error)
+      Telemetry.reportMetric("timing", metric, end - start, tags).catch((error) =>
+        Telemetry.logError(error as Error)
       );
     };
   }

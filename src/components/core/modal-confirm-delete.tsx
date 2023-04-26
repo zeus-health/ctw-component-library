@@ -49,9 +49,8 @@ export const ModalConfirmDelete = ({
         </span>
         <span className="ctw-subtext ctw-max-w-sm ctw-text-left ctw-text-content-light">
           <Trans i18nKey="resource.remove.body">
-            This will remove{" "}
-            <span className="ctw-font-medium">{{ resourceName }}</span> from
-            this patient&apos;s {{ resource }} list.
+            This will remove <span className="ctw-font-medium">{{ resourceName }}</span> from this
+            patient&apos;s {{ resource }} list.
           </Trans>
         </span>
       </div>

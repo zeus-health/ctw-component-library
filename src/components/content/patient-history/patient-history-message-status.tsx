@@ -12,14 +12,8 @@ export type PatientHistoryStatusProps = {
   messages: PatientHistoryServiceMessage[] | undefined;
 };
 
-export const PatientHistoryStatus = ({
-  status,
-  date,
-  messages,
-}: PatientHistoryStatusProps) => {
-  const servicesStatus = messages?.every(
-    (message) => message.status === "done"
-  );
+export const PatientHistoryStatus = ({ status, date, messages }: PatientHistoryStatusProps) => {
+  const servicesStatus = messages?.every((message) => message.status === "done");
 
   switch (status) {
     case "initialize":
@@ -49,8 +43,7 @@ const ErrorState = () => (
     <div className="ctw-font-medium ctw-text-error-text">
       There was an error fetching some or all records for this patient.
       <div className="ctw-font-normal ctw-text-error-text">
-        Contact your organization’s technical support if this issue persists for
-        more than 24 hours.
+        Contact your organization’s technical support if this issue persists for more than 24 hours.
       </div>
     </div>
   </div>

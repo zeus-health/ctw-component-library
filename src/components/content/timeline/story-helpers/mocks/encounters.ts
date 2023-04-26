@@ -8,8 +8,7 @@ export const encounters: fhir4.Bundle = {
   total: 6,
   entry: [
     {
-      fullUrl:
-        "https://api.dev.zusapi.com/fhir/Encounter/5af9550a-f9c7-4ca6-86b2-ecdb4c164ec3",
+      fullUrl: "https://api.dev.zusapi.com/fhir/Encounter/5af9550a-f9c7-4ca6-86b2-ecdb4c164ec3",
       resource: {
         resourceType: "Encounter",
         id: "5af9550a-f9c7-4ca6-86b2-ecdb4c164ec3",
@@ -87,8 +86,7 @@ export const encounters: fhir4.Bundle = {
                     display: "MinuteClinic",
                   },
                   {
-                    system:
-                      "urn:oid:1.2.840.114350.1.13.418.2.7.10.836982.1050",
+                    system: "urn:oid:1.2.840.114350.1.13.418.2.7.10.836982.1050",
                     code: "175",
                     display: "MinuteClinic",
                   },
@@ -158,8 +156,7 @@ export const encounters: fhir4.Bundle = {
       },
     },
     {
-      fullUrl:
-        "https://api.dev.zusapi.com/fhir/Encounter/77190d01-91ef-4dbd-8af2-8183ed9a40d3",
+      fullUrl: "https://api.dev.zusapi.com/fhir/Encounter/77190d01-91ef-4dbd-8af2-8183ed9a40d3",
       resource: {
         resourceType: "Encounter",
         id: "77190d01-91ef-4dbd-8af2-8183ed9a40d3",
@@ -214,8 +211,7 @@ export const encounters: fhir4.Bundle = {
                     display: "Physical Medicine and Rehab",
                   },
                   {
-                    system:
-                      "urn:oid:1.2.840.114350.1.13.535.2.7.10.836982.1050",
+                    system: "urn:oid:1.2.840.114350.1.13.535.2.7.10.836982.1050",
                     code: "33",
                     display: "Physical Medicine and Rehab",
                   },
@@ -276,8 +272,7 @@ export const encounters: fhir4.Bundle = {
       },
     },
     {
-      fullUrl:
-        "https://api.dev.zusapi.com/fhir/Encounter/c76550d6-3a5b-4fdc-91f7-f77ba29a6ce0",
+      fullUrl: "https://api.dev.zusapi.com/fhir/Encounter/c76550d6-3a5b-4fdc-91f7-f77ba29a6ce0",
       resource: {
         resourceType: "Encounter",
         id: "c76550d6-3a5b-4fdc-91f7-f77ba29a6ce0",
@@ -339,8 +334,7 @@ export const encounters: fhir4.Bundle = {
               {
                 coding: [
                   {
-                    system:
-                      "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
+                    system: "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
                     code: "NI",
                     display: "NoInformation",
                   },
@@ -373,8 +367,7 @@ export const encounters: fhir4.Bundle = {
       },
     },
     {
-      fullUrl:
-        "https://api.dev.zusapi.com/fhir/Encounter/a108bf4e-7791-4f23-9a6e-ab9aabf1467e",
+      fullUrl: "https://api.dev.zusapi.com/fhir/Encounter/a108bf4e-7791-4f23-9a6e-ab9aabf1467e",
       resource: {
         resourceType: "Encounter",
         id: "a108bf4e-7791-4f23-9a6e-ab9aabf1467e",
@@ -442,8 +435,7 @@ export const encounters: fhir4.Bundle = {
       },
     },
     {
-      fullUrl:
-        "https://api.dev.zusapi.com/fhir/Encounter/fc6cf519-2991-4fec-98ec-4c81ec0a0f02",
+      fullUrl: "https://api.dev.zusapi.com/fhir/Encounter/fc6cf519-2991-4fec-98ec-4c81ec0a0f02",
       resource: {
         resourceType: "Encounter",
         id: "fc6cf519-2991-4fec-98ec-4c81ec0a0f02",
@@ -522,8 +514,7 @@ export const encounters: fhir4.Bundle = {
                     display: "Emergency Medicine",
                   },
                   {
-                    system:
-                      "urn:oid:1.2.840.114350.1.13.140.2.7.10.836982.1050",
+                    system: "urn:oid:1.2.840.114350.1.13.140.2.7.10.836982.1050",
                     code: "49",
                     display: "Emergency Medicine",
                   },
@@ -596,8 +587,7 @@ export const encounters: fhir4.Bundle = {
       },
     },
     {
-      fullUrl:
-        "https://api.dev.zusapi.com/fhir/Encounter/6b77e120-04b4-4cd6-8f0b-3543767cd51f",
+      fullUrl: "https://api.dev.zusapi.com/fhir/Encounter/6b77e120-04b4-4cd6-8f0b-3543767cd51f",
       resource: {
         resourceType: "Encounter",
         id: "6b77e120-04b4-4cd6-8f0b-3543767cd51f",
@@ -659,8 +649,7 @@ export const encounters: fhir4.Bundle = {
               {
                 coding: [
                   {
-                    system:
-                      "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
+                    system: "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
                     code: "NI",
                     display: "NoInformation",
                   },

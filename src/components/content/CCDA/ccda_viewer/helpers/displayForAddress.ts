@@ -15,9 +15,7 @@ const addressParser = (addr: ModifiedAddress) => {
   return result;
 };
 
-export const displayForAddress = (
-  address: ModifiedAddress | ModifiedAddress[]
-): string => {
+export const displayForAddress = (address: ModifiedAddress | ModifiedAddress[]): string => {
   if (isEmpty(address)) return "";
 
   if (isArray(address)) return address.map(addressParser).join("\n");

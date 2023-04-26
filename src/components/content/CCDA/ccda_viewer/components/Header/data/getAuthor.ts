@@ -3,9 +3,7 @@ import { getHumanName, parseToISOString } from "../../../helpers";
 import { LabelValueType } from "../../../types";
 import { isEmpty } from "@/utils/nodash";
 
-export const getAuthor = (
-  document: Document
-): Record<string, LabelValueType[]> | undefined => {
+export const getAuthor = (document: Document): Record<string, LabelValueType[]> | undefined => {
   const authors = xpath.select(
     "*[name()='ClinicalDocument']/*[name()='author']",
     document
@@ -30,9 +28,7 @@ export const getAuthor = (
       const manufacturerModelName = String(
         xpath.select1("string(*[name()='manufacturerModelName'])", deviceName)
       );
-      const softwareName = String(
-        xpath.select1("string(*[name()='softwareName'])", deviceName)
-      );
+      const softwareName = String(xpath.select1("string(*[name()='softwareName'])", deviceName));
 
       name = [manufacturerModelName, softwareName].filter(Boolean).join("; ");
     }
@@ -43,9 +39,7 @@ export const getAuthor = (
       )
     );
 
-    const authoredOn = parseToISOString(
-      String(xpath.select1("string(*[name()='time'])", author))
-    );
+    const authoredOn = parseToISOString(String(xpath.select1("string(*[name()='time'])", author)));
 
     return [
       { label: "Name:", value: name },
@@ -54,8 +48,5 @@ export const getAuthor = (
     ];
   });
 
-  return result.reduce(
-    (acc, val, index) => ({ ...acc, [`author${index + 1}`]: val }),
-    {}
-  );
+  return result.reduce((acc, val, index) => ({ ...acc, [`author${index + 1}`]: val }), {});
 };

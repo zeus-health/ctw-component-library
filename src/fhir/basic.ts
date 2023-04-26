@@ -3,10 +3,7 @@ import { FhirResource } from "fhir-kit-client";
 import { createOrEditFhirResource } from "./action-helper";
 import { FHIRModel } from "./models/fhir-model";
 import { getUsersPractitionerReference } from "./practitioner";
-import {
-  SYSTEM_BASIC_RESOURCE_TYPE,
-  SYSTEM_ZUS_PROFILE_ACTION,
-} from "./system-urls";
+import { SYSTEM_BASIC_RESOURCE_TYPE, SYSTEM_ZUS_PROFILE_ACTION } from "./system-urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { queryClient } from "@/utils/request";
 import { Telemetry } from "@/utils/telemetry";
@@ -18,9 +15,7 @@ export async function recordProfileAction<T extends fhir4.Resource>(
   profileAction: string
 ) {
   if (!model.id) {
-    throw new Error(
-      `Tried to ${profileAction} a resource that hasn't been created yet.`
-    );
+    throw new Error(`Tried to ${profileAction} a resource that hasn't been created yet.`);
   }
 
   if (!model.isSummaryResource) {
@@ -50,16 +45,11 @@ export async function recordProfileAction<T extends fhir4.Resource>(
     author: await getUsersPractitionerReference(requestContext),
   };
 
-  const response = (await createOrEditFhirResource(
-    basic,
-    requestContext
-  )) as FhirResource;
+  const response = (await createOrEditFhirResource(basic, requestContext)) as FhirResource;
 
   if (!response.id) {
     Telemetry.reportActionFailure(profileAction);
-    throw new Error(
-      `Failed to ${profileAction} resource with id of ${model.id}`
-    );
+    throw new Error(`Failed to ${profileAction} resource with id of ${model.id}`);
   } else {
     Telemetry.reportActionFailure(profileAction);
   }
@@ -71,16 +61,10 @@ export async function toggleArchive<T extends fhir4.Resource>(
   queriesToInvalidate?: string[]
 ) {
   const existingBasic =
-    model.getBasicResourceByAction("archive") ||
-    model.getBasicResourceByAction("unarchive");
+    model.getBasicResourceByAction("archive") || model.getBasicResourceByAction("unarchive");
   const profileAction = model.isArchived ? "unarchive" : "archive";
 
-  await recordProfileAction(
-    existingBasic,
-    model,
-    requestContext,
-    profileAction
-  );
+  await recordProfileAction(existingBasic, model, requestContext, profileAction);
 
   // Refresh our data (this is really just needed to update
   // otherProviderRecord state).

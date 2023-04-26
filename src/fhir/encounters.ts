@@ -20,13 +20,8 @@ export function usePatientEncounters() {
         );
         return setupEncounterModels(encounters, bundle);
       } catch (e) {
-        Telemetry.logError(
-          e as Error,
-          "Failed fetching timeline information for patient"
-        );
-        throw new Error(
-          `Failed fetching timeline information for patient: ${e}`
-        );
+        Telemetry.logError(e as Error, "Failed fetching timeline information for patient");
+        throw new Error(`Failed fetching timeline information for patient: ${e}`);
       }
     }, "req.patient_encounters")
   );
@@ -36,7 +31,5 @@ function setupEncounterModels(
   bundle: fhir4.Bundle
 ): EncounterModel[] {
   const basicsMap = getIncludedBasics(bundle);
-  return resources.map(
-    (c) => new EncounterModel(c, undefined, basicsMap.get(c.id ?? ""))
-  );
+  return resources.map((c) => new EncounterModel(c, undefined, basicsMap.get(c.id ?? "")));
 }

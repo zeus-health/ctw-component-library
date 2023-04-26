@@ -20,17 +20,12 @@ export function usePatientDocument() {
         );
         return orderBy(
           applyDocumentFilters(documents),
-          [
-            (document) =>
-              document.resource.content[0].attachment.creation || "",
-          ],
+          [(document) => document.resource.content[0].attachment.creation || ""],
 
           ["desc"]
         );
       } catch (e) {
-        throw new Error(
-          `Failed fetching document information for patient: ${e}`
-        );
+        throw new Error(`Failed fetching document information for patient: ${e}`);
       }
     }, "req.patient_document")
   );

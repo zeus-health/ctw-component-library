@@ -2,13 +2,7 @@ import { ViewOption } from "../../resource/helpers/view-button";
 
 type Status = fhir4.MedicationStatement["status"];
 
-const current: Status[] = [
-  "active",
-  "unknown",
-  "on-hold",
-  "intended",
-  "not-taken",
-];
+const current: Status[] = ["active", "unknown", "on-hold", "intended", "not-taken"];
 const past: Status[] = ["completed", "stopped", "entered-in-error"];
 
 export const medicationViews: ViewOption[] = [

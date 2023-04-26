@@ -76,8 +76,7 @@ export const otherConditions: fhir4.Bundle = {
         clinicalStatus: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              system: "http://terminology.hl7.org/CodeSystem/condition-clinical",
               code: "active",
             },
           ],
@@ -113,8 +112,7 @@ export const otherConditions: fhir4.Bundle = {
                   valueString: "CCS",
                 },
               ],
-              system:
-                "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
+              system: "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
               code: "MBD005",
               display: "Anxiety and fear-related disorders",
               userSelected: false,
@@ -126,8 +124,7 @@ export const otherConditions: fhir4.Bundle = {
                   valueString: "CCI",
                 },
               ],
-              system:
-                "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
+              system: "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
               code: "C",
               display: "Chronic",
               userSelected: false,
@@ -236,8 +233,7 @@ export const otherConditions: fhir4.Bundle = {
         clinicalStatus: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              system: "http://terminology.hl7.org/CodeSystem/condition-clinical",
               code: "active",
             },
           ],
@@ -273,8 +269,7 @@ export const otherConditions: fhir4.Bundle = {
                   valueString: "CCS",
                 },
               ],
-              system:
-                "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
+              system: "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
               code: "FAC025",
               display: "Other specified status",
               userSelected: false,
@@ -286,8 +281,7 @@ export const otherConditions: fhir4.Bundle = {
                   valueString: "CCI",
                 },
               ],
-              system:
-                "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
+              system: "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
               code: "N",
               display:
                 "Not applicable (code cannot be used to identify a chronic or acute condition)",
@@ -397,8 +391,7 @@ export const otherConditions: fhir4.Bundle = {
         clinicalStatus: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              system: "http://terminology.hl7.org/CodeSystem/condition-clinical",
               code: "active",
             },
           ],
@@ -434,8 +427,7 @@ export const otherConditions: fhir4.Bundle = {
                   valueString: "CCS",
                 },
               ],
-              system:
-                "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
+              system: "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
               code: "END007",
               display: "Nutritional deficiencies",
               userSelected: false,
@@ -447,8 +439,7 @@ export const otherConditions: fhir4.Bundle = {
                   valueString: "CCI",
                 },
               ],
-              system:
-                "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
+              system: "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
               code: "A",
               display: "Acute",
               userSelected: false,
@@ -554,8 +545,7 @@ export const otherConditions: fhir4.Bundle = {
         clinicalStatus: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              system: "http://terminology.hl7.org/CodeSystem/condition-clinical",
               code: "inactive",
             },
           ],
@@ -591,8 +581,7 @@ export const otherConditions: fhir4.Bundle = {
                   valueString: "CCS",
                 },
               ],
-              system:
-                "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
+              system: "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
               code: "SKN002",
               display: "Other specified inflammatory condition of skin",
               userSelected: false,
@@ -604,8 +593,7 @@ export const otherConditions: fhir4.Bundle = {
                   valueString: "CCI",
                 },
               ],
-              system:
-                "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
+              system: "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
               code: "C",
               display: "Chronic",
               userSelected: false,
@@ -704,8 +692,7 @@ export const otherConditions: fhir4.Bundle = {
         clinicalStatus: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              system: "http://terminology.hl7.org/CodeSystem/condition-clinical",
               code: "active",
             },
           ],
@@ -753,8 +740,7 @@ export const otherConditions: fhir4.Bundle = {
                   valueString: "CCS",
                 },
               ],
-              system:
-                "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
+              system: "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
               code: "DIG011",
               display: "Regional enteritis and ulcerative colitis",
               userSelected: false,
@@ -766,8 +752,7 @@ export const otherConditions: fhir4.Bundle = {
                   valueString: "CCI",
                 },
               ],
-              system:
-                "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
+              system: "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
               code: "C",
               display: "Chronic",
               userSelected: false,

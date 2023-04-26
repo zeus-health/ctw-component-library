@@ -49,10 +49,7 @@ function PatientDocumentsComponent({ className }: PatientDocumentProps) {
   );
 }
 
-export const PatientDocuments = withErrorBoundary(
-  PatientDocumentsComponent,
-  "PatientDocuments"
-);
+export const PatientDocuments = withErrorBoundary(PatientDocumentsComponent, "PatientDocuments");
 
 const documentData = (document: DocumentModel) => [
   { label: "status", value: document.status },

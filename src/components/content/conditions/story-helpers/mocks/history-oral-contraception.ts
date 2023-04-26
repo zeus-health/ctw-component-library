@@ -46,8 +46,7 @@ export const historyOralContraception = {
         clinicalStatus: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              system: "http://terminology.hl7.org/CodeSystem/condition-clinical",
               code: "active",
             },
           ],
@@ -55,8 +54,7 @@ export const historyOralContraception = {
         verificationStatus: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              system: "http://terminology.hl7.org/CodeSystem/condition-ver-status",
               code: "confirmed",
             },
           ],
@@ -65,8 +63,7 @@ export const historyOralContraception = {
           {
             coding: [
               {
-                system:
-                  "http://terminology.hl7.org/CodeSystem/condition-category",
+                system: "http://terminology.hl7.org/CodeSystem/condition-category",
                 code: "encounter-diagnosis",
               },
             ],
@@ -103,8 +100,7 @@ export const historyOralContraception = {
                   valueString: "CCS",
                 },
               ],
-              system:
-                "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
+              system: "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
               code: "FAC025",
               display: "Other specified status",
               userSelected: false,
@@ -116,8 +112,7 @@ export const historyOralContraception = {
                   valueString: "CCI",
                 },
               ],
-              system:
-                "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
+              system: "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
               code: "N",
               display:
                 "Not applicable (code cannot be used to identify a chronic or acute condition)",
@@ -212,8 +207,7 @@ export const historyOralContraception = {
         clinicalStatus: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              system: "http://terminology.hl7.org/CodeSystem/condition-clinical",
               code: "active",
             },
           ],
@@ -221,8 +215,7 @@ export const historyOralContraception = {
         verificationStatus: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              system: "http://terminology.hl7.org/CodeSystem/condition-ver-status",
               code: "confirmed",
             },
           ],
@@ -231,8 +224,7 @@ export const historyOralContraception = {
           {
             coding: [
               {
-                system:
-                  "http://terminology.hl7.org/CodeSystem/condition-category",
+                system: "http://terminology.hl7.org/CodeSystem/condition-category",
                 code: "encounter-diagnosis",
               },
             ],
@@ -269,8 +261,7 @@ export const historyOralContraception = {
                   valueString: "CCS",
                 },
               ],
-              system:
-                "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
+              system: "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
               code: "FAC025",
               display: "Other specified status",
               userSelected: false,
@@ -282,8 +273,7 @@ export const historyOralContraception = {
                   valueString: "CCI",
                 },
               ],
-              system:
-                "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
+              system: "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
               code: "N",
               display:
                 "Not applicable (code cannot be used to identify a chronic or acute condition)",
@@ -378,8 +368,7 @@ export const historyOralContraception = {
         clinicalStatus: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              system: "http://terminology.hl7.org/CodeSystem/condition-clinical",
               code: "active",
             },
           ],
@@ -387,8 +376,7 @@ export const historyOralContraception = {
         verificationStatus: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              system: "http://terminology.hl7.org/CodeSystem/condition-ver-status",
               code: "confirmed",
             },
           ],
@@ -397,8 +385,7 @@ export const historyOralContraception = {
           {
             coding: [
               {
-                system:
-                  "http://terminology.hl7.org/CodeSystem/condition-category",
+                system: "http://terminology.hl7.org/CodeSystem/condition-category",
                 code: "encounter-diagnosis",
               },
             ],
@@ -435,8 +422,7 @@ export const historyOralContraception = {
                   valueString: "CCS",
                 },
               ],
-              system:
-                "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
+              system: "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
               code: "FAC025",
               display: "Other specified status",
               userSelected: false,
@@ -448,8 +434,7 @@ export const historyOralContraception = {
                   valueString: "CCI",
                 },
               ],
-              system:
-                "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
+              system: "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
               code: "N",
               display:
                 "Not applicable (code cannot be used to identify a chronic or acute condition)",
@@ -631,8 +616,7 @@ export const historyOralContraception = {
               {
                 coding: [
                   {
-                    system:
-                      "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+                    system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
                     code: "PPRF",
                   },
                 ],
@@ -890,8 +874,7 @@ export const historyOralContraception = {
               {
                 coding: [
                   {
-                    system:
-                      "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+                    system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
                     code: "PPRF",
                   },
                 ],

@@ -129,12 +129,9 @@ export function usePatientConditionsOutside() {
     setConditions(otherConditions);
   }, [patientConditionsQuery.data, otherConditionsQuery.data]);
 
-  const isLoading =
-    patientConditionsQuery.isLoading || otherConditionsQuery.isLoading;
-  const isError =
-    patientConditionsQuery.isError || otherConditionsQuery.isError;
-  const isFetching =
-    patientConditionsQuery.isFetching || otherConditionsQuery.isFetching;
+  const isLoading = patientConditionsQuery.isLoading || otherConditionsQuery.isLoading;
+  const isError = patientConditionsQuery.isError || otherConditionsQuery.isError;
+  const isFetching = patientConditionsQuery.isFetching || otherConditionsQuery.isFetching;
 
   return {
     isLoading,
@@ -149,16 +146,12 @@ function setupConditionModels(
   bundle: fhir4.Bundle
 ): ConditionModel[] {
   const basicsMap = getIncludedBasics(bundle);
-  return conditionResources.map(
-    (c) => new ConditionModel(c, undefined, basicsMap.get(c.id ?? ""))
-  );
+  return conditionResources.map((c) => new ConditionModel(c, undefined, basicsMap.get(c.id ?? "")));
 }
 
 function filterAndSort(conditions: ConditionModel[]): ConditionModel[] {
   return orderBy(
-    conditions.filter(
-      (condition) => condition.resource.asserter?.type !== "Patient"
-    ),
+    conditions.filter((condition) => condition.resource.asserter?.type !== "Patient"),
     ["resource.recordedDate", "display"],
     ["desc"]
   );
@@ -185,10 +178,7 @@ export const deleteCondition = async (
   // We have to delete clinical status because it can't be present if verification is 'entered-in-error'
   delete clonedResource.clinicalStatus;
 
-  const response = (await createOrEditFhirResource(
-    clonedResource,
-    requestContext
-  )) as FhirResource;
+  const response = (await createOrEditFhirResource(clonedResource, requestContext)) as FhirResource;
 
   if (!response.id) {
     Telemetry.reportActionFailure("delete_condition");
@@ -222,14 +212,11 @@ export const filterOtherConditions = (
       const otherRecordedDate = otherCondition.resource.recordedDate;
       const patientRecordedDate = patientCondition.resource.recordedDate;
       const isMatch = otherCondition.knownCodingsMatch(patientCondition);
-      const isEnteredInError =
-        patientCondition.verificationStatus === "entered-in-error";
+      const isEnteredInError = patientCondition.verificationStatus === "entered-in-error";
 
       const isOlder =
-        !otherRecordedDate ||
-        (patientRecordedDate && otherRecordedDate <= patientRecordedDate);
-      const hasSameStatus =
-        otherCondition.clinicalStatus === patientCondition.clinicalStatus;
+        !otherRecordedDate || (patientRecordedDate && otherRecordedDate <= patientRecordedDate);
+      const hasSameStatus = otherCondition.clinicalStatus === patientCondition.clinicalStatus;
 
       return isMatch && !isEnteredInError && (isOlder || hasSameStatus);
     });

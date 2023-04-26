@@ -1,8 +1,5 @@
 import { InputHTMLAttributes, useState } from "react";
-import {
-  ComboboxField,
-  ComboxboxFieldOption,
-} from "../../core/form/combobox-field";
+import { ComboboxField, ComboxboxFieldOption } from "../../core/form/combobox-field";
 import { getAutoCompleteMedications } from "@/api/autocomplete-medications";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 

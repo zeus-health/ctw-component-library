@@ -104,8 +104,7 @@ const ZusAggregatedProfileComponent = ({
             {title}{" "}
             {!removeBranding && (
               <span className="ctw-text-sm ctw-font-light ctw-italic ctw-text-content-light">
-                Powered by{" "}
-                <img src={ZusSVG} alt="Zus" className="-ctw-mb-1.5" />
+                Powered by <img src={ZusSVG} alt="Zus" className="-ctw-mb-1.5" />
               </span>
             )}
           </h3>
@@ -116,9 +115,7 @@ const ZusAggregatedProfileComponent = ({
         forceHorizontalTabs={forceHorizontalTabs}
         topRightContent={
           removeRequestRecords ? undefined : (
-            <RequestRecordsButton
-              includePatientDemographicsForm={includePatientDemographicsForm}
-            />
+            <RequestRecordsButton includePatientDemographicsForm={includePatientDemographicsForm} />
           )
         }
       />

@@ -1,8 +1,4 @@
-import {
-  faCheck,
-  faChevronDown,
-  IconDefinition,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faChevronDown, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Listbox } from "@headlessui/react";
 import cx from "classnames";
@@ -74,9 +70,7 @@ export function ListBox({
           )}
         >
           {children || renderDisplay(selectedItem, { listView: false })}
-          {!useBasicStyles && (
-            <FontAwesomeIcon icon={faChevronDown} className="ctw-w-2" />
-          )}
+          {!useBasicStyles && <FontAwesomeIcon icon={faChevronDown} className="ctw-w-2" />}
         </Listbox.Button>
         <Listbox.Options className={cx(optionsClassName, "ctw-list-box")}>
           {items.map((item, index) => {
@@ -110,16 +104,14 @@ export function ListBox({
                         listView: true,
                       })}
                     </span>
-                    {!useBasicStyles &&
-                      selected &&
-                      !item.key.startsWith("_") && (
-                        <span className="ctw-inline-flex ctw-pb-0.5">
-                          <FontAwesomeIcon
-                            icon={faCheck}
-                            className="ctw-inline-block ctw-h-4 ctw-stroke-0 ctw-align-middle ctw-text-primary-dark"
-                          />
-                        </span>
-                      )}
+                    {!useBasicStyles && selected && !item.key.startsWith("_") && (
+                      <span className="ctw-inline-flex ctw-pb-0.5">
+                        <FontAwesomeIcon
+                          icon={faCheck}
+                          className="ctw-inline-block ctw-h-4 ctw-stroke-0 ctw-align-middle ctw-text-primary-dark"
+                        />
+                      </span>
+                    )}
                   </li>
                 )}
               </Listbox.Option>
@@ -132,10 +124,7 @@ export function ListBox({
 }
 
 // A helper function to render items for both the ListBox button and options.
-function renderDisplay<T extends MinListBoxItem>(
-  item: T,
-  status: ListBoxOptionStatus
-) {
+function renderDisplay<T extends MinListBoxItem>(item: T, status: ListBoxOptionStatus) {
   if (item.divider) return null;
   return (
     <MenuItem icon={item.icon}>

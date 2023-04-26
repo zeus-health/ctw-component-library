@@ -54,9 +54,7 @@ export function PatientCareTeam({ className }: PatientCareTeamProps) {
   );
 }
 
-export const careTeamData = (
-  careTeamPractitioner: CareTeamPractitionerModel
-) => [
+export const careTeamData = (careTeamPractitioner: CareTeamPractitionerModel) => [
   { label: "Organization", value: careTeamPractitioner.managingOrganization },
   {
     label: "CareTeam Telecom",

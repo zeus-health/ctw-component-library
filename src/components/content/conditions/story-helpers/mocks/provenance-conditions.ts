@@ -14,8 +14,7 @@ export const ProvenanceCondition = {
   ],
   entry: [
     {
-      fullUrl:
-        "https://api.zusapi.com/fhir/Provenance/a05dc1fc-1d25-4362-affc-03b5da842b9c",
+      fullUrl: "https://api.zusapi.com/fhir/Provenance/a05dc1fc-1d25-4362-affc-03b5da842b9c",
       resource: {
         resourceType: "Provenance",
         id: "a05dc1fc-1d25-4362-affc-03b5da842b9c",
@@ -54,8 +53,7 @@ export const ProvenanceCondition = {
         activity: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/3.1.0/CodeSystem-v3-DataOperation.html",
+              system: "http://terminology.hl7.org/3.1.0/CodeSystem-v3-DataOperation.html",
               code: "CREATE",
               display: "create",
             },
@@ -76,8 +74,7 @@ export const ProvenanceCondition = {
             type: {
               coding: [
                 {
-                  system:
-                    "http://terminology.hl7.org/CodeSystem/provenance-participant-type",
+                  system: "http://terminology.hl7.org/CodeSystem/provenance-participant-type",
                   code: "assembler",
                   display: "Assembler",
                 },
@@ -94,8 +91,7 @@ export const ProvenanceCondition = {
       },
     },
     {
-      fullUrl:
-        "https://api.zusapi.com/fhir/Provenance/a05dc1fc-1d25-4362-affc-03b5da842b9c",
+      fullUrl: "https://api.zusapi.com/fhir/Provenance/a05dc1fc-1d25-4362-affc-03b5da842b9c",
       resource: {
         resourceType: "Provenance",
         id: "ff5dc1fc-1d23-1234-affc-03b5da842ccc",
@@ -134,8 +130,7 @@ export const ProvenanceCondition = {
         activity: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/3.1.0/CodeSystem-v3-DataOperation.html",
+              system: "http://terminology.hl7.org/3.1.0/CodeSystem-v3-DataOperation.html",
               code: "CREATE",
               display: "create",
             },
@@ -156,8 +151,7 @@ export const ProvenanceCondition = {
             type: {
               coding: [
                 {
-                  system:
-                    "http://terminology.hl7.org/CodeSystem/provenance-participant-type",
+                  system: "http://terminology.hl7.org/CodeSystem/provenance-participant-type",
                   code: "assembler",
                   display: "Assembler",
                 },

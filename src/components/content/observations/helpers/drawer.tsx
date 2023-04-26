@@ -8,9 +8,7 @@ export function useObservationsDetailsDrawer() {
 
   return (diagnosticReport: DiagnosticReportModel) => {
     openDrawer({
-      component: (props) => (
-        <ObservationsDrawer diagnosticReport={diagnosticReport} {...props} />
-      ),
+      component: (props) => <ObservationsDrawer diagnosticReport={diagnosticReport} {...props} />,
     });
   };
 }

@@ -2,11 +2,7 @@ import { FhirResource, Resource } from "fhir/r4";
 import { v4 as uuidv4 } from "uuid";
 import { omitEmptyArrays } from "./client";
 import { isFhirError } from "./errors";
-import {
-  ASSEMBLER_CODING,
-  CREATE_CODING,
-  createProvenance,
-} from "./provenance";
+import { ASSEMBLER_CODING, CREATE_CODING, createProvenance } from "./provenance";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { getUsersPractitionerReference } from "@/fhir/practitioner";
 import { claimsBuilderName } from "@/utils/auth";
@@ -130,30 +126,21 @@ export async function deleteMetaTags(
   };
 
   const { fhirClient } = requestContext;
-  await fhirClient.request(
-    `${resource.resourceType}/${resource.id}/$meta-delete`,
-    {
-      method: "POST",
-      body: JSON.stringify(post),
-      options: { headers: { "content-type": "application/json" } },
-    }
-  );
+  await fhirClient.request(`${resource.resourceType}/${resource.id}/$meta-delete`, {
+    method: "POST",
+    body: JSON.stringify(post),
+    options: { headers: { "content-type": "application/json" } },
+  });
 }
 
-export async function deleteFhirResource(
-  resource: Resource,
-  requestContext: CTWRequestContext
-) {
+export async function deleteFhirResource(resource: Resource, requestContext: CTWRequestContext) {
   const { fhirClient } = requestContext;
 
   if (!resource.id) {
     throw new Error(`Tried to delete a resource that hasn't been created yet.`);
   }
 
-  await fhirClient.request(
-    `${resource.resourceType}/${resource.id}?_cascade=delete`,
-    {
-      method: "DELETE",
-    }
-  );
+  await fhirClient.request(`${resource.resourceType}/${resource.id}?_cascade=delete`, {
+    method: "DELETE",
+  });
 }

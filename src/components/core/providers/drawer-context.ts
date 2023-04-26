@@ -7,9 +7,7 @@ export type OpenDrawerProps = {
     onClose,
     onOpen,
     onAfterOpen,
-  }: Pick<DrawerProps, "isOpen" | "onClose" | "onOpen" | "onAfterOpen">) =>
-    | JSX.Element
-    | undefined;
+  }: Pick<DrawerProps, "isOpen" | "onClose" | "onOpen" | "onAfterOpen">) => JSX.Element | undefined;
 };
 
 export type DrawerState = {

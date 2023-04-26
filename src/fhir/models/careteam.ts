@@ -29,8 +29,7 @@ export class CareTeamModel extends FHIRModel<fhir4.CareTeam> {
   }
 
   get managingOrganization() {
-    const behalfOf = find(this.resource.participant, "onBehalfOf")?.onBehalfOf
-      ?.display;
+    const behalfOf = find(this.resource.participant, "onBehalfOf")?.onBehalfOf?.display;
     return behalfOf;
   }
 

@@ -22,8 +22,7 @@ const PatientMedicationsOutsideComponent = ({
   readOnly = false,
   onOpenHistoryDrawer,
 }: PatientMedicationsOutsideProps) => {
-  const { otherProviderMedications, isLoading } =
-    useQueryAllPatientMedications();
+  const { otherProviderMedications, isLoading } = useQueryAllPatientMedications();
 
   return (
     <PatientMedicationsBase
@@ -50,8 +49,7 @@ const getRowActions =
   (props: RowActionsProps<MedicationStatementModel>) =>
     <RowActions {...props} onAddToRecord={onAddToRecord} />;
 
-type RowActionsProps2 = RowActionsProps<MedicationStatementModel> &
-  ExtraRowActionProps;
+type RowActionsProps2 = RowActionsProps<MedicationStatementModel> & ExtraRowActionProps;
 
 const RowActions = ({ record, onAddToRecord }: RowActionsProps2) => {
   const showAddMedicationForm = useAddMedicationForm();

@@ -3,29 +3,22 @@
 export const SYSTEM_ACT_CODE = "urn:oid:2.16.840.1.113883.5.4";
 export const SYSTEM_BASIC_RESOURCE_TYPE = `http://terminology.hl7.org/CodeSystem/basic-resource-type`;
 export const SYSTEM_CONDITION_CATEGORY = `http://terminology.hl7.org/CodeSystem/condition-category`;
-export const SYSTEM_CONDITION_CLINICAL =
-  "http://terminology.hl7.org/CodeSystem/condition-clinical";
+export const SYSTEM_CONDITION_CLINICAL = "http://terminology.hl7.org/CodeSystem/condition-clinical";
 export const SYSTEM_CONDITION_VERIFICATION_STATUS =
   "http://terminology.hl7.org/CodeSystem/condition-ver-status";
-export const SYSTEM_DIAGNOSTIC_SERVICE_SECTION_ID =
-  "http://terminology.hl7.org/CodeSystem/v2-0074";
-export const SYSTEM_MARITAL_STATUS =
-  "http://terminology.hl7.org/CodeSystem/v3-MaritalStatus";
-export const SYSTEM_NULL_FLAVOR =
-  "http://terminology.hl7.org/CodeSystem/v3-NullFlavor";
+export const SYSTEM_DIAGNOSTIC_SERVICE_SECTION_ID = "http://terminology.hl7.org/CodeSystem/v2-0074";
+export const SYSTEM_MARITAL_STATUS = "http://terminology.hl7.org/CodeSystem/v3-MaritalStatus";
+export const SYSTEM_NULL_FLAVOR = "http://terminology.hl7.org/CodeSystem/v3-NullFlavor";
 export const SYSTEM_PROVENANCE_ACTIVITY_TYPE =
   "http://terminology.hl7.org/3.1.0/CodeSystem-v3-DataOperation.html";
 export const SYSTEM_PROVENANCE_AGENT_TYPE =
   "http://terminology.hl7.org/CodeSystem/provenance-participant-type";
-export const SYSTEM_RELATIONSHIP =
-  "http://terminology.hl7.org/CodeSystem/v2-0131";
-export const SYSTEM_TASK_STATUS =
-  "https://www.hl7.org/fhir/codesystem-task-status.html";
+export const SYSTEM_RELATIONSHIP = "http://terminology.hl7.org/CodeSystem/v2-0131";
+export const SYSTEM_TASK_STATUS = "https://www.hl7.org/fhir/codesystem-task-status.html";
 
 // CODE SYSTEMS
 
-export const SYSTEM_CCS =
-  "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp";
+export const SYSTEM_CCS = "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp";
 
 export const SYSTEM_CVX = "http://hl7.org/fhir/sid/cvx";
 
@@ -52,10 +45,8 @@ export const SYSTEM_ZUS_OWNER = "https://zusapi.com/accesscontrol/owner";
 export const SYSTEM_ZUS_PRACTITIONER_ID = "https://zusapi.com/practitioner_id";
 export const SYSTEM_ZUS_PROFILE_ACTION = "https://zusapi.com/profile/action";
 export const SYSTEM_ZUS_THIRD_PARTY = "https://zusapi.com/thirdparty/source";
-export const SYSTEM_ZUS_UNIVERSAL_ID =
-  "https://zusapi.com/fhir/identifier/universal-id";
-export const SYSTEM_ZUS_UPI_RECORD_TYPE =
-  "https://zusapi.com/fhir/tag/upi-record-type";
+export const SYSTEM_ZUS_UNIVERSAL_ID = "https://zusapi.com/fhir/identifier/universal-id";
+export const SYSTEM_ZUS_UPI_RECORD_TYPE = "https://zusapi.com/fhir/tag/upi-record-type";
 export const SYSTEM_ZUS_USER_TYPE = "https://zusapi.com/user_type";
 
 // ENRICHMENT
@@ -76,8 +67,7 @@ export const LENS_EXTENSION_MEDICATION_REFILLS =
   "https://zusapi.com/lens/extension/medicationRefills";
 export const LENS_EXTENSION_MEDICATION_LAST_PRESCRIBER =
   "https://zusapi.com/lens/extension/medicationLastPrescriber";
-export const LENS_EXTENSION_AGGREGATED_FROM =
-  "https://zusapi.com/lens/extension/aggregatedFrom";
+export const LENS_EXTENSION_AGGREGATED_FROM = "https://zusapi.com/lens/extension/aggregatedFrom";
 
 // MISC
 

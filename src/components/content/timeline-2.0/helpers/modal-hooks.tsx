@@ -39,15 +39,10 @@ export const encounterData = (encounter: EncounterModel) => [
 export function useDispenseRequestDetailsDrawer() {
   const { openDrawer } = useDrawer();
 
-  return (
-    medicationModel: MedicationDispenseModel | MedicationRequestModel
-  ) => {
+  return (medicationModel: MedicationDispenseModel | MedicationRequestModel) => {
     openDrawer({
       component: (props) => (
-        <MedicationDrawerComponent
-          medicationEventModel={medicationModel}
-          {...props}
-        />
+        <MedicationDrawerComponent medicationEventModel={medicationModel} {...props} />
       ),
     });
   };

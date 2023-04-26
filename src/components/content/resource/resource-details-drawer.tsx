@@ -2,10 +2,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { History, HistoryEntries } from "./helpers/history";
 import { DocumentButton } from "../CCDA/document-button";
 import { useCCDAModal } from "../CCDA/modal-ccda";
-import {
-  DetailsCard,
-  DetailsProps,
-} from "@/components/content/resource/helpers/details-card";
+import { DetailsCard, DetailsProps } from "@/components/content/resource/helpers/details-card";
 import { Drawer } from "@/components/core/drawer";
 import { Loading } from "@/components/core/loading";
 import { useCTW } from "@/components/core/providers/ctw-provider";
@@ -18,10 +15,7 @@ import { UseQueryResultBasic } from "@/utils/request";
 
 const HISTORY_PAGE_LIMIT = 20;
 
-export type UseResourceDetailsDrawerProps<
-  T extends fhir4.Resource,
-  M extends FHIRModel<T>
-> = Pick<
+export type UseResourceDetailsDrawerProps<T extends fhir4.Resource, M extends FHIRModel<T>> = Pick<
   ResourceDetailsDrawerProps<T, M>,
   | "header"
   | "subHeader"
@@ -33,10 +27,9 @@ export type UseResourceDetailsDrawerProps<
   | "onRemove"
 >;
 
-export function useResourceDetailsDrawer<
-  T extends fhir4.Resource,
-  M extends FHIRModel<T>
->(props: UseResourceDetailsDrawerProps<T, M>) {
+export function useResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>(
+  props: UseResourceDetailsDrawerProps<T, M>
+) {
   const { openDrawer } = useDrawer();
 
   return (model: M) => {
@@ -48,10 +41,7 @@ export function useResourceDetailsDrawer<
   };
 }
 
-type ResourceDetailsDrawerProps<
-  T extends fhir4.Resource,
-  M extends FHIRModel<T>
-> = {
+type ResourceDetailsDrawerProps<T extends fhir4.Resource, M extends FHIRModel<T>> = {
   className?: string;
   details: (model: M) => DetailsProps["details"];
   getHistory?: (model: M) => UseQueryResultBasic<HistoryEntries | undefined>;
@@ -66,10 +56,7 @@ type ResourceDetailsDrawerProps<
   subHeader?: (model: M) => ReactNode;
 };
 
-function ResourceDetailsDrawer<
-  T extends fhir4.Resource,
-  M extends FHIRModel<T>
->({
+function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>({
   className,
   details,
   getHistory,
@@ -110,12 +97,7 @@ function ResourceDetailsDrawer<
   }, [getSourceDocument, model, getRequestContext]);
 
   return (
-    <Drawer
-      className={className}
-      title={model.resourceTypeTitle}
-      isOpen={isOpen}
-      onClose={onClose}
-    >
+    <Drawer className={className} title={model.resourceTypeTitle} isOpen={isOpen} onClose={onClose}>
       <Drawer.Body>
         <div className="ctw-space-y-4">
           <div className="ctw-space-y-2">
@@ -131,9 +113,7 @@ function ResourceDetailsDrawer<
               documentButton={
                 binaryId && (
                   <DocumentButton
-                    onClick={() =>
-                      openCCDAModal(binaryId, model.resourceTypeTitle)
-                    }
+                    onClick={() => openCCDAModal(binaryId, model.resourceTypeTitle)}
                     text="Source Document"
                   />
                 )

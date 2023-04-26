@@ -5,8 +5,7 @@ export const dismissFilter: FilterItem = {
   key: "isArchived",
   type: "tag",
   belowDivider: true,
-  display: ({ listView }) =>
-    listView ? "show dismissed records" : "dismissed records",
+  display: ({ listView }) => (listView ? "show dismissed records" : "dismissed records"),
   icon: faEye,
   toggleDisplay: "hide dismissed records",
   toggleIcon: faEyeSlash,

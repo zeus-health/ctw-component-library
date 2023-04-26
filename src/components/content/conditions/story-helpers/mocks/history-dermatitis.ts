@@ -46,8 +46,7 @@ export const historyDermatitis = {
         clinicalStatus: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              system: "http://terminology.hl7.org/CodeSystem/condition-clinical",
               code: "active",
             },
           ],
@@ -55,8 +54,7 @@ export const historyDermatitis = {
         verificationStatus: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              system: "http://terminology.hl7.org/CodeSystem/condition-ver-status",
               code: "confirmed",
             },
           ],
@@ -65,8 +63,7 @@ export const historyDermatitis = {
           {
             coding: [
               {
-                system:
-                  "http://terminology.hl7.org/CodeSystem/condition-category",
+                system: "http://terminology.hl7.org/CodeSystem/condition-category",
                 code: "encounter-diagnosis",
               },
             ],
@@ -103,8 +100,7 @@ export const historyDermatitis = {
                   valueString: "CCS",
                 },
               ],
-              system:
-                "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
+              system: "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
               code: "SKN002",
               display: "Other specified inflammatory condition of skin",
               userSelected: false,
@@ -116,8 +112,7 @@ export const historyDermatitis = {
                   valueString: "CCI",
                 },
               ],
-              system:
-                "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
+              system: "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
               code: "C",
               display: "Chronic",
               userSelected: false,
@@ -211,8 +206,7 @@ export const historyDermatitis = {
         clinicalStatus: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              system: "http://terminology.hl7.org/CodeSystem/condition-clinical",
               code: "active",
             },
           ],
@@ -220,8 +214,7 @@ export const historyDermatitis = {
         verificationStatus: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              system: "http://terminology.hl7.org/CodeSystem/condition-ver-status",
               code: "confirmed",
             },
           ],
@@ -230,8 +223,7 @@ export const historyDermatitis = {
           {
             coding: [
               {
-                system:
-                  "http://terminology.hl7.org/CodeSystem/condition-category",
+                system: "http://terminology.hl7.org/CodeSystem/condition-category",
                 code: "encounter-diagnosis",
               },
             ],
@@ -268,8 +260,7 @@ export const historyDermatitis = {
                   valueString: "CCS",
                 },
               ],
-              system:
-                "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
+              system: "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
               code: "SKN002",
               display: "Other specified inflammatory condition of skin",
               userSelected: false,
@@ -281,8 +272,7 @@ export const historyDermatitis = {
                   valueString: "CCI",
                 },
               ],
-              system:
-                "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
+              system: "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
               code: "C",
               display: "Chronic",
               userSelected: false,
@@ -463,8 +453,7 @@ export const historyDermatitis = {
               {
                 coding: [
                   {
-                    system:
-                      "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+                    system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
                     code: "PPRF",
                   },
                 ],
@@ -611,8 +600,7 @@ export const historyDermatitis = {
               {
                 coding: [
                   {
-                    system:
-                      "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+                    system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
                     code: "PPRF",
                   },
                 ],

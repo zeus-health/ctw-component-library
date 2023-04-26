@@ -2,10 +2,7 @@ import { Combobox } from "@headlessui/react";
 import { useEffect, useState } from "react";
 import ZusSVG from "@/assets/zus.svg";
 import { withErrorBoundary } from "@/components/core/error-boundary";
-import {
-  ComboboxField,
-  ComboxboxFieldOption,
-} from "@/components/core/form/combobox-field";
+import { ComboboxField, ComboxboxFieldOption } from "@/components/core/form/combobox-field";
 import { useQueryWithCTW } from "@/components/core/providers/ctw-provider";
 import { PatientModel } from "@/fhir/models";
 import { getBuilderPatientListWithSearch } from "@/fhir/patient-helper";
@@ -89,9 +86,7 @@ export const PatientSearch = withErrorBoundary(
           name="patient-search"
           defaultSearchTerm=""
           onCustomSelectChange={onSearchClick}
-          renderCustomOption={(e) => (
-            <CustomComboBox option={e as CustomPatientOptionValue} />
-          )}
+          renderCustomOption={(e) => <CustomComboBox option={e as CustomPatientOptionValue} />}
           onSearchChange={(e) => {
             setSearchValue(e);
             setPatients([]);
@@ -110,9 +105,7 @@ const CustomComboBox = ({ option }: { option: CustomPatientOptionValue }) => (
     value={option.label}
     className={({ active }) =>
       `ctw-relative ctw-flex ctw-cursor-default ctw-select-none ctw-space-x-2 ctw-py-2 ctw-pl-4 ctw-pr-4 ${
-        active
-          ? "ctw-bg-primary-light ctw-text-primary-dark"
-          : "ctw-text-content-black"
+        active ? "ctw-bg-primary-light ctw-text-primary-dark" : "ctw-text-content-black"
       }`
     }
   >
@@ -122,9 +115,7 @@ const CustomComboBox = ({ option }: { option: CustomPatientOptionValue }) => (
         {option.value.gender && `(${option.value.gender[0].toUpperCase()})`}
       </span>
     </div>
-    <div className="ctw-font-medium">
-      {option.value.officialOrUsualIdentifier}
-    </div>
+    <div className="ctw-font-medium">{option.value.officialOrUsualIdentifier}</div>
     <div className="ctw-space-x-1">
       <span>{option.value.dob}</span>
       <span>{option.value.age && `(${option.value.age})`}</span>

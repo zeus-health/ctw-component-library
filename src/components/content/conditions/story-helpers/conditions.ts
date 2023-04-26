@@ -14,11 +14,9 @@ export async function conditionsObject(canvasElement: HTMLElement) {
   await otherProvider.table.findAllByText("active");
 
   return {
-    clickAddCondition: () =>
-      userEvent.click(canvas.getByTestId("button.add-condition")),
+    clickAddCondition: () => userEvent.click(canvas.getByTestId("button.add-condition")),
 
-    toggleInactive: () =>
-      userEvent.click(canvas.getByLabelText("Include Inactive")),
+    toggleInactive: () => userEvent.click(canvas.getByLabelText("Include Inactive")),
 
     patientRecord,
     otherProvider,

@@ -9,10 +9,7 @@ export class PatientHistorytModel {
 
   patient: PatientModel;
 
-  constructor(
-    patient: PatientModel,
-    historyInfo: PatientRefreshHistoryMessage
-  ) {
+  constructor(patient: PatientModel, historyInfo: PatientRefreshHistoryMessage) {
     this.patient = patient;
     this.historyInfo = historyInfo as PatientRefreshHistoryMessage;
   }

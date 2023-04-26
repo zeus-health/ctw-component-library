@@ -3,9 +3,7 @@ import { getContactDetails, getHumanName, getPeriod } from "../../helpers";
 import { ExtendedGeneralInfo, isExtendedGeneralInfoExist } from "../../types";
 import { isEmpty } from "@/utils/nodash";
 
-export const getParticipantData = (
-  document: Document
-): ExtendedGeneralInfo[] | undefined => {
+export const getParticipantData = (document: Document): ExtendedGeneralInfo[] | undefined => {
   const participants = xpath.select(
     "*[name()='ClinicalDocument']/*[name()='participant']",
     document
@@ -15,10 +13,9 @@ export const getParticipantData = (
 
   return participants
     .map((participant): ExtendedGeneralInfo | undefined => {
-      const associatedEntity = xpath.select1(
-        "*[name()='associatedEntity']",
-        participant
-      ) as Document | undefined;
+      const associatedEntity = xpath.select1("*[name()='associatedEntity']", participant) as
+        | Document
+        | undefined;
 
       if (associatedEntity) {
         const associatedPerson = xpath.select1(
@@ -26,9 +23,7 @@ export const getParticipantData = (
           associatedEntity
         ) as Document;
 
-        const name = getHumanName(
-          xpath.select("*[name()='name']", associatedPerson) as Document[]
-        );
+        const name = getHumanName(xpath.select("*[name()='name']", associatedPerson) as Document[]);
 
         const contactDetails = getContactDetails(
           xpath.select("*[name()='addr']", associatedEntity) as Document[],
@@ -40,10 +35,7 @@ export const getParticipantData = (
         const period = getPeriod(time);
 
         const relationship = String(
-          xpath.select1(
-            "string(*[name()='code']/@displayName)",
-            associatedEntity
-          )
+          xpath.select1("string(*[name()='code']/@displayName)", associatedEntity)
         ).toLowerCase();
 
         return {

@@ -10,9 +10,7 @@ export const patientConditionsColumns: TableColumn<ConditionModel>[] = [
     minWidth: 320,
     render: (condition) => (
       <div>
-        <div className="ctw-font-medium group-hover:ctw-underline">
-          {condition.display}
-        </div>
+        <div className="ctw-font-medium group-hover:ctw-underline">{condition.display}</div>
         <div className="ctw-pc-chapter">{condition.ccsChapter}</div>
       </div>
     ),
@@ -21,12 +19,7 @@ export const patientConditionsColumns: TableColumn<ConditionModel>[] = [
     title: "Status",
     render: (condition) => (
       <div className="ctw-pc-status-container">
-        <div
-          className={cx(
-            "ctw-pc-status-dot",
-            statusToColor(condition.displayStatus)
-          )}
-        >
+        <div className={cx("ctw-pc-status-dot", statusToColor(condition.displayStatus))}>
           &bull;
         </div>
         <div>{condition.displayStatus}</div>
@@ -49,9 +42,7 @@ export const patientConditionsColumns: TableColumn<ConditionModel>[] = [
     widthPercent: 40,
     minWidth: 132,
     render: (condition) => {
-      const onsetText = condition.isSummaryResource
-        ? "Earliest known onset:"
-        : "Onset:";
+      const onsetText = condition.isSummaryResource ? "Earliest known onset:" : "Onset:";
 
       return (
         <div className="ctw-pc-onset-notes">

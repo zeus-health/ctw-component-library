@@ -29,10 +29,7 @@ export function applySorts<T extends object>(records: T[], sorts: Sort<T>[]) {
   const orders: SortDir[] = [];
   sorts.forEach((sortEntry) => {
     const { key, dir, isDate } = sortEntry;
-    iteratees.push(
-      (o) => isEmptyValue(o[key]),
-      isDate ? dateIteratee(key) : key
-    );
+    iteratees.push((o) => isEmptyValue(o[key]), isDate ? dateIteratee(key) : key);
     orders.push("asc", dir);
   });
 
@@ -50,11 +47,7 @@ export function sort<T>(
   return orderBy(collection, getValue, order) as T[];
 }
 
-function sortByDate<T>(
-  collection: T[],
-  getValue: GetValueFunction<T>,
-  order: "asc" | "desc"
-) {
+function sortByDate<T>(collection: T[], getValue: GetValueFunction<T>, order: "asc" | "desc") {
   collection.sort((a, b) => {
     const aDate = getValue(a) as string | undefined;
     const bDate = getValue(b) as string | undefined;

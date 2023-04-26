@@ -4,10 +4,7 @@ import { patientConditionsColumns } from "./columns";
 import { useConditionDetailsDrawer } from "./details";
 import { conditionFilters, defaultConditionFilters } from "./filters";
 import { conditionSortOptions, defaultConditionSort } from "./sorts";
-import {
-  ResourceTable,
-  ResourceTableProps,
-} from "../../resource/resource-table";
+import { ResourceTable, ResourceTableProps } from "../../resource/resource-table";
 import {
   ResourceTableActions,
   ResourceTableActionsProps,

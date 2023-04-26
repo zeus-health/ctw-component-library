@@ -17,8 +17,7 @@ export const patient = {
   ],
   entry: [
     {
-      fullUrl:
-        "https://api.sandbox.zusapi.com/fhir/Patient/76b42bff-b0cf-4056-bc28-45717a2826b9",
+      fullUrl: "https://api.sandbox.zusapi.com/fhir/Patient/76b42bff-b0cf-4056-bc28-45717a2826b9",
       resource: {
         resourceType: "Patient",
         id: "76b42bff",

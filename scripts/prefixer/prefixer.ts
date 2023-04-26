@@ -1,9 +1,7 @@
 import { readdirSync, readFileSync, writeFileSync } from "fs";
 
 async function main() {
-  const filePaths = readdirSync("../src").filter(
-    (fn) => fn.endsWith(".tsx") || fn.endsWith(".ts")
-  );
+  const filePaths = readdirSync("../src").filter((fn) => fn.endsWith(".tsx") || fn.endsWith(".ts"));
   filePaths.forEach((fp) => prefixFile(fp));
 }
 

@@ -7,10 +7,7 @@ import { compact, uniq } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_HISTORY_LIST } from "@/utils/query-keys";
 import { Telemetry } from "@/utils/telemetry";
 
-export function useBuilderPatientHistoryList(
-  pageSize: number,
-  pageOffset: number
-) {
+export function useBuilderPatientHistoryList(pageSize: number, pageOffset: number) {
   return useQueryWithCTW(
     QUERY_KEY_PATIENT_HISTORY_LIST,
     [pageSize, pageOffset],
@@ -25,9 +22,7 @@ export function useBuilderPatientHistoryList(
         const subsetMessages = response.data.slice(start, end);
 
         const patientsIds = uniq(
-          compact(
-            subsetMessages.map((message) => message.initialData.patientId)
-          )
+          compact(subsetMessages.map((message) => message.initialData.patientId))
         );
 
         if (!patientsIds.length) {
@@ -52,10 +47,7 @@ export function useBuilderPatientHistoryList(
           patients: patientHistoryPatients,
         };
       } catch (e) {
-        Telemetry.logError(
-          e as Error,
-          "Failed fetching patient history patients."
-        );
+        Telemetry.logError(e as Error, "Failed fetching patient history patients.");
         throw new Error(`Failed fetching patient history patients: ${e}`);
       }
     }

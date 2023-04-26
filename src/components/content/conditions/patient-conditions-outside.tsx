@@ -25,8 +25,7 @@ const PatientConditionsOutsideComponent = ({
   const query = usePatientConditionsOutside();
   const patientHistoryQuery = usePatientHistory();
   const hasNoOutsideDataAndHasNeverRequestedPatientHistory =
-    patientHistoryQuery.lastRetrievedAt === undefined &&
-    query.data.length === 0;
+    patientHistoryQuery.lastRetrievedAt === undefined && query.data.length === 0;
 
   const emptyMessage = !patientHistoryQuery.lastRetrievedAt ? (
     <div className="ctw-flex ctw-space-x-1">
@@ -38,9 +37,7 @@ const PatientConditionsOutsideComponent = ({
   const action = (
     <PatientHistoryAction
       hideRequestRecords={
-        hideRequestRecords ||
-        hasNoOutsideDataAndHasNeverRequestedPatientHistory ||
-        readOnly
+        hideRequestRecords || hasNoOutsideDataAndHasNeverRequestedPatientHistory || readOnly
       }
     />
   );

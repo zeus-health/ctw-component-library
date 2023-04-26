@@ -4,9 +4,7 @@ import { GeneralInfo, LabelValueType } from "../../../types";
 import { getGuardian as getGuardianFromHeader } from "../../Header/data/getGuardian";
 import { isEmpty } from "@/utils/nodash";
 
-export const getGuardian = (
-  patientRole: Document
-): GeneralInfo[] | undefined => {
+export const getGuardian = (patientRole: Document): GeneralInfo[] | undefined => {
   const guardians = xpath.select(
     "//*[name()='patientRole']/*[name()='patient']/*[name()='guardian']",
     document

@@ -30,9 +30,7 @@ export const FormField = ({
   // expect it to be in YYYY-MM-DD format.
 
   const value =
-    inputProps.type === "date"
-      ? formatDateLocalToISO(defaultValue as string)
-      : defaultValue;
+    inputProps.type === "date" ? formatDateLocalToISO(defaultValue as string) : defaultValue;
 
   const getFieldComponent = () => {
     if (render) {
@@ -43,10 +41,7 @@ export const FormField = ({
       return (
         <select
           data-testid={`form-field-${inputProps.name}`}
-          className={cx(
-            { "ctw-error": errors },
-            "ctw-listbox-button ctw-w-full"
-          )}
+          className={cx({ "ctw-error": errors }, "ctw-listbox-button ctw-w-full")}
           name={inputProps.name}
           id={inputProps.name}
           disabled={inputProps.disabled}

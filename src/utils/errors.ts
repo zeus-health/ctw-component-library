@@ -11,15 +11,10 @@ export function isError(error: unknown): error is Error {
 }
 
 export function errorMessage(error: unknown): string {
-  return isError(error)
-    ? error.message.split(":")[0]
-    : "An unknown error occurred";
+  return isError(error) ? error.message.split(":")[0] : "An unknown error occurred";
 }
 
-export const errorResponse = (
-  title: string,
-  e?: FhirError | Error | unknown
-) => {
+export const errorResponse = (title: string, e?: FhirError | Error | unknown) => {
   if (isFhirError(e)) {
     Telemetry.logFhirError(e, title);
     throw fhirErrorResponse(title, e);

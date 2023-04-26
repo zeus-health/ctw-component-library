@@ -45,7 +45,9 @@
     "prepare": "relative-deps",
     "postinstall": "patch-package"
   },
-  "prettier": {},
+  "prettier": {
+    "printWidth": 100
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/zeus-health/ctw-component-library.git"

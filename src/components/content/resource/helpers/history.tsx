@@ -10,11 +10,7 @@ export type HistoryProps = {
   resourceTypeTitle: string;
 };
 
-export const History = ({
-  entries,
-  limit,
-  resourceTypeTitle,
-}: HistoryProps) => {
+export const History = ({ entries, limit, resourceTypeTitle }: HistoryProps) => {
   const [showAll, setShowAll] = useState(!limit || entries.length <= limit);
 
   // Sort by date descending, then by version descending
@@ -26,8 +22,7 @@ export const History = ({
     ["desc", "desc"]
   );
 
-  const displayedEntries =
-    showAll || !limit ? sortedEntries : sortedEntries.slice(0, limit);
+  const displayedEntries = showAll || !limit ? sortedEntries : sortedEntries.slice(0, limit);
 
   return (
     <div className="ctw-space-y-4" data-zus-telemetry-namespace="History">
@@ -50,11 +45,7 @@ export const History = ({
       ))}
       {!showAll && (
         <div className="ctw-text-center">
-          <button
-            type="button"
-            className="ctw-btn-primary"
-            onClick={() => setShowAll(true)}
-          >
+          <button type="button" className="ctw-btn-primary" onClick={() => setShowAll(true)}>
             {/* We know limit must be set if showAll is false. */}
             {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
             Load {sortedEntries.length - limit!} More

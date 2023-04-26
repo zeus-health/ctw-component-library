@@ -44,16 +44,14 @@ export const medicationStatement = {
               {
                 url: "https://zusapi.com/lens/extension/aggregatedFrom",
                 valueReference: {
-                  reference:
-                    "MedicationDispense/612df454-aea8-4ad7-87c4-fd35ee7ce1e3",
+                  reference: "MedicationDispense/612df454-aea8-4ad7-87c4-fd35ee7ce1e3",
                   type: "MedicationDispense",
                 },
               },
               {
                 url: "https://zusapi.com/lens/extension/aggregatedFrom",
                 valueReference: {
-                  reference:
-                    "MedicationRequest/104f6928-da8a-4c0c-b4eb-abeb9e4195f0",
+                  reference: "MedicationRequest/104f6928-da8a-4c0c-b4eb-abeb9e4195f0",
                   type: "MedicationRequest",
                 },
               },
@@ -117,8 +115,7 @@ export const medicationStatement = {
               ],
               system: "http://www.nlm.nih.gov/research/umls/rxnorm",
               code: "876195",
-              display:
-                "polyethylene glycol 3350 17000 MG Powder for Oral Solution [Miralax]",
+              display: "polyethylene glycol 3350 17000 MG Powder for Oral Solution [Miralax]",
               userSelected: false,
             },
             {
@@ -166,8 +163,7 @@ export const medicationStatement = {
               ],
               system: "http://www.nlm.nih.gov/research/umls/rxnorm",
               code: "876193",
-              display:
-                "polyethylene glycol 3350 17000 MG Powder for Oral Solution",
+              display: "polyethylene glycol 3350 17000 MG Powder for Oral Solution",
               userSelected: false,
             },
           ],

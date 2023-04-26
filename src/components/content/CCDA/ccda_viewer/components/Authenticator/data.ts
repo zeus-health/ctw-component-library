@@ -1,15 +1,9 @@
 import xpath from "xpath";
-import {
-  getContactDetails,
-  getHumanName,
-  parseToISOString,
-} from "../../helpers";
+import { getContactDetails, getHumanName, parseToISOString } from "../../helpers";
 import { ExtendedGeneralInfo, isExtendedGeneralInfoExist } from "../../types";
 import { isEmpty } from "@/utils/nodash";
 
-export const getAuthenticatorData = (
-  document: Document
-): ExtendedGeneralInfo[] | undefined => {
+export const getAuthenticatorData = (document: Document): ExtendedGeneralInfo[] | undefined => {
   const authenticators = xpath.select(
     "*[name()='ClinicalDocument']/*[name()='authenticator']",
     document
@@ -17,18 +11,15 @@ export const getAuthenticatorData = (
   if (isEmpty(authenticators)) return undefined;
   return authenticators
     .map((authenticator): ExtendedGeneralInfo | undefined => {
-      const assignedEntity = xpath.select1(
-        "*[name()='assignedEntity']",
-        authenticator
-      ) as Document | undefined;
+      const assignedEntity = xpath.select1("*[name()='assignedEntity']", authenticator) as
+        | Document
+        | undefined;
       if (!assignedEntity) return undefined;
       const assignedPerson = xpath.select1(
         "*[name()='assignedPerson']",
         assignedEntity
       ) as Document;
-      const name = getHumanName(
-        xpath.select("*[name()='name']", assignedPerson) as Document[]
-      );
+      const name = getHumanName(xpath.select("*[name()='name']", assignedPerson) as Document[]);
       const contactDetails = getContactDetails(
         xpath.select("*[name()='addr']", assignedEntity) as Document[],
         xpath.select("*[name()='telecom']", assignedEntity) as Document[]

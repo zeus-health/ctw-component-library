@@ -8,9 +8,7 @@ import { isFinite } from "@/utils/nodash";
  * @returns Index of the timezone signs from the end and sign timezone itself
  *
  */
-const getIndexFromEnd = (
-  date: string
-): { index: number; timezoneSign?: "+" | "-" } => {
+const getIndexFromEnd = (date: string): { index: number; timezoneSign?: "+" | "-" } => {
   const rawDate = date.replace(/:/g, "");
   const plusSign = rawDate.lastIndexOf("+");
   const minusSign = rawDate.lastIndexOf("-");
@@ -45,9 +43,7 @@ const getIndexFromEnd = (
  *
  */
 const isCorrectValue = (fragment: string) =>
-  fragment &&
-  fragment.length > 1 &&
-  fragment.split("").every((char) => isFinite(Number(char)));
+  fragment && fragment.length > 1 && fragment.split("").every((char) => isFinite(Number(char)));
 
 const constructISOString = ({
   year,

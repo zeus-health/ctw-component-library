@@ -16,20 +16,13 @@ export type PatientConditionsProps = {
   readOnly?: boolean;
 };
 
-const PatientConditionsComponent = ({
-  className,
-  readOnly = false,
-}: PatientConditionsProps) => {
+const PatientConditionsComponent = ({ className, readOnly = false }: PatientConditionsProps) => {
   const query = usePatientConditions();
   const showAddConditionForm = useAddConditionForm();
   const { t } = useBaseTranslations();
 
   const action = !readOnly && (
-    <button
-      type="button"
-      className="ctw-btn-primary"
-      onClick={() => showAddConditionForm()}
-    >
+    <button type="button" className="ctw-btn-primary" onClick={() => showAddConditionForm()}>
       {t("resource.add", { resource: t("glossary:condition_one") })}
     </button>
   );
@@ -45,10 +38,7 @@ const PatientConditionsComponent = ({
   );
 };
 
-export const PatientConditions = withErrorBoundary(
-  PatientConditionsComponent,
-  "PatientConditions"
-);
+export const PatientConditions = withErrorBoundary(PatientConditionsComponent, "PatientConditions");
 
 const RowActions = ({ record }: RowActionsProps<ConditionModel>) => {
   const showEditConditionForm = useEditConditionForm();
@@ -57,11 +47,7 @@ const RowActions = ({ record }: RowActionsProps<ConditionModel>) => {
   return (
     <div className="ctw-flex ctw-space-x-2">
       {!record.isDeleted && (
-        <button
-          type="button"
-          className="ctw-btn-default"
-          onClick={() => confirmDelete(record)}
-        >
+        <button type="button" className="ctw-btn-default" onClick={() => confirmDelete(record)}>
           Remove
         </button>
       )}
