@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import { useEffect, useState } from "react";
 import { PatientHistoryStatus } from "./patient-history-message-status";
 import { PatientHistoryRequestDrawer } from "../patient-history-request-drawer";
@@ -19,6 +18,7 @@ import { errorResponse } from "@/utils/errors";
 import { find, omitBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_HISTORY_DETAILS } from "@/utils/query-keys";
 import { ctwFetch } from "@/utils/request";
+/* eslint-disable no-underscore-dangle */
 import { Telemetry } from "@/utils/telemetry";
 
 type PatientHistoryDetails = Partial<{
