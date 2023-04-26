@@ -3,7 +3,17 @@ import { isEqual, uniqWith } from "@/utils/nodash";
 
 export const applyDocumentFilters = (data: fhir4.DocumentReference[]) => {
   const documentModel = data.map((document) => new DocumentModel(document));
-  const documentData = uniqWith(documentModel, (a, b) =>
+
+  const actualDocument = documentModel.filter(
+    (document) =>
+      document.category &&
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      document.category.filter(
+        (category) => category.coding && category.coding.length > 1
+      )
+  );
+
+  const documentData = uniqWith(actualDocument, (a, b) =>
     isEqual(valuesToDedupeOn(a), valuesToDedupeOn(b))
   );
 
