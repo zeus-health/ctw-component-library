@@ -10,12 +10,7 @@ export type PatientObservationsProps = {
 const Component = ({ className }: PatientObservationsProps) => {
   const diagnosticReports = usePatientDiagnosticReports();
 
-  return (
-    <PatientObservationsBase className={className} query={diagnosticReports} />
-  );
+  return <PatientObservationsBase className={className} query={diagnosticReports} />;
 };
 
-export const PatientObservations = withErrorBoundary(
-  Component,
-  "PatientObservations"
-);
+export const PatientObservations = withErrorBoundary(Component, "PatientObservations");

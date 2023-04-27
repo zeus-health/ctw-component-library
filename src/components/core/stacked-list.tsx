@@ -25,9 +25,7 @@ export const StackedList = ({ entries }: StackedListProps) => (
               <div className="ctw-hover:text-primary-700 ctw-truncate ctw-text-sm ctw-font-medium">
                 {title || ""}
               </div>
-              <div className="ctw-text-gray-500 ctw-truncate ctw-text-sm">
-                {description || ""}
-              </div>
+              <div className="ctw-text-gray-500 ctw-truncate ctw-text-sm">{description || ""}</div>
             </div>
           )}
         </button>

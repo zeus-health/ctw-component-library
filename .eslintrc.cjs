@@ -2,11 +2,7 @@
  * @type {import('@types/eslint').Linter.BaseConfig}
  */
 module.exports = {
-  extends: [
-    "@kensho-technologies/eslint-config",
-    "prettier",
-    "plugin:storybook/recommended",
-  ],
+  extends: ["@kensho-technologies/eslint-config", "prettier", "plugin:storybook/recommended"],
   plugins: ["unused-imports", "sort-exports"],
   // Ignore js files as we now have typescript parsing rules.
   // See https://stackoverflow.com/a/65063702 for more.

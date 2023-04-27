@@ -1,15 +1,8 @@
 import xpath from "xpath";
-import {
-  formatDate,
-  getContactDetails,
-  getHumanName,
-  parseToISOString,
-} from "../../helpers";
+import { formatDate, getContactDetails, getHumanName, parseToISOString } from "../../helpers";
 import { ExtendedGeneralInfo } from "../../types";
 
-export const getLegalAuthenticatorData = (
-  document: Document
-): ExtendedGeneralInfo | undefined => {
+export const getLegalAuthenticatorData = (document: Document): ExtendedGeneralInfo | undefined => {
   const legalAuthenticator = xpath.select1(
     "*[name()='ClinicalDocument']/*[name()='legalAuthenticator']",
     document
@@ -22,14 +15,9 @@ export const getLegalAuthenticatorData = (
     legalAuthenticator
   ) as Document;
 
-  const assignedPerson = xpath.select1(
-    "*[name()='assignedPerson']",
-    assignedEntity
-  ) as Document;
+  const assignedPerson = xpath.select1("*[name()='assignedPerson']", assignedEntity) as Document;
 
-  const name = getHumanName(
-    xpath.select("*[name()='name']", assignedPerson) as Document[]
-  );
+  const name = getHumanName(xpath.select("*[name()='name']", assignedPerson) as Document[]);
 
   const contactDetails = getContactDetails(
     xpath.select("*[name()='addr']", assignedEntity) as Document[],
@@ -37,11 +25,7 @@ export const getLegalAuthenticatorData = (
   );
 
   const time = formatDate(
-    parseToISOString(
-      String(
-        xpath.select1("string(*[name()='time']/@value)", legalAuthenticator)
-      )
-    )
+    parseToISOString(String(xpath.select1("string(*[name()='time']/@value)", legalAuthenticator)))
   );
 
   return { name, contactDetails, time };

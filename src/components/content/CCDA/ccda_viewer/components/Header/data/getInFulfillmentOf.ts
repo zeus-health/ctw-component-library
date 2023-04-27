@@ -15,9 +15,7 @@ export const getInFulfillmentOf = (
 
   const orders = orderXmls.map((orderXml) => {
     const id = getId(xpath.select1("*[name()='id']", orderXml) as Document);
-    const code = String(
-      xpath.select1("string(*[name()='code']/@displayName)", orderXml)
-    );
+    const code = String(xpath.select1("string(*[name()='code']/@displayName)", orderXml));
 
     return [
       { label: "Order ID:", value: id },

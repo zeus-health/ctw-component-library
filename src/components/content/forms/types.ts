@@ -12,9 +12,4 @@ export type MedicationFormData = {
   status: fhir4.MedicationStatement["status"];
 };
 
-export type ConditionStatus =
-  | "Active"
-  | "Inactive"
-  | "Pending"
-  | "Refuted"
-  | "Entered In Error";
+export type ConditionStatus = "Active" | "Inactive" | "Pending" | "Refuted" | "Entered In Error";

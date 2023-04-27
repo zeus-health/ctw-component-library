@@ -1,23 +1,11 @@
-import {
-  faClipboardCheck,
-  faClipboardList,
-} from "@fortawesome/free-solid-svg-icons";
+import { faClipboardCheck, faClipboardList } from "@fortawesome/free-solid-svg-icons";
 import { dismissFilter } from "../../resource/filters";
-import {
-  FilterChangeEvent,
-  FilterItem,
-} from "@/components/core/filter-bar/filter-bar-types";
+import { FilterChangeEvent, FilterItem } from "@/components/core/filter-bar/filter-bar-types";
 import { ConditionModel } from "@/fhir/models";
-import {
-  conditionStatuses,
-  outsideConditionStatuses,
-} from "@/fhir/models/condition";
+import { conditionStatuses, outsideConditionStatuses } from "@/fhir/models/condition";
 import { uniqueValues } from "@/utils/filters";
 
-export function conditionFilters(
-  conditions: ConditionModel[],
-  outside: boolean
-): FilterItem[] {
+export function conditionFilters(conditions: ConditionModel[], outside: boolean): FilterItem[] {
   const filters: FilterItem[] = [];
 
   if (outside) {

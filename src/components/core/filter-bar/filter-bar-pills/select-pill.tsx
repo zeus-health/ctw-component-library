@@ -3,10 +3,7 @@ import cx from "classnames";
 import { ReactNode } from "react";
 import { MenuItem } from "../../menu/menu-item";
 import { FilterOptionSelect } from "@/components/core/filter-bar/filter-bar-types";
-import {
-  ListBox,
-  ListBoxOptionStatus,
-} from "@/components/core/list-box/list-box";
+import { ListBox, ListBoxOptionStatus } from "@/components/core/list-box/list-box";
 import { isString } from "@/utils/nodash";
 import { isFunction } from "@/utils/nodash/fp";
 
@@ -18,28 +15,17 @@ type FilterBarSelectPillProps = {
 
 const buttonClassName =
   "ctw-flex ctw-items-center ctw-capitalize ctw-text-content-black ctw-bg-bg-dark ctw-text-sm ctw-rounded ctw-py-2 ctw-px-3 ctw-relative ctw-cursor-pointer ctw-border-0 ctw-border-transparent";
-const renderDisplay = (
-  display: string | ((status: ListBoxOptionStatus) => string | ReactNode)
-) => (isFunction(display) ? display({ active: false }) : display);
+const renderDisplay = (display: string | ((status: ListBoxOptionStatus) => string | ReactNode)) =>
+  isFunction(display) ? display({ active: false }) : display;
 const builtInButton = (name: string, key: string, icon: IconDefinition) => ({
   key,
   display: ({ listView, filter }: ListBoxOptionStatus) =>
-    listView ? (
-      <MenuItem icon={icon}>{name}</MenuItem>
-    ) : (
-      filter && renderDisplay(filter.display)
-    ),
+    listView ? <MenuItem icon={icon}>{name}</MenuItem> : filter && renderDisplay(filter.display),
 });
 const removeButton = builtInButton("remove filter", "_remove", faTrash);
 
-export function FilterBarSelectPill({
-  filter,
-  onChange,
-  onRemove,
-}: FilterBarSelectPillProps) {
-  const filterNames = filter.values.map((value) =>
-    isString(value) ? value : value.display
-  );
+export function FilterBarSelectPill({ filter, onChange, onRemove }: FilterBarSelectPillProps) {
+  const filterNames = filter.values.map((value) => (isString(value) ? value : value.name));
   const items = [...filterNames, removeButton];
   return (
     <ListBox

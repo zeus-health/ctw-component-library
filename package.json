@@ -1,6 +1,6 @@
 {
   "name": "@zus-health/ctw-component-library",
-  "version": "1.3.7",
+  "version": "1.4.1",
   "type": "module",
   "engines": {
     "node": ">=16 <19"
@@ -45,7 +45,9 @@
     "prepare": "relative-deps",
     "postinstall": "patch-package"
   },
-  "prettier": {},
+  "prettier": {
+    "printWidth": 100
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/zeus-health/ctw-component-library.git"

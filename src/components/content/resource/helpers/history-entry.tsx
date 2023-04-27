@@ -92,18 +92,13 @@ const DetailSummary = ({
       <div className="ctw-flex ctw-space-x-3">
         {date && <div className="ctw-min-w-[5rem]">{date}</div>}
         <div>
-          <div className="ctw-font-semibold ctw-text-content-black">
-            {title}
-          </div>
+          <div className="ctw-font-semibold ctw-text-content-black">{title}</div>
           <div className="ctw-text-content-light">{subtitle}</div>
         </div>
       </div>
       <div className="ctw-flex ctw-items-center ctw-space-x-3">
         {hasDocument && (
-          <FontAwesomeIcon
-            icon={faFileLines}
-            className="ctw-h-5 ctw-text-content-light"
-          />
+          <FontAwesomeIcon icon={faFileLines} className="ctw-h-5 ctw-text-content-light" />
         )}
         <div className="ctw-justify-right ctw-flex">
           <FontAwesomeIcon

@@ -1,8 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import {
-  PatientImmunizations,
-  PatientImmunizationsProps,
-} from "./patient-immunizations";
+import { PatientImmunizations, PatientImmunizationsProps } from "./patient-immunizations";
 import { setupImmunizationMocks } from "./story-helpers/mocks/requests";
 import { CTWProvider } from "@/components/core/providers/ctw-provider";
 import { PatientProvider } from "@/components/core/providers/patient-provider";

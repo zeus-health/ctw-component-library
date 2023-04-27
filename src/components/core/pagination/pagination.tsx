@@ -33,9 +33,7 @@ export const Pagination = ({
   pagesToShow.push(currentPage - 1, currentPage, currentPage + 1);
   // Dedupe, sort and filter away any pages that are out of range.
   pagesToShow = uniq(
-    pagesToShow
-      .sort((a, b) => a - b)
-      .filter((page) => page >= 1 && page <= pageCount)
+    pagesToShow.sort((a, b) => a - b).filter((page) => page >= 1 && page <= pageCount)
   );
 
   return (
@@ -74,9 +72,7 @@ export const Pagination = ({
 
               return (
                 <Fragment key={page}>
-                  {pagesSkipped > 1 && (
-                    <span className="ctw-pagination-ellipsis">...</span>
-                  )}
+                  {pagesSkipped > 1 && <span className="ctw-pagination-ellipsis">...</span>}
                   {pagesSkipped === 1 && (
                     <Page
                       page={page - 1}
@@ -85,11 +81,7 @@ export const Pagination = ({
                     />
                   )}
 
-                  <Page
-                    setCurrentPage={setCurrentPage}
-                    page={page}
-                    currentPage={currentPage}
-                  />
+                  <Page setCurrentPage={setCurrentPage} page={page} currentPage={currentPage} />
                 </Fragment>
               );
             })}
@@ -101,10 +93,7 @@ export const Pagination = ({
               disabled={currentPage === pageCount}
             >
               <span className="ctw-sr-only">Next</span>
-              <ChevronRightIcon
-                className="ctw-h-5 ctw-w-5"
-                aria-hidden="true"
-              />
+              <ChevronRightIcon className="ctw-h-5 ctw-w-5" aria-hidden="true" />
             </Page>
           </nav>
         </div>

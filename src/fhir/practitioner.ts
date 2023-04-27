@@ -5,25 +5,16 @@ import { PractitionerModel } from "@/fhir/models/practitioner";
 import { claimsAuthEmail, claimsPractitionerId } from "@/utils/auth";
 import { withTimerMetric } from "@/utils/telemetry";
 
-const getPractitioner = async (
-  practitionerId: string,
-  requestContext: CTWRequestContext
-) => {
+const getPractitioner = async (practitionerId: string, requestContext: CTWRequestContext) => {
   let practitioners = [];
   try {
-    const { resources } = await searchBuilderRecords(
-      "Practitioner",
-      requestContext,
-      {
-        _id: practitionerId,
-      }
-    );
+    const { resources } = await searchBuilderRecords("Practitioner", requestContext, {
+      _id: practitionerId,
+    });
 
     practitioners = resources;
   } catch (error) {
-    throw new Error(
-      `Failed fetching practitioner with an id of: ${practitionerId}. ${error}`
-    );
+    throw new Error(`Failed fetching practitioner with an id of: ${practitionerId}. ${error}`);
   }
 
   if (!practitioners[0]) {

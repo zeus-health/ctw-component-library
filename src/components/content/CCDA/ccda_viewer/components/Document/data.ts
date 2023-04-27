@@ -8,10 +8,7 @@ const confidentialityCodeMap: Record<string, string> = {
 };
 export const getDocumentData = (document: Document) => {
   const id = getId(
-    xpath.select1(
-      "*[name()='ClinicalDocument']/*[name()='id']",
-      document
-    ) as Document
+    xpath.select1("*[name()='ClinicalDocument']/*[name()='id']", document) as Document
   );
 
   const effectiveTimeValue = parseToISOString(
@@ -26,16 +23,10 @@ export const getDocumentData = (document: Document) => {
   const createdOn = formatDate(effectiveTimeValue);
 
   const version = String(
-    xpath.select1(
-      "string(*[name()='ClinicalDocument']/*[name()='versionNumber']/@value)",
-      document
-    )
+    xpath.select1("string(*[name()='ClinicalDocument']/*[name()='versionNumber']/@value)", document)
   );
   const setId = getId(
-    xpath.select1(
-      "*[name()='ClinicalDocument']/*[name()='setId']",
-      document
-    ) as Document
+    xpath.select1("*[name()='ClinicalDocument']/*[name()='setId']", document) as Document
   );
   const confidentialityCode =
     confidentialityCodeMap[
@@ -47,16 +38,10 @@ export const getDocumentData = (document: Document) => {
       )
     ];
   const code = String(
-    xpath.select1(
-      "string(*[name()='ClinicalDocument']/*[name()='code']/@displayName)",
-      document
-    )
+    xpath.select1("string(*[name()='ClinicalDocument']/*[name()='code']/@displayName)", document)
   );
   const languageCode = String(
-    xpath.select1(
-      "string(*[name()='ClinicalDocument']/*[name()='languageCode']/@code)",
-      document
-    )
+    xpath.select1("string(*[name()='ClinicalDocument']/*[name()='languageCode']/@code)", document)
   );
   return {
     id,

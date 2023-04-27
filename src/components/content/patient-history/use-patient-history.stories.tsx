@@ -9,11 +9,7 @@ const HookWrapper = () => {
   const { openHistoryRequestDrawer } = usePatientHistory();
 
   return (
-    <button
-      type="button"
-      onClick={openHistoryRequestDrawer}
-      className="ctw-link ctw-btn-clear"
-    >
+    <button type="button" onClick={openHistoryRequestDrawer} className="ctw-link ctw-btn-clear">
       Request History
     </button>
   );

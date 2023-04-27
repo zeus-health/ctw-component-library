@@ -2,9 +2,7 @@ import xpath from "xpath";
 import { isEmpty } from "@/utils/nodash";
 
 export const getEthnicity = (patient: Document): string => {
-  const ethnicGroup = xpath.select1("*[name()='ethnicGroupCode']", patient) as
-    | Document
-    | undefined;
+  const ethnicGroup = xpath.select1("*[name()='ethnicGroupCode']", patient) as Document | undefined;
 
   if (ethnicGroup) {
     return String(xpath.select1("string(@displayName)", ethnicGroup));

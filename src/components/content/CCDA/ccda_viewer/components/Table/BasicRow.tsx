@@ -8,11 +8,7 @@ type TdProps = {
   indexKey: number;
   chunkSize?: 2 | 3;
 };
-export const BasicRow = ({
-  dataChunk,
-  indexKey,
-  chunkSize,
-}: TdProps): JSX.Element | null => {
+export const BasicRow = ({ dataChunk, indexKey, chunkSize }: TdProps): JSX.Element | null => {
   if (!dataChunk[0].value && !dataChunk[1]?.value && !dataChunk[2]?.value) {
     return null;
   }
@@ -31,10 +27,8 @@ export const BasicRow = ({
           if (!singleData.value) return null;
           let colSpan = 1;
           if (
-            (index === 0 &&
-              (!newDataChunk[index + 1] || !newDataChunk[index + 1].value)) ||
-            (index === 1 &&
-              (!newDataChunk[index - 1] || !newDataChunk[index - 1].value))
+            (index === 0 && (!newDataChunk[index + 1] || !newDataChunk[index + 1].value)) ||
+            (index === 1 && (!newDataChunk[index - 1] || !newDataChunk[index - 1].value))
           ) {
             colSpan = 3;
           }
@@ -66,9 +60,7 @@ export const BasicRow = ({
       </tr>
       {last && last.value && (
         <tr>
-          <td className="ctw-ccda-common-td1">
-            {last.label.replace(/:/g, "")}
-          </td>
+          <td className="ctw-ccda-common-td1">{last.label.replace(/:/g, "")}</td>
           <td className="ctw-ccda-common-td2">{last.value}</td>
         </tr>
       )}

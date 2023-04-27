@@ -17,11 +17,7 @@ interface Base64BinaryFieldProps {
   fileName: string | undefined;
 }
 
-export const Base64BinaryField = ({
-  data,
-  contentType,
-  fileName,
-}: Base64BinaryFieldProps) => {
+export const Base64BinaryField = ({ data, contentType, fileName }: Base64BinaryFieldProps) => {
   const ref = useRef<HTMLAnchorElement>(null);
   const [fileUrl, setFileUrl] = useState<string>();
   const [fileTitle, setFileTitle] = useState<string>();
@@ -32,10 +28,7 @@ export const Base64BinaryField = ({
     const xmlDocument = new DOMParser({
       locator: {},
       errorHandler: () => null,
-    }).parseFromString(
-      Buffer.from(data, "base64").toString("utf8"),
-      contentType
-    );
+    }).parseFromString(Buffer.from(data, "base64").toString("utf8"), contentType);
 
     if (xpath.select1("//*[name()='patientRole']", xmlDocument)) {
       return xmlDocument;

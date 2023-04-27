@@ -1,13 +1,7 @@
 import { createContext } from "react";
 
 export type OpenModalProps = {
-  component: ({
-    isOpen,
-    onClose,
-  }: {
-    isOpen: boolean;
-    onClose: () => void;
-  }) => JSX.Element;
+  component: ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => JSX.Element;
 };
 
 export type ModalState = {

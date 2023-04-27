@@ -27,9 +27,7 @@ export const patientAllergiesColumns = (includeViewFhirResource = false) => {
       render: (allergy) => (
         <div>
           {!!allergy.manifestations && allergy.manifestations !== "unknown" && (
-            <div className="ctw-font-medium">
-              Reaction: {capitalize(allergy.manifestations)}
-            </div>
+            <div className="ctw-font-medium">Reaction: {capitalize(allergy.manifestations)}</div>
           )}
         </div>
       ),
@@ -39,9 +37,7 @@ export const patientAllergiesColumns = (includeViewFhirResource = false) => {
     allergyColumns.push({
       widthPercent: 10,
       minWidth: 200,
-      render: (allergy) => (
-        <ViewFHIR name="Allergy Resource" resource={allergy.resource} />
-      ),
+      render: (allergy) => <ViewFHIR name="Allergy Resource" resource={allergy.resource} />,
     });
   }
 

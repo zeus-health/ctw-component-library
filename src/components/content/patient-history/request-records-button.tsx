@@ -8,13 +8,8 @@ type RequestRecordsButtonProps = {
 };
 
 export const RequestRecordsButton = withErrorBoundary(
-  ({
-    className,
-    includePatientDemographicsForm,
-  }: RequestRecordsButtonProps) => {
-    const { openHistoryRequestDrawer } = usePatientHistory(
-      includePatientDemographicsForm
-    );
+  ({ className, includePatientDemographicsForm }: RequestRecordsButtonProps) => {
+    const { openHistoryRequestDrawer } = usePatientHistory(includePatientDemographicsForm);
 
     return (
       <button

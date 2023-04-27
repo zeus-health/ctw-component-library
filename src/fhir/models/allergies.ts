@@ -56,17 +56,13 @@ export class AllergyModel extends FHIRModel<fhir4.AllergyIntolerance> {
       organizationDisplay?.managingOrganization?.reference
     )?.name;
 
-    return (
-      organizationDisplay?.managingOrganization?.display || organizationName
-    );
+    return organizationDisplay?.managingOrganization?.display || organizationName;
   }
 
   get note(): string | undefined {
     let concatenatedString;
     if (this.resource.note) {
-      concatenatedString = this.resource.note
-        .map((note) => codeableConceptLabel(note))
-        .join(", ");
+      concatenatedString = this.resource.note.map((note) => codeableConceptLabel(note)).join(", ");
     }
 
     return concatenatedString;
@@ -78,15 +74,10 @@ export class AllergyModel extends FHIRModel<fhir4.AllergyIntolerance> {
 
   get knownCodings(): fhir4.Coding[] {
     const codings = compact(
-      ALLERGY_CODE_PREFERENCE_ORDER.map((code) =>
-        findCoding(code.system, this.resource.code)
-      )
+      ALLERGY_CODE_PREFERENCE_ORDER.map((code) => findCoding(code.system, this.resource.code))
     );
 
-    const dedupedBySystemCoding = uniqWith(
-      codings,
-      (prev, next) => prev.system === next.system
-    );
+    const dedupedBySystemCoding = uniqWith(codings, (prev, next) => prev.system === next.system);
     return dedupedBySystemCoding;
   }
 

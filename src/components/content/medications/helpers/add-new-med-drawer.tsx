@@ -16,9 +16,7 @@ export function useAddMedicationForm() {
 
   return (medication: MedicationStatementModel) => {
     openDrawer({
-      component: (props) => (
-        <AddNewMedDrawer medication={medication.resource} {...props} />
-      ),
+      component: (props) => <AddNewMedDrawer medication={medication.resource} {...props} />,
     });
   };
 }
@@ -56,9 +54,7 @@ const AddNewMedDrawer = ({ isOpen, onClose, medication }: Props) => {
     });
   }
 
-  const createMedData = getMedicationFormData(
-    medStatementModelForFormPopulation
-  );
+  const createMedData = getMedicationFormData(medStatementModelForFormPopulation);
 
   return (
     <DrawerFormWithFields

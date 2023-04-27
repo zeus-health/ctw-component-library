@@ -22,11 +22,7 @@ export function Wrapper({ className, children }: ContainerProps) {
   return <div className={cx("ctw-container", className)}>{children}</div>;
 }
 
-export function StackedWrapper({
-  className,
-  children,
-  ...htmlProps
-}: ContainerProps) {
+export function StackedWrapper({ className, children, ...htmlProps }: ContainerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const classNames = cx(className, {
@@ -58,12 +54,7 @@ export function Title({ className, title, children }: TitleContainerProps) {
   );
 }
 
-export function Body({
-  className,
-  title,
-  titleChildren,
-  children,
-}: BodyContainerProps) {
+export function Body({ className, title, titleChildren, children }: BodyContainerProps) {
   const showTitleContainer = !!(title || titleChildren);
   return (
     <div className={cx("ctw-body-container", className)}>

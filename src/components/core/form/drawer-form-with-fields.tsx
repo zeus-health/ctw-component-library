@@ -3,11 +3,7 @@ import { Fragment, InputHTMLAttributes, ReactNode } from "react";
 import { DrawerForm, DrawerFormProps, FormErrors } from "./drawer-form";
 import { FormField } from "@/components/content/forms/form-field";
 import { FormFieldLabel } from "@/components/content/forms/form-field-label";
-import {
-  AnyZodSchema,
-  InputPropType,
-  useFormInputProps,
-} from "@/utils/form-helper";
+import { AnyZodSchema, InputPropType, useFormInputProps } from "@/utils/form-helper";
 import { isArray } from "@/utils/nodash";
 
 export type FormFieldType = {
@@ -54,12 +50,7 @@ export const DrawerFormWithFields = <T,>({
   const inputProps = useFormInputProps(schema);
 
   return (
-    <DrawerForm
-      title={title}
-      action={action}
-      schema={schema}
-      {...drawerFormProps}
-    >
+    <DrawerForm title={title} action={action} schema={schema} {...drawerFormProps}>
       {(submitting, errors) => (
         <div className="ctw-space-y-4">
           {header}
@@ -77,18 +68,10 @@ export const DrawerFormWithFields = <T,>({
                 );
               }
 
-              const { label, field, value, lines, readonly, hidden, render } =
-                entry;
+              const { label, field, value, lines, readonly, hidden, render } = entry;
 
               if (!field) {
-                return (
-                  <FormField
-                    key={label}
-                    readonly={readonly}
-                    render={render}
-                    name={label}
-                  />
-                );
+                return <FormField key={label} readonly={readonly} render={render} name={label} />;
               }
 
               const props = inputProps(field, schema);
@@ -133,12 +116,7 @@ export type FormFieldEntries = {
   schema: AnyZodSchema;
 };
 
-const FormFieldEntries = ({
-  recordList,
-  errors,
-  submitting,
-  schema,
-}: FormFieldEntries) => {
+const FormFieldEntries = ({ recordList, errors, submitting, schema }: FormFieldEntries) => {
   const inputProps = useFormInputProps(schema);
 
   return (
@@ -164,12 +142,7 @@ export type FormFieldEntry = {
   submitting: boolean;
 };
 
-const FormFieldEntry = ({
-  entry,
-  errors,
-  props,
-  submitting,
-}: FormFieldEntry) => {
+const FormFieldEntry = ({ entry, errors, props, submitting }: FormFieldEntry) => {
   const { label, value, field, lines, readonly, hidden, render } = entry;
   const fieldErrors = errors?.[field];
 
@@ -182,11 +155,7 @@ const FormFieldEntry = ({
       })}
     >
       {!hidden && (
-        <FormFieldLabel
-          label={label}
-          name={props.name}
-          required={props["aria-required"]}
-        />
+        <FormFieldLabel label={label} name={props.name} required={props["aria-required"]} />
       )}
       <FormField
         {...props}

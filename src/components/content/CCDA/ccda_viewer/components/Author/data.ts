@@ -4,9 +4,7 @@ import { GeneralInfoWithOrg, LabelValueType } from "../../types";
 import { getAuthor as getAuthorDataFromHeader } from "../Header/data/getAuthor";
 import { isEmpty } from "@/utils/nodash";
 
-export const getAuthorData = (
-  document: Document
-): GeneralInfoWithOrg[] | undefined => {
+export const getAuthorData = (document: Document): GeneralInfoWithOrg[] | undefined => {
   const authorXmls = xpath.select(
     "*[name()='ClinicalDocument']/*[name()='author']",
     document
@@ -14,16 +12,10 @@ export const getAuthorData = (
 
   if (isEmpty(authorXmls)) return undefined;
 
-  const authors = getAuthorDataFromHeader(document) as Record<
-    string,
-    LabelValueType[]
-  >; // we can cast because we are sure that authors exist
+  const authors = getAuthorDataFromHeader(document) as Record<string, LabelValueType[]>; // we can cast because we are sure that authors exist
 
   return authorXmls.map((authorXml, index) => {
-    const assignedAuthor = xpath.select1(
-      "*[name()='assignedAuthor']",
-      authorXml
-    ) as Document;
+    const assignedAuthor = xpath.select1("*[name()='assignedAuthor']", authorXml) as Document;
 
     const authorContactDetails = getContactDetails(
       xpath.select("*[name()='addr']", assignedAuthor) as Document[],
@@ -47,10 +39,7 @@ export const getAuthorData = (
     if (representedOrganization) {
       const organizationContactDetails = getContactDetails(
         xpath.select("*[name()='addr']", representedOrganization) as Document[],
-        xpath.select(
-          "*[name()='telecom']",
-          representedOrganization
-        ) as Document[]
+        xpath.select("*[name()='telecom']", representedOrganization) as Document[]
       );
 
       return {

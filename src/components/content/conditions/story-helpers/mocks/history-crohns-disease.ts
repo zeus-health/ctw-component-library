@@ -46,8 +46,7 @@ export const historyChronsDisease = {
         clinicalStatus: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              system: "http://terminology.hl7.org/CodeSystem/condition-clinical",
               code: "active",
             },
           ],
@@ -55,8 +54,7 @@ export const historyChronsDisease = {
         verificationStatus: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              system: "http://terminology.hl7.org/CodeSystem/condition-ver-status",
               code: "confirmed",
             },
           ],
@@ -65,8 +63,7 @@ export const historyChronsDisease = {
           {
             coding: [
               {
-                system:
-                  "http://terminology.hl7.org/CodeSystem/condition-category",
+                system: "http://terminology.hl7.org/CodeSystem/condition-category",
                 code: "encounter-diagnosis",
               },
             ],
@@ -115,8 +112,7 @@ export const historyChronsDisease = {
                   valueString: "CCS",
                 },
               ],
-              system:
-                "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
+              system: "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
               code: "DIG011",
               display: "Regional enteritis and ulcerative colitis",
               userSelected: false,
@@ -128,8 +124,7 @@ export const historyChronsDisease = {
                   valueString: "CCI",
                 },
               ],
-              system:
-                "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
+              system: "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
               code: "C",
               display: "Chronic",
               userSelected: false,
@@ -212,8 +207,7 @@ export const historyChronsDisease = {
         clinicalStatus: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              system: "http://terminology.hl7.org/CodeSystem/condition-clinical",
               code: "active",
             },
           ],
@@ -221,8 +215,7 @@ export const historyChronsDisease = {
         verificationStatus: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              system: "http://terminology.hl7.org/CodeSystem/condition-ver-status",
               code: "unconfirmed",
             },
           ],
@@ -231,8 +224,7 @@ export const historyChronsDisease = {
           {
             coding: [
               {
-                system:
-                  "http://terminology.hl7.org/CodeSystem/condition-category",
+                system: "http://terminology.hl7.org/CodeSystem/condition-category",
                 code: "encounter-diagnosis",
               },
             ],
@@ -281,8 +273,7 @@ export const historyChronsDisease = {
                   valueString: "CCS",
                 },
               ],
-              system:
-                "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
+              system: "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp",
               code: "DIG011",
               display: "Regional enteritis and ulcerative colitis",
               userSelected: false,
@@ -294,8 +285,7 @@ export const historyChronsDisease = {
                   valueString: "CCI",
                 },
               ],
-              system:
-                "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
+              system: "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp",
               code: "C",
               display: "Chronic",
               userSelected: false,
@@ -465,8 +455,7 @@ export const historyChronsDisease = {
               {
                 coding: [
                   {
-                    system:
-                      "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+                    system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
                     code: "PPRF",
                   },
                 ],

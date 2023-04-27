@@ -70,11 +70,7 @@ export const parameters = {
   },
   msw: {
     handlers: {
-      metrics: [
-        rest.post("*/report/metric", (_, res, ctx) =>
-          res(ctx.status(200), ctx.json({}))
-        ),
-      ],
+      metrics: [rest.post("*/report/metric", (_, res, ctx) => res(ctx.status(200), ctx.json({})))],
     },
   },
 };

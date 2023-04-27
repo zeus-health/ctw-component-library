@@ -28,22 +28,15 @@ export function usePatientDiagnosticReportsOutside() {
 }
 
 function diagnosticReportsFetcher(searchType: SearchType) {
-  const fetchFunction =
-    searchType === "builder" ? searchBuilderRecords : searchCommonRecords;
+  const fetchFunction = searchType === "builder" ? searchBuilderRecords : searchCommonRecords;
   return async (requestContext: CTWRequestContext, patient: PatientModel) => {
     try {
-      const { resources, bundle } = await fetchFunction(
-        "DiagnosticReport",
-        requestContext,
-        {
-          patientUPID: patient.UPID,
-          _include: ["DiagnosticReport:result"],
-        }
-      );
+      const { resources, bundle } = await fetchFunction("DiagnosticReport", requestContext, {
+        patientUPID: patient.UPID,
+        _include: ["DiagnosticReport:result"],
+      });
 
-      return resources.map(
-        (r) => new DiagnosticReportModel(r, getIncludedResources(bundle))
-      );
+      return resources.map((r) => new DiagnosticReportModel(r, getIncludedResources(bundle)));
     } catch (e) {
       throw Telemetry.logError(
         e as Error,

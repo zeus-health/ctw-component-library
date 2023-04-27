@@ -13,9 +13,7 @@ type GeneralInfoWithOrg = GeneralInfo & {
   organization: GeneralInfo;
 };
 
-export const isGeneralInfoExist = (
-  item: GeneralInfo | undefined
-): item is GeneralInfo => !!item;
+export const isGeneralInfoExist = (item: GeneralInfo | undefined): item is GeneralInfo => !!item;
 
 export const isExtendedGeneralInfoExist = (
   item: ExtendedGeneralInfo | undefined

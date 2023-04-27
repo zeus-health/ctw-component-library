@@ -1,19 +1,13 @@
 import cx from "classnames";
 import { diagnosticReportColumns } from "./columns";
 import { defaultObservationSort, observationSortOptions } from "./sorts";
-import {
-  ResourceTable,
-  ResourceTableProps,
-} from "../../resource/resource-table";
+import { ResourceTable, ResourceTableProps } from "../../resource/resource-table";
 import {
   ResourceTableActions,
   ResourceTableActionsProps,
 } from "../../resource/resource-table-actions";
 import { useObservationsDetailsDrawer } from "@/components/content/observations/helpers/drawer";
-import {
-  defaultFilters,
-  filters,
-} from "@/components/content/observations/helpers/filters";
+import { defaultFilters, filters } from "@/components/content/observations/helpers/filters";
 import { DiagnosticReportModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 

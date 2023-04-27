@@ -28,11 +28,7 @@ export type TableOptionProps<T extends MinRecordItem> = {
   onRowClick?: (row: T) => void;
 };
 
-export function usePatientsList(
-  pageSize: number,
-  pageOffset: number,
-  searchNameValue?: string
-) {
+export function usePatientsList(pageSize: number, pageOffset: number, searchNameValue?: string) {
   return useQueryWithCTW(
     QUERY_KEY_PATIENTS_LIST,
     [pageSize, pageOffset, searchNameValue],
@@ -50,18 +46,11 @@ export function usePatientsList(
  *
  */
 export const PatientsTable = withErrorBoundary(
-  ({
-    className,
-    handleRowClick,
-    pageSize = 5,
-    title = "Patients",
-  }: PatientsTableProps) => {
+  ({ className, handleRowClick, pageSize = 5, title = "Patients" }: PatientsTableProps) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [total, setTotal] = useState(0);
     const [patients, setPatients] = useState<PatientModel[]>([]);
-    const [searchNameValue, setSearchNameValue] = useState<
-      string | undefined
-    >();
+    const [searchNameValue, setSearchNameValue] = useState<string | undefined>();
     const {
       data: { patients: responsePatients, total: responseTotal } = {},
       isFetching,
@@ -164,9 +153,7 @@ const PatientNameColumn = ({ patient }: PatientNameColumnProps) => (
     <div className="ctw-ml-4">
       <div className="ctw-flex ctw-font-medium">
         <div className="ctw-max-w-xs">{patient.fullName}</div>
-        {patient.gender && (
-          <div className="ctw-uppercase"> ({patient.gender[0]})</div>
-        )}
+        {patient.gender && <div className="ctw-uppercase"> ({patient.gender[0]})</div>}
       </div>
       <div className="ctw-text-content-lighter">
         {patient.dob} ({patient.age})

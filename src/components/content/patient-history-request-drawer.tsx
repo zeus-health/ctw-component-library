@@ -10,14 +10,8 @@ import {
   DrawerFormWithFieldsProps,
 } from "../core/form/drawer-form-with-fields";
 import { CTWRequestContext } from "../core/providers/ctw-context";
-import {
-  useHandlePatientSave,
-  usePatientContext,
-} from "../core/providers/patient-provider";
-import {
-  PatientHistoryResponseError,
-  schedulePatientHistory,
-} from "@/api/patient-history";
+import { useHandlePatientSave, usePatientContext } from "../core/providers/patient-provider";
+import { PatientHistoryResponseError, schedulePatientHistory } from "@/api/patient-history";
 import { PatientModel } from "@/fhir/models";
 import { getFormResponseErrors } from "@/utils/errors";
 import { QUERY_KEY_PATIENT_HISTORY_DETAILS } from "@/utils/query-keys";
@@ -67,9 +61,7 @@ export const PatientHistoryRequestDrawer = <T,>({
 
     if ("errors" in patientHistoryResponse) {
       const requestErrors = [
-        patientHistoryResponse.errors.map(
-          (err: PatientHistoryResponseError) => err.details
-        ),
+        patientHistoryResponse.errors.map((err: PatientHistoryResponseError) => err.details),
       ];
       return new Error(requestErrors.join(", "));
     }

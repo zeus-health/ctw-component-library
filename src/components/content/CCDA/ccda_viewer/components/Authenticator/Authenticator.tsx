@@ -3,9 +3,7 @@ import { DocumentOnlyProps } from "../../types";
 import { Table } from "../Table/Table";
 import { isEmpty } from "@/utils/nodash";
 
-export const Authenticator = ({
-  document,
-}: DocumentOnlyProps): JSX.Element | null => {
+export const Authenticator = ({ document }: DocumentOnlyProps): JSX.Element | null => {
   const authenticators = getAuthenticatorData(document);
 
   if (!authenticators || isEmpty(authenticators)) return null;

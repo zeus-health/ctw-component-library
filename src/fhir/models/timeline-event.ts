@@ -31,32 +31,16 @@ export class TimelineEventModel extends FHIRModel<TimelineEventResource> {
     super(resource, includedResources, revIncludes);
     switch (resource.resourceType) {
       case "Encounter":
-        this.model = new EncounterModel(
-          resource,
-          includedResources,
-          revIncludes
-        );
+        this.model = new EncounterModel(resource, includedResources, revIncludes);
         break;
       case "DiagnosticReport":
-        this.model = new DiagnosticReportModel(
-          resource,
-          includedResources,
-          revIncludes
-        );
+        this.model = new DiagnosticReportModel(resource, includedResources, revIncludes);
         break;
       case "MedicationRequest":
-        this.model = new MedicationRequestModel(
-          resource,
-          includedResources,
-          revIncludes
-        );
+        this.model = new MedicationRequestModel(resource, includedResources, revIncludes);
         break;
       case "MedicationDispense":
-        this.model = new MedicationDispenseModel(
-          resource,
-          includedResources,
-          revIncludes
-        );
+        this.model = new MedicationDispenseModel(resource, includedResources, revIncludes);
         break;
       default:
         throw new Error("This resource is not in type TimelineEvent");
@@ -90,6 +74,14 @@ export class TimelineEventModel extends FHIRModel<TimelineEventResource> {
         return "Medication Fill";
       default:
         return undefined;
+    }
+  }
+
+  get beta() {
+    switch (this.model.kind) {
+      // Add cases for types that should show up as "beta" in the timeline.
+      default:
+        return false;
     }
   }
 
@@ -133,14 +125,10 @@ export class TimelineEventModel extends FHIRModel<TimelineEventResource> {
         return compact(this.model.diagnoses);
       case "DiagnosticReport":
         return [
-          this.model.results.length > 0
-            ? `${this.model.results.length} results available`
-            : "",
+          this.model.results.length > 0 ? `${this.model.results.length} results available` : "",
         ];
       case "MedicationRequest":
-        return compact([
-          codeableConceptLabel(this.model.resource.dosageInstruction?.[0]),
-        ]);
+        return compact([codeableConceptLabel(this.model.resource.dosageInstruction?.[0])]);
       case "MedicationDispense":
         return compact([
           codeableConceptLabel(this.model.resource.dosageInstruction?.[0]),

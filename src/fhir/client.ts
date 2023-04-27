@@ -2,15 +2,9 @@ import Client from "fhir-kit-client";
 import { Env } from "@/components/core/providers/ctw-provider";
 import { CTW_REQUEST_HEADER } from "@/utils/request";
 
-export function getFhirClient(
-  env: Env,
-  accessToken: string,
-  builderId?: string
-) {
+export function getFhirClient(env: Env, accessToken: string, builderId?: string) {
   const url =
-    env === "production"
-      ? `https://api.zusapi.com/fhir`
-      : `https://api.${env}.zusapi.com/fhir`;
+    env === "production" ? `https://api.zusapi.com/fhir` : `https://api.${env}.zusapi.com/fhir`;
 
   const customHeaders: HeadersInit = CTW_REQUEST_HEADER;
   if (builderId) {

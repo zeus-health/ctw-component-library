@@ -37,10 +37,7 @@ export const getPatientData = (document: Document) => {
   );
 
   return patientRoles.map((patientRole, index) => {
-    const patient = xpath.select1(
-      "*[name()='patient']",
-      patientRole
-    ) as Document;
+    const patient = xpath.select1("*[name()='patient']", patientRole) as Document;
 
     const race = getRace(patient);
     const ethnicity = getEthnicity(patient);

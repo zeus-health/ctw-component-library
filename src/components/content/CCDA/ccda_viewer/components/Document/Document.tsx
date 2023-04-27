@@ -3,15 +3,8 @@ import { DocumentOnlyProps } from "../../types";
 import { Table } from "../Table/Table";
 
 export const Document = ({ document }: DocumentOnlyProps) => {
-  const {
-    id,
-    createdOn,
-    version,
-    setId,
-    confidentialityCode,
-    code,
-    languageCode,
-  } = getDocumentData(document);
+  const { id, createdOn, version, setId, confidentialityCode, code, languageCode } =
+    getDocumentData(document);
 
   const finalData = [
     {

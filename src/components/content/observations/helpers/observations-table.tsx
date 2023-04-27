@@ -7,10 +7,7 @@ export type ObservationsTableProps = {
   data: ObservationModel[];
 };
 
-export const ObservationsTable = ({
-  className,
-  data,
-}: ObservationsTableProps) => (
+export const ObservationsTable = ({ className, data }: ObservationsTableProps) => (
   <div className={className}>
     <div className="ctw-text-base ctw-font-medium ctw-uppercase ctw-text-content-light">
       observations

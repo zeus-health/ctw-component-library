@@ -1,9 +1,6 @@
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { dismissFilter } from "../../resource/filters";
-import {
-  FilterChangeEvent,
-  FilterItem,
-} from "@/components/core/filter-bar/filter-bar-types";
+import { FilterChangeEvent, FilterItem } from "@/components/core/filter-bar/filter-bar-types";
 import { MedicationStatementModel } from "@/fhir/models";
 import { uniqueValues } from "@/utils/filters";
 

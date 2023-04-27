@@ -3,10 +3,7 @@ import {
   PatientConditionsOutsideProps,
 } from "../conditions/patient-conditions-outside";
 import { PatientConditionsOutsideBadge } from "../conditions/patient-conditions-outside-badge";
-import {
-  PatientMedications,
-  PatientMedicationsProps,
-} from "../medications/patient-medications";
+import { PatientMedications, PatientMedicationsProps } from "../medications/patient-medications";
 import {
   PatientMedicationsOutside,
   PatientMedicationsOutsideProps,
@@ -46,13 +43,11 @@ import {
   PatientTimelineProps,
 } from "@/components/content/timeline/patient-timeline";
 import { ZAPResourceName } from "@/components/content/zus-aggregated-profile/zus-aggregated-profile";
+import { BetaLabel } from "@/components/core/beta-label";
 import { TabGroupItem } from "@/components/core/tab-group/tab-group";
 import i18next from "@/i18n";
 
-export type ZusAggregatedProfileTabs = Record<
-  ZAPResourceName,
-  (props: object) => TabGroupItem
->;
+export type ZusAggregatedProfileTabs = Record<ZAPResourceName, (props: object) => TabGroupItem>;
 
 export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
   allergies: (props: PatientAllergiesProps = {}) => ({
@@ -78,9 +73,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     key: "conditions-outside",
     display: () => (
       <div className="ctw-space-x-2">
-        <span className="ctw-capitalize">
-          {i18next.t("zap.tabs.conditionsOutside")}
-        </span>
+        <span className="ctw-capitalize">{i18next.t("zap.tabs.conditionsOutside")}</span>
         <PatientConditionsOutsideBadge />
       </div>
     ),
@@ -90,14 +83,24 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
   documents: (props: PatientDocumentProps = {}) => ({
     key: "documents",
     getPanelClassName: () => "ctw-pt-5",
-    display: () => "documents",
+    display: () => (
+      <div className="ctw-space-x-1">
+        <span className="ctw-capitalize">documents</span>
+        <BetaLabel />
+      </div>
+    ),
     render: () => <PatientDocuments {...props} />,
   }),
 
   immunizations: (props: PatientImmunizationsProps = {}) => ({
     key: "immunizations",
     getPanelClassName: () => "ctw-pt-5",
-    display: () => "immunizations",
+    display: () => (
+      <div className="ctw-space-x-1">
+        <span className="ctw-capitalize">immunizations</span>
+        <BetaLabel />
+      </div>
+    ),
     render: () => <PatientImmunizations {...props} />,
   }),
 
@@ -111,9 +114,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     key: "medications-outside",
     display: () => (
       <div className="ctw-space-x-2">
-        <span className="ctw-capitalize">
-          {i18next.t("zap.tabs.medicationsOutside")}
-        </span>
+        <span className="ctw-capitalize">{i18next.t("zap.tabs.medicationsOutside")}</span>
         <PatientMedicationsOutsideBadge />
       </div>
     ),
@@ -140,7 +141,12 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
   timelines: (props: PatientTimelineProps = {}) => ({
     key: "timelines",
     getPanelClassName: () => "ctw-pt-5",
-    display: () => "encounter timeline",
+    display: () => (
+      <div className="ctw-space-x-1">
+        <span className="ctw-capitalize">encounter timeline</span>
+        <BetaLabel />
+      </div>
+    ),
     render: () => <PatientTimeline {...props} />,
   }),
 };

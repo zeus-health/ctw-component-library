@@ -22,10 +22,7 @@ import {
 import { withTimerMetric } from "@/utils/telemetry";
 
 // Gets patient medications for the builder, excluding meds where the information source is patient.
-export function useQueryGetPatientMedsForBuilder(): UseQueryResult<
-  MedicationResults,
-  unknown
-> {
+export function useQueryGetPatientMedsForBuilder(): UseQueryResult<MedicationResults, unknown> {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
     [
@@ -60,10 +57,7 @@ export function useQueryGetPatientMedRequestsCommon() {
         informationSourceNot: "Patient",
       },
     ],
-    withTimerMetric(
-      getCommonMedicationRequests,
-      "req.medication_requests_common"
-    )
+    withTimerMetric(getCommonMedicationRequests, "req.medication_requests_common")
   );
 }
 
@@ -75,10 +69,7 @@ export function useQueryGetPatientMedDispenseCommon() {
         informationSourceNot: "Patient",
       },
     ],
-    withTimerMetric(
-      getCommonMedicationDispenses,
-      "req.medication_dispense_common"
-    )
+    withTimerMetric(getCommonMedicationDispenses, "req.medication_dispense_common")
   );
 }
 
@@ -96,9 +87,7 @@ export function useQueryMedicationStatement(rxNorm: string | undefined) {
  * useful when creating content such as the <PatientMedications /> component.
  */
 export function useQueryAllPatientMedications() {
-  const [builderMedications, setBuilderMedications] = useState<
-    MedicationStatementModel[]
-  >([]);
+  const [builderMedications, setBuilderMedications] = useState<MedicationStatementModel[]>([]);
   const [otherProviderMedications, setOtherProviderMedications] = useState<
     MedicationStatementModel[]
   >([]);
@@ -107,14 +96,10 @@ export function useQueryAllPatientMedications() {
   const builderMedicationsQuery = useQueryGetPatientMedsForBuilder();
 
   useEffect(() => {
-    if (
-      summarizedMedicationsQuery.data?.bundle &&
-      builderMedicationsQuery.data?.bundle
-    ) {
+    if (summarizedMedicationsQuery.data?.bundle && builderMedicationsQuery.data?.bundle) {
       const { medications: summarizedMedications, bundle: summarizedBundle } =
         summarizedMedicationsQuery.data;
-      const { medications: allMedicationsForBuilder } =
-        builderMedicationsQuery.data;
+      const { medications: allMedicationsForBuilder } = builderMedicationsQuery.data;
 
       const basicsMap = getIncludedBasics(summarizedBundle);
       // Get included resources from both bundles so that we can reference them for contained medications.
@@ -126,20 +111,10 @@ export function useQueryAllPatientMedications() {
       // Split the summarized medications into those known/unknown to the builder
       const splitData = splitMedications(
         summarizedMedications.map(
-          (m) =>
-            new MedicationStatementModel(
-              m,
-              includedResources,
-              basicsMap.get(m.id ?? "")
-            )
+          (m) => new MedicationStatementModel(m, includedResources, basicsMap.get(m.id ?? ""))
         ),
         allMedicationsForBuilder.map(
-          (m) =>
-            new MedicationStatementModel(
-              m,
-              includedResources,
-              basicsMap.get(m.id ?? "")
-            )
+          (m) => new MedicationStatementModel(m, includedResources, basicsMap.get(m.id ?? ""))
         )
       );
 
@@ -148,12 +123,9 @@ export function useQueryAllPatientMedications() {
     }
   }, [summarizedMedicationsQuery.data, builderMedicationsQuery.data]);
 
-  const isLoading =
-    builderMedicationsQuery.isLoading || summarizedMedicationsQuery.isLoading;
-  const isFetching =
-    builderMedicationsQuery.isFetching || summarizedMedicationsQuery.isFetching;
-  const isError =
-    builderMedicationsQuery.isError || summarizedMedicationsQuery.isError;
+  const isLoading = builderMedicationsQuery.isLoading || summarizedMedicationsQuery.isLoading;
+  const isFetching = builderMedicationsQuery.isFetching || summarizedMedicationsQuery.isFetching;
+  const isError = builderMedicationsQuery.isError || summarizedMedicationsQuery.isError;
 
   return {
     isFetching,

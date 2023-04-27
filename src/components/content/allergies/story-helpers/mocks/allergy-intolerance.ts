@@ -52,8 +52,7 @@ export const allergyIntolerance: Bundle<AllergyIntolerance> = {
         clinicalStatus: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/CodeSystem/allergyintolerance-clinical",
+              system: "http://terminology.hl7.org/CodeSystem/allergyintolerance-clinical",
               code: "active",
               display: "Active",
             },
@@ -112,8 +111,7 @@ export const allergyIntolerance: Bundle<AllergyIntolerance> = {
         clinicalStatus: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/CodeSystem/allergyintolerance-clinical",
+              system: "http://terminology.hl7.org/CodeSystem/allergyintolerance-clinical",
               code: "active",
               display: "Active",
             },
@@ -172,8 +170,7 @@ export const allergyIntolerance: Bundle<AllergyIntolerance> = {
         clinicalStatus: {
           coding: [
             {
-              system:
-                "http://terminology.hl7.org/CodeSystem/allergyintolerance-clinical",
+              system: "http://terminology.hl7.org/CodeSystem/allergyintolerance-clinical",
               code: "active",
               display: "Active",
             },

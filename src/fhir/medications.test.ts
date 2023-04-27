@@ -1,9 +1,6 @@
 import { MedicationStatement } from "fhir/r4";
 import { getMedicationDisplayName } from "./medication";
-import {
-  filterMedicationsWithNoRxNorms,
-  splitMedications,
-} from "./medications";
+import { filterMedicationsWithNoRxNorms, splitMedications } from "./medications";
 import { SYSTEM_RXNORM } from "./system-urls";
 import { MedicationStatementModel } from "@/fhir/models";
 
@@ -88,10 +85,7 @@ describe("splitSummarizedMedications", () => {
       "0.resource.medicationCodeableConcept.text",
       "builder med display"
     );
-    expect(builderMedications).toHaveProperty(
-      "0.resource.dosage.0.text",
-      "builder dosage display"
-    );
+    expect(builderMedications).toHaveProperty("0.resource.dosage.0.text", "builder dosage display");
     expect(otherProviderMedications).toHaveProperty(
       "0.resource.medicationCodeableConcept.coding.0.code",
       "unknown"
@@ -140,10 +134,7 @@ describe("filterMedicationsWithNoRxNorms", () => {
 
     expect(filteredMeds).toHaveLength(1);
 
-    expect(filteredMeds).toHaveProperty(
-      "0.medicationCodeableConcept.coding.0.code",
-      "rxnorm-code"
-    );
+    expect(filteredMeds).toHaveProperty("0.medicationCodeableConcept.coding.0.code", "rxnorm-code");
   });
 });
 

@@ -22,11 +22,7 @@ export const diagnosticReportColumns: TableColumn<DiagnosticReportModel>[] = [
     title: "Status",
     render: (model) => (
       <div className="ctw-flex">
-        <div
-          className={cx("ctw-text-md", statusToColor(model.resource.status))}
-        >
-          &bull;
-        </div>
+        <div className={cx("ctw-text-md", statusToColor(model.resource.status))}>&bull;</div>
         <div className="ctw-ml-1">
           <div>{capitalize(model.resource.status)}</div>
         </div>
@@ -35,9 +31,7 @@ export const diagnosticReportColumns: TableColumn<DiagnosticReportModel>[] = [
   },
   {
     title: "Observations",
-    render: (model) => (
-      <div className="ctw-text-center">{model.results.length}</div>
-    ),
+    render: (model) => <div className="ctw-text-center">{model.results.length}</div>,
   },
 ];
 
@@ -53,11 +47,7 @@ export const observationsColumns: TableColumn<ObservationModel>[] = [
             </span>{" "}
           </div>
         )}
-        <div
-          className={cx("ctw-text-md", statusToColor(model.resource.status))}
-        >
-          &bull;
-        </div>
+        <div className={cx("ctw-text-md", statusToColor(model.resource.status))}>&bull;</div>
         <div className="ctw-ml-1">
           <div>{capitalize(model.resource.status)} </div>
         </div>
@@ -68,8 +58,7 @@ export const observationsColumns: TableColumn<ObservationModel>[] = [
     title: "Date and Id",
     render: (model) => (
       <div className="ctw-ml-1">
-        {startCase(model.category) || model.display}{" "}
-        {model.resource.identifier?.[0].value}
+        {startCase(model.category) || model.display} {model.resource.identifier?.[0].value}
       </div>
     ),
   },
@@ -92,9 +81,7 @@ export const observationsColumns: TableColumn<ObservationModel>[] = [
   },
 ];
 
-function statusToColor(
-  status: fhir4.DiagnosticReport["status"] | fhir4.Observation["status"]
-) {
+function statusToColor(status: fhir4.DiagnosticReport["status"] | fhir4.Observation["status"]) {
   switch (status) {
     case "final":
     case "amended":

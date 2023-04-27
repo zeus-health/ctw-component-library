@@ -31,13 +31,12 @@ export function FilterBarCheckboxPill({
   const selected = filter.key in filterValues ? filterValues[filter.key] : [];
   const items = filter.values.map((item) => ({
     key: isString(item) ? item : item.key,
-    name: isString(item) ? item : item.display,
+    name: isString(item) ? item : item.name,
+    display: isString(item) ? undefined : item.display,
     isSelected: selected.includes(isString(item) ? item : item.key),
   }));
 
-  const selectedItems = items
-    .filter((item) => item.isSelected)
-    .map((item) => item.key);
+  const selectedItems = items.filter((item) => item.isSelected).map((item) => item.key);
 
   return (
     <DropdownMenuAction

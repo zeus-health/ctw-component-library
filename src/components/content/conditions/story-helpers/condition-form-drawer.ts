@@ -1,8 +1,4 @@
-import {
-  userEvent,
-  waitForElementToBeRemoved,
-  within,
-} from "@storybook/testing-library";
+import { userEvent, waitForElementToBeRemoved, within } from "@storybook/testing-library";
 
 export function conditionFormDrawer(canvasElement: HTMLElement) {
   const canvas = within(canvasElement);
@@ -16,15 +12,11 @@ export function conditionFormDrawer(canvasElement: HTMLElement) {
     status: (status: string) =>
       userEvent.selectOptions(drawer.getByTestId("form-field-status"), status),
 
-    onset: (date: string) =>
-      userEvent.type(drawer.getByTestId("form-field-onset"), date),
-    abatement: (date: string) =>
-      userEvent.type(drawer.getByTestId("form-field-abatement"), date),
-    note: (note: string) =>
-      userEvent.type(drawer.getByTestId("form-field-note"), note),
+    onset: (date: string) => userEvent.type(drawer.getByTestId("form-field-onset"), date),
+    abatement: (date: string) => userEvent.type(drawer.getByTestId("form-field-abatement"), date),
+    note: (note: string) => userEvent.type(drawer.getByTestId("form-field-note"), note),
 
-    cancel: () =>
-      userEvent.click(drawer.getByRole("button", { name: "Cancel" })),
+    cancel: () => userEvent.click(drawer.getByRole("button", { name: "Cancel" })),
     save: async () => {
       userEvent.click(drawer.getByRole("button", { name: "Save" }));
       await waitForElementToBeRemoved(() => canvas.queryByRole("dialog"));

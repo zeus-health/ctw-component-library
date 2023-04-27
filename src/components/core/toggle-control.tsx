@@ -6,10 +6,7 @@ export type ToggleControlProps = {
   onFormChange: (e: FormEvent<HTMLFormElement>) => void;
 };
 
-export const ToggleControl = ({
-  toggleProps,
-  onFormChange,
-}: ToggleControlProps) => (
+export const ToggleControl = ({ toggleProps, onFormChange }: ToggleControlProps) => (
   <form onChange={onFormChange} className="ctw-text-end">
     <Toggle {...toggleProps} />
   </form>

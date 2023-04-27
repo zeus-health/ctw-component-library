@@ -79,8 +79,7 @@ export const providerMedications: fhir4.Bundle = {
               ],
               system: "http://www.nlm.nih.gov/research/umls/rxnorm",
               code: "895994",
-              display:
-                "120 ACTUAT fluticasone propionate 0.044 MG/ACTUAT Metered Dose Inhaler",
+              display: "120 ACTUAT fluticasone propionate 0.044 MG/ACTUAT Metered Dose Inhaler",
               userSelected: false,
             },
           ],

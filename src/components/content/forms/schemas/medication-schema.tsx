@@ -5,9 +5,7 @@ import { FormEntry } from "@/components/core/form/drawer-form-with-fields";
 import { MedicationStatementModel } from "@/fhir/models";
 import { toLower } from "@/utils/nodash/fp";
 
-export const getMedicationFormData = (
-  medication: MedicationStatementModel
-): FormEntry[] => [
+export const getMedicationFormData = (medication: MedicationStatementModel): FormEntry[] => [
   {
     label: "Subject",
     value: medication.subjectID,

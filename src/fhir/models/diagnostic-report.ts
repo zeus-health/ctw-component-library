@@ -1,26 +1,16 @@
 import { FHIRModel } from "./fhir-model";
-import {
-  codeableConceptLabel,
-  findCodingByOrderOfPreference,
-} from "@/fhir/codeable-concept";
+import { codeableConceptLabel, findCodingByOrderOfPreference } from "@/fhir/codeable-concept";
 import { formatDateISOToLocal } from "@/fhir/formatters";
-import {
-  isNullFlavorSystem,
-  NullFlavorSystem,
-} from "@/fhir/mappings/null-flavor";
+import { isNullFlavorSystem, NullFlavorSystem } from "@/fhir/mappings/null-flavor";
 import { findReference } from "@/fhir/resource-helper";
-import {
-  SYSTEM_DIAGNOSTIC_SERVICE_SECTION_ID,
-  SYSTEM_SNOMED,
-} from "@/fhir/system-urls";
+import { SYSTEM_DIAGNOSTIC_SERVICE_SECTION_ID, SYSTEM_SNOMED } from "@/fhir/system-urls";
 import { find, get } from "@/utils/nodash";
 
 export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
   kind = "DiagnosticReport" as const;
 
   get category() {
-    const category =
-      codeableConceptLabel(this.resource.category?.[0]) || this.reportCategory;
+    const category = codeableConceptLabel(this.resource.category?.[0]) || this.reportCategory;
     if (category) {
       return category;
     }
@@ -76,10 +66,7 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
   get reportCategory() {
     return (
       findCodingByOrderOfPreference(
-        [
-          { system: SYSTEM_DIAGNOSTIC_SERVICE_SECTION_ID },
-          { system: SYSTEM_SNOMED },
-        ],
+        [{ system: SYSTEM_DIAGNOSTIC_SERVICE_SECTION_ID }, { system: SYSTEM_SNOMED }],
         this.resource.code
       )?.display ?? codeableConceptLabel(this.resource.code)
     );

@@ -23,9 +23,8 @@ function mockRequests() {
     (_, res, ctx) => res(ctx.delay(750), ctx.status(200), ctx.json(patient))
   );
 
-  const mockEncounterGet = rest.get(
-    "https://api.dev.zusapi.com/fhir/Encounter",
-    (_, res, ctx) => res(ctx.status(200), ctx.json(encounters))
+  const mockEncounterGet = rest.get("https://api.dev.zusapi.com/fhir/Encounter", (_, res, ctx) =>
+    res(ctx.status(200), ctx.json(encounters))
   );
 
   const mockMedicationRequestGet = rest.get(
@@ -51,11 +50,7 @@ function mockRequests() {
   const mockDiagnosticReportGet = rest.get(
     "https://api.dev.zusapi.com/fhir/DiagnosticReport",
     (req, res, ctx) =>
-      res(
-        ctx.status(200),
-        ctx.delay(250),
-        ctx.json(createDiagnosticReportsBundle())
-      )
+      res(ctx.status(200), ctx.delay(250), ctx.json(createDiagnosticReportsBundle()))
   );
 
   return [

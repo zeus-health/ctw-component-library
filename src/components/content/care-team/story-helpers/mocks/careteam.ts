@@ -4,8 +4,7 @@ export const careTeam: fhir4.Bundle = {
   type: "searchset",
   entry: [
     {
-      fullUrl:
-        "https://api.sandbox.zusapi.com/fhir/CareTeam/d2b3df4b-f5bb-445c-8612-de4458579449",
+      fullUrl: "https://api.sandbox.zusapi.com/fhir/CareTeam/d2b3df4b-f5bb-445c-8612-de4458579449",
       resource: {
         resourceType: "CareTeam",
         id: "d2b3df4b-f5bb-445c-8612-de4458579449",
@@ -56,8 +55,7 @@ export const careTeam: fhir4.Bundle = {
                 code: {
                   coding: [
                     {
-                      system:
-                        "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
+                      system: "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
                       code: "NA",
                       display: "not applicable",
                     },

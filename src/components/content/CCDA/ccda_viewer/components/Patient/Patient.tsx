@@ -3,9 +3,7 @@ import { DocumentOnlyProps, TableInfo } from "../../types";
 import { Table } from "../Table/Table";
 import { isArray, isEmpty } from "@/utils/nodash";
 
-export const Patient = ({
-  document,
-}: DocumentOnlyProps): JSX.Element | null => {
+export const Patient = ({ document }: DocumentOnlyProps): JSX.Element | null => {
   const patients = getPatientData(document);
 
   if (!patients || isEmpty(patients)) return null;

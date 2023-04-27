@@ -41,8 +41,7 @@ export function Drawer({
   title,
   disableCloseOnBlur = false,
 }: DrawerProps) {
-  const transitionClasses =
-    "ctw-transform ctw-transition ctw-ease-in-out ctw-duration-300";
+  const transitionClasses = "ctw-transform ctw-transition ctw-ease-in-out ctw-duration-300";
 
   return (
     <Transition.Root show={isOpen} as={Fragment}>
@@ -101,10 +100,7 @@ export function Drawer({
                           className="ctw-btn-clear"
                         >
                           <span className="ctw-sr-only">Close panel</span>
-                          <XIcon
-                            className="ctw-h-6 ctw-w-6"
-                            aria-hidden="true"
-                          />
+                          <XIcon className="ctw-h-6 ctw-w-6" aria-hidden="true" />
                         </button>
                       </div>
                     </div>
@@ -130,13 +126,7 @@ Drawer.Footer = ({ children }: { children: ReactNode }) => (
   <div className="ctw-border-default ctw-border-t ctw-p-6">{children}</div>
 );
 
-Drawer.CloseButton = ({
-  label,
-  onClose,
-}: {
-  label: string;
-  onClose: () => void;
-}) => (
+Drawer.CloseButton = ({ label, onClose }: { label: string; onClose: () => void }) => (
   <button
     type="button"
     className="ctw-btn-clear !ctw-px-4 !ctw-py-2"
@@ -148,7 +138,5 @@ Drawer.CloseButton = ({
 );
 
 Drawer.Body = ({ children }: { children: ReactNode }) => (
-  <div className="ctw-flex ctw-h-full ctw-flex-col ctw-overflow-y-auto ctw-p-6">
-    {children}
-  </div>
+  <div className="ctw-flex ctw-h-full ctw-flex-col ctw-overflow-y-auto ctw-p-6">{children}</div>
 );

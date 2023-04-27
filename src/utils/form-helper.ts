@@ -54,12 +54,7 @@ export function parseParams(o: any, schema: any, key: string, value: any) {
   }
 }
 
-export function processDef(
-  def: ZodTypeAny,
-  o: any,
-  key: string,
-  value: string
-) {
+export function processDef(def: ZodTypeAny, o: any, key: string, value: string) {
   let parsedValue: any;
   if (def instanceof ZodString || def instanceof ZodLiteral) {
     parsedValue = value;
@@ -70,8 +65,7 @@ export function processDef(
     const date = Date.parse(value);
     parsedValue = isNaN(date) ? value : new Date(date);
   } else if (def instanceof ZodBoolean) {
-    parsedValue =
-      value === "true" ? true : value === "false" ? false : Boolean(value);
+    parsedValue = value === "true" ? true : value === "false" ? false : Boolean(value);
   } else if (def instanceof ZodNativeEnum || def instanceof ZodEnum) {
     parsedValue = value;
   } else if (def instanceof ZodOptional || def instanceof ZodDefault) {
@@ -109,9 +103,7 @@ export function processDef(
   }
 }
 
-export function isIterable(
-  maybeIterable: unknown
-): maybeIterable is Iterable<unknown> {
+export function isIterable(maybeIterable: unknown): maybeIterable is Iterable<unknown> {
   return Symbol.iterator in Object(maybeIterable);
 }
 
@@ -166,18 +158,12 @@ export function getParamsInternal<T>(
   return { success: false, data: undefined, errors };
 }
 
-export async function getFormData<T extends AnyZodSchema>(
-  data: FormData,
-  schema: T
-) {
+export async function getFormData<T extends AnyZodSchema>(data: FormData, schema: T) {
   type ParamsType = z.infer<T>;
   return getParamsInternal<ParamsType>(data, schema);
 }
 
-function getOptions(
-  schema: Zod.AnyZodObject,
-  field: string
-): string[] | undefined {
+function getOptions(schema: Zod.AnyZodObject, field: string): string[] | undefined {
   const zodField = schema.shape[field];
   return zodField?.options || zodField?.unwrap?.().options;
 }
@@ -198,8 +184,7 @@ export type InputPropType = {
 };
 
 export function useFormInputProps(zodThing: AnyZodSchema, options: any = {}) {
-  const schema =
-    zodThing instanceof ZodEffects ? zodThing._def.schema : zodThing;
+  const schema = zodThing instanceof ZodEffects ? zodThing._def.schema : zodThing;
   const { shape } = schema;
   const defaultOptions = options;
   return function props(key: string, options: any = {}) {
@@ -212,11 +197,7 @@ export function useFormInputProps(zodThing: AnyZodSchema, options: any = {}) {
   };
 }
 
-export function getInputProps(
-  name: string,
-  schema: any,
-  def: ZodTypeAny
-): InputPropType {
+export function getInputProps(name: string, schema: any, def: ZodTypeAny): InputPropType {
   let type = "text";
   let min;
   let max;

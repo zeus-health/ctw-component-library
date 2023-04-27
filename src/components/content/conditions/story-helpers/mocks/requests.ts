@@ -60,8 +60,7 @@ const getHistory = (param: string) => {
 // the first request url to a specific history bundle.
 const getHistoryVersionsBundle = (requestUrls: string[]) => {
   const historyVersionBundles: Record<string, fhir4.Bundle | undefined> = {
-    "/Condition/7000a33a-808f-4c94-8125-1af140ce6fbe/_history":
-      historyGeneralizedAnxietyVersions,
+    "/Condition/7000a33a-808f-4c94-8125-1af140ce6fbe/_history": historyGeneralizedAnxietyVersions,
   };
 
   // eslint-disable-next-line no-restricted-syntax
@@ -153,10 +152,7 @@ function mockRequests() {
       const tagParam = req.url.searchParams.get("_tag");
       const other = tagParam === `${SYSTEM_SUMMARY}|Common`;
 
-      return res(
-        ctx.status(200),
-        ctx.json(other ? otherConditionsCache : patientConditionsCache)
-      );
+      return res(ctx.status(200), ctx.json(other ? otherConditionsCache : patientConditionsCache));
     }
   );
 
@@ -196,10 +192,7 @@ function mockRequests() {
       const r = await req.json();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const requestUrls = r.entry?.map((entry: any) => entry.request.url) ?? [];
-      return res(
-        ctx.status(200),
-        ctx.json(getHistoryVersionsBundle(requestUrls))
-      );
+      return res(ctx.status(200), ctx.json(getHistoryVersionsBundle(requestUrls)));
     }
   );
 
