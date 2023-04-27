@@ -7,7 +7,7 @@ export const applyDocumentFilters = (data: fhir4.DocumentReference[]) => {
   const actualDocument = documentModel.filter(
     (document) =>
       document.category &&
- document.category.filter(
+      document.category.filter(
         (category) => category.coding && category.coding.length > 1
       ).length > 0
   );
