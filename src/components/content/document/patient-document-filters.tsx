@@ -7,9 +7,8 @@ export const applyDocumentFilters = (data: fhir4.DocumentReference[]) => {
   const actualDocument = documentModel.filter(
     (document) =>
       document.category &&
-      document.category.filter(
-        (category) => category.coding && category.coding.length > 1
-      ).length > 0
+      document.category.length > 1 &&
+      document.category.filter((category) => category.coding).length > 0
   );
 
   const documentData = uniqWith(actualDocument, (a, b) =>
