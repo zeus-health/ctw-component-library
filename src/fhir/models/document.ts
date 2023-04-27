@@ -22,6 +22,10 @@ export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
     return this.resource.docStatus;
   }
 
+  get category(): fhir4.CodeableConcept[] | undefined {
+    return this.resource.category;
+  }
+
   // eslint-disable-next-line class-methods-use-this
   get resourceTypeTitle(): string {
     return "Document";
