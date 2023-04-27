@@ -8,13 +8,13 @@ import { Pagination } from "@/components/core/pagination/pagination";
 import { Table } from "@/components/core/table/table";
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { PatientModel } from "@/fhir/models";
-import { PatientHistorytModel } from "@/fhir/models/patient-history";
+import { PatientHistoryRequestModel } from "@/fhir/models/patient-history";
 import { CTWBox } from "@/index";
 import "./patient-history-table.scss";
 
 export type PatientsHistoryTableProps = {
   className?: cx.Argument;
-  handleRowClick?: (row: PatientHistorytModel) => void;
+  handleRowClick?: (row: PatientHistoryRequestModel) => void;
   pageSize?: number;
   title?: string;
 } & TableOptionProps<PatientModel>;
@@ -28,7 +28,7 @@ export const PatientHistoryTable = withErrorBoundary(
   }: PatientsHistoryTableProps) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [total, setTotal] = useState(0);
-    const [patients, setPatients] = useState<PatientHistorytModel[]>([]);
+    const [patients, setPatients] = useState<PatientHistoryRequestModel[]>([]);
 
     const {
       data: { patients: responsePatients, total: responseTotal } = {},
@@ -95,7 +95,7 @@ export const PatientHistoryTable = withErrorBoundary(
   "PatientsHistoryTable"
 );
 
-const columns: TableColumn<PatientHistorytModel>[] = [
+const columns: TableColumn<PatientHistoryRequestModel>[] = [
   {
     title: "Name",
     render: (data) => <PatientNameColumn data={data} />,
@@ -120,7 +120,7 @@ const columns: TableColumn<PatientHistorytModel>[] = [
   },
 ];
 
-const PatientNameColumn = ({ data }: { data: PatientHistorytModel }) => (
+const PatientNameColumn = ({ data }: { data: PatientHistoryRequestModel }) => (
   <div className="ctw-flex ctw-items-center">
     <div className="ctw-ml-4">
       <div className="ctw-flex ctw-font-medium">
