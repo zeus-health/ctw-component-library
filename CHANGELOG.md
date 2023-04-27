@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.4.2
+
+### Patch Changes
+
+- 025918eb: Fix filtering logic for documentReferences in the table.
+- 88300b89: Fixed word break on beta label
+
 ## 1.4.1
 
 ### Patch Changes
