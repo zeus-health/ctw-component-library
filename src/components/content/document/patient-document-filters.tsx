@@ -7,10 +7,9 @@ export const applyDocumentFilters = (data: fhir4.DocumentReference[]) => {
   const actualDocument = documentModel.filter(
     (document) =>
       document.category &&
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      document.category.filter(
+ document.category.filter(
         (category) => category.coding && category.coding.length > 1
-      )
+      ).length > 0
   );
 
   const documentData = uniqWith(actualDocument, (a, b) =>
