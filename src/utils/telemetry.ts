@@ -1,5 +1,5 @@
 import { datadogLogs } from "@datadog/browser-logs";
-import { datadogRum } from "@datadog/browser-rum-slim";
+import { datadogRum, datadogRum } from "@datadog/browser-rum-slim";
 import jwtDecode from "jwt-decode";
 import packageJson from "../../package.json";
 import { getMetricsBaseUrl } from "@/api/urls";
@@ -189,6 +189,7 @@ export class Telemetry {
   }
 
   static trackView(viewName: string) {
+    this.countMetric(`component.${viewName}.loaded`);
     datadogRum.startView(viewName);
   }
 
@@ -353,6 +354,10 @@ export class Telemetry {
         Telemetry.logError(error as Error)
       );
     }
+  }
+
+  static reportZAPRecordCount(name: string, value = 1, tags: string[] = []) {
+    this.countMetric(`records.${name}`, value, tags);
   }
 
   static timeMetric(metric: string, tags: string[] = []) {

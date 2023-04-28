@@ -19,7 +19,7 @@ import {
   QUERY_KEY_PATIENT_MEDICATION_REQUESTS_COMMON,
   QUERY_KEY_PATIENT_MEDICATION_STATEMENT,
 } from "@/utils/query-keys";
-import { withTimerMetric } from "@/utils/telemetry";
+import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 // Gets patient medications for the builder, excluding meds where the information source is patient.
 export function useQueryGetPatientMedsForBuilder(): UseQueryResult<MedicationResults, unknown> {
@@ -116,6 +116,12 @@ export function useQueryAllPatientMedications() {
         allMedicationsForBuilder.map(
           (m) => new MedicationStatementModel(m, includedResources, basicsMap.get(m.id ?? ""))
         )
+      );
+
+      Telemetry.reportZAPRecordCount("builder_medications", splitData.builderMedications.length);
+      Telemetry.reportZAPRecordCount(
+        "outside_medications",
+        splitData.otherProviderMedications.length
       );
 
       setBuilderMedications(splitData.builderMedications);
