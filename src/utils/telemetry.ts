@@ -1,5 +1,5 @@
 import { datadogLogs } from "@datadog/browser-logs";
-import { datadogRum, datadogRum } from "@datadog/browser-rum-slim";
+import { datadogRum } from "@datadog/browser-rum-slim";
 import jwtDecode from "jwt-decode";
 import packageJson from "../../package.json";
 import { getMetricsBaseUrl } from "@/api/urls";
