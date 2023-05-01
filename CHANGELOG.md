@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.5.1
+
+### Patch Changes
+
+- 79d0cceb: Export beta label component
+
 ## 1.5.0
 
 ### Minor Changes
