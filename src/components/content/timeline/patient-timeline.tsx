@@ -23,8 +23,8 @@ export function PatientTimeline({ className }: PatientTimelineProps) {
   );
 
   useEffect(() => {
-    if (!query.isLoading) {
-      Telemetry.reportZAPRecordCount("encounters", query.data?.length);
+    if (!query.isLoading && query.data) {
+      Telemetry.reportZAPRecordCount("encounters", query.data.length);
     }
   }, [query.isLoading, query.data]);
 
