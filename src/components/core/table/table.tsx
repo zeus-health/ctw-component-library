@@ -1,6 +1,5 @@
 import "./table.scss";
 
-
 import cx from "classnames";
 import { ReactElement, ReactNode, useEffect, useRef, useState } from "react";
 import { TableColGroup } from "./table-colgroup";

@@ -1,6 +1,5 @@
 import "./patient-history-table.scss";
 
-
 import cx from "classnames";
 import { useEffect, useState } from "react";
 import { patientHistoryFilters } from "./helpers/filters";

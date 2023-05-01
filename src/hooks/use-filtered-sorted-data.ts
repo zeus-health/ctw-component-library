@@ -30,9 +30,7 @@ export function useFilteredSortedData<T extends object>({
     ]);
 
     const filteredAndSortedData =
-      defaultSort && sortOption
-        ? applySorts(filteredData, sortOption.sorts)
-        : filteredData;
+      defaultSort && sortOption ? applySorts(filteredData, sortOption.sorts) : filteredData;
     setData(filteredAndSortedData);
   }, [filters, sortOption, records, viewOption, defaultSort]);
 
