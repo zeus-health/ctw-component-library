@@ -13,8 +13,8 @@ const Component = ({ className }: PatientObservationsOutsideProps) => {
   const query = usePatientDiagnosticReportsOutside();
 
   useEffect(() => {
-    if (!query.isLoading) {
-      Telemetry.reportZAPRecordCount("outside_observations", query.data?.length);
+    if (!query.isLoading && query.data) {
+      Telemetry.reportZAPRecordCount("outside_observations", query.data.length);
     }
   }, [query.isLoading, query.data]);
 
