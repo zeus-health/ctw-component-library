@@ -1,7 +1,7 @@
 import { format } from "date-fns";
+import { PatientModel } from "./patient";
 import { formatISODateStringToDate } from "../formatters";
 import { PatientHistoryJob } from "@/services/patient-history/patient-history-types";
-import { PatientModel } from "./patient";
 
 export class PatientHistoryRequestModel {
   kind = "PatientHistory" as const;

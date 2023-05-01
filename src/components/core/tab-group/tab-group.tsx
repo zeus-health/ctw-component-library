@@ -1,14 +1,13 @@
 import "./tab-group.scss";
 
-import { ReactNode, useRef, useState } from "react";
-
-import cx from "classnames";
-import { ListBox } from "@/components/core/list-box/list-box";
-import { PatientHistoryStatus } from "@/components/content/patient-history/patient-history-message-status";
 import { Tab } from "@headlessui/react";
-import { useBreakpoints } from "@/hooks/use-breakpoints";
+import cx from "classnames";
+import { ReactNode, useRef, useState } from "react";
+import { PatientHistoryStatus } from "@/components/content/patient-history/patient-history-message-status";
 import { usePatientHistory } from "@/components/content/patient-history/use-patient-history";
 import { withErrorBoundary } from "@/components/core/error-boundary";
+import { ListBox } from "@/components/core/list-box/list-box";
+import { useBreakpoints } from "@/hooks/use-breakpoints";
 
 export type TabGroupProps = {
   children?: ReactNode;

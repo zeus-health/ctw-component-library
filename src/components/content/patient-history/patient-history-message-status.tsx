@@ -1,7 +1,7 @@
 import { ErrorIcon } from "@/components/core/error-icon";
+import { ProgressIcon } from "@/components/core/progress-icon";
 import { formatISODateStringToDate } from "@/fhir/formatters";
 import { PatientRefreshHistoryMessageStatus } from "@/services/patient-history/patient-history-types";
-import { ProgressIcon } from "@/components/core/progress-icon";
 
 export type PatientHistoryStatusProps = {
   status?: PatientRefreshHistoryMessageStatus;

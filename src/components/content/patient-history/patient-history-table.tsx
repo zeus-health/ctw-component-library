@@ -1,21 +1,21 @@
 import "./patient-history-table.scss";
 
-import { useEffect, useState } from "react";
 
-import { CTWBox } from "@/index";
 import cx from "classnames";
-import { FilterChangeEvent } from "@/components/core/filter-bar/filter-bar-types";
+import { useEffect, useState } from "react";
 import { patientHistoryFilters } from "./helpers/filters";
-import { PatientHistoryRequestModel } from "@/fhir/models/patient-history";
-import { PatientModel } from "@/fhir/models";
-import { PatientRefreshHistoryMessageStatus } from "@/services/patient-history/patient-history-types";
+import { useBuilderPatientHistoryList } from "./use-builder-patient-history-list";
+import { TableOptionProps } from "../patients/patients-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
+import { withErrorBoundary } from "@/components/core/error-boundary";
+import { FilterChangeEvent } from "@/components/core/filter-bar/filter-bar-types";
 import { SimplePagination } from "@/components/core/pagination/simple-pagination";
 import { Table } from "@/components/core/table/table";
 import { TableColumn } from "@/components/core/table/table-helpers";
-import { TableOptionProps } from "../patients/patients-table";
-import { useBuilderPatientHistoryList } from "./use-builder-patient-history-list";
-import { withErrorBoundary } from "@/components/core/error-boundary";
+import { PatientModel } from "@/fhir/models";
+import { PatientHistoryRequestModel } from "@/fhir/models/patient-history";
+import { CTWBox } from "@/index";
+import { PatientRefreshHistoryMessageStatus } from "@/services/patient-history/patient-history-types";
 
 export type PatientsHistoryTableProps = {
   className?: cx.Argument;
@@ -34,7 +34,7 @@ export const PatientHistoryTable = withErrorBoundary(
     title = "Patient History Request",
   }: PatientsHistoryTableProps) => {
     const [currentPage, setCurrentPage] = useState(1);
-    const [patients, setPatients] = useState<PatientHistorytModel[]>([]);
+    const [patients, setPatients] = useState<PatientHistoryRequestModel[]>([]);
     const [status, setStatus] = useState<string>();
 
     const {

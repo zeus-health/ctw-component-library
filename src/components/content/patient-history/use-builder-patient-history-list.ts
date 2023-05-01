@@ -1,11 +1,11 @@
-import { compact, uniq } from "@/utils/nodash";
-
-import { getBuilderPatientsListByIdentifier } from "@/fhir/patient-helper";
 import { getBuilderRefreshHistoryMessages } from "./use-patient-history";
+import { useQueryWithCTW } from "@/components/core/providers/ctw-provider";
+import { PatientHistoryRequestModel } from "@/fhir/models/patient-history";
+import { getBuilderPatientsListByIdentifier } from "@/fhir/patient-helper";
 import { PatientHistoryJobResponse } from "@/services/patient-history/patient-history-types";
+import { compact, uniq } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_HISTORY_LIST } from "@/utils/query-keys";
 import { Telemetry } from "@/utils/telemetry";
-import { useQueryWithCTW } from "@/components/core/providers/ctw-provider";
 
 export function useBuilderPatientHistoryList(
   pageSize: number,
@@ -43,7 +43,7 @@ export function useBuilderPatientHistoryList(
             (patient) => patient.id === job.relationships.patient.data.id
           );
 
-          return new PatientHistorytModel(matchingPatient[0], job);
+          return new PatientHistoryRequestModel(matchingPatient[0], job);
         });
 
         return {
