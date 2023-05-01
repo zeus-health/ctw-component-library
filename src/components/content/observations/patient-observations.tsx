@@ -13,8 +13,8 @@ const Component = ({ className }: PatientObservationsProps) => {
   const query = usePatientDiagnosticReports();
 
   useEffect(() => {
-    if (!query.isLoading) {
-      Telemetry.reportZAPRecordCount("builder_observations", query.data?.length);
+    if (!query.isLoading && query.data) {
+      Telemetry.reportZAPRecordCount("builder_observations", query.data.length);
     }
   }, [query.isLoading, query.data]);
 
