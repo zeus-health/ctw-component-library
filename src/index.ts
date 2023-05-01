@@ -25,6 +25,7 @@ export * from "@/components/content/zus-aggregated-profile/zus-aggregated-profil
 export * from "@/components/core/action-list/action-list";
 export * from "@/components/core/alert";
 export * from "@/components/core/badge";
+export * from "@/components/core/beta-label";
 export * from "@/components/core/list-box/list-box";
 export * from "@/components/core/pagination/pagination";
 export * from "@/components/core/pagination/pagination-list";
