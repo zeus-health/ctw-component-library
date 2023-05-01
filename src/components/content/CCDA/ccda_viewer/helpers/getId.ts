@@ -7,7 +7,5 @@ export const getId = (id: Document | undefined): string => {
 
   const extensionValue = String(xpath.select1("string(@extension)", id));
 
-  return `${extensionValue}${extensionValue ? " (" : ""}${rootValue}${
-    extensionValue ? ")" : ""
-  }`;
+  return `${extensionValue}${extensionValue ? " (" : ""}${rootValue}${extensionValue ? ")" : ""}`;
 };

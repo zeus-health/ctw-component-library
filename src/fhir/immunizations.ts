@@ -24,9 +24,7 @@ export function usePatientImmunizations() {
           ["desc"]
         );
       } catch (e) {
-        throw new Error(
-          `Failed fetching immunization information for patient: ${e}`
-        );
+        throw new Error(`Failed fetching immunization information for patient: ${e}`);
       }
     }, "req.patient_immunizations")
   );

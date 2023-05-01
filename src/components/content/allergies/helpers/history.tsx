@@ -18,9 +18,7 @@ export function useAllergiesHistory(allergy: AllergyModel) {
 }
 
 function getSearchParams(allergy: AllergyModel) {
-  const tokens = allergy.knownCodings.map(
-    (coding) => `${coding.system}|${coding.code}`
-  );
+  const tokens = allergy.knownCodings.map((coding) => `${coding.system}|${coding.code}`);
 
   const searchParams: SearchParams = {
     _include: ["AllergyIntolerance:patient"],

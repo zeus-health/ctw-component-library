@@ -13,10 +13,7 @@ export type FormErrors = Record<string, string[]>;
 type InputError = Record<string, string[]>;
 
 export type DrawerFormProps<T> = {
-  action: (
-    data: T,
-    getRequestContext: () => Promise<CTWRequestContext>
-  ) => Promise<unknown>;
+  action: (data: T, getRequestContext: () => Promise<CTWRequestContext>) => Promise<unknown>;
   schema: AnyZodSchema;
 
   children: (submitting: boolean, errors?: FormErrors) => ReactNode;
@@ -46,9 +43,7 @@ export const DrawerForm = <T,>({
     setIsSubmitting(true);
     const form = event.target;
 
-    const inputs = Array.from(
-      (event.target as HTMLElement).querySelectorAll("input")
-    );
+    const inputs = Array.from((event.target as HTMLElement).querySelectorAll("input"));
 
     const inputErrors: InputError = {};
 
@@ -70,10 +65,7 @@ export const DrawerForm = <T,>({
     const formResult = await getFormData(data, schema);
     if (!formResult.success) {
       // eslint-disable-next-line no-console
-      console.error(
-        "There was an error processing form data. formResult:",
-        formResult
-      );
+      console.error("There was an error processing form data. formResult:", formResult);
       setErrors({
         formErrors: formResult.errors,
         requestErrors: undefined,
@@ -113,12 +105,7 @@ export const DrawerForm = <T,>({
   };
 
   return (
-    <Drawer
-      {...drawerProps}
-      onClose={onClose}
-      onAfterClosed={reset}
-      disableCloseOnBlur
-    >
+    <Drawer {...drawerProps} onClose={onClose} onAfterClosed={reset} disableCloseOnBlur>
       <form
         className="ctw-flex ctw-h-full ctw-flex-col ctw-overflow-y-auto"
         onSubmit={onFormSubmit}

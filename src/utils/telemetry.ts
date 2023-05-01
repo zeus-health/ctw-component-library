@@ -1,5 +1,4 @@
 import { datadogLogs } from "@datadog/browser-logs";
-import { datadogRum } from "@datadog/browser-rum-slim";
 import jwtDecode from "jwt-decode";
 import packageJson from "../../package.json";
 import { getMetricsBaseUrl } from "@/api/urls";
@@ -38,9 +37,7 @@ if (typeof window !== "undefined") {
 }
 
 // Assume local development if origin is localhost or just an IP address
-const isLocalDevelopment = /https?:\/\/(localhost|\d+\.\d+\.\d+\.\d+)/i.test(
-  origin
-);
+const isLocalDevelopment = /https?:\/\/(localhost|\d+\.\d+\.\d+\.\d+)/i.test(origin);
 // Avoid initializing telemetry multiple times
 let isInitialized = false;
 
@@ -69,7 +66,7 @@ export class Telemetry {
     return isInitialized;
   }
 
-  private static rumLoggingIsEnabled = false;
+  private static datadogLoggingEnabled = false;
 
   static logger = datadogLogs.logger;
 
@@ -90,31 +87,17 @@ export class Telemetry {
     }
   }
 
-  static init(environment: string, allowDataDogRumAndLogging = false) {
-    this.rumLoggingIsEnabled = allowDataDogRumAndLogging;
+  static init(environment: string, allowDataDogLogging = false) {
+    this.datadogLoggingEnabled = allowDataDogLogging;
     this.setEnv(environment);
 
     if (this.telemetryIsAvailable) {
       return;
     }
 
-    // Turning on RUM and Logging is conditional. However, the event handlers
+    // Turning on Datadog Logging is conditional. However, the event handlers
     // that explicitly send internal /report/metrics to ctw are not optional.
-    if (allowDataDogRumAndLogging) {
-      datadogRum.init({
-        ...(isLocalDevelopment ? devDatadogConfig : prodDatadogConfig),
-        allowedTracingUrls: [], // No allowed tracing urls
-        defaultPrivacyLevel: "mask",
-        env: this.environment,
-        sessionReplaySampleRate: 20,
-        sessionSampleRate: 100,
-        site: "datadoghq.com",
-        trackLongTasks: true,
-        trackResources: false,
-        trackUserInteractions: false,
-        trackViewsManually: true, // url path names are useless to cwl-cl
-        version: packageJson.version,
-      });
+    if (allowDataDogLogging) {
       datadogLogs.init({
         ...(isLocalDevelopment ? devDatadogConfig : prodDatadogConfig),
         env: this.environment,
@@ -158,9 +141,8 @@ export class Telemetry {
   }
 
   static setBuilder(builderId?: string) {
-    if (this.rumLoggingIsEnabled) {
+    if (this.datadogLoggingEnabled) {
       datadogLogs.setGlobalContextProperty("builderId", builderId);
-      datadogRum.setGlobalContextProperty("builderId", builderId);
     }
   }
 
@@ -178,20 +160,18 @@ export class Telemetry {
         patientId: user[AUTH_PATIENT_ID],
         isSuperOrg: user[AUTH_IS_SUPER_ORG],
       };
-      if (this.rumLoggingIsEnabled) {
+      if (this.datadogLoggingEnabled) {
         datadogLogs.setUser(decodedUser);
-        datadogRum.setUser(decodedUser);
       }
     }
   }
 
   static clearUser() {
     datadogLogs.setUser({});
-    datadogRum.setUser({});
   }
 
   static trackView(viewName: string) {
-    datadogRum.startView(viewName);
+    this.countMetric(`component.${viewName}.loaded`);
   }
 
   static logError(error: Error, overrideMessage?: string): Error {
@@ -209,13 +189,9 @@ export class Telemetry {
     this.logger.error(message, context);
   }
 
-  static trackInteraction(
-    eventType: string,
-    namespace: string,
-    action: string
-  ) {
+  static trackInteraction(eventType: string, namespace: string, action: string) {
     // We log this event with namespace breadcrumbs if allowed
-    if (this.telemetryIsAvailable && this.rumLoggingIsEnabled) {
+    if (this.telemetryIsAvailable && this.datadogLoggingEnabled) {
       this.logger.log(`${eventType} event: ${namespace} > ${action}`, {
         eventType,
         action,
@@ -235,10 +211,7 @@ export class Telemetry {
    * in, we traverse up the DOM tree looking for `data-zus-telemetry-namespace`
    * attributes.
    */
-  private static lookupComponentNamespace(
-    target: HTMLElement,
-    namespace = ""
-  ): string {
+  private static lookupComponentNamespace(target: HTMLElement, namespace = ""): string {
     let ns = namespace;
     const closest = target.closest("[data-zus-telemetry-namespace]");
     if (closest instanceof HTMLElement) {
@@ -282,23 +255,14 @@ export class Telemetry {
     const targetName = eventTarget?.dataset[telemetryKey] ?? explicitTargetName;
     if (eventTarget && targetName) {
       if (!this.namespaceMap.has(eventTarget)) {
-        this.namespaceMap.set(
-          eventTarget,
-          this.lookupComponentNamespace(eventTarget)
-        );
+        this.namespaceMap.set(eventTarget, this.lookupComponentNamespace(eventTarget));
       }
       const namespace = this.namespaceMap.get(eventTarget);
-      this.trackInteraction(
-        this.eventTypes[telemetryKey],
-        namespace,
-        targetName
-      );
+      this.trackInteraction(this.eventTypes[telemetryKey], namespace, targetName);
     }
   }
 
-  private static closestHTMLElement(
-    target: Element | Node | null
-  ): HTMLElement | null {
+  private static closestHTMLElement(target: Element | Node | null): HTMLElement | null {
     if (!target || target instanceof HTMLElement) {
       return target;
     }
@@ -330,9 +294,7 @@ export class Telemetry {
   ) {
     if (
       process.env.NODE_ENV !== "test" &&
-      ["http://localhost:3000", "http://127.0.0.1:3000"].includes(
-        window.location.origin
-      )
+      ["http://localhost:3000", "http://127.0.0.1:3000"].includes(window.location.origin)
     ) {
       return;
     }
@@ -347,10 +309,7 @@ export class Telemetry {
     const tags = compact([
       "service:ctw-component-library",
       `env:${this.environment}`,
-      user[AUTH_BUILDER_NAME]
-        ? `builder_name:${user[AUTH_BUILDER_NAME]}`
-        : undefined,
-      `practitioner_id:${user[AUTH_PRACTITIONER_ID] || "none"}`,
+      user[AUTH_BUILDER_NAME] ? `builder_name:${user[AUTH_BUILDER_NAME]}` : undefined,
       `is_super:${user[AUTH_IS_SUPER_ORG] || "false"}`,
       ...additionalTags,
     ]);
@@ -383,8 +342,8 @@ export class Telemetry {
     // Callback should not return a promise or throw errors to the consumer
     return function endTiming() {
       const end = new Date().getTime();
-      Telemetry.reportMetric("timing", metric, end - start, tags).catch(
-        (error) => Telemetry.logError(error as Error)
+      Telemetry.reportMetric("timing", metric, end - start, tags).catch((error) =>
+        Telemetry.logError(error as Error)
       );
     };
   }

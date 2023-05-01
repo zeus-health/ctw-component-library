@@ -4,9 +4,7 @@ export type TableHeadProps<T extends MinRecordItem> = {
   columns: TableColumn<T>[];
 };
 
-export const TableHead = <T extends MinRecordItem>({
-  columns,
-}: TableHeadProps<T>) => (
+export const TableHead = <T extends MinRecordItem>({ columns }: TableHeadProps<T>) => (
   <thead data-zus-telemetry-namespace="TableHead">
     <tr>
       {columns.map((column, index) => (

@@ -3,9 +3,7 @@ import { getContactDetails, getHumanName } from "../../helpers";
 import { ExtendedGeneralInfo, isExtendedGeneralInfoExist } from "../../types";
 import { isEmpty } from "@/utils/nodash";
 
-export const getInformantData = (
-  document: Document
-): ExtendedGeneralInfo[] | undefined => {
+export const getInformantData = (document: Document): ExtendedGeneralInfo[] | undefined => {
   const informants = xpath.select(
     "*[name()='ClinicalDocument']/*[name()='informant']",
     document
@@ -15,10 +13,9 @@ export const getInformantData = (
 
   return informants
     .map((informant): ExtendedGeneralInfo | undefined => {
-      const assignedEntity = xpath.select1(
-        "*[name()='assignedEntity']",
-        informant
-      ) as Document | undefined;
+      const assignedEntity = xpath.select1("*[name()='assignedEntity']", informant) as
+        | Document
+        | undefined;
 
       if (assignedEntity) {
         const assignedPerson = xpath.select1(
@@ -26,9 +23,7 @@ export const getInformantData = (
           assignedEntity
         ) as Document;
 
-        const name = getHumanName(
-          xpath.select("*[name()='name']", assignedPerson) as Document[]
-        );
+        const name = getHumanName(xpath.select("*[name()='name']", assignedPerson) as Document[]);
 
         const contactDetails = getContactDetails(
           xpath.select("*[name()='addr']", assignedEntity) as Document[],
@@ -38,20 +33,14 @@ export const getInformantData = (
         return { name, contactDetails, relationship: "" };
       }
 
-      const relatedEntity = xpath.select1(
-        "*[name()='relatedEntity']",
-        informant
-      ) as Document | undefined;
+      const relatedEntity = xpath.select1("*[name()='relatedEntity']", informant) as
+        | Document
+        | undefined;
 
       if (relatedEntity) {
-        const relatedPerson = xpath.select1(
-          "*[name()='relatedPerson']",
-          relatedEntity
-        ) as Document;
+        const relatedPerson = xpath.select1("*[name()='relatedPerson']", relatedEntity) as Document;
 
-        const name = getHumanName(
-          xpath.select("*[name()='name']", relatedPerson) as Document[]
-        );
+        const name = getHumanName(xpath.select("*[name()='name']", relatedPerson) as Document[]);
 
         const contactDetails = getContactDetails(
           xpath.select("*[name()='addr']", relatedEntity) as Document[],

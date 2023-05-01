@@ -1,16 +1,14 @@
 import { getBuilderRefreshHistoryMessages } from "./use-patient-history";
 import { useQueryWithCTW } from "@/components/core/providers/ctw-provider";
-import { PatientHistorytModel } from "@/fhir/models/patient-history";
+import { PatientHistoryRequestModel } from "@/fhir/models/patient-history";
 import { getBuilderPatientsListByIdentifier } from "@/fhir/patient-helper";
 import { PatientHistoryResponse } from "@/services/patient-history/patient-history-types";
 import { compact, uniq } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_HISTORY_LIST } from "@/utils/query-keys";
+import { sort } from "@/utils/sort";
 import { Telemetry } from "@/utils/telemetry";
 
-export function useBuilderPatientHistoryList(
-  pageSize: number,
-  pageOffset: number
-) {
+export function useBuilderPatientHistoryList(pageSize: number, pageOffset: number) {
   return useQueryWithCTW(
     QUERY_KEY_PATIENT_HISTORY_LIST,
     [pageSize, pageOffset],
@@ -22,12 +20,13 @@ export function useBuilderPatientHistoryList(
 
         const start = pageOffset * pageSize;
         const end = start + pageSize;
-        const subsetMessages = response.data.slice(start, end);
+        const patientHistoryRequests = sort(response.data, "_createdAt", "desc", true).slice(
+          start,
+          end
+        );
 
         const patientsIds = uniq(
-          compact(
-            subsetMessages.map((message) => message.initialData.patientId)
-          )
+          compact(patientHistoryRequests.map((message) => message.initialData.patientId))
         );
 
         if (!patientsIds.length) {
@@ -40,22 +39,21 @@ export function useBuilderPatientHistoryList(
           patientsIds
         );
 
-        const patientHistoryPatients = patientData.patients.map((patient) => {
-          const matchingPatientId = subsetMessages.filter(
-            (message) => message.initialData.patientId === patient.id
-          );
-          return new PatientHistorytModel(patient, matchingPatientId[0]);
-        });
+        const patientHistoryRequestsWithPatientData = compact(
+          patientHistoryRequests.map((m) => {
+            const matchingPatient = patientData.patients.find(
+              (p) => p.id === m.initialData.patientId
+            );
+            return matchingPatient ? new PatientHistoryRequestModel(matchingPatient, m) : undefined;
+          })
+        );
 
         return {
           total: response.data.length,
-          patients: patientHistoryPatients,
+          patients: patientHistoryRequestsWithPatientData,
         };
       } catch (e) {
-        Telemetry.logError(
-          e as Error,
-          "Failed fetching patient history patients."
-        );
+        Telemetry.logError(e as Error, "Failed fetching patient history patients.");
         throw new Error(`Failed fetching patient history patients: ${e}`);
       }
     }

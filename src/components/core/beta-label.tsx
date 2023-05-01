@@ -8,7 +8,7 @@ export const BetaLabel = ({ className }: BetaLabelProps) => (
   <span
     className={cx(
       className,
-      "ctw-relative ctw-bottom-1 ctw-text-[10px] ctw-uppercase ctw-text-content-light"
+      "ctw-relative ctw-bottom-1 ctw-break-keep ctw-text-[10px] ctw-uppercase ctw-text-content-light"
     )}
   >
     beta

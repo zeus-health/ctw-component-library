@@ -1,7 +1,4 @@
-type CCSChapterNameMapType = Record<
-  string,
-  { fullName: string; shortName: string } | undefined
->;
+type CCSChapterNameMapType = Record<string, { fullName: string; shortName: string } | undefined>;
 
 export const CCSChapterName: CCSChapterNameMapType = {
   INF: {
@@ -67,8 +64,7 @@ export const CCSChapterName: CCSChapterNameMapType = {
     shortName: "Perinatal Conditions",
   },
   MAL: {
-    fullName:
-      "Congenital Malformations, Deformations and Chromosomal Abnormalities",
+    fullName: "Congenital Malformations, Deformations and Chromosomal Abnormalities",
     shortName: "Malformations and Chromosomal Abnormalities",
   },
   SYM: {
@@ -76,8 +72,7 @@ export const CCSChapterName: CCSChapterNameMapType = {
     shortName: "Clinical Findings",
   },
   INJ: {
-    fullName:
-      "Injury, Poisoning and Certain Other Consequences of External Causes",
+    fullName: "Injury, Poisoning and Certain Other Consequences of External Causes",
     shortName: "External Causes Injury",
   },
   EXT: {
@@ -85,8 +80,7 @@ export const CCSChapterName: CCSChapterNameMapType = {
     shortName: "External Morbidity",
   },
   FAC: {
-    fullName:
-      "Factors Influencing Health Status and Contact with Health Services",
+    fullName: "Factors Influencing Health Status and Contact with Health Services",
     shortName: "Health Status Influences",
   },
   XXX: {

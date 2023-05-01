@@ -6,10 +6,7 @@ import { SYSTEM_ENRICHMENT } from "./system-urls";
 import { find } from "@/utils/nodash";
 
 export const codeableConceptLabel = (concept?: fhir4.CodeableConcept): string =>
-  concept?.text ??
-  concept?.coding?.[0]?.display ??
-  concept?.coding?.[0]?.code ??
-  "";
+  concept?.text ?? concept?.coding?.[0]?.display ?? concept?.coding?.[0]?.code ?? "";
 
 export function findCoding(
   system: string,

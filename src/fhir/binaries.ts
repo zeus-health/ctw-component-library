@@ -5,16 +5,11 @@ import { QUERY_KEY_BINARY } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import { withTimerMetric } from "@/utils/telemetry";
 
-export function getBinaryId(
-  provenances: Provenance[],
-  targetId: string
-): string | undefined {
+export function getBinaryId(provenances: Provenance[], targetId: string): string | undefined {
   for (let i = 0; i < provenances.length; i += 1) {
     const provenance = provenances[i];
 
-    const hasTarget = some(provenance.target, (t) =>
-      t.reference?.includes(targetId)
-    );
+    const hasTarget = some(provenance.target, (t) => t.reference?.includes(targetId));
 
     if (hasTarget) {
       const source = find(provenance.entity, { role: "source" });
@@ -40,7 +35,4 @@ async function getBinaryDocumentReq(
   );
 }
 
-export const getBinaryDocument = withTimerMetric(
-  getBinaryDocumentReq,
-  "req.binary_document"
-);
+export const getBinaryDocument = withTimerMetric(getBinaryDocumentReq, "req.binary_document");

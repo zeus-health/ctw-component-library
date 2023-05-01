@@ -2,14 +2,8 @@ import { Resource } from "fhir/r4";
 import { useEffect, useState } from "react";
 import { usePatientDiagnosticReportsOutside } from "./diagnostic-report";
 import { usePatientEncounters } from "./encounters";
-import {
-  TimelineEventModel,
-  TimelineEventResource,
-} from "./models/timeline-event";
-import {
-  useQueryGetPatientMedDispenseCommon,
-  useQueryGetPatientMedRequestsCommon,
-} from "..";
+import { TimelineEventModel, TimelineEventResource } from "./models/timeline-event";
+import { useQueryGetPatientMedDispenseCommon, useQueryGetPatientMedRequestsCommon } from "..";
 import { ResourceMap } from "@/fhir/types";
 import { compact, concat, flatten, some } from "@/utils/nodash";
 import { applySorts } from "@/utils/sort";
@@ -36,11 +30,7 @@ export function useTimelineEvents() {
 
   useEffect(() => {
     const models = compact(
-      flatten(
-        concat(
-          queries.map((query) => query.data?.map(createTimelineEventModel))
-        )
-      )
+      flatten(concat(queries.map((query) => query.data?.map(createTimelineEventModel))))
     );
 
     setTimelineEvents(
@@ -74,5 +64,4 @@ const createTimelineEventModel = ({
   resource,
   includedResources,
   revIncludes,
-}: TimelineEventModelParams) =>
-  new TimelineEventModel(resource, includedResources, revIncludes);
+}: TimelineEventModelParams) => new TimelineEventModel(resource, includedResources, revIncludes);

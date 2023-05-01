@@ -61,16 +61,11 @@ function TabGroupComponent({
   return (
     <div
       ref={containerRef}
-      className={cx(
-        className,
-        "ctw-tab-group ctw-scrollable-pass-through-height ctw-w-full"
-      )}
+      className={cx(className, "ctw-tab-group ctw-scrollable-pass-through-height ctw-w-full")}
     >
       <PatientHistoryStatus
         messages={patientHistoryDetails.latestServiceMessages}
-        status={
-          patientHistoryDetails.lastStatus as PatientRefreshHistoryMessageStatus
-        }
+        status={patientHistoryDetails.lastStatus as PatientRefreshHistoryMessageStatus}
         date={patientHistoryDetails.lastRetrievedAt}
       />
       <Tab.Group selectedIndex={selectedTabIndex} onChange={handleOnChange}>

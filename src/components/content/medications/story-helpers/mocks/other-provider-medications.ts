@@ -47,8 +47,7 @@ export const otherProviderMedications: fhir4.Bundle = {
               {
                 url: "https://zusapi.com/lens/extension/aggregatedFrom",
                 valueReference: {
-                  reference:
-                    "MedicationAdministration/d7571c17-1e36-4c38-8149-e30ee3b18481",
+                  reference: "MedicationAdministration/d7571c17-1e36-4c38-8149-e30ee3b18481",
                   type: "MedicationAdministration",
                 },
               },
@@ -168,56 +167,49 @@ export const otherProviderMedications: fhir4.Bundle = {
               {
                 url: "https://zusapi.com/lens/extension/aggregatedFrom",
                 valueReference: {
-                  reference:
-                    "MedicationDispense/8952694e-c4ef-4432-ada6-6aeb2e193b88",
+                  reference: "MedicationDispense/8952694e-c4ef-4432-ada6-6aeb2e193b88",
                   type: "MedicationDispense",
                 },
               },
               {
                 url: "https://zusapi.com/lens/extension/aggregatedFrom",
                 valueReference: {
-                  reference:
-                    "MedicationDispense/0beb9677-f9b4-451d-9552-66652741ae58",
+                  reference: "MedicationDispense/0beb9677-f9b4-451d-9552-66652741ae58",
                   type: "MedicationDispense",
                 },
               },
               {
                 url: "https://zusapi.com/lens/extension/aggregatedFrom",
                 valueReference: {
-                  reference:
-                    "MedicationDispense/503b8b45-c132-4ad2-8d2b-69e6d0e192d9",
+                  reference: "MedicationDispense/503b8b45-c132-4ad2-8d2b-69e6d0e192d9",
                   type: "MedicationDispense",
                 },
               },
               {
                 url: "https://zusapi.com/lens/extension/aggregatedFrom",
                 valueReference: {
-                  reference:
-                    "MedicationRequest/dbfa6885-b087-4fda-a9d6-f494dfe51e0a",
+                  reference: "MedicationRequest/dbfa6885-b087-4fda-a9d6-f494dfe51e0a",
                   type: "MedicationRequest",
                 },
               },
               {
                 url: "https://zusapi.com/lens/extension/aggregatedFrom",
                 valueReference: {
-                  reference:
-                    "MedicationDispense/6ec0dc8c-8f96-44ad-800d-e4efce371314",
+                  reference: "MedicationDispense/6ec0dc8c-8f96-44ad-800d-e4efce371314",
                   type: "MedicationDispense",
                 },
               },
               {
                 url: "https://zusapi.com/lens/extension/aggregatedFrom",
                 valueReference: {
-                  reference:
-                    "MedicationDispense/57d85687-4a53-4fb1-aa13-ef802fc741c0",
+                  reference: "MedicationDispense/57d85687-4a53-4fb1-aa13-ef802fc741c0",
                   type: "MedicationDispense",
                 },
               },
               {
                 url: "https://zusapi.com/lens/extension/aggregatedFrom",
                 valueReference: {
-                  reference:
-                    "MedicationStatement/c3644cd7-676e-4d9d-9248-1479d70f5527",
+                  reference: "MedicationStatement/c3644cd7-676e-4d9d-9248-1479d70f5527",
                   type: "MedicationStatement",
                 },
               },
@@ -350,56 +342,49 @@ export const otherProviderMedications: fhir4.Bundle = {
               {
                 url: "https://zusapi.com/lens/extension/aggregatedFrom",
                 valueReference: {
-                  reference:
-                    "MedicationDispense/d03627d0-31cc-48b7-b435-21767d0bb7cc",
+                  reference: "MedicationDispense/d03627d0-31cc-48b7-b435-21767d0bb7cc",
                   type: "MedicationDispense",
                 },
               },
               {
                 url: "https://zusapi.com/lens/extension/aggregatedFrom",
                 valueReference: {
-                  reference:
-                    "MedicationDispense/f991a969-8848-4493-b794-3dfadd047f6c",
+                  reference: "MedicationDispense/f991a969-8848-4493-b794-3dfadd047f6c",
                   type: "MedicationDispense",
                 },
               },
               {
                 url: "https://zusapi.com/lens/extension/aggregatedFrom",
                 valueReference: {
-                  reference:
-                    "MedicationDispense/e89f2f5f-3429-4288-9e84-2b9db45473eb",
+                  reference: "MedicationDispense/e89f2f5f-3429-4288-9e84-2b9db45473eb",
                   type: "MedicationDispense",
                 },
               },
               {
                 url: "https://zusapi.com/lens/extension/aggregatedFrom",
                 valueReference: {
-                  reference:
-                    "MedicationDispense/c82e7f47-7ee7-4b53-b901-21e068fd7b59",
+                  reference: "MedicationDispense/c82e7f47-7ee7-4b53-b901-21e068fd7b59",
                   type: "MedicationDispense",
                 },
               },
               {
                 url: "https://zusapi.com/lens/extension/aggregatedFrom",
                 valueReference: {
-                  reference:
-                    "MedicationRequest/902e3223-b7c1-449c-a716-59e5687b4af6",
+                  reference: "MedicationRequest/902e3223-b7c1-449c-a716-59e5687b4af6",
                   type: "MedicationRequest",
                 },
               },
               {
                 url: "https://zusapi.com/lens/extension/aggregatedFrom",
                 valueReference: {
-                  reference:
-                    "MedicationDispense/6837bd08-5ba3-4ce7-82d7-abf3676d75b5",
+                  reference: "MedicationDispense/6837bd08-5ba3-4ce7-82d7-abf3676d75b5",
                   type: "MedicationDispense",
                 },
               },
               {
                 url: "https://zusapi.com/lens/extension/aggregatedFrom",
                 valueReference: {
-                  reference:
-                    "MedicationStatement/146fe496-2343-4a5d-9814-730e8ef3fdb4",
+                  reference: "MedicationStatement/146fe496-2343-4a5d-9814-730e8ef3fdb4",
                   type: "MedicationStatement",
                 },
               },
@@ -531,16 +516,14 @@ export const otherProviderMedications: fhir4.Bundle = {
               {
                 url: "https://zusapi.com/lens/extension/aggregatedFrom",
                 valueReference: {
-                  reference:
-                    "MedicationRequest/d2102ea3-e515-45be-a611-eac1daf4d345",
+                  reference: "MedicationRequest/d2102ea3-e515-45be-a611-eac1daf4d345",
                   type: "MedicationRequest",
                 },
               },
               {
                 url: "https://zusapi.com/lens/extension/aggregatedFrom",
                 valueReference: {
-                  reference:
-                    "MedicationDispense/8110cb8c-927e-49aa-9513-cb559d9875cc",
+                  reference: "MedicationDispense/8110cb8c-927e-49aa-9513-cb559d9875cc",
                   type: "MedicationDispense",
                 },
               },
@@ -604,8 +587,7 @@ export const otherProviderMedications: fhir4.Bundle = {
               ],
               system: "http://www.nlm.nih.gov/research/umls/rxnorm",
               code: "876195",
-              display:
-                "polyethylene glycol 3350 17000 MG Powder for Oral Solution [Miralax]",
+              display: "polyethylene glycol 3350 17000 MG Powder for Oral Solution [Miralax]",
               userSelected: false,
             },
             {
@@ -653,8 +635,7 @@ export const otherProviderMedications: fhir4.Bundle = {
               ],
               system: "http://www.nlm.nih.gov/research/umls/rxnorm",
               code: "876193",
-              display:
-                "polyethylene glycol 3350 17000 MG Powder for Oral Solution",
+              display: "polyethylene glycol 3350 17000 MG Powder for Oral Solution",
               userSelected: false,
             },
           ],
@@ -698,8 +679,7 @@ export const otherProviderMedications: fhir4.Bundle = {
               {
                 url: "https://zusapi.com/lens/extension/aggregatedFrom",
                 valueReference: {
-                  reference:
-                    "MedicationStatement/e23c0023-d7ad-4834-9adb-a71e54ccbcd2",
+                  reference: "MedicationStatement/e23c0023-d7ad-4834-9adb-a71e54ccbcd2",
                   type: "MedicationStatement",
                 },
               },

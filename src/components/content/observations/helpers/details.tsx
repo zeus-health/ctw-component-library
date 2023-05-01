@@ -16,9 +16,7 @@ export type ObservationDetailsProps = {
   diagnosticReport: DiagnosticReportModel;
 };
 
-export const diagnosticReportData = (
-  diagnosticReport: DiagnosticReportModel
-) => [
+export const diagnosticReportData = (diagnosticReport: DiagnosticReportModel) => [
   { label: "Organization", value: diagnosticReport.performer },
   {
     label: "Identifier",
@@ -35,9 +33,7 @@ export const diagnosticReportData = (
 ];
 
 export const Component = ({ diagnosticReport }: ObservationDetailsProps) => {
-  const [observationEntries, setObservationsEntries] = useState<
-    ObservationModel[]
-  >([]);
+  const [observationEntries, setObservationsEntries] = useState<ObservationModel[]>([]);
 
   const openCCDAModal = useCCDAModal();
   const [isLoading, setIsLoading] = useState(false);
@@ -50,9 +46,7 @@ export const Component = ({ diagnosticReport }: ObservationDetailsProps) => {
     async function load() {
       setIsLoading(true);
       const requestContext = await getRequestContext();
-      const provenances = await searchProvenances(requestContext, [
-        diagnosticReport,
-      ]);
+      const provenances = await searchProvenances(requestContext, [diagnosticReport]);
       setBinaryId(getBinaryId(provenances, diagnosticReport.id));
       setIsLoading(false);
     }
@@ -94,9 +88,7 @@ export const Component = ({ diagnosticReport }: ObservationDetailsProps) => {
             documentButton={
               binaryId && (
                 <DocumentButton
-                  onClick={() =>
-                    openCCDAModal(binaryId, diagnosticReport.resourceTypeTitle)
-                  }
+                  onClick={() => openCCDAModal(binaryId, diagnosticReport.resourceTypeTitle)}
                   text="Source Document"
                 />
               )

@@ -31,9 +31,7 @@ export function usePatientAllergies() {
 
         return applyAllergyFilters(allergy, includedResources);
       } catch (e) {
-        throw new Error(
-          `Failed fetching allergies information for patient ${patient.UPID}`
-        );
+        throw new Error(`Failed fetching allergies information for patient ${patient.UPID}`);
       }
     }, "req.patient_allergies")
   );

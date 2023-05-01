@@ -32,11 +32,9 @@ export function usePatientHistory(includePatientDemographicsForm?: boolean) {
   const { openDrawer } = useDrawer();
   const { getPatient } = usePatientPromise();
   const patientHistoryInformation = usePatientHistoryDetails();
-  const [patientHistoryDetails, setPatientHistoryDetails] =
-    useState<PatientHistoryDetails>();
+  const [patientHistoryDetails, setPatientHistoryDetails] = useState<PatientHistoryDetails>();
 
-  const [patientHistoryRequestPromise, setPatientHistoryRequestPromise] =
-    useState<Promise<void>>();
+  const [patientHistoryRequestPromise, setPatientHistoryRequestPromise] = useState<Promise<void>>();
 
   useEffect(() => {
     async function patientHistoryRequest() {
@@ -46,11 +44,7 @@ export function usePatientHistory(includePatientDemographicsForm?: boolean) {
     }
 
     setPatientHistoryRequestPromise(patientHistoryRequest());
-  }, [
-    getPatient,
-    patientHistoryInformation.isLoading,
-    patientHistoryInformation.data,
-  ]);
+  }, [getPatient, patientHistoryInformation.isLoading, patientHistoryInformation.data]);
 
   return {
     openHistoryRequestDrawer: async () => {
@@ -70,14 +64,12 @@ export function usePatientHistory(includePatientDemographicsForm?: boolean) {
               <>
                 <PatientHistoryStatus
                   messages={patientHistoryDetails?.serviceMessages}
-                  status={
-                    patientHistoryDetails?.status as PatientRefreshHistoryMessageStatus
-                  }
+                  status={patientHistoryDetails?.status as PatientRefreshHistoryMessageStatus}
                   date={patientHistoryDetails?.dateCreated}
                 />
                 <div className="ctw-pt-0 ctw-text-base">
-                  Request patient clinical history from 70K+ providers across
-                  the nation. No changes will be made to your patient record.
+                  Request patient clinical history from 70K+ providers across the nation. No changes
+                  will be made to your patient record.
                 </div>
               </>
             }
@@ -99,15 +91,11 @@ export async function getBuilderRefreshHistoryMessages(
   requestContext: CTWRequestContext,
   patientId?: string
 ) {
-  const baseUrl = new URL(
-    `${getZusApiBaseUrl(requestContext.env)}/patient-history/messages?`
-  );
+  const baseUrl = new URL(`${getZusApiBaseUrl(requestContext.env)}/patient-history/messages?`);
 
   const paramsObj = omitBy(
     {
-      "builder-id": requestContext.contextBuilderId
-        ? `${requestContext.contextBuilderId}`
-        : "",
+      "builder-id": requestContext.contextBuilderId ? `${requestContext.contextBuilderId}` : "",
       "patient-id": patientId ? `${patientId}` : "",
     },
     (value) => !value
@@ -128,10 +116,7 @@ export async function getBuilderRefreshHistoryMessages(
 
     return await response.json();
   } catch (err) {
-    throw errorResponse(
-      "Failed fetching patient refresh history messages",
-      err
-    );
+    throw errorResponse("Failed fetching patient refresh history messages", err);
   }
 }
 
@@ -141,10 +126,7 @@ export function usePatientHistoryDetails() {
     [],
     async (requestContext, patient) => {
       try {
-        const response = await getBuilderRefreshHistoryMessages(
-          requestContext,
-          patient.id
-        );
+        const response = await getBuilderRefreshHistoryMessages(requestContext, patient.id);
 
         const latestDone = find(response.data, {
           _messages: [
@@ -161,13 +143,8 @@ export function usePatientHistoryDetails() {
           serviceMessages: response.data[0]?._messages,
         };
       } catch (e) {
-        Telemetry.logError(
-          e as Error,
-          "Failed fetching patient history details"
-        );
-        throw new Error(
-          `Failed fetching patient history details for patient: ${e}`
-        );
+        Telemetry.logError(e as Error, "Failed fetching patient history details");
+        throw new Error(`Failed fetching patient history details for patient: ${e}`);
       }
     }
   );

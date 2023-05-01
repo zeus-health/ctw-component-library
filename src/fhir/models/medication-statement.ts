@@ -58,8 +58,7 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
   get aggregatedFrom(): Reference[] {
     const extension = find(
       (x) =>
-        x.url === LENS_EXTENSION_AGGREGATED_FROM ||
-        x.url === CTW_EXTENSION_LENS_AGGREGATED_FROM,
+        x.url === LENS_EXTENSION_AGGREGATED_FROM || x.url === CTW_EXTENSION_LENS_AGGREGATED_FROM,
       this.resource.extension
     );
     if (!extension?.extension) {
@@ -123,10 +122,7 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
    * Get RxNorm coding with "display" defaulting to this Med-Statement label.
    */
   get rxNormCodeableConcept() {
-    const coding = getIdentifyingRxNormCoding(
-      this.resource,
-      this.includedResources
-    );
+    const coding = getIdentifyingRxNormCoding(this.resource, this.includedResources);
 
     return {
       ...(coding ?? {}),
@@ -138,9 +134,7 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
     return codeableConceptLabel(this.resource.reasonCode?.[0]);
   }
 
-  get reasonReference():
-    | fhir4.MedicationStatement["reasonReference"]
-    | undefined {
+  get reasonReference(): fhir4.MedicationStatement["reasonReference"] | undefined {
     return this.resource.reasonReference;
   }
 
@@ -191,9 +185,8 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
 
   get lastFillDate(): string | undefined {
     return formatDateISOToLocal(
-      this.resource.extension?.find(
-        (x) => x.url === LENS_EXTENSION_MEDICATION_LAST_FILL_DATE
-      )?.valueDateTime
+      this.resource.extension?.find((x) => x.url === LENS_EXTENSION_MEDICATION_LAST_FILL_DATE)
+        ?.valueDateTime
     );
   }
 
@@ -246,9 +239,8 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
 
   get lastPrescribedDate(): string | undefined {
     return formatDateISOToLocal(
-      this.resource.extension?.find(
-        (x) => x.url === LENS_EXTENSION_MEDICATION_LAST_PRESCRIBED_DATE
-      )?.valueDateTime
+      this.resource.extension?.find((x) => x.url === LENS_EXTENSION_MEDICATION_LAST_PRESCRIBED_DATE)
+        ?.valueDateTime
     );
   }
 }

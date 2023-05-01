@@ -11,9 +11,7 @@ const PATIENT_UPID = faker.datatype.uuid();
 const BUILDER_ID = faker.datatype.uuid();
 const DATE_EARLY = faker.date.recent(20);
 const DATE_RECENT = faker.date.recent(10);
-const FAKE_DATES = new Array(20)
-  .fill(null)
-  .map(() => faker.date.between(DATE_RECENT, DATE_EARLY));
+const FAKE_DATES = new Array(20).fill(null).map(() => faker.date.between(DATE_RECENT, DATE_EARLY));
 const PATIENT = {
   reference: `Patient/${faker.datatype.uuid()}`,
   type: "Patient",
@@ -53,8 +51,7 @@ export const createDiagnosticReportsBundle = () => ({
       "https://zusapi.com/summary/Common",
       "https://zusapi.com/fhir%2Ftag%2Fupi-record-type%7Cuniversal",
     ],
-    "patient.identifier":
-      "https://zusapi.com/fhir/identifier/universal-id|u12345",
+    "patient.identifier": "https://zusapi.com/fhir/identifier/universal-id|u12345",
   }),
   entry: [
     createMockDiagnosticReportBundleEntry({
@@ -70,9 +67,7 @@ export const createDiagnosticReportsBundle = () => ({
       },
     }),
     createMockDiagnosticReportBundleEntry({
-      performer: [
-        { display: "Pharma John | Digital Labs", type: "Organization" },
-      ],
+      performer: [{ display: "Pharma John | Digital Labs", type: "Organization" }],
     }),
     ...getObservationsForBundle(),
   ],
@@ -154,166 +149,163 @@ function createMockDiagnosticReportBundleEntry(
 }
 
 function getObservationsForBundle() {
-  return observations.map(
-    (observation): fhir4.BundleEntry<fhir4.Observation> => {
-      const date = faker.helpers.arrayElement(FAKE_DATES);
-      const value = faker.datatype.float({
-        min: 1.0,
-        max: 16.5,
-        precision: 0.1,
-      });
-      const interpretationText = value > 10 ? "(Normal)" : "(High)";
-      const interpretation = {
-        coding: [
-          {
-            system: "urn:oid:2.16.840.1.113883.5.83",
-            code: value > 10 ? "H" : "N",
-            display: value > 10 ? "(Normal)" : "(High)",
-          },
-        ],
-        text: interpretationText,
-      };
-      const code = faker.helpers.arrayElement([
+  return observations.map((observation): fhir4.BundleEntry<fhir4.Observation> => {
+    const date = faker.helpers.arrayElement(FAKE_DATES);
+    const value = faker.datatype.float({
+      min: 1.0,
+      max: 16.5,
+      precision: 0.1,
+    });
+    const interpretationText = value > 10 ? "(Normal)" : "(High)";
+    const interpretation = {
+      coding: [
         {
-          system: "http://loinc.org",
-          code: "1751-7",
-          display: "ALBUMIN",
+          system: "urn:oid:2.16.840.1.113883.5.83",
+          code: value > 10 ? "H" : "N",
+          display: value > 10 ? "(Normal)" : "(High)",
         },
-        {
-          system: "http://loinc.org",
-          code: "2823-3",
-          display: "POTASSIUM",
-        },
-        {
-          system: "http://loinc.org",
-          code: "2345-7",
-          display: "GLUCOSE",
-        },
-        {
-          system: "http://loinc.org",
-          code: "33037-3",
-          display: "ANION GAP",
-        },
-        {
-          system: "http://loinc.org",
-          code: "2160-0",
-          display: "CREATININE",
-        },
-        {
-          system: "http://loinc.org",
-          code: "33914-3",
-          display: "CREATININE ESTIMATED GFR",
-        },
-        {
-          system: "http://loinc.org",
-          code: "2028-9",
-          display: "CARBON DIOXIDE",
-        },
-        {
-          system: "http://loinc.org",
-          code: "2075-0",
-          display: "CHLORIDE",
-        },
-        {
-          system: "http://loinc.org",
-          code: "17861-6",
-          display: "CALCIUM",
-        },
-      ]);
+      ],
+      text: interpretationText,
+    };
+    const code = faker.helpers.arrayElement([
+      {
+        system: "http://loinc.org",
+        code: "1751-7",
+        display: "ALBUMIN",
+      },
+      {
+        system: "http://loinc.org",
+        code: "2823-3",
+        display: "POTASSIUM",
+      },
+      {
+        system: "http://loinc.org",
+        code: "2345-7",
+        display: "GLUCOSE",
+      },
+      {
+        system: "http://loinc.org",
+        code: "33037-3",
+        display: "ANION GAP",
+      },
+      {
+        system: "http://loinc.org",
+        code: "2160-0",
+        display: "CREATININE",
+      },
+      {
+        system: "http://loinc.org",
+        code: "33914-3",
+        display: "CREATININE ESTIMATED GFR",
+      },
+      {
+        system: "http://loinc.org",
+        code: "2028-9",
+        display: "CARBON DIOXIDE",
+      },
+      {
+        system: "http://loinc.org",
+        code: "2075-0",
+        display: "CHLORIDE",
+      },
+      {
+        system: "http://loinc.org",
+        code: "17861-6",
+        display: "CALCIUM",
+      },
+    ]);
 
-      return {
-        search: {
-          mode: "include",
-        },
-        fullUrl: "",
-        resource: {
-          resourceType: "Observation",
-          id: observation.reference.split("/")[1],
-          meta: {
-            extension: [
-              {
-                url: "https://zusapi.com/data-acquisition/extension/id",
-                valueString: faker.datatype.uuid(),
-              },
-              {
-                url: "https://zusapi.com/created-at",
-                valueInstant: date.toISOString(),
-              },
-            ],
-            versionId: "1",
-            lastUpdated: "2023-03-07T14:32:09.402+00:00",
-            source: fakerFakeMockSourceId(),
-            tag: [
-              {
-                system: "https://zusapi.com/thirdparty/source",
-                code: "commonwell",
-              },
-              {
-                system: "https://zusapi.com/accesscontrol/owner",
-                code: `builder/${BUILDER_ID}`,
-              },
-            ],
-          },
+    return {
+      search: {
+        mode: "include",
+      },
+      fullUrl: "",
+      resource: {
+        resourceType: "Observation",
+        id: observation.reference.split("/")[1],
+        meta: {
           extension: [
             {
-              url: "https://zusapi.com/fhir/identifier/universal-id",
+              url: "https://zusapi.com/data-acquisition/extension/id",
               valueString: faker.datatype.uuid(),
             },
-          ],
-          identifier: [
             {
-              use: "usual",
-              system: "urn:oid:2.16.840.1.113883.3.1110.3.1.1310.6.1.13",
-              value: "ALB_L17165719_CHEM20_1",
+              url: "https://zusapi.com/created-at",
+              valueInstant: date.toISOString(),
             },
           ],
-          status: "final",
-          code: {
-            coding: [code],
-            // sometimes we will not get a code text here
-            text: Math.random() > 0.8 ? undefined : code.display,
-          },
-          category: [
+          versionId: "1",
+          lastUpdated: "2023-03-07T14:32:09.402+00:00",
+          source: fakerFakeMockSourceId(),
+          tag: [
             {
-              coding: [
-                {
-                  system:
-                    "http://terminology.hl7.org/CodeSystem/observation-category",
-                  code: "laboratory",
-                  display: "Laboratory",
-                },
-              ],
-              text: "Laboratory",
+              system: "https://zusapi.com/thirdparty/source",
+              code: "commonwell",
             },
-          ],
-          subject: PATIENT,
-          effectiveDateTime: date.toISOString(),
-          valueQuantity: {
-            value,
-            unit: "g/dL",
-          },
-          interpretation: [interpretation],
-          note: [
             {
-              text: `${faker.lorem.sentence(
-                7
-              )} FAKE:FAKE ${value} g/dL (${interpretationText})Range: 1.0 g/dL - 10.0 g/dL`,
-            },
-          ],
-          referenceRange: [
-            {
-              low: {
-                value: 1.0,
-                unit: "g/dL",
-              },
-              high: {
-                value: 10.0,
-                unit: "g/dL",
-              },
+              system: "https://zusapi.com/accesscontrol/owner",
+              code: `builder/${BUILDER_ID}`,
             },
           ],
         },
-      };
-    }
-  );
+        extension: [
+          {
+            url: "https://zusapi.com/fhir/identifier/universal-id",
+            valueString: faker.datatype.uuid(),
+          },
+        ],
+        identifier: [
+          {
+            use: "usual",
+            system: "urn:oid:2.16.840.1.113883.3.1110.3.1.1310.6.1.13",
+            value: "ALB_L17165719_CHEM20_1",
+          },
+        ],
+        status: "final",
+        code: {
+          coding: [code],
+          // sometimes we will not get a code text here
+          text: Math.random() > 0.8 ? undefined : code.display,
+        },
+        category: [
+          {
+            coding: [
+              {
+                system: "http://terminology.hl7.org/CodeSystem/observation-category",
+                code: "laboratory",
+                display: "Laboratory",
+              },
+            ],
+            text: "Laboratory",
+          },
+        ],
+        subject: PATIENT,
+        effectiveDateTime: date.toISOString(),
+        valueQuantity: {
+          value,
+          unit: "g/dL",
+        },
+        interpretation: [interpretation],
+        note: [
+          {
+            text: `${faker.lorem.sentence(
+              7
+            )} FAKE:FAKE ${value} g/dL (${interpretationText})Range: 1.0 g/dL - 10.0 g/dL`,
+          },
+        ],
+        referenceRange: [
+          {
+            low: {
+              value: 1.0,
+              unit: "g/dL",
+            },
+            high: {
+              value: 10.0,
+              unit: "g/dL",
+            },
+          },
+        ],
+      },
+    };
+  });
 }

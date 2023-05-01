@@ -14,11 +14,7 @@ export default {
       return (
         <div id="headlessui-portal-root">
           <p>To open up the drawer, simply press the button below</p>
-          <button
-            type="button"
-            className="ctw-btn-primary"
-            onClick={() => setDrawerIsOpen(true)}
-          >
+          <button type="button" className="ctw-btn-primary" onClick={() => setDrawerIsOpen(true)}>
             Open
           </button>
           <Story
@@ -57,12 +53,11 @@ export const Basic: StoryObj<DrawerProps> = {
             {[...Array(10)].map((_, i) => (
               // eslint-disable-next-line react/no-array-index-key
               <li key={i} data-testid={`scrollable-content-${i}`}>
-                Lorem ipsum dolor sit amet, his te vulputate cotidieque
-                concludaturque, no nulla dicit vocibus ius. Eos ne recusabo
-                scriptorem, admodum ullamcorper te mei. Eros mundi eos te, mea
-                at errem graecis. Ex cum delicata intellegam, mea at duis
-                patrioque conclusionemque, pri te brute ceteros eloquentiam.
-                Veri placerat persecuti ut vix, sint esse iriure ei sit
+                Lorem ipsum dolor sit amet, his te vulputate cotidieque concludaturque, no nulla
+                dicit vocibus ius. Eos ne recusabo scriptorem, admodum ullamcorper te mei. Eros
+                mundi eos te, mea at errem graecis. Ex cum delicata intellegam, mea at duis
+                patrioque conclusionemque, pri te brute ceteros eloquentiam. Veri placerat persecuti
+                ut vix, sint esse iriure ei sit
               </li>
             ))}
           </ol>

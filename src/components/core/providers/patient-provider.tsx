@@ -5,10 +5,7 @@ import { useCTW } from "./ctw-provider";
 import { DrawerProvider } from "./drawer-provider";
 import { ModalProvider } from "./modal-provider";
 import { PatientContext, PatientState } from "./patient-context";
-import {
-  editPatient,
-  PatientFormData,
-} from "../../content/forms/actions/patients";
+import { editPatient, PatientFormData } from "../../content/forms/actions/patients";
 import { PatientModel } from "@/fhir/models/patient";
 import { getBuilderFhirPatient } from "@/fhir/patient-helper";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
@@ -140,11 +137,7 @@ export function useHandlePatientSave(patient?: PatientModel) {
 export function useQueryWithPatient<T, T2>(
   queryKey: string,
   keys: T2[],
-  query: (
-    requestContext: CTWRequestContext,
-    patient: PatientModel,
-    keys?: T2[]
-  ) => Promise<T>,
+  query: (requestContext: CTWRequestContext, patient: PatientModel, keys?: T2[]) => Promise<T>,
   enabled = true
 ) {
   const { getRequestContext } = useCTW();

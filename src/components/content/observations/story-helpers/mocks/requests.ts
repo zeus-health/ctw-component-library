@@ -25,8 +25,7 @@ function mockRequests() {
   // This GET returns the same observations for both builder and outside records
   const mockDiagnosticReportGet = rest.get(
     "https://api.dev.zusapi.com/fhir/DiagnosticReport",
-    (req, res, ctx) =>
-      res(ctx.status(200), ctx.delay(250), ctx.json(diagnosticReportsBundle))
+    (req, res, ctx) => res(ctx.status(200), ctx.delay(250), ctx.json(diagnosticReportsBundle))
   );
 
   return [mockPatientGet, mockDiagnosticReportGet];

@@ -3,24 +3,15 @@ import { CareTeamPractitionerModel } from "@/fhir/models/careteam-practitioner";
 import { ResourceMap } from "@/fhir/types";
 import { isEqual, orderBy, uniqWith } from "@/utils/nodash";
 
-export const applyCareTeamFilters = (
-  data: fhir4.CareTeam[],
-  includedResources: ResourceMap
-) => {
-  const careTeamModels = data.map(
-    (careteam) => new CareTeamModel(careteam, includedResources)
-  );
+export const applyCareTeamFilters = (data: fhir4.CareTeam[], includedResources: ResourceMap) => {
+  const careTeamModels = data.map((careteam) => new CareTeamModel(careteam, includedResources));
 
   const careTeamPractitionerModels: CareTeamPractitionerModel[] = [];
   careTeamModels.forEach((careTeam) =>
     careTeam.resource.participant?.forEach((participant) => {
-      const practitioner = careTeam.getPractitionerByID(
-        participant.member?.reference as string
-      );
+      const practitioner = careTeam.getPractitionerByID(participant.member?.reference as string);
       if (practitioner?.id && participant.member?.reference) {
-        careTeamPractitionerModels.push(
-          new CareTeamPractitionerModel(careTeam, practitioner)
-        );
+        careTeamPractitionerModels.push(new CareTeamPractitionerModel(careTeam, practitioner));
       }
     })
   );

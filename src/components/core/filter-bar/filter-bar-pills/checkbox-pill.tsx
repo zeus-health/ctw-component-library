@@ -36,9 +36,7 @@ export function FilterBarCheckboxPill({
     isSelected: selected.includes(isString(item) ? item : item.key),
   }));
 
-  const selectedItems = items
-    .filter((item) => item.isSelected)
-    .map((item) => item.key);
+  const selectedItems = items.filter((item) => item.isSelected).map((item) => item.key);
 
   return (
     <DropdownMenuAction

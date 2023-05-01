@@ -63,10 +63,7 @@ export function getIdentifyingRxNormCoding(
   medication: Medication,
   includedResources?: ResourceMap
 ): fhir4.Coding | undefined {
-  const codeableConcept = getMedicationCodeableConcept(
-    medication,
-    includedResources
-  );
+  const codeableConcept = getMedicationCodeableConcept(medication, includedResources);
 
   // first check to see if the med has an RxNorm coding that wasn't provided via enrichment
   const rxNorm = codeableConcept?.coding?.find(
@@ -86,8 +83,7 @@ export function getIdentifyingRxNormCoding(
       code.system === SYSTEM_RXNORM &&
       // must have no extensions
       code.extension?.some(
-        (e) =>
-          e.url === SYSTEM_ENRICHMENT && e.valueString === "Standardization"
+        (e) => e.url === SYSTEM_ENRICHMENT && e.valueString === "Standardization"
       )
   );
 }
@@ -104,10 +100,7 @@ export function getMedicationDisplayName(
     return code.display;
   }
 
-  const medCodeableConcept = getMedicationCodeableConcept(
-    resource,
-    includedResources
-  );
+  const medCodeableConcept = getMedicationCodeableConcept(resource, includedResources);
 
   if (medCodeableConcept?.text) {
     return medCodeableConcept.text;
@@ -170,8 +163,7 @@ export function createPatientStatusMap(
 
   const rxNormStatusMap: Record<string, string> = {};
   patientMedications.forEach((medication) => {
-    const rxNormCode =
-      getIdentifyingRxNormCode(medication, includedResources) ?? "";
+    const rxNormCode = getIdentifyingRxNormCode(medication, includedResources) ?? "";
     rxNormStatusMap[rxNormCode] = medication.status;
   });
 

@@ -4,10 +4,7 @@ import { useMedicationDetailsDrawer } from "./details";
 import { defaultMedicationFilters } from "./filters";
 import { defaultMedicationSort, medicationSortOptions } from "./sorts";
 import { ViewOption } from "../../resource/helpers/view-button";
-import {
-  ResourceTable,
-  ResourceTableProps,
-} from "../../resource/resource-table";
+import { ResourceTable, ResourceTableProps } from "../../resource/resource-table";
 import {
   ResourceTableActions,
   ResourceTableActionsProps,

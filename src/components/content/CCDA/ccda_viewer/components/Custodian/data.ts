@@ -2,9 +2,7 @@ import xpath from "xpath";
 import { getContactDetails } from "../../helpers";
 import { GeneralInfo } from "../../types";
 
-export const getCustodianData = (
-  document: Document
-): GeneralInfo | undefined => {
+export const getCustodianData = (document: Document): GeneralInfo | undefined => {
   const representedCustodianOrganization = xpath.select1(
     "*[name()='ClinicalDocument']/*[name()='custodian']/*[name()='assignedCustodian']/*[name()='representedCustodianOrganization']",
     document
@@ -12,9 +10,7 @@ export const getCustodianData = (
 
   if (!representedCustodianOrganization) return undefined;
 
-  const name = String(
-    xpath.select1("string(*[name()='name'])", representedCustodianOrganization)
-  );
+  const name = String(xpath.select1("string(*[name()='name'])", representedCustodianOrganization));
 
   const contactDetails = getContactDetails(
     xpath.select1(

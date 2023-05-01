@@ -23,10 +23,7 @@ export type CTWRequestInit = {
   headers?: Record<string, string>;
 } & Omit<RequestInit, "headers">;
 
-export function ctwFetch(
-  input: RequestInfo | URL,
-  init?: CTWRequestInit
-): Promise<Response> {
+export function ctwFetch(input: RequestInfo | URL, init?: CTWRequestInit): Promise<Response> {
   const headers = init?.headers || {};
   headers["Zus-Request-Source"] = "component-library";
 

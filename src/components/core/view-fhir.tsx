@@ -15,9 +15,7 @@ export function useFHIRDrawer() {
 
   return (name: string, resource: fhir4.Resource) => {
     openDrawer({
-      component: (props) => (
-        <FHIRDrawer name={name} resource={resource} {...props} />
-      ),
+      component: (props) => <FHIRDrawer name={name} resource={resource} {...props} />,
     });
   };
 }
@@ -51,13 +49,7 @@ type FHIRDrawerProps = {
   onClose: () => void;
 };
 
-function FHIRDrawer({
-  resource,
-  isOpen,
-  onClose,
-  className,
-  name,
-}: FHIRDrawerProps) {
+function FHIRDrawer({ resource, isOpen, onClose, className, name }: FHIRDrawerProps) {
   return (
     <Drawer
       className={cx(className, "ctw-view-fhir")}

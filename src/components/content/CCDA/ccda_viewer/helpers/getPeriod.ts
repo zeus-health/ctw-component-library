@@ -7,9 +7,7 @@ export const getPeriod = (xmlData?: Document): Period => {
   if (!xmlData) return {};
 
   const low = String(xpath.select1("string(*[name()='low']/@value)", xmlData));
-  const high = String(
-    xpath.select1("string(*[name()='high']/@value)", xmlData)
-  );
+  const high = String(xpath.select1("string(*[name()='high']/@value)", xmlData));
 
   if (!low && !high) return {};
 
@@ -34,10 +32,7 @@ export const getPeriod = (xmlData?: Document): Period => {
     end = parseToISOString(end);
   }
 
-  if (
-    isBefore(new Date(start), new Date(end)) ||
-    isEqual(new Date(start), new Date(end))
-  ) {
+  if (isBefore(new Date(start), new Date(end)) || isEqual(new Date(start), new Date(end))) {
     return { start, end };
   }
 

@@ -1,15 +1,7 @@
 import { expect } from "@storybook/jest";
-import {
-  userEvent,
-  waitFor,
-  waitForElementToBeRemoved,
-  within,
-} from "@storybook/testing-library";
+import { userEvent, waitFor, waitForElementToBeRemoved, within } from "@storybook/testing-library";
 
-export function conditionTable(
-  canvasElement: HTMLElement,
-  tableEl: HTMLElement
-) {
+export function conditionTable(canvasElement: HTMLElement, tableEl: HTMLElement) {
   const canvas = within(canvasElement);
   const table = within(tableEl);
 
@@ -37,9 +29,7 @@ export function conditionTable(
       if (count === 0) {
         await waitFor(() => expect(tbody).toBeFalsy());
       } else {
-        await waitFor(() =>
-          expect(within(tbody).queryAllByRole("row")).toHaveLength(count)
-        );
+        await waitFor(() => expect(within(tbody).queryAllByRole("row")).toHaveLength(count));
       }
     },
     toHaveRowWithText: (row: number, text: string | RegExp) => {

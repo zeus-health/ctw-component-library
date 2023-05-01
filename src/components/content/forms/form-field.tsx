@@ -30,9 +30,7 @@ export const FormField = ({
   // expect it to be in YYYY-MM-DD format.
 
   const value =
-    inputProps.type === "date"
-      ? formatDateLocalToISO(defaultValue as string)
-      : defaultValue;
+    inputProps.type === "date" ? formatDateLocalToISO(defaultValue as string) : defaultValue;
 
   const getFieldComponent = () => {
     if (render) {
@@ -43,10 +41,7 @@ export const FormField = ({
       return (
         <select
           data-testid={`form-field-${inputProps.name}`}
-          className={cx(
-            { "ctw-error": errors },
-            "ctw-listbox-button ctw-w-full"
-          )}
+          className={cx({ "ctw-error": errors }, "ctw-listbox-button ctw-w-full")}
           name={inputProps.name}
           id={inputProps.name}
           disabled={inputProps.disabled}
@@ -80,7 +75,6 @@ export const FormField = ({
           readOnly={readonly}
           name={inputProps.name}
           id={inputProps.name}
-          data-zus-telemetry-focus={inputProps.name}
         />
       );
     }
@@ -97,7 +91,6 @@ export const FormField = ({
         // would get reset when saving and showing errors as the defaultValue could
         // be undefined and the input gets reset to that (empty).
         {...(value ? { defaultValue: value } : {})}
-        data-zus-telemetry-focus={inputProps.name}
       />
     );
   };

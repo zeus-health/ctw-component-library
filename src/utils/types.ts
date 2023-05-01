@@ -2,8 +2,7 @@ export function isMouseEvent(e: unknown): e is MouseEvent {
   return !!(e && typeof e === "object" && "preventDefault" in e);
 }
 
-export const hasNumber = (str: string | number | undefined) =>
-  /\d/.test(String(str));
+export const hasNumber = (str: string | number | undefined) => /\d/.test(String(str));
 
 // Properly check if the value is an "empty" value.
 // This works better than lodash's isEmpty in that it properly handles

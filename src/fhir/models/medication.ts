@@ -14,8 +14,7 @@ export class MedicationModel extends FHIRModel<Medication> {
   kind = "Medication" as const;
 
   get performer(): string | undefined {
-    return getPerformingOrganization(this.resource, this.includedResources)
-      ?.name;
+    return getPerformingOrganization(this.resource, this.includedResources)?.name;
   }
 
   get status(): string {
@@ -27,10 +26,8 @@ export class MedicationModel extends FHIRModel<Medication> {
       case "MedicationStatement":
         return this.resource.dosage?.[0]?.text;
       case "MedicationAdministration":
-        return new MedicationAdministrationModel(
-          this.resource,
-          this.includedResources
-        ).dosageDisplay;
+        return new MedicationAdministrationModel(this.resource, this.includedResources)
+          .dosageDisplay;
       case "MedicationDispense":
       case "MedicationRequest":
         return codeableConceptLabel(this.resource.dosageInstruction?.[0]);
@@ -42,9 +39,7 @@ export class MedicationModel extends FHIRModel<Medication> {
   get date(): string | undefined {
     switch (this.resource.resourceType) {
       case "MedicationStatement":
-        return (
-          this.resource.dateAsserted ?? this.resource.effectivePeriod?.start
-        );
+        return this.resource.dateAsserted ?? this.resource.effectivePeriod?.start;
       case "MedicationAdministration":
         return this.resource.effectivePeriod?.start;
       case "MedicationDispense":
@@ -52,8 +47,7 @@ export class MedicationModel extends FHIRModel<Medication> {
       case "MedicationRequest":
         return (
           this.resource.authoredOn ??
-          this.resource.dosageInstruction?.[0].timing?.repeat?.boundsPeriod
-            ?.start
+          this.resource.dosageInstruction?.[0].timing?.repeat?.boundsPeriod?.start
         );
       default:
         return "";
@@ -89,18 +83,11 @@ export class MedicationModel extends FHIRModel<Medication> {
   get prescriber(): string | undefined {
     switch (this.resource.resourceType) {
       case "MedicationStatement":
-        return new MedicationStatementModel(
-          this.resource,
-          this.includedResources
-        ).lastPrescriber;
+        return new MedicationStatementModel(this.resource, this.includedResources).lastPrescriber;
       case "MedicationDispense":
-        return new MedicationDispenseModel(
-          this.resource,
-          this.includedResources
-        ).includedPerformer;
+        return new MedicationDispenseModel(this.resource, this.includedResources).includedPerformer;
       case "MedicationRequest":
-        return new MedicationRequestModel(this.resource, this.includedResources)
-          .includedRequester;
+        return new MedicationRequestModel(this.resource, this.includedResources).includedRequester;
       default:
         return undefined;
     }

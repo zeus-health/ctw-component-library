@@ -1,5 +1,4 @@
 import { datadogLogs } from "@datadog/browser-logs";
-import { datadogRum } from "@datadog/browser-rum-slim";
 import { vi } from "vitest";
 import createFetchMock from "vitest-fetch-mock";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
@@ -52,28 +51,20 @@ describe("telemetry", () => {
     expect(await fetches[0].json()).toEqual({
       name: "am_i.or_am_i_not",
       type: "timing",
-      tags: [
-        "service:ctw-component-library",
-        "env:test",
-        "practitioner_id:none",
-        "is_super:false",
-      ],
+      tags: ["service:ctw-component-library", "env:test", "is_super:false"],
       value: 0,
     });
   });
 
   test("Default datadog clients and event listeners", async () => {
     const datadogLogsInitSpy = vi.spyOn(datadogLogs, "init");
-    const datadogRumInitSpy = vi.spyOn(datadogRum, "init");
     const addEventListenerSpy = vi.spyOn(document.body, "addEventListener");
 
     datadogLogsInitSpy.mockImplementation(() => undefined);
-    datadogRumInitSpy.mockImplementation(() => undefined);
     addEventListenerSpy.mockImplementation(() => undefined);
 
     Telemetry.init("test");
     expect(datadogLogsInitSpy).not.toHaveBeenCalled();
-    expect(datadogRumInitSpy).not.toHaveBeenCalled();
     expect(addEventListenerSpy).toHaveBeenCalled();
   });
 });

@@ -1,10 +1,5 @@
 import { z } from "zod";
-import {
-  getStateEnum,
-  phoneNumberRegex,
-  stateCode,
-  zipCodeRegex,
-} from "./validations";
+import { getStateEnum, phoneNumberRegex, stateCode, zipCodeRegex } from "./validations";
 import { FormEntry } from "@/components/core/form/drawer-form-with-fields";
 import { PatientModel } from "@/fhir/models";
 
@@ -15,9 +10,7 @@ export const getRequestData = (
   {
     label: "treating-provider",
     render: () => (
-      <div className="ctw-font-medium">
-        Who is the treating provider for this patient?
-      </div>
+      <div className="ctw-font-medium">Who is the treating provider for this patient?</div>
     ),
   },
   {
@@ -57,10 +50,7 @@ export const getRequestData = (
               <div className="ctw-font-medium">
                 Is the patient information below correct and up-to-date?
               </div>
-              <div>
-                Complete as many fields as possible to increase matching
-                results.
-              </div>
+              <div>Complete as many fields as possible to increase matching results.</div>
             </div>
           ),
         },
@@ -171,13 +161,7 @@ export const savePatientAndRequestHistorySchema = requestHistorySchema.merge(
       .regex(zipCodeRegex, {
         message: "Zip code is invalid.",
       }),
-    phone: z
-      .string()
-      .regex(phoneNumberRegex, { message: "Phone number is invalid." })
-      .optional(),
-    email: z
-      .string()
-      .email({ message: "Email address is invalid." })
-      .optional(),
+    phone: z.string().regex(phoneNumberRegex, { message: "Phone number is invalid." }).optional(),
+    email: z.string().email({ message: "Email address is invalid." }).optional(),
   })
 );

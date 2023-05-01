@@ -8,40 +8,35 @@ export const aggregatedFromMedStatement = {
         {
           url: "https://zusapi.com/lens/extension/aggregatedFrom",
           valueReference: {
-            reference:
-              "MedicationDispense/d88a5a54-8a45-4027-ab9e-233e80fc8899",
+            reference: "MedicationDispense/d88a5a54-8a45-4027-ab9e-233e80fc8899",
             type: "MedicationDispense",
           },
         },
         {
           url: "https://zusapi.com/lens/extension/aggregatedFrom",
           valueReference: {
-            reference:
-              "MedicationDispense/4c19932e-500f-4738-8600-54dec77f343d",
+            reference: "MedicationDispense/4c19932e-500f-4738-8600-54dec77f343d",
             type: "MedicationDispense",
           },
         },
         {
           url: "https://zusapi.com/lens/extension/aggregatedFrom",
           valueReference: {
-            reference:
-              "MedicationDispense/99b5e53c-81b7-4aae-ab20-fe0b7ad7ce55",
+            reference: "MedicationDispense/99b5e53c-81b7-4aae-ab20-fe0b7ad7ce55",
             type: "MedicationDispense",
           },
         },
         {
           url: "https://zusapi.com/lens/extension/aggregatedFrom",
           valueReference: {
-            reference:
-              "MedicationDispense/fa20f4e2-8a10-4555-952c-07d622fdcb50",
+            reference: "MedicationDispense/fa20f4e2-8a10-4555-952c-07d622fdcb50",
             type: "MedicationDispense",
           },
         },
         {
           url: "https://zusapi.com/lens/extension/aggregatedFrom",
           valueReference: {
-            reference:
-              "MedicationDispense/6b16e363-662e-401f-9f3f-5323f81f2149",
+            reference: "MedicationDispense/6b16e363-662e-401f-9f3f-5323f81f2149",
             type: "MedicationDispense",
           },
         },
@@ -55,8 +50,7 @@ export const aggregatedFromMedStatement = {
         {
           url: "https://zusapi.com/lens/extension/aggregatedFrom",
           valueReference: {
-            reference:
-              "MedicationStatement/0e1e097b-eed6-4c1f-b508-314f2fd8ee96",
+            reference: "MedicationStatement/0e1e097b-eed6-4c1f-b508-314f2fd8ee96",
             type: "MedicationStatement",
           },
         },

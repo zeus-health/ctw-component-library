@@ -1,10 +1,6 @@
 import type { FhirResource, MedicationStatement } from "fhir/r4";
 import { useEffect, useState } from "react";
-import {
-  bundleToResourceMap,
-  getIncludedResources,
-  getMergedIncludedResources,
-} from "./bundle";
+import { bundleToResourceMap, getIncludedResources, getMergedIncludedResources } from "./bundle";
 import { getIdentifyingRxNormCode } from "./medication";
 import { MedicationDispenseModel } from "./models";
 import { MedicationRequestModel } from "./models/medication-request";
@@ -86,16 +82,13 @@ function applySearchFiltersToResponse(
 
   if (searchFilters.informationSource) {
     medications = medications.filter(
-      (medication) =>
-        medication.informationSource?.type === searchFilters.informationSource
+      (medication) => medication.informationSource?.type === searchFilters.informationSource
     );
   }
 
   if (searchFilters.informationSourceNot) {
     medications = medications.filter(
-      (medication) =>
-        medication.informationSource?.type !==
-        searchFilters.informationSourceNot
+      (medication) => medication.informationSource?.type !== searchFilters.informationSourceNot
     );
   }
 
@@ -111,21 +104,13 @@ export async function getBuilderMedications(
   const [searchFilters = {}] = keys;
 
   try {
-    const response = await searchBuilderRecords(
-      "MedicationStatement",
-      requestContext,
-      {
-        patientUPID: patient.UPID,
-        _include: "MedicationStatement:medication",
-        ...omitClientFilters(searchFilters),
-      }
-    );
+    const response = await searchBuilderRecords("MedicationStatement", requestContext, {
+      patientUPID: patient.UPID,
+      _include: "MedicationStatement:medication",
+      ...omitClientFilters(searchFilters),
+    });
 
-    const medications = applySearchFiltersToResponse(
-      response,
-      searchFilters,
-      false
-    );
+    const medications = applySearchFiltersToResponse(response, searchFilters, false);
 
     return { bundle: response.bundle, medications };
   } catch (e) {
@@ -141,18 +126,12 @@ export async function getCommonMedicationRequests(
   const [searchFilters = {}] = keys;
 
   try {
-    const { bundle, resources } = await searchCommonRecords(
-      "MedicationRequest",
-      requestContext,
-      {
-        patientUPID: patient.UPID,
-        ...omitClientFilters(searchFilters),
-      }
-    );
+    const { bundle, resources } = await searchCommonRecords("MedicationRequest", requestContext, {
+      patientUPID: patient.UPID,
+      ...omitClientFilters(searchFilters),
+    });
 
-    return resources.map(
-      (r) => new MedicationRequestModel(r, getIncludedResources(bundle))
-    );
+    return resources.map((r) => new MedicationRequestModel(r, getIncludedResources(bundle)));
   } catch (e) {
     throw errorResponse("Failed fetching medication requests for patient", e);
   }
@@ -166,22 +145,13 @@ export async function getCommonMedicationDispenses(
   const [searchFilters = {}] = keys;
 
   try {
-    const { bundle, resources } = await searchCommonRecords(
-      "MedicationDispense",
-      requestContext,
-      {
-        patientUPID: patient.UPID,
-        ...omitClientFilters(searchFilters),
-        _include: [
-          "MedicationRequest:medication",
-          "MedicationDispense:performer",
-        ],
-      }
-    );
+    const { bundle, resources } = await searchCommonRecords("MedicationDispense", requestContext, {
+      patientUPID: patient.UPID,
+      ...omitClientFilters(searchFilters),
+      _include: ["MedicationRequest:medication", "MedicationDispense:performer"],
+    });
 
-    return resources.map(
-      (r) => new MedicationDispenseModel(r, getIncludedResources(bundle))
-    );
+    return resources.map((r) => new MedicationDispenseModel(r, getIncludedResources(bundle)));
   } catch (e) {
     throw errorResponse("Failed fetching medication dispenses for patient", e);
   }
@@ -206,9 +176,7 @@ export async function getMedicationStatements(
       }
     );
 
-    return resources.map(
-      (r) => new MedicationStatementModel(r, getIncludedResources(bundle))
-    );
+    return resources.map((r) => new MedicationStatementModel(r, getIncludedResources(bundle)));
   } catch (e) {
     throw errorResponse("Failed fetching medication statements for patient", e);
   }
@@ -236,11 +204,7 @@ export async function getActiveMedications(
       }
     );
 
-    const medications = applySearchFiltersToResponse(
-      response,
-      searchFilters,
-      true
-    );
+    const medications = applySearchFiltersToResponse(response, searchFilters, true);
 
     sendMetric();
     return { bundle: response.bundle, medications };
@@ -255,9 +219,7 @@ export function filterMedicationsWithNoRxNorms(
   bundle: FhirResource
 ) {
   const resourceMap = bundleToResourceMap(bundle);
-  return medications.filter(
-    (m) => getIdentifyingRxNormCode(m, resourceMap) !== undefined
-  );
+  return medications.filter((m) => getIdentifyingRxNormCode(m, resourceMap) !== undefined);
 }
 
 // Splits medications into those that the builder already knows about ("Provider Medications"),
@@ -270,17 +232,12 @@ export function splitMedications(
   // Get active medications where there does not exist a matching builder owned record.
   const otherProviderMedications = summarizedMedications.filter(
     (medication) =>
-      !builderOwnedMedications.some(
-        (builderMed) => builderMed.rxNorm === medication.rxNorm
-      )
+      !builderOwnedMedications.some((builderMed) => builderMed.rxNorm === medication.rxNorm)
   );
 
   // Get builder owned medications and splash in some data from lens meds if available.
   const builderMedications = builderOwnedMedications.map((m) => {
-    const summarizedMed = find(
-      (a) => a.rxNorm === m.rxNorm,
-      summarizedMedications
-    );
+    const summarizedMed = find((a) => a.rxNorm === m.rxNorm, summarizedMedications);
 
     if (!summarizedMed) {
       return m;
@@ -298,15 +255,12 @@ export function splitMedications(
       LENS_EXTENSION_MEDICATION_LAST_PRESCRIBER,
     ];
 
-    builderMedResource.extension = summarizedMed.resource.extension?.filter(
-      (x) => LENS_MEDICATION_EXTENSIONS.includes(x.url)
+    builderMedResource.extension = summarizedMed.resource.extension?.filter((x) =>
+      LENS_MEDICATION_EXTENSIONS.includes(x.url)
     );
 
     const medHistory = cloneDeep(
-      find(
-        { url: LENS_EXTENSION_AGGREGATED_FROM },
-        summarizedMed.resource.extension
-      )
+      find({ url: LENS_EXTENSION_AGGREGATED_FROM }, summarizedMed.resource.extension)
     );
     if (medHistory) {
       // To avoid confusion about the lens extension (since "aggregated from" doesn't really
@@ -315,11 +269,7 @@ export function splitMedications(
       builderMedResource.extension?.push(medHistory);
     }
 
-    return new MedicationStatementModel(
-      builderMedResource,
-      m.includedResources,
-      m.revIncludes
-    );
+    return new MedicationStatementModel(builderMedResource, m.includedResources, m.revIncludes);
   });
 
   return {
@@ -334,10 +284,7 @@ export function useMedicationHistory(medication?: fhir4.MedicationStatement) {
     : new MedicationStatementModel(medication).aggregatedFrom;
 
   const getRefId = pipe(get("reference"), split("/"), last);
-  const resources = pipe(
-    groupBy(get("type")),
-    mapValues(map(getRefId))
-  )(aggregatedFromReferences);
+  const resources = pipe(groupBy(get("type")), mapValues(map(getRefId)))(aggregatedFromReferences);
 
   return useQueryWithPatient(
     QUERY_KEY_MEDICATION_HISTORY,
@@ -403,9 +350,7 @@ export function useMedicationHistory(medication?: fhir4.MedicationStatement) {
         const medications = sort(
           uniqWith(
             medicationResources,
-            (a, b) =>
-              a.date === b.date &&
-              a.resource.resourceType === b.resource.resourceType
+            (a, b) => a.date === b.date && a.resource.resourceType === b.resource.resourceType
           ),
           "date",
           "desc",
@@ -433,8 +378,7 @@ export function useLastPrescriber(medication?: fhir4.MedicationStatement) {
   const historyQuery = useMedicationHistory(medication);
 
   useEffect(() => {
-    const { includedResources = {}, medications = [] } =
-      historyQuery.data || {};
+    const { includedResources = {}, medications = [] } = historyQuery.data || {};
 
     if (lastPrescriber === undefined && medications.length) {
       const prescriber = pipe(
@@ -471,11 +415,7 @@ function searchWrapper<T extends ResourceTypeString>(
   if (ids.length > 0) {
     return searchAllRecords(resourceType, requestContext, {
       _id: ids.join(","),
-      _include: [
-        `${resourceType}:patient`,
-        `${resourceType}:medication`,
-        ...included,
-      ],
+      _include: [`${resourceType}:patient`, `${resourceType}:medication`, ...included],
       "_include:iterate": "Patient:organization",
       // UPID required as a query param to engage "CPR mode" and provide access to other builder's data.
       // TODO: However, the CPR query will not run correctly if the Zus-Account header is set, thus

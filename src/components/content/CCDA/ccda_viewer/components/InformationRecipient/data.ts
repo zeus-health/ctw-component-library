@@ -42,9 +42,7 @@ export const getInformationRecipientData = (
       };
     }
 
-    const ids = (
-      xpath.select("*[name()='id']", intendedRecipient) as Document[]
-    )
+    const ids = (xpath.select("*[name()='id']", intendedRecipient) as Document[])
       .map(getId)
       .join(", ");
 
@@ -67,21 +65,16 @@ export const getInformationRecipientData = (
         xpath.select1("string(*[name()='name']/node())", receivedOrganization)
       );
 
-      const informationRecipientReceivedOrganizationContactDetails =
-        getContactDetails(
-          xpath.select("*[name()='addr']", receivedOrganization) as Document[],
-          xpath.select(
-            "*[name()='telecom']",
-            receivedOrganization
-          ) as Document[]
-        );
+      const informationRecipientReceivedOrganizationContactDetails = getContactDetails(
+        xpath.select("*[name()='addr']", receivedOrganization) as Document[],
+        xpath.select("*[name()='telecom']", receivedOrganization) as Document[]
+      );
 
       return {
         ...result,
         organization: {
           name: receivedOrganizationName,
-          contactDetails:
-            informationRecipientReceivedOrganizationContactDetails,
+          contactDetails: informationRecipientReceivedOrganizationContactDetails,
         },
       };
     }

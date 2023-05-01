@@ -46,11 +46,7 @@ function mockRequests() {
       if (req.url.searchParams.get("firstparty")) {
         return res(ctx.status(200), ctx.json(patientProviderMedsCache));
       }
-      return res(
-        ctx.delay(750),
-        ctx.status(200),
-        ctx.json(patientOtherProviderMedsCache)
-      );
+      return res(ctx.delay(750), ctx.status(200), ctx.json(patientOtherProviderMedsCache));
     }
   );
 
@@ -62,8 +58,9 @@ function mockRequests() {
         resource: { resourceType: "MedicationStatement" },
       });
       const bundle = await req.json();
-      const newMedication = findMedStatementInBundleFn(bundle.entry)
-        ?.resource as MedicationStatement | undefined;
+      const newMedication = findMedStatementInBundleFn(bundle.entry)?.resource as
+        | MedicationStatement
+        | undefined;
       if (!newMedication) {
         return res(ctx.status(400));
       }
@@ -103,9 +100,7 @@ function mockRequests() {
     "https://api.dev.zusapi.com/forms-data/terminology/dosages",
     (req, res, ctx) => {
       const search = req.url.searchParams.get("display") ?? "";
-      const results = searchDosagesALB.filter(
-        (item) => item.display.indexOf(search) !== -1
-      );
+      const results = searchDosagesALB.filter((item) => item.display.indexOf(search) !== -1);
       return res(
         ctx.status(200),
         ctx.json({
@@ -141,8 +136,7 @@ function mockRequests() {
         search: { mode: "include" },
       });
 
-      patientOtherProviderMedsCache.total =
-        patientOtherProviderMedsCache.entry?.length || 0;
+      patientOtherProviderMedsCache.total = patientOtherProviderMedsCache.entry?.length || 0;
       return res(ctx.status(200), ctx.json(newBasicResource));
     }
   );

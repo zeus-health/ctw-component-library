@@ -39,9 +39,7 @@ export const TableRows = <T extends MinRecordItem>({
   if (records.length === 0) {
     return (
       <TableFullLengthRow colSpan={columns.length}>
-        <span className="ctw-empty-message -ctw-mt-3.5 sm:ctw-mt-0">
-          {emptyMessage}
-        </span>
+        <span className="ctw-empty-message -ctw-mt-3.5 sm:ctw-mt-0">{emptyMessage}</span>
       </TableFullLengthRow>
     );
   }
@@ -56,17 +54,13 @@ export const TableRows = <T extends MinRecordItem>({
             "ctw-group ctw-relative ctw-mx-px",
             isFunction(getRowClassName) ? getRowClassName(record) : "",
             {
-              "ctw-cursor-pointer hover:ctw-bg-bg-lighter":
-                isFunction(handleRowClick),
+              "ctw-cursor-pointer hover:ctw-bg-bg-lighter": isFunction(handleRowClick),
             }
           )}
           key={record.key}
           onClick={({ target }) => {
             // This is for the case where a user clicks area near the button (but not on), we do not want have the onRowClick handler trigger as that will cause confusion to the user.
-            if (
-              target instanceof HTMLElement &&
-              target.querySelectorAll("button").length
-            ) {
+            if (target instanceof HTMLElement && target.querySelectorAll("button").length) {
               return;
             }
 

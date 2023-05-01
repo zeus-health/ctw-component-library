@@ -1,9 +1,6 @@
 import { FHIRModel } from "./fhir-model";
 import { formatDateISOToLocal } from "../formatters";
-import {
-  getIdentifyingRxNormCode,
-  getMedicationDisplayName,
-} from "../medication";
+import { getIdentifyingRxNormCode, getMedicationDisplayName } from "../medication";
 import { PractitionerModel } from "@/fhir/models/practitioner";
 import { findReference } from "@/fhir/resource-helper";
 import { compact } from "@/utils/nodash/fp";
@@ -36,8 +33,7 @@ export class MedicationRequestModel extends FHIRModel<fhir4.MedicationRequest> {
   }
 
   get pharmacy() {
-    const { reference, display } =
-      this.resource.dispenseRequest?.performer || {};
+    const { reference, display } = this.resource.dispenseRequest?.performer || {};
     const organization = findReference(
       "Organization",
       this.resource.contained,
@@ -46,16 +42,8 @@ export class MedicationRequestModel extends FHIRModel<fhir4.MedicationRequest> {
     );
     if (organization) {
       const telecom = organization.telecom?.[0].value;
-      const {
-        city,
-        state,
-        postalCode,
-        text,
-        line = [],
-      } = organization.address?.[0] || {};
-      const cityStatePostal = compact([city, `${state} ${postalCode}`]).join(
-        ", "
-      );
+      const { city, state, postalCode, text, line = [] } = organization.address?.[0] || {};
+      const cityStatePostal = compact([city, `${state} ${postalCode}`]).join(", ");
 
       return {
         telecom,

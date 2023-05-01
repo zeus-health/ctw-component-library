@@ -7,11 +7,7 @@ export type LoadingProps = {
   message?: string;
 };
 
-export const Loading = ({
-  className,
-  iconClass,
-  message = "Loading...",
-}: LoadingProps) => (
+export const Loading = ({ className, iconClass, message = "Loading..." }: LoadingProps) => (
   <div className={cx("ctw-space-x-2", className)}>
     {message && <span className="ctw-text-sm ctw-italic">{message}</span>}
     <Spinner className={iconClass} />

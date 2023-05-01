@@ -22,8 +22,6 @@ export class OperationOutcomeModel extends FHIRModel<fhir4.OperationOutcome> {
 
   // Get the models of each issue in this outcome.
   get issues(): OperationOutcomeIssueModel[] {
-    return this.resource.issue.map(
-      (issue) => new OperationOutcomeIssueModel(issue)
-    );
+    return this.resource.issue.map((issue) => new OperationOutcomeIssueModel(issue));
   }
 }

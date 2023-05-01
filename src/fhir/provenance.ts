@@ -2,10 +2,7 @@ import { Provenance, Resource } from "fhir/r4";
 import { FHIRModel } from "./models/fhir-model";
 import { getUsersPractitionerReference } from "./practitioner";
 import { searchAllRecords } from "./search-helpers";
-import {
-  SYSTEM_PROVENANCE_ACTIVITY_TYPE,
-  SYSTEM_PROVENANCE_AGENT_TYPE,
-} from "./system-urls";
+import { SYSTEM_PROVENANCE_ACTIVITY_TYPE, SYSTEM_PROVENANCE_AGENT_TYPE } from "./system-urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { claimsBuilderName } from "@/utils/auth";
 import { uniq } from "@/utils/nodash";
@@ -90,12 +87,10 @@ export async function searchProvenances<T extends fhir4.Resource>(
 ): Promise<Provenance[]> {
   const target = uniq(models.map((m) => `${m.resourceType}/${m.id}`)).join(",");
 
-  const { resources } = await queryClient.fetchQuery(
-    [QUERY_KEY_PROVENANCE, target],
-    async () =>
-      searchAllRecords("Provenance", requestContext, {
-        target,
-      })
+  const { resources } = await queryClient.fetchQuery([QUERY_KEY_PROVENANCE, target], async () =>
+    searchAllRecords("Provenance", requestContext, {
+      target,
+    })
   );
 
   return resources;

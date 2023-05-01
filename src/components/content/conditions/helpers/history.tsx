@@ -19,9 +19,7 @@ export function useConditionHistory(condition: ConditionModel) {
 }
 
 function getSearchParams(condition: ConditionModel) {
-  const tokens = condition.knownCodings.map(
-    (coding) => `${coding.system}|${coding.code}`
-  );
+  const tokens = condition.knownCodings.map((coding) => `${coding.system}|${coding.code}`);
 
   const searchParams: SearchParams = {
     _include: ["Condition:patient", "Condition:encounter"],
@@ -66,9 +64,7 @@ function getHistoryEntry(condition: ConditionModel): HistoryEntryProps {
     },
     {
       label: "Note",
-      value: condition.notes.length !== 0 && (
-        <NotesList notes={condition.notes} />
-      ),
+      value: condition.notes.length !== 0 && <NotesList notes={condition.notes} />,
     },
     {
       label: "Code",

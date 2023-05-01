@@ -7,9 +7,7 @@ export const applyAllergyFilters = (
   data: fhir4.AllergyIntolerance[],
   includedResources: ResourceMap
 ) => {
-  const allergyModel = data.map(
-    (allergy) => new AllergyModel(allergy, includedResources)
-  );
+  const allergyModel = data.map((allergy) => new AllergyModel(allergy, includedResources));
 
   const sortedByDate = sort(allergyModel, "recordedDate", "desc", true);
 

@@ -3,10 +3,7 @@ import {
   PatientConditionsOutsideProps,
 } from "../conditions/patient-conditions-outside";
 import { PatientConditionsOutsideBadge } from "../conditions/patient-conditions-outside-badge";
-import {
-  PatientMedications,
-  PatientMedicationsProps,
-} from "../medications/patient-medications";
+import { PatientMedications, PatientMedicationsProps } from "../medications/patient-medications";
 import {
   PatientMedicationsOutside,
   PatientMedicationsOutsideProps,
@@ -50,10 +47,7 @@ import { BetaLabel } from "@/components/core/beta-label";
 import { TabGroupItem } from "@/components/core/tab-group/tab-group";
 import i18next from "@/i18n";
 
-export type ZusAggregatedProfileTabs = Record<
-  ZAPResourceName,
-  (props: object) => TabGroupItem
->;
+export type ZusAggregatedProfileTabs = Record<ZAPResourceName, (props: object) => TabGroupItem>;
 
 export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
   allergies: (props: PatientAllergiesProps = {}) => ({
@@ -84,9 +78,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     key: "conditions-outside",
     display: () => (
       <div className="ctw-space-x-2">
-        <span className="ctw-capitalize">
-          {i18next.t("zap.tabs.conditionsOutside")}
-        </span>
+        <span className="ctw-capitalize">{i18next.t("zap.tabs.conditionsOutside")}</span>
         <PatientConditionsOutsideBadge />
       </div>
     ),
@@ -127,9 +119,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     key: "medications-outside",
     display: () => (
       <div className="ctw-space-x-2">
-        <span className="ctw-capitalize">
-          {i18next.t("zap.tabs.medicationsOutside")}
-        </span>
+        <span className="ctw-capitalize">{i18next.t("zap.tabs.medicationsOutside")}</span>
         <PatientMedicationsOutsideBadge />
       </div>
     ),

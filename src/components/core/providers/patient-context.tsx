@@ -9,6 +9,4 @@ export type PatientState = {
   onPatientSave?: (data: PatientFormData) => Promise<void>;
 };
 
-export const PatientContext = createContext<PatientState | undefined>(
-  undefined
-);
+export const PatientContext = createContext<PatientState | undefined>(undefined);

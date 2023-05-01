@@ -60,12 +60,7 @@ export const ConditionsAndMedications: StoryObj<Props> = {
   decorators,
   parameters,
   args: {
-    resources: [
-      "conditions",
-      "conditions-outside",
-      "medications",
-      "medications-outside",
-    ],
+    resources: ["conditions", "conditions-outside", "medications", "medications-outside"],
   },
 };
 

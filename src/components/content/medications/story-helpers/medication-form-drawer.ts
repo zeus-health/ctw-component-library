@@ -13,8 +13,7 @@ export async function medicationFormDrawer(canvasElement: HTMLElement) {
       userEvent.selectOptions(drawer.getByTestId("form-field-status"), status),
     instructions: (instructions: string) =>
       userEvent.type(drawer.getByLabelText("Instructions"), instructions),
-    cancel: () =>
-      userEvent.click(drawer.getByRole("button", { name: "Cancel" })),
+    cancel: () => userEvent.click(drawer.getByRole("button", { name: "Cancel" })),
     save: async () => {
       userEvent.click(drawer.getByRole("button", { name: "Save" }));
     },

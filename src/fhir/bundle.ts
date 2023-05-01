@@ -1,9 +1,4 @@
-import type {
-  ResourceArrayMap,
-  ResourceMap,
-  ResourceType,
-  ResourceTypeString,
-} from "./types";
+import type { ResourceArrayMap, ResourceMap, ResourceType, ResourceTypeString } from "./types";
 import type { FhirResource } from "fhir-kit-client";
 import { last } from "@/utils/nodash";
 
@@ -78,11 +73,7 @@ export function getIncludedBasics(bundle: FhirResource): ResourceArrayMap {
 
   bundle.entry.forEach((entry) => {
     const { resource, search } = entry;
-    if (
-      !resource ||
-      search?.mode !== "include" ||
-      resource.resourceType !== "Basic"
-    ) {
+    if (!resource || search?.mode !== "include" || resource.resourceType !== "Basic") {
       return;
     }
 
@@ -99,11 +90,6 @@ export function getIncludedBasics(bundle: FhirResource): ResourceArrayMap {
 }
 
 // Merges the included resources maps from multiple bundles into one.
-export function getMergedIncludedResources(
-  bundles: FhirResource[]
-): ResourceMap {
-  return Object.assign(
-    {},
-    ...bundles.map((bundle) => getIncludedResources(bundle))
-  ) as ResourceMap;
+export function getMergedIncludedResources(bundles: FhirResource[]): ResourceMap {
+  return Object.assign({}, ...bundles.map((bundle) => getIncludedResources(bundle))) as ResourceMap;
 }

@@ -1,5 +1,25 @@
 # ctw-component-library
 
+## 1.5.0
+
+### Minor Changes
+
+- e55af4f9: Removed RUM. No longer tracking interactions when someone focuses a form field
+
+## 1.4.2
+
+### Patch Changes
+
+- 025918eb: Fix filtering logic for documentReferences in the table.
+- 88300b89: Fixed word break on beta label
+
+## 1.4.1
+
+### Patch Changes
+
+- bcf027f8: Fix date formatting and sorting on patient history requests
+- 75146f0e: Update endpoint to schedule patient history jobs to newer JSON compliant endpoint.
+
 ## 1.4.0
 
 ### Minor Changes

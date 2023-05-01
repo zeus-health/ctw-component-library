@@ -1,8 +1,5 @@
 import { faEye } from "@fortawesome/free-solid-svg-icons";
-import {
-  FilterChangeEvent,
-  FilterItem,
-} from "@/components/core/filter-bar/filter-bar-types";
+import { FilterChangeEvent, FilterItem } from "@/components/core/filter-bar/filter-bar-types";
 import { DiagnosticReportModel } from "@/fhir/models";
 import { uniqueValues } from "@/utils/filters";
 
