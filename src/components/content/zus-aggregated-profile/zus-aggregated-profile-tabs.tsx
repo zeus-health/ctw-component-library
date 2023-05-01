@@ -18,6 +18,7 @@ import {
   PatientObservationsOutsideProps,
 } from "../observations/patient-observations-outside";
 import { PatientObservationsOutsideBadge } from "../observations/patient-observations-outside-badge";
+import { PatientTimelineV2, PatientTimelineV2Props } from "../timeline-2.0/patient-timeline";
 import {
   PatientAllergies,
   PatientAllergiesProps,
@@ -38,10 +39,6 @@ import {
   PatientImmunizations,
   PatientImmunizationsProps,
 } from "@/components/content/immunizations/patient-immunizations";
-import {
-  PatientTimeline,
-  PatientTimelineProps,
-} from "@/components/content/timeline/patient-timeline";
 import { ZAPResourceName } from "@/components/content/zus-aggregated-profile/zus-aggregated-profile";
 import { BetaLabel } from "@/components/core/beta-label";
 import { TabGroupItem } from "@/components/core/tab-group/tab-group";
@@ -138,15 +135,14 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     render: () => <PatientObservationsOutside {...props} />,
   }),
 
-  timelines: (props: PatientTimelineProps = {}) => ({
-    key: "timelines",
+  timeline: (props: PatientTimelineV2Props = {}) => ({
+    key: "timeline",
     getPanelClassName: () => "ctw-pt-5",
     display: () => (
       <div className="ctw-space-x-1">
-        <span className="ctw-capitalize">encounter timeline</span>
-        <BetaLabel />
+        <span className="ctw-capitalize">Timeline</span>
       </div>
     ),
-    render: () => <PatientTimeline {...props} />,
+    render: () => <PatientTimelineV2 {...props} />,
   }),
 };

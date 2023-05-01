@@ -1,4 +1,5 @@
 import cx from "classnames";
+import { useRef } from "react";
 import { defaultTimelineFilters, timelineFilters } from "./helpers/filters";
 import {
   useDispenseRequestDetailsDrawer,
@@ -19,6 +20,7 @@ export type PatientTimelineV2Props = {
 
 export function PatientTimelineV2({ className }: PatientTimelineV2Props) {
   const timelineEventsQuery = useTimelineEvents();
+  const containerRef = useRef<HTMLDivElement>(null);
   const { featureFlags } = useCTW();
   const { data, setFilters, setSort } = useFilteredSortedData({
     defaultFilters: defaultTimelineFilters,
@@ -30,7 +32,7 @@ export function PatientTimelineV2({ className }: PatientTimelineV2Props) {
   const openDispenseRequestDetails = useDispenseRequestDetailsDrawer();
 
   return (
-    <div className={cx(className, "ctw-scrollable-pass-through-height")}>
+    <div className={cx(className, "ctw-scrollable-pass-through-height")} ref={containerRef}>
       <ResourceTableActions
         filterOptions={{
           onChange: setFilters,
