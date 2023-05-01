@@ -1,5 +1,15 @@
 # ctw-component-library
 
+## 1.6.0
+
+### Minor Changes
+
+- 2c61eeed: Convert to all patient history requests to new JSON compliant api endpoints. Fix bug where not all patient history results came back due to looping over patients first instead of messages. UI fixes for patient history table.
+
+### Patch Changes
+
+- c4abc11f: Add metrics for loading components, crashed components and record counts in the ZAP.
+
 ## 1.5.1
 
 ### Patch Changes
