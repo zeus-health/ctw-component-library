@@ -1,5 +1,5 @@
 import cx from "classnames";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { patientImmunizationsColumns } from "./patient-immunizations-columns";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { CodingList } from "@/components/core/coding-list";
@@ -10,6 +10,7 @@ import { ViewFHIR } from "@/components/core/view-fhir";
 import { usePatientImmunizations } from "@/fhir/immunizations";
 import { ImmunizationModel } from "@/fhir/models/immunization";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
+import { Telemetry } from "@/utils/telemetry";
 
 export type PatientImmunizationsProps = {
   className?: string;
@@ -23,12 +24,18 @@ function PatientImmunizationsComponent({ className }: PatientImmunizationsProps)
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const { featureFlags } = useCTW();
-  const patientImmunizationsQuery = usePatientImmunizations();
+  const query = usePatientImmunizations();
   const openDetails = useResourceDetailsDrawer({
     header: (m) => m.description,
     details: immunizationData,
     getSourceDocument: true,
   });
+
+  useEffect(() => {
+    if (!query.isLoading && query.data) {
+      Telemetry.reportZAPRecordCount("immunization", query.data.length);
+    }
+  }, [query.isLoading, query.data]);
 
   return (
     <div
@@ -45,8 +52,8 @@ function PatientImmunizationsComponent({ className }: PatientImmunizationsProps)
       <Table
         RowActions={featureFlags?.enableViewFhirButton ? viewRecordFHIR : undefined}
         stacked={breakpoints.sm}
-        isLoading={patientImmunizationsQuery.isLoading}
-        records={patientImmunizationsQuery.data ?? []}
+        isLoading={query.isLoading}
+        records={query.data ?? []}
         columns={patientImmunizationsColumns}
         handleRowClick={openDetails}
       />

@@ -1,5 +1,5 @@
 import cx from "classnames";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { patientDocumentColumns } from "./patient-document-columns";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { withErrorBoundary } from "@/components/core/error-boundary";
@@ -8,6 +8,7 @@ import { Table } from "@/components/core/table/table";
 import { usePatientDocument } from "@/fhir/document";
 import { DocumentModel } from "@/fhir/models/document";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
+import { Telemetry } from "@/utils/telemetry";
 
 export type PatientDocumentProps = {
   className?: string;
@@ -16,15 +17,20 @@ export type PatientDocumentProps = {
 function PatientDocumentsComponent({ className }: PatientDocumentProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
-  const patientDocumentQuery = usePatientDocument();
+  const query = usePatientDocument();
   const { featureFlags } = useCTW();
   const openDetails = useResourceDetailsDrawer({
     header: (m) => `${m.dateCreated} - ${m.title}`,
     details: documentData,
   });
 
-  const document = patientDocumentQuery.data ?? [];
-  const { isLoading } = patientDocumentQuery;
+  const document = query.data ?? [];
+
+  useEffect(() => {
+    if (!query.isLoading && query.data) {
+      Telemetry.reportZAPRecordCount("documents", query.data.length);
+    }
+  }, [query.isLoading, query.data]);
 
   return (
     <div
@@ -40,7 +46,7 @@ function PatientDocumentsComponent({ className }: PatientDocumentProps) {
     >
       <Table
         stacked={breakpoints.sm}
-        isLoading={isLoading}
+        isLoading={query.isLoading}
         records={document}
         columns={patientDocumentColumns(featureFlags?.enableViewFhirButton)}
         handleRowClick={openDetails}

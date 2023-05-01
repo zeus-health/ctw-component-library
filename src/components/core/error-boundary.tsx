@@ -40,6 +40,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     const { props } = this;
+    Telemetry.countMetric(`component.${props.name}.failure`);
     Telemetry.logger.error(
       error.message,
       pickBy({
