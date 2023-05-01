@@ -10,7 +10,7 @@ export type PatientHistoryServiceMessage = {
   status: PatientRefreshHistoryMessageStatus;
 };
 
-export type PatientHistoryJob = {
+export type PatientHistoryJobResponseJobData = {
   type: string;
   id: string;
   attributes: {
@@ -35,6 +35,6 @@ export type PatientHistoryJob = {
 };
 
 export type PatientHistoryJobResponse = {
-  data: PatientHistoryJob[];
+  data: PatientHistoryJobResponseJobData[];
   links: { self: string; prev?: string; next?: string };
 };

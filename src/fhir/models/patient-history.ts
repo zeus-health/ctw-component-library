@@ -1,16 +1,16 @@
 import { format } from "date-fns";
 import { PatientModel } from "./patient";
 import { formatISODateStringToDate } from "../formatters";
-import { PatientHistoryJob } from "@/services/patient-history/patient-history-types";
+import { PatientHistoryJobResponseJobData } from "@/services/patient-history/patient-history-types";
 
 export class PatientHistoryRequestModel {
   kind = "PatientHistory" as const;
 
-  historyInfo: PatientHistoryJob | undefined = undefined;
+  historyInfo: PatientHistoryJobResponseJobData | undefined = undefined;
 
   patient: PatientModel;
 
-  constructor(patient: PatientModel, historyInfo: PatientHistoryJob | undefined) {
+  constructor(patient: PatientModel, historyInfo: PatientHistoryJobResponseJobData | undefined) {
     this.patient = patient;
     this.historyInfo = historyInfo;
   }
