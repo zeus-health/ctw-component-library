@@ -32,8 +32,8 @@ function PatientImmunizationsComponent({ className }: PatientImmunizationsProps)
   });
 
   useEffect(() => {
-    if (!query.isLoading) {
-      Telemetry.reportZAPRecordCount("immunization", query.data?.length);
+    if (!query.isLoading && query.data) {
+      Telemetry.reportZAPRecordCount("immunization", query.data.length);
     }
   }, [query.isLoading, query.data]);
 
