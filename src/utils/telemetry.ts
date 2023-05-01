@@ -1,5 +1,4 @@
 import { datadogLogs } from "@datadog/browser-logs";
-import { datadogRum } from "@datadog/browser-rum-slim";
 import jwtDecode from "jwt-decode";
 import packageJson from "../../package.json";
 import { getMetricsBaseUrl } from "@/api/urls";
@@ -67,7 +66,7 @@ export class Telemetry {
     return isInitialized;
   }
 
-  private static rumLoggingIsEnabled = false;
+  private static datadogLoggingEnabled = false;
 
   static logger = datadogLogs.logger;
 
@@ -88,31 +87,17 @@ export class Telemetry {
     }
   }
 
-  static init(environment: string, allowDataDogRumAndLogging = false) {
-    this.rumLoggingIsEnabled = allowDataDogRumAndLogging;
+  static init(environment: string, allowDataDogLogging = false) {
+    this.datadogLoggingEnabled = allowDataDogLogging;
     this.setEnv(environment);
 
     if (this.telemetryIsAvailable) {
       return;
     }
 
-    // Turning on RUM and Logging is conditional. However, the event handlers
+    // Turning on Datadog Logging is conditional. However, the event handlers
     // that explicitly send internal /report/metrics to ctw are not optional.
-    if (allowDataDogRumAndLogging) {
-      datadogRum.init({
-        ...(isLocalDevelopment ? devDatadogConfig : prodDatadogConfig),
-        allowedTracingUrls: [], // No allowed tracing urls
-        defaultPrivacyLevel: "mask",
-        env: this.environment,
-        sessionReplaySampleRate: 20,
-        sessionSampleRate: 100,
-        site: "datadoghq.com",
-        trackLongTasks: true,
-        trackResources: false,
-        trackUserInteractions: false,
-        trackViewsManually: true, // url path names are useless to cwl-cl
-        version: packageJson.version,
-      });
+    if (allowDataDogLogging) {
       datadogLogs.init({
         ...(isLocalDevelopment ? devDatadogConfig : prodDatadogConfig),
         env: this.environment,
@@ -156,9 +141,8 @@ export class Telemetry {
   }
 
   static setBuilder(builderId?: string) {
-    if (this.rumLoggingIsEnabled) {
+    if (this.datadogLoggingEnabled) {
       datadogLogs.setGlobalContextProperty("builderId", builderId);
-      datadogRum.setGlobalContextProperty("builderId", builderId);
     }
   }
 
@@ -176,21 +160,18 @@ export class Telemetry {
         patientId: user[AUTH_PATIENT_ID],
         isSuperOrg: user[AUTH_IS_SUPER_ORG],
       };
-      if (this.rumLoggingIsEnabled) {
+      if (this.datadogLoggingEnabled) {
         datadogLogs.setUser(decodedUser);
-        datadogRum.setUser(decodedUser);
       }
     }
   }
 
   static clearUser() {
     datadogLogs.setUser({});
-    datadogRum.setUser({});
   }
 
   static trackView(viewName: string) {
     this.countMetric(`component.${viewName}.loaded`);
-    datadogRum.startView(viewName);
   }
 
   static logError(error: Error, overrideMessage?: string): Error {
@@ -210,7 +191,7 @@ export class Telemetry {
 
   static trackInteraction(eventType: string, namespace: string, action: string) {
     // We log this event with namespace breadcrumbs if allowed
-    if (this.telemetryIsAvailable && this.rumLoggingIsEnabled) {
+    if (this.telemetryIsAvailable && this.datadogLoggingEnabled) {
       this.logger.log(`${eventType} event: ${namespace} > ${action}`, {
         eventType,
         action,
@@ -329,7 +310,6 @@ export class Telemetry {
       "service:ctw-component-library",
       `env:${this.environment}`,
       user[AUTH_BUILDER_NAME] ? `builder_name:${user[AUTH_BUILDER_NAME]}` : undefined,
-      `practitioner_id:${user[AUTH_PRACTITIONER_ID] || "none"}`,
       `is_super:${user[AUTH_IS_SUPER_ORG] || "false"}`,
       ...additionalTags,
     ]);
