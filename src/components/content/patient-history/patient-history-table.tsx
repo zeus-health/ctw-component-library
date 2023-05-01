@@ -1,5 +1,6 @@
 import "./patient-history-table.scss";
 
+
 import cx from "classnames";
 import { useEffect, useState } from "react";
 import { patientHistoryFilters } from "./helpers/filters";
@@ -169,9 +170,6 @@ const mapSourceToSourceLabel = (serviceName: ServiceName) => {
 const RenderCorrectStatusLabel = ({ status }: { status: PatientRefreshHistoryMessageStatus }) => {
   switch (status) {
     case "initialize":
-      return (
-        <StatusLabel status={status} className="ctw-bg-caution-light ctw-text-caution-heading" />
-      );
     case "in_progress":
       return (
         <StatusLabel status={status} className="ctw-bg-caution-light ctw-text-caution-heading" />
@@ -179,7 +177,6 @@ const RenderCorrectStatusLabel = ({ status }: { status: PatientRefreshHistoryMes
     case "done":
       return <StatusLabel status={status} className="ctw-bg-success-light ctw-text-success-dark" />;
     case "error":
-      return <StatusLabel status={status} className="ctw-bg-error-light ctw-text-error-text" />;
     case "done_with_errors":
       return <StatusLabel status={status} className="ctw-bg-error-light ctw-text-error-text" />;
     default:
