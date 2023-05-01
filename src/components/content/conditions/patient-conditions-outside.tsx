@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useAddConditionForm } from "./helpers/modal-hooks";
 import { PatientConditionsBase } from "./helpers/patient-conditions-base";
 import { PatientHistoryAction } from "../patient-history/patient-history-action";
@@ -11,7 +10,6 @@ import { toggleArchive } from "@/fhir/basic";
 import { usePatientConditionsOutside } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models";
 import { QUERY_KEY_OTHER_PROVIDER_CONDITIONS } from "@/utils/query-keys";
-import { Telemetry } from "@/utils/telemetry";
 
 export type PatientConditionsOutsideProps = {
   className?: string;
@@ -43,12 +41,6 @@ const PatientConditionsOutsideComponent = ({
       }
     />
   );
-
-  useEffect(() => {
-    if (!query.isLoading) {
-      Telemetry.reportZAPRecordCount("outside_conditions", query.data.length);
-    }
-  }, [query.isLoading, query.data]);
 
   return (
     <PatientConditionsBase

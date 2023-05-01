@@ -1,5 +1,4 @@
 import cx from "classnames";
-import { useEffect } from "react";
 import {
   useAddConditionForm,
   useConfirmDeleteCondition,
@@ -11,7 +10,6 @@ import { RowActionsProps } from "@/components/core/table/table";
 import { usePatientConditions } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models";
 import { useBaseTranslations } from "@/i18n";
-import { Telemetry } from "@/utils/telemetry";
 
 export type PatientConditionsProps = {
   className?: cx.Argument;
@@ -22,12 +20,6 @@ const PatientConditionsComponent = ({ className, readOnly = false }: PatientCond
   const query = usePatientConditions();
   const showAddConditionForm = useAddConditionForm();
   const { t } = useBaseTranslations();
-
-  useEffect(() => {
-    if (!query.isLoading && query.data) {
-      Telemetry.reportZAPRecordCount("builder_conditions", query.data.length);
-    }
-  }, [query.isLoading, query.data]);
 
   const action = !readOnly && (
     <button type="button" className="ctw-btn-primary" onClick={() => showAddConditionForm()}>
