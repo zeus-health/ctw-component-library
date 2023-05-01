@@ -59,4 +59,4 @@ export type Filter =
       type: "select";
     };
 
-export type FilterChangeEvent = Record<string, Filter>;
+export type FilterChangeEvent = Record<string, Filter | undefined>;

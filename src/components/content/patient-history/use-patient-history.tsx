@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import { useEffect, useState } from "react";
 import { PatientHistoryStatus } from "./patient-history-message-status";
 import { PatientHistoryRequestDrawer } from "../patient-history-request-drawer";
@@ -11,8 +10,8 @@ import {
 } from "@/components/core/providers/patient-provider";
 import { PatientModel } from "@/fhir/models";
 import {
+  PatientHistoryJobResponse,
   PatientHistoryServiceMessage,
-  PatientRefreshHistoryMessage,
   PatientRefreshHistoryMessageStatus,
 } from "@/services/patient-history/patient-history-types";
 import { errorResponse } from "@/utils/errors";
@@ -22,11 +21,10 @@ import { ctwFetch } from "@/utils/request";
 import { Telemetry } from "@/utils/telemetry";
 
 type PatientHistoryDetails = Partial<{
-  lastRetrievedAt: string;
   status: PatientRefreshHistoryMessageStatus;
-  dateCreated: string;
-  serviceMessages: PatientHistoryServiceMessage[];
-}>;
+  createdAt: string;
+  providers: PatientHistoryServiceMessage[];
+}> & { lastRetrievedAt: string };
 
 export function usePatientHistory(includePatientDemographicsForm?: boolean) {
   const { openDrawer } = useDrawer();
@@ -39,7 +37,7 @@ export function usePatientHistory(includePatientDemographicsForm?: boolean) {
   useEffect(() => {
     async function patientHistoryRequest() {
       if (!patientHistoryInformation.isLoading) {
-        setPatientHistoryDetails(patientHistoryInformation.data);
+        setPatientHistoryDetails(patientHistoryInformation.data as PatientHistoryDetails);
       }
     }
 
@@ -63,9 +61,8 @@ export function usePatientHistory(includePatientDemographicsForm?: boolean) {
             header={
               <>
                 <PatientHistoryStatus
-                  messages={patientHistoryDetails?.serviceMessages}
-                  status={patientHistoryDetails?.status as PatientRefreshHistoryMessageStatus}
-                  date={patientHistoryDetails?.dateCreated}
+                  status={patientHistoryDetails?.status}
+                  date={patientHistoryDetails?.createdAt}
                 />
                 <div className="ctw-pt-0 ctw-text-base">
                   Request patient clinical history from 70K+ providers across the nation. No changes
@@ -80,32 +77,48 @@ export function usePatientHistory(includePatientDemographicsForm?: boolean) {
       });
     },
     lastRetrievedAt: patientHistoryDetails?.lastRetrievedAt,
-    latestServiceMessages: patientHistoryDetails?.serviceMessages,
+    latestProviderJobs: patientHistoryDetails?.providers,
     lastStatus: patientHistoryDetails?.status,
-    dateCreatedAt: patientHistoryDetails?.dateCreated,
+    createdAt: patientHistoryDetails?.createdAt,
     isLoading: patientHistoryInformation.isLoading,
   };
 }
 
-export async function getBuilderRefreshHistoryMessages(
-  requestContext: CTWRequestContext,
-  patientId?: string
-) {
-  const baseUrl = new URL(`${getZusApiBaseUrl(requestContext.env)}/patient-history/messages?`);
+export type GetBuilderRefreshHistoryMessagesParams = {
+  requestContext: CTWRequestContext;
+  count?: number;
+  offset?: number;
+  patientId?: string;
+  status?: string;
+};
+
+export async function getBuilderRefreshHistoryMessages({
+  requestContext,
+  count = 50,
+  offset = 0,
+  patientId,
+  status,
+}: GetBuilderRefreshHistoryMessagesParams) {
+  const baseUrl = new URL(`${getZusApiBaseUrl(requestContext.env)}/patient-history/jobs?`);
 
   const paramsObj = omitBy(
     {
-      "builder-id": requestContext.contextBuilderId ? `${requestContext.contextBuilderId}` : "",
-      "patient-id": patientId ? `${patientId}` : "",
+      "page[count]": String(count),
+      "page[offset]": offset ? String(offset + count) : String(offset),
+      "filter[builder-id]": requestContext.contextBuilderId
+        ? `${requestContext.contextBuilderId}`
+        : "",
+      "filter[patient-id]": patientId ? `${patientId}` : "",
+      "filter[status]": status ? `${status}` : "",
     },
     (value) => !value
   );
 
   const params = new URLSearchParams([...Object.entries(paramsObj)]).toString();
-  const endpointUrl = `${baseUrl}${params}`;
+  const endpointUrl = new URL(`${baseUrl}${decodeURIComponent(params)}`);
 
   try {
-    const response = await ctwFetch(endpointUrl, {
+    const response = await ctwFetch(endpointUrl.href, {
       headers: {
         Authorization: `Bearer ${requestContext.authToken}`,
         ...(requestContext.contextBuilderId && {
@@ -126,21 +139,27 @@ export function usePatientHistoryDetails() {
     [],
     async (requestContext, patient) => {
       try {
-        const response = await getBuilderRefreshHistoryMessages(requestContext, patient.id);
+        const response = (await getBuilderRefreshHistoryMessages({
+          requestContext,
+          patientId: patient.id,
+        })) as PatientHistoryJobResponse;
 
-        const latestDone = find(response.data, {
-          _messages: [
-            {
-              status: "done",
-            },
-          ],
-        }) as PatientRefreshHistoryMessage | undefined;
+        const latestDone = find(response.data, (item) =>
+          item.attributes.providers.every((provider) => provider.status === "done")
+        );
+
+        const latestStatus = response.data[0]?.attributes.providers.filter(
+          (provider) => provider.status !== "done"
+        );
 
         return {
-          lastRetrievedAt: latestDone?._createdAt,
-          status: response.data[0]?.status,
-          dateCreated: response.data[0]?._createdAt,
-          serviceMessages: response.data[0]?._messages,
+          lastRetrievedAt: latestDone?.attributes.targetDate ?? latestDone?.attributes.createdAt,
+          status:
+            latestStatus.length > 0
+              ? latestStatus[0].status
+              : response.data[0]?.attributes.providers[0].status,
+          createdAt: response.data[0].attributes.createdAt,
+          providers: response.data[0]?.attributes.providers,
         };
       } catch (e) {
         Telemetry.logError(e as Error, "Failed fetching patient history details");
