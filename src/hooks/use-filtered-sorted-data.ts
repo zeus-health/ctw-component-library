@@ -7,7 +7,7 @@ import { applySorts } from "@/utils/sort";
 
 export type UseFilteredSortedDataProps<T extends object> = {
   records?: T[];
-  defaultSort: SortOption<T>;
+  defaultSort?: SortOption<T>;
   defaultFilters?: FilterChangeEvent;
   defaultView?: ViewOption;
 };
@@ -28,9 +28,13 @@ export function useFilteredSortedData<T extends object>({
       ...Object.values(filters),
       ...(viewOption?.filters ?? []),
     ]);
-    const filteredAndSortedData = applySorts(filteredData, sortOption.sorts);
+
+    const filteredAndSortedData =
+      defaultSort && sortOption
+        ? applySorts(filteredData, sortOption.sorts)
+        : filteredData;
     setData(filteredAndSortedData);
-  }, [filters, sortOption, records, viewOption]);
+  }, [filters, sortOption, records, viewOption, defaultSort]);
 
   return {
     setFilters,

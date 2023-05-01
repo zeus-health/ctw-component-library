@@ -1,13 +1,14 @@
-import { Tab } from "@headlessui/react";
-import cx from "classnames";
+import "./tab-group.scss";
+
 import { ReactNode, useRef, useState } from "react";
+
+import cx from "classnames";
+import { ListBox } from "@/components/core/list-box/list-box";
 import { PatientHistoryStatus } from "@/components/content/patient-history/patient-history-message-status";
+import { Tab } from "@headlessui/react";
+import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { usePatientHistory } from "@/components/content/patient-history/use-patient-history";
 import { withErrorBoundary } from "@/components/core/error-boundary";
-import { ListBox } from "@/components/core/list-box/list-box";
-import { useBreakpoints } from "@/hooks/use-breakpoints";
-import "./tab-group.scss";
-import { PatientRefreshHistoryMessageStatus } from "@/services/patient-history/patient-history-types";
 
 export type TabGroupProps = {
   children?: ReactNode;
@@ -64,8 +65,7 @@ function TabGroupComponent({
       className={cx(className, "ctw-tab-group ctw-scrollable-pass-through-height ctw-w-full")}
     >
       <PatientHistoryStatus
-        messages={patientHistoryDetails.latestServiceMessages}
-        status={patientHistoryDetails.lastStatus as PatientRefreshHistoryMessageStatus}
+        status={patientHistoryDetails.lastStatus}
         date={patientHistoryDetails.lastRetrievedAt}
       />
       <Tab.Group selectedIndex={selectedTabIndex} onChange={handleOnChange}>

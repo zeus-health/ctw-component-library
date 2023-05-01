@@ -50,6 +50,7 @@ export const TailwindTheme = {
     success: {
       main: "#10B981",
       light: "#D1FAE5",
+      dark: "#065F46",
     },
     caution: {
       main: "#F59E0B",

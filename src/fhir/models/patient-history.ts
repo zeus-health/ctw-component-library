@@ -1,43 +1,37 @@
+import { format } from "date-fns";
+import { formatISODateStringToDate } from "../formatters";
+import { PatientHistoryJob } from "@/services/patient-history/patient-history-types";
 import { PatientModel } from "./patient";
-import { formatDate, formatISODateStringToDate } from "../formatters";
-import { PatientRefreshHistoryMessage } from "@/services/patient-history/patient-history-types";
 
 export class PatientHistoryRequestModel {
   kind = "PatientHistory" as const;
 
-  historyInfo: PatientRefreshHistoryMessage | undefined = undefined;
+  historyInfo: PatientHistoryJob | undefined = undefined;
 
   patient: PatientModel;
 
-  constructor(patient: PatientModel, historyInfo: PatientRefreshHistoryMessage) {
+  constructor(patient: PatientModel, historyInfo: PatientHistoryJob | undefined) {
     this.patient = patient;
-    this.historyInfo = historyInfo as PatientRefreshHistoryMessage;
+    this.historyInfo = historyInfo;
   }
 
-  get messages() {
-    // eslint-disable-next-line no-underscore-dangle
-    return this.historyInfo?._messages;
+  get providers() {
+    return this.historyInfo?.attributes.providers;
   }
 
   get key() {
-    // eslint-disable-next-line no-underscore-dangle
-    return this.historyInfo?.uuid || "";
+    return this.historyInfo?.id || "";
   }
 
   get lastRetrievedAt() {
-    // eslint-disable-next-line no-underscore-dangle
-    return formatISODateStringToDate(this.historyInfo?._lastUpdated);
+    return formatISODateStringToDate(this.historyInfo?.attributes.createdAt);
   }
 
   get createdAt() {
-    return formatDate(
-      // eslint-disable-next-line no-underscore-dangle
-      this.historyInfo?._createdAt,
-      "M/d/yy h:mm a"
-    );
-  }
+    if (!this.historyInfo?.attributes.createdAt) {
+      return undefined;
+    }
 
-  get retrievedStatus() {
-    return this.historyInfo?.status;
+    return format(new Date(Number(this.historyInfo.attributes.createdAt) * 1000), "M/d/yy h:mm a");
   }
 }
