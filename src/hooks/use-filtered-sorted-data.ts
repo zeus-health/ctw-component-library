@@ -3,11 +3,12 @@ import { ViewOption } from "@/components/content/resource/helpers/view-button";
 import { FilterChangeEvent } from "@/components/core/filter-bar/filter-bar-types";
 import { SortOption } from "@/components/core/sort-button/sort-button";
 import { applyFilters } from "@/utils/filters";
+import { compact } from "@/utils/nodash";
 import { applySorts } from "@/utils/sort";
 
 export type UseFilteredSortedDataProps<T extends object> = {
   records?: T[];
-  defaultSort: SortOption<T>;
+  defaultSort?: SortOption<T>;
   defaultFilters?: FilterChangeEvent;
   defaultView?: ViewOption;
 };
@@ -25,12 +26,14 @@ export function useFilteredSortedData<T extends object>({
 
   useEffect(() => {
     const filteredData = applyFilters(records ?? [], [
-      ...Object.values(filters),
+      ...compact(Object.values(filters)),
       ...(viewOption?.filters ?? []),
     ]);
-    const filteredAndSortedData = applySorts(filteredData, sortOption.sorts);
+
+    const filteredAndSortedData =
+      defaultSort && sortOption ? applySorts(filteredData, sortOption.sorts) : filteredData;
     setData(filteredAndSortedData);
-  }, [filters, sortOption, records, viewOption]);
+  }, [filters, sortOption, records, viewOption, defaultSort]);
 
   return {
     setFilters,

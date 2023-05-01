@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 1.5.1
+
+### Patch Changes
+
+- 79d0cceb: Export beta label component
+
+## 1.5.0
+
+### Minor Changes
+
+- e55af4f9: Removed RUM. No longer tracking interactions when someone focuses a form field
+
 ## 1.4.2
 
 ### Patch Changes
