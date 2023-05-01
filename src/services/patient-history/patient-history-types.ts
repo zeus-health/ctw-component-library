@@ -11,7 +11,7 @@ export type PatientHistoryServiceMessage = {
 };
 
 export type PatientHistoryJob = {
-  type: "patient-history/jobs";
+  type: string;
   id: string;
   attributes: {
     createdAt: string;
