@@ -43,12 +43,7 @@ export const PatientHistoryTable = withErrorBoundary(
     } = useBuilderPatientHistoryList(pageSize, currentPage - 1, status);
 
     const onFilterChange = (e: FilterChangeEvent) => {
-      if (Object.entries(e).length === 0) {
-        setStatus("");
-        return;
-      }
-
-      setStatus(e.status.selected as string);
+      setStatus(String(e.status?.selected) || "");
     };
 
     // Here we are setting the total and patients only when we know that useQuery
