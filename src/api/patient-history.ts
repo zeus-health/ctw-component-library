@@ -1,6 +1,5 @@
 import { getZusProxyApiBaseUrl } from "./urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { PatientHistoryCreateJobBody } from "@/services/patient-history/patient-history-types";
 import { ctwFetch } from "@/utils/request";
 import { Telemetry } from "@/utils/telemetry";
 
@@ -22,7 +21,7 @@ export const schedulePatientHistory = async (
     // If patientID is empty, just pass any non-identifying string in url.
   )}/patient-history/jobs`;
 
-  const body: PatientHistoryCreateJobBody = {
+  const body = {
     data: {
       type: "patient-history/jobs",
       attributes: {

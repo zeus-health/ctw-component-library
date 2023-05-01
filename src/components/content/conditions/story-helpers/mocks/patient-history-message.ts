@@ -1,25 +1,32 @@
 export const patientHistoryMessage = {
-  data: {
-    0: {
-      status: "done",
-      messageUuid: "41da155d-f10e-4402-b076-652546610e6e",
-      initialData: {
-        patientId: "260db817-62e7-4429-986d-86126cb8c6b7",
+  data: [
+    {
+      type: "patient-history/jobs",
+      id: "2ffbe3f8-817e-44a5-b2dd-09aee727501e",
+      attributes: {
+        createdAt: "1682695506",
+        requestConsent: true,
+        practitioner: {
+          npi: "1568511573",
+          name: "Test",
+          role: "doctor",
+        },
+        providers: [
+          {
+            service: "commonwell",
+            status: "done",
+          },
+          {
+            service: "surescripts",
+            status: "done",
+          },
+        ],
       },
-      _serviceMessage: [
-        {
-          serviceUrl: "https://api.dev.zusapi.com/medical-history",
-          service: "CommonWell",
-          id: "e4ec64fe-e873-4810-a09b-8057b6ca2614",
+      relationships: {
+        patient: {
+          data: { type: "fhir/Patient", id: "168a6cf7-8fc2-4b85-8323-6d9828a534e9" },
         },
-        {
-          serviceUrl: "https://api.dev.zusapi.com/medication-history",
-          service: "SureScripts",
-          id: "4a359f4a490c4a41b16ad666ea365ea2",
-        },
-      ],
-      _errors: [],
-      _createdAt: "2022-11-28T14:29:25.509Z",
+      },
     },
-  },
+  ],
 };
