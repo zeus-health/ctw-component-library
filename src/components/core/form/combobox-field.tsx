@@ -145,7 +145,7 @@ const ComboboxOptions = ({
   }
 
   if (query.length < 2) {
-    return <ComboboxOption option={{ value: "", label: "Pleae type at least two characters" }} />;
+    return <ComboboxOption option={{ value: "", label: "Please type at least two characters" }} />;
   }
 
   if (options.length === 0) {
