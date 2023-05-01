@@ -27,8 +27,8 @@ export function PatientCareTeam({ className }: PatientCareTeamProps) {
   const patientCareTeamQuery = usePatientCareTeam();
 
   useEffect(() => {
-    if (!patientCareTeamQuery.isLoading) {
-      Telemetry.reportZAPRecordCount("care_team", patientCareTeamQuery.data?.length);
+    if (!patientCareTeamQuery.isLoading && patientCareTeamQuery.data) {
+      Telemetry.reportZAPRecordCount("care_team", patientCareTeamQuery.data.length);
     }
   }, [patientCareTeamQuery.isLoading, patientCareTeamQuery.data]);
 

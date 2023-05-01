@@ -40,8 +40,8 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
   const { isLoading } = patientAllergiesQuery;
 
   useEffect(() => {
-    if (!isLoading) {
-      Telemetry.reportZAPRecordCount("allergies", patientAllergiesQuery.data?.length);
+    if (!isLoading && patientAllergiesQuery.data) {
+      Telemetry.reportZAPRecordCount("allergies", patientAllergiesQuery.data.length);
     }
   }, [isLoading, patientAllergiesQuery.data]);
 
