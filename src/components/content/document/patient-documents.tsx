@@ -27,8 +27,8 @@ function PatientDocumentsComponent({ className }: PatientDocumentProps) {
   const document = query.data ?? [];
 
   useEffect(() => {
-    if (!query.isLoading) {
-      Telemetry.reportZAPRecordCount("documents", query.data?.length);
+    if (!query.isLoading && query.data) {
+      Telemetry.reportZAPRecordCount("documents", query.data.length);
     }
   }, [query.isLoading, query.data]);
 
