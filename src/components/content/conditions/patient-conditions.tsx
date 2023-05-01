@@ -24,8 +24,8 @@ const PatientConditionsComponent = ({ className, readOnly = false }: PatientCond
   const { t } = useBaseTranslations();
 
   useEffect(() => {
-    if (!query.isLoading) {
-      Telemetry.reportZAPRecordCount("builder_conditions", query.data?.length);
+    if (!query.isLoading && query.data) {
+      Telemetry.reportZAPRecordCount("builder_conditions", query.data.length);
     }
   }, [query.isLoading, query.data]);
 
