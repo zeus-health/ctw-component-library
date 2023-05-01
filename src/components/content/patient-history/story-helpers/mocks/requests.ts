@@ -18,7 +18,7 @@ function mockRequests() {
   );
 
   const mockPatientHistoryGet = rest.get(
-    "https://api.dev.zusapi.com/patient-history/messages",
+    "https://api.dev.zusapi.com/patient-history/jobs",
     (_, res, ctx) => res(ctx.status(200), ctx.json(patientHistory))
   );
 

@@ -94,7 +94,7 @@ export type GetBuilderRefreshHistoryMessagesParams = {
 
 export async function getBuilderRefreshHistoryMessages({
   requestContext,
-  count = 8,
+  count = 50,
   offset = 0,
   patientId,
   status,
