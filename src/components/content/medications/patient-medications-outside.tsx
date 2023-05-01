@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useAddMedicationForm } from "./helpers/add-new-med-drawer";
 import { medicationFilters } from "./helpers/filters";
 import { PatientMedicationsBase } from "./helpers/patient-medications-base";
@@ -8,6 +9,7 @@ import { MedicationStatementModel } from "@/fhir/models";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { useCTW } from "@/index";
 import { QUERY_KEY_OTHER_PROVIDER_MEDICATIONS } from "@/utils/query-keys";
+import { Telemetry } from "@/utils/telemetry";
 
 export type PatientMedicationsOutsideProps = {
   className?: string;
@@ -23,6 +25,12 @@ const PatientMedicationsOutsideComponent = ({
   onOpenHistoryDrawer,
 }: PatientMedicationsOutsideProps) => {
   const { otherProviderMedications, isLoading } = useQueryAllPatientMedications();
+
+  useEffect(() => {
+    if (!isLoading) {
+      Telemetry.reportZAPRecordCount("outside_medications", otherProviderMedications.length);
+    }
+  }, [isLoading, otherProviderMedications]);
 
   return (
     <PatientMedicationsBase

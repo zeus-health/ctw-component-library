@@ -1,5 +1,5 @@
 import cx from "classnames";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { patientCareTeamColumns } from "./patient-careteam-columns";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { useCTW } from "@/components/core/providers/ctw-provider";
@@ -7,6 +7,7 @@ import { Table } from "@/components/core/table/table";
 import { usePatientCareTeam } from "@/fhir/care-team";
 import { CareTeamPractitionerModel } from "@/fhir/models/careteam-practitioner";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
+import { Telemetry } from "@/utils/telemetry";
 
 export type PatientCareTeamProps = {
   className?: string;
@@ -24,6 +25,12 @@ export function PatientCareTeam({ className }: PatientCareTeamProps) {
   const breakpoints = useBreakpoints(containerRef);
   const { featureFlags } = useCTW();
   const patientCareTeamQuery = usePatientCareTeam();
+
+  useEffect(() => {
+    if (!patientCareTeamQuery.isLoading) {
+      Telemetry.reportZAPRecordCount("care_team", patientCareTeamQuery.data?.length);
+    }
+  }, [patientCareTeamQuery.isLoading, patientCareTeamQuery.data]);
 
   const openDetails = useResourceDetailsDrawer({
     header: (m) => m.practitionerName,
