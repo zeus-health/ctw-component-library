@@ -37,7 +37,12 @@ export function DrawerProvider({ children }: ProviderProps) {
     <DrawerContext.Provider value={state}>
       {drawerProps.component({
         isOpen,
-        onClose: () => setIsOpen(false),
+        onClose: () => {
+          setIsOpen(false);
+          setProps({
+            component: dummyChild,
+          });
+        },
       })}
       {children}
     </DrawerContext.Provider>
