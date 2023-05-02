@@ -185,7 +185,7 @@ const RenderCorrectStatusLabel = ({ status }: { status: PatientRefreshHistoryMes
 };
 
 const StatusLabel = ({ status, className }: { status: string; className?: cx.Argument }) => (
-  <div className={cx("ctw-w-fit ctw-rounded-2xl ctw-px-3	ctw-py-1 ctw-font-medium", className)}>
+  <div className={cx("ctw-w-fit ctw-rounded-2xl ctw-px-3 ctw-py-1 ctw-font-medium", className)}>
     {status.split("_").join(" ")}
   </div>
 );
