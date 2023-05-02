@@ -50,7 +50,7 @@ export async function recordProfileAction<T extends fhir4.Resource>(
     Telemetry.reportActionFailure(profileAction);
     throw new Error(`Failed to ${profileAction} resource with id of ${model.id}`);
   } else {
-    Telemetry.reportActionFailure(profileAction);
+    Telemetry.reportActionSuccess(profileAction);
   }
 }
 
