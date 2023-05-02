@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 1.7.0
+
+### Minor Changes
+
+- b4c1056e: Revert metric updates.
+
+## 1.6.1
+
+### Patch Changes
+
+- 88aad92b: Fix bug where in_progress and done_with_errors don't filter correctly in patient history table.
+
 ## 1.6.0
 
 ### Minor Changes

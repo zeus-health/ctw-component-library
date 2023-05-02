@@ -1,5 +1,5 @@
 import cx from "classnames";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { allergyFilter, defaultAllergyFilters } from "./helpers/filters";
 import { useAllergiesHistory } from "./helpers/history";
 import { allergySortOptions, defaultAllergySort } from "./helpers/sort";
@@ -13,7 +13,6 @@ import { usePatientAllergies } from "@/fhir/allergies";
 import { AllergyModel } from "@/fhir/models/allergies";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { capitalize } from "@/utils/nodash";
-import { Telemetry } from "@/utils/telemetry";
 
 export type PatientAllergiesProps = {
   className?: string;
@@ -38,12 +37,6 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
 
   // Get our allergies.
   const { isLoading } = patientAllergiesQuery;
-
-  useEffect(() => {
-    if (!isLoading && patientAllergiesQuery.data) {
-      Telemetry.reportZAPRecordCount("allergies", patientAllergiesQuery.data.length);
-    }
-  }, [isLoading, patientAllergiesQuery.data]);
 
   return (
     <div

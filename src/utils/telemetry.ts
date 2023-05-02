@@ -336,10 +336,6 @@ export class Telemetry {
     }
   }
 
-  static reportZAPRecordCount(name: string, value = 1, tags: string[] = []) {
-    this.countMetric(`records.${name}`, value, tags);
-  }
-
   static timeMetric(metric: string, tags: string[] = []) {
     const start = new Date().getTime();
 
