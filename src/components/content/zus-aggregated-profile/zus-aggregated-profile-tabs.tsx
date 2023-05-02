@@ -141,6 +141,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     display: () => (
       <div className="ctw-space-x-1">
         <span className="ctw-capitalize">Timeline</span>
+        <BetaLabel />
       </div>
     ),
     render: () => <PatientTimelineV2 {...props} />,

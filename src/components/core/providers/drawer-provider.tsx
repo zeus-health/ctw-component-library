@@ -1,4 +1,4 @@
-import { ReactNode, useContext, useEffect, useMemo, useState } from "react";
+import { ReactNode, useContext, useMemo, useState } from "react";
 import { DrawerContext, DrawerState, OpenDrawerProps } from "./drawer-context";
 
 interface ProviderProps {
@@ -20,7 +20,6 @@ export function DrawerProvider({ children }: ProviderProps) {
     () => ({
       openDrawer: (props: OpenDrawerProps) => {
         setProps(props);
-
         // Ensure isOpen starts as false and then async set it to true.
         // This ensures the drawer is added first before isOpen is set to
         // true which fixes an issue around initial opening animation/transition.
@@ -33,15 +32,6 @@ export function DrawerProvider({ children }: ProviderProps) {
 
     []
   );
-
-  useEffect(() => {
-    if (!isOpen) {
-      // Reset the props when the drawer is closed.
-      setProps({
-        component: dummyChild,
-      });
-    }
-  }, [isOpen]);
 
   return (
     <DrawerContext.Provider value={state}>
