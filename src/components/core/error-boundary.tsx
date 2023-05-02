@@ -89,7 +89,7 @@ export class ErrorBoundary extends Component<Props, State> {
 export function withErrorBoundary<T>(
   wrappedComponent: (props: T) => ReactNode,
   name?: string,
-  trackView = false
+  trackView = true
 ) {
   return (props: T) => (
     <ErrorBoundary name={name} trackView={trackView}>
