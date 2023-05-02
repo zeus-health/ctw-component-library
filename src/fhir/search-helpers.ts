@@ -204,19 +204,28 @@ export async function searchSummaryRecords<T extends ResourceTypeString>(
 export async function searchCommonRecords<T extends ResourceTypeString>(
   resourceType: T,
   requestContext: CTWRequestContext,
-  searchParams?: SearchParams,
-  postQueryFilter?: (r: ResourceType<T>) => boolean
+  searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
-  const tags = !postQueryFilter ? excludeTagsinPatientRecordSearch(resourceType) : [];
-  const params = mergeParams(searchParams, tags.length ? { "_tag:not": tags } : {});
+  const params = searchParams || {};
 
   const results = await searchAllRecords(resourceType, requestContext, params);
 
-  if (postQueryFilter) {
-    const filteredResults = results.resources.filter(postQueryFilter);
-    return { bundle: results.bundle, resources: filteredResults, total: results.total };
-  }
-  return results;
+  // filter out anything we don't want
+  const filteredResources = results.resources.filter((resource) => {
+    // no tags are allowed through (should be an edge case)
+    if (!resource.meta || !resource.meta.tag) {
+      return true;
+    }
+
+    const hasExcludableTag =
+      resource.meta.tag.filter((tag) =>
+        excludeTagsinPatientRecordSearch(resourceType).includes(`${tag.system}|${tag.code}`)
+      ).length > 0;
+
+    return !hasExcludableTag;
+  });
+
+  return { ...results, resources: filteredResources };
 }
 
 // Returns a new filers object with every value that was an array,

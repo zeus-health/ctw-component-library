@@ -19,7 +19,6 @@ export type UseHistoryProps<T extends ResourceTypeString, M extends FHIRModel<Re
   valuesToDedupeOn: (m: M) => unknown;
   getSearchParams: (m: M) => SearchParams;
   getHistoryEntry: (m: M) => HistoryEntryProps;
-  postQueryFilter?: (r: ResourceType<T>) => boolean;
 };
 
 export function useHistory<T extends ResourceTypeString, M extends FHIRModel<ResourceType<T>>>({
@@ -30,7 +29,6 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
   valuesToDedupeOn,
   getSearchParams,
   getHistoryEntry,
-  postQueryFilter,
 }: UseHistoryProps<T, M>) {
   return useQueryWithPatient(
     queryKey,
@@ -45,8 +43,7 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
         const { resources, bundle } = await searchCommonRecords(
           resourceType,
           requestContext,
-          searchParams,
-          postQueryFilter
+          searchParams
         );
         const includedResources = getIncludedResources(bundle);
 
