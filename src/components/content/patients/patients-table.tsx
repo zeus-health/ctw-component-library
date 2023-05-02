@@ -1,3 +1,5 @@
+import "./patients-table.scss";
+
 import type { TableColumn } from "@/components/core/table/table-helpers";
 import type { PatientModel } from "@/fhir/models/patient";
 import { SearchIcon } from "@heroicons/react/solid";
@@ -13,7 +15,6 @@ import { MinRecordItem } from "@/components/core/table/table-helpers";
 import { getBuilderPatientsList } from "@/fhir/patient-helper";
 import { debounce } from "@/utils/nodash";
 import { QUERY_KEY_PATIENTS_LIST } from "@/utils/query-keys";
-import "./patients-table.scss";
 
 export type PatientsTableProps = {
   className?: cx.Argument;

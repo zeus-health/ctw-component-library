@@ -1,5 +1,33 @@
 # ctw-component-library
 
+## 1.7.0
+
+### Minor Changes
+
+- b4c1056e: Revert metric updates.
+
+## 1.6.1
+
+### Patch Changes
+
+- 88aad92b: Fix bug where in_progress and done_with_errors don't filter correctly in patient history table.
+
+## 1.6.0
+
+### Minor Changes
+
+- 2c61eeed: Convert to all patient history requests to new JSON compliant api endpoints. Fix bug where not all patient history results came back due to looping over patients first instead of messages. UI fixes for patient history table.
+
+### Patch Changes
+
+- c4abc11f: Add metrics for loading components, crashed components and record counts in the ZAP.
+
+## 1.5.1
+
+### Patch Changes
+
+- 79d0cceb: Export beta label component
+
 ## 1.5.0
 
 ### Minor Changes

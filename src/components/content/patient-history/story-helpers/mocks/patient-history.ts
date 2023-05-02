@@ -1,23 +1,32 @@
 export const patientHistory = {
   data: [
     {
-      uuid: "9b872994-973c-4b68-a0b0-2cf05829527d",
-      status: "error",
-      initialData: {
-        patientId: "61266ccb-6493-4044-92c3-bb9ea7604e8c",
+      type: "patient-history/jobs",
+      id: "2ffbe3f8-817e-44a5-b2dd-09aee727501e",
+      attributes: {
+        createdAt: "1682695506",
+        requestConsent: true,
+        practitioner: {
+          npi: "1568511573",
+          name: "Test",
+          role: "doctor",
+        },
+        providers: [
+          {
+            service: "commonwell",
+            status: "done",
+          },
+          {
+            service: "surescripts",
+            status: "done",
+          },
+        ],
       },
-      _messages: [
-        {
-          service: "commonwell",
-          status: "error",
+      relationships: {
+        patient: {
+          data: { type: "fhir/Patient", id: "168a6cf7-8fc2-4b85-8323-6d9828a534e9" },
         },
-        {
-          service: "surescripts",
-          status: "Unknown",
-        },
-      ],
-      _lastUpdated: "2023-01-20T19:12:24.632118005Z",
-      _createdAt: "2023-01-11T15:49:36.682430633Z",
+      },
     },
   ],
 };

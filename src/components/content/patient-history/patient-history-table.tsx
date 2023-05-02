@@ -1,16 +1,20 @@
-import { SearchIcon } from "@heroicons/react/outline";
+import "./patient-history-table.scss";
+
 import cx from "classnames";
 import { useEffect, useState } from "react";
+import { patientHistoryFilters } from "./helpers/filters";
 import { useBuilderPatientHistoryList } from "./use-builder-patient-history-list";
 import { TableOptionProps } from "../patients/patients-table";
+import { ResourceTableActions } from "../resource/resource-table-actions";
 import { withErrorBoundary } from "@/components/core/error-boundary";
-import { Pagination } from "@/components/core/pagination/pagination";
+import { FilterChangeEvent } from "@/components/core/filter-bar/filter-bar-types";
+import { SimplePagination } from "@/components/core/pagination/simple-pagination";
 import { Table } from "@/components/core/table/table";
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { PatientModel } from "@/fhir/models";
 import { PatientHistoryRequestModel } from "@/fhir/models/patient-history";
 import { CTWBox } from "@/index";
-import "./patient-history-table.scss";
+import { PatientRefreshHistoryMessageStatus } from "@/services/patient-history/patient-history-types";
 
 export type PatientsHistoryTableProps = {
   className?: cx.Argument;
@@ -19,29 +23,38 @@ export type PatientsHistoryTableProps = {
   title?: string;
 } & TableOptionProps<PatientModel>;
 
+export type ServiceName = "commonwell" | "surescripts";
+
 export const PatientHistoryTable = withErrorBoundary(
   ({
     className,
     handleRowClick,
-    pageSize = 20,
+    pageSize = 10,
     title = "Patient History Request",
   }: PatientsHistoryTableProps) => {
     const [currentPage, setCurrentPage] = useState(1);
-    const [total, setTotal] = useState(0);
     const [patients, setPatients] = useState<PatientHistoryRequestModel[]>([]);
+    const [status, setStatus] = useState<string>();
 
     const {
-      data: { patients: responsePatients, total: responseTotal } = {},
+      data: { patients: responsePatients, total: responseTotal, hasNext } = {},
       isFetching,
       isError,
-    } = useBuilderPatientHistoryList(pageSize, currentPage - 1);
+    } = useBuilderPatientHistoryList(pageSize, currentPage - 1, status);
+
+    const onFilterChange = (e: FilterChangeEvent) => {
+      if (e.status?.selected && typeof e.status.selected === "string") {
+        setStatus(e.status.selected.split(" ").join("_"));
+      } else {
+        setStatus(undefined);
+      }
+    };
 
     // Here we are setting the total and patients only when we know that useQuery
     // isn't fetching. This will prevent empty intermediate states where there
     // is no data because the value of `usePatientsTable()` hasn't settled yet.
     useEffect(() => {
       if (!isFetching && responsePatients) {
-        setTotal(responseTotal ?? 0);
         setPatients(responsePatients);
       }
     }, [responsePatients, responseTotal, isError, isFetching]);
@@ -49,7 +62,6 @@ export const PatientHistoryTable = withErrorBoundary(
     // This resets our state when there is an error fetching patients from ODS.
     useEffect(() => {
       if (isError) {
-        setTotal(0);
         setPatients([]);
       }
     }, [isError, isFetching]);
@@ -59,19 +71,14 @@ export const PatientHistoryTable = withErrorBoundary(
         className={cx("ctw-patients-table", className)}
         data-zus-telemetry-namespace="PatientsTable"
       >
-        <CTWBox.Heading title={title}>
-          <div className="ctw-relative">
-            <div className="ctw-search-icon-wrapper">
-              <SearchIcon className="ctw-search-icon" />
-            </div>
-            <input
-              type="text"
-              className="ctw-patients-table-search"
-              placeholder="Search"
-              name="searchPatientName"
-            />
-          </div>
-        </CTWBox.Heading>
+        <CTWBox.Heading title={title} />
+        <ResourceTableActions
+          filterOptions={{
+            onChange: onFilterChange,
+            filters: patientHistoryFilters(),
+          }}
+          className="ctw-ml-2"
+        />
         <div className="ctw-overflow-hidden">
           <Table
             records={patients}
@@ -80,12 +87,10 @@ export const PatientHistoryTable = withErrorBoundary(
             handleRowClick={handleRowClick}
             hidePagination
           >
-            <Pagination
-              setCurrentPage={setCurrentPage}
-              total={total}
+            <SimplePagination
               currentPage={currentPage}
-              pageSize={pageSize}
-              isLoading={isFetching}
+              setCurrentPage={setCurrentPage}
+              hasNext={hasNext}
             />
           </Table>
         </div>
@@ -97,33 +102,47 @@ export const PatientHistoryTable = withErrorBoundary(
 
 const columns: TableColumn<PatientHistoryRequestModel>[] = [
   {
+    title: "Last Queried",
+    render: (data) => <div>{data.createdAt}</div>,
+  },
+  {
     title: "Name",
     render: (data) => <PatientNameColumn data={data} />,
   },
   {
-    title: "Initiated",
-    render: (data) => <div>{data.createdAt}</div>,
+    title: "Source",
+    render: (data) => (
+      <div className="ctw-space-y-2">
+        {data.providers?.map((provider) => (
+          <div key={`${data.historyInfo?.id}-${provider.service}`}>
+            <div className="ctw-w-fit  ctw-py-1	ctw-capitalize">
+              {mapSourceToSourceLabel(provider.service as ServiceName)}
+            </div>
+          </div>
+        ))}
+      </div>
+    ),
   },
   {
     title: "Status",
     render: (data) => (
-      <>
-        {data.messages?.map((message) => (
-          <div className="ctw-status-column" key={`${data.historyInfo?.uuid}-${message.service}`}>
-            <div className="ctw-capitalize">{message.service}</div>
-            <div>-</div>
-            <div>{message.status}</div>
+      <div className="ctw-space-y-2">
+        {data.providers?.map((provider) => (
+          <div key={`${data.key}-${provider.service}`}>
+            <div className="ctw-capitalize">
+              <RenderCorrectStatusLabel status={provider.status} />
+            </div>
           </div>
         ))}
-      </>
+      </div>
     ),
   },
 ];
 
 const PatientNameColumn = ({ data }: { data: PatientHistoryRequestModel }) => (
   <div className="ctw-flex ctw-items-center">
-    <div className="ctw-ml-4">
-      <div className="ctw-flex ctw-font-medium">
+    <div>
+      <div className="ctw-flex ctw-space-x-1 ctw-font-medium">
         <div className="ctw-max-w-xs">{data.patient.fullName}</div>
         {data.patient.resource.gender && (
           <div className="ctw-uppercase">({data.patient.resource.gender[0]})</div>
@@ -133,5 +152,39 @@ const PatientNameColumn = ({ data }: { data: PatientHistoryRequestModel }) => (
         {data.patient.dob} ({data.patient.age})
       </div>
     </div>
+  </div>
+);
+
+const mapSourceToSourceLabel = (serviceName: ServiceName) => {
+  switch (serviceName.toLowerCase()) {
+    case "commonwell":
+      return "EHR Network";
+    case "surescripts":
+      return "Medication History";
+    default:
+      return serviceName;
+  }
+};
+
+const RenderCorrectStatusLabel = ({ status }: { status: PatientRefreshHistoryMessageStatus }) => {
+  switch (status) {
+    case "initialize":
+    case "in_progress":
+      return (
+        <StatusLabel status={status} className="ctw-bg-caution-light ctw-text-caution-heading" />
+      );
+    case "done":
+      return <StatusLabel status={status} className="ctw-bg-success-light ctw-text-success-dark" />;
+    case "error":
+    case "done_with_errors":
+      return <StatusLabel status={status} className="ctw-bg-error-light ctw-text-error-text" />;
+    default:
+      return <StatusLabel status={status} />;
+  }
+};
+
+const StatusLabel = ({ status, className }: { status: string; className?: cx.Argument }) => (
+  <div className={cx("ctw-w-fit ctw-rounded-2xl ctw-px-3 ctw-py-1 ctw-font-medium", className)}>
+    {status.split("_").join(" ")}
   </div>
 );

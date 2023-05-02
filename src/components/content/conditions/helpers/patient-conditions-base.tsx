@@ -1,3 +1,5 @@
+import "./patient-conditions.scss";
+
 import cx from "classnames";
 import { ReactElement } from "react";
 import { patientConditionsColumns } from "./columns";
@@ -9,7 +11,6 @@ import {
   ResourceTableActions,
   ResourceTableActionsProps,
 } from "../../resource/resource-table-actions";
-import "./patient-conditions.scss";
 import { ConditionModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 

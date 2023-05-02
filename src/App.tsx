@@ -1,7 +1,5 @@
-import type { ReactNode } from "react";
-import { Auth0Provider } from "@auth0/auth0-react";
-import { ErrorBoundary } from "./error-boundary";
-import { SecuredApp } from "@/SecuredApp";
+import "./App.css";
+
 import {
   CTWProvider,
   PatientProvider,
@@ -9,8 +7,12 @@ import {
   PatientTimelineV2,
   ZusAggregatedProfile,
 } from ".";
-import "./App.css";
+
+import { Auth0Provider } from "@auth0/auth0-react";
+import { ErrorBoundary } from "./error-boundary";
 import { PatientHistoryTable } from "./components/content/patient-history/patient-history-table";
+import type { ReactNode } from "react";
+import { SecuredApp } from "@/SecuredApp";
 
 const {
   VITE_SYSTEM_URL,

@@ -2,31 +2,30 @@ import { getBuilderRefreshHistoryMessages } from "./use-patient-history";
 import { useQueryWithCTW } from "@/components/core/providers/ctw-provider";
 import { PatientHistoryRequestModel } from "@/fhir/models/patient-history";
 import { getBuilderPatientsListByIdentifier } from "@/fhir/patient-helper";
-import { PatientHistoryResponse } from "@/services/patient-history/patient-history-types";
+import { PatientHistoryJobResponse } from "@/services/patient-history/patient-history-types";
 import { compact, uniq } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_HISTORY_LIST } from "@/utils/query-keys";
-import { sort } from "@/utils/sort";
 import { Telemetry } from "@/utils/telemetry";
 
-export function useBuilderPatientHistoryList(pageSize: number, pageOffset: number) {
+export function useBuilderPatientHistoryList(
+  pageSize: number,
+  pageOffset: number,
+  status?: string
+) {
   return useQueryWithCTW(
     QUERY_KEY_PATIENT_HISTORY_LIST,
-    [pageSize, pageOffset],
+    [pageSize, pageOffset, status],
     async (requestContext) => {
       try {
-        const response = (await getBuilderRefreshHistoryMessages(
-          requestContext
-        )) as PatientHistoryResponse;
-
-        const start = pageOffset * pageSize;
-        const end = start + pageSize;
-        const patientHistoryRequests = sort(response.data, "_createdAt", "desc", true).slice(
-          start,
-          end
-        );
+        const response = (await getBuilderRefreshHistoryMessages({
+          requestContext,
+          count: pageSize,
+          offset: pageOffset,
+          status,
+        })) as PatientHistoryJobResponse;
 
         const patientsIds = uniq(
-          compact(patientHistoryRequests.map((message) => message.initialData.patientId))
+          compact(response.data.map((job) => job.relationships.patient.data.id))
         );
 
         if (!patientsIds.length) {
@@ -39,18 +38,18 @@ export function useBuilderPatientHistoryList(pageSize: number, pageOffset: numbe
           patientsIds
         );
 
-        const patientHistoryRequestsWithPatientData = compact(
-          patientHistoryRequests.map((m) => {
-            const matchingPatient = patientData.patients.find(
-              (p) => p.id === m.initialData.patientId
-            );
-            return matchingPatient ? new PatientHistoryRequestModel(matchingPatient, m) : undefined;
-          })
-        );
+        const patientHistoryPatients = response.data.map((job) => {
+          const matchingPatient = patientData.patients.filter(
+            (patient) => patient.id === job.relationships.patient.data.id
+          );
+
+          return new PatientHistoryRequestModel(matchingPatient[0], job);
+        });
 
         return {
+          hasNext: !!response.links.next,
           total: response.data.length,
-          patients: patientHistoryRequestsWithPatientData,
+          patients: patientHistoryPatients,
         };
       } catch (e) {
         Telemetry.logError(e as Error, "Failed fetching patient history patients.");
