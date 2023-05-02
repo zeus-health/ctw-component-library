@@ -1,5 +1,6 @@
 import { datadogLogs } from "@datadog/browser-logs";
 import jwtDecode from "jwt-decode";
+import { IsEnvValid } from "..";
 import packageJson from "../../package.json";
 import { getMetricsBaseUrl } from "@/api/urls";
 import { FhirError, fhirErrorResponse } from "@/fhir/errors";
@@ -248,11 +249,11 @@ export class Telemetry {
     value: number,
     additionalTags: string[] = []
   ) {
-    // TODO - bail of env is no good?
-
+    // if running locally or we cannot determine correct environment
     if (
-      process.env.NODE_ENV !== "test" &&
-      ["http://localhost:3000", "http://127.0.0.1:3000"].includes(window.location.origin)
+      (process.env.NODE_ENV !== "test" &&
+        ["http://localhost:3000", "http://127.0.0.1:3000"].includes(window.location.origin)) ||
+      !IsEnvValid(this.environment)
     ) {
       console.log(`Metric: ${type}, ${metric}, ${value}`);
       return;

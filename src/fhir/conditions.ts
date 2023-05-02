@@ -65,7 +65,7 @@ export function getNewCondition(patientId: string) {
   return getAddConditionWithDefaults(newCondition);
 }
 
-export function usePatientConditions() {
+export function usePatientBuilderConditions() {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_CONDITIONS,
     [],
@@ -78,8 +78,9 @@ export function usePatientConditions() {
             patientUPID: patient.UPID,
           }
         );
-        Telemetry.countMetric("req.builder_conditions", conditions.length);
-        return filterAndSort(setupConditionModels(conditions, bundle));
+        const results = filterAndSort(setupConditionModels(conditions, bundle));
+        Telemetry.countMetric("req.builder_conditions", results.length);
+        return results;
       } catch (e) {
         throw Telemetry.logError(
           e as Error,
@@ -90,7 +91,7 @@ export function usePatientConditions() {
   );
 }
 
-function usePatientConditionsOutsideDuped() {
+function usePatientSummaryConditions() {
   return useQueryWithPatient(
     QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
     [],
@@ -104,22 +105,23 @@ function usePatientConditionsOutsideDuped() {
             patientUPID: patient.UPID,
           }
         );
-        Telemetry.countMetric("req.outside_conditions", conditions.length);
-        return filterAndSort(setupConditionModels(conditions, bundle));
+        const results = filterAndSort(setupConditionModels(conditions, bundle));
+        Telemetry.countMetric("req.summary_conditions", conditions.length);
+        return results;
       } catch (e) {
         throw Telemetry.logError(
           e as Error,
           `Failed fetching conditions outside for patient: ${patient.UPID}`
         );
       }
-    }, "req.outside_conditions")
+    }, "req.summary_conditions")
   );
 }
 
 export function usePatientConditionsOutside() {
   const [conditions, setConditions] = useState<ConditionModel[]>([]);
-  const patientConditionsQuery = usePatientConditions();
-  const otherConditionsQuery = usePatientConditionsOutsideDuped();
+  const patientConditionsQuery = usePatientBuilderConditions();
+  const otherConditionsQuery = usePatientSummaryConditions();
 
   useEffect(() => {
     const patientConditions = patientConditionsQuery.data ?? [];

@@ -28,8 +28,9 @@ export function usePatientAllergies() {
         );
 
         const includedResources = getIncludedResources(bundle);
-        Telemetry.countMetric("req.allergies", resources.length);
-        return applyAllergyFilters(resources, includedResources);
+        const results = applyAllergyFilters(resources, includedResources);
+        Telemetry.countMetric("req.allergies", results.length);
+        return results;
       } catch (e) {
         throw new Error(`Failed fetching allergies information for patient ${patient.UPID}`);
       }

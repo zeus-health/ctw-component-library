@@ -43,7 +43,7 @@ function diagnosticReportsFetcher(searchType: SearchType) {
         patientUPID: patient.UPID,
         _include: ["DiagnosticReport:result"],
       });
-
+      Telemetry.countMetric(`req.${searchType}_diagnostic_reports`, resources.length);
       return resources.map((r) => new DiagnosticReportModel(r, getIncludedResources(bundle)));
     } catch (e) {
       throw Telemetry.logError(

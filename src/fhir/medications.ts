@@ -49,7 +49,7 @@ import {
 } from "@/utils/nodash/fp";
 import { QUERY_KEY_MEDICATION_HISTORY } from "@/utils/query-keys";
 import { sort } from "@/utils/sort";
-import { withTimerMetric } from "@/utils/telemetry";
+import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export type InformationSource =
   | "Patient"
@@ -111,6 +111,8 @@ export async function getBuilderMedications(
     });
 
     const medications = applySearchFiltersToResponse(response, searchFilters, false);
+
+    Telemetry.countMetric("req.builder_medications", medications.length);
 
     return { bundle: response.bundle, medications };
   } catch (e) {
@@ -204,6 +206,7 @@ export async function getActiveMedications(
     );
 
     const medications = applySearchFiltersToResponse(response, searchFilters, true);
+    Telemetry.countMetric("req.active_medications", medications.length);
     return { bundle: response.bundle, medications };
   } catch (e) {
     throw errorResponse("Failed fetching medications for patient", e);

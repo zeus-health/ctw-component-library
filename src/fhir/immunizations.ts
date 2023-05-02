@@ -3,7 +3,7 @@ import { applyImmunizationFilters } from "@/components/content/immunizations/pat
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { orderBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_IMMUNIZATIONS } from "@/utils/query-keys";
-import { withTimerMetric } from "@/utils/telemetry";
+import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export function usePatientImmunizations() {
   return useQueryWithPatient(
@@ -18,11 +18,13 @@ export function usePatientImmunizations() {
             patientUPID: patient.UPID,
           }
         );
-        return orderBy(
+        const results = orderBy(
           applyImmunizationFilters(immunizations),
           [(model) => model.occurrence ?? ""],
           ["desc"]
         );
+        Telemetry.countMetric("req.immunizations", results.length);
+        return results;
       } catch (e) {
         throw new Error(`Failed fetching immunization information for patient: ${e}`);
       }
