@@ -78,6 +78,7 @@ export function usePatientConditions() {
             patientUPID: patient.UPID,
           }
         );
+        Telemetry.countMetric("req.builder_conditions", conditions.length);
         return filterAndSort(setupConditionModels(conditions, bundle));
       } catch (e) {
         throw Telemetry.logError(
@@ -85,7 +86,7 @@ export function usePatientConditions() {
           `Failed fetching conditions for patient: ${patient.UPID}`
         );
       }
-    }, "req.patient_conditions")
+    }, "req.builder_conditions")
   );
 }
 
@@ -103,6 +104,7 @@ function usePatientConditionsOutsideDuped() {
             patientUPID: patient.UPID,
           }
         );
+        Telemetry.countMetric("req.outside_conditions", conditions.length);
         return filterAndSort(setupConditionModels(conditions, bundle));
       } catch (e) {
         throw Telemetry.logError(
@@ -110,7 +112,7 @@ function usePatientConditionsOutsideDuped() {
           `Failed fetching conditions outside for patient: ${patient.UPID}`
         );
       }
-    }, "req.other_provider_conditions")
+    }, "req.outside_conditions")
   );
 }
 

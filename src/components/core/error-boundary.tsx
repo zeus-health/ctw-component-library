@@ -1,4 +1,4 @@
-import React, { Component, ErrorInfo, ReactNode } from "react";
+import { Component, ErrorInfo, ReactNode } from "react";
 import * as CTWBox from "@/components/core/ctw-box";
 import { pickBy } from "@/utils/nodash";
 import { Telemetry } from "@/utils/telemetry";
@@ -40,6 +40,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     const { props } = this;
+    Telemetry.countMetric(`component.${props.name}.failure`);
     Telemetry.logger.error(
       error.message,
       pickBy({
@@ -88,7 +89,7 @@ export class ErrorBoundary extends Component<Props, State> {
 export function withErrorBoundary<T>(
   wrappedComponent: (props: T) => ReactNode,
   name?: string,
-  trackView = true
+  trackView = false
 ) {
   return (props: T) => (
     <ErrorBoundary name={name} trackView={trackView}>

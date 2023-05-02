@@ -14,7 +14,7 @@ import {
   AUTH_USER_TYPE,
   ZusJWT,
 } from "@/utils/auth";
-import { compact, snakeCase, trim } from "@/utils/nodash";
+import { compact, snakeCase } from "@/utils/nodash";
 
 type TelemetryEventKey = "zusTelemetryClick" | "zusTelemetryFocus";
 
@@ -107,36 +107,6 @@ export class Telemetry {
         version: packageJson.version,
       });
     }
-
-    // We are listening to click events propagating to the document body as that
-    // is the lowest level HTMLElement we actually know will both exist at this
-    // time and which won't be removed from the DOM by React causing a small
-    // memory leak.
-    // Additionally, because we aren't listening directly to events on elements
-    // that have `data-zus-telemetry-*` attributes, we don't have the luxury of
-    // knowing whether an event triggered from inside one of these telemetry
-    // elements, so we'll have to traverse the DOM tree ourselves. To minimize
-    // this work we'll put a `depth` level and adjust it over time if needed.
-    // For example, imagine the user clicked an element with CSS selector path
-    // of "button[data-zus-telemetry-click="submit"] > span > span". Because we
-    // are listening on body and not button, we would have to walk up 2 parent
-    // nodes of the DOM before knowing whether this event was relevant to us.
-    body?.addEventListener("click", (event) => {
-      const { target, isTrusted } = event;
-      if (!(isTrusted && target instanceof Element)) {
-        return;
-      }
-      const htmlElement = this.closestHTMLElement(target);
-      if (htmlElement instanceof HTMLElement) {
-        this.processHTMLEvent(htmlElement, "zusTelemetryClick");
-      }
-    });
-    body?.addEventListener("focusin", (event) => {
-      const { target, isTrusted } = event;
-      if (isTrusted && target instanceof HTMLElement) {
-        this.processHTMLEvent(target, "zusTelemetryFocus");
-      }
-    });
     isInitialized = true;
   }
 
@@ -187,20 +157,6 @@ export class Telemetry {
   static logFhirError(error: FhirError, message: string) {
     const context = fhirErrorResponse(message, error);
     this.logger.error(message, context);
-  }
-
-  static trackInteraction(eventType: string, namespace: string, action: string) {
-    // We log this event with namespace breadcrumbs if allowed
-    if (this.telemetryIsAvailable && this.datadogLoggingEnabled) {
-      this.logger.log(`${eventType} event: ${namespace} > ${action}`, {
-        eventType,
-        action,
-        namespace,
-      });
-    }
-    // We send a generic action metric to CTW regardless
-    const leafNamespace = namespace.split(">").map(trim).pop();
-    this.countMetric(`interaction.${action}`, 1, compact([leafNamespace]));
   }
 
   /**
@@ -292,10 +248,13 @@ export class Telemetry {
     value: number,
     additionalTags: string[] = []
   ) {
+    // TODO - bail of env is no good?
+
     if (
       process.env.NODE_ENV !== "test" &&
       ["http://localhost:3000", "http://127.0.0.1:3000"].includes(window.location.origin)
     ) {
+      console.log(`Metric: ${type}, ${metric}, ${value}`);
       return;
     }
     let user;
@@ -325,15 +284,13 @@ export class Telemetry {
   }
 
   static countMetric(name: string, value = 1, tags: string[] = []) {
-    if (value > 0) {
-      Telemetry.reportMetric("increment", name, value, tags).catch((error) =>
-        Telemetry.logError(error as Error)
-      );
-    } else {
-      Telemetry.reportMetric("decrement", name, -value, tags).catch((error) =>
-        Telemetry.logError(error as Error)
-      );
-    }
+    Telemetry.reportMetric("count", name, value, tags).catch((error) =>
+      Telemetry.logError(error as Error)
+    );
+  }
+
+  static reportZAPRecordCount(name: string, value = 1, tags: string[] = []) {
+    this.countMetric(`records.${name}`, value, tags);
   }
 
   static timeMetric(metric: string, tags: string[] = []) {

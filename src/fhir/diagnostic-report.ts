@@ -7,7 +7,7 @@ import {
   QUERY_KEY_OTHER_PROVIDER_DIAGNOSTIC_REPORTS,
   QUERY_KEY_PATIENT_DIAGNOSTIC_REPORTS,
 } from "@/utils/query-keys";
-import { Telemetry } from "@/utils/telemetry";
+import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 type SearchType = "builder" | "outside";
 
@@ -15,7 +15,11 @@ export function usePatientDiagnosticReports() {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_DIAGNOSTIC_REPORTS,
     [],
-    diagnosticReportsFetcher("builder")
+    withTimerMetric(
+      async (requestContext, patient) =>
+        diagnosticReportsFetcher("builder")(requestContext, patient),
+      "req.builder_diagnostic_reports"
+    )
   );
 }
 
@@ -23,7 +27,11 @@ export function usePatientDiagnosticReportsOutside() {
   return useQueryWithPatient(
     QUERY_KEY_OTHER_PROVIDER_DIAGNOSTIC_REPORTS,
     [],
-    diagnosticReportsFetcher("outside")
+    withTimerMetric(
+      async (requestContext, patient) =>
+        diagnosticReportsFetcher("outside")(requestContext, patient),
+      "req.outside_diagnostic_reports"
+    )
   );
 }
 

@@ -5,7 +5,7 @@ import { SYSTEM_NDC, SYSTEM_RXNORM, SYSTEM_SNOMED } from "./system-urls";
 import { applyAllergyFilters } from "@/components/content/allergies/allergies-filter";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { QUERY_KEY_PATIENT_ALLERGIES } from "@/utils/query-keys";
-import { withTimerMetric } from "@/utils/telemetry";
+import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export type AllergyIntolerance = {
   AllergyIntoleranceList: fhir4.AllergyIntolerance[];
@@ -17,7 +17,7 @@ export function usePatientAllergies() {
     [],
     withTimerMetric(async (requestContext, patient) => {
       try {
-        const { bundle, resources: allergy } = await searchCommonRecords(
+        const { bundle, resources } = await searchCommonRecords(
           "AllergyIntolerance",
           requestContext,
           {
@@ -28,12 +28,12 @@ export function usePatientAllergies() {
         );
 
         const includedResources = getIncludedResources(bundle);
-
-        return applyAllergyFilters(allergy, includedResources);
+        Telemetry.countMetric("req.allergies", resources.length);
+        return applyAllergyFilters(resources, includedResources);
       } catch (e) {
         throw new Error(`Failed fetching allergies information for patient ${patient.UPID}`);
       }
-    }, "req.patient_allergies")
+    }, "req.allergies")
   );
 }
 
