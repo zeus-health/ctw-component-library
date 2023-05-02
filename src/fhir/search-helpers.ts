@@ -199,7 +199,7 @@ export async function searchSummaryRecords<T extends ResourceTypeString>(
   return records;
 }
 
-// Like searchAllRecords, but filters out lens resources. If postQueryFilter
+// Like searchAllRecords, but filters out lens resources.
 // is specified, exclusion will happen client side, not server side
 export async function searchCommonRecords<T extends ResourceTypeString>(
   resourceType: T,
