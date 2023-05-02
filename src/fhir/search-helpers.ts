@@ -200,7 +200,6 @@ export async function searchSummaryRecords<T extends ResourceTypeString>(
 }
 
 // Like searchAllRecords, but filters out lens resources.
-// is specified, exclusion will happen client side, not server side
 export async function searchCommonRecords<T extends ResourceTypeString>(
   resourceType: T,
   requestContext: CTWRequestContext,
