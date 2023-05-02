@@ -265,6 +265,7 @@ export class Telemetry {
         ["http://localhost:3000", "http://127.0.0.1:3000"].includes(window.location.origin)) ||
       !IsEnvValid(this.environment)
     ) {
+      // eslint-disable-next-line no-console
       console.log(`Metric: ${type}, ${metric}, ${value}`);
       return;
     }
