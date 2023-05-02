@@ -19,6 +19,8 @@ function excludeTagsinPatientRecordSearch<T extends ResourceTypeString>(resource
   switch (resourceType) {
     case "Patient":
       return [...UPI_TAGS];
+    case "Condition":
+      return [...CONDITIONS_LENS_TAGS, ...SUMMARY_TAGS];
     case "MedicationStatement":
       return [...MEDICATION_LENS_TAGS, ...SUMMARY_TAGS];
     case "Coverage":
@@ -197,16 +199,24 @@ export async function searchSummaryRecords<T extends ResourceTypeString>(
   return records;
 }
 
-// Like searchAllRecords, but filters out lens resources.
+// Like searchAllRecords, but filters out lens resources. If postQueryFilter
+// is specified, exclusion will happen client side, not server side
 export async function searchCommonRecords<T extends ResourceTypeString>(
   resourceType: T,
   requestContext: CTWRequestContext,
-  searchParams?: SearchParams
+  searchParams?: SearchParams,
+  postQueryFilter?: (r: ResourceType<T>) => boolean
 ): Promise<SearchReturn<T>> {
-  const tags = excludeTagsinPatientRecordSearch(resourceType);
+  const tags = !postQueryFilter ? excludeTagsinPatientRecordSearch(resourceType) : [];
   const params = mergeParams(searchParams, tags.length ? { "_tag:not": tags } : {});
 
-  return searchAllRecords(resourceType, requestContext, params);
+  const results = await searchAllRecords(resourceType, requestContext, params);
+
+  if (postQueryFilter) {
+    const filteredResults = results.resources.filter(postQueryFilter);
+    return { bundle: results.bundle, resources: filteredResults, total: results.total };
+  }
+  return results;
 }
 
 // Returns a new filers object with every value that was an array,

@@ -45,7 +45,8 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
         const { resources, bundle } = await searchCommonRecords(
           resourceType,
           requestContext,
-          searchParams
+          searchParams, 
+          postQueryFilter
         );
         const includedResources = getIncludedResources(bundle);
 
@@ -53,14 +54,11 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
         if (includeVersionHistory) {
           versions = await getVersionHistory(resourceType, requestContext, searchParams);
         }
-
-        const filteredResources = postQueryFilter ? resources.filter(postQueryFilter) : resources;
-
         const constructor = model.constructor as new (
           r: ResourceType<T>,
           includedRes: ResourceMap
         ) => M;
-        const models = [...filteredResources, ...versions].map(
+        const models = [...resources, ...versions].map(
           (c) => new constructor(c, includedResources)
         );
 
