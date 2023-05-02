@@ -1,5 +1,6 @@
 import "./patient-history-table.scss";
 
+
 import cx from "classnames";
 import { useEffect, useState } from "react";
 import { patientHistoryFilters } from "./helpers/filters";
@@ -77,6 +78,7 @@ export const PatientHistoryTable = withErrorBoundary(
             onChange: onFilterChange,
             filters: patientHistoryFilters(),
           }}
+          className="ctw-ml-2"
         />
         <div className="ctw-overflow-hidden">
           <Table
@@ -114,7 +116,7 @@ const columns: TableColumn<PatientHistoryRequestModel>[] = [
       <div className="ctw-space-y-2">
         {data.providers?.map((provider) => (
           <div key={`${data.historyInfo?.id}-${provider.service}`}>
-            <div className="ctw-w-fit ctw-px-3 ctw-py-1	ctw-capitalize">
+            <div className="ctw-w-fit  ctw-py-1	ctw-capitalize">
               {mapSourceToSourceLabel(provider.service as ServiceName)}
             </div>
           </div>
@@ -183,7 +185,7 @@ const RenderCorrectStatusLabel = ({ status }: { status: PatientRefreshHistoryMes
 };
 
 const StatusLabel = ({ status, className }: { status: string; className?: cx.Argument }) => (
-  <div className={cx("ctw-w-fit ctw-rounded-xl ctw-px-3	ctw-py-1", className)}>
+  <div className={cx("ctw-w-fit ctw-rounded-2xl ctw-px-3	ctw-py-1 ctw-font-medium", className)}>
     {status.split("_").join(" ")}
   </div>
 );
