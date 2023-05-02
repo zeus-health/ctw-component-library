@@ -1,6 +1,5 @@
 import { datadogLogs } from "@datadog/browser-logs";
 import jwtDecode from "jwt-decode";
-import { IsEnvValid } from "..";
 import packageJson from "../../package.json";
 import { getMetricsBaseUrl } from "@/api/urls";
 import { FhirError, fhirErrorResponse } from "@/fhir/errors";
@@ -106,6 +105,7 @@ export class Telemetry {
         version: packageJson.version,
       });
     }
+
     isInitialized = true;
   }
 
@@ -194,52 +194,6 @@ export class Telemetry {
   }
 
   /**
-   * Process Click Event - This function takes a target element and an optional
-   * explicitTargetName. If the `explicitTargetName` is NOT passed in, we need to
-   * traverse the DOM and verify whether it corresponds with a zus telemetry
-   * event or not. However, if `explicitTargetName` is passed in, then we can
-   * assume this is an event ready for processing.
-   */
-  static processHTMLEvent(
-    target: HTMLElement,
-    telemetryKey: TelemetryEventKey,
-    explicitTargetName?: string
-  ) {
-    let eventTarget: HTMLElement | null = null;
-
-    if (explicitTargetName) {
-      eventTarget = target;
-    } else {
-      let nextTarget: HTMLElement | null = target;
-      let depth = 5;
-      while (!eventTarget && depth > 0 && nextTarget) {
-        if (nextTarget.dataset[telemetryKey]) {
-          eventTarget = nextTarget;
-        }
-        nextTarget = nextTarget.parentElement;
-        depth -= 1;
-      }
-    }
-
-    const targetName = eventTarget?.dataset[telemetryKey] ?? explicitTargetName;
-    if (eventTarget && targetName) {
-      if (!this.namespaceMap.has(eventTarget)) {
-        this.namespaceMap.set(eventTarget, this.lookupComponentNamespace(eventTarget));
-      }
-    }
-  }
-
-  private static closestHTMLElement(target: Element | Node | null): HTMLElement | null {
-    if (!target || target instanceof HTMLElement) {
-      return target;
-    }
-    if (target.parentElement instanceof HTMLElement) {
-      return target.parentElement;
-    }
-    return this.closestHTMLElement(target.parentNode);
-  }
-
-  /**
    * Metrics names are alphanumeric, lowercase, seperated by only "." or "_"
    */
   private static normalizeMetricName(metric: string) {
@@ -259,14 +213,10 @@ export class Telemetry {
     value: number,
     additionalTags: string[] = []
   ) {
-    // if running locally or we cannot determine correct environment
     if (
-      (process.env.NODE_ENV !== "test" &&
-        ["http://localhost:3000", "http://127.0.0.1:3000"].includes(window.location.origin)) ||
-      !IsEnvValid(this.environment)
+      process.env.NODE_ENV !== "test" &&
+      ["http://localhost:3000", "http://127.0.0.1:3000"].includes(window.location.origin)
     ) {
-      // eslint-disable-next-line no-console
-      console.log(`Metric: ${type}, ${metric}, ${value}`);
       return;
     }
     let user;
