@@ -73,9 +73,9 @@ const demoComponents: DemoComponent[] = [
       />
     ),
   },
-  // { render: () => <PatientSearch />, title: "Patient Search" },
-  // { render: () => <PatientHistoryTable />, title: "Patient History Table" },
-  // { render: () => <PatientTimelineV2 />, title: "Patient Timeline" },
+  { render: () => <PatientSearch />, title: "Patient Search" },
+  { render: () => <PatientHistoryTable />, title: "Patient History Table" },
+  { render: () => <PatientTimelineV2 />, title: "Patient Timeline" },
 ];
 
 const DemoApp = ({ accessToken = "" }) => (
