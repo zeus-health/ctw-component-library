@@ -148,9 +148,9 @@ export function usePatientHistoryDetails() {
           item.attributes.providers.every((provider) => provider.status === "done")
         );
 
-        const latestStatus = response.data[0]?.attributes.providers.filter(
-          (provider) => provider.status !== "done"
-        );
+        const latestStatus =
+          response.data[0]?.attributes.providers.filter((provider) => provider.status !== "done") ??
+          [];
 
         return {
           lastRetrievedAt: latestDone?.attributes.targetDate ?? latestDone?.attributes.createdAt,
@@ -158,7 +158,7 @@ export function usePatientHistoryDetails() {
             latestStatus.length > 0
               ? latestStatus[0].status
               : response.data[0]?.attributes.providers[0].status,
-          createdAt: response.data[0].attributes.createdAt,
+          createdAt: response.data[0]?.attributes.createdAt,
           providers: response.data[0]?.attributes.providers,
         };
       } catch (e) {
