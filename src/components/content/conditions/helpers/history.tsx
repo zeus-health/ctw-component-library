@@ -35,12 +35,13 @@ function filterConditionResultsPostQuery(c: Condition) {
     return true;
   }
 
-  const hasLensTags = metaTags.filter(
+  const hasLensTags =
+    metaTags.filter(
       (tag) =>
         isChronicConditionLens(tag.system, tag.code) || isSummaryConditionLens(tag.system, tag.code)
-    ).length > 0
+    ).length > 0;
 
-  return !hasLensTags
+  return !hasLensTags;
 }
 
 function getSearchParams(condition: ConditionModel) {

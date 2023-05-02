@@ -45,7 +45,7 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
         const { resources, bundle } = await searchCommonRecords(
           resourceType,
           requestContext,
-          searchParams, 
+          searchParams,
           postQueryFilter
         );
         const includedResources = getIncludedResources(bundle);
