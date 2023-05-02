@@ -5,7 +5,6 @@ import { FHIRModel } from "./models/fhir-model";
 import { getUsersPractitionerReference } from "./practitioner";
 import { SYSTEM_BASIC_RESOURCE_TYPE, SYSTEM_ZUS_PROFILE_ACTION } from "./system-urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { queryClient } from "@/utils/request";
 import { Telemetry } from "@/utils/telemetry";
 
 export async function recordProfileAction<T extends fhir4.Resource>(
@@ -58,17 +57,10 @@ export async function recordProfileAction<T extends fhir4.Resource>(
 export async function toggleArchive<T extends fhir4.Resource>(
   model: FHIRModel<T>,
   requestContext: CTWRequestContext,
-  queriesToInvalidate?: string[]
 ) {
   const existingBasic =
     model.getBasicResourceByAction("archive") || model.getBasicResourceByAction("unarchive");
   const profileAction = model.isArchived ? "unarchive" : "archive";
 
   await recordProfileAction(existingBasic, model, requestContext, profileAction);
-
-  // Refresh our data (this is really just needed to update
-  // otherProviderRecord state).
-  if (queriesToInvalidate) {
-    await queryClient.invalidateQueries(queriesToInvalidate);
-  }
 }
