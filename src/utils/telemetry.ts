@@ -31,10 +31,8 @@ const devDatadogConfig = {
 };
 
 let origin = "";
-let body: HTMLElement | undefined;
 if (typeof window !== "undefined") {
   origin = window.location.origin;
-  body = window.document.body;
 }
 
 // Assume local development if origin is localhost or just an IP address

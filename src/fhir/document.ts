@@ -1,4 +1,3 @@
-import { result } from "lodash";
 import { searchCommonRecords } from "./search-helpers";
 import { useQueryWithPatient } from "..";
 import { applyDocumentFilters } from "@/components/content/document/patient-document-filters";
@@ -21,7 +20,7 @@ export function usePatientDocument() {
 
           ["desc"]
         );
-        Telemetry.countMetric("req.documents", result.length);
+        Telemetry.countMetric("req.documents", results.length);
         return results;
       } catch (e) {
         throw new Error(`Failed fetching document information for patient: ${e}`);
