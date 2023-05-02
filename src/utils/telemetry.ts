@@ -295,7 +295,7 @@ export class Telemetry {
   }
 
   static countMetric(name: string, value = 1, tags: string[] = []) {
-    Telemetry.reportMetric("count", name, value, tags).catch((error) =>
+    Telemetry.reportMetric("increment", name, value, tags).catch((error) =>
       Telemetry.logError(error as Error)
     );
   }
