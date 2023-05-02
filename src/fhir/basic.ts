@@ -56,7 +56,7 @@ export async function recordProfileAction<T extends fhir4.Resource>(
 
 export async function toggleArchive<T extends fhir4.Resource>(
   model: FHIRModel<T>,
-  requestContext: CTWRequestContext,
+  requestContext: CTWRequestContext
 ) {
   const existingBasic =
     model.getBasicResourceByAction("archive") || model.getBasicResourceByAction("unarchive");

@@ -1,7 +1,7 @@
 import { t } from "i18next";
 import { useAddConditionForm } from "./helpers/modal-hooks";
 import { PatientConditionsBase } from "./helpers/patient-conditions-base";
-import { useToggleArchive } from "../hooks/useToggleArchive";
+import { useToggleArchive } from "../hooks/use-toggle-archive";
 import { PatientHistoryAction } from "../patient-history/patient-history-action";
 import { RequestRecordsButton } from "../patient-history/request-records-button";
 import { usePatientHistory } from "../patient-history/use-patient-history";
@@ -64,17 +64,27 @@ export const PatientConditionsOutside = withErrorBoundary(
 
 const RowActions = ({ record }: RowActionsProps<ConditionModel>) => {
   const showAddConditionForm = useAddConditionForm();
-  const {isLoading, toggleArchive } = useToggleArchive(record, QUERY_KEY_OTHER_PROVIDER_CONDITIONS)
-  const archiveLabel = record.isArchived ? t("resourceTable.restore") : t("resourceTable.dismiss")
+  const { isLoading, toggleArchive } = useToggleArchive(
+    record,
+    QUERY_KEY_OTHER_PROVIDER_CONDITIONS
+  );
+  const archiveLabel = record.isArchived ? t("resourceTable.restore") : t("resourceTable.dismiss");
 
   return (
     <div className="ctw-flex ctw-space-x-2">
-      <button type="button" className="ctw-btn-default" disabled={isLoading} onClick={toggleArchive}>
+      <button
+        type="button"
+        className="ctw-btn-default"
+        disabled={isLoading}
+        onClick={toggleArchive}
+      >
         {isLoading ? (
           <div className="ctw-flex">
             <Spinner className="ctw-mx-4 ctw-align-middle" />
           </div>
-        ) : archiveLabel}
+        ) : (
+          archiveLabel
+        )}
       </button>
 
       <button

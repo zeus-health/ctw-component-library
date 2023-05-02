@@ -9,7 +9,7 @@ interface UseToggleArchiveResult {
   /**
    * Function to call to toggle the archive status of the FHIR model
    */
-  toggleArchive: ActionCallback<unknown, void>;  
+  toggleArchive: ActionCallback<unknown, void>;
 
   /**
    * True when `toggleArchive` is called
@@ -19,7 +19,7 @@ interface UseToggleArchiveResult {
 
 /**
  * This hook is toggles the archive status for the specified FHIR model.
- * 
+ *
  * @param model The FHIR model
  * @param queryToInvalidate  Query to refetch
  */

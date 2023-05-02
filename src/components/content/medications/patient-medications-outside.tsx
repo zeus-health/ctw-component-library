@@ -2,7 +2,7 @@ import { t } from "i18next";
 import { useAddMedicationForm } from "./helpers/add-new-med-drawer";
 import { medicationFilters } from "./helpers/filters";
 import { PatientMedicationsBase } from "./helpers/patient-medications-base";
-import { useToggleArchive } from "../hooks/useToggleArchive";
+import { useToggleArchive } from "../hooks/use-toggle-archive";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { RowActionsProps } from "@/components/core/table/table";
 import { MedicationStatementModel } from "@/fhir/models";
@@ -54,17 +54,27 @@ type RowActionsProps2 = RowActionsProps<MedicationStatementModel> & ExtraRowActi
 
 const RowActions = ({ record, onAddToRecord }: RowActionsProps2) => {
   const showAddMedicationForm = useAddMedicationForm();
-  const {isLoading, toggleArchive } = useToggleArchive(record, QUERY_KEY_OTHER_PROVIDER_MEDICATIONS)
-  const archiveLabel = record.isArchived ? t("resourceTable.restore") : t("resourceTable.dismiss")
+  const { isLoading, toggleArchive } = useToggleArchive(
+    record,
+    QUERY_KEY_OTHER_PROVIDER_MEDICATIONS
+  );
+  const archiveLabel = record.isArchived ? t("resourceTable.restore") : t("resourceTable.dismiss");
 
   return (
     <div className="ctw-flex ctw-space-x-2">
-      <button type="button" className="ctw-btn-default" disabled={isLoading} onClick={toggleArchive}>
+      <button
+        type="button"
+        className="ctw-btn-default"
+        disabled={isLoading}
+        onClick={toggleArchive}
+      >
         {isLoading ? (
           <div className="ctw-flex">
             <Spinner className="ctw-mx-4 ctw-align-middle" />
           </div>
-        ) : archiveLabel}
+        ) : (
+          archiveLabel
+        )}
       </button>
 
       <button

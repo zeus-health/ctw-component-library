@@ -23,7 +23,6 @@ export function getDynamicValue<TInput, TOutcome, TResult>(
 }
 
 export interface UseActionOptions<TInput, TOutput> {
-
   /**
    * Callback when the promise resolves successfully
    */
@@ -46,7 +45,8 @@ export function useAction<TInput, TOutput>(
   const { onSuccess, onError } = options;
 
   return useCallback(
-    (input: TInput) => callback(input).then(
+    (input: TInput) =>
+      callback(input).then(
         (result) => {
           onSuccess?.(result, input);
           return result;
