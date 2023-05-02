@@ -15,7 +15,7 @@ import {
   AUTH_USER_TYPE,
   ZusJWT,
 } from "@/utils/auth";
-import { compact, snakeCase } from "@/utils/nodash";
+import { compact, snakeCase, trim } from "@/utils/nodash";
 
 type TelemetryEventKey = "zusTelemetryClick" | "zusTelemetryFocus";
 
@@ -181,6 +181,20 @@ export class Telemetry {
     return ns || "unknown";
   }
 
+  static trackInteraction(eventType: string, namespace: string, action: string) {
+    // We log this event with namespace breadcrumbs if allowed
+    if (this.telemetryIsAvailable && this.datadogLoggingEnabled) {
+      this.logger.log(`${eventType} event: ${namespace} > ${action}`, {
+        eventType,
+        action,
+        namespace,
+      });
+    }
+    // We send a generic action metric to CTW regardless
+    const leafNamespace = namespace.split(">").map(trim).pop();
+    this.countMetric(`interaction.${action}`, 1, compact([leafNamespace]));
+  }
+
   /**
    * Process Click Event - This function takes a target element and an optional
    * explicitTargetName. If the `explicitTargetName` is NOT passed in, we need to
@@ -214,8 +228,6 @@ export class Telemetry {
       if (!this.namespaceMap.has(eventTarget)) {
         this.namespaceMap.set(eventTarget, this.lookupComponentNamespace(eventTarget));
       }
-      const namespace = this.namespaceMap.get(eventTarget);
-      this.trackInteraction(this.eventTypes[telemetryKey], namespace, targetName);
     }
   }
 
@@ -288,10 +300,6 @@ export class Telemetry {
     Telemetry.reportMetric("count", name, value, tags).catch((error) =>
       Telemetry.logError(error as Error)
     );
-  }
-
-  static reportZAPRecordCount(name: string, value = 1, tags: string[] = []) {
-    this.countMetric(`records.${name}`, value, tags);
   }
 
   static timeMetric(metric: string, tags: string[] = []) {

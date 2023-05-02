@@ -1,6 +1,6 @@
 import { Resource } from "fhir/r4";
 import { useEffect, useState } from "react";
-import { usePatientDiagnosticReportsOutside } from "./diagnostic-report";
+import { usePatientAllDiagnosticReports } from "./diagnostic-report";
 import { usePatientEncounters } from "./encounters";
 import { TimelineEventModel, TimelineEventResource } from "./models/timeline-event";
 import { useQueryGetPatientMedDispenseCommon, useQueryGetPatientMedRequestsCommon } from "..";
@@ -17,7 +17,7 @@ type TimelineEventModelParams = {
 export function useTimelineEvents() {
   const [timelineEvents, setTimelineEvents] = useState<TimelineEventModel[]>();
   const patientEncountersQuery = usePatientEncounters();
-  const diagnosticReportQuery = usePatientDiagnosticReportsOutside();
+  const diagnosticReportQuery = usePatientAllDiagnosticReports();
   const medicationRequestCommon = useQueryGetPatientMedRequestsCommon();
   const medicationDispenseCommon = useQueryGetPatientMedDispenseCommon();
 

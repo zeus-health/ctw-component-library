@@ -1,14 +1,14 @@
 import cx from "classnames";
 import { PatientObservationsBase } from "@/components/content/observations/helpers/base";
 import { withErrorBoundary } from "@/components/core/error-boundary";
-import { usePatientDiagnosticReports } from "@/fhir/diagnostic-report";
+import { usePatientBuilderDiagnosticReports } from "@/fhir/diagnostic-report";
 
 export type PatientObservationsProps = {
   className?: cx.Argument;
 };
 
 const Component = ({ className }: PatientObservationsProps) => {
-  const diagnosticReports = usePatientDiagnosticReports();
+  const diagnosticReports = usePatientBuilderDiagnosticReports();
 
   return <PatientObservationsBase className={className} query={diagnosticReports} />;
 };

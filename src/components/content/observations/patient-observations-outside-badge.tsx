@@ -1,8 +1,8 @@
 import { Badge } from "@/components/core/badge";
-import { usePatientDiagnosticReportsOutside } from "@/fhir/diagnostic-report";
+import { usePatientAllDiagnosticReports } from "@/fhir/diagnostic-report";
 
 export const PatientObservationsOutsideBadge = () => {
-  const { data = [] } = usePatientDiagnosticReportsOutside();
+  const { data = [] } = usePatientAllDiagnosticReports();
 
   return data.length ? (
     <Badge color="notification" text={data.length.toString()} className="ctw-h-5" />

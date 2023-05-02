@@ -19,7 +19,7 @@ export function usePatientEncounters() {
           }
         );
         const results = setupEncounterModels(encounters, bundle);
-        Telemetry.countMetric("req.documents", results.length);
+        Telemetry.countMetric("req.encounters", results.length);
         return results;
       } catch (e) {
         Telemetry.logError(e as Error, "Failed fetching timeline information for patient");

@@ -9,9 +9,9 @@ import {
 } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
-type SearchType = "builder" | "outside";
+type SearchType = "builder" | "all";
 
-export function usePatientDiagnosticReports() {
+export function usePatientBuilderDiagnosticReports() {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_DIAGNOSTIC_REPORTS,
     [],
@@ -23,14 +23,13 @@ export function usePatientDiagnosticReports() {
   );
 }
 
-export function usePatientDiagnosticReportsOutside() {
+export function usePatientAllDiagnosticReports() {
   return useQueryWithPatient(
     QUERY_KEY_OTHER_PROVIDER_DIAGNOSTIC_REPORTS,
     [],
     withTimerMetric(
-      async (requestContext, patient) =>
-        diagnosticReportsFetcher("outside")(requestContext, patient),
-      "req.outside_diagnostic_reports"
+      async (requestContext, patient) => diagnosticReportsFetcher("all")(requestContext, patient),
+      "req.all_diagnostic_reports"
     )
   );
 }
