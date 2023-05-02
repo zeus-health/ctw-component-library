@@ -19,6 +19,7 @@ export type UseHistoryProps<T extends ResourceTypeString, M extends FHIRModel<Re
   valuesToDedupeOn: (m: M) => unknown;
   getSearchParams: (m: M) => SearchParams;
   getHistoryEntry: (m: M) => HistoryEntryProps;
+  postQueryFilter?: (r: ResourceType<T>) => boolean;
 };
 
 export function useHistory<T extends ResourceTypeString, M extends FHIRModel<ResourceType<T>>>({
@@ -29,6 +30,7 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
   valuesToDedupeOn,
   getSearchParams,
   getHistoryEntry,
+  postQueryFilter,
 }: UseHistoryProps<T, M>) {
   return useQueryWithPatient(
     queryKey,
@@ -52,11 +54,13 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
           versions = await getVersionHistory(resourceType, requestContext, searchParams);
         }
 
+        const filteredResources = postQueryFilter ? resources.filter(postQueryFilter) : resources;
+
         const constructor = model.constructor as new (
           r: ResourceType<T>,
           includedRes: ResourceMap
         ) => M;
-        const models = [...resources, ...versions].map(
+        const models = [...filteredResources, ...versions].map(
           (c) => new constructor(c, includedResources)
         );
 

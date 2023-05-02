@@ -6,6 +6,8 @@ import { NotesList } from "@/components/core/notes-list";
 import { ConditionModel } from "@/fhir/models";
 import { capitalize, startCase } from "@/utils/nodash";
 import { QUERY_KEY_CONDITION_HISTORY } from "@/utils/query-keys";
+import { Condition } from "fhir/r4";
+import { SYSTEM_SUMMARY, SYSTEM_ZUS_LENS } from "@/fhir/system-urls";
 
 export function useConditionHistory(condition: ConditionModel) {
   return useHistory({
@@ -15,7 +17,33 @@ export function useConditionHistory(condition: ConditionModel) {
     valuesToDedupeOn,
     getSearchParams,
     getHistoryEntry,
+    postQueryFilter: filterConditionResultsPostQuery,
   });
+}
+
+function isChronicConditionLens(system?: string, code?: string) {
+  return system === SYSTEM_ZUS_LENS && code === "ChronicConditions"
+}
+
+function isSummaryConditionLens(system?: string, code?: string) {
+  return system === SYSTEM_SUMMARY && code === "Common"
+}
+
+function filterConditionResultsPostQuery(c: Condition) {
+
+  const metaTags = c.meta?.tag
+  if (!metaTags) {
+    return true;
+  }
+
+  const lenTags = metaTags.filter((tag) => 
+    isChronicConditionLens(tag.system, tag.code) ||
+    isSummaryConditionLens(tag.system, tag.code)
+  )
+
+  const hasLensTags = lenTags.length > 0
+
+  return !hasLensTags;
 }
 
 function getSearchParams(condition: ConditionModel) {

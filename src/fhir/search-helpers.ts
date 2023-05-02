@@ -19,8 +19,6 @@ function excludeTagsinPatientRecordSearch<T extends ResourceTypeString>(resource
   switch (resourceType) {
     case "Patient":
       return [...UPI_TAGS];
-    case "Condition":
-      return [...CONDITIONS_LENS_TAGS, ...SUMMARY_TAGS];
     case "MedicationStatement":
       return [...MEDICATION_LENS_TAGS, ...SUMMARY_TAGS];
     case "Coverage":
