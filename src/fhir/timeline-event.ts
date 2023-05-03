@@ -1,6 +1,6 @@
 import { Resource } from "fhir/r4";
 import { useEffect, useState } from "react";
-import { usePatientDiagnosticReportsOutside } from "./diagnostic-report";
+import { usePatientAllDiagnosticReports } from "./diagnostic-report";
 import { usePatientEncounters } from "./encounters";
 import { TimelineEventModel, TimelineEventResource } from "./models/timeline-event";
 import { ResourceMap } from "@/fhir/types";

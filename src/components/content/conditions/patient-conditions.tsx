@@ -7,7 +7,7 @@ import {
 import { PatientConditionsBase } from "./helpers/patient-conditions-base";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { RowActionsProps } from "@/components/core/table/table";
-import { usePatientConditions } from "@/fhir/conditions";
+import { usePatientBuilderConditions } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models";
 import { useBaseTranslations } from "@/i18n";
 
@@ -17,7 +17,7 @@ export type PatientConditionsProps = {
 };
 
 const PatientConditionsComponent = ({ className, readOnly = false }: PatientConditionsProps) => {
-  const query = usePatientConditions();
+  const query = usePatientBuilderConditions();
   const showAddConditionForm = useAddConditionForm();
   const { t } = useBaseTranslations();
 
