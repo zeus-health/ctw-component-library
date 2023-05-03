@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.7.2
+
+### Patch Changes
+
+- 2c5127d6: Add metrics for components crashing and stats on record counts.
+
 ## 1.7.1
 
 ### Patch Changes
