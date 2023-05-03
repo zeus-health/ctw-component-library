@@ -1,4 +1,3 @@
-import { t } from "i18next";
 import { useAddConditionForm } from "./helpers/modal-hooks";
 import { PatientConditionsBase } from "./helpers/patient-conditions-base";
 import { useToggleArchive } from "../hooks/use-toggle-archive";
@@ -10,6 +9,7 @@ import { Spinner } from "@/components/core/spinner";
 import { RowActionsProps } from "@/components/core/table/table";
 import { usePatientConditionsOutside } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models";
+import { useBaseTranslations } from "@/i18n";
 import { QUERY_KEY_OTHER_PROVIDER_CONDITIONS } from "@/utils/query-keys";
 
 export type PatientConditionsOutsideProps = {
@@ -63,6 +63,7 @@ export const PatientConditionsOutside = withErrorBoundary(
 );
 
 const RowActions = ({ record }: RowActionsProps<ConditionModel>) => {
+  const { t } = useBaseTranslations();
   const showAddConditionForm = useAddConditionForm();
   const { isLoading, toggleArchive } = useToggleArchive(
     record,

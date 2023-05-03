@@ -1,4 +1,3 @@
-import { t } from "i18next";
 import { useAddMedicationForm } from "./helpers/add-new-med-drawer";
 import { medicationFilters } from "./helpers/filters";
 import { PatientMedicationsBase } from "./helpers/patient-medications-base";
@@ -7,6 +6,7 @@ import { withErrorBoundary } from "@/components/core/error-boundary";
 import { RowActionsProps } from "@/components/core/table/table";
 import { MedicationStatementModel } from "@/fhir/models";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
+import { useBaseTranslations } from "@/i18n";
 import { Spinner } from "@/index";
 import { QUERY_KEY_OTHER_PROVIDER_MEDICATIONS } from "@/utils/query-keys";
 
@@ -53,6 +53,7 @@ const getRowActions =
 type RowActionsProps2 = RowActionsProps<MedicationStatementModel> & ExtraRowActionProps;
 
 const RowActions = ({ record, onAddToRecord }: RowActionsProps2) => {
+  const { t } = useBaseTranslations();
   const showAddMedicationForm = useAddMedicationForm();
   const { isLoading, toggleArchive } = useToggleArchive(
     record,
