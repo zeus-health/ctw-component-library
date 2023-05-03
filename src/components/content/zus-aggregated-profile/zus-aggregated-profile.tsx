@@ -159,5 +159,6 @@ const ZusAggregatedProfileComponent = ({
  */
 export const ZusAggregatedProfile = withErrorBoundary(
   ZusAggregatedProfileComponent,
-  "ZusAggregatedProfile"
+  "ZusAggregatedProfile",
+  true
 );
