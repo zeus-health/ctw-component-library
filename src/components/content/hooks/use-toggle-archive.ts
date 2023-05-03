@@ -2,14 +2,13 @@ import { useCallback, useState } from "react";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { toggleArchive } from "@/fhir/basic";
 import { FHIRModel } from "@/fhir/models/fhir-model";
-import { ActionCallback, useAction } from "@/hooks/use-action";
 import { queryClient } from "@/utils/request";
 
 interface UseToggleArchiveResult {
   /**
    * Function to call to toggle the archive status of the FHIR model
    */
-  toggleArchive: ActionCallback<unknown, void>;
+  toggleArchive: () => void;
 
   /**
    * True when `toggleArchive` is called
@@ -31,25 +30,23 @@ export function useToggleArchive<T extends fhir4.Resource>(
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const updateArchive = useCallback(async () => {
+  const handleToggleArchive = useCallback(async () => {
     setIsLoading(true);
 
-    await toggleArchive(model, await getRequestContext());
+    toggleArchive(model, await getRequestContext()).then(
+      async () => {
+        setIsLoading(false);
+        await queryClient.invalidateQueries([queryToInvalidate]);
+      },
+      () => {
+        setIsLoading(false);
+      }
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [model]);
 
-  const handleUpdateArchive = useAction(updateArchive, {
-    onSuccess: async () => {
-      setIsLoading(false);
-      await queryClient.invalidateQueries([queryToInvalidate]);
-    },
-    onError: () => {
-      setIsLoading(false);
-    },
-  });
-
   return {
-    toggleArchive: handleUpdateArchive,
+    toggleArchive: handleToggleArchive,
     isLoading,
   };
 }
