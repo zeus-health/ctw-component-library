@@ -1,12 +1,6 @@
-import { useMedicationDetailsDrawer } from "../../medications/helpers/details";
 import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
 import { CodingList } from "@/components/core/coding-list";
-import { DrawerProps } from "@/components/core/drawer";
-import { useDrawer } from "@/components/core/providers/drawer-provider";
-import { MedicationDispenseModel } from "@/fhir/models";
 import { EncounterModel } from "@/fhir/models/encounter";
-import { MedicationRequestModel } from "@/fhir/models/medication-request";
-import { useQueryMedicationStatement } from "@/hooks/use-medications";
 import { capitalize } from "@/utils/nodash/fp";
 
 export function usePatientEncounterDetailsDrawer() {
@@ -35,29 +29,3 @@ export const encounterData = (encounter: EncounterModel) => [
   { label: "Diagnosis", value: encounter.diagnoses?.join(", ") },
   { label: "Discharge Disposition", value: encounter.dischargeDisposition },
 ];
-
-export function useDispenseRequestDetailsDrawer() {
-  const { openDrawer } = useDrawer();
-
-  return (medicationModel: MedicationDispenseModel | MedicationRequestModel) => {
-    openDrawer({
-      component: (props) => (
-        <MedicationDrawerComponent medicationEventModel={medicationModel} {...props} />
-      ),
-    });
-  };
-}
-
-type MedicationDrawerComponentProps = {
-  medicationEventModel: MedicationDispenseModel | MedicationRequestModel;
-} & Pick<DrawerProps, "isOpen" | "onClose" | "onOpen" | "onAfterOpen">;
-
-const MedicationDrawerComponent = (props: MedicationDrawerComponentProps) => {
-  const { medicationEventModel } = props;
-  const medStatement = useQueryMedicationStatement(medicationEventModel.rxNorm);
-  const openDrawer = useMedicationDetailsDrawer();
-  if (medStatement.data?.length) {
-    openDrawer(medStatement.data[0]);
-  }
-  return null;
-};
