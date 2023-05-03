@@ -51,7 +51,6 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
         if (includeVersionHistory) {
           versions = await getVersionHistory(resourceType, requestContext, searchParams);
         }
-
         const constructor = model.constructor as new (
           r: ResourceType<T>,
           includedRes: ResourceMap
