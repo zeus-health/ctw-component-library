@@ -85,7 +85,7 @@ export const Everything: StoryObj<Props> = {
       "medications",
       "medications-outside",
       "care-team",
-      "timelines",
+      "timeline",
     ],
   },
 };
@@ -104,7 +104,7 @@ export const ScrollbarsOnOverflowZap: StoryObj<Props> = {
       "medications",
       "medications-outside",
       "care-team",
-      "timelines",
+      "timeline",
     ],
   },
   decorators: [

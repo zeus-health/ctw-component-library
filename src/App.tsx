@@ -2,6 +2,11 @@ import "./App.css";
 
 import {
   CTWProvider,
+  PatientConditions,
+  PatientConditionsOutside,
+  PatientDocuments,
+  PatientMedications,
+  PatientMedicationsOutside,
   PatientProvider,
   PatientSearch,
   PatientTimelineV2,
@@ -60,22 +65,15 @@ const demoComponents: DemoComponent[] = [
     render: () => (
       <ZusAggregatedProfile
         includePatientDemographicsForm={false}
-        resources={[
-          "allergies",
-          "conditions",
-          "conditions-outside",
-          "medications",
-          "medications-outside",
-          "observations",
-          "observations-outside",
-        ]}
+        resources={["timeline"]}
         title="ZAP"
       />
     ),
   },
   { render: () => <PatientSearch />, title: "Patient Search" },
   { render: () => <PatientHistoryTable />, title: "Patient History Table" },
-  { render: () => <PatientTimelineV2 />, title: "Patient Timeline" },
+  { render: () => <PatientConditionsOutside />, title: "Patient Conditions" },
+  { render: () => <PatientDocuments />, title: "Patient Documents" },
 ];
 
 const DemoApp = ({ accessToken = "" }) => (

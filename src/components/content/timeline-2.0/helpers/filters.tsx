@@ -38,7 +38,7 @@ export function timelineFilters(timelineEvents: TimelineEventModel[]): FilterIte
 export const defaultTimelineFilters: FilterChangeEvent = {
   type: {
     key: "type",
-    selected: ["Medication Fill", "Prescription", "Encounter", "Diagnostic Report"],
+    selected: ["Diagnostic Report", "Encounter"],
     type: "checkbox",
   },
 };
