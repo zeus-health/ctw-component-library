@@ -3,6 +3,7 @@ import { PatientMedicationsProps } from "../medications/patient-medications";
 import { PatientMedicationsOutsideProps } from "../medications/patient-medications-outside";
 import { PatientObservationsProps } from "../observations/patient-observations";
 import { PatientObservationsOutsideProps } from "../observations/patient-observations-outside";
+import { PatientTimelineV2Props } from "../timeline-2.0/patient-timeline";
 import ZusSVG from "@/assets/zus.svg";
 import { PatientAllergiesProps } from "@/components/content/allergies/patient-allergies";
 import { PatientCareTeamProps } from "@/components/content/care-team/patient-careteam";
@@ -10,7 +11,6 @@ import { PatientConditionsProps } from "@/components/content/conditions/patient-
 import { PatientDocumentProps } from "@/components/content/document/patient-documents";
 import { PatientImmunizationsProps } from "@/components/content/immunizations/patient-immunizations";
 import { RequestRecordsButton } from "@/components/content/patient-history/request-records-button";
-import { PatientTimelineProps } from "@/components/content/timeline/patient-timeline";
 import {
   ZusAggregatedProfileTabs,
   zusAggregatedProfileTabs,
@@ -30,7 +30,7 @@ export type ZAPResourceName =
   | "medications-outside"
   | "observations"
   | "observations-outside"
-  | "timelines";
+  | "timeline";
 
 export type ZusAggregatedProfileProps = {
   resources: ZAPResourceName[];
@@ -53,7 +53,7 @@ export type ZusAggregatedProfileSubComponentProps = Partial<{
   medicationsOutsideProps: PatientMedicationsOutsideProps;
   observationsProps: PatientObservationsProps;
   observationsOutsideProps: PatientObservationsOutsideProps;
-  timelineProps: PatientTimelineProps;
+  timelinePropsV2: PatientTimelineV2Props;
 }>;
 
 const ZusAggregatedProfileComponent = ({
@@ -69,7 +69,7 @@ const ZusAggregatedProfileComponent = ({
   medicationsOutsideProps,
   observationsProps,
   observationsOutsideProps,
-  timelineProps,
+  timelinePropsV2,
   resources,
   hideTitle = false,
   title = "Outside Records",
@@ -88,7 +88,7 @@ const ZusAggregatedProfileComponent = ({
     "medications-outside": medicationsOutsideProps,
     observations: observationsProps,
     "observations-outside": observationsOutsideProps,
-    timelines: timelineProps,
+    timeline: timelinePropsV2,
   };
 
   const tabbedContent = resources.map((tabName) => {
@@ -101,7 +101,7 @@ const ZusAggregatedProfileComponent = ({
       {!hideTitle && (
         <Title className="ctw-border-b-2 ctw-border-l-0 ctw-border-r-0 ctw-border-t-0 ctw-border-solid ctw-border-divider-light">
           <h3 className="ctw-m-0 ctw-inline-block ctw-p-0 ctw-pb-3 ctw-text-lg ctw-font-medium">
-            {title}{" "}
+            {title}
             {!removeBranding && (
               <span className="ctw-text-sm ctw-font-light ctw-italic ctw-text-content-light">
                 Powered by <img src={ZusSVG} alt="Zus" className="-ctw-mb-1.5" />
@@ -159,5 +159,6 @@ const ZusAggregatedProfileComponent = ({
  */
 export const ZusAggregatedProfile = withErrorBoundary(
   ZusAggregatedProfileComponent,
-  "ZusAggregatedProfile"
+  "ZusAggregatedProfile",
+  true
 );

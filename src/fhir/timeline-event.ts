@@ -1,9 +1,8 @@
 import { Resource } from "fhir/r4";
 import { useEffect, useState } from "react";
-import { usePatientDiagnosticReportsOutside } from "./diagnostic-report";
+import { usePatientAllDiagnosticReports } from "./diagnostic-report";
 import { usePatientEncounters } from "./encounters";
 import { TimelineEventModel, TimelineEventResource } from "./models/timeline-event";
-import { useQueryGetPatientMedDispenseCommon, useQueryGetPatientMedRequestsCommon } from "..";
 import { ResourceMap } from "@/fhir/types";
 import { compact, concat, flatten, some } from "@/utils/nodash";
 import { applySorts } from "@/utils/sort";
@@ -17,16 +16,9 @@ type TimelineEventModelParams = {
 export function useTimelineEvents() {
   const [timelineEvents, setTimelineEvents] = useState<TimelineEventModel[]>();
   const patientEncountersQuery = usePatientEncounters();
-  const diagnosticReportQuery = usePatientDiagnosticReportsOutside();
-  const medicationRequestCommon = useQueryGetPatientMedRequestsCommon();
-  const medicationDispenseCommon = useQueryGetPatientMedDispenseCommon();
+  const diagnosticReportQuery = usePatientAllDiagnosticReports();
 
-  const queries = [
-    patientEncountersQuery,
-    diagnosticReportQuery,
-    medicationRequestCommon,
-    medicationDispenseCommon,
-  ];
+  const queries = [patientEncountersQuery, diagnosticReportQuery];
 
   useEffect(() => {
     const models = compact(
@@ -41,12 +33,7 @@ export function useTimelineEvents() {
     );
     // Disabling because including queries will cause infinite loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    patientEncountersQuery.data,
-    diagnosticReportQuery.data,
-    medicationRequestCommon.data,
-    medicationDispenseCommon.data,
-  ]);
+  }, [patientEncountersQuery.data, diagnosticReportQuery.data]);
 
   const isLoading = some(queries, "isLoading");
   const isFetching = some(queries, "isFetching");

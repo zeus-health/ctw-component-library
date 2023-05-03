@@ -2,26 +2,15 @@ import { Resource } from "fhir/r4";
 import { DiagnosticReportModel } from "./diagnostic-report";
 import { EncounterModel } from "./encounter";
 import { FHIRModel } from "./fhir-model";
-import { MedicationDispenseModel } from "./medication-dispense";
-import { MedicationRequestModel } from "./medication-request";
-import { codeableConceptLabel } from "../codeable-concept";
 import { ResourceMap } from "../types";
 import { compact } from "@/utils/nodash";
 
-export type TimelineEventResource =
-  | fhir4.Encounter
-  | fhir4.DiagnosticReport
-  | fhir4.MedicationRequest
-  | fhir4.MedicationDispense;
+export type TimelineEventResource = fhir4.Encounter | fhir4.DiagnosticReport;
 
 export class TimelineEventModel extends FHIRModel<TimelineEventResource> {
   kind = "TimelineEvent" as const;
 
-  public model:
-    | EncounterModel
-    | DiagnosticReportModel
-    | MedicationRequestModel
-    | MedicationDispenseModel;
+  public model: EncounterModel | DiagnosticReportModel;
 
   constructor(
     resource: TimelineEventResource,
@@ -36,12 +25,6 @@ export class TimelineEventModel extends FHIRModel<TimelineEventResource> {
       case "DiagnosticReport":
         this.model = new DiagnosticReportModel(resource, includedResources, revIncludes);
         break;
-      case "MedicationRequest":
-        this.model = new MedicationRequestModel(resource, includedResources, revIncludes);
-        break;
-      case "MedicationDispense":
-        this.model = new MedicationDispenseModel(resource, includedResources, revIncludes);
-        break;
       default:
         throw new Error("This resource is not in type TimelineEvent");
     }
@@ -53,10 +36,6 @@ export class TimelineEventModel extends FHIRModel<TimelineEventResource> {
         return this.model.periodStart;
       case "DiagnosticReport":
         return this.model.effectiveStart;
-      case "MedicationRequest":
-        return this.model.authoredOn;
-      case "MedicationDispense":
-        return this.model.whenHandedOver || this.model.whenPrepared;
       default:
         return undefined;
     }
@@ -68,10 +47,6 @@ export class TimelineEventModel extends FHIRModel<TimelineEventResource> {
         return "Encounter";
       case "DiagnosticReport":
         return "Diagnostic Report";
-      case "MedicationRequest":
-        return "Prescription";
-      case "MedicationDispense":
-        return "Medication Fill";
       default:
         return undefined;
     }
@@ -91,10 +66,6 @@ export class TimelineEventModel extends FHIRModel<TimelineEventResource> {
         return this.model.typeDisplay;
       case "DiagnosticReport":
         return this.model.category;
-      case "MedicationRequest":
-        return this.model.medicationDisplayName;
-      case "MedicationDispense":
-        return this.model.medicationDisplayName;
       default:
         return undefined;
     }
@@ -106,14 +77,6 @@ export class TimelineEventModel extends FHIRModel<TimelineEventResource> {
         return compact([this.model.participants, this.model.location]);
       case "DiagnosticReport":
         return compact([this.model.performer]);
-      case "MedicationRequest":
-        return compact([this.model.includedRequester]);
-      case "MedicationDispense":
-        return compact([
-          this.model.performerDetails.name,
-          this.model.performerDetails.address,
-          this.model.performerDetails.telecom,
-        ]);
       default:
         return [];
     }
@@ -127,18 +90,6 @@ export class TimelineEventModel extends FHIRModel<TimelineEventResource> {
         return [
           this.model.results.length > 0 ? `${this.model.results.length} results available` : "",
         ];
-      case "MedicationRequest":
-        return compact([codeableConceptLabel(this.model.resource.dosageInstruction?.[0])]);
-      case "MedicationDispense":
-        return compact([
-          codeableConceptLabel(this.model.resource.dosageInstruction?.[0]),
-          this.model.resource.daysSupply?.value
-            ? `Days supply: ${this.model.resource.daysSupply.value}`
-            : "",
-          this.model.resource.quantity?.value
-            ? `Quantity: ${this.model.resource.quantity.value}`
-            : "",
-        ]);
       default:
         return [];
     }

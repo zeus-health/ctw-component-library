@@ -18,7 +18,9 @@ import { ctwFetch, queryClient } from "@/utils/request";
 import { Telemetry } from "@/utils/telemetry";
 import "../main.scss";
 
-export type Env = "dev" | "sandbox" | "production" | "phitest";
+export const Env = ["production", "sandbox", "phi-test", "dev"];
+export type Env = (typeof Env)[number];
+export const IsEnvValid = (env: string): boolean => Env.includes(env);
 
 // We use an expiry padding to provide a buffer to prevent race conditions.
 // A race condition could happen in that we check if the token is expired,

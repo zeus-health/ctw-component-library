@@ -112,6 +112,8 @@ export async function getBuilderMedications(
 
     const medications = applySearchFiltersToResponse(response, searchFilters, false);
 
+    Telemetry.countMetric("req.builder_medications", medications.length);
+
     return { bundle: response.bundle, medications };
   } catch (e) {
     throw errorResponse("Failed fetching medications for patient", e);
@@ -192,7 +194,6 @@ export async function getActiveMedications(
   const [searchFilters = {}] = keys;
 
   try {
-    const sendMetric = Telemetry.timeMetric("req.active_medications");
     const response = await searchLensRecords(
       "MedicationStatement",
       requestContext,
@@ -205,8 +206,7 @@ export async function getActiveMedications(
     );
 
     const medications = applySearchFiltersToResponse(response, searchFilters, true);
-
-    sendMetric();
+    Telemetry.countMetric("req.active_medications", medications.length);
     return { bundle: response.bundle, medications };
   } catch (e) {
     throw errorResponse("Failed fetching medications for patient", e);
