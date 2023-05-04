@@ -23,11 +23,14 @@ export function usePatientImmunizations() {
           [(model) => model.occurrence ?? ""],
           ["desc"]
         );
-        Telemetry.countMetric("req.immunizations", results.length);
+        if (results.length === 0) {
+          Telemetry.countMetric("req.count.immunizations.none");
+        }
+        Telemetry.histogramMetric("req.count.immunizations", results.length);
         return results;
       } catch (e) {
         throw new Error(`Failed fetching immunization information for patient: ${e}`);
       }
-    }, "req.patient_immunizations")
+    }, "req.timing.immunizations")
   );
 }
