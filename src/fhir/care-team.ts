@@ -3,7 +3,7 @@ import { searchCommonRecords } from "./search-helpers";
 import { applyCareTeamFilters } from "@/components/content/care-team/patient-careteam-filters";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { QUERY_KEY_CARETEAM } from "@/utils/query-keys";
-import { withTimerMetric } from "@/utils/telemetry";
+import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export function usePatientCareTeam() {
   return useQueryWithPatient(
@@ -12,21 +12,19 @@ export function usePatientCareTeam() {
     withTimerMetric(
       async (requestContext, patient) => {
         try {
-          const { bundle, resources: careteam } = await searchCommonRecords(
-            "CareTeam",
-            requestContext,
-            {
-              patientUPID: patient.UPID,
-              _include: "CareTeam:participant",
-            }
-          );
+          const { bundle, resources } = await searchCommonRecords("CareTeam", requestContext, {
+            patientUPID: patient.UPID,
+            _include: "CareTeam:participant",
+          });
           const includedResources = getIncludedResources(bundle);
-          return applyCareTeamFilters(careteam, includedResources);
+          const results = applyCareTeamFilters(resources, includedResources);
+          Telemetry.countMetric("req.care_teams", results.length);
+          return results;
         } catch (e) {
           throw new Error(`Failed fetching care team information for patient: ${e}`);
         }
       },
-      "req.patient_care_team",
+      "req.care_teams",
       []
     )
   );

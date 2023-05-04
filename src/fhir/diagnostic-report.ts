@@ -7,23 +7,30 @@ import {
   QUERY_KEY_OTHER_PROVIDER_DIAGNOSTIC_REPORTS,
   QUERY_KEY_PATIENT_DIAGNOSTIC_REPORTS,
 } from "@/utils/query-keys";
-import { Telemetry } from "@/utils/telemetry";
+import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
-type SearchType = "builder" | "outside";
+type SearchType = "builder" | "all";
 
-export function usePatientDiagnosticReports() {
+export function usePatientBuilderDiagnosticReports() {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_DIAGNOSTIC_REPORTS,
     [],
-    diagnosticReportsFetcher("builder")
+    withTimerMetric(
+      async (requestContext, patient) =>
+        diagnosticReportsFetcher("builder")(requestContext, patient),
+      "req.builder_diagnostic_reports"
+    )
   );
 }
 
-export function usePatientDiagnosticReportsOutside() {
+export function usePatientAllDiagnosticReports() {
   return useQueryWithPatient(
     QUERY_KEY_OTHER_PROVIDER_DIAGNOSTIC_REPORTS,
     [],
-    diagnosticReportsFetcher("outside")
+    withTimerMetric(
+      async (requestContext, patient) => diagnosticReportsFetcher("all")(requestContext, patient),
+      "req.all_diagnostic_reports"
+    )
   );
 }
 
@@ -35,7 +42,7 @@ function diagnosticReportsFetcher(searchType: SearchType) {
         patientUPID: patient.UPID,
         _include: ["DiagnosticReport:result"],
       });
-
+      Telemetry.countMetric(`req.${searchType}_diagnostic_reports`, resources.length);
       return resources.map((r) => new DiagnosticReportModel(r, getIncludedResources(bundle)));
     } catch (e) {
       throw Telemetry.logError(

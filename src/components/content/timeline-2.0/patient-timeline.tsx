@@ -1,9 +1,7 @@
 import cx from "classnames";
+import { useRef } from "react";
 import { defaultTimelineFilters, timelineFilters } from "./helpers/filters";
-import {
-  useDispenseRequestDetailsDrawer,
-  usePatientEncounterDetailsDrawer,
-} from "./helpers/modal-hooks";
+import { usePatientEncounterDetailsDrawer } from "./helpers/modal-hooks";
 import { defaultTimelineSort, timelineSortOptions } from "./helpers/sorts";
 import { patientTimelineColumns } from "./patient-timeline-columns";
 import { useObservationsDetailsDrawer } from "../observations/helpers/drawer";
@@ -19,6 +17,7 @@ export type PatientTimelineV2Props = {
 
 export function PatientTimelineV2({ className }: PatientTimelineV2Props) {
   const timelineEventsQuery = useTimelineEvents();
+  const containerRef = useRef<HTMLDivElement>(null);
   const { featureFlags } = useCTW();
   const { data, setFilters, setSort } = useFilteredSortedData({
     defaultFilters: defaultTimelineFilters,
@@ -27,10 +26,9 @@ export function PatientTimelineV2({ className }: PatientTimelineV2Props) {
   });
   const openEncounterDetails = usePatientEncounterDetailsDrawer();
   const openDiagnosticReportDetails = useObservationsDetailsDrawer();
-  const openDispenseRequestDetails = useDispenseRequestDetailsDrawer();
 
   return (
-    <div className={cx(className, "ctw-scrollable-pass-through-height")}>
+    <div className={cx(className, "ctw-scrollable-pass-through-height")} ref={containerRef}>
       <ResourceTableActions
         filterOptions={{
           onChange: setFilters,
@@ -56,10 +54,6 @@ export function PatientTimelineV2({ className }: PatientTimelineV2Props) {
               break;
             case "DiagnosticReport":
               openDiagnosticReportDetails(record.model);
-              break;
-            case "MedicationDispense":
-            case "MedicationRequest":
-              openDispenseRequestDetails(record.model);
               break;
             default:
           }

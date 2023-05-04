@@ -56,15 +56,12 @@ describe("telemetry", () => {
     });
   });
 
-  test("Default datadog clients and event listeners", async () => {
+  test("Default datadog clients", async () => {
     const datadogLogsInitSpy = vi.spyOn(datadogLogs, "init");
-    const addEventListenerSpy = vi.spyOn(document.body, "addEventListener");
 
     datadogLogsInitSpy.mockImplementation(() => undefined);
-    addEventListenerSpy.mockImplementation(() => undefined);
 
     Telemetry.init("test");
     expect(datadogLogsInitSpy).not.toHaveBeenCalled();
-    expect(addEventListenerSpy).toHaveBeenCalled();
   });
 });

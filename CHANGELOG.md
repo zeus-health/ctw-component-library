@@ -1,5 +1,31 @@
 # ctw-component-library
 
+## 1.7.4
+
+### Patch Changes
+
+- 6915e674: Add a way to invalidate all queries in the cache.
+
+## 1.7.3
+
+### Patch Changes
+
+- f18efed5: Add beta label to timeline and fix timeline drawer bug.
+
+## 1.7.2
+
+### Patch Changes
+
+- 2c5127d6: Add metrics for components crashing and stats on record counts.
+
+## 1.7.1
+
+### Patch Changes
+
+- 54589e98: Some style fixes around patient history table.
+- 48fc83c3: Fix issue where error occurred when patient had never made any patient history requests.
+- 20622f0e: Improve condition history drawer load time
+
 ## 1.7.0
 
 ### Minor Changes
