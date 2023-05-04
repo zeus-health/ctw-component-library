@@ -5,6 +5,8 @@ import {
 } from "./query-keys";
 import { queryClient } from "@/utils/request";
 
+export const invalidateQueries = () => queryClient.invalidateQueries();
+
 export const invalidateQueriesFrom = (queryKey: unknown[]) =>
   queryClient.invalidateQueries({ queryKey });
 
