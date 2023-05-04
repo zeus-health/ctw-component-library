@@ -1,10 +1,35 @@
+import { Coding } from "fhir/r4";
 import { FHIRModel } from "./fhir-model";
 import { codeableConceptLabel, findCodingByOrderOfPreference } from "@/fhir/codeable-concept";
 import { formatDateISOToLocal } from "@/fhir/formatters";
-import { isNullFlavorSystem, NullFlavorSystem } from "@/fhir/mappings/null-flavor";
 import { findReference } from "@/fhir/resource-helper";
 import { SYSTEM_DIAGNOSTIC_SERVICE_SECTION_ID, SYSTEM_SNOMED } from "@/fhir/system-urls";
-import { find, get } from "@/utils/nodash";
+import { find } from "@/utils/nodash";
+
+const standardizedLoincDisplay = (coding?: Coding[]) => {
+  if (!coding) {
+    return undefined;
+  }
+
+  return coding.find(
+    (x) =>
+      x.extension &&
+      x.extension.find(
+        (ext) =>
+          ext.valueString === "LOINC Standardization" &&
+          ext.url === "https://zusapi.com/terminology/enrichment"
+      ) &&
+      x.display
+  );
+};
+
+const firstDisplay = (coding?: Coding[]): Coding | undefined => {
+  if (!coding) {
+    return undefined;
+  }
+
+  return coding.find((x) => x.display);
+};
 
 export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
   kind = "DiagnosticReport" as const;
@@ -27,14 +52,11 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
   }
 
   get displayName() {
-    const { code } = this.resource;
-    const value = codeableConceptLabel(code);
-
-    if (isNullFlavorSystem(code.coding?.[0])) {
-      return get(NullFlavorSystem, [value, "display"], "Unknown");
-    }
-
-    return value;
+    return (
+      standardizedLoincDisplay(this.resource.code.coding)?.display ||
+      firstDisplay(this.resource.code.coding)?.display ||
+      codeableConceptLabel(this.resource.code)
+    );
   }
 
   get effectiveEnd() {
