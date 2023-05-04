@@ -1,4 +1,4 @@
-import { Coding } from "fhir/r4";
+import { Coding, Observation } from "fhir/r4";
 import { FHIRModel } from "./fhir-model";
 import { codeableConceptLabel, findCodingByOrderOfPreference } from "@/fhir/codeable-concept";
 import { formatDateISOToLocal } from "@/fhir/formatters";
@@ -31,6 +31,55 @@ const firstDisplay = (coding?: Coding[]): Coding | undefined => {
   return coding.find((x) => x.display);
 };
 
+const filterOutFalsy = <T>(arr: (T | undefined)[] | undefined): T[] => {
+  if (!arr) {
+    return [];
+  }
+
+  // this makes me sad, but TypeScript isn't smart enough to figure this out
+  return arr.filter((x) => x) as T[];
+};
+
+// go through all possible values, grab the maximum date, or undefined
+// if nothing was found
+const inferStartDateFromResults = (results: (Observation | undefined)[] | undefined) =>
+  filterOutFalsy(results)
+    .map(
+      (obs) =>
+        formatDateISOToLocal(obs.effectivePeriod?.start) ||
+        formatDateISOToLocal(obs.effectiveDateTime) ||
+        formatDateISOToLocal(obs.effectiveInstant)
+    )
+    .reduce((d, min) => {
+      if (!d) {
+        return min;
+      }
+      if (!min) {
+        return d;
+      }
+      return Date.parse(d) < Date.parse(min) ? d : min;
+    }, undefined as unknown as string);
+
+// go through all possible values, grab the maximum date, or undefined
+// if nothing was found
+const inferEndDateFromResults = (results: (Observation | undefined)[] | undefined) =>
+  filterOutFalsy(results)
+    .map(
+      (obs) =>
+        formatDateISOToLocal(obs.effectivePeriod?.start) ||
+        formatDateISOToLocal(obs.effectiveDateTime) ||
+        formatDateISOToLocal(obs.effectiveInstant)
+    )
+    .reduce((d, min) => {
+      if (!d) {
+        return min;
+      }
+      if (!min) {
+        return d;
+      }
+      return Date.parse(d) > Date.parse(min) ? d : min;
+    }, undefined as unknown as string);
+
 export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
   kind = "DiagnosticReport" as const;
 
@@ -59,21 +108,40 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
     );
   }
 
+  get effectiveStart() {
+    return (
+      formatDateISOToLocal(
+        this.resource.effectivePeriod?.start || this.resource.effectiveDateTime
+      ) ||
+      inferStartDateFromResults(
+        this.resource.result?.map((ref) =>
+          findReference("Observation", undefined, this.includedResources, ref.reference)
+        )
+      )
+    );
+  }
+
   get effectiveEnd() {
     if (this.resource.effectivePeriod?.end) {
       return formatDateISOToLocal(this.resource.effectivePeriod.end);
     }
-    return this.effectiveStart;
+    return (
+      this.effectiveStart ||
+      inferEndDateFromResults(
+        this.resource.result?.map((ref) =>
+          findReference("Observation", undefined, this.includedResources, ref.reference)
+        )
+      ) ||
+      inferStartDateFromResults(
+        this.resource.result?.map((ref) =>
+          findReference("Observation", undefined, this.includedResources, ref.reference)
+        )
+      )
+    );
   }
 
   get identifier() {
     return this.resource.identifier?.[0].value ?? "";
-  }
-
-  get effectiveStart() {
-    return formatDateISOToLocal(
-      this.resource.effectivePeriod?.start || this.resource.effectiveDateTime
-    );
   }
 
   get performer() {
