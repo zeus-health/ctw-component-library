@@ -1,7 +1,33 @@
+import { CodeableConcept, Coding } from "fhir/r4";
 import { FHIRModel } from "./fhir-model";
 import { codeableConceptLabel } from "@/fhir/codeable-concept";
 import { formatDateISOToLocal } from "@/fhir/formatters";
 import { compact } from "@/utils/nodash";
+
+const standardizedLoincDisplay = (coding?: Coding[]) => {
+  if (!coding) {
+    return undefined;
+  }
+
+  return coding.find(
+    (x) =>
+      x.extension &&
+      x.extension.find(
+        (ext) =>
+          ext.valueString === "LOINC Standardization" &&
+          ext.url === "https://zusapi.com/terminology/enrichment"
+      ) &&
+      x.display
+  );
+};
+
+const firstDisplay = (coding?: Coding[]): CodeableConcept | undefined => {
+  if (!coding) {
+    return undefined;
+  }
+
+  return coding.find((x) => x.display);
+};
 
 export class ObservationModel extends FHIRModel<fhir4.Observation> {
   kind = "Observation" as const;
@@ -11,7 +37,14 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
   }
 
   get display() {
-    return codeableConceptLabel(this.resource.code);
+    return (
+      // use standardized loinc from enrichment
+      standardizedLoincDisplay(this.resource.code.coding)?.display ||
+      // then try the first valid display value from one of the codings
+      firstDisplay(this.resource.code.coding) ||
+      // finally use what's on the code.text
+      codeableConceptLabel(this.resource.code)
+    );
   }
 
   get effectiveStart() {
