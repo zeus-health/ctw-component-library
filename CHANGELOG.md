@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 1.7.4
+
+### Patch Changes
+
+- 6915e674: Add a way to invalidate all queries in the cache.
+
+## 1.7.3
+
+### Patch Changes
+
+- f18efed5: Add beta label to timeline and fix timeline drawer bug.
+
 ## 1.7.2
 
 ### Patch Changes
