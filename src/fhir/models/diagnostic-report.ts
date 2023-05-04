@@ -6,7 +6,7 @@ import { findReference } from "@/fhir/resource-helper";
 import { SYSTEM_DIAGNOSTIC_SERVICE_SECTION_ID, SYSTEM_SNOMED } from "@/fhir/system-urls";
 import { find } from "@/utils/nodash";
 
-const standardizedLoincDisplay = (coding?: Coding[]) => {
+export const standardizedLoincDisplay = (coding?: Coding[]) => {
   if (!coding) {
     return undefined;
   }
@@ -23,7 +23,7 @@ const standardizedLoincDisplay = (coding?: Coding[]) => {
   );
 };
 
-const firstDisplay = (coding?: Coding[]): Coding | undefined => {
+export const firstDisplay = (coding?: Coding[]): Coding | undefined => {
   if (!coding) {
     return undefined;
   }
@@ -31,7 +31,7 @@ const firstDisplay = (coding?: Coding[]): Coding | undefined => {
   return coding.find((x) => x.display);
 };
 
-const filterOutFalsy = <T>(arr: (T | undefined)[] | undefined): T[] => {
+export const filterOutFalsy = <T>(arr: (T | undefined)[] | undefined): T[] => {
   if (!arr) {
     return [];
   }
@@ -42,7 +42,7 @@ const filterOutFalsy = <T>(arr: (T | undefined)[] | undefined): T[] => {
 
 // go through all possible values, grab the maximum date, or undefined
 // if nothing was found
-const inferStartDateFromResults = (results: (Observation | undefined)[] | undefined) =>
+export const inferStartDateFromResults = (results: (Observation | undefined)[] | undefined) =>
   filterOutFalsy(results)
     .map(
       (obs) =>
@@ -62,7 +62,7 @@ const inferStartDateFromResults = (results: (Observation | undefined)[] | undefi
 
 // go through all possible values, grab the maximum date, or undefined
 // if nothing was found
-const inferEndDateFromResults = (results: (Observation | undefined)[] | undefined) =>
+export const inferEndDateFromResults = (results: (Observation | undefined)[] | undefined) =>
   filterOutFalsy(results)
     .map(
       (obs) =>
