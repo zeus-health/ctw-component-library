@@ -30,7 +30,7 @@ export function useQueryGetPatientMedsForBuilder(): UseQueryResult<MedicationRes
         informationSourceNot: "Patient", // exclude medication statements where the patient is the information source
       },
     ],
-    withTimerMetric(getBuilderMedications, "req.builder_medications")
+    withTimerMetric(getBuilderMedications, "req.timing.builder_medications")
   );
 }
 
@@ -45,7 +45,7 @@ export function useQueryGetSummarizedPatientMedications(): UseQueryResult<
         _revinclude: "Basic:subject",
       },
     ],
-    withTimerMetric(getActiveMedications, "req.active_medications")
+    withTimerMetric(getActiveMedications, "req.timing.active_medications")
   );
 }
 

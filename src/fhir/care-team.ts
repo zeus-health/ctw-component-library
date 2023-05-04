@@ -18,13 +18,16 @@ export function usePatientCareTeam() {
           });
           const includedResources = getIncludedResources(bundle);
           const results = applyCareTeamFilters(resources, includedResources);
-          Telemetry.countMetric("req.care_teams", results.length);
+          if (results.length === 0) {
+            Telemetry.countMetric("req.count.care_teams.none");
+          }
+          Telemetry.histogramMetric("req.count.care_teams", results.length);
           return results;
         } catch (e) {
           throw new Error(`Failed fetching care team information for patient: ${e}`);
         }
       },
-      "req.care_teams",
+      "req.timing.care_teams",
       []
     )
   );
