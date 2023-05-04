@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.7.4
+
+### Patch Changes
+
+- 6915e674: Add a way to invalidate all queries in the cache.
+
 ## 1.7.3
 
 ### Patch Changes
