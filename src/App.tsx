@@ -65,7 +65,16 @@ const demoComponents: DemoComponent[] = [
     render: () => (
       <ZusAggregatedProfile
         includePatientDemographicsForm={false}
-        resources={["timeline"]}
+        resources={[
+          // "allergies",
+          // "conditions",
+          // "conditions-outside",
+          // "medications",
+          // "medications-outside",
+          // "observations",
+          // "timeline",
+          "observations-outside",
+        ]}
         title="ZAP"
       />
     ),
