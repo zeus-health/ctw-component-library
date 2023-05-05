@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.7.6
+
+### Patch Changes
+
+- 3a83c88c: Fixes issue with missing builder filter.
+
 ## 1.7.5
 
 ### Patch Changes
