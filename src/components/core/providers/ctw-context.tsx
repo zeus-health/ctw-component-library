@@ -30,7 +30,9 @@ export type CTWState = {
 export type CTWRequestContext = {
   env: Env;
   authToken: string;
+  // The user's builder ID.
   builderId: string;
+  // The optional builder ID used in case the user is impersonating a builder.
   contextBuilderId: string | undefined;
   fhirClient: Client;
 };
