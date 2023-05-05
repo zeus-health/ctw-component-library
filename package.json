@@ -1,6 +1,6 @@
 {
   "name": "@zus-health/ctw-component-library",
-  "version": "1.7.6",
+  "version": "1.7.7",
   "type": "module",
   "engines": {
     "node": ">=16 <19"
