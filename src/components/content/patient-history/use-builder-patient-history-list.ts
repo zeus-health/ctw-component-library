@@ -1,8 +1,9 @@
 import { getBuilderRefreshHistoryMessages } from "./use-patient-history";
+import { PatientHistoryRequestModel } from "@/api/patient-history/models/patient-history";
+import { JSONApiReponse } from "@/api/utils/types";
 import { useQueryWithCTW } from "@/components/core/providers/ctw-provider";
-import { PatientHistoryRequestModel } from "@/fhir/models/patient-history";
 import { getBuilderPatientsListByIdentifier } from "@/fhir/patient-helper";
-import { PatientHistoryJobResponse } from "@/services/patient-history/patient-history-types";
+import { PatientHistoryJobResponseJobData } from "@/services/patient-history/patient-history-types";
 import { compact, uniq } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_HISTORY_LIST } from "@/utils/query-keys";
 import { Telemetry } from "@/utils/telemetry";
@@ -22,7 +23,7 @@ export function useBuilderPatientHistoryList(
           count: pageSize,
           offset: pageOffset,
           status,
-        })) as PatientHistoryJobResponse;
+        })) as JSONApiReponse<PatientHistoryJobResponseJobData>;
 
         const patientsIds = uniq(
           compact(response.data.map((job) => job.relationships.patient.data.id))

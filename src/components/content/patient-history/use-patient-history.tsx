@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { PatientHistoryStatus } from "./patient-history-message-status";
 import { PatientHistoryRequestDrawer } from "../patient-history-request-drawer";
 import { getZusApiBaseUrl } from "@/api/urls";
+import { JSONApiReponse } from "@/api/utils/types";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
 import {
@@ -10,7 +11,7 @@ import {
 } from "@/components/core/providers/patient-provider";
 import { PatientModel } from "@/fhir/models";
 import {
-  PatientHistoryJobResponse,
+  PatientHistoryJobResponseJobData,
   PatientHistoryServiceMessage,
   PatientRefreshHistoryMessageStatus,
 } from "@/services/patient-history/patient-history-types";
@@ -142,7 +143,7 @@ export function usePatientHistoryDetails() {
         const response = (await getBuilderRefreshHistoryMessages({
           requestContext,
           patientId: patient.id,
-        })) as PatientHistoryJobResponse;
+        })) as JSONApiReponse<PatientHistoryJobResponseJobData>;
 
         const latestDone = find(response.data, (item) =>
           item.attributes.providers.every((provider) => provider.status === "done")
