@@ -3,6 +3,7 @@ import { PatientHistoryStatus } from "./patient-history-message-status";
 import { PatientHistoryRequestDrawer } from "../patient-history-request-drawer";
 import { getZusApiBaseUrl } from "@/api/urls";
 import { JSONApiReponse } from "@/api/utils/types";
+import { constructJSONUrl } from "@/api/utils/url";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
 import {
@@ -16,7 +17,7 @@ import {
   PatientRefreshHistoryMessageStatus,
 } from "@/services/patient-history/patient-history-types";
 import { errorResponse } from "@/utils/errors";
-import { find, omitBy } from "@/utils/nodash";
+import { find } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_HISTORY_DETAILS } from "@/utils/query-keys";
 import { ctwFetch } from "@/utils/request";
 import { Telemetry } from "@/utils/telemetry";
@@ -101,25 +102,16 @@ export async function getBuilderRefreshHistoryMessages({
   status,
 }: GetBuilderRefreshHistoryMessagesParams) {
   const baseUrl = new URL(`${getZusApiBaseUrl(requestContext.env)}/patient-history/jobs?`);
-
-  const paramsObj = omitBy(
-    {
-      "page[count]": String(count),
-      "page[offset]": offset ? String(offset + count) : String(offset),
-      "filter[builder-id]": requestContext.contextBuilderId
-        ? `${requestContext.contextBuilderId}`
-        : "",
-      "filter[patient-id]": patientId ? `${patientId}` : "",
-      "filter[status]": status ? `${status}` : "",
-    },
-    (value) => !value
-  );
-
-  const params = new URLSearchParams([...Object.entries(paramsObj)]).toString();
-  const endpointUrl = new URL(`${baseUrl}${decodeURIComponent(params)}`);
+  const params = {
+    "filter[builder-id]": requestContext.contextBuilderId
+      ? `${requestContext.contextBuilderId}`
+      : "",
+    "filter[patient-id]": patientId ? `${patientId}` : "",
+    "filter[status]": status ? `${status}` : "",
+  };
 
   try {
-    const response = await ctwFetch(endpointUrl.href, {
+    const response = await ctwFetch(constructJSONUrl(baseUrl, params, count, offset), {
       headers: {
         Authorization: `Bearer ${requestContext.authToken}`,
         ...(requestContext.contextBuilderId && {

@@ -1,9 +1,9 @@
 import { getZusApiBaseUrl } from "../../urls";
 import { JSONApiReponse } from "@/api/utils/types";
+import { constructJSONUrl } from "@/api/utils/url";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { User } from "@/services/auth/users";
 import { errorResponse } from "@/utils/errors";
-import { omitBy } from "@/utils/nodash";
 
 export async function getUsers(
   requestContext: CTWRequestContext,
@@ -11,24 +11,14 @@ export async function getUsers(
   offset = 0
 ): Promise<JSONApiReponse<User>> {
   const baseUrl = new URL(`${getZusApiBaseUrl(requestContext.env)}/auth/users?`);
-
-  const paramsObj = omitBy(
-    {
-      sort: "email",
-      "page[count]": String(count),
-      "page[offset]": offset ? String(offset + count) : String(offset),
-      "filter[builderId]": requestContext.contextBuilderId
-        ? `${requestContext.contextBuilderId}`
-        : "",
-    },
-    (value) => !value
-  );
-
-  const params = new URLSearchParams([...Object.entries(paramsObj)]).toString();
-  const endpointUrl = new URL(`${baseUrl}${decodeURIComponent(params)}`);
+  const params = {
+    "filter[builderId]": requestContext.contextBuilderId
+      ? `${requestContext.contextBuilderId}`
+      : "",
+  };
 
   try {
-    const response = await fetch(endpointUrl, {
+    const response = await fetch(constructJSONUrl(baseUrl, params, count, offset), {
       headers: {
         Authorization: `Bearer ${requestContext.authToken}`,
       },
