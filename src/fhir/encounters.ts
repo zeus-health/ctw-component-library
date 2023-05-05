@@ -19,13 +19,16 @@ export function usePatientEncounters() {
           }
         );
         const results = setupEncounterModels(encounters, bundle);
-        Telemetry.countMetric("req.encounters", results.length);
+        if (results.length === 0) {
+          Telemetry.countMetric("req.count.encounters.none");
+        }
+        Telemetry.histogramMetric("req.count.encounters", results.length);
         return results;
       } catch (e) {
         Telemetry.logError(e as Error, "Failed fetching timeline information for patient");
         throw new Error(`Failed fetching timeline information for patient: ${e}`);
       }
-    }, "req.encounters")
+    }, "req.timing.encounters")
   );
 }
 function setupEncounterModels(

@@ -251,6 +251,12 @@ export class Telemetry {
     );
   }
 
+  static histogramMetric(name: string, value: number, tags: string[] = []) {
+    Telemetry.reportMetric("histogram", name, value, tags).catch((error) =>
+      Telemetry.logError(error as Error)
+    );
+  }
+
   static timeMetric(metric: string, tags: string[] = []) {
     const start = new Date().getTime();
 

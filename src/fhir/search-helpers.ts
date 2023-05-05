@@ -106,6 +106,9 @@ export async function searchBuilderRecords<T extends ResourceTypeString>(
   requestContext: CTWRequestContext,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
+  // TODO: Once all third party and lens data is being written to dedicated builders (ie. we are in a "post-kludge world")
+  // then we can remove all of this filtering by firstparty and the user's builder.
+  // The whole purpose of this code is to specifically target data that was written by the user's builder.
   const nonBuilderTags = [
     ...THIRD_PARTY_TAGS,
     ...MEDICATION_LENS_TAGS,
@@ -114,12 +117,13 @@ export async function searchBuilderRecords<T extends ResourceTypeString>(
     ...UPI_TAGS,
   ];
   type FirstPartyParams = {
-    _tag?: string[];
     firstparty?: boolean;
     "_tag:not"?: string[];
   };
   const firstPartyParams: FirstPartyParams = {};
 
+  // Only some resources in ODS support filtering by the "firstparty" in order to exclude 3rd party and lens data.
+  // For other resources we'll need to keep using the _tag:not parameter which is significantly slower.
   if (FIRST_PARTY_TAG_SUPPORTED_RESOURCES.includes(resourceType)) {
     firstPartyParams.firstparty = true;
   } else {
@@ -127,7 +131,20 @@ export async function searchBuilderRecords<T extends ResourceTypeString>(
   }
 
   const params = mergeParams(searchParams, firstPartyParams);
-  return searchAllRecords(resourceType, requestContext, params);
+  const records = await searchAllRecords(resourceType, requestContext, params);
+
+  // Filter using the user's builder ID.
+  const { entry, resources } = filterSearchReturnByBuilderId(
+    records,
+    requestContext.contextBuilderId || requestContext.builderId
+  );
+
+  records.resources = resources;
+  records.bundle.entry = entry;
+  records.bundle.total = entry.length;
+  records.total = resources.length;
+
+  return records;
 }
 
 // Like searchAllRecords, but filters down to lens records.
@@ -154,7 +171,10 @@ export async function searchLensRecords<T extends ResourceTypeString>(
   This will help avoid getting duplicate results or no there is no data for the builder. 
   Once we have been in the post-kludge world long enough we can remove this functionality. */
   if (resources.length === 0 && entry.length === 0) {
-    ({ entry, resources } = filterSearchReturnByBuilderId(records, requestContext.builderId));
+    ({ entry, resources } = filterSearchReturnByBuilderId(
+      records,
+      requestContext.contextBuilderId || requestContext.builderId
+    ));
   }
 
   records.resources = resources;
@@ -188,7 +208,10 @@ export async function searchSummaryRecords<T extends ResourceTypeString>(
   This will help avoid getting duplicate results or no there is no data for the builder. 
   Once we have been in the post-kludge world long enough we can remove this functionality. */
   if (resources.length === 0 || entry.length === 0) {
-    ({ entry, resources } = filterSearchReturnByBuilderId(records, requestContext.builderId));
+    ({ entry, resources } = filterSearchReturnByBuilderId(
+      records,
+      requestContext.contextBuilderId || requestContext.builderId
+    ));
   }
 
   records.resources = resources;

@@ -20,11 +20,14 @@ export function usePatientDocument() {
 
           ["desc"]
         );
-        Telemetry.countMetric("req.documents", results.length);
+        if (results.length === 0) {
+          Telemetry.countMetric("req.count.documents.none");
+        }
+        Telemetry.histogramMetric("req.count.documents", results.length);
         return results;
       } catch (e) {
         throw new Error(`Failed fetching document information for patient: ${e}`);
       }
-    }, "req.documents")
+    }, "req.timing.documents")
   );
 }

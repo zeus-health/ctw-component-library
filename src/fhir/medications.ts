@@ -112,7 +112,7 @@ export async function getBuilderMedications(
 
     const medications = applySearchFiltersToResponse(response, searchFilters, false);
 
-    Telemetry.countMetric("req.builder_medications", medications.length);
+    Telemetry.histogramMetric("req.count.builder_medications", medications.length);
 
     return { bundle: response.bundle, medications };
   } catch (e) {
@@ -206,7 +206,10 @@ export async function getActiveMedications(
     );
 
     const medications = applySearchFiltersToResponse(response, searchFilters, true);
-    Telemetry.countMetric("req.active_medications", medications.length);
+    if (medications.length === 0) {
+      Telemetry.countMetric("req.count.active_medications.none");
+    }
+    Telemetry.histogramMetric("req.count.active_medications", medications.length);
     return { bundle: response.bundle, medications };
   } catch (e) {
     throw errorResponse("Failed fetching medications for patient", e);
