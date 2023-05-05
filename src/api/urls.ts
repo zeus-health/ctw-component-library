@@ -8,6 +8,10 @@ export const getZusProxyApiBaseUrl = (env: Env) =>
     ? `https://ehr-hooks.zusapi.com/proxy`
     : `https://ehr-hooks.${env}.zusapi.com/proxy`;
 
+export const getZusFhirBaseUrl = (env: Env) => `${getZusApiBaseUrl(env)}/fhir`;
+
+export const getZusProxyFhirBaseUrl = (env: Env) => `${getZusProxyApiBaseUrl(env)}/fhir`;
+
 export const getFormsConditionsUrl = (env: Env) =>
   `${getZusApiBaseUrl(env)}/forms-data/terminology/conditions`;
 
