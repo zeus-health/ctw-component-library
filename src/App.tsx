@@ -18,6 +18,7 @@ import { ErrorBoundary } from "./error-boundary";
 import { PatientHistoryTable } from "./components/content/patient-history/patient-history-table";
 import type { ReactNode } from "react";
 import { SecuredApp } from "@/SecuredApp";
+import { UsersTable } from "./components/content/users/users";
 
 const {
   VITE_SYSTEM_URL,
@@ -61,19 +62,19 @@ type DemoComponent = {
   note?: string;
 };
 const demoComponents: DemoComponent[] = [
-  {
-    render: () => (
-      <ZusAggregatedProfile
-        includePatientDemographicsForm={false}
-        resources={["timeline"]}
-        title="ZAP"
-      />
-    ),
-  },
-  { render: () => <PatientSearch />, title: "Patient Search" },
-  { render: () => <PatientHistoryTable />, title: "Patient History Table" },
-  { render: () => <PatientConditionsOutside />, title: "Patient Conditions" },
-  { render: () => <PatientDocuments />, title: "Patient Documents" },
+  // {
+  //   render: () => (
+  //     <ZusAggregatedProfile
+  //       includePatientDemographicsForm={false}
+  //       resources={["timeline"]}
+  //       title="ZAP"
+  //     />
+  //   ),
+  // },
+  // { render: () => <PatientSearch />, title: "Patient Search" },
+  // { render: () => <PatientHistoryTable />, title: "Patient History Table" },
+  // { render: () => <PatientConditionsOutside />, title: "Patient Conditions" },
+  { render: () => <UsersTable />, title: "Users" },
 ];
 
 const DemoApp = ({ accessToken = "" }) => (
