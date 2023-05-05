@@ -19,7 +19,8 @@ export const standardizedLoincDisplay = (coding?: Coding[]) => {
           ext.valueString === "LOINC Standardization" &&
           ext.url === "https://zusapi.com/terminology/enrichment"
       ) &&
-      x.display
+      x.display &&
+      x.system !== "http://terminology.hl7.org/CodeSystem/v3-NullFlavor"
   );
 };
 
@@ -28,7 +29,13 @@ export const firstDisplay = (coding?: Coding[]): Coding | undefined => {
     return undefined;
   }
 
-  return coding.find((x) => x.display);
+  return (
+    coding
+      // filter out null flavor
+      .filter((x) => x.system !== "http://terminology.hl7.org/CodeSystem/v3-NullFlavor")
+      // find the first one that has a truthy display
+      .find((x) => x.display)
+  );
 };
 
 export const filterOutFalsy = <T>(arr: (T | undefined)[] | undefined): T[] => {
