@@ -12,7 +12,7 @@ import { Table } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
 import { QUERY_KEY_PATIENTS_LIST } from "@/utils/query-keys";
 
-export type PatientsTableProps = {
+export type UsersTableProps = {
   className?: cx.Argument;
   pageSize?: number;
   title?: string;
@@ -31,16 +31,10 @@ export function useUsersList(pageSize: number, pageOffset: number) {
 }
 
 /**
- * PatientsTable displays a paginated list of all patients for a builder. In
- * addition to having configurable page size, lazy loading and name search, the
- * component accepts an `onRowClick` prop so developers can add their own
- * logic when a row is clicked. The `onRowClick` receives the targeted
- * `PatientModel` as its sole argument, which contains the underlying FHIR
- * object as `.resource`.
- *
+ * UsersTable displays a paginated list of all users for a builder.
  */
 export const UsersTable = withErrorBoundary(
-  ({ className, pageSize = 10, title = "Patients" }: PatientsTableProps) => {
+  ({ className, pageSize = 10, title = "Patients" }: UsersTableProps) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [users, setUsers] = useState<UserModel[]>([]);
     const { data, isFetching, isError } = useUsersList(pageSize, currentPage - 1);
