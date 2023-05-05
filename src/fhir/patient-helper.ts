@@ -19,7 +19,6 @@ export async function getBuilderFhirPatient(
     const response = await searchBuilderRecords("Patient", requestContext, {
       ...searchParams,
       identifier: `${systemURL}|${patientID}`,
-      _count: 1,
       _include: "Patient:organization",
     });
 

@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 1.7.6
+
+### Patch Changes
+
+- 3a83c88c: Fixes issue with missing builder filter.
+
+## 1.7.5
+
+### Patch Changes
+
+- 9b803fd4: Adjust metrics to distinguish record counts from timing.
+
 ## 1.7.4
 
 ### Patch Changes

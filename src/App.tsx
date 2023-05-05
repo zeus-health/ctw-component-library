@@ -79,10 +79,10 @@ const demoComponents: DemoComponent[] = [
       />
     ),
   },
-  { render: () => <PatientSearch />, title: "Patient Search" },
-  { render: () => <PatientHistoryTable />, title: "Patient History Table" },
-  { render: () => <PatientConditionsOutside />, title: "Patient Conditions" },
-  { render: () => <PatientDocuments />, title: "Patient Documents" },
+  // { render: () => <PatientSearch />, title: "Patient Search" },
+  // { render: () => <PatientHistoryTable />, title: "Patient History Table" },
+  // { render: () => <PatientConditionsOutside />, title: "Patient Conditions" },
+  // { render: () => <PatientDocuments />, title: "Patient Documents" },
 ];
 
 const DemoApp = ({ accessToken = "" }) => (

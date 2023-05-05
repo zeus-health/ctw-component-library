@@ -79,7 +79,7 @@ export function usePatientBuilderConditions() {
           }
         );
         const results = filterAndSort(setupConditionModels(conditions, bundle));
-        Telemetry.countMetric("req.builder_conditions", results.length);
+        Telemetry.histogramMetric("req.count.builder_conditions", results.length);
         return results;
       } catch (e) {
         throw Telemetry.logError(
@@ -87,7 +87,7 @@ export function usePatientBuilderConditions() {
           `Failed fetching conditions for patient: ${patient.UPID}`
         );
       }
-    }, "req.builder_conditions")
+    }, "req.timing.builder_conditions")
   );
 }
 
@@ -106,7 +106,10 @@ function usePatientSummaryConditions() {
           }
         );
         const results = filterAndSort(setupConditionModels(conditions, bundle));
-        Telemetry.countMetric("req.summary_conditions", conditions.length);
+        if (results.length === 0) {
+          Telemetry.countMetric("req.count.summary_conditions.none");
+        }
+        Telemetry.histogramMetric("req.count.summary_conditions", results.length);
         return results;
       } catch (e) {
         throw Telemetry.logError(
@@ -114,7 +117,7 @@ function usePatientSummaryConditions() {
           `Failed fetching conditions outside for patient: ${patient.UPID}`
         );
       }
-    }, "req.summary_conditions")
+    }, "req.timing.summary_conditions")
   );
 }
 
