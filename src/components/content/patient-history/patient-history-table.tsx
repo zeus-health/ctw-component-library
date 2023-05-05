@@ -6,13 +6,13 @@ import { patientHistoryFilters } from "./helpers/filters";
 import { useBuilderPatientHistoryList } from "./use-builder-patient-history-list";
 import { TableOptionProps } from "../patients/patients-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
+import { PatientHistoryRequestModel } from "@/api/patient-history/models/patient-history";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { FilterChangeEvent } from "@/components/core/filter-bar/filter-bar-types";
 import { SimplePagination } from "@/components/core/pagination/simple-pagination";
 import { Table } from "@/components/core/table/table";
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { PatientModel } from "@/fhir/models";
-import { PatientHistoryRequestModel } from "@/fhir/models/patient-history";
 import { CTWBox } from "@/index";
 import { PatientRefreshHistoryMessageStatus } from "@/services/patient-history/patient-history-types";
 
