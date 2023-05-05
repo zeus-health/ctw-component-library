@@ -1,3 +1,5 @@
+import { JSONApiBase } from "@/api/utils/types";
+
 export type PatientRefreshHistoryMessageStatus =
   | "initialize"
   | "in_progress"
@@ -11,8 +13,6 @@ export type PatientHistoryServiceMessage = {
 };
 
 export type PatientHistoryJobResponseJobData = {
-  type: string;
-  id: string;
   attributes: {
     createdAt: string;
     requestConsent: boolean;
@@ -32,9 +32,4 @@ export type PatientHistoryJobResponseJobData = {
       data: { type: "fhir/Practitioner"; id: string };
     };
   };
-};
-
-export type PatientHistoryJobResponse = {
-  data: PatientHistoryJobResponseJobData[];
-  links: { self: string; prev?: string; next?: string };
-};
+} & JSONApiBase;
