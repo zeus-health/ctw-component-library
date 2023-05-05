@@ -65,15 +65,15 @@ const demoComponents: DemoComponent[] = [
     render: () => (
       <ZusAggregatedProfile
         includePatientDemographicsForm={false}
-        resources={["timeline"]}
+        resources={["medications", "medications-outside"]}
         title="ZAP"
       />
     ),
   },
-  { render: () => <PatientSearch />, title: "Patient Search" },
-  { render: () => <PatientHistoryTable />, title: "Patient History Table" },
-  { render: () => <PatientConditionsOutside />, title: "Patient Conditions" },
-  { render: () => <PatientDocuments />, title: "Patient Documents" },
+  // { render: () => <PatientSearch />, title: "Patient Search" },
+  // { render: () => <PatientHistoryTable />, title: "Patient History Table" },
+  // { render: () => <PatientConditionsOutside />, title: "Patient Conditions" },
+  // { render: () => <PatientDocuments />, title: "Patient Documents" },
 ];
 
 const DemoApp = ({ accessToken = "" }) => (
