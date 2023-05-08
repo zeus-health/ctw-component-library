@@ -141,8 +141,6 @@ export async function searchBuilderRecords<T extends ResourceTypeString>(
 
   records.resources = resources;
   records.bundle.entry = entry;
-  records.bundle.total = entry.length;
-  records.total = resources.length;
 
   return records;
 }
