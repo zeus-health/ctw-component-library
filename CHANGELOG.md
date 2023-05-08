@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.7.9
+
+### Patch Changes
+
+- 7dbea9a2: Preserving server side total in response from searchBuilderRecords
+
 ## 1.7.8
 
 ### Patch Changes
