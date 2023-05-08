@@ -51,7 +51,7 @@ describe("telemetry", () => {
     expect(await fetches[0].json()).toEqual({
       name: "am_i.or_am_i_not",
       type: "timing",
-      tags: ["service:ctw-component-library", "env:test", "is_super:false"],
+      tags: ["service:ctw-component-library", "env:test", "is_super:false", "ehr:unknown"],
       value: 0,
     });
   });
