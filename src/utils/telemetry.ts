@@ -70,7 +70,7 @@ export class Telemetry {
 
   static environment = "";
 
-  static ehr: string | undefined = undefined;
+  static ehr = "unknown";
 
   /**
    * We need to normalize environment name in order to effectively use template
@@ -87,11 +87,7 @@ export class Telemetry {
     }
   }
 
-  static init(
-    environment: string,
-    ehr: string | undefined = undefined,
-    allowDataDogLogging = false
-  ) {
+  static init(environment: string, ehr = "unknown", allowDataDogLogging = false) {
     this.datadogLoggingEnabled = allowDataDogLogging;
     this.setEnv(environment);
     this.ehr = ehr;
