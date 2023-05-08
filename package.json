@@ -1,6 +1,7 @@
 {
   "name": "@zus-health/ctw-component-library",
   "version": "1.7.8",
+  "license" : "MIT",
   "type": "module",
   "engines": {
     "node": ">=16 <19"
