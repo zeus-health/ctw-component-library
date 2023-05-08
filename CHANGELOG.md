@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.7.7
+
+### Patch Changes
+
+- 4034716a: Fix display and date for diagnostic reports in table view
+
 ## 1.7.6
 
 ### Patch Changes
