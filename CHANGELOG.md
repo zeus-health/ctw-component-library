@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.7.8
+
+### Patch Changes
+
+- 6b9630e0: Add optional ehr to metrics.
+
 ## 1.7.7
 
 ### Patch Changes
