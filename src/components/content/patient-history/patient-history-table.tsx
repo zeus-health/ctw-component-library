@@ -102,8 +102,12 @@ export const PatientHistoryTable = withErrorBoundary(
 
 const columns: TableColumn<PatientHistoryRequestModel>[] = [
   {
-    title: "Last Queried",
+    title: "Initiated",
     render: (data) => <div>{data.createdAt}</div>,
+  },
+  {
+    title: "Target Date",
+    render: (data) => <div>{data.targetDate}</div>,
   },
   {
     title: "Name",

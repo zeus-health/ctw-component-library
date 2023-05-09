@@ -1,7 +1,7 @@
-import { format } from "date-fns";
 import { PatientModel } from "./patient";
 import { formatISODateStringToDate } from "../formatters";
 import { PatientHistoryJobResponseJobData } from "@/services/patient-history/patient-history-types";
+import { format } from "date-fns";
 
 export class PatientHistoryRequestModel {
   kind = "PatientHistory" as const;
@@ -23,8 +23,8 @@ export class PatientHistoryRequestModel {
     return this.historyInfo?.id || "";
   }
 
-  get lastRetrievedAt() {
-    return formatISODateStringToDate(this.historyInfo?.attributes.createdAt);
+  get targetDate() {
+    return formatISODateStringToDate(this.historyInfo?.attributes.targetDate);
   }
 
   get createdAt() {
