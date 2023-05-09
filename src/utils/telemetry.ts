@@ -241,6 +241,7 @@ export class Telemetry {
       user[AUTH_BUILDER_NAME] ? `builder_name:${user[AUTH_BUILDER_NAME]}` : undefined,
       `is_super:${user[AUTH_IS_SUPER_ORG] || "false"}`,
       this.ehr ? `ehr:${this.ehr}` : undefined,
+      `version:${packageJson.version}`,
       ...additionalTags,
     ]);
 
