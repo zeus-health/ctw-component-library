@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.7.11
+
+### Patch Changes
+
+- 26181d8b: Sort patient list by last name.
+
 ## 1.7.10
 
 ### Patch Changes
