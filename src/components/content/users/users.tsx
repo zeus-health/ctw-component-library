@@ -2,19 +2,21 @@ import type { TableColumn } from "@/components/core/table/table-helpers";
 import type { Argument } from "classnames";
 import cx from "classnames";
 import { useEffect, useState } from "react";
+import { RowActions } from "./helpers/actions";
 import { UserModel } from "@/api/auth/models/users";
 import { getUsers } from "@/api/auth/queries/auth";
 import * as CTWBox from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { SimplePagination } from "@/components/core/pagination/simple-pagination";
 import { useQueryWithCTW } from "@/components/core/providers/ctw-provider";
-import { Table } from "@/components/core/table/table";
+import { Table, TableProps } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
 import { QUERY_KEY_PATIENTS_LIST } from "@/utils/query-keys";
 
 export type UsersTableProps = {
   className?: cx.Argument;
   pageSize?: number;
+  rowActions: TableProps<UserModel>["RowActions"];
   title?: string;
 } & TableOptionProps<UserModel>;
 
@@ -62,7 +64,13 @@ export const UsersTable = withErrorBoundary(
       >
         <CTWBox.Heading title={title} />
         <div className="ctw-overflow-hidden">
-          <Table records={users} columns={columns} pageSize={pageSize} hidePagination>
+          <Table
+            records={users}
+            columns={columns}
+            pageSize={pageSize}
+            hidePagination
+            RowActions={RowActions}
+          >
             <SimplePagination
               currentPage={currentPage}
               setCurrentPage={setCurrentPage}
