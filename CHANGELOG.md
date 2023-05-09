@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.7.10
+
+### Patch Changes
+
+- 4094dbd6: Add version to metrics so we can track what versions are being used.
+
 ## 1.7.9
 
 ### Patch Changes
