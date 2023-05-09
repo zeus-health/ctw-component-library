@@ -1,3 +1,4 @@
+export const QUERY_KEY_AUTH_ROLES = "auth_roles";
 export const QUERY_KEY_AUTH_TOKEN = "auth_token";
 export const QUERY_KEY_BINARY = "binary";
 export const QUERY_KEY_CARETEAM = "patient_care_team";
