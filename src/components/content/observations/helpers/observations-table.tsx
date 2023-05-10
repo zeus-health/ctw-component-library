@@ -10,7 +10,7 @@ export type ObservationsTableProps = {
 export const ObservationsTable = ({ className, data }: ObservationsTableProps) => (
   <div className={className}>
     <div className="ctw-text-base ctw-font-medium ctw-uppercase ctw-text-content-light">
-      observations
+      Results
     </div>
     <ResourceTable
       className="ctw-patient-observation-details"

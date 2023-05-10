@@ -34,11 +34,46 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
     );
   }
 
+  get unit() {
+    return this.resource.valueQuantity?.unit;
+  }
+
+  get valueString(): string | undefined {
+    return this.resource.valueString;
+  }
+
   get interpretation() {
     return codeableConceptLabel(this.resource.interpretation?.[0]);
   }
 
   get notes() {
     return this.resource.note?.[0].text ?? "";
+  }
+
+  get referenceRange() {
+    return this.resource.referenceRange?.[0].text;
+  }
+
+  get acceptedInterpretations(): boolean {
+    switch (codeableConceptLabel(this.resource.interpretation?.[0])) {
+      case "N":
+      case "NoInformation":
+      case "normal":
+      case "Normal":
+      case "NA":
+      case "(Normal)":
+      case "unknown":
+      case "not applicable":
+      case "temporarily unavailable":
+      case "NORMAL":
+      case "NML":
+      case "NORM":
+      case "Unknown":
+      case "*":
+      case "Na":
+        return false;
+      default:
+        return true;
+    }
   }
 }
