@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.7.12
+
+### Patch Changes
+
+- 4493ba77: Update Observation drawer table.
+
 ## 1.7.11
 
 ### Patch Changes
