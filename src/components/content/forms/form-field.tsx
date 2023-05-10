@@ -39,26 +39,13 @@ export const FormField = ({
 
     if (options) {
       return (
-        <select
-          data-testid={`form-field-${inputProps.name}`}
-          className={cx({ "ctw-error": errors }, "ctw-listbox-button ctw-w-full")}
-          name={inputProps.name}
-          id={inputProps.name}
-          disabled={inputProps.disabled}
-          defaultValue={value}
-          data-zus-telemetry-focus={inputProps.name}
-        >
-          {!options.includes(defaultValue as string) && (
-            <option value={defaultValue} disabled>
-              Select one
-            </option>
-          )}
-          {options.map((option) => (
-            <option value={option} key={option}>
-              {startCase(option)}
-            </option>
-          ))}
-        </select>
+        <SelectField
+          inputProps={inputProps}
+          value={value}
+          options={options}
+          defaultValue={defaultValue}
+          errors={errors}
+        />
       );
     }
     if (lines) {
@@ -141,3 +128,34 @@ export const FormField = ({
     </>
   );
 };
+
+type SelectFieldProps = {
+  inputProps: FormFieldProps;
+  errors: string[] | undefined;
+  value: string | (string[] & readonly string[]) | undefined;
+  defaultValue: string | (string[] & readonly string[]) | undefined;
+  options: string[];
+};
+
+const SelectField = ({ inputProps, errors, value, defaultValue, options }: SelectFieldProps) => (
+  <select
+    data-testid={`form-field-${inputProps.name}`}
+    className={cx({ "ctw-error": errors }, "ctw-listbox-button ctw-w-full")}
+    name={inputProps.name}
+    id={inputProps.name}
+    disabled={inputProps.disabled}
+    defaultValue={value}
+    data-zus-telemetry-focus={inputProps.name}
+  >
+    {!options.includes(defaultValue as string) && (
+      <option value={defaultValue} disabled>
+        Select one
+      </option>
+    )}
+    {options.map((option) => (
+      <option value={option} key={option}>
+        {startCase(option)}
+      </option>
+    ))}
+  </select>
+);
