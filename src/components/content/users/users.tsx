@@ -3,6 +3,8 @@ import type { Argument } from "classnames";
 import cx from "classnames";
 import { useEffect, useState } from "react";
 import { RowActions } from "./helpers/actions";
+import { useAddUserForm } from "./helpers/modal-hooks";
+import { ResourceTableActions } from "../resource/resource-table-actions";
 import { UserModel } from "@/api/auth/models/users";
 import { getUsers } from "@/api/auth/queries/auth";
 import * as CTWBox from "@/components/core/ctw-box";
@@ -37,9 +39,17 @@ export function useUsersList(pageSize: number, pageOffset: number) {
  */
 export const UsersTable = withErrorBoundary(
   ({ className, pageSize = 10, title = "Patients" }: UsersTableProps) => {
+    const showAddUserForm = useAddUserForm();
+
     const [currentPage, setCurrentPage] = useState(1);
     const [users, setUsers] = useState<UserModel[]>([]);
     const { data, isFetching, isError } = useUsersList(pageSize, currentPage - 1);
+
+    const action = (
+      <button type="button" className="ctw-btn-primary" onClick={() => showAddUserForm()}>
+        Add User
+      </button>
+    );
 
     // Here we are setting the total and patients only when we know that useQuery
     // isn't fetching. This will prevent empty intermediate states where there
@@ -63,6 +73,7 @@ export const UsersTable = withErrorBoundary(
         data-zus-telemetry-namespace="PatientsTable"
       >
         <CTWBox.Heading title={title} />
+        <ResourceTableActions className="ctw-ml-2" action={action} />
         <div className="ctw-overflow-hidden">
           <Table
             records={users}
