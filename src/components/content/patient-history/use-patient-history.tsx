@@ -1,3 +1,4 @@
+import format from "date-fns/format";
 import { useEffect, useState } from "react";
 import { PatientHistoryStatus } from "./patient-history-message-status";
 import { PatientHistoryRequestDrawer } from "../patient-history-request-drawer";
@@ -110,6 +111,7 @@ export async function getBuilderRefreshHistoryMessages({
         : "",
       "filter[patient-id]": patientId ? `${patientId}` : "",
       "filter[status]": status ? `${status}` : "",
+      "filter[targetDate][until]": format(Date.now(), "yyyy-MM-dd"),
     },
     (value) => !value
   );
