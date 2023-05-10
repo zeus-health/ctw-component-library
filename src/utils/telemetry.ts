@@ -70,6 +70,8 @@ export class Telemetry {
 
   static environment = "";
 
+  static ehr = "unknown";
+
   /**
    * We need to normalize environment name in order to effectively use template
    * variables on dashboards in Datadog. Otherwise, users of the dashboard would
@@ -85,9 +87,10 @@ export class Telemetry {
     }
   }
 
-  static init(environment: string, allowDataDogLogging = false) {
+  static init(environment: string, ehr = "unknown", allowDataDogLogging = false) {
     this.datadogLoggingEnabled = allowDataDogLogging;
     this.setEnv(environment);
+    this.ehr = ehr;
 
     if (this.telemetryIsAvailable) {
       return;
@@ -219,6 +222,11 @@ export class Telemetry {
     ) {
       return;
     }
+
+    if (!this.environment) {
+      return;
+    }
+
     let user;
     const name = this.normalizeMetricName(metric);
     try {
@@ -232,6 +240,8 @@ export class Telemetry {
       `env:${this.environment}`,
       user[AUTH_BUILDER_NAME] ? `builder_name:${user[AUTH_BUILDER_NAME]}` : undefined,
       `is_super:${user[AUTH_IS_SUPER_ORG] || "false"}`,
+      this.ehr ? `ehr:${this.ehr}` : undefined,
+      `version:${packageJson.version}`,
       ...additionalTags,
     ]);
 
@@ -247,6 +257,12 @@ export class Telemetry {
 
   static countMetric(name: string, value = 1, tags: string[] = []) {
     Telemetry.reportMetric("increment", name, value, tags).catch((error) =>
+      Telemetry.logError(error as Error)
+    );
+  }
+
+  static histogramMetric(name: string, value: number, tags: string[] = []) {
+    Telemetry.reportMetric("histogram", name, value, tags).catch((error) =>
       Telemetry.logError(error as Error)
     );
   }

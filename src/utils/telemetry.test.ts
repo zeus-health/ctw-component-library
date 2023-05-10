@@ -1,6 +1,7 @@
 import { datadogLogs } from "@datadog/browser-logs";
 import { vi } from "vitest";
 import createFetchMock from "vitest-fetch-mock";
+import packageJson from "../../package.json";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 const fetchMock = createFetchMock(vi);
@@ -48,10 +49,17 @@ describe("telemetry", () => {
     expect(reportMetricSpy).toBeCalledWith("timing", "AmI.or-AmI Not", 0, []);
     expect(fetches.length).toEqual(1);
     expect(fetches[0].url).toEqual("http://localhost:3000/report/metric");
+    const versionTag = `version:${packageJson.version}`;
     expect(await fetches[0].json()).toEqual({
       name: "am_i.or_am_i_not",
       type: "timing",
-      tags: ["service:ctw-component-library", "env:test", "is_super:false"],
+      tags: [
+        "service:ctw-component-library",
+        "env:test",
+        "is_super:false",
+        "ehr:unknown",
+        versionTag,
+      ],
       value: 0,
     });
   });
