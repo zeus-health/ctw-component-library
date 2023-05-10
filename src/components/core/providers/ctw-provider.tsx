@@ -42,6 +42,7 @@ type CTWProviderProps = {
   featureFlags?: FeatureFlags;
   theme?: Theme;
   locals?: Locals;
+  ehr?: string;
 } & (AuthTokenSpecified | AuthTokenURLSpecified);
 
 declare global {
@@ -146,12 +147,12 @@ function CTWProvider({
   }, [token, ctwState]);
 
   useEffect(() => {
-    Telemetry.init(ctwState.env, enableTelemetry);
+    Telemetry.init(ctwState.env, ctwState.ehr, enableTelemetry);
     Telemetry.setBuilder(ctwState.builderId);
     handleAuth()
       .then((accessToken) => Telemetry.setUser(accessToken))
       .catch(() => Telemetry.clearUser());
-  }, [ctwState.builderId, ctwState.env, enableTelemetry, handleAuth, token]);
+  }, [ctwState.builderId, ctwState.env, ctwState.ehr, enableTelemetry, handleAuth, token]);
 
   const providerState = useMemo(
     () => ({

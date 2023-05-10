@@ -65,15 +65,24 @@ const demoComponents: DemoComponent[] = [
     render: () => (
       <ZusAggregatedProfile
         includePatientDemographicsForm={false}
-        resources={["timeline"]}
+        resources={[
+          // "allergies",
+          // "conditions",
+          // "conditions-outside",
+          // "medications",
+          // "medications-outside",
+          // "observations",
+          // "timeline",
+          "observations-outside",
+        ]}
         title="ZAP"
       />
     ),
   },
-  { render: () => <PatientSearch />, title: "Patient Search" },
-  { render: () => <PatientHistoryTable />, title: "Patient History Table" },
-  { render: () => <PatientConditionsOutside />, title: "Patient Conditions" },
-  { render: () => <PatientDocuments />, title: "Patient Documents" },
+  // { render: () => <PatientSearch />, title: "Patient Search" },
+  // { render: () => <PatientHistoryTable />, title: "Patient History Table" },
+  // { render: () => <PatientConditionsOutside />, title: "Patient Conditions" },
+  // { render: () => <PatientDocuments />, title: "Patient Documents" },
 ];
 
 const DemoApp = ({ accessToken = "" }) => (
@@ -84,6 +93,7 @@ const DemoApp = ({ accessToken = "" }) => (
     enableTelemetry
     theme={theme}
     locals={locals}
+    ehr="test"
   >
     <PatientProvider patientID={VITE_PATIENT_ID} systemURL={VITE_SYSTEM_URL}>
       <div className="App">

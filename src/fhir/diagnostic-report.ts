@@ -18,7 +18,7 @@ export function usePatientBuilderDiagnosticReports() {
     withTimerMetric(
       async (requestContext, patient) =>
         diagnosticReportsFetcher("builder")(requestContext, patient),
-      "req.builder_diagnostic_reports"
+      "req.timing.builder_diagnostic_reports"
     )
   );
 }
@@ -29,7 +29,7 @@ export function usePatientAllDiagnosticReports() {
     [],
     withTimerMetric(
       async (requestContext, patient) => diagnosticReportsFetcher("all")(requestContext, patient),
-      "req.all_diagnostic_reports"
+      "req.timing.all_diagnostic_reports"
     )
   );
 }
@@ -42,7 +42,10 @@ function diagnosticReportsFetcher(searchType: SearchType) {
         patientUPID: patient.UPID,
         _include: ["DiagnosticReport:result"],
       });
-      Telemetry.countMetric(`req.${searchType}_diagnostic_reports`, resources.length);
+      if (searchType === "all" && resources.length === 0) {
+        Telemetry.countMetric(`req.count.${searchType}_diagnostic_reports.none`);
+      }
+      Telemetry.histogramMetric(`req.count.${searchType}_diagnostic_reports`, resources.length);
       return resources.map((r) => new DiagnosticReportModel(r, getIncludedResources(bundle)));
     } catch (e) {
       throw Telemetry.logError(
