@@ -27,7 +27,6 @@ export function useAddUserForm() {
 export function useEditUserForm() {
   const { openDrawer } = useDrawer();
   const authRoles = useAuthRoles();
-  console.log("Auth Roles", authRoles);
 
   return (user: UserModel) => {
     openDrawer({
