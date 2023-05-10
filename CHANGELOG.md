@@ -1,5 +1,35 @@
 # ctw-component-library
 
+## 1.7.11
+
+### Patch Changes
+
+- 26181d8b: Sort patient list by last name.
+
+## 1.7.10
+
+### Patch Changes
+
+- 4094dbd6: Add version to metrics so we can track what versions are being used.
+
+## 1.7.9
+
+### Patch Changes
+
+- 7dbea9a2: Preserving server side total in response from searchBuilderRecords
+
+## 1.7.8
+
+### Patch Changes
+
+- 6b9630e0: Add optional ehr to metrics.
+
+## 1.7.7
+
+### Patch Changes
+
+- 4034716a: Fix display and date for diagnostic reports in table view
+
 ## 1.7.6
 
 ### Patch Changes

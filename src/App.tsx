@@ -93,6 +93,7 @@ const DemoApp = ({ accessToken = "" }) => (
     enableTelemetry
     theme={theme}
     locals={locals}
+    ehr="test"
   >
     <PatientProvider patientID={VITE_PATIENT_ID} systemURL={VITE_SYSTEM_URL}>
       <div className="App">

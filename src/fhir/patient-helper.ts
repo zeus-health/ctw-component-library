@@ -80,6 +80,7 @@ export async function getBuilderPatientsList(
     _count: pageSize,
     _total: "accurate",
     _offset: offset,
+    _sort: "family",
     ...(hasNumber(searchValue) ? { identifier: searchValue } : { name: searchValue }),
   }) as SearchParams;
 
