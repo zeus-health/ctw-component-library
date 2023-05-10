@@ -38,8 +38,8 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
     return this.resource.valueQuantity?.unit;
   }
 
-  get valueString(): string | undefined {
-    return this.resource.valueString;
+  get valueString(): string | number | undefined {
+    return this.resource.valueString || this.resource.valueQuantity?.value;
   }
 
   get interpretation() {
@@ -54,26 +54,51 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
     return this.resource.referenceRange?.[0].text;
   }
 
-  get acceptedInterpretations(): boolean {
-    switch (codeableConceptLabel(this.resource.interpretation?.[0])) {
-      case "N":
-      case "NoInformation":
+  get acceptedInterpretations(): string {
+    switch (codeableConceptLabel(this.resource.interpretation?.[0]).toLowerCase()) {
+      case "n":
+      case "noinformation":
       case "normal":
-      case "Normal":
-      case "NA":
-      case "(Normal)":
+      case "na":
+      case "(normal)":
       case "unknown":
       case "not applicable":
       case "temporarily unavailable":
-      case "NORMAL":
-      case "NML":
-      case "NORM":
-      case "Unknown":
+      case "nml":
+      case "norm":
       case "*":
-      case "Na":
-        return false;
+        return "";
+      case "high":
+      case "low":
+      case "hi":
+      case "abn":
+      case "(high)":
+      case "(low)":
+      case "abnormal":
+      case "a":
+      case "l":
+      case "h":
+      case "above high normal":
+      case "crit":
+      case "below low normal":
+      case "high alert":
+      case "(abnormal)":
+      case "abnormal alert":
+      case "abnormal low":
+      case "abnormal high":
+      case "low alert":
+      case "pos":
+      case "no reference range":
+      case "positive":
+      case "(positive)":
+      case "(critical high)":
+      case "(critical low)":
+      case "critical high":
+      case "critical low":
+      case "c":
+        return "ctw-text-caution-heading ctw-bg-caution-light ctw-inline-flex ctw-rounded-full ctw-font-normal ctw-text-sm ctw-p-1";
       default:
-        return true;
+        return "ctw-text-content-black ctw-bg-bg-light ctw-inline-flex ctw-rounded-full ctw-leading-5 ctw-font-normal ctw-text-sm ctw-p-1";
     }
   }
 }

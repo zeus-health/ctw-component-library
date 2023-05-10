@@ -43,21 +43,31 @@ export const observationsColumns: TableColumn<ObservationModel>[] = [
     title: "Result",
     render: (model) => (
       <div className="ctw-flex">
-        {model.interpretation && model.acceptedInterpretations && model.valueString && (
-          <BubbleIcon status={model.interpretation} result={model.valueString} />
-        )}
-        {model.valueString && (
-          <div>
-            Result: <BubbleIcon result={model.valueString} />
-          </div>
-        )}
+        {model.interpretation
+          ? model.interpretation &&
+            model.valueString && (
+              <div className="ctw-text-sm ctw-font-medium">
+                Result:{" "}
+                <BubbleIcon
+                  interpretation={model.interpretation}
+                  result={model.valueString}
+                  className={model.acceptedInterpretations}
+                />
+              </div>
+            )
+          : model.valueString && (
+              <div className="ctw-text-sm ctw-font-medium">
+                Result:{" "}
+                <BubbleIcon result={model.valueString} className={model.acceptedInterpretations} />
+              </div>
+            )}
       </div>
     ),
   },
   {
     title: "Reference Range",
     render: (model) => (
-      <div className="ctw-flex">
+      <div className="ctw-flex ctw-text-sm ctw-font-medium">
         {model.referenceRange && (
           <div>
             Reference Range: {model.referenceRange} {model.unit}
