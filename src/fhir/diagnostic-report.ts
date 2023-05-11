@@ -42,6 +42,7 @@ function diagnosticReportsFetcher(searchType: SearchType) {
         patientUPID: patient.UPID,
         _include: ["DiagnosticReport:result"],
       });
+      console.log("bundle coming from query", bundle);
       if (searchType === "all" && resources.length === 0) {
         Telemetry.countMetric(`req.count.${searchType}_diagnostic_reports.none`);
       }

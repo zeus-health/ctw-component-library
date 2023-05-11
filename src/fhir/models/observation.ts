@@ -30,7 +30,7 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
 
   get value() {
     return compact([this.resource.valueQuantity?.value, this.resource.valueQuantity?.unit]).join(
-      ""
+      " "
     );
   }
 

@@ -45,20 +45,20 @@ export const observationsColumns: TableColumn<ObservationModel>[] = [
       <div className="ctw-flex">
         {model.interpretation
           ? model.interpretation &&
-            model.valueString && (
+            model.value && (
               <div className="ctw-text-sm ctw-font-medium">
                 Result:{" "}
                 <BubbleIcon
                   interpretation={model.interpretation}
-                  result={model.valueString}
+                  result={model.value}
                   className={model.acceptedInterpretations}
                 />
               </div>
             )
-          : model.valueString && (
+          : model.value && (
               <div className="ctw-text-sm ctw-font-medium">
                 Result:{" "}
-                <BubbleIcon result={model.valueString} className={model.acceptedInterpretations} />
+                <BubbleIcon result={model.value} className={model.acceptedInterpretations} />
               </div>
             )}
       </div>

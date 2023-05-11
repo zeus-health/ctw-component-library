@@ -13,7 +13,8 @@ export type ObservationDetailsProps = {
 
 export const Component = ({ diagnosticReport }: ObservationDetailsProps) => {
   const [observationEntries, setObservationsEntries] = useState<ObservationModel[]>([]);
-
+  console.log("results", diagnosticReport.results);
+  console.log("Observation entries", observationEntries);
   useEffect(() => {
     setObservationsEntries(
       compact(
