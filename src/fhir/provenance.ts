@@ -85,6 +85,13 @@ export async function searchProvenances<T extends fhir4.Resource>(
   requestContext: CTWRequestContext,
   models: FHIRModel<T>[]
 ): Promise<Provenance[]> {
+  // FIXME:
+  // 1. bucket models into type => array of ids
+  // 2. For each type
+  //    a. query for provenance using upid (e.g. {fhir_url}/<ResourceType>?patient.identifier=<UPI-System|UPID>&_revinclude=Provenance:target)
+  //    b. organize the results for quick id => provenance lookup
+  // 4. Tie results back to the original model order
+
   const target = uniq(models.map((m) => `${m.resourceType}/${m.id}`)).join(",");
 
   const { resources } = await queryClient.fetchQuery([QUERY_KEY_PROVENANCE, target], async () =>
