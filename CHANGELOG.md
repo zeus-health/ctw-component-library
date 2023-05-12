@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.7.14
+
+### Patch Changes
+
+- 9c891d63: Update the details card for labs drawer.
+
 ## 1.7.13
 
 ### Patch Changes
