@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.7.13
+
+### Patch Changes
+
+- 96bd13b2: Updates labs drawer with changes.
+
 ## 1.7.12
 
 ### Patch Changes
