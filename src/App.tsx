@@ -72,8 +72,8 @@ const demoComponents: DemoComponent[] = [
           "medications",
           "medications-outside",
           // "observations",
-          // "timeline",
-          // "observations-outside",
+          "timeline",
+          "observations-outside",
         ]}
         title="ZAP"
       />
