@@ -11,6 +11,14 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
   }
 
   get display() {
+    const filteredCoding = this.resource.code.coding?.find(
+      (coding) => coding.display !== "unknown"
+    );
+
+    if (filteredCoding) {
+      return filteredCoding.display || filteredCoding.code;
+    }
+
     return codeableConceptLabel(this.resource.code);
   }
 
@@ -29,9 +37,12 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
   }
 
   get value() {
-    return compact([this.resource.valueQuantity?.value, this.resource.valueQuantity?.unit]).join(
-      " "
-    );
+    return compact([
+      this.resource.valueQuantity?.value ||
+        this.resource.valueString ||
+        codeableConceptLabel(this.resource.valueCodeableConcept),
+      this.resource.valueQuantity?.unit,
+    ]).join(" ");
   }
 
   get unit() {
@@ -43,7 +54,26 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
   }
 
   get interpretation() {
-    return codeableConceptLabel(this.resource.interpretation?.[0]);
+    const nonAcceptedValues = [
+      "n",
+      "noinformation",
+      "normal",
+      "na",
+      "(normal)",
+      "unknown",
+      "not applicable",
+      "temporarily unavailable",
+      "nml",
+      "norm",
+      "*",
+    ];
+
+    const interpretation = codeableConceptLabel(this.resource.interpretation?.[0]).toLowerCase();
+    if (nonAcceptedValues.includes(interpretation)) {
+      return undefined;
+    }
+
+    return interpretation;
   }
 
   get notes() {
@@ -56,18 +86,6 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
 
   get acceptedInterpretations(): string {
     switch (codeableConceptLabel(this.resource.interpretation?.[0]).toLowerCase()) {
-      case "n":
-      case "noinformation":
-      case "normal":
-      case "na":
-      case "(normal)":
-      case "unknown":
-      case "not applicable":
-      case "temporarily unavailable":
-      case "nml":
-      case "norm":
-      case "*":
-        return "";
       case "high":
       case "low":
       case "hi":
@@ -96,9 +114,9 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
       case "critical high":
       case "critical low":
       case "c":
-        return "ctw-text-caution-heading ctw-bg-caution-light ctw-inline-flex ctw-rounded-full ctw-font-normal ctw-text-sm ctw-p-1";
+        return "ctw-text-caution-heading ctw-bg-caution-light ctw-inline-flex ctw-rounded-xl ctw-font-medium ctw-text-sm ctw-p-1 ctw-px-3";
       default:
-        return "ctw-text-content-black ctw-bg-bg-light ctw-inline-flex ctw-rounded-full ctw-leading-5 ctw-font-normal ctw-text-sm ctw-p-1";
+        return "ctw-text-content-black ctw-bg-bg-light ctw-inline-flex ctw-rounded-xl ctw-leading-5 ctw-font-medium ctw-text-sm ctw-p-1 ctw-px-3";
     }
   }
 }
