@@ -12,7 +12,7 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
 
   get display() {
     const filteredCoding = this.resource.code.coding?.find(
-      (coding) => coding.display !== "unknown"
+      (coding) => coding.display !== "unknown" && coding.display
     );
 
     if (filteredCoding) {
