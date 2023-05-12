@@ -23,10 +23,6 @@ export const diagnosticReportData = (diagnosticReport: DiagnosticReportModel) =>
     value: diagnosticReport.identifier,
   },
   {
-    label: "Service category",
-    value: diagnosticReport.category,
-  },
-  {
     label: "Status",
     value: capitalize(diagnosticReport.resource.status),
   },
