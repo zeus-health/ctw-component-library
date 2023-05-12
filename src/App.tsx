@@ -67,13 +67,13 @@ const demoComponents: DemoComponent[] = [
         includePatientDemographicsForm={false}
         resources={[
           // "allergies",
-          // "conditions",
-          // "conditions-outside",
-          // "medications",
-          // "medications-outside",
+          "conditions",
+          "conditions-outside",
+          "medications",
+          "medications-outside",
           // "observations",
           // "timeline",
-          "observations-outside",
+          // "observations-outside",
         ]}
         title="ZAP"
       />
@@ -81,7 +81,8 @@ const demoComponents: DemoComponent[] = [
   },
   // { render: () => <PatientSearch />, title: "Patient Search" },
   // { render: () => <PatientHistoryTable />, title: "Patient History Table" },
-  // { render: () => <PatientConditionsOutside />, title: "Patient Conditions" },
+  { render: () => <PatientConditions />, title: "Patient Conditions" },
+  { render: () => <PatientConditionsOutside />, title: "Patient Conditions Outside" },
   // { render: () => <PatientDocuments />, title: "Patient Documents" },
 ];
 

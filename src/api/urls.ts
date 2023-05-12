@@ -3,10 +3,17 @@ import { Env } from "..";
 export const getZusApiBaseUrl = (env: Env) =>
   env === "production" ? `https://api.zusapi.com` : `https://api.${env}.zusapi.com`;
 
-export const getZusProxyApiBaseUrl = (env: Env) =>
-  env === "production"
+export const getZusProxyApiBaseUrl = (env: Env) => {
+  const { VITE_LOCAL_EHR_HOOKS_URL } = import.meta.env;
+  if (VITE_LOCAL_EHR_HOOKS_URL) {
+    // This environment variable is only used locally. It allows the UI to talk
+    // to a locally hosted ehr-data-integration service.
+    return VITE_LOCAL_EHR_HOOKS_URL;
+  }
+  return env === "production"
     ? `https://ehr-hooks.zusapi.com/proxy`
     : `https://ehr-hooks.${env}.zusapi.com/proxy`;
+};
 
 export const getZusFhirBaseUrl = (env: Env) => `${getZusApiBaseUrl(env)}/fhir`;
 

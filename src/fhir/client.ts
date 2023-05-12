@@ -48,9 +48,10 @@ export function getFhirClient(env: Env, accessToken: string, builderId?: string)
         }
 
         if (typeof targetValue === "function") {
+          const isWrite = prop === "save" || prop === "create" || prop === "transaction";
           // If the target is a function, we will bind it to the correct client.
           // The "save" method is the only method we care to proxy atm.
-          return targetValue.bind(prop === "save" ? fhirWriteClient : target);
+          return targetValue.bind(isWrite ? fhirWriteClient : target);
         }
         return targetValue;
       }
