@@ -22,10 +22,6 @@ export const diagnosticReportData = (diagnosticReport: DiagnosticReportModel) =>
     value: diagnosticReport.effectiveStart,
   },
   { label: "Organization", value: diagnosticReport.performer },
-  {
-    label: "Category",
-    value: diagnosticReport.category,
-  },
 ];
 
 export const Component = ({ diagnosticReport }: ObservationDetailsProps) => {
