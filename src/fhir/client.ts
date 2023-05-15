@@ -18,6 +18,22 @@ export function getFhirClient(env: Env, accessToken: string, builderId?: string)
   });
 }
 
+export function getFqsFhirClient(env: Env, accessToken: string, builderId?: string) {
+  const url =
+    env === "production" ? `https://api.zusapi.com/fqs` : `https://api.${env}.zusapi.com/fqs`;
+
+  const customHeaders: HeadersInit = CTW_REQUEST_HEADER;
+  if (builderId) {
+    customHeaders["Zus-Account"] = builderId;
+  }
+
+  return new Client({
+    baseUrl: url,
+    bearerToken: accessToken,
+    customHeaders,
+  });
+}
+
 // Returns a new value with all empty arrays replaced with "undefined".
 // This fixes an issue where ODS will complain with:
 // "Array cannot be empty - the property should not be present if it has no values"

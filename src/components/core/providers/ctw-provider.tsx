@@ -8,7 +8,7 @@ import {
   FeatureFlags,
 } from "./ctw-context";
 import { version } from "../../../../package.json";
-import { getFhirClient } from "@/fhir/client";
+import { getFhirClient, getFqsFhirClient } from "@/fhir/client";
 import i18next, { Locals } from "@/i18n";
 import { DefaultTheme, EmptyTailwindCSSVars, mapToCSSVar, Theme } from "@/styles/tailwind.theme";
 import { claimsBuilderId, claimsExp } from "@/utils/auth";
@@ -195,6 +195,7 @@ function useCTW() {
       builderId: context.builderId ?? claimsBuilderId(authToken) ?? "",
       contextBuilderId: context.builderId,
       fhirClient: getFhirClient(context.env, authToken, context.builderId),
+      fqsFhirClient: getFqsFhirClient(context.env, authToken, context.builderId),
     };
     return requestContext;
   }, [context]);

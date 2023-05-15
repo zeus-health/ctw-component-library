@@ -28,7 +28,7 @@ async function getBinaryDocumentReq(
   binaryId: string
 ): Promise<fhir4.Binary> {
   return queryClient.fetchQuery([QUERY_KEY_BINARY, binaryId], async () =>
-    requestContext.fhirClient.read({
+    requestContext.fqsFhirClient.read({
       resourceType: "Binary",
       id: binaryId,
     })
