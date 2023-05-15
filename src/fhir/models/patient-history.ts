@@ -19,6 +19,13 @@ export class PatientHistoryRequestModel {
     return this.historyInfo?.attributes.providers;
   }
 
+  get lastUpdatedAt() {
+    return format(
+      new Date(Number(this.historyInfo?.attributes.lastUpdatedAt) * 1000),
+      "M/d/yy h:mm a"
+    );
+  }
+
   get key() {
     return this.historyInfo?.id || "";
   }

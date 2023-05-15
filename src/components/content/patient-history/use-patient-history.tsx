@@ -1,4 +1,4 @@
-import format from "date-fns/format";
+import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { PatientHistoryStatus } from "./patient-history-message-status";
 import { PatientHistoryRequestDrawer } from "../patient-history-request-drawer";
@@ -91,6 +91,7 @@ export type GetBuilderRefreshHistoryMessagesParams = {
   offset?: number;
   patientId?: string;
   status?: string;
+  excludeFutureJobs?: boolean;
 };
 
 export async function getBuilderRefreshHistoryMessages({
@@ -99,6 +100,7 @@ export async function getBuilderRefreshHistoryMessages({
   offset = 0,
   patientId,
   status,
+  excludeFutureJobs,
 }: GetBuilderRefreshHistoryMessagesParams) {
   const baseUrl = new URL(`${getZusApiBaseUrl(requestContext.env)}/patient-history/jobs?`);
 
@@ -111,7 +113,7 @@ export async function getBuilderRefreshHistoryMessages({
         : "",
       "filter[patient-id]": patientId ? `${patientId}` : "",
       "filter[status]": status ? `${status}` : "",
-      "filter[targetDate][until]": format(Date.now(), "yyyy-MM-dd"),
+      ...(!!excludeFutureJobs && { "filter[targetDate][until]": format(Date.now(), "yyyy-MM-dd") }),
     },
     (value) => !value
   );
