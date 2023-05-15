@@ -10,26 +10,18 @@ import { getBinaryId } from "@/fhir/binaries";
 import { DiagnosticReportModel, ObservationModel } from "@/fhir/models";
 import { searchProvenances } from "@/fhir/provenance";
 import { findReference } from "@/fhir/resource-helper";
-import { capitalize, compact } from "@/utils/nodash";
+import { compact } from "@/utils/nodash";
 
 export type ObservationDetailsProps = {
   diagnosticReport: DiagnosticReportModel;
 };
 
 export const diagnosticReportData = (diagnosticReport: DiagnosticReportModel) => [
+  {
+    label: "Effective Date",
+    value: diagnosticReport.effectiveStart,
+  },
   { label: "Organization", value: diagnosticReport.performer },
-  {
-    label: "Identifier",
-    value: diagnosticReport.identifier,
-  },
-  {
-    label: "Service category",
-    value: diagnosticReport.category,
-  },
-  {
-    label: "Status",
-    value: capitalize(diagnosticReport.resource.status),
-  },
 ];
 
 export const Component = ({ diagnosticReport }: ObservationDetailsProps) => {
