@@ -44,7 +44,7 @@ export const PatientHistoryTable = withErrorBoundary(
     } = useBuilderPatientHistoryList(pageSize, currentPage - 1, status, excludeFutureJobs);
 
     const onFilterChange = (e: FilterChangeEvent) => {
-      setExcludeFutureJobs(!!e.future_jobs?.selected)
+      setExcludeFutureJobs(!!e.future_jobs?.selected);
       if (e.status?.selected && typeof e.status.selected === "string") {
         setStatus(e.status.selected.split(" ").join("_"));
       } else {
