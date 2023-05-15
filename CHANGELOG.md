@@ -1,5 +1,23 @@
 # ctw-component-library
 
+## 1.7.14
+
+### Patch Changes
+
+- 9c891d63: Update the details card for labs drawer.
+
+## 1.7.13
+
+### Patch Changes
+
+- 96bd13b2: Updates labs drawer with changes.
+
+## 1.7.12
+
+### Patch Changes
+
+- 4493ba77: Update Observation drawer table.
+
 ## 1.7.11
 
 ### Patch Changes

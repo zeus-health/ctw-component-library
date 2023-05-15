@@ -1,5 +1,6 @@
 export { default as camelCase } from "lodash/camelCase";
 export { default as capitalize } from "lodash/capitalize";
+export { default as chain } from "lodash/chain";
 export { default as chunk } from "lodash/chunk";
 export { default as clone } from "lodash/clone";
 export { default as cloneDeep } from "lodash/cloneDeep";
