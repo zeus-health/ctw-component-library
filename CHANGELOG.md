@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.7.15
+
+### Patch Changes
+
+- 7f0f5093: Add target date to patient history table.
+
 ## 1.7.14
 
 ### Patch Changes
