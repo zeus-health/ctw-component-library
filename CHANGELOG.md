@@ -1,5 +1,35 @@
 # ctw-component-library
 
+## 1.7.14
+
+### Patch Changes
+
+- 9c891d63: Update the details card for labs drawer.
+
+## 1.7.13
+
+### Patch Changes
+
+- 96bd13b2: Updates labs drawer with changes.
+
+## 1.7.12
+
+### Patch Changes
+
+- 4493ba77: Update Observation drawer table.
+
+## 1.7.11
+
+### Patch Changes
+
+- 26181d8b: Sort patient list by last name.
+
+## 1.7.10
+
+### Patch Changes
+
+- 4094dbd6: Add version to metrics so we can track what versions are being used.
+
 ## 1.7.9
 
 ### Patch Changes
