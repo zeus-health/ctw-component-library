@@ -73,7 +73,7 @@ export function useConfirmDeleteCondition() {
   return (condition: ConditionModel, onDelete?: (condition: ConditionModel) => void) => {
     const name =
       condition.display ??
-      t("resource.unamed", {
+      t("resource.unnamed", {
         resource: t("glossary:condition_one"),
       });
 

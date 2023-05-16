@@ -18,7 +18,10 @@ export const resources = {
       "resource.remove.body":
         "This will remove <2>{{resourceName}}</2> from this patient's {{resource}} list.",
       "resource.remove.heading": "Remove this {{resource}}?",
-      "resource.unamed": "unamed {{resource}}",
+      "resource.unnamed": "unnamed {{resource}}",
+      "resourceTable.add": "Add",
+      "resourceTable.dismiss": "Dismiss",
+      "resourceTable.restore": "Restore",
       "zap.tabs.medicationsOutside": "medications",
       "zap.tabs.conditions": "$t(glossary:condition_other) list",
       "zap.tabs.conditionsOutside": "outside $t(glossary:condition_other)",
