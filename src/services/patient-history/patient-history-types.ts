@@ -16,6 +16,7 @@ export type PatientHistoryJobResponseJobData = {
   attributes: {
     createdAt: string;
     requestConsent: boolean;
+    lastUpdatedAt: string;
     practitioner: {
       npi: string;
       name: string;
