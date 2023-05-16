@@ -1,12 +1,11 @@
 import { DOMParser } from "@xmldom/xmldom";
-import { Buffer } from "buffer";
 import { useMemo, useRef, useState } from "react";
 import xpath from "xpath";
 import { CcdaViewer } from "./ccda_viewer";
 import "./styles.scss";
 import { DocumentButton } from "./document-button";
 
-const xmlTypes = ["/xml", "/xhtml+xml", "application/xml"];
+const xmlTypes = ["/xml", "/xhtml+xml", "application/xml", "text/xml"];
 
 const isSpecificContentType = (extensions: string[], contentType: string) =>
   extensions.some((extension) => contentType.includes(extension));
@@ -44,7 +43,7 @@ export const BinaryField = ({ data, contentType, fileName }: BinaryFieldProps) =
     }
 
     const objectURL = URL.createObjectURL(
-      new Blob([Buffer.from(data, "base64").toString("utf8")], {
+      new Blob([data], {
         type: "text/xml",
       })
     );
