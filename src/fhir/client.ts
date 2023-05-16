@@ -18,8 +18,8 @@ export function getFhirClient(env: Env, accessToken: string, builderId?: string)
   });
 }
 
-export function getFqsFhirClient(env: Env, accessToken: string, builderId?: string) {
-  const url =
+export function getFqsRestClient(env: Env, accessToken: string, builderId?: string) {
+  const baseUrl =
     env === "production" ? `https://api.zusapi.com/fqs` : `https://api.${env}.zusapi.com/fqs`;
 
   const customHeaders: HeadersInit = CTW_REQUEST_HEADER;
@@ -27,11 +27,14 @@ export function getFqsFhirClient(env: Env, accessToken: string, builderId?: stri
     customHeaders["Zus-Account"] = builderId;
   }
 
-  return new Client({
-    baseUrl: url,
-    bearerToken: accessToken,
-    customHeaders,
-  });
+  return (url: string, options: RequestInit) =>
+    fetch(`${baseUrl}/${url}`, {
+      ...options,
+      headers: new Headers({
+        ...options.headers,
+        Authorization: `Bearer ${accessToken}`,
+      }),
+    });
 }
 
 // Returns a new value with all empty arrays replaced with "undefined".

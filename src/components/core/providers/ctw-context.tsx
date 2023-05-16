@@ -35,7 +35,7 @@ export type CTWRequestContext = {
   // The optional builder ID used in case the user is impersonating a builder.
   contextBuilderId: string | undefined;
   fhirClient: Client;
-  fqsFhirClient: Client;
+  fqsRestClient: (url: string, options: RequestInit) => Promise<Response>;
 };
 
 export const CTWStateContext = createContext<CTWState | undefined>(undefined);
