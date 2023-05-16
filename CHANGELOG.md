@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 1.8.0
+
+### Minor Changes
+
+- fcde05f4: Add a beta label to Care Team tab in ZAP
+
+## 1.7.15
+
+### Patch Changes
+
+- 7f0f5093: Add target date to patient history table.
+
 ## 1.7.14
 
 ### Patch Changes
