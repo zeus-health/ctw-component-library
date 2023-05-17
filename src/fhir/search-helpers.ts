@@ -159,13 +159,13 @@ export async function searchLensRecords<T extends ResourceTypeString>(
     _tag: tagFilter,
   });
   const records = await searchAllRecords(resourceType, requestContext, params);
-  // Filter using the lens builderID for data from the builder that exists in the post-kludge world.
+  // Filter using the lens builderId for data from the builder that exists in the post-kludge world.
   let { entry, resources } = filterSearchReturnByBuilderId(
     records,
     getLensBuilderId(requestContext.env)
   );
 
-  /* Filter using the user's builderID for data from the builder that exists in the pre-kludge world.
+  /* Filter using the user's builderId for data from the builder that exists in the pre-kludge world.
   This will help avoid getting duplicate results or no there is no data for the builder. 
   Once we have been in the post-kludge world long enough we can remove this functionality. */
   if (resources.length === 0 && entry.length === 0) {
@@ -196,13 +196,13 @@ export async function searchSummaryRecords<T extends ResourceTypeString>(
 
   const records = await searchAllRecords(resourceType, requestContext, params);
 
-  // Filter using the lens builderID for data from the builder that exists in the post-kludge world.
+  // Filter using the lens builderId for data from the builder that exists in the post-kludge world.
   let { entry, resources } = filterSearchReturnByBuilderId(
     records,
     getLensBuilderId(requestContext.env)
   );
 
-  /* Filter using the user's builderID for data from the builder that exists in the pre-kludge world.
+  /* Filter using the user's builderId for data from the builder that exists in the pre-kludge world.
   This will help avoid getting duplicate results or no there is no data for the builder. 
   Once we have been in the post-kludge world long enough we can remove this functionality. */
   if (resources.length === 0 || entry.length === 0) {
@@ -302,14 +302,14 @@ function patientSearchParams(resourceType: ResourceTypeString, patientUPID?: str
 
 export const filterSearchReturnByBuilderId = <T extends ResourceTypeString>(
   searchReturn: SearchReturn<T>,
-  builderID: string
+  builderId: string
 ) => {
   const resources = filter(
     searchReturn.resources,
     (record) =>
       !!find(record.meta?.tag, {
         system: SYSTEM_ZUS_OWNER,
-        code: `builder/${builderID}`,
+        code: `builder/${builderId}`,
       })
   );
 
@@ -318,7 +318,7 @@ export const filterSearchReturnByBuilderId = <T extends ResourceTypeString>(
     (record) =>
       !!find(record.resource?.meta?.tag, {
         system: SYSTEM_ZUS_OWNER,
-        code: `builder/${builderID}`,
+        code: `builder/${builderId}`,
       })
   );
 

@@ -8,7 +8,7 @@ import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { patientAllergiesColumns } from "@/components/content/allergies/patient-allergies-column";
 import { withErrorBoundary } from "@/components/core/error-boundary";
-import { useCTW } from "@/components/core/providers/ctw-provider";
+import { useCTW } from "@/components/core/providers/use-ctw";
 import { usePatientAllergies } from "@/fhir/allergies";
 import { AllergyModel } from "@/fhir/models/allergies";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";

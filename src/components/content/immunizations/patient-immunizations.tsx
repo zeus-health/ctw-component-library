@@ -4,7 +4,7 @@ import { patientImmunizationsColumns } from "./patient-immunizations-columns";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { CodingList } from "@/components/core/coding-list";
 import { withErrorBoundary } from "@/components/core/error-boundary";
-import { useCTW } from "@/components/core/providers/ctw-provider";
+import { useCTW } from "@/components/core/providers/use-ctw";
 import { Table } from "@/components/core/table/table";
 import { ViewFHIR } from "@/components/core/view-fhir";
 import { usePatientImmunizations } from "@/fhir/immunizations";
