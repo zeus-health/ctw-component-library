@@ -138,7 +138,7 @@ export const conditionsQuery = (upid: string, count: number, cursor: string) => 
       }
       gender
       name {
-        ...Name
+        ...HumanName
       }
       organization {
         display
@@ -164,11 +164,11 @@ export const conditionsQuery = (upid: string, count: number, cursor: string) => 
       ..Address
     }
     name {
-      ...Name
+      ...HumanName
     }
   }
 
-  fragment Name on HumanName {
+  fragment HumanName on HumanName {
     family
     given
     prefix
