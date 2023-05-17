@@ -32,16 +32,11 @@ export function useToggleArchive<T extends fhir4.Resource>(
 
   const handleToggleArchive = useCallback(async () => {
     setIsLoading(true);
-
-    toggleArchive(model, await getRequestContext()).then(
-      async () => {
-        setIsLoading(false);
-        await queryClient.invalidateQueries([queryToInvalidate]);
-      },
-      () => {
-        setIsLoading(false);
-      }
-    );
+    await toggleArchive(model, await getRequestContext())
+    await queryClient.invalidateQueries([queryToInvalidate]);
+    // Timeout here fixes bug where we would briefly flash
+    // the old dismiss/restore text.
+    setTimeout(() => setIsLoading(false), 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [model]);
 
