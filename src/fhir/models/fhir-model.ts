@@ -1,7 +1,7 @@
 import { Basic, Resource } from "fhir/r4";
 import { SYSTEM_ENRICHMENT, SYSTEM_SUMMARY, SYSTEM_ZUS_PROFILE_ACTION } from "../system-urls";
 import { ResourceMap } from "../types";
-import { find, startCase } from "@/utils/nodash";
+import { find, orderBy, some, startCase } from "@/utils/nodash";
 
 export abstract class FHIRModel<T extends fhir4.Resource> {
   public resource: T;
@@ -34,7 +34,8 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
   }
 
   get isArchived(): boolean {
-    return this.getBasicResourceByAction("archive") !== undefined;
+    const basic = this.getLatestBasicResourceByActions(["archive", "unarchive"]);
+    return some(basic?.code.coding, { code: "archive" });
   }
 
   // Returns true if this resource is a summary/lens resource.
@@ -50,12 +51,23 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
     return startCase(this.resourceType);
   }
 
-  getBasicResourceByAction(profileAction: string): Basic | undefined {
-    return find(this.revIncludes, {
-      resourceType: "Basic",
-      code: {
-        coding: [{ system: SYSTEM_ZUS_PROFILE_ACTION, code: profileAction }],
-      },
+  // Returns the latest Basic resource that has a code that matches
+  // one of profileActions.
+  // This way we get the latest action for either "archive" or "unarchive".
+  // In practice, there should only be a single Basic resource, but
+  // we need to handle the case where there may be several.
+  getLatestBasicResourceByActions(profileActions: string[]): Basic | undefined {
+    const ordered = orderBy(this.revIncludes, "meta.lastUpdated", "desc");
+    return find(ordered, (resource) => {
+      if (resource.resourceType === "Basic") {
+        return some(
+          (resource as Basic).code.coding,
+          (coding) =>
+            coding.system === SYSTEM_ZUS_PROFILE_ACTION &&
+            profileActions.includes(coding.code ?? "")
+        );
+      }
+      return false;
     }) as Basic | undefined;
   }
 
