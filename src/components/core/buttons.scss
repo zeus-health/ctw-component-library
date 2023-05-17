@@ -30,6 +30,18 @@
   @include focus-visible;
 }
 
+.ctw-btn:disabled {
+  @apply ctw-pointer-events-none;
+}
+
+.ctw-btn-primary:disabled {
+  @apply ctw-bg-content-lighter;
+}
+
+.ctw-btn-default:disabled {
+  @apply ctw-bg-bg-light;
+}
+
 .ctw-btn-icon {
   @apply ctw-btn-primary;
   @apply ctw-flex ctw-items-center ctw-justify-center ctw-rounded-full ctw-p-2;

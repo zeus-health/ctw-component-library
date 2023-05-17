@@ -56,7 +56,12 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
 
   "care-team": (props: PatientCareTeamProps = {}) => ({
     key: "care-team",
-    display: () => "care team",
+    display: () => (
+      <div className="ctw-space-x-1">
+        <span className="ctw-capitalize">care team</span>
+        <BetaLabel />
+      </div>
+    ),
     render: () => <PatientCareTeam {...props} />,
   }),
 
