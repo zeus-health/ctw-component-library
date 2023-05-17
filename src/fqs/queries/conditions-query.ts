@@ -1,8 +1,8 @@
 import { gql } from "graphql-request";
 
 export const conditionsQuery = (upid: string, count: number, cursor: string) => gql`
-  query Conditions($upid: ID!, $cursor: String!, $sort: ConditionSortParams!, $first: Int!) {
-    ConditionConnection(upid: $upid, after: $cursor, sort: $sort, first: $first) {
+  query Conditions {
+    ConditionConnection(upid: "${upid}", after: "${cursor}", first: "${count}") {
       pageInfo {
         hasNextPage
       }
@@ -134,19 +134,7 @@ export const conditionsQuery = (upid: string, count: number, cursor: string) => 
     }
     contact {
       address {
-        city
-        country
-        district
-        line
-        period {
-          start
-          end
-        }
-        postalCode
-        state
-        text
-        type
-        use
+        ..Address
       }
       gender
       name {
@@ -173,15 +161,7 @@ export const conditionsQuery = (upid: string, count: number, cursor: string) => 
       system
     }
     address {
-      use
-      type
-      text
-      line
-      city
-      district
-      state
-      postalCode
-      country
+      ..Address
     }
     name {
       ...Name
@@ -194,6 +174,22 @@ export const conditionsQuery = (upid: string, count: number, cursor: string) => 
     prefix
     suffix
     text
+    use
+  }
+
+  fragment Address on Address {
+    city
+    country
+    district
+    line
+    period {
+      start
+      end
+    }
+    postalCode
+    state
+    text
+    type
     use
   }
 `;
