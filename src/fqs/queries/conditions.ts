@@ -4,8 +4,14 @@ import { coding, patient } from "./fragments";
 export const conditionsQuery = gql`
   ${coding}
   ${patient}
-  query Conditions($upid: ID!, $cursor: String!, $sort: ConditionSortParams!, $first: Int!) {
-    ConditionConnection(upid: $upid, after: $cursor, sort: $sort, first: $first) {
+  query Conditions(
+    $upid: ID!
+    $cursor: String!
+    $filter: ConditionFilterParams!
+    $sort: ConditionSortParams!
+    $first: Int!
+  ) {
+    ConditionConnection(upid: $upid, after: $cursor, filter: $filter, sort: $sort, first: $first) {
       pageInfo {
         hasNextPage
       }
@@ -16,6 +22,7 @@ export const conditionsQuery = gql`
           meta {
             tag {
               system
+              code
             }
             versionId
           }
