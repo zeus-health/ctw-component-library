@@ -18,24 +18,6 @@ export function getFhirClient(env: Env, accessToken: string, builderId?: string)
   });
 }
 
-export function getFqsRestClient(env: Env, accessToken: string, builderId?: string) {
-  const baseUrl = `${getZusApiBaseUrl(env)}/fqs}`;
-
-  const customHeaders: HeadersInit = CTW_REQUEST_HEADER;
-  if (builderId) {
-    customHeaders["Zus-Account"] = builderId;
-  }
-
-  return (url: string, options: RequestInit) =>
-    fetch(`${baseUrl}/${url}`, {
-      ...options,
-      headers: new Headers({
-        ...options.headers,
-        Authorization: `Bearer ${accessToken}`,
-      }),
-    });
-}
-
 // Returns a new value with all empty arrays replaced with "undefined".
 // This fixes an issue where ODS will complain with:
 // "Array cannot be empty - the property should not be present if it has no values"
