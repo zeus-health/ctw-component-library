@@ -27,12 +27,16 @@ async function getBinaryDocumentReq(
   requestContext: CTWRequestContext,
   binaryId: string
 ): Promise<fhir4.Binary> {
-  return queryClient.fetchQuery([QUERY_KEY_BINARY, binaryId], async () =>
-    requestContext.fhirClient.read({
+  return queryClient.fetchQuery([QUERY_KEY_BINARY, binaryId], async () => {
+    const response = await requestContext.fetchFromFqs(`Binary/${binaryId}`, {
+      method: "GET",
+    });
+    return {
+      contentType: response.headers.get("Content-Type") || "unknown",
       resourceType: "Binary",
-      id: binaryId,
-    })
-  );
+      data: await response.text(),
+    };
+  });
 }
 
 export const getBinaryDocument = withTimerMetric(getBinaryDocumentReq, "req.binary_document");
