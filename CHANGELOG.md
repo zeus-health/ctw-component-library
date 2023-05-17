@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.9.1
+
+### Patch Changes
+
+- fb89405a: Fix situation where FQS binary queries may fail
+
 ## 1.9.0
 
 ### Minor Changes
