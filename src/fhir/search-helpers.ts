@@ -11,7 +11,7 @@ import {
 import { ResourceType, ResourceTypeString } from "./types";
 import { getLensBuilderId } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { filter, find, mapValues, mergeWith } from "@/utils/nodash";
+import { filter, mapValues, mergeWith, some } from "@/utils/nodash";
 
 const MAX_COUNT = 250;
 
@@ -158,11 +158,13 @@ export async function searchLensRecords<T extends ResourceTypeString>(
   const params = mergeParams(searchParams, {
     _tag: tagFilter,
   });
+  const builderId = requestContext.contextBuilderId || requestContext.builderId;
   const records = await searchAllRecords(resourceType, requestContext, params);
   // Filter using the lens builderID for data from the builder that exists in the post-kludge world.
   let { entry, resources } = filterSearchReturnByBuilderId(
     records,
-    getLensBuilderId(requestContext.env)
+    getLensBuilderId(requestContext.env),
+    builderId,
   );
 
   /* Filter using the user's builderID for data from the builder that exists in the pre-kludge world.
@@ -171,7 +173,7 @@ export async function searchLensRecords<T extends ResourceTypeString>(
   if (resources.length === 0 && entry.length === 0) {
     ({ entry, resources } = filterSearchReturnByBuilderId(
       records,
-      requestContext.contextBuilderId || requestContext.builderId
+      builderId,
     ));
   }
 
@@ -193,22 +195,23 @@ export async function searchSummaryRecords<T extends ResourceTypeString>(
   const params = mergeParams(searchParams, {
     _tag: tagFilter,
   });
-
+  const builderId = requestContext.contextBuilderId || requestContext.builderId;
   const records = await searchAllRecords(resourceType, requestContext, params);
 
   // Filter using the lens builderID for data from the builder that exists in the post-kludge world.
   let { entry, resources } = filterSearchReturnByBuilderId(
     records,
-    getLensBuilderId(requestContext.env)
+    getLensBuilderId(requestContext.env),
+    builderId
   );
 
   /* Filter using the user's builderID for data from the builder that exists in the pre-kludge world.
-  This will help avoid getting duplicate results or no there is no data for the builder. 
+  This will help avoid getting duplicate results or know there is no data for the builder. 
   Once we have been in the post-kludge world long enough we can remove this functionality. */
   if (resources.length === 0 || entry.length === 0) {
     ({ entry, resources } = filterSearchReturnByBuilderId(
       records,
-      requestContext.contextBuilderId || requestContext.builderId
+      builderId,
     ));
   }
 
@@ -300,27 +303,34 @@ function patientSearchParams(resourceType: ResourceTypeString, patientUPID?: str
   }
 }
 
-export const filterSearchReturnByBuilderId = <T extends ResourceTypeString>(
+// Filters resources down to those owned by matchOwnerBuilderID.
+// Filters the bundle of entries down to those owned by:
+//  * mathOwnerBuilderID for search entries with mode "match"
+//  * includedOwnerBuilderID for search entries with mode "include"
+const filterSearchReturnByBuilderId = <T extends ResourceTypeString>(
   searchReturn: SearchReturn<T>,
-  builderID: string
+  matchOwnerBuilderID: string,
+  includedOwnerBuilderID?: string
 ) => {
-  const resources = filter(
-    searchReturn.resources,
-    (record) =>
-      !!find(record.meta?.tag, {
-        system: SYSTEM_ZUS_OWNER,
-        code: `builder/${builderID}`,
-      })
+  const resources = filter(searchReturn.resources, (record) =>
+    some(record.meta?.tag, {
+      system: SYSTEM_ZUS_OWNER,
+      code: `builder/${matchOwnerBuilderID}`,
+    })
   );
 
-  const entry = filter(
-    searchReturn.bundle.entry,
-    (record) =>
-      !!find(record.resource?.meta?.tag, {
+  const entry = filter(searchReturn.bundle.entry, (record) => {
+    if (record.search?.mode === "include") {
+      return some(record.resource?.meta?.tag, {
         system: SYSTEM_ZUS_OWNER,
-        code: `builder/${builderID}`,
-      })
-  );
+        code: `builder/${includedOwnerBuilderID ?? matchOwnerBuilderID}`,
+      });
+    }
+    return some(record.resource?.meta?.tag, {
+      system: SYSTEM_ZUS_OWNER,
+      code: `builder/${matchOwnerBuilderID}`,
+    });
+  });
 
   return { resources, entry };
 };
