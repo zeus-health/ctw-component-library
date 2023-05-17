@@ -1,5 +1,5 @@
 import { XIcon } from "@heroicons/react/outline";
-import { BinaryField } from "./rawFieldToBinaryField";
+import { BinaryField } from "./binary-field";
 import { Modal, ModalProps } from "@/components/core/modal";
 import { useCTW } from "@/components/core/providers/ctw-provider";
 import { useModal } from "@/components/core/providers/modal-provider";
