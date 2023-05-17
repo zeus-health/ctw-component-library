@@ -4,7 +4,7 @@ import { Env } from "@/components/core/providers/ctw-provider";
 import { CTW_REQUEST_HEADER } from "@/utils/request";
 
 export function getFhirClient(env: Env, accessToken: string, builderId?: string) {
-  const url = `${getZusApiBaseUrl(env)}/fhir}`;
+  const url = `${getZusApiBaseUrl(env)}/fhir`;
 
   const customHeaders: HeadersInit = CTW_REQUEST_HEADER;
   if (builderId) {
