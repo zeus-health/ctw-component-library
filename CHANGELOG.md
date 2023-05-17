@@ -1,5 +1,16 @@
 # ctw-component-library
 
+## 1.9.0
+
+### Minor Changes
+
+- 4111721e: Show spinner when dismissing or restoring outside conditions and medications
+
+### Patch Changes
+
+- b81c51a7: Use FQS for Binary Lookups
+- 41379b19: Fix bug with fhir client base URL
+
 ## 1.8.0
 
 ### Minor Changes
