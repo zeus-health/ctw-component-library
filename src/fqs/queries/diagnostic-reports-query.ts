@@ -44,7 +44,16 @@ export const diagnosticReportQuery = (
           text
         }
         performer {
-          reference
+          resource { 
+            ... on Practitioner {
+              id
+              resourceType
+            }
+            ... on Practitioner {
+              id
+              resourceType
+            }
+          }
         }
         subject {
           resource {
