@@ -1,9 +1,10 @@
+import { Condition } from "fhir/r4";
 import { FhirResource } from "fhir-kit-client";
 import { useEffect, useState } from "react";
 import { createOrEditFhirResource } from "./action-helper";
 import { getIncludedBasics } from "./bundle";
 import { CodePreference } from "./codeable-concept";
-import { searchBuilderRecords, searchSummaryRecords } from "./search-helpers";
+import { searchSummaryRecords } from "./search-helpers";
 import {
   SYSTEM_CONDITION_VERIFICATION_STATUS,
   SYSTEM_ICD10,
@@ -19,6 +20,8 @@ import {
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { ConditionModel } from "@/fhir/models/condition";
+import { createGraphClient } from "@/fqs/fqs";
+import { conditionsQuery } from "@/fqs/queries/conditions";
 import { cloneDeep, orderBy } from "@/utils/nodash";
 import {
   QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
@@ -26,9 +29,6 @@ import {
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
-import { conditionsQuery } from "@/fqs/queries/conditions";
-import { Patient } from "fhir/r4";
-import { createGraphClient } from "@/fqs/fqs";
 
 export type VerificationStatus =
   | "unconfirmed"
@@ -56,6 +56,23 @@ export const CONDITION_CODE_PREFERENCE_ORDER: CodePreference[] = [
   { system: SYSTEM_ICD9_CM },
 ];
 
+export interface GraphqlPageInfo {
+  hasNextPage: boolean;
+}
+
+export interface GraphqlConnectionNode<T> {
+  node: T;
+}
+
+export interface ConditionConnection {
+  pageInfo: GraphqlPageInfo;
+  edges: GraphqlConnectionNode<Condition>[];
+}
+
+export interface ConditionGraphqlResponse {
+  ConditionConnection: ConditionConnection;
+}
+
 export function getNewCondition(patientId: string) {
   const newCondition: fhir4.Condition = {
     resourceType: "Condition",
@@ -69,14 +86,13 @@ export function getNewCondition(patientId: string) {
 }
 
 export function usePatientBuilderConditions() {
-  let data;
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_CONDITIONS,
     [],
     withTimerMetric(async (requestContext, patient) => {
       try {
         const graphClient = createGraphClient(requestContext);
-        data = await graphClient.request(conditionsQuery, {
+        const data = (await graphClient.request(conditionsQuery, {
           upid: patient.UPID,
           cursor: "",
           first: 1000,
@@ -88,9 +104,12 @@ export function usePatientBuilderConditions() {
               nonematch: ["https://zusapi.com/thirdparty/source"],
             },
           },
-        });
+        })) as ConditionGraphqlResponse;
 
-        console.log(data);
+        const result = data.ConditionConnection.edges.map((x) => x.node);
+        // const conditionModelResult = filterAndSort(setupConditionModels(result));
+
+        console.log(result[0]);
         return [];
 
         // const { bundle, resources: conditions } = await searchBuilderRecords(

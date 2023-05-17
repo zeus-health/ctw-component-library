@@ -45,11 +45,11 @@ const theme = {
 const locals = {
   en: {
     glossary: {
-      condition_one: "problem",
-      condition_other: "problems",
+      condition_one: "conditions",
+      condition_other: "conditions",
     },
     main: {
-      "zap.tabs.conditionsOutside": "problems",
+      "zap.tabs.conditionsOutside": "Outside Conditions",
       "zap.tabs.medicationsOutside": "medications",
     },
   },
@@ -67,8 +67,8 @@ const demoComponents: DemoComponent[] = [
         includePatientDemographicsForm={false}
         resources={[
           // "allergies",
-          // "conditions",
-          // "conditions-outside",
+          "conditions",
+          "conditions-outside",
           // "medications",
           // "medications-outside",
           // "observations",
