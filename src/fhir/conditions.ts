@@ -26,6 +26,9 @@ import {
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
+import { conditionsQuery } from "@/fqs/queries/conditions";
+import { Patient } from "fhir/r4";
+import { createGraphClient } from "@/fqs/fqs";
 
 export type VerificationStatus =
   | "unconfirmed"
@@ -66,21 +69,40 @@ export function getNewCondition(patientId: string) {
 }
 
 export function usePatientBuilderConditions() {
+  let data;
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_CONDITIONS,
     [],
     withTimerMetric(async (requestContext, patient) => {
       try {
-        const { bundle, resources: conditions } = await searchBuilderRecords(
-          "Condition",
-          requestContext,
-          {
-            patientUPID: patient.UPID,
-          }
-        );
-        const results = filterAndSort(setupConditionModels(conditions, bundle));
-        Telemetry.histogramMetric("req.count.builder_conditions", results.length);
-        return results;
+        const graphClient = createGraphClient(requestContext);
+        data = await graphClient.request(conditionsQuery, {
+          upid: patient.UPID,
+          cursor: "",
+          first: 1000,
+          sort: {
+            lastUpdated: "ASC",
+          },
+          filter: {
+            tag: {
+              nonematch: ["https://zusapi.com/thirdparty/source"],
+            },
+          },
+        });
+
+        console.log(data);
+        return [];
+
+        // const { bundle, resources: conditions } = await searchBuilderRecords(
+        //   "Condition",
+        //   requestContext,
+        //   {
+        //     patientUPID: patient.UPID,
+        //   }
+        // );
+        // const results = filterAndSort(setupConditionModels(conditions, bundle));
+        // Telemetry.histogramMetric("req.count.builder_conditions", results.length);
+        // return results;
       } catch (e) {
         throw Telemetry.logError(
           e as Error,
