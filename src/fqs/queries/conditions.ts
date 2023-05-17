@@ -1,8 +1,11 @@
 import { gql } from "graphql-request";
+import { coding, patient } from "./fragments";
 
-export const conditionsQuery = (upid: string, count: number, cursor: string) => gql`
-  query Conditions {
-    ConditionConnection(upid: "${upid}", after: "${cursor}", first: "${count}") {
+export const conditionsQuery = gql`
+  ${coding}
+  ${patient}
+  query Conditions($upid: ID!, $cursor: String!, $sort: ConditionSortParams!, $first: Int!) {
+    ConditionConnection(upid: $upid, after: $cursor, sort: $sort, first: $first) {
       pageInfo {
         hasNextPage
       }
@@ -115,81 +118,5 @@ export const conditionsQuery = (upid: string, count: number, cursor: string) => 
         }
       }
     }
-  }
-
-  fragment Coding on Coding {
-    code
-    display
-    system
-  }
-
-  fragment Patient on Patient {
-    id
-    resourceType
-    active
-    identifier {
-      use
-      system
-      value
-    }
-    contact {
-      address {
-        ..Address
-      }
-      gender
-      name {
-        ...HumanName
-      }
-      organization {
-        display
-        identifier {
-          value
-        }
-        type
-      }
-    }
-    birthDate
-    gender
-    maritalStatus {
-      coding {
-        ...Coding
-      }
-    }
-    telecom {
-      use
-      value
-      system
-    }
-    address {
-      ..Address
-    }
-    name {
-      ...HumanName
-    }
-  }
-
-  fragment HumanName on HumanName {
-    family
-    given
-    prefix
-    suffix
-    text
-    use
-  }
-
-  fragment Address on Address {
-    city
-    country
-    district
-    line
-    period {
-      start
-      end
-    }
-    postalCode
-    state
-    text
-    type
-    use
   }
 `;
