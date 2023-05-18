@@ -60,7 +60,7 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
   // In practice, there should only be a single Basic resource, but
   // we need to handle the case where there may be several.
   getLatestBasicResourceByActions(profileActions: string[]): Basic | undefined {
-    const ordered = orderBy(this.revIncludes, "meta.lastUpdated", "desc");
+    const ordered = orderBy(this.revIncludes, "meta.lastUpdated", "desc") as Resource[];
     return find(ordered, (resource) => {
       if (resource.resourceType === "Basic") {
         return some(
