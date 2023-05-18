@@ -35,7 +35,10 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
 
   get isArchived(): boolean {
     const basic = this.getLatestBasicResourceByActions(["archive", "unarchive"]);
-    return some(basic?.code.coding, { code: "archive" });
+    return some(basic?.code.coding, {
+      system: SYSTEM_ZUS_PROFILE_ACTION,
+      code: "archive",
+    });
   }
 
   // Returns true if this resource is a summary/lens resource.
