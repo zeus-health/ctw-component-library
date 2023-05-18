@@ -28,23 +28,32 @@ async function getBinaryDocumentReq(
   binaryId: string
 ): Promise<fhir4.Binary> {
   return queryClient.fetchQuery([QUERY_KEY_BINARY, binaryId], async () => {
-    try {
-      const response = await requestContext.fetchFromFqs(`Binary/${binaryId}`, {
-        method: "GET",
-      });
+    const response = await requestContext.fetchFromFqs(`Binary/${binaryId}`, {
+      method: "GET",
+    });
+
+    if (response.status === 200) {
       return {
         contentType: response.headers.get("Content-Type") || "unknown",
         resourceType: "Binary",
         data: await response.text(),
       };
-    } catch (e: unknown) {
-      // fall back to asking ODS for the binary
-      // Remove this once FQS is backfilled + dekludge is completed
-      return requestContext.fhirClient.read({
-        resourceType: "Binary",
-        id: binaryId,
-      });
     }
+
+    // fall back to asking ODS for the binary
+    // Remove this once FQS is backfilled + dekludge is completed
+    const based64binary = (await requestContext.fhirClient.read({
+      resourceType: "Binary",
+      id: binaryId,
+    })) as fhir4.Binary;
+
+    const decodedData = atob(based64binary.data || "");
+
+    return {
+      resourceType: "Binary",
+      contentType: based64binary.contentType,
+      data: decodedData,
+    };
   });
 }
 
