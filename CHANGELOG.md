@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.9.2
+
+### Patch Changes
+
+- 74deb10d: Fix issue where falling back to ODS does not occur when a FQS query fails
+
 ## 1.9.1
 
 ### Patch Changes
