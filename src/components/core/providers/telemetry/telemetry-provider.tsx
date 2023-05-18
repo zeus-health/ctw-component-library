@@ -27,5 +27,5 @@ export function TelemetryProvider({
       .catch(() => Telemetry.clearUser());
   }, [builderId, env, ehr, enableTelemetry, getAuthToken]);
 
-  return <>{children}</>;
+  return children;
 }
