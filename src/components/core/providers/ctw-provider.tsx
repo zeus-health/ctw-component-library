@@ -20,7 +20,7 @@ import { Telemetry } from "@/utils/telemetry";
 import "../main.scss";
 
 export const Env = ["production", "sandbox", "phi-test", "dev"];
-export type Env = (typeof Env)[number];
+export type Env = typeof Env[number];
 export const IsEnvValid = (env: string): boolean => Env.includes(env);
 
 // We use an expiry padding to provide a buffer to prevent race conditions.

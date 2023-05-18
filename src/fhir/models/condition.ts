@@ -329,5 +329,5 @@ export const conditionStatuses = [
 export const outsideConditionStatuses = ["Active", "Inactive", "Unknown"] as const;
 
 export type ConditionStatuses =
-  | (typeof conditionStatuses)[number]
-  | (typeof outsideConditionStatuses)[number];
+  | typeof conditionStatuses[number]
+  | typeof outsideConditionStatuses[number];

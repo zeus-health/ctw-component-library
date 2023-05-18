@@ -32,7 +32,7 @@ export function useToggleArchive<T extends fhir4.Resource>(
 
   const handleToggleArchive = useCallback(async () => {
     setIsLoading(true);
-    await toggleArchive(model, await getRequestContext())
+    await toggleArchive(model, await getRequestContext());
     await queryClient.invalidateQueries([queryToInvalidate]);
     // Timeout here fixes bug where we would briefly flash
     // the old dismiss/restore text.

@@ -164,17 +164,14 @@ export async function searchLensRecords<T extends ResourceTypeString>(
   let { entry, resources } = filterSearchReturnByBuilderId(
     records,
     getLensBuilderId(requestContext.env),
-    builderId,
+    builderId
   );
 
   /* Filter using the user's builderID for data from the builder that exists in the pre-kludge world.
   This will help avoid getting duplicate results or no there is no data for the builder. 
   Once we have been in the post-kludge world long enough we can remove this functionality. */
   if (resources.length === 0 && entry.length === 0) {
-    ({ entry, resources } = filterSearchReturnByBuilderId(
-      records,
-      builderId,
-    ));
+    ({ entry, resources } = filterSearchReturnByBuilderId(records, builderId));
   }
 
   records.resources = resources;
@@ -209,10 +206,7 @@ export async function searchSummaryRecords<T extends ResourceTypeString>(
   This will help avoid getting duplicate results or know there is no data for the builder. 
   Once we have been in the post-kludge world long enough we can remove this functionality. */
   if (resources.length === 0 || entry.length === 0) {
-    ({ entry, resources } = filterSearchReturnByBuilderId(
-      records,
-      builderId,
-    ));
+    ({ entry, resources } = filterSearchReturnByBuilderId(records, builderId));
   }
 
   records.resources = resources;
