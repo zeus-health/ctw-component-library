@@ -17,7 +17,7 @@ export function TelemetryProvider({
   enableTelemetry = false,
   ehr,
 }: PropsWithChildren<TelemetryProviderProps>) {
-  const { getAuthToken } = useAuthentication()
+  const { getAuthToken } = useAuthentication();
 
   useEffect(() => {
     Telemetry.init(env, ehr, enableTelemetry);
@@ -27,5 +27,5 @@ export function TelemetryProvider({
       .catch(() => Telemetry.clearUser());
   }, [builderId, env, ehr, enableTelemetry, getAuthToken]);
 
-  return (<>{children}</>);
+  return <>{children}</>;
 }

@@ -8,8 +8,8 @@ export type CTWToken = {
 export interface AuthenticationContextValue {
   token?: CTWToken;
   getAuthToken: () => Promise<string>;
-};
+}
 
 export const AuthenticationContext = createContext<AuthenticationContextValue>({
-  getAuthToken: () => Promise.resolve(''),
-})
+  getAuthToken: () => Promise.resolve(""),
+});
