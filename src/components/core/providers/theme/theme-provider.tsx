@@ -63,7 +63,7 @@ export function ThemeProvider({
     document.body.appendChild(el);
   }, [style]);
 
-  // Overwrite our i18next resources with any provided to CTWProvider.
+  // Overwrite our i18next resources with any provided to ThemeProvider.
   useEffect(() => {
     if (locals) {
       Object.entries(locals).forEach(([lang, namespaces]) => {
