@@ -113,7 +113,7 @@ export const EmptyTailwindCSSVars: Record<string, string> = {
 };
 
 // Theme type is a nested partial
-export type ColorTheme = Subset<typeof TailwindTheme["colors"]>;
+export type ColorTheme = Subset<(typeof TailwindTheme)["colors"]>;
 export type Theme = {
   colors?: ColorTheme;
   breakpoints?: Subset<typeof defaultBreakpoints>;
