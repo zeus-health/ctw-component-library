@@ -78,7 +78,7 @@ export function ThemeProvider({
     () => ({
       // Set our context theme to our default theme merged
       // with any of the provided theme overwrites.
-      // This way consumers of useCTW can get access to
+      // This way consumers of useTheme can get access to
       // the full true theme being applied.
       theme: merge({}, DefaultTheme, theme),
       ctwThemeRef,
