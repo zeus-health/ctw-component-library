@@ -6,7 +6,6 @@ export type CTWToken = {
 };
 
 export interface AuthenticationContextValue {
-  token?: CTWToken;
   getAuthToken: () => Promise<string>;
 }
 

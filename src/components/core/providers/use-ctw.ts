@@ -1,5 +1,5 @@
 import { useCallback, useContext } from "react";
-import { useAuthentication } from "./authentication/use-authentication";
+import { useGetAuthToken } from "./authentication/use-get-auth-token";
 import { CTWRequestContext, CTWStateContext } from "./ctw-context";
 import { getFhirClient } from "@/fhir/client";
 import { getFetchFromFqs } from "@/services/fqs/client";
@@ -7,7 +7,7 @@ import { claimsBuilderId } from "@/utils/auth";
 
 export function useCTW() {
   const context = useContext(CTWStateContext);
-  const { getAuthToken } = useAuthentication();
+  const getAuthToken = useGetAuthToken();
 
   if (context === undefined) {
     throw new Error("useCTW must be used within a CTWProvider");
