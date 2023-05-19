@@ -5,7 +5,10 @@ import { FHIRModel } from "./models/fhir-model";
 import { getUsersPractitionerReference } from "./practitioner";
 import { SYSTEM_BASIC_RESOURCE_TYPE, SYSTEM_ZUS_PROFILE_ACTION } from "./system-urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { Telemetry } from "@/utils/telemetry";
+import { Telemetry, withTimerMetric } from "@/utils/telemetry";
+import { useQueryWithPatient } from "..";
+import { QUERY_KEY_BASIC } from "@/utils/query-keys";
+import { searchCommonRecords } from "./search-helpers";
 
 export async function recordProfileAction<T extends fhir4.Resource>(
   existingBasic: Basic | undefined,
@@ -52,6 +55,30 @@ export async function recordProfileAction<T extends fhir4.Resource>(
   } else {
     Telemetry.reportActionSuccess(profileAction);
   }
+}
+
+export function useBasic() {
+  return useQueryWithPatient(
+    QUERY_KEY_BASIC,
+    [],
+    withTimerMetric(async (requestContext, patient) => {
+      try {
+        const { resources } = await searchCommonRecords("Basic", requestContext, {
+          _tag: `https://zusapi.com/accesscontrol/owner|builder/${requestContext.builderId}`,
+        });
+
+        return resources;
+
+        // if (results.length === 0) {
+        //   Telemetry.countMetric("req.count.basic.none");
+        // }
+        // Telemetry.histogramMetric("req.count.basic", results.length);
+        // return results;
+      } catch (e) {
+        throw new Error(`Failed fetching basic information for patient ${patient.UPID}`);
+      }
+    }, "req.timing.basic")
+  );
 }
 
 export async function toggleArchive<T extends fhir4.Resource>(
