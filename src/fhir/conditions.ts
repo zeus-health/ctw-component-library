@@ -108,7 +108,7 @@ export function usePatientBuilderConditions() {
         })) as ConditionGraphqlResponse;
 
         const nodes = data.ConditionConnection.edges.map((x) => x.node);
-        const conditions = setupConditionModelswithFQS(nodes);
+        const conditions = setupConditionModelsWithFQS(nodes);
         const results = filterAndSort(conditions);
         Telemetry.histogramMetric("req.count.builder_conditions", results.length);
         return results;
@@ -144,7 +144,7 @@ function usePatientSummaryConditions() {
         })) as ConditionGraphqlResponse;
 
         const nodes = data.ConditionConnection.edges.map((x) => x.node);
-        const conditions = setupConditionModelswithFQS(nodes);
+        const conditions = setupConditionModelsWithFQS(nodes);
         const results = filterAndSort(conditions);
         if (results.length === 0) {
           Telemetry.countMetric("req.count.summary_conditions.none");
@@ -196,7 +196,7 @@ function setupConditionModels(
   return conditionResources.map((c) => new ConditionModel(c, undefined, basicsMap.get(c.id ?? "")));
 }
 
-function setupConditionModelswithFQS(conditionResources: fhir4.Condition[]): ConditionModel[] {
+function setupConditionModelsWithFQS(conditionResources: fhir4.Condition[]): ConditionModel[] {
   return conditionResources.map((c) => new ConditionModel(c));
 }
 
