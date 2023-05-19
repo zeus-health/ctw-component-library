@@ -23,6 +23,10 @@ export const coding = gql`
     code
     display
     system
+    extension {
+      url
+      valueString
+    }
   }
 `;
 

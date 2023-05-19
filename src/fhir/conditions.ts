@@ -12,6 +12,7 @@ import {
   SYSTEM_ICD9_CM,
   SYSTEM_SNOMED,
   SYSTEM_SUMMARY,
+  SYSTEM_ZUS_THIRD_PARTY,
 } from "./system-urls";
 import {
   getAddConditionWithDefaults,
@@ -97,30 +98,19 @@ export function usePatientBuilderConditions() {
           cursor: "",
           first: 1000,
           sort: {
-            lastUpdated: "ASC",
+            lastUpdated: "DESC",
           },
           filter: {
             tag: {
-              nonematch: [`${SYSTEM_SUMMARY}|Common`],
+              nonematch: [SYSTEM_SUMMARY, SYSTEM_ZUS_THIRD_PARTY],
             },
           },
         })) as ConditionGraphqlResponse;
 
-        const result = data.ConditionConnection.edges.map((x) => x.node);
-        const conditionModelResult = setupConditionModelswithFQS(result);
-        return conditionModelResult;
-
-        // const { bundle, resources: conditions } = await searchBuilderRecords(
-        //   "Condition",
-        //   requestContext,
-        //   {
-        //     patientUPID: patient.UPID,
-        //   }
-        // );
-        // console.log(conditions, bundle);
-        // const results = filterAndSort(setupConditionModels(conditions, bundle));
-        // Telemetry.histogramMetric("req.count.builder_conditions", results.length);
-        // return results;
+        const nodes = data.ConditionConnection.edges.map((x) => x.node);
+        const conditions = setupConditionModelswithFQS(nodes);
+        const results = filterAndSort(conditions);
+        return results;
       } catch (e) {
         throw Telemetry.logError(
           e as Error,
@@ -143,17 +133,19 @@ function usePatientSummaryConditions() {
           cursor: "",
           first: 1000,
           sort: {
-            lastUpdated: "ASC",
+            lastUpdated: "DESC",
           },
           filter: {
             tag: {
-              nonematch: [`${SYSTEM_SUMMARY}|Common`],
+              allmatch: [SYSTEM_SUMMARY],
             },
           },
         })) as ConditionGraphqlResponse;
 
         const nodes = data.ConditionConnection.edges.map((x) => x.node);
-        const results = setupConditionModelswithFQS(nodes);
+        const conditions = setupConditionModelswithFQS(nodes);
+        const results = filterAndSort(conditions);
+        return results;
         if (results.length === 0) {
           Telemetry.countMetric("req.count.summary_conditions.none");
         }
