@@ -101,7 +101,7 @@ export function usePatientBuilderConditions() {
           },
           filter: {
             tag: {
-              nonematch: ["https://zusapi.com/thirdparty/source"],
+              nonematch: [`${SYSTEM_SUMMARY}|Common`],
             },
           },
         })) as ConditionGraphqlResponse;
@@ -147,7 +147,7 @@ function usePatientSummaryConditions() {
           },
           filter: {
             tag: {
-              allmatch: [`${SYSTEM_SUMMARY}|Common`],
+              nonematch: [`${SYSTEM_SUMMARY}|Common`],
             },
           },
         })) as ConditionGraphqlResponse;
