@@ -1,5 +1,13 @@
 # ctw-component-library
 
+## 1.9.3
+
+### Patch Changes
+
+- 64f76b55: Bump postcss from 8.4.21 to 8.4.23
+- f2809f21: Fix bug with dismiss/restore
+- 2c6c9455: Bump i18next from 22.4.14 to 22.4.15
+
 ## 1.9.2
 
 ### Patch Changes
