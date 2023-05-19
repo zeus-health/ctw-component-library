@@ -198,6 +198,7 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
   }
 
   get recordedDate(): string | undefined {
+    console.log("recordedDate", this.resource.recordedDate);
     return formatDateISOToLocal(this.resource.recordedDate);
   }
 

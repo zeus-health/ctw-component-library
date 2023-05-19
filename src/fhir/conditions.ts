@@ -107,10 +107,10 @@ export function usePatientBuilderConditions() {
         })) as ConditionGraphqlResponse;
 
         const result = data.ConditionConnection.edges.map((x) => x.node);
-        // const conditionModelResult = filterAndSort(setupConditionModels(result));
+        const conditionModelResult = setupConditionModelswithFQS(result);
 
-        console.log(result[0]);
-        return [];
+        console.log(result);
+        return conditionModelResult;
 
         // const { bundle, resources: conditions } = await searchBuilderRecords(
         //   "Condition",
@@ -119,6 +119,7 @@ export function usePatientBuilderConditions() {
         //     patientUPID: patient.UPID,
         //   }
         // );
+        // console.log(conditions, bundle);
         // const results = filterAndSort(setupConditionModels(conditions, bundle));
         // Telemetry.histogramMetric("req.count.builder_conditions", results.length);
         // return results;
@@ -195,6 +196,10 @@ function setupConditionModels(
 ): ConditionModel[] {
   const basicsMap = getIncludedBasics(bundle);
   return conditionResources.map((c) => new ConditionModel(c, undefined, basicsMap.get(c.id ?? "")));
+}
+
+function setupConditionModelswithFQS(conditionResources: fhir4.Condition[]): ConditionModel[] {
+  return conditionResources.map((c) => new ConditionModel(c));
 }
 
 function filterAndSort(conditions: ConditionModel[]): ConditionModel[] {
