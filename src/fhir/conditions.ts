@@ -110,6 +110,7 @@ export function usePatientBuilderConditions() {
         const nodes = data.ConditionConnection.edges.map((x) => x.node);
         const conditions = setupConditionModelswithFQS(nodes);
         const results = filterAndSort(conditions);
+        Telemetry.histogramMetric("req.count.builder_conditions", results.length);
         return results;
       } catch (e) {
         throw Telemetry.logError(
@@ -145,7 +146,6 @@ function usePatientSummaryConditions() {
         const nodes = data.ConditionConnection.edges.map((x) => x.node);
         const conditions = setupConditionModelswithFQS(nodes);
         const results = filterAndSort(conditions);
-        return results;
         if (results.length === 0) {
           Telemetry.countMetric("req.count.summary_conditions.none");
         }
