@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { createOrEditFhirResource } from "./action-helper";
 import { getIncludedBasics } from "./bundle";
 import { CodePreference } from "./codeable-concept";
-import { searchSummaryRecords } from "./search-helpers";
 import {
   SYSTEM_CONDITION_VERIFICATION_STATUS,
   SYSTEM_ICD10,
@@ -12,6 +11,7 @@ import {
   SYSTEM_ICD9,
   SYSTEM_ICD9_CM,
   SYSTEM_SNOMED,
+  SYSTEM_SUMMARY,
 } from "./system-urls";
 import {
   getAddConditionWithDefaults,
@@ -108,8 +108,6 @@ export function usePatientBuilderConditions() {
 
         const result = data.ConditionConnection.edges.map((x) => x.node);
         const conditionModelResult = setupConditionModelswithFQS(result);
-
-        console.log(result);
         return conditionModelResult;
 
         // const { bundle, resources: conditions } = await searchBuilderRecords(
@@ -139,15 +137,23 @@ function usePatientSummaryConditions() {
     [],
     withTimerMetric(async (requestContext, patient) => {
       try {
-        const { bundle, resources: conditions } = await searchSummaryRecords(
-          "Condition",
-          requestContext,
-          {
-            _revinclude: "Basic:subject",
-            patientUPID: patient.UPID,
-          }
-        );
-        const results = filterAndSort(setupConditionModels(conditions, bundle));
+        const graphClient = createGraphClient(requestContext);
+        const data = (await graphClient.request(conditionsQuery, {
+          upid: patient.UPID,
+          cursor: "",
+          first: 1000,
+          sort: {
+            lastUpdated: "ASC",
+          },
+          filter: {
+            tag: {
+              allmatch: [`${SYSTEM_SUMMARY}|Common`],
+            },
+          },
+        })) as ConditionGraphqlResponse;
+
+        const nodes = data.ConditionConnection.edges.map((x) => x.node);
+        const results = setupConditionModelswithFQS(nodes);
         if (results.length === 0) {
           Telemetry.countMetric("req.count.summary_conditions.none");
         }
