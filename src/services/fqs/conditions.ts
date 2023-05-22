@@ -19,6 +19,7 @@ import {
 } from "@/components/content/forms/actions/conditions";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
+import { useBasic } from "@/fhir/basic";
 import { ConditionModel } from "@/fhir/models/condition";
 import { createGraphqlClient, GraphqlConnectionNode, GraphqlPageInfo } from "@/services/fqs/client";
 import { conditionsQuery } from "@/services/fqs/queries/conditions";
@@ -29,7 +30,6 @@ import {
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
-import { useBasic } from "@/fhir/basic";
 
 export type VerificationStatus =
   | "unconfirmed"
