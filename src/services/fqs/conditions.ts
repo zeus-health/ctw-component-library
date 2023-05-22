@@ -242,19 +242,25 @@ export const deleteCondition = async (
 // Filter out other conditions where:
 //  1. Condition is archived and includeArchived is false.
 //  2. CCS Category code starts with FAC or XXX.
-//  3. There is an existing patient condition with a matching known code.
+//  3. The conditions has been dismissed via a Basic resource.
+//  4. There is an existing patient condition with a matching known code.
 //     AND The other condition is older than the patient condition OR they
 //     have the same status.
 export const filterOtherConditions = (
   otherConditions: ConditionModel[],
   patientConditions: ConditionModel[],
-  basic: Basic[],
+  basics: Basic[],
   includeArchived: boolean
 ): ConditionModel[] =>
   otherConditions.filter((otherCondition) => {
     if (otherCondition.isArchived && !includeArchived) return false;
 
     if (["FAC", "XXX"].includes(otherCondition.ccsChapterCode ?? "")) {
+      return false;
+    }
+
+    // Don't include conditions that have been dismissed via a Basic resource.
+    if (basics.some((basic) => basic.subject?.reference === `Condition/${otherCondition.id}`)) {
       return false;
     }
 

@@ -6,7 +6,7 @@ describe("FHIR Condition", () => {
   describe("filterOtherConditions", () => {
     it("should filter out when there's a match and other record has no date", () => {
       const { others, patients } = setupConditions();
-      const filtered = filterOtherConditions(others, patients, false);
+      const filtered = filterOtherConditions(others, patients, [], false);
       expect(filtered).toHaveLength(2);
       expect(filtered[0].id).toEqual("other2");
       expect(filtered[1].id).toEqual("other3");
@@ -14,7 +14,7 @@ describe("FHIR Condition", () => {
 
     it("should filter out when there's a match and patient record is newer", () => {
       const { others, patients } = setupConditions("2022-11-09", "2022-11-10");
-      const filtered = filterOtherConditions(others, patients, false);
+      const filtered = filterOtherConditions(others, patients, [], false);
       expect(filtered).toHaveLength(2);
       expect(filtered[0].id).toEqual("other2");
       expect(filtered[1].id).toEqual("other3");
@@ -22,13 +22,13 @@ describe("FHIR Condition", () => {
 
     it("should NOT filter out when there's a match and patient record is older", () => {
       const { others, patients } = setupConditions("2022-11-10", "2022-11-09");
-      const filtered = filterOtherConditions(others, patients, false);
+      const filtered = filterOtherConditions(others, patients, [], false);
       expect(filtered).toHaveLength(3);
     });
 
     it("should filter out when there's a match and patient record is older BUT they have same status", () => {
       const { others, patients } = setupConditions("2022-11-10", "2022-11-09", "active", "active");
-      const filtered = filterOtherConditions(others, patients, false);
+      const filtered = filterOtherConditions(others, patients, [], false);
       expect(filtered).toHaveLength(2);
     });
 
@@ -40,7 +40,7 @@ describe("FHIR Condition", () => {
         "active",
         "entered-in-error"
       );
-      const filtered = filterOtherConditions(others, patients, false);
+      const filtered = filterOtherConditions(others, patients, [], false);
       expect(filtered).toHaveLength(3);
     });
 
