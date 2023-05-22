@@ -1,8 +1,8 @@
 import { XIcon } from "@heroicons/react/outline";
 import { BinaryField } from "./binary-field";
 import { Modal, ModalProps } from "@/components/core/modal";
-import { useCTW } from "@/components/core/providers/ctw-provider";
 import { useModal } from "@/components/core/providers/modal-provider";
+import { useCTW } from "@/components/core/providers/use-ctw";
 import { getBinaryDocument } from "@/fhir/binaries";
 
 export function useCCDAModal() {

@@ -4,7 +4,7 @@ import { usePatientConditionsOutside } from "@/services/fqs/conditions";
 export const PatientConditionsOutsideBadge = () => {
   const otherConditionsQuery = usePatientConditionsOutside();
   const activeUnarchivedConditions = otherConditionsQuery.data.filter(
-    (condition) => condition.displayStatus === "Active"
+    (condition) => condition.active && !condition.isArchived
   );
 
   if (activeUnarchivedConditions.length > 0) {

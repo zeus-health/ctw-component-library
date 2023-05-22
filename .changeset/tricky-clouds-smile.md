@@ -2,4 +2,4 @@
 "@zus-health/ctw-component-library": patch
 ---
 
-Use FQS for Binary Lookups
+Don't count dismissed outside resources in badges

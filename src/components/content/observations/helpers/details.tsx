@@ -5,7 +5,7 @@ import { ObservationsTable } from "@/components/content/observations/helpers/obs
 import { DetailsCard } from "@/components/content/resource/helpers/details-card";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Loading } from "@/components/core/loading";
-import { useCTW } from "@/components/core/providers/ctw-provider";
+import { useCTW } from "@/components/core/providers/use-ctw";
 import { getBinaryId } from "@/fhir/binaries";
 import { DiagnosticReportModel, ObservationModel } from "@/fhir/models";
 import { searchProvenances } from "@/fhir/provenance";

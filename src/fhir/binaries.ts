@@ -31,10 +31,28 @@ async function getBinaryDocumentReq(
     const response = await requestContext.fetchFromFqs(`Binary/${binaryId}`, {
       method: "GET",
     });
-    return {
-      contentType: response.headers.get("Content-Type") || "unknown",
+
+    if (response.status === 200) {
+      return {
+        contentType: response.headers.get("Content-Type") || "unknown",
+        resourceType: "Binary",
+        data: await response.text(),
+      };
+    }
+
+    // fall back to asking ODS for the binary
+    // Remove this once FQS is backfilled + dekludge is completed
+    const based64binary = (await requestContext.fhirClient.read({
       resourceType: "Binary",
-      data: await response.text(),
+      id: binaryId,
+    })) as fhir4.Binary;
+
+    const decodedData = atob(based64binary.data || "");
+
+    return {
+      resourceType: "Binary",
+      contentType: based64binary.contentType,
+      data: decodedData,
     };
   });
 }
