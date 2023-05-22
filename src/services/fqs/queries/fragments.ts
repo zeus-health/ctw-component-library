@@ -1,23 +1,5 @@
 import { gql } from "graphql-request";
 
-export const fragmentAddress = gql`
-  fragment Address on Address {
-    city
-    country
-    district
-    line
-    period {
-      start
-      end
-    }
-    postalCode
-    state
-    text
-    type
-    use
-  }
-`;
-
 export const fragmentCoding = gql`
   fragment Coding on Coding {
     code
@@ -27,17 +9,6 @@ export const fragmentCoding = gql`
       url
       valueString
     }
-  }
-`;
-
-export const fragmentHumanName = gql`
-  fragment HumanName on HumanName {
-    family
-    given
-    prefix
-    suffix
-    text
-    use
   }
 `;
 
