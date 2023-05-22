@@ -3,12 +3,12 @@ import { FhirResource } from "fhir-kit-client";
 import { createOrEditFhirResource } from "./action-helper";
 import { FHIRModel } from "./models/fhir-model";
 import { getUsersPractitionerReference } from "./practitioner";
-import { SYSTEM_BASIC_RESOURCE_TYPE, SYSTEM_ZUS_PROFILE_ACTION } from "./system-urls";
-import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { Telemetry, withTimerMetric } from "@/utils/telemetry";
-import { useQueryWithPatient } from "..";
-import { QUERY_KEY_BASIC } from "@/utils/query-keys";
 import { searchCommonRecords } from "./search-helpers";
+import { SYSTEM_BASIC_RESOURCE_TYPE, SYSTEM_ZUS_PROFILE_ACTION } from "./system-urls";
+import { useQueryWithPatient } from "..";
+import { CTWRequestContext } from "@/components/core/providers/ctw-context";
+import { QUERY_KEY_BASIC } from "@/utils/query-keys";
+import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export async function recordProfileAction<T extends fhir4.Resource>(
   existingBasic: Basic | undefined,
@@ -66,14 +66,11 @@ export function useBasic() {
         const { resources } = await searchCommonRecords("Basic", requestContext, {
           _tag: `https://zusapi.com/accesscontrol/owner|builder/${requestContext.builderId}`,
         });
-
+        if (resources.length === 0) {
+          Telemetry.countMetric("req.count.basic.none");
+        }
+        Telemetry.histogramMetric("req.count.basic", resources.length);
         return resources;
-
-        // if (results.length === 0) {
-        //   Telemetry.countMetric("req.count.basic.none");
-        // }
-        // Telemetry.histogramMetric("req.count.basic", results.length);
-        // return results;
       } catch (e) {
         throw new Error(`Failed fetching basic information for patient ${patient.UPID}`);
       }
