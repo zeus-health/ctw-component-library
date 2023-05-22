@@ -70,6 +70,23 @@ export const conditionsQuery = gql`
               ...Coding
             }
           }
+          contained {
+            resource {
+              ... on Patient {
+                id
+                resourceType
+                contained {
+                  resource {
+                    ... on Organization {
+                      id
+                      resourceType
+                      name
+                    }
+                  }
+                }
+              }
+            }
+          }
           encounter {
             display
           }

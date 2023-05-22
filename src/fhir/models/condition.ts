@@ -182,12 +182,12 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
     const reference = findReference(
       "Patient",
       this.resource.contained,
-      this.includedResources,
+      undefined,
       this.resource.subject.reference
     );
 
     if (reference) {
-      return new PatientModel(reference, this.includedResources).organization?.name;
+      return new PatientModel(reference, undefined).organization?.name;
     }
 
     return undefined;
