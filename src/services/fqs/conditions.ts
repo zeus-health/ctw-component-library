@@ -20,7 +20,7 @@ import {
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { ConditionModel } from "@/fhir/models/condition";
-import { createGraphqlClient } from "@/services/fqs/client";
+import { createGraphqlClient, GraphqlConnectionNode, GraphqlPageInfo } from "@/services/fqs/client";
 import { conditionsQuery } from "@/services/fqs/queries/conditions";
 import { cloneDeep, orderBy } from "@/utils/nodash";
 import {
@@ -55,14 +55,6 @@ export const CONDITION_CODE_PREFERENCE_ORDER: CodePreference[] = [
   { system: SYSTEM_ICD9 },
   { system: SYSTEM_ICD9_CM },
 ];
-
-export interface GraphqlPageInfo {
-  hasNextPage: boolean;
-}
-
-export interface GraphqlConnectionNode<T> {
-  node: T;
-}
 
 export interface ConditionConnection {
   pageInfo: GraphqlPageInfo;

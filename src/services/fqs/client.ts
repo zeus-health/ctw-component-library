@@ -4,6 +4,14 @@ import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { Env } from "@/components/core/providers/ctw-provider";
 import { CTW_REQUEST_HEADER } from "@/utils/request";
 
+export interface GraphqlPageInfo {
+  hasNextPage: boolean;
+}
+
+export interface GraphqlConnectionNode<T> {
+  node: T;
+}
+
 export const createGraphqlClient = (requestContext: CTWRequestContext) => {
   const endpoint = `${getZusApiBaseUrl(requestContext.env)}/fqs/query`;
   return new GraphQLClient(endpoint, {
