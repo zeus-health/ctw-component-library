@@ -44,6 +44,32 @@ describe("FHIR Condition", () => {
       expect(filtered).toHaveLength(3);
     });
 
+    it("should filter out when it's previously been dismissed", () => {
+      const { others, patients } = setupConditions(
+        "2022-11-10",
+        "2022-11-09",
+        "active",
+        "active",
+        "entered-in-error"
+      );
+      const filtered = filterOtherConditions(
+        others,
+        patients,
+        [
+          {
+            resourceType: "Basic",
+            code: {},
+            subject: {
+              type: "Condition",
+              reference: `Condition/${others[0].id}`,
+            },
+          },
+        ],
+        false
+      );
+      expect(filtered).toHaveLength(3);
+    });
+
     function getCondition(
       id: string,
       status = "active",
