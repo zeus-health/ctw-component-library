@@ -11,7 +11,7 @@ import { ModalConfirmDelete } from "@/components/core/modal-confirm-delete";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
 import { useModal } from "@/components/core/providers/modal-provider";
 import { usePatient } from "@/components/core/providers/patient-provider";
-import { deleteCondition, getNewCondition } from "@/fhir/conditions";
+import { deleteCondition, getNewCondition } from "@/services/fqs/conditions";
 import { useBaseTranslations } from "@/i18n";
 import { ConditionModel, useCTW } from "@/index";
 import { curry } from "@/utils/nodash";

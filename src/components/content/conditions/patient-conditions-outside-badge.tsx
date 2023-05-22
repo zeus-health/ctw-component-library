@@ -1,5 +1,5 @@
 import { Badge } from "@/components/core/badge";
-import { usePatientConditionsOutside } from "@/fhir/conditions";
+import { usePatientConditionsOutside } from "@/services/fqs/conditions";
 
 export const PatientConditionsOutsideBadge = () => {
   const otherConditionsQuery = usePatientConditionsOutside();

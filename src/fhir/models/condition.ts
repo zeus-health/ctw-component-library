@@ -19,7 +19,7 @@ import {
   ClinicalStatus,
   CONDITION_CODE_PREFERENCE_ORDER,
   VerificationStatus,
-} from "@/fhir/conditions";
+} from "@/services/fqs/conditions";
 import { findReference } from "@/fhir/resource-helper";
 import { compact, find, intersectionWith, uniqWith } from "@/utils/nodash";
 

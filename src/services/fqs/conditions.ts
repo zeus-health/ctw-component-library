@@ -1,9 +1,8 @@
 import { Condition } from "fhir/r4";
 import { FhirResource } from "fhir-kit-client";
 import { useEffect, useState } from "react";
-import { createOrEditFhirResource } from "./action-helper";
-import { getIncludedBasics } from "./bundle";
-import { CodePreference } from "./codeable-concept";
+import { createOrEditFhirResource } from "../../fhir/action-helper";
+import { CodePreference } from "../../fhir/codeable-concept";
 import {
   SYSTEM_CONDITION_VERIFICATION_STATUS,
   SYSTEM_ICD10,
@@ -13,7 +12,7 @@ import {
   SYSTEM_SNOMED,
   SYSTEM_SUMMARY,
   SYSTEM_ZUS_THIRD_PARTY,
-} from "./system-urls";
+} from "../../fhir/system-urls";
 import {
   getAddConditionWithDefaults,
   getClincalAndVerificationStatus,
@@ -21,8 +20,8 @@ import {
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { ConditionModel } from "@/fhir/models/condition";
-import { createGraphClient } from "@/fqs/fqs";
-import { conditionsQuery } from "@/fqs/queries/conditions";
+import { createGraphqlClient } from "@/services/fqs/client";
+import { conditionsQuery } from "@/services/fqs/queries/conditions";
 import { cloneDeep, orderBy } from "@/utils/nodash";
 import {
   QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
@@ -92,7 +91,7 @@ export function usePatientBuilderConditions() {
     [],
     withTimerMetric(async (requestContext, patient) => {
       try {
-        const graphClient = createGraphClient(requestContext);
+        const graphClient = createGraphqlClient(requestContext);
         const data = (await graphClient.request(conditionsQuery, {
           upid: patient.UPID,
           cursor: "",
@@ -128,7 +127,7 @@ function usePatientSummaryConditions() {
     [],
     withTimerMetric(async (requestContext, patient) => {
       try {
-        const graphClient = createGraphClient(requestContext);
+        const graphClient = createGraphqlClient(requestContext);
         const data = (await graphClient.request(conditionsQuery, {
           upid: patient.UPID,
           cursor: "",
@@ -188,13 +187,13 @@ export function usePatientConditionsOutside() {
   };
 }
 
-function setupConditionModels(
-  conditionResources: fhir4.Condition[],
-  bundle: fhir4.Bundle
-): ConditionModel[] {
-  const basicsMap = getIncludedBasics(bundle);
-  return conditionResources.map((c) => new ConditionModel(c, undefined, basicsMap.get(c.id ?? "")));
-}
+// function setupConditionModels(
+//   conditionResources: fhir4.Condition[],
+//   bundle: fhir4.Bundle
+// ): ConditionModel[] {
+//   const basicsMap = getIncludedBasics(bundle);
+//   return conditionResources.map((c) => new ConditionModel(c, undefined, basicsMap.get(c.id ?? "")));
+// }
 
 function setupConditionModelsWithFQS(conditionResources: fhir4.Condition[]): ConditionModel[] {
   return conditionResources.map((c) => new ConditionModel(c));

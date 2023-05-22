@@ -45,11 +45,11 @@ const theme = {
 const locals = {
   en: {
     glossary: {
-      condition_one: "conditions",
+      condition_one: "condition",
       condition_other: "conditions",
     },
     main: {
-      "zap.tabs.conditionsOutside": "Outside Conditions",
+      "zap.tabs.conditionsOutside": "conditions",
       "zap.tabs.medicationsOutside": "medications",
     },
   },
