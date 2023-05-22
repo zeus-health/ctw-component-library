@@ -178,7 +178,7 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
     return formatStringToDate(this.resource.onsetString);
   }
 
-  get patient(): PatientModel | undefined {
+  get patientOrganizationName(): string | undefined {
     const reference = findReference(
       "Patient",
       this.resource.contained,
@@ -187,7 +187,7 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
     );
 
     if (reference) {
-      return new PatientModel(reference, this.includedResources);
+      return new PatientModel(reference, this.includedResources).organization?.name;
     }
 
     return undefined;

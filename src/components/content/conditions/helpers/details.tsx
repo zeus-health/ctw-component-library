@@ -26,7 +26,7 @@ export const useConditionDetailsDrawer = ({
       { label: "Recorded Date", value: condition.recordedDate },
       {
         label: "Provider Organization",
-        value: condition.patient?.organization?.name,
+        value: condition.patientOrganizationName,
       },
       { label: "Status", value: capitalize(condition.displayStatus) },
       { label: "Onset Date", value: condition.onset },
