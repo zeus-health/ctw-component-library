@@ -7,7 +7,7 @@ import {
 import { PatientConditionsBase } from "./helpers/patient-conditions-base";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { RowActionsProps } from "@/components/core/table/table";
-import { usePatientBuilderConditions } from "@/fhir/conditions";
+import { usePatientBuilderConditions } from "@/services/fqs/conditions";
 import { ConditionModel } from "@/fhir/models";
 import { useBaseTranslations } from "@/i18n";
 

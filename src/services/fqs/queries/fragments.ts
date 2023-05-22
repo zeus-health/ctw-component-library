@@ -1,6 +1,6 @@
 import { gql } from "graphql-request";
 
-export const address = gql`
+export const fragmentAddress = gql`
   fragment Address on Address {
     city
     country
@@ -18,7 +18,7 @@ export const address = gql`
   }
 `;
 
-export const coding = gql`
+export const fragmentCoding = gql`
   fragment Coding on Coding {
     code
     display
@@ -30,7 +30,7 @@ export const coding = gql`
   }
 `;
 
-export const humanName = gql`
+export const fragmentHumanName = gql`
   fragment HumanName on HumanName {
     family
     given
@@ -41,7 +41,7 @@ export const humanName = gql`
   }
 `;
 
-export const patient = gql`
+export const fragmentPatient = gql`
   fragment Patient on Patient {
     id
     resourceType

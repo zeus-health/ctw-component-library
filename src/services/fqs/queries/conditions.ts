@@ -1,9 +1,9 @@
 import { gql } from "graphql-request";
-import { coding, patient } from "./fragments";
+import { fragmentCoding, fragmentPatient } from "./fragments";
 
 export const conditionsQuery = gql`
-  ${coding}
-  ${patient}
+  ${fragmentCoding}
+  ${fragmentPatient}
   query Conditions(
     $upid: ID!
     $cursor: String!

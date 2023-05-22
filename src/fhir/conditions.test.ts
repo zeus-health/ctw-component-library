@@ -1,4 +1,4 @@
-import { filterOtherConditions } from "./conditions";
+import { filterOtherConditions } from "../services/fqs/conditions";
 import { ConditionModel } from "@/fhir/models";
 import { SYSTEM_CONDITION_VERIFICATION_STATUS, SYSTEM_SNOMED } from "@/fhir/system-urls";
 
