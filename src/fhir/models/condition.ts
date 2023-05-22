@@ -1,6 +1,8 @@
 import { FHIRModel } from "./fhir-model";
+import { PatientModel } from "./patient";
 import { formatDateISOToLocal, formatStringToDate } from "../formatters";
 import { CCSChapterName } from "../mappings/ccs-chapter-names";
+import { findReference } from "../resource-helper";
 import {
   SYSTEM_CCS,
   SYSTEM_CONDITION_CLINICAL,
@@ -174,6 +176,21 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
     }
 
     return formatStringToDate(this.resource.onsetString);
+  }
+
+  get patient(): PatientModel | undefined {
+    const reference = findReference(
+      "Patient",
+      this.resource.contained,
+      this.includedResources,
+      this.resource.subject.reference
+    );
+
+    if (reference) {
+      return new PatientModel(reference, this.includedResources);
+    }
+
+    return undefined;
   }
 
   get preferredCoding(): fhir4.Coding | undefined {
