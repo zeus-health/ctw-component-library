@@ -18,7 +18,6 @@ export * from "@/components/content/patient-history/patient-history-last-retriev
 export * from "@/components/content/patients/patients-table";
 export * from "@/components/content/patient-history/patient-history-table";
 export * from "@/components/content/patients/patients-search";
-export * from "@/components/content/timeline/patient-timeline";
 export * from "@/components/content/timeline-2.0/patient-timeline";
 export * from "@/components/content/zus-aggregated-profile/zus-aggregated-profile";
 // Core components
