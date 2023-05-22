@@ -7,9 +7,9 @@ import { usePatientHistory } from "../patient-history/use-patient-history";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Spinner } from "@/components/core/spinner";
 import { RowActionsProps } from "@/components/core/table/table";
-import { usePatientConditionsOutside } from "@/services/fqs/conditions";
 import { ConditionModel } from "@/fhir/models";
 import { useBaseTranslations } from "@/i18n";
+import { usePatientConditionsOutside } from "@/services/fqs/conditions";
 import { QUERY_KEY_OTHER_PROVIDER_CONDITIONS } from "@/utils/query-keys";
 
 export type PatientConditionsOutsideProps = {

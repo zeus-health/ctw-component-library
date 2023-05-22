@@ -1,4 +1,4 @@
-import { Condition } from "fhir/r4";
+import { Basic, Condition } from "fhir/r4";
 import { FhirResource } from "fhir-kit-client";
 import { useEffect, useState } from "react";
 import { createOrEditFhirResource } from "../../fhir/action-helper";
@@ -29,6 +29,7 @@ import {
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
+import { useBasic } from "@/fhir/basic";
 
 export type VerificationStatus =
   | "unconfirmed"
@@ -156,20 +157,26 @@ export function usePatientConditionsOutside() {
   const [conditions, setConditions] = useState<ConditionModel[]>([]);
   const patientConditionsQuery = usePatientBuilderConditions();
   const otherConditionsQuery = usePatientSummaryConditions();
+  const basicQuery = useBasic();
 
   useEffect(() => {
     const patientConditions = patientConditionsQuery.data ?? [];
+    const basic = basicQuery.data ?? [];
     const otherConditions = filterOtherConditions(
       otherConditionsQuery.data ?? [],
       patientConditions,
+      basic,
       true
     );
     setConditions(otherConditions);
-  }, [patientConditionsQuery.data, otherConditionsQuery.data]);
+  }, [patientConditionsQuery.data, otherConditionsQuery.data, basicQuery.data]);
 
-  const isLoading = patientConditionsQuery.isLoading || otherConditionsQuery.isLoading;
-  const isError = patientConditionsQuery.isError || otherConditionsQuery.isError;
-  const isFetching = patientConditionsQuery.isFetching || otherConditionsQuery.isFetching;
+  const isLoading =
+    patientConditionsQuery.isLoading || otherConditionsQuery.isLoading || basicQuery.isLoading;
+  const isError =
+    patientConditionsQuery.isError || otherConditionsQuery.isError || basicQuery.isError;
+  const isFetching =
+    patientConditionsQuery.isFetching || otherConditionsQuery.isFetching || basicQuery.isFetching;
 
   return {
     isLoading,
@@ -241,6 +248,7 @@ export const deleteCondition = async (
 export const filterOtherConditions = (
   otherConditions: ConditionModel[],
   patientConditions: ConditionModel[],
+  basic: Basic[],
   includeArchived: boolean
 ): ConditionModel[] =>
   otherConditions.filter((otherCondition) => {
