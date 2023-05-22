@@ -1,5 +1,5 @@
 import { rest } from "msw";
-import { patient } from "@/components/content/medications/story-helpers/mocks/patient";
+import { patient } from "./patient";
 import { createDiagnosticReportsBundle } from "@/components/content/observations/story-helpers/mocks/diagnostic-reports";
 
 export function setupObservationMocks() {

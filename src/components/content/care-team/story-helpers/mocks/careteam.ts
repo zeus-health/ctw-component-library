@@ -1,3 +1,5 @@
+import { FAKE_UNIVERSAL_ID_EXTENSION, LENS_BUILDER_TAG } from "@/components/content/story-helpers/ids";
+
 export const careTeam: fhir4.Bundle = {
   resourceType: "Bundle",
   id: "9f8f9095-cc74-4cd5-ac58-ab233e6c7a92",
@@ -17,11 +19,7 @@ export const careTeam: fhir4.Bundle = {
               system: "https://zusapi.com/thirdparty/source",
               code: "commonwell",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/2a6358ef-9276-49fb-bf62-000f1aba1a68",
-              display: "GoodRx Care",
-            },
+            LENS_BUILDER_TAG,
           ],
         },
         contained: [
@@ -66,12 +64,7 @@ export const careTeam: fhir4.Bundle = {
             ],
           },
         ],
-        extension: [
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "93b436c5-c9ea-4d2d-98cc-53483d8322df",
-          },
-        ],
+        extension: [ FAKE_UNIVERSAL_ID_EXTENSION ],
         identifier: [
           {
             use: "usual",

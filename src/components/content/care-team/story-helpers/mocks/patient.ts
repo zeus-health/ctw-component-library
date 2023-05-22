@@ -1,3 +1,5 @@
+import { FAKE_UNIVERSAL_ID_TAG, LENS_BUILDER_TAG } from "@/components/content/story-helpers/ids";
+
 export const patient = {
   resourceType: "Bundle",
   id: "f4da1f39-7638-45e4-999b-9ff33d7c5201",
@@ -31,18 +33,11 @@ export const patient = {
               system: "https://zusapi.com/thirdparty/source",
               code: "commonwell",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/f09f6b6f-ae4b-45f4-a653-5677b1582115",
-              display: "HLTH 2022 - Gunther",
-            },
+            LENS_BUILDER_TAG,
           ],
         },
         identifier: [
-          {
-            system: "https://zusapi.com/fhir/identifier/universal-id",
-            value: "b640bda1-aec7-4be6-a890-e3685a55bce3",
-          },
+          FAKE_UNIVERSAL_ID_TAG 
         ],
         name: [
           {

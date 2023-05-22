@@ -1,3 +1,9 @@
+import {
+  FAKE_LENS_PATIENT_UPID_TAG,
+  FAKE_UNIVERSAL_ID_EXTENSION,
+  LENS_BUILDER_TAG,
+} from "@/components/content/story-helpers/ids";
+
 export const otherConditions: fhir4.Bundle = {
   resourceType: "Bundle",
   id: "f958f3e3-e585-4845-b666-6bf1a6914087",
@@ -30,15 +36,8 @@ export const otherConditions: fhir4.Bundle = {
               system: "https://zusapi.com/summary",
               code: "Common",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/b123",
-              display: "Storybook Medical - Test Customer",
-            },
-            {
-              system: "https://zusapi.com/lens/upid",
-              code: "u12345",
-            },
+            LENS_BUILDER_TAG,
+            FAKE_LENS_PATIENT_UPID_TAG,
           ],
         },
         extension: [
@@ -68,10 +67,7 @@ export const otherConditions: fhir4.Bundle = {
               },
             ],
           },
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "u12345",
-          },
+          FAKE_UNIVERSAL_ID_EXTENSION,
         ],
         clinicalStatus: {
           coding: [
@@ -187,15 +183,8 @@ export const otherConditions: fhir4.Bundle = {
               system: "https://zusapi.com/summary",
               code: "Common",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/b123",
-              display: "Storybook Medical - Test Customer",
-            },
-            {
-              system: "https://zusapi.com/lens/upid",
-              code: "u12345",
-            },
+            LENS_BUILDER_TAG,
+            FAKE_LENS_PATIENT_UPID_TAG,
           ],
         },
         extension: [
@@ -225,10 +214,7 @@ export const otherConditions: fhir4.Bundle = {
               },
             ],
           },
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "u12345",
-          },
+          FAKE_UNIVERSAL_ID_EXTENSION,
         ],
         clinicalStatus: {
           coding: [
@@ -345,15 +331,8 @@ export const otherConditions: fhir4.Bundle = {
               system: "https://zusapi.com/summary",
               code: "Common",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/b123",
-              display: "Storybook Medical - Test Customer",
-            },
-            {
-              system: "https://zusapi.com/lens/upid",
-              code: "u12345",
-            },
+            LENS_BUILDER_TAG,
+            FAKE_LENS_PATIENT_UPID_TAG,
           ],
         },
         extension: [
@@ -383,10 +362,7 @@ export const otherConditions: fhir4.Bundle = {
               },
             ],
           },
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "u12345",
-          },
+          FAKE_UNIVERSAL_ID_EXTENSION,
         ],
         clinicalStatus: {
           coding: [
@@ -506,15 +482,8 @@ export const otherConditions: fhir4.Bundle = {
               system: "https://zusapi.com/summary",
               code: "Common",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/b123",
-              display: "Storybook Medical - Test Customer",
-            },
-            {
-              system: "https://zusapi.com/lens/upid",
-              code: "u12345",
-            },
+            LENS_BUILDER_TAG,
+            FAKE_LENS_PATIENT_UPID_TAG,
           ],
         },
         extension: [
@@ -537,10 +506,7 @@ export const otherConditions: fhir4.Bundle = {
               },
             ],
           },
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "u12345",
-          },
+          FAKE_UNIVERSAL_ID_EXTENSION,
         ],
         clinicalStatus: {
           coding: [
@@ -660,15 +626,8 @@ export const otherConditions: fhir4.Bundle = {
               system: "https://zusapi.com/summary",
               code: "Common",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/b123",
-              display: "Storybook Medical - Test Customer",
-            },
-            {
-              system: "https://zusapi.com/lens/upid",
-              code: "u12345",
-            },
+            LENS_BUILDER_TAG,
+            FAKE_LENS_PATIENT_UPID_TAG,
           ],
         },
         extension: [
@@ -684,10 +643,7 @@ export const otherConditions: fhir4.Bundle = {
               },
             ],
           },
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "u12345",
-          },
+          FAKE_UNIVERSAL_ID_EXTENSION,
         ],
         clinicalStatus: {
           coding: [

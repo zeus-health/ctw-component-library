@@ -7,11 +7,14 @@ import { medicationAdministration } from "./medication-administration";
 import { medicationDispense } from "./medication-dispense";
 import { medicationRequest } from "./medication-request";
 import { patient } from "./patient";
-import { SYSTEM_ZUS_OWNER } from "@/fhir/system-urls";
+import {
+  getMockBasicPost,
+  getMockBasicPut,
+} from "@/components/content/story-helpers/mocks/requests/basic";
+import { newBundleCaches } from "@/components/content/story-helpers/types";
 import { cloneDeep, find } from "@/utils/nodash/fp";
 
-let patientProviderMedsCache: fhir4.Bundle;
-let patientOtherProviderMedsCache: fhir4.Bundle;
+const cache = newBundleCaches();
 
 // Sets mocks for getting/creating medications. Cache is reset on story load.
 export function setupMedicationMocks({
@@ -21,8 +24,8 @@ export function setupMedicationMocks({
   return {
     decorators: [
       (Story: ComponentType) => {
-        patientProviderMedsCache = cloneDeep(providerMedications);
-        patientOtherProviderMedsCache = cloneDeep(otherProviderMedications);
+        cache.builder = cloneDeep(providerMedications);
+        cache.outside = cloneDeep(otherProviderMedications);
         return createElement(Story);
       },
     ],
@@ -44,13 +47,13 @@ function mockRequests() {
     "https://api.dev.zusapi.com/fhir/MedicationStatement",
     (req, res, ctx) => {
       if (req.url.searchParams.get("firstparty")) {
-        return res(ctx.status(200), ctx.json(patientProviderMedsCache));
+        return res(ctx.status(200), ctx.json(cache.builder));
       }
-      return res(ctx.delay(750), ctx.status(200), ctx.json(patientOtherProviderMedsCache));
+      return res(ctx.delay(750), ctx.status(200), ctx.json(cache.outside));
     }
   );
 
-  // Mocked post will add the new medication to patientProviderMedsCache
+  // Mocked post will add the new medication to cache.builder
   const mockMedicationStatementPost = rest.post(
     "https://api.dev.zusapi.com/fhir",
     async (req, res, ctx) => {
@@ -66,11 +69,11 @@ function mockRequests() {
       }
 
       newMedication.id = uuidv4();
-      patientProviderMedsCache.entry?.push({
+      cache.builder.entry?.push({
         resource: newMedication,
         search: { mode: "match" },
       });
-      patientProviderMedsCache.total = patientProviderMedsCache.entry?.length;
+      cache.builder.total = cache.builder.entry?.length;
 
       return res(ctx.delay(500), ctx.status(200), ctx.json(newMedication));
     }
@@ -111,50 +114,6 @@ function mockRequests() {
     }
   );
 
-  // Mock the creation of a Basic resource for a dismissed med and add to cache.
-  const mockBasicPost = rest.post(
-    "https://api.dev.zusapi.com/fhir/Basic",
-    async (req, res, ctx) => {
-      const newBasicResource = (await req.json()) as fhir4.Basic;
-      if (newBasicResource.subject?.type !== "MedicationStatement") {
-        // The ZusAggregatedProfile component has multiple tabs mocking fhir
-        // Basic resources. We only want to handle medications here.
-        return undefined;
-      }
-      newBasicResource.id = uuidv4();
-      newBasicResource.meta = {
-        tag: [
-          {
-            system: SYSTEM_ZUS_OWNER,
-            code: "builder/12345",
-            display: "Storybook Builder",
-          },
-        ],
-      };
-      patientOtherProviderMedsCache.entry?.push({
-        resource: newBasicResource,
-        search: { mode: "include" },
-      });
-
-      patientOtherProviderMedsCache.total = patientOtherProviderMedsCache.entry?.length || 0;
-      return res(ctx.status(200), ctx.json(newBasicResource));
-    }
-  );
-
-  const mockBasicPut = rest.put(
-    "https://api.dev.zusapi.com/fhir/Basic/:basicId",
-    async (req, res, ctx) => {
-      const basic = await req.json();
-      const index = patientOtherProviderMedsCache.entry?.findIndex(
-        (entry) => entry.resource?.id === basic.id
-      );
-      if (index !== undefined && patientOtherProviderMedsCache.entry?.[index]) {
-        patientOtherProviderMedsCache.entry[index].resource = basic;
-      }
-      return res(ctx.status(200), ctx.json(basic));
-    }
-  );
-
   return [
     mockPatientGet,
     mockTerminologyDosageGet,
@@ -164,7 +123,7 @@ function mockRequests() {
     mockMedicationDispenseGet,
     mockMedicationAdministrationGet,
     mockProvenancePost,
-    mockBasicPost,
-    mockBasicPut,
+    getMockBasicPost("MedicationStatement", cache),
+    getMockBasicPut(cache),
   ];
 }

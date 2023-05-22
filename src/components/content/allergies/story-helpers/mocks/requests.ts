@@ -1,15 +1,16 @@
 import { rest } from "msw";
 import { ComponentType, createElement } from "react";
 import { patient } from "./patient";
+import { newBundleCaches } from "@/components/content/story-helpers/types";
 import { cloneDeep } from "@/utils/nodash/fp";
 
-let patientAllergiesCache: fhir4.Bundle;
+const cache = newBundleCaches();
 
 export function setupAllergiesMocks({ allergyIntolerance }: Record<string, fhir4.Bundle>) {
   return {
     decorators: [
       (Story: ComponentType) => {
-        patientAllergiesCache = cloneDeep(allergyIntolerance);
+        cache.builder = cloneDeep(allergyIntolerance);
         return createElement(Story);
       },
     ],
@@ -28,7 +29,7 @@ function mockRequests() {
 
   const mockAllergyIntolleranceGet = rest.get(
     "https://api.dev.zusapi.com/fhir/AllergyIntolerance",
-    (req, res, ctx) => res(ctx.delay(750), ctx.status(200), ctx.json(patientAllergiesCache))
+    (req, res, ctx) => res(ctx.delay(750), ctx.status(200), ctx.json(cache.builder))
   );
 
   return [mockPatientGet, mockAllergyIntolleranceGet];
