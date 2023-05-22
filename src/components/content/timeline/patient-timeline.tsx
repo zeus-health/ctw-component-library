@@ -11,11 +11,11 @@ import { useCTW } from "@/components/core/providers/ctw-provider";
 import { useTimelineEvents } from "@/fhir/timeline-event";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 
-export type PatientTimelineV2Props = {
+export type PatientTimelineProps = {
   className?: cx.Argument;
 };
 
-export function PatientTimelineV2({ className }: PatientTimelineV2Props) {
+export function PatientTimeline({ className }: PatientTimelineProps) {
   const timelineEventsQuery = useTimelineEvents();
   const containerRef = useRef<HTMLDivElement>(null);
   const { featureFlags } = useCTW();
