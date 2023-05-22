@@ -110,7 +110,7 @@
     "sass": "^1.55.0",
     "storybook": "^7.0.2",
     "tailwindcss": "^3.1.6",
-    "tsc-alias": "^1.8.5",
+    "tsc-alias": "^1.8.6",
     "typescript": "^4.7.4",
     "vite": "^4.2.1",
     "vite-tsconfig-paths": "^4.0.8",
