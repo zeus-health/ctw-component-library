@@ -32,7 +32,7 @@ describe("FHIR Condition", () => {
       expect(filtered).toHaveLength(2);
     });
 
-    it("if there is an entered-in-error condition in patient record it should still show up in other conditions", () => {
+    it("should still show up in other conditions if there is an entered-in-error condition in patient record", () => {
       const { others, patients } = setupConditions(
         "2022-11-10",
         "2022-11-09",
