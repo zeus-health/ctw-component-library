@@ -61,7 +61,7 @@ export function useBasic() {
   return useQueryWithPatient(
     QUERY_KEY_BASIC,
     [],
-    withTimerMetric(async (requestContext, patient) => {
+    withTimerMetric(async (requestContext) => {
       try {
         const { resources } = await searchCommonRecords("Basic", requestContext, {
           _tag: `https://zusapi.com/accesscontrol/owner|builder/${requestContext.builderId}`,
@@ -72,7 +72,9 @@ export function useBasic() {
         Telemetry.histogramMetric("req.count.basic", resources.length);
         return resources;
       } catch (e) {
-        throw new Error(`Failed fetching basic information for patient ${patient.UPID}`);
+        throw new Error(
+          `Failed fetching basic information for builder ${requestContext.builderId}`
+        );
       }
     }, "req.timing.basic")
   );
