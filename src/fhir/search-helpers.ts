@@ -160,14 +160,14 @@ export async function searchLensRecords<T extends ResourceTypeString>(
   });
   const builderId = requestContext.contextBuilderId || requestContext.builderId;
   const records = await searchAllRecords(resourceType, requestContext, params);
-  // Filter using the lens builderID for data from the builder that exists in the post-kludge world.
+  // Filter using the lens builderId for data from the builder that exists in the post-kludge world.
   let { entry, resources } = filterSearchReturnByBuilderId(
     records,
     getLensBuilderId(requestContext.env),
     builderId
   );
 
-  /* Filter using the user's builderID for data from the builder that exists in the pre-kludge world.
+  /* Filter using the user's builderId for data from the builder that exists in the pre-kludge world.
   This will help avoid getting duplicate results or no there is no data for the builder. 
   Once we have been in the post-kludge world long enough we can remove this functionality. */
   if (resources.length === 0 && entry.length === 0) {
@@ -195,14 +195,14 @@ export async function searchSummaryRecords<T extends ResourceTypeString>(
   const builderId = requestContext.contextBuilderId || requestContext.builderId;
   const records = await searchAllRecords(resourceType, requestContext, params);
 
-  // Filter using the lens builderID for data from the builder that exists in the post-kludge world.
+  // Filter using the lens builderId for data from the builder that exists in the post-kludge world.
   let { entry, resources } = filterSearchReturnByBuilderId(
     records,
     getLensBuilderId(requestContext.env),
     builderId
   );
 
-  /* Filter using the user's builderID for data from the builder that exists in the pre-kludge world.
+  /* Filter using the user's builderId for data from the builder that exists in the pre-kludge world.
   This will help avoid getting duplicate results or know there is no data for the builder. 
   Once we have been in the post-kludge world long enough we can remove this functionality. */
   if (resources.length === 0 || entry.length === 0) {
@@ -297,19 +297,19 @@ function patientSearchParams(resourceType: ResourceTypeString, patientUPID?: str
   }
 }
 
-// Filters resources down to those owned by matchOwnerBuilderID.
+// Filters resources down to those owned by matchOwnerBuilderId.
 // Filters the bundle of entries down to those owned by:
-//  * mathOwnerBuilderID for search entries with mode "match"
-//  * includedOwnerBuilderID for search entries with mode "include"
+//  * mathOwnerBuilderId for search entries with mode "match"
+//  * includedOwnerBuilderId for search entries with mode "include"
 const filterSearchReturnByBuilderId = <T extends ResourceTypeString>(
   searchReturn: SearchReturn<T>,
-  matchOwnerBuilderID: string,
-  includedOwnerBuilderID?: string
+  matchOwnerBuilderId: string,
+  includedOwnerBuilderId?: string
 ) => {
   const resources = filter(searchReturn.resources, (record) =>
     some(record.meta?.tag, {
       system: SYSTEM_ZUS_OWNER,
-      code: `builder/${matchOwnerBuilderID}`,
+      code: `builder/${matchOwnerBuilderId}`,
     })
   );
 
@@ -317,12 +317,12 @@ const filterSearchReturnByBuilderId = <T extends ResourceTypeString>(
     if (record.search?.mode === "include") {
       return some(record.resource?.meta?.tag, {
         system: SYSTEM_ZUS_OWNER,
-        code: `builder/${includedOwnerBuilderID ?? matchOwnerBuilderID}`,
+        code: `builder/${includedOwnerBuilderId ?? matchOwnerBuilderId}`,
       });
     }
     return some(record.resource?.meta?.tag, {
       system: SYSTEM_ZUS_OWNER,
-      code: `builder/${matchOwnerBuilderID}`,
+      code: `builder/${matchOwnerBuilderId}`,
     });
   });
 

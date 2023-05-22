@@ -11,9 +11,10 @@ import { ModalConfirmDelete } from "@/components/core/modal-confirm-delete";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
 import { useModal } from "@/components/core/providers/modal-provider";
 import { usePatient } from "@/components/core/providers/patient-provider";
+import { useCTW } from "@/components/core/providers/use-ctw";
 import { deleteCondition, getNewCondition } from "@/fhir/conditions";
+import { ConditionModel } from "@/fhir/models";
 import { useBaseTranslations } from "@/i18n";
-import { ConditionModel, useCTW } from "@/index";
 import { curry } from "@/utils/nodash";
 
 export function useAddConditionForm() {

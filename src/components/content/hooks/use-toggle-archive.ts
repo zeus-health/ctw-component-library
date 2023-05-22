@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { useCTW } from "@/components/core/providers/ctw-provider";
+import { useCTW } from "@/components/core/providers/use-ctw";
 import { toggleArchive } from "@/fhir/basic";
 import { FHIRModel } from "@/fhir/models/fhir-model";
 import { queryClient } from "@/utils/request";
