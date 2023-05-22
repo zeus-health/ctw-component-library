@@ -67,7 +67,7 @@ describe("FHIR Condition", () => {
         ],
         false
       );
-      expect(filtered).toHaveLength(3);
+      expect(filtered).toHaveLength(2);
     });
 
     function getCondition(
