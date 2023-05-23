@@ -1,5 +1,48 @@
 # ctw-component-library
 
+## 1.9.3
+
+### Patch Changes
+
+- 64f76b55: Bump postcss from 8.4.21 to 8.4.23
+- f2809f21: Fix bug with dismiss/restore
+- 2c6c9455: Bump i18next from 22.4.14 to 22.4.15
+
+## 1.9.2
+
+### Patch Changes
+
+- 74deb10d: Fix issue where falling back to ODS does not occur when a FQS query fails
+
+## 1.9.1
+
+### Patch Changes
+
+- fb89405a: Fix situation where FQS binary queries may fail
+
+## 1.9.0
+
+### Minor Changes
+
+- 4111721e: Show spinner when dismissing or restoring outside conditions and medications
+
+### Patch Changes
+
+- b81c51a7: Use FQS for Binary Lookups
+- 41379b19: Fix bug with fhir client base URL
+
+## 1.8.0
+
+### Minor Changes
+
+- fcde05f4: Add a beta label to Care Team tab in ZAP
+
+## 1.7.15
+
+### Patch Changes
+
+- 7f0f5093: Add target date to patient history table.
+
 ## 1.7.14
 
 ### Patch Changes

@@ -2,7 +2,7 @@ import "./patient-history-table.scss";
 
 import cx from "classnames";
 import { useEffect, useState } from "react";
-import { patientHistoryFilters } from "./helpers/filters";
+import { defaultPatientHistoryFilters, patientHistoryFilters } from "./helpers/filters";
 import { useBuilderPatientHistoryList } from "./use-builder-patient-history-list";
 import { TableOptionProps } from "../patients/patients-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
@@ -35,14 +35,16 @@ export const PatientHistoryTable = withErrorBoundary(
     const [currentPage, setCurrentPage] = useState(1);
     const [patients, setPatients] = useState<PatientHistoryRequestModel[]>([]);
     const [status, setStatus] = useState<string>();
+    const [excludeFutureJobs, setExcludeFutureJobs] = useState<boolean>(true);
 
     const {
       data: { patients: responsePatients, total: responseTotal, hasNext } = {},
       isFetching,
       isError,
-    } = useBuilderPatientHistoryList(pageSize, currentPage - 1, status);
+    } = useBuilderPatientHistoryList(pageSize, currentPage - 1, status, excludeFutureJobs);
 
     const onFilterChange = (e: FilterChangeEvent) => {
+      setExcludeFutureJobs(!!e.future_jobs?.selected);
       if (e.status?.selected && typeof e.status.selected === "string") {
         setStatus(e.status.selected.split(" ").join("_"));
       } else {
@@ -76,6 +78,7 @@ export const PatientHistoryTable = withErrorBoundary(
           filterOptions={{
             onChange: onFilterChange,
             filters: patientHistoryFilters(),
+            defaultState: defaultPatientHistoryFilters,
           }}
           className="ctw-ml-2"
         />
@@ -103,7 +106,11 @@ export const PatientHistoryTable = withErrorBoundary(
 const columns: TableColumn<PatientHistoryRequestModel>[] = [
   {
     title: "Last Queried",
-    render: (data) => <div>{data.createdAt}</div>,
+    render: (data) => <div>{data.lastUpdatedAt}</div>,
+  },
+  {
+    title: "Target Date",
+    render: (data) => <div>{data.targetDate}</div>,
   },
   {
     title: "Name",

@@ -1,5 +1,5 @@
 import { getBuilderRefreshHistoryMessages } from "./use-patient-history";
-import { useQueryWithCTW } from "@/components/core/providers/ctw-provider";
+import { useQueryWithCTW } from "@/components/core/providers/use-query-with-ctw";
 import { PatientHistoryRequestModel } from "@/fhir/models/patient-history";
 import { getBuilderPatientsListByIdentifier } from "@/fhir/patient-helper";
 import { PatientHistoryJobResponse } from "@/services/patient-history/patient-history-types";
@@ -10,11 +10,12 @@ import { Telemetry } from "@/utils/telemetry";
 export function useBuilderPatientHistoryList(
   pageSize: number,
   pageOffset: number,
-  status?: string
+  status?: string,
+  excludeFutureJobs?: boolean
 ) {
   return useQueryWithCTW(
     QUERY_KEY_PATIENT_HISTORY_LIST,
-    [pageSize, pageOffset, status],
+    [pageSize, pageOffset, status, excludeFutureJobs],
     async (requestContext) => {
       try {
         const response = (await getBuilderRefreshHistoryMessages({
@@ -22,6 +23,7 @@ export function useBuilderPatientHistoryList(
           count: pageSize,
           offset: pageOffset,
           status,
+          excludeFutureJobs,
         })) as PatientHistoryJobResponse;
 
         const patientsIds = uniq(

@@ -1,6 +1,6 @@
 import Client from "fhir-kit-client";
 import { getZusFhirBaseUrl, getZusProxyFhirBaseUrl } from "@/api/urls";
-import { Env } from "@/components/core/providers/ctw-provider";
+import { Env } from "@/components/core/providers/types";
 import { CTW_REQUEST_HEADER } from "@/utils/request";
 
 export function getFhirClient(env: Env, accessToken: string, builderId?: string) {

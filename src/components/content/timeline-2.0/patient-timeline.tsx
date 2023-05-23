@@ -7,7 +7,7 @@ import { patientTimelineColumns } from "./patient-timeline-columns";
 import { useObservationsDetailsDrawer } from "../observations/helpers/drawer";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { ResourceTable } from "@/components/content/resource/resource-table";
-import { useCTW } from "@/components/core/providers/ctw-provider";
+import { useCTW } from "@/components/core/providers/use-ctw";
 import { useTimelineEvents } from "@/fhir/timeline-event";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 

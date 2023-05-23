@@ -1,0 +1,14 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react"
+      - dependency-name: "react-dom"
+      # Ignoring the @headlessui/react because we have an outstanding issue that needs to be resolved first. CT-832
+      - dependency-name: "@headlessui/react"
+    open-pull-requests-limit: 3

@@ -1,7 +1,7 @@
 import useResizeObserverTemp from "@react-hook/resize-observer";
 import { RefObject, useState } from "react";
 import { useIsomorphicLayoutEffect } from "./use-isomorphic-layout-effect";
-import { useCTW } from "@/components/core/providers/ctw-provider";
+import { useTheme } from "@/components/core/providers/theme/use-theme";
 import { defaultBreakpoints } from "@/styles/tailwind.theme";
 import { mapValues } from "@/utils/nodash";
 
@@ -21,7 +21,7 @@ type BreakpointKeys = keyof typeof defaultBreakpoints;
 export type Breakpoints = Record<BreakpointKeys, boolean>;
 
 export function useBreakpoints<T extends HTMLElement>(target: RefObject<T>) {
-  const { theme } = useCTW();
+  const theme = useTheme();
   const [breakpoints, setBreakpoints] = useState<Breakpoints>(
     mapValues(defaultBreakpoints, () => false)
   );
