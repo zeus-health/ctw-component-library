@@ -37,6 +37,7 @@ export * from "@/components/core/modal";
 export * from "@/components/core/pagination/simple-pagination";
 export { type CTWRequestContext } from "@/components/core/providers/ctw-context";
 export * from "@/components/core/providers/ctw-provider";
+export * from "@/components/core/providers/drawer-provider";
 export * from "@/components/core/providers/patient-provider";
 export type { Env } from "@/components/core/providers/types";
 export * from "@/components/core/providers/use-query-with-ctw";
