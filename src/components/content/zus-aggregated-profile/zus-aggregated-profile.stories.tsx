@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { setupZusAggregatedProfileMocks } from "./story-helpers/mocks/requests";
+import { FAKE_AUTH, FAKE_BUILDER_ID, FAKE_PATIENT_UPID } from "../story-helpers/ids";
 import { allergyIntolerance } from "@/components/content/allergies/story-helpers/mocks/allergy-intolerance";
 import { otherConditions } from "@/components/content/conditions/story-helpers/mocks/other-conditions";
 import { patientConditions } from "@/components/content/conditions/story-helpers/mocks/patient-conditions";
@@ -18,8 +19,8 @@ export default {
   component: ZusAggregatedProfile,
   decorators: [
     (Story, { args }) => (
-      <CTWProvider env="dev" authToken="ey.12345" builderId="12345">
-        <PatientProvider patientID="007" systemURL={SYSTEM_ZUS_UNIVERSAL_ID}>
+      <CTWProvider env="dev" authToken={FAKE_AUTH} builderId={FAKE_BUILDER_ID}>
+        <PatientProvider patientID={FAKE_PATIENT_UPID} systemURL={SYSTEM_ZUS_UNIVERSAL_ID}>
           <Story args={args} />
         </PatientProvider>
       </CTWProvider>

@@ -1,3 +1,5 @@
+import { FAKE_BUILDER_TAG, FAKE_UNIVERSAL_ID_TAG } from "@/components/content/story-helpers/ids";
+
 export const patient = {
   resourceType: "Bundle",
   id: "0cd95281",
@@ -37,20 +39,9 @@ export const patient = {
               code: "HTEST",
             },
           ],
-          tag: [
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/f09f6b6f",
-              display: "HLTH 2022 - Gunther",
-            },
-          ],
+          tag: [FAKE_BUILDER_TAG],
         },
-        identifier: [
-          {
-            system: "https://zusapi.com/fhir/identifier/universal-id",
-            value: "b640bda1",
-          },
-        ],
+        identifier: [FAKE_UNIVERSAL_ID_TAG],
         active: true,
         name: [
           {
@@ -153,13 +144,7 @@ export const patient = {
           versionId: "1",
           lastUpdated: "2023-01-26T15:49:29.815+00:00",
           source: "#8XARW8z21o5TqSvA",
-          tag: [
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/f09f6b6f",
-              display: "HLTH 2022 - Gunther",
-            },
-          ],
+          tag: [FAKE_BUILDER_TAG],
         },
         name: "Demo Health",
       },

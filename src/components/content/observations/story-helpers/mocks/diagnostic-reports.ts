@@ -5,13 +5,12 @@ import {
   fakerFakeBundleLinks,
   fakerFakeMockSourceId,
 } from "@/components/content/story-helpers/faker";
+import {
+  FAKE_UNIVERSAL_ID_EXTENSION,
+  LENS_BUILDER_TAG,
+} from "@/components/content/story-helpers/ids";
 
 const LATEST_DATE = new Date();
-const PATIENT_UPID = faker.datatype.uuid();
-const BUILDER_ID = faker.datatype.uuid();
-const DATE_EARLY = faker.date.recent(20);
-const DATE_RECENT = faker.date.recent(10);
-const FAKE_DATES = new Array(20).fill(null).map(() => faker.date.between(DATE_RECENT, DATE_EARLY));
 const PATIENT = {
   reference: `Patient/${faker.datatype.uuid()}`,
   type: "Patient",
@@ -103,21 +102,13 @@ function createMockDiagnosticReportBundleEntry(
         source: fakerFakeMockSourceId(),
         tag: [
           {
-            system: "https://zusapi.com/accesscontrol/owner",
-            code: "builder/",
-          },
-          {
             system: "https://zusapi.com/thirdparty/source",
             code: "commonwell",
           },
+          LENS_BUILDER_TAG,
         ],
       },
-      extension: [
-        {
-          url: "https://zusapi.com/fhir/identifier/universal-id",
-          valueString: PATIENT_UPID,
-        },
-      ],
+      extension: [FAKE_UNIVERSAL_ID_EXTENSION],
       identifier: [
         {
           use: "usual",
@@ -150,7 +141,6 @@ function createMockDiagnosticReportBundleEntry(
 
 function getObservationsForBundle() {
   return observations.map((observation): fhir4.BundleEntry<fhir4.Observation> => {
-    const date = faker.helpers.arrayElement(FAKE_DATES);
     const value = faker.datatype.float({
       min: 1.0,
       max: 16.5,
@@ -231,7 +221,7 @@ function getObservationsForBundle() {
             },
             {
               url: "https://zusapi.com/created-at",
-              valueInstant: date.toISOString(),
+              valueInstant: "2023-03-07T14:32:09.402+00:00",
             },
           ],
           versionId: "1",
@@ -242,18 +232,10 @@ function getObservationsForBundle() {
               system: "https://zusapi.com/thirdparty/source",
               code: "commonwell",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: `builder/${BUILDER_ID}`,
-            },
+            LENS_BUILDER_TAG,
           ],
         },
-        extension: [
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: faker.datatype.uuid(),
-          },
-        ],
+        extension: [FAKE_UNIVERSAL_ID_EXTENSION],
         identifier: [
           {
             use: "usual",
@@ -280,7 +262,7 @@ function getObservationsForBundle() {
           },
         ],
         subject: PATIENT,
-        effectiveDateTime: date.toISOString(),
+        effectiveDateTime: "2023-03-07T14:32:09.402+00:00",
         valueQuantity: {
           value,
           unit: "g/dL",

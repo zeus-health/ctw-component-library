@@ -1,3 +1,8 @@
+import {
+  FAKE_BUILDER_TAG,
+  FAKE_UNIVERSAL_ID_EXTENSION,
+} from "@/components/content/story-helpers/ids";
+
 export const providerMedications: fhir4.Bundle = {
   resourceType: "Bundle",
   id: "0b13191b",
@@ -25,20 +30,9 @@ export const providerMedications: fhir4.Bundle = {
           versionId: "2",
           lastUpdated: "2022-11-21",
           source: "#90f35e548b45cbc4",
-          tag: [
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/123456",
-              display: "Storybook Medical - Test Customer",
-            },
-          ],
+          tag: [FAKE_BUILDER_TAG],
         },
-        extension: [
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "57ddcfa9-6df8-4d00-a86d-c63c0faad93f",
-          },
-        ],
+        extension: [FAKE_UNIVERSAL_ID_EXTENSION],
         status: "active",
         medicationCodeableConcept: {
           coding: [

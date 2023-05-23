@@ -1,3 +1,8 @@
+import {
+  FAKE_UNIVERSAL_ID_EXTENSION,
+  LENS_BUILDER_TAG,
+} from "@/components/content/story-helpers/ids";
+
 const tags = [
   {
     system: "https://zusapi.com/lens",
@@ -7,11 +12,7 @@ const tags = [
     system: "https://zusapi.com/summary",
     code: "Common",
   },
-  {
-    system: "https://zusapi.com/accesscontrol/owner",
-    code: "builder/12345",
-    display: "Storybook Medical - Test Customer",
-  },
+  LENS_BUILDER_TAG,
   {
     system: "https://zusapi.com/lens/upid",
     code: "57ddcfa9-6df8-4d00-a86d-c63c0faad93f",
@@ -80,10 +81,7 @@ export const otherProviderMedications: fhir4.Bundle = {
             url: "https://zusapi.com/lens/extension/medicationLastPrescriber",
             valueString: "NO-VALUE",
           },
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "57ddcfa9-6df8-4d00-a86d-c63c0faad93f",
-          },
+          FAKE_UNIVERSAL_ID_EXTENSION,
         ],
         status: "active",
         medicationCodeableConcept: {
@@ -248,10 +246,7 @@ export const otherProviderMedications: fhir4.Bundle = {
               display: "Sally McCann",
             },
           },
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "57ddcfa9-6df8-4d00-a86d-c63c0faad93f",
-          },
+          FAKE_UNIVERSAL_ID_EXTENSION,
         ],
         status: "active",
         medicationCodeableConcept: {
@@ -423,10 +418,7 @@ export const otherProviderMedications: fhir4.Bundle = {
               display: "Mike McDonald",
             },
           },
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "57ddcfa9-6df8-4d00-a86d-c63c0faad93f",
-          },
+          FAKE_UNIVERSAL_ID_EXTENSION,
         ],
         status: "active",
         medicationCodeableConcept: {
@@ -562,10 +554,7 @@ export const otherProviderMedications: fhir4.Bundle = {
               display: "Dr. People Person",
             },
           },
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "57ddcfa9-6df8-4d00-a86d-c63c0faad93f",
-          },
+          FAKE_UNIVERSAL_ID_EXTENSION,
         ],
         status: "active",
         medicationCodeableConcept: {
@@ -709,10 +698,7 @@ export const otherProviderMedications: fhir4.Bundle = {
             url: "https://zusapi.com/lens/extension/medicationLastPrescriber",
             valueString: "NO-VALUE",
           },
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "57ddcfa9-6df8-4d00-a86d-c63c0faad93f",
-          },
+          FAKE_UNIVERSAL_ID_EXTENSION,
         ],
         status: "active",
         medicationCodeableConcept: {

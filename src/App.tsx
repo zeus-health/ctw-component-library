@@ -9,7 +9,7 @@ import {
   PatientMedicationsOutside,
   PatientProvider,
   PatientSearch,
-  PatientTimelineV2,
+  PatientTimeline,
   ZusAggregatedProfile,
 } from ".";
 

@@ -3,6 +3,13 @@
 //     condition in other and therefor it is filtered out.
 //  2. Active PTSD, in the same category as the above to test sorting.
 //  3. Inactive Crohn's disease which is recorded earlier
+
+import {
+  FAKE_BUILDER_TAG,
+  FAKE_LENS_PATIENT_UPID_TAG,
+  FAKE_UNIVERSAL_ID_EXTENSION,
+} from "@/components/content/story-helpers/ids";
+
 //     than the one in other and therefor it is NOT filtered out.
 export const patientConditions: fhir4.Bundle = {
   resourceType: "Bundle",
@@ -27,24 +34,9 @@ export const patientConditions: fhir4.Bundle = {
           versionId: "2",
           lastUpdated: "2022-11-10T19:38:36.663+00:00",
           source: "#7cb535fd22ce30df",
-          tag: [
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/b123",
-              display: "Storybook Medical - Test Customer",
-            },
-            {
-              system: "https://zusapi.com/lens/upid",
-              code: "u12345",
-            },
-          ],
+          tag: [FAKE_BUILDER_TAG, FAKE_LENS_PATIENT_UPID_TAG],
         },
-        extension: [
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "u12345",
-          },
-        ],
+        extension: [FAKE_UNIVERSAL_ID_EXTENSION],
         verificationStatus: {
           coding: [
             {
@@ -166,24 +158,9 @@ export const patientConditions: fhir4.Bundle = {
           versionId: "2",
           lastUpdated: "2022-11-10T19:38:36.663+00:00",
           source: "#7cb535fd22ce30df",
-          tag: [
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/b123",
-              display: "Storybook Medical - Test Customer",
-            },
-            {
-              system: "https://zusapi.com/lens/upid",
-              code: "u12345",
-            },
-          ],
+          tag: [FAKE_BUILDER_TAG, FAKE_LENS_PATIENT_UPID_TAG],
         },
-        extension: [
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "u12345",
-          },
-        ],
+        extension: [FAKE_UNIVERSAL_ID_EXTENSION],
         verificationStatus: {
           coding: [
             {
@@ -289,24 +266,9 @@ export const patientConditions: fhir4.Bundle = {
           versionId: "1",
           lastUpdated: "2022-11-10T19:38:36.621+00:00",
           source: "#7cb535fd22ce30df",
-          tag: [
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/b123",
-              display: "Storybook Medical - Test Customer",
-            },
-            {
-              system: "https://zusapi.com/lens/upid",
-              code: "u12345",
-            },
-          ],
+          tag: [FAKE_BUILDER_TAG, FAKE_LENS_PATIENT_UPID_TAG],
         },
-        extension: [
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "u12345",
-          },
-        ],
+        extension: [FAKE_UNIVERSAL_ID_EXTENSION],
         verificationStatus: {
           coding: [
             {
