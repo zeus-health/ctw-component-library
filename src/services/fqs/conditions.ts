@@ -1,3 +1,4 @@
+import { UseQueryResult } from "@tanstack/react-query";
 import { Basic, Condition } from "fhir/r4";
 import { FhirResource } from "fhir-kit-client";
 import { useEffect, useState } from "react";
@@ -20,7 +21,9 @@ import {
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { useBasic } from "@/fhir/basic";
+import { getIncludedBasics } from "@/fhir/bundle";
 import { ConditionModel } from "@/fhir/models/condition";
+import { searchBuilderRecords, searchSummaryRecords } from "@/fhir/search-helpers";
 import { createGraphqlClient, GraphqlConnectionNode, GraphqlPageInfo } from "@/services/fqs/client";
 import { conditionsQuery } from "@/services/fqs/queries/conditions";
 import { cloneDeep, orderBy } from "@/utils/nodash";
@@ -84,6 +87,62 @@ export function usePatientBuilderConditions() {
     [],
     withTimerMetric(async (requestContext, patient) => {
       try {
+        const { bundle, resources: conditions } = await searchBuilderRecords(
+          "Condition",
+          requestContext,
+          {
+            patientUPID: patient.UPID,
+          }
+        );
+        const results = filterAndSort(setupConditionModels(conditions, bundle));
+        Telemetry.histogramMetric("req.count.builder_conditions", results.length);
+        return results;
+      } catch (e) {
+        throw Telemetry.logError(
+          e as Error,
+          `Failed fetching conditions for patient: ${patient.UPID}`
+        );
+      }
+    }, "req.timing.builder_conditions")
+  );
+}
+
+function usePatientSummaryConditions() {
+  return useQueryWithPatient(
+    QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
+    [],
+    withTimerMetric(async (requestContext, patient) => {
+      try {
+        const { bundle, resources: conditions } = await searchSummaryRecords(
+          "Condition",
+          requestContext,
+          {
+            _revinclude: "Basic:subject",
+            patientUPID: patient.UPID,
+          }
+        );
+        const results = filterAndSort(setupConditionModels(conditions, bundle));
+        if (results.length === 0) {
+          Telemetry.countMetric("req.count.summary_conditions.none");
+        }
+        Telemetry.histogramMetric("req.count.summary_conditions", results.length);
+        return results;
+      } catch (e) {
+        throw Telemetry.logError(
+          e as Error,
+          `Failed fetching conditions outside for patient: ${patient.UPID}`
+        );
+      }
+    }, "req.timing.summary_conditions")
+  );
+}
+
+export function usePatientBuilderConditionsFQS() {
+  return useQueryWithPatient(
+    QUERY_KEY_PATIENT_CONDITIONS,
+    [],
+    withTimerMetric(async (requestContext, patient) => {
+      try {
         const graphClient = createGraphqlClient(requestContext);
         const data = (await graphClient.request(conditionsQuery, {
           upid: patient.UPID,
@@ -114,7 +173,7 @@ export function usePatientBuilderConditions() {
   );
 }
 
-function usePatientSummaryConditions() {
+function usePatientSummaryConditionsFQS() {
   return useQueryWithPatient(
     QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
     [],
@@ -153,10 +212,20 @@ function usePatientSummaryConditions() {
   );
 }
 
-export function usePatientConditionsOutside() {
+export function usePatientConditionsOutside(enableFQS: boolean) {
   const [conditions, setConditions] = useState<ConditionModel[]>([]);
-  const patientConditionsQuery = usePatientBuilderConditions();
-  const otherConditionsQuery = usePatientSummaryConditions();
+  let patientConditionsQuery: UseQueryResult<ConditionModel[], unknown>;
+  let otherConditionsQuery: UseQueryResult<ConditionModel[], unknown>;
+  if (enableFQS) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    patientConditionsQuery = usePatientBuilderConditionsFQS();
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    otherConditionsQuery = usePatientSummaryConditionsFQS();
+  }
+
+  patientConditionsQuery = usePatientBuilderConditions();
+  otherConditionsQuery = usePatientSummaryConditions();
+
   const basicQuery = useBasic();
 
   useEffect(() => {
@@ -186,13 +255,13 @@ export function usePatientConditionsOutside() {
   };
 }
 
-// function setupConditionModels(
-//   conditionResources: fhir4.Condition[],
-//   bundle: fhir4.Bundle
-// ): ConditionModel[] {
-//   const basicsMap = getIncludedBasics(bundle);
-//   return conditionResources.map((c) => new ConditionModel(c, undefined, basicsMap.get(c.id ?? "")));
-// }
+function setupConditionModels(
+  conditionResources: fhir4.Condition[],
+  bundle: fhir4.Bundle
+): ConditionModel[] {
+  const basicsMap = getIncludedBasics(bundle);
+  return conditionResources.map((c) => new ConditionModel(c, undefined, basicsMap.get(c.id ?? "")));
+}
 
 function setupConditionModelsWithFQS(conditionResources: fhir4.Condition[]): ConditionModel[] {
   return conditionResources.map((c) => new ConditionModel(c));
