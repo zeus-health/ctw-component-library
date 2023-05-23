@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.10.2
+
+### Patch Changes
+
+- 3e5dce3e: ProgressIcon uses ctw-animate-spin class
+
 ## 1.10.1
 
 ### Patch Changes
