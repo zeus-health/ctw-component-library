@@ -1,5 +1,18 @@
 # ctw-component-library
 
+## 1.10.0
+
+### Minor Changes
+
+- 050753be: TimelineV2 is now Timeline and dropped V1
+- 95ebb96b: Refactor CTWProvider context for readability
+
+### Patch Changes
+
+- f5b6ae07: Bump tsc-alias from 1.8.5 to 1.8.6
+- 050753be: Rework storybook examples to show data again
+- c278dde6: Don't count dismissed outside resources in badges
+
 ## 1.9.3
 
 ### Patch Changes
