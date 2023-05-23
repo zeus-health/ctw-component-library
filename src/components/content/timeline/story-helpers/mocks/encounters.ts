@@ -1,3 +1,8 @@
+import {
+  FAKE_UNIVERSAL_ID_EXTENSION,
+  LENS_BUILDER_TAG,
+} from "@/components/content/story-helpers/ids";
+
 export const encounters: fhir4.Bundle = {
   resourceType: "Bundle",
   id: "4b58609b-b4c2-43bb-81de-21b9a02fa62f",
@@ -27,19 +32,10 @@ export const encounters: fhir4.Bundle = {
               system: "https://zusapi.com/thirdparty/source",
               code: "commonwell",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/d037b2ef-66d6-4fcc-b228-2bc748ce4d0e",
-              display: "CTW Health",
-            },
+            LENS_BUILDER_TAG,
           ],
         },
-        extension: [
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "7bd02b95-a275-485b-8053-2ef190d2d86a",
-          },
-        ],
+        extension: [FAKE_UNIVERSAL_ID_EXTENSION],
         status: "finished",
         class: {
           system: "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
@@ -175,19 +171,10 @@ export const encounters: fhir4.Bundle = {
               system: "https://zusapi.com/thirdparty/source",
               code: "commonwell",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/d037b2ef-66d6-4fcc-b228-2bc748ce4d0e",
-              display: "CTW Health",
-            },
+            LENS_BUILDER_TAG,
           ],
         },
-        extension: [
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "7bd02b95-a275-485b-8053-2ef190d2d86a",
-          },
-        ],
+        extension: [FAKE_UNIVERSAL_ID_EXTENSION],
         status: "finished",
         class: {
           system: "urn:oid:2.16.840.1.113883.5.4",
@@ -291,19 +278,10 @@ export const encounters: fhir4.Bundle = {
               system: "https://zusapi.com/thirdparty/source",
               code: "commonwell",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/d037b2ef-66d6-4fcc-b228-2bc748ce4d0e",
-              display: "CTW Health",
-            },
+            LENS_BUILDER_TAG,
           ],
         },
-        extension: [
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "7bd02b95-a275-485b-8053-2ef190d2d86a",
-          },
-        ],
+        extension: [FAKE_UNIVERSAL_ID_EXTENSION],
         status: "finished",
         class: {
           system: "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
@@ -386,19 +364,10 @@ export const encounters: fhir4.Bundle = {
               system: "https://zusapi.com/thirdparty/source",
               code: "commonwell",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/d037b2ef-66d6-4fcc-b228-2bc748ce4d0e",
-              display: "CTW Health",
-            },
+            LENS_BUILDER_TAG,
           ],
         },
-        extension: [
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "7bd02b95-a275-485b-8053-2ef190d2d86a",
-          },
-        ],
+        extension: [FAKE_UNIVERSAL_ID_EXTENSION],
         status: "finished",
         class: {
           system: "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
@@ -454,19 +423,10 @@ export const encounters: fhir4.Bundle = {
               system: "https://zusapi.com/thirdparty/source",
               code: "commonwell",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/d037b2ef-66d6-4fcc-b228-2bc748ce4d0e",
-              display: "CTW Health",
-            },
+            LENS_BUILDER_TAG,
           ],
         },
-        extension: [
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "7bd02b95-a275-485b-8053-2ef190d2d86a",
-          },
-        ],
+        extension: [FAKE_UNIVERSAL_ID_EXTENSION],
         status: "finished",
         class: {
           system: "urn:oid:2.16.840.1.113883.5.4",
@@ -606,19 +566,10 @@ export const encounters: fhir4.Bundle = {
               system: "https://zusapi.com/thirdparty/source",
               code: "commonwell",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/d037b2ef-66d6-4fcc-b228-2bc748ce4d0e",
-              display: "CTW Health",
-            },
+            LENS_BUILDER_TAG,
           ],
         },
-        extension: [
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "7bd02b95-a275-485b-8053-2ef190d2d86a",
-          },
-        ],
+        extension: [FAKE_UNIVERSAL_ID_EXTENSION],
         status: "finished",
         class: {
           system: "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
