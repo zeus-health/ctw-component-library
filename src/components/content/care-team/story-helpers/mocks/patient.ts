@@ -36,9 +36,7 @@ export const patient = {
             LENS_BUILDER_TAG,
           ],
         },
-        identifier: [
-          FAKE_UNIVERSAL_ID_TAG 
-        ],
+        identifier: [FAKE_UNIVERSAL_ID_TAG],
         name: [
           {
             family: "Zhang",

@@ -1,4 +1,7 @@
-import { FAKE_UNIVERSAL_ID_EXTENSION, LENS_BUILDER_TAG } from "@/components/content/story-helpers/ids";
+import {
+  FAKE_UNIVERSAL_ID_EXTENSION,
+  LENS_BUILDER_TAG,
+} from "@/components/content/story-helpers/ids";
 
 export const careTeam: fhir4.Bundle = {
   resourceType: "Bundle",
@@ -64,7 +67,7 @@ export const careTeam: fhir4.Bundle = {
             ],
           },
         ],
-        extension: [ FAKE_UNIVERSAL_ID_EXTENSION ],
+        extension: [FAKE_UNIVERSAL_ID_EXTENSION],
         identifier: [
           {
             use: "usual",

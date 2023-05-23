@@ -1,4 +1,7 @@
-import { FAKE_UNIVERSAL_ID_EXTENSION, LENS_BUILDER_TAG } from "@/components/content/story-helpers/ids";
+import {
+  FAKE_UNIVERSAL_ID_EXTENSION,
+  LENS_BUILDER_TAG,
+} from "@/components/content/story-helpers/ids";
 
 export const documents: fhir4.Bundle = {
   resourceType: "Bundle",
@@ -28,13 +31,9 @@ export const documents: fhir4.Bundle = {
           versionId: "9",
           lastUpdated: "2023-02-02T22:17:32.153+00:00",
           source: "#d6fc69a0d3aa79fb",
-          tag: [
-            LENS_BUILDER_TAG,
-          ],
+          tag: [LENS_BUILDER_TAG],
         },
-        extension: [
-          FAKE_UNIVERSAL_ID_EXTENSION,
-        ],
+        extension: [FAKE_UNIVERSAL_ID_EXTENSION],
         masterIdentifier: {
           use: "usual",
           system: "urn:oid:2.16.840.1.113883.4.570.10",
