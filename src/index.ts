@@ -32,11 +32,17 @@ export * as CTWBox from "@/components/core/ctw-box";
 export * from "@/components/core/form/drawer-form-with-fields";
 // Zus Providers and Hooks
 export * from "@/components/core/drawer";
+export * from "@/components/core/error-boundary";
 export * from "@/components/core/modal";
+export * from "@/components/core/pagination/simple-pagination";
+export { type CTWRequestContext } from "@/components/core/providers/ctw-context";
 export * from "@/components/core/providers/ctw-provider";
 export * from "@/components/core/providers/patient-provider";
+export type { Env } from "@/components/core/providers/types";
+export * from "@/components/core/providers/use-query-with-ctw";
 export * from "@/components/core/spinner";
 export * from "@/components/core/table/table";
+export * from "@/components/core/table/table-helpers";
 export * from "@/components/core/toggle";
 export * from "@/components/core/toggle-control";
 export * from "@/hooks/use-medications";
