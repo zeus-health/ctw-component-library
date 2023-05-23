@@ -1,3 +1,10 @@
+import {
+  FAKE_BUILDER_TAG,
+  FAKE_UNIVERSAL_ID_EXTENSION,
+  FAKE_UNIVERSAL_ID_TAG,
+  LENS_BUILDER_TAG,
+} from "@/components/content/story-helpers/ids";
+
 export const medicationDispense = {
   resourceType: "Bundle",
   id: "3890b281",
@@ -27,19 +34,10 @@ export const medicationDispense = {
               system: "https://zusapi.com/thirdparty/source",
               code: "surescripts",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/12345",
-              display: "Storybook Medical - Test Customer",
-            },
+            LENS_BUILDER_TAG,
           ],
         },
-        extension: [
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "f5ba64c5-4f66-45cf-b07d-84ed828138e0",
-          },
-        ],
+        extension: [FAKE_UNIVERSAL_ID_EXTENSION],
         status: "completed",
         medicationCodeableConcept: {
           coding: [
@@ -140,19 +138,10 @@ export const medicationDispense = {
               system: "https://zusapi.com/thirdparty/source",
               code: "surescripts",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/12345",
-              display: "Storybook Medical - Test Customer",
-            },
+            LENS_BUILDER_TAG,
           ],
         },
-        extension: [
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "f5ba64c5-4f66-45cf-b07d-84ed828138e0",
-          },
-        ],
+        extension: [FAKE_UNIVERSAL_ID_EXTENSION],
         status: "completed",
         medicationCodeableConcept: {
           coding: [
@@ -253,19 +242,10 @@ export const medicationDispense = {
               system: "https://zusapi.com/thirdparty/source",
               code: "surescripts",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/12345",
-              display: "Storybook Medical - Test Customer",
-            },
+            LENS_BUILDER_TAG,
           ],
         },
-        extension: [
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "f5ba64c5-4f66-45cf-b07d-84ed828138e0",
-          },
-        ],
+        extension: [FAKE_UNIVERSAL_ID_EXTENSION],
         status: "completed",
         medicationCodeableConcept: {
           coding: [
@@ -366,19 +346,10 @@ export const medicationDispense = {
               system: "https://zusapi.com/thirdparty/source",
               code: "surescripts",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/12345",
-              display: "Storybook Medical - Test Customer",
-            },
+            LENS_BUILDER_TAG,
           ],
         },
-        extension: [
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "f5ba64c5-4f66-45cf-b07d-84ed828138e0",
-          },
-        ],
+        extension: [FAKE_UNIVERSAL_ID_EXTENSION],
         status: "completed",
         medicationCodeableConcept: {
           coding: [
@@ -479,19 +450,10 @@ export const medicationDispense = {
               system: "https://zusapi.com/thirdparty/source",
               code: "surescripts",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/12345",
-              display: "Storybook Medical - Test Customer",
-            },
+            LENS_BUILDER_TAG,
           ],
         },
-        extension: [
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "f5ba64c5-4f66-45cf-b07d-84ed828138e0",
-          },
-        ],
+        extension: [FAKE_UNIVERSAL_ID_EXTENSION],
         status: "completed",
         medicationCodeableConcept: {
           coding: [
@@ -594,19 +556,10 @@ export const medicationDispense = {
               system: "https://zusapi.com/thirdparty/source",
               code: "surescripts",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/12345",
-              display: "Storybook Medical - Test Customer",
-            },
+            LENS_BUILDER_TAG,
           ],
         },
-        identifier: [
-          {
-            system: "https://zusapi.com/fhir/identifier/universal-id",
-            value: "f5ba64c5-4f66-45cf-b07d-84ed828138e0",
-          },
-        ],
+        identifier: [FAKE_UNIVERSAL_ID_TAG],
         name: [
           {
             family: "Shah",
@@ -658,13 +611,7 @@ export const medicationDispense = {
           versionId: "1",
           lastUpdated: "2022-11-08T15:02:12.528+00:00",
           source: "#tOneu1PaqCCk4CMB",
-          tag: [
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/12345",
-              display: "Storybook Medical - Test Customer",
-            },
-          ],
+          tag: [FAKE_BUILDER_TAG],
         },
         name: "Longs Drug Stores California LLC",
         telecom: [

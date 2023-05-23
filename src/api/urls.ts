@@ -1,4 +1,4 @@
-import { Env } from "..";
+import { Env } from "@/components/core/providers/types";
 
 export const getZusApiBaseUrl = (env: Env) =>
   env === "production" ? `https://api.zusapi.com` : `https://api.${env}.zusapi.com`;

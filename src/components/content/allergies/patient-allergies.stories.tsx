@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { setupAllergiesMocks } from "./story-helpers/mocks/requests";
+import { FAKE_AUTH, FAKE_BUILDER_ID, FAKE_PATIENT_UPID } from "../story-helpers/ids";
 import {
   PatientAllergies,
   PatientAllergiesProps,
@@ -16,8 +17,8 @@ export default {
   component: PatientAllergies,
   decorators: [
     (Story, { args }) => (
-      <CTWProvider env="dev" authToken="ey.12345" builderId="12345">
-        <PatientProvider patientID="007" systemURL={SYSTEM_ZUS_UNIVERSAL_ID}>
+      <CTWProvider env="dev" authToken={FAKE_AUTH} builderId={FAKE_BUILDER_ID}>
+        <PatientProvider patientID={FAKE_PATIENT_UPID} systemURL={SYSTEM_ZUS_UNIVERSAL_ID}>
           <Story args={args} />
         </PatientProvider>
       </CTWProvider>

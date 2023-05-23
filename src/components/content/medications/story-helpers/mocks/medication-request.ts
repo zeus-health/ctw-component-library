@@ -1,3 +1,9 @@
+import {
+  FAKE_UNIVERSAL_ID_EXTENSION,
+  FAKE_UNIVERSAL_ID_TAG,
+  LENS_BUILDER_TAG,
+} from "@/components/content/story-helpers/ids";
+
 export const medicationRequest = {
   resourceType: "Bundle",
   id: "1e2d41d5",
@@ -27,19 +33,10 @@ export const medicationRequest = {
               system: "https://zusapi.com/thirdparty/source",
               code: "surescripts",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/12345",
-              display: "Storybook Medical - Test Customer",
-            },
+            LENS_BUILDER_TAG,
           ],
         },
-        extension: [
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "f5ba64c5-4f66-45cf-b07d-84ed828138e0",
-          },
-        ],
+        extension: [FAKE_UNIVERSAL_ID_EXTENSION],
         status: "active",
         intent: "order",
         medicationCodeableConcept: {
@@ -157,19 +154,10 @@ export const medicationRequest = {
               system: "https://zusapi.com/thirdparty/source",
               code: "surescripts",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/12345",
-              display: "Storybook Medical - Test Customer",
-            },
+            LENS_BUILDER_TAG,
           ],
         },
-        identifier: [
-          {
-            system: "https://zusapi.com/fhir/identifier/universal-id",
-            value: "f5ba64c5-4f66-45cf-b07d-84ed828138e0",
-          },
-        ],
+        identifier: [FAKE_UNIVERSAL_ID_TAG],
         name: [
           {
             family: "Shah",

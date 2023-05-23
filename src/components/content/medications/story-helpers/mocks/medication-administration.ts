@@ -1,3 +1,10 @@
+import {
+  FAKE_BUILDER_TAG,
+  FAKE_UNIVERSAL_ID_EXTENSION,
+  FAKE_UNIVERSAL_ID_TAG,
+  LENS_BUILDER_TAG,
+} from "@/components/content/story-helpers/ids";
+
 export const medicationAdministration = {
   resourceType: "Bundle",
   id: "e23143d2",
@@ -27,19 +34,10 @@ export const medicationAdministration = {
               system: "https://zusapi.com/thirdparty/source",
               code: "commonwell",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/12345",
-              display: "Storybook Medical - Test Customer",
-            },
+            LENS_BUILDER_TAG,
           ],
         },
-        extension: [
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "57ddcfa9",
-          },
-        ],
+        extension: [FAKE_UNIVERSAL_ID_EXTENSION],
         status: "completed",
         medicationCodeableConcept: {
           coding: [
@@ -132,19 +130,10 @@ export const medicationAdministration = {
               system: "https://zusapi.com/thirdparty/source",
               code: "commonwell",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/12345",
-              display: "Storybook Medical - Test Customer",
-            },
+            LENS_BUILDER_TAG,
           ],
         },
-        identifier: [
-          {
-            system: "https://zusapi.com/fhir/identifier/universal-id",
-            value: "57ddcfa9",
-          },
-        ],
+        identifier: [FAKE_UNIVERSAL_ID_TAG],
         name: [
           {
             family: "Shah",
@@ -199,13 +188,7 @@ export const medicationAdministration = {
           versionId: "1",
           lastUpdated: "2022-11-21T18:21:37.321+00:00",
           source: "#XgOPpWgfRvpfdykH",
-          tag: [
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/12345",
-              display: "Storybook Medical - Test Customer",
-            },
-          ],
+          tag: [FAKE_BUILDER_TAG],
         },
         name: "Endo Health",
       },

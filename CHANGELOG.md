@@ -1,5 +1,32 @@
 # ctw-component-library
 
+## 1.10.0
+
+### Minor Changes
+
+- 050753be: TimelineV2 is now Timeline and dropped V1
+- 95ebb96b: Refactor CTWProvider context for readability
+
+### Patch Changes
+
+- f5b6ae07: Bump tsc-alias from 1.8.5 to 1.8.6
+- 050753be: Rework storybook examples to show data again
+- c278dde6: Don't count dismissed outside resources in badges
+
+## 1.9.3
+
+### Patch Changes
+
+- 64f76b55: Bump postcss from 8.4.21 to 8.4.23
+- f2809f21: Fix bug with dismiss/restore
+- 2c6c9455: Bump i18next from 22.4.14 to 22.4.15
+
+## 1.9.2
+
+### Patch Changes
+
+- 74deb10d: Fix issue where falling back to ODS does not occur when a FQS query fails
+
 ## 1.9.1
 
 ### Patch Changes

@@ -3,7 +3,7 @@ import { useRef } from "react";
 import { patientDocumentColumns } from "./patient-document-columns";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { withErrorBoundary } from "@/components/core/error-boundary";
-import { useCTW } from "@/components/core/providers/ctw-provider";
+import { useCTW } from "@/components/core/providers/use-ctw";
 import { Table } from "@/components/core/table/table";
 import { usePatientDocument } from "@/fhir/document";
 import { DocumentModel } from "@/fhir/models/document";
