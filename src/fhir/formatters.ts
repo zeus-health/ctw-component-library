@@ -102,12 +102,13 @@ export function formatAge(age: fhir4.Age): string {
 }
 
 // Formats a string ISO date to MM/DD/YYY.
-export function formatISODateStringToDate(dateStr?: string): string | undefined {
+export function formatISODateStringToDate(dateStr?: string | number): string | undefined {
   if (!dateStr) return undefined;
+  const date = typeof dateStr === "number" ? new Date(dateStr).toISOString() : dateStr;
 
-  const day = dateStr.substring(8, 10);
-  const month = dateStr.substring(5, 7);
-  const year = dateStr.substring(0, 4);
+  const day = date.substring(8, 10);
+  const month = date.substring(5, 7);
+  const year = date.substring(0, 4);
 
   return `${month}/${day}/${year}`;
 }
