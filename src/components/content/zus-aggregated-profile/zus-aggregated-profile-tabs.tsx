@@ -18,7 +18,7 @@ import {
   PatientObservationsOutsideProps,
 } from "../observations/patient-observations-outside";
 import { PatientObservationsOutsideBadge } from "../observations/patient-observations-outside-badge";
-import { PatientTimelineV2, PatientTimelineV2Props } from "../timeline-2.0/patient-timeline";
+import { PatientTimeline, PatientTimelineProps } from "../timeline/patient-timeline";
 import {
   PatientAllergies,
   PatientAllergiesProps,
@@ -140,7 +140,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     render: () => <PatientObservationsOutside {...props} />,
   }),
 
-  timeline: (props: PatientTimelineV2Props = {}) => ({
+  timeline: (props: PatientTimelineProps = {}) => ({
     key: "timeline",
     getPanelClassName: () => "ctw-pt-5",
     display: () => (
@@ -149,6 +149,6 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
         <BetaLabel />
       </div>
     ),
-    render: () => <PatientTimelineV2 {...props} />,
+    render: () => <PatientTimeline {...props} />,
   }),
 };

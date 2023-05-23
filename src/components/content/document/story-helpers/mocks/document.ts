@@ -1,3 +1,8 @@
+import {
+  FAKE_UNIVERSAL_ID_EXTENSION,
+  LENS_BUILDER_TAG,
+} from "@/components/content/story-helpers/ids";
+
 export const documents: fhir4.Bundle = {
   resourceType: "Bundle",
   id: "b8627acb-9676-47cd-a5b9-145bb680b8eb",
@@ -26,19 +31,9 @@ export const documents: fhir4.Bundle = {
           versionId: "9",
           lastUpdated: "2023-02-02T22:17:32.153+00:00",
           source: "#d6fc69a0d3aa79fb",
-          tag: [
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/f4599d90-6d29-4843-a16d-ae7c469eb229",
-            },
-          ],
+          tag: [LENS_BUILDER_TAG],
         },
-        extension: [
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "348a02df-f1a7-4413-93f9-b0802a7a4796",
-          },
-        ],
+        extension: [FAKE_UNIVERSAL_ID_EXTENSION],
         masterIdentifier: {
           use: "usual",
           system: "urn:oid:2.16.840.1.113883.4.570.10",
