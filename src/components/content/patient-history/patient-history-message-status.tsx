@@ -5,7 +5,7 @@ import { PatientRefreshHistoryMessageStatus } from "@/services/patient-history/p
 
 export type PatientHistoryStatusProps = {
   status?: PatientRefreshHistoryMessageStatus;
-  date?: string;
+  date?: string | number;
 };
 
 export const PatientHistoryStatus = ({ status, date }: PatientHistoryStatusProps) => {

@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 1.10.2
+
+### Patch Changes
+
+- 3e5dce3e: ProgressIcon uses ctw-animate-spin class
+
+## 1.10.1
+
+### Patch Changes
+
+- a41a8101: Fix issue when patient history request recieves a number for last retrieved.
+
 ## 1.10.0
 
 ### Minor Changes

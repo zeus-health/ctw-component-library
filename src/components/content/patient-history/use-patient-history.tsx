@@ -25,7 +25,7 @@ type PatientHistoryDetails = Partial<{
   status: PatientRefreshHistoryMessageStatus;
   createdAt: string;
   providers: PatientHistoryServiceMessage[];
-}> & { lastRetrievedAt: string };
+}> & { lastRetrievedAt: string | number };
 
 export function usePatientHistory(includePatientDemographicsForm?: boolean) {
   const { openDrawer } = useDrawer();
