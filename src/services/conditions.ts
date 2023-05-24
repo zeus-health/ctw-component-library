@@ -3,14 +3,8 @@ import { FhirResource } from "fhir-kit-client";
 import { useEffect, useState } from "react";
 import { PatientModel } from "..";
 import { createOrEditFhirResource } from "../fhir/action-helper";
-import { CodePreference } from "../fhir/codeable-concept";
 import {
   SYSTEM_CONDITION_VERIFICATION_STATUS,
-  SYSTEM_ICD10,
-  SYSTEM_ICD10_CM,
-  SYSTEM_ICD9,
-  SYSTEM_ICD9_CM,
-  SYSTEM_SNOMED,
   SYSTEM_SUMMARY,
   SYSTEM_ZUS_THIRD_PARTY,
 } from "../fhir/system-urls";
@@ -34,38 +28,12 @@ import {
 import { queryClient } from "@/utils/request";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
-export type VerificationStatus =
-  | "unconfirmed"
-  | "provisional"
-  | "differential"
-  | "confirmed"
-  | "refuted"
-  | "entered-in-error";
-
-export type ClinicalStatus =
-  | "active"
-  | "recurrence"
-  | "relapse"
-  | "inactive"
-  | "remission"
-  | "resolved";
-
-export const CONDITION_CODE_PREFERENCE_ORDER: CodePreference[] = [
-  { system: SYSTEM_SNOMED, checkForEnrichment: true },
-  { system: SYSTEM_ICD10, checkForEnrichment: true },
-  { system: SYSTEM_SNOMED },
-  { system: SYSTEM_ICD10 },
-  { system: SYSTEM_ICD10_CM },
-  { system: SYSTEM_ICD9 },
-  { system: SYSTEM_ICD9_CM },
-];
-
-export interface ConditionConnection {
+interface ConditionConnection {
   pageInfo: GraphqlPageInfo;
   edges: GraphqlConnectionNode<Condition>[];
 }
 
-export interface ConditionGraphqlResponse {
+interface ConditionGraphqlResponse {
   ConditionConnection: ConditionConnection;
 }
 
