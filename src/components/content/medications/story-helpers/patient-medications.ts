@@ -45,7 +45,7 @@ export function singleMedicationsTable(canvasElement: HTMLElement, tableEl: HTML
     },
     toHaveRowWithText: (row: number, text: string | RegExp) => within(getRow(row)).getByText(text),
     toHaveAnyRowWithText: async (text: string | RegExp) => {
-      const tbody = await within(tableEl).getAllByRole("rowgroup")[1];
+      const tbody = within(tableEl).getAllByRole("rowgroup")[1];
       expect(
         within(tbody)
           .getAllByRole("row")
