@@ -19,8 +19,8 @@ export type PatientConditionsProps = {
 
 const PatientConditionsComponent = ({
   className,
-  readOnly = false,
   enableFQS = false,
+  readOnly = false,
 }: PatientConditionsProps) => {
   const query = usePatientBuilderConditions(enableFQS);
   const showAddConditionForm = useAddConditionForm();
