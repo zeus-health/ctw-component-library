@@ -62,24 +62,8 @@ export function useBasic(enableFQS: boolean) {
     QUERY_KEY_BASIC,
     [],
     enableFQS
-      ? // FQS implementation
-        withTimerMetric(async (requestContext) => {
-          try {
-            const { resources } = await searchCommonRecords("Basic", requestContext, {
-              _tag: `https://zusapi.com/accesscontrol/owner|builder/${requestContext.builderId}`,
-            });
-            if (resources.length === 0) {
-              Telemetry.countMetric("req.count.basic.none");
-            }
-            Telemetry.histogramMetric("req.count.basic", resources.length);
-            return resources;
-          } catch (e) {
-            throw new Error(
-              `Failed fetching basic resources for builder ${requestContext.builderId}`
-            );
-          }
-        }, "req.timing.basic")
-      : // ODS implementation (noop)
+      ? withTimerMetric(fetchBasic, "req.timing.basic")
+      : // Don't fetch Basic resources if FQS is disabled; the ODS queries already fetch them via _revinclude.
         async () =>
           new Promise<Basic[]>((resolve) => {
             resolve([]);
@@ -95,4 +79,19 @@ export async function toggleArchive<T extends fhir4.Resource>(
   const profileAction = model.isArchived ? "unarchive" : "archive";
 
   await recordProfileAction(existingBasic, model, requestContext, profileAction);
+}
+
+async function fetchBasic(requestContext: CTWRequestContext) {
+  try {
+    const { resources } = await searchCommonRecords("Basic", requestContext, {
+      _tag: `https://zusapi.com/accesscontrol/owner|builder/${requestContext.builderId}`,
+    });
+    if (resources.length === 0) {
+      Telemetry.countMetric("req.count.basic.none");
+    }
+    Telemetry.histogramMetric("req.count.basic", resources.length);
+    return resources;
+  } catch (e) {
+    throw new Error(`Failed fetching basic resources for builder ${requestContext.builderId}`);
+  }
 }
