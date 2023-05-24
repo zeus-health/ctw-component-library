@@ -8,10 +8,6 @@ import {
   SYSTEM_SUMMARY,
   SYSTEM_ZUS_THIRD_PARTY,
 } from "../fhir/system-urls";
-import {
-  getAddConditionWithDefaults,
-  getClincalAndVerificationStatus,
-} from "@/components/content/forms/actions/conditions";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { useBasic } from "@/fhir/basic";
@@ -27,18 +23,6 @@ import {
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
-
-export function getNewCondition(patientId: string) {
-  const newCondition: fhir4.Condition = {
-    resourceType: "Condition",
-    subject: {
-      type: "Patient",
-      reference: `Patient/${patientId}`,
-    },
-    ...getClincalAndVerificationStatus("Active"),
-  };
-  return getAddConditionWithDefaults(newCondition);
-}
 
 export function usePatientBuilderConditions(enableFQS: boolean) {
   return useQueryWithPatient(

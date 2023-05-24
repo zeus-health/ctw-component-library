@@ -14,6 +14,10 @@ import {
   SYSTEM_SNOMED,
 } from "../system-urls";
 import {
+  getAddConditionWithDefaults,
+  getClincalAndVerificationStatus,
+} from "@/components/content/forms/actions/conditions";
+import {
   codeableConceptLabel,
   CodePreference,
   findCoding,
@@ -41,6 +45,18 @@ const CONDITION_CODE_PREFERENCE_ORDER: CodePreference[] = [
   { system: SYSTEM_ICD9 },
   { system: SYSTEM_ICD9_CM },
 ];
+
+export function getNewCondition(patientId: string) {
+  const newCondition: fhir4.Condition = {
+    resourceType: "Condition",
+    subject: {
+      type: "Patient",
+      reference: `Patient/${patientId}`,
+    },
+    ...getClincalAndVerificationStatus("Active"),
+  };
+  return getAddConditionWithDefaults(newCondition);
+}
 
 export class ConditionModel extends FHIRModel<fhir4.Condition> {
   kind = "Condition" as const;
