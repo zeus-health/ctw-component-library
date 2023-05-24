@@ -1,3 +1,10 @@
+import {
+  FAKE_BUILDER_TAG,
+  FAKE_UNIVERSAL_ID_EXTENSION,
+  FAKE_UNIVERSAL_ID_TAG,
+  LENS_BUILDER_TAG,
+} from "@/components/content/story-helpers/ids";
+
 export const medicationStatement = {
   resourceType: "Bundle",
   id: "be63733e",
@@ -23,19 +30,10 @@ export const medicationStatement = {
               system: "https://zusapi.com/thirdparty/source",
               code: "commonwell",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/12345",
-              display: "Storybook Medical - Test Customer",
-            },
+            LENS_BUILDER_TAG,
           ],
         },
-        extension: [
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "f5ba64c5-4f66-45cf-b07d-84ed828138e0",
-          },
-        ],
+        extension: [FAKE_UNIVERSAL_ID_EXTENSION],
         status: "active",
         medicationCodeableConcept: {
           coding: [
@@ -135,19 +133,10 @@ export const medicationStatement = {
               system: "https://zusapi.com/thirdparty/source",
               code: "commonwell",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/12345",
-              display: "Storybook Medical - Test Customer",
-            },
+            LENS_BUILDER_TAG,
           ],
         },
-        identifier: [
-          {
-            system: "https://zusapi.com/fhir/identifier/universal-id",
-            value: "f5ba64c5-4f66-45cf-b07d-84ed828138e0",
-          },
-        ],
+        identifier: [FAKE_UNIVERSAL_ID_TAG],
         name: [
           {
             family: "Shah",
@@ -202,13 +191,7 @@ export const medicationStatement = {
           versionId: "1",
           lastUpdated: "2022-11-08T15:02:12.239+00:00",
           source: "#PBAb44ovUWIiO2TB",
-          tag: [
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/12345",
-              display: "Storybook Medical - Test Customer",
-            },
-          ],
+          tag: [FAKE_BUILDER_TAG],
         },
         name: "Northway Pediatrics",
       },

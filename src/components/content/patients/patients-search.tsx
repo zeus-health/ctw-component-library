@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import ZusSVG from "@/assets/zus.svg";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { ComboboxField, ComboxboxFieldOption } from "@/components/core/form/combobox-field";
-import { useQueryWithCTW } from "@/components/core/providers/ctw-provider";
+import { useQueryWithCTW } from "@/components/core/providers/use-query-with-ctw";
 import { PatientModel } from "@/fhir/models";
 import { getBuilderPatientListWithSearch } from "@/fhir/patient-helper";
 import { QUERY_KEY_PATIENTS_LIST } from "@/utils/query-keys";

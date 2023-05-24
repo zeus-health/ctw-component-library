@@ -1,49 +1,24 @@
-import { QueryClientProvider, useQuery } from "@tanstack/react-query";
-import { ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { PropsWithChildren, useEffect, useMemo } from "react";
 import {
-  CTWRequestContext,
-  CTWState,
-  CTWStateContext,
-  CTWToken,
-  FeatureFlags,
-} from "./ctw-context";
+  AuthenticationProvider,
+  AuthenticationProviderProps,
+} from "./authentication/authentication-provider";
+import { CTWStateContext, FeatureFlags } from "./ctw-context";
+import { TelemetryProvider } from "./telemetry/telemetry-provider";
+import { ThemeProvider, ThemeProviderProps } from "./theme/theme-provider";
+import { Env } from "./types";
 import { version } from "../../../../package.json";
-import { getFhirClient } from "@/fhir/client";
-import i18next, { Locals } from "@/i18n";
-import { DefaultTheme, EmptyTailwindCSSVars, mapToCSSVar, Theme } from "@/styles/tailwind.theme";
-import { claimsBuilderId, claimsExp } from "@/utils/auth";
-import { merge } from "@/utils/nodash";
-import { QUERY_KEY_AUTH_TOKEN } from "@/utils/query-keys";
-import { ctwFetch, queryClient } from "@/utils/request";
-import { Telemetry } from "@/utils/telemetry";
-import "../main.scss";
-
-export const Env = ["production", "sandbox", "phi-test", "dev"];
-export type Env = (typeof Env)[number];
-export const IsEnvValid = (env: string): boolean => Env.includes(env);
-
-// We use an expiry padding to provide a buffer to prevent race conditions.
-// A race condition could happen in that we check if the token is expired,
-// it isn't, but by time we do our request(s) it has expired.
-const EXPIRY_PADDING_MS = 60000;
-
-type AuthTokenSpecified = { authToken: string; authTokenURL?: never };
-
-// authTokenURL should return a valid Zus accessToken.
-// E.g. {access_token: ZUS_ACCESS_TOKEN}
-type AuthTokenURLSpecified = { authToken?: never; authTokenURL: string };
+import { queryClient } from "@/utils/request";
 
 type CTWProviderProps = {
-  builderId?: string;
-  children: ReactNode;
-  enableTelemetry?: boolean;
   env: Env;
-  headers?: Record<string, string>;
-  featureFlags?: FeatureFlags;
-  theme?: Theme;
-  locals?: Locals;
+  builderId?: string;
+  enableTelemetry?: boolean;
   ehr?: string;
-} & (AuthTokenSpecified | AuthTokenURLSpecified);
+  featureFlags?: FeatureFlags;
+} & ThemeProviderProps &
+  AuthenticationProviderProps;
 
 declare global {
   interface Window {
@@ -60,187 +35,48 @@ declare global {
  * addition to providing a client request context, the CTWProvider also allows
  * for theme configuration and opting into telemetry collection if desired.
  */
-function CTWProvider({
+export function CTWProvider({
   children,
+  env,
+  builderId,
   enableTelemetry = false,
+  ehr,
   featureFlags,
   locals,
   theme,
-  ...ctwState
-}: CTWProviderProps) {
-  const [token, setToken] = useState<CTWToken>();
-  const [style, setStyle] = useState<string>("");
-  const ctwProviderRef = useRef<HTMLDivElement>(null);
-
+  headers,
+  authToken,
+  authTokenURL,
+}: PropsWithChildren<CTWProviderProps>) {
   useEffect(() => {
     window.CTWComponentLibrary = {
       version,
     };
   }, []);
 
-  // Manually compute our CSS theme string AND the
-  // fix for empty tailwind CSS vars.
-  // We have to apply this manually instead of `style={style}`
-  // as we want to use a string instead of an object where react would
-  // drop the empty variables!
-  useEffect(() => {
-    const styles = {
-      ...mapToCSSVar(theme?.colors || {}),
-      ...EmptyTailwindCSSVars,
-    };
-
-    // Convert our styles into a style string.
-    setStyle(
-      Object.entries(styles)
-        .map(([key, value]) => `${key}:${value}`)
-        .join(";")
-    );
-  }, [ctwProviderRef, theme]);
-
-  // Manually apply our CSS theme string to the ctw-provider.
-  useEffect(() => {
-    ctwProviderRef.current?.setAttribute("style", style);
-  }, [ctwProviderRef, style]);
-
-  // Workaround for https://github.com/tailwindlabs/headlessui/discussions/666
-  // Note: We want the portal root to:
-  //    1. Be a child of body.
-  //    2. Have our theme styles.
-  useEffect(() => {
-    // Remove any existing portal root.
-    document.getElementById("headlessui-portal-root")?.remove();
-
-    // Create a new portal root.
-    const el = document.createElement("div");
-    el.id = "headlessui-portal-root";
-
-    // It needs at least one child, so that HeadlessUI doesn't remove this portal root workaround
-    // https://github.com/tailwindlabs/headlessui/blob/main/packages/@headlessui-react/src/components/portal/portal.tsx#L84
-    el.innerHTML = "<div/>";
-
-    // Apply our theme styles and add the portal root to the body.
-    el.setAttribute("style", style);
-    document.body.appendChild(el);
-  }, [style]);
-
-  // Overwrite our i18next resources with any provided to CTWProvider.
-  useEffect(() => {
-    if (locals) {
-      Object.entries(locals).forEach(([lang, namespaces]) => {
-        Object.entries(namespaces).forEach(([namespace, resources]) => {
-          i18next.addResourceBundle(lang, namespace, resources);
-        });
-      });
-    }
-  }, [locals]);
-
-  const handleAuth = useCallback(async () => {
-    if (ctwState.authToken) {
-      return ctwState.authToken;
-    }
-
-    const newToken = await checkOrRefreshAuth(token, ctwState.authTokenURL, ctwState.headers);
-    if (token?.accessToken !== newToken.accessToken) {
-      setToken(newToken);
-    }
-    return newToken.accessToken;
-  }, [token, ctwState]);
-
-  useEffect(() => {
-    Telemetry.init(ctwState.env, ctwState.ehr, enableTelemetry);
-    Telemetry.setBuilder(ctwState.builderId);
-    handleAuth()
-      .then((accessToken) => Telemetry.setUser(accessToken))
-      .catch(() => Telemetry.clearUser());
-  }, [ctwState.builderId, ctwState.env, ctwState.ehr, enableTelemetry, handleAuth, token]);
-
   const providerState = useMemo(
     () => ({
-      ...ctwState,
+      env,
+      builderId,
       featureFlags,
-      // Set our context theme to our default theme merged
-      // with any of the provided theme overwrites.
-      // This way consumers of useCTW can get access to
-      // the full true theme being applied.
-      theme: merge({}, DefaultTheme, theme),
-      token,
-      ctwProviderRef,
-      actions: {
-        handleAuth,
-      },
     }),
-    [ctwState, theme, handleAuth, token, ctwProviderRef, featureFlags]
+    [env, builderId, featureFlags]
   );
 
   return (
-    <div ref={ctwProviderRef} className="ctw-provider">
-      <CTWStateContext.Provider value={providerState}>
-        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-      </CTWStateContext.Provider>
-    </div>
+    <ThemeProvider theme={theme} locals={locals}>
+      <AuthenticationProvider headers={headers} authToken={authToken} authTokenURL={authTokenURL}>
+        <TelemetryProvider
+          env={env}
+          builderId={builderId}
+          ehr={ehr}
+          enableTelemetry={enableTelemetry}
+        >
+          <CTWStateContext.Provider value={providerState}>
+            <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+          </CTWStateContext.Provider>
+        </TelemetryProvider>
+      </AuthenticationProvider>
+    </ThemeProvider>
   );
 }
-
-function useCTW() {
-  const context = useContext(CTWStateContext);
-  if (context === undefined || context.theme === undefined) {
-    throw new Error("useCTW must be used within a CTWProvider");
-  }
-
-  const getRequestContext = useCallback(async () => {
-    const authToken = await context.actions.handleAuth();
-    const requestContext: CTWRequestContext = {
-      env: context.env,
-      authToken,
-      builderId: context.builderId ?? claimsBuilderId(authToken) ?? "",
-      contextBuilderId: context.builderId,
-      fhirClient: getFhirClient(context.env, authToken, context.builderId),
-    };
-    return requestContext;
-  }, [context]);
-
-  return {
-    getRequestContext,
-    theme: context.theme as Required<Theme>,
-    ctwProviderRef: context.ctwProviderRef,
-    featureFlags: context.featureFlags,
-  };
-}
-
-export function useQueryWithCTW<T, T2>(
-  queryKey: string,
-  keys: T2[],
-  query: (requestContext: CTWRequestContext, keys?: T2[]) => Promise<T>,
-  enabled = true
-) {
-  const { getRequestContext } = useCTW();
-
-  return useQuery(
-    [queryKey, ...keys],
-    async () => {
-      const requestContext = await getRequestContext();
-      return query(requestContext, keys);
-    },
-    { enabled }
-  );
-}
-
-async function checkOrRefreshAuth(
-  token: CTWToken | undefined,
-  url: CTWState["authTokenURL"],
-  headers?: Record<string, string>
-): Promise<CTWToken> {
-  if (!token || Date.now() >= token.expiresAt + EXPIRY_PADDING_MS) {
-    const response = await queryClient.fetchQuery([QUERY_KEY_AUTH_TOKEN, url], async () =>
-      ctwFetch(url as string, { headers })
-    );
-    const newToken = await response.json();
-    return {
-      accessToken: newToken.access_token,
-      expiresAt: claimsExp(newToken.access_token) * 1000,
-    };
-  }
-  return token;
-}
-
-export { CTWProvider, useCTW };

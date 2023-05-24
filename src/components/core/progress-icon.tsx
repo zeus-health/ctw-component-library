@@ -1,5 +1,7 @@
+import cx from "classnames";
+
 export type ProgressIconProps = {
-  className?: string;
+  className?: cx.Argument;
   height?: number;
 };
 
@@ -7,7 +9,7 @@ export const ProgressIcon = ({ className, height }: ProgressIconProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 512 512"
-    className={className}
+    className={cx("ctw-animate-spin", className)}
     height={height}
   >
     <path

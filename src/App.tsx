@@ -9,7 +9,7 @@ import {
   PatientMedicationsOutside,
   PatientProvider,
   PatientSearch,
-  PatientTimelineV2,
+  PatientTimeline,
   ZusAggregatedProfile,
 } from ".";
 
@@ -45,11 +45,11 @@ const theme = {
 const locals = {
   en: {
     glossary: {
-      condition_one: "problem",
-      condition_other: "problems",
+      condition_one: "condition",
+      condition_other: "conditions",
     },
     main: {
-      "zap.tabs.conditionsOutside": "problems",
+      "zap.tabs.conditionsOutside": "conditions",
       "zap.tabs.medicationsOutside": "medications",
     },
   },

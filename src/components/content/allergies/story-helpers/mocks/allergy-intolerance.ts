@@ -1,4 +1,8 @@
 import type { AllergyIntolerance, Bundle } from "fhir/r4";
+import {
+  FAKE_UNIVERSAL_ID_EXTENSION,
+  LENS_BUILDER_TAG,
+} from "@/components/content/story-helpers/ids";
 
 export const allergyIntolerance: Bundle<AllergyIntolerance> = {
   resourceType: "Bundle",
@@ -36,19 +40,10 @@ export const allergyIntolerance: Bundle<AllergyIntolerance> = {
               system: "https://zusapi.com/thirdparty/source",
               code: "commonwell",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/f09f6b6f",
-              display: "HLTH 2022 - Gunther",
-            },
+            LENS_BUILDER_TAG,
           ],
         },
-        extension: [
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "b640bda1",
-          },
-        ],
+        extension: [FAKE_UNIVERSAL_ID_EXTENSION],
         clinicalStatus: {
           coding: [
             {
@@ -95,19 +90,10 @@ export const allergyIntolerance: Bundle<AllergyIntolerance> = {
               system: "https://zusapi.com/thirdparty/source",
               code: "commonwell",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/f09f6b6f",
-              display: "HLTH 2022 - Gunther",
-            },
+            LENS_BUILDER_TAG,
           ],
         },
-        extension: [
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "b640bda1",
-          },
-        ],
+        extension: [FAKE_UNIVERSAL_ID_EXTENSION],
         clinicalStatus: {
           coding: [
             {
@@ -154,19 +140,10 @@ export const allergyIntolerance: Bundle<AllergyIntolerance> = {
               system: "https://zusapi.com/thirdparty/source",
               code: "commonwell",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/f09f6b6f",
-              display: "HLTH 2022 - Gunther",
-            },
+            LENS_BUILDER_TAG,
           ],
         },
-        extension: [
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "b640bda1",
-          },
-        ],
+        extension: [FAKE_UNIVERSAL_ID_EXTENSION],
         clinicalStatus: {
           coding: [
             {

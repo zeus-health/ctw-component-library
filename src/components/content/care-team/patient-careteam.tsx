@@ -2,7 +2,7 @@ import cx from "classnames";
 import { useRef } from "react";
 import { patientCareTeamColumns } from "./patient-careteam-columns";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
-import { useCTW } from "@/components/core/providers/ctw-provider";
+import { useCTW } from "@/components/core/providers/use-ctw";
 import { Table } from "@/components/core/table/table";
 import { usePatientCareTeam } from "@/fhir/care-team";
 import { CareTeamPractitionerModel } from "@/fhir/models/careteam-practitioner";

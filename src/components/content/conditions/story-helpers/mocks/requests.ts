@@ -11,12 +11,16 @@ import { historyOralContraception } from "./history-oral-contraception";
 import { patient } from "./patient";
 import { patientHistoryMessage } from "./patient-history-message";
 import { ProvenanceCondition } from "./provenance-conditions";
-import { mockBinaryGet } from "@/components/content/story-helpers/mocks/requests";
-import { SYSTEM_SUMMARY, SYSTEM_ZUS_OWNER } from "@/fhir/system-urls";
+import {
+  getMockBasicPost,
+  getMockBasicPut,
+} from "@/components/content/story-helpers/mocks/requests/basic";
+import { mockBinaryGet } from "@/components/content/story-helpers/mocks/requests/requests";
+import { newBundleCaches } from "@/components/content/story-helpers/types";
+import { SYSTEM_SUMMARY } from "@/fhir/system-urls";
 import { cloneDeep } from "@/utils/nodash";
 
-let patientConditionsCache: fhir4.Bundle;
-let otherConditionsCache: fhir4.Bundle;
+const cache = newBundleCaches();
 
 // Sets up a bunch of mocks and uses some global caches
 // to allow adding/editing/deleting.
@@ -30,8 +34,8 @@ export function setupConditionMocks({
     // This way, each story gets a fresh cache.
     decorators: [
       (Story: ComponentType) => {
-        patientConditionsCache = cloneDeep(patientConditions);
-        otherConditionsCache = cloneDeep(otherConditions);
+        cache.builder = cloneDeep(patientConditions);
+        cache.outside = cloneDeep(otherConditions);
         return createElement(Story);
       },
     ],
@@ -108,11 +112,11 @@ function mockRequests() {
     async (req, res, ctx) => {
       const newCondition = await req.json();
       newCondition.id = uuidv4();
-      patientConditionsCache.entry?.push({
+      cache.builder.entry?.push({
         resource: newCondition,
         search: { mode: "match" },
       });
-      patientConditionsCache.total = patientConditionsCache.entry?.length;
+      cache.builder.total = cache.builder.entry?.length;
       return res(ctx.status(200), ctx.json(newCondition));
     }
   );
@@ -123,11 +127,9 @@ function mockRequests() {
     "https://api.dev.zusapi.com/fhir/Condition/:conditionId",
     async (req, res, ctx) => {
       const condition: fhir4.Condition = await req.json();
-      const index = patientConditionsCache.entry?.findIndex(
-        (entry) => entry.resource?.id === condition.id
-      );
-      if (index !== undefined && patientConditionsCache.entry?.[index]) {
-        patientConditionsCache.entry[index].resource = condition;
+      const index = cache.builder.entry?.findIndex((entry) => entry.resource?.id === condition.id);
+      if (index !== undefined && cache.builder.entry?.[index]) {
+        cache.builder.entry[index].resource = condition;
       }
       return res(ctx.status(200), ctx.json(condition));
     }
@@ -152,36 +154,7 @@ function mockRequests() {
       const tagParam = req.url.searchParams.get("_tag");
       const other = tagParam === `${SYSTEM_SUMMARY}|Common`;
 
-      return res(ctx.status(200), ctx.json(other ? otherConditionsCache : patientConditionsCache));
-    }
-  );
-
-  const mockConditionsBasic = rest.post(
-    "https://api.dev.zusapi.com/fhir/Basic",
-    async (req, res, ctx) => {
-      const newBasicResource = (await req.json()) as fhir4.Basic;
-      if (newBasicResource.subject?.type !== "Condition") {
-        // The ZusAggregatedProfile component has multiple tabs mocking fhir
-        // Basic resources. We only want to handle conditions here.
-        return undefined;
-      }
-      newBasicResource.id = uuidv4();
-      newBasicResource.meta = {
-        tag: [
-          {
-            system: SYSTEM_ZUS_OWNER,
-            code: "builder/b123",
-            display: "Storybook Builder",
-          },
-        ],
-      };
-      otherConditionsCache.entry?.push({
-        resource: newBasicResource,
-        search: { mode: "include" },
-      });
-
-      otherConditionsCache.total = otherConditionsCache.entry?.length;
-      return res(ctx.status(200), ctx.json(newBasicResource));
+      return res(ctx.status(200), ctx.json(other ? cache.outside : cache.builder));
     }
   );
 
@@ -195,21 +168,6 @@ function mockRequests() {
       return res(ctx.status(200), ctx.json(getHistoryVersionsBundle(requestUrls)));
     }
   );
-
-  const mockConditionsBasicPut = rest.put(
-    "https://api.dev.zusapi.com/fhir/Basic/:basicId",
-    async (req, res, ctx) => {
-      const basic = await req.json();
-      const index = otherConditionsCache.entry?.findIndex(
-        (entry) => entry.resource?.id === basic.id
-      );
-      if (index !== undefined && otherConditionsCache.entry?.[index]) {
-        otherConditionsCache.entry[index].resource = basic;
-      }
-      return res(ctx.status(200), ctx.json(basic));
-    }
-  );
-
   return [
     mockPatientGet,
     mockConditionSearch,
@@ -219,9 +177,9 @@ function mockRequests() {
     mockConditionPut,
     mockPatientHistoryGet,
     mockBinaryGet(),
-    mockConditionsBasic,
+    getMockBasicPost("Condition", cache),
+    getMockBasicPut(cache),
     mockConditionVersionHistoryBundle,
     mockConditionProvenance,
-    mockConditionsBasicPut,
   ];
 }

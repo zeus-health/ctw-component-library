@@ -1,3 +1,5 @@
+import { FAKE_BUILDER_TAG, FAKE_UNIVERSAL_ID_TAG } from "@/components/content/story-helpers/ids";
+
 export const patient = {
   resourceType: "Bundle",
   id: "c1db2d18",
@@ -26,23 +28,14 @@ export const patient = {
               code: "HTEST",
             },
           ],
-          tag: [
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/12345",
-              display: "Storybook Medical - Test Customer",
-            },
-          ],
+          tag: [FAKE_BUILDER_TAG],
         },
         identifier: [
           {
             system: "https://Storybookmedical.com/patient-id",
             value: "12345",
           },
-          {
-            system: "https://zusapi.com/fhir/identifier/universal-id",
-            value: "007",
-          },
+          FAKE_UNIVERSAL_ID_TAG,
         ],
         name: [
           {

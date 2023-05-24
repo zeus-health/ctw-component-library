@@ -1,3 +1,8 @@
+import {
+  FAKE_UNIVERSAL_ID_EXTENSION,
+  LENS_BUILDER_TAG,
+} from "@/components/content/story-helpers/ids";
+
 export const immunizations: fhir4.Bundle = {
   resourceType: "Bundle",
   id: "f2b911f3-b5cc-42c0-899c-f4f3ed92cfd1",
@@ -34,19 +39,10 @@ export const immunizations: fhir4.Bundle = {
               system: "https://zusapi.com/thirdparty/source",
               code: "commonwell",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/f09f6b6f-ae4b-45f4-a653-5677b1582115",
-              display: "HLTH 2022 - Gunther",
-            },
+            LENS_BUILDER_TAG,
           ],
         },
-        extension: [
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "b640bda1-aec7-4be6-a890-e3685a55bce3",
-          },
-        ],
+        extension: [FAKE_UNIVERSAL_ID_EXTENSION],
         status: "completed",
         vaccineCode: {
           coding: [
@@ -88,19 +84,10 @@ export const immunizations: fhir4.Bundle = {
               system: "https://zusapi.com/thirdparty/source",
               code: "commonwell",
             },
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/f09f6b6f-ae4b-45f4-a653-5677b1582115",
-              display: "HLTH 2022 - Gunther",
-            },
+            LENS_BUILDER_TAG,
           ],
         },
-        extension: [
-          {
-            url: "https://zusapi.com/fhir/identifier/universal-id",
-            valueString: "b640bda1-aec7-4be6-a890-e3685a55bce3",
-          },
-        ],
+        extension: [FAKE_UNIVERSAL_ID_EXTENSION],
         status: "completed",
         vaccineCode: {
           coding: [

@@ -1,28 +1,31 @@
 import { useAddConditionForm } from "./helpers/modal-hooks";
 import { PatientConditionsBase } from "./helpers/patient-conditions-base";
+import { useToggleArchive } from "../hooks/use-toggle-archive";
 import { PatientHistoryAction } from "../patient-history/patient-history-action";
 import { RequestRecordsButton } from "../patient-history/request-records-button";
 import { usePatientHistory } from "../patient-history/use-patient-history";
 import { withErrorBoundary } from "@/components/core/error-boundary";
-import { useCTW } from "@/components/core/providers/ctw-provider";
+import { Spinner } from "@/components/core/spinner";
 import { RowActionsProps } from "@/components/core/table/table";
-import { toggleArchive } from "@/fhir/basic";
-import { usePatientConditionsOutside } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models";
-import { QUERY_KEY_OTHER_PROVIDER_CONDITIONS } from "@/utils/query-keys";
+import { useBaseTranslations } from "@/i18n";
+import { usePatientConditionsOutside } from "@/services/conditions";
+import { QUERY_KEY_BASIC, QUERY_KEY_OTHER_PROVIDER_CONDITIONS } from "@/utils/query-keys";
 
 export type PatientConditionsOutsideProps = {
   className?: string;
+  enableFQS?: boolean;
   hideRequestRecords?: boolean;
   readOnly?: boolean;
 };
 
 const PatientConditionsOutsideComponent = ({
   className,
+  enableFQS = false,
   hideRequestRecords = false,
   readOnly = false,
 }: PatientConditionsOutsideProps) => {
-  const query = usePatientConditionsOutside();
+  const query = usePatientConditionsOutside(enableFQS);
   const patientHistoryQuery = usePatientHistory();
   const hasNoOutsideDataAndHasNeverRequestedPatientHistory =
     patientHistoryQuery.lastRetrievedAt === undefined && query.data.length === 0;
@@ -62,29 +65,39 @@ export const PatientConditionsOutside = withErrorBoundary(
 );
 
 const RowActions = ({ record }: RowActionsProps<ConditionModel>) => {
+  const { t } = useBaseTranslations();
   const showAddConditionForm = useAddConditionForm();
-  const { getRequestContext } = useCTW();
+  const { isLoading, toggleArchive } = useToggleArchive(
+    record,
+    QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
+    QUERY_KEY_BASIC
+  );
+  const archiveLabel = record.isArchived ? t("resourceTable.restore") : t("resourceTable.dismiss");
 
   return (
     <div className="ctw-flex ctw-space-x-2">
       <button
         type="button"
         className="ctw-btn-default"
-        onClick={async () => {
-          await toggleArchive(record, await getRequestContext(), [
-            QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
-          ]);
-        }}
+        disabled={isLoading}
+        onClick={toggleArchive}
       >
-        {record.isArchived ? "Restore" : "Dismiss"}
+        {isLoading ? (
+          <div className="ctw-flex">
+            <Spinner className="ctw-mx-4 ctw-align-middle" />
+          </div>
+        ) : (
+          archiveLabel
+        )}
       </button>
 
       <button
         type="button"
         className="ctw-btn-primary"
+        disabled={isLoading}
         onClick={() => showAddConditionForm(record)}
       >
-        Add
+        {t("resourceTable.add")}
       </button>
     </div>
   );

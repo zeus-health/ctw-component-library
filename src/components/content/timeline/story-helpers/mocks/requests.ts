@@ -1,7 +1,11 @@
 import { rest } from "msw";
 import { encounters } from "./encounters";
+import { medicationStatement } from "./medication-statement";
 import { patient } from "./patient";
 import { provenances } from "./provenances";
+import { medicationDispense } from "../../../medications/story-helpers/mocks/medication-dispense";
+import { medicationRequest } from "../../../medications/story-helpers/mocks/medication-request";
+import { createDiagnosticReportsBundle } from "@/components/content/observations/story-helpers/mocks/diagnostic-reports";
 
 export function setupTimelineMocks() {
   return {
@@ -16,11 +20,26 @@ function mockRequests() {
     "https://api.dev.zusapi.com/fhir/Patient",
     // Add ctx.delay(750), delay to show loading, we set this to 750ms to be
     // less than the default testing-library timeout of 1000ms.
-    (req, res, ctx) => res(ctx.delay(750), ctx.status(200), ctx.json(patient))
+    (_, res, ctx) => res(ctx.delay(750), ctx.status(200), ctx.json(patient))
   );
 
-  const mockEncounterGet = rest.get("https://api.dev.zusapi.com/fhir/Encounter", (req, res, ctx) =>
+  const mockEncounterGet = rest.get("https://api.dev.zusapi.com/fhir/Encounter", (_, res, ctx) =>
     res(ctx.status(200), ctx.json(encounters))
+  );
+
+  const mockMedicationRequestGet = rest.get(
+    "https://api.dev.zusapi.com/fhir/MedicationRequest",
+    (_, res, ctx) => res(ctx.status(200), ctx.json(medicationRequest))
+  );
+
+  const mockMedicationDispenseGet = rest.get(
+    "https://api.dev.zusapi.com/fhir/MedicationDispense",
+    (_, res, ctx) => res(ctx.status(200), ctx.json(medicationDispense))
+  );
+
+  const mockMedicationStatementGet = rest.get(
+    "https://api.dev.zusapi.com/fhir/MedicationStatement",
+    (_, res, ctx) => res(ctx.status(200), ctx.json(medicationStatement))
   );
 
   const mockProvenanceGet = rest.get(
@@ -28,5 +47,19 @@ function mockRequests() {
     async (_, res, ctx) => res(ctx.status(200), ctx.json(provenances))
   );
 
-  return [mockPatientGet, mockEncounterGet, mockProvenanceGet];
+  const mockDiagnosticReportGet = rest.get(
+    "https://api.dev.zusapi.com/fhir/DiagnosticReport",
+    (req, res, ctx) =>
+      res(ctx.status(200), ctx.delay(250), ctx.json(createDiagnosticReportsBundle()))
+  );
+
+  return [
+    mockPatientGet,
+    mockEncounterGet,
+    mockProvenanceGet,
+    mockMedicationRequestGet,
+    mockMedicationDispenseGet,
+    mockMedicationStatementGet,
+    mockDiagnosticReportGet,
+  ];
 }

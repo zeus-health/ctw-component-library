@@ -1,5 +1,5 @@
 import { getBuilderRefreshHistoryMessages } from "./use-patient-history";
-import { useQueryWithCTW } from "@/components/core/providers/ctw-provider";
+import { useQueryWithCTW } from "@/components/core/providers/use-query-with-ctw";
 import { PatientHistoryRequestModel } from "@/fhir/models/patient-history";
 import { getBuilderPatientsListByIdentifier } from "@/fhir/patient-helper";
 import { PatientHistoryJobResponse } from "@/services/patient-history/patient-history-types";

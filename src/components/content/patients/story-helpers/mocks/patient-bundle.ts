@@ -3,6 +3,7 @@ import {
   fakerFakeBundleLinks,
   fakerFakeMockSourceId,
 } from "@/components/content/story-helpers/faker";
+import { FAKE_BUILDER_TAG } from "@/components/content/story-helpers/ids";
 
 const EARLIEST_DATE = new Date("2020-11-11");
 const LATEST_DATE = new Date();
@@ -55,12 +56,7 @@ export function createMockPatientBundleEntry(): fhir4.BundleEntry<fhir4.Patient>
         versionId: "5",
         lastUpdated: updated.toISOString(),
         source: faker.helpers.arrayElement(SOURCE_IDS),
-        tag: [
-          {
-            system: "https://zusapi.com/accesscontrol/owner",
-            code: `builder/${BUILDER_UUID}`,
-          },
-        ],
+        tag: [FAKE_BUILDER_TAG],
       },
       identifier: [
         {

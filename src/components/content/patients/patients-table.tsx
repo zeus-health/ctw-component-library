@@ -9,7 +9,7 @@ import { useCallback, useEffect, useState } from "react";
 import * as CTWBox from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Pagination } from "@/components/core/pagination/pagination";
-import { useQueryWithCTW } from "@/components/core/providers/ctw-provider";
+import { useQueryWithCTW } from "@/components/core/providers/use-query-with-ctw";
 import { Table } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
 import { getBuilderPatientsList } from "@/fhir/patient-helper";

@@ -18,7 +18,7 @@ import {
   PatientObservationsOutsideProps,
 } from "../observations/patient-observations-outside";
 import { PatientObservationsOutsideBadge } from "../observations/patient-observations-outside-badge";
-import { PatientTimelineV2, PatientTimelineV2Props } from "../timeline-2.0/patient-timeline";
+import { PatientTimeline, PatientTimelineProps } from "../timeline/patient-timeline";
 import {
   PatientAllergies,
   PatientAllergiesProps,
@@ -56,7 +56,12 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
 
   "care-team": (props: PatientCareTeamProps = {}) => ({
     key: "care-team",
-    display: () => "care team",
+    display: () => (
+      <div className="ctw-space-x-1">
+        <span className="ctw-capitalize">care team</span>
+        <BetaLabel />
+      </div>
+    ),
     render: () => <PatientCareTeam {...props} />,
   }),
 
@@ -71,7 +76,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     display: () => (
       <div className="ctw-space-x-2">
         <span className="ctw-capitalize">{i18next.t("zap.tabs.conditionsOutside")}</span>
-        <PatientConditionsOutsideBadge />
+        <PatientConditionsOutsideBadge enableFQS={props.enableFQS} />
       </div>
     ),
     render: () => <PatientConditionsOutside {...props} />,
@@ -135,7 +140,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     render: () => <PatientObservationsOutside {...props} />,
   }),
 
-  timeline: (props: PatientTimelineV2Props = {}) => ({
+  timeline: (props: PatientTimelineProps = {}) => ({
     key: "timeline",
     getPanelClassName: () => "ctw-pt-5",
     display: () => (
@@ -144,6 +149,6 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
         <BetaLabel />
       </div>
     ),
-    render: () => <PatientTimelineV2 {...props} />,
+    render: () => <PatientTimeline {...props} />,
   }),
 };

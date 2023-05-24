@@ -1,84 +1,56 @@
 import { SimpleMoreList } from "@/components/core/simple-more-list";
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { ViewFHIR } from "@/components/core/view-fhir";
-import { EncounterModel } from "@/fhir/models/encounter";
+import { TimelineEventModel } from "@/fhir/models/timeline-event";
 
 export const patientTimelineColumns = (includeViewFhirResource = false) => {
-  const timellineColumns: TableColumn<EncounterModel>[] = [
+  const timelineColumns: TableColumn<TimelineEventModel>[] = [
     {
       title: "Date",
       widthPercent: 10,
       minWidth: 120,
-      render: (encounter) => (
-        <div className="group-hover:ctw-underline">{encounter.periodStart}</div>
-      ),
+      dataIndex: "date",
     },
     {
       title: "Type",
-      widthPercent: 20,
-      minWidth: 150,
-      render: (encounter) => (
+      render: (timelineEvent) => (
         <div>
-          <div>Encounter</div>
-          <div>{encounter.typeDisplay}</div>
+          <div className="ctw-font-medium">{timelineEvent.type}</div>
+          <div>{timelineEvent.subtype}</div>
         </div>
       ),
     },
     {
-      title: "Provider",
-      widthPercent: 25,
-      minWidth: 200,
-      render: (encounter) => {
-        const { participant } = encounter.resource;
-        if (!participant || participant.length === 0) return null;
-
-        const items = participant.map((p) => {
-          const name = p.individual?.display ?? "";
-          let qualification = p.type?.[0].text ?? "";
-          if (["noinformation", "unk"].includes(qualification.toLowerCase())) {
-            qualification = "";
-          }
-          if (name && qualification) {
-            return `${name} (${qualification})`;
-          }
-          return name || qualification;
-        });
-
-        return (
-          <div>
-            <SimpleMoreList items={items} limit={6} total={participant.length} />
-            <div>{encounter.location}</div>
-          </div>
-        );
-      },
+      title: "Actor",
+      render: (timelineEvent) => (
+        <>
+          {timelineEvent.actorDetails.map((detail) => (
+            <div className="ctw-capitalize" key={detail}>
+              {detail.toLocaleLowerCase()}
+            </div>
+          ))}
+        </>
+      ),
     },
     {
-      widthPercent: 45,
-      minWidth: 250,
-      render: (encounter) => {
-        const { diagnosis } = encounter.resource;
-        if (!diagnosis || diagnosis.length === 0) return null;
-
-        return (
-          <div>
-            <SimpleMoreList
-              items={diagnosis.map((d) => d.condition.display ?? "")}
-              limit={3}
-              total={diagnosis.length}
-            />
-          </div>
-        );
-      },
+      title: "Modifiers",
+      render: (timelineEvent) => (
+        <SimpleMoreList
+          items={timelineEvent.modifiers}
+          limit={3}
+          total={timelineEvent.modifiers.length}
+        />
+      ),
     },
   ];
 
   if (includeViewFhirResource) {
-    timellineColumns.push({
+    timelineColumns.push({
       widthPercent: 10,
       minWidth: 200,
       render: (encounter) => <ViewFHIR name="Encounter Resource" resource={encounter.resource} />,
     });
   }
 
-  return timellineColumns;
+  return timelineColumns;
 };

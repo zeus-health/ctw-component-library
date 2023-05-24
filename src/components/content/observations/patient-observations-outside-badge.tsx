@@ -3,8 +3,13 @@ import { usePatientAllDiagnosticReports } from "@/fhir/diagnostic-report";
 
 export const PatientObservationsOutsideBadge = () => {
   const { data = [] } = usePatientAllDiagnosticReports();
+  const unarchivedObservations = data.filter((observation) => !observation.isArchived);
 
-  return data.length ? (
-    <Badge color="notification" text={data.length.toString()} className="ctw-h-5" />
+  return unarchivedObservations.length ? (
+    <Badge
+      color="notification"
+      text={unarchivedObservations.length.toString()}
+      className="ctw-h-5"
+    />
   ) : null;
 };

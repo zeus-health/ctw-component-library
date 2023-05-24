@@ -5,7 +5,7 @@ import * as RadixDropdownMenu from "@radix-ui/react-dropdown-menu";
 import cx from "classnames";
 import { ReactNode, useState } from "react";
 import { MenuItem } from "./menu/menu-item";
-import { useCTW } from "./providers/ctw-provider";
+import { useCtwThemeRef } from "./providers/theme/use-ctw-theme-ref";
 import "./dropdown-action-menu.scss";
 
 export type MenuItem = {
@@ -43,7 +43,7 @@ export function DropdownMenuAction({
   pinnedActions = [],
   isOpen,
 }: DropdownMenuProps) {
-  const { ctwProviderRef } = useCTW();
+  const ctwThemeRef = useCtwThemeRef();
   const [isMenuOpen, setIsMenuOpen] = useState(isOpen);
   return (
     <Menu>
@@ -55,7 +55,7 @@ export function DropdownMenuAction({
         <RadixDropdownMenu.Trigger className={cx(buttonClassName)} aria-label="dropdown">
           {children}
         </RadixDropdownMenu.Trigger>
-        <RadixDropdownMenu.Portal container={ctwProviderRef.current}>
+        <RadixDropdownMenu.Portal container={ctwThemeRef.current}>
           <RadixDropdownMenu.Content
             align="start"
             // Prevent focus from closing menu, this fixes

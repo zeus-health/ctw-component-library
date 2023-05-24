@@ -3,7 +3,7 @@ import { PatientMedicationsProps } from "../medications/patient-medications";
 import { PatientMedicationsOutsideProps } from "../medications/patient-medications-outside";
 import { PatientObservationsProps } from "../observations/patient-observations";
 import { PatientObservationsOutsideProps } from "../observations/patient-observations-outside";
-import { PatientTimelineV2Props } from "../timeline-2.0/patient-timeline";
+import { PatientTimelineProps } from "../timeline/patient-timeline";
 import ZusSVG from "@/assets/zus.svg";
 import { PatientAllergiesProps } from "@/components/content/allergies/patient-allergies";
 import { PatientCareTeamProps } from "@/components/content/care-team/patient-careteam";
@@ -53,7 +53,7 @@ export type ZusAggregatedProfileSubComponentProps = Partial<{
   medicationsOutsideProps: PatientMedicationsOutsideProps;
   observationsProps: PatientObservationsProps;
   observationsOutsideProps: PatientObservationsOutsideProps;
-  timelinePropsV2: PatientTimelineV2Props;
+  timelineProps: PatientTimelineProps;
 }>;
 
 const ZusAggregatedProfileComponent = ({
@@ -69,7 +69,7 @@ const ZusAggregatedProfileComponent = ({
   medicationsOutsideProps,
   observationsProps,
   observationsOutsideProps,
-  timelinePropsV2,
+  timelineProps,
   resources,
   hideTitle = false,
   title = "Outside Records",
@@ -88,7 +88,7 @@ const ZusAggregatedProfileComponent = ({
     "medications-outside": medicationsOutsideProps,
     observations: observationsProps,
     "observations-outside": observationsOutsideProps,
-    timeline: timelinePropsV2,
+    timeline: timelineProps,
   };
 
   const tabbedContent = resources.map((tabName) => {

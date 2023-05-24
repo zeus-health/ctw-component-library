@@ -1,8 +1,8 @@
 import { XIcon } from "@heroicons/react/outline";
-import { Base64BinaryField } from "./base64toBinaryField";
+import { BinaryField } from "./binary-field";
 import { Modal, ModalProps } from "@/components/core/modal";
-import { useCTW } from "@/components/core/providers/ctw-provider";
 import { useModal } from "@/components/core/providers/modal-provider";
+import { useCTW } from "@/components/core/providers/use-ctw";
 import { getBinaryDocument } from "@/fhir/binaries";
 
 export function useCCDAModal() {
@@ -29,7 +29,7 @@ export const CCDAModal = ({ rawBinary, fileName, onClose, ...modalProps }: CCDAM
   <Modal {...modalProps}>
     {rawBinary?.data && (
       <div className="ctw-flex ctw-w-full ctw-space-x-4">
-        <Base64BinaryField
+        <BinaryField
           data={rawBinary.data}
           contentType={rawBinary.contentType}
           fileName={fileName}

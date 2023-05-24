@@ -1,7 +1,7 @@
 import { rest } from "msw";
 import { documents } from "./document";
 import { patient } from "./patient";
-import { mockBinaryGet } from "@/components/content/story-helpers/mocks/requests";
+import { mockBinaryGet } from "@/components/content/story-helpers/mocks/requests/requests";
 
 export function setupDocumentMocks() {
   return {

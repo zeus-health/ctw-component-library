@@ -1,3 +1,5 @@
+import { FAKE_BUILDER_TAG, FAKE_UNIVERSAL_ID_TAG } from "@/components/content/story-helpers/ids";
+
 export const patient = {
   resourceType: "Bundle",
   id: "f4da1f39-7638-45e4-999b-9ff33d7c5201",
@@ -26,23 +28,14 @@ export const patient = {
               code: "HTEST",
             },
           ],
-          tag: [
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/123",
-              display: "Storybook Medical - Test Customer",
-            },
-          ],
+          tag: [FAKE_BUILDER_TAG],
         },
         identifier: [
           {
             system: "https://example.com/patient-id",
             value: "001",
           },
-          {
-            system: "https://zusapi.com/fhir/identifier/universal-id",
-            value: "u12345",
-          },
+          FAKE_UNIVERSAL_ID_TAG,
         ],
         name: [
           {
@@ -144,13 +137,7 @@ export const patient = {
           versionId: "1",
           lastUpdated: "2022-11-10T19:37:09.032+00:00",
           source: "#RdK4JAWrQkSRa9Qw",
-          tag: [
-            {
-              system: "https://zusapi.com/accesscontrol/owner",
-              code: "builder/b123",
-              display: "Storybook Medical - Test Customer",
-            },
-          ],
+          tag: [FAKE_BUILDER_TAG],
         },
         name: "Demo Health",
       },

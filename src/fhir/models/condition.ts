@@ -2,26 +2,61 @@ import { FHIRModel } from "./fhir-model";
 import { PatientModel } from "./patient";
 import { formatDateISOToLocal, formatStringToDate } from "../formatters";
 import { CCSChapterName } from "../mappings/ccs-chapter-names";
+import { findReference } from "../resource-helper";
 import {
   SYSTEM_CCS,
   SYSTEM_CONDITION_CLINICAL,
   SYSTEM_CONDITION_VERIFICATION_STATUS,
   SYSTEM_ICD10,
+  SYSTEM_ICD10_CM,
+  SYSTEM_ICD9,
+  SYSTEM_ICD9_CM,
   SYSTEM_SNOMED,
 } from "../system-urls";
 import {
+  getAddConditionWithDefaults,
+  getClincalAndVerificationStatus,
+} from "@/components/content/forms/actions/conditions";
+import {
   codeableConceptLabel,
+  CodePreference,
   findCoding,
   findCodingByOrderOfPreference,
   findCodingWithEnrichment,
 } from "@/fhir/codeable-concept";
-import {
-  ClinicalStatus,
-  CONDITION_CODE_PREFERENCE_ORDER,
-  VerificationStatus,
-} from "@/fhir/conditions";
-import { findReference } from "@/fhir/resource-helper";
 import { compact, find, intersectionWith, uniqWith } from "@/utils/nodash";
+
+type VerificationStatus =
+  | "unconfirmed"
+  | "provisional"
+  | "differential"
+  | "confirmed"
+  | "refuted"
+  | "entered-in-error";
+
+type ClinicalStatus = "active" | "recurrence" | "relapse" | "inactive" | "remission" | "resolved";
+
+const CONDITION_CODE_PREFERENCE_ORDER: CodePreference[] = [
+  { system: SYSTEM_SNOMED, checkForEnrichment: true },
+  { system: SYSTEM_ICD10, checkForEnrichment: true },
+  { system: SYSTEM_SNOMED },
+  { system: SYSTEM_ICD10 },
+  { system: SYSTEM_ICD10_CM },
+  { system: SYSTEM_ICD9 },
+  { system: SYSTEM_ICD9_CM },
+];
+
+export function getNewCondition(patientId: string) {
+  const newCondition: fhir4.Condition = {
+    resourceType: "Condition",
+    subject: {
+      type: "Patient",
+      reference: `Patient/${patientId}`,
+    },
+    ...getClincalAndVerificationStatus("Active"),
+  };
+  return getAddConditionWithDefaults(newCondition);
+}
 
 export class ConditionModel extends FHIRModel<fhir4.Condition> {
   kind = "Condition" as const;
@@ -178,7 +213,7 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
     return formatStringToDate(this.resource.onsetString);
   }
 
-  get patient(): PatientModel | undefined {
+  get patientOrganizationName(): string | undefined {
     const reference = findReference(
       "Patient",
       this.resource.contained,
@@ -187,7 +222,7 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
     );
 
     if (reference) {
-      return new PatientModel(reference, this.includedResources);
+      return new PatientModel(reference, this.includedResources).organization?.name;
     }
 
     return undefined;
