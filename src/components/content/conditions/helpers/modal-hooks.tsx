@@ -14,7 +14,7 @@ import { usePatient } from "@/components/core/providers/patient-provider";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { ConditionModel } from "@/fhir/models";
 import { useBaseTranslations } from "@/i18n";
-import { deleteCondition, getNewCondition } from "@/services/fqs/conditions";
+import { deleteCondition, getNewCondition } from "@/services/conditions";
 import { curry } from "@/utils/nodash";
 
 export function useAddConditionForm() {

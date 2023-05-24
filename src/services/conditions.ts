@@ -1,8 +1,8 @@
 import { Basic, Condition } from "fhir/r4";
 import { FhirResource } from "fhir-kit-client";
 import { useEffect, useState } from "react";
-import { createOrEditFhirResource } from "../../fhir/action-helper";
-import { CodePreference } from "../../fhir/codeable-concept";
+import { createOrEditFhirResource } from "../fhir/action-helper";
+import { CodePreference } from "../fhir/codeable-concept";
 import {
   SYSTEM_CONDITION_VERIFICATION_STATUS,
   SYSTEM_ICD10,
@@ -12,7 +12,7 @@ import {
   SYSTEM_SNOMED,
   SYSTEM_SUMMARY,
   SYSTEM_ZUS_THIRD_PARTY,
-} from "../../fhir/system-urls";
+} from "../fhir/system-urls";
 import {
   getAddConditionWithDefaults,
   getClincalAndVerificationStatus,

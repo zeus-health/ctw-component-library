@@ -20,7 +20,7 @@ import {
   ClinicalStatus,
   CONDITION_CODE_PREFERENCE_ORDER,
   VerificationStatus,
-} from "@/services/fqs/conditions";
+} from "@/services/conditions";
 import { compact, find, intersectionWith, uniqWith } from "@/utils/nodash";
 
 export class ConditionModel extends FHIRModel<fhir4.Condition> {

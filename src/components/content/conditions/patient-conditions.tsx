@@ -9,7 +9,7 @@ import { withErrorBoundary } from "@/components/core/error-boundary";
 import { RowActionsProps } from "@/components/core/table/table";
 import { ConditionModel } from "@/fhir/models";
 import { useBaseTranslations } from "@/i18n";
-import { usePatientBuilderConditions } from "@/services/fqs/conditions";
+import { usePatientBuilderConditions } from "@/services/conditions";
 
 export type PatientConditionsProps = {
   className?: cx.Argument;

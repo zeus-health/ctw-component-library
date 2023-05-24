@@ -9,7 +9,7 @@ import { Spinner } from "@/components/core/spinner";
 import { RowActionsProps } from "@/components/core/table/table";
 import { ConditionModel } from "@/fhir/models";
 import { useBaseTranslations } from "@/i18n";
-import { usePatientConditionsOutside } from "@/services/fqs/conditions";
+import { usePatientConditionsOutside } from "@/services/conditions";
 import { QUERY_KEY_OTHER_PROVIDER_CONDITIONS } from "@/utils/query-keys";
 
 export type PatientConditionsOutsideProps = {

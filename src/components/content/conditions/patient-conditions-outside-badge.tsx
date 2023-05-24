@@ -1,5 +1,5 @@
 import { Badge } from "@/components/core/badge";
-import { usePatientConditionsOutside } from "@/services/fqs/conditions";
+import { usePatientConditionsOutside } from "@/services/conditions";
 
 export type PatientConditionsOutsideBadgeProps = {
   enableFQS?: boolean;
