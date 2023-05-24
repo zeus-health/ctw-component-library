@@ -20,7 +20,7 @@ interface UseToggleArchiveResult {
  * This hook is toggles the archive status for the specified FHIR model.
  *
  * @param model The FHIR model
- * @param queryToInvalidate  Query to refetch
+ * @param queriesToInvalidate  Queries to refetch
  */
 export function useToggleArchive<T extends fhir4.Resource>(
   model: FHIRModel<T>,
