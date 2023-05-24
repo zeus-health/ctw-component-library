@@ -75,7 +75,7 @@ export function useBasic(enableFQS: boolean) {
             return resources;
           } catch (e) {
             throw new Error(
-              `Failed fetching basic information for builder ${requestContext.builderId}`
+              `Failed fetching basic resources for builder ${requestContext.builderId}`
             );
           }
         }, "req.timing.basic")
