@@ -63,7 +63,7 @@ export function useBasic(enableFQS: boolean) {
     [],
     enableFQS
       ? withTimerMetric(fetchBasic, "req.timing.basic")
-      : // Don't fetch Basic resources if FQS is disabled; the ODS queries already fetch them via _revinclude.
+      : // Don't fetch Basic resources if FQS is disabled; the Outside Conditions/Meds ODS queries already fetch them via _revinclude.
         async () =>
           new Promise<Basic[]>((resolve) => {
             resolve([]);
