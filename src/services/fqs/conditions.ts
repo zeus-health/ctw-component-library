@@ -218,10 +218,11 @@ export function usePatientConditionsOutside(enableFQS: boolean) {
       otherConditionsQuery.data ?? [],
       patientConditions,
       basic,
+      enableFQS,
       true
     );
     setConditions(otherConditions);
-  }, [patientConditionsQuery.data, otherConditionsQuery.data, basicQuery.data]);
+  }, [patientConditionsQuery.data, otherConditionsQuery.data, enableFQS, basicQuery.data]);
 
   const isLoading =
     patientConditionsQuery.isLoading || otherConditionsQuery.isLoading || basicQuery.isLoading;
@@ -302,6 +303,7 @@ export const filterOtherConditions = (
   otherConditions: ConditionModel[],
   patientConditions: ConditionModel[],
   basics: Basic[],
+  enableFQS: boolean,
   includeArchived: boolean
 ): ConditionModel[] =>
   otherConditions.filter((otherCondition) => {
@@ -312,8 +314,10 @@ export const filterOtherConditions = (
     }
 
     // Don't include conditions that have been dismissed via a Basic resource.
-    if (basics.some((basic) => basic.subject?.reference === `Condition/${otherCondition.id}`)) {
-      return false;
+    if (enableFQS) {
+      if (basics.some((basic) => basic.subject?.reference === `Condition/${otherCondition.id}`)) {
+        return false;
+      }
     }
 
     return !patientConditions.some((patientCondition) => {
