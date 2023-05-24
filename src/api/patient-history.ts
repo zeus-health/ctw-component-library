@@ -62,7 +62,7 @@ export const schedulePatientHistory = async (
     return await response.json();
   } catch (e) {
     const err = e as Error;
-    const errorMessage = `Error scheduling patient history job with id of ${patientID}: ${err.message}`;
+    const errorMessage = `Error scheduling patient history job with patientID of ${patientID}: ${err.message}`;
     Telemetry.logError(err, errorMessage);
     return new Error(errorMessage);
   }

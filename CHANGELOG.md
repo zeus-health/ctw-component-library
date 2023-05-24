@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.10.3
+
+### Patch Changes
+
+- f2b696a3: Fix issue with patient history api status box where date shows up in the past.
+
 ## 1.10.2
 
 ### Patch Changes
