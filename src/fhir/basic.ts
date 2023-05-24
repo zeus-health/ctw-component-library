@@ -57,26 +57,33 @@ export async function recordProfileAction<T extends fhir4.Resource>(
   }
 }
 
-export function useBasic() {
+export function useBasic(enableFQS: boolean) {
   return useQueryWithPatient(
     QUERY_KEY_BASIC,
     [],
-    withTimerMetric(async (requestContext) => {
-      try {
-        const { resources } = await searchCommonRecords("Basic", requestContext, {
-          _tag: `https://zusapi.com/accesscontrol/owner|builder/${requestContext.builderId}`,
-        });
-        if (resources.length === 0) {
-          Telemetry.countMetric("req.count.basic.none");
-        }
-        Telemetry.histogramMetric("req.count.basic", resources.length);
-        return resources;
-      } catch (e) {
-        throw new Error(
-          `Failed fetching basic information for builder ${requestContext.builderId}`
-        );
-      }
-    }, "req.timing.basic")
+    enableFQS
+      ? // FQS implementation
+        withTimerMetric(async (requestContext) => {
+          try {
+            const { resources } = await searchCommonRecords("Basic", requestContext, {
+              _tag: `https://zusapi.com/accesscontrol/owner|builder/${requestContext.builderId}`,
+            });
+            if (resources.length === 0) {
+              Telemetry.countMetric("req.count.basic.none");
+            }
+            Telemetry.histogramMetric("req.count.basic", resources.length);
+            return resources;
+          } catch (e) {
+            throw new Error(
+              `Failed fetching basic information for builder ${requestContext.builderId}`
+            );
+          }
+        }, "req.timing.basic")
+      : // ODS implementation (noop)
+        async () =>
+          new Promise<Basic[]>((resolve) => {
+            resolve([]);
+          })
   );
 }
 
