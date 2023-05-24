@@ -2,4 +2,4 @@
 "@zus-health/ctw-component-library": minor
 ---
 
-Add FQS to conditions component.
+Add feature flag option to use FQS (Zus's GraphQL Fast-Query-Service) for fetching conditions.
