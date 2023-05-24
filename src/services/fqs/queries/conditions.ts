@@ -1,5 +1,16 @@
+import { Condition } from "fhir/r4";
 import { gql } from "graphql-request";
 import { fragmentCoding, fragmentPatient } from "./fragments";
+import { GraphqlConnectionNode, GraphqlPageInfo } from "../client";
+
+export interface ConditionConnection {
+  pageInfo: GraphqlPageInfo;
+  edges: GraphqlConnectionNode<Condition>[];
+}
+
+export interface ConditionGraphqlResponse {
+  ConditionConnection: ConditionConnection;
+}
 
 export const conditionsQuery = gql`
   ${fragmentCoding}

@@ -1,4 +1,4 @@
-import { Basic, Condition } from "fhir/r4";
+import { Basic } from "fhir/r4";
 import { FhirResource } from "fhir-kit-client";
 import { useEffect, useState } from "react";
 import { PatientModel } from "..";
@@ -18,8 +18,8 @@ import { useBasic } from "@/fhir/basic";
 import { getIncludedBasics } from "@/fhir/bundle";
 import { ConditionModel } from "@/fhir/models/condition";
 import { searchBuilderRecords, searchSummaryRecords } from "@/fhir/search-helpers";
-import { createGraphqlClient, GraphqlConnectionNode, GraphqlPageInfo } from "@/services/fqs/client";
-import { conditionsQuery } from "@/services/fqs/queries/conditions";
+import { createGraphqlClient } from "@/services/fqs/client";
+import { ConditionGraphqlResponse, conditionsQuery } from "@/services/fqs/queries/conditions";
 import { cloneDeep, orderBy } from "@/utils/nodash";
 import {
   QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
@@ -27,15 +27,6 @@ import {
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
-
-interface ConditionConnection {
-  pageInfo: GraphqlPageInfo;
-  edges: GraphqlConnectionNode<Condition>[];
-}
-
-interface ConditionGraphqlResponse {
-  ConditionConnection: ConditionConnection;
-}
 
 export function getNewCondition(patientId: string) {
   const newCondition: fhir4.Condition = {
