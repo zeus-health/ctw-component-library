@@ -20,11 +20,11 @@ interface UseToggleArchiveResult {
  * This hook is toggles the archive status for the specified FHIR model.
  *
  * @param model The FHIR model
- * @param queryToInvalidate  Query to refetch
+ * @param queriesToInvalidate  Queries to refetch
  */
 export function useToggleArchive<T extends fhir4.Resource>(
   model: FHIRModel<T>,
-  queryToInvalidate: string
+  ...queriesToInvalidate: string[]
 ): UseToggleArchiveResult {
   const { getRequestContext } = useCTW();
 
@@ -33,7 +33,12 @@ export function useToggleArchive<T extends fhir4.Resource>(
   const handleToggleArchive = useCallback(async () => {
     setIsLoading(true);
     await toggleArchive(model, await getRequestContext());
-    await queryClient.invalidateQueries([queryToInvalidate]);
+    await Promise.all(
+      queriesToInvalidate.map((queryToInvalidate) =>
+        queryClient.invalidateQueries([queryToInvalidate])
+      )
+    );
+
     // Timeout here fixes bug where we would briefly flash
     // the old dismiss/restore text.
     setTimeout(() => setIsLoading(false), 0);

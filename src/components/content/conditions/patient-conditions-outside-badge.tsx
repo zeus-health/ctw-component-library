@@ -1,8 +1,14 @@
 import { Badge } from "@/components/core/badge";
-import { usePatientConditionsOutside } from "@/fhir/conditions";
+import { usePatientConditionsOutside } from "@/services/conditions";
 
-export const PatientConditionsOutsideBadge = () => {
-  const otherConditionsQuery = usePatientConditionsOutside();
+export type PatientConditionsOutsideBadgeProps = {
+  enableFQS?: boolean;
+};
+
+export const PatientConditionsOutsideBadge = ({
+  enableFQS = false,
+}: PatientConditionsOutsideBadgeProps) => {
+  const otherConditionsQuery = usePatientConditionsOutside(enableFQS);
   const activeUnarchivedConditions = otherConditionsQuery.data.filter(
     (condition) => condition.active && !condition.isArchived
   );
