@@ -33,8 +33,10 @@ export function useToggleArchive<T extends fhir4.Resource>(
   const handleToggleArchive = useCallback(async () => {
     setIsLoading(true);
     await toggleArchive(model, await getRequestContext());
-    await queriesToInvalidate.forEach((queryToInvalidate) =>
-      queryClient.invalidateQueries([queryToInvalidate])
+    await Promise.all(
+      queriesToInvalidate.map((queryToInvalidate) =>
+        queryClient.invalidateQueries([queryToInvalidate])
+      )
     );
 
     // Timeout here fixes bug where we would briefly flash
