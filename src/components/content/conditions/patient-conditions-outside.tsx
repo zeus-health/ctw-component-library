@@ -10,7 +10,7 @@ import { RowActionsProps } from "@/components/core/table/table";
 import { ConditionModel } from "@/fhir/models";
 import { useBaseTranslations } from "@/i18n";
 import { usePatientConditionsOutside } from "@/services/conditions";
-import { QUERY_KEY_OTHER_PROVIDER_CONDITIONS } from "@/utils/query-keys";
+import { QUERY_KEY_BASIC, QUERY_KEY_OTHER_PROVIDER_CONDITIONS } from "@/utils/query-keys";
 
 export type PatientConditionsOutsideProps = {
   className?: string;
@@ -69,7 +69,8 @@ const RowActions = ({ record }: RowActionsProps<ConditionModel>) => {
   const showAddConditionForm = useAddConditionForm();
   const { isLoading, toggleArchive } = useToggleArchive(
     record,
-    QUERY_KEY_OTHER_PROVIDER_CONDITIONS
+    QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
+    QUERY_KEY_BASIC
   );
   const archiveLabel = record.isArchived ? t("resourceTable.restore") : t("resourceTable.dismiss");
 
