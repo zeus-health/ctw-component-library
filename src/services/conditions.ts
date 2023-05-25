@@ -1,13 +1,16 @@
 import { Basic } from "fhir/r4";
 import { FhirResource } from "fhir-kit-client";
 import { useEffect, useState } from "react";
+import { filterResourcesByBuilderId } from "./common";
 import { PatientModel } from "..";
 import { createOrEditFhirResource } from "../fhir/action-helper";
 import {
   SYSTEM_CONDITION_VERIFICATION_STATUS,
   SYSTEM_SUMMARY,
+  SYSTEM_ZUS_OWNER,
   SYSTEM_ZUS_THIRD_PARTY,
 } from "../fhir/system-urls";
+import { getLensBuilderId } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { useBasic } from "@/fhir/basic";
@@ -186,16 +189,24 @@ async function fetchPatientBuilderConditionsFQS(
       },
       filter: {
         tag: {
-          nonematch: [SYSTEM_SUMMARY, SYSTEM_ZUS_THIRD_PARTY],
+          nonematch: [SYSTEM_SUMMARY, `${SYSTEM_ZUS_THIRD_PARTY}`],
+          // TODO: There's a bug in FQS that doesn't allow filtering with nonematch AND allmatch.
+          // Uncomment the line below once https://zeushealth.atlassian.net/browse/DRT-249 is resolved.
+          // allmatch: [`${SYSTEM_ZUS_OWNER}|builder/${requestContext.builderId}`],
         },
       },
     })) as ConditionGraphqlResponse;
 
-    const nodes = data.ConditionConnection.edges.map((x) => x.node);
-    const conditions = setupConditionModelsWithFQS(nodes);
-    const results = filterAndSort(conditions);
-    Telemetry.histogramMetric(`req.count.builder_conditions`, results.length, ["fqs"]);
-    return results;
+    let nodes = data.ConditionConnection.edges.map((x) => x.node);
+    // TODO: No longer needed once https://zeushealth.atlassian.net/browse/DRT-249 is resolved.
+    nodes = filterResourcesByBuilderId(
+      nodes,
+      requestContext.contextBuilderId || requestContext.builderId
+    );
+    let conditions = setupConditionModelsWithFQS(nodes);
+    conditions = filterAndSort(conditions);
+    Telemetry.histogramMetric(`req.count.builder_conditions`, conditions.length, ["fqs"]);
+    return conditions;
   } catch (e) {
     throw Telemetry.logError(e as Error, `Failed fetching conditions for patient: ${patient.UPID}`);
   }
@@ -236,7 +247,10 @@ async function fetchPatientSummaryConditionsFQS(
       },
       filter: {
         tag: {
-          allmatch: [SYSTEM_SUMMARY],
+          allmatch: [
+            SYSTEM_SUMMARY,
+            `${SYSTEM_ZUS_OWNER}|builder/${getLensBuilderId(requestContext.env)}`,
+          ],
         },
       },
     })) as ConditionGraphqlResponse;
