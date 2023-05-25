@@ -21,6 +21,7 @@ module.exports = {
     project: ["./tsconfig.json"],
   },
   rules: {
+    "@typescript-eslint/await-thenable": "error",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-unnecessary-condition": "error",
     "@typescript-eslint/no-floating-promises": ["error", { ignoreVoid: true }],

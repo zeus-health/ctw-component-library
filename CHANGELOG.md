@@ -1,5 +1,42 @@
 # ctw-component-library
 
+## 1.10.4
+
+### Patch Changes
+
+- 5edc56c2: Dissmissing meds will now continue to show loading spinner until the meds data has been refreshed. This fixes a bug where we briefly show the stale, non-dismissed, state.
+
+## 1.10.3
+
+### Patch Changes
+
+- f2b696a3: Fix issue with patient history api status box where date shows up in the past.
+
+## 1.10.2
+
+### Patch Changes
+
+- 3e5dce3e: ProgressIcon uses ctw-animate-spin class
+
+## 1.10.1
+
+### Patch Changes
+
+- a41a8101: Fix issue when patient history request recieves a number for last retrieved.
+
+## 1.10.0
+
+### Minor Changes
+
+- 050753be: TimelineV2 is now Timeline and dropped V1
+- 95ebb96b: Refactor CTWProvider context for readability
+
+### Patch Changes
+
+- f5b6ae07: Bump tsc-alias from 1.8.5 to 1.8.6
+- 050753be: Rework storybook examples to show data again
+- c278dde6: Don't count dismissed outside resources in badges
+
 ## 1.9.3
 
 ### Patch Changes

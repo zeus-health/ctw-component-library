@@ -7,23 +7,25 @@ import { usePatientHistory } from "../patient-history/use-patient-history";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Spinner } from "@/components/core/spinner";
 import { RowActionsProps } from "@/components/core/table/table";
-import { usePatientConditionsOutside } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models";
 import { useBaseTranslations } from "@/i18n";
-import { QUERY_KEY_OTHER_PROVIDER_CONDITIONS } from "@/utils/query-keys";
+import { usePatientConditionsOutside } from "@/services/conditions";
+import { QUERY_KEY_BASIC, QUERY_KEY_OTHER_PROVIDER_CONDITIONS } from "@/utils/query-keys";
 
 export type PatientConditionsOutsideProps = {
   className?: string;
+  enableFQS?: boolean;
   hideRequestRecords?: boolean;
   readOnly?: boolean;
 };
 
 const PatientConditionsOutsideComponent = ({
   className,
+  enableFQS = false,
   hideRequestRecords = false,
   readOnly = false,
 }: PatientConditionsOutsideProps) => {
-  const query = usePatientConditionsOutside();
+  const query = usePatientConditionsOutside(enableFQS);
   const patientHistoryQuery = usePatientHistory();
   const hasNoOutsideDataAndHasNeverRequestedPatientHistory =
     patientHistoryQuery.lastRetrievedAt === undefined && query.data.length === 0;
@@ -67,7 +69,8 @@ const RowActions = ({ record }: RowActionsProps<ConditionModel>) => {
   const showAddConditionForm = useAddConditionForm();
   const { isLoading, toggleArchive } = useToggleArchive(
     record,
-    QUERY_KEY_OTHER_PROVIDER_CONDITIONS
+    QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
+    QUERY_KEY_BASIC
   );
   const archiveLabel = record.isArchived ? t("resourceTable.restore") : t("resourceTable.dismiss");
 

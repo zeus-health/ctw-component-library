@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useAddMedicationForm } from "./helpers/add-new-med-drawer";
 import { medicationFilters } from "./helpers/filters";
 import { PatientMedicationsBase } from "./helpers/patient-medications-base";
@@ -24,13 +25,14 @@ const PatientMedicationsOutsideComponent = ({
   onOpenHistoryDrawer,
 }: PatientMedicationsOutsideProps) => {
   const { otherProviderMedications, isLoading } = useQueryAllPatientMedications();
+  const rowActions = useMemo(() => getRowActions({ onAddToRecord }), [onAddToRecord]);
 
   return (
     <PatientMedicationsBase
       className={className}
       query={{ data: otherProviderMedications, isLoading }}
       filters={medicationFilters(otherProviderMedications, true)}
-      rowActions={readOnly ? undefined : getRowActions({ onAddToRecord })}
+      rowActions={readOnly ? undefined : rowActions}
       onOpenHistoryDrawer={onOpenHistoryDrawer}
     />
   );
