@@ -27,6 +27,18 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
 
   readonly builderPatientRxNormStatus?: Record<string, string>;
 
+  get aggregatedFrom(): Reference[] {
+    const extension = find(
+      (x) =>
+        x.url === LENS_EXTENSION_AGGREGATED_FROM || x.url === CTW_EXTENSION_LENS_AGGREGATED_FROM,
+      this.resource.extension
+    );
+    if (!extension?.extension) {
+      return compact(this.resource.derivedFrom);
+    }
+    return compact(extension.extension.map(get("valueReference")));
+  }
+
   get basedOn(): string | undefined {
     return this.resource.basedOn?.[0]?.type;
   }
@@ -53,18 +65,6 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
 
   get derivedFrom(): string[] {
     return this.resource.derivedFrom?.map(({ display }) => display || "") || [];
-  }
-
-  get aggregatedFrom(): Reference[] {
-    const extension = find(
-      (x) =>
-        x.url === LENS_EXTENSION_AGGREGATED_FROM || x.url === CTW_EXTENSION_LENS_AGGREGATED_FROM,
-      this.resource.extension
-    );
-    if (!extension?.extension) {
-      return compact(this.resource.derivedFrom);
-    }
-    return compact(extension.extension.map(get("valueReference")));
   }
 
   get display() {
