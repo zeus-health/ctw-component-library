@@ -92,9 +92,7 @@ export const medicationStatementQuery = gql`
             value
           }
           informationSource {
-            reference {
-              ...Reference
-            }
+            ...Reference
           }
           medicationCodeableConcept {
             coding {
@@ -116,9 +114,7 @@ export const medicationStatementQuery = gql`
             }
           }
           reasonReference {
-            reference {
-              ...Reference
-            }
+            ...Reference
           }
           status
           statusReason {
@@ -127,11 +123,9 @@ export const medicationStatementQuery = gql`
             }
           }
           subject {
-            reference {
-              ...Reference
-            }
+            ...Reference
           }
-          
+
       }
     }
   }
