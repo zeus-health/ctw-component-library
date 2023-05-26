@@ -6,7 +6,7 @@ import { allergySortOptions, defaultAllergySort } from "./helpers/sort";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
-import { patientAllergiesColumns } from "@/components/content/allergies/patient-allergies-column";
+import { patientAllergiesColumns } from "@/components/content/allergies/helpers/column";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { usePatientAllergies } from "@/fhir/allergies";

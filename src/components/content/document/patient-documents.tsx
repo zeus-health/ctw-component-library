@@ -1,6 +1,6 @@
 import cx from "classnames";
 import { useRef } from "react";
-import { patientDocumentColumns } from "./patient-document-columns";
+import { patientDocumentColumns } from "./helpers/columns";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/use-ctw";
