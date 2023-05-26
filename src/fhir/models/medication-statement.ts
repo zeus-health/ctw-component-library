@@ -85,10 +85,6 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
     return this.resource.identifier?.[0]?.value;
   }
 
-  get informationSource(): Reference | undefined {
-    return this.resource.informationSource || undefined;
-  }
-
   set informationSource(informationSource: Reference | undefined) {
     this.resource.informationSource = informationSource;
   }
@@ -155,10 +151,6 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
 
   get statusReason(): string | undefined {
     return codeableConceptLabel(this.resource.statusReason?.[0]);
-  }
-
-  get subject(): Reference {
-    return this.resource.subject;
   }
 
   get subjectID(): string {

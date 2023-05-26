@@ -1,6 +1,6 @@
 import { MedicationStatement } from "fhir/r4";
 import { gql } from "graphql-request";
-import { fragmentCoding, fragmentPatient, fragmentReference } from "./fragments";
+import { fragmentCoding, fragmentPatient } from "./fragments";
 import { GraphqlConnectionNode, GraphqlPageInfo } from "../client";
 
 export interface MedicationStatementConnection {
@@ -15,7 +15,6 @@ export interface MedicationStatementGraphqlResponse {
 export const medicationStatementQuery = gql`
   ${fragmentCoding}
   ${fragmentPatient}
-  ${fragmentReference}
   query MedicationStatements(
     $upid: ID!
     $cursor: String!
@@ -75,6 +74,23 @@ export const medicationStatementQuery = gql`
               ...Coding
             }
           }
+          contained {
+            resource {
+              ... on Practitioner {
+                id
+                resourceType
+                name {
+                  family
+                  given
+                }
+              }
+              ... on Organization {
+                id
+                resourceType
+                organizationName: name
+              }
+            }
+          }
           context {
             display
           }
@@ -90,9 +106,6 @@ export const medicationStatementQuery = gql`
           }
           identifier {
             value
-          }
-          informationSource {
-            ...Reference
           }
           medicationCodeableConcept {
             coding {
@@ -121,9 +134,6 @@ export const medicationStatementQuery = gql`
             coding {
               ...Coding
             }
-          }
-          subject {
-            ...Reference
           }
 
       }
