@@ -12,6 +12,22 @@ export const fragmentCoding = gql`
   }
 `;
 
+export const fragmentEncounter = gql`
+  fragment Encounter on Encounter {
+    id
+    resourceType
+    status
+    priority {
+      text
+      coding {
+        code
+        display
+        system
+      }
+    }
+  }
+`;
+
 export const fragmentPatient = gql`
   fragment Patient on Patient {
     id
