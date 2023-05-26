@@ -3,22 +3,27 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cx from "classnames";
 import { useState } from "react";
 import { DropdownMenuAction } from "@/components/core/dropdown-action-menu";
-import { Filter } from "@/components/core/filter-bar/filter-bar-types";
+import { FilterEntry } from "@/utils/filters";
 
-export type ViewOption = {
+export type ViewOption<T extends object> = {
   display: string;
-  filters: Filter[];
+  filters: FilterEntry<T>[];
 };
 
-export type ViewButtonProps = {
+export type ViewButtonProps<T extends object> = {
   className?: cx.Argument;
-  defaultView: ViewOption;
-  onChange: (view: ViewOption) => void;
-  options: ViewOption[];
+  defaultView: ViewOption<T>;
+  onChange: (view: ViewOption<T>) => void;
+  options: ViewOption<T>[];
 };
 
-export const ViewButton = ({ className, defaultView, onChange, options }: ViewButtonProps) => {
-  const [selected, setSelected] = useState<ViewOption>(defaultView);
+export const ViewButton = <T extends object>({
+  className,
+  defaultView,
+  onChange,
+  options,
+}: ViewButtonProps<T>) => {
+  const [selected, setSelected] = useState<ViewOption<T>>(defaultView);
 
   return (
     <DropdownMenuAction

@@ -11,7 +11,7 @@ export type ResourceTableActionsProps<T extends MinRecordItem> = {
   className?: string;
   filterOptions?: FilterBarProps;
   sortOptions?: SortButtonProps<T>;
-  viewOptions?: ViewButtonProps;
+  viewOptions?: ViewButtonProps<T>;
 };
 
 export const ResourceTableActions = <T extends MinRecordItem>({

@@ -5,9 +5,11 @@ import { defaultTimelineFilters, timelineFilters } from "./helpers/filters";
 import { usePatientEncounterDetailsDrawer } from "./helpers/modal-hooks";
 import { defaultTimelineSort, timelineSortOptions } from "./helpers/sorts";
 import { useObservationsDetailsDrawer } from "../observations/helpers/drawer";
+import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { ResourceTable } from "@/components/content/resource/resource-table";
 import { useCTW } from "@/components/core/providers/use-ctw";
+import { TimelineEventModel } from "@/fhir/models/timeline-event";
 import { useTimelineEvents } from "@/fhir/timeline-event";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 
@@ -19,7 +21,9 @@ export function PatientTimeline({ className }: PatientTimelineProps) {
   const timelineEventsQuery = useTimelineEvents();
   const containerRef = useRef<HTMLDivElement>(null);
   const { featureFlags } = useCTW();
-  const { data, setFilters, setSort } = useFilteredSortedData({
+  const { viewOptions, defaultView } = getDateRangeView<TimelineEventModel>("date");
+  const { data, setFilters, setSort, setViewOption } = useFilteredSortedData({
+    defaultView,
     defaultFilters: defaultTimelineFilters,
     defaultSort: defaultTimelineSort,
     records: timelineEventsQuery.data,
@@ -30,6 +34,11 @@ export function PatientTimeline({ className }: PatientTimelineProps) {
   return (
     <div className={cx(className, "ctw-scrollable-pass-through-height")} ref={containerRef}>
       <ResourceTableActions
+        viewOptions={{
+          onChange: setViewOption,
+          options: viewOptions,
+          defaultView,
+        }}
         filterOptions={{
           onChange: setFilters,
           defaultState: defaultTimelineFilters,
