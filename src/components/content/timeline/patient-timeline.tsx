@@ -1,9 +1,9 @@
 import cx from "classnames";
 import { useRef } from "react";
+import { patientTimelineColumns } from "./helpers/columns";
 import { defaultTimelineFilters, timelineFilters } from "./helpers/filters";
 import { usePatientEncounterDetailsDrawer } from "./helpers/modal-hooks";
 import { defaultTimelineSort, timelineSortOptions } from "./helpers/sorts";
-import { patientTimelineColumns } from "./patient-timeline-columns";
 import { useObservationsDetailsDrawer } from "../observations/helpers/drawer";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { ResourceTable } from "@/components/content/resource/resource-table";
