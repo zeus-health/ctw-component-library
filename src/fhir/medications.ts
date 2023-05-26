@@ -22,6 +22,8 @@ import {
   LENS_EXTENSION_MEDICATION_QUANTITY,
   LENS_EXTENSION_MEDICATION_REFILLS,
   SYSTEM_RXNORM,
+  SYSTEM_SUMMARY,
+  SYSTEM_ZUS_THIRD_PARTY,
   SYSTEM_ZUS_UNIVERSAL_ID,
 } from "./system-urls";
 import { ResourceTypeString } from "./types";
@@ -30,6 +32,10 @@ import { useQueryWithPatient } from "@/components/core/providers/patient-provide
 import { MedicationModel } from "@/fhir/models/medication";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { PatientModel } from "@/fhir/models/patient";
+import { filterResourcesByBuilderId } from "@/services/common";
+import { createGraphqlClient } from "@/services/fqs/client";
+import { conditionsQuery } from "@/services/fqs/queries/conditions";
+import { MedicationStatementGraphqlResponse } from "@/services/fqs/queries/medication-statements";
 import { errorResponse } from "@/utils/errors";
 import { cloneDeep, uniqWith } from "@/utils/nodash";
 import {
@@ -182,6 +188,79 @@ export async function getMedicationStatements(
   } catch (e) {
     throw errorResponse("Failed fetching medication statements for patient", e);
   }
+}
+
+function setupMedicationStatementModelsWithFQS(
+  medicationStatementResources: fhir4.MedicationStatement[]
+): MedicationStatementModel[] {
+  return medicationStatementResources.map((ms) => new MedicationStatementModel(ms));
+}
+
+export async function fetchBuilderMedicationStatementsFQS(
+  requestContext: CTWRequestContext,
+  patient: PatientModel
+) {
+  try {
+    const graphClient = createGraphqlClient(requestContext);
+    const data = (await graphClient.request(conditionsQuery, {
+      upid: patient.UPID,
+      cursor: "",
+      first: 1000,
+      sort: {
+        lastUpdated: "DESC",
+      },
+      filter: {
+        tag: {
+          nonematch: [SYSTEM_SUMMARY, `${SYSTEM_ZUS_THIRD_PARTY}`],
+          // TODO: There's a bug in FQS that doesn't allow filtering with nonematch AND allmatch.
+          // Uncomment the line below once https://zeushealth.atlassian.net/browse/DRT-249 is resolved.
+          // allmatch: [`${SYSTEM_ZUS_OWNER}|builder/${requestContext.builderId}`],
+        },
+      },
+    })) as MedicationStatementGraphqlResponse;
+    let nodes = data.MedicationStatementConnection.edges.map((x) => x.node);
+    nodes = filterResourcesByBuilderId(
+      nodes,
+      requestContext.contextBuilderId || requestContext.builderId
+    );
+    const medStatements = setupMedicationStatementModelsWithFQS(nodes);
+    const results = applySearchFiltersToFQSResponse(medStatements);
+    if (results.length === 0) {
+      Telemetry.countMetric("req.count.builder_medications.none", 1, ["fqs"]);
+    }
+    Telemetry.histogramMetric("req.count.builder_medications", results.length, ["fqs"]);
+    return results;
+  } catch (e) {
+    throw Telemetry.logError(
+      e as Error,
+      `Failed fetching builder medications for patient: ${patient.UPID}`
+    );
+  }
+}
+
+function applySearchFiltersToFQSResponse(
+  medicationStatements: MedicationStatementModel[],
+  searchFilters: MedicationFilter = {},
+  removeMedsWithNoRxNorm = false
+) {
+  let medications = medicationStatements;
+  if (removeMedsWithNoRxNorm) {
+    medications = medications.filter((medication) => medication.rxNorm !== undefined);
+  }
+
+  if (searchFilters.informationSource) {
+    medications = medications.filter(
+      (medication) => medication.informationSource?.type === searchFilters.informationSource
+    );
+  }
+
+  if (searchFilters.informationSourceNot) {
+    medications = medications.filter(
+      (medication) => medication.informationSource?.type !== searchFilters.informationSourceNot
+    );
+  }
+
+  return medications;
 }
 
 /* Note when filtering the bundle may contain data that will no longer 

@@ -107,6 +107,9 @@ export const medicationStatementQuery = gql`
           identifier {
             value
           }
+          informationSource {
+            type
+          }
           medicationCodeableConcept {
             coding {
               ...Coding
