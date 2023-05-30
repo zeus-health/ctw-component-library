@@ -17,7 +17,7 @@ export const getZusProxyApiBaseUrl = (env: Env) => {
 
 export const getZusFhirBaseUrl = (env: Env) => `${getZusApiBaseUrl(env)}/fhir`;
 
-export const getZusProxyFhirBaseUrl = (env: Env) => `${getZusProxyApiBaseUrl(env)}/fhir`;
+export const getZusFhirWriteBackBaseUrl = (env: Env) => `${getZusProxyApiBaseUrl(env)}/fhir`;
 
 export const getFormsConditionsUrl = (env: Env) =>
   `${getZusApiBaseUrl(env)}/forms-data/terminology/conditions`;
