@@ -2,4 +2,4 @@
 "@zus-health/ctw-component-library": minor
 ---
 
-Writes by fhirClient now go through the ehr-data-integration proxy
+Added `fhirWriteBackClient` to proxy creation of new FHIR resources through the ehr-data-integration server.
