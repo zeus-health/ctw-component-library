@@ -12,7 +12,7 @@ export async function createOrEditFhirResource(
   resource: Resource,
   requestContext: CTWRequestContext
 ) {
-  const { fhirClient } = requestContext;
+  const { fhirClient, fhirWriteBackClient } = requestContext;
   const resourceModified = resource;
   let action = "create";
   let response;
@@ -20,6 +20,7 @@ export async function createOrEditFhirResource(
   try {
     if (resource.id) {
       action = "update";
+      // Use the ODS client to update a resource
       response = await fhirClient.update({
         resourceType: resource.resourceType,
         id: resource.id,
@@ -29,7 +30,8 @@ export async function createOrEditFhirResource(
         await createProvenance("UPDATE", response, requestContext);
       }
     } else {
-      response = await fhirClient.create({
+      // Utilize the FHIR write-back client for creating resources
+      response = await fhirWriteBackClient.create({
         resourceType: resource.resourceType,
         body: omitEmptyArrays(resource),
       });
