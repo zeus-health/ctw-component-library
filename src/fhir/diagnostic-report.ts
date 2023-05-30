@@ -4,7 +4,6 @@ import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { getIncludedResources } from "@/fhir/bundle";
 import { DiagnosticReportModel, PatientModel } from "@/fhir/models";
-import { resources } from "@/i18n";
 import { createGraphqlClient } from "@/services/fqs/client";
 import {
   DiagnosticReportGraphqlResponse,
@@ -18,26 +17,25 @@ import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 type SearchType = "builder" | "all";
 
-export function usePatientBuilderDiagnosticReports() {
+export function usePatientBuilderDiagnosticReports(enableFQS: boolean) {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_DIAGNOSTIC_REPORTS,
     [],
-    withTimerMetric(
-      async (requestContext, patient) =>
-        diagnosticReportsFetcher("builder")(requestContext, patient),
-      "req.timing.builder_diagnostic_reports"
-    )
+    withTimerMetric(async (requestContext, patient) => {
+      const service = enableFQS ? diagnosticReportsFetcherFQS : diagnosticReportsFetcherODS;
+      return service("builder")(requestContext, patient);
+    }, "req.timing.builder_diagnostic_reports")
   );
 }
 
-export function usePatientAllDiagnosticReports() {
+export function usePatientAllDiagnosticReports(enableFQS: boolean) {
   return useQueryWithPatient(
     QUERY_KEY_OTHER_PROVIDER_DIAGNOSTIC_REPORTS,
     [],
-    withTimerMetric(
-      async (requestContext, patient) => diagnosticReportsFetcher("all")(requestContext, patient),
-      "req.timing.all_diagnostic_reports"
-    )
+    withTimerMetric(async (requestContext, patient) => {
+      const service = enableFQS ? diagnosticReportsFetcherFQS : diagnosticReportsFetcherODS;
+      return service("all")(requestContext, patient);
+    }, "req.timing.all_diagnostic_reports")
   );
 }
 
@@ -68,12 +66,15 @@ function diagnosticReportsFetcherFQS(searchType: SearchType) {
     searchType === "builder" ? diagnosticReportBuilderQueryFQS : diagnosticReportCommonQueryFQS;
   return async (requestContext: CTWRequestContext, patient: PatientModel) => {
     try {
-      const result = await fetchFunction(requestContext, patient);
-      if (searchType === "all" && result.DiagnosticReportConnection.edges.length === 0) {
+      const data = await fetchFunction(requestContext, patient);
+      if (searchType === "all" && data.DiagnosticReportConnection.edges.length === 0) {
         Telemetry.countMetric(`req.count.${searchType}_diagnostic_reports.none`);
       }
-      Telemetry.histogramMetric(`req.count.${searchType}_diagnostic_reports`, resources.length);
-      return resources.map((r) => new DiagnosticReportModel(r, getIncludedResources(bundle)));
+      const result = setupDiagnosticReportModelsWithFQS(
+        data.DiagnosticReportConnection.edges.map((x) => x.node)
+      );
+      Telemetry.histogramMetric(`req.count.${searchType}_diagnostic_reports`, result.length);
+      return result;
     } catch (e) {
       throw Telemetry.logError(
         e as Error,
@@ -123,4 +124,10 @@ async function diagnosticReportCommonQueryFQS(
     },
   })) as DiagnosticReportGraphqlResponse;
   return data;
+}
+
+function setupDiagnosticReportModelsWithFQS(
+  diagnosticResource: fhir4.DiagnosticReport[]
+): DiagnosticReportModel[] {
+  return diagnosticResource.map((d) => new DiagnosticReportModel(d));
 }

@@ -5,10 +5,11 @@ import { usePatientBuilderDiagnosticReports } from "@/fhir/diagnostic-report";
 
 export type PatientObservationsProps = {
   className?: cx.Argument;
+  enableFQS?: boolean;
 };
 
-const Component = ({ className }: PatientObservationsProps) => {
-  const diagnosticReports = usePatientBuilderDiagnosticReports();
+const Component = ({ className, enableFQS = false }: PatientObservationsProps) => {
+  const diagnosticReports = usePatientBuilderDiagnosticReports(enableFQS);
 
   return <PatientObservationsBase className={className} query={diagnosticReports} />;
 };

@@ -73,14 +73,11 @@ export const diagnosticReportQuery = gql`
                     }
                   }
                 }
-              }, 
-              ... on Organization {
-                
               }
-            }, 
+            }
             resource {
               ... on Organization {
-                id 
+                id
                 resource
               }
             }

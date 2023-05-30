@@ -16,7 +16,7 @@ type TimelineEventModelParams = {
 export function useTimelineEvents() {
   const [timelineEvents, setTimelineEvents] = useState<TimelineEventModel[]>();
   const patientEncountersQuery = usePatientEncounters();
-  const diagnosticReportQuery = usePatientAllDiagnosticReports();
+  const diagnosticReportQuery = usePatientAllDiagnosticReports(false);
 
   const queries = [patientEncountersQuery, diagnosticReportQuery];
 
