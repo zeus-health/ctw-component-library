@@ -24,5 +24,5 @@ function mockRequests() {
     (req, res, ctx) => res(ctx.status(200), ctx.json(documents))
   );
 
-  return [mockPatientGet, mockDocumentGet, mockBinaryGet()];
+  return [mockPatientGet, mockDocumentGet, ...mockBinaryGet()];
 }
