@@ -8,15 +8,14 @@ export function getFhirClients(env: Env, accessToken: string, builderId?: string
   if (builderId) {
     customHeaders["Zus-Account"] = builderId;
   }
-  // FHIR Client to ODS
+  // fhirClient reads/writes directly to and from ODS
   const fhirClient = new Client({
     baseUrl: getZusFhirBaseUrl(env),
     bearerToken: accessToken,
     customHeaders,
   });
-  // FHIR Client to the write-back proxy is used for writing resources which may also be written to
-  // outside sources. The write-back configs are managed by the ehr-data-integration service. All
-  // library consumers may write through this proxy regardless if they utilize write-backs or not.
+  // fhirWriteBackClient uses write-back proxy to create new FHIR resources which could also have
+  // configurations in ehr-data-integration service to additionally write out to an external source
   const fhirWriteBackClient = new Client({
     baseUrl: getZusFhirWriteBackBaseUrl(env),
     bearerToken: accessToken,
