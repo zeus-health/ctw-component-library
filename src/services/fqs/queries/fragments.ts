@@ -134,3 +134,28 @@ export const fragmentPatient = gql`
     }
   }
 `;
+
+export const fragmentObservation = gql`
+  fragment Observation on Observation {
+    id
+    resourceType
+    status
+    category {
+      text
+      coding {
+        code
+        display
+        system
+        extension {
+          url
+          valueString
+        }
+      }
+    }
+    effectivePeriod {
+      start
+      end
+    }
+    effectiveDateTime
+  }
+`;

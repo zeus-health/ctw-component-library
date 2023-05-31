@@ -3,6 +3,7 @@ import { gql } from "graphql-request";
 import {
   fragmentCoding,
   fragmentMedicationRequest,
+  fragmentObservation,
   fragmentPatient,
   fragmentPractitioner,
 } from "./fragments";
@@ -22,6 +23,7 @@ export const diagnosticReportQuery = gql`
   ${fragmentPatient}
   ${fragmentPractitioner}
   ${fragmentMedicationRequest}
+  ${fragmentObservation}
   query DiagnosticReportConnection(
     $upid: ID!
     $cursor: String!
@@ -78,6 +80,38 @@ export const diagnosticReportQuery = gql`
             reference
             resource {
               ...Practitioner
+            }
+          }
+          result {
+            reference
+            resource {
+              ...Observation
+            }
+          }
+          contained {
+            resource {
+              ... on Observation {
+                id
+                resourceType
+                status
+                category {
+                  text
+                  coding {
+                    code
+                    display
+                    system
+                    extension {
+                      url
+                      valueString
+                    }
+                  }
+                }
+                effectivePeriod {
+                  start
+                  end
+                }
+                effectiveDateTime
+              }
             }
           }
         }
