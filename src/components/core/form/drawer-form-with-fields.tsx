@@ -6,6 +6,11 @@ import { FormFieldLabel } from "@/components/content/forms/form-field-label";
 import { AnyZodSchema, InputPropType, useFormInputProps } from "@/utils/form-helper";
 import { isArray } from "@/utils/nodash";
 
+export interface FormFieldOption {
+  label: string;
+  value: string;
+}
+
 export type FormFieldType = {
   label: string;
   field: string;
@@ -17,6 +22,7 @@ export type FormFieldType = {
     readOnly: boolean | undefined,
     inputProps: InputHTMLAttributes<HTMLInputElement>
   ) => JSX.Element;
+  options?: readonly FormFieldOption[];
 };
 
 export type FormContentType = {
@@ -34,7 +40,7 @@ export type FormEntry = FormFieldType | FormContentType | FormFieldType[];
 export type DrawerFormWithFieldsProps<T> = {
   title: string;
   header?: ReactNode;
-  data: FormEntry[] | undefined;
+  data?: FormEntry[];
 } & Pick<DrawerFormProps<T>, "onClose" | "isOpen" | "action" | "schema">;
 
 export type FormActionTypes = "Edit" | "Add";
@@ -74,7 +80,7 @@ export const DrawerFormWithFields = <T,>({
                 return <FormField key={label} readonly={readonly} render={render} name={label} />;
               }
 
-              const props = inputProps(field, schema);
+              const props = inputProps(entry, schema);
 
               if (hidden) {
                 return (
@@ -125,7 +131,7 @@ const FormFieldEntries = ({ recordList, errors, submitting, schema }: FormFieldE
         <Fragment key={record.label}>
           <FormFieldEntry
             entry={record}
-            props={inputProps(record.field, schema)}
+            props={inputProps(record, schema)}
             submitting={submitting}
             errors={errors}
           />

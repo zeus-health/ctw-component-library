@@ -7,7 +7,7 @@ import { ctwFetch, queryClient } from "@/utils/request";
 // We use an expiry padding to provide a buffer to prevent race conditions.
 // A race condition could happen in that we check if the token is expired,
 // it isn't, but by time we do our request(s) it has expired.
-const EXPIRY_PADDING_MS = 60000;
+const EXPIRY_PADDING_MS = 60_000;
 
 export type AuthenticationProviderProps = {
   headers?: Record<string, string>;
@@ -64,7 +64,7 @@ async function checkOrRefreshAuth(
     const newToken = await response.json();
     return {
       accessToken: newToken.access_token,
-      expiresAt: claimsExp(newToken.access_token) * 1000,
+      expiresAt: claimsExp(newToken.access_token) * 1_000,
     };
   }
   return token;
