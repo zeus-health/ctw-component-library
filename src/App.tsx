@@ -71,7 +71,7 @@ const demoComponents: DemoComponent[] = [
           // "conditions-outside",
           // "medications",
           // "medications-outside",
-          // "observations",
+          "observations",
           "timeline",
           "observations-outside",
         ]}

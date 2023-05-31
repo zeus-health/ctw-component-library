@@ -92,7 +92,6 @@ async function diagnosticReportBuilderQueryFQS(
   const data = (await graphClient.request(diagnosticReportQuery, {
     upid: patient.UPID,
     cursor: "",
-    first: 1000,
     sort: {
       lastUpdated: "DESC",
     },
@@ -113,7 +112,6 @@ async function diagnosticReportCommonQueryFQS(
   const data = (await graphClient.request(diagnosticReportQuery, {
     upid: patient.UPID,
     cursor: "",
-    first: 1000,
     sort: {
       lastUpdated: "DESC",
     },

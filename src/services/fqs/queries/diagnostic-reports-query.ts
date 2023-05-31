@@ -1,6 +1,11 @@
 import { DiagnosticReport } from "fhir/r4";
 import { gql } from "graphql-request";
-import { fragmentCoding, fragmentPatient } from "./fragments";
+import {
+  fragmentCoding,
+  fragmentMedicationRequest,
+  fragmentPatient,
+  fragmentPractitioner,
+} from "./fragments";
 import { GraphqlConnectionNode, GraphqlPageInfo } from "../client";
 
 export interface DiagnosticReportConnection {
@@ -15,20 +20,15 @@ export interface DiagnosticReportGraphqlResponse {
 export const diagnosticReportQuery = gql`
   ${fragmentCoding}
   ${fragmentPatient}
+  ${fragmentPractitioner}
+  ${fragmentMedicationRequest}
   query Conditions(
     $upid: ID!
     $cursor: String!
     $filter: DiagnosticReportFilterParams!
     $sort: DiagnosticReportSortParams!
-    $first: Int!
   ) {
-    DiagnosticReportConnection(
-      upid: $upid
-      after: $cursor
-      filter: $filter
-      sort: $sort
-      first: $first
-    ) {
+    DiagnosticReportConnection(upid: $upid, after: $cursor, filter: $filter, sort: $sort) {
       pageInfo {
         hasNextPage
       }
@@ -42,83 +42,42 @@ export const diagnosticReportQuery = gql`
               valueInstant
             }
           }
+          basedOn {
+            reference
+            resource {
+              ...MedicationRequest
+            }
+          }
           status
           category {
+            text
             coding {
-              text
-              coding {
-                ...Coding
-              }
+              ...Coding
             }
           }
           code {
+            text
             coding {
-              text
-              coding {
-                ...Coding
-              }
-            }
-          }
-          contained {
-            resource {
-              ... on Patient {
-                id
-                resourceType
-                contained {
-                  resource {
-                    ... on Organization {
-                      id
-                      resourceType
-                      name
-                    }
-                  }
-                }
-              }
-            }
-            resource {
-              ... on Organization {
-                id
-                resource
-              }
-            }
-          }
-          performer {
-            resource {
-              ... on Practitioner {
-                id
-                resourceType
-              }
-              ... on Practitioner {
-                id
-                resourceType
-              }
+              ...Coding
             }
           }
           subject {
-            resource {
-              ... on Patient {
-                id
-                gender
-                resourceType
-              }
-              ... on Organization {
-                id
-                resourceType
-              }
-              ... on Practitioner {
-                id
-                resourceType
-              }
-              ... on Medication {
-                id
-                resourceType
-              }
-            }
-          }
-          encounter {
             reference
             resource {
-              ...Encounter
+              ...Patient
+            }
+          }
+          effectiveDateTime
+          effectivePeriod {
+            start
+            end
+          }
+          issued
+          conclusion
+          performer {
+            reference
+            resource {
+              ...Practitioner
             }
           }
         }

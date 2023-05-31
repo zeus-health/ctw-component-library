@@ -28,6 +28,30 @@ export const fragmentEncounter = gql`
   }
 `;
 
+export const fragmentPractitioner = gql`
+  fragment Practitioner on Practitioner {
+    id
+    resourceType
+    name {
+      family
+      given
+      prefix
+      suffix
+      text
+      use
+    }
+  }
+`;
+
+export const fragmentMedicationRequest = gql`
+  fragment MedicationRequest on MedicationRequest {
+    id
+    resourceType
+    status
+    intent
+  }
+`;
+
 export const fragmentPatient = gql`
   fragment Patient on Patient {
     id
