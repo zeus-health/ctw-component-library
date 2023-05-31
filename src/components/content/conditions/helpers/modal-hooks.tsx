@@ -12,9 +12,10 @@ import { useDrawer } from "@/components/core/providers/drawer-provider";
 import { useModal } from "@/components/core/providers/modal-provider";
 import { usePatient } from "@/components/core/providers/patient-provider";
 import { useCTW } from "@/components/core/providers/use-ctw";
-import { deleteCondition, getNewCondition } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models";
+import { getNewCondition } from "@/fhir/models/condition";
 import { useBaseTranslations } from "@/i18n";
+import { deleteCondition } from "@/services/conditions";
 import { curry } from "@/utils/nodash";
 
 export function useAddConditionForm() {

@@ -1,21 +1,31 @@
 import Client from "fhir-kit-client";
-import { getZusApiBaseUrl } from "@/api/urls";
+import { getZusFhirBaseUrl, getZusFhirWriteBackBaseUrl } from "@/api/urls";
 import { Env } from "@/components/core/providers/types";
 import { CTW_REQUEST_HEADER } from "@/utils/request";
 
-export function getFhirClient(env: Env, accessToken: string, builderId?: string) {
-  const url = `${getZusApiBaseUrl(env)}/fhir`;
-
+export function getFhirClients(env: Env, accessToken: string, builderId?: string) {
   const customHeaders: HeadersInit = CTW_REQUEST_HEADER;
   if (builderId) {
     customHeaders["Zus-Account"] = builderId;
   }
-
-  return new Client({
-    baseUrl: url,
+  // fhirClient reads/writes directly to and from ODS
+  const fhirClient = new Client({
+    baseUrl: getZusFhirBaseUrl(env),
     bearerToken: accessToken,
     customHeaders,
   });
+  // fhirWriteBackClient uses write-back proxy to create new FHIR resources which could also have
+  // configurations in ehr-data-integration service to additionally write out to an external source
+  const fhirWriteBackClient = new Client({
+    baseUrl: getZusFhirWriteBackBaseUrl(env),
+    bearerToken: accessToken,
+    customHeaders,
+  });
+
+  return {
+    fhirClient,
+    fhirWriteBackClient,
+  };
 }
 
 // Returns a new value with all empty arrays replaced with "undefined".

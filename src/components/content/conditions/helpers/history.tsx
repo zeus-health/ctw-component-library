@@ -89,7 +89,7 @@ function getHistoryEntry(condition: ConditionModel): HistoryEntryProps {
     date: condition.recordedDate,
     versionId: condition.versionId,
     title: startCase(condition.categories[0]),
-    subtitle: condition.patient?.organization?.name,
+    subtitle: condition.patientOrganizationName,
     details: detailData,
   };
 }

@@ -7,17 +7,22 @@ import {
 import { PatientConditionsBase } from "./helpers/patient-conditions-base";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { RowActionsProps } from "@/components/core/table/table";
-import { usePatientBuilderConditions } from "@/fhir/conditions";
 import { ConditionModel } from "@/fhir/models";
 import { useBaseTranslations } from "@/i18n";
+import { usePatientBuilderConditions } from "@/services/conditions";
 
 export type PatientConditionsProps = {
   className?: cx.Argument;
+  enableFQS?: boolean;
   readOnly?: boolean;
 };
 
-const PatientConditionsComponent = ({ className, readOnly = false }: PatientConditionsProps) => {
-  const query = usePatientBuilderConditions();
+const PatientConditionsComponent = ({
+  className,
+  enableFQS = false,
+  readOnly = false,
+}: PatientConditionsProps) => {
+  const query = usePatientBuilderConditions(enableFQS);
   const showAddConditionForm = useAddConditionForm();
   const { t } = useBaseTranslations();
 
