@@ -73,6 +73,8 @@ function diagnosticReportsFetcherFQS(searchType: SearchType) {
       const result = setupDiagnosticReportModelsWithFQS(
         data.DiagnosticReportConnection.edges.map((x) => x.node)
       );
+
+      console.log("result", result);
       Telemetry.histogramMetric(`req.count.${searchType}_diagnostic_reports`, result.length);
       return result;
     } catch (e) {

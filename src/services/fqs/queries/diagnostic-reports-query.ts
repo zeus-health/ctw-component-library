@@ -111,6 +111,18 @@ export const diagnosticReportQuery = gql`
                   end
                 }
                 effectiveDateTime
+                interpretation {
+                  text
+                  coding {
+                    code
+                    display
+                    system
+                    extension {
+                      url
+                      valueString
+                    }
+                  }
+                }
               }
             }
           }

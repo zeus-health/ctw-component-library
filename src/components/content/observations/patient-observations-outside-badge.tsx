@@ -1,7 +1,13 @@
 import { Badge } from "@/components/core/badge";
 import { usePatientAllDiagnosticReports } from "@/fhir/diagnostic-report";
 
-export const PatientObservationsOutsideBadge = (enableFQS = true) => {
+export type PatientObservationsOutsideBadgeProps = {
+  enableFQS?: boolean;
+};
+
+export const PatientObservationsOutsideBadge = ({
+  enableFQS = true,
+}: PatientObservationsOutsideBadgeProps) => {
   const { data = [] } = usePatientAllDiagnosticReports(enableFQS);
   const unarchivedObservations = data.filter((observation) => !observation.isArchived);
 

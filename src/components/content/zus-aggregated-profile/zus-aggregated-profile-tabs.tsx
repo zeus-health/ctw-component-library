@@ -134,7 +134,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     display: () => (
       <>
         <span className="ctw-pr-2 ctw-capitalize">outside observations</span>
-        <PatientObservationsOutsideBadge />
+        <PatientObservationsOutsideBadge enableFQS />
       </>
     ),
     render: () => <PatientObservationsOutside {...props} />,
