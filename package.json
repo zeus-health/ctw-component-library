@@ -69,7 +69,7 @@
     "@storybook/addon-interactions": "^7.0.2",
     "@storybook/addon-links": "^7.0.2",
     "@storybook/jest": "^0.1.0",
-    "@storybook/react": "^7.0.2",
+    "@storybook/react": "^7.0.18",
     "@storybook/react-vite": "^7.0.2",
     "@storybook/test-runner": "^0.10.0",
     "@storybook/testing-library": "^0.1.0",
