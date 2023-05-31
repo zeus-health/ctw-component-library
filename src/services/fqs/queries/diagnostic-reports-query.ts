@@ -22,11 +22,11 @@ export const diagnosticReportQuery = gql`
   ${fragmentPatient}
   ${fragmentPractitioner}
   ${fragmentMedicationRequest}
-  query Conditions(
+  query DiagnosticReportConnection(
     $upid: ID!
     $cursor: String!
-    $filter: DiagnosticReportFilterParams!
     $sort: DiagnosticReportSortParams!
+    $filter: DiagnosticReportFilterParams!
   ) {
     DiagnosticReportConnection(upid: $upid, after: $cursor, filter: $filter, sort: $sort) {
       pageInfo {

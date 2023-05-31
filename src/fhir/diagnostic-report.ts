@@ -1,5 +1,5 @@
 import { searchBuilderRecords, searchCommonRecords } from "./search-helpers";
-import { SYSTEM_SUMMARY, SYSTEM_ZUS_THIRD_PARTY } from "./system-urls";
+import { SYSTEM_ZUS_THIRD_PARTY } from "./system-urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { getIncludedResources } from "@/fhir/bundle";
@@ -97,7 +97,7 @@ async function diagnosticReportBuilderQueryFQS(
     },
     filter: {
       tag: {
-        nonematch: [SYSTEM_SUMMARY, SYSTEM_ZUS_THIRD_PARTY],
+        nonematch: [SYSTEM_ZUS_THIRD_PARTY],
       },
     },
   })) as DiagnosticReportGraphqlResponse;
@@ -117,7 +117,7 @@ async function diagnosticReportCommonQueryFQS(
     },
     filter: {
       tag: {
-        allmatch: [SYSTEM_SUMMARY],
+        allmatch: [SYSTEM_ZUS_THIRD_PARTY],
       },
     },
   })) as DiagnosticReportGraphqlResponse;
