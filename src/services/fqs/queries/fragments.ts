@@ -94,3 +94,34 @@ export const fragmentPatient = gql`
     }
   }
 `;
+
+export const fragmentEncounter = gql`
+  fragment Encounter on Encounter {
+    id
+    resourceType
+    status
+    priority {
+      text
+      coding {
+        code
+        display
+        system
+      }
+    }
+  }
+`;
+
+export const fragmentPractitioner = gql`
+  fragment Practitioner on Practitioner {
+    id
+    resourceType
+    name {
+      family
+      given
+      prefix
+      suffix
+      text
+      use
+    }
+  }
+`;

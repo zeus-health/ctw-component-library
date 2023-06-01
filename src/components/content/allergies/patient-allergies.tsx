@@ -16,13 +16,13 @@ import { capitalize } from "@/utils/nodash";
 
 export type PatientAllergiesProps = {
   className?: string;
-  enableFqs?: boolean;
+  enableFQS?: boolean;
 };
 
-function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
+function PatientAllergiesComponent({ className, enableFQS = false }: PatientAllergiesProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { featureFlags } = useCTW();
-  const patientAllergiesQuery = usePatientAllergies();
+  const patientAllergiesQuery = usePatientAllergies(enableFQS);
   const { data, setFilters, setSort } = useFilteredSortedData({
     defaultFilters: defaultAllergyFilters,
     defaultSort: defaultAllergySort,
