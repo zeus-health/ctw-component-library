@@ -61,7 +61,10 @@ async function checkOrRefreshAuth(
     const response = await queryClient.fetchQuery([QUERY_KEY_AUTH_TOKEN, url], async () =>
       ctwFetch(url as string, { headers })
     );
-    const newToken = await response.json();
+
+    // For some reason we can end up calling json() twice on the same response.
+    // We avoid this double read error by cloning the response.
+    const newToken = await response.clone().json();
     return {
       accessToken: newToken.access_token,
       expiresAt: claimsExp(newToken.access_token) * 1_000,
