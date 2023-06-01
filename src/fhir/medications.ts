@@ -34,8 +34,10 @@ import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { PatientModel } from "@/fhir/models/patient";
 import { filterResourcesByBuilderId } from "@/services/common";
 import { createGraphqlClient } from "@/services/fqs/client";
-import { conditionsQuery } from "@/services/fqs/queries/conditions";
-import { MedicationStatementGraphqlResponse } from "@/services/fqs/queries/medication-statements";
+import {
+  MedicationStatementGraphqlResponse,
+  medicationStatementQuery,
+} from "@/services/fqs/queries/medication-statements";
 import { errorResponse } from "@/utils/errors";
 import { cloneDeep, uniqWith } from "@/utils/nodash";
 import {
@@ -202,7 +204,7 @@ export async function fetchBuilderMedicationStatementsFQS(
 ) {
   try {
     const graphClient = createGraphqlClient(requestContext);
-    const data = (await graphClient.request(conditionsQuery, {
+    const data = (await graphClient.request(medicationStatementQuery, {
       upid: patient.UPID,
       cursor: "",
       first: 1000,

@@ -5,6 +5,7 @@ import { getIncludedBasics, getMergedIncludedResources } from "@/fhir/bundle";
 import {
   getActiveMedications,
   getBuilderMedications,
+  // fetchBuilderMedicationStatementsFQS,
   getCommonMedicationDispenses,
   getCommonMedicationRequests,
   getMedicationStatements,
@@ -31,6 +32,7 @@ export function useQueryGetPatientMedsForBuilder(): UseQueryResult<MedicationRes
       },
     ],
     withTimerMetric(getBuilderMedications, "req.timing.builder_medications")
+    // withTimerMetric(fetchBuilderMedicationStatementsFQS, "req.timing.builder_medications")
   );
 }
 
