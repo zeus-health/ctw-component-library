@@ -5,7 +5,7 @@ import { patient } from "./patient";
 import { provenances } from "./provenances";
 import { medicationDispense } from "../../../medications/story-helpers/mocks/medication-dispense";
 import { medicationRequest } from "../../../medications/story-helpers/mocks/medication-request";
-import { createDiagnosticReportsBundle } from "@/components/content/observations/story-helpers/mocks/diagnostic-reports";
+import { diagnosticReport } from "@/components/content/observations/story-helpers/mocks/diagnostic-reports";
 
 export function setupTimelineMocks() {
   return {
@@ -49,8 +49,7 @@ function mockRequests() {
 
   const mockDiagnosticReportGet = rest.get(
     "https://api.dev.zusapi.com/fhir/DiagnosticReport",
-    (req, res, ctx) =>
-      res(ctx.status(200), ctx.delay(250), ctx.json(createDiagnosticReportsBundle()))
+    (req, res, ctx) => res(ctx.status(200), ctx.delay(250), ctx.json(diagnosticReport))
   );
 
   return [
