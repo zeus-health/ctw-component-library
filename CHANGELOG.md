@@ -1,5 +1,16 @@
 # ctw-component-library
 
+## 1.12.0
+
+### Minor Changes
+
+- 57e03269: Added `fhirWriteBackClient` to proxy creation of new FHIR resources through the ehr-data-integration server.
+
+### Patch Changes
+
+- 88c8d13c: Update some dependencies
+- bdc77c6f: Fix case where CCDA viewer crashes
+
 ## 1.11.0
 
 ### Minor Changes
