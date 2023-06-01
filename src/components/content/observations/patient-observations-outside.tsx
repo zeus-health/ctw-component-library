@@ -8,7 +8,7 @@ export type PatientObservationsOutsideProps = {
   enableFQS?: boolean;
 };
 
-const Component = ({ className, enableFQS = true }: PatientObservationsOutsideProps) => {
+const Component = ({ className, enableFQS = false }: PatientObservationsOutsideProps) => {
   const diagnosticReports = usePatientAllDiagnosticReports(enableFQS);
 
   return (

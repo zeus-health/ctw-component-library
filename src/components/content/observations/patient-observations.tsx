@@ -8,7 +8,7 @@ export type PatientObservationsProps = {
   enableFQS?: boolean;
 };
 
-const Component = ({ className, enableFQS = true }: PatientObservationsProps) => {
+const Component = ({ className, enableFQS = false }: PatientObservationsProps) => {
   const diagnosticReports = usePatientBuilderDiagnosticReports(enableFQS);
 
   return <PatientObservationsBase className={className} query={diagnosticReports} />;

@@ -6,7 +6,7 @@ export type PatientObservationsOutsideBadgeProps = {
 };
 
 export const PatientObservationsOutsideBadge = ({
-  enableFQS = true,
+  enableFQS = false,
 }: PatientObservationsOutsideBadgeProps) => {
   const { data = [] } = usePatientAllDiagnosticReports(enableFQS);
   const unarchivedObservations = data.filter((observation) => !observation.isArchived);

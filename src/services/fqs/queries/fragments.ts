@@ -157,5 +157,26 @@ export const fragmentObservation = gql`
       end
     }
     effectiveDateTime
+    referenceRange {
+      text
+    }
+    code {
+      text
+      coding {
+        code
+        display
+        system
+        extension {
+          url
+          valueString
+        }
+      }
+    }
+    valueQuantity {
+      unit
+      value
+      system
+      code
+    }
   }
 `;

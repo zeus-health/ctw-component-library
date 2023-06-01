@@ -35,7 +35,7 @@ export function ObservationsDrawer({
       showCloseFooter
     >
       <Drawer.Body>
-        <ObservationDetails diagnosticReport={diagnosticReport} />
+        <ObservationDetails diagnosticReport={diagnosticReport} enableFQS />
       </Drawer.Body>
     </Drawer>
   );
