@@ -69,14 +69,13 @@ const demoComponents: DemoComponent[] = [
           // "allergies",
           // "conditions",
           // "conditions-outside",
-          "medications",
-          "medications-outside",
+          // "medications",
+          // "medications-outside",
           // "observations",
           "timeline",
           "observations-outside",
         ]}
         title="ZAP"
-        medicationsOutsideProps={{ enableFQS: true }}
       />
     ),
   },
