@@ -1,7 +1,8 @@
 import { UseQueryResult } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
-import { getIncludedBasics, getMergedIncludedResources } from "@/fhir/bundle";
+import { useBasic } from "@/fhir/basic";
+import { getIncludedBasics, getIncludedBasicsMap, getMergedIncludedResources } from "@/fhir/bundle";
 import {
   getActiveMedications,
   getActiveMedicationsFQS,
@@ -14,7 +15,7 @@ import {
   splitMedications,
 } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
-import { ResourceArrayMap, ResourceMap } from "@/fhir/types";
+import { ResourceMap } from "@/fhir/types";
 import {
   QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
   QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
@@ -41,7 +42,8 @@ export function useQueryGetPatientMedsForBuilder(): UseQueryResult<MedicationRes
 export function useQueryGetSummarizedPatientMedications(
   enableFQS: boolean
 ): UseQueryResult<MedicationResults, unknown> {
-  return useQueryWithPatient(
+  const basics = useBasic(enableFQS);
+  const result = useQueryWithPatient(
     QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
     [
       {
@@ -52,6 +54,10 @@ export function useQueryGetSummarizedPatientMedications(
       ? withTimerMetric(getActiveMedicationsFQS, "req.timing.active_medications", ["fqs"])
       : withTimerMetric(getActiveMedications, "req.timing.active_medications")
   );
+  if (result.data && basics.data) {
+    result.data.basic = basics.data;
+  }
+  return result;
 }
 
 export function useQueryGetPatientMedRequestsCommon() {
@@ -134,11 +140,11 @@ export function useQueryAllPatientMedications(enableFQS: boolean) {
       summarizedMedicationsQuery.data?.medications &&
       builderMedicationsQuery.data?.bundle // TODO: switch to not use bundle
     ) {
-      const { medications: summarizedMedications } = summarizedMedicationsQuery.data;
+      const { medications: summarizedMedications, basic: basics } = summarizedMedicationsQuery.data;
       const { medications: allMedicationsForBuilder } = builderMedicationsQuery.data;
 
       // TODO: deal with basics and included resources
-      const basicsMap = new Map() as ResourceArrayMap;
+      const basicsMap = getIncludedBasicsMap(basics);
       // Get included resources from both bundles so that we can reference them for contained medications.
       const includedResources = {} as ResourceMap;
 

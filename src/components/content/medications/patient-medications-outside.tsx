@@ -9,7 +9,7 @@ import { MedicationStatementModel } from "@/fhir/models";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { useBaseTranslations } from "@/i18n";
 import { Spinner } from "@/index";
-import { QUERY_KEY_OTHER_PROVIDER_MEDICATIONS } from "@/utils/query-keys";
+import { QUERY_KEY_BASIC, QUERY_KEY_OTHER_PROVIDER_MEDICATIONS } from "@/utils/query-keys";
 
 export type PatientMedicationsOutsideProps = {
   className?: string;
@@ -61,7 +61,8 @@ const RowActions = ({ record, onAddToRecord }: RowActionsProps2) => {
   const showAddMedicationForm = useAddMedicationForm();
   const { isLoading, toggleArchive } = useToggleArchive(
     record,
-    QUERY_KEY_OTHER_PROVIDER_MEDICATIONS
+    QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
+    QUERY_KEY_BASIC
   );
   const archiveLabel = record.isArchived ? t("resourceTable.restore") : t("resourceTable.dismiss");
 
