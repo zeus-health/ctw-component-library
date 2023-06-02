@@ -52,6 +52,9 @@ export const Component = ({ diagnosticReport, enableFQS = false }: ObservationDe
         ? compact(
             diagnosticReport.resource.result?.map(
               (result) =>
+                // @ts-ignore: Unreachable code error
+                // We are disabling it for this line as the FHIR spec doesn't support this
+                // customized result field that now has the observation resource and not only just a reference.
                 new ObservationModel(result.resource, {
                   [diagnosticReport.id]: diagnosticReport.resource,
                 })
