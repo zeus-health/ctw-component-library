@@ -1,14 +1,7 @@
 import { getIncludedResources } from "./bundle";
-import { CodePreference } from "./codeable-concept";
 import { AllergyModel } from "./models/allergies";
 import { searchCommonRecords } from "./search-helpers";
-import {
-  SYSTEM_NDC,
-  SYSTEM_RXNORM,
-  SYSTEM_SNOMED,
-  SYSTEM_SUMMARY,
-  SYSTEM_ZUS_THIRD_PARTY,
-} from "./system-urls";
+import { SYSTEM_SUMMARY, SYSTEM_ZUS_THIRD_PARTY } from "./system-urls";
 import { applyAllergyFilters } from "@/components/content/allergies/allergies-filter";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { createGraphqlClient } from "@/services/fqs/client";
@@ -77,12 +70,6 @@ export function usePatientAllergies(enableFQS: boolean) {
         }, "req.timing.allergies")
   );
 }
-
-export const ALLERGY_CODE_PREFERENCE_ORDER: CodePreference[] = [
-  { system: SYSTEM_RXNORM },
-  { system: SYSTEM_NDC },
-  { system: SYSTEM_SNOMED },
-];
 
 function setupAllergyModelsWithFQS(allergyResources: fhir4.AllergyIntolerance[]): AllergyModel[] {
   return allergyResources.map((c) => new AllergyModel(c));

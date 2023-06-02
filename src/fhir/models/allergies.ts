@@ -1,8 +1,8 @@
 import { FHIRModel } from "./fhir-model";
-import { ALLERGY_CODE_PREFERENCE_ORDER } from "../allergies";
 import { formatDateISOToLocal } from "../formatters";
 import { findReference } from "../resource-helper";
-import { codeableConceptLabel, findCoding } from "@/fhir/codeable-concept";
+import { SYSTEM_NDC, SYSTEM_RXNORM, SYSTEM_SNOMED } from "../system-urls";
+import { codeableConceptLabel, CodePreference, findCoding } from "@/fhir/codeable-concept";
 import { displayOnset } from "@/fhir/display-onset";
 import { compact, uniqWith } from "@/utils/nodash";
 
@@ -93,3 +93,9 @@ export class AllergyModel extends FHIRModel<fhir4.AllergyIntolerance> {
     return this.resource.type ?? "";
   }
 }
+
+const ALLERGY_CODE_PREFERENCE_ORDER: CodePreference[] = [
+  { system: SYSTEM_RXNORM },
+  { system: SYSTEM_NDC },
+  { system: SYSTEM_SNOMED },
+];
