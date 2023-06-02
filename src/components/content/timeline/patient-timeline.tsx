@@ -15,10 +15,11 @@ import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 
 export type PatientTimelineProps = {
   className?: cx.Argument;
+  enableFQS?: boolean;
 };
 
-export function PatientTimeline({ className }: PatientTimelineProps) {
-  const timelineEventsQuery = useTimelineEvents();
+export function PatientTimeline({ className, enableFQS = true }: PatientTimelineProps) {
+  const timelineEventsQuery = useTimelineEvents(enableFQS);
   const containerRef = useRef<HTMLDivElement>(null);
   const { featureFlags } = useCTW();
   const { viewOptions, defaultView } = getDateRangeView<TimelineEventModel>("date");
