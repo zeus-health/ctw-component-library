@@ -94,3 +94,24 @@ export const fragmentPatient = gql`
     }
   }
 `;
+
+export const fragmentReference = gql`
+  fragment Reference on Reference {
+    id
+    extension {
+      url
+      valueString
+      #TODO other extension fields?
+    }
+    reference
+    type
+    identifier {
+      id
+      system
+      value
+      #TODO other identifier fields?
+    }
+    display
+    #resource -- TODO
+  }
+`;

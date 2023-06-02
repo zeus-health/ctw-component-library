@@ -23,10 +23,12 @@ import {
   LENS_EXTENSION_MEDICATION_REFILLS,
   SYSTEM_RXNORM,
   SYSTEM_SUMMARY,
+  SYSTEM_ZUS_OWNER,
   SYSTEM_ZUS_THIRD_PARTY,
   SYSTEM_ZUS_UNIVERSAL_ID,
 } from "./system-urls";
 import { ResourceTypeString } from "./types";
+import { getLensBuilderId } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { MedicationModel } from "@/fhir/models/medication";
@@ -73,7 +75,7 @@ type MedicationFilter = {
 };
 
 export type MedicationResults = {
-  bundle: fhir4.Bundle;
+  bundle: fhir4.Bundle | Record<string, never>;
   medications: fhir4.MedicationStatement[];
 };
 
@@ -294,6 +296,50 @@ export async function getActiveMedications(
     return { bundle: response.bundle, medications };
   } catch (e) {
     throw errorResponse("Failed fetching medications for patient", e);
+  }
+}
+
+/* Note when filtering the bundle may contain data that will no longer 
+be in the returned medications, such as medications with no RxNorm code. */
+export async function getActiveMedicationsFQS(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  keys: Record<string, string>[] = []
+): Promise<MedicationResults> {
+  try {
+    const [searchFilters = {}] = keys;
+
+    const graphClient = createGraphqlClient(requestContext);
+    const data = (await graphClient.request(medicationStatementQuery, {
+      upid: patient.UPID,
+      cursor: "",
+      first: 1000,
+      sort: {
+        lastUpdated: "DESC",
+      },
+      filter: {
+        tag: {
+          allmatch: [
+            SYSTEM_SUMMARY,
+            `${SYSTEM_ZUS_OWNER}|builder/${getLensBuilderId(requestContext.env)}`,
+          ],
+        },
+      },
+    })) as MedicationStatementGraphqlResponse;
+    const nodes = data.MedicationStatementConnection.edges.map((x) => x.node);
+    const medStatements = setupMedicationStatementModelsWithFQS(nodes);
+    const models = applySearchFiltersToFQSResponse(medStatements, searchFilters, true);
+    if (models.length === 0) {
+      Telemetry.countMetric("req.count.active_medications.none", 1, ["fqs"]);
+    }
+    Telemetry.histogramMetric("req.count.active_medications", models.length, ["fqs"]);
+    const results = models.map((x) => x.resource);
+    return { bundle: {}, medications: results };
+  } catch (e) {
+    throw Telemetry.logError(
+      e as Error,
+      `Failed fetching active medications for patient: ${patient.UPID}`
+    );
   }
 }
 

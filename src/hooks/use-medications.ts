@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { getIncludedBasics, getMergedIncludedResources } from "@/fhir/bundle";
 import {
-  getActiveMedications,
+  getActiveMedicationsFQS,
   getBuilderMedications,
   // fetchBuilderMedicationStatementsFQS,
   getCommonMedicationDispenses,
@@ -47,7 +47,7 @@ export function useQueryGetSummarizedPatientMedications(): UseQueryResult<
         _revinclude: "Basic:subject",
       },
     ],
-    withTimerMetric(getActiveMedications, "req.timing.active_medications")
+    withTimerMetric(getActiveMedicationsFQS, "req.timing.active_medications")
   );
 }
 
