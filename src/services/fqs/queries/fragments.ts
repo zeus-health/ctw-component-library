@@ -178,5 +178,17 @@ export const fragmentObservation = gql`
       system
       code
     }
+    interpretation {
+      text
+      coding {
+        code
+        display
+        system
+        extension {
+          url
+          valueString
+        }
+      }
+    }
   }
 `;
