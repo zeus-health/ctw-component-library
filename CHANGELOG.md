@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.13.1
+
+### Patch Changes
+
+- fa1fb932: Fix bug when trying to save or update resources fetched from FQS.
+
 ## 1.13.0
 
 ### Minor Changes
