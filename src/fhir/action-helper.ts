@@ -1,6 +1,6 @@
 import { FhirResource, Resource } from "fhir/r4";
 import { v4 as uuidv4 } from "uuid";
-import { omitEmptyArrays } from "./client";
+import { fixupFHIR } from "./client";
 import { isFhirError } from "./errors";
 import { ASSEMBLER_CODING, CREATE_CODING, createProvenance } from "./provenance";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
@@ -24,7 +24,7 @@ export async function createOrEditFhirResource(
       response = await fhirClient.update({
         resourceType: resource.resourceType,
         id: resource.id,
-        body: omitEmptyArrays(resource),
+        body: fixupFHIR(resource),
       });
       if (!isFhirError(response)) {
         await createProvenance("UPDATE", response, requestContext);
@@ -33,7 +33,7 @@ export async function createOrEditFhirResource(
       // Utilize the FHIR write-back client for creating resources
       response = await fhirWriteBackClient.create({
         resourceType: resource.resourceType,
-        body: omitEmptyArrays(resource),
+        body: fixupFHIR(resource),
       });
       if (!isFhirError(response)) {
         resourceModified.id = response.id;
@@ -103,7 +103,7 @@ export async function createFhirResourceWithProvenance(
   };
 
   return fhirClient.transaction({
-    body: omitEmptyArrays({
+    body: fixupFHIR({
       ...bundle,
       type: "transaction",
     }),
