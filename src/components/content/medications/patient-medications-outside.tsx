@@ -16,6 +16,7 @@ export type PatientMedicationsOutsideProps = {
   onOpenHistoryDrawer?: () => void;
   onAddToRecord?: (record: MedicationStatementModel) => void;
   readOnly?: boolean;
+  enableFQS?: boolean;
 };
 
 const PatientMedicationsOutsideComponent = ({
@@ -23,8 +24,9 @@ const PatientMedicationsOutsideComponent = ({
   onAddToRecord,
   readOnly = false,
   onOpenHistoryDrawer,
+  enableFQS = false,
 }: PatientMedicationsOutsideProps) => {
-  const { otherProviderMedications, isLoading } = useQueryAllPatientMedications();
+  const { otherProviderMedications, isLoading } = useQueryAllPatientMedications(enableFQS);
   const rowActions = useMemo(() => getRowActions({ onAddToRecord }), [onAddToRecord]);
 
   return (

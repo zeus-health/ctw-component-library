@@ -76,6 +76,7 @@ const demoComponents: DemoComponent[] = [
           "observations-outside",
         ]}
         title="ZAP"
+        medicationsOutsideProps={{ enableFQS: true }}
       />
     ),
   },

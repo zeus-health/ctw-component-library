@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { getIncludedBasics, getMergedIncludedResources } from "@/fhir/bundle";
 import {
+  getActiveMedications,
   getActiveMedicationsFQS,
   getBuilderMedications,
   // fetchBuilderMedicationStatementsFQS,
@@ -13,6 +14,7 @@ import {
   splitMedications,
 } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
+import { ResourceArrayMap, ResourceMap } from "@/fhir/types";
 import {
   QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
   QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
@@ -36,10 +38,9 @@ export function useQueryGetPatientMedsForBuilder(): UseQueryResult<MedicationRes
   );
 }
 
-export function useQueryGetSummarizedPatientMedications(): UseQueryResult<
-  MedicationResults,
-  unknown
-> {
+export function useQueryGetSummarizedPatientMedications(
+  enableFQS: boolean
+): UseQueryResult<MedicationResults, unknown> {
   return useQueryWithPatient(
     QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
     [
@@ -47,7 +48,9 @@ export function useQueryGetSummarizedPatientMedications(): UseQueryResult<
         _revinclude: "Basic:subject",
       },
     ],
-    withTimerMetric(getActiveMedicationsFQS, "req.timing.active_medications")
+    enableFQS
+      ? withTimerMetric(getActiveMedicationsFQS, "req.timing.active_medications", ["fqs"])
+      : withTimerMetric(getActiveMedications, "req.timing.active_medications")
   );
 }
 
@@ -88,17 +91,21 @@ export function useQueryMedicationStatement(rxNorm: string | undefined) {
  * categories ("Builder Medications" and "Other Provider Medications"). This is
  * useful when creating content such as the <PatientMedications /> component.
  */
-export function useQueryAllPatientMedications() {
+export function useQueryAllPatientMedications(enableFQS: boolean) {
   const [builderMedications, setBuilderMedications] = useState<MedicationStatementModel[]>([]);
   const [otherProviderMedications, setOtherProviderMedications] = useState<
     MedicationStatementModel[]
   >([]);
 
-  const summarizedMedicationsQuery = useQueryGetSummarizedPatientMedications();
+  const summarizedMedicationsQuery = useQueryGetSummarizedPatientMedications(enableFQS);
   const builderMedicationsQuery = useQueryGetPatientMedsForBuilder();
 
   useEffect(() => {
-    if (summarizedMedicationsQuery.data?.bundle && builderMedicationsQuery.data?.bundle) {
+    if (
+      !enableFQS &&
+      summarizedMedicationsQuery.data?.bundle &&
+      builderMedicationsQuery.data?.bundle
+    ) {
       const { medications: summarizedMedications, bundle: summarizedBundle } =
         summarizedMedicationsQuery.data;
       const { medications: allMedicationsForBuilder } = builderMedicationsQuery.data;
@@ -122,8 +129,33 @@ export function useQueryAllPatientMedications() {
 
       setBuilderMedications(splitData.builderMedications);
       setOtherProviderMedications(splitData.otherProviderMedications);
+    } else if (
+      enableFQS &&
+      summarizedMedicationsQuery.data?.medications &&
+      builderMedicationsQuery.data?.bundle // TODO: switch to not use bundle
+    ) {
+      const { medications: summarizedMedications } = summarizedMedicationsQuery.data;
+      const { medications: allMedicationsForBuilder } = builderMedicationsQuery.data;
+
+      // TODO: deal with basics and included resources
+      const basicsMap = new Map() as ResourceArrayMap;
+      // Get included resources from both bundles so that we can reference them for contained medications.
+      const includedResources = {} as ResourceMap;
+
+      // Split the summarized medications into those known/unknown to the builder
+      const splitData = splitMedications(
+        summarizedMedications.map(
+          (m) => new MedicationStatementModel(m, includedResources, basicsMap.get(m.id ?? ""))
+        ),
+        allMedicationsForBuilder.map(
+          (m) => new MedicationStatementModel(m, includedResources, basicsMap.get(m.id ?? ""))
+        )
+      );
+
+      setBuilderMedications(splitData.builderMedications);
+      setOtherProviderMedications(splitData.otherProviderMedications);
     }
-  }, [summarizedMedicationsQuery.data, builderMedicationsQuery.data]);
+  }, [summarizedMedicationsQuery.data, builderMedicationsQuery.data, enableFQS]);
 
   const isLoading = builderMedicationsQuery.isLoading || summarizedMedicationsQuery.isLoading;
   const isFetching = builderMedicationsQuery.isFetching || summarizedMedicationsQuery.isFetching;

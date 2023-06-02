@@ -23,6 +23,7 @@ import {
   LENS_EXTENSION_MEDICATION_REFILLS,
   SYSTEM_RXNORM,
   SYSTEM_SUMMARY,
+  SYSTEM_ZUS_LENS,
   SYSTEM_ZUS_OWNER,
   SYSTEM_ZUS_THIRD_PARTY,
   SYSTEM_ZUS_UNIVERSAL_ID,
@@ -75,7 +76,7 @@ type MedicationFilter = {
 };
 
 export type MedicationResults = {
-  bundle: fhir4.Bundle | Record<string, never>;
+  bundle: fhir4.Bundle | undefined;
   medications: fhir4.MedicationStatement[];
 };
 
@@ -320,7 +321,7 @@ export async function getActiveMedicationsFQS(
       filter: {
         tag: {
           allmatch: [
-            SYSTEM_SUMMARY,
+            `${SYSTEM_ZUS_LENS}|ActiveMedications`,
             `${SYSTEM_ZUS_OWNER}|builder/${getLensBuilderId(requestContext.env)}`,
           ],
         },
@@ -334,7 +335,7 @@ export async function getActiveMedicationsFQS(
     }
     Telemetry.histogramMetric("req.count.active_medications", models.length, ["fqs"]);
     const results = models.map((x) => x.resource);
-    return { bundle: {}, medications: results };
+    return { bundle: undefined, medications: results };
   } catch (e) {
     throw Telemetry.logError(
       e as Error,
