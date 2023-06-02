@@ -3,6 +3,7 @@ import { useAddMedicationForm } from "./helpers/add-new-med-drawer";
 import { medicationFilters } from "./helpers/filters";
 import { PatientMedicationsBase } from "./helpers/patient-medications-base";
 import { useToggleArchive } from "../hooks/use-toggle-archive";
+import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { RowActionsProps } from "@/components/core/table/table";
 import { MedicationStatementModel } from "@/fhir/models";
@@ -26,6 +27,8 @@ const PatientMedicationsOutsideComponent = ({
 }: PatientMedicationsOutsideProps) => {
   const { otherProviderMedications, isLoading } = useQueryAllPatientMedications();
   const rowActions = useMemo(() => getRowActions({ onAddToRecord }), [onAddToRecord]);
+  const { viewOptions, defaultView } =
+    getDateRangeView<MedicationStatementModel>("lastActivityDate");
 
   return (
     <PatientMedicationsBase
@@ -33,6 +36,8 @@ const PatientMedicationsOutsideComponent = ({
       query={{ data: otherProviderMedications, isLoading }}
       filters={medicationFilters(otherProviderMedications, true)}
       rowActions={readOnly ? undefined : rowActions}
+      views={viewOptions}
+      defaultView={defaultView}
       onOpenHistoryDrawer={onOpenHistoryDrawer}
     />
   );

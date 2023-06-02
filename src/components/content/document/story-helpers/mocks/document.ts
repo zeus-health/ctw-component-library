@@ -234,7 +234,7 @@ export const documents: fhir4.Bundle = {
               url: "Binary/fa5b964d-d509-458a-b893-763052df4adf",
               hash: "DOYC3qYo0MgDnxhooYVutWko1/4=",
               title: "Continuity of Care Document (Transition of Care)",
-              creation: "2021-09-10T14:38:39-05:00",
+              creation: "2023-04-10T14:38:39-05:00",
             },
           },
         ],

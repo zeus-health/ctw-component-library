@@ -10,7 +10,7 @@ export type UseFilteredSortedDataProps<T extends object> = {
   records?: T[];
   defaultSort?: SortOption<T>;
   defaultFilters?: FilterChangeEvent;
-  defaultView?: ViewOption;
+  defaultView?: ViewOption<T>;
 };
 
 export function useFilteredSortedData<T extends object>({

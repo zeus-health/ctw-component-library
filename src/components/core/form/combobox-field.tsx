@@ -161,11 +161,11 @@ const ComboboxOptions = ({
 
   return (
     <>
-      {options.map((option) =>
+      {options.map((option, index) =>
         renderCustomOption ? (
-          <Fragment key={option.key}>{renderCustomOption(option)} </Fragment>
+          <Fragment key={option.key ?? `option-${index}`}>{renderCustomOption(option)} </Fragment>
         ) : (
-          <ComboboxOption option={option} key={option.key} />
+          <ComboboxOption option={option} key={option.key ?? `option-${index}`} />
         )
       )}
     </>

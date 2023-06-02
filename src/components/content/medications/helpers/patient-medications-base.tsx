@@ -20,8 +20,8 @@ export type PatientMedicationsBaseProps = {
   query: { data?: MedicationStatementModel[]; isLoading: boolean };
   rowActions?: ResourceTableProps<MedicationStatementModel>["rowActions"];
   filters: FilterItem[];
-  defaultView?: ViewOption;
-  views?: ViewOption[];
+  defaultView?: ViewOption<MedicationStatementModel>;
+  views?: ViewOption<MedicationStatementModel>[];
 
   onOpenHistoryDrawer?: () => void;
 };

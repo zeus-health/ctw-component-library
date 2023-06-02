@@ -1,3 +1,4 @@
+import { max } from "date-fns";
 import type { Reference } from "fhir/r4";
 import { FHIRModel } from "./fhir-model";
 import { PatientModel } from "./patient";
@@ -242,5 +243,15 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
       this.resource.extension?.find((x) => x.url === LENS_EXTENSION_MEDICATION_LAST_PRESCRIBED_DATE)
         ?.valueDateTime
     );
+  }
+
+  get lastActivityDate(): string | undefined {
+    const { lastPrescribedDate, lastFillDate } = this;
+    const dates = compact([lastPrescribedDate, lastFillDate]).map((x) => new Date(x));
+    if (dates.length === 0) {
+      return undefined;
+    }
+    const maxDate = max(dates);
+    return formatDateISOToLocal(maxDate.toISOString());
   }
 }

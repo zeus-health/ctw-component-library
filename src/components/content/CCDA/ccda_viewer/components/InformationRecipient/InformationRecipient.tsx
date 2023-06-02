@@ -11,21 +11,17 @@ export const InformationRecipient = ({ document }: DocumentOnlyProps) => {
   const finalData = informationRecipients.flatMap((informationRecipient) => [
     {
       label: "Information Recipient",
-      value: informationRecipient.name,
+      value: informationRecipient.name ?? "Unnamed",
     },
     {
-      label: "Contact Details",
-      value: informationRecipient.contactDetails,
+      label: "ID",
+      value: informationRecipient.id,
     },
     {
       label: "Organization",
-      value: informationRecipient.organization.name,
-    },
-    {
-      label: "Contact Details (Organization)",
-      value: informationRecipient.organization.contactDetails,
+      value: informationRecipient.organization,
     },
   ]);
 
-  return <Table data={finalData} />;
+  return <Table data={finalData} chunkSize={3} />;
 };

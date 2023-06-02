@@ -1,6 +1,6 @@
 import cx from "classnames";
 import { useRef } from "react";
-import { patientCareTeamColumns } from "./patient-careteam-columns";
+import { patientCareTeamColumns } from "./helpers/columns";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { Table } from "@/components/core/table/table";

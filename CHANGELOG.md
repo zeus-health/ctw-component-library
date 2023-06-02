@@ -1,5 +1,26 @@
 # ctw-component-library
 
+## 1.12.0
+
+### Minor Changes
+
+- 57e03269: Added `fhirWriteBackClient` to proxy creation of new FHIR resources through the ehr-data-integration server.
+
+### Patch Changes
+
+- 88c8d13c: Update some dependencies
+- bdc77c6f: Fix case where CCDA viewer crashes
+
+## 1.11.0
+
+### Minor Changes
+
+- de1c2c88: Add feature flag option to use FQS (Zus's GraphQL Fast-Query-Service) for fetching conditions.
+
+### Patch Changes
+
+- b411c5f3: Fix issue with superclusters loading too much data when FQS is enabled
+
 ## 1.10.4
 
 ### Patch Changes
