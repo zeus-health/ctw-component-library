@@ -9,3 +9,5 @@ storybook-static
 .env
 .DS_Store
 .vscode
+# Local Netlify folder
+.netlify
