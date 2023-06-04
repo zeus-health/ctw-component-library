@@ -13,13 +13,14 @@ import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 
 export type PatientDocumentProps = {
   className?: string;
+  enableFQS?: boolean;
 };
 
-function PatientDocumentsComponent({ className }: PatientDocumentProps) {
+function PatientDocumentsComponent({ className, enableFQS = false }: PatientDocumentProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { featureFlags } = useCTW();
 
-  const patientDocumentQuery = usePatientDocument();
+  const patientDocumentQuery = usePatientDocument(enableFQS);
   const { viewOptions, defaultView } = getDateRangeView<DocumentModel>("dateCreated");
   const { data, setViewOption } = useFilteredSortedData({
     defaultView,

@@ -192,3 +192,61 @@ export const fragmentObservation = gql`
     }
   }
 `;
+
+export const fragmentOrganization = gql`
+  fragment Organization on Organization {
+    id
+    resourceType
+    name
+    telecom {
+      system
+      value
+      period {
+        start
+        end
+      }
+    }
+    contact {
+      purpose {
+        text
+        coding {
+          code
+          display
+          system
+          extension {
+            url
+            valueString
+          }
+        }
+      }
+      name {
+        family
+        given
+        prefix
+        suffix
+        text
+        use
+      }
+      telecom {
+        system
+        value
+        period {
+          start
+          end
+        }
+      }
+      address {
+        type
+        use
+        text
+        line
+        city
+        district
+        state
+        postalCode
+        country
+        period
+      }
+    }
+  }
+`;
