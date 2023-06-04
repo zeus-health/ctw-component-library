@@ -87,7 +87,7 @@ const components: DemoComponent[] = [
     title: "Patient History Table",
   },
   { name: "patient-search", render: () => <PatientSearch />, title: "Patient Search" },
-  { name: "timeline", render: () => <PatientTimeline enableFQS />, title: "Patient Timeline" },
+  { name: "timeline", render: () => <PatientTimeline />, title: "Patient Timeline" },
   {
     name: "zap",
     render: () => (
@@ -96,16 +96,7 @@ const components: DemoComponent[] = [
           hideRequestRecords: true,
         }}
         includePatientDemographicsForm={false}
-        resources={[
-          "allergies",
-          "conditions",
-          "conditions-outside",
-          "medications",
-          "medications-outside",
-          "observations",
-          "timeline",
-          "observations-outside",
-        ]}
+        resources={["observations", "timeline", "observations-outside"]}
         title="ZAP"
       />
     ),

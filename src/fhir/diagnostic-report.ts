@@ -101,6 +101,7 @@ async function diagnosticReportBuilderQueryFQS(
         nonematch: [SYSTEM_ZUS_THIRD_PARTY],
       },
     },
+    first: 100,
   })) as DiagnosticReportGraphqlResponse;
   return data;
 }
@@ -121,6 +122,7 @@ async function diagnosticReportCommonQueryFQS(
         allmatch: [SYSTEM_ZUS_THIRD_PARTY],
       },
     },
+    first: 100,
   })) as DiagnosticReportGraphqlResponse;
   return data;
 }

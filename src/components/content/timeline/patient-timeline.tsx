@@ -18,7 +18,7 @@ export type PatientTimelineProps = {
   enableFQS?: boolean;
 };
 
-export function PatientTimeline({ className, enableFQS = true }: PatientTimelineProps) {
+export function PatientTimeline({ className, enableFQS = false }: PatientTimelineProps) {
   const timelineEventsQuery = useTimelineEvents(enableFQS);
   const containerRef = useRef<HTMLDivElement>(null);
   const { featureFlags } = useCTW();

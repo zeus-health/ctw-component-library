@@ -29,8 +29,15 @@ export const diagnosticReportQuery = gql`
     $cursor: String!
     $sort: DiagnosticReportSortParams!
     $filter: DiagnosticReportFilterParams!
+    $first: Int!
   ) {
-    DiagnosticReportConnection(upid: $upid, after: $cursor, filter: $filter, sort: $sort) {
+    DiagnosticReportConnection(
+      upid: $upid
+      after: $cursor
+      filter: $filter
+      sort: $sort
+      first: $first
+    ) {
       pageInfo {
         hasNextPage
       }
