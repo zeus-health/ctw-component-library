@@ -163,7 +163,12 @@ export function useQueryAllPatientMedications(enableFQS: boolean) {
       setBuilderMedications(splitData.builderMedications);
       setOtherProviderMedications(splitData.otherProviderMedications);
     }
-  }, [summarizedMedicationsQuery.data, builderMedicationsQuery.data, enableFQS]);
+  }, [
+    summarizedMedicationsQuery.data,
+    builderMedicationsQuery.data,
+    summarizedMedicationsQuery.data?.basic,
+    enableFQS,
+  ]);
 
   const isLoading = builderMedicationsQuery.isLoading || summarizedMedicationsQuery.isLoading;
   const isFetching = builderMedicationsQuery.isFetching || summarizedMedicationsQuery.isFetching;
