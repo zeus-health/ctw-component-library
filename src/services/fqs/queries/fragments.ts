@@ -101,7 +101,6 @@ export const fragmentReference = gql`
     extension {
       url
       valueString
-      #TODO other extension fields?
     }
     reference
     type
@@ -109,9 +108,7 @@ export const fragmentReference = gql`
       id
       system
       value
-      #TODO other identifier fields?
     }
     display
-    #resource -- TODO
   }
 `;

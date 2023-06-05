@@ -149,16 +149,14 @@ export function useQueryAllPatientMedications(enableFQS: boolean) {
       const { medications: allMedicationsForBuilder } = builderMedicationsQuery.data;
 
       const basicsMap = getIncludedBasicsMap(basics);
-      // Get included resources from both bundles so that we can reference them for contained medications.
-      const includedResources = {} as ResourceMap;
 
       // Split the summarized medications into those known/unknown to the builder
       const splitData = splitMedications(
         summarizedMedications.map(
-          (m) => new MedicationStatementModel(m, includedResources, basicsMap.get(m.id ?? ""))
+          (m) => new MedicationStatementModel(m, {} as ResourceMap, basicsMap.get(m.id ?? ""))
         ),
         allMedicationsForBuilder.map(
-          (m) => new MedicationStatementModel(m, includedResources, basicsMap.get(m.id ?? ""))
+          (m) => new MedicationStatementModel(m, {} as ResourceMap, basicsMap.get(m.id ?? ""))
         )
       );
 

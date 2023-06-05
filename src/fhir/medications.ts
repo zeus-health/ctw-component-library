@@ -79,7 +79,6 @@ export type MedicationResults = {
   bundle: fhir4.Bundle | undefined;
   medications: fhir4.MedicationStatement[];
   basic: fhir4.Basic[];
-  includedMedications: fhir4.Medication[];
 };
 
 const omitClientFilters = omit(["informationSourceNot", "informationSource"]);
@@ -127,7 +126,7 @@ export async function getBuilderMedications(
 
     Telemetry.histogramMetric("req.count.builder_medications", medications.length);
 
-    return { bundle: response.bundle, medications, includedMedications: [], basic: [] };
+    return { bundle: response.bundle, medications, basic: [] };
   } catch (e) {
     throw errorResponse("Failed fetching medications for patient", e);
   }
@@ -169,7 +168,7 @@ export async function getBuilderMedicationStatementsFQS(
     }
     Telemetry.histogramMetric("req.count.builder_medications", models.length, ["fqs"]);
     const results = models.map((x) => x.resource);
-    return { bundle: undefined, medications: results, includedMedications: [], basic: [] };
+    return { bundle: undefined, medications: results, basic: [] };
   } catch (e) {
     throw Telemetry.logError(
       e as Error,
@@ -299,7 +298,7 @@ export async function getActiveMedications(
       Telemetry.countMetric("req.count.active_medications.none");
     }
     Telemetry.histogramMetric("req.count.active_medications", medications.length);
-    return { bundle: response.bundle, medications, basic: [], includedMedications: [] };
+    return { bundle: response.bundle, medications, basic: [] };
   } catch (e) {
     throw errorResponse("Failed fetching medications for patient", e);
   }
@@ -340,7 +339,7 @@ export async function getActiveMedicationsFQS(
     }
     Telemetry.histogramMetric("req.count.active_medications", models.length, ["fqs"]);
     const results = models.map((x) => x.resource);
-    return { bundle: undefined, medications: results, includedMedications: [], basic: [] };
+    return { bundle: undefined, medications: results, basic: [] };
   } catch (e) {
     throw Telemetry.logError(
       e as Error,
