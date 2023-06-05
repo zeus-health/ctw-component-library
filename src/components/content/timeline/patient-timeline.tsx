@@ -30,7 +30,7 @@ export function PatientTimeline({ className, enableFQS = false }: PatientTimelin
     records: timelineEventsQuery.data,
   });
   const openEncounterDetails = usePatientEncounterDetailsDrawer();
-  const openDiagnosticReportDetails = useObservationsDetailsDrawer();
+  const openDiagnosticReportDetails = useObservationsDetailsDrawer(enableFQS);
 
   return (
     <div className={cx(className, "ctw-scrollable-pass-through-height")} ref={containerRef}>

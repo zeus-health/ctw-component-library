@@ -15,6 +15,7 @@ const Component = ({ className, enableFQS = false }: PatientObservationsOutsideP
     <PatientObservationsBase
       query={diagnosticReports}
       className={cx(className, "ctw-scrollable-pass-through-height")}
+      enableFQS
     />
   );
 };

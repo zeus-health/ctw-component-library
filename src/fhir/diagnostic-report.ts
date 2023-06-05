@@ -20,7 +20,7 @@ type SearchType = "builder" | "all";
 export function usePatientBuilderDiagnosticReports(enableFQS: boolean) {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_DIAGNOSTIC_REPORTS,
-    [],
+    [enableFQS],
     withTimerMetric(
       async (requestContext, patient) => {
         const service = enableFQS ? diagnosticReportsFetcherFQS : diagnosticReportsFetcherODS;
@@ -35,7 +35,7 @@ export function usePatientBuilderDiagnosticReports(enableFQS: boolean) {
 export function usePatientAllDiagnosticReports(enableFQS: boolean) {
   return useQueryWithPatient(
     QUERY_KEY_OTHER_PROVIDER_DIAGNOSTIC_REPORTS,
-    [],
+    [enableFQS],
     withTimerMetric(
       async (requestContext, patient) => {
         const service = enableFQS ? diagnosticReportsFetcherFQS : diagnosticReportsFetcherODS;

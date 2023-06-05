@@ -126,7 +126,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
   observations: (props: PatientObservationsProps = {}) => ({
     key: "observations",
     display: () => "observations",
-    render: () => <PatientObservations {...props} enableFQS={false} />,
+    render: () => <PatientObservations {...props} />,
   }),
 
   "observations-outside": (props: PatientObservationsOutsideProps = {}) => ({
@@ -134,10 +134,10 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     display: () => (
       <>
         <span className="ctw-pr-2 ctw-capitalize">outside observations</span>
-        <PatientObservationsOutsideBadge enableFQS={false} />
+        <PatientObservationsOutsideBadge />
       </>
     ),
-    render: () => <PatientObservationsOutside {...props} enableFQS={false} />,
+    render: () => <PatientObservationsOutside {...props} />,
   }),
 
   timeline: (props: PatientTimelineProps = {}) => ({
@@ -149,6 +149,6 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
         <BetaLabel />
       </div>
     ),
-    render: () => <PatientTimeline {...props} enableFQS={false} />,
+    render: () => <PatientTimeline {...props} />,
   }),
 };
