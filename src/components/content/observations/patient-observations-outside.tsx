@@ -5,15 +5,17 @@ import { usePatientAllDiagnosticReports } from "@/fhir/diagnostic-report";
 
 export type PatientObservationsOutsideProps = {
   className?: cx.Argument;
+  enableFQS?: boolean;
 };
 
-const Component = ({ className }: PatientObservationsOutsideProps) => {
-  const diagnosticReports = usePatientAllDiagnosticReports();
+const Component = ({ className, enableFQS = false }: PatientObservationsOutsideProps) => {
+  const diagnosticReports = usePatientAllDiagnosticReports(enableFQS);
 
   return (
     <PatientObservationsBase
       query={diagnosticReports}
       className={cx(className, "ctw-scrollable-pass-through-height")}
+      enableFQS
     />
   );
 };
