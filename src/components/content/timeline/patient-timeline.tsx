@@ -15,10 +15,11 @@ import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 
 export type PatientTimelineProps = {
   className?: cx.Argument;
+  enableFQS?: boolean;
 };
 
-export function PatientTimeline({ className }: PatientTimelineProps) {
-  const timelineEventsQuery = useTimelineEvents();
+export function PatientTimeline({ className, enableFQS = false }: PatientTimelineProps) {
+  const timelineEventsQuery = useTimelineEvents(enableFQS);
   const containerRef = useRef<HTMLDivElement>(null);
   const { featureFlags } = useCTW();
   const { viewOptions, defaultView } = getDateRangeView<TimelineEventModel>("date");
@@ -29,7 +30,7 @@ export function PatientTimeline({ className }: PatientTimelineProps) {
     records: timelineEventsQuery.data,
   });
   const openEncounterDetails = usePatientEncounterDetailsDrawer();
-  const openDiagnosticReportDetails = useObservationsDetailsDrawer();
+  const openDiagnosticReportDetails = useObservationsDetailsDrawer(enableFQS);
 
   return (
     <div className={cx(className, "ctw-scrollable-pass-through-height")} ref={containerRef}>
