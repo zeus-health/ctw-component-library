@@ -2,7 +2,7 @@ import { getIncludedResources } from "./bundle";
 import { CodePreference } from "./codeable-concept";
 import { searchCommonRecords } from "./search-helpers";
 import { SYSTEM_NDC, SYSTEM_RXNORM, SYSTEM_SNOMED } from "./system-urls";
-import { applyAllergyFilters } from "@/components/content/allergies/allergies-filter";
+import { applyAllergyFilters } from "@/components/content/allergies/helpers/allergies-filter";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { QUERY_KEY_PATIENT_ALLERGIES } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";

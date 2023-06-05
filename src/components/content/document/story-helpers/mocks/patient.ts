@@ -1,4 +1,4 @@
-import { FAKE_UNIVERSAL_ID_TAG, LENS_BUILDER_TAG } from "@/components/content/story-helpers/ids";
+import { FAKE_BUILDER_TAG, FAKE_UNIVERSAL_ID_TAG } from "@/components/content/story-helpers/ids";
 
 export const patient = {
   resourceType: "Bundle",
@@ -28,13 +28,7 @@ export const patient = {
               code: "HTEST",
             },
           ],
-          tag: [
-            {
-              system: "https://zusapi.com/thirdparty/source",
-              code: "commonwell",
-            },
-            LENS_BUILDER_TAG,
-          ],
+          tag: [FAKE_BUILDER_TAG],
         },
         identifier: [FAKE_UNIVERSAL_ID_TAG],
         name: [

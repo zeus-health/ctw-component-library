@@ -1,5 +1,5 @@
 import { searchCommonRecords } from "./search-helpers";
-import { applyImmunizationFilters } from "@/components/content/immunizations/patient-immunizations-filters";
+import { applyImmunizationFilters } from "@/components/content/immunizations/helpers/filters";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { orderBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_IMMUNIZATIONS } from "@/utils/query-keys";
