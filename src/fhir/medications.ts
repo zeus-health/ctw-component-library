@@ -133,6 +133,51 @@ export async function getBuilderMedications(
   }
 }
 
+export async function getBuilderMedicationStatementsFQS(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  keys: object[] = []
+): Promise<MedicationResults> {
+  try {
+    const [searchFilters = {}] = keys;
+    const graphClient = createGraphqlClient(requestContext);
+    const data = (await graphClient.request(medicationStatementQuery, {
+      upid: patient.UPID,
+      cursor: "",
+      first: 1000,
+      sort: {
+        lastUpdated: "DESC",
+      },
+      filter: {
+        tag: {
+          nonematch: [SYSTEM_SUMMARY, `${SYSTEM_ZUS_THIRD_PARTY}`],
+          // TODO: There's a bug in FQS that doesn't allow filtering with nonematch AND allmatch.
+          // Uncomment the line below once https://zeushealth.atlassian.net/browse/DRT-249 is resolved.
+          // allmatch: [`${SYSTEM_ZUS_OWNER}|builder/${requestContext.builderId}`],
+        },
+      },
+    })) as MedicationStatementGraphqlResponse;
+    let nodes = data.MedicationStatementConnection.edges.map((x) => x.node);
+    nodes = filterResourcesByBuilderId(
+      nodes,
+      requestContext.contextBuilderId || requestContext.builderId
+    );
+    const medStatements = setupMedicationStatementModelsWithFQS(nodes);
+    const models = applySearchFiltersToFQSResponse(medStatements, searchFilters, false);
+    if (models.length === 0) {
+      Telemetry.countMetric("req.count.builder_medications.none", 1, ["fqs"]);
+    }
+    Telemetry.histogramMetric("req.count.builder_medications", models.length, ["fqs"]);
+    const results = models.map((x) => x.resource);
+    return { bundle: undefined, medications: results, includedMedications: [], basic: [] };
+  } catch (e) {
+    throw Telemetry.logError(
+      e as Error,
+      `Failed fetching builder medications for patient: ${patient.UPID}`
+    );
+  }
+}
+
 export async function getCommonMedicationRequests(
   requestContext: CTWRequestContext,
   patient: PatientModel,
@@ -201,48 +246,6 @@ function setupMedicationStatementModelsWithFQS(
   medicationStatementResources: fhir4.MedicationStatement[]
 ): MedicationStatementModel[] {
   return medicationStatementResources.map((ms) => new MedicationStatementModel(ms));
-}
-
-export async function fetchBuilderMedicationStatementsFQS(
-  requestContext: CTWRequestContext,
-  patient: PatientModel
-) {
-  try {
-    const graphClient = createGraphqlClient(requestContext);
-    const data = (await graphClient.request(medicationStatementQuery, {
-      upid: patient.UPID,
-      cursor: "",
-      first: 1000,
-      sort: {
-        lastUpdated: "DESC",
-      },
-      filter: {
-        tag: {
-          nonematch: [SYSTEM_SUMMARY, `${SYSTEM_ZUS_THIRD_PARTY}`],
-          // TODO: There's a bug in FQS that doesn't allow filtering with nonematch AND allmatch.
-          // Uncomment the line below once https://zeushealth.atlassian.net/browse/DRT-249 is resolved.
-          // allmatch: [`${SYSTEM_ZUS_OWNER}|builder/${requestContext.builderId}`],
-        },
-      },
-    })) as MedicationStatementGraphqlResponse;
-    let nodes = data.MedicationStatementConnection.edges.map((x) => x.node);
-    nodes = filterResourcesByBuilderId(
-      nodes,
-      requestContext.contextBuilderId || requestContext.builderId
-    );
-    const medStatements = setupMedicationStatementModelsWithFQS(nodes);
-    const results = applySearchFiltersToFQSResponse(medStatements);
-    if (results.length === 0) {
-      Telemetry.countMetric("req.count.builder_medications.none", 1, ["fqs"]);
-    }
-    Telemetry.histogramMetric("req.count.builder_medications", results.length, ["fqs"]);
-    return results;
-  } catch (e) {
-    throw Telemetry.logError(
-      e as Error,
-      `Failed fetching builder medications for patient: ${patient.UPID}`
-    );
-  }
 }
 
 function applySearchFiltersToFQSResponse(

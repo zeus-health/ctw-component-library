@@ -7,7 +7,7 @@ import {
   getActiveMedications,
   getActiveMedicationsFQS,
   getBuilderMedications,
-  // fetchBuilderMedicationStatementsFQS,
+  getBuilderMedicationStatementsFQS,
   getCommonMedicationDispenses,
   getCommonMedicationRequests,
   getMedicationStatements,
@@ -26,7 +26,9 @@ import {
 import { withTimerMetric } from "@/utils/telemetry";
 
 // Gets patient medications for the builder, excluding meds where the information source is patient.
-export function useQueryGetPatientMedsForBuilder(): UseQueryResult<MedicationResults, unknown> {
+export function useQueryGetPatientMedsForBuilder(
+  enableFQS: boolean
+): UseQueryResult<MedicationResults, unknown> {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
     [
@@ -34,8 +36,11 @@ export function useQueryGetPatientMedsForBuilder(): UseQueryResult<MedicationRes
         informationSourceNot: "Patient", // exclude medication statements where the patient is the information source
       },
     ],
-    withTimerMetric(getBuilderMedications, "req.timing.builder_medications")
-    // withTimerMetric(fetchBuilderMedicationStatementsFQS, "req.timing.builder_medications")
+    enableFQS
+      ? withTimerMetric(getBuilderMedicationStatementsFQS, "req.timing.builder_medications", [
+          "fqs",
+        ])
+      : withTimerMetric(getBuilderMedications, "req.timing.builder_medications")
   );
 }
 
@@ -104,7 +109,7 @@ export function useQueryAllPatientMedications(enableFQS: boolean) {
   >([]);
 
   const summarizedMedicationsQuery = useQueryGetSummarizedPatientMedications(enableFQS);
-  const builderMedicationsQuery = useQueryGetPatientMedsForBuilder();
+  const builderMedicationsQuery = useQueryGetPatientMedsForBuilder(enableFQS);
 
   useEffect(() => {
     if (
