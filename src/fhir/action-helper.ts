@@ -1,11 +1,8 @@
-import { FhirResource, Resource } from "fhir/r4";
-import { v4 as uuidv4 } from "uuid";
+import { Resource } from "fhir/r4";
 import { fixupFHIR } from "./client";
 import { isFhirError } from "./errors";
-import { ASSEMBLER_CODING, CREATE_CODING, createProvenance } from "./provenance";
+import { createProvenance } from "./provenance";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { getUsersPractitionerReference } from "@/fhir/practitioner";
-import { claimsBuilderName } from "@/utils/auth";
 import { Telemetry } from "@/utils/telemetry";
 
 export async function createOrEditFhirResource(
@@ -35,6 +32,8 @@ export async function createOrEditFhirResource(
         resourceType: resource.resourceType,
         body: fixupFHIR(resource),
       });
+      await createProvenance("CREATE", response, requestContext);
+
       if (!isFhirError(response)) {
         resourceModified.id = response.id;
       }
@@ -46,103 +45,4 @@ export async function createOrEditFhirResource(
     Telemetry.logError(err as Error);
     return err;
   }
-}
-
-export async function createFhirResourceWithProvenance(
-  resource: FhirResource,
-  requestContext: CTWRequestContext
-) {
-  const { fhirClient } = requestContext;
-  const builderName = claimsBuilderName(requestContext.authToken);
-  const resourceId = resource.id || uuidv4();
-  const provenanceFullUrl = uuidv4();
-
-  const bundle: fhir4.Bundle = {
-    resourceType: "Bundle",
-    type: "transaction",
-    entry: [
-      {
-        request: {
-          method: "POST",
-          url: resource.resourceType,
-        },
-        fullUrl: resourceId,
-        resource,
-      },
-      {
-        request: {
-          method: "POST",
-          url: "Provenance",
-        },
-        fullUrl: provenanceFullUrl,
-        resource: {
-          resourceType: "Provenance",
-          activity: CREATE_CODING,
-          agent: [
-            {
-              who: await getUsersPractitionerReference(requestContext),
-              onBehalfOf: { display: builderName },
-            },
-            {
-              type: {
-                coding: [ASSEMBLER_CODING],
-              },
-              who: { display: "Zus Health" },
-            },
-          ],
-          recorded: new Date().toISOString(),
-          target: [
-            {
-              reference: `${resource.resourceType}/${resourceId}`,
-              type: resource.resourceType,
-            },
-          ],
-        },
-      },
-    ],
-  };
-
-  return fhirClient.transaction({
-    body: fixupFHIR({
-      ...bundle,
-      type: "transaction",
-    }),
-  });
-}
-
-export async function deleteMetaTags(
-  resource: Resource,
-  requestContext: CTWRequestContext,
-  tag: fhir4.Coding[]
-) {
-  const post = {
-    resourceType: "Parameters",
-    parameter: [
-      {
-        name: "meta",
-        valueMeta: {
-          tag,
-        },
-      },
-    ],
-  };
-
-  const { fhirClient } = requestContext;
-  await fhirClient.request(`${resource.resourceType}/${resource.id}/$meta-delete`, {
-    method: "POST",
-    body: JSON.stringify(post),
-    options: { headers: { "content-type": "application/json" } },
-  });
-}
-
-export async function deleteFhirResource(resource: Resource, requestContext: CTWRequestContext) {
-  const { fhirClient } = requestContext;
-
-  if (!resource.id) {
-    throw new Error(`Tried to delete a resource that hasn't been created yet.`);
-  }
-
-  await fhirClient.request(`${resource.resourceType}/${resource.id}?_cascade=delete`, {
-    method: "DELETE",
-  });
 }

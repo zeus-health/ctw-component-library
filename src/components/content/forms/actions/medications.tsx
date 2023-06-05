@@ -1,5 +1,5 @@
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { createFhirResourceWithProvenance } from "@/fhir/action-helper";
+import { createOrEditFhirResource } from "@/fhir/action-helper";
 import { dateToISO } from "@/fhir/formatters";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { SYSTEM_RXNORM } from "@/fhir/system-urls";
@@ -55,7 +55,7 @@ export const createMedicationStatement = async (
 
   const resourceModel = new MedicationStatementModel(fhirMedicationStatement);
 
-  const response = await createFhirResourceWithProvenance(
+  const response = await createOrEditFhirResource(
     resourceModel.resource,
     await getRequestContext()
   );
