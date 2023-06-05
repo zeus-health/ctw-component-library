@@ -2,7 +2,9 @@ import { Resource } from "fhir/r4";
 import { fixupFHIR } from "./client";
 import { isFhirError } from "./errors";
 import { createProvenance } from "./provenance";
+import { isFHIRResource } from "./types";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
+import { longPollFQS } from "@/services/fqs/long-poll-fqs";
 import { Telemetry } from "@/utils/telemetry";
 
 export async function createOrEditFhirResource(
@@ -39,6 +41,20 @@ export async function createOrEditFhirResource(
       }
     }
     Telemetry.reportActionSuccess(`${resource.resourceType}.${action}`);
+
+    // Read-Your-Writes!
+    // Wait for FQS to have the latest version of the resource.
+    // This way callers can safely refetch/invalidateQueries
+    // and be sure to get fresh data from FQS.
+    if (isFHIRResource(response) && response.id && response.meta?.lastUpdated) {
+      await longPollFQS(
+        requestContext,
+        resource.resourceType,
+        response.id,
+        response.meta.lastUpdated
+      );
+    }
+
     return response;
   } catch (err) {
     Telemetry.reportActionFailure(`${resource.resourceType}.${action}`);
