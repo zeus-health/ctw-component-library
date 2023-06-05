@@ -21,10 +21,14 @@ export function usePatientBuilderDiagnosticReports(enableFQS: boolean) {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_DIAGNOSTIC_REPORTS,
     [],
-    withTimerMetric(async (requestContext, patient) => {
-      const service = enableFQS ? diagnosticReportsFetcherFQS : diagnosticReportsFetcherODS;
-      return service("builder")(requestContext, patient);
-    }, "req.timing.builder_diagnostic_reports")
+    withTimerMetric(
+      async (requestContext, patient) => {
+        const service = enableFQS ? diagnosticReportsFetcherFQS : diagnosticReportsFetcherODS;
+        return service("builder")(requestContext, patient);
+      },
+      "req.timing.builder_diagnostic_reports",
+      enableFQS ? ["FQS"] : [""]
+    )
   );
 }
 
@@ -32,10 +36,14 @@ export function usePatientAllDiagnosticReports(enableFQS: boolean) {
   return useQueryWithPatient(
     QUERY_KEY_OTHER_PROVIDER_DIAGNOSTIC_REPORTS,
     [],
-    withTimerMetric(async (requestContext, patient) => {
-      const service = enableFQS ? diagnosticReportsFetcherFQS : diagnosticReportsFetcherODS;
-      return service("all")(requestContext, patient);
-    }, "req.timing.all_diagnostic_reports")
+    withTimerMetric(
+      async (requestContext, patient) => {
+        const service = enableFQS ? diagnosticReportsFetcherFQS : diagnosticReportsFetcherODS;
+        return service("all")(requestContext, patient);
+      },
+      "req.timing.all_diagnostic_reports",
+      enableFQS ? ["FQS"] : [""]
+    )
   );
 }
 
@@ -55,7 +63,7 @@ function diagnosticReportsFetcherODS(searchType: SearchType) {
     } catch (e) {
       throw Telemetry.logError(
         e as Error,
-        `Failed fetching ${searchType} DiagnosticReport resources`
+        `Failed fetching ${searchType} DiagnosticReport resources (ODS)`
       );
     }
   };
@@ -68,18 +76,20 @@ function diagnosticReportsFetcherFQS(searchType: SearchType) {
     try {
       const data = await fetchFunction(requestContext, patient);
       if (searchType === "all" && data.DiagnosticReportConnection.edges.length === 0) {
-        Telemetry.countMetric(`req.count.${searchType}_diagnostic_reports.none`);
+        Telemetry.countMetric(`req.count.${searchType}_diagnostic_reports.none`, 0, ["FQS"]);
       }
       const result = setupDiagnosticReportModelsWithFQS(
         data.DiagnosticReportConnection.edges.map((x) => x.node)
       );
 
-      Telemetry.histogramMetric(`req.count.${searchType}_diagnostic_reports`, result.length);
+      Telemetry.histogramMetric(`req.count.${searchType}_diagnostic_reports`, result.length, [
+        "FQS",
+      ]);
       return result;
     } catch (e) {
       throw Telemetry.logError(
         e as Error,
-        `Failed fetching ${searchType} DiagnosticReport resources`
+        `Failed fetching ${searchType} DiagnosticReport resources (FQS)`
       );
     }
   };
