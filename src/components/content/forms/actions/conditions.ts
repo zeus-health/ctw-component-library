@@ -9,11 +9,12 @@ import {
   SYSTEM_CONDITION_CATEGORY,
   SYSTEM_CONDITION_CLINICAL,
   SYSTEM_CONDITION_VERIFICATION_STATUS,
-  SYSTEM_ZUS_UNIVERSAL_ID,
 } from "@/fhir/system-urls";
-import { isFHIRResource } from "@/fhir/types";
-import { cloneDeep, find, findIndex, isUndefined, omitBy } from "@/utils/nodash";
-import { QUERY_KEY_PATIENT_CONDITIONS } from "@/utils/query-keys";
+import { cloneDeep, isUndefined, omitBy } from "@/utils/nodash";
+import {
+  QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
+  QUERY_KEY_PATIENT_CONDITIONS,
+} from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 
 // Sets any autofill values that apply when a user adds a condition, whether creating or confirming.
@@ -126,22 +127,10 @@ export const createOrEditCondition = async (
 
   const response = await createOrEditFhirResource(fhirCondition, requestContext);
 
-  if (isFHIRResource(response)) {
-    const patientUPID = find(response.extension, { url: SYSTEM_ZUS_UNIVERSAL_ID })?.valueString;
-    // Need to use an entirely new array so that
-    // setQueryData function will trigger a re-render.
-    const conditions = cloneDeep(
-      queryClient.getQueryData([QUERY_KEY_PATIENT_CONDITIONS, patientUPID]) as ConditionModel[]
-    );
-
-    const index = findIndex(conditions, { id: response.id });
-    if (index >= 0) {
-      conditions[index].resource = response as fhir4.Condition;
-    } else {
-      conditions.push(new ConditionModel(response as fhir4.Condition));
-    }
-    queryClient.setQueryData([QUERY_KEY_PATIENT_CONDITIONS, patientUPID], conditions);
-  }
+  await Promise.all([
+    queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]),
+    queryClient.invalidateQueries([QUERY_KEY_OTHER_PROVIDER_CONDITIONS]),
+  ]);
 
   return response;
 };
