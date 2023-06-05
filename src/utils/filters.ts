@@ -1,18 +1,25 @@
 import { Filter } from "@/components/core/filter-bar/filter-bar-types";
 import { compact, find, isArray, uniq } from "@/utils/nodash/";
 
-export const applyFilters = <T extends object>(data: T[], filters?: Filter[]) => {
-  if (!filters) return data;
+export type FilterFunc<T extends object> = (data: T[]) => T[];
+export type FilterEntry<T extends object> = Filter | FilterFunc<T>;
 
-  return data.filter((entry) => {
-    const showArchived = find(filters, { key: "isArchived" })?.selected;
+export const applyFilters = <T extends object>(data: T[], filters?: (Filter | FilterFunc<T>)[]) => {
+  if (!filters) return data;
+  const filterFuncs = filters.filter((f) => typeof f === "function") as FilterFunc<T>[];
+  const filterItems = filters.filter((f) => typeof f !== "function") as Filter[];
+
+  const filteredData = filterFuncs.reduce((acc, filterFunc) => filterFunc(acc), data);
+
+  return filteredData.filter((entry) => {
+    const showArchived = find(filterItems, { key: "isArchived" })?.selected;
     const isArchived = Boolean(entry["isArchived" as keyof T]);
 
     if (!showArchived && isArchived) {
       return false;
     }
 
-    return Object.entries(filters).every(([_, filterItem]) => {
+    return Object.entries(filterItems).every(([_, filterItem]) => {
       const targetFilter = String(entry[filterItem.key as keyof T]);
 
       switch (filterItem.type) {

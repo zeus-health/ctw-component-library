@@ -1,6 +1,6 @@
 import { getIncludedResources } from "./bundle";
 import { searchCommonRecords } from "./search-helpers";
-import { applyCareTeamFilters } from "@/components/content/care-team/patient-careteam-filters";
+import { applyCareTeamFilters } from "@/components/content/care-team/helpers/filters";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { QUERY_KEY_CARETEAM } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
