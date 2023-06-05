@@ -4,7 +4,7 @@ import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { get } from "@/utils/nodash";
 
 // We'll keep retrying until we've gone over our timeout.
-const TIMEOUT_MS = 30_000;
+const TIMEOUT_MS = 20_000;
 
 // Due to mutations going to ODS, there is a delay
 // before FQS has the latest fresh resource.
@@ -35,8 +35,13 @@ export async function longPollFQS(
     retryCount += 1;
 
     // Refetch the resource from FQS.
-    const data = await graphClient.request(query);
-    currentTimestamp = Date.parse(String(get(data, "Condition.meta.lastUpdated")));
+    try {
+      const data = await graphClient.request(query);
+      currentTimestamp = Date.parse(String(get(data, "Condition.meta.lastUpdated")));
+    } catch (err) {
+      // Ignore errors and retry.
+      // This can happen if we just created a new resource that isn't in FQS yet.
+    }
   } while (currentTimestamp < targetTimestamp && performance.now() - startTime < TIMEOUT_MS);
 }
 
