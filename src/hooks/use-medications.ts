@@ -143,12 +143,11 @@ export function useQueryAllPatientMedications(enableFQS: boolean) {
     } else if (
       enableFQS &&
       summarizedMedicationsQuery.data?.medications &&
-      builderMedicationsQuery.data?.bundle // TODO: switch to not use bundle
+      builderMedicationsQuery.data?.medications
     ) {
       const { medications: summarizedMedications, basic: basics } = summarizedMedicationsQuery.data;
       const { medications: allMedicationsForBuilder } = builderMedicationsQuery.data;
 
-      // TODO: deal with basics and included resources
       const basicsMap = getIncludedBasicsMap(basics);
       // Get included resources from both bundles so that we can reference them for contained medications.
       const includedResources = {} as ResourceMap;

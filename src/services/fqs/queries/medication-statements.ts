@@ -89,6 +89,15 @@ export const medicationStatementQuery = gql`
                 resourceType
                 organizationName: name
               }
+              ... on Medication {
+                id
+                resourceType
+                code {
+                  coding {
+                    ...Coding
+                  }
+                }
+              }
             }
           }
           context {
