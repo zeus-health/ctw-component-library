@@ -192,3 +192,27 @@ export const fragmentObservation = gql`
     }
   }
 `;
+
+export const fragmentLocation = gql`
+  fragment Location on Location {
+    id
+    resourceType
+    status
+    name
+    description
+    type {
+      code
+      display
+      system
+      extension {
+        url
+        valueString
+      }
+    }
+    telecom {
+      use
+      value
+      system
+    }
+  }
+`;

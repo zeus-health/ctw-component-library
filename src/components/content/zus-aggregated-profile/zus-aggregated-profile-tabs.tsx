@@ -149,6 +149,6 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
         <BetaLabel />
       </div>
     ),
-    render: () => <PatientTimeline {...props} enableFQS={false} />,
+    render: () => <PatientTimeline {...props} enableFQS />,
   }),
 };
