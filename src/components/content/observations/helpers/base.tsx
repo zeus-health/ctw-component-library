@@ -16,6 +16,7 @@ export type PatientObservationsTableProps = {
   className?: cx.Argument;
   query: { data?: DiagnosticReportModel[]; isLoading: boolean };
   rowActions?: ResourceTableProps<DiagnosticReportModel>["rowActions"];
+  enableFQS?: boolean;
 };
 
 export const PatientObservationsBase = ({
@@ -23,8 +24,9 @@ export const PatientObservationsBase = ({
   className,
   query,
   rowActions,
+  enableFQS = false,
 }: PatientObservationsTableProps) => {
-  const openDrawer = useObservationsDetailsDrawer();
+  const openDrawer = useObservationsDetailsDrawer(enableFQS);
   const { data, setFilters, setSort } = useFilteredSortedData({
     defaultSort: defaultObservationSort,
     records: query.data,
