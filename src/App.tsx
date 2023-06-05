@@ -105,8 +105,13 @@ const components: DemoComponent[] = [
           "observations",
           "timeline",
           "observations-outside",
+          "care-team",
+          "documents",
+          "immunizations",
         ]}
         title="ZAP"
+        timelineProps={{ enableFQS: true }}
+        observationsProps={{ enableFQS: true }}
       />
     ),
   },
