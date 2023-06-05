@@ -45,8 +45,7 @@
     "test-storybook": "test-storybook",
     "test-storybook:watch": "test-storybook --watch",
     "prepare": "relative-deps",
-    "postinstall": "patch-package",
-    "netlify:build": "cd ctw && npm install --save ../ && npm run build"
+    "postinstall": "patch-package"
   },
   "prettier": {
     "printWidth": 100
