@@ -28,6 +28,18 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
 
   readonly builderPatientRxNormStatus?: Record<string, string>;
 
+  get aggregatedFrom(): Reference[] {
+    const extension = find(
+      (x) =>
+        x.url === LENS_EXTENSION_AGGREGATED_FROM || x.url === CTW_EXTENSION_LENS_AGGREGATED_FROM,
+      this.resource.extension
+    );
+    if (!extension?.extension) {
+      return compact(this.resource.derivedFrom);
+    }
+    return compact(extension.extension.map(get("valueReference")));
+  }
+
   get basedOn(): string | undefined {
     return this.resource.basedOn?.[0]?.type;
   }
@@ -56,18 +68,6 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
     return this.resource.derivedFrom?.map(({ display }) => display || "") || [];
   }
 
-  get aggregatedFrom(): Reference[] {
-    const extension = find(
-      (x) =>
-        x.url === LENS_EXTENSION_AGGREGATED_FROM || x.url === CTW_EXTENSION_LENS_AGGREGATED_FROM,
-      this.resource.extension
-    );
-    if (!extension?.extension) {
-      return compact(this.resource.derivedFrom);
-    }
-    return compact(extension.extension.map(get("valueReference")));
-  }
-
   get display() {
     return codeableConceptLabel(
       getMedicationCodeableConcept(this.resource, this.includedResources)
@@ -84,10 +84,6 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
 
   get identifier(): string | undefined {
     return this.resource.identifier?.[0]?.value;
-  }
-
-  get informationSource(): Reference | undefined {
-    return this.resource.informationSource || undefined;
   }
 
   set informationSource(informationSource: Reference | undefined) {
@@ -156,10 +152,6 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
 
   get statusReason(): string | undefined {
     return codeableConceptLabel(this.resource.statusReason?.[0]);
-  }
-
-  get subject(): Reference {
-    return this.resource.subject;
   }
 
   get subjectID(): string {
