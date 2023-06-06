@@ -9,10 +9,7 @@ import { claimsBuilderName } from "@/utils/auth";
 import { Telemetry } from "@/utils/telemetry";
 
 type ResourceSaveStatus = "update" | "create" | "failure";
-export type OnResourceSaveCallback = (
-  resource: Resource,
-  action: ResourceSaveStatus
-) => void;
+export type OnResourceSaveCallback = (resource: Resource, action: ResourceSaveStatus) => void;
 
 export async function createOrEditFhirResource(
   resource: Resource,
