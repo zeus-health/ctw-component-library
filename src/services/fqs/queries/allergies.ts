@@ -1,34 +1,41 @@
 import { AllergyIntolerance } from "fhir/r4";
 import { gql } from "graphql-request";
-import { fragmentCoding, fragmentEncounter, fragmentPatient } from "./fragments";
+import {
+  fragmentCoding,
+  fragmentEncounter,
+  fragmentPatient,
+  fragmentPractitioner,
+} from "./fragments";
 import { GraphqlConnectionNode, GraphqlPageInfo } from "../client";
 
-export interface AllergyConnection {
+export interface AllergyIntoleranceConnection {
   pageInfo: GraphqlPageInfo;
   edges: GraphqlConnectionNode<AllergyIntolerance>[];
 }
 
 export interface AllergyGraphqlResponse {
-  AllergyConnection: AllergyConnection;
+  AllergyIntoleranceConnection: AllergyIntoleranceConnection;
 }
 
 export const allergyQuery = gql`
   ${fragmentCoding}
   ${fragmentPatient}
   ${fragmentEncounter}
-  query Allergy(
+  ${fragmentPractitioner}
+  query AllergyIntolerance(
     $upid: ID!
     $cursor: String!
-    $filter: AllergyFilterParams!
-    $sort: AllergySortParams!
+    $sort: AllergyIntoleranceSortParams!
     $first: Int!
   ) {
-    AllergyConnection(upid: $upid, after: $cursor, filter: $filter, sort: $sort, first: $first) {
+    AllergyIntoleranceConnection(upid: $upid, after: $cursor, sort: $sort, first: $first) {
       pageInfo {
         hasNextPage
       }
       edges {
         node {
+          id
+          resourceType
           clinicalStatus {
             coding {
               ...Coding
@@ -60,7 +67,12 @@ export const allergyQuery = gql`
             }
           }
           onsetDateTime
-          onsetAge
+          onsetAge {
+            value
+            unit
+            system
+            code
+          }
           onsetPeriod {
             start
             end
@@ -73,7 +85,10 @@ export const allergyQuery = gql`
             }
           }
           lastOccurrence
-          note
+          note {
+            text
+            time
+          }
           reaction {
             substance {
               coding {
@@ -87,7 +102,10 @@ export const allergyQuery = gql`
             }
             onset
             severity
-            note
+            note {
+              text
+              time
+            }
           }
         }
       }

@@ -1,8 +1,9 @@
 import { getIncludedResources } from "./bundle";
-import { AllergyModel } from "./models/allergies";
 import { searchCommonRecords } from "./search-helpers";
-import { SYSTEM_SUMMARY, SYSTEM_ZUS_THIRD_PARTY } from "./system-urls";
-import { applyAllergyFilters } from "@/components/content/allergies/helpers/allergies-filter";
+import {
+  applyAllergyFilters,
+  applyAllergyFiltersFQS,
+} from "@/components/content/allergies/helpers/allergies-filter";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { createGraphqlClient } from "@/services/fqs/client";
 import { AllergyGraphqlResponse, allergyQuery } from "@/services/fqs/queries/allergies";
@@ -24,23 +25,17 @@ export function usePatientAllergies(enableFQS: boolean) {
               sort: {
                 lastUpdated: "DESC",
               },
-              filter: {
-                tag: {
-                  nonematch: [SYSTEM_SUMMARY, `${SYSTEM_ZUS_THIRD_PARTY}`],
-                },
-              },
             })) as AllergyGraphqlResponse;
 
-            const nodes = data.AllergyConnection.edges.map((x) => x.node);
+            const nodes = data.AllergyIntoleranceConnection.edges.map((x) => x.node);
             // TODO: No longer needed once https://zeushealth.atlassian.net/browse/DRT-249 is resolved.
 
-            const allergies = setupAllergyModelsWithFQS(nodes);
-
-            if (allergies.length === 0) {
+            const results = applyAllergyFiltersFQS(nodes);
+            if (results.length === 0) {
               Telemetry.countMetric("req.count.allergies.none");
             }
-            Telemetry.histogramMetric("req.count.allergies", allergies.length);
-            return allergies;
+            Telemetry.histogramMetric("req.count.allergies", results.length);
+            return results;
           } catch (e) {
             throw new Error(`Failed fetching allergies information for patient ${patient.UPID}`);
           }
@@ -69,8 +64,4 @@ export function usePatientAllergies(enableFQS: boolean) {
           }
         }, "req.timing.allergies")
   );
-}
-
-function setupAllergyModelsWithFQS(allergyResources: fhir4.AllergyIntolerance[]): AllergyModel[] {
-  return allergyResources.map((c) => new AllergyModel(c));
 }

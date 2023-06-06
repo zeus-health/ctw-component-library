@@ -28,6 +28,7 @@ function PatientAllergiesComponent({ className, enableFQS = false }: PatientAlle
     defaultSort: defaultAllergySort,
     records: patientAllergiesQuery.data,
   });
+
   const openDetails = useResourceDetailsDrawer({
     header: (m) => capitalize(m.display),
     details: allergyData,
