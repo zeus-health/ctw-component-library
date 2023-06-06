@@ -15,9 +15,9 @@ export async function longPollFQS(
   resourceType: string,
   resourceId: string,
   lastUpdated: string
-) {
+): Promise<boolean> {
   const graphClient = createGraphqlClient(requestContext);
-  const query = `query {
+  const query = `query GetLastUpdated {
       ${resourceType}(id: "${resourceId}") {
         meta {
           lastUpdated
@@ -28,7 +28,7 @@ export async function longPollFQS(
   const targetTimestamp = Date.parse(lastUpdated);
   let retryCount = 0;
   let currentTimestamp = 0;
-  const startTime = performance.now();
+  const startTime = Date.now();
   do {
     // Exponential backoff how long we wait between retries.
     await sleep(100 * 2 ** retryCount);
@@ -42,7 +42,9 @@ export async function longPollFQS(
       // Ignore errors and retry.
       // This can happen if we just created a new resource that isn't in FQS yet.
     }
-  } while (currentTimestamp < targetTimestamp && performance.now() - startTime < TIMEOUT_MS);
+  } while (currentTimestamp < targetTimestamp && Date.now() - startTime < TIMEOUT_MS);
+
+  return currentTimestamp >= targetTimestamp;
 }
 
 function sleep(ms: number) {
