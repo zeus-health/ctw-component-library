@@ -12,12 +12,12 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
 
   readonly includedResources?: ResourceMap;
 
-  readonly revIncludes?: Resource[];
+  private revIncludedResources?: Resource[];
 
   constructor(resource: T, includedResources?: ResourceMap, revIncludes?: Resource[]) {
     this.resource = resource;
     this.includedResources = includedResources;
-    this.revIncludes = revIncludes;
+    this.revIncludedResources = revIncludes;
   }
 
   get id(): string {
@@ -52,6 +52,14 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
 
   get resourceTypeTitle(): string {
     return startCase(this.resourceType);
+  }
+
+  get revIncludes(): Resource[] | undefined {
+    return this.revIncludedResources;
+  }
+
+  set revIncludes(resources: Resource[] | undefined) {
+    this.revIncludedResources = resources;
   }
 
   // Returns the latest Basic resource that has a code that matches

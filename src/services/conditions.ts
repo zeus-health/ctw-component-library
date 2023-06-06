@@ -1,4 +1,3 @@
-import { Basic } from "fhir/r4";
 import { FhirResource } from "fhir-kit-client";
 import { useEffect, useState } from "react";
 import { filterResourcesByBuilderId } from "./common";
@@ -57,13 +56,20 @@ export function usePatientConditionsOutside(enableFQS: boolean) {
 
   useEffect(() => {
     const patientConditions = patientConditionsQuery.data ?? [];
-    const basic = basicQuery.data ?? [];
+    const basics = basicQuery.data ?? [];
     const otherConditions = filterOtherConditions(
       otherConditionsQuery.data ?? [],
       patientConditions,
-      basic,
       true
     );
+    // If basic data came back from the above useBasic call, manually map any basic data to the condition
+    // it corresponds to.
+    if (basics.length > 0) {
+      otherConditions.forEach((c, i) => {
+        const filteredBasics = basics.filter((b) => b.subject?.reference === `Condition/${c.id}`);
+        otherConditions[i].revIncludes = filteredBasics;
+      });
+    }
     setConditions(otherConditions);
   }, [patientConditionsQuery.data, otherConditionsQuery.data, enableFQS, basicQuery.data]);
 
@@ -138,25 +144,18 @@ export const deleteCondition = async (
 // Filter out other conditions where:
 //  1. Condition is archived and includeArchived is false.
 //  2. CCS Category code starts with FAC or XXX.
-//  3. The conditions has been dismissed via a Basic resource.
 //  4. There is an existing patient condition with a matching known code.
 //     AND The other condition is older than the patient condition OR they
 //     have the same status.
 export const filterOtherConditions = (
   otherConditions: ConditionModel[],
   patientConditions: ConditionModel[],
-  basics: Basic[],
   includeArchived: boolean
 ): ConditionModel[] =>
   otherConditions.filter((otherCondition) => {
     if (otherCondition.isArchived && !includeArchived) return false;
 
     if (["FAC", "XXX"].includes(otherCondition.ccsChapterCode ?? "")) {
-      return false;
-    }
-
-    // Don't include conditions that have been dismissed via a Basic resource.
-    if (basics.some((basic) => basic.subject?.reference === `Condition/${otherCondition.id}`)) {
       return false;
     }
 

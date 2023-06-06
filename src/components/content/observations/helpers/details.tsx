@@ -14,6 +14,7 @@ import { compact } from "@/utils/nodash";
 
 export type ObservationDetailsProps = {
   diagnosticReport: DiagnosticReportModel;
+  enableFQS: boolean;
 };
 
 export const diagnosticReportData = (diagnosticReport: DiagnosticReportModel) => [
@@ -24,9 +25,8 @@ export const diagnosticReportData = (diagnosticReport: DiagnosticReportModel) =>
   { label: "Organization", value: diagnosticReport.performer },
 ];
 
-export const Component = ({ diagnosticReport }: ObservationDetailsProps) => {
+export const Component = ({ diagnosticReport, enableFQS = false }: ObservationDetailsProps) => {
   const [observationEntries, setObservationsEntries] = useState<ObservationModel[]>([]);
-
   const openCCDAModal = useCCDAModal();
   const [isLoading, setIsLoading] = useState(false);
   const [binaryId, setBinaryId] = useState<string>();
@@ -48,24 +48,36 @@ export const Component = ({ diagnosticReport }: ObservationDetailsProps) => {
 
   useEffect(() => {
     setObservationsEntries(
-      compact(
-        diagnosticReport.results.map((result) => {
-          const observation = findReference(
-            "Observation",
-            undefined,
-            diagnosticReport.includedResources,
-            result.reference
-          );
-          if (!observation) {
-            return undefined;
-          }
-          return new ObservationModel(observation, {
-            [diagnosticReport.id]: diagnosticReport.resource,
-          });
-        })
-      )
+      enableFQS
+        ? compact(
+            diagnosticReport.resource.result?.map(
+              (result) =>
+                // @ts-ignore: Unreachable code error
+                // We are disabling it for this line as the FHIR spec doesn't support this
+                // customized result field that now has the observation resource and not only just a reference.
+                new ObservationModel(result.resource, {
+                  [diagnosticReport.id]: diagnosticReport.resource,
+                })
+            )
+          )
+        : compact(
+            diagnosticReport.results.map((result) => {
+              const observation = findReference(
+                "Observation",
+                undefined,
+                diagnosticReport.includedResources,
+                result.reference
+              );
+              if (!observation) {
+                return undefined;
+              }
+              return new ObservationModel(observation, {
+                [diagnosticReport.id]: diagnosticReport.resource,
+              });
+            })
+          )
     );
-  }, [diagnosticReport]);
+  }, [diagnosticReport, enableFQS]);
 
   return (
     <div className="ctw-space-y-6" data-zus-telemetry-namespace="Observations">
