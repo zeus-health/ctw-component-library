@@ -11,7 +11,7 @@ export type PatientObservationsProps = {
 const Component = ({ className, enableFQS = false }: PatientObservationsProps) => {
   const diagnosticReports = usePatientBuilderDiagnosticReports(enableFQS);
 
-  return <PatientObservationsBase className={className} query={diagnosticReports} />;
+  return <PatientObservationsBase className={className} query={diagnosticReports} enableFQS />;
 };
 
 export const PatientObservations = withErrorBoundary(Component, "PatientObservations");

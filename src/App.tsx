@@ -96,8 +96,22 @@ const components: DemoComponent[] = [
           hideRequestRecords: true,
         }}
         includePatientDemographicsForm={false}
-        resources={["observations", "timeline", "observations-outside", "immunizations"]}
+        resources={[
+          "allergies",
+          "conditions",
+          "conditions-outside",
+          "medications",
+          "medications-outside",
+          "observations",
+          "timeline",
+          "observations-outside",
+          "care-team",
+          "documents",
+          "immunizations",
+        ]}
         title="ZAP"
+        timelineProps={{ enableFQS: true }}
+        observationsProps={{ enableFQS: true }}
       />
     ),
   },
