@@ -21,6 +21,7 @@ export type CTWRequestContext = {
   // The optional builder ID used in case the user is impersonating a builder.
   contextBuilderId: string | undefined;
   fhirClient: Client;
+  fhirWriteBackClient: Client;
   fetchFromFqs: (url: string, options: RequestInit) => Promise<Response>;
 };
 

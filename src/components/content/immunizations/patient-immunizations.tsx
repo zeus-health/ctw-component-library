@@ -1,6 +1,6 @@
 import cx from "classnames";
 import { useRef } from "react";
-import { patientImmunizationsColumns } from "./patient-immunizations-columns";
+import { patientImmunizationsColumns } from "./helpers/columns";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { CodingList } from "@/components/core/coding-list";
 import { withErrorBoundary } from "@/components/core/error-boundary";

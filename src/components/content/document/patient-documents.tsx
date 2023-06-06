@@ -1,13 +1,15 @@
 import cx from "classnames";
 import { useRef } from "react";
-import { patientDocumentColumns } from "./patient-document-columns";
+import { patientDocumentColumns } from "./helpers/columns";
+import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
+import { ResourceTable } from "../resource/resource-table";
+import { ResourceTableActions } from "../resource/resource-table-actions";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/use-ctw";
-import { Table } from "@/components/core/table/table";
 import { usePatientDocument } from "@/fhir/document";
 import { DocumentModel } from "@/fhir/models/document";
-import { useBreakpoints } from "@/hooks/use-breakpoints";
+import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 
 export type PatientDocumentProps = {
   className?: string;
@@ -15,35 +17,39 @@ export type PatientDocumentProps = {
 
 function PatientDocumentsComponent({ className }: PatientDocumentProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const breakpoints = useBreakpoints(containerRef);
-  const patientDocumentQuery = usePatientDocument();
   const { featureFlags } = useCTW();
+
+  const patientDocumentQuery = usePatientDocument();
+  const { viewOptions, defaultView } = getDateRangeView<DocumentModel>("dateCreated");
+  const { data, setViewOption } = useFilteredSortedData({
+    defaultView,
+    records: patientDocumentQuery.data,
+  });
+
   const openDetails = useResourceDetailsDrawer({
     header: (m) => `${m.dateCreated} - ${m.title}`,
     details: documentData,
   });
 
-  const document = patientDocumentQuery.data ?? [];
-  const { isLoading } = patientDocumentQuery;
-
   return (
     <div
       ref={containerRef}
       data-zus-telemetry-namespace="Documents"
-      className={cx(
-        "ctw-patient-documents ctw-scrollable-pass-through-height ctw-bg-white",
-        className,
-        {
-          "ctw-stacked": breakpoints.sm,
-        }
-      )}
+      className={cx(className, "ctw-scrollable-pass-through-height")}
     >
-      <Table
-        stacked={breakpoints.sm}
-        isLoading={isLoading}
-        records={document}
+      <ResourceTableActions
+        viewOptions={{
+          onChange: setViewOption,
+          options: viewOptions,
+          defaultView,
+        }}
+      />
+      <ResourceTable
+        isLoading={patientDocumentQuery.isLoading}
+        data={data}
+        emptyMessage="There are no documents available."
         columns={patientDocumentColumns(featureFlags?.enableViewFhirButton)}
-        handleRowClick={openDetails}
+        onRowClick={openDetails}
       />
     </div>
   );

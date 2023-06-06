@@ -490,8 +490,8 @@ export const encounters: fhir4.Bundle = {
           },
         ],
         period: {
-          start: "2022-01-29T13:31:59-06:00",
-          end: "2022-01-29T15:02:31-06:00",
+          start: "2023-01-29T13:31:59-06:00",
+          end: "2023-01-29T15:02:31-06:00",
         },
         length: {
           value: 90,

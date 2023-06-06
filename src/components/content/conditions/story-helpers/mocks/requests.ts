@@ -176,7 +176,7 @@ function mockRequests() {
     mockConditionPost,
     mockConditionPut,
     mockPatientHistoryGet,
-    mockBinaryGet(),
+    ...mockBinaryGet(),
     getMockBasicPost("Condition", cache),
     getMockBasicPut(cache),
     mockConditionVersionHistoryBundle,
