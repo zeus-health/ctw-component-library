@@ -12,6 +12,46 @@ export const fragmentCoding = gql`
   }
 `;
 
+export const fragmentEncounter = gql`
+  fragment Encounter on Encounter {
+    id
+    resourceType
+    status
+    priority {
+      text
+      coding {
+        code
+        display
+        system
+      }
+    }
+  }
+`;
+
+export const fragmentPractitioner = gql`
+  fragment Practitioner on Practitioner {
+    id
+    resourceType
+    name {
+      family
+      given
+      prefix
+      suffix
+      text
+      use
+    }
+  }
+`;
+
+export const fragmentMedicationRequest = gql`
+  fragment MedicationRequest on MedicationRequest {
+    id
+    resourceType
+    status
+    intent
+  }
+`;
+
 export const fragmentPatient = gql`
   fragment Patient on Patient {
     id
@@ -95,33 +135,78 @@ export const fragmentPatient = gql`
   }
 `;
 
-export const fragmentEncounter = gql`
-  fragment Encounter on Encounter {
+export const fragmentReference = gql`
+  fragment Reference on Reference {
+    id
+    extension {
+      url
+      valueString
+    }
+    reference
+    type
+    identifier {
+      id
+      system
+      value
+    }
+    display
+  }
+`;
+
+export const fragmentObservation = gql`
+  fragment Observation on Observation {
     id
     resourceType
     status
-    priority {
+    category {
       text
       coding {
         code
         display
         system
+        extension {
+          url
+          valueString
+        }
       }
     }
-  }
-`;
-
-export const fragmentPractitioner = gql`
-  fragment Practitioner on Practitioner {
-    id
-    resourceType
-    name {
-      family
-      given
-      prefix
-      suffix
+    effectivePeriod {
+      start
+      end
+    }
+    effectiveDateTime
+    referenceRange {
       text
-      use
+    }
+    code {
+      text
+      coding {
+        code
+        display
+        system
+        extension {
+          url
+          valueString
+        }
+      }
+    }
+    valueQuantity {
+      unit
+      value
+      system
+      code
+    }
+    interpretation {
+      text
+      coding {
+        code
+        display
+        system
+        extension {
+          url
+          valueString
+        }
+      }
     }
   }
 `;

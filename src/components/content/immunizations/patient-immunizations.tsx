@@ -1,6 +1,6 @@
 import cx from "classnames";
 import { useRef } from "react";
-import { patientImmunizationsColumns } from "./patient-immunizations-columns";
+import { patientImmunizationsColumns } from "./helpers/columns";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { CodingList } from "@/components/core/coding-list";
 import { withErrorBoundary } from "@/components/core/error-boundary";
@@ -13,17 +13,21 @@ import { useBreakpoints } from "@/hooks/use-breakpoints";
 
 export type PatientImmunizationsProps = {
   className?: string;
+  enableFQS?: boolean;
 };
 
 const viewRecordFHIR = ({ record }: { record: ImmunizationModel }) => (
   <ViewFHIR name="Immunization Resource" resource={record.resource} />
 );
 
-function PatientImmunizationsComponent({ className }: PatientImmunizationsProps) {
+function PatientImmunizationsComponent({
+  className,
+  enableFQS = false,
+}: PatientImmunizationsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const { featureFlags } = useCTW();
-  const patientImmunizationsQuery = usePatientImmunizations();
+  const patientImmunizationsQuery = usePatientImmunizations(enableFQS);
   const openDetails = useResourceDetailsDrawer({
     header: (m) => m.description,
     details: immunizationData,

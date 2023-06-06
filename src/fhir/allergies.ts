@@ -2,7 +2,7 @@ import { getIncludedResources } from "./bundle";
 import { AllergyModel } from "./models/allergies";
 import { searchCommonRecords } from "./search-helpers";
 import { SYSTEM_SUMMARY, SYSTEM_ZUS_THIRD_PARTY } from "./system-urls";
-import { applyAllergyFilters } from "@/components/content/allergies/allergies-filter";
+import { applyAllergyFilters } from "@/components/content/allergies/helpers/allergies-filter";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { createGraphqlClient } from "@/services/fqs/client";
 import { AllergyGraphqlResponse, allergyQuery } from "@/services/fqs/queries/allergies";

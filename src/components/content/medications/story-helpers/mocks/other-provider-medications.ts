@@ -33,11 +33,11 @@ export const otherProviderMedications: fhir4.Bundle = {
           extension: [
             {
               url: "https://zusapi.com/created-at",
-              valueInstant: "2022-11-21T18:21:52.653+00:00",
+              valueInstant: "2023-04-21T18:21:52.653+00:00",
             },
           ],
           versionId: "2",
-          lastUpdated: "2022-11-08T15:03:31.124+00:00",
+          lastUpdated: "2023-04-08T15:03:31.124+00:00",
           source: "#b9875aae99734b0c",
           tag: tags,
         },
@@ -121,7 +121,7 @@ export const otherProviderMedications: fhir4.Bundle = {
           reference: "Patient/007",
           type: "Patient",
         },
-        dateAsserted: "2022-06-11T03:15:00+00:00",
+        dateAsserted: "2023-05-11T03:15:00+00:00",
         dosage: [
           {
             route: {
@@ -150,11 +150,11 @@ export const otherProviderMedications: fhir4.Bundle = {
           extension: [
             {
               url: "https://zusapi.com/created-at",
-              valueInstant: "2022-11-21T18:22:55.266+00:00",
+              valueInstant: "2023-03-21T18:22:55.266+00:00",
             },
           ],
           versionId: "2",
-          lastUpdated: "2022-11-08T15:03:31.148+00:00",
+          lastUpdated: "2023-03-08T15:03:31.148+00:00",
           source: "#b9875aae99734b0c",
           tag: tags,
         },
@@ -215,11 +215,11 @@ export const otherProviderMedications: fhir4.Bundle = {
           },
           {
             url: "https://zusapi.com/lens/extension/medicationLastFillDate",
-            valueDateTime: "2022-11-07",
+            valueDateTime: "2023-03-07",
           },
           {
             url: "https://zusapi.com/lens/extension/medicationLastPrescribedDate",
-            valueDateTime: "2021-08-01",
+            valueDateTime: "2022-10-01",
           },
           {
             url: "https://zusapi.com/lens/extension/medicationQuantity",
@@ -303,7 +303,7 @@ export const otherProviderMedications: fhir4.Bundle = {
           reference: "Patient/007",
           type: "Patient",
         },
-        dateAsserted: "2022-11-07",
+        dateAsserted: "2023-03-07",
         dosage: [
           {
             text: "Inject 3 ML before meals. Quantity: 90 days",
@@ -322,11 +322,11 @@ export const otherProviderMedications: fhir4.Bundle = {
           extension: [
             {
               url: "https://zusapi.com/created-at",
-              valueInstant: "2022-11-21T18:22:55.266+00:00",
+              valueInstant: "2023-03-21T18:22:55.266+00:00",
             },
           ],
           versionId: "2",
-          lastUpdated: "2022-11-08T15:03:31.098+00:00",
+          lastUpdated: "2023-03-08T15:03:31.098+00:00",
           source: "#b9875aae99734b0c",
           tag: tags,
         },
@@ -387,11 +387,11 @@ export const otherProviderMedications: fhir4.Bundle = {
           },
           {
             url: "https://zusapi.com/lens/extension/medicationLastFillDate",
-            valueDateTime: "2022-11-07",
+            valueDateTime: "2023-03-07",
           },
           {
             url: "https://zusapi.com/lens/extension/medicationLastPrescribedDate",
-            valueDateTime: "2021-08-01",
+            valueDateTime: "2022-10-01",
           },
           {
             url: "https://zusapi.com/lens/extension/medicationQuantity",
@@ -474,7 +474,7 @@ export const otherProviderMedications: fhir4.Bundle = {
           reference: "Patient/007",
           type: "Patient",
         },
-        dateAsserted: "2022-11-07",
+        dateAsserted: "2023-03-07",
         dosage: [
           {
             text: "Inject 3 ML with enclosed pen injector every morning. ",
@@ -493,11 +493,11 @@ export const otherProviderMedications: fhir4.Bundle = {
           extension: [
             {
               url: "https://zusapi.com/created-at",
-              valueInstant: "2022-11-21T18:22:55.266+00:00",
+              valueInstant: "2023-03-21T18:22:55.266+00:00",
             },
           ],
           versionId: "2",
-          lastUpdated: "2022-11-08T15:03:31.174+00:00",
+          lastUpdated: "2023-03-08T15:03:31.174+00:00",
           source: "#b9875aae99734b0c",
           tag: tags,
         },
@@ -527,7 +527,7 @@ export const otherProviderMedications: fhir4.Bundle = {
           },
           {
             url: "https://zusapi.com/lens/extension/medicationLastPrescribedDate",
-            valueDateTime: "2022-09-20",
+            valueDateTime: "2023-05-20",
           },
           {
             url: "https://zusapi.com/lens/extension/medicationQuantity",
@@ -634,7 +634,7 @@ export const otherProviderMedications: fhir4.Bundle = {
           reference: "Patient/007",
           type: "Patient",
         },
-        dateAsserted: "2022-09-20",
+        dateAsserted: "2023-03-20",
         dosage: [
           {
             text: "Dissolve 17g in 4–8oz liquid and drink once daily for up to 7 days.",
@@ -653,11 +653,11 @@ export const otherProviderMedications: fhir4.Bundle = {
           extension: [
             {
               url: "https://zusapi.com/created-at",
-              valueInstant: "2022-11-21T19:52:58.330+00:00",
+              valueInstant: "2023-03-21T19:52:58.330+00:00",
             },
           ],
           versionId: "1",
-          lastUpdated: "2022-11-08T18:47:34.568+00:00",
+          lastUpdated: "2023-03-08T18:47:34.568+00:00",
           source: "#b9875aae99734b0c",
           tag: tags,
         },
