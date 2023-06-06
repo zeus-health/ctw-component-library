@@ -2,6 +2,7 @@
 import { createGraphqlClient } from "./client";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { get } from "@/utils/nodash";
+import { Telemetry } from "@/utils/telemetry";
 
 // We'll keep retrying until we've gone over our timeout.
 const TIMEOUT_MS = 20_000;
@@ -44,6 +45,7 @@ export async function longPollFQS(
     }
   } while (currentTimestamp < targetTimestamp && Date.now() - startTime < TIMEOUT_MS);
 
+  Telemetry.histogramMetric(`fqs.longpoll.${resourceType}`, Date.now() - startTime);
   return currentTimestamp >= targetTimestamp;
 }
 
