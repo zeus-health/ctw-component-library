@@ -1,5 +1,7 @@
+import { PatientModel } from "./models";
 import { searchCommonRecords } from "./search-helpers";
 import { applyImmunizationFilters } from "@/components/content/immunizations/helpers/filters";
+import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { createGraphqlClient } from "@/services/fqs/client";
 import {
@@ -15,54 +17,61 @@ export function usePatientImmunizations(enableFQS: boolean) {
     QUERY_KEY_PATIENT_IMMUNIZATIONS,
     [],
     enableFQS
-      ? withTimerMetric(async (requestContext, patient) => {
-          try {
-            const graphClient = createGraphqlClient(requestContext);
-            const data = (await graphClient.request(immunizationsQuery, {
-              upid: patient.UPID,
-              cursor: "",
-              first: 1000,
-              sort: {
-                lastUpdated: "DESC",
-              },
-            })) as ImmunizationGraphqlResponse;
-            const nodes = data.ImmunizationConnection.edges.map((x) => x.node);
-            const results = orderBy(
-              applyImmunizationFilters(nodes),
-              [(model) => model.occurrence ?? ""],
-              ["desc"]
-            );
-            if (results.length === 0) {
-              Telemetry.countMetric("req.count.immunizations.none");
-            }
-            Telemetry.histogramMetric("req.count.immunizations", results.length);
-            return results;
-          } catch (e) {
-            throw new Error(`Failed fetching immunization information for patient: ${e}`);
-          }
-        }, "req.timing.immunizations")
-      : withTimerMetric(async (requestContext, patient) => {
-          try {
-            const { resources: immunizations } = await searchCommonRecords(
-              "Immunization",
-              requestContext,
-              {
-                patientUPID: patient.UPID,
-              }
-            );
-            const results = orderBy(
-              applyImmunizationFilters(immunizations),
-              [(model) => model.occurrence ?? ""],
-              ["desc"]
-            );
-            if (results.length === 0) {
-              Telemetry.countMetric("req.count.immunizations.none");
-            }
-            Telemetry.histogramMetric("req.count.immunizations", results.length);
-            return results;
-          } catch (e) {
-            throw new Error(`Failed fetching immunization information for patient: ${e}`);
-          }
-        }, "req.timing.immunizations")
+      ? withTimerMetric(
+          async (requestContext, patient) => getImmunizationFromFQS(requestContext, patient),
+          "req.timing.immunizations",
+          ["FQS"]
+        )
+      : withTimerMetric(
+          async (requestContext, patient) => getImmunizationFromODS(requestContext, patient),
+          "req.timing.immunizations"
+        )
   );
+}
+
+async function getImmunizationFromFQS(requestContext: CTWRequestContext, patient: PatientModel) {
+  try {
+    const graphClient = createGraphqlClient(requestContext);
+    const data = (await graphClient.request(immunizationsQuery, {
+      upid: patient.UPID,
+      cursor: "",
+      first: 1000,
+      sort: {
+        lastUpdated: "DESC",
+      },
+    })) as ImmunizationGraphqlResponse;
+    const nodes = data.ImmunizationConnection.edges.map((x) => x.node);
+    const results = orderBy(
+      applyImmunizationFilters(nodes),
+      [(model) => model.occurrence ?? ""],
+      ["desc"]
+    );
+    if (results.length === 0) {
+      Telemetry.countMetric("req.count.immunizations.none");
+    }
+    Telemetry.histogramMetric("req.count.immunizations", results.length);
+    return results;
+  } catch (e) {
+    throw new Error(`Failed fetching immunization information for patient: ${e}`);
+  }
+}
+
+async function getImmunizationFromODS(requestContext: CTWRequestContext, patient: PatientModel) {
+  try {
+    const { resources: immunizations } = await searchCommonRecords("Immunization", requestContext, {
+      patientUPID: patient.UPID,
+    });
+    const results = orderBy(
+      applyImmunizationFilters(immunizations),
+      [(model) => model.occurrence ?? ""],
+      ["desc"]
+    );
+    if (results.length === 0) {
+      Telemetry.countMetric("req.count.immunizations.none");
+    }
+    Telemetry.histogramMetric("req.count.immunizations", results.length);
+    return results;
+  } catch (e) {
+    throw new Error(`Failed fetching immunization information for patient: ${e}`);
+  }
 }
