@@ -57,7 +57,16 @@ export const allergyQuery = gql`
           patient {
             reference
             resource {
-              ...Patient
+              ... on Patient {
+                ...Patient
+                managingOrganization {
+                  resource {
+                    ... on Organization {
+                      name
+                    }
+                  }
+                }
+              }
             }
           }
           encounter {

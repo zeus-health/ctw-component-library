@@ -59,6 +59,11 @@ export class AllergyModel extends FHIRModel<fhir4.AllergyIntolerance> {
     return organizationDisplay?.managingOrganization?.display || organizationName;
   }
 
+  get managingOrganizationFQS(): string | undefined {
+    // @ts-ignore //We need this as we have a mutated resource that deviates from the FHIR spec.
+    return this.resource.patient.resource.managingOrganization.resource.name;
+  }
+
   get note(): string | undefined {
     let concatenatedString;
     if (this.resource.note) {
