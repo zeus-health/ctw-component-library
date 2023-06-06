@@ -1,6 +1,7 @@
 import Client from "fhir-kit-client";
 import { createContext } from "react";
 import { Env } from "./types";
+import { OnResourceSaveCallback } from "@/fhir/action-helper";
 
 export type FeatureFlags = {
   enableViewFhirButton?: boolean;
@@ -11,6 +12,7 @@ export type CTWState = {
   builderId?: string;
   headers?: HeadersInit;
   featureFlags?: FeatureFlags;
+  onResourceSave?: OnResourceSaveCallback;
 };
 
 export type CTWRequestContext = {
@@ -23,6 +25,7 @@ export type CTWRequestContext = {
   fhirClient: Client;
   fhirWriteBackClient: Client;
   fetchFromFqs: (url: string, options: RequestInit) => Promise<Response>;
+  onResourceSave: OnResourceSaveCallback;
 };
 
 export const CTWStateContext = createContext<CTWState | undefined>(undefined);

@@ -131,6 +131,9 @@ const DemoApp = ({ accessToken = "" }) => (
     theme={theme}
     locals={locals}
     ehr="test"
+    onResourceSave={(resource, action) => {
+      console.log("Result of saving a resource", resource, action);
+    }}
   >
     <PatientProvider patientID={VITE_PATIENT_ID} systemURL={VITE_SYSTEM_URL}>
       <div className="App">

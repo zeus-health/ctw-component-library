@@ -8,13 +8,19 @@ import { getUsersPractitionerReference } from "@/fhir/practitioner";
 import { claimsBuilderName } from "@/utils/auth";
 import { Telemetry } from "@/utils/telemetry";
 
+type ResourceSaveStatus = "update" | "create" | "failure";
+export type OnResourceSaveCallback = (
+  resource: Resource,
+  action: ResourceSaveStatus
+) => void;
+
 export async function createOrEditFhirResource(
   resource: Resource,
   requestContext: CTWRequestContext
 ) {
   const { fhirClient, fhirWriteBackClient } = requestContext;
   const resourceModified = resource;
-  let action = "create";
+  let action: ResourceSaveStatus = "create";
   let response;
 
   try {
@@ -42,9 +48,12 @@ export async function createOrEditFhirResource(
     Telemetry.reportActionSuccess(`${resource.resourceType}.${action}`);
     return response;
   } catch (err) {
+    action = "failure";
     Telemetry.reportActionFailure(`${resource.resourceType}.${action}`);
     Telemetry.logError(err as Error);
     return err;
+  } finally {
+    requestContext.onResourceSave(resourceModified, action);
   }
 }
 

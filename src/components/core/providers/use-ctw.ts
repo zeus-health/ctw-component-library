@@ -28,6 +28,11 @@ export function useCTW() {
       builderId: context.builderId ?? claimsBuilderId(authToken) ?? "",
       contextBuilderId: context.builderId,
       fetchFromFqs: getFetchFromFqs(context.env, authToken, context.builderId),
+      onResourceSave: (resource, action) => {
+        if (context.onResourceSave) {
+          context.onResourceSave(resource, action);
+        }
+      },
     };
     return requestContext;
   }, [context, getAuthToken]);
