@@ -69,7 +69,7 @@ export function getIdentifyingRxNormCoding(
   const rxNorm = codeableConcept?.coding?.find(
     (code) =>
       // must be an RxNorm code
-      code.system === SYSTEM_RXNORM && code.extension === undefined
+      code.system === SYSTEM_RXNORM && !code.extension?.some((e) => e.url === SYSTEM_ENRICHMENT)
   );
 
   if (rxNorm) {

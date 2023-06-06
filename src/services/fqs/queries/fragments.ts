@@ -135,6 +135,24 @@ export const fragmentPatient = gql`
   }
 `;
 
+export const fragmentReference = gql`
+  fragment Reference on Reference {
+    id
+    extension {
+      url
+      valueString
+    }
+    reference
+    type
+    identifier {
+      id
+      system
+      value
+    }
+    display
+  }
+`;
+
 export const fragmentObservation = gql`
   fragment Observation on Observation {
     id
