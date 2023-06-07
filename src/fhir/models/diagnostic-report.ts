@@ -17,12 +17,8 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
 
     const label = codeableConceptLabel(this.resource.category?.[0]);
     return (
-      findReference(
-        "Observation",
-        undefined,
-        this.includedResources,
-        this.resource.result?.[0].reference
-      )?.category ?? `No display value found ${label ? " for " : ""}${label}`
+      findReference("Observation", undefined, this.includedResources, this.resource.result?.[0])
+        ?.category ?? `No display value found ${label ? " for " : ""}${label}`
     );
   }
 
@@ -41,7 +37,7 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
       ) ||
       inferStartDateFromResults(
         this.resource.result?.map((ref) =>
-          findReference("Observation", undefined, this.includedResources, ref.reference)
+          findReference("Observation", undefined, this.includedResources, ref)
         )
       )
     );
@@ -55,12 +51,12 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
       this.effectiveStart ||
       inferEndDateFromResults(
         this.resource.result?.map((ref) =>
-          findReference("Observation", undefined, this.includedResources, ref.reference)
+          findReference("Observation", undefined, this.includedResources, ref)
         )
       ) ||
       inferStartDateFromResults(
         this.resource.result?.map((ref) =>
-          findReference("Observation", undefined, this.includedResources, ref.reference)
+          findReference("Observation", undefined, this.includedResources, ref)
         )
       )
     );

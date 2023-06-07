@@ -1,10 +1,7 @@
 import { getIncludedResources } from "./bundle";
 import { PatientModel } from "./models";
 import { searchCommonRecords } from "./search-helpers";
-import {
-  applyAllergyFilters,
-  applyAllergyFiltersFQS,
-} from "@/components/content/allergies/helpers/allergies-filter";
+import { applyAllergyFilters } from "@/components/content/allergies/helpers/allergies-filter";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { createGraphqlClient } from "@/services/fqs/client";
@@ -45,7 +42,7 @@ async function getAllergyIntoleranceFromFQS(
     })) as AllergyGraphqlResponse;
 
     const nodes = data.AllergyIntoleranceConnection.edges.map((x) => x.node);
-    const results = applyAllergyFiltersFQS(nodes);
+    const results = applyAllergyFilters(nodes);
     if (results.length === 0) {
       Telemetry.countMetric("req.count.allergies.none", 0, ["FQS"]);
     }
