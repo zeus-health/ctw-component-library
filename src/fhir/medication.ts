@@ -44,7 +44,7 @@ export function getMedicationCodeableConcept(
     "Medication",
     medication.contained,
     includedResources,
-    medication.medicationReference?.reference
+    medication.medicationReference
   );
 
   return medicationResource?.code;
@@ -136,12 +136,7 @@ export function getPerformingOrganization(
   }
 
   if (reference?.reference && reference.type === "Organization") {
-    return findReference(
-      "Organization",
-      resource.contained,
-      includedResources,
-      reference.reference
-    );
+    return findReference("Organization", resource.contained, includedResources, reference);
   }
 
   return undefined;

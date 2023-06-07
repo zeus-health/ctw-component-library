@@ -1,5 +1,6 @@
-import { rest } from "msw";
+import { graphql, rest } from "msw";
 import { documents } from "./document";
+import { documentFQS } from "./document-fqs";
 import { patient } from "./patient";
 import { mockBinaryGet } from "@/components/content/story-helpers/mocks/requests/requests";
 
@@ -24,5 +25,9 @@ function mockRequests() {
     (req, res, ctx) => res(ctx.status(200), ctx.json(documents))
   );
 
-  return [mockPatientGet, mockDocumentGet, ...mockBinaryGet()];
+  const mockDocumentFQSPost = graphql.query("DocumentReference", (_, res, ctx) =>
+    res(ctx.delay(750), ctx.status(200), ctx.data(documentFQS))
+  );
+
+  return [mockPatientGet, mockDocumentGet, mockDocumentFQSPost, ...mockBinaryGet()];
 }

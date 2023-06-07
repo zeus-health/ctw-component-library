@@ -29,3 +29,10 @@ export default {
 export const Basic: StoryObj<Props> = {
   ...setupAllergiesMocks({ allergyIntolerance }),
 };
+
+export const BasicFQS: StoryObj<Props> = {
+  args: {
+    enableFQS: true,
+  },
+  ...setupAllergiesMocks({ allergyIntolerance }),
+};

@@ -9,7 +9,7 @@ export const applyCareTeamFilters = (data: fhir4.CareTeam[], includedResources: 
   const careTeamPractitionerModels: CareTeamPractitionerModel[] = [];
   careTeamModels.forEach((careTeam) =>
     careTeam.resource.participant?.forEach((participant) => {
-      const practitioner = careTeam.getPractitionerByID(participant.member?.reference as string);
+      const practitioner = careTeam.getPractitionerByID(participant.member);
       if (practitioner?.id && participant.member?.reference) {
         careTeamPractitionerModels.push(new CareTeamPractitionerModel(careTeam, practitioner));
       }

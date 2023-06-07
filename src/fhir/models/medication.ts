@@ -63,7 +63,7 @@ export class MedicationModel extends FHIRModel<Medication> {
       "Patient",
       this.resource.contained,
       this.includedResources,
-      this.resource.subject?.reference
+      this.resource.subject
     );
 
     if (reference) {
