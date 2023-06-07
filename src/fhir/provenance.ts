@@ -10,13 +10,13 @@ import { QUERY_KEY_PROVENANCE } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import { Telemetry } from "@/utils/telemetry";
 
-export const ASSEMBLER_CODING = {
+const ASSEMBLER_CODING = {
   system: SYSTEM_PROVENANCE_AGENT_TYPE,
   code: "assembler",
   display: "Assembler",
 };
 
-export const CREATE_CODING = {
+const CREATE_CODING = {
   coding: [
     {
       system: SYSTEM_PROVENANCE_ACTIVITY_TYPE,
@@ -26,7 +26,7 @@ export const CREATE_CODING = {
   ],
 };
 
-export const UPDATE_CODING = {
+const UPDATE_CODING = {
   coding: [
     {
       system: SYSTEM_PROVENANCE_ACTIVITY_TYPE,
@@ -47,6 +47,7 @@ export const createProvenance = async (
 
   const provenance: Provenance = {
     resourceType: "Provenance",
+    activity: type === "CREATE" ? CREATE_CODING : UPDATE_CODING,
     agent: [
       {
         who: await getUsersPractitionerReference(requestContext),
@@ -67,7 +68,6 @@ export const createProvenance = async (
       },
     ],
   };
-  provenance.activity = type === "CREATE" ? CREATE_CODING : UPDATE_CODING;
   try {
     const response = fhirClient.create({
       resourceType: "Provenance",
