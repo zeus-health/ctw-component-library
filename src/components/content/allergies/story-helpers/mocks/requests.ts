@@ -1,6 +1,6 @@
 import { graphql, rest } from "msw";
 import { ComponentType, createElement } from "react";
-import { allergyIntoleranceFQS } from "./allergy-intoleranceFQS";
+import { allergyIntoleranceFQS } from "./allergy-intolerance-fqs";
 import { patient } from "./patient";
 import { newBundleCaches } from "@/components/content/story-helpers/types";
 import { cloneDeep } from "@/utils/nodash/fp";
