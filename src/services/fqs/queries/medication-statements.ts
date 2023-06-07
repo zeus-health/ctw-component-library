@@ -51,7 +51,6 @@ export const medicationStatementQuery = gql`
                 id
                 type
                 reference
-                display
               }
             }
             valueDateTime
@@ -60,6 +59,7 @@ export const medicationStatementQuery = gql`
               id
               type
               reference
+              display
             }
             valueQuantity {
               unit
