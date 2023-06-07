@@ -1,5 +1,6 @@
 import { rest } from "msw";
 import { ComponentType, createElement } from "react";
+import { allergyIntoleranceFQS } from "./allergy-intoleranceFQS";
 import { patient } from "./patient";
 import { newBundleCaches } from "@/components/content/story-helpers/types";
 import { cloneDeep } from "@/utils/nodash/fp";
@@ -32,5 +33,10 @@ function mockRequests() {
     (req, res, ctx) => res(ctx.delay(750), ctx.status(200), ctx.json(cache.builder))
   );
 
-  return [mockPatientGet, mockAllergyIntolleranceGet];
+  const mockAllergyIntolleranceFQSGet = rest.get(
+    "https://api.dev.zusapi.com/fqs/query",
+    (_, res, ctx) => res(ctx.delay(750), ctx.status(200), ctx.json(allergyIntoleranceFQS))
+  );
+
+  return [mockPatientGet, mockAllergyIntolleranceGet, mockAllergyIntolleranceFQSGet];
 }
