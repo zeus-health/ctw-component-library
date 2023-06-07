@@ -1,5 +1,30 @@
 # ctw-component-library
 
+## 1.15.0
+
+### Minor Changes
+
+- e3f827ab: Update Allergies to utilize FQS.
+
+### Patch Changes
+
+- 892fecfa: Use document date before binary creation date when defining document's creation date
+
+## 1.14.0
+
+### Minor Changes
+
+- c751a3b8: Update the diagnosticReport table to use FQS.
+- f8d6be46: Update MedicationStatement queries to use FQS
+- 2f1187de: Update the Immunizations component with FQS.
+
+### Patch Changes
+
+- a93e5269: fix: use rainbow cutover date to determine whether to show document
+- f2b3832a: Bump postcss from 8.4.23 to 8.4.24
+- 4c848fff: Bump @radix-ui/react-dropdown-menu from 2.0.4 to 2.0.5
+- 210fdcea: Resolved issue where dismissed conditions running in FQS mode could never be restored
+
 ## 1.13.1
 
 ### Patch Changes

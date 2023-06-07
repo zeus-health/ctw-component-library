@@ -16,18 +16,19 @@ import { capitalize } from "@/utils/nodash";
 
 export type PatientAllergiesProps = {
   className?: string;
-  enableFqs?: boolean;
+  enableFQS?: boolean;
 };
 
-function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
+function PatientAllergiesComponent({ className, enableFQS = false }: PatientAllergiesProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { featureFlags } = useCTW();
-  const patientAllergiesQuery = usePatientAllergies();
+  const patientAllergiesQuery = usePatientAllergies(enableFQS);
   const { data, setFilters, setSort } = useFilteredSortedData({
     defaultFilters: defaultAllergyFilters,
     defaultSort: defaultAllergySort,
     records: patientAllergiesQuery.data,
   });
+
   const openDetails = useResourceDetailsDrawer({
     header: (m) => capitalize(m.display),
     details: allergyData,
@@ -61,7 +62,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
           showTableHead
           isLoading={isLoading}
           data={data}
-          columns={patientAllergiesColumns(featureFlags?.enableViewFhirButton)}
+          columns={patientAllergiesColumns(featureFlags?.enableViewFhirButton, enableFQS)}
           onRowClick={openDetails}
         />
       </div>
