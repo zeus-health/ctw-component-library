@@ -1,4 +1,4 @@
-import { rest } from "msw";
+import { graphql, rest } from "msw";
 import { ComponentType, createElement } from "react";
 import { allergyIntoleranceFQS } from "./allergy-intoleranceFQS";
 import { patient } from "./patient";
@@ -33,10 +33,9 @@ function mockRequests() {
     (req, res, ctx) => res(ctx.delay(750), ctx.status(200), ctx.json(cache.builder))
   );
 
-  const mockAllergyIntolleranceFQSGet = rest.get(
-    "https://api.dev.zusapi.com/fqs/query",
-    (_, res, ctx) => res(ctx.delay(750), ctx.status(200), ctx.json(allergyIntoleranceFQS))
+  const mockAllergyIntolleranceFQSPost = graphql.query("AllergyIntolerance", (_, res, ctx) =>
+    res(ctx.delay(750), ctx.status(200), ctx.data(allergyIntoleranceFQS))
   );
 
-  return [mockPatientGet, mockAllergyIntolleranceGet, mockAllergyIntolleranceFQSGet];
+  return [mockPatientGet, mockAllergyIntolleranceGet, mockAllergyIntolleranceFQSPost];
 }
