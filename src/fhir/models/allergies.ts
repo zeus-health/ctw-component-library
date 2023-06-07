@@ -46,22 +46,17 @@ export class AllergyModel extends FHIRModel<fhir4.AllergyIntolerance> {
       "Patient",
       this.resource.contained,
       this.includedResources,
-      this.resource.patient.reference
+      this.resource.patient
     );
 
     const organizationName = findReference(
       "Organization",
       this.resource.contained,
       this.includedResources,
-      organizationDisplay?.managingOrganization?.reference
+      organizationDisplay?.managingOrganization
     )?.name;
 
     return organizationDisplay?.managingOrganization?.display || organizationName;
-  }
-
-  get managingOrganizationFQS(): string | undefined {
-    // @ts-ignore //We need this as we have a mutated resource that deviates from the FHIR spec.
-    return this.resource.patient.resource.managingOrganization.resource.name;
   }
 
   get note(): string | undefined {

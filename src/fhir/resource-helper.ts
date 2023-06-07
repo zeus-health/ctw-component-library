@@ -9,21 +9,32 @@ export function findReference<T extends ResourceTypeString>(
   resourceType: T,
   contained: fhir4.FhirResource[] | undefined,
   includedResources: ResourceMap | undefined,
-  reference: string | undefined
+  reference: fhir4.Reference | undefined
 ): ResourceType<T> | undefined {
   if (!reference) {
     return undefined;
   }
 
-  if (reference.startsWith("#")) {
+  // @ts-ignore
+  if (reference.resource) {
+    // NOTE: This is a hack to get around the fact that we have a
+    //       mutated resource that deviates from the FHIR spec.
+    // @ts-ignore
+    return reference.resource as ResourceType<T>;
+  }
+
+  if (reference.reference?.startsWith("#")) {
     return find(contained, {
-      id: reference.substring(1), // Remove preceding # when looking up contained resource.
+      id: reference.reference.substring(1), // Remove preceding # when looking up contained resource.
       resourceType,
     }) as ResourceType<T> | undefined;
   }
 
-  if (includedResources?.[reference]?.resourceType === resourceType) {
-    return includedResources[reference] as ResourceType<T>;
+  if (
+    reference.reference &&
+    includedResources?.[reference.reference]?.resourceType === resourceType
+  ) {
+    return includedResources[reference.reference] as ResourceType<T>;
   }
 
   // TIP: Are you missing a _include or _include:iterate in

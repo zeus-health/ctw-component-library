@@ -59,7 +59,7 @@ export class PatientModel extends FHIRModel<fhir4.Patient> {
       "Organization",
       this.resource.contained,
       this.includedResources,
-      this.resource.managingOrganization?.reference
+      this.resource.managingOrganization
     );
 
     if (reference) {

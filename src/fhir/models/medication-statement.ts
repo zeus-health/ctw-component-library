@@ -164,7 +164,7 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
       "Patient",
       this.resource.contained,
       this.includedResources,
-      this.resource.subject.reference
+      this.resource.subject
     );
 
     if (reference) {
@@ -218,7 +218,7 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
       reference.type as "Practitioner" | "Organization",
       this.resource.contained,
       this.includedResources,
-      reference.reference
+      reference
     );
     if (resource?.name) {
       if (typeof resource.name === "string") {
