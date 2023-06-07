@@ -62,7 +62,7 @@ function PatientAllergiesComponent({ className, enableFQS = false }: PatientAlle
           showTableHead
           isLoading={isLoading}
           data={data}
-          columns={patientAllergiesColumns(featureFlags?.enableViewFhirButton, enableFQS)}
+          columns={patientAllergiesColumns(featureFlags?.enableViewFhirButton)}
           onRowClick={openDetails}
         />
       </div>

@@ -39,3 +39,10 @@ export default {
 export const Basic: StoryObj<Props> = {
   ...setupDocumentMocks(),
 };
+
+export const BasicFQS: StoryObj<Props> = {
+  args: {
+    enableFQS: true,
+  },
+  ...setupDocumentMocks(),
+};

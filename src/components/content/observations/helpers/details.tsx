@@ -66,7 +66,7 @@ export const Component = ({ diagnosticReport, enableFQS = false }: ObservationDe
                 "Observation",
                 undefined,
                 diagnosticReport.includedResources,
-                result.reference
+                result
               );
               if (!observation) {
                 return undefined;
