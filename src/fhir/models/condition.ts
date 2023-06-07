@@ -218,7 +218,7 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
       "Patient",
       this.resource.contained,
       this.includedResources,
-      this.resource.subject.reference
+      this.resource.subject
     );
 
     if (reference) {
