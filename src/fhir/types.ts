@@ -13,3 +13,14 @@ export type ResourceMap = { [key: string]: fhir4.Resource | undefined };
 export type ResourceArrayMap = Map<string, fhir4.Resource[]>;
 
 export type Tag = { system: string; code: string };
+
+export function isFHIRDomainResource(resource: unknown): resource is fhir4.DomainResource {
+  return (
+    typeof resource === "object" &&
+    resource !== null &&
+    "resourceType" in resource &&
+    // Exclude resource types that extend "Resource" and not "DomainResource".
+    resource.resourceType !== "Binary" &&
+    resource.resourceType !== "Bundle"
+  );
+}
