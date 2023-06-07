@@ -24,13 +24,11 @@ export function usePatientDocument(enableFQS: boolean) {
               },
             })) as DocumentReferenceGraphqlResponse;
             const nodes = data.DocumentReferenceConnection.edges.map((x) => x.node);
-            console.log("nodes", nodes);
             const results = orderBy(
               applyDocumentFilters(nodes),
               [(document) => document.resource.content[0].attachment.creation || ""],
               ["desc"]
             );
-            console.log("results", results);
             if (results.length === 0) {
               Telemetry.countMetric("req.count.documents.none", 0, ["FQS"]);
             }

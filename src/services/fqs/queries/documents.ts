@@ -30,12 +30,13 @@ export const documentsQuery = gql`
           id
           resourceType
           meta {
+            extension {
+              url
+              valueInstant
+            }
             tag {
               system
               code
-              extension {
-                url
-              }
             }
             versionId
           }
