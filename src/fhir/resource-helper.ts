@@ -17,7 +17,6 @@ export function findReference<T extends ResourceTypeString>(
     return undefined;
   }
 
-  // @ts-ignore
   if (reference.resource) {
     return reference.resource as ResourceType<T>;
   }
