@@ -135,6 +135,24 @@ export const fragmentPatient = gql`
   }
 `;
 
+export const fragmentReference = gql`
+  fragment Reference on Reference {
+    id
+    extension {
+      url
+      valueString
+    }
+    reference
+    type
+    identifier {
+      id
+      system
+      value
+    }
+    display
+  }
+`;
+
 export const fragmentObservation = gql`
   fragment Observation on Observation {
     id
@@ -188,64 +206,6 @@ export const fragmentObservation = gql`
           url
           valueString
         }
-      }
-    }
-  }
-`;
-
-export const fragmentOrganization = gql`
-  fragment Organization on Organization {
-    id
-    resourceType
-    name
-    telecom {
-      system
-      value
-      period {
-        start
-        end
-      }
-    }
-    contact {
-      purpose {
-        text
-        coding {
-          code
-          display
-          system
-          extension {
-            url
-            valueString
-          }
-        }
-      }
-      name {
-        family
-        given
-        prefix
-        suffix
-        text
-        use
-      }
-      telecom {
-        system
-        value
-        period {
-          start
-          end
-        }
-      }
-      address {
-        type
-        use
-        text
-        line
-        city
-        district
-        state
-        postalCode
-        country
-        period
       }
     }
   }

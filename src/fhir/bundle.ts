@@ -1,4 +1,5 @@
 import type { ResourceArrayMap, ResourceMap, ResourceType, ResourceTypeString } from "./types";
+import { Basic } from "fhir/r4";
 import type { FhirResource } from "fhir-kit-client";
 import { last } from "@/utils/nodash";
 
@@ -84,6 +85,25 @@ export function getIncludedBasics(bundle: FhirResource): ResourceArrayMap {
       resources.set(refId, []);
     }
     resources.get(refId)?.push(resource);
+  });
+
+  return resources;
+}
+
+// Returns a map from basic resoure's subject id to an array
+// of associated basic resources.
+// This way we can easily lookup a specific resources associated basic resources.
+export function getIncludedBasicsMap(basics: Basic[]): ResourceArrayMap {
+  const resources = new Map() as ResourceArrayMap;
+
+  basics.forEach((entry) => {
+    const refId = last(entry.subject?.reference?.split("/"));
+    if (!refId) return;
+
+    if (!resources.has(refId)) {
+      resources.set(refId, []);
+    }
+    resources.get(refId)?.push(entry);
   });
 
   return resources;

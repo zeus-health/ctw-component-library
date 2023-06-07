@@ -7,13 +7,15 @@ import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 export type PatientMedicationsProps = {
   className?: string;
   onOpenHistoryDrawer?: () => void;
+  enableFQS?: boolean;
 };
 
 const PatientMedicationsComponent = ({
   className,
   onOpenHistoryDrawer,
+  enableFQS = false,
 }: PatientMedicationsProps) => {
-  const { builderMedications, isLoading } = useQueryAllPatientMedications();
+  const { builderMedications, isLoading } = useQueryAllPatientMedications(enableFQS);
 
   return (
     <PatientMedicationsBase

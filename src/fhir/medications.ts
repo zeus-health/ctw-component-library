@@ -22,14 +22,25 @@ import {
   LENS_EXTENSION_MEDICATION_QUANTITY,
   LENS_EXTENSION_MEDICATION_REFILLS,
   SYSTEM_RXNORM,
+  SYSTEM_SUMMARY,
+  SYSTEM_ZUS_LENS,
+  SYSTEM_ZUS_OWNER,
+  SYSTEM_ZUS_THIRD_PARTY,
   SYSTEM_ZUS_UNIVERSAL_ID,
 } from "./system-urls";
 import { ResourceTypeString } from "./types";
+import { getLensBuilderId } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { MedicationModel } from "@/fhir/models/medication";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { PatientModel } from "@/fhir/models/patient";
+import { filterResourcesByBuilderId } from "@/services/common";
+import { createGraphqlClient } from "@/services/fqs/client";
+import {
+  MedicationStatementGraphqlResponse,
+  medicationStatementQuery,
+} from "@/services/fqs/queries/medication-statements";
 import { errorResponse } from "@/utils/errors";
 import { cloneDeep, uniqWith } from "@/utils/nodash";
 import {
@@ -65,8 +76,9 @@ type MedicationFilter = {
 };
 
 export type MedicationResults = {
-  bundle: fhir4.Bundle;
+  bundle: fhir4.Bundle | undefined;
   medications: fhir4.MedicationStatement[];
+  basic: fhir4.Basic[];
 };
 
 const omitClientFilters = omit(["informationSourceNot", "informationSource"]);
@@ -114,9 +126,54 @@ export async function getBuilderMedications(
 
     Telemetry.histogramMetric("req.count.builder_medications", medications.length);
 
-    return { bundle: response.bundle, medications };
+    return { bundle: response.bundle, medications, basic: [] };
   } catch (e) {
     throw errorResponse("Failed fetching medications for patient", e);
+  }
+}
+
+export async function getBuilderMedicationStatementsFQS(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  keys: object[] = []
+): Promise<MedicationResults> {
+  try {
+    const [searchFilters = {}] = keys;
+    const graphClient = createGraphqlClient(requestContext);
+    const data = (await graphClient.request(medicationStatementQuery, {
+      upid: patient.UPID,
+      cursor: "",
+      first: 1000,
+      sort: {
+        lastUpdated: "DESC",
+      },
+      filter: {
+        tag: {
+          nonematch: [SYSTEM_SUMMARY, `${SYSTEM_ZUS_THIRD_PARTY}`],
+          // TODO: There's a bug in FQS that doesn't allow filtering with nonematch AND allmatch.
+          // Uncomment the line below once https://zeushealth.atlassian.net/browse/DRT-249 is resolved.
+          // allmatch: [`${SYSTEM_ZUS_OWNER}|builder/${requestContext.builderId}`],
+        },
+      },
+    })) as MedicationStatementGraphqlResponse;
+    let nodes = data.MedicationStatementConnection.edges.map((x) => x.node);
+    nodes = filterResourcesByBuilderId(
+      nodes,
+      requestContext.contextBuilderId || requestContext.builderId
+    );
+    const medStatements = setupMedicationStatementModelsWithFQS(nodes);
+    const models = applySearchFiltersToFQSResponse(medStatements, searchFilters, false);
+    if (models.length === 0) {
+      Telemetry.countMetric("req.count.builder_medications.none", 1, ["fqs"]);
+    }
+    Telemetry.histogramMetric("req.count.builder_medications", models.length, ["fqs"]);
+    const results = models.map((x) => x.resource);
+    return { bundle: undefined, medications: results, basic: [] };
+  } catch (e) {
+    throw Telemetry.logError(
+      e as Error,
+      `Failed fetching builder medications for patient: ${patient.UPID}`
+    );
   }
 }
 
@@ -184,6 +241,37 @@ export async function getMedicationStatements(
   }
 }
 
+function setupMedicationStatementModelsWithFQS(
+  medicationStatementResources: fhir4.MedicationStatement[]
+): MedicationStatementModel[] {
+  return medicationStatementResources.map((ms) => new MedicationStatementModel(ms));
+}
+
+function applySearchFiltersToFQSResponse(
+  medicationStatements: MedicationStatementModel[],
+  searchFilters: MedicationFilter = {},
+  removeMedsWithNoRxNorm = false
+) {
+  let medications = medicationStatements;
+  if (removeMedsWithNoRxNorm) {
+    medications = medications.filter((medication) => medication.rxNorm !== undefined);
+  }
+
+  if (searchFilters.informationSource) {
+    medications = medications.filter(
+      (medication) => medication.informationSource?.type === searchFilters.informationSource
+    );
+  }
+
+  if (searchFilters.informationSourceNot) {
+    medications = medications.filter(
+      (medication) => medication.informationSource?.type !== searchFilters.informationSourceNot
+    );
+  }
+
+  return medications;
+}
+
 /* Note when filtering the bundle may contain data that will no longer 
 be in the returned medications, such as medications with no RxNorm code. */
 export async function getActiveMedications(
@@ -210,9 +298,53 @@ export async function getActiveMedications(
       Telemetry.countMetric("req.count.active_medications.none");
     }
     Telemetry.histogramMetric("req.count.active_medications", medications.length);
-    return { bundle: response.bundle, medications };
+    return { bundle: response.bundle, medications, basic: [] };
   } catch (e) {
     throw errorResponse("Failed fetching medications for patient", e);
+  }
+}
+
+/* Note when filtering the bundle may contain data that will no longer 
+be in the returned medications, such as medications with no RxNorm code. */
+export async function getActiveMedicationsFQS(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  keys: Record<string, string>[] = []
+): Promise<MedicationResults> {
+  try {
+    const [searchFilters = {}] = keys;
+
+    const graphClient = createGraphqlClient(requestContext);
+    const data = (await graphClient.request(medicationStatementQuery, {
+      upid: patient.UPID,
+      cursor: "",
+      first: 1000,
+      sort: {
+        lastUpdated: "DESC",
+      },
+      filter: {
+        tag: {
+          allmatch: [
+            `${SYSTEM_ZUS_LENS}|ActiveMedications`,
+            `${SYSTEM_ZUS_OWNER}|builder/${getLensBuilderId(requestContext.env)}`,
+          ],
+        },
+      },
+    })) as MedicationStatementGraphqlResponse;
+    const nodes = data.MedicationStatementConnection.edges.map((x) => x.node);
+    const medStatements = setupMedicationStatementModelsWithFQS(nodes);
+    const models = applySearchFiltersToFQSResponse(medStatements, searchFilters, true);
+    if (models.length === 0) {
+      Telemetry.countMetric("req.count.active_medications.none", 1, ["fqs"]);
+    }
+    Telemetry.histogramMetric("req.count.active_medications", models.length, ["fqs"]);
+    const results = models.map((x) => x.resource);
+    return { bundle: undefined, medications: results, basic: [] };
+  } catch (e) {
+    throw Telemetry.logError(
+      e as Error,
+      `Failed fetching active medications for patient: ${patient.UPID}`
+    );
   }
 }
 
