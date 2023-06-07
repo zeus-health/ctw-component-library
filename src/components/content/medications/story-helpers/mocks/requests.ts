@@ -1,5 +1,5 @@
 import { MedicationStatement } from "fhir/r4";
-import { rest } from "msw";
+import { graphql, rest } from "msw";
 import { ComponentType, createElement } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { searchDosagesALB } from "./forms-data-terminology-dosages";
@@ -7,6 +7,7 @@ import { medicationAdministration } from "./medication-administration";
 import { medicationDispense } from "./medication-dispense";
 import { medicationRequest } from "./medication-request";
 import { patient } from "./patient";
+import { providerMedicationsFQS } from "./provider-medications-fqs";
 import {
   getMockBasicPost,
   getMockBasicPut,
@@ -114,7 +115,12 @@ function mockRequests() {
     }
   );
 
+  const mockFQS = graphql.query("MedicationStatements", async (req, res, ctx) =>
+    res(ctx.data(providerMedicationsFQS))
+  );
+
   return [
+    mockFQS,
     mockPatientGet,
     mockTerminologyDosageGet,
     mockMedicationStatementGet,
