@@ -1,4 +1,4 @@
-import { rest } from "msw";
+import { graphql, rest } from "msw";
 import { immunizations } from "./immunizations";
 import { immunizationsFQS } from "./immunizations-fqs";
 import { patient } from "./patient";
@@ -24,9 +24,9 @@ function mockRequests() {
     (_, res, ctx) => res(ctx.status(200), ctx.json(immunizations))
   );
 
-  const mockImmunizationFQSGet = rest.get("https://api.dev.zusapi.com/fqs/query", (_, res, ctx) =>
-    res(ctx.status(200), ctx.json(immunizationsFQS))
+  const mockImmunizationFQSPost = graphql.query("Immunizations", (_, res, ctx) =>
+    res(ctx.delay(750), ctx.status(200), ctx.data(immunizationsFQS))
   );
 
-  return [mockPatientGet, mockImmunizationGet, mockImmunizationFQSGet];
+  return [mockPatientGet, mockImmunizationGet, mockImmunizationFQSPost];
 }

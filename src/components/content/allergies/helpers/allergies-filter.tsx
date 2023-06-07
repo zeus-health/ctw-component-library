@@ -5,21 +5,9 @@ import { sort } from "@/utils/sort";
 
 export const applyAllergyFilters = (
   data: fhir4.AllergyIntolerance[],
-  includedResources: ResourceMap
+  includedResources?: ResourceMap
 ) => {
   const allergyModel = data.map((allergy) => new AllergyModel(allergy, includedResources));
-
-  const sortedByDate = sort(allergyModel, "recordedDate", "desc", true);
-
-  const allergyData = uniqWith(sortedByDate, (a, b) =>
-    isEqual(valuesToDedupeOn(a), valuesToDedupeOn(b))
-  );
-
-  return allergyData;
-};
-
-export const applyAllergyFiltersFQS = (data: fhir4.AllergyIntolerance[]) => {
-  const allergyModel = data.map((allergy) => new AllergyModel(allergy));
 
   const sortedByDate = sort(allergyModel, "recordedDate", "desc", true);
 
