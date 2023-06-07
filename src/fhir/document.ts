@@ -2,7 +2,7 @@ import { searchCommonRecords } from "./search-helpers";
 import { useQueryWithPatient } from "..";
 import { applyDocumentFilters } from "@/components/content/document/helpers/filters";
 import { createGraphqlClient } from "@/services/fqs/client";
-import { DocumentGraphqlResponse, documentsQuery } from "@/services/fqs/queries/documents";
+import { DocumentReferenceGraphqlResponse, documentsQuery } from "@/services/fqs/queries/documents";
 import { orderBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_DOCUMENTS } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
@@ -22,18 +22,19 @@ export function usePatientDocument(enableFQS: boolean) {
               sort: {
                 lastUpdated: "DESC",
               },
-            })) as DocumentGraphqlResponse;
-            const nodes = data.DocumentConnection.edges.map((x) => x.node);
+            })) as DocumentReferenceGraphqlResponse;
+            const nodes = data.DocumentReferenceConnection.edges.map((x) => x.node);
+            console.log("nodes", nodes);
             const results = orderBy(
               applyDocumentFilters(nodes),
               [(document) => document.resource.content[0].attachment.creation || ""],
-
               ["desc"]
             );
+            console.log("results", results);
             if (results.length === 0) {
-              Telemetry.countMetric("req.count.documents.none");
+              Telemetry.countMetric("req.count.documents.none", 0, ["FQS"]);
             }
-            Telemetry.histogramMetric("req.count.documents", results.length);
+            Telemetry.histogramMetric("req.count.documents", results.length, ["FQS"]);
             return results;
           } catch (e) {
             throw new Error(`Failed fetching document information for patient: ${e}`);

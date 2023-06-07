@@ -91,7 +91,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
         <BetaLabel />
       </div>
     ),
-    render: () => <PatientDocuments {...props} enableFQS />,
+    render: () => <PatientDocuments {...props} />,
   }),
 
   immunizations: (props: PatientImmunizationsProps = {}) => ({

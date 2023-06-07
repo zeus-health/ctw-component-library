@@ -3,20 +3,25 @@ import { gql } from "graphql-request";
 import { fragmentCoding, fragmentOrganization } from "./fragments";
 import { GraphqlConnectionNode, GraphqlPageInfo } from "../client";
 
-export interface DocumentConnection {
+export interface DocumentReferenceConnection {
   pageInfo: GraphqlPageInfo;
   edges: GraphqlConnectionNode<DocumentReference>[];
 }
 
-export interface DocumentGraphqlResponse {
-  DocumentConnection: DocumentConnection;
+export interface DocumentReferenceGraphqlResponse {
+  DocumentReferenceConnection: DocumentReferenceConnection;
 }
 
 export const documentsQuery = gql`
   ${fragmentCoding}
   ${fragmentOrganization}
-  query Documents($upid: ID!, $cursor: String!, $sort: DocumentSortParams!, $first: Int!) {
-    DocumentConnection(upid: $upid, after: $cursor, sort: $sort, first: $first) {
+  query DocumentReference(
+    $upid: ID!
+    $cursor: String!
+    $sort: DocumentReferenceSortParams!
+    $first: Int!
+  ) {
+    DocumentReferenceConnection(upid: $upid, after: $cursor, sort: $sort, first: $first) {
       pageInfo {
         hasNextPage
       }
@@ -28,6 +33,9 @@ export const documentsQuery = gql`
             tag {
               system
               code
+              extension {
+                url
+              }
             }
             versionId
           }
@@ -66,7 +74,7 @@ export const documentsQuery = gql`
             }
             format {
               system
-              versionId
+              version
               code
               display
             }
