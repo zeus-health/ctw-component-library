@@ -16,7 +16,7 @@ export function usePatientDocument(enableFQS: boolean) {
       ? withTimerMetric(
           async (requestContext, patient) => getDocumentFromFQS(requestContext, patient),
           "req.timing.documents",
-          ["FQS"]
+          ["fqs"]
         )
       : withTimerMetric(
           async (requestContext, patient) => getDocumentFromODS(requestContext, patient),
@@ -43,9 +43,9 @@ async function getDocumentFromFQS(requestContext: CTWRequestContext, patient: Pa
       ["desc"]
     );
     if (results.length === 0) {
-      Telemetry.countMetric("req.count.documents.none", 0, ["FQS"]);
+      Telemetry.countMetric("req.count.documents.none", 0, ["fqs"]);
     }
-    Telemetry.histogramMetric("req.count.documents", results.length, ["FQS"]);
+    Telemetry.histogramMetric("req.count.documents", results.length, ["fqs"]);
     return results;
   } catch (e) {
     throw new Error(`Failed fetching document information for patient: ${e}`);
