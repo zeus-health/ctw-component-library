@@ -2,4 +2,4 @@
 "@zus-health/ctw-component-library": patch
 ---
 
-Fetching medicationLastPrescriber display value
+Fixed missing medicationLastPrescriber data when fetching medications from FQS
