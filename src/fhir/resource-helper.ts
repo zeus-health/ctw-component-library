@@ -1,6 +1,8 @@
 import type { ResourceMap, ResourceType, ResourceTypeString } from "./types";
 import { find } from "@/utils/nodash";
 
+type Fhir4Reference = fhir4.Reference & { resource?: fhir4.FhirResource };
+
 // Returns the referenced resource if there is one.
 // Checks both the contained resources AND any included resources map.
 // NOTE: Throws error if reference exists but we couldn't find it!
@@ -9,7 +11,7 @@ export function findReference<T extends ResourceTypeString>(
   resourceType: T,
   contained: fhir4.FhirResource[] | undefined,
   includedResources: ResourceMap | undefined,
-  reference: fhir4.Reference | undefined
+  reference: Fhir4Reference | undefined
 ): ResourceType<T> | undefined {
   if (!reference) {
     return undefined;
@@ -17,9 +19,6 @@ export function findReference<T extends ResourceTypeString>(
 
   // @ts-ignore
   if (reference.resource) {
-    // NOTE: This is a hack to get around the fact that we have a
-    //       mutated resource that deviates from the FHIR spec.
-    // @ts-ignore
     return reference.resource as ResourceType<T>;
   }
 
