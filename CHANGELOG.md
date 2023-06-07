@@ -1,5 +1,15 @@
 # ctw-component-library
 
+## 1.15.0
+
+### Minor Changes
+
+- e3f827ab: Update Allergies to utilize FQS.
+
+### Patch Changes
+
+- 892fecfa: Use document date before binary creation date when defining document's creation date
+
 ## 1.14.0
 
 ### Minor Changes
