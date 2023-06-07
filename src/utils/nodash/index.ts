@@ -12,6 +12,7 @@ export { default as escapeRegExp } from "lodash/escapeRegExp";
 export { default as every } from "lodash/every";
 export { default as filter } from "lodash/filter";
 export { default as find } from "lodash/find";
+export { default as findIndex } from "lodash/findIndex";
 export { default as flatten } from "lodash/flatten";
 export { default as get } from "lodash/get";
 export { default as identity } from "lodash/identity";
