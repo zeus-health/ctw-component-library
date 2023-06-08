@@ -9,6 +9,7 @@ import { TelemetryProvider } from "./telemetry/telemetry-provider";
 import { ThemeProvider, ThemeProviderProps } from "./theme/theme-provider";
 import { Env } from "./types";
 import { version } from "../../../../package.json";
+import { OnResourceSaveCallback } from "@/fhir/action-helper";
 import { queryClient } from "@/utils/request";
 
 type CTWProviderProps = {
@@ -17,6 +18,7 @@ type CTWProviderProps = {
   enableTelemetry?: boolean;
   ehr?: string;
   featureFlags?: FeatureFlags;
+  onResourceSave?: OnResourceSaveCallback;
 } & ThemeProviderProps &
   AuthenticationProviderProps;
 
@@ -47,6 +49,7 @@ export function CTWProvider({
   headers,
   authToken,
   authTokenURL,
+  onResourceSave,
 }: PropsWithChildren<CTWProviderProps>) {
   useEffect(() => {
     window.CTWComponentLibrary = {
@@ -59,8 +62,9 @@ export function CTWProvider({
       env,
       builderId,
       featureFlags,
+      onResourceSave,
     }),
-    [env, builderId, featureFlags]
+    [env, builderId, featureFlags, onResourceSave]
   );
 
   return (

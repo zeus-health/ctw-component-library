@@ -7,6 +7,7 @@ export type PatientState = {
   systemURL: string;
   tags?: Tag[];
   onPatientSave?: (data: PatientFormData) => Promise<void>;
+  onResourceSave?: (data: fhir4.Resource, action: "create" | "update") => void;
 };
 
 export const PatientContext = createContext<PatientState | undefined>(undefined);

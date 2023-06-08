@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.16.1
+
+### Patch Changes
+
+- 141411f6: Fix managingOrganization field for FQS enabled queries.
+
 ## 1.16.0
 
 ### Minor Changes
