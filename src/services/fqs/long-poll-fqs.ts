@@ -45,7 +45,7 @@ export async function longPollFQS(
     }
   } while (currentTimestamp < targetTimestamp && Date.now() - startTime < TIMEOUT_MS);
 
-  Telemetry.histogramMetric(`fqs.longpoll`, Date.now() - startTime);
+  Telemetry.histogramMetric(`fqs.longpoll.all`, Date.now() - startTime);
   Telemetry.histogramMetric(`fqs.longpoll.${resourceType}`, Date.now() - startTime);
   return currentTimestamp >= targetTimestamp;
 }
