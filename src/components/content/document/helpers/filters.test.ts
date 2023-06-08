@@ -103,9 +103,24 @@ describe("document filters tests", () => {
     postRainbowCategories: false,
   });
 
+  const carequalityDoc = createSyntheticDocRef({
+    id: "1",
+    docRefDate: "2023-04-17T12:34:56.000Z",
+    zusCreationDate: "2023-04-17T12:34:56.000Z",
+    thirdPartyOwner: "carequality",
+    postRainbowCategories: true,
+  });
+
   test("verify only commonwell docs are rendered", () => {
-    const input = [commonwellDoc, commonwelPreRainbowDoc, surescriptsDoc, questDoc, firstPartyDoc];
-    const expectedOutput = [commonwellDoc, commonwelPreRainbowDoc].map(
+    const input = [
+      commonwellDoc,
+      commonwelPreRainbowDoc,
+      surescriptsDoc,
+      questDoc,
+      firstPartyDoc,
+      carequalityDoc,
+    ];
+    const expectedOutput = [commonwellDoc, commonwelPreRainbowDoc, carequalityDoc].map(
       (docRef) => new DocumentModel(docRef)
     );
     const actualOutput = applyDocumentFilters(input);

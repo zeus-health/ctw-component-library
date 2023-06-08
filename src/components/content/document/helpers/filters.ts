@@ -29,7 +29,7 @@ const isViewablePostRainbow = (docRef: fhir4.DocumentReference) => {
 
 const isRenderableBinary = (doc: fhir4.DocumentReference): boolean => {
   const thirdPartyTag = doc.meta?.tag?.find((tag) => tag.system === THIRD_PARTY_SOURCE_SYSTEM);
-  const isSupportedThirdParty = ["commonwell"].includes(thirdPartyTag?.code || "");
+  const isSupportedThirdParty = ["commonwell", "carequality"].includes(thirdPartyTag?.code || "");
   return isSupportedThirdParty;
 };
 
