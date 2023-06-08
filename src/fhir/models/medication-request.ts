@@ -13,7 +13,7 @@ export class MedicationRequestModel extends FHIRModel<fhir4.MedicationRequest> {
   }
 
   get includedRequester() {
-    const reference = this.resource.requester?.reference;
+    const reference = this.resource.requester;
 
     const practitioner = findReference(
       "Practitioner",
@@ -33,7 +33,7 @@ export class MedicationRequestModel extends FHIRModel<fhir4.MedicationRequest> {
   }
 
   get pharmacy() {
-    const { reference, display } = this.resource.dispenseRequest?.performer || {};
+    const reference = this.resource.dispenseRequest?.performer || {};
     const organization = findReference(
       "Organization",
       this.resource.contained,
@@ -51,7 +51,7 @@ export class MedicationRequestModel extends FHIRModel<fhir4.MedicationRequest> {
         address: text ?? compact([line, cityStatePostal]).join("\n"),
       };
     }
-    return { name: display };
+    return { name: reference.display };
   }
 
   get rxNorm(): string | undefined {

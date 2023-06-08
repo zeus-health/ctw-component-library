@@ -3,7 +3,7 @@ import { ViewFHIR } from "@/components/core/view-fhir";
 import { AllergyModel } from "@/fhir/models/allergies";
 import { capitalize } from "@/utils/nodash";
 
-export const patientAllergiesColumns = (includeViewFhirResource = false, enableFQS = false) => {
+export const patientAllergiesColumns = (includeViewFhirResource = false) => {
   const allergyColumns: TableColumn<AllergyModel>[] = [
     {
       title: "Name",
@@ -18,7 +18,7 @@ export const patientAllergiesColumns = (includeViewFhirResource = false, enableF
       render: (allergy) => (
         <div>
           <div className="ctw-font-medium">{allergy.recordedDate} </div>
-          <div>{enableFQS ? allergy.managingOrganizationFQS : allergy.managingOrganization}</div>
+          <div>{allergy.managingOrganization}</div>
         </div>
       ),
     },

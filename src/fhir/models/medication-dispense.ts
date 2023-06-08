@@ -12,7 +12,7 @@ export class MedicationDispenseModel extends FHIRModel<fhir4.MedicationDispense>
   kind = "MedicationDispense" as const;
 
   get includedPerformer(): string | undefined {
-    const reference = this.resource.performer?.[0]?.actor.reference;
+    const reference = this.resource.performer?.[0]?.actor;
 
     const practitioner = findReference(
       "Practitioner",

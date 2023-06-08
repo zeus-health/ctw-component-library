@@ -38,7 +38,7 @@ export class CareTeamModel extends FHIRModel<fhir4.CareTeam> {
   }
 
   get practitionerQualification() {
-    const reference = this.resource.participant?.[0]?.member?.reference;
+    const reference = this.resource.participant?.[0]?.member;
 
     const practitioner = findReference(
       "Practitioner",
@@ -55,7 +55,7 @@ export class CareTeamModel extends FHIRModel<fhir4.CareTeam> {
     return undefined;
   }
 
-  getPractitionerByID(reference: string | undefined) {
+  getPractitionerByID(reference: fhir4.Reference | undefined) {
     return findReference(
       "Practitioner",
       this.resource.contained,

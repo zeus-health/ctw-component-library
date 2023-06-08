@@ -114,6 +114,7 @@ const components: DemoComponent[] = [
         observationsProps={{ enableFQS: true }}
         immunizationsProps={{ enableFQS: true }}
         allergiesProps={{ enableFQS: true }}
+        documentsProps={{ enableFQS: true }}
       />
     ),
   },
