@@ -1,6 +1,7 @@
 import { FHIRModel } from "./fhir-model";
 import { codeableConceptLabel } from "../codeable-concept";
 import { formatISODateStringToDate } from "../formatters";
+import { findReference } from "../resource-helper";
 
 export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
   kind = "Document" as const;
@@ -42,7 +43,13 @@ export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
   }
 
   get custodian(): string | undefined {
-    return this.resource.custodian?.display;
+    const organizationName = findReference(
+      "Organization",
+      this.resource.contained,
+      this.includedResources,
+      this.resource.custodian
+    )?.name;
+    return this.resource.custodian?.display || organizationName;
   }
 
   get sectionDisplays(): string[] | undefined {
