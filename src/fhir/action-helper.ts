@@ -7,8 +7,12 @@ import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { longPollFQS } from "@/services/fqs/long-poll-fqs";
 import { Telemetry } from "@/utils/telemetry";
 
-type ResourceSaveStatus = "update" | "create" | "failure";
-export type OnResourceSaveCallback = (resource: Resource, action: ResourceSaveStatus) => void;
+type ResourceSaveOperation = "update" | "create";
+export type OnResourceSaveCallback = (
+  resource: Resource,
+  action: ResourceSaveOperation,
+  error?: Error
+) => void;
 
 export async function createOrEditFhirResource(
   resource: Resource,
@@ -16,7 +20,7 @@ export async function createOrEditFhirResource(
 ) {
   const { fhirClient, fhirWriteBackClient } = requestContext;
   const resourceModified = resource;
-  let action: ResourceSaveStatus = "create";
+  let action: ResourceSaveOperation = "create";
   let response;
 
   try {
@@ -44,6 +48,7 @@ export async function createOrEditFhirResource(
       }
     }
     Telemetry.reportActionSuccess(`${resource.resourceType}.${action}`);
+    requestContext.onResourceSave(resourceModified, action);
 
     // Read-Your-Writes!
     // Wait for FQS to have the latest version of the resource.
@@ -60,11 +65,9 @@ export async function createOrEditFhirResource(
 
     return response;
   } catch (err) {
-    action = "failure";
     Telemetry.reportActionFailure(`${resource.resourceType}.${action}`);
     Telemetry.logError(err as Error);
+    requestContext.onResourceSave(resourceModified, action, err as Error);
     return err;
-  } finally {
-    requestContext.onResourceSave(resourceModified, action);
   }
 }
