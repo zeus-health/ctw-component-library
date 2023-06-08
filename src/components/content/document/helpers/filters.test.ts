@@ -3,6 +3,7 @@ import { DocumentModel } from "@/fhir/models/document";
 
 interface SyntheticDocRefProps {
   id: string;
+  title: string;
   postRainbowCategories: boolean;
   zusCreationDate: string;
   thirdPartyOwner?: string;
@@ -17,6 +18,7 @@ const createSyntheticDocRef = (props: SyntheticDocRefProps): fhir4.DocumentRefer
   content: [
     {
       attachment: {
+        title: props.title,
         creation: props.binaryCreationDate,
         data: "blah",
       },
@@ -64,6 +66,7 @@ const createSyntheticDocRef = (props: SyntheticDocRefProps): fhir4.DocumentRefer
 describe("document filters tests", () => {
   const commonwellDoc = createSyntheticDocRef({
     id: "1",
+    title: "post rainbow commonwell",
     docRefDate: "2023-04-17T12:34:56.000Z",
     zusCreationDate: "2023-04-17T12:34:56.000Z",
     thirdPartyOwner: "commonwell",
@@ -72,6 +75,7 @@ describe("document filters tests", () => {
 
   const commonwelPreRainbowDoc = createSyntheticDocRef({
     id: "1a",
+    title: "pre rainbow commonwell",
     docRefDate: "2022-04-17T12:34:56.000Z",
     zusCreationDate: "2022-04-17T12:34:56.000Z",
     thirdPartyOwner: "commonwell",
@@ -80,24 +84,25 @@ describe("document filters tests", () => {
 
   const surescriptsDoc = createSyntheticDocRef({
     id: "2",
+    title: "post rainbow surescript",
     docRefDate: "2023-04-17T12:34:56.000Z",
     zusCreationDate: "2023-04-17T12:34:56.000Z",
-
     thirdPartyOwner: "surescripts",
     postRainbowCategories: true,
   });
 
   const questDoc = createSyntheticDocRef({
     id: "3",
+    title: "post rainbow quest",
     docRefDate: "2023-04-17T12:34:56.000Z",
     zusCreationDate: "2023-04-17T12:34:56.000Z",
-
     thirdPartyOwner: "quest",
     postRainbowCategories: true,
   });
 
   const firstPartyDoc = createSyntheticDocRef({
     id: "4",
+    title: "first party",
     docRefDate: "2023-04-17T12:34:56.000Z",
     zusCreationDate: "2023-04-17T12:34:56.000Z",
     postRainbowCategories: false,
@@ -105,6 +110,7 @@ describe("document filters tests", () => {
 
   const carequalityDoc = createSyntheticDocRef({
     id: "1",
+    title: "post rainbow carequality",
     docRefDate: "2023-04-17T12:34:56.000Z",
     zusCreationDate: "2023-04-17T12:34:56.000Z",
     thirdPartyOwner: "carequality",
