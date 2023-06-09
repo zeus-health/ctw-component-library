@@ -8,23 +8,23 @@ import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Spinner } from "@/components/core/spinner";
 import { RowActionsProps } from "@/components/core/table/table";
 import { ConditionModel } from "@/fhir/models";
+import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { useBaseTranslations } from "@/i18n";
 import { usePatientConditionsOutside } from "@/services/conditions";
 import { QUERY_KEY_BASIC, QUERY_KEY_OTHER_PROVIDER_CONDITIONS } from "@/utils/query-keys";
 
 export type PatientConditionsOutsideProps = {
   className?: string;
-  enableFQS?: boolean;
   hideRequestRecords?: boolean;
   readOnly?: boolean;
 };
 
 const PatientConditionsOutsideComponent = ({
   className,
-  enableFQS = false,
   hideRequestRecords = false,
   readOnly = false,
 }: PatientConditionsOutsideProps) => {
+  const enableFQS = useFQSFeatureToggle("conditions");
   const query = usePatientConditionsOutside(enableFQS);
   const patientHistoryQuery = usePatientHistory();
   const hasNoOutsideDataAndHasNeverRequestedPatientHistory =
