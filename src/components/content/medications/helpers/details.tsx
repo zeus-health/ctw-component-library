@@ -5,8 +5,9 @@ import { Loading } from "@/components/core/loading";
 import { useLastPrescriber } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models";
 
-export const useMedicationDetailsDrawer = () =>
+export const useMedicationDetailsDrawer = (enableFQS: boolean) =>
   useResourceDetailsDrawer({
+    enableFQS,
     header: (medication: MedicationStatementModel) => medication.display,
     getHistory: useMedicationHistoryEntries,
     details: (medication: MedicationStatementModel) => [

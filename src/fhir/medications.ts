@@ -177,6 +177,36 @@ export async function getBuilderMedicationStatementsFQS(
   }
 }
 
+export async function getMedicationStatementsForPatientByIdFQS(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  resourceIds: string[]
+): Promise<MedicationResults> {
+  try {
+    const graphClient = createGraphqlClient(requestContext);
+    const data = (await graphClient.request(medicationStatementQuery, {
+      upid: patient.UPID,
+      cursor: "",
+      first: 1000,
+      sort: {
+        lastUpdated: "DESC",
+      },
+      filter: {
+        ids: {
+          anymatch: resourceIds,
+        },
+      },
+    })) as MedicationStatementGraphqlResponse;
+    const nodes = data.MedicationStatementConnection.edges.map((x) => x.node);
+    return { bundle: undefined, medications: nodes, basic: [] };
+  } catch (e) {
+    throw Telemetry.logError(
+      e as Error,
+      `Failed fetching medication statements by ID for patient: ${patient.UPID}`
+    );
+  }
+}
+
 export async function getCommonMedicationRequests(
   requestContext: CTWRequestContext,
   patient: PatientModel,
@@ -413,7 +443,7 @@ export function splitMedications(
   };
 }
 
-export function useMedicationHistory(medication?: fhir4.MedicationStatement) {
+export function useMedicationHistory(enableFQS: boolean, medication?: fhir4.MedicationStatement) {
   const aggregatedFromReferences = !medication
     ? []
     : new MedicationStatementModel(medication).aggregatedFrom;
@@ -431,6 +461,37 @@ export function useMedicationHistory(medication?: fhir4.MedicationStatement) {
             includedResources: {},
             medications: [],
           };
+        }
+        if (enableFQS) {
+          const [
+            medicationStatementResponse,
+            // medicationAdministrationResponse,
+            // medicationRequestResponse,
+            // medicationDispenseResponse,
+          ] = await Promise.all([
+            getMedicationStatementsForPatientByIdFQS(
+              requestContext,
+              patient,
+              resources.MedicationStatement
+            ),
+          ]);
+          const medicationResources = compact([
+            ...medicationStatementResponse.medications,
+            // ...medicationAdministrationResponse,
+            // ...medicationRequestResponse,
+            // ...medicationDispenseResponse,
+          ]).map((m) => new MedicationModel(m));
+
+          const medications = sort(
+            uniqWith(
+              medicationResources,
+              (a, b) => a.date === b.date && a.resource.resourceType === b.resource.resourceType
+            ),
+            "date",
+            "desc",
+            true
+          );
+          return { medications };
         }
         const [
           medicationStatementResponse,
@@ -491,7 +552,6 @@ export function useMedicationHistory(medication?: fhir4.MedicationStatement) {
           "desc",
           true
         );
-
         return { medications, includedResources };
       } catch (e) {
         throw new Error(
