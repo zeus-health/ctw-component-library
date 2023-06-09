@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.17.1
+
+### Patch Changes
+
+- 4bfb2d04: Add metric for tracking FQS latency across all resources.
+
 ## 1.17.0
 
 ### Minor Changes
