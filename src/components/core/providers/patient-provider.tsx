@@ -152,6 +152,8 @@ export function useQueryWithPatient<T, T2>(
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return query(requestContext, patientResponse.data!, keys);
     },
-    { enabled: !!patientResponse.data?.UPID && enabled }
+    {
+      enabled: !!patientResponse.data?.UPID && enabled,
+    }
   );
 }
