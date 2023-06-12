@@ -1,4 +1,4 @@
-import FlagProvider from "@unleash/proxy-client-react";
+import FlagProvider, { useUnleashContext } from "@unleash/proxy-client-react";
 import jwtDecode from "jwt-decode";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { useGetAuthToken } from "./authentication/use-get-auth-token";
@@ -6,6 +6,26 @@ import { useGetAuthToken } from "./authentication/use-get-auth-token";
 export type FeatureFlagProviderProps = { children: ReactNode };
 
 export function FeatureFlagProvider({ children }: FeatureFlagProviderProps) {
+  const unleashConfig = useMemo(
+    () => ({
+      url: "https://unleash-proxy-prod.zusapi.com/proxy",
+      clientKey: "MDE0NDU5NTQtNEIyNC00RUVGLUI4NDUtRTE3QjYyMUQ3NTAzCg==",
+      refreshInterval: 15, // (in seconds)
+      appName: "ctw-component-library",
+      context: {},
+    }),
+    []
+  );
+
+  return (
+    <FlagProvider config={unleashConfig}>
+      <FeatureFlagProviderComponent>{children}</FeatureFlagProviderComponent>
+    </FlagProvider>
+  );
+}
+
+const FeatureFlagProviderComponent = ({ children }: FeatureFlagProviderProps) => {
+  const updateContext = useUnleashContext();
   const authTokenPromise = useGetAuthToken();
   const [authToken, setAuthToken] = useState<string>();
 
@@ -15,22 +35,16 @@ export function FeatureFlagProvider({ children }: FeatureFlagProviderProps) {
     })();
   }, [authTokenPromise]);
 
-  const unleashConfig = useMemo(
-    () => ({
-      url: "https://unleash-proxy-prod.zusapi.com/proxy",
-      clientKey: "MDE0NDU5NTQtNEIyNC00RUVGLUI4NDUtRTE3QjYyMUQ3NTAzCg==",
-      refreshInterval: 15, // (in seconds)
-      appName: "ctw-component-library",
-      context: authToken ? getUnleashContext(authToken) : {},
-    }),
-    [authToken]
-  );
+  useEffect(() => {
+    if (authToken) {
+      void (async function run() {
+        await updateContext(getUnleashContext(authToken));
+      })();
+    }
+  }, [authToken, updateContext]);
 
-  if (!authToken) {
-    return <>{children}</>;
-  }
-  return <FlagProvider config={unleashConfig}>{children}</FlagProvider>;
-}
+  return <>{children}</>;
+};
 
 function getUnleashContext(authToken: string) {
   const decoded = jwtDecode(authToken) as { [key: string]: string };
