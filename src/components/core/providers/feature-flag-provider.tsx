@@ -17,7 +17,7 @@ export function FeatureFlagProvider({ children }: FeatureFlagProviderProps) {
 
   const unleashConfig = useMemo(
     () => ({
-      url: "https://unleash-proxy-prod.zusapi.com/proxy2",
+      url: "https://unleash-proxy-prod.zusapi.com/proxy",
       clientKey: "MDE0NDU5NTQtNEIyNC00RUVGLUI4NDUtRTE3QjYyMUQ3NTAzCg==",
       refreshInterval: 15, // (in seconds)
       appName: "ctw-component-library",
