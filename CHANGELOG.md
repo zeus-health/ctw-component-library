@@ -1,5 +1,35 @@
 # ctw-component-library
 
+## 1.17.2
+
+### Patch Changes
+
+- b85e7dd8: Bump @storybook/addon-links from 7.0.18 to 7.0.20
+- 81d56ae4: Export additional helpers to aid in creating new components
+- 9094bb5d: Fixed medication sort directions for date based sorts.
+
+## 1.17.1
+
+### Patch Changes
+
+- 4bfb2d04: Add metric for tracking FQS latency across all resources.
+
+## 1.17.0
+
+### Minor Changes
+
+- 43de95c5: Add onResourceSave callback to CTWProvider context which will get called anytime a resource is modified (edited or created).
+
+### Patch Changes
+
+- 6a203085: List only renderable documents in document component
+
+## 1.16.1
+
+### Patch Changes
+
+- 141411f6: Fix managingOrganization field for FQS enabled queries.
+
 ## 1.16.0
 
 ### Minor Changes
