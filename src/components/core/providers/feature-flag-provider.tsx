@@ -43,7 +43,6 @@ const FeatureFlagComponent = ({ children }: FeatureFlagProviderProps) => {
 
   useEffect(() => {
     unleashClient.on("error", () => {
-      console.log("here");
       setUnleashFailed(true);
     });
   }, [unleashClient]);
