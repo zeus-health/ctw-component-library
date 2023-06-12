@@ -1,5 +1,13 @@
 # ctw-component-library
 
+## 1.17.2
+
+### Patch Changes
+
+- b85e7dd8: Bump @storybook/addon-links from 7.0.18 to 7.0.20
+- 81d56ae4: Export additional helpers to aid in creating new components
+- 9094bb5d: Fixed medication sort directions for date based sorts.
+
 ## 1.17.1
 
 ### Patch Changes
