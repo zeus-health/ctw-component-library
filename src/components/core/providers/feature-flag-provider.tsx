@@ -1,4 +1,4 @@
-import FlagProvider, { useFlagsStatus, useUnleashClient } from "@unleash/proxy-client-react";
+import FlagProvider from "@unleash/proxy-client-react";
 import jwtDecode from "jwt-decode";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { useGetAuthToken } from "./authentication/use-get-auth-token";
@@ -10,10 +10,9 @@ export function FeatureFlagProvider({ children }: FeatureFlagProviderProps) {
   const [authToken, setAuthToken] = useState<string>();
 
   useEffect(() => {
-    async function fetchData() {
+    void (async function fetchData() {
       setAuthToken(await authTokenPromise());
-    }
-    void fetchData();
+    })();
   }, [authTokenPromise]);
 
   const unleashConfig = useMemo(
@@ -28,29 +27,10 @@ export function FeatureFlagProvider({ children }: FeatureFlagProviderProps) {
   );
 
   if (!authToken) {
-    return <></>;
+    return <>{children}</>;
   }
-  return (
-    <FlagProvider config={unleashConfig}>
-      <FeatureFlagComponent>{children}</FeatureFlagComponent>
-    </FlagProvider>
-  );
+  return <FlagProvider config={unleashConfig}>{children}</FlagProvider>;
 }
-
-const FeatureFlagComponent = ({ children }: FeatureFlagProviderProps) => {
-  const unleashClient = useUnleashClient();
-  const [unleashFailed, setUnleashFailed] = useState<boolean>();
-
-  useEffect(() => {
-    unleashClient.on("error", () => {
-      setUnleashFailed(true);
-    });
-  }, [unleashClient]);
-
-  const flagStatus = useFlagsStatus();
-  const hasFetchedFlags = flagStatus.flagsReady || flagStatus.flagsError;
-  return hasFetchedFlags || unleashFailed ? <>{children}</> : null;
-};
 
 function getUnleashContext(authToken: string) {
   const decoded = jwtDecode(authToken) as { [key: string]: string };

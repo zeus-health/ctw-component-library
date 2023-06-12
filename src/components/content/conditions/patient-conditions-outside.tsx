@@ -24,7 +24,30 @@ const PatientConditionsOutsideComponent = ({
   hideRequestRecords = false,
   readOnly = false,
 }: PatientConditionsOutsideProps) => {
-  const enableFQS = useFQSFeatureToggle("conditions");
+  const fqs = useFQSFeatureToggle("conditions");
+  if (!fqs.ready) {
+    return <></>;
+  }
+  return (
+    <CorePatientConditionsOutsideComponent
+      className={className}
+      hideRequestRecords={hideRequestRecords}
+      readOnly={readOnly}
+      enableFQS={fqs.enabled}
+    />
+  );
+};
+
+type CorePatientConditionsOutsideProps = PatientConditionsOutsideProps & {
+  enableFQS: boolean;
+};
+
+const CorePatientConditionsOutsideComponent = ({
+  className,
+  hideRequestRecords = false,
+  readOnly = false,
+  enableFQS,
+}: CorePatientConditionsOutsideProps) => {
   const query = usePatientConditionsOutside(enableFQS);
   const patientHistoryQuery = usePatientHistory();
   const hasNoOutsideDataAndHasNeverRequestedPatientHistory =

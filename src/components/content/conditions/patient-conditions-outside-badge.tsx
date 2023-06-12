@@ -3,7 +3,20 @@ import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { usePatientConditionsOutside } from "@/services/conditions";
 
 export const PatientConditionsOutsideBadge = () => {
-  const enableFQS = useFQSFeatureToggle("conditions");
+  const fqs = useFQSFeatureToggle("conditions");
+  if (!fqs.ready) {
+    return <></>;
+  }
+  return <CorePatientConditionsOutsideBadge enableFQS={fqs.enabled} />;
+};
+
+type CorePatientConditionsOutsideBadgeProps = {
+  enableFQS: boolean;
+};
+
+const CorePatientConditionsOutsideBadge = ({
+  enableFQS,
+}: CorePatientConditionsOutsideBadgeProps) => {
   const otherConditionsQuery = usePatientConditionsOutside(enableFQS);
   const activeUnarchivedConditions = otherConditionsQuery.data.filter(
     (condition) => condition.active && !condition.isArchived

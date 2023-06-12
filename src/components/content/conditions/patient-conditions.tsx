@@ -17,8 +17,32 @@ export type PatientConditionsProps = {
   readOnly?: boolean;
 };
 
-const PatientConditionsComponent = ({ className, readOnly = false }: PatientConditionsProps) => {
-  const enableFQS = useFQSFeatureToggle("conditions");
+export const PatientConditionsComponent = ({
+  className,
+  readOnly = false,
+}: PatientConditionsProps) => {
+  const fqs = useFQSFeatureToggle("conditions");
+  if (!fqs.ready) {
+    return <></>;
+  }
+  return (
+    <CorePatientConditionsComponent
+      className={className}
+      readOnly={readOnly}
+      enableFQS={fqs.enabled}
+    />
+  );
+};
+
+type CorePatientConditionsProps = PatientConditionsProps & {
+  enableFQS: boolean;
+};
+
+const CorePatientConditionsComponent = ({
+  className,
+  readOnly = false,
+  enableFQS,
+}: CorePatientConditionsProps) => {
   const query = usePatientBuilderConditions(enableFQS);
   const showAddConditionForm = useAddConditionForm();
   const { t } = useBaseTranslations();
