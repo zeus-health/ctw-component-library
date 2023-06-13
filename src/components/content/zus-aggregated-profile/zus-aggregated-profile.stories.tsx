@@ -11,6 +11,7 @@ import {
   ZusAggregatedProfile,
 } from "@/components/content/zus-aggregated-profile/zus-aggregated-profile";
 import { CTWProvider } from "@/components/core/providers/ctw-provider";
+import { FeatureFlagProvider } from "@/components/core/providers/feature-flag-provider";
 import { PatientProvider } from "@/components/core/providers/patient-provider";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 
@@ -20,9 +21,11 @@ export default {
   decorators: [
     (Story, { args }) => (
       <CTWProvider env="dev" authToken={FAKE_AUTH} builderId={FAKE_BUILDER_ID}>
-        <PatientProvider patientID={FAKE_PATIENT_UPID} systemURL={SYSTEM_ZUS_UNIVERSAL_ID}>
-          <Story args={args} />
-        </PatientProvider>
+        <FeatureFlagProvider>
+          <PatientProvider patientID={FAKE_PATIENT_UPID} systemURL={SYSTEM_ZUS_UNIVERSAL_ID}>
+            <Story args={args} />
+          </PatientProvider>
+        </FeatureFlagProvider>
       </CTWProvider>
     ),
   ],
