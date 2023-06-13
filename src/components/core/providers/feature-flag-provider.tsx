@@ -24,6 +24,8 @@ export function FeatureFlagProvider({ children }: FeatureFlagProviderProps) {
   );
 }
 
+// Component responsible for fetching the auth token and updating the Unleash context once the auth token has been fetched.
+// This needs to be a child of `FlagProvider` in order to have access to the Unleash context.
 const FeatureFlagProviderComponent = ({ children }: FeatureFlagProviderProps) => {
   const updateContext = useUnleashContext();
   const authTokenPromise = useGetAuthToken();
