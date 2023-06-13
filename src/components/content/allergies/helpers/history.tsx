@@ -5,7 +5,7 @@ import { AllergyModel } from "@/fhir/models/allergies";
 import { capitalize } from "@/utils/nodash";
 import { QUERY_KEY_ALLERGY_HISTORY } from "@/utils/query-keys";
 
-export function useAllergiesHistory(allergy: AllergyModel) {
+export function useAllergiesHistory(enableFQS: boolean, allergy: AllergyModel) {
   return useHistory({
     resourceType: "AllergyIntolerance",
     model: allergy,
