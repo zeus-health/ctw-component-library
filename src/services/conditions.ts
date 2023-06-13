@@ -16,6 +16,7 @@ import { useBasic } from "@/fhir/basic";
 import { getIncludedBasics } from "@/fhir/bundle";
 import { ConditionModel } from "@/fhir/models/condition";
 import { searchBuilderRecords, searchSummaryRecords } from "@/fhir/search-helpers";
+import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { createGraphqlClient } from "@/services/fqs/client";
 import { ConditionGraphqlResponse, conditionsQuery } from "@/services/fqs/queries/conditions";
 import { cloneDeep, orderBy } from "@/utils/nodash";
@@ -26,33 +27,50 @@ import {
 import { queryClient } from "@/utils/request";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
-export function usePatientBuilderConditions(enableFQS: boolean) {
+export function usePatientBuilderConditions() {
+  const fqs = useFQSFeatureToggle("conditions");
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_CONDITIONS,
-    [],
-    enableFQS
-      ? withTimerMetric(fetchPatientBuilderConditionsFQS, "req.timing.builder_conditions", ["fqs"])
-      : withTimerMetric(fetchPatientBuilderConditionsODS, "req.timing.builder_conditions")
+    [fqs.ready],
+    (() => {
+      if (!fqs.ready) {
+        return async () => [];
+      }
+      return fqs.enabled
+        ? withTimerMetric(fetchPatientBuilderConditionsFQS, "req.timing.builder_conditions", [
+            "fqs",
+          ])
+        : withTimerMetric(fetchPatientBuilderConditionsODS, "req.timing.builder_conditions");
+    })()
   );
 }
 
-function usePatientSummaryConditions(enableFQS: boolean) {
+function usePatientSummaryConditions() {
+  const fqs = useFQSFeatureToggle("conditions");
   return useQueryWithPatient(
     QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
-    [],
-    enableFQS
-      ? withTimerMetric(fetchPatientSummaryConditionsFQS, "req.timing.summary_conditions", ["fqs"])
-      : withTimerMetric(fetchPatientSummaryConditionsODS, "req.timing.summary_conditions")
+    [fqs.ready],
+    (() => {
+      if (!fqs.ready) {
+        return async () => [];
+      }
+      return fqs.enabled
+        ? withTimerMetric(fetchPatientSummaryConditionsFQS, "req.timing.summary_conditions", [
+            "fqs",
+          ])
+        : withTimerMetric(fetchPatientSummaryConditionsODS, "req.timing.summary_conditions");
+    })()
   );
 }
 
-export function usePatientConditionsOutside(enableFQS: boolean) {
+export function usePatientConditionsOutside() {
+  const fqs = useFQSFeatureToggle("conditions");
   const [conditions, setConditions] = useState<ConditionModel[]>([]);
-  const patientConditionsQuery = usePatientBuilderConditions(enableFQS);
-  const otherConditionsQuery = usePatientSummaryConditions(enableFQS);
+  const patientConditionsQuery = usePatientBuilderConditions();
+  const otherConditionsQuery = usePatientSummaryConditions();
 
   // This query is a noop when FQS is disabled and will just return an empty list of basic resources.
-  const basicQuery = useBasic(enableFQS);
+  const basicQuery = useBasic(fqs);
 
   useEffect(() => {
     const patientConditions = patientConditionsQuery.data ?? [];
@@ -71,14 +89,26 @@ export function usePatientConditionsOutside(enableFQS: boolean) {
       });
     }
     setConditions(otherConditions);
-  }, [patientConditionsQuery.data, otherConditionsQuery.data, enableFQS, basicQuery.data]);
+  }, [patientConditionsQuery.data, otherConditionsQuery.data, basicQuery.data]);
+
+  if (!fqs.ready) {
+    return {
+      isLoading: true,
+      isError: false,
+      isFetching: true,
+      data: [],
+    };
+  }
 
   const isLoading =
     patientConditionsQuery.isLoading || otherConditionsQuery.isLoading || basicQuery.isLoading;
   const isError =
     patientConditionsQuery.isError || otherConditionsQuery.isError || basicQuery.isError;
   const isFetching =
-    patientConditionsQuery.isFetching || otherConditionsQuery.isFetching || basicQuery.isFetching;
+    patientConditionsQuery.isFetching ||
+    otherConditionsQuery.isFetching ||
+    basicQuery.isFetching ||
+    !fqs.ready;
 
   return {
     isLoading,

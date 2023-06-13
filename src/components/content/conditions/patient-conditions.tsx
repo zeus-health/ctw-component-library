@@ -8,7 +8,6 @@ import { PatientConditionsBase } from "./helpers/patient-conditions-base";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { RowActionsProps } from "@/components/core/table/table";
 import { ConditionModel } from "@/fhir/models";
-import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { useBaseTranslations } from "@/i18n";
 import { usePatientBuilderConditions } from "@/services/conditions";
 
@@ -17,33 +16,8 @@ export type PatientConditionsProps = {
   readOnly?: boolean;
 };
 
-export const PatientConditionsComponent = ({
-  className,
-  readOnly = false,
-}: PatientConditionsProps) => {
-  const fqs = useFQSFeatureToggle("conditions");
-  if (!fqs.ready) {
-    return <></>;
-  }
-  return (
-    <CorePatientConditionsComponent
-      className={className}
-      readOnly={readOnly}
-      enableFQS={fqs.enabled}
-    />
-  );
-};
-
-type CorePatientConditionsProps = PatientConditionsProps & {
-  enableFQS: boolean;
-};
-
-const CorePatientConditionsComponent = ({
-  className,
-  readOnly = false,
-  enableFQS,
-}: CorePatientConditionsProps) => {
-  const query = usePatientBuilderConditions(enableFQS);
+const PatientConditionsComponent = ({ className, readOnly = false }: PatientConditionsProps) => {
+  const query = usePatientBuilderConditions();
   const showAddConditionForm = useAddConditionForm();
   const { t } = useBaseTranslations();
 

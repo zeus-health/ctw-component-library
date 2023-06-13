@@ -38,6 +38,7 @@ const FeatureFlagProviderComponent = ({ children }: FeatureFlagProviderProps) =>
   useEffect(() => {
     if (authToken) {
       void (async function run() {
+        console.log("updating unleash context", getUnleashContext(authToken));
         await updateContext(getUnleashContext(authToken));
       })();
     }

@@ -8,6 +8,8 @@ export type FQSFeatureToggle = {
 export function useFQSFeatureToggle(resourceType: string): FQSFeatureToggle {
   const variant = useFeatureVariant("ctw-fqs");
 
+  console.log("variant", variant);
+
   if (!variant.ready) {
     return { enabled: false, ready: false };
   }

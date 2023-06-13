@@ -8,7 +8,6 @@ import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Spinner } from "@/components/core/spinner";
 import { RowActionsProps } from "@/components/core/table/table";
 import { ConditionModel } from "@/fhir/models";
-import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { useBaseTranslations } from "@/i18n";
 import { usePatientConditionsOutside } from "@/services/conditions";
 import { QUERY_KEY_BASIC, QUERY_KEY_OTHER_PROVIDER_CONDITIONS } from "@/utils/query-keys";
@@ -24,31 +23,7 @@ const PatientConditionsOutsideComponent = ({
   hideRequestRecords = false,
   readOnly = false,
 }: PatientConditionsOutsideProps) => {
-  const fqs = useFQSFeatureToggle("conditions");
-  if (!fqs.ready) {
-    return <></>;
-  }
-  return (
-    <CorePatientConditionsOutsideComponent
-      className={className}
-      hideRequestRecords={hideRequestRecords}
-      readOnly={readOnly}
-      enableFQS={fqs.enabled}
-    />
-  );
-};
-
-type CorePatientConditionsOutsideProps = PatientConditionsOutsideProps & {
-  enableFQS: boolean;
-};
-
-const CorePatientConditionsOutsideComponent = ({
-  className,
-  hideRequestRecords = false,
-  readOnly = false,
-  enableFQS,
-}: CorePatientConditionsOutsideProps) => {
-  const query = usePatientConditionsOutside(enableFQS);
+  const query = usePatientConditionsOutside();
   const patientHistoryQuery = usePatientHistory();
   const hasNoOutsideDataAndHasNeverRequestedPatientHistory =
     patientHistoryQuery.lastRetrievedAt === undefined && query.data.length === 0;

@@ -1,9 +1,4 @@
-import {
-  IVariant,
-  useFlagsStatus,
-  useUnleashClient,
-  useVariant,
-} from "@unleash/proxy-client-react";
+import { IVariant, useFlagsStatus, useUnleashClient } from "@unleash/proxy-client-react";
 import { useEffect, useState } from "react";
 
 export type FeatureVariant = Partial<IVariant> & {
@@ -13,13 +8,14 @@ export type FeatureVariant = Partial<IVariant> & {
 export function useFeatureVariant(name: string): FeatureVariant {
   const client = useUnleashClient();
   const status = useFlagsStatus();
-  const variant = useVariant(name);
   const [failed, setFailed] = useState<boolean>();
   useEffect(() => {
     client.on("error", () => {
       setFailed(true);
     });
   }, [client]);
+
+  console.log("client.getContext()", client.getContext());
 
   // return "not ready" if unleash is still fetching flags
   if (!status.flagsReady && !status.flagsError) {
@@ -37,6 +33,8 @@ export function useFeatureVariant(name: string): FeatureVariant {
   if (status.flagsError) {
     return { ready: true };
   }
+
   // return "ready" /w a variant(!)
+  const variant = client.getVariant(name);
   return { ...variant, ready: true };
 }
