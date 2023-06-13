@@ -1,4 +1,9 @@
-import { IVariant, useFlagsStatus, useUnleashClient } from "@unleash/proxy-client-react";
+import {
+  IVariant,
+  useFlagsStatus,
+  useUnleashClient,
+  useVariant,
+} from "@unleash/proxy-client-react";
 import { useEffect, useState } from "react";
 
 export type FeatureVariant = Partial<IVariant> & {
@@ -8,15 +13,37 @@ export type FeatureVariant = Partial<IVariant> & {
 export function useFeatureVariant(name: string): FeatureVariant {
   const client = useUnleashClient();
   const status = useFlagsStatus();
-  const [failed, setFailed] = useState<boolean>();
+  const variant = useVariant(name);
+  const [clientError, setClientError] = useState<boolean>();
+  const [clientRefetched, setClientRefetched] = useState<boolean>();
+  const { userId } = client.getContext();
+
   useEffect(() => {
     client.on("error", () => {
-      setFailed(true);
+      setClientError(true);
     });
   }, [client]);
 
-  console.log("client.getContext()", client.getContext());
+  useEffect(() => {
+    if (userId) {
+      client.on("update", () => {
+        setClientRefetched(true);
+      });
+    }
+  }, [client, userId]);
 
+  // return "ready" if unleash failed to bootstrap
+  if (clientError) {
+    return { ready: true };
+  }
+  // return "ready" if unleash failed to load flags
+  if (status.flagsError) {
+    return { ready: true };
+  }
+  // return "not ready" if unleash hasn't refetched flags after the context changed.
+  if (!clientRefetched) {
+    return { ready: false };
+  }
   // return "not ready" if unleash is still fetching flags
   if (!status.flagsReady && !status.flagsError) {
     return { ready: false };
@@ -25,16 +52,7 @@ export function useFeatureVariant(name: string): FeatureVariant {
   if (!client.getContext().userId) {
     return { ready: false };
   }
-  // return "ready" if unleash failed to bootstrap
-  if (failed) {
-    return { ready: true };
-  }
-  // return "ready" if unleash failed to load flags
-  if (status.flagsError) {
-    return { ready: true };
-  }
 
   // return "ready" /w a variant(!)
-  const variant = client.getVariant(name);
   return { ...variant, ready: true };
 }
