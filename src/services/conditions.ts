@@ -91,15 +91,6 @@ export function usePatientConditionsOutside() {
     setConditions(otherConditions);
   }, [patientConditionsQuery.data, otherConditionsQuery.data, basicQuery.data]);
 
-  if (!fqs.ready) {
-    return {
-      isLoading: true,
-      isError: false,
-      isFetching: true,
-      data: [],
-    };
-  }
-
   const isLoading =
     patientConditionsQuery.isLoading || otherConditionsQuery.isLoading || basicQuery.isLoading;
   const isError =
