@@ -15,7 +15,10 @@ import {
   getMockBasicPost,
   getMockBasicPut,
 } from "@/components/content/story-helpers/mocks/requests/basic";
-import { mockBinaryGet } from "@/components/content/story-helpers/mocks/requests/requests";
+import {
+  mockBinaryGet,
+  mockUnleashFQSEnabledGet,
+} from "@/components/content/story-helpers/mocks/requests/requests";
 import { newBundleCaches } from "@/components/content/story-helpers/types";
 import { SYSTEM_SUMMARY } from "@/fhir/system-urls";
 import { cloneDeep } from "@/utils/nodash";
@@ -78,6 +81,8 @@ const getHistoryVersionsBundle = (requestUrls: string[]) => {
 };
 
 function mockRequests() {
+  const mockUnleashGet = mockUnleashFQSEnabledGet("conditions");
+
   const mockPatientGet = rest.get(
     "https://api.dev.zusapi.com/fhir/Patient",
     // Add ctx.delay(750), delay to show loading, we set this to 750ms to be
@@ -169,6 +174,7 @@ function mockRequests() {
     }
   );
   return [
+    mockUnleashGet,
     mockPatientGet,
     mockConditionSearch,
     mockProvenancePost,
