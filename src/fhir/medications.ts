@@ -1,4 +1,10 @@
-import type { FhirResource, MedicationStatement } from "fhir/r4";
+import type {
+  FhirResource,
+  MedicationAdministration,
+  MedicationDispense,
+  MedicationRequest,
+  MedicationStatement,
+} from "fhir/r4";
 import { useEffect, useState } from "react";
 import { bundleToResourceMap, getIncludedResources, getMergedIncludedResources } from "./bundle";
 import { getIdentifyingRxNormCode } from "./medication";
@@ -37,6 +43,18 @@ import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { PatientModel } from "@/fhir/models/patient";
 import { filterResourcesByBuilderId } from "@/services/common";
 import { createGraphqlClient } from "@/services/fqs/client";
+import {
+  MedicationAdministrationGraphqlResponse,
+  medicationAdministrationQuery,
+} from "@/services/fqs/queries/medication-administration";
+import {
+  MedicationDispenseGraphqlResponse,
+  medicationDispenseQuery,
+} from "@/services/fqs/queries/medication-dispense";
+import {
+  MedicationRequestGraphqlResponse,
+  medicationRequestQuery,
+} from "@/services/fqs/queries/medication-request";
 import {
   MedicationStatementGraphqlResponse,
   medicationStatementQuery,
@@ -180,9 +198,12 @@ export async function getBuilderMedicationStatementsFQS(
 export async function getMedicationStatementsForPatientByIdFQS(
   requestContext: CTWRequestContext,
   patient: PatientModel,
-  resourceIds: string[]
+  resourceIds: string[] | undefined
 ): Promise<MedicationResults> {
   try {
+    if (resourceIds === undefined || resourceIds.length === 0) {
+      return { bundle: undefined, medications: [], basic: [] };
+    }
     const graphClient = createGraphqlClient(requestContext);
     const data = (await graphClient.request(medicationStatementQuery, {
       upid: patient.UPID,
@@ -203,6 +224,105 @@ export async function getMedicationStatementsForPatientByIdFQS(
     throw Telemetry.logError(
       e as Error,
       `Failed fetching medication statements by ID for patient: ${patient.UPID}`
+    );
+  }
+}
+
+export async function getMedicationAdministrationsForPatientByIdFQS(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  resourceIds: string[] | undefined
+): Promise<MedicationAdministration[]> {
+  try {
+    if (resourceIds === undefined || resourceIds.length === 0) {
+      return [];
+    }
+    const graphClient = createGraphqlClient(requestContext);
+    const data = (await graphClient.request(medicationAdministrationQuery, {
+      upid: patient.UPID,
+      cursor: "",
+      first: 1000,
+      sort: {
+        lastUpdated: "DESC",
+      },
+      filter: {
+        ids: {
+          anymatch: resourceIds,
+        },
+      },
+    })) as MedicationAdministrationGraphqlResponse;
+    const nodes = data.MedicationAdministrationConnection.edges.map((x) => x.node);
+    return nodes;
+  } catch (e) {
+    throw Telemetry.logError(
+      e as Error,
+      `Failed fetching medication administrations by ID for patient: ${patient.UPID}`
+    );
+  }
+}
+
+export async function getMedicationDispensesForPatientByIdFQS(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  resourceIds: string[] | undefined
+): Promise<MedicationDispense[]> {
+  try {
+    if (resourceIds === undefined || resourceIds.length === 0) {
+      return [];
+    }
+    const graphClient = createGraphqlClient(requestContext);
+    const data = (await graphClient.request(medicationDispenseQuery, {
+      upid: patient.UPID,
+      cursor: "",
+      first: 1000,
+      sort: {
+        lastUpdated: "DESC",
+      },
+      filter: {
+        ids: {
+          anymatch: resourceIds,
+        },
+      },
+    })) as MedicationDispenseGraphqlResponse;
+    const nodes = data.MedicationDispenseConnection.edges.map((x) => x.node);
+    return nodes;
+  } catch (e) {
+    throw Telemetry.logError(
+      e as Error,
+      `Failed fetching medication dispenses by ID for patient: ${patient.UPID}`
+    );
+  }
+}
+
+export async function getMedicationRequestsForPatientByIdFQS(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  resourceIds: string[] | undefined
+): Promise<MedicationRequest[]> {
+  try {
+    if (resourceIds === undefined || resourceIds.length === 0) {
+      return [];
+    }
+    const graphClient = createGraphqlClient(requestContext);
+    const data = (await graphClient.request(medicationRequestQuery, {
+      upid: patient.UPID,
+      cursor: "",
+      first: 1000,
+      sort: {
+        lastUpdated: "DESC",
+      },
+      filter: {
+        ids: {
+          anymatch: resourceIds,
+        },
+      },
+    })) as MedicationRequestGraphqlResponse;
+    const nodes = data.MedicationRequestConnection.edges.map((x) => x.node);
+    return nodes;
+  } catch (e) {
+    throw Telemetry.logError(
+      e as Error,
+      `Failed fetching medication requests by ID for patient: ${patient.UPID}`
     );
   }
 }
@@ -465,21 +585,36 @@ export function useMedicationHistory(enableFQS: boolean, medication?: fhir4.Medi
         if (enableFQS) {
           const [
             medicationStatementResponse,
-            // medicationAdministrationResponse,
-            // medicationRequestResponse,
-            // medicationDispenseResponse,
+            medicationAdministrationResponse,
+            medicationRequestResponse,
+            medicationDispenseResponse,
           ] = await Promise.all([
             getMedicationStatementsForPatientByIdFQS(
               requestContext,
               patient,
               resources.MedicationStatement
             ),
+            getMedicationAdministrationsForPatientByIdFQS(
+              requestContext,
+              patient,
+              resources.MedicationAdministration
+            ),
+            getMedicationRequestsForPatientByIdFQS(
+              requestContext,
+              patient,
+              resources.MedicationRequest
+            ),
+            getMedicationDispensesForPatientByIdFQS(
+              requestContext,
+              patient,
+              resources.MedicationDispense
+            ),
           ]);
           const medicationResources = compact([
             ...medicationStatementResponse.medications,
-            // ...medicationAdministrationResponse,
-            // ...medicationRequestResponse,
-            // ...medicationDispenseResponse,
+            ...medicationAdministrationResponse,
+            ...medicationRequestResponse,
+            ...medicationDispenseResponse,
           ]).map((m) => new MedicationModel(m));
 
           const medications = sort(
@@ -568,9 +703,9 @@ export function useMedicationHistory(enableFQS: boolean, medication?: fhir4.Medi
  * history and reusing the `useMedicationHistory` query to avoid making extra
  * ODS requests (as the history ui and details ui are always together atm).
  */
-export function useLastPrescriber(medication?: fhir4.MedicationStatement) {
+export function useLastPrescriber(enableFQS: boolean, medication?: fhir4.MedicationStatement) {
   const [lastPrescriber, setLastPrescriber] = useState<string | undefined>();
-  const historyQuery = useMedicationHistory(medication);
+  const historyQuery = useMedicationHistory(enableFQS, medication);
 
   useEffect(() => {
     const { includedResources = {}, medications = [] } = historyQuery.data || {};
