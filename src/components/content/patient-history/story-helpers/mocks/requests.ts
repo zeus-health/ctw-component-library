@@ -1,6 +1,7 @@
 import { rest } from "msw";
 import { patient } from "./patient";
 import { patientHistory } from "./patient-history";
+import { mockUnleashFQSEnabledGet } from "@/components/content/story-helpers/mocks/requests/requests";
 
 export function setupPatientHistoryMocks() {
   return {
@@ -13,6 +14,8 @@ export function setupPatientHistoryMocks() {
 }
 
 function mockRequests() {
+  const mockUnleashGet = mockUnleashFQSEnabledGet("patientHistory");
+
   const mockPatientGet = rest.get("https://api.dev.zusapi.com/fhir/Patient", (req, res, ctx) =>
     res(ctx.status(200), ctx.json(patient))
   );
@@ -39,6 +42,7 @@ function mockRequests() {
   );
 
   return [
+    mockUnleashGet,
     mockPatientHistoryPost,
     mockProvenancePost,
     mockPatientPut,

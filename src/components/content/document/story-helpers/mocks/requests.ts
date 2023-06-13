@@ -2,7 +2,10 @@ import { graphql, rest } from "msw";
 import { documents } from "./document";
 import { documentFQS } from "./document-fqs";
 import { patient } from "./patient";
-import { mockBinaryGet } from "@/components/content/story-helpers/mocks/requests/requests";
+import {
+  mockBinaryGet,
+  mockUnleashFQSEnabledGet,
+} from "@/components/content/story-helpers/mocks/requests/requests";
 
 export function setupDocumentMocks() {
   return {
@@ -13,6 +16,8 @@ export function setupDocumentMocks() {
 }
 
 function mockRequests() {
+  const mockUnleashGet = mockUnleashFQSEnabledGet("documents");
+
   const mockPatientGet = rest.get(
     "https://api.dev.zusapi.com/fhir/Patient",
     // Add ctx.delay(750), delay to show loading, we set this to 750ms to be
@@ -29,5 +34,5 @@ function mockRequests() {
     res(ctx.delay(750), ctx.status(200), ctx.data(documentFQS))
   );
 
-  return [mockPatientGet, mockDocumentGet, mockDocumentFQSPost, ...mockBinaryGet()];
+  return [mockUnleashGet, mockPatientGet, mockDocumentGet, mockDocumentFQSPost, ...mockBinaryGet()];
 }

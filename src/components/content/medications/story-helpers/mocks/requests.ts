@@ -11,6 +11,7 @@ import {
   getMockBasicPost,
   getMockBasicPut,
 } from "@/components/content/story-helpers/mocks/requests/basic";
+import { mockUnleashFQSEnabledGet } from "@/components/content/story-helpers/mocks/requests/requests";
 import { newBundleCaches } from "@/components/content/story-helpers/types";
 import { cloneDeep, find } from "@/utils/nodash/fp";
 
@@ -36,6 +37,8 @@ export function setupMedicationMocks({
 }
 
 function mockRequests() {
+  const mockUnleashGet = mockUnleashFQSEnabledGet("medications");
+
   const mockPatientGet = rest.get(
     "https://api.dev.zusapi.com/fhir/Patient",
     // Add ctx.delay(750), delay to show loading, we set this to 750ms to be
@@ -115,6 +118,7 @@ function mockRequests() {
   );
 
   return [
+    mockUnleashGet,
     mockPatientGet,
     mockTerminologyDosageGet,
     mockMedicationStatementGet,
