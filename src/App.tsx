@@ -77,12 +77,12 @@ const components: DemoComponent[] = [
   { name: "documents", render: () => <PatientDocuments />, title: "Patient Documents" },
   {
     name: "medications",
-    render: () => <PatientMedications enableFQS />,
+    render: () => <PatientMedications />,
     title: "Patient Medications",
   },
   {
     name: "medications-outside",
-    render: () => <PatientMedicationsOutside enableFQS />,
+    render: () => <PatientMedicationsOutside />,
     title: "Patient Medications Outside",
   },
   {
