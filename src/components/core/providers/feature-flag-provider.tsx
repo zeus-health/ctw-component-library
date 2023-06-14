@@ -1,4 +1,4 @@
-import FlagProvider, { useUnleashContext } from "@unleash/proxy-client-react";
+import { FlagProvider, useUnleashContext } from "@unleash/proxy-client-react";
 import jwtDecode from "jwt-decode";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { useGetAuthToken } from "./authentication/use-get-auth-token";
