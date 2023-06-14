@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.17.3
+
+### Patch Changes
+
+- f027eacf: alias @radix-ui/react-dropdown-menu to @zus/react-dropdown-menu to avoid install issues when clients have the library as well.
+
 ## 1.17.2
 
 ### Patch Changes
