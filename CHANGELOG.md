@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.17.4
+
+### Patch Changes
+
+- 05e81164: Downgrade radix to fix issue build issue. https://github.com/radix-ui/primitives/issues/2192
+
 ## 1.17.3
 
 ### Patch Changes
