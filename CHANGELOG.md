@@ -1,5 +1,29 @@
 # ctw-component-library
 
+## 1.17.6
+
+### Patch Changes
+
+- d40f48dd: Pin @radix-ui/react-dropdown-menu to exact version.
+
+## 1.17.5
+
+### Patch Changes
+
+- a5802742: Pin @radix-ui/react-dropdown-menu to patch version
+
+## 1.17.4
+
+### Patch Changes
+
+- 05e81164: Downgrade radix to fix issue build issue. https://github.com/radix-ui/primitives/issues/2192
+
+## 1.17.3
+
+### Patch Changes
+
+- f027eacf: alias @radix-ui/react-dropdown-menu to @zus/react-dropdown-menu to avoid install issues when clients have the library as well.
+
 ## 1.17.2
 
 ### Patch Changes
