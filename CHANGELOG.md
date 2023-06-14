@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.17.5
+
+### Patch Changes
+
+- a5802742: Pin @radix-ui/react-dropdown-menu to patch version
+
 ## 1.17.4
 
 ### Patch Changes
