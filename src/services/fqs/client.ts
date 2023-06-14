@@ -2,6 +2,7 @@ import { GraphQLClient } from "graphql-request";
 import { getZusApiBaseUrl } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { Env } from "@/components/core/providers/types";
+import { ResourceTypeString } from "@/fhir/types";
 import { CTW_REQUEST_HEADER } from "@/utils/request";
 
 export interface GraphqlPageInfo {
@@ -10,6 +11,15 @@ export interface GraphqlPageInfo {
 
 export interface GraphqlConnectionNode<T> {
   node: T;
+}
+
+export interface GenericConnection<T extends ResourceTypeString> {
+  pageInfo: GraphqlPageInfo;
+  edges: GraphqlConnectionNode<T>[];
+}
+
+export interface GenericResponse<T extends ResourceTypeString> {
+  GenericConnection: GenericConnection<T>;
 }
 
 export const createGraphqlClient = (requestContext: CTWRequestContext) => {

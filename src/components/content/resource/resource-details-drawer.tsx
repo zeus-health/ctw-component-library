@@ -44,7 +44,7 @@ export function useResourceDetailsDrawer<T extends fhir4.Resource, M extends FHI
 type ResourceDetailsDrawerProps<T extends fhir4.Resource, M extends FHIRModel<T>> = {
   className?: string;
   details: (model: M) => DetailsProps["details"];
-  getHistory?: (model: M) => UseQueryResultBasic<HistoryEntries | undefined>;
+  getHistory?: (model: M, enableFQS?: boolean) => UseQueryResultBasic<HistoryEntries | undefined>;
   getSourceDocument?: boolean;
   header: (model: M) => ReactNode;
   isOpen: boolean;
