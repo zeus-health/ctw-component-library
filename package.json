@@ -63,6 +63,7 @@
     "@changesets/cli": "^2.24.3",
     "@faker-js/faker": "^7.6.0",
     "@kensho-technologies/eslint-config": "^26.1.2",
+    "@radix-ui/react-dropdown-menu": "^2.0.5",
     "@storybook/addon-actions": "^7.0.18",
     "@storybook/addon-docs": "^7.0.18",
     "@storybook/addon-essentials": "^7.0.18",
@@ -115,8 +116,7 @@
     "vite": "^4.2.3",
     "vite-tsconfig-paths": "^4.0.8",
     "vitest": "^0.29.8",
-    "vitest-fetch-mock": "^0.2.2",
-    "@radix-ui/react-dropdown-menu": "^2.0.5"
+    "vitest-fetch-mock": "^0.2.2"
   },
   "dependencies": {
     "@datadog/browser-logs": "^4.30.1",
