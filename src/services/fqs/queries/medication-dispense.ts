@@ -1,6 +1,6 @@
 import { MedicationDispense } from "fhir/r4";
 import { gql } from "graphql-request";
-import { fragmentCoding, fragmentReference } from "./fragments";
+import { fragmentCoding } from "./fragments";
 import { GraphqlConnectionNode, GraphqlPageInfo } from "../client";
 
 export interface MedicationDispenseConnection {
@@ -14,7 +14,6 @@ export interface MedicationDispenseGraphqlResponse {
 
 export const medicationDispenseQuery = gql`
   ${fragmentCoding}
-  ${fragmentReference}
   query MedicationDispense(
     $upid: ID!
     $cursor: String!
@@ -52,11 +51,55 @@ export const medicationDispenseQuery = gql`
                   value
                 }
               }
+              ... on Organization {
+                id
+                resourceType
+                organizationName: name
+                telecom {
+                  value
+                }
+                address {
+                  city
+                  state
+                  postalCode
+                  text
+                  line
+                }
+              }
             }
           }
           performer {
             actor {
-              ...Reference
+              id
+              extension {
+                url
+                valueString
+              }
+              reference
+              type
+              identifier {
+                id
+                system
+                value
+              }
+              display
+              resource {
+                ... on Organization {
+                  id
+                  resourceType
+                  name
+                  telecom {
+                    value
+                  }
+                  address {
+                    city
+                    state
+                    postalCode
+                    text
+                    line
+                  }
+                }
+              }
             }
           }
           status
