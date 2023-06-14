@@ -1,7 +1,7 @@
 import { faCheck, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Menu } from "@headlessui/react";
-import * as RadixDropdownMenu from "@radix-ui/react-dropdown-menu";
+import * as RadixDropdownMenu from "@zus/react-dropdown-menu";
 import cx from "classnames";
 import { ReactNode, useState } from "react";
 import { MenuItem } from "./menu/menu-item";
