@@ -2,6 +2,7 @@ import { graphql, rest } from "msw";
 import { ComponentType, createElement } from "react";
 import { allergyIntoleranceFQS } from "./allergy-intolerance-fqs";
 import { patient } from "./patient";
+import { mockUnleashFQSEnabledGet } from "@/components/content/story-helpers/mocks/requests/requests";
 import { newBundleCaches } from "@/components/content/story-helpers/types";
 import { cloneDeep } from "@/utils/nodash/fp";
 
@@ -22,6 +23,8 @@ export function setupAllergiesMocks({ allergyIntolerance }: Record<string, fhir4
 }
 
 function mockRequests() {
+  const mockUnleashGet = mockUnleashFQSEnabledGet("allergies");
+
   const mockPatientGet = rest.get(
     "https://api.dev.zusapi.com/fhir/Patient",
     // Add ctx.delay(750), delay to show loading, we set this to 750ms
@@ -37,5 +40,10 @@ function mockRequests() {
     res(ctx.delay(750), ctx.status(200), ctx.data(allergyIntoleranceFQS))
   );
 
-  return [mockPatientGet, mockAllergyIntolleranceGet, mockAllergyIntolleranceFQSPost];
+  return [
+    mockUnleashGet,
+    mockPatientGet,
+    mockAllergyIntolleranceGet,
+    mockAllergyIntolleranceFQSPost,
+  ];
 }
