@@ -56,7 +56,7 @@ export const medicationRequestQuery = gql`
               ... on Organization {
                 id
                 resourceType
-                oragnizationName: name
+                organizationName: name
                 telecom {
                   value
                 }
@@ -74,6 +74,23 @@ export const medicationRequestQuery = gql`
             performer {
               ...Reference
             }
+            numberOfRepeatsAllowed
+            initialFill {
+              quantity {
+                value
+                unit
+              }
+            }
+          }
+          dosageInstruction {
+            text
+            timing {
+              repeat {
+                boundsPeriod {
+                  start
+                }
+              }
+            }
           }
           medicationCodeableConcept {
             text
@@ -81,6 +98,13 @@ export const medicationRequestQuery = gql`
               ...Coding
             }
           }
+          performer {
+            ...Reference
+          }
+          requester {
+            ...Reference
+          }
+          status
         }
       }
     }
