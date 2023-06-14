@@ -3,7 +3,7 @@ import { resolve } from "path";
 import { defineConfig } from "vite";
 import { dependencies, peerDependencies } from "./package.json";
 
-const DEPS_TO_BUNDLE = ["graphql-request", "graphql"];
+const DEPS_TO_BUNDLE = ["graphql-request", "graphql", "@radix-ui/react-dropdown-menu"];
 
 export default defineConfig({
   plugins: [
