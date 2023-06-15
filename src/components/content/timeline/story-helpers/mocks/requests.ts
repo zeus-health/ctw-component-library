@@ -6,6 +6,7 @@ import { provenances } from "./provenances";
 import { medicationDispense } from "../../../medications/story-helpers/mocks/medication-dispense";
 import { medicationRequest } from "../../../medications/story-helpers/mocks/medication-request";
 import { diagnosticReport } from "@/components/content/observations/story-helpers/mocks/diagnostic-reports";
+import { mockUnleashFQSEnabledGet } from "@/components/content/story-helpers/mocks/requests/requests";
 
 export function setupTimelineMocks() {
   return {
@@ -16,6 +17,8 @@ export function setupTimelineMocks() {
 }
 
 function mockRequests() {
+  const mockUnleashGet = mockUnleashFQSEnabledGet("timeline");
+
   const mockPatientGet = rest.get(
     "https://api.dev.zusapi.com/fhir/Patient",
     // Add ctx.delay(750), delay to show loading, we set this to 750ms to be
@@ -53,6 +56,7 @@ function mockRequests() {
   );
 
   return [
+    mockUnleashGet,
     mockPatientGet,
     mockEncounterGet,
     mockProvenanceGet,

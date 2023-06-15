@@ -2,6 +2,7 @@ import { graphql, rest } from "msw";
 import { immunizations } from "./immunizations";
 import { immunizationsFQS } from "./immunizations-fqs";
 import { patient } from "./patient";
+import { mockUnleashFQSEnabledGet } from "@/components/content/story-helpers/mocks/requests/requests";
 
 export function setupImmunizationMocks() {
   return {
@@ -12,6 +13,8 @@ export function setupImmunizationMocks() {
 }
 
 function mockRequests() {
+  const mockUnleashGet = mockUnleashFQSEnabledGet("immunizations");
+
   const mockPatientGet = rest.get(
     "https://api.dev.zusapi.com/fhir/Patient",
     // Add ctx.delay(750), delay to show loading, we set this to 750ms to be
@@ -28,5 +31,5 @@ function mockRequests() {
     res(ctx.delay(750), ctx.status(200), ctx.data(immunizationsFQS))
   );
 
-  return [mockPatientGet, mockImmunizationGet, mockImmunizationFQSPost];
+  return [mockUnleashGet, mockPatientGet, mockImmunizationGet, mockImmunizationFQSPost];
 }
