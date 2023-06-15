@@ -36,7 +36,7 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
   valuesToDedupeOn,
   getSearchParams,
   getHistoryEntry,
-  enableFQS = false,
+  enableFQS = true,
 }: UseHistoryProps<T, M>) {
   return useQueryWithPatient(
     queryKey,
@@ -255,6 +255,8 @@ export async function getVersionHistoryFQS<T extends ResourceTypeString>(
   if (!resourceIds.length) {
     return [];
   }
+
+  // fetch history from fqs
 
   const bundle: fhir4.Bundle = {
     resourceType: "Bundle",
