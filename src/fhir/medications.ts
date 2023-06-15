@@ -43,6 +43,7 @@ import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { PatientModel } from "@/fhir/models/patient";
 import { filterResourcesByBuilderId } from "@/services/common";
 import { createGraphqlClient } from "@/services/fqs/client";
+import { graphQLToFHIR } from "@/services/fqs/graphql-to-fhir";
 import {
   MedicationAdministrationGraphqlResponse,
   medicationAdministrationQuery,
@@ -158,7 +159,7 @@ export async function getBuilderMedicationStatementsFQS(
   try {
     const [searchFilters = {}] = keys;
     const graphClient = createGraphqlClient(requestContext);
-    const data = (await graphClient.request(medicationStatementQuery, {
+    const data = await graphClient.request(medicationStatementQuery, {
       upid: patient.UPID,
       cursor: "",
       first: 1000,
@@ -173,8 +174,9 @@ export async function getBuilderMedicationStatementsFQS(
           // allmatch: [`${SYSTEM_ZUS_OWNER}|builder/${requestContext.builderId}`],
         },
       },
-    })) as MedicationStatementGraphqlResponse;
-    let nodes = data.MedicationStatementConnection.edges.map((x) => x.node);
+    });
+    const cleanData = graphQLToFHIR(data) as MedicationStatementGraphqlResponse;
+    let nodes = cleanData.MedicationStatementConnection.edges.map((x) => x.node);
     nodes = filterResourcesByBuilderId(
       nodes,
       requestContext.contextBuilderId || requestContext.builderId
@@ -205,7 +207,7 @@ export async function getMedicationStatementsForPatientByIdFQS(
       return { bundle: undefined, medications: [], basic: [] };
     }
     const graphClient = createGraphqlClient(requestContext);
-    const data = (await graphClient.request(medicationStatementQuery, {
+    const data = await graphClient.request(medicationStatementQuery, {
       upid: patient.UPID,
       cursor: "",
       first: 1000,
@@ -217,8 +219,9 @@ export async function getMedicationStatementsForPatientByIdFQS(
           anymatch: resourceIds,
         },
       },
-    })) as MedicationStatementGraphqlResponse;
-    const nodes = data.MedicationStatementConnection.edges.map((x) => x.node);
+    });
+    const cleanData = graphQLToFHIR(data) as MedicationStatementGraphqlResponse;
+    const nodes = cleanData.MedicationStatementConnection.edges.map((x) => x.node);
     return { bundle: undefined, medications: nodes, basic: [] };
   } catch (e) {
     throw Telemetry.logError(
@@ -271,7 +274,7 @@ export async function getMedicationDispensesForPatientByIdFQS(
       return [];
     }
     const graphClient = createGraphqlClient(requestContext);
-    const data = (await graphClient.request(medicationDispenseQuery, {
+    const data = await graphClient.request(medicationDispenseQuery, {
       upid: patient.UPID,
       cursor: "",
       first: 1000,
@@ -283,8 +286,9 @@ export async function getMedicationDispensesForPatientByIdFQS(
           anymatch: resourceIds,
         },
       },
-    })) as MedicationDispenseGraphqlResponse;
-    const nodes = data.MedicationDispenseConnection.edges.map((x) => x.node);
+    });
+    const cleanData = graphQLToFHIR(data) as MedicationDispenseGraphqlResponse;
+    const nodes = cleanData.MedicationDispenseConnection.edges.map((x) => x.node);
     return nodes;
   } catch (e) {
     throw Telemetry.logError(
@@ -304,7 +308,7 @@ export async function getMedicationRequestsForPatientByIdFQS(
       return [];
     }
     const graphClient = createGraphqlClient(requestContext);
-    const data = (await graphClient.request(medicationRequestQuery, {
+    const data = await graphClient.request(medicationRequestQuery, {
       upid: patient.UPID,
       cursor: "",
       first: 1000,
@@ -316,8 +320,9 @@ export async function getMedicationRequestsForPatientByIdFQS(
           anymatch: resourceIds,
         },
       },
-    })) as MedicationRequestGraphqlResponse;
-    const nodes = data.MedicationRequestConnection.edges.map((x) => x.node);
+    });
+    const cleanData = graphQLToFHIR(data) as MedicationRequestGraphqlResponse;
+    const nodes = cleanData.MedicationRequestConnection.edges.map((x) => x.node);
     return nodes;
   } catch (e) {
     throw Telemetry.logError(
@@ -465,7 +470,7 @@ export async function getActiveMedicationsFQS(
     const [searchFilters = {}] = keys;
 
     const graphClient = createGraphqlClient(requestContext);
-    const data = (await graphClient.request(medicationStatementQuery, {
+    const data = await graphClient.request(medicationStatementQuery, {
       upid: patient.UPID,
       cursor: "",
       first: 1000,
@@ -480,8 +485,9 @@ export async function getActiveMedicationsFQS(
           ],
         },
       },
-    })) as MedicationStatementGraphqlResponse;
-    const nodes = data.MedicationStatementConnection.edges.map((x) => x.node);
+    });
+    const cleanData = graphQLToFHIR(data) as MedicationStatementGraphqlResponse;
+    const nodes = cleanData.MedicationStatementConnection.edges.map((x) => x.node);
     const medStatements = setupMedicationStatementModelsWithFQS(nodes);
     const models = applySearchFiltersToFQSResponse(medStatements, searchFilters, true);
     if (models.length === 0) {

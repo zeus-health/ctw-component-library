@@ -54,7 +54,7 @@ export const medicationDispenseQuery = gql`
               ... on Organization {
                 id
                 resourceType
-                organizationName: name
+                _organization__name: name
                 telecom {
                   value
                 }
