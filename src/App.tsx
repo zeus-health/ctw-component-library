@@ -18,6 +18,9 @@ import {
   PatientTimeline,
   ZusAggregatedProfile,
 } from ".";
+import { title } from "process";
+import { render } from "react-dom";
+import { binary } from "./components/content/story-helpers/mocks/resources/binary";
 
 const {
   VITE_AUTH0_AUDIENCE,
@@ -74,7 +77,43 @@ const components: DemoComponent[] = [
     render: () => <PatientConditionsOutside />,
     title: "Patient Conditions Outside",
   },
-  { name: "documents", render: () => <PatientDocuments />, title: "Patient Documents" },
+  {
+    name: "documents",
+    render: () => (
+      <PatientDocuments
+        onAddToRecord={async (document, binary) => {
+          try {
+            const response = await fetch("ehr_api/clinical_documents/", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+              },
+              body: JSON.stringify({
+                patient: 0, // Replace with the current patient ID
+                authoring_practice: 0, // Replace with the current practice ID
+                xml_file: {
+                  original_filename: document.title, // TODO: Should this have some kind of date added to it or some formatting ensured (ie. no special characters)?
+                  content_type: "application/octet-stream",
+                  base64_content: btoa(binary.data ?? ""), // Assuming the binary data is provided in base64 format
+                },
+                data_format: "ccda", // TODO: How can we tell if a document is a CCDA?,
+              }),
+            });
+
+            const data = await response.json();
+
+            // Handle the response from the API as needed
+            console.log("API response:", data);
+          } catch (error) {
+            // Handle any errors that occur during the API request
+            console.error("API request error:", error);
+          }
+        }}
+      />
+    ),
+    title: "Patient Documents",
+  },
   { name: "medications", render: () => <PatientMedications />, title: "Patient Medications" },
   {
     name: "medications-outside",

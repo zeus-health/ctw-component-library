@@ -8,7 +8,7 @@ import { orderBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_DOCUMENTS } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
-export function usePatientDocument(enableFQS: boolean) {
+export function usePatientDocuments(enableFQS: boolean) {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_DOCUMENTS,
     [],
