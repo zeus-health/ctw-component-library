@@ -5,6 +5,7 @@ import {
   AuthenticationProviderProps,
 } from "./authentication/authentication-provider";
 import { CTWStateContext, FeatureFlags } from "./ctw-context";
+import { FeatureFlagProvider } from "./feature-flag-provider";
 import { TelemetryProvider } from "./telemetry/telemetry-provider";
 import { ThemeProvider, ThemeProviderProps } from "./theme/theme-provider";
 import { Env } from "./types";
@@ -70,16 +71,18 @@ export function CTWProvider({
   return (
     <ThemeProvider theme={theme} locals={locals}>
       <AuthenticationProvider headers={headers} authToken={authToken} authTokenURL={authTokenURL}>
-        <TelemetryProvider
-          env={env}
-          builderId={builderId}
-          ehr={ehr}
-          enableTelemetry={enableTelemetry}
-        >
-          <CTWStateContext.Provider value={providerState}>
-            <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-          </CTWStateContext.Provider>
-        </TelemetryProvider>
+        <FeatureFlagProvider>
+          <TelemetryProvider
+            env={env}
+            builderId={builderId}
+            ehr={ehr}
+            enableTelemetry={enableTelemetry}
+          >
+            <CTWStateContext.Provider value={providerState}>
+              <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+            </CTWStateContext.Provider>
+          </TelemetryProvider>
+        </FeatureFlagProvider>
       </AuthenticationProvider>
     </ThemeProvider>
   );

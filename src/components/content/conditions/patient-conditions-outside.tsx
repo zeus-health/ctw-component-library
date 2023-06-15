@@ -14,18 +14,16 @@ import { QUERY_KEY_BASIC, QUERY_KEY_OTHER_PROVIDER_CONDITIONS } from "@/utils/qu
 
 export type PatientConditionsOutsideProps = {
   className?: string;
-  enableFQS?: boolean;
   hideRequestRecords?: boolean;
   readOnly?: boolean;
 };
 
 const PatientConditionsOutsideComponent = ({
   className,
-  enableFQS = false,
   hideRequestRecords = false,
   readOnly = false,
 }: PatientConditionsOutsideProps) => {
-  const query = usePatientConditionsOutside(enableFQS);
+  const query = usePatientConditionsOutside();
   const patientHistoryQuery = usePatientHistory();
   const hasNoOutsideDataAndHasNeverRequestedPatientHistory =
     patientHistoryQuery.lastRetrievedAt === undefined && query.data.length === 0;

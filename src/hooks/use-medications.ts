@@ -1,5 +1,6 @@
 import { UseQueryResult } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { useFQSFeatureToggle } from "./use-fqs-feature-toggle";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { useBasic } from "@/fhir/basic";
 import { getIncludedBasics, getIncludedBasicsMap, getMergedIncludedResources } from "@/fhir/bundle";
@@ -47,7 +48,8 @@ export function useQueryGetPatientMedsForBuilder(
 export function useQueryGetSummarizedPatientMedications(
   enableFQS: boolean
 ): UseQueryResult<MedicationResults, unknown> {
-  const basics = useBasic(enableFQS);
+  const fqs = useFQSFeatureToggle("medications");
+  const basics = useBasic(fqs);
   const result = useQueryWithPatient(
     QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
     [

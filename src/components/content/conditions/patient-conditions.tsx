@@ -13,16 +13,11 @@ import { usePatientBuilderConditions } from "@/services/conditions";
 
 export type PatientConditionsProps = {
   className?: cx.Argument;
-  enableFQS?: boolean;
   readOnly?: boolean;
 };
 
-const PatientConditionsComponent = ({
-  className,
-  enableFQS = false,
-  readOnly = false,
-}: PatientConditionsProps) => {
-  const query = usePatientBuilderConditions(enableFQS);
+const PatientConditionsComponent = ({ className, readOnly = false }: PatientConditionsProps) => {
+  const query = usePatientBuilderConditions();
   const showAddConditionForm = useAddConditionForm();
   const { t } = useBaseTranslations();
 
