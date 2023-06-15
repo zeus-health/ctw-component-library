@@ -14,6 +14,7 @@ import { filterResourcesByBuilderId } from "@/services/common";
 import { createGraphqlClient, GenericResponse } from "@/services/fqs/client";
 import { allergyQuery } from "@/services/fqs/queries/allergies";
 import { conditionsQuery } from "@/services/fqs/queries/conditions";
+import { versionsQuery } from "@/services/fqs/queries/versions";
 import { compact, isEqual, orderBy, some, uniqWith } from "@/utils/nodash";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
@@ -256,6 +257,9 @@ export async function getVersionHistoryFQS<T extends ResourceTypeString>(
     return [];
   }
 
+  const versionsFQS = versionsQuery(resourceType, resourceIds);
+
+  console.log("versionFQS", versionsFQS);
   // fetch history from fqs
 
   const bundle: fhir4.Bundle = {
