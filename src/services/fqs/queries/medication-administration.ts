@@ -49,6 +49,10 @@ export const medicationAdministrationQuery = gql`
               }
             }
           }
+          effectivePeriod {
+            start
+            end
+          }
         }
       }
     }
