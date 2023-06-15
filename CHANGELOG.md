@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.18.1
+
+### Patch Changes
+
+- 8eef5459: Fixed race condition when fetching feature flags
+
 ## 1.18.0
 
 ### Minor Changes
