@@ -1,5 +1,15 @@
 # ctw-component-library
 
+## 1.19.0
+
+### Minor Changes
+
+- 570a075e: Use FQS to fetch medication history data
+
+### Patch Changes
+
+- 84a202f6: Fixed issue where Unleash client was sometimes taking too long to load flags
+
 ## 1.18.1
 
 ### Patch Changes
