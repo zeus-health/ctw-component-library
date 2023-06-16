@@ -19,6 +19,7 @@ export type UseHistoryProps<T extends ResourceTypeString, M extends FHIRModel<Re
   valuesToDedupeOn: (m: M) => unknown;
   getSearchParams: (m: M) => SearchParams;
   getHistoryEntry: (m: M) => HistoryEntryProps;
+  enableFQS?: boolean;
 };
 
 export function useHistory<T extends ResourceTypeString, M extends FHIRModel<ResourceType<T>>>({
@@ -29,6 +30,7 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
   valuesToDedupeOn,
   getSearchParams,
   getHistoryEntry,
+  enableFQS = false,
 }: UseHistoryProps<T, M>) {
   return useQueryWithPatient(
     queryKey,
@@ -62,7 +64,7 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
         const entries = dedupeHistory(models, valuesToDedupeOn).map(getHistoryEntry);
 
         // Fetch provenances and add binaryId to each entry.
-        const provenances = await searchProvenances(requestContext, models);
+        const provenances = await searchProvenances(requestContext, models, enableFQS);
         entries.forEach((entry) => {
           // eslint-disable-next-line no-param-reassign
           entry.binaryId = getBinaryId(provenances, entry.id);
