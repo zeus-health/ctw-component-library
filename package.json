@@ -113,7 +113,7 @@
     "tsc-alias": "^1.8.6",
     "typescript": "^4.7.4",
     "vite": "^4.2.3",
-    "vite-tsconfig-paths": "^4.0.8",
+    "vite-tsconfig-paths": "^4.2.0",
     "vitest": "^0.29.8",
     "vitest-fetch-mock": "^0.2.2"
   },
