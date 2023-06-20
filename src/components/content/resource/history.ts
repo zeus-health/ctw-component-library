@@ -82,9 +82,8 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
               const models = [...resources, ...versions].map((c) => new constructor(c));
 
               const entries = dedupeHistory(models, valuesToDedupeOn).map(getHistoryEntry);
-
               // Fetch provenances and add binaryId to each entry.
-              const provenances = await searchProvenances(requestContext, models);
+              const provenances = await searchProvenances(requestContext, models, enableFQS);
               entries.forEach((entry) => {
                 // eslint-disable-next-line no-param-reassign
                 entry.binaryId = getBinaryId(provenances, entry.id);

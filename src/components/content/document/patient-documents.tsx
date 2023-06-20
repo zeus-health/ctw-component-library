@@ -30,6 +30,7 @@ function PatientDocumentsComponent({ className, enableFQS = false }: PatientDocu
   const openDetails = useResourceDetailsDrawer({
     header: (m) => `${m.dateCreated} - ${m.title}`,
     details: documentData,
+    enableFQS,
   });
 
   return (

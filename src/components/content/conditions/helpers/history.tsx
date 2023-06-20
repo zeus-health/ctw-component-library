@@ -16,6 +16,7 @@ export function useConditionHistory(enableFQS: boolean, condition: ConditionMode
     getSearchParams,
     getFiltersFQS,
     getHistoryEntry,
+    enableFQS,
   });
 }
 
