@@ -1,5 +1,15 @@
 # ctw-component-library
 
+## 1.20.0
+
+### Minor Changes
+
+- bc8f8c3c: Updated allergy components to read FQS feature flags directly from Unleash
+
+### Patch Changes
+
+- c56ccc70: Add ability to fetch provenances from FQS, currently disabled.
+
 ## 1.19.2
 
 ### Patch Changes
