@@ -121,7 +121,6 @@ const components: DemoComponent[] = [
         timelineProps={{ enableFQS: true }}
         observationsProps={{ enableFQS: true }}
         immunizationsProps={{ enableFQS: true }}
-        allergiesProps={{ enableFQS: true }}
         documentsProps={{ enableFQS: true }}
         medicationsProps={{ enableFQS: true }}
         medicationsOutsideProps={{ enableFQS: true }}
