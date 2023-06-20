@@ -37,11 +37,13 @@ export const allergyQuery = gql`
           id
           resourceType
           clinicalStatus {
+            text
             coding {
               ...Coding
             }
           }
           verificationStatus {
+            text
             coding {
               ...Coding
             }
@@ -50,6 +52,7 @@ export const allergyQuery = gql`
           category
           criticality
           code {
+            text
             coding {
               ...Coding
             }
@@ -100,11 +103,13 @@ export const allergyQuery = gql`
           }
           reaction {
             substance {
+              text
               coding {
                 ...Coding
               }
             }
             manifestation {
+              text
               coding {
                 ...Coding
               }
