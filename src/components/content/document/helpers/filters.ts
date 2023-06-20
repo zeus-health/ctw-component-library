@@ -16,8 +16,10 @@ const zusCreationDate = (doc: fhir4.DocumentReference) => {
 
 const isViewablePreRainbow = (doc: fhir4.DocumentReference) => {
   const creationDate = zusCreationDate(doc);
+
+  // if we cannot determine the date, default to trying to show the document
   if (!creationDate) {
-    return false;
+    return true;
   }
   return creationDate < RAINBOW_CUTOVER_DATE;
 };
