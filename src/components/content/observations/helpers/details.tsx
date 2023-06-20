@@ -38,13 +38,13 @@ export const Component = ({ diagnosticReport, enableFQS = false }: ObservationDe
     async function load() {
       setIsLoading(true);
       const requestContext = await getRequestContext();
-      const provenances = await searchProvenances(requestContext, [diagnosticReport]);
+      const provenances = await searchProvenances(requestContext, [diagnosticReport], enableFQS);
       setBinaryId(getBinaryId(provenances, diagnosticReport.id));
       setIsLoading(false);
     }
 
     void load();
-  }, [diagnosticReport, getRequestContext]);
+  }, [diagnosticReport, getRequestContext, enableFQS]);
 
   useEffect(() => {
     setObservationsEntries(

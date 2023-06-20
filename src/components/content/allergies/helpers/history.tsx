@@ -14,6 +14,7 @@ export function useAllergiesHistory(enableFQS: boolean, allergy: AllergyModel) {
     valuesToDedupeOn,
     getSearchParams,
     getHistoryEntry,
+    enableFQS,
   });
 }
 

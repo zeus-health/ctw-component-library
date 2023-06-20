@@ -7,6 +7,7 @@ import { Table } from "@/components/core/table/table";
 import { usePatientCareTeam } from "@/fhir/care-team";
 import { CareTeamPractitionerModel } from "@/fhir/models/careteam-practitioner";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
+import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 
 export type PatientCareTeamProps = {
   className?: string;
@@ -20,6 +21,7 @@ export type CareTeamDetailsDrawerProps = {
 };
 
 export function PatientCareTeam({ className }: PatientCareTeamProps) {
+  const { enabled } = useFQSFeatureToggle("careTeams");
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const { featureFlags } = useCTW();
@@ -30,6 +32,7 @@ export function PatientCareTeam({ className }: PatientCareTeamProps) {
     subHeader: (m) => m.qualification,
     details: careTeamData,
     getSourceDocument: true,
+    enableFQS: enabled,
   });
 
   return (

@@ -12,6 +12,7 @@ import { useCTW } from "@/components/core/providers/use-ctw";
 import { usePatientAllergies } from "@/fhir/allergies";
 import { AllergyModel } from "@/fhir/models/allergies";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
+import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { capitalize } from "@/utils/nodash";
 
 export type PatientAllergiesProps = {
@@ -21,6 +22,7 @@ export type PatientAllergiesProps = {
 function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { featureFlags } = useCTW();
+  const { enabled } = useFQSFeatureToggle("allergies");
   const patientAllergiesQuery = usePatientAllergies();
   const { data, setFilters, setSort } = useFilteredSortedData({
     defaultFilters: defaultAllergyFilters,
@@ -33,6 +35,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
     details: allergyData,
     getHistory: useAllergiesHistory,
     getSourceDocument: true,
+    enableFQS: enabled,
   });
 
   // Get our allergies.

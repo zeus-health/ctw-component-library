@@ -15,6 +15,7 @@ export function useConditionHistory(enableFQS: boolean, condition: ConditionMode
     valuesToDedupeOn,
     getSearchParams,
     getHistoryEntry,
+    enableFQS,
   });
 }
 
