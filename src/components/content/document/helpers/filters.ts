@@ -19,7 +19,7 @@ const isViewablePreRainbow = (doc: fhir4.DocumentReference) => {
   if (!creationDate) {
     return false;
   }
-  return creationDate > RAINBOW_CUTOVER_DATE;
+  return creationDate < RAINBOW_CUTOVER_DATE;
 };
 
 const isViewablePostRainbow = (docRef: fhir4.DocumentReference) => {
