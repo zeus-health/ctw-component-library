@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.19.2
+
+### Patch Changes
+
+- 0616c5bb: Show documents with no creation date
+
 ## 1.19.1
 
 ### Patch Changes
