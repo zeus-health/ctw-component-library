@@ -8,7 +8,6 @@ import { getIncludedResources, getResources } from "@/fhir/bundle";
 import { FHIRModel } from "@/fhir/models/fhir-model";
 import { searchProvenances } from "@/fhir/provenance";
 import { searchBuilderRecords, searchCommonRecords } from "@/fhir/search-helpers";
-import { SYSTEM_SUMMARY, SYSTEM_ZUS_THIRD_PARTY } from "@/fhir/system-urls";
 import { ResourceMap, ResourceType, ResourceTypeString } from "@/fhir/types";
 import { filterResourcesByBuilderId } from "@/services/common";
 import { createGraphqlClient, getHistoryResources, getResourceNodes } from "@/services/fqs/client";
@@ -26,6 +25,7 @@ export type UseHistoryProps<T extends ResourceTypeString, M extends FHIRModel<Re
   valuesToDedupeOn: (m: M) => unknown;
   getSearchParams: (m: M) => SearchParams;
   getHistoryEntry: (m: M) => HistoryEntryProps;
+  getFiltersFQS: (m: M) => object | undefined;
   enableFQS?: boolean;
 };
 
@@ -37,6 +37,7 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
   valuesToDedupeOn,
   getSearchParams,
   getHistoryEntry,
+  getFiltersFQS,
   enableFQS = true,
 }: UseHistoryProps<T, M>) {
   return useQueryWithPatient(
@@ -47,26 +48,31 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
           async (requestContext, patient) => {
             try {
               const graphClient = createGraphqlClient(requestContext);
-              const resources = getResourceNodes<T>(
-                await graphClient.request(getResourceFQSQuery(resourceType), {
-                  upid: patient.UPID,
-                  cursor: "",
-                  first: 1000,
-                  sort: {
-                    lastUpdated: "DESC",
-                  },
-                })
-              );
+              const filter = getFiltersFQS(model);
+              const resources = filter
+                ? getResourceNodes<T>(
+                    await graphClient.request(getResourceFQSQuery(resourceType), {
+                      upid: patient.UPID,
+                      cursor: "",
+                      first: 1000,
+                      sort: {
+                        lastUpdated: "DESC",
+                      },
+                      filter,
+                    })
+                  )
+                : [model.resource];
 
               console.log("resources", resources);
 
               let versions: ResourceType<T>[] = [];
+
               if (includeVersionHistory) {
                 versions = await getVersionHistoryFQS(
                   resourceType,
                   requestContext,
                   graphClient,
-                  patient.UPID
+                  resources
                 );
               }
               const constructor = model.constructor as new (r: ResourceType<T>) => M;
@@ -223,39 +229,14 @@ export async function getVersionHistoryFQS<T extends ResourceTypeString>(
   resourceType: T,
   requestContext: CTWRequestContext,
   graphClient: GraphQLClient,
-  patientUPID: string
+  resources: ResourceType<T>[]
 ): Promise<ResourceType<T>[]> {
-  let resources: ResourceType<T>[] = [];
-
-  resources = getResourceNodes<T>(
-    await graphClient.request(getResourceFQSQuery(resourceType), {
-      upid: patientUPID,
-      cursor: "",
-      first: 1000,
-      sort: {
-        lastUpdated: "DESC",
-      },
-      filter: {
-        tag: {
-          nonematch: [SYSTEM_SUMMARY, `${SYSTEM_ZUS_THIRD_PARTY}`],
-          // TODO: There's a bug in FQS that doesn't allow filtering with nonematch AND allmatch.
-          // Uncomment the line below once https://zeushealth.atlassian.net/browse/DRT-249 is resolved.
-          // allmatch: [`${SYSTEM_ZUS_OWNER}|builder/${requestContext.builderId}`],
-        },
-      },
-    })
-  );
-
-  // TODO: fix the typing on resources (potenitally use isDomainFHIRResource)
-  resources = filterResourcesByBuilderId(
-    resources,
-    requestContext.contextBuilderId || requestContext.builderId
-  );
+  let builderResources = filterResourcesByBuilderId(resources, requestContext.builderId);
 
   // Filter out any resources that are currently marked as entered in error.
-  resources = resources.filter((r) => !wasEnteredInError(r));
+  builderResources = builderResources.filter((r) => !wasEnteredInError(r));
 
-  const resourceIds = compact(resources.map((resource) => resource.id));
+  const resourceIds = compact(builderResources.map((resource) => resource.id));
 
   if (!resourceIds.length) {
     return [];
@@ -263,33 +244,7 @@ export async function getVersionHistoryFQS<T extends ResourceTypeString>(
 
   const versionQuery = versionsQuery(resourceType, resourceIds);
 
-  console.log("versionQuery", versionQuery);
-
   const versions = getHistoryResources<T>(await graphClient.request(versionQuery));
-
-  console.log("versions", versions);
-
-  // const bundle: fhir4.Bundle = {
-  //   resourceType: "Bundle",
-  //   id: `bundle-history-${resourceType}`,
-  //   type: "batch",
-  //   entry: resourceIds.map((id) => ({
-  //     request: {
-  //       method: "GET",
-  //       url: `/${resourceType}/${id}/_history`,
-  //     },
-  //   })) as fhir4.BundleEntry<fhir4.FhirResource>[],
-  // };
-
-  // const versions = getResources(
-  //   await requestContext.fhirClient.batch({
-  //     body: {
-  //       ...bundle,
-  //       type: "batch",
-  //     },
-  //   }),
-  //   resourceType
-  // );
 
   // Don't show any versions that were entered in error.
   return versions.filter((version) => !wasEnteredInError(version));

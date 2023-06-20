@@ -14,6 +14,7 @@ export function useConditionHistory(condition: ConditionModel) {
     queryKey: QUERY_KEY_CONDITION_HISTORY,
     valuesToDedupeOn,
     getSearchParams,
+    getFiltersFQS,
     getHistoryEntry,
   });
 }
@@ -38,6 +39,18 @@ function getSearchParams(condition: ConditionModel) {
   }
 
   return searchParams;
+}
+
+function getFiltersFQS(condition: ConditionModel) {
+  const tokens = condition.knownCodings.map((coding) => `${coding.system}|${coding.code}`);
+
+  if (tokens.length > 0) {
+    return {
+      code: { anymatch: tokens },
+    };
+  }
+
+  return undefined;
 }
 
 function getHistoryEntry(condition: ConditionModel): HistoryEntryProps {
