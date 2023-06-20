@@ -17,7 +17,7 @@ export const conditionsQuery = gql`
   query Conditions(
     $upid: ID!
     $cursor: String!
-    $filter: ConditionFilterParams!
+    $filter: ConditionFilterParams! = {}
     $sort: ConditionSortParams!
     $first: Int!
   ) {

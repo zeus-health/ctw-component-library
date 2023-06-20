@@ -3,17 +3,17 @@ import { fragmentCondition } from "./fragments/condition";
 import { ResourceTypeString } from "@/fhir/types";
 
 export function versionsQuery(resourceType: ResourceTypeString, resourceIds: string[]) {
+  console.log("resourceIds", resourceIds);
   const fragment = getResourceFragment(resourceType);
 
-  const megaquery = "";
-
-  resourceIds.map((resourceId) =>
-    megaquery.concat(createHistoryQuery(fragment, resourceType, resourceId))
-  );
+  const queries = resourceIds
+    .map((resourceId, ind) => createHistoryQuery(resourceType, resourceId, ind))
+    .join("\n");
 
   return gql`
-    query getHistory {
-      ${megaquery}
+  ${fragment}
+    query historyQuery {
+      ${queries}
     }
   `;
 }
@@ -29,26 +29,12 @@ function getResourceFragment(resourceType: ResourceTypeString) {
   }
 }
 
-function createHistoryQuery(
-  fragment: string,
-  resourceType: ResourceTypeString,
-  resourceId: string
-) {
-  return gql`
-    ${fragment}
-    query getHistory {
-      ${resourceType}History(
+function createHistoryQuery(resourceType: ResourceTypeString, resourceId: string, ind: number) {
+  return `
+      history${ind}: ${resourceType}History(
         id: "${resourceId}"
-      ) {
-        pageInfo {
-          hasNextPage
-        }
-        edges {
-          node {
-            ...${resourceType}
-          }
-        }
+      ) {          
+        ...${resourceType}
       }
-    }
   `;
 }
