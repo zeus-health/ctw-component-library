@@ -7,6 +7,7 @@ import { searchCommonRecords } from "./search-helpers";
 import { SYSTEM_BASIC_RESOURCE_TYPE, SYSTEM_ZUS_PROFILE_ACTION } from "./system-urls";
 import { useQueryWithPatient } from "..";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
+import { FQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { QUERY_KEY_BASIC } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
@@ -57,17 +58,25 @@ export async function recordProfileAction<T extends fhir4.Resource>(
   }
 }
 
-export function useBasic(enableFQS: boolean) {
+export function useBasic(fqs: FQSFeatureToggle) {
   return useQueryWithPatient(
     QUERY_KEY_BASIC,
-    [],
-    enableFQS
-      ? withTimerMetric(fetchBasic, "req.timing.basic")
-      : // Don't fetch Basic resources if FQS is disabled; the Outside Conditions/Meds ODS queries already fetch them via _revinclude.
-        async () =>
+    [fqs.ready],
+    (() => {
+      if (!fqs.ready) {
+        return async () =>
           new Promise<Basic[]>((resolve) => {
             resolve([]);
-          })
+          });
+      }
+      return fqs.enabled
+        ? withTimerMetric(fetchBasic, "req.timing.basic")
+        : // Don't fetch Basic resources if FQS is disabled; the Outside Conditions/Meds ODS queries already fetch them via _revinclude.
+          async () =>
+            new Promise<Basic[]>((resolve) => {
+              resolve([]);
+            });
+    })()
   );
 }
 

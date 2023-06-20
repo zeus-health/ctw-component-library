@@ -74,11 +74,19 @@ const components: DemoComponent[] = [
     render: () => <PatientConditionsOutside />,
     title: "Patient Conditions Outside",
   },
-  { name: "documents", render: () => <PatientDocuments />, title: "Patient Documents" },
-  { name: "medications", render: () => <PatientMedications />, title: "Patient Medications" },
+  {
+    name: "documents",
+    render: () => <PatientDocuments enableFQS={true} />,
+    title: "Patient Documents",
+  },
+  {
+    name: "medications",
+    render: () => <PatientMedications enableFQS={true} />,
+    title: "Patient Medications",
+  },
   {
     name: "medications-outside",
-    render: () => <PatientMedicationsOutside />,
+    render: () => <PatientMedicationsOutside enableFQS={true} />,
     title: "Patient Medications Outside",
   },
   {
@@ -115,6 +123,8 @@ const components: DemoComponent[] = [
         immunizationsProps={{ enableFQS: true }}
         allergiesProps={{ enableFQS: true }}
         documentsProps={{ enableFQS: true }}
+        medicationsProps={{ enableFQS: true }}
+        medicationsOutsideProps={{ enableFQS: true }}
       />
     ),
   },

@@ -41,6 +41,7 @@ const PatientMedicationsOutsideComponent = ({
       views={viewOptions}
       defaultView={defaultView}
       onOpenHistoryDrawer={onOpenHistoryDrawer}
+      enableFQS={enableFQS}
     />
   );
 };

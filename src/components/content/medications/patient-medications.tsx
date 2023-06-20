@@ -25,6 +25,7 @@ const PatientMedicationsComponent = ({
       views={medicationViews}
       defaultView={defaultMedicationView}
       onOpenHistoryDrawer={onOpenHistoryDrawer}
+      enableFQS={enableFQS}
     />
   );
 };

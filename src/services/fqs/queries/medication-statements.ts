@@ -88,7 +88,7 @@ export const medicationStatementQuery = gql`
               ... on Organization {
                 id
                 resourceType
-                organizationName: name
+                _organization__name: name
               }
               ... on Medication {
                 id

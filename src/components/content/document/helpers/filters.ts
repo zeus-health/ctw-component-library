@@ -8,14 +8,21 @@ const RAINBOW_CUTOVER_DATE = new Date("2023-03-08T05:00:00.000Z");
 const zusCreationDate = (doc: fhir4.DocumentReference) => {
   const createExtension = doc.meta?.extension?.filter((ext) => ext.url === ZUS_CREATION_DATE_URL);
   if (createExtension?.length !== 1 || !createExtension[0].valueInstant) {
-    throw Error("no creation date found for document reference");
+    return null;
   }
 
   return new Date(createExtension[0].valueInstant);
 };
 
-const isViewablePreRainbow = (doc: fhir4.DocumentReference) =>
-  zusCreationDate(doc) < RAINBOW_CUTOVER_DATE;
+const isViewablePreRainbow = (doc: fhir4.DocumentReference) => {
+  const creationDate = zusCreationDate(doc);
+
+  // if we cannot determine the date, default to trying to show the document
+  if (!creationDate) {
+    return true;
+  }
+  return creationDate < RAINBOW_CUTOVER_DATE;
+};
 
 const isViewablePostRainbow = (docRef: fhir4.DocumentReference) => {
   const document = new DocumentModel(docRef);
