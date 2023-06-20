@@ -83,15 +83,27 @@ export const createProvenance = async (
 
 export async function searchProvenances<T extends fhir4.Resource>(
   requestContext: CTWRequestContext,
-  models: FHIRModel<T>[]
+  models: FHIRModel<T>[],
+  // TODO remove underscore prefix when used.
+  _enableFQS = false
 ): Promise<Provenance[]> {
-  const target = uniq(models.map((m) => `${m.resourceType}/${m.id}`)).join(",");
+  if (models.length === 0) return [];
 
+  const targets = uniq(models.map((m) => `${m.resourceType}/${m.id}`));
+
+  // TODO uncomment when FQS supports provenance on all resources and is back-filled.
+  // if (enableFQS) {
+  //   return searchProvenancesFQS(requestContext, models[0].resourceType, targets);
+  // }
+  return searchProvenancesODS(requestContext, targets);
+}
+
+export async function searchProvenancesODS(requestContext: CTWRequestContext, targets: string[]) {
+  const target = targets.join(",");
   const { resources } = await queryClient.fetchQuery([QUERY_KEY_PROVENANCE, target], async () =>
     searchAllRecords("Provenance", requestContext, {
       target,
     })
   );
-
   return resources;
 }
