@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.19.1
+
+### Patch Changes
+
+- 2aba3de4: Bump vitest from 0.29.8 to 0.32.2
+- 679a085d: Fix issue where no documents were rendered due to missing creation date
+
 ## 1.19.0
 
 ### Minor Changes
