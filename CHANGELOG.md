@@ -1,5 +1,28 @@
 # ctw-component-library
 
+## 1.19.2
+
+### Patch Changes
+
+- 0616c5bb: Show documents with no creation date
+
+## 1.19.1
+
+### Patch Changes
+
+- 2aba3de4: Bump vitest from 0.29.8 to 0.32.2
+- 679a085d: Fix issue where no documents were rendered due to missing creation date
+
+## 1.19.0
+
+### Minor Changes
+
+- 570a075e: Use FQS to fetch medication history data
+
+### Patch Changes
+
+- 84a202f6: Fixed issue where Unleash client was sometimes taking too long to load flags
+
 ## 1.18.1
 
 ### Patch Changes

@@ -5,7 +5,7 @@ interface SyntheticDocRefProps {
   id: string;
   title: string;
   postRainbowCategories: boolean;
-  zusCreationDate: string;
+  zusCreationDate?: string;
   thirdPartyOwner?: string;
   docRefDate?: string;
   binaryCreationDate?: string;
@@ -82,6 +82,13 @@ describe("document filters tests", () => {
     postRainbowCategories: false,
   });
 
+  const commonwellNoDateDoc = createSyntheticDocRef({
+    id: "2",
+    title: "no odate commonwell",
+    thirdPartyOwner: "commonwell",
+    postRainbowCategories: false,
+  });
+
   const surescriptsDoc = createSyntheticDocRef({
     id: "2",
     title: "post rainbow surescript",
@@ -121,14 +128,18 @@ describe("document filters tests", () => {
     const input = [
       commonwellDoc,
       commonwelPreRainbowDoc,
+      commonwellNoDateDoc,
       surescriptsDoc,
       questDoc,
       firstPartyDoc,
       carequalityDoc,
     ];
-    const expectedOutput = [commonwellDoc, commonwelPreRainbowDoc, carequalityDoc].map(
-      (docRef) => new DocumentModel(docRef)
-    );
+    const expectedOutput = [
+      commonwellDoc,
+      commonwelPreRainbowDoc,
+      commonwellNoDateDoc,
+      carequalityDoc,
+    ].map((docRef) => new DocumentModel(docRef));
     const actualOutput = applyDocumentFilters(input);
 
     expect(actualOutput).toStrictEqual(expectedOutput);
