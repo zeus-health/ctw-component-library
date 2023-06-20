@@ -40,6 +40,8 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
   getFiltersFQS,
   enableFQS = true,
 }: UseHistoryProps<T, M>) {
+  // eslint-disable-next-line no-param-reassign
+  enableFQS = true;
   return useQueryWithPatient(
     queryKey,
     [model],
@@ -49,6 +51,7 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
             try {
               const graphClient = createGraphqlClient(requestContext);
               const filter = getFiltersFQS(model);
+              console.log("filter", filter);
               const resources = filter
                 ? getResourceNodes<T>(
                     await graphClient.request(getResourceFQSQuery(resourceType), {
