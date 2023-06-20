@@ -3,7 +3,6 @@ import { fragmentCondition } from "./fragments/condition";
 import { ResourceTypeString } from "@/fhir/types";
 
 export function versionsQuery(resourceType: ResourceTypeString, resourceIds: string[]) {
-  console.log("resourceIds", resourceIds);
   const fragment = getResourceFragment(resourceType);
 
   const queries = resourceIds
@@ -22,8 +21,6 @@ function getResourceFragment(resourceType: ResourceTypeString) {
   switch (resourceType) {
     case "Condition":
       return fragmentCondition;
-    // case "AllergyIntolerance":
-    //   return fragmentAllergy;
     default:
       return "";
   }
