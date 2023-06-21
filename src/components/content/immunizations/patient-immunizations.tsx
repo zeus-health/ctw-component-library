@@ -32,6 +32,7 @@ function PatientImmunizationsComponent({
     header: (m) => m.description,
     details: immunizationData,
     getSourceDocument: true,
+    enableFQS,
   });
 
   return (
