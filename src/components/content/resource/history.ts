@@ -43,7 +43,7 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
   getSearchParams,
   getHistoryEntry,
   getFiltersFQS,
-  enableFQS = false,
+  enableFQS,
 }: UseHistoryProps<T, M>) {
   return useQueryWithPatient(
     queryKey,
@@ -221,7 +221,7 @@ async function fetchResourcesFQS<
 
     let versions: ResourceType<T>[] = [];
 
-    const filteredResources = filterLensandSummary(resources, resourceType);
+    const filteredResources = filterLensAndSummary(resources, resourceType);
 
     if (includeVersionHistory) {
       versions = await getVersionHistoryFQS(
@@ -307,7 +307,7 @@ async function fetchResourcesODS<
   }
 }
 
-export function filterLensandSummary<T extends ResourceTypeString>(
+export function filterLensAndSummary<T extends ResourceTypeString>(
   resources: ResourceType<T>[],
   resourceType: T
 ) {
