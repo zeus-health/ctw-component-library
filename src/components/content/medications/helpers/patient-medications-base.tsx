@@ -34,10 +34,9 @@ export const PatientMedicationsBase = ({
   filters,
   defaultView,
   views,
-  enableFQS = false,
   onOpenHistoryDrawer,
 }: PatientMedicationsBaseProps) => {
-  const openDetailsDrawer = useMedicationDetailsDrawer(enableFQS);
+  const openDetailsDrawer = useMedicationDetailsDrawer();
   const { data, setFilters, setSort, setViewOption } = useFilteredSortedData({
     defaultView,
     defaultFilters: defaultMedicationFilters,
