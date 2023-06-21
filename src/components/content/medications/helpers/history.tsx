@@ -13,7 +13,7 @@ export function useMedicationHistoryEntries(
   enableFQS: boolean,
   medication: MedicationStatementModel
 ): UseQueryResultBasic<HistoryEntries | undefined> {
-  const medHistoryQuery = useMedicationHistory(enableFQS, medication.resource);
+  const medHistoryQuery = useMedicationHistory(medication.resource);
   return {
     data: medHistoryQuery.data?.medications.map(createMedicationDetailsCard),
     isLoading: medHistoryQuery.isLoading,

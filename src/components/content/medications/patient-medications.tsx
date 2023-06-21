@@ -13,9 +13,8 @@ export type PatientMedicationsProps = {
 const PatientMedicationsComponent = ({
   className,
   onOpenHistoryDrawer,
-  enableFQS = false,
 }: PatientMedicationsProps) => {
-  const { builderMedications, isLoading } = useQueryAllPatientMedications(enableFQS);
+  const { builderMedications, isLoading } = useQueryAllPatientMedications();
 
   return (
     <PatientMedicationsBase
@@ -25,7 +24,6 @@ const PatientMedicationsComponent = ({
       views={medicationViews}
       defaultView={defaultMedicationView}
       onOpenHistoryDrawer={onOpenHistoryDrawer}
-      enableFQS={enableFQS}
     />
   );
 };
