@@ -5,6 +5,7 @@ import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { getBinaryId } from "@/fhir/binaries";
 import { getIncludedResources, getResources } from "@/fhir/bundle";
+import { PatientModel } from "@/fhir/models";
 import { FHIRModel } from "@/fhir/models/fhir-model";
 import { searchProvenances } from "@/fhir/provenance";
 import { searchBuilderRecords, searchCommonRecords } from "@/fhir/search-helpers";
@@ -40,109 +41,40 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
   getFiltersFQS,
   enableFQS = true,
 }: UseHistoryProps<T, M>) {
-  // eslint-disable-next-line no-param-reassign
-  enableFQS = true;
   return useQueryWithPatient(
     queryKey,
     [model],
     enableFQS
       ? withTimerMetric(
-          async (requestContext, patient) => {
-            try {
-              const graphClient = createGraphqlClient(requestContext);
-              const filter = getFiltersFQS(model);
-              console.log("filter", filter);
-              const resources = filter
-                ? getResourceNodes<T>(
-                    await graphClient.request(getResourceFQSQuery(resourceType), {
-                      upid: patient.UPID,
-                      cursor: "",
-                      first: 1000,
-                      sort: {
-                        lastUpdated: "DESC",
-                      },
-                      filter,
-                    })
-                  )
-                : [model.resource];
-
-              console.log("resources", resources);
-
-              let versions: ResourceType<T>[] = [];
-
-              if (includeVersionHistory) {
-                versions = await getVersionHistoryFQS(
-                  resourceType,
-                  requestContext,
-                  graphClient,
-                  resources
-                );
-              }
-              const constructor = model.constructor as new (r: ResourceType<T>) => M;
-              const models = [...resources, ...versions].map((c) => new constructor(c));
-
-              const entries = dedupeHistory(models, valuesToDedupeOn).map(getHistoryEntry);
-              // Fetch provenances and add binaryId to each entry.
-              const provenances = await searchProvenances(requestContext, models, enableFQS);
-              entries.forEach((entry) => {
-                // eslint-disable-next-line no-param-reassign
-                entry.binaryId = getBinaryId(provenances, entry.id);
-              });
-
-              return entries;
-            } catch (e) {
-              throw Telemetry.logError(
-                e as Error,
-                `Failed fetching ${resourceType} history for patient: ${patient.UPID}}`
-              );
-            }
-          },
+          async (requestContext, patient) =>
+            fetchResourcesFQS(
+              resourceType,
+              model,
+              includeVersionHistory,
+              requestContext,
+              patient,
+              getFiltersFQS(model),
+              valuesToDedupeOn,
+              getHistoryEntry,
+              enableFQS
+            ),
           `req.${model.resourceType.toLowerCase()}_history`,
           ["fqs"]
         )
-      : withTimerMetric(async (requestContext, patient) => {
-          try {
-            const searchParams = {
-              ...getSearchParams(model),
-              patientUPID: patient.UPID,
-            };
-
-            const { resources, bundle } = await searchCommonRecords(
+      : withTimerMetric(
+          async (requestContext, patient) =>
+            fetchResourcesODS(
               resourceType,
+              model,
+              includeVersionHistory,
               requestContext,
-              searchParams
-            );
-            const includedResources = getIncludedResources(bundle);
-
-            let versions: ResourceType<T>[] = [];
-            if (includeVersionHistory) {
-              versions = await getVersionHistory(resourceType, requestContext, searchParams);
-            }
-            const constructor = model.constructor as new (
-              r: ResourceType<T>,
-              includedRes: ResourceMap
-            ) => M;
-            const models = [...resources, ...versions].map(
-              (c) => new constructor(c, includedResources)
-            );
-
-            const entries = dedupeHistory(models, valuesToDedupeOn).map(getHistoryEntry);
-
-            // Fetch provenances and add binaryId to each entry.
-            const provenances = await searchProvenances(requestContext, models);
-            entries.forEach((entry) => {
-              // eslint-disable-next-line no-param-reassign
-              entry.binaryId = getBinaryId(provenances, entry.id);
-            });
-
-            return entries;
-          } catch (e) {
-            throw Telemetry.logError(
-              e as Error,
-              `Failed fetching ${resourceType} history for patient: ${patient.UPID}}`
-            );
-          }
-        }, `req.${model.resourceType.toLowerCase()}_history`),
+              patient,
+              valuesToDedupeOn,
+              getHistoryEntry,
+              getSearchParams
+            ),
+          `req.${model.resourceType.toLowerCase()}_history`
+        ),
     !!model
   );
 }
@@ -250,4 +182,114 @@ export async function getVersionHistoryFQS<T extends ResourceTypeString>(
 
   // Don't show any versions that were entered in error.
   return versions.filter((version) => !wasEnteredInError(version));
+}
+
+async function fetchResourcesFQS<
+  T extends ResourceTypeString,
+  M extends FHIRModel<ResourceType<T>>
+>(
+  resourceType: T,
+  model: M,
+  includeVersionHistory: boolean,
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  filter: object | undefined,
+  valuesToDedupeOn: (m: M) => unknown,
+  getHistoryEntry: (m: M) => HistoryEntryProps,
+  enableFQS: boolean
+) {
+  try {
+    const graphClient = createGraphqlClient(requestContext);
+
+    const resources = filter
+      ? getResourceNodes<T>(
+          await graphClient.request(getResourceFQSQuery(resourceType), {
+            upid: patient.UPID,
+            cursor: "",
+            first: 1000,
+            sort: {
+              lastUpdated: "DESC",
+            },
+            filter,
+          })
+        )
+      : [model.resource];
+
+    let versions: ResourceType<T>[] = [];
+
+    if (includeVersionHistory) {
+      versions = await getVersionHistoryFQS(resourceType, requestContext, graphClient, resources);
+    }
+    const constructor = model.constructor as new (r: ResourceType<T>) => M;
+    const models = [...resources, ...versions].map((c) => new constructor(c));
+
+    const entries = dedupeHistory(models, valuesToDedupeOn).map(getHistoryEntry);
+    // Fetch provenances and add binaryId to each entry.
+    const provenances = await searchProvenances(requestContext, models, enableFQS);
+    entries.forEach((entry) => {
+      // eslint-disable-next-line no-param-reassign
+      entry.binaryId = getBinaryId(provenances, entry.id);
+    });
+
+    return entries;
+  } catch (e) {
+    throw Telemetry.logError(
+      e as Error,
+      `Failed fetching ${resourceType} history for patient via FQS: ${patient.UPID}}`
+    );
+  }
+}
+
+async function fetchResourcesODS<
+  T extends ResourceTypeString,
+  M extends FHIRModel<ResourceType<T>>
+>(
+  resourceType: T,
+  model: M,
+  includeVersionHistory: boolean,
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  valuesToDedupeOn: (m: M) => unknown,
+  getHistoryEntry: (m: M) => HistoryEntryProps,
+  getSearchParams: (m: M) => SearchParams
+) {
+  try {
+    const searchParams = {
+      ...getSearchParams(model),
+      patientUPID: patient.UPID,
+    };
+
+    const { resources, bundle } = await searchCommonRecords(
+      resourceType,
+      requestContext,
+      searchParams
+    );
+    const includedResources = getIncludedResources(bundle);
+
+    let versions: ResourceType<T>[] = [];
+    if (includeVersionHistory) {
+      versions = await getVersionHistory(resourceType, requestContext, searchParams);
+    }
+    const constructor = model.constructor as new (
+      r: ResourceType<T>,
+      includedRes: ResourceMap
+    ) => M;
+    const models = [...resources, ...versions].map((c) => new constructor(c, includedResources));
+
+    const entries = dedupeHistory(models, valuesToDedupeOn).map(getHistoryEntry);
+
+    // Fetch provenances and add binaryId to each entry.
+    const provenances = await searchProvenances(requestContext, models);
+    entries.forEach((entry) => {
+      // eslint-disable-next-line no-param-reassign
+      entry.binaryId = getBinaryId(provenances, entry.id);
+    });
+
+    return entries;
+  } catch (e) {
+    throw Telemetry.logError(
+      e as Error,
+      `Failed fetching ${resourceType} history for patient: ${patient.UPID}}`
+    );
+  }
 }
