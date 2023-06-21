@@ -182,7 +182,8 @@ export function useQueryAllPatientMedications() {
     summarizedMedicationsQuery.data,
     builderMedicationsQuery.data,
     summarizedMedicationsQuery.data?.basic,
-    fqs,
+    fqs.enabled,
+    fqs.ready,
   ]);
 
   const isLoading = builderMedicationsQuery.isLoading || summarizedMedicationsQuery.isLoading;

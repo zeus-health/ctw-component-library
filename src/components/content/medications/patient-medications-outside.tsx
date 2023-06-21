@@ -17,7 +17,6 @@ export type PatientMedicationsOutsideProps = {
   onOpenHistoryDrawer?: () => void;
   onAddToRecord?: (record: MedicationStatementModel) => void;
   readOnly?: boolean;
-  enableFQS?: boolean;
 };
 
 const PatientMedicationsOutsideComponent = ({
