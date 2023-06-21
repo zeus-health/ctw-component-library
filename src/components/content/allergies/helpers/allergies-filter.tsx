@@ -1,6 +1,5 @@
 import { AllergyModel } from "@/fhir/models/allergies";
 import { ResourceMap } from "@/fhir/types";
-import { isEqual, uniqWith } from "@/utils/nodash";
 import { sort } from "@/utils/sort";
 
 export const applyAllergyFilters = (
@@ -12,22 +11,20 @@ export const applyAllergyFilters = (
 
   const sortedByDate = sort(allergyModel, "recordedDate", "desc", true);
 
-  const allergyData = uniqWith(sortedByDate, (a, b) => {
-    const valuesA = valuesToDedupeOn(a);
-    const valuesB = valuesToDedupeOn(b);
+  // pull out unique allergies preferring those owned by the builder
+  const allergyDataMap = new Map<string | undefined, AllergyModel>();
+  sortedByDate.forEach((allergy) => {
+    const { lowercaseDisplay } = allergy;
+    const existingAllergy = allergyDataMap.get(lowercaseDisplay);
 
-    // prefer returning first party records so we can distinguish those in the table
-    if (a.ownedByBuilder(builderId) && !b.ownedByBuilder(builderId)) {
-      return true;
+    if (!existingAllergy) {
+      allergyDataMap.set(lowercaseDisplay, allergy);
+    } else if (allergy.ownedByBuilder(builderId) && !existingAllergy.ownedByBuilder(builderId)) {
+      allergyDataMap.set(lowercaseDisplay, allergy);
     }
-    if (!a.ownedByBuilder(builderId) && b.ownedByBuilder(builderId)) {
-      return false;
-    }
-
-    return isEqual(valuesA, valuesB);
   });
 
-  return allergyData;
-};
+  const uniqueAllergies = Array.from(allergyDataMap.values());
 
-const valuesToDedupeOn = (allergy: AllergyModel) => [allergy.lowercaseDisplay];
+  return uniqueAllergies;
+};
