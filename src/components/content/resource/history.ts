@@ -163,7 +163,7 @@ function getResourceFQSQuery(resourceType: ResourceTypeString) {
   }
 }
 
-export async function getVersionHistoryFQS<T extends ResourceTypeString>(
+async function getVersionHistoryFQS<T extends ResourceTypeString>(
   resourceType: T,
   requestContext: CTWRequestContext,
   graphClient: GraphQLClient,
