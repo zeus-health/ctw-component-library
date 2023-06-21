@@ -1,4 +1,4 @@
-import { SearchParams } from "fhir-kit-client";
+import Client, { SearchParams } from "fhir-kit-client";
 import { getResources } from "./bundle";
 import {
   SYSTEM_SUMMARY,
@@ -14,6 +14,13 @@ import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { filter, mapValues, mergeWith, some } from "@/utils/nodash";
 
 const MAX_COUNT = 250;
+
+// Set env to true to fetch all pages from ODS.
+const DEBUG_ODS_FETCH_ALL_PAGES = import.meta.env.VITE_DEBUG_ODS_FETCH_ALL_PAGES;
+
+// Number of entries in bundle before we stop fetching all pages.
+// This way, we don't accidentally fetch 100K resources from ODS.
+const DEBUG_ODS_FETCH_ALL_PAGES_CUTOFF = 2500;
 
 function excludeTagsinPatientRecordSearch<T extends ResourceTypeString>(resourceType: T): string[] {
   switch (resourceType) {
@@ -87,7 +94,7 @@ export async function searchAllRecords<T extends ResourceTypeString>(
   const { patientUPID, _count, ...params } = searchParams ?? {};
   const fetchAll = typeof _count === "undefined";
   const count = fetchAll ? MAX_COUNT : _count;
-  const bundle = (await requestContext.fhirClient.search({
+  let bundle = (await requestContext.fhirClient.search({
     resourceType,
     searchParams: {
       ...params,
@@ -95,6 +102,10 @@ export async function searchAllRecords<T extends ResourceTypeString>(
       ...patientSearchParams(resourceType, patientUPID as string),
     },
   })) as fhir4.Bundle;
+
+  if (DEBUG_ODS_FETCH_ALL_PAGES === "true") {
+    bundle = await fetchAllPages(requestContext.fhirClient, bundle);
+  }
 
   const resources = getResources(bundle, resourceType);
   return { bundle, total: bundle.total ?? 0, resources };
@@ -328,3 +339,19 @@ const filterSearchReturnByBuilderId = <T extends ResourceTypeString>(
 
   return { resources, entry };
 };
+
+async function fetchAllPages(fhirClient: Client, bundle: fhir4.Bundle) {
+  const entries = [...(bundle.entry ?? [])];
+  let currentBundle = bundle;
+
+  while (
+    currentBundle.link?.find((link) => link.relation === "next")?.url &&
+    entries.length < DEBUG_ODS_FETCH_ALL_PAGES_CUTOFF
+  ) {
+    // eslint-disable-next-line no-await-in-loop
+    currentBundle = (await fhirClient.nextPage({ bundle: currentBundle })) as fhir4.Bundle;
+    entries.push(...(currentBundle.entry ?? []));
+  }
+
+  return { ...bundle, link: undefined, entry: entries, total: entries.length };
+}

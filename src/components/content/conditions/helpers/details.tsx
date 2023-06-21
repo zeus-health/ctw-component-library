@@ -3,6 +3,7 @@ import { useConfirmDeleteCondition, useEditConditionForm } from "./modal-hooks";
 import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
 import { NotesList } from "@/components/core/notes-list";
 import { ConditionModel } from "@/fhir/models";
+import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { capitalize } from "@/utils/nodash";
 
 export const useConditionDetailsDrawer = ({
@@ -11,6 +12,7 @@ export const useConditionDetailsDrawer = ({
   canEdit: boolean;
   canRemove: boolean;
 }) => {
+  const { enabled } = useFQSFeatureToggle("conditions");
   const showEditConditionForm = useEditConditionForm();
   const confirmDelete = useConfirmDeleteCondition();
 
@@ -19,6 +21,7 @@ export const useConditionDetailsDrawer = ({
     subHeader: (condition: ConditionModel) => condition.ccsChapter,
     getSourceDocument: true,
     readOnly: !canEdit,
+    enableFQS: enabled,
     onEdit: showEditConditionForm,
     onRemove: confirmDelete,
     details: (condition: ConditionModel) => [

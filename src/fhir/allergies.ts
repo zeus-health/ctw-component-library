@@ -4,25 +4,34 @@ import { searchCommonRecords } from "./search-helpers";
 import { applyAllergyFilters } from "@/components/content/allergies/helpers/allergies-filter";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
+import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { createGraphqlClient } from "@/services/fqs/client";
 import { AllergyGraphqlResponse, allergyQuery } from "@/services/fqs/queries/allergies";
 import { QUERY_KEY_PATIENT_ALLERGIES } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
-export function usePatientAllergies(enableFQS: boolean) {
+export function usePatientAllergies() {
+  const fqs = useFQSFeatureToggle("allergies");
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_ALLERGIES,
-    [],
-    enableFQS
-      ? withTimerMetric(
-          async (requestContext, patient) => getAllergyIntoleranceFromFQS(requestContext, patient),
-          "req.timing.allergies",
-          ["FQS"]
-        )
-      : withTimerMetric(
-          async (requestContext, patient) => getAllergyIntoleranceFromODS(requestContext, patient),
-          "req.timing.allergies"
-        )
+    [fqs.ready],
+    (() => {
+      if (!fqs.ready) {
+        return async () => [];
+      }
+      return fqs.enabled
+        ? withTimerMetric(
+            async (requestContext, patient) =>
+              getAllergyIntoleranceFromFQS(requestContext, patient),
+            "req.timing.allergies",
+            ["FQS"]
+          )
+        : withTimerMetric(
+            async (requestContext, patient) =>
+              getAllergyIntoleranceFromODS(requestContext, patient),
+            "req.timing.allergies"
+          );
+    })()
   );
 }
 

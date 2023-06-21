@@ -1,12 +1,13 @@
 import { ExclamationCircleIcon, LockClosedIcon } from "@heroicons/react/solid";
 import cx from "classnames";
 import type { InputHTMLAttributes } from "react";
+import { FormFieldOption } from "@/components/core/form/drawer-form-with-fields";
 import { formatDateLocalToISO } from "@/fhir/formatters";
 import { startCase } from "@/utils/nodash";
 
 export type FormFieldProps = {
   errors?: string[];
-  options?: string[];
+  options?: readonly FormFieldOption[];
   lines?: number;
   defaultValue?: string | string[];
   readonly?: boolean;
@@ -48,14 +49,14 @@ export const FormField = ({
           defaultValue={value}
           data-zus-telemetry-focus={inputProps.name}
         >
-          {!options.includes(defaultValue as string) && (
+          {!options.some((option) => option.value === defaultValue) && (
             <option value={defaultValue} disabled>
               Select one
             </option>
           )}
           {options.map((option) => (
-            <option value={option} key={option}>
-              {startCase(option)}
+            <option value={option.value} key={option.value}>
+              {startCase(option.label)}
             </option>
           ))}
         </select>

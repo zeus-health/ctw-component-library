@@ -32,7 +32,8 @@ type PatientUPIDSpecified = {
 type PatientProviderProps = {
   children: ReactNode;
   tags?: Tag[];
-  onPatientSave?: (data: PatientFormData) => Promise<void>;
+  onPatientSave?: (data: PatientFormData) => void;
+  onResourceSave?: (data: fhir4.Resource, action: "create" | "update") => void;
 } & (ThirdPartyID | PatientUPIDSpecified);
 
 export function PatientProvider({
@@ -42,6 +43,7 @@ export function PatientProvider({
   systemURL,
   tags,
   onPatientSave,
+  onResourceSave,
 }: PatientProviderProps) {
   const providerState = useMemo(
     () => ({
@@ -49,8 +51,9 @@ export function PatientProvider({
       systemURL: patientUPID ? SYSTEM_ZUS_UNIVERSAL_ID : systemURL,
       tags,
       onPatientSave,
+      onResourceSave,
     }),
-    [patientID, patientUPID, systemURL, tags, onPatientSave]
+    [patientID, patientUPID, systemURL, tags, onPatientSave, onResourceSave]
   );
 
   return (
@@ -152,6 +155,8 @@ export function useQueryWithPatient<T, T2>(
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return query(requestContext, patientResponse.data!, keys);
     },
-    { enabled: !!patientResponse.data?.UPID && enabled }
+    {
+      enabled: !!patientResponse.data?.UPID && enabled,
+    }
   );
 }

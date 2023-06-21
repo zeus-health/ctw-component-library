@@ -18,6 +18,7 @@ import Zod, {
   ZodTypeAny,
   ZodUnknown,
 } from "zod";
+import { FormFieldOption, FormFieldType } from "..";
 
 export type AnyZodSchema = Zod.AnyZodObject | ZodEffects<any, any, any>;
 
@@ -163,9 +164,20 @@ export async function getFormData<T extends AnyZodSchema>(data: FormData, schema
   return getParamsInternal<ParamsType>(data, schema);
 }
 
-function getOptions(schema: Zod.AnyZodObject, field: string): string[] | undefined {
-  const zodField = schema.shape[field];
-  return zodField?.options || zodField?.unwrap?.().options;
+function getOptions(
+  schema: Zod.AnyZodObject,
+  entry: Readonly<FormFieldType>
+): readonly FormFieldOption[] | undefined {
+  if (entry.options) {
+    return entry.options;
+  }
+
+  const zodField = schema.shape[entry.field];
+
+  return (zodField?.options || zodField?.unwrap?.().options)?.map((option: any) => ({
+    label: option,
+    value: option,
+  }));
 }
 
 export const isOptional = (schema: Zod.AnyZodObject, field: string): boolean =>
@@ -180,38 +192,40 @@ export type InputPropType = {
   max?: number;
   minLength?: number;
   maxLength?: number;
-  options?: string[] | undefined;
+  options?: readonly FormFieldOption[] | undefined;
 };
 
-export function useFormInputProps(zodThing: AnyZodSchema, options: any = {}) {
+export function useFormInputProps(zodThing: AnyZodSchema) {
   const schema = zodThing instanceof ZodEffects ? zodThing._def.schema : zodThing;
   const { shape } = schema;
-  const defaultOptions = options;
-  return function props(key: string, options: any = {}) {
-    options = { ...defaultOptions, ...options };
-    const def = shape[key];
+  return function (entry: Readonly<FormFieldType>, options: any = {}) {
+    const def = shape[entry.field];
     if (!def) {
-      throw new Error(`no such key: ${key}`);
+      throw new Error(`no such key: ${entry.field}`);
     }
-    return getInputProps(key, schema, def);
+    return getInputProps(entry, schema, def);
   };
 }
 
-export function getInputProps(name: string, schema: any, def: ZodTypeAny): InputPropType {
+export function getInputProps(
+  entry: Readonly<FormFieldType>,
+  schema: any,
+  def: ZodTypeAny
+): InputPropType {
   let type = "text";
   let min;
   let max;
-  let minlength;
-  let maxlength;
-  const options = getOptions(schema, name);
+  let minLength;
+  let maxLength;
+  const options = getOptions(schema, entry);
   if (def instanceof ZodString) {
     if (def.isEmail) {
       type = "email";
     } else if (def.isURL) {
       type = "url";
     }
-    minlength = def.minLength ?? undefined;
-    maxlength = def.maxLength ?? undefined;
+    minLength = def.minLength ?? undefined;
+    maxLength = def.maxLength ?? undefined;
 
     const check: any = def._def.checks.find((c) => c.kind === "regex");
   } else if (def instanceof ZodNumber) {
@@ -223,11 +237,11 @@ export function getInputProps(name: string, schema: any, def: ZodTypeAny): Input
   } else if (def instanceof ZodDate || def._def.innerType instanceof ZodDate) {
     type = "date";
   } else if (def instanceof ZodArray) {
-    return getInputProps(name, schema, def.element);
+    return getInputProps(entry, schema, def.element);
   }
 
   const inputProps: InputPropType = {
-    name,
+    name: entry.field,
     type,
     options,
   };
@@ -237,7 +251,7 @@ export function getInputProps(name: string, schema: any, def: ZodTypeAny): Input
   }
   if (min) inputProps.min = min;
   if (max) inputProps.max = max;
-  if (minlength && Number.isFinite(minlength)) inputProps.minLength = minlength;
-  if (maxlength && Number.isFinite(maxlength)) inputProps.maxLength = maxlength;
+  if (minLength && Number.isFinite(minLength)) inputProps.minLength = minLength;
+  if (maxLength && Number.isFinite(maxLength)) inputProps.maxLength = maxLength;
   return inputProps;
 }

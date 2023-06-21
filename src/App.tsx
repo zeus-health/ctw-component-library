@@ -74,11 +74,19 @@ const components: DemoComponent[] = [
     render: () => <PatientConditionsOutside />,
     title: "Patient Conditions Outside",
   },
-  { name: "documents", render: () => <PatientDocuments />, title: "Patient Documents" },
-  { name: "medications", render: () => <PatientMedications />, title: "Patient Medications" },
+  {
+    name: "documents",
+    render: () => <PatientDocuments enableFQS={true} />,
+    title: "Patient Documents",
+  },
+  {
+    name: "medications",
+    render: () => <PatientMedications enableFQS={true} />,
+    title: "Patient Medications",
+  },
   {
     name: "medications-outside",
-    render: () => <PatientMedicationsOutside />,
+    render: () => <PatientMedicationsOutside enableFQS={true} />,
     title: "Patient Medications Outside",
   },
   {
@@ -113,8 +121,9 @@ const components: DemoComponent[] = [
         timelineProps={{ enableFQS: true }}
         observationsProps={{ enableFQS: true }}
         immunizationsProps={{ enableFQS: true }}
-        allergiesProps={{ enableFQS: true }}
         documentsProps={{ enableFQS: true }}
+        medicationsProps={{ enableFQS: true }}
+        medicationsOutsideProps={{ enableFQS: true }}
       />
     ),
   },
@@ -133,6 +142,9 @@ const DemoApp = ({ accessToken = "" }) => (
     theme={theme}
     locals={locals}
     ehr="test"
+    onResourceSave={(resource, action, error) => {
+      console.log("Result of saving a resource", resource, action, error);
+    }}
   >
     <PatientProvider patientID={VITE_PATIENT_ID} systemURL={VITE_SYSTEM_URL}>
       <div className="App">
