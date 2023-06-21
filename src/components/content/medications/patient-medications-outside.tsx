@@ -25,9 +25,8 @@ const PatientMedicationsOutsideComponent = ({
   onAddToRecord,
   readOnly = false,
   onOpenHistoryDrawer,
-  enableFQS = false,
 }: PatientMedicationsOutsideProps) => {
-  const { otherProviderMedications, isLoading } = useQueryAllPatientMedications(enableFQS);
+  const { otherProviderMedications, isLoading } = useQueryAllPatientMedications();
   const rowActions = useMemo(() => getRowActions({ onAddToRecord }), [onAddToRecord]);
   const { viewOptions, defaultView } =
     getDateRangeView<MedicationStatementModel>("lastActivityDate");
