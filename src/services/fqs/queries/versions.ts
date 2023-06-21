@@ -1,12 +1,12 @@
 import { gql } from "graphql-request";
-import { fragmentCondition } from "./fragments/condition";
+import { fragmentConditionHistory } from "./fragments/condition";
 import { ResourceTypeString } from "@/fhir/types";
 
 export function versionsQuery(resourceType: ResourceTypeString, resourceIds: string[]) {
   const fragment = getResourceFragment(resourceType);
 
   const queries = resourceIds
-    .map((resourceId) => createHistoryQuery(resourceType, resourceId))
+    .map((resourceId, ind) => createHistoryQuery(resourceType, resourceId, ind))
     .join("\n");
 
   return gql`
@@ -20,15 +20,15 @@ export function versionsQuery(resourceType: ResourceTypeString, resourceIds: str
 function getResourceFragment(resourceType: ResourceTypeString) {
   switch (resourceType) {
     case "Condition":
-      return fragmentCondition;
+      return fragmentConditionHistory;
     default:
       return "";
   }
 }
 
-function createHistoryQuery(resourceType: ResourceTypeString, resourceId: string) {
+function createHistoryQuery(resourceType: ResourceTypeString, resourceId: string, ind: number) {
   return `
-      ${resourceType}(
+    history${ind}: ${resourceType}History(
         id: "${resourceId}"
       ) {          
         ...${resourceType}
