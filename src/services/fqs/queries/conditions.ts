@@ -57,6 +57,7 @@ export const conditionsQuery = gql`
           }
           abatementString
           clinicalStatus {
+            text
             coding {
               ...Coding
             }
@@ -77,6 +78,7 @@ export const conditionsQuery = gql`
             }
           }
           code {
+            text
             coding {
               ...Coding
             }
@@ -103,12 +105,14 @@ export const conditionsQuery = gql`
           }
           evidence {
             code {
+              text
               coding {
                 ...Coding
               }
             }
           }
           verificationStatus {
+            text
             coding {
               ...Coding
             }
@@ -134,17 +138,20 @@ export const conditionsQuery = gql`
             display
           }
           severity {
+            text
             coding {
               ...Coding
             }
           }
           stage {
             summary {
+              text
               coding {
                 ...Coding
               }
             }
             type {
+              text
               coding {
                 ...Coding
               }
