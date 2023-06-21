@@ -8,7 +8,11 @@ import { getIncludedResources, getResources } from "@/fhir/bundle";
 import { PatientModel } from "@/fhir/models";
 import { FHIRModel } from "@/fhir/models/fhir-model";
 import { searchProvenances } from "@/fhir/provenance";
-import { searchBuilderRecords, searchCommonRecords } from "@/fhir/search-helpers";
+import {
+  excludeTagsinPatientRecordSearch,
+  searchBuilderRecords,
+  searchCommonRecords,
+} from "@/fhir/search-helpers";
 import { ResourceMap, ResourceType, ResourceTypeString } from "@/fhir/types";
 import { filterResourcesByBuilderId } from "@/services/common";
 import { createGraphqlClient, getHistoryResources, getResourceNodes } from "@/services/fqs/client";
@@ -39,7 +43,7 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
   getSearchParams,
   getHistoryEntry,
   getFiltersFQS,
-  enableFQS = true,
+  enableFQS = false,
 }: UseHistoryProps<T, M>) {
   return useQueryWithPatient(
     queryKey,
@@ -217,13 +221,22 @@ async function fetchResourcesFQS<
 
     let versions: ResourceType<T>[] = [];
 
+    const filteredResources = filterLensandSummary(resources, resourceType);
+
     if (includeVersionHistory) {
-      versions = await getVersionHistoryFQS(resourceType, requestContext, graphClient, resources);
+      versions = await getVersionHistoryFQS(
+        resourceType,
+        requestContext,
+        graphClient,
+        filteredResources
+      );
     }
+
     const constructor = model.constructor as new (r: ResourceType<T>) => M;
-    const models = [...resources, ...versions].map((c) => new constructor(c));
+    const models = [...filteredResources, ...versions].map((c) => new constructor(c));
 
     const entries = dedupeHistory(models, valuesToDedupeOn).map(getHistoryEntry);
+
     // Fetch provenances and add binaryId to each entry.
     const provenances = await searchProvenances(requestContext, models, enableFQS);
     entries.forEach((entry) => {
@@ -292,4 +305,26 @@ async function fetchResourcesODS<
       `Failed fetching ${resourceType} history for patient: ${patient.UPID}}`
     );
   }
+}
+
+export function filterLensandSummary<T extends ResourceTypeString>(
+  resources: ResourceType<T>[],
+  resourceType: T
+) {
+  // filter out anything we don't want
+  const filteredResources = resources.filter((resource) => {
+    // no tags are allowed through (should be an edge case)
+    if (!resource.meta || !resource.meta.tag) {
+      return true;
+    }
+
+    const hasExcludableTag =
+      resource.meta.tag.filter((tag) =>
+        excludeTagsinPatientRecordSearch(resourceType).includes(`${tag.system}|${tag.code}`)
+      ).length > 0;
+
+    return !hasExcludableTag;
+  });
+
+  return filteredResources;
 }
