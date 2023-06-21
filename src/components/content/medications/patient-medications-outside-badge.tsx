@@ -1,14 +1,8 @@
 import { Badge } from "@/components/core/badge";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 
-export type PatientMedicationsOutsideBadgeProps = {
-  enableFQS?: boolean;
-};
-
-export const PatientMedicationsOutsideBadge = ({
-  enableFQS = false,
-}: PatientMedicationsOutsideBadgeProps) => {
-  const { otherProviderMedications = [] } = useQueryAllPatientMedications(enableFQS);
+export const PatientMedicationsOutsideBadge = () => {
+  const { otherProviderMedications = [] } = useQueryAllPatientMedications();
   const activeUnarchivedMedications = otherProviderMedications.filter(
     (medication) => !(medication.isArchived || medication.isInactive)
   );
