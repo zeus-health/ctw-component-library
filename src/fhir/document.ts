@@ -2,26 +2,33 @@ import { searchCommonRecords } from "./search-helpers";
 import { PatientModel, useQueryWithPatient } from "..";
 import { applyDocumentFilters } from "@/components/content/document/helpers/filters";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
+import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { createGraphqlClient } from "@/services/fqs/client";
 import { DocumentReferenceGraphqlResponse, documentsQuery } from "@/services/fqs/queries/documents";
 import { orderBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_DOCUMENTS } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
-export function usePatientDocument(enableFQS: boolean) {
+export function usePatientDocument() {
+  const fqs = useFQSFeatureToggle("documents");
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_DOCUMENTS,
-    [],
-    enableFQS
-      ? withTimerMetric(
-          async (requestContext, patient) => getDocumentFromFQS(requestContext, patient),
-          "req.timing.documents",
-          ["fqs"]
-        )
-      : withTimerMetric(
-          async (requestContext, patient) => getDocumentFromODS(requestContext, patient),
-          "req.timing.documents"
-        )
+    [fqs.ready],
+    (() => {
+      if (!fqs.ready) {
+        return async () => [];
+      }
+      return fqs.enabled
+        ? withTimerMetric(
+            async (requestContext, patient) => getDocumentFromFQS(requestContext, patient),
+            "req.timing.documents",
+            ["fqs"]
+          )
+        : withTimerMetric(
+            async (requestContext, patient) => getDocumentFromODS(requestContext, patient),
+            "req.timing.documents"
+          );
+    })()
   );
 }
 
