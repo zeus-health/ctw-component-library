@@ -6,7 +6,7 @@ export function versionsQuery(resourceType: ResourceTypeString, resourceIds: str
   const fragment = getResourceFragment(resourceType);
 
   const queries = resourceIds
-    .map((resourceId, ind) => createHistoryQuery(resourceType, resourceId, ind))
+    .map((resourceId) => createHistoryQuery(resourceType, resourceId))
     .join("\n");
 
   return gql`
@@ -26,9 +26,9 @@ function getResourceFragment(resourceType: ResourceTypeString) {
   }
 }
 
-function createHistoryQuery(resourceType: ResourceTypeString, resourceId: string, ind: number) {
+function createHistoryQuery(resourceType: ResourceTypeString, resourceId: string) {
   return `
-      history${ind}: ${resourceType}History(
+      ${resourceType}(
         id: "${resourceId}"
       ) {          
         ...${resourceType}
