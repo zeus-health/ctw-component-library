@@ -20,7 +20,7 @@ function PatientDocumentsComponent({ className, enableFQS = false }: PatientDocu
   const containerRef = useRef<HTMLDivElement>(null);
   const { featureFlags } = useCTW();
 
-  const patientDocumentQuery = usePatientDocument(enableFQS);
+  const patientDocumentQuery = usePatientDocument();
   const { viewOptions, defaultView } = getDateRangeView<DocumentModel>("dateCreated");
   const { data, setViewOption } = useFilteredSortedData({
     defaultView,
