@@ -159,7 +159,7 @@ function getResourceFQSQuery(resourceType: ResourceTypeString) {
     case "AllergyIntolerance":
       return allergyQuery;
     default:
-      return "";
+      throw new Error(`Resource type to FQS query not implemented yet for ${resourceType}`);
   }
 }
 
