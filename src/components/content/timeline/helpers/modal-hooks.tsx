@@ -1,14 +1,18 @@
 import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
 import { CodingList } from "@/components/core/coding-list";
 import { EncounterModel } from "@/fhir/models/encounter";
+import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { capitalize } from "@/utils/nodash/fp";
 
 export function usePatientEncounterDetailsDrawer() {
+  const { enabled } = useFQSFeatureToggle("encounters");
+
   return useResourceDetailsDrawer({
     header: (m) => `${m.periodStart} - ${m.periodEnd}`,
     subHeader: (m) => m.typeDisplay,
     getSourceDocument: true,
     details: encounterData,
+    enableFQS: enabled,
   });
 }
 

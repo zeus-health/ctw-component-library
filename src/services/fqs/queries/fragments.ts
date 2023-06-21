@@ -98,6 +98,7 @@ export const fragmentPatient = gql`
     birthDate
     gender
     maritalStatus {
+      text
       coding {
         code
         display
