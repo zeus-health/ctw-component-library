@@ -1,5 +1,15 @@
 # ctw-component-library
 
+## 1.21.0
+
+### Minor Changes
+
+- 0ad09ace: Updated usePatientDocument hook to fetch FQS feature flag directly from Unleash
+
+### Patch Changes
+
+- 61bfb6d6: Add text to codeable concepts in graphql queries"
+
 ## 1.20.0
 
 ### Minor Changes
