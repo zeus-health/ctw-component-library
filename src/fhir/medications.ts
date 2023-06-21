@@ -34,7 +34,7 @@ import {
   SYSTEM_ZUS_THIRD_PARTY,
   SYSTEM_ZUS_UNIVERSAL_ID,
 } from "./system-urls";
-import { ResourceTypeString } from "./types";
+import { ResourceMap, ResourceTypeString } from "./types";
 import { getLensBuilderId } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
@@ -776,7 +776,7 @@ function getMedicationHistoryFQS(medication: fhir4.MedicationStatement) {
         "desc",
         true
       );
-      return { medications };
+      return { medications, includedResources: {} as ResourceMap };
     } catch (e) {
       throw new Error(`Failed fetching medication history for medication ${medication.id}: ${e}`);
     }
