@@ -1,5 +1,11 @@
 import { Basic, Resource } from "fhir/r4";
-import { SYSTEM_ENRICHMENT, SYSTEM_SUMMARY, SYSTEM_ZUS_PROFILE_ACTION } from "../system-urls";
+import {
+  SYSTEM_ENRICHMENT,
+  SYSTEM_SUMMARY,
+  SYSTEM_ZUS_OWNER,
+  SYSTEM_ZUS_PROFILE_ACTION,
+  SYSTEM_ZUS_THIRD_PARTY,
+} from "../system-urls";
 import { ResourceMap, ResourceTypeString } from "../types";
 import { find, orderBy, some, startCase } from "@/utils/nodash";
 
@@ -86,6 +92,19 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
   // from Zus enrichment.
   isEnriched(): boolean {
     return JSON.stringify(this.resource).includes(SYSTEM_ENRICHMENT);
+  }
+
+  // Returns true if this resource is owned by the specified builder.
+  ownedByBuilder(builderId: string): boolean {
+    try {
+      if (this.resource.meta?.tag?.some((tag) => tag.system === SYSTEM_ZUS_THIRD_PARTY)) {
+        return false;
+      }
+      const ownerTag = this.resource.meta?.tag?.find((tag) => tag.system === SYSTEM_ZUS_OWNER);
+      return ownerTag?.code?.split("/")[1] === builderId;
+    } catch (error) {
+      throw new Error("Expected builder owner tag missing or malformed.");
+    }
   }
 
   // Returns a string that would setup this model.

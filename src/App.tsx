@@ -8,6 +8,7 @@ import "./App.css";
 
 import {
   CTWProvider,
+  PatientAllergies,
   PatientConditions,
   PatientConditionsOutside,
   PatientDocuments,
@@ -68,6 +69,7 @@ const locals = {
 };
 
 const components: DemoComponent[] = [
+  { name: "allergies", render: () => <PatientAllergies />, title: "Patient Allergies" },
   { name: "conditions", render: () => <PatientConditions />, title: "Patient Conditions" },
   {
     name: "conditions-outside",

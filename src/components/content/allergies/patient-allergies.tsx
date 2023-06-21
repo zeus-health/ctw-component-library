@@ -1,5 +1,5 @@
 import cx from "classnames";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { allergyFilter, defaultAllergyFilters } from "./helpers/filters";
 import { useAllergiesHistory } from "./helpers/history";
 import { allergySortOptions, defaultAllergySort } from "./helpers/sort";
@@ -21,7 +21,7 @@ export type PatientAllergiesProps = {
 
 function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { featureFlags } = useCTW();
+  const { featureFlags, getRequestContext } = useCTW();
   const { enabled } = useFQSFeatureToggle("allergies");
   const patientAllergiesQuery = usePatientAllergies();
   const { data, setFilters, setSort } = useFilteredSortedData({
@@ -29,6 +29,17 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
     defaultSort: defaultAllergySort,
     records: patientAllergiesQuery.data,
   });
+
+  const [userBuilderId, setUserBuilderId] = useState<string>("");
+
+  useEffect(() => {
+    async function load() {
+      const requestContext = await getRequestContext();
+      setUserBuilderId(requestContext.builderId);
+    }
+
+    void load();
+  }, [getRequestContext]);
 
   const openDetails = useResourceDetailsDrawer({
     header: (m) => capitalize(m.display),
@@ -64,7 +75,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
           showTableHead
           isLoading={isLoading}
           data={data}
-          columns={patientAllergiesColumns(featureFlags?.enableViewFhirButton)}
+          columns={patientAllergiesColumns(userBuilderId, featureFlags?.enableViewFhirButton)}
           onRowClick={openDetails}
         />
       </div>

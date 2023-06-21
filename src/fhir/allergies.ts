@@ -51,7 +51,7 @@ async function getAllergyIntoleranceFromFQS(
     })) as AllergyGraphqlResponse;
 
     const nodes = data.AllergyIntoleranceConnection.edges.map((x) => x.node);
-    const results = applyAllergyFilters(nodes);
+    const results = applyAllergyFilters(nodes, requestContext.builderId);
     if (results.length === 0) {
       Telemetry.countMetric("req.count.allergies.none", 0, ["FQS"]);
     }
@@ -74,7 +74,7 @@ async function getAllergyIntoleranceFromODS(
     });
 
     const includedResources = getIncludedResources(bundle);
-    const results = applyAllergyFilters(resources, includedResources);
+    const results = applyAllergyFilters(resources, requestContext.builderId, includedResources);
     if (results.length === 0) {
       Telemetry.countMetric("req.count.allergies.none");
     }
