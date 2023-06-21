@@ -12,7 +12,7 @@ export const patientAllergiesColumns = (builderId: string, includeViewFhirResour
           {allergy.ownedByBuilder(builderId) ? (
             <span className="ctw-font-normal">{capitalize(allergy.display)}</span>
           ) : (
-            <span className="ctw-font-medium">
+            <span className="ctw-font-medium" title="Outside data pulled from the network">
               <svg
                 className="ctw-h-3 ctw-w-3 ctw-fill-success-main"
                 viewBox="0 0 2 2"
