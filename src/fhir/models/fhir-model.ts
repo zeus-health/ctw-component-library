@@ -1,6 +1,6 @@
 import { Basic, Resource } from "fhir/r4";
 import { SYSTEM_ENRICHMENT, SYSTEM_SUMMARY, SYSTEM_ZUS_PROFILE_ACTION } from "../system-urls";
-import { ResourceMap } from "../types";
+import { ResourceMap, ResourceTypeString } from "../types";
 import { find, orderBy, some, startCase } from "@/utils/nodash";
 
 export abstract class FHIRModel<T extends fhir4.Resource> {
@@ -46,8 +46,8 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
     return find(this.resource.meta?.tag, { system: SYSTEM_SUMMARY }) !== undefined;
   }
 
-  get resourceType(): string {
-    return this.resource.resourceType;
+  get resourceType(): ResourceTypeString {
+    return this.resource.resourceType as ResourceTypeString;
   }
 
   get resourceTypeTitle(): string {

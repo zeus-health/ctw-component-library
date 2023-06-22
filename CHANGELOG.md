@@ -1,5 +1,84 @@
 # ctw-component-library
 
+## 1.22.0
+
+### Minor Changes
+
+- d4e933a5: Updated medication components to read FQS feature flags directly from Unleash
+
+## 1.21.0
+
+### Minor Changes
+
+- 0ad09ace: Updated usePatientDocument hook to fetch FQS feature flag directly from Unleash
+
+### Patch Changes
+
+- 61bfb6d6: Add text to codeable concepts in graphql queries"
+
+## 1.20.0
+
+### Minor Changes
+
+- bc8f8c3c: Updated allergy components to read FQS feature flags directly from Unleash
+
+### Patch Changes
+
+- c56ccc70: Add ability to fetch provenances from FQS, currently disabled.
+
+## 1.19.2
+
+### Patch Changes
+
+- 0616c5bb: Show documents with no creation date
+
+## 1.19.1
+
+### Patch Changes
+
+- 2aba3de4: Bump vitest from 0.29.8 to 0.32.2
+- 679a085d: Fix issue where no documents were rendered due to missing creation date
+
+## 1.19.0
+
+### Minor Changes
+
+- 570a075e: Use FQS to fetch medication history data
+
+### Patch Changes
+
+- 84a202f6: Fixed issue where Unleash client was sometimes taking too long to load flags
+
+## 1.18.1
+
+### Patch Changes
+
+- 8eef5459: Fixed race condition when fetching feature flags
+
+## 1.18.0
+
+### Minor Changes
+
+- a0457d1a: Patient Conditions components now reach out to Unleash directly for feature flags
+
+## 1.17.6
+
+### Patch Changes
+
+- d40f48dd: Pin @radix-ui/react-dropdown-menu to exact version.
+
+## 1.17.5
+
+### Patch Changes
+
+- a5802742: Pin @radix-ui/react-dropdown-menu to patch version
+
+## 1.17.4
+
+### Patch Changes
+
+- 05e81164: Downgrade radix to fix issue build issue. https://github.com/radix-ui/primitives/issues/2192
+
 ## 1.17.3
 
 ### Patch Changes

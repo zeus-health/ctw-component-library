@@ -1,5 +1,6 @@
 import { UseQueryResult } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { useFQSFeatureToggle } from "./use-fqs-feature-toggle";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { useBasic } from "@/fhir/basic";
 import { getIncludedBasics, getIncludedBasicsMap, getMergedIncludedResources } from "@/fhir/bundle";
@@ -26,38 +27,49 @@ import {
 import { withTimerMetric } from "@/utils/telemetry";
 
 // Gets patient medications for the builder, excluding meds where the information source is patient.
-export function useQueryGetPatientMedsForBuilder(
-  enableFQS: boolean
-): UseQueryResult<MedicationResults, unknown> {
+export function useQueryGetPatientMedsForBuilder(): UseQueryResult<MedicationResults, unknown> {
+  const fqs = useFQSFeatureToggle("medications");
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
-    [
-      {
-        informationSourceNot: "Patient", // exclude medication statements where the patient is the information source
-      },
-    ],
-    enableFQS
-      ? withTimerMetric(getBuilderMedicationStatementsFQS, "req.timing.builder_medications", [
-          "fqs",
-        ])
-      : withTimerMetric(getBuilderMedications, "req.timing.builder_medications")
+    [fqs.ready],
+    (() => {
+      if (!fqs.ready) {
+        return async () =>
+          ({
+            medications: [] as fhir4.MedicationStatement[],
+            basic: [] as fhir4.Basic[],
+          } as MedicationResults);
+      }
+      return fqs.enabled
+        ? withTimerMetric(getBuilderMedicationStatementsFQS, "req.timing.builder_medications", [
+            "fqs",
+          ])
+        : withTimerMetric(getBuilderMedications, "req.timing.builder_medications");
+    })()
   );
 }
 
-export function useQueryGetSummarizedPatientMedications(
-  enableFQS: boolean
-): UseQueryResult<MedicationResults, unknown> {
-  const basics = useBasic(enableFQS);
+export function useQueryGetSummarizedPatientMedications(): UseQueryResult<
+  MedicationResults,
+  unknown
+> {
+  const fqs = useFQSFeatureToggle("medications");
+  const basics = useBasic(fqs);
   const result = useQueryWithPatient(
     QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
-    [
-      {
-        _revinclude: "Basic:subject",
-      },
-    ],
-    enableFQS
-      ? withTimerMetric(getActiveMedicationsFQS, "req.timing.active_medications", ["fqs"])
-      : withTimerMetric(getActiveMedications, "req.timing.active_medications")
+    [fqs.ready],
+    (() => {
+      if (!fqs.ready) {
+        return async () =>
+          ({
+            medications: [] as fhir4.MedicationStatement[],
+            basic: [] as fhir4.Basic[],
+          } as MedicationResults);
+      }
+      return fqs.enabled
+        ? withTimerMetric(getActiveMedicationsFQS, "req.timing.active_medications", ["fqs"])
+        : withTimerMetric(getActiveMedications, "req.timing.active_medications");
+    })()
   );
   if (result.data && basics.data) {
     result.data.basic = basics.data;
@@ -102,18 +114,20 @@ export function useQueryMedicationStatement(rxNorm: string | undefined) {
  * categories ("Builder Medications" and "Other Provider Medications"). This is
  * useful when creating content such as the <PatientMedications /> component.
  */
-export function useQueryAllPatientMedications(enableFQS: boolean) {
+export function useQueryAllPatientMedications() {
+  const fqs = useFQSFeatureToggle("medications");
   const [builderMedications, setBuilderMedications] = useState<MedicationStatementModel[]>([]);
   const [otherProviderMedications, setOtherProviderMedications] = useState<
     MedicationStatementModel[]
   >([]);
 
-  const summarizedMedicationsQuery = useQueryGetSummarizedPatientMedications(enableFQS);
-  const builderMedicationsQuery = useQueryGetPatientMedsForBuilder(enableFQS);
+  const summarizedMedicationsQuery = useQueryGetSummarizedPatientMedications();
+  const builderMedicationsQuery = useQueryGetPatientMedsForBuilder();
 
   useEffect(() => {
     if (
-      !enableFQS &&
+      fqs.ready &&
+      !fqs.enabled &&
       summarizedMedicationsQuery.data?.bundle &&
       builderMedicationsQuery.data?.bundle
     ) {
@@ -141,7 +155,8 @@ export function useQueryAllPatientMedications(enableFQS: boolean) {
       setBuilderMedications(splitData.builderMedications);
       setOtherProviderMedications(splitData.otherProviderMedications);
     } else if (
-      enableFQS &&
+      fqs.ready &&
+      fqs.enabled &&
       summarizedMedicationsQuery.data?.medications &&
       builderMedicationsQuery.data?.medications
     ) {
@@ -167,11 +182,13 @@ export function useQueryAllPatientMedications(enableFQS: boolean) {
     summarizedMedicationsQuery.data,
     builderMedicationsQuery.data,
     summarizedMedicationsQuery.data?.basic,
-    enableFQS,
+    fqs.enabled,
+    fqs.ready,
   ]);
 
   const isLoading = builderMedicationsQuery.isLoading || summarizedMedicationsQuery.isLoading;
-  const isFetching = builderMedicationsQuery.isFetching || summarizedMedicationsQuery.isFetching;
+  const isFetching =
+    !fqs.ready || builderMedicationsQuery.isFetching || summarizedMedicationsQuery.isFetching;
   const isError = builderMedicationsQuery.isError || summarizedMedicationsQuery.isError;
 
   return {

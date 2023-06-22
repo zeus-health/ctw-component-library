@@ -76,7 +76,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     display: () => (
       <div className="ctw-space-x-2">
         <span className="ctw-capitalize">{i18next.t("zap.tabs.conditionsOutside")}</span>
-        <PatientConditionsOutsideBadge enableFQS={props.enableFQS} />
+        <PatientConditionsOutsideBadge />
       </div>
     ),
     render: () => <PatientConditionsOutside {...props} />,
@@ -117,7 +117,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     display: () => (
       <div className="ctw-space-x-2">
         <span className="ctw-capitalize">{i18next.t("zap.tabs.medicationsOutside")}</span>
-        <PatientMedicationsOutsideBadge enableFQS={props.enableFQS} />
+        <PatientMedicationsOutsideBadge />
       </div>
     ),
     render: () => <PatientMedicationsOutside {...props} />,
