@@ -1,5 +1,5 @@
 import { gql } from "graphql-request";
-import { fragmentConditionHistory } from "./fragments/condition";
+import { fragmentCondition } from "./fragments/condition";
 import { ResourceTypeString } from "@/fhir/types";
 
 export function versionsQuery(resourceType: ResourceTypeString, resourceIds: string[]) {
@@ -20,7 +20,7 @@ export function versionsQuery(resourceType: ResourceTypeString, resourceIds: str
 function getResourceFragment(resourceType: ResourceTypeString) {
   switch (resourceType) {
     case "Condition":
-      return fragmentConditionHistory;
+      return fragmentCondition(true);
     default:
       throw new Error(`Resource type to FQS query not implemented yet for ${resourceType}`);
   }

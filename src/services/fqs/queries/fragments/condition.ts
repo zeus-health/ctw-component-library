@@ -1,224 +1,119 @@
-import { gql } from "graphql-request";
 import { fragmentCoding, fragmentPatient } from "../fragments";
 
-export const fragmentCondition = gql`
-  ${fragmentCoding}
-  ${fragmentPatient}
-
-  fragment Condition on Condition {
-    id
-    resourceType
-    meta {
-      tag {
-        system
-        code
+export function fragmentCondition(isConditionHistory: boolean) {
+  const patientFragment = isConditionHistory ? "" : fragmentPatient;
+  const subjectFragment = isConditionHistory
+    ? ""
+    : `subject {
+    reference
+    resource {
+      ...Patient
+    }
+  }`;
+  return `
+    ${fragmentCoding}
+    ${patientFragment}
+    fragment Condition on Condition {
+      id
+      resourceType
+      meta {
+        tag {
+          system
+          code
+        }
+        versionId
       }
-      versionId
-    }
-    subject {
-      reference
-      resource {
-        ...Patient
-      }
-    }
-    abatementAge {
-      value
-    }
-    abatementDateTime
-    abatementPeriod {
-      start
-    }
-    abatementRange {
-      low {
+      ${subjectFragment}
+      abatementAge {
         value
       }
-    }
-    abatementString
-    clinicalStatus {
-      coding {
-        ...Coding
+      abatementDateTime
+      abatementPeriod {
+        start
       }
-    }
-    asserter {
-      display
-    }
-    bodySite {
-      text
-      coding {
-        ...Coding
+      abatementRange {
+        low {
+          value
+        }
       }
-    }
-    category {
-      text
-      coding {
-        ...Coding
+      abatementString
+      clinicalStatus {
+        coding {
+          ...Coding
+        }
       }
-    }
-    code {
-      coding {
-        ...Coding
+      asserter {
+        display
       }
-    }
-    encounter {
-      display
-    }
-    evidence {
+      bodySite {
+        text
+        coding {
+          ...Coding
+        }
+      }
+      category {
+        text
+        coding {
+          ...Coding
+        }
+      }
       code {
         coding {
           ...Coding
         }
       }
-    }
-    verificationStatus {
-      coding {
-        ...Coding
+      encounter {
+        display
       }
-    }
-    note {
-      text
-    }
-    onsetAge {
-      value
-    }
-    onsetDateTime
-    onsetPeriod {
-      start
-    }
-    onsetRange {
-      low {
+      evidence {
+        code {
+          coding {
+            ...Coding
+          }
+        }
+      }
+      verificationStatus {
+        coding {
+          ...Coding
+        }
+      }
+      note {
+        text
+      }
+      onsetAge {
         value
       }
-    }
-    onsetString
-    recordedDate
-    recorder {
-      display
-    }
-    severity {
-      coding {
-        ...Coding
+      onsetDateTime
+      onsetPeriod {
+        start
       }
-    }
-    stage {
-      summary {
+      onsetRange {
+        low {
+          value
+        }
+      }
+      onsetString
+      recordedDate
+      recorder {
+        display
+      }
+      severity {
         coding {
           ...Coding
         }
       }
-      type {
-        coding {
-          ...Coding
+      stage {
+        summary {
+          coding {
+            ...Coding
+          }
+        }
+        type {
+          coding {
+            ...Coding
+          }
         }
       }
     }
-  }
-`;
-
-export const fragmentConditionHistory = gql`
-  ${fragmentCoding}
-
-  fragment Condition on Condition {
-    id
-    resourceType
-    meta {
-      tag {
-        system
-        code
-      }
-      versionId
-    }
-    subject {
-      reference
-    }
-    abatementAge {
-      value
-    }
-    abatementDateTime
-    abatementPeriod {
-      start
-    }
-    abatementRange {
-      low {
-        value
-      }
-    }
-    abatementString
-    clinicalStatus {
-      coding {
-        ...Coding
-      }
-    }
-    asserter {
-      display
-    }
-    bodySite {
-      text
-      coding {
-        ...Coding
-      }
-    }
-    category {
-      text
-      coding {
-        ...Coding
-      }
-    }
-    code {
-      coding {
-        ...Coding
-      }
-    }
-    encounter {
-      display
-    }
-    evidence {
-      code {
-        coding {
-          ...Coding
-        }
-      }
-    }
-    verificationStatus {
-      coding {
-        ...Coding
-      }
-    }
-    note {
-      text
-    }
-    onsetAge {
-      value
-    }
-    onsetDateTime
-    onsetPeriod {
-      start
-    }
-    onsetRange {
-      low {
-        value
-      }
-    }
-    onsetString
-    recordedDate
-    recorder {
-      display
-    }
-    severity {
-      coding {
-        ...Coding
-      }
-    }
-    stage {
-      summary {
-        coding {
-          ...Coding
-        }
-      }
-      type {
-        coding {
-          ...Coding
-        }
-      }
-    }
-  }
-`;
+  `;
+}
