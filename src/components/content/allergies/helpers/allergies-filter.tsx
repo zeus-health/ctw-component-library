@@ -12,7 +12,7 @@ export const applyAllergyFilters = (
   const sortedByDate = sort(allergyModel, "recordedDate", "desc", true);
 
   // pull out unique allergies preferring those owned by the builder
-  const allergyDataMap = new Map<string | undefined, AllergyModel>();
+  const allergyDataMap = new Map<string, AllergyModel>();
   sortedByDate.forEach((allergy) => {
     const { lowercaseDisplay } = allergy;
     const existingAllergy = allergyDataMap.get(lowercaseDisplay);

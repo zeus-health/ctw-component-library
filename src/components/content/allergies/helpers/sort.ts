@@ -9,6 +9,10 @@ export const defaultAllergySort: SortOption<AllergyModel> = {
 export const allergySortOptions: SortOption<AllergyModel>[] = [
   defaultAllergySort,
   {
+    display: "Status",
+    sorts: [{ key: "recordedDate", dir: "asc", isDate: true }],
+  },
+  {
     display: "Date (Old to New)",
     sorts: [{ key: "recordedDate", dir: "asc", isDate: true }],
   },
