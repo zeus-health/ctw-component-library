@@ -76,7 +76,7 @@ const components: DemoComponent[] = [
   },
   {
     name: "documents",
-    render: () => <PatientDocuments enableFQS={true} />,
+    render: () => <PatientDocuments />,
     title: "Patient Documents",
   },
   {
@@ -120,7 +120,6 @@ const components: DemoComponent[] = [
         title="ZAP"
         timelineProps={{ enableFQS: true }}
         observationsProps={{ enableFQS: true }}
-        documentsProps={{ enableFQS: true }}
       />
     ),
   },
