@@ -12,7 +12,7 @@ export const useConditionDetailsDrawer = ({
   canEdit: boolean;
   canRemove: boolean;
 }) => {
-  const { enabled } = useFQSFeatureToggle("conditions");
+  const { enabled } = useFQSFeatureToggle("conditionsDrawer");
   const showEditConditionForm = useEditConditionForm();
   const confirmDelete = useConfirmDeleteCondition();
 
