@@ -34,13 +34,14 @@ import {
   SYSTEM_ZUS_THIRD_PARTY,
   SYSTEM_ZUS_UNIVERSAL_ID,
 } from "./system-urls";
-import { ResourceTypeString } from "./types";
+import { ResourceMap, ResourceTypeString } from "./types";
 import { getLensBuilderId } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { MedicationModel } from "@/fhir/models/medication";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { PatientModel } from "@/fhir/models/patient";
+import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { filterResourcesByBuilderId } from "@/services/common";
 import { createGraphqlClient } from "@/services/fqs/client";
 import { graphQLToFHIR } from "@/services/fqs/graphql-to-fhir";
@@ -129,10 +130,11 @@ function applySearchFiltersToResponse(
 /* Note when filtering the bundle may contain data that will no longer be in the returned medications. */
 export async function getBuilderMedications(
   requestContext: CTWRequestContext,
-  patient: PatientModel,
-  keys: object[] = []
+  patient: PatientModel
 ): Promise<MedicationResults> {
-  const [searchFilters = {}] = keys;
+  const searchFilters = {
+    informationSourceNot: "Patient", // exclude medication statements where the patient is the information source
+  } as MedicationFilter;
 
   try {
     const response = await searchBuilderRecords("MedicationStatement", requestContext, {
@@ -153,11 +155,12 @@ export async function getBuilderMedications(
 
 export async function getBuilderMedicationStatementsFQS(
   requestContext: CTWRequestContext,
-  patient: PatientModel,
-  keys: object[] = []
+  patient: PatientModel
 ): Promise<MedicationResults> {
   try {
-    const [searchFilters = {}] = keys;
+    const searchFilters = {
+      informationSourceNot: "Patient", // exclude medication statements where the patient is the information source
+    } as MedicationFilter;
     const graphClient = createGraphqlClient(requestContext);
     const data = await graphClient.request(medicationStatementQuery, {
       upid: patient.UPID,
@@ -431,10 +434,11 @@ function applySearchFiltersToFQSResponse(
 be in the returned medications, such as medications with no RxNorm code. */
 export async function getActiveMedications(
   requestContext: CTWRequestContext,
-  patient: PatientModel,
-  keys: Record<string, string>[] = []
+  patient: PatientModel
 ): Promise<MedicationResults> {
-  const [searchFilters = {}] = keys;
+  const searchFilters = {
+    _revinclude: "Basic:subject",
+  } as Record<string, string>;
 
   try {
     const response = await searchLensRecords(
@@ -463,12 +467,9 @@ export async function getActiveMedications(
 be in the returned medications, such as medications with no RxNorm code. */
 export async function getActiveMedicationsFQS(
   requestContext: CTWRequestContext,
-  patient: PatientModel,
-  keys: Record<string, string>[] = []
+  patient: PatientModel
 ): Promise<MedicationResults> {
   try {
-    const [searchFilters = {}] = keys;
-
     const graphClient = createGraphqlClient(requestContext);
     const data = await graphClient.request(medicationStatementQuery, {
       upid: patient.UPID,
@@ -488,8 +489,7 @@ export async function getActiveMedicationsFQS(
     });
     const cleanData = graphQLToFHIR(data) as MedicationStatementGraphqlResponse;
     const nodes = cleanData.MedicationStatementConnection.edges.map((x) => x.node);
-    const medStatements = setupMedicationStatementModelsWithFQS(nodes);
-    const models = applySearchFiltersToFQSResponse(medStatements, searchFilters, true);
+    const models = setupMedicationStatementModelsWithFQS(nodes);
     if (models.length === 0) {
       Telemetry.countMetric("req.count.active_medications.none", 1, ["fqs"]);
     }
@@ -569,137 +569,22 @@ export function splitMedications(
   };
 }
 
-export function useMedicationHistory(enableFQS: boolean, medication?: fhir4.MedicationStatement) {
-  const aggregatedFromReferences = !medication
-    ? []
-    : new MedicationStatementModel(medication).aggregatedFrom;
-
-  const getRefId = pipe(get("reference"), split("/"), last);
-  const resources = pipe(groupBy(get("type")), mapValues(map(getRefId)))(aggregatedFromReferences);
-
+export function useMedicationHistory(medication?: fhir4.MedicationStatement) {
+  const fqs = useFQSFeatureToggle("medicationsDrawer");
   return useQueryWithPatient(
     QUERY_KEY_MEDICATION_HISTORY,
-    [medication?.id || "empty"],
-    withTimerMetric(async (requestContext, patient) => {
-      try {
-        if (!medication) {
-          return {
-            includedResources: {},
-            medications: [],
-          };
-        }
-        if (enableFQS) {
-          const [
-            medicationStatementResponse,
-            medicationAdministrationResponse,
-            medicationRequestResponse,
-            medicationDispenseResponse,
-          ] = await Promise.all([
-            getMedicationStatementsForPatientByIdFQS(
-              requestContext,
-              patient,
-              resources.MedicationStatement
-            ),
-            getMedicationAdministrationsForPatientByIdFQS(
-              requestContext,
-              patient,
-              resources.MedicationAdministration
-            ),
-            getMedicationRequestsForPatientByIdFQS(
-              requestContext,
-              patient,
-              resources.MedicationRequest
-            ),
-            getMedicationDispensesForPatientByIdFQS(
-              requestContext,
-              patient,
-              resources.MedicationDispense
-            ),
-          ]);
-          const medicationResources = compact([
-            ...medicationStatementResponse.medications,
-            ...medicationAdministrationResponse,
-            ...medicationRequestResponse,
-            ...medicationDispenseResponse,
-          ]).map((m) => new MedicationModel(m));
-
-          const medications = sort(
-            uniqWith(
-              medicationResources,
-              (a, b) => a.date === b.date && a.resource.resourceType === b.resource.resourceType
-            ),
-            "date",
-            "desc",
-            true
-          );
-          return { medications };
-        }
-        const [
-          medicationStatementResponse,
-          medicationAdministrationResponse,
-          medicationRequestResponse,
-          medicationDispenseResponse,
-        ] = await Promise.all([
-          searchWrapper(
-            "MedicationStatement",
-            requestContext,
-            patient.UPID,
-            resources.MedicationStatement
-          ),
-          searchWrapper(
-            "MedicationAdministration",
-            requestContext,
-            patient.UPID,
-            resources.MedicationAdministration
-          ),
-          searchWrapper(
-            "MedicationRequest",
-            requestContext,
-            patient.UPID,
-            resources.MedicationRequest,
-            ["MedicationRequest:requester"]
-          ),
-          searchWrapper(
-            "MedicationDispense",
-            requestContext,
-            patient.UPID,
-            resources.MedicationDispense,
-            ["MedicationDispense:performer", "MedicationDispense:prescription"]
-          ),
-        ]);
-
-        const includedResources = getMergedIncludedResources(
-          compact([
-            medicationStatementResponse.bundle,
-            medicationAdministrationResponse.bundle,
-            medicationRequestResponse.bundle,
-            medicationDispenseResponse.bundle,
-          ])
-        );
-
-        const medicationResources = compact([
-          ...medicationStatementResponse.resources,
-          ...medicationAdministrationResponse.resources,
-          ...medicationRequestResponse.resources,
-          ...medicationDispenseResponse.resources,
-        ]).map((m) => new MedicationModel(m, includedResources));
-
-        const medications = sort(
-          uniqWith(
-            medicationResources,
-            (a, b) => a.date === b.date && a.resource.resourceType === b.resource.resourceType
-          ),
-          "date",
-          "desc",
-          true
-        );
-        return { medications, includedResources };
-      } catch (e) {
-        throw new Error(
-          `Failed fetching medication history for medication ${medication?.id}: ${e}`
-        );
+    [medication?.id || "empty", fqs.ready],
+    (() => {
+      if (!medication || !fqs.ready) {
+        return async () => ({
+          includedResources: {},
+          medications: [],
+        });
       }
-    }, "req.medication_history")
+      return fqs.enabled
+        ? withTimerMetric(getMedicationHistoryFQS(medication), "req.medication_history", ["fqs"])
+        : withTimerMetric(getMedicationHistoryODS(medication), "req.medication_history");
+    })()
   );
 }
 
@@ -709,9 +594,9 @@ export function useMedicationHistory(enableFQS: boolean, medication?: fhir4.Medi
  * history and reusing the `useMedicationHistory` query to avoid making extra
  * ODS requests (as the history ui and details ui are always together atm).
  */
-export function useLastPrescriber(enableFQS: boolean, medication?: fhir4.MedicationStatement) {
+export function useLastPrescriber(medication?: fhir4.MedicationStatement) {
   const [lastPrescriber, setLastPrescriber] = useState<string | undefined>();
-  const historyQuery = useMedicationHistory(enableFQS, medication);
+  const historyQuery = useMedicationHistory(medication);
 
   useEffect(() => {
     const { includedResources = {}, medications = [] } = historyQuery.data || {};
@@ -760,4 +645,140 @@ function searchWrapper<T extends ResourceTypeString>(
     });
   }
   return { resources: [], bundle: undefined };
+}
+
+function getMedicationHistoryODS(medication: fhir4.MedicationStatement) {
+  return async (requestContext: CTWRequestContext, patient: PatientModel) => {
+    try {
+      const aggregatedFromReferences = new MedicationStatementModel(medication).aggregatedFrom;
+
+      const getRefId = pipe(get("reference"), split("/"), last);
+      const resources = pipe(
+        groupBy(get("type")),
+        mapValues(map(getRefId))
+      )(aggregatedFromReferences);
+      const [
+        medicationStatementResponse,
+        medicationAdministrationResponse,
+        medicationRequestResponse,
+        medicationDispenseResponse,
+      ] = await Promise.all([
+        searchWrapper(
+          "MedicationStatement",
+          requestContext,
+          patient.UPID,
+          resources.MedicationStatement
+        ),
+        searchWrapper(
+          "MedicationAdministration",
+          requestContext,
+          patient.UPID,
+          resources.MedicationAdministration
+        ),
+        searchWrapper(
+          "MedicationRequest",
+          requestContext,
+          patient.UPID,
+          resources.MedicationRequest,
+          ["MedicationRequest:requester"]
+        ),
+        searchWrapper(
+          "MedicationDispense",
+          requestContext,
+          patient.UPID,
+          resources.MedicationDispense,
+          ["MedicationDispense:performer", "MedicationDispense:prescription"]
+        ),
+      ]);
+
+      const includedResources = getMergedIncludedResources(
+        compact([
+          medicationStatementResponse.bundle,
+          medicationAdministrationResponse.bundle,
+          medicationRequestResponse.bundle,
+          medicationDispenseResponse.bundle,
+        ])
+      );
+
+      const medicationResources = compact([
+        ...medicationStatementResponse.resources,
+        ...medicationAdministrationResponse.resources,
+        ...medicationRequestResponse.resources,
+        ...medicationDispenseResponse.resources,
+      ]).map((m) => new MedicationModel(m, includedResources));
+
+      const medications = sort(
+        uniqWith(
+          medicationResources,
+          (a, b) => a.date === b.date && a.resource.resourceType === b.resource.resourceType
+        ),
+        "date",
+        "desc",
+        true
+      );
+      return { medications, includedResources };
+    } catch (e) {
+      throw new Error(`Failed fetching medication history for medication ${medication.id}: ${e}`);
+    }
+  };
+}
+
+function getMedicationHistoryFQS(medication: fhir4.MedicationStatement) {
+  return async (requestContext: CTWRequestContext, patient: PatientModel) => {
+    try {
+      const aggregatedFromReferences = new MedicationStatementModel(medication).aggregatedFrom;
+
+      const getRefId = pipe(get("reference"), split("/"), last);
+      const resources = pipe(
+        groupBy(get("type")),
+        mapValues(map(getRefId))
+      )(aggregatedFromReferences);
+      const [
+        medicationStatementResponse,
+        medicationAdministrationResponse,
+        medicationRequestResponse,
+        medicationDispenseResponse,
+      ] = await Promise.all([
+        getMedicationStatementsForPatientByIdFQS(
+          requestContext,
+          patient,
+          resources.MedicationStatement
+        ),
+        getMedicationAdministrationsForPatientByIdFQS(
+          requestContext,
+          patient,
+          resources.MedicationAdministration
+        ),
+        getMedicationRequestsForPatientByIdFQS(
+          requestContext,
+          patient,
+          resources.MedicationRequest
+        ),
+        getMedicationDispensesForPatientByIdFQS(
+          requestContext,
+          patient,
+          resources.MedicationDispense
+        ),
+      ]);
+      const medicationResources = compact([
+        ...medicationStatementResponse.medications,
+        ...medicationAdministrationResponse,
+        ...medicationRequestResponse,
+        ...medicationDispenseResponse,
+      ]).map((m) => new MedicationModel(m));
+
+      const medications = sort(
+        uniqWith(
+          medicationResources,
+          (a, b) => a.date === b.date && a.resource.resourceType === b.resource.resourceType
+        ),
+        "date",
+        "desc",
+        true
+      );
+      return { medications, includedResources: {} as ResourceMap };
+    } catch (e) {
+      throw new Error(`Failed fetching medication history for medication ${medication.id}: ${e}`);
+    }
+  };
 }

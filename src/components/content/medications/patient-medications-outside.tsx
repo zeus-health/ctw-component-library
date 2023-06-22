@@ -17,7 +17,6 @@ export type PatientMedicationsOutsideProps = {
   onOpenHistoryDrawer?: () => void;
   onAddToRecord?: (record: MedicationStatementModel) => void;
   readOnly?: boolean;
-  enableFQS?: boolean;
 };
 
 const PatientMedicationsOutsideComponent = ({
@@ -25,9 +24,8 @@ const PatientMedicationsOutsideComponent = ({
   onAddToRecord,
   readOnly = false,
   onOpenHistoryDrawer,
-  enableFQS = false,
 }: PatientMedicationsOutsideProps) => {
-  const { otherProviderMedications, isLoading } = useQueryAllPatientMedications(enableFQS);
+  const { otherProviderMedications, isLoading } = useQueryAllPatientMedications();
   const rowActions = useMemo(() => getRowActions({ onAddToRecord }), [onAddToRecord]);
   const { viewOptions, defaultView } =
     getDateRangeView<MedicationStatementModel>("lastActivityDate");
@@ -41,7 +39,6 @@ const PatientMedicationsOutsideComponent = ({
       views={viewOptions}
       defaultView={defaultView}
       onOpenHistoryDrawer={onOpenHistoryDrawer}
-      enableFQS={enableFQS}
     />
   );
 };
