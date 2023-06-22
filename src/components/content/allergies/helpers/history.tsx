@@ -14,6 +14,7 @@ export function useAllergiesHistory(enableFQS: boolean, allergy: AllergyModel) {
     valuesToDedupeOn,
     getSearchParams,
     getHistoryEntry,
+    getFiltersFQS,
     enableFQS,
   });
 }
@@ -39,6 +40,18 @@ function getSearchParams(allergy: AllergyModel) {
   }
 
   return searchParams;
+}
+
+function getFiltersFQS(allergy: AllergyModel) {
+  const tokens = allergy.knownCodings.map((coding) => `${coding.system}|${coding.code}`);
+
+  if (tokens.length > 0) {
+    return {
+      code: { anymatch: tokens },
+    };
+  }
+
+  return undefined;
 }
 
 function getHistoryEntry(allergy: AllergyModel): HistoryEntryProps {

@@ -26,9 +26,16 @@ export const allergyQuery = gql`
     $upid: ID!
     $cursor: String!
     $sort: AllergyIntoleranceSortParams!
+    $filter: AllergyIntoleranceFilterParams! = {}
     $first: Int!
   ) {
-    AllergyIntoleranceConnection(upid: $upid, after: $cursor, sort: $sort, first: $first) {
+    AllergyIntoleranceConnection(
+      upid: $upid
+      after: $cursor
+      sort: $sort
+      filter: $filter
+      first: $first
+    ) {
       pageInfo {
         hasNextPage
       }
