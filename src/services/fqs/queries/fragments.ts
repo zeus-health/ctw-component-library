@@ -12,7 +12,7 @@ export const fragmentCoding = gql`
   }
 `;
 
-export const fragmentEncounter = gql`
+export const fragmentEncounterReference = gql`
   fragment Encounter on Encounter {
     id
     resourceType
@@ -269,33 +269,6 @@ export const fragmentOrganization = gql`
           end
         }
       }
-    }
-  }
-`;
-
-export const fragmentLocation = gql`
-  fragment Location on Location {
-    id
-    resourceType
-    status
-    name
-    description
-    type {
-      coding {
-        code
-        display
-        system
-        extension {
-          url
-          valueString
-        }
-      }
-      text
-    }
-    telecom {
-      use
-      value
-      system
     }
   }
 `;

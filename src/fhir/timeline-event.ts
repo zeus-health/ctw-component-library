@@ -13,10 +13,10 @@ type TimelineEventModelParams = {
   revIncludes?: Resource[];
 };
 
-export function useTimelineEvents(enableFQS: boolean) {
+export function useTimelineEvents() {
   const [timelineEvents, setTimelineEvents] = useState<TimelineEventModel[]>();
-  const patientEncountersQuery = usePatientEncounters(enableFQS);
-  const diagnosticReportQuery = usePatientAllDiagnosticReports(enableFQS);
+  const patientEncountersQuery = usePatientEncounters();
+  const diagnosticReportQuery = usePatientAllDiagnosticReports();
 
   const queries = [patientEncountersQuery, diagnosticReportQuery];
 

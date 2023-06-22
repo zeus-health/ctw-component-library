@@ -2,29 +2,24 @@ import { getIncludedBasics } from "./bundle";
 import { PatientModel } from "./models";
 import { EncounterModel } from "./models/encounter";
 import { searchCommonRecords } from "./search-helpers";
+import { useFeatureFlaggedQueryWithPatient } from "..";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { createGraphqlClient } from "@/services/fqs/client";
 import { EncounterGraphqlResponse, encountersQuery } from "@/services/fqs/queries/encounters";
 import { QUERY_KEY_PATIENT_ENCOUNTERS } from "@/utils/query-keys";
-import { Telemetry, withTimerMetric } from "@/utils/telemetry";
+import { Telemetry } from "@/utils/telemetry";
 
-export function usePatientEncounters(enableFQS: boolean) {
-  return useQueryWithPatient(
+export function usePatientEncounters() {
+  return useFeatureFlaggedQueryWithPatient(
     QUERY_KEY_PATIENT_ENCOUNTERS,
     [],
-    enableFQS
-      ? withTimerMetric(
-          async (requestContext, patient) => getEncountersFromFQS(requestContext, patient),
-          "req.timing.encounters",
-          ["fqs"]
-        )
-      : withTimerMetric(
-          async (requestContext, patient) => getEncountersFromODS(requestContext, patient),
-          "req.timing.encounters"
-        )
+    "encounters",
+    "req.timing.encounters",
+    getEncountersFromFQS,
+    getEncountersFromODS
   );
 }
+
 function setupEncounterModels(
   resources: fhir4.Encounter[],
   bundle?: fhir4.Bundle
