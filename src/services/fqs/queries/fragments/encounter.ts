@@ -1,10 +1,8 @@
 import { gql } from "graphql-request";
-import { fragmentLocation } from "./location";
-import { fragmentCoding } from "../fragments";
+import { fragmentCodeableConcept } from "./codeable-concept";
 
 export const fragmentEncounter = gql`
-  ${fragmentCoding}
-  ${fragmentLocation}
+  ${fragmentCodeableConcept}
 
   fragment Encounter on Encounter {
     id
@@ -24,56 +22,27 @@ export const fragmentEncounter = gql`
       display
     }
     type {
-      text
-      coding {
-        ...Coding
-      }
+      ...CodeableConcept
     }
     serviceType {
-      text
-      coding {
-        ...Coding
-      }
+      ...CodeableConcept
     }
     priority {
-      text
-      coding {
-        ...Coding
-      }
+      ...CodeableConcept
     }
     diagnosis {
       condition {
         reference
-        resource {
-          ... on Condition {
-            id
-            resourceType
-            code {
-              coding {
-                ...Coding
-              }
-              text
-            }
-          }
-          ... on Procedure {
-            id
-            resourceType
-            code {
-              coding {
-                ...Coding
-              }
-              text
-            }
-          }
-        }
+        display
       }
     }
     participant {
+      individual {
+        reference
+        display
+      }
       type {
-        text
-        coding {
-          ...Coding
-        }
+        ...CodeableConcept
       }
       period {
         start
@@ -89,17 +58,17 @@ export const fragmentEncounter = gql`
       unit
     }
     reasonCode {
-      text
-      coding {
-        ...Coding
+      ...CodeableConcept
+    }
+    hospitalization {
+      dischargeDisposition {
+        ...CodeableConcept
       }
     }
     location {
       location {
         reference
-        resource {
-          ...Location
-        }
+        display
       }
       status
       period {
