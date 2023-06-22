@@ -118,7 +118,6 @@ const components: DemoComponent[] = [
           "immunizations",
         ]}
         title="ZAP"
-        immunizationsProps={{ enableFQS: true }}
         documentsProps={{ enableFQS: true }}
       />
     ),
