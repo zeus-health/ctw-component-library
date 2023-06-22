@@ -5,9 +5,8 @@ import { Loading } from "@/components/core/loading";
 import { useLastPrescriber } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models";
 
-export const useMedicationDetailsDrawer = (enableFQS: boolean) =>
+export const useMedicationDetailsDrawer = () =>
   useResourceDetailsDrawer({
-    enableFQS,
     header: (medication: MedicationStatementModel) => medication.display,
     getHistory: useMedicationHistoryEntries,
     details: (medication: MedicationStatementModel) => [
@@ -19,21 +18,15 @@ export const useMedicationDetailsDrawer = (enableFQS: boolean) =>
       { label: "Instructions", value: medication.dosage },
       {
         label: "Prescriber",
-        value: <LastPrescriber enableFQS={enableFQS} medication={medication} />,
+        value: <LastPrescriber medication={medication} />,
       },
       { label: "Last Prescribed Date", value: medication.lastPrescribedDate },
       ...entryFromArray("Note", medication.notesDisplay),
     ],
   });
 
-function LastPrescriber({
-  enableFQS,
-  medication,
-}: {
-  enableFQS: boolean;
-  medication: MedicationStatementModel;
-}) {
-  const { lastPrescriber, isLoading } = useLastPrescriber(enableFQS, medication.resource);
+function LastPrescriber({ medication }: { medication: MedicationStatementModel }) {
+  const { lastPrescriber, isLoading } = useLastPrescriber(medication.resource);
 
   if (isLoading) {
     return <Loading className="ctw-h-3" iconClass="!ctw-w-3 !ctw-h-3" message="" />;

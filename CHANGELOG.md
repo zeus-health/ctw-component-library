@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.22.0
+
+### Minor Changes
+
+- d4e933a5: Updated medication components to read FQS feature flags directly from Unleash
+
 ## 1.21.0
 
 ### Minor Changes
