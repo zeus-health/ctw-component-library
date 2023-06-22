@@ -1,3 +1,4 @@
+import { CheckIcon } from "@/components/core/check-icon";
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { ViewFHIR } from "@/components/core/view-fhir";
 import { AllergyModel } from "@/fhir/models/allergies";
@@ -9,14 +10,14 @@ export const patientAllergiesColumns = (builderId: string, includeViewFhirResour
       title: "Name",
       render: (allergy) => (
         <div>
-          {allergy.ownedByBuilder(builderId) ? (
-            <span className="ctw-font-normal">{capitalize(allergy.display)}</span>
-          ) : (
-            <div className="ctw-flow-root">
-              <span className="ctw-font-medium" title="Outside data pulled from the network">
-                {capitalize(allergy.display)}
-              </span>
-              <span className="ctw-float-right">
+          <div className="ctw-flow-root">
+            <span className={`ctw-font-${allergy.ownedByBuilder(builderId) ? "normal" : "medium"}`}>
+              {capitalize(allergy.display)}
+            </span>
+            <span className="ctw-float-right">
+              {allergy.ownedByBuilder(builderId) ? (
+                <CheckIcon />
+              ) : (
                 <svg
                   className="ctw-h-3 ctw-w-3 ctw-fill-success-main"
                   viewBox="0 0 2 2"
@@ -24,9 +25,9 @@ export const patientAllergiesColumns = (builderId: string, includeViewFhirResour
                 >
                   <circle cx={1} cy={1} r={1} />
                 </svg>
-              </span>
-            </div>
-          )}
+              )}
+            </span>
+          </div>
         </div>
       ),
     },
