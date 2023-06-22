@@ -570,7 +570,7 @@ export function splitMedications(
 }
 
 export function useMedicationHistory(medication?: fhir4.MedicationStatement) {
-  const fqs = useFQSFeatureToggle("medications");
+  const fqs = useFQSFeatureToggle("medicationsDrawer");
   return useQueryWithPatient(
     QUERY_KEY_MEDICATION_HISTORY,
     [medication?.id || "empty", fqs.ready],
