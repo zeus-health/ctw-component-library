@@ -3,14 +3,12 @@ import { Drawer } from "@/components/core/drawer";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
 import { DiagnosticReportModel } from "@/fhir/models";
 
-export function useObservationsDetailsDrawer(enableFQS: boolean) {
+export function useObservationsDetailsDrawer() {
   const { openDrawer } = useDrawer();
 
   return (diagnosticReport: DiagnosticReportModel) => {
     openDrawer({
-      component: (props) => (
-        <ObservationsDrawer diagnosticReport={diagnosticReport} {...props} enableFQS={enableFQS} />
-      ),
+      component: (props) => <ObservationsDrawer diagnosticReport={diagnosticReport} {...props} />,
     });
   };
 }
@@ -20,7 +18,6 @@ export type ObservationsDrawerProps = {
   diagnosticReport: DiagnosticReportModel;
   isOpen: boolean;
   onClose: () => void;
-  enableFQS: boolean;
 };
 
 export function ObservationsDrawer({
@@ -28,7 +25,6 @@ export function ObservationsDrawer({
   diagnosticReport,
   isOpen,
   onClose,
-  enableFQS,
 }: ObservationsDrawerProps) {
   return (
     <Drawer
@@ -39,7 +35,7 @@ export function ObservationsDrawer({
       showCloseFooter
     >
       <Drawer.Body>
-        <ObservationDetails diagnosticReport={diagnosticReport} enableFQS={enableFQS} />
+        <ObservationDetails diagnosticReport={diagnosticReport} />
       </Drawer.Body>
     </Drawer>
   );
