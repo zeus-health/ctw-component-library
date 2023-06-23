@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.23.3
+
+### Patch Changes
+
+- 860bb086: Alter filtering for allergies client side instead of server side temporarily.
+
 ## 1.23.2
 
 ### Patch Changes
