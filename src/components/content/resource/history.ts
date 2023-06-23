@@ -30,7 +30,8 @@ export type UseHistoryProps<T extends ResourceTypeString, M extends FHIRModel<Re
   valuesToDedupeOn: (m: M) => unknown;
   getSearchParams: (m: M) => SearchParams;
   getHistoryEntry: (m: M) => HistoryEntryProps;
-  getFiltersFQS: (m: M) => object | undefined;
+  getFiltersFQS?: (m: M) => object | undefined;
+  clientSideFiltersFQS?: (model: M, resources: ResourceType<T>[]) => ResourceType<T>[];
   enableFQS?: boolean;
 };
 
@@ -43,6 +44,7 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
   getSearchParams,
   getHistoryEntry,
   getFiltersFQS,
+  clientSideFiltersFQS,
   enableFQS,
 }: UseHistoryProps<T, M>) {
   return useQueryWithPatient(
@@ -57,10 +59,11 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
               includeVersionHistory,
               requestContext,
               patient,
-              getFiltersFQS(model),
               valuesToDedupeOn,
               getHistoryEntry,
-              enableFQS
+              enableFQS,
+              clientSideFiltersFQS,
+              getFiltersFQS?.(model)
             ),
           `req.${model.resourceType.toLowerCase()}_history`,
           ["fqs"]
@@ -197,31 +200,37 @@ async function fetchResourcesFQS<
   includeVersionHistory: boolean,
   requestContext: CTWRequestContext,
   patient: PatientModel,
-  filter: object | undefined,
   valuesToDedupeOn: (m: M) => unknown,
   getHistoryEntry: (m: M) => HistoryEntryProps,
-  enableFQS: boolean
+  enableFQS: boolean,
+  clientSideFiltersFQS?: (model: M, resources: ResourceType<T>[]) => ResourceType<T>[],
+  filter?: object | undefined
 ) {
   try {
     const graphClient = createGraphqlClient(requestContext);
 
-    const resources = filter
-      ? getResourceNodes<T>(
-          await graphClient.request(getResourceFQSQuery(resourceType), {
-            upid: patient.UPID,
-            cursor: "",
-            first: 1000,
-            sort: {
-              lastUpdated: "DESC",
-            },
-            filter,
-          })
-        )
-      : [model.resource];
+    const resources =
+      filter || clientSideFiltersFQS
+        ? getResourceNodes<T>(
+            await graphClient.request(getResourceFQSQuery(resourceType), {
+              upid: patient.UPID,
+              cursor: "",
+              first: 1000,
+              sort: {
+                lastUpdated: "DESC",
+              },
+              filter,
+            })
+          )
+        : [model.resource];
 
     let versions: ResourceType<T>[] = [];
 
-    const filteredResources = filterLensAndSummary(resources, resourceType);
+    let filteredResources = filterLensAndSummary(resources, resourceType);
+
+    if (clientSideFiltersFQS) {
+      filteredResources = clientSideFiltersFQS(model, filteredResources);
+    }
 
     if (includeVersionHistory) {
       versions = await getVersionHistoryFQS(
