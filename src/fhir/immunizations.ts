@@ -1,9 +1,8 @@
 import { PatientModel } from "./models";
 import { searchCommonRecords } from "./search-helpers";
+import { useFeatureFlaggedQueryWithPatient } from "..";
 import { applyImmunizationFilters } from "@/components/content/immunizations/helpers/filters";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
-import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { createGraphqlClient } from "@/services/fqs/client";
 import {
   ImmunizationGraphqlResponse,
@@ -11,28 +10,16 @@ import {
 } from "@/services/fqs/queries/immunizations";
 import { orderBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_IMMUNIZATIONS } from "@/utils/query-keys";
-import { Telemetry, withTimerMetric } from "@/utils/telemetry";
+import { Telemetry } from "@/utils/telemetry";
 
 export function usePatientImmunizations() {
-  const fqs = useFQSFeatureToggle("immunizations");
-  return useQueryWithPatient(
+  return useFeatureFlaggedQueryWithPatient(
     QUERY_KEY_PATIENT_IMMUNIZATIONS,
-    [fqs.ready],
-    (() => {
-      if (!fqs.ready) {
-        return async () => [];
-      }
-      return fqs.enabled
-        ? withTimerMetric(
-            async (requestContext, patient) => getImmunizationFromFQS(requestContext, patient),
-            "req.timing.immunizations",
-            ["fqs"]
-          )
-        : withTimerMetric(
-            async (requestContext, patient) => getImmunizationFromODS(requestContext, patient),
-            "req.timing.immunizations"
-          );
-    })()
+    [],
+    "immunizations",
+    "req.timing.immunizations",
+    getImmunizationFromFQS,
+    getImmunizationFromODS
   );
 }
 

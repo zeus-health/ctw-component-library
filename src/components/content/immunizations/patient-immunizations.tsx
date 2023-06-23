@@ -24,7 +24,7 @@ function PatientImmunizationsComponent({ className }: PatientImmunizationsProps)
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const { featureFlags } = useCTW();
-  const { enabled } = useFQSFeatureToggle("immunizationsDrawer");
+  const { enabled } = useFQSFeatureToggle("immunizations");
   const patientImmunizationsQuery = usePatientImmunizations();
   const openDetails = useResourceDetailsDrawer({
     header: (m) => m.description,
