@@ -139,6 +139,7 @@
     "patch-package": "^6.5.1",
     "react-i18next": "^12.2.0",
     "react-jason": "^1.1.2",
+    "unleash-proxy-client": "^2.5.0",
     "use-isomorphic-layout-effect": "^1.1.2",
     "uuid": "^9.0.0",
     "xml-beautify": "^1.2.3",
