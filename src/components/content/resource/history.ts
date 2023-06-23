@@ -50,7 +50,7 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
   enableFQS = true;
   return useQueryWithPatient(
     queryKey,
-    [model],
+    [model, enableFQS],
     enableFQS
       ? withTimerMetric(
           async (requestContext, patient) =>
