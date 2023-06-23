@@ -118,8 +118,6 @@ const components: DemoComponent[] = [
           "immunizations",
         ]}
         title="ZAP"
-        timelineProps={{ enableFQS: true }}
-        observationsProps={{ enableFQS: true }}
       />
     ),
   },

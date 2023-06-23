@@ -10,6 +10,7 @@ import { PatientModel } from "@/fhir/models/patient";
 import { getBuilderFhirPatient } from "@/fhir/patient-helper";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 import { Tag } from "@/fhir/types";
+import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { QUERY_KEY_PATIENT } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import { withTimerMetric } from "@/utils/telemetry";
@@ -159,4 +160,29 @@ export function useQueryWithPatient<T, T2>(
       enabled: !!patientResponse.data?.UPID && enabled,
     }
   );
+}
+
+export function useFeatureFlaggedQueryWithPatient<T, T2>(
+  queryKey: string,
+  keys: T2[],
+  variant: string,
+  metric: string,
+  queryFQS: (requestContext: CTWRequestContext, patient: PatientModel, keys?: T2[]) => Promise<T>,
+  queryODS: (requestContext: CTWRequestContext, patient: PatientModel, keys?: T2[]) => Promise<T>
+) {
+  const fqs = useFQSFeatureToggle(variant);
+  const query = fqs.enabled
+    ? withTimerMetric(
+        async (requestContext: CTWRequestContext, patient: PatientModel) =>
+          queryFQS(requestContext, patient),
+        metric,
+        ["fqs"]
+      )
+    : withTimerMetric(
+        async (requestContext: CTWRequestContext, patient: PatientModel) =>
+          queryODS(requestContext, patient),
+        metric
+      );
+
+  return useQueryWithPatient(queryKey, [...keys, fqs.ready, fqs.enabled], query, fqs.ready);
 }
