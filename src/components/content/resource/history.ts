@@ -31,7 +31,7 @@ export type UseHistoryProps<T extends ResourceTypeString, M extends FHIRModel<Re
   getSearchParams: (m: M) => SearchParams;
   getHistoryEntry: (m: M) => HistoryEntryProps;
   getFiltersFQS?: (m: M) => object | undefined;
-  clientSideFiltersFQS?: (m: M[]) => M[];
+  clientSideFiltersFQS?: (model: M, resources: ResourceType<T>[]) => ResourceType<T>[];
   enableFQS?: boolean;
 };
 
@@ -47,7 +47,6 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
   clientSideFiltersFQS,
   enableFQS,
 }: UseHistoryProps<T, M>) {
-  enableFQS = true;
   return useQueryWithPatient(
     queryKey,
     [model, enableFQS],
@@ -204,33 +203,34 @@ async function fetchResourcesFQS<
   valuesToDedupeOn: (m: M) => unknown,
   getHistoryEntry: (m: M) => HistoryEntryProps,
   enableFQS: boolean,
-  clientSideFiltersFQS?: (m: M[]) => M[],
+  clientSideFiltersFQS?: (model: M, resources: ResourceType<T>[]) => ResourceType<T>[],
   filter?: object | undefined
 ) {
   try {
     const graphClient = createGraphqlClient(requestContext);
 
-    const resources = filter
-      ? getResourceNodes<T>(
-          await graphClient.request(getResourceFQSQuery(resourceType), {
-            upid: patient.UPID,
-            cursor: "",
-            first: 1000,
-            sort: {
-              lastUpdated: "DESC",
-            },
-            filter,
-          })
-        )
-      : [model.resource];
-
-    console.log("resources after fetching", resources);
+    const resources =
+      filter || clientSideFiltersFQS
+        ? getResourceNodes<T>(
+            await graphClient.request(getResourceFQSQuery(resourceType), {
+              upid: patient.UPID,
+              cursor: "",
+              first: 1000,
+              sort: {
+                lastUpdated: "DESC",
+              },
+              filter,
+            })
+          )
+        : [model.resource];
 
     let versions: ResourceType<T>[] = [];
 
-    const filteredResources = filterLensAndSummary(resources, resourceType);
+    let filteredResources = filterLensAndSummary(resources, resourceType);
 
-    console.log("filteredResources with Lens and Summary", filteredResources);
+    if (clientSideFiltersFQS) {
+      filteredResources = clientSideFiltersFQS(model, filteredResources);
+    }
 
     if (includeVersionHistory) {
       versions = await getVersionHistoryFQS(
@@ -242,11 +242,7 @@ async function fetchResourcesFQS<
     }
 
     const constructor = model.constructor as new (r: ResourceType<T>) => M;
-    let models = [...filteredResources, ...versions].map((c) => new constructor(c));
-
-    if (clientSideFiltersFQS) {
-      models = clientSideFiltersFQS(models);
-    }
+    const models = [...filteredResources, ...versions].map((c) => new constructor(c));
 
     const entries = dedupeHistory(models, valuesToDedupeOn).map(getHistoryEntry);
 

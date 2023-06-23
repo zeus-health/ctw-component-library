@@ -1,3 +1,4 @@
+import { AllergyIntolerance } from "fhir/r4";
 import { SearchParams } from "fhir-kit-client";
 import { HistoryEntryProps } from "../../resource/helpers/history-entry";
 import { useHistory } from "../../resource/history";
@@ -37,22 +38,15 @@ function getSearchParams(allergy: AllergyModel) {
   return searchParams;
 }
 
-function clientSideFiltersFQS(allergies: AllergyModel[]) {
-  console.log("allergyArray", allergies);
-  const filteredAllergies = allergies.filter((a) =>
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    a.knownCodings.map((coding) => `${coding.system}|${coding.code}` || a.codeText)
-  );
-
-  console.log("filteredAllergies", filteredAllergies);
-
-  /*
-    const findAllergy = find(allergies, (allergy) => {
-      return allergyCodes = allergy.knownCodings.map((coding) => `${coding.system}|${coding.code}`);
-    });
-  */
-
-  return filteredAllergies;
+function clientSideFiltersFQS(model: AllergyModel, allergies: AllergyIntolerance[]) {
+  const tokens = model.knownCodings.map((coding) => `${coding.system}|${coding.code}`);
+  return allergies.filter((allergy) => {
+    const modelTokens = allergy.code?.coding?.map((coding) => `${coding.system}|${coding.code}`);
+    // Sometimes data doesn't have known codings, so we also match on the code.text making sure that it is not blank.
+    const matchingCodeDisplay = model.codeText && allergy.code?.text === model.codeText;
+    const matchingSystemCode = modelTokens?.some((token) => tokens.includes(token));
+    return matchingSystemCode || matchingCodeDisplay;
+  });
 }
 
 function getHistoryEntry(allergy: AllergyModel): HistoryEntryProps {
