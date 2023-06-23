@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.23.2
+
+### Patch Changes
+
+- 7297d2fc: Add `unleash-proxy-client` to deps. It was previously listed as peer dep.
+
 ## 1.23.1
 
 ### Patch Changes
