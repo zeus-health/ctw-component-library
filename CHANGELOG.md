@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.23.1
+
+### Patch Changes
+
+- 5706ff6d: Refactored FQS vs ODS query logic and removed all "drawer" specific feature variants. We'll instead use resource specific variants, regardless of which components do the data fetching.
+- 7bb72d33: Fetch timeline data (encounters, diagnostic reports, observations) from FQS. This is behind a feature flag, default is to still fetch from ODS.
+
 ## 1.23.0
 
 ### Minor Changes
