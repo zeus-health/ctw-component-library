@@ -19,7 +19,7 @@ export type PatientDocumentProps = {
 function PatientDocumentsComponent({ className }: PatientDocumentProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { featureFlags } = useCTW();
-  const { enabled } = useFQSFeatureToggle("documentsDrawer");
+  const { enabled } = useFQSFeatureToggle("documents");
 
   const patientDocumentQuery = usePatientDocument();
   const { viewOptions, defaultView } = getDateRangeView<DocumentModel>("dateCreated");

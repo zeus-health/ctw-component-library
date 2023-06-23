@@ -22,7 +22,7 @@ export type PatientAllergiesProps = {
 function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { featureFlags } = useCTW();
-  const { enabled } = useFQSFeatureToggle("allergiesDrawer");
+  const { enabled } = useFQSFeatureToggle("allergies");
   const patientAllergiesQuery = usePatientAllergies();
   const { data, setFilters, setSort } = useFilteredSortedData({
     defaultFilters: defaultAllergyFilters,
