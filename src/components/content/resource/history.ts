@@ -30,7 +30,8 @@ export type UseHistoryProps<T extends ResourceTypeString, M extends FHIRModel<Re
   valuesToDedupeOn: (m: M) => unknown;
   getSearchParams: (m: M) => SearchParams;
   getHistoryEntry: (m: M) => HistoryEntryProps;
-  getFiltersFQS: (m: M) => object | undefined;
+  getFiltersFQS?: (m: M) => object | undefined;
+  clientSideFiltersFQS?: (m: M[]) => M[];
   enableFQS?: boolean;
 };
 
@@ -43,8 +44,10 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
   getSearchParams,
   getHistoryEntry,
   getFiltersFQS,
+  clientSideFiltersFQS,
   enableFQS,
 }: UseHistoryProps<T, M>) {
+  enableFQS = true;
   return useQueryWithPatient(
     queryKey,
     [model],
@@ -57,10 +60,11 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
               includeVersionHistory,
               requestContext,
               patient,
-              getFiltersFQS(model),
               valuesToDedupeOn,
               getHistoryEntry,
-              enableFQS
+              enableFQS,
+              clientSideFiltersFQS,
+              getFiltersFQS?.(model)
             ),
           `req.${model.resourceType.toLowerCase()}_history`,
           ["fqs"]
@@ -197,10 +201,11 @@ async function fetchResourcesFQS<
   includeVersionHistory: boolean,
   requestContext: CTWRequestContext,
   patient: PatientModel,
-  filter: object | undefined,
   valuesToDedupeOn: (m: M) => unknown,
   getHistoryEntry: (m: M) => HistoryEntryProps,
-  enableFQS: boolean
+  enableFQS: boolean,
+  clientSideFiltersFQS?: (m: M[]) => M[],
+  filter?: object | undefined
 ) {
   try {
     const graphClient = createGraphqlClient(requestContext);
@@ -219,9 +224,13 @@ async function fetchResourcesFQS<
         )
       : [model.resource];
 
+    console.log("resources after fetching", resources);
+
     let versions: ResourceType<T>[] = [];
 
     const filteredResources = filterLensAndSummary(resources, resourceType);
+
+    console.log("filteredResources with Lens and Summary", filteredResources);
 
     if (includeVersionHistory) {
       versions = await getVersionHistoryFQS(
@@ -233,7 +242,11 @@ async function fetchResourcesFQS<
     }
 
     const constructor = model.constructor as new (r: ResourceType<T>) => M;
-    const models = [...filteredResources, ...versions].map((c) => new constructor(c));
+    let models = [...filteredResources, ...versions].map((c) => new constructor(c));
+
+    if (clientSideFiltersFQS) {
+      models = clientSideFiltersFQS(models);
+    }
 
     const entries = dedupeHistory(models, valuesToDedupeOn).map(getHistoryEntry);
 

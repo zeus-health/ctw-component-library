@@ -14,8 +14,8 @@ export function useAllergiesHistory(enableFQS: boolean, allergy: AllergyModel) {
     valuesToDedupeOn,
     getSearchParams,
     getHistoryEntry,
-    getFiltersFQS,
     enableFQS,
+    clientSideFiltersFQS,
   });
 }
 
@@ -37,16 +37,22 @@ function getSearchParams(allergy: AllergyModel) {
   return searchParams;
 }
 
-function getFiltersFQS(allergy: AllergyModel) {
-  const tokens = allergy.knownCodings.map((coding) => `${coding.system}|${coding.code}`);
+function clientSideFiltersFQS(allergies: AllergyModel[]) {
+  console.log("allergyArray", allergies);
+  const filteredAllergies = allergies.filter((a) =>
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    a.knownCodings.map((coding) => `${coding.system}|${coding.code}` || a.codeText)
+  );
 
-  if (tokens.length > 0) {
-    return {
-      code: { anymatch: tokens },
-    };
-  }
+  console.log("filteredAllergies", filteredAllergies);
 
-  return undefined;
+  /*
+    const findAllergy = find(allergies, (allergy) => {
+      return allergyCodes = allergy.knownCodings.map((coding) => `${coding.system}|${coding.code}`);
+    });
+  */
+
+  return filteredAllergies;
 }
 
 function getHistoryEntry(allergy: AllergyModel): HistoryEntryProps {
