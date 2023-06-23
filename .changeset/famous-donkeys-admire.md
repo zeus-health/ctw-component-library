@@ -2,4 +2,4 @@
 "@zus-health/ctw-component-library": patch
 ---
 
-Add unleash to `DEPS_TO_BUNDLE` to solve consumer build issues.
+Add `unleash-proxy-client` to deps. It was previously listed as peer dep.
