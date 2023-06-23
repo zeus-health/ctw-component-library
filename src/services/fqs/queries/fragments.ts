@@ -12,7 +12,7 @@ export const fragmentCoding = gql`
   }
 `;
 
-export const fragmentEncounter = gql`
+export const fragmentEncounterReference = gql`
   fragment Encounter on Encounter {
     id
     resourceType

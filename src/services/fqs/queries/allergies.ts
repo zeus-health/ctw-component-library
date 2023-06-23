@@ -2,7 +2,7 @@ import { AllergyIntolerance } from "fhir/r4";
 import { gql } from "graphql-request";
 import {
   fragmentCoding,
-  fragmentEncounter,
+  fragmentEncounterReference,
   fragmentPatient,
   fragmentPractitioner,
 } from "./fragments";
@@ -20,7 +20,7 @@ export interface AllergyGraphqlResponse {
 export const allergyQuery = gql`
   ${fragmentCoding}
   ${fragmentPatient}
-  ${fragmentEncounter}
+  ${fragmentEncounterReference}
   ${fragmentPractitioner}
   query AllergyIntolerance(
     $upid: ID!
