@@ -1,5 +1,8 @@
+import { useEffect, useState } from "react";
+import { useBasic } from "./basic";
 import { getIncludedResources } from "./bundle";
 import { PatientModel } from "./models";
+import { AllergyModel } from "./models/allergies";
 import { searchCommonRecords } from "./search-helpers";
 import { applyAllergyFilters } from "@/components/content/allergies/helpers/allergies-filter";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
@@ -12,7 +15,9 @@ import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export function usePatientAllergies() {
   const fqs = useFQSFeatureToggle("allergies");
-  return useQueryWithPatient(
+  const [allergies, setAllergies] = useState<AllergyModel[]>([]);
+
+  const patientAllergiesQuery = useQueryWithPatient(
     QUERY_KEY_PATIENT_ALLERGIES,
     [fqs.ready],
     (() => {
@@ -33,6 +38,34 @@ export function usePatientAllergies() {
           );
     })()
   );
+
+  const basicsQuery = useBasic(fqs);
+
+  useEffect(() => {
+    const patientAllergies = patientAllergiesQuery.data ?? [];
+    const basics = basicsQuery.data ?? [];
+    // If basic data came back from the above useBasic call, manually map any basic data to the condition
+    // it corresponds to.
+    if (basics.length > 0) {
+      patientAllergies.forEach((a, i) => {
+        const filteredBasics = basics.filter(
+          (b) => b.subject?.reference === `AllergyIntolerance/${a.id}`
+        );
+        patientAllergies[i].revIncludes = filteredBasics;
+      });
+    }
+    setAllergies(patientAllergies);
+  }, [basicsQuery.data, patientAllergiesQuery.data]);
+
+  const isLoading = patientAllergiesQuery.isLoading || basicsQuery.isLoading;
+  const isError = patientAllergiesQuery.isError || basicsQuery.isError;
+  const isFetching = patientAllergiesQuery.isFetching || basicsQuery.isFetching || !fqs.ready;
+  return {
+    isLoading,
+    isError,
+    isFetching,
+    data: allergies,
+  };
 }
 
 async function getAllergyIntoleranceFromFQS(

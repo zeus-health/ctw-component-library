@@ -3,17 +3,22 @@ import { useEffect, useRef, useState } from "react";
 import { allergyFilter, defaultAllergyFilters } from "./helpers/filters";
 import { useAllergiesHistory } from "./helpers/history";
 import { allergySortOptions, defaultAllergySort } from "./helpers/sort";
+import { useToggleArchive } from "../hooks/use-toggle-archive";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { patientAllergiesColumns } from "@/components/content/allergies/helpers/column";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/use-ctw";
+import { Spinner } from "@/components/core/spinner";
+import { RowActionsProps } from "@/components/core/table/table";
 import { usePatientAllergies } from "@/fhir/allergies";
 import { AllergyModel } from "@/fhir/models/allergies";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
+import { useBaseTranslations } from "@/i18n";
 import { capitalize } from "@/utils/nodash";
+import { QUERY_KEY_BASIC, QUERY_KEY_PATIENT_ALLERGIES } from "@/utils/query-keys";
 
 export type PatientAllergiesProps = {
   className?: string;
@@ -77,6 +82,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
           data={data}
           columns={patientAllergiesColumns(userBuilderId, featureFlags?.enableViewFhirButton)}
           onRowClick={openDetails}
+          rowActions={getRowActions(userBuilderId)}
         />
       </div>
     </div>
@@ -95,3 +101,38 @@ const allergyData = (allergy: AllergyModel) => [
   { label: "Severity", value: capitalize(allergy.severity) },
   { label: "Note", value: allergy.note },
 ];
+
+const getRowActions =
+  (userBuilderId: string) =>
+  ({ record }: RowActionsProps<AllergyModel>) => {
+    const { t } = useBaseTranslations();
+    const { isLoading, toggleArchive } = useToggleArchive(
+      record,
+      QUERY_KEY_PATIENT_ALLERGIES,
+      QUERY_KEY_BASIC
+    );
+    const archiveLabel = record.isArchived
+      ? t("resourceTable.restore")
+      : t("resourceTable.dismiss");
+
+    return record.ownedByBuilder(userBuilderId) ? (
+      <></>
+    ) : (
+      <div className="ctw-flex ctw-space-x-2">
+        <button
+          type="button"
+          className="ctw-btn-default"
+          disabled={isLoading}
+          onClick={toggleArchive}
+        >
+          {isLoading ? (
+            <div className="ctw-flex">
+              <Spinner className="ctw-mx-4 ctw-align-middle" />
+            </div>
+          ) : (
+            archiveLabel
+          )}
+        </button>
+      </div>
+    );
+  };

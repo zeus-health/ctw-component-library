@@ -21,7 +21,7 @@ export async function recordProfileAction<T extends fhir4.Resource>(
     throw new Error(`Tried to ${profileAction} a resource that hasn't been created yet.`);
   }
 
-  if (!model.isSummaryResource) {
+  if (!model.isSummaryResource && model.ownedByBuilder(requestContext.builderId)) {
     throw new Error(`Tried to ${profileAction} a patient record resource.`);
   }
 

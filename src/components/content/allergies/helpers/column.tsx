@@ -11,20 +11,25 @@ export const patientAllergiesColumns = (builderId: string, includeViewFhirResour
       render: (allergy) => (
         <div>
           <div className="ctw-flow-root">
-            <span className={`ctw-font-${allergy.ownedByBuilder(builderId) ? "normal" : "medium"}`}>
+            <span
+              className={`ctw-font-${
+                allergy.ownedByBuilder(builderId) || allergy.isArchived ? "normal" : "medium"
+              }`}
+            >
               {capitalize(allergy.display)}
             </span>
             <span className="ctw-float-right">
               {allergy.ownedByBuilder(builderId) ? (
                 <CheckIcon />
               ) : (
-                <svg
-                  className="ctw-h-3 ctw-w-3 ctw-fill-success-main"
-                  viewBox="0 0 2 2"
-                  aria-hidden="true"
-                >
-                  <circle cx={1} cy={1} r={1} />
-                </svg>
+                <></>
+                // <svg
+                //   className="ctw-h-3 ctw-w-3 ctw-fill-success-main"
+                //   viewBox="0 0 2 2"
+                //   aria-hidden="true"
+                // >
+                //   <circle cx={1} cy={1} r={1} />
+                // </svg>
               )}
             </span>
           </div>
