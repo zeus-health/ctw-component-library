@@ -1,5 +1,5 @@
 import cx from "classnames";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { allergyFilter, defaultAllergyFilters } from "./helpers/filters";
 import { useAllergiesHistory } from "./helpers/history";
 import { allergySortOptions, defaultAllergySort } from "./helpers/sort";
@@ -57,6 +57,8 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
   // Get our allergies.
   const { isLoading } = patientAllergiesQuery;
 
+  const rowActions = useMemo(() => getRowActions(userBuilderId), [userBuilderId]);
+
   return (
     <div
       className={cx(className, "ctw-scrollable-pass-through-height")}
@@ -82,7 +84,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
           data={data}
           columns={patientAllergiesColumns(userBuilderId, featureFlags?.enableViewFhirButton)}
           onRowClick={openDetails}
-          rowActions={getRowActions(userBuilderId)}
+          rowActions={rowActions}
         />
       </div>
     </div>
