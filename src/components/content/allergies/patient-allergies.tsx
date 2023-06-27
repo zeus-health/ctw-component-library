@@ -147,22 +147,6 @@ const getRowActions =
           className="ctw-btn-default"
           disabled={isToggleDismissLoading || isToggleReadLoading}
           onClick={() => {
-            toggleRead(record);
-          }}
-        >
-          {isToggleReadLoading ? (
-            <div className="ctw-flex">
-              <Spinner className="ctw-mx-4 ctw-align-middle" />
-            </div>
-          ) : (
-            readLabel
-          )}
-        </button>
-        <button
-          type="button"
-          className="ctw-btn-default"
-          disabled={isToggleDismissLoading || isToggleReadLoading}
-          onClick={() => {
             toggleDismiss(record);
             if (!record.isRead) {
               toggleRead(record);
@@ -175,6 +159,22 @@ const getRowActions =
             </div>
           ) : (
             archiveLabel
+          )}
+        </button>
+        <button
+          type="button"
+          className="ctw-btn-default"
+          disabled={isToggleDismissLoading || isToggleReadLoading}
+          onClick={() => {
+            toggleRead(record);
+          }}
+        >
+          {isToggleReadLoading ? (
+            <div className="ctw-flex">
+              <Spinner className="ctw-mx-4 ctw-align-middle" />
+            </div>
+          ) : (
+            readLabel
           )}
         </button>
       </div>
