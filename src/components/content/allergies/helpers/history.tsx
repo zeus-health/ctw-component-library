@@ -21,11 +21,6 @@ export function useAllergiesHistory(enableFQS: boolean, allergy: AllergyModel) {
 }
 
 function getSearchParams(allergy: AllergyModel) {
-  // TODO - this will only find other allergies with the same code, but it does
-  // not handle allergies that have a different code but the same display, which is
-  // what we de-dupe on.
-  // Perhaps a better solution would be to just get all the patients allergies
-  // and pull out the relevant ones.
   const tokens = allergy.knownCodings.map((coding) => `${coding.system}|${coding.code}`);
 
   const searchParams: SearchParams = {
