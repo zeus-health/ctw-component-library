@@ -13,6 +13,10 @@ export class AllergyModel extends FHIRModel<fhir4.AllergyIntolerance> {
     return this.resource.category?.join(", ");
   }
 
+  get codeText(): string | undefined {
+    return this.resource.code?.text;
+  }
+
   get resourceTypeTitle(): string {
     return this.resource.resourceType.slice(0, 7);
   }

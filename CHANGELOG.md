@@ -1,5 +1,41 @@
 # ctw-component-library
 
+## 1.23.4
+
+### Patch Changes
+
+- b0dc8817: Bump @storybook/test-runner from 0.10.0 to 0.11.0
+- 19cd88c0: Update conditionHistory entries to contain ManagingOrganization.
+
+## 1.23.3
+
+### Patch Changes
+
+- 860bb086: Alter filtering for allergies client side instead of server side temporarily.
+
+## 1.23.2
+
+### Patch Changes
+
+- 7297d2fc: Add `unleash-proxy-client` to deps. It was previously listed as peer dep.
+
+## 1.23.1
+
+### Patch Changes
+
+- 5706ff6d: Refactored FQS vs ODS query logic and removed all "drawer" specific feature variants. We'll instead use resource specific variants, regardless of which components do the data fetching.
+- 7bb72d33: Fetch timeline data (encounters, diagnostic reports, observations) from FQS. This is behind a feature flag, default is to still fetch from ODS.
+
+## 1.23.0
+
+### Minor Changes
+
+- 43f0a786: Allergies drawer requests use a separate toggle variant than the allergies table requests
+- 4b2a7e0f: Conditions drawer requests use a separate toggle variant than the conditions table requests
+- 4ef870b4: Medications drawer requests uses a separate toggle variant than medications table requests
+- bf9cb114: Updated Immunizations component list view to pull feature flags directly from Unleash
+- 773d86c4: Update useHistory hook to work with FQS. Additionally, rewire the versionsHistory to use FQS as well.
+
 ## 1.22.0
 
 ### Minor Changes

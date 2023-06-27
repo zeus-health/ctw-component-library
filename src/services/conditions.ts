@@ -11,7 +11,7 @@ import {
 } from "../fhir/system-urls";
 import { getLensBuilderId } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
+import { useFeatureFlaggedQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { useBasic } from "@/fhir/basic";
 import { getIncludedBasics } from "@/fhir/bundle";
 import { ConditionModel } from "@/fhir/models/condition";
@@ -25,41 +25,27 @@ import {
   QUERY_KEY_PATIENT_CONDITIONS,
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
-import { Telemetry, withTimerMetric } from "@/utils/telemetry";
+import { Telemetry } from "@/utils/telemetry";
 
 export function usePatientBuilderConditions() {
-  const fqs = useFQSFeatureToggle("conditions");
-  return useQueryWithPatient(
+  return useFeatureFlaggedQueryWithPatient(
     QUERY_KEY_PATIENT_CONDITIONS,
-    [fqs.ready],
-    (() => {
-      if (!fqs.ready) {
-        return async () => [];
-      }
-      return fqs.enabled
-        ? withTimerMetric(fetchPatientBuilderConditionsFQS, "req.timing.builder_conditions", [
-            "fqs",
-          ])
-        : withTimerMetric(fetchPatientBuilderConditionsODS, "req.timing.builder_conditions");
-    })()
+    [],
+    "conditions",
+    "req.timing.builder_conditions",
+    fetchPatientBuilderConditionsFQS,
+    fetchPatientBuilderConditionsODS
   );
 }
 
 function usePatientSummaryConditions() {
-  const fqs = useFQSFeatureToggle("conditions");
-  return useQueryWithPatient(
+  return useFeatureFlaggedQueryWithPatient(
     QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
-    [fqs.ready],
-    (() => {
-      if (!fqs.ready) {
-        return async () => [];
-      }
-      return fqs.enabled
-        ? withTimerMetric(fetchPatientSummaryConditionsFQS, "req.timing.summary_conditions", [
-            "fqs",
-          ])
-        : withTimerMetric(fetchPatientSummaryConditionsODS, "req.timing.summary_conditions");
-    })()
+    [],
+    "conditions",
+    "req.timing.summary_conditions",
+    fetchPatientSummaryConditionsFQS,
+    fetchPatientSummaryConditionsODS
   );
 }
 

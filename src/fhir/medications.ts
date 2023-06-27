@@ -29,19 +29,18 @@ import {
   LENS_EXTENSION_MEDICATION_REFILLS,
   SYSTEM_RXNORM,
   SYSTEM_SUMMARY,
-  SYSTEM_ZUS_LENS,
   SYSTEM_ZUS_OWNER,
+  SYSTEM_ZUS_SUMMARY,
   SYSTEM_ZUS_THIRD_PARTY,
   SYSTEM_ZUS_UNIVERSAL_ID,
 } from "./system-urls";
 import { ResourceMap, ResourceTypeString } from "./types";
+import { useFeatureFlaggedQueryWithPatient } from "..";
 import { getLensBuilderId } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { MedicationModel } from "@/fhir/models/medication";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { PatientModel } from "@/fhir/models/patient";
-import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { filterResourcesByBuilderId } from "@/services/common";
 import { createGraphqlClient } from "@/services/fqs/client";
 import { graphQLToFHIR } from "@/services/fqs/graphql-to-fhir";
@@ -80,7 +79,7 @@ import {
 } from "@/utils/nodash/fp";
 import { QUERY_KEY_MEDICATION_HISTORY } from "@/utils/query-keys";
 import { sort } from "@/utils/sort";
-import { Telemetry, withTimerMetric } from "@/utils/telemetry";
+import { Telemetry } from "@/utils/telemetry";
 
 export type InformationSource =
   | "Patient"
@@ -441,16 +440,11 @@ export async function getActiveMedications(
   } as Record<string, string>;
 
   try {
-    const response = await searchLensRecords(
-      "MedicationStatement",
-      requestContext,
-      "ActiveMedications",
-      {
-        patientUPID: patient.UPID,
-        _include: "MedicationStatement:medication",
-        ...omitClientFilters(searchFilters),
-      }
-    );
+    const response = await searchLensRecords("MedicationStatement", requestContext, {
+      patientUPID: patient.UPID,
+      _include: "MedicationStatement:medication",
+      ...omitClientFilters(searchFilters),
+    });
 
     const medications = applySearchFiltersToResponse(response, searchFilters, true);
     if (medications.length === 0) {
@@ -481,7 +475,7 @@ export async function getActiveMedicationsFQS(
       filter: {
         tag: {
           allmatch: [
-            `${SYSTEM_ZUS_LENS}|ActiveMedications`,
+            `${SYSTEM_ZUS_SUMMARY}|Common`,
             `${SYSTEM_ZUS_OWNER}|builder/${getLensBuilderId(requestContext.env)}`,
           ],
         },
@@ -570,21 +564,13 @@ export function splitMedications(
 }
 
 export function useMedicationHistory(medication?: fhir4.MedicationStatement) {
-  const fqs = useFQSFeatureToggle("medications");
-  return useQueryWithPatient(
+  return useFeatureFlaggedQueryWithPatient(
     QUERY_KEY_MEDICATION_HISTORY,
-    [medication?.id || "empty", fqs.ready],
-    (() => {
-      if (!medication || !fqs.ready) {
-        return async () => ({
-          includedResources: {},
-          medications: [],
-        });
-      }
-      return fqs.enabled
-        ? withTimerMetric(getMedicationHistoryFQS(medication), "req.medication_history", ["fqs"])
-        : withTimerMetric(getMedicationHistoryODS(medication), "req.medication_history");
-    })()
+    [],
+    "medications",
+    "req.timing.medication_history",
+    getMedicationHistoryFQS(medication),
+    getMedicationHistoryODS(medication)
   );
 }
 
@@ -647,8 +633,12 @@ function searchWrapper<T extends ResourceTypeString>(
   return { resources: [], bundle: undefined };
 }
 
-function getMedicationHistoryODS(medication: fhir4.MedicationStatement) {
+function getMedicationHistoryODS(medication?: fhir4.MedicationStatement) {
   return async (requestContext: CTWRequestContext, patient: PatientModel) => {
+    if (!medication) {
+      return { medications: [], includedResources: {} as ResourceMap };
+    }
+
     try {
       const aggregatedFromReferences = new MedicationStatementModel(medication).aggregatedFrom;
 
@@ -723,8 +713,11 @@ function getMedicationHistoryODS(medication: fhir4.MedicationStatement) {
   };
 }
 
-function getMedicationHistoryFQS(medication: fhir4.MedicationStatement) {
+function getMedicationHistoryFQS(medication?: fhir4.MedicationStatement) {
   return async (requestContext: CTWRequestContext, patient: PatientModel) => {
+    if (!medication) {
+      return { medications: [], includedResources: {} as ResourceMap };
+    }
     try {
       const aggregatedFromReferences = new MedicationStatementModel(medication).aggregatedFrom;
 

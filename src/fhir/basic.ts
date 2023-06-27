@@ -61,7 +61,7 @@ export async function recordProfileAction<T extends fhir4.Resource>(
 export function useBasic(fqs: FQSFeatureToggle) {
   return useQueryWithPatient(
     QUERY_KEY_BASIC,
-    [fqs.ready],
+    [fqs.ready, fqs.enabled],
     (() => {
       if (!fqs.ready) {
         return async () =>
