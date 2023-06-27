@@ -4,6 +4,7 @@ import { getUsersPractitionerReference } from "./practitioner";
 import { searchAllRecords } from "./search-helpers";
 import { SYSTEM_PROVENANCE_ACTIVITY_TYPE, SYSTEM_PROVENANCE_AGENT_TYPE } from "./system-urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
+import { searchProvenancesFQS } from "@/services/fqs/queries/provenances";
 import { claimsBuilderName } from "@/utils/auth";
 import { uniq } from "@/utils/nodash";
 import { QUERY_KEY_PROVENANCE } from "@/utils/query-keys";
@@ -84,17 +85,15 @@ export const createProvenance = async (
 export async function searchProvenances<T extends fhir4.Resource>(
   requestContext: CTWRequestContext,
   models: FHIRModel<T>[],
-  // TODO remove underscore prefix when used.
-  _enableFQS = false
+  enableFQS = false
 ): Promise<Provenance[]> {
   if (models.length === 0) return [];
 
   const targets = uniq(models.map((m) => `${m.resourceType}/${m.id}`));
 
-  // TODO uncomment when FQS supports provenance on all resources and is back-filled.
-  // if (enableFQS) {
-  //   return searchProvenancesFQS(requestContext, models[0].resourceType, targets);
-  // }
+  if (enableFQS) {
+    return searchProvenancesFQS(requestContext, models[0].resourceType, targets);
+  }
   return searchProvenancesODS(requestContext, targets);
 }
 
