@@ -54,7 +54,8 @@ export function usePatientAllergies() {
         patientAllergies[i].revIncludes = filteredBasics;
       });
     }
-    setAllergies(patientAllergies);
+
+    setAllergies([...patientAllergies]); // spread syntax here needed to make sure the array is a new reference in order to trigger a re-render
   }, [basicsQuery.data, patientAllergiesQuery.data]);
 
   const isLoading = patientAllergiesQuery.isLoading || basicsQuery.isLoading;
