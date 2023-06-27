@@ -3,7 +3,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { allergyFilter, defaultAllergyFilters } from "./helpers/filters";
 import { useAllergiesHistory } from "./helpers/history";
 import { allergySortOptions, defaultAllergySort } from "./helpers/sort";
-import { useToggleArchive } from "../hooks/use-toggle-archive";
+import { useToggleDismiss } from "../hooks/use-toggle-archive";
+import { useToggleRead } from "../hooks/use-toggle-read";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
@@ -59,6 +60,15 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
 
   const rowActions = useMemo(() => getRowActions(userBuilderId), [userBuilderId]);
 
+  const { toggleRead } = useToggleRead(QUERY_KEY_PATIENT_ALLERGIES, QUERY_KEY_BASIC);
+
+  const handleRowClick = (record: AllergyModel) => {
+    if (!record.isRead) {
+      toggleRead(record);
+    }
+    openDetails(record);
+  };
+
   return (
     <div
       className={cx(className, "ctw-scrollable-pass-through-height")}
@@ -83,8 +93,9 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
           isLoading={isLoading}
           data={data}
           columns={patientAllergiesColumns(userBuilderId, featureFlags?.enableViewFhirButton)}
-          onRowClick={openDetails}
+          onRowClick={handleRowClick}
           rowActions={rowActions}
+          boldUnreadRows
         />
       </div>
     </div>
@@ -113,14 +124,19 @@ const getRowActions =
     // const userBuilderId = "69290920-44af-4585-96b0-aa8ebec5f2a2";
 
     const { t } = useBaseTranslations();
-    const { isLoading, toggleArchive } = useToggleArchive(
-      record,
+    const { isLoading: isToggleDismissLoading, toggleDismiss } = useToggleDismiss(
+      QUERY_KEY_PATIENT_ALLERGIES,
+      QUERY_KEY_BASIC
+    );
+    const { isLoading: isToggleReadLoading, toggleRead } = useToggleRead(
       QUERY_KEY_PATIENT_ALLERGIES,
       QUERY_KEY_BASIC
     );
     const archiveLabel = record.isArchived
       ? t("resourceTable.restore")
       : t("resourceTable.dismiss");
+
+    const readLabel = record.isRead ? t("resourceTable.unread") : t("resourceTable.read");
 
     return record.ownedByBuilder(userBuilderId) ? (
       <></>
@@ -129,10 +145,31 @@ const getRowActions =
         <button
           type="button"
           className="ctw-btn-default"
-          disabled={isLoading}
-          onClick={toggleArchive}
+          disabled={isToggleDismissLoading || isToggleReadLoading}
+          onClick={() => {
+            toggleRead(record);
+          }}
         >
-          {isLoading ? (
+          {isToggleReadLoading ? (
+            <div className="ctw-flex">
+              <Spinner className="ctw-mx-4 ctw-align-middle" />
+            </div>
+          ) : (
+            readLabel
+          )}
+        </button>
+        <button
+          type="button"
+          className="ctw-btn-default"
+          disabled={isToggleDismissLoading || isToggleReadLoading}
+          onClick={() => {
+            toggleDismiss(record);
+            if (!record.isRead) {
+              toggleRead(record);
+            }
+          }}
+        >
+          {isToggleDismissLoading ? (
             <div className="ctw-flex">
               <Spinner className="ctw-mx-4 ctw-align-middle" />
             </div>

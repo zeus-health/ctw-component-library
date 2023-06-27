@@ -1,14 +1,14 @@
 import { useCallback, useState } from "react";
 import { useCTW } from "@/components/core/providers/use-ctw";
-import { toggleDismiss } from "@/fhir/basic";
+import { toggleRead } from "@/fhir/basic";
 import { FHIRModel } from "@/fhir/models/fhir-model";
 import { queryClient } from "@/utils/request";
 
-interface UseToggleDismissResult {
+interface UseToggleReadResult {
   /**
    * Function to call to toggle the archive status of the FHIR model
    */
-  toggleDismiss: (model: FHIRModel<fhir4.Resource>) => void;
+  toggleRead: (model: FHIRModel<fhir4.Resource>) => void;
 
   /**
    * True when `toggleArchive` is called
@@ -17,18 +17,18 @@ interface UseToggleDismissResult {
 }
 
 /**
- * This hook is toggles the dismiss status for the specified FHIR model.
+ * This hook is toggles the read status for the specified FHIR model.
  *
  * @param queriesToInvalidate  Queries to refetch
  */
-export function useToggleDismiss(...queriesToInvalidate: string[]): UseToggleDismissResult {
+export function useToggleRead(...queriesToInvalidate: string[]): UseToggleReadResult {
   const { getRequestContext } = useCTW();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleToggleDismiss = useCallback(async (model: FHIRModel<fhir4.Resource>) => {
+  const handleToggleRead = useCallback(async (model: FHIRModel<fhir4.Resource>) => {
     setIsLoading(true);
-    await toggleDismiss(model, await getRequestContext());
+    await toggleRead(model, await getRequestContext());
     await Promise.all(
       queriesToInvalidate.map((queryToInvalidate) =>
         queryClient.invalidateQueries([queryToInvalidate])
@@ -36,13 +36,13 @@ export function useToggleDismiss(...queriesToInvalidate: string[]): UseToggleDis
     );
 
     // Timeout here fixes bug where we would briefly flash
-    // the old dismiss/restore text.
+    // the old read/restore text.
     setTimeout(() => setIsLoading(false), 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return {
-    toggleDismiss: handleToggleDismiss,
+    toggleRead: handleToggleRead,
     isLoading,
   };
 }

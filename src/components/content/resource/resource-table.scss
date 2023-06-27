@@ -7,4 +7,11 @@
       @apply ctw-text-content-lighter;
     }
   }
+  .ctw-tr-unread {
+    td,
+    td span,
+    td div {
+      @apply ctw-font-bold;
+    }
+  }
 }

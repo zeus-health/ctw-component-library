@@ -23,7 +23,7 @@ export const patientAllergiesColumns = (builderId: string, includeViewFhirResour
       title: "Last Updated",
       render: (allergy) => (
         <div>
-          <div className="ctw-font-normal">{allergy.recordedDate} </div>
+          <div>{allergy.recordedDate} </div>
           <div>{allergy.managingOrganization}</div>
         </div>
       ),
@@ -33,7 +33,7 @@ export const patientAllergiesColumns = (builderId: string, includeViewFhirResour
       render: (allergy) => (
         <div>
           {!!allergy.manifestations && allergy.manifestations !== "unknown" && (
-            <div className="ctw-font-normal">Reaction: {capitalize(allergy.manifestations)}</div>
+            <div>Reaction: {capitalize(allergy.manifestations)}</div>
           )}
         </div>
       ),

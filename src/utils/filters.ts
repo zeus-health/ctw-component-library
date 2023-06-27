@@ -1,5 +1,5 @@
 import { Filter } from "@/components/core/filter-bar/filter-bar-types";
-import { compact, isArray, uniq } from "@/utils/nodash/";
+import { compact, find, isArray, uniq } from "@/utils/nodash/";
 
 export type FilterFunc<T extends object> = (data: T[]) => T[];
 export type FilterEntry<T extends object> = Filter | FilterFunc<T>;
@@ -11,8 +11,15 @@ export const applyFilters = <T extends object>(data: T[], filters?: (Filter | Fi
 
   const filteredData = filterFuncs.reduce((acc, filterFunc) => filterFunc(acc), data);
 
-  return filteredData.filter((entry) =>
-    Object.entries(filterItems).every(([_, filterItem]) => {
+  return filteredData.filter((entry) => {
+    const showArchived = find(filterItems, { key: "isArchived" })?.selected;
+    const isArchived = Boolean(entry["isArchived" as keyof T]);
+
+    if (!showArchived && isArchived) {
+      return false;
+    }
+
+    return Object.entries(filterItems).every(([_, filterItem]) => {
       const targetFilter = String(entry[filterItem.key as keyof T]);
 
       switch (filterItem.type) {
@@ -33,8 +40,8 @@ export const applyFilters = <T extends object>(data: T[], filters?: (Filter | Fi
         default:
       }
       return true;
-    })
-  );
+    });
+  });
 };
 
 export function uniqueValues<T extends object>(data: T[], key: keyof T): string[] {

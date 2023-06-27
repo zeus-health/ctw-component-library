@@ -47,6 +47,14 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
     });
   }
 
+  get isRead(): boolean {
+    const basic = this.getLatestBasicResourceByActions(["read", "unread"]);
+    return some(basic?.code.coding, {
+      system: SYSTEM_ZUS_PROFILE_ACTION,
+      code: "read",
+    });
+  }
+
   // Returns true if this resource is a summary/lens resource.
   get isSummaryResource(): boolean {
     return find(this.resource.meta?.tag, { system: SYSTEM_SUMMARY }) !== undefined;

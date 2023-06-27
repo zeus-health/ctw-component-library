@@ -80,12 +80,22 @@ export function useBasic(fqs: FQSFeatureToggle) {
   );
 }
 
-export async function toggleArchive<T extends fhir4.Resource>(
+export async function toggleDismiss<T extends fhir4.Resource>(
   model: FHIRModel<T>,
   requestContext: CTWRequestContext
 ) {
   const existingBasic = model.getLatestBasicResourceByActions(["archive", "unarchive"]);
   const profileAction = model.isArchived ? "unarchive" : "archive";
+
+  await recordProfileAction(existingBasic, model, requestContext, profileAction);
+}
+
+export async function toggleRead<T extends fhir4.Resource>(
+  model: FHIRModel<T>,
+  requestContext: CTWRequestContext
+) {
+  const existingBasic = model.getLatestBasicResourceByActions(["read", "unread"]);
+  const profileAction = model.isRead ? "unread" : "read";
 
   await recordProfileAction(existingBasic, model, requestContext, profileAction);
 }
