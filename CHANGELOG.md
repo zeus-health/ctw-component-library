@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.23.4
+
+### Patch Changes
+
+- b0dc8817: Bump @storybook/test-runner from 0.10.0 to 0.11.0
+- 19cd88c0: Update conditionHistory entries to contain ManagingOrganization.
+
 ## 1.23.3
 
 ### Patch Changes
