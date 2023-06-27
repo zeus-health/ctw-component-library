@@ -1,5 +1,5 @@
 import cx from "classnames";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef } from "react";
 import { allergyFilter, defaultAllergyFilters } from "./helpers/filters";
 import { useAllergiesHistory } from "./helpers/history";
 import { allergySortOptions, defaultAllergySort } from "./helpers/sort";
@@ -27,7 +27,7 @@ export type PatientAllergiesProps = {
 
 function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { featureFlags, getRequestContext } = useCTW();
+  const { featureFlags, builderId } = useCTW();
   const { enabled } = useFQSFeatureToggle("allergies");
   const patientAllergiesQuery = usePatientAllergies();
   const { data, setFilters, setSort } = useFilteredSortedData({
@@ -35,17 +35,6 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
     defaultSort: defaultAllergySort,
     records: patientAllergiesQuery.data,
   });
-
-  const [userBuilderId, setUserBuilderId] = useState<string>("");
-
-  useEffect(() => {
-    async function load() {
-      const requestContext = await getRequestContext();
-      setUserBuilderId(requestContext.builderId);
-    }
-
-    void load();
-  }, [getRequestContext]);
 
   const openDetails = useResourceDetailsDrawer({
     header: (m) => capitalize(m.display),
@@ -58,7 +47,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
   // Get our allergies.
   const { isLoading } = patientAllergiesQuery;
 
-  const rowActions = useMemo(() => getRowActions(userBuilderId), [userBuilderId]);
+  const rowActions = useMemo(() => getRowActions(builderId), [builderId]);
 
   const { toggleRead } = useToggleRead(QUERY_KEY_PATIENT_ALLERGIES, QUERY_KEY_BASIC);
 
@@ -92,7 +81,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
           showTableHead
           isLoading={isLoading}
           data={data}
-          columns={patientAllergiesColumns(userBuilderId, featureFlags?.enableViewFhirButton)}
+          columns={patientAllergiesColumns(builderId, featureFlags?.enableViewFhirButton)}
           onRowClick={handleRowClick}
           rowActions={rowActions}
           boldUnreadRows
@@ -121,8 +110,6 @@ const allergyData = (allergy: AllergyModel) => [
 const getRowActions =
   (userBuilderId: string) =>
   ({ record }: RowActionsProps<AllergyModel>) => {
-    // const userBuilderId = "69290920-44af-4585-96b0-aa8ebec5f2a2";
-
     const { t } = useBaseTranslations();
     const { isLoading: isToggleDismissLoading, toggleDismiss } = useToggleDismiss(
       QUERY_KEY_PATIENT_ALLERGIES,

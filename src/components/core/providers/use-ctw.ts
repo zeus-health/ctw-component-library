@@ -39,6 +39,7 @@ export function useCTW() {
 
   return {
     getRequestContext,
+    builderId: context.builderId || "",
     featureFlags: context.featureFlags,
   };
 }
