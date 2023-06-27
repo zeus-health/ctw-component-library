@@ -104,15 +104,16 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
 
   // Returns true if this resource is owned by the specified builder.
   ownedByBuilder(builderId: string): boolean {
-    try {
-      if (this.resource.meta?.tag?.some((tag) => tag.system === SYSTEM_ZUS_THIRD_PARTY)) {
-        return false;
-      }
-      const ownerTag = this.resource.meta?.tag?.find((tag) => tag.system === SYSTEM_ZUS_OWNER);
-      return ownerTag?.code?.split("/")[1] === builderId;
-    } catch (error) {
-      throw new Error("Expected builder owner tag missing or malformed.");
+    if (this.resource.meta?.tag?.some((tag) => tag.system === SYSTEM_ZUS_THIRD_PARTY)) {
+      return false;
     }
+    const ownerTag = this.resource.meta?.tag?.find((tag) => tag.system === SYSTEM_ZUS_OWNER);
+    const splitTag = ownerTag?.code?.split("/");
+
+    if (splitTag?.length !== 2) {
+      return false;
+    }
+    return ownerTag?.code?.split("/")[1] === builderId;
   }
 
   // Returns a string that would setup this model.
