@@ -44,9 +44,6 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
     enableFQS: enabled,
   });
 
-  // Get our allergies.
-  const { isLoading } = patientAllergiesQuery;
-
   const rowActions = useMemo(() => getRowActions(builderId), [builderId]);
 
   const { toggleRead } = useToggleRead(QUERY_KEY_PATIENT_ALLERGIES, QUERY_KEY_BASIC);
@@ -79,7 +76,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
       <div className="ctw-scrollable-pass-through-height">
         <ResourceTable
           showTableHead
-          isLoading={isLoading}
+          isLoading={patientAllergiesQuery.isLoading}
           data={data}
           columns={patientAllergiesColumns(builderId, featureFlags?.enableViewFhirButton)}
           onRowClick={handleRowClick}
@@ -104,9 +101,6 @@ const allergyData = (allergy: AllergyModel) => [
   { label: "Note", value: allergy.note },
 ];
 
-// Having getRowActions as a function was causing an error when re-rendering the table
-// so I'm making it like this temporarily to better match the conditions/meds tables
-// while I troubleshoot the issue with the table not updating when dismissing a record.
 const getRowActions =
   (userBuilderId: string) =>
   ({ record }: RowActionsProps<AllergyModel>) => {
