@@ -1,5 +1,5 @@
 import cx from "classnames";
-import { ReactElement, useEffect, useRef, useState } from "react";
+import { ReactElement, useRef } from "react";
 import { usePatient } from "@/components/core/providers/patient-provider";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { Table, TableProps } from "@/components/core/table/table";
@@ -32,7 +32,7 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
   boldUnreadRows,
 }: ResourceTableProps<M>) => {
   const patient = usePatient();
-  const { getRequestContext } = useCTW();
+  const { builderId } = useCTW();
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const shouldShowTableHead = typeof showTableHead === "boolean" ? showTableHead : !breakpoints.sm;
@@ -42,17 +42,6 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
     <div className="ctw-space-y-4">Patient not found.</div>
   );
 
-  const [userBuilderId, setUserBuilderId] = useState<string>("");
-
-  useEffect(() => {
-    async function load() {
-      const requestContext = await getRequestContext();
-      setUserBuilderId(requestContext.builderId);
-    }
-
-    void load();
-  }, [getRequestContext]);
-
   return (
     <div
       ref={containerRef}
@@ -61,8 +50,7 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
       <Table
         getRowClassName={(record) => ({
           "ctw-tr-archived": record.isArchived,
-          "ctw-tr-unread":
-            boldUnreadRows && !record.ownedByBuilder(userBuilderId) && !record.isRead,
+          "ctw-tr-unread": boldUnreadRows && !record.ownedByBuilder(builderId) && !record.isRead,
         })}
         showTableHead={shouldShowTableHead}
         stacked={breakpoints.sm}
