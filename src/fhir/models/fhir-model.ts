@@ -39,7 +39,7 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
     return this.resource.meta?.versionId || "";
   }
 
-  get isArchived(): boolean {
+  get isDismissed(): boolean {
     const basic = this.getLatestBasicResourceByActions(["archive", "unarchive"]);
     return some(basic?.code.coding, {
       system: SYSTEM_ZUS_PROFILE_ACTION,

@@ -113,7 +113,7 @@ const getRowActions =
       QUERY_KEY_PATIENT_ALLERGIES,
       QUERY_KEY_BASIC
     );
-    const archiveLabel = record.isArchived
+    const archiveLabel = record.isDismissed
       ? t("resourceTable.restore")
       : t("resourceTable.dismiss");
 

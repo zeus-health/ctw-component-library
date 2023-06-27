@@ -3,7 +3,7 @@ import { usePatientAllDiagnosticReports } from "@/fhir/diagnostic-report";
 
 export const PatientObservationsOutsideBadge = () => {
   const { data = [] } = usePatientAllDiagnosticReports();
-  const unarchivedObservations = data.filter((observation) => !observation.isArchived);
+  const unarchivedObservations = data.filter((observation) => !observation.isDismissed);
 
   return unarchivedObservations.length ? (
     <Badge

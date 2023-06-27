@@ -69,7 +69,7 @@ const RowActions = ({ record }: RowActionsProps<ConditionModel>) => {
     QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
     QUERY_KEY_BASIC
   );
-  const archiveLabel = record.isArchived ? t("resourceTable.restore") : t("resourceTable.dismiss");
+  const archiveLabel = record.isDismissed ? t("resourceTable.restore") : t("resourceTable.dismiss");
 
   return (
     <div className="ctw-flex ctw-space-x-2">

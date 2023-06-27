@@ -160,7 +160,7 @@ export const filterOtherConditions = (
   includeArchived: boolean
 ): ConditionModel[] =>
   otherConditions.filter((otherCondition) => {
-    if (otherCondition.isArchived && !includeArchived) return false;
+    if (otherCondition.isDismissed && !includeArchived) return false;
 
     if (["FAC", "XXX"].includes(otherCondition.ccsChapterCode ?? "")) {
       return false;

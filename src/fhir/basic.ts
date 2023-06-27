@@ -85,7 +85,7 @@ export async function toggleDismiss<T extends fhir4.Resource>(
   requestContext: CTWRequestContext
 ) {
   const existingBasic = model.getLatestBasicResourceByActions(["archive", "unarchive"]);
-  const profileAction = model.isArchived ? "unarchive" : "archive";
+  const profileAction = model.isDismissed ? "unarchive" : "archive";
 
   await recordProfileAction(existingBasic, model, requestContext, profileAction);
 }
