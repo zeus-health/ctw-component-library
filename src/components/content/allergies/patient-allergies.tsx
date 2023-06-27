@@ -1,5 +1,5 @@
 import cx from "classnames";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { allergyFilter, defaultAllergyFilters } from "./helpers/filters";
 import { useAllergiesHistory } from "./helpers/history";
 import { allergySortOptions, defaultAllergySort } from "./helpers/sort";
@@ -35,17 +35,16 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
     records: patientAllergiesQuery.data,
   });
 
-  // const [userBuilderId, setUserBuilderId] = useState<string>("");
-  const userBuilderId = "69290920-44af-4585-96b0-aa8ebec5f2a2";
+  const [userBuilderId, setUserBuilderId] = useState<string>("");
 
-  // useEffect(() => {
-  //   async function load() {
-  //     const requestContext = await getRequestContext();
-  //     setUserBuilderId(requestContext.builderId);
-  //   }
+  useEffect(() => {
+    async function load() {
+      const requestContext = await getRequestContext();
+      setUserBuilderId(requestContext.builderId);
+    }
 
-  //   void load();
-  // }, [getRequestContext]);
+    void load();
+  }, [getRequestContext]);
 
   const openDetails = useResourceDetailsDrawer({
     header: (m) => capitalize(m.display),
@@ -83,8 +82,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
           data={data}
           columns={patientAllergiesColumns(userBuilderId, featureFlags?.enableViewFhirButton)}
           onRowClick={openDetails}
-          // rowActions={getRowActions(userBuilderId)}
-          rowActions={RowActions}
+          rowActions={getRowActions(userBuilderId)}
         />
       </div>
     </div>
@@ -107,37 +105,39 @@ const allergyData = (allergy: AllergyModel) => [
 // Having getRowActions as a function was causing an error when re-rendering the table
 // so I'm making it like this temporarily to better match the conditions/meds tables
 // while I troubleshoot the issue with the table not updating when dismissing a record.
-// const getRowActions =
-//   (userBuilderId: string) =>
-const RowActions = ({ record }: RowActionsProps<AllergyModel>) => {
-  const userBuilderId = "69290920-44af-4585-96b0-aa8ebec5f2a2";
+const getRowActions =
+  (userBuilderId: string) =>
+  ({ record }: RowActionsProps<AllergyModel>) => {
+    // const userBuilderId = "69290920-44af-4585-96b0-aa8ebec5f2a2";
 
-  const { t } = useBaseTranslations();
-  const { isLoading, toggleArchive } = useToggleArchive(
-    record,
-    QUERY_KEY_PATIENT_ALLERGIES,
-    QUERY_KEY_BASIC
-  );
-  const archiveLabel = record.isArchived ? t("resourceTable.restore") : t("resourceTable.dismiss");
+    const { t } = useBaseTranslations();
+    const { isLoading, toggleArchive } = useToggleArchive(
+      record,
+      QUERY_KEY_PATIENT_ALLERGIES,
+      QUERY_KEY_BASIC
+    );
+    const archiveLabel = record.isArchived
+      ? t("resourceTable.restore")
+      : t("resourceTable.dismiss");
 
-  return record.ownedByBuilder(userBuilderId) ? (
-    <></>
-  ) : (
-    <div className="ctw-flex ctw-space-x-2">
-      <button
-        type="button"
-        className="ctw-btn-default"
-        disabled={isLoading}
-        onClick={toggleArchive}
-      >
-        {isLoading ? (
-          <div className="ctw-flex">
-            <Spinner className="ctw-mx-4 ctw-align-middle" />
-          </div>
-        ) : (
-          archiveLabel
-        )}
-      </button>
-    </div>
-  );
-};
+    return record.ownedByBuilder(userBuilderId) ? (
+      <></>
+    ) : (
+      <div className="ctw-flex ctw-space-x-2">
+        <button
+          type="button"
+          className="ctw-btn-default"
+          disabled={isLoading}
+          onClick={toggleArchive}
+        >
+          {isLoading ? (
+            <div className="ctw-flex">
+              <Spinner className="ctw-mx-4 ctw-align-middle" />
+            </div>
+          ) : (
+            archiveLabel
+          )}
+        </button>
+      </div>
+    );
+  };
