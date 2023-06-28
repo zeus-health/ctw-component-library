@@ -7,7 +7,7 @@ import { ConditionModel } from "@/fhir/models";
 import { capitalize, startCase } from "@/utils/nodash";
 import { QUERY_KEY_CONDITION_HISTORY } from "@/utils/query-keys";
 
-export function useConditionHistory(enableFQS: boolean, condition: ConditionModel) {
+export function useConditionHistory(condition: ConditionModel) {
   return useHistory({
     resourceType: "Condition",
     model: condition,
@@ -16,7 +16,6 @@ export function useConditionHistory(enableFQS: boolean, condition: ConditionMode
     getSearchParams,
     getFiltersFQS,
     getHistoryEntry,
-    enableFQS,
   });
 }
 
