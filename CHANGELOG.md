@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.25.0
+
+### Minor Changes
+
+- a33f1f2b: Add useHistory variant to useHistory hook for enabling FQS.
+
 ## 1.24.0
 
 ### Minor Changes
