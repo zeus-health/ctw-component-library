@@ -29,8 +29,8 @@ import {
   LENS_EXTENSION_MEDICATION_REFILLS,
   SYSTEM_RXNORM,
   SYSTEM_SUMMARY,
-  SYSTEM_ZUS_LENS,
   SYSTEM_ZUS_OWNER,
+  SYSTEM_ZUS_SUMMARY,
   SYSTEM_ZUS_THIRD_PARTY,
   SYSTEM_ZUS_UNIVERSAL_ID,
 } from "./system-urls";
@@ -440,16 +440,11 @@ export async function getActiveMedications(
   } as Record<string, string>;
 
   try {
-    const response = await searchLensRecords(
-      "MedicationStatement",
-      requestContext,
-      "ActiveMedications",
-      {
-        patientUPID: patient.UPID,
-        _include: "MedicationStatement:medication",
-        ...omitClientFilters(searchFilters),
-      }
-    );
+    const response = await searchLensRecords("MedicationStatement", requestContext, {
+      patientUPID: patient.UPID,
+      _include: "MedicationStatement:medication",
+      ...omitClientFilters(searchFilters),
+    });
 
     const medications = applySearchFiltersToResponse(response, searchFilters, true);
     if (medications.length === 0) {
@@ -480,7 +475,7 @@ export async function getActiveMedicationsFQS(
       filter: {
         tag: {
           allmatch: [
-            `${SYSTEM_ZUS_LENS}|ActiveMedications`,
+            `${SYSTEM_ZUS_SUMMARY}|Common`,
             `${SYSTEM_ZUS_OWNER}|builder/${getLensBuilderId(requestContext.env)}`,
           ],
         },

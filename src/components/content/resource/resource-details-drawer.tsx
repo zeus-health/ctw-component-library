@@ -11,6 +11,7 @@ import { getBinaryId } from "@/fhir/binaries";
 import { DocumentModel } from "@/fhir/models/document";
 import { FHIRModel } from "@/fhir/models/fhir-model";
 import { searchProvenances } from "@/fhir/provenance";
+import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { UseQueryResultBasic } from "@/utils/request";
 
 const HISTORY_PAGE_LIMIT = 20;
@@ -45,7 +46,7 @@ export function useResourceDetailsDrawer<T extends fhir4.Resource, M extends FHI
 type ResourceDetailsDrawerProps<T extends fhir4.Resource, M extends FHIRModel<T>> = {
   className?: string;
   details: (model: M) => DetailsProps["details"];
-  getHistory?: (enableFQS: boolean, model: M) => UseQueryResultBasic<HistoryEntries | undefined>;
+  getHistory?: (model: M) => UseQueryResultBasic<HistoryEntries | undefined>;
   getSourceDocument?: boolean;
   header: (model: M) => ReactNode;
   isOpen: boolean;
@@ -71,13 +72,13 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
   onRemove,
   readOnly,
   subHeader,
-  enableFQS = false,
 }: ResourceDetailsDrawerProps<T, M>) {
   const openCCDAModal = useCCDAModal();
   const [isLoading, setIsLoading] = useState(false);
   const [binaryId, setBinaryId] = useState<string>();
   const { getRequestContext } = useCTW();
-  const history = getHistory && getHistory(enableFQS, model);
+  const fqsProvenances = useFQSFeatureToggle("provenances");
+  const history = getHistory && getHistory(model);
 
   // We optionally look for any associated binary CCDAs
   // if getSourceDocument is true.
@@ -85,23 +86,19 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
     async function load() {
       setIsLoading(true);
       const requestContext = await getRequestContext();
-      const provenances = await searchProvenances(requestContext, [model], enableFQS);
-      console.log("provenances", provenances);
+      const provenances = await searchProvenances(requestContext, [model], fqsProvenances.enabled);
       setBinaryId(getBinaryId(provenances, model.id));
       setIsLoading(false);
     }
-
-    console.log("binaryId", binaryId);
 
     if (model instanceof DocumentModel) {
       // Special handling for document models
       // which already have a binaryID.
       setBinaryId(model.binaryId);
-      console.log("binaryId", binaryId);
-    } else if (getSourceDocument) {
+    } else if (getSourceDocument && fqsProvenances.ready) {
       void load();
     }
-  }, [getSourceDocument, model, getRequestContext, enableFQS, binaryId]);
+  }, [getSourceDocument, model, getRequestContext, fqsProvenances.enabled, fqsProvenances.ready]);
 
   return (
     <Drawer className={className} title={model.resourceTypeTitle} isOpen={isOpen} onClose={onClose}>

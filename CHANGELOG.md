@@ -1,5 +1,30 @@
 # ctw-component-library
 
+## 1.25.0
+
+### Minor Changes
+
+- a33f1f2b: Add useHistory variant to useHistory hook for enabling FQS.
+
+## 1.24.0
+
+### Minor Changes
+
+- 4d77b89b: Add managing organization to medication statement FQS queries
+- 45c813ee: Use summary tag in medication lens query instead of ActiveMedication tag
+
+### Patch Changes
+
+- a0e46a38: Enable fetching provenances from FQS if "provenances" feature-flag variant is enabled.
+- e10b3e9a: Don't filter out resources without dates
+
+## 1.23.4
+
+### Patch Changes
+
+- b0dc8817: Bump @storybook/test-runner from 0.10.0 to 0.11.0
+- 19cd88c0: Update conditionHistory entries to contain ManagingOrganization.
+
 ## 1.23.3
 
 ### Patch Changes
