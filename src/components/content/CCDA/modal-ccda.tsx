@@ -11,9 +11,7 @@ export function useCCDAModal() {
 
   return async (binaryId: string, title: string) => {
     const requestContext = await getRequestContext();
-    console.log("binaryID inside useCCDA", binaryId);
     const rawBinary = await getBinaryDocument(requestContext, binaryId);
-    console.log("rawBinary", rawBinary);
 
     openModal({
       component: (props) => <CCDAModal fileName={title} rawBinary={rawBinary} {...props} />,

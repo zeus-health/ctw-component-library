@@ -9,8 +9,6 @@ export function getBinaryId(provenances: Provenance[], targetId: string): string
   for (let i = 0; i < provenances.length; i += 1) {
     const provenance = provenances[i];
 
-    console.log(provenance);
-
     const hasTarget = some(provenance.target, (t) => t.reference?.includes(targetId));
 
     if (hasTarget) {
@@ -34,8 +32,6 @@ async function getBinaryDocumentReq(
       method: "GET",
     });
 
-    console.log("response", response);
-
     if (response.status === 200) {
       return {
         contentType: response.headers.get("Content-Type") || "unknown",
@@ -50,8 +46,6 @@ async function getBinaryDocumentReq(
       resourceType: "Binary",
       id: binaryId,
     })) as fhir4.Binary;
-
-    console.log("based64binary", based64binary);
 
     const decodedData = atob(based64binary.data || "");
 

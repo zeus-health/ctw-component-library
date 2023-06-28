@@ -111,7 +111,6 @@ export async function searchProvenancesODS(
   patientUPID: string | undefined
 ) {
   const id = ids.join(",");
-  console.log("id", id);
   const { bundle } = await queryClient.fetchQuery([QUERY_KEY_PROVENANCE, id], async () =>
     searchAllRecords(resourceType, requestContext, {
       _id: id,
