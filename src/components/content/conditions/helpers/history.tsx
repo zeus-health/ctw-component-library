@@ -4,7 +4,6 @@ import { useHistory } from "../../resource/history";
 import { CodingList } from "@/components/core/coding-list";
 import { NotesList } from "@/components/core/notes-list";
 import { ConditionModel } from "@/fhir/models";
-import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { capitalize, startCase } from "@/utils/nodash";
 import { QUERY_KEY_CONDITION_HISTORY } from "@/utils/query-keys";
 
@@ -17,7 +16,6 @@ export function useConditionHistory(condition: ConditionModel) {
     getSearchParams,
     getFiltersFQS,
     getHistoryEntry,
-    enableFQS: useFQSFeatureToggle("useHistory").enabled,
   });
 }
 
