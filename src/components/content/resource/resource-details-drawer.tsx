@@ -46,7 +46,7 @@ export function useResourceDetailsDrawer<T extends fhir4.Resource, M extends FHI
 type ResourceDetailsDrawerProps<T extends fhir4.Resource, M extends FHIRModel<T>> = {
   className?: string;
   details: (model: M) => DetailsProps["details"];
-  getHistory?: (enableFQS: boolean, model: M) => UseQueryResultBasic<HistoryEntries | undefined>;
+  getHistory?: (model: M) => UseQueryResultBasic<HistoryEntries | undefined>;
   getSourceDocument?: boolean;
   header: (model: M) => ReactNode;
   isOpen: boolean;
@@ -72,14 +72,13 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
   onRemove,
   readOnly,
   subHeader,
-  enableFQS = false,
 }: ResourceDetailsDrawerProps<T, M>) {
   const openCCDAModal = useCCDAModal();
   const [isLoading, setIsLoading] = useState(false);
   const [binaryId, setBinaryId] = useState<string>();
   const { getRequestContext } = useCTW();
   const fqsProvenances = useFQSFeatureToggle("provenances");
-  const history = getHistory && getHistory(enableFQS, model);
+  const history = getHistory && getHistory(model);
 
   // We optionally look for any associated binary CCDAs
   // if getSourceDocument is true.

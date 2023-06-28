@@ -33,7 +33,6 @@ export type UseHistoryProps<T extends ResourceTypeString, M extends FHIRModel<Re
   getHistoryEntry: (m: M) => HistoryEntryProps;
   getFiltersFQS?: (m: M) => object | undefined;
   clientSideFiltersFQS?: (model: M, resources: ResourceType<T>[]) => ResourceType<T>[];
-  enableFQS?: boolean;
 };
 
 export function useHistory<T extends ResourceTypeString, M extends FHIRModel<ResourceType<T>>>({
@@ -46,14 +45,20 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
   getHistoryEntry,
   getFiltersFQS,
   clientSideFiltersFQS,
-  enableFQS,
 }: UseHistoryProps<T, M>) {
   const fqsProvenances = useFQSFeatureToggle("provenances");
+  const useHistoryUnleash = useFQSFeatureToggle("useHistory");
 
   return useQueryWithPatient(
     queryKey,
-    [model, enableFQS, fqsProvenances.ready, fqsProvenances.enabled],
-    enableFQS
+    [
+      model,
+      useHistoryUnleash.enabled,
+      useHistoryUnleash.ready,
+      fqsProvenances.ready,
+      fqsProvenances.enabled,
+    ],
+    useHistoryUnleash.enabled
       ? withTimerMetric(
           async (requestContext, patient) =>
             fetchResourcesFQS(
@@ -85,7 +90,7 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
             ),
           `req.${model.resourceType.toLowerCase()}_history`
         ),
-    fqsProvenances.ready
+    fqsProvenances.ready && useHistoryUnleash.ready
   );
 }
 
