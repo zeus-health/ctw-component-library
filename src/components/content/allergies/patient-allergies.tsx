@@ -1,5 +1,5 @@
 import cx from "classnames";
-import { useMemo, useRef } from "react";
+import { useMemo } from "react";
 import { allergyFilter, defaultAllergyFilters } from "./helpers/filters";
 import { useAllergiesHistory } from "./helpers/history";
 import { allergySortOptions, defaultAllergySort } from "./helpers/sort";
@@ -26,7 +26,6 @@ export type PatientAllergiesProps = {
 };
 
 function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
   const { featureFlags, builderId } = useCTW();
   const { enabled } = useFQSFeatureToggle("allergies");
   const patientAllergiesQuery = usePatientAllergies();
@@ -58,7 +57,6 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
   return (
     <div
       className={cx(className, "ctw-scrollable-pass-through-height")}
-      ref={containerRef}
       data-zus-telemetry-namespace="Allergies"
     >
       <ResourceTableActions
@@ -73,17 +71,15 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
           onChange: setSort,
         }}
       />
-      <div className="ctw-scrollable-pass-through-height">
-        <ResourceTable
-          showTableHead
-          isLoading={patientAllergiesQuery.isLoading}
-          data={data}
-          columns={patientAllergiesColumns(builderId, featureFlags?.enableViewFhirButton)}
-          onRowClick={handleRowClick}
-          rowActions={rowActions}
-          boldUnreadRows
-        />
-      </div>
+      <ResourceTable
+        showTableHead
+        isLoading={patientAllergiesQuery.isLoading}
+        data={data}
+        columns={patientAllergiesColumns(builderId, featureFlags?.enableViewFhirButton)}
+        onRowClick={handleRowClick}
+        rowActions={rowActions}
+        boldUnreadRows
+      />
     </div>
   );
 }
