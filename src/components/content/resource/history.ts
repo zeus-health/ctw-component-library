@@ -47,6 +47,7 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
   clientSideFiltersFQS,
   enableFQS,
 }: UseHistoryProps<T, M>) {
+  enableFQS = false;
   return useQueryWithPatient(
     queryKey,
     [model, enableFQS],

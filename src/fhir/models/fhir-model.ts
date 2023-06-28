@@ -1,6 +1,11 @@
 import { Basic, Resource } from "fhir/r4";
-import { SYSTEM_ENRICHMENT, SYSTEM_SUMMARY, SYSTEM_ZUS_PROFILE_ACTION } from "../system-urls";
-import { ResourceMap, ResourceTypeString } from "../types";
+import {
+  SYSTEM_ENRICHMENT,
+  SYSTEM_SUMMARY,
+  SYSTEM_ZUS_PROFILE_ACTION,
+  SYSTEM_ZUS_UNIVERSAL_ID,
+} from "../system-urls";
+import { isFHIRDomainResource, ResourceMap, ResourceTypeString } from "../types";
 import { find, orderBy, some, startCase } from "@/utils/nodash";
 
 export abstract class FHIRModel<T extends fhir4.Resource> {
@@ -44,6 +49,13 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
   // Returns true if this resource is a summary/lens resource.
   get isSummaryResource(): boolean {
     return find(this.resource.meta?.tag, { system: SYSTEM_SUMMARY }) !== undefined;
+  }
+
+  get patientUPID(): string | undefined {
+    if (isFHIRDomainResource(this.resource)) {
+      return find(this.resource.extension, { url: SYSTEM_ZUS_UNIVERSAL_ID })?.valueString;
+    }
+    return undefined;
   }
 
   get resourceType(): ResourceTypeString {

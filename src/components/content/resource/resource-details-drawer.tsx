@@ -86,18 +86,22 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
       setIsLoading(true);
       const requestContext = await getRequestContext();
       const provenances = await searchProvenances(requestContext, [model], enableFQS);
+      console.log("provenances", provenances);
       setBinaryId(getBinaryId(provenances, model.id));
       setIsLoading(false);
     }
+
+    console.log("binaryId", binaryId);
 
     if (model instanceof DocumentModel) {
       // Special handling for document models
       // which already have a binaryID.
       setBinaryId(model.binaryId);
+      console.log("binaryId", binaryId);
     } else if (getSourceDocument) {
       void load();
     }
-  }, [getSourceDocument, model, getRequestContext, enableFQS]);
+  }, [getSourceDocument, model, getRequestContext, enableFQS, binaryId]);
 
   return (
     <Drawer className={className} title={model.resourceTypeTitle} isOpen={isOpen} onClose={onClose}>
