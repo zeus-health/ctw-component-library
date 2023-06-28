@@ -17,9 +17,10 @@ export const applyAllergyFilters = (
     const { lowercaseDisplay } = allergy;
     const existingAllergy = allergyDataMap.get(lowercaseDisplay);
 
-    if (!existingAllergy) {
-      allergyDataMap.set(lowercaseDisplay, allergy);
-    } else if (allergy.ownedByBuilder(builderId) && !existingAllergy.ownedByBuilder(builderId)) {
+    if (
+      !existingAllergy ||
+      (allergy.ownedByBuilder(builderId) && !existingAllergy.ownedByBuilder(builderId))
+    ) {
       allergyDataMap.set(lowercaseDisplay, allergy);
     }
   });
