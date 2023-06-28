@@ -9,7 +9,6 @@ import { capitalize, startCase } from "@/utils/nodash";
 import { QUERY_KEY_CONDITION_HISTORY } from "@/utils/query-keys";
 
 export function useConditionHistory(condition: ConditionModel) {
-  const { ready: enableFQS } = useFQSFeatureToggle("useHistory");
   return useHistory({
     resourceType: "Condition",
     model: condition,
@@ -18,7 +17,7 @@ export function useConditionHistory(condition: ConditionModel) {
     getSearchParams,
     getFiltersFQS,
     getHistoryEntry,
-    enableFQS,
+    enableFQS: useFQSFeatureToggle("useHistory").enabled,
   });
 }
 

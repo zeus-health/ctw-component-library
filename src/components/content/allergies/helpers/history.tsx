@@ -8,7 +8,6 @@ import { capitalize } from "@/utils/nodash";
 import { QUERY_KEY_ALLERGY_HISTORY } from "@/utils/query-keys";
 
 export function useAllergiesHistory(allergy: AllergyModel) {
-  const { ready: enableFQS } = useFQSFeatureToggle("useHistory");
   return useHistory({
     resourceType: "AllergyIntolerance",
     model: allergy,
@@ -17,7 +16,7 @@ export function useAllergiesHistory(allergy: AllergyModel) {
     valuesToDedupeOn,
     getSearchParams,
     getHistoryEntry,
-    enableFQS,
+    enableFQS: useFQSFeatureToggle("useHistory").enabled,
     clientSideFiltersFQS,
   });
 }
