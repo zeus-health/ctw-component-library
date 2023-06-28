@@ -14,6 +14,7 @@ import {
   searchCommonRecords,
 } from "@/fhir/search-helpers";
 import { ResourceMap, ResourceType, ResourceTypeString } from "@/fhir/types";
+import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { filterResourcesByBuilderId } from "@/services/common";
 import { createGraphqlClient, getHistoryResources, getResourceNodes } from "@/services/fqs/client";
 import { allergyQuery } from "@/services/fqs/queries/allergies";
@@ -47,9 +48,11 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
   clientSideFiltersFQS,
   enableFQS,
 }: UseHistoryProps<T, M>) {
+  const fqsProvenances = useFQSFeatureToggle("provenances");
+
   return useQueryWithPatient(
     queryKey,
-    [model, enableFQS],
+    [model, enableFQS, fqsProvenances.ready, fqsProvenances.enabled],
     enableFQS
       ? withTimerMetric(
           async (requestContext, patient) =>
@@ -61,7 +64,7 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
               patient,
               valuesToDedupeOn,
               getHistoryEntry,
-              enableFQS,
+              fqsProvenances.enabled,
               clientSideFiltersFQS,
               getFiltersFQS?.(model)
             ),
@@ -82,7 +85,7 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
             ),
           `req.${model.resourceType.toLowerCase()}_history`
         ),
-    !!model
+    fqsProvenances.ready
   );
 }
 
@@ -202,7 +205,7 @@ async function fetchResourcesFQS<
   patient: PatientModel,
   valuesToDedupeOn: (m: M) => unknown,
   getHistoryEntry: (m: M) => HistoryEntryProps,
-  enableFQS: boolean,
+  enableFQSProvenances: boolean,
   clientSideFiltersFQS?: (model: M, resources: ResourceType<T>[]) => ResourceType<T>[],
   filter?: object | undefined
 ) {
@@ -247,7 +250,7 @@ async function fetchResourcesFQS<
     const entries = dedupeHistory(models, valuesToDedupeOn).map(getHistoryEntry);
 
     // Fetch provenances and add binaryId to each entry.
-    const provenances = await searchProvenances(requestContext, models, enableFQS);
+    const provenances = await searchProvenances(requestContext, models, enableFQSProvenances);
     entries.forEach((entry) => {
       // eslint-disable-next-line no-param-reassign
       entry.binaryId = getBinaryId(provenances, entry.id);
@@ -301,7 +304,7 @@ async function fetchResourcesODS<
     const entries = dedupeHistory(models, valuesToDedupeOn).map(getHistoryEntry);
 
     // Fetch provenances and add binaryId to each entry.
-    const provenances = await searchProvenances(requestContext, models);
+    const provenances = await searchProvenances(requestContext, models, false);
     entries.forEach((entry) => {
       // eslint-disable-next-line no-param-reassign
       entry.binaryId = getBinaryId(provenances, entry.id);

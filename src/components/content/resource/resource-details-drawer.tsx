@@ -11,6 +11,7 @@ import { getBinaryId } from "@/fhir/binaries";
 import { DocumentModel } from "@/fhir/models/document";
 import { FHIRModel } from "@/fhir/models/fhir-model";
 import { searchProvenances } from "@/fhir/provenance";
+import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { UseQueryResultBasic } from "@/utils/request";
 
 const HISTORY_PAGE_LIMIT = 20;
@@ -77,6 +78,7 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
   const [isLoading, setIsLoading] = useState(false);
   const [binaryId, setBinaryId] = useState<string>();
   const { getRequestContext } = useCTW();
+  const fqsProvenances = useFQSFeatureToggle("provenances");
   const history = getHistory && getHistory(enableFQS, model);
 
   // We optionally look for any associated binary CCDAs
@@ -85,7 +87,7 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
     async function load() {
       setIsLoading(true);
       const requestContext = await getRequestContext();
-      const provenances = await searchProvenances(requestContext, [model], enableFQS);
+      const provenances = await searchProvenances(requestContext, [model], fqsProvenances.enabled);
       setBinaryId(getBinaryId(provenances, model.id));
       setIsLoading(false);
     }
@@ -94,10 +96,10 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
       // Special handling for document models
       // which already have a binaryID.
       setBinaryId(model.binaryId);
-    } else if (getSourceDocument) {
+    } else if (getSourceDocument && fqsProvenances.ready) {
       void load();
     }
-  }, [getSourceDocument, model, getRequestContext, enableFQS]);
+  }, [getSourceDocument, model, getRequestContext, fqsProvenances.enabled, fqsProvenances.ready]);
 
   return (
     <Drawer className={className} title={model.resourceTypeTitle} isOpen={isOpen} onClose={onClose}>

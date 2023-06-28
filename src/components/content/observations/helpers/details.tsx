@@ -31,7 +31,8 @@ export const Component = ({ diagnosticReport }: ObservationDetailsProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [binaryId, setBinaryId] = useState<string>();
   const { getRequestContext } = useCTW();
-  const fqs = useFQSFeatureToggle("observations");
+  const fqsObservations = useFQSFeatureToggle("observations");
+  const fqsProvenances = useFQSFeatureToggle("provenances");
 
   // We optionally look for any associated binary CCDAs
   // if getSourceDocument is true.
@@ -39,20 +40,24 @@ export const Component = ({ diagnosticReport }: ObservationDetailsProps) => {
     async function load() {
       setIsLoading(true);
       const requestContext = await getRequestContext();
-      const provenances = await searchProvenances(requestContext, [diagnosticReport], fqs.enabled);
+      const provenances = await searchProvenances(
+        requestContext,
+        [diagnosticReport],
+        fqsProvenances.enabled
+      );
       setBinaryId(getBinaryId(provenances, diagnosticReport.id));
       setIsLoading(false);
     }
 
-    if (fqs.ready) {
+    if (fqsProvenances.ready) {
       void load();
     }
-  }, [diagnosticReport, getRequestContext, fqs.enabled, fqs.ready]);
+  }, [diagnosticReport, getRequestContext, fqsProvenances.enabled, fqsProvenances.ready]);
 
   useEffect(() => {
-    if (fqs.ready) {
+    if (fqsObservations.ready) {
       setObservationsEntries(
-        fqs.enabled
+        fqsObservations.enabled
           ? compact(
               diagnosticReport.resource.result?.map(
                 (result) =>
@@ -82,7 +87,7 @@ export const Component = ({ diagnosticReport }: ObservationDetailsProps) => {
             )
       );
     }
-  }, [diagnosticReport, fqs.ready, fqs.enabled]);
+  }, [diagnosticReport, fqsObservations.ready, fqsObservations.enabled]);
 
   return (
     <div className="ctw-space-y-6" data-zus-telemetry-namespace="Observations">
