@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 1.24.0
+
+### Minor Changes
+
+- 4d77b89b: Add managing organization to medication statement FQS queries
+- 45c813ee: Use summary tag in medication lens query instead of ActiveMedication tag
+
+### Patch Changes
+
+- a0e46a38: Enable fetching provenances from FQS if "provenances" feature-flag variant is enabled.
+- e10b3e9a: Don't filter out resources without dates
+
 ## 1.23.4
 
 ### Patch Changes
