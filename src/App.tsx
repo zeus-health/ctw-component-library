@@ -12,6 +12,7 @@ import {
   PatientConditions,
   PatientConditionsOutside,
   PatientDocuments,
+  PatientImmunizations,
   PatientMedications,
   PatientMedicationsOutside,
   PatientProvider,
@@ -80,6 +81,11 @@ const components: DemoComponent[] = [
     name: "documents",
     render: () => <PatientDocuments />,
     title: "Patient Documents",
+  },
+  {
+    name: "immunizations",
+    render: () => <PatientImmunizations />,
+    title: "Patient Immunizations",
   },
   {
     name: "medications",

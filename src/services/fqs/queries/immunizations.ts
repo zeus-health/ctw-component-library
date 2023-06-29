@@ -47,7 +47,16 @@ export const immunizationsQuery = gql`
           patient {
             reference
             resource {
-              ...Patient
+              ... on Patient {
+                ...Patient
+                managingOrganization {
+                  resource {
+                    ... on Organization {
+                      name
+                    }
+                  }
+                }
+              }
             }
           }
           occurrenceDateTime

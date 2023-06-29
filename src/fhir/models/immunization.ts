@@ -1,6 +1,7 @@
 import { FHIRModel } from "./fhir-model";
 import { findCoding } from "../codeable-concept";
 import { formatDateISOToLocal } from "../formatters";
+import { findReference } from "../resource-helper";
 import { SYSTEM_CVX } from "../system-urls";
 
 export class ImmunizationModel extends FHIRModel<fhir4.Immunization> {
@@ -21,5 +22,23 @@ export class ImmunizationModel extends FHIRModel<fhir4.Immunization> {
     }
 
     return this.resource.occurrenceString;
+  }
+
+  get managingOrganization(): string | undefined {
+    const organizationDisplay = findReference(
+      "Patient",
+      this.resource.contained,
+      this.includedResources,
+      this.resource.patient
+    );
+
+    const organizationName = findReference(
+      "Organization",
+      this.resource.contained,
+      this.includedResources,
+      organizationDisplay?.managingOrganization
+    )?.name;
+
+    return organizationDisplay?.managingOrganization?.display || organizationName;
   }
 }
