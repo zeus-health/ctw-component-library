@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.26.3
+
+### Patch Changes
+
+- a718e438: Fix provenance query for FQS in the drawer.
+
 ## 1.26.2
 
 ### Patch Changes
