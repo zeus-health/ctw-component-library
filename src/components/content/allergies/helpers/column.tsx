@@ -24,7 +24,7 @@ export const patientAllergiesColumns = (builderId: string, includeViewFhirResour
       title: "Last Updated",
       render: (allergy) => (
         <div>
-          <div>{allergy.recordedDate} </div>
+          <div>{allergy.recordedDate}</div>
           <div>{allergy.managingOrganization}</div>
         </div>
       ),
