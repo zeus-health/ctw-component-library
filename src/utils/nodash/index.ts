@@ -26,6 +26,7 @@ export { default as isObject } from "lodash/isObject";
 export { default as isString } from "lodash/isString";
 export { default as isUndefined } from "lodash/isUndefined";
 export { default as last } from "lodash/last";
+export { default as lowerCase } from "lodash/lowerCase";
 export { default as map } from "lodash/map";
 export { default as mapValues } from "lodash/mapValues";
 export { default as merge } from "lodash/merge";

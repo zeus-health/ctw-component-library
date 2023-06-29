@@ -1,10 +1,12 @@
 .ctw-resource-table {
-  .ctw-tr-archived {
+  .ctw-tr-dismissed {
     td,
     td span,
     td div {
-      // Gray out archived table content
       @apply ctw-text-content-lighter;
     }
+  }
+  .ctw-tr-unread {
+    @apply ctw-font-bold;
   }
 }
