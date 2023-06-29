@@ -2,7 +2,9 @@ import { Basic, Resource } from "fhir/r4";
 import {
   SYSTEM_ENRICHMENT,
   SYSTEM_SUMMARY,
+  SYSTEM_ZUS_OWNER,
   SYSTEM_ZUS_PROFILE_ACTION,
+  SYSTEM_ZUS_THIRD_PARTY,
   SYSTEM_ZUS_UNIVERSAL_ID,
 } from "../system-urls";
 import { isFHIRDomainResource, ResourceMap, ResourceTypeString } from "../types";
@@ -38,11 +40,19 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
     return this.resource.meta?.versionId || "";
   }
 
-  get isArchived(): boolean {
+  get isDismissed(): boolean {
     const basic = this.getLatestBasicResourceByActions(["archive", "unarchive"]);
     return some(basic?.code.coding, {
       system: SYSTEM_ZUS_PROFILE_ACTION,
       code: "archive",
+    });
+  }
+
+  get isRead(): boolean {
+    const basic = this.getLatestBasicResourceByActions(["read", "unread"]);
+    return some(basic?.code.coding, {
+      system: SYSTEM_ZUS_PROFILE_ACTION,
+      code: "read",
     });
   }
 
@@ -98,6 +108,20 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
   // from Zus enrichment.
   isEnriched(): boolean {
     return JSON.stringify(this.resource).includes(SYSTEM_ENRICHMENT);
+  }
+
+  // Returns true if this resource is owned by the specified builder.
+  ownedByBuilder(builderId: string): boolean {
+    if (this.resource.meta?.tag?.some((tag) => tag.system === SYSTEM_ZUS_THIRD_PARTY)) {
+      return false;
+    }
+    const ownerTag = this.resource.meta?.tag?.find((tag) => tag.system === SYSTEM_ZUS_OWNER);
+    const splitTag = ownerTag?.code?.split("/");
+
+    if (splitTag?.length !== 2) {
+      return false;
+    }
+    return splitTag[1] === builderId;
   }
 
   // Returns a string that would setup this model.

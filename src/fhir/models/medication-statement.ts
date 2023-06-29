@@ -144,7 +144,7 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
   }
 
   get displayStatus() {
-    if (this.isArchived) {
+    if (this.isDismissed) {
       return "Dismissed";
     }
     return capitalize(this.resource.status);

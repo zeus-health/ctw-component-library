@@ -69,7 +69,10 @@
 
   .ctw-table-row-actions {
     background: linear-gradient(90deg, #f9fafb00 0%, #f9fafb 4.17%);
-    @apply ctw-invisible ctw-absolute ctw-right-0 ctw-top-0 ctw-z-20 ctw-flex ctw-h-full ctw-items-center ctw-space-x-2 ctw-px-4;
+    // Reduce height by 1px to fix an issue where our background here would overlap row borders in some cases.
+    height: calc(100% - 1px) !important;
+    top: 1px;
+    @apply ctw-invisible ctw-absolute ctw-right-0 ctw-z-20 ctw-flex ctw-h-full ctw-items-center ctw-space-x-2 ctw-px-4;
   }
 }
 
