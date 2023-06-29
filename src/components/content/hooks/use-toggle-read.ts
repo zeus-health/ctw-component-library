@@ -11,7 +11,7 @@ interface UseToggleReadResult {
   toggleRead: (model: FHIRModel<fhir4.Resource>) => void;
 
   /**
-   * True when `toggleArchive` is called
+   * True when `toggleRead` is called
    */
   isLoading: boolean;
 }
