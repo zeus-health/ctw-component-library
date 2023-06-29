@@ -35,13 +35,14 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
   const { getRequestContext } = useCTW();
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
+  const [userBuilderId, setUserBuilderId] = useState("");
+
   const shouldShowTableHead = typeof showTableHead === "boolean" ? showTableHead : !breakpoints.sm;
   const emptyMessageWithRequestRecords = patient.data ? (
     emptyMessage
   ) : (
     <div className="ctw-space-y-4">Patient not found.</div>
   );
-  const [userBuilderId, setUserBuilderId] = useState<string>("");
 
   useEffect(() => {
     async function load() {

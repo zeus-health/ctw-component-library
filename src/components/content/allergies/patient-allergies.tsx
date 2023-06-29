@@ -35,7 +35,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
     records: patientAllergiesQuery.data,
   });
 
-  const [userBuilderId, setUserBuilderId] = useState<string>("");
+  const [userBuilderId, setUserBuilderId] = useState("");
 
   useEffect(() => {
     async function load() {
