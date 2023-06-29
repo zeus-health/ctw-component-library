@@ -52,7 +52,6 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
   }
 
   get patientUPID(): string | undefined {
-    console.log("true or not", isFHIRDomainResource(this.resource));
     if (isFHIRDomainResource(this.resource)) {
       return find(this.resource.extension, { url: SYSTEM_ZUS_UNIVERSAL_ID })?.valueString;
     }
