@@ -3,8 +3,8 @@ import {
   SYSTEM_ENRICHMENT,
   SYSTEM_SUMMARY,
   SYSTEM_ZUS_OWNER,
-  SYSTEM_ZUS_THIRD_PARTY,
   SYSTEM_ZUS_PROFILE_ACTION,
+  SYSTEM_ZUS_THIRD_PARTY,
   SYSTEM_ZUS_UNIVERSAL_ID,
 } from "../system-urls";
 import { isFHIRDomainResource, ResourceMap, ResourceTypeString } from "../types";
