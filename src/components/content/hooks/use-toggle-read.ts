@@ -17,7 +17,7 @@ interface UseToggleReadResult {
 }
 
 /**
- * This hook is toggles the read status for the specified FHIR model.
+ * This hook toggles the read status for the specified FHIR model.
  *
  * @param queriesToInvalidate  Queries to refetch
  */
