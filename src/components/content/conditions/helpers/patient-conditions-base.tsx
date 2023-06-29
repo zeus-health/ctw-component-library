@@ -48,16 +48,12 @@ export const PatientConditionsBase = ({
   });
 
   const isEmptyQuery = query.data?.length === 0;
-  const isEmptyFilter = data.length === 0;
+  const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
 
   let empty = emptyMessage;
   if (emptyMessage === undefined) {
     empty = (
-      <EmptyTable
-        isEmptyQuery={isEmptyQuery}
-        isEmptyFilters={isEmptyFilter}
-        resourceName="conditions"
-      />
+      <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="conditions" />
     );
   }
 

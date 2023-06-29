@@ -33,7 +33,7 @@ export const PatientObservationsBase = ({
   });
 
   const isEmptyQuery = query.data?.length === 0;
-  const isEmptyFilter = data.length === 0;
+  const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
 
   return (
     <div className={cx(className, "ctw-scrollable-pass-through-height")}>
@@ -56,11 +56,7 @@ export const PatientObservationsBase = ({
         columns={diagnosticReportColumns}
         data={data}
         emptyMessage={
-          <EmptyTable
-            isEmptyQuery={isEmptyQuery}
-            isEmptyFilters={isEmptyFilter}
-            resourceName="observations"
-          />
+          <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="observations" />
         }
         isLoading={query.isLoading}
         rowActions={rowActions}

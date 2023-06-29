@@ -37,7 +37,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
   });
 
   const isEmptyQuery = patientAllergiesQuery.data?.length === 0;
-  const isEmptyFilter = data.length === 0;
+  const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
   const [userBuilderId, setUserBuilderId] = useState("");
 
   useEffect(() => {
@@ -94,11 +94,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
         rowActions={rowActions}
         boldUnreadRows
         emptyMessage={
-          <EmptyTable
-            isEmptyQuery={isEmptyQuery}
-            isEmptyFilters={isEmptyFilter}
-            resourceName="allergies"
-          />
+          <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="allergies" />
         }
       />
     </div>

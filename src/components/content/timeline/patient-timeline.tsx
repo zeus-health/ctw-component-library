@@ -31,7 +31,7 @@ export function PatientTimeline({ className }: PatientTimelineProps) {
   });
 
   const isEmptyQuery = timelineEventsQuery.data.length === 0;
-  const isEmptyFilter = data.length === 0;
+  const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
 
   const openEncounterDetails = usePatientEncounterDetailsDrawer();
   const openDiagnosticReportDetails = useObservationsDetailsDrawer();
@@ -61,8 +61,7 @@ export function PatientTimeline({ className }: PatientTimelineProps) {
         data={data}
         emptyMessage={
           <EmptyTable
-            isEmptyQuery={isEmptyQuery}
-            isEmptyFilters={isEmptyFilter}
+            hasZeroFilteredRecords={hasZeroFilteredRecords}
             resourceName="timeline records"
           />
         }

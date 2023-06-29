@@ -30,7 +30,7 @@ function PatientDocumentsComponent({ className }: PatientDocumentProps) {
   });
 
   const isEmptyQuery = patientDocumentQuery.data?.length === 0;
-  const isEmptyFilter = data.length === 0;
+  const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
 
   const openDetails = useResourceDetailsDrawer({
     header: (m) => `${m.dateCreated} - ${m.title}`,
@@ -55,11 +55,7 @@ function PatientDocumentsComponent({ className }: PatientDocumentProps) {
         isLoading={patientDocumentQuery.isLoading}
         data={data}
         emptyMessage={
-          <EmptyTable
-            isEmptyQuery={isEmptyQuery}
-            isEmptyFilters={isEmptyFilter}
-            resourceName="documents"
-          />
+          <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="documents" />
         }
         columns={patientDocumentColumns(featureFlags?.enableViewFhirButton)}
         onRowClick={openDetails}

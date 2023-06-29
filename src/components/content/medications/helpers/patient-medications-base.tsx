@@ -46,7 +46,7 @@ export const PatientMedicationsBase = ({
   });
 
   const isEmptyQuery = query.data?.length === 0;
-  const isEmptyFilter = data.length === 0;
+  const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
 
   function handleRowClick(medication: MedicationStatementModel) {
     onOpenHistoryDrawer?.();
@@ -83,11 +83,7 @@ export const PatientMedicationsBase = ({
         columns={patientMedicationColumns}
         data={data}
         emptyMessage={
-          <EmptyTable
-            isEmptyQuery={isEmptyQuery}
-            isEmptyFilters={isEmptyFilter}
-            resourceName="medications"
-          />
+          <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="medications" />
         }
         isLoading={query.isLoading}
         onRowClick={handleRowClick}
