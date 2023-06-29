@@ -36,7 +36,7 @@ export function useToggleRead(...queriesToInvalidate: string[]): UseToggleReadRe
     );
 
     // Timeout here fixes bug where we would briefly flash
-    // the old read/restore text.
+    // the old mark as read/new text.
     setTimeout(() => setIsLoading(false), 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
