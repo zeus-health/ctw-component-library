@@ -7,6 +7,7 @@ import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { patientAllergiesColumns } from "@/components/content/allergies/helpers/column";
+import { EmptyTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { usePatientAllergies } from "@/fhir/allergies";
@@ -29,6 +30,9 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
     defaultSort: defaultAllergySort,
     records: patientAllergiesQuery.data,
   });
+
+  const isEmptyQuery = patientAllergiesQuery.data?.length === 0;
+  const isEmptyFilter = data.length === 0;
 
   const openDetails = useResourceDetailsDrawer({
     header: (m) => capitalize(m.display),
@@ -66,6 +70,13 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
           data={data}
           columns={patientAllergiesColumns(featureFlags?.enableViewFhirButton)}
           onRowClick={openDetails}
+          emptyMessage={
+            <EmptyTable
+              isEmptyQuery={isEmptyQuery}
+              isEmptyFilters={isEmptyFilter}
+              resourceName="allergies"
+            />
+          }
         />
       </div>
     </div>

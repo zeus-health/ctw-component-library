@@ -8,6 +8,7 @@ import {
 } from "../../resource/resource-table-actions";
 import { useObservationsDetailsDrawer } from "@/components/content/observations/helpers/drawer";
 import { defaultFilters, filters } from "@/components/content/observations/helpers/filters";
+import { EmptyTable } from "@/components/core/empty-table";
 import { DiagnosticReportModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 
@@ -31,6 +32,9 @@ export const PatientObservationsBase = ({
     defaultFilters,
   });
 
+  const isEmptyQuery = query.data?.length === 0;
+  const isEmptyFilter = data.length === 0;
+
   return (
     <div className={cx(className, "ctw-scrollable-pass-through-height")}>
       <ResourceTableActions
@@ -51,7 +55,13 @@ export const PatientObservationsBase = ({
         className="ctw-patient-observations"
         columns={diagnosticReportColumns}
         data={data}
-        emptyMessage="There are no observation records available."
+        emptyMessage={
+          <EmptyTable
+            isEmptyQuery={isEmptyQuery}
+            isEmptyFilters={isEmptyFilter}
+            resourceName="observations"
+          />
+        }
         isLoading={query.isLoading}
         rowActions={rowActions}
         onRowClick={openDrawer}

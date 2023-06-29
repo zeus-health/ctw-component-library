@@ -5,6 +5,7 @@ import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
+import { EmptyTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { usePatientDocument } from "@/fhir/document";
@@ -28,6 +29,9 @@ function PatientDocumentsComponent({ className }: PatientDocumentProps) {
     records: patientDocumentQuery.data,
   });
 
+  const isEmptyQuery = patientDocumentQuery.data?.length === 0;
+  const isEmptyFilter = data.length === 0;
+
   const openDetails = useResourceDetailsDrawer({
     header: (m) => `${m.dateCreated} - ${m.title}`,
     details: documentData,
@@ -50,7 +54,13 @@ function PatientDocumentsComponent({ className }: PatientDocumentProps) {
       <ResourceTable
         isLoading={patientDocumentQuery.isLoading}
         data={data}
-        emptyMessage="There are no documents available."
+        emptyMessage={
+          <EmptyTable
+            isEmptyQuery={isEmptyQuery}
+            isEmptyFilters={isEmptyFilter}
+            resourceName="documents"
+          />
+        }
         columns={patientDocumentColumns(featureFlags?.enableViewFhirButton)}
         onRowClick={openDetails}
       />

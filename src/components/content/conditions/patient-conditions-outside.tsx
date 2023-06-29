@@ -51,7 +51,6 @@ const PatientConditionsOutsideComponent = ({
       query={query}
       readOnly={readOnly}
       rowActions={readOnly ? undefined : RowActions}
-      emptyMessage={emptyMessage}
       isLoading={patientHistoryQuery.isLoading}
     />
   );
