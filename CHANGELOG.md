@@ -1,5 +1,21 @@
 # ctw-component-library
 
+## 1.26.0
+
+### Minor Changes
+
+- bc3fe1dc: Rewire the careteams component with FQS.
+
+### Patch Changes
+
+- b426028f: Update provenance to handle post-kludge data.
+
+## 1.25.0
+
+### Minor Changes
+
+- a33f1f2b: Add useHistory variant to useHistory hook for enabling FQS.
+
 ## 1.24.0
 
 ### Minor Changes
