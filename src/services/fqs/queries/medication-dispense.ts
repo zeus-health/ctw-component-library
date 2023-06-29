@@ -35,6 +35,10 @@ export const medicationDispenseQuery = gql`
         node {
           id
           resourceType
+          extension {
+            url
+            valueString
+          }
           contained {
             resource {
               ... on Practitioner {

@@ -32,6 +32,10 @@ export function fragmentCondition(isConditionHistory: boolean) {
         }
         versionId
       }
+      extension {
+        url
+        valueString
+      }
       ${subjectFragment}
       abatementAge {
         value

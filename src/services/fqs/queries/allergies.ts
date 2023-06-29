@@ -49,6 +49,10 @@ export const allergyQuery = gql`
               ...Coding
             }
           }
+          extension {
+            url
+            valueString
+          }
           verificationStatus {
             text
             coding {
