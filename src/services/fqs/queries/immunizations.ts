@@ -31,6 +31,10 @@ export const immunizationsQuery = gql`
             }
             versionId
           }
+          extension {
+            url
+            valueString
+          }
           status
           statusReason {
             text

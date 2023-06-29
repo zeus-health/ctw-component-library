@@ -36,6 +36,10 @@ export const medicationRequestQuery = gql`
         node {
           id
           resourceType
+          extension {
+            url
+            valueString
+          }
           authoredOn
           contained {
             resource {
