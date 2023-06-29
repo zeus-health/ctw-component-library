@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.26.2
+
+### Patch Changes
+
+- 3bd05c15: Distinguish builder and outside data in allergy component. Add "Dismiss" and "Mark as Read" functionality to allergy component.
+
 ## 1.26.1
 
 ### Patch Changes
