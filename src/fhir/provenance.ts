@@ -95,7 +95,7 @@ export async function searchProvenances<T extends fhir4.Resource>(
 ): Promise<Provenance[]> {
   if (models.length === 0) return [];
 
-  const targets = uniq(models.map((m) => `${m.resourceType}/${m.id}}`));
+  const targets = uniq(models.map((m) => `${m.resourceType}/${m.id}`));
   const ids = models.map((m) => m.id);
 
   if (enableFQS) {
