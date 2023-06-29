@@ -1,4 +1,5 @@
-import { CheckIcon } from "@/components/core/check-icon";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { ViewFHIR } from "@/components/core/view-fhir";
 import { AllergyModel } from "@/fhir/models/allergies";
@@ -13,7 +14,7 @@ export const patientAllergiesColumns = (builderId: string, includeViewFhirResour
           <div className="ctw-flow-root">
             {capitalize(allergy.display)}
             <span className="ctw-float-right">
-              {allergy.ownedByBuilder(builderId) ? <CheckIcon /> : <></>}
+              {allergy.ownedByBuilder(builderId) ? <FontAwesomeIcon icon={faCheck} /> : <></>}
             </span>
           </div>
         </div>
