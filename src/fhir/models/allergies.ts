@@ -29,8 +29,8 @@ export class AllergyModel extends FHIRModel<fhir4.AllergyIntolerance> {
     return codeableConceptLabel(this.resource.code);
   }
 
-  get lowercaseDisplay(): string | undefined {
-    return this.display ? this.display.toLowerCase() : this.display;
+  get lowercaseDisplay(): string {
+    return this.display?.toLocaleLowerCase() || "";
   }
 
   get manifestations(): string {

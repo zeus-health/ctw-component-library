@@ -43,11 +43,22 @@ export const allergyQuery = gql`
         node {
           id
           resourceType
+          meta {
+            tag {
+              system
+              code
+              display
+            }
+          }
           clinicalStatus {
             text
             coding {
               ...Coding
             }
+          }
+          extension {
+            url
+            valueString
           }
           verificationStatus {
             text

@@ -1,15 +1,26 @@
+import { faCircleCheck } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { ViewFHIR } from "@/components/core/view-fhir";
 import { AllergyModel } from "@/fhir/models/allergies";
 import { capitalize } from "@/utils/nodash";
 
-export const patientAllergiesColumns = (includeViewFhirResource = false) => {
+export const patientAllergiesColumns = (builderId: string, includeViewFhirResource = false) => {
   const allergyColumns: TableColumn<AllergyModel>[] = [
     {
       title: "Name",
       render: (allergy) => (
         <div>
-          <div className="ctw-font-medium">{capitalize(allergy.display)} </div>
+          <div className="ctw-flow-root">
+            {capitalize(allergy.display)}
+            <span className="ctw-float-right">
+              {allergy.ownedByBuilder(builderId) ? (
+                <FontAwesomeIcon className="ctw-text-content-light" icon={faCircleCheck} />
+              ) : (
+                <></>
+              )}
+            </span>
+          </div>
         </div>
       ),
     },
@@ -17,7 +28,7 @@ export const patientAllergiesColumns = (includeViewFhirResource = false) => {
       title: "Last Updated",
       render: (allergy) => (
         <div>
-          <div className="ctw-font-medium">{allergy.recordedDate} </div>
+          <div>{allergy.recordedDate}</div>
           <div>{allergy.managingOrganization}</div>
         </div>
       ),
@@ -27,7 +38,7 @@ export const patientAllergiesColumns = (includeViewFhirResource = false) => {
       render: (allergy) => (
         <div>
           {!!allergy.manifestations && allergy.manifestations !== "unknown" && (
-            <div className="ctw-font-medium">Reaction: {capitalize(allergy.manifestations)}</div>
+            <div>Reaction: {capitalize(allergy.manifestations)}</div>
           )}
         </div>
       ),
