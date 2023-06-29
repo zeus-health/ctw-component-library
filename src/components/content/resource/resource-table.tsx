@@ -49,7 +49,7 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
     >
       <Table
         getRowClassName={(record) => ({
-          "ctw-tr-archived": record.isDismissed,
+          "ctw-tr-dismissed": record.isDismissed,
           "ctw-tr-unread": boldUnreadRows && !record.ownedByBuilder(builderId) && !record.isRead,
         })}
         showTableHead={shouldShowTableHead}
