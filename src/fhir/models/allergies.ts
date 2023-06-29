@@ -4,7 +4,7 @@ import { findReference } from "../resource-helper";
 import { SYSTEM_NDC, SYSTEM_RXNORM, SYSTEM_SNOMED } from "../system-urls";
 import { codeableConceptLabel, CodePreference, findCoding } from "@/fhir/codeable-concept";
 import { displayOnset } from "@/fhir/display-onset";
-import { compact, lowerCase, uniqWith } from "@/utils/nodash";
+import { compact, uniqWith } from "@/utils/nodash";
 
 export class AllergyModel extends FHIRModel<fhir4.AllergyIntolerance> {
   kind = "Allergy" as const;
@@ -30,7 +30,7 @@ export class AllergyModel extends FHIRModel<fhir4.AllergyIntolerance> {
   }
 
   get lowercaseDisplay(): string {
-    return lowerCase(this.display);
+    return this.display?.toLocaleLowerCase() || "";
   }
 
   get manifestations(): string {
