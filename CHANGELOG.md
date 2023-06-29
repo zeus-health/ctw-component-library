@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.26.1
+
+### Patch Changes
+
+- 061b48b0: Update graphql queries to include extensions.
+
 ## 1.26.0
 
 ### Minor Changes

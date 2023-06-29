@@ -16,6 +16,10 @@ export const fragmentEncounterReference = gql`
   fragment Encounter on Encounter {
     id
     resourceType
+    extension {
+      url
+      valueString
+    }
     status
     priority {
       text
@@ -32,6 +36,10 @@ export const fragmentPractitioner = gql`
   fragment Practitioner on Practitioner {
     id
     resourceType
+    extension {
+      url
+      valueString
+    }
     name {
       family
       given
@@ -47,6 +55,10 @@ export const fragmentMedicationRequest = gql`
   fragment MedicationRequest on MedicationRequest {
     id
     resourceType
+    extension {
+      url
+      valueString
+    }
     status
     intent
   }
@@ -56,6 +68,10 @@ export const fragmentPatient = gql`
   fragment Patient on Patient {
     id
     resourceType
+    extension {
+      url
+      valueString
+    }
     active
     identifier {
       use
@@ -158,6 +174,10 @@ export const fragmentObservation = gql`
   fragment Observation on Observation {
     id
     resourceType
+    extension {
+      url
+      valueString
+    }
     status
     category {
       text
@@ -216,6 +236,10 @@ export const fragmentOrganization = gql`
   fragment Organization on Organization {
     id
     resourceType
+    extension {
+      url
+      valueString
+    }
     name
     telecom {
       system

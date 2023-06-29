@@ -40,6 +40,10 @@ export const documentsQuery = gql`
             }
             versionId
           }
+          extension {
+            url
+            valueString
+          }
           status
           docStatus
           type {
