@@ -1,5 +1,6 @@
 import { AllergyModel } from "@/fhir/models/allergies";
 import { ResourceMap } from "@/fhir/types";
+import { orderBy, uniqBy } from "@/utils/nodash";
 import { sort } from "@/utils/sort";
 
 export const applyAllergyFilters = (
@@ -8,24 +9,8 @@ export const applyAllergyFilters = (
   includedResources?: ResourceMap
 ) => {
   const allergyModel = data.map((allergy) => new AllergyModel(allergy, includedResources));
-
   const sortedByDate = sort(allergyModel, "recordedDate", "desc", true);
-
-  // pull out unique allergies preferring those owned by the builder
-  const allergyDataMap = new Map<string, AllergyModel>();
-  sortedByDate.forEach((allergy) => {
-    const { lowercaseDisplay } = allergy;
-    const existingAllergy = allergyDataMap.get(lowercaseDisplay);
-
-    if (
-      !existingAllergy ||
-      (allergy.ownedByBuilder(builderId) && !existingAllergy.ownedByBuilder(builderId))
-    ) {
-      allergyDataMap.set(lowercaseDisplay, allergy);
-    }
-  });
-
-  const uniqueAllergies = Array.from(allergyDataMap.values());
-
-  return uniqueAllergies;
+  // Bump builder owned allergies to the front, so uniqBy favors them!
+  const builderOwnedFirst = orderBy(sortedByDate, (a) => a.ownedByBuilder(builderId), "desc");
+  return uniqBy(builderOwnedFirst, "lowercaseDisplay");
 };
