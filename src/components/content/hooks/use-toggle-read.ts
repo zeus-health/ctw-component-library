@@ -6,7 +6,7 @@ import { queryClient } from "@/utils/request";
 
 interface UseToggleReadResult {
   /**
-   * Function to call to toggle the archive status of the FHIR model
+   * Function to call to toggle the read status of the FHIR model
    */
   toggleRead: (model: FHIRModel<fhir4.Resource>) => void;
 
