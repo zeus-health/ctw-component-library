@@ -1,12 +1,12 @@
 import cx from "classnames";
 import { ReactElement, useEffect, useRef, useState } from "react";
 import { usePatient } from "@/components/core/providers/patient-provider";
+import { useCTW } from "@/components/core/providers/use-ctw";
 import { Table, TableProps } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
 import { FHIRModel } from "@/fhir/models/fhir-model";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import "./resource-table.scss";
-import { useCTW } from "@/components/core/providers/use-ctw";
 
 export type ResourceTableProps<T extends MinRecordItem> = {
   className?: string;

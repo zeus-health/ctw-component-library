@@ -1,6 +1,10 @@
 .ctw-resource-table {
   .ctw-tr-dismissed {
-    @apply ctw-text-content-lighter;
+    td,
+    td span,
+    td div {
+      @apply ctw-text-content-lighter;
+    }
   }
   .ctw-tr-unread {
     @apply ctw-font-bold;
