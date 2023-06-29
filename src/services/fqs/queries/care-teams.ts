@@ -35,6 +35,10 @@ export const careTeamsQuery = gql`
             }
             versionId
           }
+          extension {
+            url
+            valueString
+          }
           status
           category {
             text

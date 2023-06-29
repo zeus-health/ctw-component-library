@@ -4,6 +4,10 @@ export const fragmentLocation = gql`
   fragment Location on Location {
     id
     resourceType
+    extension {
+      url
+      valueString
+    }
     status
     name
     description
