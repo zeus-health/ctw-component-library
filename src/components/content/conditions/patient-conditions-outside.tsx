@@ -1,6 +1,6 @@
 import { useAddConditionForm } from "./helpers/modal-hooks";
 import { PatientConditionsBase } from "./helpers/patient-conditions-base";
-import { useToggleDismiss } from "../hooks/use-toggle-archive";
+import { useToggleDismiss } from "../hooks/use-toggle-dismiss";
 import { PatientHistoryAction } from "../patient-history/patient-history-action";
 import { RequestRecordsButton } from "../patient-history/request-records-button";
 import { usePatientHistory } from "../patient-history/use-patient-history";
@@ -65,7 +65,7 @@ export const PatientConditionsOutside = withErrorBoundary(
 const RowActions = ({ record }: RowActionsProps<ConditionModel>) => {
   const { t } = useBaseTranslations();
   const showAddConditionForm = useAddConditionForm();
-  const { isLoading, toggleDismiss: toggleArchive } = useToggleDismiss(
+  const { isLoading, toggleDismiss } = useToggleDismiss(
     QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
     QUERY_KEY_BASIC
   );
@@ -78,7 +78,7 @@ const RowActions = ({ record }: RowActionsProps<ConditionModel>) => {
         className="ctw-btn-default"
         disabled={isLoading}
         onClick={() => {
-          toggleArchive(record);
+          toggleDismiss(record);
         }}
       >
         {isLoading ? (

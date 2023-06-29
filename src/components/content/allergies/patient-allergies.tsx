@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { allergyFilter, defaultAllergyFilters } from "./helpers/filters";
 import { useAllergiesHistory } from "./helpers/history";
 import { allergySortOptions, defaultAllergySort } from "./helpers/sort";
-import { useToggleDismiss } from "../hooks/use-toggle-archive";
+import { useToggleDismiss } from "../hooks/use-toggle-dismiss";
 import { useToggleRead } from "../hooks/use-toggle-read";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { ResourceTable } from "../resource/resource-table";
