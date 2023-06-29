@@ -1,12 +1,12 @@
 import cx from "classnames";
-import { ReactElement, useRef } from "react";
+import { ReactElement, useEffect, useRef, useState } from "react";
 import { usePatient } from "@/components/core/providers/patient-provider";
-import { useCTW } from "@/components/core/providers/use-ctw";
 import { Table, TableProps } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
 import { FHIRModel } from "@/fhir/models/fhir-model";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import "./resource-table.scss";
+import { useCTW } from "@/components/core/providers/use-ctw";
 
 export type ResourceTableProps<T extends MinRecordItem> = {
   className?: string;
@@ -32,7 +32,7 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
   boldUnreadRows,
 }: ResourceTableProps<M>) => {
   const patient = usePatient();
-  const { builderId } = useCTW();
+  const { getRequestContext } = useCTW();
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const shouldShowTableHead = typeof showTableHead === "boolean" ? showTableHead : !breakpoints.sm;
@@ -41,6 +41,16 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
   ) : (
     <div className="ctw-space-y-4">Patient not found.</div>
   );
+  const [userBuilderId, setUserBuilderId] = useState<string>("");
+
+  useEffect(() => {
+    async function load() {
+      const requestContext = await getRequestContext();
+      setUserBuilderId(requestContext.builderId);
+    }
+
+    void load();
+  }, [getRequestContext]);
 
   return (
     <div
@@ -50,7 +60,8 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
       <Table
         getRowClassName={(record) => ({
           "ctw-tr-dismissed": record.isDismissed,
-          "ctw-tr-unread": boldUnreadRows && !record.ownedByBuilder(builderId) && !record.isRead,
+          "ctw-tr-unread":
+            boldUnreadRows && !record.ownedByBuilder(userBuilderId) && !record.isRead,
         })}
         showTableHead={shouldShowTableHead}
         stacked={breakpoints.sm}
