@@ -7,6 +7,15 @@ import { capitalize } from "@/utils/nodash";
 export const patientImmunizationsColumns = (builderId: string, includeViewFhirResource = false) => {
   const immunizationColumns: TableColumn<ImmunizationModel>[] = [
     {
+      title: "Date",
+      render: (immunization) => (
+        <div>
+          <div>{immunization.occurrence} </div>
+          <div>{immunization.managingOrganization}</div>
+        </div>
+      ),
+    },
+    {
       title: "Immunization",
       render: (immunization) => (
         <div>
@@ -17,15 +26,6 @@ export const patientImmunizationsColumns = (builderId: string, includeViewFhirRe
               {immunization.ownedByBuilder(builderId) ? <CheckIcon /> : <></>}
             </span>
           </div>
-        </div>
-      ),
-    },
-    {
-      title: "Date",
-      render: (immunization) => (
-        <div>
-          <div>{immunization.occurrence} </div>
-          <div>{immunization.managingOrganization}</div>
         </div>
       ),
     },
