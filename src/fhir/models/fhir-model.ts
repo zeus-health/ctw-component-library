@@ -121,7 +121,7 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
     if (splitTag?.length !== 2) {
       return false;
     }
-    return ownerTag?.code?.split("/")[1] === builderId;
+    return splitTag[1] === builderId;
   }
 
   // Returns a string that would setup this model.
