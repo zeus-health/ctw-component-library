@@ -1,17 +1,8 @@
 .ctw-resource-table {
   .ctw-tr-archived {
-    td,
-    td span,
-    td div {
-      // Gray out archived table content
-      @apply ctw-text-content-lighter;
-    }
+    @apply ctw-text-content-lighter;
   }
   .ctw-tr-unread {
-    td,
-    td span,
-    td div {
-      @apply ctw-font-bold;
-    }
+    @apply ctw-font-bold;
   }
 }
