@@ -117,19 +117,23 @@ async function diagnosticReportCommonQueryFQS(
   patient: PatientModel
 ) {
   const graphClient = createGraphqlClient(requestContext);
-  const data = (await graphClient.request(diagnosticReportQuery, {
-    upid: patient.UPID,
-    cursor: "",
-    sort: {
-      lastUpdated: "DESC",
-    },
-    filter: {
-      tag: {
-        allmatch: [SYSTEM_ZUS_THIRD_PARTY],
+  const { data } = await fqsRequest<DiagnosticReportGraphqlResponse>(
+    graphClient,
+    diagnosticReportQuery,
+    {
+      upid: patient.UPID,
+      cursor: "",
+      sort: {
+        lastUpdated: "DESC",
       },
-    },
-    first: 1000,
-  })) as DiagnosticReportGraphqlResponse;
+      filter: {
+        tag: {
+          allmatch: [SYSTEM_ZUS_THIRD_PARTY],
+        },
+      },
+      first: 1000,
+    }
+  );
   return data;
 }
 
