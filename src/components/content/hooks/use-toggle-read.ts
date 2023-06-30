@@ -27,6 +27,12 @@ export function useToggleRead(...queriesToInvalidate: string[]): UseToggleReadRe
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleToggleRead = useCallback(async (model: FHIRModel<fhir4.Resource>) => {
+    const requestContext = await getRequestContext();
+    // In production we want to avoid non-builder users from inadvertantly marking records as read
+    // In lower environments this is allowed for demos/testing
+    if (requestContext.env === "production" && !(requestContext.userType === "builder")) {
+      return;
+    }
     setIsLoading(true);
     await toggleRead(model, await getRequestContext());
     await Promise.all(
