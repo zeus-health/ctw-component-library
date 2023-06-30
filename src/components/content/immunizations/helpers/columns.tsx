@@ -1,4 +1,5 @@
-import { CheckIcon } from "@/components/core/check-icon";
+import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { ViewFHIR } from "@/components/core/view-fhir";
 import { ImmunizationModel } from "@/fhir/models/immunization";
@@ -17,13 +18,18 @@ export const patientImmunizationsColumns = (builderId: string, includeViewFhirRe
     },
     {
       title: "Immunization",
+      minWidth: 400,
       render: (immunization) => (
         <div>
           <div className="ctw-flow-root">
             {capitalize(immunization.description)}{" "}
             {immunization.cvxCode ? `(CVX: ${immunization.cvxCode})` : ""}
             <span className="ctw-float-right">
-              {immunization.ownedByBuilder(builderId) ? <CheckIcon /> : <></>}
+              {immunization.ownedByBuilder(builderId) ? (
+                <FontAwesomeIcon className="ctw-text-content-light" icon={faCircleCheck} />
+              ) : (
+                <></>
+              )}
             </span>
           </div>
         </div>

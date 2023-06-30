@@ -1,3 +1,4 @@
+import { dismissFilter } from "../../resource/filters";
 import { FilterChangeEvent, FilterItem } from "@/components/core/filter-bar/filter-bar-types";
 import { ImmunizationModel } from "@/fhir/models/immunization";
 import { ResourceMap } from "@/fhir/types";
@@ -36,9 +37,9 @@ export const applyImmunizationFilters = (
   return uniqueImmunizations;
 };
 
-export function immunizationFilter(): FilterItem[] {
-  const filters: FilterItem[] = [];
+export function immunizationsFilter(): FilterItem[] {
+  const filters: FilterItem[] = [dismissFilter];
   return filters;
 }
 
-export const defaultImmunizationFilters: FilterChangeEvent = {};
+export const defaultImmunizationsFilters: FilterChangeEvent = {};

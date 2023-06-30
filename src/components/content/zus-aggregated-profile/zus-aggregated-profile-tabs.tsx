@@ -100,7 +100,6 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     display: () => (
       <div className="ctw-space-x-1">
         <span className="ctw-capitalize">immunizations</span>
-        <BetaLabel />
       </div>
     ),
     render: () => <PatientImmunizations {...props} />,
