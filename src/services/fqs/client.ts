@@ -5,6 +5,7 @@ import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { Env } from "@/components/core/providers/types";
 import { ResourceType, ResourceTypeString } from "@/fhir/types";
 import { CTW_REQUEST_HEADER } from "@/utils/request";
+import { Telemetry } from "@/utils/telemetry";
 
 export interface GraphqlPageInfo {
   hasNextPage: boolean;
@@ -34,7 +35,7 @@ export const fqsRequest = async <T>(client: GraphQLClient, query: string, variab
   const fhirData = graphQLToFHIR(data);
   if (errors) {
     if (data) {
-      // TODO: log the errors?
+      Telemetry.logger.error(`Errors in FQS request:${errors}`);
       return { data: fhirData };
     }
     throw errors;
