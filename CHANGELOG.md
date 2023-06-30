@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.26.4
+
+### Patch Changes
+
+- 21a83a76: Add notification to allergy tab in ZAP indicating unread allergies. Modify outside conditions/medications count badge to display notification.
+
 ## 1.26.3
 
 ### Patch Changes
