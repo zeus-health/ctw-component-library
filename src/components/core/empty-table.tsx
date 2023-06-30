@@ -8,7 +8,7 @@ export type EmptyTableProps = {
 
 export const EmptyTable = ({ resourceName, hasZeroFilteredRecords }: EmptyTableProps) => {
   let icon = faInbox;
-  let errorText = `No ${resourceName} yet`;
+  let errorText = `No ${resourceName}`;
   let subText = "We didn't find any records for this patient.";
   if (hasZeroFilteredRecords) {
     icon = faMagnifyingGlass;
