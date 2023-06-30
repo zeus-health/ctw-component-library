@@ -21,10 +21,29 @@ export interface GenericConnection<T extends ResourceTypeString> {
 export const createGraphqlClient = (requestContext: CTWRequestContext) => {
   const endpoint = `${getZusApiBaseUrl(requestContext.env)}/fqs/query`;
   return new GraphQLClient(endpoint, {
+    errorPolicy: "all",
     headers: {
       authorization: `Bearer ${requestContext.authToken}`,
     },
   });
+};
+
+export const request = async <T>(
+  client: GraphQLClient,
+  query: string,
+  upid: string,
+  filters: object
+) => {
+  const { data, errors } = await client.rawRequest<T>(query, {
+    upid,
+    cursor: "",
+    first: 1000,
+    sort: {
+      lastUpdated: "DESC",
+    },
+    filter: filters,
+  });
+  return { data, errors };
 };
 
 export function getFetchFromFqs(env: Env, accessToken: string, builderId?: string) {

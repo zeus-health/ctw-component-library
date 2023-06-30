@@ -5,6 +5,7 @@ import type {
   MedicationRequest,
   MedicationStatement,
 } from "fhir/r4";
+import { GraphQLResponse } from "graphql-request/build/esm/types";
 import { useEffect, useState } from "react";
 import { bundleToResourceMap, getIncludedResources, getMergedIncludedResources } from "./bundle";
 import { getIdentifyingRxNormCode } from "./medication";
@@ -42,7 +43,7 @@ import { MedicationModel } from "@/fhir/models/medication";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { PatientModel } from "@/fhir/models/patient";
 import { filterResourcesByBuilderId } from "@/services/common";
-import { createGraphqlClient } from "@/services/fqs/client";
+import { createGraphqlClient, request } from "@/services/fqs/client";
 import { graphQLToFHIR } from "@/services/fqs/graphql-to-fhir";
 import {
   MedicationAdministrationGraphqlResponse,
@@ -243,19 +244,22 @@ export async function getMedicationAdministrationsForPatientByIdFQS(
       return [];
     }
     const graphClient = createGraphqlClient(requestContext);
-    const data = (await graphClient.request(medicationAdministrationQuery, {
-      upid: patient.UPID,
-      cursor: "",
-      first: 1000,
-      sort: {
-        lastUpdated: "DESC",
-      },
-      filter: {
-        ids: {
-          anymatch: resourceIds,
+    const { data } = await graphClient.rawRequest<MedicationAdministrationGraphqlResponse>(
+      medicationAdministrationQuery,
+      {
+        upid: patient.UPID,
+        cursor: "",
+        first: 1000,
+        sort: {
+          lastUpdated: "DESC",
         },
-      },
-    })) as MedicationAdministrationGraphqlResponse;
+        filter: {
+          ids: {
+            anymatch: resourceIds,
+          },
+        },
+      }
+    );
     const nodes = data.MedicationAdministrationConnection.edges.map((x) => x.node);
     return nodes;
   } catch (e) {
@@ -276,20 +280,17 @@ export async function getMedicationDispensesForPatientByIdFQS(
       return [];
     }
     const graphClient = createGraphqlClient(requestContext);
-    const data = await graphClient.request(medicationDispenseQuery, {
-      upid: patient.UPID,
-      cursor: "",
-      first: 1000,
-      sort: {
-        lastUpdated: "DESC",
-      },
-      filter: {
+    const { data } = await request<GraphQLResponse>(
+      graphClient,
+      medicationDispenseQuery,
+      patient.UPID,
+      {
         ids: {
           anymatch: resourceIds,
         },
-      },
-    });
-    const cleanData = graphQLToFHIR(data) as MedicationDispenseGraphqlResponse;
+      }
+    );
+    const cleanData = graphQLToFHIR(data as unknown) as MedicationDispenseGraphqlResponse;
     const nodes = cleanData.MedicationDispenseConnection.edges.map((x) => x.node);
     return nodes;
   } catch (e) {
