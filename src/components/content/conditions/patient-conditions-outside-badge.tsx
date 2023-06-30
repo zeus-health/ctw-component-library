@@ -1,4 +1,4 @@
-import { Badge } from "@/components/core/badge";
+import { UnreadNotification } from "@/components/core/unread-notification";
 import { usePatientConditionsOutside } from "@/services/conditions";
 
 export const PatientConditionsOutsideBadge = () => {
@@ -8,13 +8,7 @@ export const PatientConditionsOutsideBadge = () => {
   );
 
   if (activeUnarchivedConditions.length > 0) {
-    return (
-      <Badge
-        color="notification"
-        text={activeUnarchivedConditions.length.toString()}
-        className="ctw-h-5"
-      />
-    );
+    return <UnreadNotification />;
   }
   return null;
 };

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useCTW } from "@/components/core/providers/use-ctw";
+import { UnreadNotification } from "@/components/core/unread-notification";
 import { usePatientAllergies } from "@/fhir/allergies";
 
 export const UnreadAllergiesNotification = () => {
@@ -22,18 +23,7 @@ export const UnreadAllergiesNotification = () => {
   );
 
   if (unreadOutsideAllergies.length > 0) {
-    return (
-      <span>
-        <svg
-          height={10}
-          className="ctw-fill-notification-icon"
-          viewBox="0 0 10 10"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <circle cx="5" cy="5" r="5" />
-        </svg>
-      </span>
-    );
+    return <UnreadNotification />;
   }
   return null;
 };
