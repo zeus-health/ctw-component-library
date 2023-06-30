@@ -213,7 +213,7 @@ export async function getMedicationStatementsForPatientByIdFQS(
     const graphClient = createGraphqlClient(requestContext);
     const { data } = await fqsRequest<MedicationStatementGraphqlResponse>(
       graphClient,
-      medicationDispenseQuery,
+      medicationStatementQuery,
       {
         upid: patient.UPID,
         cursor: "",
