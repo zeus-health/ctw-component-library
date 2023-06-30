@@ -14,6 +14,10 @@ export const fragmentEncounter = gql`
       }
       versionId
     }
+    extension {
+      url
+      valueString
+    }
     status
     class {
       system

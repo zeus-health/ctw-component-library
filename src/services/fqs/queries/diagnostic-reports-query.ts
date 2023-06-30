@@ -51,6 +51,10 @@ export const diagnosticReportQuery = gql`
               valueInstant
             }
           }
+          extension {
+            url
+            valueString
+          }
           basedOn {
             reference
             resource {

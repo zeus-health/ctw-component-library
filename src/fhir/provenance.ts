@@ -1,8 +1,14 @@
 import { Provenance, Resource } from "fhir/r4";
+import { getResources } from "./bundle";
 import { FHIRModel } from "./models/fhir-model";
 import { getUsersPractitionerReference } from "./practitioner";
 import { searchAllRecords } from "./search-helpers";
-import { SYSTEM_PROVENANCE_ACTIVITY_TYPE, SYSTEM_PROVENANCE_AGENT_TYPE } from "./system-urls";
+import {
+  SYSTEM_PROVENANCE_ACTIVITY_TYPE,
+  SYSTEM_PROVENANCE_AGENT_TYPE,
+  SYSTEM_ZUS_UNIVERSAL_ID,
+} from "./system-urls";
+import { ResourceTypeString } from "./types";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { searchProvenancesFQS } from "@/services/fqs/queries/provenances";
 import { claimsBuilderName } from "@/utils/auth";
@@ -90,19 +96,29 @@ export async function searchProvenances<T extends fhir4.Resource>(
   if (models.length === 0) return [];
 
   const targets = uniq(models.map((m) => `${m.resourceType}/${m.id}`));
+  const ids = models.map((m) => m.id);
 
   if (enableFQS) {
     return searchProvenancesFQS(requestContext, models[0].resourceType, targets);
   }
-  return searchProvenancesODS(requestContext, targets);
+  return searchProvenancesODS(requestContext, ids, models[0].resourceType, models[0].patientUPID);
 }
 
-export async function searchProvenancesODS(requestContext: CTWRequestContext, targets: string[]) {
-  const target = targets.join(",");
-  const { resources } = await queryClient.fetchQuery([QUERY_KEY_PROVENANCE, target], async () =>
-    searchAllRecords("Provenance", requestContext, {
-      target,
+export async function searchProvenancesODS(
+  requestContext: CTWRequestContext,
+  ids: string[],
+  resourceType: ResourceTypeString,
+  patientUPID: string | undefined
+) {
+  const id = ids.join(",");
+  const { bundle } = await queryClient.fetchQuery([QUERY_KEY_PROVENANCE, id], async () =>
+    searchAllRecords(resourceType, requestContext, {
+      _id: id,
+      _revinclude: "Provenance:target",
+      // Need to include patient identifier to work around CPR.
+      "patient.identifier": patientUPID ? `${SYSTEM_ZUS_UNIVERSAL_ID}|${patientUPID}` : "",
     })
   );
-  return resources;
+
+  return getResources(bundle, "Provenance");
 }

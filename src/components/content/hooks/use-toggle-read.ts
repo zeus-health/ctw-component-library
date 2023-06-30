@@ -6,18 +6,18 @@ import { queryClient } from "@/utils/request";
 
 interface UseToggleReadResult {
   /**
-   * Function to call to toggle the archive status of the FHIR model
+   * Function to call to toggle the read status of the FHIR model
    */
   toggleRead: (model: FHIRModel<fhir4.Resource>) => void;
 
   /**
-   * True when `toggleArchive` is called
+   * True when `toggleRead` is called
    */
   isLoading: boolean;
 }
 
 /**
- * This hook is toggles the read status for the specified FHIR model.
+ * This hook toggles the read status for the specified FHIR model.
  *
  * @param queriesToInvalidate  Queries to refetch
  */
@@ -36,7 +36,7 @@ export function useToggleRead(...queriesToInvalidate: string[]): UseToggleReadRe
     );
 
     // Timeout here fixes bug where we would briefly flash
-    // the old read/restore text.
+    // the old mark as read/new text.
     setTimeout(() => setIsLoading(false), 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
