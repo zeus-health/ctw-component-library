@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.26.5
+
+### Patch Changes
+
+- e01d88e3: Fetch all types of values for observations from FQS. This fixes an issue where some diagnostic report observations don't show any results.
+
 ## 1.26.4
 
 ### Patch Changes
