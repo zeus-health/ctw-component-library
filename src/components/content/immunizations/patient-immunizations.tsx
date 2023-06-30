@@ -8,7 +8,6 @@ import { useToggleRead } from "../hooks/use-toggle-read";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
-import { CodingList } from "@/components/core/coding-list";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { Spinner } from "@/components/core/spinner";
@@ -98,14 +97,9 @@ export const PatientImmunizations = withErrorBoundary(
 );
 
 const immunizationData = (immunization: ImmunizationModel) => [
-  { label: "Date", value: immunization.occurrence },
+  { label: "Date Given", value: immunization.occurrence },
   { label: "Description", value: immunization.description },
-  {
-    label: "Vaccine Code",
-    value: immunization.resource.vaccineCode.coding ? (
-      <CodingList codings={immunization.resource.vaccineCode.coding} />
-    ) : undefined,
-  },
+  // TODO -
 ];
 
 const getRowActions =
