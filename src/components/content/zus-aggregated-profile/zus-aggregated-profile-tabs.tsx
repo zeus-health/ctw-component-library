@@ -3,6 +3,7 @@ import {
   PatientConditionsOutsideProps,
 } from "../conditions/patient-conditions-outside";
 import { PatientConditionsOutsideBadge } from "../conditions/patient-conditions-outside-badge";
+import { UnreadImmunizationsNotification } from "../immunizations/unread-immunizations-notification";
 import { PatientMedications, PatientMedicationsProps } from "../medications/patient-medications";
 import {
   PatientMedicationsOutside,
@@ -100,6 +101,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     display: () => (
       <div className="ctw-space-x-1">
         <span className="ctw-capitalize">immunizations</span>
+        <UnreadImmunizationsNotification />
       </div>
     ),
     render: () => <PatientImmunizations {...props} />,
