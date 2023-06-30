@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { usePatientAllergies } from "@/fhir/allergies";
 
-export const UnreadAllergiesBadge = () => {
+export const UnreadAllergiesNotification = () => {
   const query = usePatientAllergies();
   const { getRequestContext } = useCTW();
 
