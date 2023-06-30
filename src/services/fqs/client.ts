@@ -35,7 +35,9 @@ export const fqsRequest = async <T>(client: GraphQLClient, query: string, variab
   const fhirData = graphQLToFHIR(data);
   if (errors) {
     if (data) {
-      Telemetry.logger.error(`Errors in FQS request:${errors}`);
+      errors.forEach((e) => {
+        Telemetry.logger.error("Error in FQS request", undefined, e);
+      });
       return { data: fhirData };
     }
     throw errors;
