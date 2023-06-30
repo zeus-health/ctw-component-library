@@ -92,6 +92,7 @@ async function getAllergyIntoleranceFromODS(
       patientUPID: patient.UPID,
       _include: ["AllergyIntolerance:patient"],
       "_include:iterate": "Patient:organization",
+      _revinclude: "Basic:subject",
     });
 
     const includedResources = getIncludedResources(bundle);

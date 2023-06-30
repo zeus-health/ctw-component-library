@@ -35,6 +35,10 @@ export const medicationAdministrationQuery = gql`
         node {
           id
           resourceType
+          extension {
+            url
+            valueString
+          }
           dosage {
             text
             dose {

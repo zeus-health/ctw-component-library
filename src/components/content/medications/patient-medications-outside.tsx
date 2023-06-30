@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useAddMedicationForm } from "./helpers/add-new-med-drawer";
 import { medicationFilters } from "./helpers/filters";
 import { PatientMedicationsBase } from "./helpers/patient-medications-base";
-import { useToggleDismiss } from "../hooks/use-toggle-archive";
+import { useToggleDismiss } from "../hooks/use-toggle-dismiss";
 import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { RowActionsProps } from "@/components/core/table/table";
