@@ -5,7 +5,6 @@ import type {
   MedicationRequest,
   MedicationStatement,
 } from "fhir/r4";
-import { GraphQLResponse } from "graphql-request/build/esm/types";
 import { useEffect, useState } from "react";
 import { bundleToResourceMap, getIncludedResources, getMergedIncludedResources } from "./bundle";
 import { getIdentifyingRxNormCode } from "./medication";
@@ -43,8 +42,7 @@ import { MedicationModel } from "@/fhir/models/medication";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { PatientModel } from "@/fhir/models/patient";
 import { filterResourcesByBuilderId } from "@/services/common";
-import { createGraphqlClient, request } from "@/services/fqs/client";
-import { graphQLToFHIR } from "@/services/fqs/graphql-to-fhir";
+import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import {
   MedicationAdministrationGraphqlResponse,
   medicationAdministrationQuery,
@@ -162,24 +160,27 @@ export async function getBuilderMedicationStatementsFQS(
       informationSourceNot: "Patient", // exclude medication statements where the patient is the information source
     } as MedicationFilter;
     const graphClient = createGraphqlClient(requestContext);
-    const data = await graphClient.request(medicationStatementQuery, {
-      upid: patient.UPID,
-      cursor: "",
-      first: 1000,
-      sort: {
-        lastUpdated: "DESC",
-      },
-      filter: {
-        tag: {
-          nonematch: [SYSTEM_SUMMARY, `${SYSTEM_ZUS_THIRD_PARTY}`],
-          // TODO: There's a bug in FQS that doesn't allow filtering with nonematch AND allmatch.
-          // Uncomment the line below once https://zeushealth.atlassian.net/browse/DRT-249 is resolved.
-          // allmatch: [`${SYSTEM_ZUS_OWNER}|builder/${requestContext.builderId}`],
+    const { data } = await fqsRequest<MedicationStatementGraphqlResponse>(
+      graphClient,
+      medicationStatementQuery,
+      {
+        upid: patient.UPID,
+        cursor: "",
+        first: 1000,
+        sort: {
+          lastUpdated: "DESC",
         },
-      },
-    });
-    const cleanData = graphQLToFHIR(data) as MedicationStatementGraphqlResponse;
-    let nodes = cleanData.MedicationStatementConnection.edges.map((x) => x.node);
+        filter: {
+          tag: {
+            nonematch: [SYSTEM_SUMMARY, `${SYSTEM_ZUS_THIRD_PARTY}`],
+            // TODO: There's a bug in FQS that doesn't allow filtering with nonematch AND allmatch.
+            // Uncomment the line below once https://zeushealth.atlassian.net/browse/DRT-249 is resolved.
+            // allmatch: [`${SYSTEM_ZUS_OWNER}|builder/${requestContext.builderId}`],
+          },
+        },
+      }
+    );
+    let nodes = data.MedicationStatementConnection.edges.map((x) => x.node);
     nodes = filterResourcesByBuilderId(
       nodes,
       requestContext.contextBuilderId || requestContext.builderId
@@ -210,21 +211,24 @@ export async function getMedicationStatementsForPatientByIdFQS(
       return { bundle: undefined, medications: [], basic: [] };
     }
     const graphClient = createGraphqlClient(requestContext);
-    const data = await graphClient.request(medicationStatementQuery, {
-      upid: patient.UPID,
-      cursor: "",
-      first: 1000,
-      sort: {
-        lastUpdated: "DESC",
-      },
-      filter: {
-        ids: {
-          anymatch: resourceIds,
+    const { data } = await fqsRequest<MedicationStatementGraphqlResponse>(
+      graphClient,
+      medicationDispenseQuery,
+      {
+        upid: patient.UPID,
+        cursor: "",
+        first: 1000,
+        sort: {
+          lastUpdated: "DESC",
         },
-      },
-    });
-    const cleanData = graphQLToFHIR(data) as MedicationStatementGraphqlResponse;
-    const nodes = cleanData.MedicationStatementConnection.edges.map((x) => x.node);
+        filter: {
+          ids: {
+            anymatch: resourceIds,
+          },
+        },
+      }
+    );
+    const nodes = data.MedicationStatementConnection.edges.map((x) => x.node);
     return { bundle: undefined, medications: nodes, basic: [] };
   } catch (e) {
     throw Telemetry.logError(
@@ -244,7 +248,8 @@ export async function getMedicationAdministrationsForPatientByIdFQS(
       return [];
     }
     const graphClient = createGraphqlClient(requestContext);
-    const { data } = await graphClient.rawRequest<MedicationAdministrationGraphqlResponse>(
+    const { data } = await fqsRequest<MedicationAdministrationGraphqlResponse>(
+      graphClient,
       medicationAdministrationQuery,
       {
         upid: patient.UPID,
@@ -280,18 +285,25 @@ export async function getMedicationDispensesForPatientByIdFQS(
       return [];
     }
     const graphClient = createGraphqlClient(requestContext);
-    const { data } = await request<GraphQLResponse>(
+    const { data } = await fqsRequest<MedicationDispenseGraphqlResponse>(
       graphClient,
       medicationDispenseQuery,
-      patient.UPID,
       {
-        ids: {
-          anymatch: resourceIds,
+        upid: patient.UPID,
+        cursor: "",
+        first: 1000,
+        sort: {
+          lastUpdated: "DESC",
+        },
+        filter: {
+          ids: {
+            anymatch: resourceIds,
+          },
         },
       }
     );
-    const cleanData = graphQLToFHIR(data as unknown) as MedicationDispenseGraphqlResponse;
-    const nodes = cleanData.MedicationDispenseConnection.edges.map((x) => x.node);
+
+    const nodes = data.MedicationDispenseConnection.edges.map((x) => x.node);
     return nodes;
   } catch (e) {
     throw Telemetry.logError(
@@ -311,21 +323,25 @@ export async function getMedicationRequestsForPatientByIdFQS(
       return [];
     }
     const graphClient = createGraphqlClient(requestContext);
-    const data = await graphClient.request(medicationRequestQuery, {
-      upid: patient.UPID,
-      cursor: "",
-      first: 1000,
-      sort: {
-        lastUpdated: "DESC",
-      },
-      filter: {
-        ids: {
-          anymatch: resourceIds,
+
+    const { data } = await fqsRequest<MedicationRequestGraphqlResponse>(
+      graphClient,
+      medicationRequestQuery,
+      {
+        upid: patient.UPID,
+        cursor: "",
+        first: 1000,
+        sort: {
+          lastUpdated: "DESC",
         },
-      },
-    });
-    const cleanData = graphQLToFHIR(data) as MedicationRequestGraphqlResponse;
-    const nodes = cleanData.MedicationRequestConnection.edges.map((x) => x.node);
+        filter: {
+          ids: {
+            anymatch: resourceIds,
+          },
+        },
+      }
+    );
+    const nodes = data.MedicationRequestConnection.edges.map((x) => x.node);
     return nodes;
   } catch (e) {
     throw Telemetry.logError(
@@ -466,24 +482,27 @@ export async function getActiveMedicationsFQS(
 ): Promise<MedicationResults> {
   try {
     const graphClient = createGraphqlClient(requestContext);
-    const data = await graphClient.request(medicationStatementQuery, {
-      upid: patient.UPID,
-      cursor: "",
-      first: 1000,
-      sort: {
-        lastUpdated: "DESC",
-      },
-      filter: {
-        tag: {
-          allmatch: [
-            `${SYSTEM_ZUS_SUMMARY}|Common`,
-            `${SYSTEM_ZUS_OWNER}|builder/${getLensBuilderId(requestContext.env)}`,
-          ],
+    const { data } = await fqsRequest<MedicationStatementGraphqlResponse>(
+      graphClient,
+      medicationStatementQuery,
+      {
+        upid: patient.UPID,
+        cursor: "",
+        first: 1000,
+        sort: {
+          lastUpdated: "DESC",
         },
-      },
-    });
-    const cleanData = graphQLToFHIR(data) as MedicationStatementGraphqlResponse;
-    const nodes = cleanData.MedicationStatementConnection.edges.map((x) => x.node);
+        filter: {
+          tag: {
+            allmatch: [
+              `${SYSTEM_ZUS_SUMMARY}|Common`,
+              `${SYSTEM_ZUS_OWNER}|builder/${getLensBuilderId(requestContext.env)}`,
+            ],
+          },
+        },
+      }
+    );
+    const nodes = data.MedicationStatementConnection.edges.map((x) => x.node);
     const models = setupMedicationStatementModelsWithFQS(nodes);
     if (models.length === 0) {
       Telemetry.countMetric("req.count.active_medications.none", 1, ["fqs"]);

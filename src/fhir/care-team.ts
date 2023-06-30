@@ -2,7 +2,7 @@ import { getIncludedResources } from "./bundle";
 import { searchCommonRecords } from "./search-helpers";
 import { CTWRequestContext, PatientModel, useFeatureFlaggedQueryWithPatient } from "..";
 import { applyCareTeamFilters } from "@/components/content/care-team/helpers/filters";
-import { createGraphqlClient } from "@/services/fqs/client";
+import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import { CareTeamGraphqlResponse, careTeamsQuery } from "@/services/fqs/queries/care-teams";
 import { QUERY_KEY_CARETEAM } from "@/utils/query-keys";
 import { Telemetry } from "@/utils/telemetry";
@@ -39,14 +39,15 @@ async function getCareTeamODS(requestContext: CTWRequestContext, patient: Patien
 async function getCareTeamFQS(requestContext: CTWRequestContext, patient: PatientModel) {
   try {
     const graphClient = createGraphqlClient(requestContext);
-    const data = (await graphClient.request(careTeamsQuery, {
+    const { data } = await fqsRequest<CareTeamGraphqlResponse>(graphClient, careTeamsQuery, {
       upid: patient.UPID,
       cursor: "",
       first: 1000,
       sort: {
         lastUpdated: "DESC",
       },
-    })) as CareTeamGraphqlResponse;
+    });
+
     const nodes = data.CareTeamConnection.edges.map((x) => x.node);
     const results = applyCareTeamFilters(nodes, {});
 

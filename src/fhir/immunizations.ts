@@ -3,7 +3,7 @@ import { searchCommonRecords } from "./search-helpers";
 import { useFeatureFlaggedQueryWithPatient } from "..";
 import { applyImmunizationFilters } from "@/components/content/immunizations/helpers/filters";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { createGraphqlClient } from "@/services/fqs/client";
+import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import {
   ImmunizationGraphqlResponse,
   immunizationsQuery,
@@ -26,14 +26,18 @@ export function usePatientImmunizations() {
 async function getImmunizationFromFQS(requestContext: CTWRequestContext, patient: PatientModel) {
   try {
     const graphClient = createGraphqlClient(requestContext);
-    const data = (await graphClient.request(immunizationsQuery, {
-      upid: patient.UPID,
-      cursor: "",
-      first: 1000,
-      sort: {
-        lastUpdated: "DESC",
-      },
-    })) as ImmunizationGraphqlResponse;
+    const { data } = await fqsRequest<ImmunizationGraphqlResponse>(
+      graphClient,
+      immunizationsQuery,
+      {
+        upid: patient.UPID,
+        cursor: "",
+        first: 1000,
+        sort: {
+          lastUpdated: "DESC",
+        },
+      }
+    );
     const nodes = data.ImmunizationConnection.edges.map((x) => x.node);
     const results = orderBy(
       applyImmunizationFilters(nodes),

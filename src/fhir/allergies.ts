@@ -8,7 +8,7 @@ import { applyAllergyFilters } from "@/components/content/allergies/helpers/alle
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useFeatureFlaggedQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
-import { createGraphqlClient } from "@/services/fqs/client";
+import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import { AllergyGraphqlResponse, allergyQuery } from "@/services/fqs/queries/allergies";
 import { QUERY_KEY_PATIENT_ALLERGIES } from "@/utils/query-keys";
 import { Telemetry } from "@/utils/telemetry";
@@ -62,15 +62,14 @@ async function getAllergyIntoleranceFromFQS(
 ) {
   try {
     const graphClient = createGraphqlClient(requestContext);
-    const data = (await graphClient.request(allergyQuery, {
+    const { data } = await fqsRequest<AllergyGraphqlResponse>(graphClient, allergyQuery, {
       upid: patient.UPID,
       cursor: "",
       first: 1000,
       sort: {
         lastUpdated: "DESC",
       },
-    })) as AllergyGraphqlResponse;
-
+    });
     const nodes = data.AllergyIntoleranceConnection.edges.map((x) => x.node);
     const results = applyAllergyFilters(nodes, requestContext.builderId);
     if (results.length === 0) {

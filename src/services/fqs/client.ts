@@ -1,4 +1,5 @@
-import { GraphQLClient } from "graphql-request";
+import { GraphQLClient, Variables } from "graphql-request";
+import { graphQLToFHIR } from "./graphql-to-fhir";
 import { getZusApiBaseUrl } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { Env } from "@/components/core/providers/types";
@@ -28,22 +29,17 @@ export const createGraphqlClient = (requestContext: CTWRequestContext) => {
   });
 };
 
-export const request = async <T>(
-  client: GraphQLClient,
-  query: string,
-  upid: string,
-  filters: object
-) => {
-  const { data, errors } = await client.rawRequest<T>(query, {
-    upid,
-    cursor: "",
-    first: 1000,
-    sort: {
-      lastUpdated: "DESC",
-    },
-    filter: filters,
-  });
-  return { data, errors };
+export const fqsRequest = async <T>(client: GraphQLClient, query: string, variables: object) => {
+  const { data, errors } = await client.rawRequest<T>(query, variables as Variables);
+  const fhirData = graphQLToFHIR(data);
+  if (errors) {
+    if (data) {
+      // TODO: log the errors?
+      return { data: fhirData };
+    }
+    throw errors;
+  }
+  return { data: fhirData };
 };
 
 export function getFetchFromFqs(env: Env, accessToken: string, builderId?: string) {
