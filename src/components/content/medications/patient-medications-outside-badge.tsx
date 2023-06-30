@@ -1,4 +1,4 @@
-import { Badge } from "@/components/core/badge";
+import { UnreadNotification } from "@/components/core/unread-notification";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 
 export const PatientMedicationsOutsideBadge = () => {
@@ -8,13 +8,7 @@ export const PatientMedicationsOutsideBadge = () => {
   );
 
   if (activeUnarchivedMedications.length > 0) {
-    return (
-      <Badge
-        color="notification"
-        text={activeUnarchivedMedications.length.toString()}
-        className="ctw-h-5"
-      />
-    );
+    return <UnreadNotification />;
   }
   return null;
 };
