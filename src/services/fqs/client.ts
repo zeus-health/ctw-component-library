@@ -1,5 +1,5 @@
 import { GraphQLClient } from "graphql-request";
-import { getZusApiBaseUrl } from "@/api/urls";
+import { getZusServiceUrl } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { Env } from "@/components/core/providers/types";
 import { ResourceType, ResourceTypeString } from "@/fhir/types";
@@ -19,7 +19,7 @@ export interface GenericConnection<T extends ResourceTypeString> {
 }
 
 export const createGraphqlClient = (requestContext: CTWRequestContext) => {
-  const endpoint = `${getZusApiBaseUrl(requestContext.env)}/fqs/query`;
+  const endpoint = `${getZusServiceUrl(requestContext.env, "fqs")}/query`;
   return new GraphQLClient(endpoint, {
     headers: {
       authorization: `Bearer ${requestContext.authToken}`,
@@ -28,7 +28,7 @@ export const createGraphqlClient = (requestContext: CTWRequestContext) => {
 };
 
 export function getFetchFromFqs(env: Env, accessToken: string, builderId?: string) {
-  const baseUrl = `${getZusApiBaseUrl(env)}/fqs`;
+  const baseUrl = `${getZusServiceUrl(env, "fqs")}/`;
 
   const customHeaders: HeadersInit = CTW_REQUEST_HEADER;
   if (builderId) {
