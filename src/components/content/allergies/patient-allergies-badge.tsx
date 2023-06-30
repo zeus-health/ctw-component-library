@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { Badge } from "@/components/core/badge";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { usePatientAllergies } from "@/fhir/allergies";
 
-export const PatientAllergiesBadge = () => {
+export const UnreadAllergiesBadge = () => {
   const query = usePatientAllergies();
   const { getRequestContext } = useCTW();
 
@@ -24,11 +23,16 @@ export const PatientAllergiesBadge = () => {
 
   if (unreadOutsideAllergies.length > 0) {
     return (
-      <Badge
-        color="notification"
-        text={unreadOutsideAllergies.length.toString()}
-        className="ctw-h-5"
-      />
+      <span>
+        <svg
+          height={10}
+          className="ctw-fill-notification-icon"
+          viewBox="0 0 10 10"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle cx="5" cy="5" r="5" />
+        </svg>
+      </span>
     );
   }
   return null;

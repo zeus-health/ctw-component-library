@@ -1,4 +1,4 @@
-import { PatientAllergiesBadge } from "../allergies/patient-allergies-badge";
+import { UnreadAllergiesBadge } from "../allergies/patient-allergies-badge";
 import {
   PatientConditionsOutside,
   PatientConditionsOutsideProps,
@@ -52,9 +52,9 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     key: "allergies",
     getPanelClassName: () => "ctw-pt-5",
     display: () => (
-      <div className="ctw-space-x-2">
+      <div className="ctw-space-x-1">
         <span className="ctw-capitalize">allergies</span>
-        <PatientAllergiesBadge />
+        <UnreadAllergiesBadge />
       </div>
     ),
     render: () => <PatientAllergies {...props} />,
