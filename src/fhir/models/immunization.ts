@@ -1,8 +1,10 @@
 import { FHIRModel } from "./fhir-model";
-import { findCoding } from "../codeable-concept";
+import { codeableConceptLabel, findCoding } from "../codeable-concept";
 import { formatDateISOToLocal } from "../formatters";
+import { quantityLabel } from "../quantity";
 import { findReference } from "../resource-helper";
 import { SYSTEM_CVX } from "../system-urls";
+import { capitalize } from "@/utils/nodash";
 
 export class ImmunizationModel extends FHIRModel<fhir4.Immunization> {
   kind = "Immunization" as const;
@@ -14,6 +16,26 @@ export class ImmunizationModel extends FHIRModel<fhir4.Immunization> {
   get cvxCode(): string | undefined {
     const cvxCoding = findCoding(SYSTEM_CVX, this.resource.vaccineCode);
     return cvxCoding?.code;
+  }
+
+  get doseQuantity(): string {
+    return quantityLabel(this.resource.doseQuantity);
+  }
+
+  get route(): string {
+    return codeableConceptLabel(this.resource.route);
+  }
+
+  get site(): string {
+    return codeableConceptLabel(this.resource.site);
+  }
+
+  get status(): string {
+    return capitalize(this.resource.status);
+  }
+
+  get notesDisplay(): string[] {
+    return this.resource.note?.map(({ text }) => text) || [];
   }
 
   get occurrence(): string | undefined {

@@ -8,6 +8,7 @@ import { useToggleRead } from "../hooks/use-toggle-read";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
+import { entryFromArray } from "@/components/core/data-list";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { Spinner } from "@/components/core/spinner";
@@ -98,8 +99,13 @@ export const PatientImmunizations = withErrorBoundary(
 
 const immunizationData = (immunization: ImmunizationModel) => [
   { label: "Date Given", value: immunization.occurrence },
-  { label: "Description", value: immunization.description },
-  // TODO -
+  { label: "Provider Organization", value: immunization.managingOrganization },
+  { label: "Status", value: immunization.status },
+  { label: "Dose Quantity", value: immunization.doseQuantity },
+  { label: "Route", value: immunization.route },
+  { label: "Site", value: immunization.site },
+  { label: "Lot Number", value: immunization.resource.lotNumber },
+  ...entryFromArray("Note", immunization.notesDisplay),
 ];
 
 const getRowActions =
