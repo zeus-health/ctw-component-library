@@ -105,7 +105,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     key: "immunizations",
     getPanelClassName: () => "ctw-pt-5",
     display: () => (
-      <div className="ctw-space-x-2">
+      <div className="ctw-flex ctw-items-center ctw-space-x-2">
         <UnreadImmunizationsNotification />
         <span className="ctw-capitalize">immunizations</span>
         <BetaLabel />

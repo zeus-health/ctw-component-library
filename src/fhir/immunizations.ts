@@ -8,7 +8,7 @@ import { useFeatureFlaggedQueryWithPatient } from "..";
 import { applyImmunizationFilters } from "@/components/content/immunizations/helpers/filters";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
-import { createGraphqlClient } from "@/services/fqs/client";
+import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import {
   ImmunizationGraphqlResponse,
   immunizationsQuery,
