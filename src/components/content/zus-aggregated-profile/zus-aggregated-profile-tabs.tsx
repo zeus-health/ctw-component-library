@@ -5,7 +5,7 @@ import {
 } from "../conditions/patient-conditions-outside";
 import { PatientConditionsOutsideBadge } from "../conditions/patient-conditions-outside-badge";
 import { PatientMedications, PatientMedicationsProps } from "../medications/patient-medications";
-import { PatientMedicationsOutsideBadge } from "../medications/patient-medications-outside-badge";
+import { UnreadMedicationsNotification } from "../medications/unread-allergies-notification";
 import {
   PatientObservations,
   PatientObservationsProps,
@@ -112,7 +112,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     key: "medications",
     display: () => (
       <div className="ctw-flex ctw-items-center ctw-space-x-2">
-        <PatientMedicationsOutsideBadge />
+        <UnreadMedicationsNotification />
         <span className="ctw-capitalize">medications</span>
       </div>
     ),

@@ -1,11 +1,13 @@
 import cx from "classnames";
 import { useEffect, useMemo, useState } from "react";
+import { useAddMedicationForm } from "./helpers/add-new-med-drawer";
 import { patientMedicationsColumns } from "./helpers/columns";
 import { useMedicationDetailsDrawer } from "./helpers/details";
 import { defaultMedicationFilters, medicationFilters } from "./helpers/filters";
 import { defaultMedicationSort, medicationSortOptions } from "./helpers/sorts";
 import { useToggleDismiss } from "../hooks/use-toggle-dismiss";
 import { useToggleRead } from "../hooks/use-toggle-read";
+import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { withErrorBoundary } from "@/components/core/error-boundary";
@@ -16,23 +18,28 @@ import { MedicationStatementModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { usePatientMedications } from "@/hooks/use-medications";
 import { useBaseTranslations } from "@/i18n";
-import {
-  QUERY_KEY_BASIC,
-  QUERY_KEY_PATIENT_ALLERGIES,
-  QUERY_KEY_SUMMARY_MEDICATIONS,
-} from "@/utils/query-keys";
+import { QUERY_KEY_BASIC, QUERY_KEY_SUMMARY_MEDICATIONS } from "@/utils/query-keys";
 
 export type PatientMedicationsProps = {
   className?: string;
+  onAddToRecord?: (record: MedicationStatementModel) => void;
+  readOnly?: boolean;
 };
 
-function PatientMedicationsComponent({ className }: PatientMedicationsProps) {
+function PatientMedicationsComponent({
+  className,
+  onAddToRecord,
+  readOnly,
+}: PatientMedicationsProps) {
   const { featureFlags, getRequestContext } = useCTW();
   const patientMedicationsQuery = usePatientMedications();
-  const { data, setFilters, setSort } = useFilteredSortedData({
+  const { viewOptions, defaultView } =
+    getDateRangeView<MedicationStatementModel>("lastActivityDate");
+  const { data, setFilters, setSort, setViewOption } = useFilteredSortedData({
+    defaultView,
     defaultFilters: defaultMedicationFilters,
     defaultSort: defaultMedicationSort,
-    records: patientMedicationsQuery.medications,
+    records: patientMedicationsQuery.data,
   });
   const openDetails = useMedicationDetailsDrawer();
   const [userBuilderId, setUserBuilderId] = useState("");
@@ -46,12 +53,15 @@ function PatientMedicationsComponent({ className }: PatientMedicationsProps) {
     void load();
   }, [getRequestContext]);
 
-  const rowActions = useMemo(() => getRowActions(userBuilderId), [userBuilderId]);
+  const rowActions = useMemo(
+    () => (readOnly ? undefined : getRowActions(userBuilderId, onAddToRecord)),
+    [userBuilderId, onAddToRecord, readOnly]
+  );
 
-  const { toggleRead } = useToggleRead(QUERY_KEY_PATIENT_ALLERGIES, QUERY_KEY_BASIC);
+  const { toggleRead } = useToggleRead(QUERY_KEY_SUMMARY_MEDICATIONS, QUERY_KEY_BASIC);
 
   const handleRowClick = (record: MedicationStatementModel) => {
-    if (!record.isRead) {
+    if (!record.isRead && !readOnly && !record.ownedByBuilder(userBuilderId)) {
       toggleRead(record);
     }
     openDetails(record);
@@ -63,10 +73,15 @@ function PatientMedicationsComponent({ className }: PatientMedicationsProps) {
       data-zus-telemetry-namespace="Medications"
     >
       <ResourceTableActions
+        viewOptions={{
+          onChange: setViewOption,
+          defaultView,
+          options: viewOptions,
+        }}
         filterOptions={{
           onChange: setFilters,
           defaultState: defaultMedicationFilters,
-          filters: medicationFilters(data, true),
+          filters: medicationFilters(patientMedicationsQuery.data),
         }}
         sortOptions={{
           defaultSort: defaultMedicationSort,
@@ -93,9 +108,10 @@ export const PatientMedications = withErrorBoundary(
 );
 
 const getRowActions =
-  (userBuilderId: string) =>
+  (userBuilderId: string, onAddToRecord?: (record: MedicationStatementModel) => void) =>
   ({ record }: RowActionsProps<MedicationStatementModel>) => {
     const { t } = useBaseTranslations();
+    const showAddMedicationForm = useAddMedicationForm();
     const { isLoading: isToggleDismissLoading, toggleDismiss } = useToggleDismiss(
       QUERY_KEY_SUMMARY_MEDICATIONS,
       QUERY_KEY_BASIC
@@ -148,6 +164,22 @@ const getRowActions =
           ) : (
             readLabel
           )}
+        </button>
+        <button
+          type="button"
+          className="ctw-btn-primary ctw-ml-1 ctw-capitalize"
+          data-zus-telemetry-click="Add to record"
+          data-testid="add-to-record"
+          disabled={isToggleDismissLoading || isToggleReadLoading}
+          onClick={() => {
+            if (onAddToRecord) {
+              onAddToRecord(record);
+            } else {
+              showAddMedicationForm(record);
+            }
+          }}
+        >
+          {t("resourceTable.add")}
         </button>
       </div>
     );

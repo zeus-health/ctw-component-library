@@ -4,16 +4,9 @@ import { FilterChangeEvent, FilterItem } from "@/components/core/filter-bar/filt
 import { MedicationStatementModel } from "@/fhir/models";
 import { uniqueValues } from "@/utils/filters";
 
-export function medicationFilters(
-  medications: MedicationStatementModel[],
-  outside: boolean
-): FilterItem[] {
+export function medicationFilters(medications: MedicationStatementModel[]): FilterItem[] {
   const prescriberNames = uniqueValues(medications, "lastPrescriber");
-  const filters: FilterItem[] = [];
-
-  if (outside) {
-    filters.push(dismissFilter);
-  }
+  const filters: FilterItem[] = [dismissFilter];
 
   if (prescriberNames.length > 1) {
     filters.push({

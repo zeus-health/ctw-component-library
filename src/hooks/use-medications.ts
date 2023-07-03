@@ -133,6 +133,6 @@ export function usePatientMedications() {
     isFetching,
     isLoading,
     isError,
-    medications,
+    data: medications,
   };
 }

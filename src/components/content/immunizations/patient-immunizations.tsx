@@ -14,6 +14,7 @@ import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 
 export type PatientImmunizationsProps = {
   className?: string;
+  readOnly?: boolean;
 };
 
 const viewRecordFHIR = ({ record }: { record: ImmunizationModel }) => (

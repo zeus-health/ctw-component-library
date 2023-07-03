@@ -23,9 +23,10 @@ import { QUERY_KEY_BASIC, QUERY_KEY_PATIENT_ALLERGIES } from "@/utils/query-keys
 
 export type PatientAllergiesProps = {
   className?: string;
+  readOnly?: boolean;
 };
 
-function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
+function PatientAllergiesComponent({ className, readOnly }: PatientAllergiesProps) {
   const { featureFlags, getRequestContext } = useCTW();
   const { enabled } = useFQSFeatureToggle("allergies");
   const patientAllergiesQuery = usePatientAllergies();
@@ -54,12 +55,15 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
     enableFQS: enabled,
   });
 
-  const rowActions = useMemo(() => getRowActions(userBuilderId), [userBuilderId]);
+  const rowActions = useMemo(
+    () => (readOnly ? undefined : getRowActions(userBuilderId)),
+    [userBuilderId, readOnly]
+  );
 
   const { toggleRead } = useToggleRead(QUERY_KEY_PATIENT_ALLERGIES, QUERY_KEY_BASIC);
 
   const handleRowClick = (record: AllergyModel) => {
-    if (!record.isRead) {
+    if (!record.isRead && !readOnly && !record.ownedByBuilder(userBuilderId)) {
       toggleRead(record);
     }
     openDetails(record);
