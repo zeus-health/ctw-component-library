@@ -1,9 +1,11 @@
-import { GraphQLClient } from "graphql-request";
+import { GraphQLClient, Variables } from "graphql-request";
+import { graphQLToFHIR } from "./graphql-to-fhir";
 import { getZusServiceUrl } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { Env } from "@/components/core/providers/types";
 import { ResourceType, ResourceTypeString } from "@/fhir/types";
 import { CTW_REQUEST_HEADER } from "@/utils/request";
+import { Telemetry } from "@/utils/telemetry";
 
 export interface GraphqlPageInfo {
   hasNextPage: boolean;
@@ -21,10 +23,26 @@ export interface GenericConnection<T extends ResourceTypeString> {
 export const createGraphqlClient = (requestContext: CTWRequestContext) => {
   const endpoint = `${getZusServiceUrl(requestContext.env, "fqs")}/query`;
   return new GraphQLClient(endpoint, {
+    errorPolicy: "all",
     headers: {
       authorization: `Bearer ${requestContext.authToken}`,
     },
   });
+};
+
+export const fqsRequest = async <T>(client: GraphQLClient, query: string, variables: object) => {
+  const { data, errors } = await client.rawRequest<T>(query, variables as Variables);
+  const fhirData = graphQLToFHIR(data);
+  if (errors) {
+    if (data) {
+      errors.forEach((e) => {
+        Telemetry.logger.error("Error in FQS request", undefined, e);
+      });
+      return { data: fhirData };
+    }
+    throw errors;
+  }
+  return { data: fhirData };
 };
 
 export function getFetchFromFqs(env: Env, accessToken: string, builderId?: string) {
