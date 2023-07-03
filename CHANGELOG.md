@@ -1,5 +1,33 @@
 # ctw-component-library
 
+## 1.27.1
+
+### Patch Changes
+
+- c08c83c5: Fix styling on notification icons.
+
+## 1.27.0
+
+### Minor Changes
+
+- 8856e90b: Use data from FQS queries that return errors and data
+
+### Patch Changes
+
+- 56ca29a6: Prevent non-builder users from being able to mark records as read in production.
+
+## 1.26.5
+
+### Patch Changes
+
+- e01d88e3: Fetch all types of values for observations from FQS. This fixes an issue where some diagnostic report observations don't show any results.
+
+## 1.26.4
+
+### Patch Changes
+
+- 21a83a76: Add notification to allergy tab in ZAP indicating unread allergies. Modify outside conditions/medications count badge to display notification.
+
 ## 1.26.3
 
 ### Patch Changes

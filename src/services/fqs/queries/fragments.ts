@@ -217,6 +217,55 @@ export const fragmentObservation = gql`
       system
       code
     }
+    valueCodeableConcept {
+      text
+      coding {
+        system
+        code
+        display
+      }
+    }
+    valueString
+    valueBoolean
+    valueInteger
+    valueRange {
+      low {
+        comparator
+        unit
+        value
+        system
+        code
+      }
+      high {
+        comparator
+        unit
+        value
+        system
+        code
+      }
+    }
+    valueRatio {
+      numerator {
+        comparator
+        unit
+        value
+        system
+        code
+      }
+      denominator {
+        comparator
+        unit
+        value
+        system
+        code
+      }
+    }
+    valueTime
+    valueDateTime
+    valuePeriod {
+      start
+      end
+    }
     interpretation {
       text
       coding {

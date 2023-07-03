@@ -95,6 +95,7 @@ export const diagnosticReportQuery = gql`
           }
           result {
             reference
+            display
             resource {
               ...Observation
             }
