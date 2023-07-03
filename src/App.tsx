@@ -108,12 +108,16 @@ const components: DemoComponent[] = [
         includePatientDemographicsForm={false}
         resources={[
           "allergies",
+          "conditions",
           "conditions-outside",
+          "medications",
+          "medications-outside",
+          "observations",
+          "timeline",
+          "observations-outside",
+          "care-team",
           "documents",
           "immunizations",
-          "medications-outside",
-          "care-team",
-          "timeline",
         ]}
         title="ZAP"
       />
