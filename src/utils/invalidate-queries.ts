@@ -1,7 +1,7 @@
 import {
   QUERY_KEY_MEDICATION_HISTORY,
-  QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
   QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
+  QUERY_KEY_SUMMARY_MEDICATIONS,
 } from "./query-keys";
 import { queryClient } from "@/utils/request";
 
@@ -16,7 +16,7 @@ export function invalidateBuilderMedsQueries() {
 }
 
 export function invalidateOtherProviderMedsQueries() {
-  return invalidateQueriesFrom([QUERY_KEY_OTHER_PROVIDER_MEDICATIONS]);
+  return invalidateQueriesFrom([QUERY_KEY_SUMMARY_MEDICATIONS]);
 }
 
 export function invalidateMedicationHistoryQueries() {

@@ -87,11 +87,6 @@ const components: DemoComponent[] = [
     title: "Patient Medications",
   },
   {
-    name: "medications-outside",
-    render: () => <PatientMedicationsOutside />,
-    title: "Patient Medications Outside",
-  },
-  {
     name: "patient-history",
     render: () => <PatientHistoryTable />,
     title: "Patient History Table",
@@ -111,7 +106,6 @@ const components: DemoComponent[] = [
           "conditions",
           "conditions-outside",
           "medications",
-          "medications-outside",
           "observations",
           "timeline",
           "observations-outside",

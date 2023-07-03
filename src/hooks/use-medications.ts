@@ -5,18 +5,18 @@ import { useFeatureFlaggedQueryWithPatient } from "@/components/core/providers/p
 import { useBasic } from "@/fhir/basic";
 import { getIncludedBasics, getIncludedBasicsMap, getMergedIncludedResources } from "@/fhir/bundle";
 import {
-  getActiveMedications,
-  getActiveMedicationsFQS,
   getBuilderMedications,
   getBuilderMedicationStatementsFQS,
+  getSummaryMedications,
+  getSummaryMedicationsFQS,
   MedicationResults,
-  splitMedications,
+  mergeMedications,
 } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { ResourceMap } from "@/fhir/types";
 import {
-  QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
   QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
+  QUERY_KEY_SUMMARY_MEDICATIONS,
 } from "@/utils/query-keys";
 
 // Gets patient medications for the builder, excluding meds where the information source is patient.
@@ -38,12 +38,12 @@ export function useQueryGetSummarizedPatientMedications(): UseQueryResult<
   const fqs = useFQSFeatureToggle("medications");
   const basics = useBasic(fqs);
   const result = useFeatureFlaggedQueryWithPatient(
-    QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
+    QUERY_KEY_SUMMARY_MEDICATIONS,
     [],
     "medications",
     "req.timing.active_medications",
-    getActiveMedicationsFQS,
-    getActiveMedications
+    getSummaryMedicationsFQS,
+    getSummaryMedications
   );
 
   if (result.data && basics.data) {
@@ -57,12 +57,9 @@ export function useQueryGetSummarizedPatientMedications(): UseQueryResult<
  * categories ("Builder Medications" and "Other Provider Medications"). This is
  * useful when creating content such as the <PatientMedications /> component.
  */
-export function useQueryAllPatientMedications() {
+export function usePatientMedications() {
   const fqs = useFQSFeatureToggle("medications");
-  const [builderMedications, setBuilderMedications] = useState<MedicationStatementModel[]>([]);
-  const [otherProviderMedications, setOtherProviderMedications] = useState<
-    MedicationStatementModel[]
-  >([]);
+  const [medications, setMedications] = useState<MedicationStatementModel[]>([]);
 
   const summarizedMedicationsQuery = useQueryGetSummarizedPatientMedications();
   const builderMedicationsQuery = useQueryGetPatientMedsForBuilder();
@@ -86,7 +83,7 @@ export function useQueryAllPatientMedications() {
       ]);
 
       // Split the summarized medications into those known/unknown to the builder
-      const splitData = splitMedications(
+      const mergedData = mergeMedications(
         summarizedMedications.map(
           (m) => new MedicationStatementModel(m, includedResources, basicsMap.get(m.id ?? ""))
         ),
@@ -95,8 +92,7 @@ export function useQueryAllPatientMedications() {
         )
       );
 
-      setBuilderMedications(splitData.builderMedications);
-      setOtherProviderMedications(splitData.otherProviderMedications);
+      setMedications([...mergedData]);
     } else if (
       fqs.ready &&
       fqs.enabled &&
@@ -109,7 +105,7 @@ export function useQueryAllPatientMedications() {
       const basicsMap = getIncludedBasicsMap(basics);
 
       // Split the summarized medications into those known/unknown to the builder
-      const splitData = splitMedications(
+      const mergedData = mergeMedications(
         summarizedMedications.map(
           (m) => new MedicationStatementModel(m, {} as ResourceMap, basicsMap.get(m.id ?? ""))
         ),
@@ -118,8 +114,7 @@ export function useQueryAllPatientMedications() {
         )
       );
 
-      setBuilderMedications(splitData.builderMedications);
-      setOtherProviderMedications(splitData.otherProviderMedications);
+      setMedications([...mergedData]);
     }
   }, [
     summarizedMedicationsQuery.data,
@@ -138,7 +133,6 @@ export function useQueryAllPatientMedications() {
     isFetching,
     isLoading,
     isError,
-    builderMedications,
-    otherProviderMedications,
+    medications,
   };
 }

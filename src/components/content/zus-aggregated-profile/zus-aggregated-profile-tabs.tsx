@@ -5,10 +5,6 @@ import {
 } from "../conditions/patient-conditions-outside";
 import { PatientConditionsOutsideBadge } from "../conditions/patient-conditions-outside-badge";
 import { PatientMedications, PatientMedicationsProps } from "../medications/patient-medications";
-import {
-  PatientMedicationsOutside,
-  PatientMedicationsOutsideProps,
-} from "../medications/patient-medications-outside";
 import { PatientMedicationsOutsideBadge } from "../medications/patient-medications-outside-badge";
 import {
   PatientObservations,
@@ -114,19 +110,13 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
 
   medications: (props: PatientMedicationsProps = {}) => ({
     key: "medications",
-    display: () => "medication list",
-    render: () => <PatientMedications {...props} />,
-  }),
-
-  "medications-outside": (props: PatientMedicationsOutsideProps = {}) => ({
-    key: "medications-outside",
     display: () => (
       <div className="ctw-space-x-2">
         <PatientMedicationsOutsideBadge />
-        <span className="ctw-capitalize">{i18next.t("zap.tabs.medicationsOutside")}</span>
+        <span className="ctw-capitalize">medications</span>
       </div>
     ),
-    render: () => <PatientMedicationsOutside {...props} />,
+    render: () => <PatientMedications {...props} />,
   }),
 
   observations: (props: PatientObservationsProps = {}) => ({

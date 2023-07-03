@@ -1,6 +1,6 @@
 import { MedicationStatement } from "fhir/r4";
 import { getMedicationDisplayName } from "./medication";
-import { filterMedicationsWithNoRxNorms, splitMedications } from "./medications";
+import { filterMedicationsWithNoRxNorms, mergeMedications } from "./medications";
 import { SYSTEM_RXNORM } from "./system-urls";
 import { MedicationStatementModel } from "@/fhir/models";
 
@@ -69,7 +69,7 @@ describe("splitSummarizedMedications", () => {
       }),
     ];
 
-    const { builderMedications, otherProviderMedications } = splitMedications(
+    const { builderMedications, otherProviderMedications } = mergeMedications(
       lensMeds,
       builderMeds
     );

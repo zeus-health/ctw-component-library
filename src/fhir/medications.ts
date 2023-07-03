@@ -431,7 +431,7 @@ function applySearchFiltersToFQSResponse(
 
 /* Note when filtering the bundle may contain data that will no longer 
 be in the returned medications, such as medications with no RxNorm code. */
-export async function getActiveMedications(
+export async function getSummaryMedications(
   requestContext: CTWRequestContext,
   patient: PatientModel
 ): Promise<MedicationResults> {
@@ -459,7 +459,7 @@ export async function getActiveMedications(
 
 /* Note when filtering the bundle may contain data that will no longer 
 be in the returned medications, such as medications with no RxNorm code. */
-export async function getActiveMedicationsFQS(
+export async function getSummaryMedicationsFQS(
   requestContext: CTWRequestContext,
   patient: PatientModel
 ): Promise<MedicationResults> {
@@ -507,15 +507,15 @@ export function filterMedicationsWithNoRxNorms(
   return medications.filter((m) => getIdentifyingRxNormCode(m, resourceMap) !== undefined);
 }
 
-// Splits medications into those that the builder already knows about ("Provider Medications"),
-// those that they do not know about ("Other Provider Medications"), and those they didn't know
-// about originally and then dismissed ("Dismissed Other Provider Medications").
-export function splitMedications(
+// Merges summary medications and builder-owned medications into a single list.
+// Builder medications are prefered over summary medications, but are given
+// some of the lens extensions if available so that data can be presented in the table.
+export function mergeMedications(
   summarizedMedications: MedicationStatementModel[],
   builderOwnedMedications: MedicationStatementModel[]
 ) {
-  // Get active medications where there does not exist a matching builder owned record.
-  const otherProviderMedications = summarizedMedications.filter(
+  // Get summarized medications where there does not exist a matching builder owned record.
+  const outsideSummaryMeds = summarizedMedications.filter(
     (medication) =>
       !builderOwnedMedications.some((builderMed) => builderMed.rxNorm === medication.rxNorm)
   );
@@ -557,10 +557,7 @@ export function splitMedications(
     return new MedicationStatementModel(builderMedResource, m.includedResources, m.revIncludes);
   });
 
-  return {
-    builderMedications,
-    otherProviderMedications,
-  };
+  return [...builderMedications, ...outsideSummaryMeds];
 }
 
 export function useMedicationHistory(medication?: fhir4.MedicationStatement) {
