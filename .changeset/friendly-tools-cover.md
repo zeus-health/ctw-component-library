@@ -2,4 +2,4 @@
 "@zus-health/ctw-component-library": patch
 ---
 
-Add unread/read and dismissal functionality to immunization component.
+Update immunization component - read/unread, dismiss, updates to columns, default sort, additional data in details drawer.
