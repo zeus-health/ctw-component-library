@@ -41,6 +41,10 @@ function getClaims(authToken: string): ZusJWT {
   }
 }
 
+export function claimsUserType(authToken: string): string | undefined {
+  return getClaims(authToken)[AUTH_USER_TYPE];
+}
+
 export function claimsBuilderId(authToken: string): string | undefined {
   return getClaims(authToken)[AUTH_BUILDER_ID];
 }
