@@ -3,7 +3,7 @@ import { useGetAuthToken } from "./authentication/use-get-auth-token";
 import { CTWRequestContext, CTWStateContext } from "./ctw-context";
 import { getFhirClients } from "@/fhir/client";
 import { getFetchFromFqs } from "@/services/fqs/client";
-import { claimsBuilderId } from "@/utils/auth";
+import { claimsBuilderId, claimsUserType } from "@/utils/auth";
 
 export function useCTW() {
   const context = useContext(CTWStateContext);
@@ -25,6 +25,7 @@ export function useCTW() {
       fhirClient,
       fhirWriteBackClient,
       env: context.env,
+      userType: claimsUserType(authToken) ?? undefined,
       builderId: context.builderId ?? claimsBuilderId(authToken) ?? "",
       contextBuilderId: context.builderId,
       fetchFromFqs: getFetchFromFqs(context.env, authToken, context.builderId),
