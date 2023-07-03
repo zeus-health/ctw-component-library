@@ -18,6 +18,11 @@ export class ImmunizationModel extends FHIRModel<fhir4.Immunization> {
     return cvxCoding?.code;
   }
 
+  // String used to define a unique instance of an immunization administered for a patient.
+  get uniqueKey(): string {
+    return `${this.cvxCode || this.description} - ${this.occurrence}`;
+  }
+
   get doseQuantity(): string {
     return quantityLabel(this.resource.doseQuantity);
   }
