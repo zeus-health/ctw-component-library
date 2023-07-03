@@ -1,5 +1,15 @@
 # ctw-component-library
 
+## 1.27.0
+
+### Minor Changes
+
+- 8856e90b: Use data from FQS queries that return errors and data
+
+### Patch Changes
+
+- 56ca29a6: Prevent non-builder users from being able to mark records as read in production.
+
 ## 1.26.5
 
 ### Patch Changes
