@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.27.1
+
+### Patch Changes
+
+- c08c83c5: Fix styling on notification icons.
+
 ## 1.27.0
 
 ### Minor Changes
