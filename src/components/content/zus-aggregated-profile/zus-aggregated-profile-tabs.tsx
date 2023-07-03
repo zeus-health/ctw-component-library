@@ -48,7 +48,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     key: "allergies",
     getPanelClassName: () => "ctw-pt-5",
     display: () => (
-      <div className="ctw-space-x-2">
+      <div className="ctw-flex ctw-items-center ctw-space-x-2">
         <UnreadAllergiesNotification />
         <span className="ctw-capitalize">allergies</span>
       </div>
@@ -76,7 +76,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
   "conditions-outside": (props: PatientConditionsOutsideProps = {}) => ({
     key: "conditions-outside",
     display: () => (
-      <div className="ctw-space-x-2">
+      <div className="ctw-flex ctw-items-center ctw-space-x-2">
         <PatientConditionsOutsideBadge />
         <span className="ctw-capitalize">{i18next.t("zap.tabs.conditionsOutside")}</span>
       </div>
@@ -111,7 +111,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
   medications: (props: PatientMedicationsProps = {}) => ({
     key: "medications",
     display: () => (
-      <div className="ctw-space-x-2">
+      <div className="ctw-flex ctw-items-center ctw-space-x-2">
         <PatientMedicationsOutsideBadge />
         <span className="ctw-capitalize">medications</span>
       </div>

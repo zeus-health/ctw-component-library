@@ -4,7 +4,7 @@ import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useFeatureFlaggedQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { getIncludedResources } from "@/fhir/bundle";
 import { DiagnosticReportModel, PatientModel } from "@/fhir/models";
-import { createGraphqlClient } from "@/services/fqs/client";
+import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import {
   DiagnosticReportGraphqlResponse,
   diagnosticReportQuery,
@@ -92,19 +92,23 @@ async function diagnosticReportBuilderQueryFQS(
   patient: PatientModel
 ) {
   const graphClient = createGraphqlClient(requestContext);
-  const data = (await graphClient.request(diagnosticReportQuery, {
-    upid: patient.UPID,
-    cursor: "",
-    sort: {
-      lastUpdated: "DESC",
-    },
-    filter: {
-      tag: {
-        nonematch: [SYSTEM_ZUS_THIRD_PARTY],
+  const { data } = await fqsRequest<DiagnosticReportGraphqlResponse>(
+    graphClient,
+    diagnosticReportQuery,
+    {
+      upid: patient.UPID,
+      cursor: "",
+      sort: {
+        lastUpdated: "DESC",
       },
-    },
-    first: 1000,
-  })) as DiagnosticReportGraphqlResponse;
+      filter: {
+        tag: {
+          nonematch: [SYSTEM_ZUS_THIRD_PARTY],
+        },
+      },
+      first: 1000,
+    }
+  );
   return data;
 }
 
@@ -113,19 +117,23 @@ async function diagnosticReportCommonQueryFQS(
   patient: PatientModel
 ) {
   const graphClient = createGraphqlClient(requestContext);
-  const data = (await graphClient.request(diagnosticReportQuery, {
-    upid: patient.UPID,
-    cursor: "",
-    sort: {
-      lastUpdated: "DESC",
-    },
-    filter: {
-      tag: {
-        allmatch: [SYSTEM_ZUS_THIRD_PARTY],
+  const { data } = await fqsRequest<DiagnosticReportGraphqlResponse>(
+    graphClient,
+    diagnosticReportQuery,
+    {
+      upid: patient.UPID,
+      cursor: "",
+      sort: {
+        lastUpdated: "DESC",
       },
-    },
-    first: 1000,
-  })) as DiagnosticReportGraphqlResponse;
+      filter: {
+        tag: {
+          allmatch: [SYSTEM_ZUS_THIRD_PARTY],
+        },
+      },
+      first: 1000,
+    }
+  );
   return data;
 }
 

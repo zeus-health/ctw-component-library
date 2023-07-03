@@ -17,7 +17,7 @@ import { getIncludedBasics } from "@/fhir/bundle";
 import { ConditionModel } from "@/fhir/models/condition";
 import { searchBuilderRecords, searchSummaryRecords } from "@/fhir/search-helpers";
 import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
-import { createGraphqlClient } from "@/services/fqs/client";
+import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import { ConditionGraphqlResponse, conditionsQuery } from "@/services/fqs/queries/conditions";
 import { cloneDeep, orderBy } from "@/utils/nodash";
 import {
@@ -186,7 +186,7 @@ async function fetchPatientBuilderConditionsFQS(
 ) {
   try {
     const graphClient = createGraphqlClient(requestContext);
-    const data = (await graphClient.request(conditionsQuery, {
+    const { data } = await fqsRequest<ConditionGraphqlResponse>(graphClient, conditionsQuery, {
       upid: patient.UPID,
       cursor: "",
       first: 1000,
@@ -201,8 +201,7 @@ async function fetchPatientBuilderConditionsFQS(
           // allmatch: [`${SYSTEM_ZUS_OWNER}|builder/${requestContext.builderId}`],
         },
       },
-    })) as ConditionGraphqlResponse;
-
+    });
     let nodes = data.ConditionConnection.edges.map((x) => x.node);
     // TODO: No longer needed once https://zeushealth.atlassian.net/browse/DRT-249 is resolved.
     nodes = filterResourcesByBuilderId(
@@ -244,7 +243,7 @@ async function fetchPatientSummaryConditionsFQS(
 ) {
   try {
     const graphClient = createGraphqlClient(requestContext);
-    const data = (await graphClient.request(conditionsQuery, {
+    const { data } = await fqsRequest<ConditionGraphqlResponse>(graphClient, conditionsQuery, {
       upid: patient.UPID,
       cursor: "",
       first: 1000,
@@ -259,7 +258,7 @@ async function fetchPatientSummaryConditionsFQS(
           ],
         },
       },
-    })) as ConditionGraphqlResponse;
+    });
     const nodes = data.ConditionConnection.edges.map((x) => x.node);
     const conditions = setupConditionModelsWithFQS(nodes);
     const results = filterAndSort(conditions);
