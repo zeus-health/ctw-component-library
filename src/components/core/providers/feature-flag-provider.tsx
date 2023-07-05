@@ -83,6 +83,11 @@ const FeatureFlagProviderComponent = ({
 
 function getUnleashContext(authToken: string) {
   const decoded = jwtDecode(authToken) as { [key: string]: string };
+  // For some reason unleash proxy does not like localhost appearing
+  // in the query params and will return 403's.
+  // As a work around, we replace localhost with local.
+  const hostname = window.location.hostname.replace("localhost", "local");
+
   return {
     userId: decoded["https://zusapi.com/user_id"],
     properties: {
@@ -90,7 +95,7 @@ function getUnleashContext(authToken: string) {
       builderName: decoded["https://zusapi.com/builder_name"],
       userType: decoded["https://zusapi.com/user_type"],
       email: decoded["https://zusapi.com/email"],
-      hostname: window.location.hostname,
+      hostname,
     },
   };
 }
