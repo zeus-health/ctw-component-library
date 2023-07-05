@@ -1,4 +1,10 @@
-import type { FhirResource, MedicationStatement } from "fhir/r4";
+import type {
+  FhirResource,
+  MedicationAdministration,
+  MedicationDispense,
+  MedicationRequest,
+  MedicationStatement,
+} from "fhir/r4";
 import { useEffect, useState } from "react";
 import { bundleToResourceMap, getIncludedResources, getMergedIncludedResources } from "./bundle";
 import { getIdentifyingRxNormCode } from "./medication";
@@ -23,20 +29,32 @@ import {
   LENS_EXTENSION_MEDICATION_REFILLS,
   SYSTEM_RXNORM,
   SYSTEM_SUMMARY,
-  SYSTEM_ZUS_LENS,
   SYSTEM_ZUS_OWNER,
+  SYSTEM_ZUS_SUMMARY,
   SYSTEM_ZUS_THIRD_PARTY,
   SYSTEM_ZUS_UNIVERSAL_ID,
 } from "./system-urls";
-import { ResourceTypeString } from "./types";
+import { ResourceMap, ResourceTypeString } from "./types";
+import { useFeatureFlaggedQueryWithPatient } from "..";
 import { getLensBuilderId } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { MedicationModel } from "@/fhir/models/medication";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { PatientModel } from "@/fhir/models/patient";
 import { filterResourcesByBuilderId } from "@/services/common";
-import { createGraphqlClient } from "@/services/fqs/client";
+import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
+import {
+  MedicationAdministrationGraphqlResponse,
+  medicationAdministrationQuery,
+} from "@/services/fqs/queries/medication-administration";
+import {
+  MedicationDispenseGraphqlResponse,
+  medicationDispenseQuery,
+} from "@/services/fqs/queries/medication-dispense";
+import {
+  MedicationRequestGraphqlResponse,
+  medicationRequestQuery,
+} from "@/services/fqs/queries/medication-request";
 import {
   MedicationStatementGraphqlResponse,
   medicationStatementQuery,
@@ -60,7 +78,7 @@ import {
 } from "@/utils/nodash/fp";
 import { QUERY_KEY_MEDICATION_HISTORY } from "@/utils/query-keys";
 import { sort } from "@/utils/sort";
-import { Telemetry, withTimerMetric } from "@/utils/telemetry";
+import { Telemetry } from "@/utils/telemetry";
 
 export type InformationSource =
   | "Patient"
@@ -110,10 +128,11 @@ function applySearchFiltersToResponse(
 /* Note when filtering the bundle may contain data that will no longer be in the returned medications. */
 export async function getBuilderMedications(
   requestContext: CTWRequestContext,
-  patient: PatientModel,
-  keys: object[] = []
+  patient: PatientModel
 ): Promise<MedicationResults> {
-  const [searchFilters = {}] = keys;
+  const searchFilters = {
+    informationSourceNot: "Patient", // exclude medication statements where the patient is the information source
+  } as MedicationFilter;
 
   try {
     const response = await searchBuilderRecords("MedicationStatement", requestContext, {
@@ -134,28 +153,33 @@ export async function getBuilderMedications(
 
 export async function getBuilderMedicationStatementsFQS(
   requestContext: CTWRequestContext,
-  patient: PatientModel,
-  keys: object[] = []
+  patient: PatientModel
 ): Promise<MedicationResults> {
   try {
-    const [searchFilters = {}] = keys;
+    const searchFilters = {
+      informationSourceNot: "Patient", // exclude medication statements where the patient is the information source
+    } as MedicationFilter;
     const graphClient = createGraphqlClient(requestContext);
-    const data = (await graphClient.request(medicationStatementQuery, {
-      upid: patient.UPID,
-      cursor: "",
-      first: 1000,
-      sort: {
-        lastUpdated: "DESC",
-      },
-      filter: {
-        tag: {
-          nonematch: [SYSTEM_SUMMARY, `${SYSTEM_ZUS_THIRD_PARTY}`],
-          // TODO: There's a bug in FQS that doesn't allow filtering with nonematch AND allmatch.
-          // Uncomment the line below once https://zeushealth.atlassian.net/browse/DRT-249 is resolved.
-          // allmatch: [`${SYSTEM_ZUS_OWNER}|builder/${requestContext.builderId}`],
+    const { data } = await fqsRequest<MedicationStatementGraphqlResponse>(
+      graphClient,
+      medicationStatementQuery,
+      {
+        upid: patient.UPID,
+        cursor: "",
+        first: 1000,
+        sort: {
+          lastUpdated: "DESC",
         },
-      },
-    })) as MedicationStatementGraphqlResponse;
+        filter: {
+          tag: {
+            nonematch: [SYSTEM_SUMMARY, `${SYSTEM_ZUS_THIRD_PARTY}`],
+            // TODO: There's a bug in FQS that doesn't allow filtering with nonematch AND allmatch.
+            // Uncomment the line below once https://zeushealth.atlassian.net/browse/DRT-249 is resolved.
+            // allmatch: [`${SYSTEM_ZUS_OWNER}|builder/${requestContext.builderId}`],
+          },
+        },
+      }
+    );
     let nodes = data.MedicationStatementConnection.edges.map((x) => x.node);
     nodes = filterResourcesByBuilderId(
       nodes,
@@ -173,6 +197,156 @@ export async function getBuilderMedicationStatementsFQS(
     throw Telemetry.logError(
       e as Error,
       `Failed fetching builder medications for patient: ${patient.UPID}`
+    );
+  }
+}
+
+export async function getMedicationStatementsForPatientByIdFQS(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  resourceIds: string[] | undefined
+): Promise<MedicationResults> {
+  try {
+    if (resourceIds === undefined || resourceIds.length === 0) {
+      return { bundle: undefined, medications: [], basic: [] };
+    }
+    const graphClient = createGraphqlClient(requestContext);
+    const { data } = await fqsRequest<MedicationStatementGraphqlResponse>(
+      graphClient,
+      medicationStatementQuery,
+      {
+        upid: patient.UPID,
+        cursor: "",
+        first: 1000,
+        sort: {
+          lastUpdated: "DESC",
+        },
+        filter: {
+          ids: {
+            anymatch: resourceIds,
+          },
+        },
+      }
+    );
+    const nodes = data.MedicationStatementConnection.edges.map((x) => x.node);
+    return { bundle: undefined, medications: nodes, basic: [] };
+  } catch (e) {
+    throw Telemetry.logError(
+      e as Error,
+      `Failed fetching medication statements by ID for patient: ${patient.UPID}`
+    );
+  }
+}
+
+export async function getMedicationAdministrationsForPatientByIdFQS(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  resourceIds: string[] | undefined
+): Promise<MedicationAdministration[]> {
+  try {
+    if (resourceIds === undefined || resourceIds.length === 0) {
+      return [];
+    }
+    const graphClient = createGraphqlClient(requestContext);
+    const { data } = await fqsRequest<MedicationAdministrationGraphqlResponse>(
+      graphClient,
+      medicationAdministrationQuery,
+      {
+        upid: patient.UPID,
+        cursor: "",
+        first: 1000,
+        sort: {
+          lastUpdated: "DESC",
+        },
+        filter: {
+          ids: {
+            anymatch: resourceIds,
+          },
+        },
+      }
+    );
+    const nodes = data.MedicationAdministrationConnection.edges.map((x) => x.node);
+    return nodes;
+  } catch (e) {
+    throw Telemetry.logError(
+      e as Error,
+      `Failed fetching medication administrations by ID for patient: ${patient.UPID}`
+    );
+  }
+}
+
+export async function getMedicationDispensesForPatientByIdFQS(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  resourceIds: string[] | undefined
+): Promise<MedicationDispense[]> {
+  try {
+    if (resourceIds === undefined || resourceIds.length === 0) {
+      return [];
+    }
+    const graphClient = createGraphqlClient(requestContext);
+    const { data } = await fqsRequest<MedicationDispenseGraphqlResponse>(
+      graphClient,
+      medicationDispenseQuery,
+      {
+        upid: patient.UPID,
+        cursor: "",
+        first: 1000,
+        sort: {
+          lastUpdated: "DESC",
+        },
+        filter: {
+          ids: {
+            anymatch: resourceIds,
+          },
+        },
+      }
+    );
+
+    const nodes = data.MedicationDispenseConnection.edges.map((x) => x.node);
+    return nodes;
+  } catch (e) {
+    throw Telemetry.logError(
+      e as Error,
+      `Failed fetching medication dispenses by ID for patient: ${patient.UPID}`
+    );
+  }
+}
+
+export async function getMedicationRequestsForPatientByIdFQS(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  resourceIds: string[] | undefined
+): Promise<MedicationRequest[]> {
+  try {
+    if (resourceIds === undefined || resourceIds.length === 0) {
+      return [];
+    }
+    const graphClient = createGraphqlClient(requestContext);
+
+    const { data } = await fqsRequest<MedicationRequestGraphqlResponse>(
+      graphClient,
+      medicationRequestQuery,
+      {
+        upid: patient.UPID,
+        cursor: "",
+        first: 1000,
+        sort: {
+          lastUpdated: "DESC",
+        },
+        filter: {
+          ids: {
+            anymatch: resourceIds,
+          },
+        },
+      }
+    );
+    const nodes = data.MedicationRequestConnection.edges.map((x) => x.node);
+    return nodes;
+  } catch (e) {
+    throw Telemetry.logError(
+      e as Error,
+      `Failed fetching medication requests by ID for patient: ${patient.UPID}`
     );
   }
 }
@@ -276,22 +450,18 @@ function applySearchFiltersToFQSResponse(
 be in the returned medications, such as medications with no RxNorm code. */
 export async function getActiveMedications(
   requestContext: CTWRequestContext,
-  patient: PatientModel,
-  keys: Record<string, string>[] = []
+  patient: PatientModel
 ): Promise<MedicationResults> {
-  const [searchFilters = {}] = keys;
+  const searchFilters = {
+    _revinclude: "Basic:subject",
+  } as Record<string, string>;
 
   try {
-    const response = await searchLensRecords(
-      "MedicationStatement",
-      requestContext,
-      "ActiveMedications",
-      {
-        patientUPID: patient.UPID,
-        _include: "MedicationStatement:medication",
-        ...omitClientFilters(searchFilters),
-      }
-    );
+    const response = await searchLensRecords("MedicationStatement", requestContext, {
+      patientUPID: patient.UPID,
+      _include: "MedicationStatement:medication",
+      ...omitClientFilters(searchFilters),
+    });
 
     const medications = applySearchFiltersToResponse(response, searchFilters, true);
     if (medications.length === 0) {
@@ -308,32 +478,32 @@ export async function getActiveMedications(
 be in the returned medications, such as medications with no RxNorm code. */
 export async function getActiveMedicationsFQS(
   requestContext: CTWRequestContext,
-  patient: PatientModel,
-  keys: Record<string, string>[] = []
+  patient: PatientModel
 ): Promise<MedicationResults> {
   try {
-    const [searchFilters = {}] = keys;
-
     const graphClient = createGraphqlClient(requestContext);
-    const data = (await graphClient.request(medicationStatementQuery, {
-      upid: patient.UPID,
-      cursor: "",
-      first: 1000,
-      sort: {
-        lastUpdated: "DESC",
-      },
-      filter: {
-        tag: {
-          allmatch: [
-            `${SYSTEM_ZUS_LENS}|ActiveMedications`,
-            `${SYSTEM_ZUS_OWNER}|builder/${getLensBuilderId(requestContext.env)}`,
-          ],
+    const { data } = await fqsRequest<MedicationStatementGraphqlResponse>(
+      graphClient,
+      medicationStatementQuery,
+      {
+        upid: patient.UPID,
+        cursor: "",
+        first: 1000,
+        sort: {
+          lastUpdated: "DESC",
         },
-      },
-    })) as MedicationStatementGraphqlResponse;
+        filter: {
+          tag: {
+            allmatch: [
+              `${SYSTEM_ZUS_SUMMARY}|Common`,
+              `${SYSTEM_ZUS_OWNER}|builder/${getLensBuilderId(requestContext.env)}`,
+            ],
+          },
+        },
+      }
+    );
     const nodes = data.MedicationStatementConnection.edges.map((x) => x.node);
-    const medStatements = setupMedicationStatementModelsWithFQS(nodes);
-    const models = applySearchFiltersToFQSResponse(medStatements, searchFilters, true);
+    const models = setupMedicationStatementModelsWithFQS(nodes);
     if (models.length === 0) {
       Telemetry.countMetric("req.count.active_medications.none", 1, ["fqs"]);
     }
@@ -414,91 +584,13 @@ export function splitMedications(
 }
 
 export function useMedicationHistory(medication?: fhir4.MedicationStatement) {
-  const aggregatedFromReferences = !medication
-    ? []
-    : new MedicationStatementModel(medication).aggregatedFrom;
-
-  const getRefId = pipe(get("reference"), split("/"), last);
-  const resources = pipe(groupBy(get("type")), mapValues(map(getRefId)))(aggregatedFromReferences);
-
-  return useQueryWithPatient(
+  return useFeatureFlaggedQueryWithPatient(
     QUERY_KEY_MEDICATION_HISTORY,
-    [medication?.id || "empty"],
-    withTimerMetric(async (requestContext, patient) => {
-      try {
-        if (!medication) {
-          return {
-            includedResources: {},
-            medications: [],
-          };
-        }
-        const [
-          medicationStatementResponse,
-          medicationAdministrationResponse,
-          medicationRequestResponse,
-          medicationDispenseResponse,
-        ] = await Promise.all([
-          searchWrapper(
-            "MedicationStatement",
-            requestContext,
-            patient.UPID,
-            resources.MedicationStatement
-          ),
-          searchWrapper(
-            "MedicationAdministration",
-            requestContext,
-            patient.UPID,
-            resources.MedicationAdministration
-          ),
-          searchWrapper(
-            "MedicationRequest",
-            requestContext,
-            patient.UPID,
-            resources.MedicationRequest,
-            ["MedicationRequest:requester"]
-          ),
-          searchWrapper(
-            "MedicationDispense",
-            requestContext,
-            patient.UPID,
-            resources.MedicationDispense,
-            ["MedicationDispense:performer", "MedicationDispense:prescription"]
-          ),
-        ]);
-
-        const includedResources = getMergedIncludedResources(
-          compact([
-            medicationStatementResponse.bundle,
-            medicationAdministrationResponse.bundle,
-            medicationRequestResponse.bundle,
-            medicationDispenseResponse.bundle,
-          ])
-        );
-
-        const medicationResources = compact([
-          ...medicationStatementResponse.resources,
-          ...medicationAdministrationResponse.resources,
-          ...medicationRequestResponse.resources,
-          ...medicationDispenseResponse.resources,
-        ]).map((m) => new MedicationModel(m, includedResources));
-
-        const medications = sort(
-          uniqWith(
-            medicationResources,
-            (a, b) => a.date === b.date && a.resource.resourceType === b.resource.resourceType
-          ),
-          "date",
-          "desc",
-          true
-        );
-
-        return { medications, includedResources };
-      } catch (e) {
-        throw new Error(
-          `Failed fetching medication history for medication ${medication?.id}: ${e}`
-        );
-      }
-    }, "req.medication_history")
+    [],
+    "medications",
+    "req.timing.medication_history",
+    getMedicationHistoryFQS(medication),
+    getMedicationHistoryODS(medication)
   );
 }
 
@@ -559,4 +651,147 @@ function searchWrapper<T extends ResourceTypeString>(
     });
   }
   return { resources: [], bundle: undefined };
+}
+
+function getMedicationHistoryODS(medication?: fhir4.MedicationStatement) {
+  return async (requestContext: CTWRequestContext, patient: PatientModel) => {
+    if (!medication) {
+      return { medications: [], includedResources: {} as ResourceMap };
+    }
+
+    try {
+      const aggregatedFromReferences = new MedicationStatementModel(medication).aggregatedFrom;
+
+      const getRefId = pipe(get("reference"), split("/"), last);
+      const resources = pipe(
+        groupBy(get("type")),
+        mapValues(map(getRefId))
+      )(aggregatedFromReferences);
+      const [
+        medicationStatementResponse,
+        medicationAdministrationResponse,
+        medicationRequestResponse,
+        medicationDispenseResponse,
+      ] = await Promise.all([
+        searchWrapper(
+          "MedicationStatement",
+          requestContext,
+          patient.UPID,
+          resources.MedicationStatement
+        ),
+        searchWrapper(
+          "MedicationAdministration",
+          requestContext,
+          patient.UPID,
+          resources.MedicationAdministration
+        ),
+        searchWrapper(
+          "MedicationRequest",
+          requestContext,
+          patient.UPID,
+          resources.MedicationRequest,
+          ["MedicationRequest:requester"]
+        ),
+        searchWrapper(
+          "MedicationDispense",
+          requestContext,
+          patient.UPID,
+          resources.MedicationDispense,
+          ["MedicationDispense:performer", "MedicationDispense:prescription"]
+        ),
+      ]);
+
+      const includedResources = getMergedIncludedResources(
+        compact([
+          medicationStatementResponse.bundle,
+          medicationAdministrationResponse.bundle,
+          medicationRequestResponse.bundle,
+          medicationDispenseResponse.bundle,
+        ])
+      );
+
+      const medicationResources = compact([
+        ...medicationStatementResponse.resources,
+        ...medicationAdministrationResponse.resources,
+        ...medicationRequestResponse.resources,
+        ...medicationDispenseResponse.resources,
+      ]).map((m) => new MedicationModel(m, includedResources));
+
+      const medications = sort(
+        uniqWith(
+          medicationResources,
+          (a, b) => a.date === b.date && a.resource.resourceType === b.resource.resourceType
+        ),
+        "date",
+        "desc",
+        true
+      );
+      return { medications, includedResources };
+    } catch (e) {
+      throw new Error(`Failed fetching medication history for medication ${medication.id}: ${e}`);
+    }
+  };
+}
+
+function getMedicationHistoryFQS(medication?: fhir4.MedicationStatement) {
+  return async (requestContext: CTWRequestContext, patient: PatientModel) => {
+    if (!medication) {
+      return { medications: [], includedResources: {} as ResourceMap };
+    }
+    try {
+      const aggregatedFromReferences = new MedicationStatementModel(medication).aggregatedFrom;
+
+      const getRefId = pipe(get("reference"), split("/"), last);
+      const resources = pipe(
+        groupBy(get("type")),
+        mapValues(map(getRefId))
+      )(aggregatedFromReferences);
+      const [
+        medicationStatementResponse,
+        medicationAdministrationResponse,
+        medicationRequestResponse,
+        medicationDispenseResponse,
+      ] = await Promise.all([
+        getMedicationStatementsForPatientByIdFQS(
+          requestContext,
+          patient,
+          resources.MedicationStatement
+        ),
+        getMedicationAdministrationsForPatientByIdFQS(
+          requestContext,
+          patient,
+          resources.MedicationAdministration
+        ),
+        getMedicationRequestsForPatientByIdFQS(
+          requestContext,
+          patient,
+          resources.MedicationRequest
+        ),
+        getMedicationDispensesForPatientByIdFQS(
+          requestContext,
+          patient,
+          resources.MedicationDispense
+        ),
+      ]);
+      const medicationResources = compact([
+        ...medicationStatementResponse.medications,
+        ...medicationAdministrationResponse,
+        ...medicationRequestResponse,
+        ...medicationDispenseResponse,
+      ]).map((m) => new MedicationModel(m));
+
+      const medications = sort(
+        uniqWith(
+          medicationResources,
+          (a, b) => a.date === b.date && a.resource.resourceType === b.resource.resourceType
+        ),
+        "date",
+        "desc",
+        true
+      );
+      return { medications, includedResources: {} as ResourceMap };
+    } catch (e) {
+      throw new Error(`Failed fetching medication history for medication ${medication.id}: ${e}`);
+    }
+  };
 }

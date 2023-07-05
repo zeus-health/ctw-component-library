@@ -12,23 +12,20 @@ import { getBinaryDocument } from "@/fhir/binaries";
 import { usePatientDocuments } from "@/fhir/document";
 import { DocumentModel } from "@/fhir/models/document";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
+import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { useBaseTranslations } from "@/i18n";
 
-export type PatientDocumentProps = {
+export type PatientDocumentsProps = {
   className?: string;
-  enableFQS?: boolean;
   onAddToRecord?: (document: DocumentModel, binary: fhir4.Binary) => void;
 };
 
-function PatientDocumentsComponent({
-  className,
-  enableFQS = false,
-  onAddToRecord,
-}: PatientDocumentProps) {
+function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocumentsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { featureFlags } = useCTW();
+  const { enabled } = useFQSFeatureToggle("documents");
 
-  const patientDocumentQuery = usePatientDocuments(enableFQS);
+  const patientDocumentQuery = usePatientDocuments();
   const rowActions = useMemo(() => getRowActions({ onAddToRecord }), [onAddToRecord]);
   const { viewOptions, defaultView } = getDateRangeView<DocumentModel>("dateCreated");
   const { data, setViewOption } = useFilteredSortedData({
@@ -39,6 +36,7 @@ function PatientDocumentsComponent({
   const openDetails = useResourceDetailsDrawer({
     header: (m) => `${m.dateCreated} - ${m.title}`,
     details: documentData,
+    enableFQS: enabled,
   });
 
   return (
@@ -80,9 +78,9 @@ type RowActionsProps2 = RowActionsProps<DocumentModel> & ExtraRowActionProps;
 const RowActions = ({ record, onAddToRecord }: RowActionsProps2) => {
   const { t } = useBaseTranslations();
   const { getRequestContext } = useCTW();
-  const { binaryID } = record;
+  const { binaryId } = record;
 
-  return onAddToRecord && binaryID ? (
+  return onAddToRecord && binaryId ? (
     <div className="ctw-flex ctw-space-x-2">
       <button
         type="button"
@@ -90,7 +88,7 @@ const RowActions = ({ record, onAddToRecord }: RowActionsProps2) => {
         data-zus-telemetry-click="Add to record"
         data-testid="add-to-record"
         onClick={async () => {
-          const binary = await getBinaryDocument(await getRequestContext(), binaryID);
+          const binary = await getBinaryDocument(await getRequestContext(), binaryId);
           onAddToRecord(record, binary);
         }}
       >

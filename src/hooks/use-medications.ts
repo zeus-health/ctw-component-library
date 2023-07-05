@@ -1,7 +1,7 @@
 import { UseQueryResult } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useFQSFeatureToggle } from "./use-fqs-feature-toggle";
-import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
+import { useFeatureFlaggedQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { useBasic } from "@/fhir/basic";
 import { getIncludedBasics, getIncludedBasicsMap, getMergedIncludedResources } from "@/fhir/bundle";
 import {
@@ -9,9 +9,6 @@ import {
   getActiveMedicationsFQS,
   getBuilderMedications,
   getBuilderMedicationStatementsFQS,
-  getCommonMedicationDispenses,
-  getCommonMedicationRequests,
-  getMedicationStatements,
   MedicationResults,
   splitMedications,
 } from "@/fhir/medications";
@@ -20,83 +17,39 @@ import { ResourceMap } from "@/fhir/types";
 import {
   QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
   QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
-  QUERY_KEY_PATIENT_MEDICATION_DISPENSE_COMMON,
-  QUERY_KEY_PATIENT_MEDICATION_REQUESTS_COMMON,
-  QUERY_KEY_PATIENT_MEDICATION_STATEMENT,
 } from "@/utils/query-keys";
-import { withTimerMetric } from "@/utils/telemetry";
 
 // Gets patient medications for the builder, excluding meds where the information source is patient.
-export function useQueryGetPatientMedsForBuilder(
-  enableFQS: boolean
-): UseQueryResult<MedicationResults, unknown> {
-  return useQueryWithPatient(
+export function useQueryGetPatientMedsForBuilder(): UseQueryResult<MedicationResults, unknown> {
+  return useFeatureFlaggedQueryWithPatient(
     QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
-    [
-      {
-        informationSourceNot: "Patient", // exclude medication statements where the patient is the information source
-      },
-    ],
-    enableFQS
-      ? withTimerMetric(getBuilderMedicationStatementsFQS, "req.timing.builder_medications", [
-          "fqs",
-        ])
-      : withTimerMetric(getBuilderMedications, "req.timing.builder_medications")
+    [],
+    "medications",
+    "req.timing.builder_medications",
+    getBuilderMedicationStatementsFQS,
+    getBuilderMedications
   );
 }
 
-export function useQueryGetSummarizedPatientMedications(
-  enableFQS: boolean
-): UseQueryResult<MedicationResults, unknown> {
+export function useQueryGetSummarizedPatientMedications(): UseQueryResult<
+  MedicationResults,
+  unknown
+> {
   const fqs = useFQSFeatureToggle("medications");
   const basics = useBasic(fqs);
-  const result = useQueryWithPatient(
+  const result = useFeatureFlaggedQueryWithPatient(
     QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
-    [
-      {
-        _revinclude: "Basic:subject",
-      },
-    ],
-    enableFQS
-      ? withTimerMetric(getActiveMedicationsFQS, "req.timing.active_medications", ["fqs"])
-      : withTimerMetric(getActiveMedications, "req.timing.active_medications")
+    [],
+    "medications",
+    "req.timing.active_medications",
+    getActiveMedicationsFQS,
+    getActiveMedications
   );
+
   if (result.data && basics.data) {
     result.data.basic = basics.data;
   }
   return result;
-}
-
-export function useQueryGetPatientMedRequestsCommon() {
-  return useQueryWithPatient(
-    QUERY_KEY_PATIENT_MEDICATION_REQUESTS_COMMON,
-    [
-      {
-        informationSourceNot: "Patient",
-      },
-    ],
-    withTimerMetric(getCommonMedicationRequests, "req.medication_requests_common")
-  );
-}
-
-export function useQueryGetPatientMedDispenseCommon() {
-  return useQueryWithPatient(
-    QUERY_KEY_PATIENT_MEDICATION_DISPENSE_COMMON,
-    [
-      {
-        informationSourceNot: "Patient",
-      },
-    ],
-    withTimerMetric(getCommonMedicationDispenses, "req.medication_dispense_common")
-  );
-}
-
-export function useQueryMedicationStatement(rxNorm: string | undefined) {
-  return useQueryWithPatient(
-    QUERY_KEY_PATIENT_MEDICATION_STATEMENT,
-    [rxNorm],
-    withTimerMetric(getMedicationStatements, "req.medication_statement")
-  );
 }
 
 /**
@@ -104,18 +57,20 @@ export function useQueryMedicationStatement(rxNorm: string | undefined) {
  * categories ("Builder Medications" and "Other Provider Medications"). This is
  * useful when creating content such as the <PatientMedications /> component.
  */
-export function useQueryAllPatientMedications(enableFQS: boolean) {
+export function useQueryAllPatientMedications() {
+  const fqs = useFQSFeatureToggle("medications");
   const [builderMedications, setBuilderMedications] = useState<MedicationStatementModel[]>([]);
   const [otherProviderMedications, setOtherProviderMedications] = useState<
     MedicationStatementModel[]
   >([]);
 
-  const summarizedMedicationsQuery = useQueryGetSummarizedPatientMedications(enableFQS);
-  const builderMedicationsQuery = useQueryGetPatientMedsForBuilder(enableFQS);
+  const summarizedMedicationsQuery = useQueryGetSummarizedPatientMedications();
+  const builderMedicationsQuery = useQueryGetPatientMedsForBuilder();
 
   useEffect(() => {
     if (
-      !enableFQS &&
+      fqs.ready &&
+      !fqs.enabled &&
       summarizedMedicationsQuery.data?.bundle &&
       builderMedicationsQuery.data?.bundle
     ) {
@@ -143,7 +98,8 @@ export function useQueryAllPatientMedications(enableFQS: boolean) {
       setBuilderMedications(splitData.builderMedications);
       setOtherProviderMedications(splitData.otherProviderMedications);
     } else if (
-      enableFQS &&
+      fqs.ready &&
+      fqs.enabled &&
       summarizedMedicationsQuery.data?.medications &&
       builderMedicationsQuery.data?.medications
     ) {
@@ -169,11 +125,13 @@ export function useQueryAllPatientMedications(enableFQS: boolean) {
     summarizedMedicationsQuery.data,
     builderMedicationsQuery.data,
     summarizedMedicationsQuery.data?.basic,
-    enableFQS,
+    fqs.enabled,
+    fqs.ready,
   ]);
 
   const isLoading = builderMedicationsQuery.isLoading || summarizedMedicationsQuery.isLoading;
-  const isFetching = builderMedicationsQuery.isFetching || summarizedMedicationsQuery.isFetching;
+  const isFetching =
+    !fqs.ready || builderMedicationsQuery.isFetching || summarizedMedicationsQuery.isFetching;
   const isError = builderMedicationsQuery.isError || summarizedMedicationsQuery.isError;
 
   return {

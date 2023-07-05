@@ -51,6 +51,10 @@ export const diagnosticReportQuery = gql`
               valueInstant
             }
           }
+          extension {
+            url
+            valueString
+          }
           basedOn {
             reference
             resource {
@@ -91,6 +95,7 @@ export const diagnosticReportQuery = gql`
           }
           result {
             reference
+            display
             resource {
               ...Observation
             }

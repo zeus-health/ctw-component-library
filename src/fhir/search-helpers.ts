@@ -22,7 +22,10 @@ const DEBUG_ODS_FETCH_ALL_PAGES = import.meta.env.VITE_DEBUG_ODS_FETCH_ALL_PAGES
 // This way, we don't accidentally fetch 100K resources from ODS.
 const DEBUG_ODS_FETCH_ALL_PAGES_CUTOFF = 2500;
 
-function excludeTagsinPatientRecordSearch<T extends ResourceTypeString>(resourceType: T): string[] {
+// TODO: move this into client.ts after we are off ODS.
+export function excludeTagsinPatientRecordSearch<T extends ResourceTypeString>(
+  resourceType: T
+): string[] {
   switch (resourceType) {
     case "Patient":
       return [...UPI_TAGS];
@@ -156,16 +159,12 @@ export async function searchBuilderRecords<T extends ResourceTypeString>(
   return records;
 }
 
-// Like searchAllRecords, but filters down to lens records.
-export type LensTag = "ActiveMedications" | "ChronicConditions";
-
 export async function searchLensRecords<T extends ResourceTypeString>(
   resourceType: T,
   requestContext: CTWRequestContext,
-  lensTag: LensTag,
   searchParams?: SearchParams
 ): Promise<SearchReturn<T>> {
-  const tagFilter = [`${SYSTEM_ZUS_LENS}|${lensTag}`];
+  const tagFilter = SUMMARY_TAGS;
   const params = mergeParams(searchParams, {
     _tag: tagFilter,
   });

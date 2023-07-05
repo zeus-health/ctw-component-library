@@ -22,7 +22,7 @@ export type PatientMedicationsBaseProps = {
   filters: FilterItem[];
   defaultView?: ViewOption<MedicationStatementModel>;
   views?: ViewOption<MedicationStatementModel>[];
-
+  enableFQS?: boolean;
   onOpenHistoryDrawer?: () => void;
 };
 

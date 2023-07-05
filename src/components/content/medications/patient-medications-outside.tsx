@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useAddMedicationForm } from "./helpers/add-new-med-drawer";
 import { medicationFilters } from "./helpers/filters";
 import { PatientMedicationsBase } from "./helpers/patient-medications-base";
-import { useToggleArchive } from "../hooks/use-toggle-archive";
+import { useToggleDismiss } from "../hooks/use-toggle-dismiss";
 import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { RowActionsProps } from "@/components/core/table/table";
@@ -17,7 +17,6 @@ export type PatientMedicationsOutsideProps = {
   onOpenHistoryDrawer?: () => void;
   onAddToRecord?: (record: MedicationStatementModel) => void;
   readOnly?: boolean;
-  enableFQS?: boolean;
 };
 
 const PatientMedicationsOutsideComponent = ({
@@ -25,9 +24,8 @@ const PatientMedicationsOutsideComponent = ({
   onAddToRecord,
   readOnly = false,
   onOpenHistoryDrawer,
-  enableFQS = false,
 }: PatientMedicationsOutsideProps) => {
-  const { otherProviderMedications, isLoading } = useQueryAllPatientMedications(enableFQS);
+  const { otherProviderMedications, isLoading } = useQueryAllPatientMedications();
   const rowActions = useMemo(() => getRowActions({ onAddToRecord }), [onAddToRecord]);
   const { viewOptions, defaultView } =
     getDateRangeView<MedicationStatementModel>("lastActivityDate");
@@ -64,12 +62,11 @@ type RowActionsProps2 = RowActionsProps<MedicationStatementModel> & ExtraRowActi
 const RowActions = ({ record, onAddToRecord }: RowActionsProps2) => {
   const { t } = useBaseTranslations();
   const showAddMedicationForm = useAddMedicationForm();
-  const { isLoading, toggleArchive } = useToggleArchive(
-    record,
+  const { isLoading, toggleDismiss: toggleArchive } = useToggleDismiss(
     QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
     QUERY_KEY_BASIC
   );
-  const archiveLabel = record.isArchived ? t("resourceTable.restore") : t("resourceTable.dismiss");
+  const archiveLabel = record.isDismissed ? t("resourceTable.restore") : t("resourceTable.dismiss");
 
   return (
     <div className="ctw-flex ctw-space-x-2">
@@ -77,7 +74,9 @@ const RowActions = ({ record, onAddToRecord }: RowActionsProps2) => {
         type="button"
         className="ctw-btn-default"
         disabled={isLoading}
-        onClick={toggleArchive}
+        onClick={() => {
+          toggleArchive(record);
+        }}
       >
         {isLoading ? (
           <div className="ctw-flex">

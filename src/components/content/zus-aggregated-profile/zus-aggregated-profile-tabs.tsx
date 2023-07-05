@@ -1,3 +1,4 @@
+import { UnreadAllergiesNotification } from "../allergies/unread-allergies-notification";
 import {
   PatientConditionsOutside,
   PatientConditionsOutsideProps,
@@ -32,8 +33,8 @@ import {
   PatientConditionsProps,
 } from "@/components/content/conditions/patient-conditions";
 import {
-  PatientDocumentProps,
   PatientDocuments,
+  PatientDocumentsProps,
 } from "@/components/content/document/patient-documents";
 import {
   PatientImmunizations,
@@ -50,7 +51,12 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
   allergies: (props: PatientAllergiesProps = {}) => ({
     key: "allergies",
     getPanelClassName: () => "ctw-pt-5",
-    display: () => "allergies",
+    display: () => (
+      <div className="ctw-flex ctw-items-center ctw-space-x-2">
+        <UnreadAllergiesNotification />
+        <span className="ctw-capitalize">allergies</span>
+      </div>
+    ),
     render: () => <PatientAllergies {...props} />,
   }),
 
@@ -74,15 +80,15 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
   "conditions-outside": (props: PatientConditionsOutsideProps = {}) => ({
     key: "conditions-outside",
     display: () => (
-      <div className="ctw-space-x-2">
-        <span className="ctw-capitalize">{i18next.t("zap.tabs.conditionsOutside")}</span>
+      <div className="ctw-flex ctw-items-center ctw-space-x-2">
         <PatientConditionsOutsideBadge />
+        <span className="ctw-capitalize">{i18next.t("zap.tabs.conditionsOutside")}</span>
       </div>
     ),
     render: () => <PatientConditionsOutside {...props} />,
   }),
 
-  documents: (props: PatientDocumentProps = {}) => ({
+  documents: (props: PatientDocumentsProps = {}) => ({
     key: "documents",
     getPanelClassName: () => "ctw-pt-5",
     display: () => (
@@ -115,9 +121,9 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
   "medications-outside": (props: PatientMedicationsOutsideProps = {}) => ({
     key: "medications-outside",
     display: () => (
-      <div className="ctw-space-x-2">
-        <span className="ctw-capitalize">{i18next.t("zap.tabs.medicationsOutside")}</span>
+      <div className="ctw-flex ctw-items-center ctw-space-x-2">
         <PatientMedicationsOutsideBadge />
+        <span className="ctw-capitalize">{i18next.t("zap.tabs.medicationsOutside")}</span>
       </div>
     ),
     render: () => <PatientMedicationsOutside {...props} />,

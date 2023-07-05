@@ -12,10 +12,10 @@ export const applyFilters = <T extends object>(data: T[], filters?: (Filter | Fi
   const filteredData = filterFuncs.reduce((acc, filterFunc) => filterFunc(acc), data);
 
   return filteredData.filter((entry) => {
-    const showArchived = find(filterItems, { key: "isArchived" })?.selected;
-    const isArchived = Boolean(entry["isArchived" as keyof T]);
+    const showDismissed = find(filterItems, { key: "isDismissed" })?.selected;
+    const isDismissed = Boolean(entry["isDismissed" as keyof T]);
 
-    if (!showArchived && isArchived) {
+    if (!showDismissed && isDismissed) {
       return false;
     }
 

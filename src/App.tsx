@@ -8,6 +8,7 @@ import "./App.css";
 
 import {
   CTWProvider,
+  PatientAllergies,
   PatientConditions,
   PatientConditionsOutside,
   PatientDocuments,
@@ -19,6 +20,9 @@ import {
   ZusAggregatedProfile,
 } from ".";
 import { binary } from "./components/content/story-helpers/mocks/resources/binary";
+import { doc } from "prettier";
+import { title } from "process";
+import { resources } from "./i18n";
 
 const {
   VITE_AUTH0_AUDIENCE,
@@ -69,6 +73,7 @@ const locals = {
 };
 
 const components: DemoComponent[] = [
+  { name: "allergies", render: () => <PatientAllergies />, title: "Patient Allergies" },
   { name: "conditions", render: () => <PatientConditions />, title: "Patient Conditions" },
   {
     name: "conditions-outside",
@@ -77,42 +82,14 @@ const components: DemoComponent[] = [
   },
   {
     name: "documents",
-    render: () => (
-      <PatientDocuments
-        onAddToRecord={async (document, binary) => {
-          try {
-            const response = await fetch("ehr_api/clinical_documents/", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-              },
-              body: JSON.stringify({
-                patient: 0, // Replace with the current patient ID
-                authoring_practice: 0, // Replace with the current practice ID
-                xml_file: {
-                  original_filename: document.title, // TODO: Should this have some kind of date added to it or some formatting ensured (ie. no special characters)?
-                  content_type: "application/octet-stream",
-                  base64_content: btoa(binary.data ?? ""), // Assuming the binary data is provided in base64 format
-                },
-                data_format: "ccda", // TODO: How can we tell if a document is a CCDA?,
-              }),
-            });
-
-            const data = await response.json();
-
-            // Handle the response from the API as needed
-            console.log("API response:", data);
-          } catch (error) {
-            // Handle any errors that occur during the API request
-            console.error("API request error:", error);
-          }
-        }}
-      />
-    ),
+    render: () => <PatientDocuments />,
     title: "Patient Documents",
   },
-  { name: "medications", render: () => <PatientMedications />, title: "Patient Medications" },
+  {
+    name: "medications",
+    render: () => <PatientMedications />,
+    title: "Patient Medications",
+  },
   {
     name: "medications-outside",
     render: () => <PatientMedicationsOutside />,
@@ -147,11 +124,6 @@ const components: DemoComponent[] = [
           "immunizations",
         ]}
         title="ZAP"
-        timelineProps={{ enableFQS: true }}
-        observationsProps={{ enableFQS: true }}
-        immunizationsProps={{ enableFQS: true }}
-        allergiesProps={{ enableFQS: true }}
-        documentsProps={{ enableFQS: true }}
       />
     ),
   },

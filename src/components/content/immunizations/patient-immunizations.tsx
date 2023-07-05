@@ -10,28 +10,27 @@ import { ViewFHIR } from "@/components/core/view-fhir";
 import { usePatientImmunizations } from "@/fhir/immunizations";
 import { ImmunizationModel } from "@/fhir/models/immunization";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
+import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 
 export type PatientImmunizationsProps = {
   className?: string;
-  enableFQS?: boolean;
 };
 
 const viewRecordFHIR = ({ record }: { record: ImmunizationModel }) => (
   <ViewFHIR name="Immunization Resource" resource={record.resource} />
 );
 
-function PatientImmunizationsComponent({
-  className,
-  enableFQS = false,
-}: PatientImmunizationsProps) {
+function PatientImmunizationsComponent({ className }: PatientImmunizationsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const { featureFlags } = useCTW();
-  const patientImmunizationsQuery = usePatientImmunizations(enableFQS);
+  const { enabled } = useFQSFeatureToggle("immunizations");
+  const patientImmunizationsQuery = usePatientImmunizations();
   const openDetails = useResourceDetailsDrawer({
     header: (m) => m.description,
     details: immunizationData,
     getSourceDocument: true,
+    enableFQS: enabled,
   });
 
   return (

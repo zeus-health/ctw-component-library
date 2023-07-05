@@ -1,3 +1,4 @@
+import { AllergyIntolerance } from "fhir/r4";
 import { SearchParams } from "fhir-kit-client";
 import { HistoryEntryProps } from "../../resource/helpers/history-entry";
 import { useHistory } from "../../resource/history";
@@ -14,6 +15,7 @@ export function useAllergiesHistory(allergy: AllergyModel) {
     valuesToDedupeOn,
     getSearchParams,
     getHistoryEntry,
+    clientSideFiltersFQS,
   });
 }
 
@@ -33,6 +35,17 @@ function getSearchParams(allergy: AllergyModel) {
   }
 
   return searchParams;
+}
+
+function clientSideFiltersFQS(model: AllergyModel, allergies: AllergyIntolerance[]) {
+  const tokens = model.knownCodings.map((coding) => `${coding.system}|${coding.code}`);
+  return allergies.filter((allergy) => {
+    const modelTokens = allergy.code?.coding?.map((coding) => `${coding.system}|${coding.code}`);
+    // Sometimes data doesn't have known codings, so we also match on the code.text making sure that it is not blank.
+    const matchingCodeDisplay = model.codeText && allergy.code?.text === model.codeText;
+    const matchingSystemCode = modelTokens?.some((token) => tokens.includes(token));
+    return matchingSystemCode || matchingCodeDisplay;
+  });
 }
 
 function getHistoryEntry(allergy: AllergyModel): HistoryEntryProps {

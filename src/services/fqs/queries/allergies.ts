@@ -2,7 +2,7 @@ import { AllergyIntolerance } from "fhir/r4";
 import { gql } from "graphql-request";
 import {
   fragmentCoding,
-  fragmentEncounter,
+  fragmentEncounterReference,
   fragmentPatient,
   fragmentPractitioner,
 } from "./fragments";
@@ -20,15 +20,22 @@ export interface AllergyGraphqlResponse {
 export const allergyQuery = gql`
   ${fragmentCoding}
   ${fragmentPatient}
-  ${fragmentEncounter}
+  ${fragmentEncounterReference}
   ${fragmentPractitioner}
   query AllergyIntolerance(
     $upid: ID!
     $cursor: String!
     $sort: AllergyIntoleranceSortParams!
+    $filter: AllergyIntoleranceFilterParams! = {}
     $first: Int!
   ) {
-    AllergyIntoleranceConnection(upid: $upid, after: $cursor, sort: $sort, first: $first) {
+    AllergyIntoleranceConnection(
+      upid: $upid
+      after: $cursor
+      sort: $sort
+      filter: $filter
+      first: $first
+    ) {
       pageInfo {
         hasNextPage
       }
@@ -36,12 +43,25 @@ export const allergyQuery = gql`
         node {
           id
           resourceType
+          meta {
+            tag {
+              system
+              code
+              display
+            }
+          }
           clinicalStatus {
+            text
             coding {
               ...Coding
             }
           }
+          extension {
+            url
+            valueString
+          }
           verificationStatus {
+            text
             coding {
               ...Coding
             }
@@ -50,6 +70,7 @@ export const allergyQuery = gql`
           category
           criticality
           code {
+            text
             coding {
               ...Coding
             }
@@ -100,11 +121,13 @@ export const allergyQuery = gql`
           }
           reaction {
             substance {
+              text
               coding {
                 ...Coding
               }
             }
             manifestation {
+              text
               coding {
                 ...Coding
               }

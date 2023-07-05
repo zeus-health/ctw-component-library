@@ -12,10 +12,14 @@ export const fragmentCoding = gql`
   }
 `;
 
-export const fragmentEncounter = gql`
+export const fragmentEncounterReference = gql`
   fragment Encounter on Encounter {
     id
     resourceType
+    extension {
+      url
+      valueString
+    }
     status
     priority {
       text
@@ -32,6 +36,10 @@ export const fragmentPractitioner = gql`
   fragment Practitioner on Practitioner {
     id
     resourceType
+    extension {
+      url
+      valueString
+    }
     name {
       family
       given
@@ -47,6 +55,10 @@ export const fragmentMedicationRequest = gql`
   fragment MedicationRequest on MedicationRequest {
     id
     resourceType
+    extension {
+      url
+      valueString
+    }
     status
     intent
   }
@@ -56,6 +68,10 @@ export const fragmentPatient = gql`
   fragment Patient on Patient {
     id
     resourceType
+    extension {
+      url
+      valueString
+    }
     active
     identifier {
       use
@@ -98,6 +114,7 @@ export const fragmentPatient = gql`
     birthDate
     gender
     maritalStatus {
+      text
       coding {
         code
         display
@@ -157,6 +174,10 @@ export const fragmentObservation = gql`
   fragment Observation on Observation {
     id
     resourceType
+    extension {
+      url
+      valueString
+    }
     status
     category {
       text
@@ -196,6 +217,55 @@ export const fragmentObservation = gql`
       system
       code
     }
+    valueCodeableConcept {
+      text
+      coding {
+        system
+        code
+        display
+      }
+    }
+    valueString
+    valueBoolean
+    valueInteger
+    valueRange {
+      low {
+        comparator
+        unit
+        value
+        system
+        code
+      }
+      high {
+        comparator
+        unit
+        value
+        system
+        code
+      }
+    }
+    valueRatio {
+      numerator {
+        comparator
+        unit
+        value
+        system
+        code
+      }
+      denominator {
+        comparator
+        unit
+        value
+        system
+        code
+      }
+    }
+    valueTime
+    valueDateTime
+    valuePeriod {
+      start
+      end
+    }
     interpretation {
       text
       coding {
@@ -215,6 +285,10 @@ export const fragmentOrganization = gql`
   fragment Organization on Organization {
     id
     resourceType
+    extension {
+      url
+      valueString
+    }
     name
     telecom {
       system

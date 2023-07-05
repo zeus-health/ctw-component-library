@@ -11,6 +11,7 @@ import { getBinaryId } from "@/fhir/binaries";
 import { DocumentModel } from "@/fhir/models/document";
 import { FHIRModel } from "@/fhir/models/fhir-model";
 import { searchProvenances } from "@/fhir/provenance";
+import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { UseQueryResultBasic } from "@/utils/request";
 
 const HISTORY_PAGE_LIMIT = 20;
@@ -25,6 +26,7 @@ export type UseResourceDetailsDrawerProps<T extends fhir4.Resource, M extends FH
   | "readOnly"
   | "onEdit"
   | "onRemove"
+  | "enableFQS"
 >;
 
 export function useResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>(
@@ -54,6 +56,7 @@ type ResourceDetailsDrawerProps<T extends fhir4.Resource, M extends FHIRModel<T>
   onRemove?: (model: M, onDelete?: (model: M) => void) => void;
   readOnly?: boolean;
   subHeader?: (model: M) => ReactNode;
+  enableFQS?: boolean;
 };
 
 function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>({
@@ -74,6 +77,7 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
   const [isLoading, setIsLoading] = useState(false);
   const [binaryId, setBinaryId] = useState<string>();
   const { getRequestContext } = useCTW();
+  const fqsProvenances = useFQSFeatureToggle("provenances");
   const history = getHistory && getHistory(model);
 
   // We optionally look for any associated binary CCDAs
@@ -82,7 +86,7 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
     async function load() {
       setIsLoading(true);
       const requestContext = await getRequestContext();
-      const provenances = await searchProvenances(requestContext, [model]);
+      const provenances = await searchProvenances(requestContext, [model], fqsProvenances.enabled);
       setBinaryId(getBinaryId(provenances, model.id));
       setIsLoading(false);
     }
@@ -90,11 +94,11 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
     if (model instanceof DocumentModel) {
       // Special handling for document models
       // which already have a binaryID.
-      setBinaryId(model.binaryID);
-    } else if (getSourceDocument) {
+      setBinaryId(model.binaryId);
+    } else if (getSourceDocument && fqsProvenances.ready) {
       void load();
     }
-  }, [getSourceDocument, model, getRequestContext]);
+  }, [getSourceDocument, model, getRequestContext, fqsProvenances.enabled, fqsProvenances.ready]);
 
   return (
     <Drawer className={className} title={model.resourceTypeTitle} isOpen={isOpen} onClose={onClose}>

@@ -10,11 +10,11 @@ import { getBinaryId } from "@/fhir/binaries";
 import { DiagnosticReportModel, ObservationModel } from "@/fhir/models";
 import { searchProvenances } from "@/fhir/provenance";
 import { findReference } from "@/fhir/resource-helper";
+import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { compact } from "@/utils/nodash";
 
 export type ObservationDetailsProps = {
   diagnosticReport: DiagnosticReportModel;
-  enableFQS: boolean;
 };
 
 export const diagnosticReportData = (diagnosticReport: DiagnosticReportModel) => [
@@ -25,12 +25,14 @@ export const diagnosticReportData = (diagnosticReport: DiagnosticReportModel) =>
   { label: "Organization", value: diagnosticReport.performer },
 ];
 
-export const Component = ({ diagnosticReport, enableFQS = false }: ObservationDetailsProps) => {
+export const Component = ({ diagnosticReport }: ObservationDetailsProps) => {
   const [observationEntries, setObservationsEntries] = useState<ObservationModel[]>([]);
   const openCCDAModal = useCCDAModal();
   const [isLoading, setIsLoading] = useState(false);
   const [binaryId, setBinaryId] = useState<string>();
   const { getRequestContext } = useCTW();
+  const fqsObservations = useFQSFeatureToggle("observations");
+  const fqsProvenances = useFQSFeatureToggle("provenances");
 
   // We optionally look for any associated binary CCDAs
   // if getSourceDocument is true.
@@ -38,46 +40,54 @@ export const Component = ({ diagnosticReport, enableFQS = false }: ObservationDe
     async function load() {
       setIsLoading(true);
       const requestContext = await getRequestContext();
-      const provenances = await searchProvenances(requestContext, [diagnosticReport]);
+      const provenances = await searchProvenances(
+        requestContext,
+        [diagnosticReport],
+        fqsProvenances.enabled
+      );
       setBinaryId(getBinaryId(provenances, diagnosticReport.id));
       setIsLoading(false);
     }
 
-    void load();
-  }, [diagnosticReport, getRequestContext]);
+    if (fqsProvenances.ready) {
+      void load();
+    }
+  }, [diagnosticReport, getRequestContext, fqsProvenances.enabled, fqsProvenances.ready]);
 
   useEffect(() => {
-    setObservationsEntries(
-      enableFQS
-        ? compact(
-            diagnosticReport.resource.result?.map(
-              (result) =>
-                // @ts-ignore: Unreachable code error
-                // We are disabling it for this line as the FHIR spec doesn't support this
-                // customized result field that now has the observation resource and not only just a reference.
-                new ObservationModel(result.resource, {
-                  [diagnosticReport.id]: diagnosticReport.resource,
-                })
+    if (fqsObservations.ready) {
+      setObservationsEntries(
+        fqsObservations.enabled
+          ? compact(
+              diagnosticReport.resource.result?.map(
+                (result) =>
+                  // @ts-ignore: Unreachable code error
+                  // We are disabling it for this line as the FHIR spec doesn't support this
+                  // customized result field that now has the observation resource and not only just a reference.
+                  new ObservationModel(result.resource, {
+                    [diagnosticReport.id]: diagnosticReport.resource,
+                  })
+              )
             )
-          )
-        : compact(
-            diagnosticReport.results.map((result) => {
-              const observation = findReference(
-                "Observation",
-                undefined,
-                diagnosticReport.includedResources,
-                result
-              );
-              if (!observation) {
-                return undefined;
-              }
-              return new ObservationModel(observation, {
-                [diagnosticReport.id]: diagnosticReport.resource,
-              });
-            })
-          )
-    );
-  }, [diagnosticReport, enableFQS]);
+          : compact(
+              diagnosticReport.results.map((result) => {
+                const observation = findReference(
+                  "Observation",
+                  undefined,
+                  diagnosticReport.includedResources,
+                  result
+                );
+                if (!observation) {
+                  return undefined;
+                }
+                return new ObservationModel(observation, {
+                  [diagnosticReport.id]: diagnosticReport.resource,
+                });
+              })
+            )
+      );
+    }
+  }, [diagnosticReport, fqsObservations.ready, fqsObservations.enabled]);
 
   return (
     <div className="ctw-space-y-6" data-zus-telemetry-namespace="Observations">

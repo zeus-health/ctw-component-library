@@ -1,5 +1,170 @@
 # ctw-component-library
 
+## 1.27.1
+
+### Patch Changes
+
+- c08c83c5: Fix styling on notification icons.
+
+## 1.27.0
+
+### Minor Changes
+
+- 8856e90b: Use data from FQS queries that return errors and data
+
+### Patch Changes
+
+- 56ca29a6: Prevent non-builder users from being able to mark records as read in production.
+
+## 1.26.5
+
+### Patch Changes
+
+- e01d88e3: Fetch all types of values for observations from FQS. This fixes an issue where some diagnostic report observations don't show any results.
+
+## 1.26.4
+
+### Patch Changes
+
+- 21a83a76: Add notification to allergy tab in ZAP indicating unread allergies. Modify outside conditions/medications count badge to display notification.
+
+## 1.26.3
+
+### Patch Changes
+
+- a718e438: Fix provenance query for FQS in the drawer.
+
+## 1.26.2
+
+### Patch Changes
+
+- 3bd05c15: Distinguish builder and outside data in allergy component. Add "Dismiss" and "Mark as Read" functionality to allergy component.
+
+## 1.26.1
+
+### Patch Changes
+
+- 061b48b0: Update graphql queries to include extensions.
+
+## 1.26.0
+
+### Minor Changes
+
+- bc3fe1dc: Rewire the careteams component with FQS.
+
+### Patch Changes
+
+- b426028f: Update provenance to handle post-kludge data.
+
+## 1.25.0
+
+### Minor Changes
+
+- a33f1f2b: Add useHistory variant to useHistory hook for enabling FQS.
+
+## 1.24.0
+
+### Minor Changes
+
+- 4d77b89b: Add managing organization to medication statement FQS queries
+- 45c813ee: Use summary tag in medication lens query instead of ActiveMedication tag
+
+### Patch Changes
+
+- a0e46a38: Enable fetching provenances from FQS if "provenances" feature-flag variant is enabled.
+- e10b3e9a: Don't filter out resources without dates
+
+## 1.23.4
+
+### Patch Changes
+
+- b0dc8817: Bump @storybook/test-runner from 0.10.0 to 0.11.0
+- 19cd88c0: Update conditionHistory entries to contain ManagingOrganization.
+
+## 1.23.3
+
+### Patch Changes
+
+- 860bb086: Alter filtering for allergies client side instead of server side temporarily.
+
+## 1.23.2
+
+### Patch Changes
+
+- 7297d2fc: Add `unleash-proxy-client` to deps. It was previously listed as peer dep.
+
+## 1.23.1
+
+### Patch Changes
+
+- 5706ff6d: Refactored FQS vs ODS query logic and removed all "drawer" specific feature variants. We'll instead use resource specific variants, regardless of which components do the data fetching.
+- 7bb72d33: Fetch timeline data (encounters, diagnostic reports, observations) from FQS. This is behind a feature flag, default is to still fetch from ODS.
+
+## 1.23.0
+
+### Minor Changes
+
+- 43f0a786: Allergies drawer requests use a separate toggle variant than the allergies table requests
+- 4b2a7e0f: Conditions drawer requests use a separate toggle variant than the conditions table requests
+- 4ef870b4: Medications drawer requests uses a separate toggle variant than medications table requests
+- bf9cb114: Updated Immunizations component list view to pull feature flags directly from Unleash
+- 773d86c4: Update useHistory hook to work with FQS. Additionally, rewire the versionsHistory to use FQS as well.
+
+## 1.22.0
+
+### Minor Changes
+
+- d4e933a5: Updated medication components to read FQS feature flags directly from Unleash
+
+## 1.21.0
+
+### Minor Changes
+
+- 0ad09ace: Updated usePatientDocument hook to fetch FQS feature flag directly from Unleash
+
+### Patch Changes
+
+- 61bfb6d6: Add text to codeable concepts in graphql queries"
+
+## 1.20.0
+
+### Minor Changes
+
+- bc8f8c3c: Updated allergy components to read FQS feature flags directly from Unleash
+
+### Patch Changes
+
+- c56ccc70: Add ability to fetch provenances from FQS, currently disabled.
+
+## 1.19.2
+
+### Patch Changes
+
+- 0616c5bb: Show documents with no creation date
+
+## 1.19.1
+
+### Patch Changes
+
+- 2aba3de4: Bump vitest from 0.29.8 to 0.32.2
+- 679a085d: Fix issue where no documents were rendered due to missing creation date
+
+## 1.19.0
+
+### Minor Changes
+
+- 570a075e: Use FQS to fetch medication history data
+
+### Patch Changes
+
+- 84a202f6: Fixed issue where Unleash client was sometimes taking too long to load flags
+
+## 1.18.1
+
+### Patch Changes
+
+- 8eef5459: Fixed race condition when fetching feature flags
+
 ## 1.18.0
 
 ### Minor Changes

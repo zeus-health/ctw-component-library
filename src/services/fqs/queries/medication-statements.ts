@@ -71,6 +71,7 @@ export const medicationStatementQuery = gql`
             type
           }
           category {
+            text
             coding {
               ...Coding
             }
@@ -88,12 +89,13 @@ export const medicationStatementQuery = gql`
               ... on Organization {
                 id
                 resourceType
-                organizationName: name
+                _organization__name: name
               }
               ... on Medication {
                 id
                 resourceType
                 code {
+                  text
                   coding {
                     ...Coding
                   }
@@ -149,6 +151,19 @@ export const medicationStatementQuery = gql`
             text
             coding {
               ...Coding
+            }
+          }
+          subject {
+            resource {
+              ... on Patient {
+                managingOrganization {
+                  resource {
+                    ... on Organization {
+                      name
+                    }
+                  }
+                }
+              }
             }
           }
         }
