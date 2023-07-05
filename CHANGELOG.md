@@ -1,5 +1,13 @@
 # ctw-component-library
 
+## 1.27.2
+
+### Patch Changes
+
+- ecaca91f: Update immunization component - read/unread, dismiss, updates to columns, default sort, additional data in details drawer.
+- cbca00c3: Fix errors in medication administration FQS query
+- ce82c34c: Bump prettier-plugin-tailwindcss from 0.1.13 to 0.3.0
+
 ## 1.27.1
 
 ### Patch Changes
