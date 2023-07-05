@@ -8,7 +8,7 @@ import { orderBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_DOCUMENTS } from "@/utils/query-keys";
 import { Telemetry } from "@/utils/telemetry";
 
-export function usePatientDocument() {
+export function usePatientDocuments() {
   return useFeatureFlaggedQueryWithPatient(
     QUERY_KEY_PATIENT_DOCUMENTS,
     [],
