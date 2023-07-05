@@ -90,6 +90,7 @@ function getUnleashContext(authToken: string) {
       builderName: decoded["https://zusapi.com/builder_name"],
       userType: decoded["https://zusapi.com/user_type"],
       email: decoded["https://zusapi.com/email"],
+      hostname: window.location.hostname,
     },
   };
 }
