@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.27.4
+
+### Patch Changes
+
+- b79b0e4a: Export unread allergy/immunization indicators"
+
 ## 1.27.3
 
 ### Patch Changes
