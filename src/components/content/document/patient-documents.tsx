@@ -17,7 +17,6 @@ import { useBaseTranslations } from "@/i18n";
 export type PatientDocumentProps = {
   className?: string;
   enableFQS?: boolean;
-  // could call this additionalRowActions and make it an array
   onAddToRecord?: (document: DocumentModel, binary: fhir4.Binary) => void;
 };
 
