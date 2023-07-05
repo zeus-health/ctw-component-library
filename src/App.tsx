@@ -19,10 +19,6 @@ import {
   PatientTimeline,
   ZusAggregatedProfile,
 } from ".";
-import { binary } from "./components/content/story-helpers/mocks/resources/binary";
-import { doc } from "prettier";
-import { title } from "process";
-import { resources } from "./i18n";
 
 const {
   VITE_AUTH0_AUDIENCE,
