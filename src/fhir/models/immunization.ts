@@ -1,7 +1,10 @@
 import { FHIRModel } from "./fhir-model";
-import { findCoding } from "../codeable-concept";
+import { codeableConceptLabel, findCoding } from "../codeable-concept";
 import { formatDateISOToLocal } from "../formatters";
+import { quantityLabel } from "../quantity";
+import { findReference } from "../resource-helper";
 import { SYSTEM_CVX } from "../system-urls";
+import { capitalize } from "@/utils/nodash";
 
 export class ImmunizationModel extends FHIRModel<fhir4.Immunization> {
   kind = "Immunization" as const;
@@ -15,11 +18,54 @@ export class ImmunizationModel extends FHIRModel<fhir4.Immunization> {
     return cvxCoding?.code;
   }
 
+  // String used to define a unique instance of an immunization administered for a patient.
+  get uniqueKey(): string {
+    return `${this.cvxCode || this.description} - ${this.occurrence}`;
+  }
+
+  get doseQuantity(): string {
+    return quantityLabel(this.resource.doseQuantity);
+  }
+
+  get route(): string {
+    return codeableConceptLabel(this.resource.route);
+  }
+
+  get site(): string {
+    return codeableConceptLabel(this.resource.site);
+  }
+
+  get status(): string {
+    return capitalize(this.resource.status);
+  }
+
+  get notesDisplay(): string[] {
+    return this.resource.note?.map(({ text }) => text) || [];
+  }
+
   get occurrence(): string | undefined {
     if (this.resource.occurrenceDateTime) {
       return formatDateISOToLocal(this.resource.occurrenceDateTime);
     }
 
     return this.resource.occurrenceString;
+  }
+
+  get managingOrganization(): string | undefined {
+    const organizationDisplay = findReference(
+      "Patient",
+      this.resource.contained,
+      this.includedResources,
+      this.resource.patient
+    );
+
+    const organizationName = findReference(
+      "Organization",
+      this.resource.contained,
+      this.includedResources,
+      organizationDisplay?.managingOrganization
+    )?.name;
+
+    return organizationDisplay?.managingOrganization?.display || organizationName;
   }
 }

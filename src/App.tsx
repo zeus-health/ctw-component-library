@@ -12,6 +12,7 @@ import {
   PatientConditions,
   PatientConditionsOutside,
   PatientDocuments,
+  PatientImmunizations,
   PatientMedications,
   PatientMedicationsOutside,
   PatientProvider,
@@ -82,6 +83,11 @@ const components: DemoComponent[] = [
     title: "Patient Documents",
   },
   {
+    name: "immunizations",
+    render: () => <PatientImmunizations />,
+    title: "Patient Immunizations",
+  },
+  {
     name: "medications",
     render: () => <PatientMedications />,
     title: "Patient Medications",
@@ -106,19 +112,7 @@ const components: DemoComponent[] = [
           hideRequestRecords: true,
         }}
         includePatientDemographicsForm={false}
-        resources={[
-          "allergies",
-          "conditions",
-          "conditions-outside",
-          "medications",
-          "medications-outside",
-          "observations",
-          "timeline",
-          "observations-outside",
-          "care-team",
-          "documents",
-          "immunizations",
-        ]}
+        resources={["allergies", "conditions", "conditions-outside", "documents", "immunizations"]}
         title="ZAP"
       />
     ),

@@ -1,31 +1,40 @@
 import cx from "classnames";
-import { useRef } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { patientImmunizationsColumns } from "./helpers/columns";
+import { defaultImmunizationsFilters, immunizationsFilter } from "./helpers/filters";
+import { defaultImmunizationSort, immunizationSortOptions } from "./helpers/sort";
+import { useToggleDismiss } from "../hooks/use-toggle-dismiss";
+import { useToggleRead } from "../hooks/use-toggle-read";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
-import { CodingList } from "@/components/core/coding-list";
+import { ResourceTable } from "../resource/resource-table";
+import { ResourceTableActions } from "../resource/resource-table-actions";
+import { entryFromArray } from "@/components/core/data-list";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/use-ctw";
-import { Table } from "@/components/core/table/table";
-import { ViewFHIR } from "@/components/core/view-fhir";
+import { Spinner } from "@/components/core/spinner";
+import { RowActionsProps } from "@/components/core/table/table";
 import { usePatientImmunizations } from "@/fhir/immunizations";
 import { ImmunizationModel } from "@/fhir/models/immunization";
-import { useBreakpoints } from "@/hooks/use-breakpoints";
+import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
+import { useBaseTranslations } from "@/i18n";
+import { QUERY_KEY_BASIC, QUERY_KEY_PATIENT_IMMUNIZATIONS } from "@/utils/query-keys";
 
 export type PatientImmunizationsProps = {
   className?: string;
 };
 
-const viewRecordFHIR = ({ record }: { record: ImmunizationModel }) => (
-  <ViewFHIR name="Immunization Resource" resource={record.resource} />
-);
-
 function PatientImmunizationsComponent({ className }: PatientImmunizationsProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const breakpoints = useBreakpoints(containerRef);
-  const { featureFlags } = useCTW();
+  const { featureFlags, getRequestContext } = useCTW();
   const { enabled } = useFQSFeatureToggle("immunizations");
   const patientImmunizationsQuery = usePatientImmunizations();
+  const { data, setFilters, setSort } = useFilteredSortedData({
+    defaultFilters: defaultImmunizationsFilters,
+    defaultSort: defaultImmunizationSort,
+    records: patientImmunizationsQuery.data,
+  });
+  const [userBuilderId, setUserBuilderId] = useState("");
+
   const openDetails = useResourceDetailsDrawer({
     header: (m) => m.description,
     details: immunizationData,
@@ -33,25 +42,51 @@ function PatientImmunizationsComponent({ className }: PatientImmunizationsProps)
     enableFQS: enabled,
   });
 
+  useEffect(() => {
+    async function load() {
+      const requestContext = await getRequestContext();
+      setUserBuilderId(requestContext.builderId);
+    }
+
+    void load();
+  }, [getRequestContext]);
+
+  const rowActions = useMemo(() => getRowActions(userBuilderId), [userBuilderId]);
+
+  const { toggleRead } = useToggleRead(QUERY_KEY_PATIENT_IMMUNIZATIONS, QUERY_KEY_BASIC);
+
+  const handleRowClick = (record: ImmunizationModel) => {
+    if (!record.isRead) {
+      toggleRead(record);
+    }
+    openDetails(record);
+  };
+
   return (
     <div
-      ref={containerRef}
+      className={cx(className, "ctw-scrollable-pass-through-height")}
       data-zus-telemetry-namespace="Immunizations"
-      className={cx(
-        "ctw-patient-immunizations ctw-scrollable-pass-through-height ctw-bg-white",
-        className,
-        {
-          "ctw-stacked": breakpoints.sm,
-        }
-      )}
     >
-      <Table
-        RowActions={featureFlags?.enableViewFhirButton ? viewRecordFHIR : undefined}
-        stacked={breakpoints.sm}
+      <ResourceTableActions
+        filterOptions={{
+          onChange: setFilters,
+          defaultState: defaultImmunizationsFilters,
+          filters: immunizationsFilter(),
+        }}
+        sortOptions={{
+          defaultSort: defaultImmunizationSort,
+          options: immunizationSortOptions,
+          onChange: setSort,
+        }}
+      />
+      <ResourceTable
+        showTableHead
         isLoading={patientImmunizationsQuery.isLoading}
-        records={patientImmunizationsQuery.data ?? []}
-        columns={patientImmunizationsColumns}
-        handleRowClick={openDetails}
+        data={data}
+        columns={patientImmunizationsColumns(userBuilderId, featureFlags?.enableViewFhirButton)}
+        onRowClick={handleRowClick}
+        rowActions={rowActions}
+        boldUnreadRows
       />
     </div>
   );
@@ -63,12 +98,73 @@ export const PatientImmunizations = withErrorBoundary(
 );
 
 const immunizationData = (immunization: ImmunizationModel) => [
-  { label: "Date", value: immunization.occurrence },
-  { label: "Description", value: immunization.description },
-  {
-    label: "Vaccine Code",
-    value: immunization.resource.vaccineCode.coding ? (
-      <CodingList codings={immunization.resource.vaccineCode.coding} />
-    ) : undefined,
-  },
+  { label: "Date Given", value: immunization.occurrence },
+  { label: "Provider Organization", value: immunization.managingOrganization },
+  { label: "Status", value: immunization.status },
+  { label: "Dose Quantity", value: immunization.doseQuantity },
+  { label: "Route", value: immunization.route },
+  { label: "Site", value: immunization.site },
+  { label: "Lot Number", value: immunization.resource.lotNumber },
+  ...entryFromArray("Note", immunization.notesDisplay),
 ];
+
+const getRowActions =
+  (userBuilderId: string) =>
+  ({ record }: RowActionsProps<ImmunizationModel>) => {
+    const { t } = useBaseTranslations();
+    const { isLoading: isToggleDismissLoading, toggleDismiss } = useToggleDismiss(
+      QUERY_KEY_PATIENT_IMMUNIZATIONS,
+      QUERY_KEY_BASIC
+    );
+    const { isLoading: isToggleReadLoading, toggleRead } = useToggleRead(
+      QUERY_KEY_PATIENT_IMMUNIZATIONS,
+      QUERY_KEY_BASIC
+    );
+    const archiveLabel = record.isDismissed
+      ? t("resourceTable.restore")
+      : t("resourceTable.dismiss");
+
+    const readLabel = record.isRead ? t("resourceTable.unread") : t("resourceTable.read");
+
+    return record.ownedByBuilder(userBuilderId) ? (
+      <></>
+    ) : (
+      <div className="ctw-flex ctw-space-x-2">
+        <button
+          type="button"
+          className="ctw-btn-default"
+          disabled={isToggleDismissLoading || isToggleReadLoading}
+          onClick={() => {
+            toggleDismiss(record);
+            if (!record.isRead) {
+              toggleRead(record);
+            }
+          }}
+        >
+          {isToggleDismissLoading ? (
+            <div className="ctw-flex">
+              <Spinner className="ctw-mx-4 ctw-align-middle" />
+            </div>
+          ) : (
+            archiveLabel
+          )}
+        </button>
+        <button
+          type="button"
+          className="ctw-btn-default"
+          disabled={isToggleDismissLoading || isToggleReadLoading}
+          onClick={() => {
+            toggleRead(record);
+          }}
+        >
+          {isToggleReadLoading ? (
+            <div className="ctw-flex">
+              <Spinner className="ctw-mx-4 ctw-align-middle" />
+            </div>
+          ) : (
+            readLabel
+          )}
+        </button>
+      </div>
+    );
+  };
