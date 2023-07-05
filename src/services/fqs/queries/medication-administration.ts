@@ -44,12 +44,11 @@ export const medicationAdministrationQuery = gql`
             dose {
               value
               unit
-              route {
-                text
-              }
-              effectivePeriod {
-                start
-                end
+            }
+            route {
+              text
+              coding {
+                ...Coding
               }
             }
           }
