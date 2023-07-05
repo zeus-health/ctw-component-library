@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.27.3
+
+### Patch Changes
+
+- b69fa916: Fix cache issue for outside medications history requests
+- a48e3d51: Add hostname to feature-flag context.
+
 ## 1.27.2
 
 ### Patch Changes
