@@ -586,7 +586,7 @@ export function splitMedications(
 export function useMedicationHistory(medication?: fhir4.MedicationStatement) {
   return useFeatureFlaggedQueryWithPatient(
     QUERY_KEY_MEDICATION_HISTORY,
-    [],
+    [medication?.id],
     "medications",
     "req.timing.medication_history",
     getMedicationHistoryFQS(medication),
