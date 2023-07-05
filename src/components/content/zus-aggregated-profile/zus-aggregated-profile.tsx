@@ -8,7 +8,7 @@ import ZusSVG from "@/assets/zus.svg";
 import { PatientAllergiesProps } from "@/components/content/allergies/patient-allergies";
 import { PatientCareTeamProps } from "@/components/content/care-team/patient-careteam";
 import { PatientConditionsProps } from "@/components/content/conditions/patient-conditions";
-import { PatientDocumentProps } from "@/components/content/document/patient-documents";
+import { PatientDocumentsProps } from "@/components/content/document/patient-documents";
 import { PatientImmunizationsProps } from "@/components/content/immunizations/patient-immunizations";
 import { RequestRecordsButton } from "@/components/content/patient-history/request-records-button";
 import {
@@ -47,7 +47,7 @@ export type ZusAggregatedProfileSubComponentProps = Partial<{
   careTeamProps: PatientCareTeamProps;
   conditionsProps: PatientConditionsProps;
   conditionsOutsideProps: PatientConditionsOutsideProps;
-  documentsProps: PatientDocumentProps;
+  documentsProps: PatientDocumentsProps;
   immunizationsProps: PatientImmunizationsProps;
   medicationsProps: PatientMedicationsProps;
   medicationsOutsideProps: PatientMedicationsOutsideProps;

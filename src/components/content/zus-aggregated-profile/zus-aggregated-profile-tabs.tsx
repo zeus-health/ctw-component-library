@@ -34,8 +34,8 @@ import {
   PatientConditionsProps,
 } from "@/components/content/conditions/patient-conditions";
 import {
-  PatientDocumentProps,
   PatientDocuments,
+  PatientDocumentsProps,
 } from "@/components/content/document/patient-documents";
 import {
   PatientImmunizations,
@@ -89,7 +89,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     render: () => <PatientConditionsOutside {...props} />,
   }),
 
-  documents: (props: PatientDocumentProps = {}) => ({
+  documents: (props: PatientDocumentsProps = {}) => ({
     key: "documents",
     getPanelClassName: () => "ctw-pt-5",
     display: () => (
