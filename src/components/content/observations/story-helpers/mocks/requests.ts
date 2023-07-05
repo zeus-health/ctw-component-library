@@ -1,6 +1,7 @@
 import { rest } from "msw";
 import { patient } from "./patient";
 import { diagnosticReport } from "@/components/content/observations/story-helpers/mocks/diagnostic-reports";
+import { mockUnleashFQSEnabledGet } from "@/components/content/story-helpers/mocks/requests/requests";
 
 export function setupObservationMocks() {
   return {
@@ -13,6 +14,8 @@ export function setupObservationMocks() {
 }
 
 function mockRequests() {
+  const mockUnleashGet = mockUnleashFQSEnabledGet("observations");
+
   const mockPatientGet = rest.get(
     "https://api.dev.zusapi.com/fhir/Patient",
     // Add ctx.delay(750), delay to show loading, we set this to 750ms to be
@@ -26,5 +29,5 @@ function mockRequests() {
     (req, res, ctx) => res(ctx.status(200), ctx.delay(250), ctx.json(diagnosticReport))
   );
 
-  return [mockPatientGet, mockDiagnosticReportGet];
+  return [mockUnleashGet, mockPatientGet, mockDiagnosticReportGet];
 }

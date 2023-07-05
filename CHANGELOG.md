@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 1.18.0
+
+### Minor Changes
+
+- a0457d1a: Patient Conditions components now reach out to Unleash directly for feature flags
+
+## 1.17.6
+
+### Patch Changes
+
+- d40f48dd: Pin @radix-ui/react-dropdown-menu to exact version.
+
 ## 1.17.5
 
 ### Patch Changes

@@ -18,8 +18,6 @@ import {
   PatientTimeline,
   ZusAggregatedProfile,
 } from ".";
-import { title } from "process";
-import { render } from "react-dom";
 import { binary } from "./components/content/story-helpers/mocks/resources/binary";
 
 const {
