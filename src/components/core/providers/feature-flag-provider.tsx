@@ -34,6 +34,10 @@ export function FeatureFlagProvider({ env, children }: FeatureFlagProviderProps)
   );
 }
 
+// Map our env to the unleash environment, defaulting to "development".
+// NOTE: these keys are hardcoded in https://github.com/zeus-health/aws-base/blame/8eb18e694f5c94b70f15559254ce10027e74f4b4/unleash/scripts/create_secrets.sh#L33-L39
+// so they could change without notice. INFRA-729 will create these in AWS secrets for all
+// accounts but for now it is safe to store these in GitHub
 function getUnleashProxyForEnv(env: Env) {
   switch (env) {
     case "production":
