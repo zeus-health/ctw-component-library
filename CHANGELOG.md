@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.27.8
+
+### Patch Changes
+
+- b6e8c774: Fix careteams drawer issue.
+
 ## 1.27.7
 
 ### Patch Changes
