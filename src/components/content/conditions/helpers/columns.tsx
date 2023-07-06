@@ -8,7 +8,7 @@ import { capitalize, compact } from "@/utils/nodash";
 export const patientConditionsColumns: TableColumn<ConditionModel>[] = [
   {
     title: "Name",
-    widthPercent: 30,
+    widthPercent: 40,
     minWidth: 320,
     render: (condition) => (
       <div>
@@ -19,6 +19,7 @@ export const patientConditionsColumns: TableColumn<ConditionModel>[] = [
   },
   {
     title: "Status",
+    minWidth: 128,
     render: (condition) => (
       <div className="ctw-pc-status-container">
         <div className={cx("ctw-pc-status-dot", statusToColor(condition.displayStatus))}>
@@ -36,8 +37,6 @@ export const patientConditionsColumns: TableColumn<ConditionModel>[] = [
         </div>
       </div>
     ),
-    widthPercent: 30,
-    minWidth: 128,
   },
   {
     title: "Details",
@@ -82,22 +81,13 @@ export const patientConditionsAllColumns = (builderId: string): TableColumn<Cond
     ),
   },
   {
-    title: "Status",
+    title: "Last Updated",
     widthPercent: 30,
     minWidth: 128,
     render: (condition) => (
       <div>
-        <div className="ctw-flex ctw-items-center ctw-space-x-2">
-          <span className={cx("ctw-text-xl", statusToColor(condition.displayStatus))}>&bull;</span>
-          <span>{condition.displayStatus}</span>
-        </div>
-        <div>
-          Last Updated:{" "}
-          {compact([
-            condition.recordedDate,
-            condition.recorder ? `(${condition.recorder})` : "",
-          ]).join(" ")}
-        </div>
+        <div>{condition.recordedDate}</div>
+        <div>{condition.recorder}</div>
       </div>
     ),
   },
