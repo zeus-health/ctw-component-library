@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.27.5
+
+### Patch Changes
+
+- 3cc59c28: Expand the medication prescriber reference in medication request FQS query
+
 ## 1.27.4
 
 ### Patch Changes
