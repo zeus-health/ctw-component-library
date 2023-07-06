@@ -1,5 +1,6 @@
 import cx from "classnames";
 import { ReactElement, useEffect, useRef, useState } from "react";
+import { AuthError } from "@/components/core/auth-error";
 import { usePatient } from "@/components/core/providers/patient-provider";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { Table, TableProps } from "@/components/core/table/table";
@@ -38,11 +39,6 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
   const [userBuilderId, setUserBuilderId] = useState("");
 
   const shouldShowTableHead = typeof showTableHead === "boolean" ? showTableHead : !breakpoints.sm;
-  const emptyMessageWithRequestRecords = patient.data ? (
-    emptyMessage
-  ) : (
-    <div className="ctw-space-y-4">Patient not found.</div>
-  );
 
   useEffect(() => {
     async function load() {
@@ -52,6 +48,26 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
 
     void load();
   }, [getRequestContext]);
+
+  // Use correct empty message when there are auth errors or failure fetching patient data.
+  let emptyMessage2 = emptyMessage;
+  if (
+    patient.error &&
+    typeof patient.error === "object" &&
+    "status" in patient.error &&
+    patient.error.status === 401
+  ) {
+    emptyMessage2 = <AuthError />;
+  } else if (!patient.data) {
+    emptyMessage2 = <div className="ctw-space-y-4">Patient not found.</div>;
+  }
+
+  // We're loading, if our patient is loading OR
+  // if we have our patient data but the passed in isLoading is true.
+  // We have to check for patient.data because most queries are only
+  // enabled when we have a patient UPID, without one, those queries
+  // will stay in the loading state forever.
+  const isLoading2 = patient.isLoading || (!!patient.data && isLoading);
 
   return (
     <div
@@ -66,8 +82,8 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
         })}
         showTableHead={shouldShowTableHead}
         stacked={breakpoints.sm}
-        emptyMessage={emptyMessageWithRequestRecords}
-        isLoading={!!patient.data && isLoading}
+        emptyMessage={emptyMessage2}
+        isLoading={isLoading2}
         records={data}
         RowActions={rowActions}
         columns={columns}
