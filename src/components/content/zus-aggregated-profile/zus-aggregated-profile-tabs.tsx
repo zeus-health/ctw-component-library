@@ -1,9 +1,13 @@
 import { UnreadAllergiesNotification } from "../allergies/unread-allergies-notification";
 import {
+  PatientConditionsAll,
+  PatientConditionsAllProps,
+} from "../conditions/patient-conditions-all";
+import {
   PatientConditionsOutside,
   PatientConditionsOutsideProps,
 } from "../conditions/patient-conditions-outside";
-import { PatientConditionsOutsideBadge } from "../conditions/patient-conditions-outside-badge";
+import { UnreadConditionsNotification } from "../conditions/unread-conditions-notification";
 import { UnreadImmunizationsNotification } from "../immunizations/unread-immunizations-notification";
 import { PatientMedications, PatientMedicationsProps } from "../medications/patient-medications";
 import {
@@ -74,7 +78,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
 
   conditions: (props: PatientConditionsProps = {}) => ({
     key: "conditions",
-    display: () => i18next.t("zap.tabs.conditions"),
+    display: () => "Builder Conditions",
     render: () => <PatientConditions {...props} />,
   }),
 
@@ -82,11 +86,22 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     key: "conditions-outside",
     display: () => (
       <div className="ctw-flex ctw-items-center ctw-space-x-2">
-        <PatientConditionsOutsideBadge />
-        <span className="ctw-capitalize">{i18next.t("zap.tabs.conditionsOutside")}</span>
+        <UnreadConditionsNotification />
+        <span className="ctw-capitalize">Outside Conditions</span>
       </div>
     ),
     render: () => <PatientConditionsOutside {...props} />,
+  }),
+
+  "conditions-all": (props: PatientConditionsAllProps = {}) => ({
+    key: "conditions-all",
+    display: () => (
+      <div className="ctw-flex ctw-items-center ctw-space-x-2">
+        <UnreadConditionsNotification />
+        <span className="ctw-capitalize">All Conditions</span>
+      </div>
+    ),
+    render: () => <PatientConditionsAll {...props} />,
   }),
 
   documents: (props: PatientDocumentsProps = {}) => ({
