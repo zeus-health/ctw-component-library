@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.27.7
+
+### Patch Changes
+
+- 6f3c58c8: Pull the dispense request performing organization data in medication request FQS query
+
 ## 1.27.6
 
 ### Patch Changes
