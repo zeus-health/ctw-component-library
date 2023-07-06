@@ -31,6 +31,10 @@ export const immunizationsQuery = gql`
             }
             versionId
           }
+          extension {
+            url
+            valueString
+          }
           status
           statusReason {
             text
@@ -47,7 +51,16 @@ export const immunizationsQuery = gql`
           patient {
             reference
             resource {
-              ...Patient
+              ... on Patient {
+                ...Patient
+                managingOrganization {
+                  resource {
+                    ... on Organization {
+                      name
+                    }
+                  }
+                }
+              }
             }
           }
           occurrenceDateTime

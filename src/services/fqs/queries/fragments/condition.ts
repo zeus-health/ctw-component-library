@@ -5,11 +5,20 @@ export function fragmentCondition(isConditionHistory: boolean) {
   const subjectFragment = isConditionHistory
     ? ""
     : `subject {
-    reference
-    resource {
-      ...Patient
-    }
-  }`;
+      reference
+      resource {
+        ... on Patient {
+          ...Patient
+          managingOrganization {
+            resource {
+              ... on Organization {
+                name
+              }
+            }
+          }
+        }
+      }
+    }`;
   return `
     ${fragmentCoding}
     ${patientFragment}
@@ -22,6 +31,10 @@ export function fragmentCondition(isConditionHistory: boolean) {
           code
         }
         versionId
+      }
+      extension {
+        url
+        valueString
       }
       ${subjectFragment}
       abatementAge {

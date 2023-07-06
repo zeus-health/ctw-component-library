@@ -8,9 +8,11 @@ import "./App.css";
 
 import {
   CTWProvider,
+  PatientAllergies,
   PatientConditions,
   PatientConditionsOutside,
   PatientDocuments,
+  PatientImmunizations,
   PatientMedications,
   PatientMedicationsOutside,
   PatientProvider,
@@ -68,6 +70,7 @@ const locals = {
 };
 
 const components: DemoComponent[] = [
+  { name: "allergies", render: () => <PatientAllergies />, title: "Patient Allergies" },
   { name: "conditions", render: () => <PatientConditions />, title: "Patient Conditions" },
   {
     name: "conditions-outside",
@@ -78,6 +81,11 @@ const components: DemoComponent[] = [
     name: "documents",
     render: () => <PatientDocuments />,
     title: "Patient Documents",
+  },
+  {
+    name: "immunizations",
+    render: () => <PatientImmunizations />,
+    title: "Patient Immunizations",
   },
   {
     name: "medications",
@@ -104,19 +112,7 @@ const components: DemoComponent[] = [
           hideRequestRecords: true,
         }}
         includePatientDemographicsForm={false}
-        resources={[
-          "allergies",
-          "conditions",
-          "conditions-outside",
-          "medications",
-          "medications-outside",
-          "observations",
-          "timeline",
-          "observations-outside",
-          "care-team",
-          "documents",
-          "immunizations",
-        ]}
+        resources={["allergies", "conditions", "conditions-outside", "documents", "immunizations"]}
         title="ZAP"
       />
     ),

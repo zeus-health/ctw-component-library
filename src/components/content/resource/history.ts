@@ -14,6 +14,7 @@ import {
   searchCommonRecords,
 } from "@/fhir/search-helpers";
 import { ResourceMap, ResourceType, ResourceTypeString } from "@/fhir/types";
+import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { filterResourcesByBuilderId } from "@/services/common";
 import { createGraphqlClient, getHistoryResources, getResourceNodes } from "@/services/fqs/client";
 import { allergyQuery } from "@/services/fqs/queries/allergies";
@@ -30,8 +31,8 @@ export type UseHistoryProps<T extends ResourceTypeString, M extends FHIRModel<Re
   valuesToDedupeOn: (m: M) => unknown;
   getSearchParams: (m: M) => SearchParams;
   getHistoryEntry: (m: M) => HistoryEntryProps;
-  getFiltersFQS: (m: M) => object | undefined;
-  enableFQS?: boolean;
+  getFiltersFQS?: (m: M) => object | undefined;
+  clientSideFiltersFQS?: (model: M, resources: ResourceType<T>[]) => ResourceType<T>[];
 };
 
 export function useHistory<T extends ResourceTypeString, M extends FHIRModel<ResourceType<T>>>({
@@ -43,12 +44,21 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
   getSearchParams,
   getHistoryEntry,
   getFiltersFQS,
-  enableFQS,
+  clientSideFiltersFQS,
 }: UseHistoryProps<T, M>) {
+  const fqsProvenances = useFQSFeatureToggle("provenances");
+  const useHistoryUnleash = useFQSFeatureToggle("useHistory");
+
   return useQueryWithPatient(
     queryKey,
-    [model, enableFQS],
-    enableFQS
+    [
+      model,
+      useHistoryUnleash.enabled,
+      useHistoryUnleash.ready,
+      fqsProvenances.ready,
+      fqsProvenances.enabled,
+    ],
+    useHistoryUnleash.enabled
       ? withTimerMetric(
           async (requestContext, patient) =>
             fetchResourcesFQS(
@@ -57,10 +67,11 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
               includeVersionHistory,
               requestContext,
               patient,
-              getFiltersFQS(model),
               valuesToDedupeOn,
               getHistoryEntry,
-              enableFQS
+              fqsProvenances.enabled,
+              clientSideFiltersFQS,
+              getFiltersFQS?.(model)
             ),
           `req.${model.resourceType.toLowerCase()}_history`,
           ["fqs"]
@@ -79,7 +90,7 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
             ),
           `req.${model.resourceType.toLowerCase()}_history`
         ),
-    !!model
+    fqsProvenances.ready && useHistoryUnleash.ready
   );
 }
 
@@ -197,31 +208,37 @@ async function fetchResourcesFQS<
   includeVersionHistory: boolean,
   requestContext: CTWRequestContext,
   patient: PatientModel,
-  filter: object | undefined,
   valuesToDedupeOn: (m: M) => unknown,
   getHistoryEntry: (m: M) => HistoryEntryProps,
-  enableFQS: boolean
+  enableFQSProvenances: boolean,
+  clientSideFiltersFQS?: (model: M, resources: ResourceType<T>[]) => ResourceType<T>[],
+  filter?: object | undefined
 ) {
   try {
     const graphClient = createGraphqlClient(requestContext);
 
-    const resources = filter
-      ? getResourceNodes<T>(
-          await graphClient.request(getResourceFQSQuery(resourceType), {
-            upid: patient.UPID,
-            cursor: "",
-            first: 1000,
-            sort: {
-              lastUpdated: "DESC",
-            },
-            filter,
-          })
-        )
-      : [model.resource];
+    const resources =
+      filter || clientSideFiltersFQS
+        ? getResourceNodes<T>(
+            await graphClient.request(getResourceFQSQuery(resourceType), {
+              upid: patient.UPID,
+              cursor: "",
+              first: 1000,
+              sort: {
+                lastUpdated: "DESC",
+              },
+              filter,
+            })
+          )
+        : [model.resource];
 
     let versions: ResourceType<T>[] = [];
 
-    const filteredResources = filterLensAndSummary(resources, resourceType);
+    let filteredResources = filterLensAndSummary(resources, resourceType);
+
+    if (clientSideFiltersFQS) {
+      filteredResources = clientSideFiltersFQS(model, filteredResources);
+    }
 
     if (includeVersionHistory) {
       versions = await getVersionHistoryFQS(
@@ -238,7 +255,7 @@ async function fetchResourcesFQS<
     const entries = dedupeHistory(models, valuesToDedupeOn).map(getHistoryEntry);
 
     // Fetch provenances and add binaryId to each entry.
-    const provenances = await searchProvenances(requestContext, models, enableFQS);
+    const provenances = await searchProvenances(requestContext, models, enableFQSProvenances);
     entries.forEach((entry) => {
       // eslint-disable-next-line no-param-reassign
       entry.binaryId = getBinaryId(provenances, entry.id);
@@ -292,7 +309,7 @@ async function fetchResourcesODS<
     const entries = dedupeHistory(models, valuesToDedupeOn).map(getHistoryEntry);
 
     // Fetch provenances and add binaryId to each entry.
-    const provenances = await searchProvenances(requestContext, models);
+    const provenances = await searchProvenances(requestContext, models, false);
     entries.forEach((entry) => {
       // eslint-disable-next-line no-param-reassign
       entry.binaryId = getBinaryId(provenances, entry.id);

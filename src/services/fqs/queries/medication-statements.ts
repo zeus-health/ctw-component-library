@@ -153,6 +153,19 @@ export const medicationStatementQuery = gql`
               ...Coding
             }
           }
+          subject {
+            resource {
+              ... on Patient {
+                managingOrganization {
+                  resource {
+                    ... on Organization {
+                      name
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }

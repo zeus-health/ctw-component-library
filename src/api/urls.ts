@@ -3,6 +3,9 @@ import { Env } from "@/components/core/providers/types";
 export const getZusApiBaseUrl = (env: Env) =>
   env === "production" ? `https://api.zusapi.com` : `https://api.${env}.zusapi.com`;
 
+export const getZusServiceUrl = (env: Env, service: string) =>
+  env === "production" ? `https://${service}.zusapi.com` : `https://${service}.${env}.zusapi.com`;
+
 export const getZusProxyApiBaseUrl = (env: Env) => {
   const { VITE_LOCAL_EHR_HOOKS_URL } = import.meta.env;
   if (VITE_LOCAL_EHR_HOOKS_URL) {

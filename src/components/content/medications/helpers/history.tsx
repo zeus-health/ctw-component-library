@@ -10,7 +10,6 @@ import { capitalize, compact } from "@/utils/nodash";
 import { UseQueryResultBasic } from "@/utils/request";
 
 export function useMedicationHistoryEntries(
-  enableFQS: boolean,
   medication: MedicationStatementModel
 ): UseQueryResultBasic<HistoryEntries | undefined> {
   const medHistoryQuery = useMedicationHistory(medication.resource);

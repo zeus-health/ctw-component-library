@@ -1,6 +1,6 @@
 import { useAddConditionForm } from "./helpers/modal-hooks";
 import { PatientConditionsBase } from "./helpers/patient-conditions-base";
-import { useToggleArchive } from "../hooks/use-toggle-archive";
+import { useToggleDismiss } from "../hooks/use-toggle-dismiss";
 import { PatientHistoryAction } from "../patient-history/patient-history-action";
 import { RequestRecordsButton } from "../patient-history/request-records-button";
 import { usePatientHistory } from "../patient-history/use-patient-history";
@@ -65,12 +65,11 @@ export const PatientConditionsOutside = withErrorBoundary(
 const RowActions = ({ record }: RowActionsProps<ConditionModel>) => {
   const { t } = useBaseTranslations();
   const showAddConditionForm = useAddConditionForm();
-  const { isLoading, toggleArchive } = useToggleArchive(
-    record,
+  const { isLoading, toggleDismiss } = useToggleDismiss(
     QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
     QUERY_KEY_BASIC
   );
-  const archiveLabel = record.isArchived ? t("resourceTable.restore") : t("resourceTable.dismiss");
+  const archiveLabel = record.isDismissed ? t("resourceTable.restore") : t("resourceTable.dismiss");
 
   return (
     <div className="ctw-flex ctw-space-x-2">
@@ -78,7 +77,9 @@ const RowActions = ({ record }: RowActionsProps<ConditionModel>) => {
         type="button"
         className="ctw-btn-default"
         disabled={isLoading}
-        onClick={toggleArchive}
+        onClick={() => {
+          toggleDismiss(record);
+        }}
       >
         {isLoading ? (
           <div className="ctw-flex">

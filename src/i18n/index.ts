@@ -20,6 +20,8 @@ export const resources = {
       "resource.remove.heading": "Remove this {{resource}}?",
       "resource.unnamed": "unnamed {{resource}}",
       "resourceTable.add": "Add",
+      "resourceTable.read": "Mark as Viewed",
+      "resourceTable.unread": "Mark as New",
       "resourceTable.dismiss": "Dismiss",
       "resourceTable.restore": "Restore",
       "zap.tabs.medicationsOutside": "medications",

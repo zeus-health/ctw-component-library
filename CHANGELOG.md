@@ -1,5 +1,125 @@
 # ctw-component-library
 
+## 1.27.5
+
+### Patch Changes
+
+- 3cc59c28: Expand the medication prescriber reference in medication request FQS query
+
+## 1.27.4
+
+### Patch Changes
+
+- b79b0e4a: Export unread allergy/immunization indicators"
+
+## 1.27.3
+
+### Patch Changes
+
+- b69fa916: Fix cache issue for outside medications history requests
+- a48e3d51: Add hostname to feature-flag context.
+
+## 1.27.2
+
+### Patch Changes
+
+- ecaca91f: Update immunization component - read/unread, dismiss, updates to columns, default sort, additional data in details drawer.
+- cbca00c3: Fix errors in medication administration FQS query
+- ce82c34c: Bump prettier-plugin-tailwindcss from 0.1.13 to 0.3.0
+
+## 1.27.1
+
+### Patch Changes
+
+- c08c83c5: Fix styling on notification icons.
+
+## 1.27.0
+
+### Minor Changes
+
+- 8856e90b: Use data from FQS queries that return errors and data
+
+### Patch Changes
+
+- 56ca29a6: Prevent non-builder users from being able to mark records as read in production.
+
+## 1.26.5
+
+### Patch Changes
+
+- e01d88e3: Fetch all types of values for observations from FQS. This fixes an issue where some diagnostic report observations don't show any results.
+
+## 1.26.4
+
+### Patch Changes
+
+- 21a83a76: Add notification to allergy tab in ZAP indicating unread allergies. Modify outside conditions/medications count badge to display notification.
+
+## 1.26.3
+
+### Patch Changes
+
+- a718e438: Fix provenance query for FQS in the drawer.
+
+## 1.26.2
+
+### Patch Changes
+
+- 3bd05c15: Distinguish builder and outside data in allergy component. Add "Dismiss" and "Mark as Read" functionality to allergy component.
+
+## 1.26.1
+
+### Patch Changes
+
+- 061b48b0: Update graphql queries to include extensions.
+
+## 1.26.0
+
+### Minor Changes
+
+- bc3fe1dc: Rewire the careteams component with FQS.
+
+### Patch Changes
+
+- b426028f: Update provenance to handle post-kludge data.
+
+## 1.25.0
+
+### Minor Changes
+
+- a33f1f2b: Add useHistory variant to useHistory hook for enabling FQS.
+
+## 1.24.0
+
+### Minor Changes
+
+- 4d77b89b: Add managing organization to medication statement FQS queries
+- 45c813ee: Use summary tag in medication lens query instead of ActiveMedication tag
+
+### Patch Changes
+
+- a0e46a38: Enable fetching provenances from FQS if "provenances" feature-flag variant is enabled.
+- e10b3e9a: Don't filter out resources without dates
+
+## 1.23.4
+
+### Patch Changes
+
+- b0dc8817: Bump @storybook/test-runner from 0.10.0 to 0.11.0
+- 19cd88c0: Update conditionHistory entries to contain ManagingOrganization.
+
+## 1.23.3
+
+### Patch Changes
+
+- 860bb086: Alter filtering for allergies client side instead of server side temporarily.
+
+## 1.23.2
+
+### Patch Changes
+
+- 7297d2fc: Add `unleash-proxy-client` to deps. It was previously listed as peer dep.
+
 ## 1.23.1
 
 ### Patch Changes

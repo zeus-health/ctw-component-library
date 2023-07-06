@@ -1,14 +1,14 @@
 import { useCallback, useState } from "react";
 import { useCTW } from "@/components/core/providers/use-ctw";
-import { toggleArchive } from "@/fhir/basic";
+import { toggleDismiss } from "@/fhir/basic";
 import { FHIRModel } from "@/fhir/models/fhir-model";
 import { queryClient } from "@/utils/request";
 
-interface UseToggleArchiveResult {
+interface UseToggleDismissResult {
   /**
    * Function to call to toggle the archive status of the FHIR model
    */
-  toggleArchive: () => void;
+  toggleDismiss: (model: FHIRModel<fhir4.Resource>) => void;
 
   /**
    * True when `toggleArchive` is called
@@ -17,22 +17,18 @@ interface UseToggleArchiveResult {
 }
 
 /**
- * This hook is toggles the archive status for the specified FHIR model.
+ * This hook is toggles the dismiss status for the specified FHIR model.
  *
- * @param model The FHIR model
  * @param queriesToInvalidate  Queries to refetch
  */
-export function useToggleArchive<T extends fhir4.Resource>(
-  model: FHIRModel<T>,
-  ...queriesToInvalidate: string[]
-): UseToggleArchiveResult {
+export function useToggleDismiss(...queriesToInvalidate: string[]): UseToggleDismissResult {
   const { getRequestContext } = useCTW();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleToggleArchive = useCallback(async () => {
+  const handleToggleDismiss = useCallback(async (model: FHIRModel<fhir4.Resource>) => {
     setIsLoading(true);
-    await toggleArchive(model, await getRequestContext());
+    await toggleDismiss(model, await getRequestContext());
     await Promise.all(
       queriesToInvalidate.map((queryToInvalidate) =>
         queryClient.invalidateQueries([queryToInvalidate])
@@ -43,10 +39,10 @@ export function useToggleArchive<T extends fhir4.Resource>(
     // the old dismiss/restore text.
     setTimeout(() => setIsLoading(false), 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [model]);
+  }, []);
 
   return {
-    toggleArchive: handleToggleArchive,
+    toggleDismiss: handleToggleDismiss,
     isLoading,
   };
 }
