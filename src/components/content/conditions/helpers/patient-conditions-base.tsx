@@ -20,7 +20,7 @@ export type PatientConditionsTableProps = {
   query: { data?: ConditionModel[]; isLoading: boolean };
   outside?: boolean;
   readOnly?: boolean;
-  rowActions?: ResourceTableProps<ConditionModel>["rowActions"];
+  rowActions?: ResourceTableProps<ConditionModel>["RowActions"];
   emptyMessage?: string | ReactElement;
   isLoading?: boolean;
 };

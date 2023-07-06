@@ -15,7 +15,7 @@ export type PatientObservationsTableProps = {
   action?: ResourceTableActionsProps<DiagnosticReportModel>["action"];
   className?: cx.Argument;
   query: { data?: DiagnosticReportModel[]; isLoading: boolean };
-  rowActions?: ResourceTableProps<DiagnosticReportModel>["rowActions"];
+  rowActions?: ResourceTableProps<DiagnosticReportModel>["RowActions"];
 };
 
 export const PatientObservationsBase = ({
