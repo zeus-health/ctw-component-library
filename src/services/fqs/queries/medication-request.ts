@@ -76,7 +76,36 @@ export const medicationRequestQuery = gql`
           }
           dispenseRequest {
             performer {
-              ...Reference
+              id
+              extension {
+                url
+                valueString
+              }
+              reference
+              type
+              identifier {
+                id
+                system
+                value
+              }
+              display
+              resource {
+                ... on Organization {
+                  id
+                  resourceType
+                  name
+                  telecom {
+                    value
+                  }
+                  address {
+                    city
+                    state
+                    postalCode
+                    text
+                    line
+                  }
+                }
+              }
             }
             numberOfRepeatsAllowed
             initialFill {
