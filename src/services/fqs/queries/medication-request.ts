@@ -106,7 +106,35 @@ export const medicationRequestQuery = gql`
             ...Reference
           }
           requester {
-            ...Reference
+            id
+            extension {
+              url
+              valueString
+            }
+            reference
+            type
+            identifier {
+              id
+              system
+              value
+            }
+            display
+            resource {
+              ... on Practitioner {
+                id
+                resourceType
+                name {
+                  family
+                  given
+                }
+                address {
+                  text
+                }
+                telecom {
+                  value
+                }
+              }
+            }
           }
           status
         }
