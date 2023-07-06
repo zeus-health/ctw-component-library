@@ -81,7 +81,7 @@ export const PatientMedicationsBase = ({
         emptyMessage="There are no medication records available."
         isLoading={query.isLoading}
         onRowClick={handleRowClick}
-        rowActions={rowActions}
+        RowActions={rowActions}
       />
     </div>
   );

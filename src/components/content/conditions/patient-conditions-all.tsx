@@ -1,46 +1,45 @@
 import cx from "classnames";
 import { useEffect, useMemo, useState } from "react";
-import { patientImmunizationsColumns } from "./helpers/columns";
-import { defaultImmunizationsFilters, immunizationsFilter } from "./helpers/filters";
-import { defaultImmunizationSort, immunizationSortOptions } from "./helpers/sort";
+import { patientConditionsAllColumns } from "./helpers/columns";
+import { useConditionDetailsDrawer } from "./helpers/details";
+import { conditionFilters, defaultConditionFilters } from "./helpers/filters";
+import {
+  useAddConditionForm,
+  useConfirmDeleteCondition,
+  useEditConditionForm,
+} from "./helpers/modal-hooks";
+import { conditionSortOptions, defaultConditionSort } from "./helpers/sorts";
 import { useToggleDismiss } from "../hooks/use-toggle-dismiss";
 import { useToggleRead } from "../hooks/use-toggle-read";
-import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
-import { entryFromArray } from "@/components/core/data-list";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { Spinner } from "@/components/core/spinner";
 import { RowActionsProps } from "@/components/core/table/table";
-import { usePatientImmunizations } from "@/fhir/immunizations";
-import { ImmunizationModel } from "@/fhir/models/immunization";
+import { ConditionModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
-import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { useBaseTranslations } from "@/i18n";
-import { QUERY_KEY_BASIC, QUERY_KEY_PATIENT_IMMUNIZATIONS } from "@/utils/query-keys";
+import { QUERY_KEY_BASIC, QUERY_KEY_PATIENT_CONDITIONS } from "@/utils/query-keys";
+import { usePatientConditionsAll } from "@/services/conditions";
 
-export type PatientImmunizationsProps = {
+export type PatientConditionsAllProps = {
   className?: string;
+  readOnly?: boolean;
 };
 
-function PatientImmunizationsComponent({ className }: PatientImmunizationsProps) {
+function PatientConditionsAllComponent({ className, readOnly }: PatientConditionsAllProps) {
   const { getRequestContext } = useCTW();
-  const { enabled } = useFQSFeatureToggle("immunizations");
-  const patientImmunizationsQuery = usePatientImmunizations();
+  const { t } = useBaseTranslations();
+  const query = usePatientConditionsAll();
+  const showAddConditionForm = useAddConditionForm();
   const { data, setFilters, setSort } = useFilteredSortedData({
-    defaultFilters: defaultImmunizationsFilters,
-    defaultSort: defaultImmunizationSort,
-    records: patientImmunizationsQuery.data,
+    defaultFilters: defaultConditionFilters,
+    defaultSort: defaultConditionSort,
+    records: query.data,
   });
-  const [userBuilderId, setUserBuilderId] = useState("");
 
-  const openDetails = useResourceDetailsDrawer({
-    header: (m) => m.description,
-    details: immunizationData,
-    getSourceDocument: true,
-    enableFQS: enabled,
-  });
+  const [userBuilderId, setUserBuilderId] = useState("");
 
   useEffect(() => {
     async function load() {
@@ -51,39 +50,51 @@ function PatientImmunizationsComponent({ className }: PatientImmunizationsProps)
     void load();
   }, [getRequestContext]);
 
+  const openDetails = useConditionDetailsDrawer({
+    canRemove: !readOnly,
+    canEdit: !readOnly,
+  });
+
   const rowActions = useMemo(() => getRowActions(userBuilderId), [userBuilderId]);
 
-  const { toggleRead } = useToggleRead(QUERY_KEY_PATIENT_IMMUNIZATIONS, QUERY_KEY_BASIC);
+  const { toggleRead } = useToggleRead(QUERY_KEY_PATIENT_CONDITIONS, QUERY_KEY_BASIC);
 
-  const handleRowClick = (record: ImmunizationModel) => {
+  const handleRowClick = (record: ConditionModel) => {
     if (!record.isRead) {
       toggleRead(record);
     }
     openDetails(record);
   };
 
+  const action = !readOnly && (
+    <button type="button" className="ctw-btn-primary" onClick={() => showAddConditionForm()}>
+      {t("resource.add", { resource: t("glossary:condition_one") })}
+    </button>
+  );
+
   return (
     <div
       className={cx(className, "ctw-scrollable-pass-through-height")}
-      data-zus-telemetry-namespace="Immunizations"
+      data-zus-telemetry-namespace="Conditions"
     >
       <ResourceTableActions
         filterOptions={{
           onChange: setFilters,
-          defaultState: defaultImmunizationsFilters,
-          filters: immunizationsFilter(),
+          defaultState: defaultConditionFilters,
+          filters: conditionFilters(query.data, true),
         }}
         sortOptions={{
-          defaultSort: defaultImmunizationSort,
-          options: immunizationSortOptions,
+          defaultSort: defaultConditionSort,
+          options: conditionSortOptions,
           onChange: setSort,
         }}
+        action={action}
       />
       <ResourceTable
         showTableHead
-        isLoading={patientImmunizationsQuery.isLoading}
+        isLoading={query.isLoading}
         data={data}
-        columns={patientImmunizationsColumns(userBuilderId)}
+        columns={patientConditionsAllColumns(userBuilderId)}
         onRowClick={handleRowClick}
         RowActions={rowActions}
         boldUnreadRows
@@ -92,34 +103,27 @@ function PatientImmunizationsComponent({ className }: PatientImmunizationsProps)
   );
 }
 
-export const PatientImmunizations = withErrorBoundary(
-  PatientImmunizationsComponent,
-  "PatientImmunizations"
+export const PatientConditionsAll = withErrorBoundary(
+  PatientConditionsAllComponent,
+  "PatientConditionsAll"
 );
-
-const immunizationData = (immunization: ImmunizationModel) => [
-  { label: "Date Given", value: immunization.occurrence },
-  { label: "Provider Organization", value: immunization.managingOrganization },
-  { label: "Status", value: immunization.status },
-  { label: "Dose Quantity", value: immunization.doseQuantity },
-  { label: "Route", value: immunization.route },
-  { label: "Site", value: immunization.site },
-  { label: "Lot Number", value: immunization.resource.lotNumber },
-  ...entryFromArray("Note", immunization.notesDisplay),
-];
 
 const getRowActions =
   (userBuilderId: string) =>
-  ({ record }: RowActionsProps<ImmunizationModel>) => {
+  ({ record }: RowActionsProps<ConditionModel>) => {
     const { t } = useBaseTranslations();
     const { isLoading: isToggleDismissLoading, toggleDismiss } = useToggleDismiss(
-      QUERY_KEY_PATIENT_IMMUNIZATIONS,
+      QUERY_KEY_PATIENT_CONDITIONS,
       QUERY_KEY_BASIC
     );
     const { isLoading: isToggleReadLoading, toggleRead } = useToggleRead(
-      QUERY_KEY_PATIENT_IMMUNIZATIONS,
+      QUERY_KEY_PATIENT_CONDITIONS,
       QUERY_KEY_BASIC
     );
+    const showAddConditionForm = useAddConditionForm();
+    const showEditConditionForm = useEditConditionForm();
+    const confirmDelete = useConfirmDeleteCondition();
+
     const archiveLabel = record.isDismissed
       ? t("resourceTable.restore")
       : t("resourceTable.dismiss");
@@ -127,7 +131,21 @@ const getRowActions =
     const readLabel = record.isRead ? t("resourceTable.unread") : t("resourceTable.read");
 
     return record.ownedByBuilder(userBuilderId) ? (
-      <></>
+      <div className="ctw-flex ctw-space-x-2">
+        {!record.isDeleted && (
+          <button type="button" className="ctw-btn-default" onClick={() => confirmDelete(record)}>
+            Remove
+          </button>
+        )}
+
+        <button
+          type="button"
+          className="ctw-btn-primary"
+          onClick={() => showEditConditionForm(record)}
+        >
+          Edit
+        </button>
+      </div>
     ) : (
       <div className="ctw-flex ctw-space-x-2">
         <button
@@ -164,6 +182,14 @@ const getRowActions =
           ) : (
             readLabel
           )}
+        </button>
+        <button
+          type="button"
+          className="ctw-btn-primary"
+          disabled={isToggleDismissLoading || isToggleReadLoading}
+          onClick={() => showAddConditionForm(record)}
+        >
+          {t("resourceTable.add")}
         </button>
       </div>
     );

@@ -53,7 +53,7 @@ export const PatientObservationsBase = ({
         data={data}
         emptyMessage="There are no observation records available."
         isLoading={query.isLoading}
-        rowActions={rowActions}
+        RowActions={rowActions}
         onRowClick={openDrawer}
       />
     </div>

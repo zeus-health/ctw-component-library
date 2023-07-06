@@ -68,7 +68,7 @@ export const PatientConditionsBase = ({
         emptyMessage={emptyMessage}
         isLoading={isLoading || query.isLoading}
         onRowClick={openDetailsDrawer}
-        rowActions={rowActions}
+        RowActions={rowActions}
       />
     </div>
   );

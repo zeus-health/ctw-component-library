@@ -13,7 +13,6 @@ import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { Spinner } from "@/components/core/spinner";
 import { RowActionsProps } from "@/components/core/table/table";
-import { ViewFHIR } from "@/components/core/view-fhir";
 import { usePatientAllergies } from "@/fhir/allergies";
 import { AllergyModel } from "@/fhir/models/allergies";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
@@ -27,7 +26,7 @@ export type PatientAllergiesProps = {
 };
 
 function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
-  const { featureFlags, getRequestContext } = useCTW();
+  const { getRequestContext } = useCTW();
   const { enabled } = useFQSFeatureToggle("allergies");
   const patientAllergiesQuery = usePatientAllergies();
   const { data, setFilters, setSort } = useFilteredSortedData({
@@ -55,10 +54,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
     enableFQS: enabled,
   });
 
-  const rowActions = useMemo(
-    () => getRowActions(userBuilderId, featureFlags?.enableViewFhirButton || false),
-    [userBuilderId, featureFlags?.enableViewFhirButton]
-  );
+  const rowActions = useMemo(() => getRowActions(userBuilderId), [userBuilderId]);
 
   const { toggleRead } = useToggleRead(QUERY_KEY_PATIENT_ALLERGIES, QUERY_KEY_BASIC);
 
@@ -92,7 +88,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
         data={data}
         columns={patientAllergiesColumns(userBuilderId)}
         onRowClick={handleRowClick}
-        rowActions={rowActions}
+        RowActions={rowActions}
         boldUnreadRows
       />
     </div>
@@ -113,7 +109,7 @@ const allergyData = (allergy: AllergyModel) => [
 ];
 
 const getRowActions =
-  (userBuilderId: string, enableViewFhirButton: boolean) =>
+  (userBuilderId: string) =>
   ({ record }: RowActionsProps<AllergyModel>) => {
     const { t } = useBaseTranslations();
     const { isLoading: isToggleDismissLoading, toggleDismiss } = useToggleDismiss(
@@ -134,7 +130,6 @@ const getRowActions =
       <></>
     ) : (
       <div className="ctw-flex ctw-space-x-2">
-        {enableViewFhirButton && <ViewFHIR resource={record.resource} />}
         <button
           type="button"
           className="ctw-btn-default"

@@ -22,7 +22,6 @@ export type PatientDocumentsProps = {
 
 function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocumentsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { featureFlags } = useCTW();
   const { enabled } = useFQSFeatureToggle("documents");
 
   const patientDocumentQuery = usePatientDocuments();
@@ -56,9 +55,9 @@ function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocument
         isLoading={patientDocumentQuery.isLoading}
         data={data}
         emptyMessage="There are no documents available."
-        columns={patientDocumentColumns(featureFlags?.enableViewFhirButton)}
+        columns={patientDocumentColumns}
         onRowClick={openDetails}
-        rowActions={rowActions}
+        RowActions={rowActions}
       />
     </div>
   );
