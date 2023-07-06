@@ -151,13 +151,13 @@ const PatientNameColumn = ({ data }: { data: PatientHistoryRequestModel }) => (
   <div className="ctw-flex ctw-items-center">
     <div>
       <div className="ctw-flex ctw-space-x-1 ctw-font-medium">
-        <div className="ctw-max-w-xs">{data.patient.fullName}</div>
-        {data.patient.resource.gender && (
+        <div className="ctw-max-w-xs">{data.patient?.fullName}</div>
+        {data.patient?.resource.gender && (
           <div className="ctw-uppercase">({data.patient.resource.gender[0]})</div>
         )}
       </div>
       <div className="ctw-text-content-lighter">
-        {data.patient.dob} ({data.patient.age})
+        {data.patient?.dob} ({data.patient?.age})
       </div>
     </div>
   </div>
