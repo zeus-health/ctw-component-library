@@ -98,6 +98,11 @@ export async function searchProvenances<T extends fhir4.Resource>(
   const targets = uniq(models.map((m) => `${m.resourceType}/${m.id}`));
   const ids = models.map((m) => m.id);
 
+  // Builder-scoped queries will fix the issue of FQS not supporting Practitioner provenance search.
+  if (enableFQS && models[0].resourceType === "Practitioner") {
+    return [];
+  }
+
   if (enableFQS) {
     return searchProvenancesFQS(requestContext, models[0].resourceType, targets);
   }
