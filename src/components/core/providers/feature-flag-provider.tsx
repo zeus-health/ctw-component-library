@@ -2,26 +2,27 @@ import { FlagProvider, UnleashClient, useUnleashContext } from "@unleash/proxy-c
 import jwtDecode from "jwt-decode";
 import { createContext, ReactNode, useEffect, useMemo, useState } from "react";
 import { useGetAuthToken } from "./authentication/use-get-auth-token";
+import { Env } from "./types";
 
 export const FeatureFlagContext = createContext({
   unleashClientFailed: false,
 });
 
 export type FeatureFlagProviderProps = {
+  env: Env;
   children: ReactNode;
 };
 
-export function FeatureFlagProvider({ children }: FeatureFlagProviderProps) {
+export function FeatureFlagProvider({ env, children }: FeatureFlagProviderProps) {
   const unleashClient = useMemo(
     () =>
       new UnleashClient({
-        url: "https://unleash-proxy-prod.zusapi.com/proxy",
-        clientKey: "MDE0NDU5NTQtNEIyNC00RUVGLUI4NDUtRTE3QjYyMUQ3NTAzCg==",
+        ...getUnleashProxyForEnv(env),
         refreshInterval: 15, // (in seconds)
         appName: "ctw-component-library",
         context: {},
       }),
-    []
+    [env]
   );
 
   return (
@@ -31,6 +32,28 @@ export function FeatureFlagProvider({ children }: FeatureFlagProviderProps) {
       </FeatureFlagProviderComponent>
     </FlagProvider>
   );
+}
+
+function getUnleashProxyForEnv(env: Env) {
+  switch (env) {
+    case "production":
+      return {
+        url: "https://unleash-proxy-prod.zusapi.com/proxy",
+        clientKey: "MDE0NDU5NTQtNEIyNC00RUVGLUI4NDUtRTE3QjYyMUQ3NTAzCg==",
+      };
+    case "sandbox":
+      return {
+        url: "https://unleash-proxy.zusapi.com/proxy",
+        clientKey: "Q0QwNUIxODgtQkFEMC00MTA2LUIwRDEtRDgwQ0FFRDBBMzBCCg==",
+      };
+    case "phi-test":
+    case "dev":
+    default:
+      return {
+        url: "https://unleash-proxy-dev.zusapi.com/proxy",
+        clientKey: "NTk3QkM3RTItMTU4Qi00NDYwLTlFQjQtNjMyQ0ZFMENBNkY1Cg==",
+      };
+  }
 }
 
 type FeatureFlagProviderComponentProps = {
