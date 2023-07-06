@@ -111,14 +111,20 @@ export async function searchProvenancesODS(
   patientUPID: string | undefined
 ) {
   const id = ids.join(",");
-  const { bundle } = await queryClient.fetchQuery([QUERY_KEY_PROVENANCE, id], async () =>
-    searchAllRecords(resourceType, requestContext, {
+  const { bundle } = await queryClient.fetchQuery([QUERY_KEY_PROVENANCE, id], async () => {
+    if (resourceType === "Practitioner") {
+      return searchAllRecords(resourceType, requestContext, {
+        _id: id,
+        _revinclude: "Provenance:target",
+      });
+    }
+    return searchAllRecords(resourceType, requestContext, {
       _id: id,
       _revinclude: "Provenance:target",
       // Need to include patient identifier to work around CPR.
       "patient.identifier": patientUPID ? `${SYSTEM_ZUS_UNIVERSAL_ID}|${patientUPID}` : "",
-    })
-  );
+    });
+  });
 
   return getResources(bundle, "Provenance");
 }

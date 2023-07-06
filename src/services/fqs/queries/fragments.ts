@@ -48,6 +48,20 @@ export const fragmentPractitioner = gql`
       text
       use
     }
+    qualification {
+      code {
+        text
+        coding {
+          code
+          display
+          system
+        }
+      }
+      period {
+        start
+        end
+      }
+    }
   }
 `;
 
