@@ -13,6 +13,7 @@ import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { Spinner } from "@/components/core/spinner";
 import { RowActionsProps } from "@/components/core/table/table";
+import { ViewFHIR } from "@/components/core/view-fhir";
 import { usePatientImmunizations } from "@/fhir/immunizations";
 import { ImmunizationModel } from "@/fhir/models/immunization";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
@@ -51,7 +52,10 @@ function PatientImmunizationsComponent({ className }: PatientImmunizationsProps)
     void load();
   }, [getRequestContext]);
 
-  const rowActions = useMemo(() => getRowActions(userBuilderId), [userBuilderId]);
+  const rowActions = useMemo(
+    () => getRowActions(userBuilderId, featureFlags?.enableViewFhirButton || false),
+    [userBuilderId, featureFlags?.enableViewFhirButton]
+  );
 
   const { toggleRead } = useToggleRead(QUERY_KEY_PATIENT_IMMUNIZATIONS, QUERY_KEY_BASIC);
 
@@ -83,7 +87,7 @@ function PatientImmunizationsComponent({ className }: PatientImmunizationsProps)
         showTableHead
         isLoading={patientImmunizationsQuery.isLoading}
         data={data}
-        columns={patientImmunizationsColumns(userBuilderId, featureFlags?.enableViewFhirButton)}
+        columns={patientImmunizationsColumns(userBuilderId)}
         onRowClick={handleRowClick}
         rowActions={rowActions}
         boldUnreadRows
@@ -109,7 +113,7 @@ const immunizationData = (immunization: ImmunizationModel) => [
 ];
 
 const getRowActions =
-  (userBuilderId: string) =>
+  (userBuilderId: string, enableViewFhirButton: boolean) =>
   ({ record }: RowActionsProps<ImmunizationModel>) => {
     const { t } = useBaseTranslations();
     const { isLoading: isToggleDismissLoading, toggleDismiss } = useToggleDismiss(
@@ -130,6 +134,7 @@ const getRowActions =
       <></>
     ) : (
       <div className="ctw-flex ctw-space-x-2">
+        {enableViewFhirButton && <ViewFHIR resource={record.resource} />}
         <button
           type="button"
           className="ctw-btn-default"

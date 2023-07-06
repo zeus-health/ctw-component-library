@@ -6,7 +6,7 @@ import { Drawer } from "./drawer";
 import { useDrawer } from "./providers/drawer-provider";
 
 export type ViewFHIRProps = {
-  name: string;
+  name?: string;
   resource: fhir4.Resource;
 };
 
@@ -20,13 +20,13 @@ export function useFHIRDrawer() {
   };
 }
 
-export function ViewFHIR({ name, resource }: ViewFHIRProps) {
+export function ViewFHIR({ name = "View FHIR", resource }: ViewFHIRProps) {
   const openDrawer = useFHIRDrawer();
 
   return (
     <button
       type="button"
-      className="ctw-btn-primary ctw-text-sm"
+      className="ctw-btn-default"
       onClick={(event) => {
         // Prevents any rowClick handler from firing.
         event.stopPropagation();

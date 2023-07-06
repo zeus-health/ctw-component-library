@@ -13,6 +13,7 @@ import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { Spinner } from "@/components/core/spinner";
 import { RowActionsProps } from "@/components/core/table/table";
+import { ViewFHIR } from "@/components/core/view-fhir";
 import { usePatientAllergies } from "@/fhir/allergies";
 import { AllergyModel } from "@/fhir/models/allergies";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
@@ -54,7 +55,10 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
     enableFQS: enabled,
   });
 
-  const rowActions = useMemo(() => getRowActions(userBuilderId), [userBuilderId]);
+  const rowActions = useMemo(
+    () => getRowActions(userBuilderId, featureFlags?.enableViewFhirButton || false),
+    [userBuilderId, featureFlags?.enableViewFhirButton]
+  );
 
   const { toggleRead } = useToggleRead(QUERY_KEY_PATIENT_ALLERGIES, QUERY_KEY_BASIC);
 
@@ -86,7 +90,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
         showTableHead
         isLoading={patientAllergiesQuery.isLoading}
         data={data}
-        columns={patientAllergiesColumns(userBuilderId, featureFlags?.enableViewFhirButton)}
+        columns={patientAllergiesColumns(userBuilderId)}
         onRowClick={handleRowClick}
         rowActions={rowActions}
         boldUnreadRows
@@ -109,7 +113,7 @@ const allergyData = (allergy: AllergyModel) => [
 ];
 
 const getRowActions =
-  (userBuilderId: string) =>
+  (userBuilderId: string, enableViewFhirButton: boolean) =>
   ({ record }: RowActionsProps<AllergyModel>) => {
     const { t } = useBaseTranslations();
     const { isLoading: isToggleDismissLoading, toggleDismiss } = useToggleDismiss(
@@ -130,6 +134,7 @@ const getRowActions =
       <></>
     ) : (
       <div className="ctw-flex ctw-space-x-2">
+        {enableViewFhirButton && <ViewFHIR resource={record.resource} />}
         <button
           type="button"
           className="ctw-btn-default"
