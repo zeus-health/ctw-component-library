@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.28.1
+
+### Patch Changes
+
+- c4976b13: Add className for UnreadNotification component.
+
 ## 1.28.0
 
 ### Minor Changes
