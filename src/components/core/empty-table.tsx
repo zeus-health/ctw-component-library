@@ -16,12 +16,14 @@ export const EmptyTable = ({ resourceName, hasZeroFilteredRecords }: EmptyTableP
     subText = "Try changing the filters.";
   }
   return (
-    <div>
-      <div className="ctw-flex ctw-justify-center">
-        <FontAwesomeIcon icon={icon} className="ctw-h-16 ctw-text-icon-light" />
+    <div className="ctw-space-y-3">
+      <div className="ctw-space-y-6">
+        <div className="ctw-flex ctw-justify-center">
+          <FontAwesomeIcon icon={icon} className="ctw-h-16 ctw-text-icon-light" />
+        </div>
+        <div className="ctw-text-center ctw-text-xl ctw-font-medium">{errorText}</div>
       </div>
-      <div className="ctw-pt-6 ctw-text-center ctw-text-xl ctw-font-medium">{errorText}</div>
-      <div className="ctw-pt-3 ctw-text-center ctw-text-base ctw-font-normal">{subText}</div>
+      <div className="ctw-text-center ctw-text-base ctw-font-normal">{subText}</div>
     </div>
   );
 };
