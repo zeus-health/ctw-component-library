@@ -8,15 +8,10 @@ import { useObservationsDetailsDrawer } from "../observations/helpers/drawer";
 import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { ResourceTable } from "@/components/content/resource/resource-table";
-<<<<<<< HEAD
-=======
 import { EmptyTable } from "@/components/core/empty-table";
-import { useCTW } from "@/components/core/providers/use-ctw";
->>>>>>> main
 import { TimelineEventModel } from "@/fhir/models/timeline-event";
 import { useTimelineEvents } from "@/fhir/timeline-event";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
-import { EmptyTable } from "@/components/core/empty-table";
 
 export type PatientTimelineProps = {
   className?: cx.Argument;
