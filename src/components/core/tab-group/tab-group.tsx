@@ -20,7 +20,6 @@ export type TabGroupProps = {
 
 export type TabGroupItem = {
   display: () => string | ReactNode;
-  getPanelClassName?: (sm: boolean) => cx.Argument;
   key: string;
   render: (sm: boolean) => string | ReactNode;
 };
@@ -128,10 +127,7 @@ function TabGroupComponent({
           {content.map((item, index) => (
             <Tab.Panel
               key={item.key}
-              className={cx(
-                "ctw-scrollable-pass-through-height",
-                item.getPanelClassName?.(breakpoints.sm)
-              )}
+              className={cx("ctw-scrollable-pass-through-height")}
               // Don't unmount our tabs. This fixes an issue
               // where ZAP filters/sort selections would get reset
               // when switching to a new tab and back again.
