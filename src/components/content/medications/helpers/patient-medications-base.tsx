@@ -9,6 +9,7 @@ import {
   ResourceTableActions,
   ResourceTableActionsProps,
 } from "../../resource/resource-table-actions";
+import { EmptyTable } from "@/components/core/empty-table";
 import { FilterItem } from "@/components/core/filter-bar/filter-bar-types";
 import { MedicationStatementModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
@@ -44,6 +45,9 @@ export const PatientMedicationsBase = ({
     records: query.data,
   });
 
+  const isEmptyQuery = query.data?.length === 0;
+  const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
+
   function handleRowClick(medication: MedicationStatementModel) {
     onOpenHistoryDrawer?.();
     openDetailsDrawer(medication);
@@ -78,7 +82,9 @@ export const PatientMedicationsBase = ({
         className="ctw-patient-medications"
         columns={patientMedicationColumns}
         data={data}
-        emptyMessage="There are no medication records available."
+        emptyMessage={
+          <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="medications" />
+        }
         isLoading={query.isLoading}
         onRowClick={handleRowClick}
         RowActions={rowActions}
