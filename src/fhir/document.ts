@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useBasic } from "./basic";
-import { DocumentModel, DocumentModel } from "./models/document";
+import { DocumentModel } from "./models/document";
 import { searchCommonRecords } from "./search-helpers";
 import { PatientModel, useFeatureFlaggedQueryWithPatient } from "..";
 import { applyDocumentFilters } from "@/components/content/document/helpers/filters";

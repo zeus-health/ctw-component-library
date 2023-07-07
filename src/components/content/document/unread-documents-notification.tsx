@@ -22,8 +22,6 @@ export const UnreadDocumentsNotification = () => {
     (d) => !d.isDismissed && !d.isRead && !d.ownedByBuilder(userBuilderId)
   );
 
-  console.log(query.data);
-
   if (unreadOutsideDocuments.length > 0) {
     return <UnreadNotification />;
   }
