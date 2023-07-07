@@ -26,15 +26,8 @@ export function ViewFHIR({ name = "View FHIR", resource }: ViewFHIRProps) {
   return (
     <button
       type="button"
-<<<<<<< Updated upstream
       className="ctw-btn-default"
-      onClick={(event) => {
-        // Prevents any rowClick handler from firing.
-        event.stopPropagation();
-=======
-      className="ctw-btn-primary ctw-text-sm"
       onClick={() => {
->>>>>>> Stashed changes
         openDrawer(name, resource);
       }}
     >
