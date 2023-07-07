@@ -1,5 +1,85 @@
 # ctw-component-library
 
+## 1.27.9
+
+### Patch Changes
+
+- 63ce552f: Forcing medication history results to be sorted by resource ID before de-duplicating.
+- 06196609: Add not authorized error message.
+
+## 1.27.8
+
+### Patch Changes
+
+- b6e8c774: Fix careteams drawer issue.
+
+## 1.27.7
+
+### Patch Changes
+
+- 6f3c58c8: Pull the dispense request performing organization data in medication request FQS query
+
+## 1.27.6
+
+### Patch Changes
+
+- 778bafb1: Fix issue where patient history table crashes due to patients being deleted.
+
+## 1.27.5
+
+### Patch Changes
+
+- 3cc59c28: Expand the medication prescriber reference in medication request FQS query
+
+## 1.27.4
+
+### Patch Changes
+
+- b79b0e4a: Export unread allergy/immunization indicators"
+
+## 1.27.3
+
+### Patch Changes
+
+- b69fa916: Fix cache issue for outside medications history requests
+- a48e3d51: Add hostname to feature-flag context.
+
+## 1.27.2
+
+### Patch Changes
+
+- ecaca91f: Update immunization component - read/unread, dismiss, updates to columns, default sort, additional data in details drawer.
+- cbca00c3: Fix errors in medication administration FQS query
+- ce82c34c: Bump prettier-plugin-tailwindcss from 0.1.13 to 0.3.0
+
+## 1.27.1
+
+### Patch Changes
+
+- c08c83c5: Fix styling on notification icons.
+
+## 1.27.0
+
+### Minor Changes
+
+- 8856e90b: Use data from FQS queries that return errors and data
+
+### Patch Changes
+
+- 56ca29a6: Prevent non-builder users from being able to mark records as read in production.
+
+## 1.26.5
+
+### Patch Changes
+
+- e01d88e3: Fetch all types of values for observations from FQS. This fixes an issue where some diagnostic report observations don't show any results.
+
+## 1.26.4
+
+### Patch Changes
+
+- 21a83a76: Add notification to allergy tab in ZAP indicating unread allergies. Modify outside conditions/medications count badge to display notification.
+
 ## 1.26.3
 
 ### Patch Changes

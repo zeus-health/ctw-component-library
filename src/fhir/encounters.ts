@@ -4,7 +4,7 @@ import { EncounterModel } from "./models/encounter";
 import { searchCommonRecords } from "./search-helpers";
 import { useFeatureFlaggedQueryWithPatient } from "..";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { createGraphqlClient } from "@/services/fqs/client";
+import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import { EncounterGraphqlResponse, encountersQuery } from "@/services/fqs/queries/encounters";
 import { QUERY_KEY_PATIENT_ENCOUNTERS } from "@/utils/query-keys";
 import { Telemetry } from "@/utils/telemetry";
@@ -34,14 +34,14 @@ function setupEncounterModels(
 async function getEncountersFromFQS(requestContext: CTWRequestContext, patient: PatientModel) {
   try {
     const graphClient = createGraphqlClient(requestContext);
-    const data = (await graphClient.request(encountersQuery, {
+    const { data } = await fqsRequest<EncounterGraphqlResponse>(graphClient, encountersQuery, {
       upid: patient.UPID,
       cursor: "",
       first: 1000,
       sort: {
         lastUpdated: "DESC",
       },
-    })) as EncounterGraphqlResponse;
+    });
     const nodes = data.EncounterConnection.edges.map((x) => x.node);
     const results = setupEncounterModels(nodes);
     if (results.length === 0) {

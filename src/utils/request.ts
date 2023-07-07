@@ -8,6 +8,7 @@ export type UseQueryResultBasic<T> = {
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      retry: false,
       // NOTE: Stale time must be kept less than what we'd expect auth token
       // expiration to be. This ensures that if the token expires and we go to
       // fetch a fresh one, we don't get a stale token from react-query cache.

@@ -8,7 +8,7 @@ export class PatientHistoryRequestModel {
 
   historyInfo: PatientHistoryJobResponseJobData | undefined = undefined;
 
-  patient: PatientModel;
+  patient?: PatientModel;
 
   constructor(patient: PatientModel, historyInfo: PatientHistoryJobResponseJobData | undefined) {
     this.patient = patient;

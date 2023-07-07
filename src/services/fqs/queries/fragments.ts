@@ -48,6 +48,20 @@ export const fragmentPractitioner = gql`
       text
       use
     }
+    qualification {
+      code {
+        text
+        coding {
+          code
+          display
+          system
+        }
+      }
+      period {
+        start
+        end
+      }
+    }
   }
 `;
 
@@ -216,6 +230,55 @@ export const fragmentObservation = gql`
       value
       system
       code
+    }
+    valueCodeableConcept {
+      text
+      coding {
+        system
+        code
+        display
+      }
+    }
+    valueString
+    valueBoolean
+    valueInteger
+    valueRange {
+      low {
+        comparator
+        unit
+        value
+        system
+        code
+      }
+      high {
+        comparator
+        unit
+        value
+        system
+        code
+      }
+    }
+    valueRatio {
+      numerator {
+        comparator
+        unit
+        value
+        system
+        code
+      }
+      denominator {
+        comparator
+        unit
+        value
+        system
+        code
+      }
+    }
+    valueTime
+    valueDateTime
+    valuePeriod {
+      start
+      end
     }
     interpretation {
       text
