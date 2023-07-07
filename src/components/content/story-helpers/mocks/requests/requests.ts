@@ -14,7 +14,7 @@ export const mockBinaryGet = () => [
 ];
 
 export const mockUnleashFQSEnabledGet = (resourceType: string) =>
-  rest.get("https://unleash-proxy-prod.zusapi.com/*", async (_, res, ctx) =>
+  rest.get("https://unleash-proxy-dev.zusapi.com/*", async (_, res, ctx) =>
     res(
       ctx.status(200),
       ctx.json(unleashVariant("test", "conditions", { [resourceType]: true }, true))
