@@ -58,6 +58,7 @@ function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocument
         columns={patientDocumentColumns}
         onRowClick={openDetails}
         RowActions={rowActions}
+        enableDismissAndReadActions
       />
     </div>
   );
