@@ -9,6 +9,7 @@ import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { patientAllergiesColumns } from "@/components/content/allergies/helpers/column";
+import { EmptyTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { Spinner } from "@/components/core/spinner";
@@ -35,6 +36,8 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
     records: patientAllergiesQuery.data,
   });
 
+  const isEmptyQuery = patientAllergiesQuery.data.length === 0;
+  const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
   const [userBuilderId, setUserBuilderId] = useState("");
 
   useEffect(() => {
@@ -90,6 +93,9 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
         onRowClick={handleRowClick}
         rowActions={rowActions}
         boldUnreadRows
+        emptyMessage={
+          <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="allergies" />
+        }
       />
     </div>
   );

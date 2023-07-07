@@ -11,6 +11,7 @@ import {
   ResourceTableActions,
   ResourceTableActionsProps,
 } from "../../resource/resource-table-actions";
+import { EmptyTable } from "@/components/core/empty-table";
 import { ConditionModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 
@@ -21,7 +22,7 @@ export type PatientConditionsTableProps = {
   outside?: boolean;
   readOnly?: boolean;
   rowActions?: ResourceTableProps<ConditionModel>["rowActions"];
-  emptyMessage?: string | ReactElement;
+  emptyMessage?: string | ReactElement | undefined;
   isLoading?: boolean;
 };
 
@@ -32,7 +33,7 @@ export const PatientConditionsBase = ({
   outside = false,
   readOnly = false,
   rowActions,
-  emptyMessage = "There are no condition records available.",
+  emptyMessage,
   isLoading,
 }: PatientConditionsTableProps) => {
   const openDetailsDrawer = useConditionDetailsDrawer({
@@ -45,6 +46,16 @@ export const PatientConditionsBase = ({
     defaultSort: defaultConditionSort,
     records: query.data,
   });
+
+  const isEmptyQuery = query.data?.length === 0;
+  const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
+
+  let empty = emptyMessage;
+  if (emptyMessage === undefined) {
+    empty = (
+      <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="conditions" />
+    );
+  }
 
   return (
     <div className={cx(className, "ctw-scrollable-pass-through-height")}>
@@ -65,7 +76,7 @@ export const PatientConditionsBase = ({
         className="ctw-patient-conditions"
         columns={patientConditionsColumns}
         data={data}
-        emptyMessage={emptyMessage}
+        emptyMessage={empty}
         isLoading={isLoading || query.isLoading}
         onRowClick={openDetailsDrawer}
         rowActions={rowActions}
