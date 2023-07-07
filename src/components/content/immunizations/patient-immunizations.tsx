@@ -25,7 +25,7 @@ export type PatientImmunizationsProps = {
 };
 
 function PatientImmunizationsComponent({ className }: PatientImmunizationsProps) {
-  const { featureFlags, getRequestContext } = useCTW();
+  const { getRequestContext } = useCTW();
   const { enabled } = useFQSFeatureToggle("immunizations");
   const patientImmunizationsQuery = usePatientImmunizations();
   const { data, setFilters, setSort } = useFilteredSortedData({
@@ -83,9 +83,9 @@ function PatientImmunizationsComponent({ className }: PatientImmunizationsProps)
         showTableHead
         isLoading={patientImmunizationsQuery.isLoading}
         data={data}
-        columns={patientImmunizationsColumns(userBuilderId, featureFlags?.enableViewFhirButton)}
+        columns={patientImmunizationsColumns(userBuilderId)}
         onRowClick={handleRowClick}
-        rowActions={rowActions}
+        RowActions={rowActions}
         boldUnreadRows
       />
     </div>

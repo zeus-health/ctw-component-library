@@ -19,7 +19,7 @@ export type PatientMedicationsBaseProps = {
   action?: ResourceTableActionsProps<MedicationStatementModel>["action"];
   className?: string;
   query: { data?: MedicationStatementModel[]; isLoading: boolean };
-  rowActions?: ResourceTableProps<MedicationStatementModel>["rowActions"];
+  rowActions?: ResourceTableProps<MedicationStatementModel>["RowActions"];
   filters: FilterItem[];
   defaultView?: ViewOption<MedicationStatementModel>;
   views?: ViewOption<MedicationStatementModel>[];
@@ -87,7 +87,7 @@ export const PatientMedicationsBase = ({
         }
         isLoading={query.isLoading}
         onRowClick={handleRowClick}
-        rowActions={rowActions}
+        RowActions={rowActions}
       />
     </div>
   );

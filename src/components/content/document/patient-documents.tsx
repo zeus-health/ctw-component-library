@@ -23,7 +23,6 @@ export type PatientDocumentsProps = {
 
 function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocumentsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { featureFlags } = useCTW();
   const { enabled } = useFQSFeatureToggle("documents");
 
   const patientDocumentQuery = usePatientDocuments();
@@ -62,9 +61,9 @@ function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocument
         emptyMessage={
           <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="documents" />
         }
-        columns={patientDocumentColumns(featureFlags?.enableViewFhirButton)}
+        columns={patientDocumentColumns}
         onRowClick={openDetails}
-        rowActions={rowActions}
+        RowActions={rowActions}
       />
     </div>
   );

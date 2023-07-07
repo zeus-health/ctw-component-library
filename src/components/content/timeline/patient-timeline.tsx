@@ -9,7 +9,6 @@ import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { ResourceTable } from "@/components/content/resource/resource-table";
 import { EmptyTable } from "@/components/core/empty-table";
-import { useCTW } from "@/components/core/providers/use-ctw";
 import { TimelineEventModel } from "@/fhir/models/timeline-event";
 import { useTimelineEvents } from "@/fhir/timeline-event";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
@@ -21,7 +20,6 @@ export type PatientTimelineProps = {
 export function PatientTimeline({ className }: PatientTimelineProps) {
   const timelineEventsQuery = useTimelineEvents();
   const containerRef = useRef<HTMLDivElement>(null);
-  const { featureFlags } = useCTW();
   const { viewOptions, defaultView } = getDateRangeView<TimelineEventModel>("date");
   const { data, setFilters, setSort, setViewOption } = useFilteredSortedData({
     defaultView,
@@ -65,7 +63,7 @@ export function PatientTimeline({ className }: PatientTimelineProps) {
             resourceName="timeline records"
           />
         }
-        columns={patientTimelineColumns(featureFlags?.enableViewFhirButton)}
+        columns={patientTimelineColumns}
         onRowClick={(record) => {
           switch (record.model.kind) {
             case "Encounter":

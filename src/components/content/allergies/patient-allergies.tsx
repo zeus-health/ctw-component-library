@@ -27,7 +27,7 @@ export type PatientAllergiesProps = {
 };
 
 function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
-  const { featureFlags, getRequestContext } = useCTW();
+  const { getRequestContext } = useCTW();
   const { enabled } = useFQSFeatureToggle("allergies");
   const patientAllergiesQuery = usePatientAllergies();
   const { data, setFilters, setSort } = useFilteredSortedData({
@@ -89,9 +89,9 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
         showTableHead
         isLoading={patientAllergiesQuery.isLoading}
         data={data}
-        columns={patientAllergiesColumns(userBuilderId, featureFlags?.enableViewFhirButton)}
+        columns={patientAllergiesColumns(userBuilderId)}
         onRowClick={handleRowClick}
-        rowActions={rowActions}
+        RowActions={rowActions}
         boldUnreadRows
         emptyMessage={
           <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="allergies" />
