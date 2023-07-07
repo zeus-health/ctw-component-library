@@ -1,5 +1,18 @@
 # ctw-component-library
 
+## 1.27.9
+
+### Patch Changes
+
+- 63ce552f: Forcing medication history results to be sorted by resource ID before de-duplicating.
+- 06196609: Add not authorized error message.
+
+## 1.27.8
+
+### Patch Changes
+
+- b6e8c774: Fix careteams drawer issue.
+
 ## 1.27.7
 
 ### Patch Changes

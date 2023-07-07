@@ -60,11 +60,12 @@ import {
   medicationStatementQuery,
 } from "@/services/fqs/queries/medication-statements";
 import { errorResponse } from "@/utils/errors";
-import { cloneDeep, uniqWith } from "@/utils/nodash";
+import { cloneDeep, sortBy, uniqWith } from "@/utils/nodash";
 import {
   compact,
   filter,
   find,
+  sortBy as fpSortBy,
   get,
   groupBy,
   last,
@@ -73,7 +74,6 @@ import {
   omit,
   pipe,
   propEq,
-  sortBy,
   split,
 } from "@/utils/nodash/fp";
 import { QUERY_KEY_MEDICATION_HISTORY } from "@/utils/query-keys";
@@ -614,7 +614,7 @@ export function useLastPrescriber(medication?: fhir4.MedicationStatement) {
         // 2. Throw away any resources that are not MedicationRequests.
         filter(propEq("resourceType", "MedicationRequest")),
         // 3. Sort by the authored on date.
-        sortBy((m) => Date.parse(m.authoredOn)),
+        fpSortBy((m) => Date.parse(m.authoredOn)),
         // 4. If there are med dispense records, make them models.
         map((mr) => new MedicationModel(mr, includedResources)),
         // 5. Take the last (latest) from our filtered list.
@@ -710,12 +710,15 @@ function getMedicationHistoryODS(medication?: fhir4.MedicationStatement) {
         ])
       );
 
-      const medicationResources = compact([
+      let medicationResources = compact([
         ...medicationStatementResponse.resources,
         ...medicationAdministrationResponse.resources,
         ...medicationRequestResponse.resources,
         ...medicationDispenseResponse.resources,
       ]).map((m) => new MedicationModel(m, includedResources));
+
+      // force ODS results to be sorted by id just like FQS results to ensure both functions return the same output.
+      medicationResources = sortBy(medicationResources, (a) => a.resource.id);
 
       const medications = sort(
         uniqWith(
@@ -773,12 +776,16 @@ function getMedicationHistoryFQS(medication?: fhir4.MedicationStatement) {
           resources.MedicationDispense
         ),
       ]);
-      const medicationResources = compact([
+      let medicationResources = compact([
         ...medicationStatementResponse.medications,
         ...medicationAdministrationResponse,
         ...medicationRequestResponse,
         ...medicationDispenseResponse,
       ]).map((m) => new MedicationModel(m));
+
+      // force FQS results to be sorted by id just like ODS results to ensure both functions return the same output.
+      // TODO: Remove once the ODS code path no longer exists.
+      medicationResources = sortBy(medicationResources, (a) => a.resource.id);
 
       const medications = sort(
         uniqWith(
