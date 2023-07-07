@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { patientImmunizationsColumns } from "./helpers/columns";
 import { defaultImmunizationsFilters, immunizationsFilter } from "./helpers/filters";
 import { defaultImmunizationSort, immunizationSortOptions } from "./helpers/sort";
-import { useToggleRead } from "../hooks/use-toggle-read";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
@@ -14,7 +13,6 @@ import { usePatientImmunizations } from "@/fhir/immunizations";
 import { ImmunizationModel } from "@/fhir/models/immunization";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
-import { QUERY_KEY_BASIC, QUERY_KEY_PATIENT_IMMUNIZATIONS } from "@/utils/query-keys";
 
 export type PatientImmunizationsProps = {
   className?: string;
@@ -47,15 +45,6 @@ function PatientImmunizationsComponent({ className }: PatientImmunizationsProps)
     void load();
   }, [getRequestContext]);
 
-  const { toggleRead } = useToggleRead(QUERY_KEY_PATIENT_IMMUNIZATIONS, QUERY_KEY_BASIC);
-
-  const handleRowClick = (record: ImmunizationModel) => {
-    if (!record.isRead) {
-      toggleRead(record);
-    }
-    openDetails(record);
-  };
-
   return (
     <div
       className={cx(className, "ctw-scrollable-pass-through-height")}
@@ -78,8 +67,7 @@ function PatientImmunizationsComponent({ className }: PatientImmunizationsProps)
         isLoading={patientImmunizationsQuery.isLoading}
         data={data}
         columns={patientImmunizationsColumns(userBuilderId)}
-        onRowClick={handleRowClick}
-        RowActions={rowActions}
+        onRowClick={openDetails}
         enableDismissAndReadActions
       />
     </div>

@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { allergyFilter, defaultAllergyFilters } from "./helpers/filters";
 import { useAllergiesHistory } from "./helpers/history";
 import { allergySortOptions, defaultAllergySort } from "./helpers/sort";
-import { useToggleRead } from "../hooks/use-toggle-read";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
@@ -15,7 +14,6 @@ import { AllergyModel } from "@/fhir/models/allergies";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { capitalize } from "@/utils/nodash";
-import { QUERY_KEY_BASIC, QUERY_KEY_PATIENT_ALLERGIES } from "@/utils/query-keys";
 
 export type PatientAllergiesProps = {
   className?: string;
@@ -50,15 +48,6 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
     enableFQS: enabled,
   });
 
-  const { toggleRead } = useToggleRead(QUERY_KEY_PATIENT_ALLERGIES, QUERY_KEY_BASIC);
-
-  const handleRowClick = (record: AllergyModel) => {
-    if (!record.isRead) {
-      toggleRead(record);
-    }
-    openDetails(record);
-  };
-
   return (
     <div
       className={cx(className, "ctw-scrollable-pass-through-height")}
@@ -81,7 +70,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
         isLoading={patientAllergiesQuery.isLoading}
         data={data}
         columns={patientAllergiesColumns(userBuilderId)}
-        onRowClick={handleRowClick}
+        onRowClick={openDetails}
         enableDismissAndReadActions
       />
     </div>
