@@ -45,7 +45,7 @@ async function getEncountersFromFQS(requestContext: CTWRequestContext, patient: 
     const nodes = data.EncounterConnection.edges.map((x) => x.node);
     const results = setupEncounterModels(nodes);
     if (results.length === 0) {
-      Telemetry.countMetric("req.count.encounters.none", 0, ["fqs"]);
+      Telemetry.countMetric("req.count.encounters.none", 1, ["fqs"]);
     }
     Telemetry.histogramMetric("req.count.encounters", results.length, ["fqs"]);
     return results;

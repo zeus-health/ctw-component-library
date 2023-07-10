@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.28.3
+
+### Patch Changes
+
+- 2ae44af3: Add UnreadDocumentsNotification to exported components.
+
 ## 1.28.2
 
 ### Patch Changes
