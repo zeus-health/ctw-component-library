@@ -1,6 +1,7 @@
-import { rest } from "msw";
+import { graphql, rest } from "msw";
 import { ComponentType, createElement } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { conditionFQS } from "./condition-fqs";
 import { heartConditions } from "./forms-data-conditions-search";
 import { historyChronsDisease } from "./history-crohns-disease";
 import { historyDermatitis } from "./history-dermatitis";
@@ -173,6 +174,11 @@ function mockRequests() {
       return res(ctx.status(200), ctx.json(getHistoryVersionsBundle(requestUrls)));
     }
   );
+
+  const mockConditionFQSPost = graphql.query("Condition", (_, res, ctx) =>
+    res(ctx.delay(750), ctx.status(200), ctx.data(conditionFQS))
+  );
+
   return [
     mockUnleashGet,
     mockPatientGet,
@@ -187,5 +193,6 @@ function mockRequests() {
     getMockBasicPut(cache),
     mockConditionVersionHistoryBundle,
     mockConditionProvenance,
+    mockConditionFQSPost,
   ];
 }
