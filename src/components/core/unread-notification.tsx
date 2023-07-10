@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { useCTW } from "./providers/use-ctw";
+import { useUserBuilderId } from "./providers/user-builder-id";
 import { UnreadNotificationIcon } from "./unread-notification-icon";
 import { FHIRModel } from "@/fhir/models/fhir-model";
 
@@ -14,18 +13,7 @@ export type UnreadNotificationProps = {
 };
 
 export const UnreadNotification = ({ className, query }: UnreadNotificationProps) => {
-  const { getRequestContext } = useCTW();
-
-  const [userBuilderId, setUserBuilderId] = useState("");
-
-  useEffect(() => {
-    async function load() {
-      const requestContext = await getRequestContext();
-      setUserBuilderId(requestContext.builderId);
-    }
-
-    void load();
-  }, [getRequestContext]);
+  const userBuilderId = useUserBuilderId();
 
   const unreadOutsideRecords = query.data.filter(
     (record) => !record.isDismissed && !record.isRead && !record.ownedByBuilder(userBuilderId)
