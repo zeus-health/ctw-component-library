@@ -5,6 +5,7 @@ import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
+import { EmptyTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { RowActionsProps } from "@/components/core/table/table";
@@ -22,7 +23,6 @@ export type PatientDocumentsProps = {
 
 function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocumentsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { featureFlags } = useCTW();
   const { enabled } = useFQSFeatureToggle("documents");
 
   const patientDocumentQuery = usePatientDocuments();
@@ -32,6 +32,9 @@ function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocument
     defaultView,
     records: patientDocumentQuery.data,
   });
+
+  const isEmptyQuery = patientDocumentQuery.data?.length === 0;
+  const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
 
   const openDetails = useResourceDetailsDrawer({
     header: (m) => `${m.dateCreated} - ${m.title}`,
@@ -55,10 +58,12 @@ function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocument
       <ResourceTable
         isLoading={patientDocumentQuery.isLoading}
         data={data}
-        emptyMessage="There are no documents available."
-        columns={patientDocumentColumns(featureFlags?.enableViewFhirButton)}
+        emptyMessage={
+          <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="documents" />
+        }
+        columns={patientDocumentColumns}
         onRowClick={openDetails}
-        rowActions={rowActions}
+        RowActions={rowActions}
       />
     </div>
   );

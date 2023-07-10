@@ -3,8 +3,9 @@ import { ReactElement, useEffect, useRef, useState } from "react";
 import { AuthError } from "@/components/core/auth-error";
 import { usePatient } from "@/components/core/providers/patient-provider";
 import { useCTW } from "@/components/core/providers/use-ctw";
-import { Table, TableProps } from "@/components/core/table/table";
+import { RowActionsProps, Table, TableProps } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
+import { ViewFHIR } from "@/components/core/view-fhir";
 import { FHIRModel } from "@/fhir/models/fhir-model";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import "./resource-table.scss";
@@ -16,7 +17,7 @@ export type ResourceTableProps<T extends MinRecordItem> = {
   emptyMessage?: string | ReactElement;
   isLoading: boolean;
   onRowClick?: TableProps<T>["handleRowClick"];
-  rowActions?: TableProps<T>["RowActions"];
+  RowActions?: TableProps<T>["RowActions"];
   showTableHead?: boolean;
   boldUnreadRows?: boolean;
 };
@@ -28,12 +29,12 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
   emptyMessage,
   isLoading,
   onRowClick,
-  rowActions,
+  RowActions,
   showTableHead,
   boldUnreadRows,
 }: ResourceTableProps<M>) => {
   const patient = usePatient();
-  const { getRequestContext } = useCTW();
+  const { getRequestContext, featureFlags } = useCTW();
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const [userBuilderId, setUserBuilderId] = useState("");
@@ -49,6 +50,15 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
     void load();
   }, [getRequestContext]);
 
+  const rowActionsWithViewFHIR =
+    featureFlags?.enableViewFhirButton || RowActions
+      ? ({ record }: RowActionsProps<M>) => (
+          <div className="ctw-flex ctw-space-x-2">
+            {featureFlags?.enableViewFhirButton && <ViewFHIR resource={record.resource} />}
+            {RowActions && <RowActions record={record} />}
+          </div>
+        )
+      : undefined;
   // Use correct empty message when there are auth errors or failure fetching patient data.
   let emptyMessage2 = emptyMessage;
   if (
@@ -85,7 +95,7 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
         emptyMessage={emptyMessage2}
         isLoading={isLoading2}
         records={data}
-        RowActions={rowActions}
+        RowActions={rowActionsWithViewFHIR}
         columns={columns}
         handleRowClick={onRowClick}
       />
