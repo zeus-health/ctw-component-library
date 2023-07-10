@@ -27,3 +27,8 @@ export default {
 export const Basic: StoryObj<Props> = {
   ...setupObservationMocks(),
 };
+
+export const BasicFQS: StoryObj<Props> = {
+  args: {},
+  ...setupObservationMocks(),
+};

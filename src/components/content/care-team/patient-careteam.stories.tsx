@@ -39,3 +39,8 @@ export default {
 export const Basic: StoryObj<Props> = {
   ...setupCareTeamMocks(),
 };
+
+export const BasicFQS: StoryObj<Props> = {
+  args: {},
+  ...setupCareTeamMocks(),
+};

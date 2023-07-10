@@ -121,6 +121,7 @@ const components: DemoComponent[] = [
           "care-team",
           "medications",
           "medications-outside",
+          "timeline",
         ]}
         title="ZAP"
       />
