@@ -41,7 +41,7 @@ async function getDocumentFromFQS(requestContext: CTWRequestContext, patient: Pa
       ["desc"]
     );
     if (results.length === 0) {
-      Telemetry.countMetric("req.count.documents.none", 0, ["fqs"]);
+      Telemetry.countMetric("req.count.documents.none", 1, ["fqs"]);
     }
     Telemetry.histogramMetric("req.count.documents", results.length, ["fqs"]);
     return results;

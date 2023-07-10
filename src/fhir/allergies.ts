@@ -73,7 +73,7 @@ async function getAllergyIntoleranceFromFQS(
     const nodes = data.AllergyIntoleranceConnection.edges.map((x) => x.node);
     const results = applyAllergyFilters(nodes, requestContext.builderId);
     if (results.length === 0) {
-      Telemetry.countMetric("req.count.allergies.none", 0, ["fqs"]);
+      Telemetry.countMetric("req.count.allergies.none", 1, ["fqs"]);
     }
     Telemetry.histogramMetric("req.count.allergies", results.length, ["fqs"]);
     return results;
