@@ -1,4 +1,4 @@
-import { UnreadNotification } from "@/components/core/unread-notification";
+import { UnreadNotificationIcon } from "@/components/core/unread-notification-icon";
 import { usePatientConditionsOutside } from "@/services/conditions";
 
 export const PatientConditionsOutsideBadge = () => {
@@ -8,7 +8,7 @@ export const PatientConditionsOutsideBadge = () => {
   );
 
   if (activeUnarchivedConditions.length > 0) {
-    return <UnreadNotification />;
+    return <UnreadNotificationIcon />;
   }
   return null;
 };

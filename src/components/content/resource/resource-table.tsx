@@ -1,14 +1,20 @@
 import cx from "classnames";
-import { ReactElement, useEffect, useRef, useState } from "react";
+import { ReactElement, useRef } from "react";
+import { useToggleDismiss } from "../hooks/use-toggle-dismiss";
+import { useToggleRead } from "../hooks/use-toggle-read";
 import { AuthError } from "@/components/core/auth-error";
 import { usePatient } from "@/components/core/providers/patient-provider";
 import { useCTW } from "@/components/core/providers/use-ctw";
+import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
+import { Spinner } from "@/components/core/spinner";
 import { RowActionsProps, Table, TableProps } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
 import { ViewFHIR } from "@/components/core/view-fhir";
 import { FHIRModel } from "@/fhir/models/fhir-model";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 import "./resource-table.scss";
+import { useBaseTranslations } from "@/i18n";
+import { QUERY_KEY_BASIC } from "@/utils/query-keys";
 
 export type ResourceTableProps<T extends MinRecordItem> = {
   className?: string;
@@ -19,7 +25,7 @@ export type ResourceTableProps<T extends MinRecordItem> = {
   onRowClick?: TableProps<T>["handleRowClick"];
   RowActions?: TableProps<T>["RowActions"];
   showTableHead?: boolean;
-  boldUnreadRows?: boolean;
+  enableDismissAndReadActions?: boolean;
 };
 
 export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>({
@@ -31,34 +37,42 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
   onRowClick,
   RowActions,
   showTableHead,
-  boldUnreadRows,
+  enableDismissAndReadActions,
 }: ResourceTableProps<M>) => {
   const patient = usePatient();
-  const { getRequestContext, featureFlags } = useCTW();
+  const { featureFlags } = useCTW();
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
-  const [userBuilderId, setUserBuilderId] = useState("");
+  const userBuilderId = useUserBuilderId();
 
   const shouldShowTableHead = typeof showTableHead === "boolean" ? showTableHead : !breakpoints.sm;
 
-  useEffect(() => {
-    async function load() {
-      const requestContext = await getRequestContext();
-      setUserBuilderId(requestContext.builderId);
-    }
+  const { toggleRead } = useToggleRead(QUERY_KEY_BASIC);
 
-    void load();
-  }, [getRequestContext]);
+  const onRowClickWithRead = onRowClick
+    ? (record: M) => {
+        if (!record.isRead && enableDismissAndReadActions) {
+          toggleRead(record);
+        }
+        onRowClick(record);
+      }
+    : undefined;
 
-  const rowActionsWithViewFHIR =
-    featureFlags?.enableViewFhirButton || RowActions
+  const DismissAndReadActions = enableDismissAndReadActions
+    ? getDismissAndReadActions(userBuilderId)
+    : undefined;
+
+  const allRowActions =
+    featureFlags?.enableViewFhirButton || RowActions || enableDismissAndReadActions
       ? ({ record }: RowActionsProps<M>) => (
           <div className="ctw-flex ctw-space-x-2">
             {featureFlags?.enableViewFhirButton && <ViewFHIR resource={record.resource} />}
             {RowActions && <RowActions record={record} />}
+            {DismissAndReadActions && <DismissAndReadActions record={record} />}
           </div>
         )
       : undefined;
+
   // Use correct empty message when there are auth errors or failure fetching patient data.
   let emptyMessage2 = emptyMessage;
   if (
@@ -88,17 +102,73 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
         getRowClassName={(record) => ({
           "ctw-tr-dismissed": record.isDismissed,
           "ctw-tr-unread":
-            boldUnreadRows && !record.ownedByBuilder(userBuilderId) && !record.isRead,
+            enableDismissAndReadActions && !record.ownedByBuilder(userBuilderId) && !record.isRead,
         })}
         showTableHead={shouldShowTableHead}
         stacked={breakpoints.sm}
         emptyMessage={emptyMessage2}
         isLoading={isLoading2}
         records={data}
-        RowActions={rowActionsWithViewFHIR}
+        RowActions={allRowActions}
         columns={columns}
-        handleRowClick={onRowClick}
+        handleRowClick={onRowClickWithRead}
       />
     </div>
   );
 };
+
+const getDismissAndReadActions =
+  (userBuilderId: string) =>
+  ({ record }: RowActionsProps<FHIRModel<fhir4.Resource>>) => {
+    const { t } = useBaseTranslations();
+
+    const { isLoading: isToggleDismissLoading, toggleDismiss } = useToggleDismiss(QUERY_KEY_BASIC);
+    const { isLoading: isToggleReadLoading, toggleRead } = useToggleRead(QUERY_KEY_BASIC);
+    const archiveLabel = record.isDismissed
+      ? t("resourceTable.restore")
+      : t("resourceTable.dismiss");
+
+    const readLabel = record.isRead ? t("resourceTable.unread") : t("resourceTable.read");
+
+    return record.ownedByBuilder(userBuilderId) ? (
+      <></>
+    ) : (
+      <div className="ctw-flex ctw-space-x-2">
+        <button
+          type="button"
+          className="ctw-btn-default"
+          disabled={isToggleDismissLoading || isToggleReadLoading}
+          onClick={() => {
+            toggleDismiss(record);
+            if (!record.isRead) {
+              toggleRead(record);
+            }
+          }}
+        >
+          {isToggleDismissLoading ? (
+            <div className="ctw-flex">
+              <Spinner className="ctw-mx-4 ctw-align-middle" />
+            </div>
+          ) : (
+            archiveLabel
+          )}
+        </button>
+        <button
+          type="button"
+          className="ctw-btn-default"
+          disabled={isToggleDismissLoading || isToggleReadLoading}
+          onClick={() => {
+            toggleRead(record);
+          }}
+        >
+          {isToggleReadLoading ? (
+            <div className="ctw-flex">
+              <Spinner className="ctw-mx-4 ctw-align-middle" />
+            </div>
+          ) : (
+            readLabel
+          )}
+        </button>
+      </div>
+    );
+  };

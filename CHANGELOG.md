@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.28.2
+
+### Patch Changes
+
+- b55c825d: Refactor unread notifications and expose className.
+- ab6088ed: Making "View FHIR" button a generic feature in ResourceTable and adding the functionality for documents.
+
 ## 1.28.1
 
 ### Patch Changes

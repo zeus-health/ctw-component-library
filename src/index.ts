@@ -8,6 +8,7 @@ export * from "@/components/content/conditions/patient-conditions-profile";
 export * from "@/components/content/conditions/patient-conditions-outside-badge";
 export * from "@/components/content/care-team/patient-careteam";
 export * from "@/components/content/document/patient-documents";
+export * from "@/components/content/document/unread-documents-notification";
 export * from "@/components/content/immunizations/patient-immunizations";
 export * from "@/components/content/immunizations/unread-immunizations-notification";
 export * from "@/components/content/medications/patient-medications";
