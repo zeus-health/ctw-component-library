@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.28.4
+
+### Patch Changes
+
+- 4a50eab0: Resolved incorrect fqs tags on some component metrics
+
 ## 1.28.3
 
 ### Patch Changes
