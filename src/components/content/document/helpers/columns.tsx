@@ -6,9 +6,7 @@ export const patientDocumentColumns: TableColumn<DocumentModel>[] = [
     widthPercent: 35,
     minWidth: 200,
     title: "Title",
-    render: (document) => (
-      <div className="ctw-font-medium group-hover:ctw-underline">{document.title}</div>
-    ),
+    render: (document) => <div className="group-hover:ctw-underline">{document.title}</div>,
   },
   {
     widthPercent: 15,
