@@ -45,3 +45,8 @@ export default {
 export const Basic: StoryObj<Props> = {
   ...setupMedicationMocks({ providerMedications, otherProviderMedications }),
 };
+
+export const BasicFQS: StoryObj<Props> = {
+  args: {},
+  ...setupMedicationMocks({ providerMedications, otherProviderMedications }),
+};
