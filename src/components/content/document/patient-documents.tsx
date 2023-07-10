@@ -5,6 +5,7 @@ import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
+import { EmptyTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { RowActionsProps } from "@/components/core/table/table";
@@ -32,6 +33,9 @@ function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocument
     records: patientDocumentQuery.data,
   });
 
+  const isEmptyQuery = patientDocumentQuery.data.length === 0;
+  const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
+
   const openDetails = useResourceDetailsDrawer({
     header: (m) => `${m.dateCreated} - ${m.title}`,
     details: documentData,
@@ -54,7 +58,9 @@ function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocument
       <ResourceTable
         isLoading={patientDocumentQuery.isLoading}
         data={data}
-        emptyMessage="There are no documents available."
+        emptyMessage={
+          <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="documents" />
+        }
         columns={patientDocumentColumns}
         onRowClick={openDetails}
         RowActions={rowActions}

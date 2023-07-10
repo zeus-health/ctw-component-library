@@ -52,7 +52,6 @@ export type ZusAggregatedProfileTabs = Record<ZAPResourceName, (props: object) =
 export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
   allergies: (props: PatientAllergiesProps = {}) => ({
     key: "allergies",
-    getPanelClassName: () => "ctw-pt-5",
     display: () => (
       <div className="ctw-flex ctw-items-center ctw-space-x-2">
         <UnreadAllergiesNotification />
@@ -92,7 +91,6 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
 
   documents: (props: PatientDocumentsProps = {}) => ({
     key: "documents",
-    getPanelClassName: () => "ctw-pt-5",
     display: () => (
       <div className="ctw-flex ctw-items-center ctw-space-x-2">
         <UnreadDocumentsNotification />
@@ -107,7 +105,6 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
 
   immunizations: (props: PatientImmunizationsProps = {}) => ({
     key: "immunizations",
-    getPanelClassName: () => "ctw-pt-5",
     display: () => (
       <div className="ctw-flex ctw-items-center ctw-space-x-2">
         <UnreadImmunizationsNotification />
@@ -156,7 +153,6 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
 
   timeline: (props: PatientTimelineProps = {}) => ({
     key: "timeline",
-    getPanelClassName: () => "ctw-pt-5",
     display: () => (
       <div className="ctw-space-x-1">
         <span className="ctw-capitalize">Timeline</span>

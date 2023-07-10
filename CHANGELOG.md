@@ -1,5 +1,22 @@
 # ctw-component-library
 
+## 1.28.1
+
+### Patch Changes
+
+- c4976b13: Add className for UnreadNotification component.
+
+## 1.28.0
+
+### Minor Changes
+
+- d25aa290: Update empty table displays to differentiate between no queried data vs no data due to filters
+
+### Patch Changes
+
+- f5cc3711: Remove padding from top of allergies/documents/immunizations/timeline.
+- d1c49cdb: Making "View FHIR" button a generic feature in ResourceTable.
+
 ## 1.27.10
 
 ### Patch Changes

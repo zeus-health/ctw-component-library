@@ -6,6 +6,7 @@ import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { patientAllergiesColumns } from "@/components/content/allergies/helpers/column";
+import { EmptyTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { usePatientAllergies } from "@/fhir/allergies";
@@ -27,6 +28,8 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
     records: patientAllergiesQuery.data,
   });
   const userBuilderId = useUserBuilderId();
+  const isEmptyQuery = patientAllergiesQuery.data.length === 0;
+  const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
 
   const openDetails = useResourceDetailsDrawer({
     header: (m) => capitalize(m.display),
@@ -60,6 +63,9 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
         columns={patientAllergiesColumns(userBuilderId)}
         onRowClick={openDetails}
         enableDismissAndReadActions
+        emptyMessage={
+          <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="allergies" />
+        }
       />
     </div>
   );

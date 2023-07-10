@@ -7,11 +7,11 @@ import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { entryFromArray } from "@/components/core/data-list";
 import { withErrorBoundary } from "@/components/core/error-boundary";
+import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { usePatientImmunizations } from "@/fhir/immunizations";
 import { ImmunizationModel } from "@/fhir/models/immunization";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
-import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 
 export type PatientImmunizationsProps = {
   className?: string;
