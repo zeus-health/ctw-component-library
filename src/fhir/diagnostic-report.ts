@@ -68,7 +68,7 @@ function diagnosticReportsFetcherFQS(searchType: SearchType) {
     try {
       const data = await fetchFunction(requestContext, patient);
       if (searchType === "all" && data.DiagnosticReportConnection.edges.length === 0) {
-        Telemetry.countMetric(`req.count.${searchType}_diagnostic_reports.none`, 0, ["fqs"]);
+        Telemetry.countMetric(`req.count.${searchType}_diagnostic_reports.none`, 1, ["fqs"]);
       }
       const result = setupDiagnosticReportModelsWithFQS(
         data.DiagnosticReportConnection.edges.map((x) => x.node)
