@@ -1,5 +1,4 @@
 import cx from "classnames";
-import { useEffect, useState } from "react";
 import { allergyFilter, defaultAllergyFilters } from "./helpers/filters";
 import { useAllergiesHistory } from "./helpers/history";
 import { allergySortOptions, defaultAllergySort } from "./helpers/sort";
@@ -8,7 +7,7 @@ import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { patientAllergiesColumns } from "@/components/content/allergies/helpers/column";
 import { withErrorBoundary } from "@/components/core/error-boundary";
-import { useCTW } from "@/components/core/providers/use-ctw";
+import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { usePatientAllergies } from "@/fhir/allergies";
 import { AllergyModel } from "@/fhir/models/allergies";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
@@ -20,7 +19,6 @@ export type PatientAllergiesProps = {
 };
 
 function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
-  const { getRequestContext } = useCTW();
   const { enabled } = useFQSFeatureToggle("allergies");
   const patientAllergiesQuery = usePatientAllergies();
   const { data, setFilters, setSort } = useFilteredSortedData({
@@ -28,17 +26,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
     defaultSort: defaultAllergySort,
     records: patientAllergiesQuery.data,
   });
-
-  const [userBuilderId, setUserBuilderId] = useState("");
-
-  useEffect(() => {
-    async function load() {
-      const requestContext = await getRequestContext();
-      setUserBuilderId(requestContext.builderId);
-    }
-
-    void load();
-  }, [getRequestContext]);
+  const userBuilderId = useUserBuilderId();
 
   const openDetails = useResourceDetailsDrawer({
     header: (m) => capitalize(m.display),

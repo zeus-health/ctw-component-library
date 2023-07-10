@@ -109,8 +109,10 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     display: () => (
       <div className="ctw-flex ctw-items-center ctw-space-x-2">
         <UnreadImmunizationsNotification />
-        <span className="ctw-capitalize">immunizations</span>
-        <BetaLabel />
+        <div className="ctw-flex ctw-items-center ctw-space-x-1">
+          <span className="ctw-capitalize">immunizations</span>
+          <BetaLabel />
+        </div>
       </div>
     ),
     render: () => <PatientImmunizations {...props} />,

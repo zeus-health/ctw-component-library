@@ -1,10 +1,11 @@
 import cx from "classnames";
-import { ReactElement, useEffect, useRef, useState } from "react";
+import { ReactElement, useRef } from "react";
 import { useToggleDismiss } from "../hooks/use-toggle-dismiss";
 import { useToggleRead } from "../hooks/use-toggle-read";
 import { AuthError } from "@/components/core/auth-error";
 import { usePatient } from "@/components/core/providers/patient-provider";
 import { useCTW } from "@/components/core/providers/use-ctw";
+import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { Spinner } from "@/components/core/spinner";
 import { RowActionsProps, Table, TableProps } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
@@ -25,7 +26,6 @@ export type ResourceTableProps<T extends MinRecordItem> = {
   RowActions?: TableProps<T>["RowActions"];
   showTableHead?: boolean;
   enableDismissAndReadActions?: boolean;
-  queryKeyToInvalidateOnReadDismiss?: string;
 };
 
 export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>({
@@ -38,47 +38,29 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
   RowActions,
   showTableHead,
   enableDismissAndReadActions,
-  queryKeyToInvalidateOnReadDismiss,
 }: ResourceTableProps<M>) => {
   const patient = usePatient();
-  const { getRequestContext, featureFlags } = useCTW();
+  const { featureFlags } = useCTW();
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
-  const [userBuilderId, setUserBuilderId] = useState("");
+  const userBuilderId = useUserBuilderId();
 
   const shouldShowTableHead = typeof showTableHead === "boolean" ? showTableHead : !breakpoints.sm;
 
-  useEffect(() => {
-    async function load() {
-      const requestContext = await getRequestContext();
-      setUserBuilderId(requestContext.builderId);
-    }
+  const { toggleRead } = useToggleRead(QUERY_KEY_BASIC);
 
-    void load();
-  }, [getRequestContext]);
-
-  const queryKeysToInvalidate = [QUERY_KEY_BASIC];
-  if (queryKeyToInvalidateOnReadDismiss) {
-    queryKeysToInvalidate.push(queryKeyToInvalidateOnReadDismiss);
-  }
-  const { toggleRead } = useToggleRead(...queryKeysToInvalidate);
-
-  const onRowClickWithRead =
-    onRowClick || enableDismissAndReadActions
-      ? (record: M) => {
-          if (!record.isRead && enableDismissAndReadActions) {
-            toggleRead(record);
-          }
-          if (onRowClick) {
-            onRowClick(record);
-          }
+  const onRowClickWithRead = onRowClick
+    ? (record: M) => {
+        if (!record.isRead && enableDismissAndReadActions) {
+          toggleRead(record);
         }
-      : undefined;
+        onRowClick(record);
+      }
+    : undefined;
 
-  const DismissAndReadActions =
-    enableDismissAndReadActions && data.length > 0
-      ? getDismissAndReadActions(userBuilderId, queryKeyToInvalidateOnReadDismiss)
-      : undefined;
+  const DismissAndReadActions = enableDismissAndReadActions
+    ? getDismissAndReadActions(userBuilderId)
+    : undefined;
 
   const allRowActions =
     featureFlags?.enableViewFhirButton || RowActions || enableDismissAndReadActions
@@ -136,19 +118,12 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
 };
 
 const getDismissAndReadActions =
-  (userBuilderId: string, queryKeyToInvalidate?: string) =>
+  (userBuilderId: string) =>
   ({ record }: RowActionsProps<FHIRModel<fhir4.Resource>>) => {
     const { t } = useBaseTranslations();
 
-    const queryKeysToInvalidate = [QUERY_KEY_BASIC];
-    if (queryKeyToInvalidate) {
-      queryKeysToInvalidate.push(queryKeyToInvalidate);
-    }
-
-    const { isLoading: isToggleDismissLoading, toggleDismiss } = useToggleDismiss(
-      ...queryKeysToInvalidate
-    );
-    const { isLoading: isToggleReadLoading, toggleRead } = useToggleRead(...queryKeysToInvalidate);
+    const { isLoading: isToggleDismissLoading, toggleDismiss } = useToggleDismiss(QUERY_KEY_BASIC);
+    const { isLoading: isToggleReadLoading, toggleRead } = useToggleRead(QUERY_KEY_BASIC);
     const archiveLabel = record.isDismissed
       ? t("resourceTable.restore")
       : t("resourceTable.dismiss");
