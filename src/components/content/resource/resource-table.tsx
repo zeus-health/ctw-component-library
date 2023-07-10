@@ -100,7 +100,7 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
     >
       <Table
         getRowClassName={(record) => ({
-          "ctw-tr-dismissed": enableDismissAndReadActions && record.isDismissed,
+          "ctw-tr-dismissed": record.isDismissed,
           "ctw-tr-unread":
             enableDismissAndReadActions && !record.ownedByBuilder(userBuilderId) && !record.isRead,
         })}
