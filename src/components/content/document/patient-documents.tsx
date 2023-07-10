@@ -35,7 +35,7 @@ function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocument
     records: patientDocumentQuery.data,
   });
 
-  const isEmptyQuery = patientDocumentQuery.data?.length === 0;
+  const isEmptyQuery = patientDocumentQuery.data.length === 0;
   const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
 
   const openDetails = useResourceDetailsDrawer({
@@ -72,6 +72,7 @@ function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocument
         columns={patientDocumentColumns}
         onRowClick={openDetails}
         RowActions={rowActions}
+        enableDismissAndReadActions
       />
     </div>
   );
