@@ -1,5 +1,78 @@
 # ctw-component-library
 
+## 1.28.3
+
+### Patch Changes
+
+- 2ae44af3: Add UnreadDocumentsNotification to exported components.
+
+## 1.28.2
+
+### Patch Changes
+
+- b55c825d: Refactor unread notifications and expose className.
+- ab6088ed: Making "View FHIR" button a generic feature in ResourceTable and adding the functionality for documents.
+
+## 1.28.1
+
+### Patch Changes
+
+- c4976b13: Add className for UnreadNotification component.
+
+## 1.28.0
+
+### Minor Changes
+
+- d25aa290: Update empty table displays to differentiate between no queried data vs no data due to filters
+
+### Patch Changes
+
+- f5cc3711: Remove padding from top of allergies/documents/immunizations/timeline.
+- d1c49cdb: Making "View FHIR" button a generic feature in ResourceTable.
+
+## 1.27.10
+
+### Patch Changes
+
+- 4428ba51: Use matching unleash environment.
+
+## 1.27.9
+
+### Patch Changes
+
+- 63ce552f: Forcing medication history results to be sorted by resource ID before de-duplicating.
+- 06196609: Add not authorized error message.
+
+## 1.27.8
+
+### Patch Changes
+
+- b6e8c774: Fix careteams drawer issue.
+
+## 1.27.7
+
+### Patch Changes
+
+- 6f3c58c8: Pull the dispense request performing organization data in medication request FQS query
+
+## 1.27.6
+
+### Patch Changes
+
+- 778bafb1: Fix issue where patient history table crashes due to patients being deleted.
+
+## 1.27.5
+
+### Patch Changes
+
+- 3cc59c28: Expand the medication prescriber reference in medication request FQS query
+
+## 1.27.4
+
+### Patch Changes
+
+- b79b0e4a: Export unread allergy/immunization indicators"
+
 ## 1.27.3
 
 ### Patch Changes

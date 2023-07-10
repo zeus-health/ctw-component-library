@@ -71,7 +71,7 @@ export function CTWProvider({
   return (
     <ThemeProvider theme={theme} locals={locals}>
       <AuthenticationProvider headers={headers} authToken={authToken} authTokenURL={authTokenURL}>
-        <FeatureFlagProvider>
+        <FeatureFlagProvider env={env}>
           <TelemetryProvider
             env={env}
             builderId={builderId}

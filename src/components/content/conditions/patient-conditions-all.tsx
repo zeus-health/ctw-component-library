@@ -9,18 +9,14 @@ import {
   useEditConditionForm,
 } from "./helpers/modal-hooks";
 import { conditionSortOptions, defaultConditionSort } from "./helpers/sorts";
-import { useToggleDismiss } from "../hooks/use-toggle-dismiss";
-import { useToggleRead } from "../hooks/use-toggle-read";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/use-ctw";
-import { Spinner } from "@/components/core/spinner";
 import { RowActionsProps } from "@/components/core/table/table";
 import { ConditionModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { useBaseTranslations } from "@/i18n";
-import { QUERY_KEY_BASIC, QUERY_KEY_PATIENT_CONDITIONS } from "@/utils/query-keys";
 import { usePatientConditionsAll } from "@/services/conditions";
 
 export type PatientConditionsAllProps = {
@@ -57,15 +53,6 @@ function PatientConditionsAllComponent({ className, readOnly }: PatientCondition
 
   const rowActions = useMemo(() => getRowActions(userBuilderId), [userBuilderId]);
 
-  const { toggleRead } = useToggleRead(QUERY_KEY_PATIENT_CONDITIONS, QUERY_KEY_BASIC);
-
-  const handleRowClick = (record: ConditionModel) => {
-    if (!record.isRead) {
-      toggleRead(record);
-    }
-    openDetails(record);
-  };
-
   const action = !readOnly && (
     <button type="button" className="ctw-btn-primary" onClick={() => showAddConditionForm()}>
       {t("resource.add", { resource: t("glossary:condition_one") })}
@@ -95,9 +82,9 @@ function PatientConditionsAllComponent({ className, readOnly }: PatientCondition
         isLoading={query.isLoading}
         data={data}
         columns={patientConditionsAllColumns(userBuilderId)}
-        onRowClick={handleRowClick}
-        rowActions={rowActions}
-        boldUnreadRows
+        onRowClick={openDetails}
+        RowActions={rowActions}
+        enableDismissAndReadActions
       />
     </div>
   );
@@ -112,23 +99,9 @@ const getRowActions =
   (userBuilderId: string) =>
   ({ record }: RowActionsProps<ConditionModel>) => {
     const { t } = useBaseTranslations();
-    const { isLoading: isToggleDismissLoading, toggleDismiss } = useToggleDismiss(
-      QUERY_KEY_PATIENT_CONDITIONS,
-      QUERY_KEY_BASIC
-    );
-    const { isLoading: isToggleReadLoading, toggleRead } = useToggleRead(
-      QUERY_KEY_PATIENT_CONDITIONS,
-      QUERY_KEY_BASIC
-    );
     const showAddConditionForm = useAddConditionForm();
     const showEditConditionForm = useEditConditionForm();
     const confirmDelete = useConfirmDeleteCondition();
-
-    const archiveLabel = record.isDismissed
-      ? t("resourceTable.restore")
-      : t("resourceTable.dismiss");
-
-    const readLabel = record.isRead ? t("resourceTable.unread") : t("resourceTable.read");
 
     return record.ownedByBuilder(userBuilderId) ? (
       <div className="ctw-flex ctw-space-x-2">
@@ -147,50 +120,12 @@ const getRowActions =
         </button>
       </div>
     ) : (
-      <div className="ctw-flex ctw-space-x-2">
-        <button
-          type="button"
-          className="ctw-btn-default"
-          disabled={isToggleDismissLoading || isToggleReadLoading}
-          onClick={() => {
-            toggleDismiss(record);
-            if (!record.isRead) {
-              toggleRead(record);
-            }
-          }}
-        >
-          {isToggleDismissLoading ? (
-            <div className="ctw-flex">
-              <Spinner className="ctw-mx-4 ctw-align-middle" />
-            </div>
-          ) : (
-            archiveLabel
-          )}
-        </button>
-        <button
-          type="button"
-          className="ctw-btn-default"
-          disabled={isToggleDismissLoading || isToggleReadLoading}
-          onClick={() => {
-            toggleRead(record);
-          }}
-        >
-          {isToggleReadLoading ? (
-            <div className="ctw-flex">
-              <Spinner className="ctw-mx-4 ctw-align-middle" />
-            </div>
-          ) : (
-            readLabel
-          )}
-        </button>
-        <button
-          type="button"
-          className="ctw-btn-primary"
-          disabled={isToggleDismissLoading || isToggleReadLoading}
-          onClick={() => showAddConditionForm(record)}
-        >
-          {t("resourceTable.add")}
-        </button>
-      </div>
+      <button
+        type="button"
+        className="ctw-btn-primary"
+        onClick={() => showAddConditionForm(record)}
+      >
+        {t("resourceTable.add")}
+      </button>
     );
   };

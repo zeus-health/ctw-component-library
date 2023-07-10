@@ -1,11 +1,10 @@
 import { faCircleCheck } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TableColumn } from "@/components/core/table/table-helpers";
-import { ViewFHIR } from "@/components/core/view-fhir";
 import { ImmunizationModel } from "@/fhir/models/immunization";
 import { capitalize } from "@/utils/nodash";
 
-export const patientImmunizationsColumns = (builderId: string, includeViewFhirResource = false) => {
+export const patientImmunizationsColumns = (builderId: string) => {
   const immunizationColumns: TableColumn<ImmunizationModel>[] = [
     {
       title: "Immunization",
@@ -36,15 +35,6 @@ export const patientImmunizationsColumns = (builderId: string, includeViewFhirRe
       ),
     },
   ];
-  if (includeViewFhirResource) {
-    immunizationColumns.push({
-      widthPercent: 10,
-      minWidth: 200,
-      render: (immunization) => (
-        <ViewFHIR name="Immunization Resource" resource={immunization.resource} />
-      ),
-    });
-  }
 
   return immunizationColumns;
 };

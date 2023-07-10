@@ -118,7 +118,7 @@ export function usePatientConditionsAll() {
         outsideConditions[i].revIncludes = filteredBasics;
       });
     }
-    setConditions(outsideConditions);
+    setConditions([...outsideConditions]);
   }, [builderConditionsQuery.data, summaryConditionsQuery.data, basicQuery.data]);
 
   const isLoading =
