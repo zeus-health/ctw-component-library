@@ -67,8 +67,8 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
       ? ({ record }: RowActionsProps<M>) => (
           <div className="ctw-flex ctw-space-x-2">
             {featureFlags?.enableViewFhirButton && <ViewFHIR resource={record.resource} />}
-            {RowActions && <RowActions record={record} />}
             {DismissAndReadActions && <DismissAndReadActions record={record} />}
+            {RowActions && <RowActions record={record} />}
           </div>
         )
       : undefined;
