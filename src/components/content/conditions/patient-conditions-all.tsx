@@ -20,7 +20,7 @@ import { useBaseTranslations } from "@/i18n";
 import { usePatientConditionsAll } from "@/services/conditions";
 
 export type PatientConditionsAllProps = {
-  className?: string;
+  className?: cx.Argument;
   readOnly?: boolean;
 };
 

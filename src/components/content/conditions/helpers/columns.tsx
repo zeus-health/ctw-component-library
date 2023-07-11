@@ -2,7 +2,7 @@ import { faCircleCheck } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { ConditionModel } from "@/fhir/models";
-import { capitalize } from "@/utils/nodash";
+import { capitalize, compact } from "@/utils/nodash";
 
 export const patientConditionsColumns: TableColumn<ConditionModel>[] = [
   {
@@ -17,12 +17,23 @@ export const patientConditionsColumns: TableColumn<ConditionModel>[] = [
     ),
   },
   {
-    title: "Last Updated",
+    title: "Status",
     minWidth: 128,
     render: (condition) => (
-      <div>
-        <div>{condition.recordedDate}</div>
-        <div>{condition.recorder}</div>
+      <div className="ctw-pc-status-container">
+        <div className={cx("ctw-pc-status-dot", statusToColor(condition.displayStatus))}>
+          &bull;
+        </div>
+        <div>{condition.displayStatus}</div>
+        <div className="ctw-pc-status-and-extra">
+          <div>
+            Last Updated:{" "}
+            {compact([
+              condition.recordedDate,
+              condition.recorder ? `(${condition.recorder})` : "",
+            ]).join(" ")}
+          </div>
+        </div>
       </div>
     ),
   },

@@ -27,7 +27,7 @@ const PatientMedicationsOutsideComponent = ({
 }: PatientMedicationsOutsideProps) => {
   const { otherProviderMedications, isLoading } = useQueryAllPatientMedications();
   const rowActions = useMemo(() => getRowActions({ onAddToRecord }), [onAddToRecord]);
-  const { viewOptions, defaultView } =
+  const { viewOptions, past6Months } =
     getDateRangeView<MedicationStatementModel>("lastActivityDate");
 
   return (
@@ -37,7 +37,7 @@ const PatientMedicationsOutsideComponent = ({
       filters={medicationFilters(otherProviderMedications, true)}
       rowActions={readOnly ? undefined : rowActions}
       views={viewOptions}
-      defaultView={defaultView}
+      defaultView={past6Months}
       onOpenHistoryDrawer={onOpenHistoryDrawer}
     />
   );
