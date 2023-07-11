@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.28.5
+
+### Patch Changes
+
+- 1d3a4524: Revamp documents component (add sort, encounter date, cleanup details).
+- 2fa31cb7: Add encounter date to dedupe document logic.
+
 ## 1.28.4
 
 ### Patch Changes
