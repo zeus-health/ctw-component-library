@@ -22,9 +22,14 @@ import { usePatientConditionsAll } from "@/services/conditions";
 export type PatientConditionsAllProps = {
   className?: string;
   readOnly?: boolean;
+  onlyAllowAddOutsideConditions?: boolean;
 };
 
-function PatientConditionsAllComponent({ className, readOnly }: PatientConditionsAllProps) {
+function PatientConditionsAllComponent({
+  className,
+  readOnly = false,
+  onlyAllowAddOutsideConditions = false,
+}: PatientConditionsAllProps) {
   const userBuilderId = useUserBuilderId();
   const { t } = useBaseTranslations();
   const query = usePatientConditionsAll();
@@ -40,9 +45,12 @@ function PatientConditionsAllComponent({ className, readOnly }: PatientCondition
     canEdit: !readOnly,
   });
 
-  const rowActions = useMemo(() => getRowActions(userBuilderId), [userBuilderId]);
+  const rowActions = useMemo(
+    () => (!readOnly ? getRowActions(userBuilderId, onlyAllowAddOutsideConditions) : undefined),
+    [userBuilderId, readOnly, onlyAllowAddOutsideConditions]
+  );
 
-  const action = !readOnly && (
+  const action = !readOnly && !onlyAllowAddOutsideConditions && (
     <button type="button" className="ctw-btn-primary" onClick={() => showAddConditionForm()}>
       {t("resource.add", { resource: t("glossary:condition_one") })}
     </button>
@@ -85,36 +93,42 @@ export const PatientConditionsAll = withErrorBoundary(
 );
 
 const getRowActions =
-  (userBuilderId: string) =>
+  (userBuilderId: string, onlyAllowAddOutsideConditions: boolean) =>
   ({ record }: RowActionsProps<ConditionModel>) => {
     const { t } = useBaseTranslations();
     const showAddConditionForm = useAddConditionForm();
     const showEditConditionForm = useEditConditionForm();
     const confirmDelete = useConfirmDeleteCondition();
 
-    return record.ownedByBuilder(userBuilderId) ? (
-      <div className="ctw-flex ctw-space-x-2">
-        {!record.isDeleted && (
-          <button type="button" className="ctw-btn-default" onClick={() => confirmDelete(record)}>
-            Remove
-          </button>
-        )}
+    if (record.ownedByBuilder(userBuilderId) && !onlyAllowAddOutsideConditions) {
+      return (
+        <div className="ctw-flex ctw-space-x-2">
+          {!record.isDeleted && (
+            <button type="button" className="ctw-btn-default" onClick={() => confirmDelete(record)}>
+              Remove
+            </button>
+          )}
 
+          <button
+            type="button"
+            className="ctw-btn-primary"
+            onClick={() => showEditConditionForm(record)}
+          >
+            Edit
+          </button>
+        </div>
+      );
+    }
+    if (!record.ownedByBuilder(userBuilderId) && onlyAllowAddOutsideConditions) {
+      return (
         <button
           type="button"
           className="ctw-btn-primary"
-          onClick={() => showEditConditionForm(record)}
+          onClick={() => showAddConditionForm(record)}
         >
-          Edit
+          {t("resourceTable.add")}
         </button>
-      </div>
-    ) : (
-      <button
-        type="button"
-        className="ctw-btn-primary"
-        onClick={() => showAddConditionForm(record)}
-      >
-        {t("resourceTable.add")}
-      </button>
-    );
+      );
+    }
+    return null;
   };
