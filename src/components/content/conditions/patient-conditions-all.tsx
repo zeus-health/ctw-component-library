@@ -12,7 +12,7 @@ import { conditionSortOptions, defaultConditionSort } from "./helpers/sorts";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { withErrorBoundary } from "@/components/core/error-boundary";
-import { useUserBuilderId, useUserBuilderId } from "@/components/core/providers/user-builder-id";
+import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { RowActionsProps } from "@/components/core/table/table";
 import { ConditionModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
