@@ -11,6 +11,7 @@ import {
   PatientAllergies,
   PatientConditions,
   PatientConditionsOutside,
+  PatientDiagnosticReports,
   PatientDocuments,
   PatientImmunizations,
   PatientMedications,
@@ -76,6 +77,11 @@ const components: DemoComponent[] = [
     name: "conditions-outside",
     render: () => <PatientConditionsOutside />,
     title: "Patient Conditions Outside",
+  },
+  {
+    name: "diagnostic-reports",
+    render: () => <PatientDiagnosticReports />,
+    title: "Patient Diagnostic Reports",
   },
   {
     name: "documents",
