@@ -9,6 +9,7 @@ import {
   useEditConditionForm,
 } from "./helpers/modal-hooks";
 import { conditionSortOptions, defaultConditionSort } from "./helpers/sorts";
+import { useToggleRead } from "../hooks/use-toggle-read";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { withErrorBoundary } from "@/components/core/error-boundary";
@@ -99,6 +100,7 @@ const getRowActions =
     const showAddConditionForm = useAddConditionForm();
     const showEditConditionForm = useEditConditionForm();
     const confirmDelete = useConfirmDeleteCondition();
+    const { toggleRead } = useToggleRead();
 
     if (record.ownedByBuilder(userBuilderId) && !onlyAllowAddOutsideConditions) {
       return (
@@ -124,7 +126,10 @@ const getRowActions =
         <button
           type="button"
           className="ctw-btn-primary"
-          onClick={() => showAddConditionForm(record)}
+          onClick={() => {
+            toggleRead(record);
+            showAddConditionForm(record);
+          }}
         >
           {t("resourceTable.add")}
         </button>
