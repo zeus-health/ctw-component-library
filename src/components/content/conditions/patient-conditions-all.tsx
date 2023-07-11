@@ -20,7 +20,7 @@ import { useBaseTranslations } from "@/i18n";
 import { usePatientConditionsAll } from "@/services/conditions";
 
 export type PatientConditionsAllProps = {
-  className?: cx.Argument;
+  className?: string;
   readOnly?: boolean;
 };
 
@@ -57,7 +57,7 @@ function PatientConditionsAllComponent({ className, readOnly }: PatientCondition
         filterOptions={{
           onChange: setFilters,
           defaultState: defaultConditionFilters,
-          filters: conditionFilters(query.data, true),
+          filters: conditionFilters(query.data, true, true),
         }}
         sortOptions={{
           defaultSort: defaultConditionSort,
