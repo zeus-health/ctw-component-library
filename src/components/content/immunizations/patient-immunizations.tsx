@@ -6,6 +6,7 @@ import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { entryFromArray } from "@/components/core/data-list";
+import { EmptyTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { usePatientImmunizations } from "@/fhir/immunizations";
@@ -26,6 +27,9 @@ function PatientImmunizationsComponent({ className }: PatientImmunizationsProps)
     defaultSort: defaultImmunizationSort,
     records: patientImmunizationsQuery.data,
   });
+
+  const isEmptyQuery = patientImmunizationsQuery.data.length === 0;
+  const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
 
   const openDetails = useResourceDetailsDrawer({
     header: (m) => m.description,
@@ -58,6 +62,12 @@ function PatientImmunizationsComponent({ className }: PatientImmunizationsProps)
         columns={patientImmunizationsColumns(userBuilderId)}
         onRowClick={openDetails}
         enableDismissAndReadActions
+        emptyMessage={
+          <EmptyTable
+            hasZeroFilteredRecords={hasZeroFilteredRecords}
+            resourceName="immunizations"
+          />
+        }
       />
     </div>
   );
