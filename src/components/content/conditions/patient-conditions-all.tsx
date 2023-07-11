@@ -41,8 +41,8 @@ function PatientConditionsAllComponent({
   });
 
   const openDetails = useConditionDetailsDrawer({
-    canRemove: !readOnly,
-    canEdit: !readOnly,
+    canRemove: !readOnly && !onlyAllowAddOutsideConditions,
+    canEdit: !readOnly && !onlyAllowAddOutsideConditions,
   });
 
   const rowActions = useMemo(
@@ -119,7 +119,7 @@ const getRowActions =
         </div>
       );
     }
-    if (!record.ownedByBuilder(userBuilderId) && onlyAllowAddOutsideConditions) {
+    if (!record.ownedByBuilder(userBuilderId)) {
       return (
         <button
           type="button"

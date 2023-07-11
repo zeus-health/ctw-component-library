@@ -37,7 +37,7 @@ export async function longPollFQS(
     // Refetch the resource from FQS.
     try {
       const data = await graphClient.request(query);
-      currentTimestamp = Date.parse(String(get(data, "Condition.meta.lastUpdated")));
+      currentTimestamp = Date.parse(String(get(data, `${resourceType}.meta.lastUpdated`)));
     } catch (err) {
       // Ignore errors and retry.
       // This can happen if we just created a new resource that isn't in FQS yet.
