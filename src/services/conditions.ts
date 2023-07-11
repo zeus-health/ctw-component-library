@@ -61,7 +61,7 @@ export function usePatientConditionsOutside() {
   useEffect(() => {
     const builderConditions = builderConditionsQuery.data ?? [];
     const basics = basicQuery.data ?? [];
-    const outsideConditions = filterOtherConditions(
+    const outsideConditions = filterOutsideConditions(
       summaryConditionsQuery.data ?? [],
       builderConditions
     );
@@ -106,19 +106,21 @@ export function usePatientConditionsAll() {
   useEffect(() => {
     const builderConditions = builderConditionsQuery.data ?? [];
     const basics = basicQuery.data ?? [];
-    const outsideConditions = filterAndMergeConditions(
+    const allConditions = filterOutsideConditions(
       summaryConditionsQuery.data ?? [],
       builderConditions
     );
+    allConditions.push(...builderConditions);
+
     // If basic data came back from the above useBasic call, manually map any basic data to the condition
     // it corresponds to.
     if (basics.length > 0) {
-      outsideConditions.forEach((c, i) => {
+      allConditions.forEach((c, i) => {
         const filteredBasics = basics.filter((b) => b.subject?.reference === `Condition/${c.id}`);
-        outsideConditions[i].revIncludes = filteredBasics;
+        allConditions[i].revIncludes = filteredBasics;
       });
     }
-    setConditions([...outsideConditions]);
+    setConditions(allConditions);
   }, [builderConditionsQuery.data, summaryConditionsQuery.data, basicQuery.data]);
 
   const isLoading =
@@ -192,16 +194,16 @@ export const deleteCondition = async (
   await queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]);
 };
 
-// Filter out other conditions where:
+// Filter out summary conditions so that they only include relevant outside conditions where:
 //  1. CCS Category code starts with FAC or XXX.
 //  2. There is an existing builder-owned condition with a matching known code
 //     AND (the outside condition is older than the builder condition OR they
-//     have the same status).
-export const filterOtherConditions = (
-  outsideConditions: ConditionModel[],
+//     have the same status). That is - the builder already knows about this condition in its current state.
+export const filterOutsideConditions = (
+  summaryConditions: ConditionModel[],
   builderConditions: ConditionModel[]
 ): ConditionModel[] =>
-  outsideConditions.filter((outsideCondition) => {
+  summaryConditions.filter((outsideCondition) => {
     if (["FAC", "XXX"].includes(outsideCondition.ccsChapterCode ?? "")) {
       return false;
     }
@@ -219,35 +221,6 @@ export const filterOtherConditions = (
       return isMatch && !isEnteredInError && (isOlder || hasSameStatus);
     });
   });
-
-// TODO - comment explaining why this is needed
-export const filterAndMergeConditions = (
-  outsideConditions: ConditionModel[],
-  builderConditions: ConditionModel[]
-): ConditionModel[] => {
-  const conditions = outsideConditions.filter((outsideCondition) => {
-    if (["FAC", "XXX"].includes(outsideCondition.ccsChapterCode ?? "")) {
-      return false;
-    }
-
-    return !builderConditions.some((builderCondition) => {
-      const otherRecordedDate = outsideCondition.resource.recordedDate;
-      const patientRecordedDate = builderCondition.resource.recordedDate;
-      const isMatch = outsideCondition.knownCodingsMatch(builderCondition);
-      const isEnteredInError = builderCondition.verificationStatus === "entered-in-error";
-
-      const isOlder =
-        !otherRecordedDate || (patientRecordedDate && otherRecordedDate <= patientRecordedDate);
-      const hasSameStatus = outsideCondition.clinicalStatus === builderCondition.clinicalStatus;
-
-      return isMatch && !isEnteredInError && (isOlder || hasSameStatus);
-    });
-  });
-
-  conditions.push(...builderConditions);
-
-  return conditions;
-};
 
 async function fetchPatientBuilderConditionsFQS(
   requestContext: CTWRequestContext,
