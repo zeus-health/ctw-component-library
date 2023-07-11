@@ -1,5 +1,4 @@
-import { faCircleCheck } from "@fortawesome/free-regular-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ResourceTitleColumn } from "../../resource/helpers/resource-title-column";
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { AllergyModel } from "@/fhir/models/allergies";
 import { capitalize } from "@/utils/nodash";
@@ -9,18 +8,10 @@ export const patientAllergiesColumns = (builderId: string) => {
     {
       title: "Name",
       render: (allergy) => (
-        <div>
-          <div className="ctw-flow-root">
-            {capitalize(allergy.display)}
-            <span className="ctw-float-right">
-              {allergy.ownedByBuilder(builderId) ? (
-                <FontAwesomeIcon className="ctw-text-content-light" icon={faCircleCheck} />
-              ) : (
-                <></>
-              )}
-            </span>
-          </div>
-        </div>
+        <ResourceTitleColumn
+          title={allergy.display}
+          ownedByBuilder={allergy.ownedByBuilder(builderId)}
+        />
       ),
     },
     {
