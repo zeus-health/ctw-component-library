@@ -17,15 +17,6 @@ import {
   PatientMedicationsOutsideProps,
 } from "../medications/patient-medications-outside";
 import { PatientMedicationsOutsideBadge } from "../medications/patient-medications-outside-badge";
-import {
-  PatientObservations,
-  PatientObservationsProps,
-} from "../observations/patient-observations";
-import {
-  PatientObservationsOutside,
-  PatientObservationsOutsideProps,
-} from "../observations/patient-observations-outside";
-import { PatientObservationsOutsideBadge } from "../observations/patient-observations-outside-badge";
 import { PatientTimeline, PatientTimelineProps } from "../timeline/patient-timeline";
 import {
   PatientAllergies,
@@ -129,23 +120,6 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     key: "care-team",
     display: () => <TabHelper name="care team" beta />,
     render: () => <PatientCareTeam {...props} />,
-  }),
-
-  observations: (props: PatientObservationsProps = {}) => ({
-    key: "observations",
-    display: () => "observations",
-    render: () => <PatientObservations {...props} />,
-  }),
-
-  "observations-outside": (props: PatientObservationsOutsideProps = {}) => ({
-    key: "observations-outside",
-    display: () => (
-      <>
-        <span className="ctw-pr-2 ctw-capitalize">outside observations</span>
-        <PatientObservationsOutsideBadge />
-      </>
-    ),
-    render: () => <PatientObservationsOutside {...props} />,
   }),
 };
 

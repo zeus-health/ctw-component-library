@@ -2,8 +2,6 @@ import { PatientConditionsOutsideProps } from "../conditions/patient-conditions-
 import { PatientDiagnosticReportsProps } from "../diagnostic-reports/patient-diagnostic-reports";
 import { PatientMedicationsProps } from "../medications/patient-medications";
 import { PatientMedicationsOutsideProps } from "../medications/patient-medications-outside";
-import { PatientObservationsProps } from "../observations/patient-observations";
-import { PatientObservationsOutsideProps } from "../observations/patient-observations-outside";
 import { PatientTimelineProps } from "../timeline/patient-timeline";
 import ZusSVG from "@/assets/zus.svg";
 import { PatientAllergiesProps } from "@/components/content/allergies/patient-allergies";
@@ -30,8 +28,6 @@ export type ZAPResourceName =
   | "immunizations"
   | "medications"
   | "medications-outside"
-  | "observations"
-  | "observations-outside"
   | "timeline";
 
 export type ZusAggregatedProfileProps = {
@@ -54,8 +50,6 @@ export type ZusAggregatedProfileSubComponentProps = Partial<{
   immunizationsProps: PatientImmunizationsProps;
   medicationsProps: PatientMedicationsProps;
   medicationsOutsideProps: PatientMedicationsOutsideProps;
-  observationsProps: PatientObservationsProps;
-  observationsOutsideProps: PatientObservationsOutsideProps;
   timelineProps: PatientTimelineProps;
 }>;
 
@@ -71,8 +65,6 @@ const ZusAggregatedProfileComponent = ({
   immunizationsProps,
   medicationsProps,
   medicationsOutsideProps,
-  observationsProps,
-  observationsOutsideProps,
   timelineProps,
   resources,
   hideTitle = false,
@@ -91,8 +83,6 @@ const ZusAggregatedProfileComponent = ({
     immunizations: immunizationsProps,
     medications: medicationsProps,
     "medications-outside": medicationsOutsideProps,
-    observations: observationsProps,
-    "observations-outside": observationsOutsideProps,
     timeline: timelineProps,
   };
 
@@ -159,8 +149,6 @@ const ZusAggregatedProfileComponent = ({
  * "immunizations",
  * "medications",
  * "medications-outside",
- * "observations",
- * "observations-outside",
  * "timelines".
  */
 export const ZusAggregatedProfile = withErrorBoundary(
