@@ -126,6 +126,7 @@ async function diagnosticReportCommonQueryFQS(
       sort: {
         lastUpdated: "DESC",
       },
+      filter: {},
       first: 1000,
     }
   );
