@@ -1,5 +1,5 @@
 import cx from "classnames";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { patientConditionsAllColumns } from "./helpers/columns";
 import { useConditionDetailsDrawer } from "./helpers/details";
 import { conditionFilters, defaultConditionFilters } from "./helpers/filters";
@@ -12,7 +12,7 @@ import { conditionSortOptions, defaultConditionSort } from "./helpers/sorts";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { withErrorBoundary } from "@/components/core/error-boundary";
-import { useCTW } from "@/components/core/providers/use-ctw";
+import { useUserBuilderId, useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { RowActionsProps } from "@/components/core/table/table";
 import { ConditionModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
@@ -25,7 +25,7 @@ export type PatientConditionsAllProps = {
 };
 
 function PatientConditionsAllComponent({ className, readOnly }: PatientConditionsAllProps) {
-  const { getRequestContext } = useCTW();
+  const userBuilderId = useUserBuilderId();
   const { t } = useBaseTranslations();
   const query = usePatientConditionsAll();
   const showAddConditionForm = useAddConditionForm();
@@ -34,17 +34,6 @@ function PatientConditionsAllComponent({ className, readOnly }: PatientCondition
     defaultSort: defaultConditionSort,
     records: query.data,
   });
-
-  const [userBuilderId, setUserBuilderId] = useState("");
-
-  useEffect(() => {
-    async function load() {
-      const requestContext = await getRequestContext();
-      setUserBuilderId(requestContext.builderId);
-    }
-
-    void load();
-  }, [getRequestContext]);
 
   const openDetails = useConditionDetailsDrawer({
     canRemove: !readOnly,
