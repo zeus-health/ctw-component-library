@@ -115,6 +115,7 @@ const components: DemoComponent[] = [
         resources={[
           "allergies",
           "conditions-all",
+          "conditions-outside",
           "documents",
           "immunizations",
           "care-team",
