@@ -55,6 +55,7 @@ export const applyDocumentFilters = (data: fhir4.DocumentReference[]) => {
 };
 
 const valuesToDedupeOn = (document: DocumentModel) => [
+  document.encounterDate,
   document.dateCreated,
   document.custodian,
   document.title,

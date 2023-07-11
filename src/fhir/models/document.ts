@@ -1,3 +1,4 @@
+import { differenceInYears } from "date-fns";
 import { FHIRModel } from "./fhir-model";
 import { codeableConceptLabel } from "../codeable-concept";
 import { formatISODateStringToDate } from "../formatters";
@@ -40,6 +41,28 @@ export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
     return formatISODateStringToDate(
       this.resource.date || this.resource.content[0].attachment.creation
     );
+  }
+
+  get encounterDate(): string | undefined {
+    const { start, end } = this.resource.context?.period || {};
+    if (start && end) {
+      const years = differenceInYears(new Date(end), new Date(start));
+      if (years > 0) {
+        // Omit if end - start >= 1 year.
+        // This implies that it is a summary document.
+        return undefined;
+      }
+      return formatISODateStringToDate(start);
+    }
+
+    if (end) {
+      return formatISODateStringToDate(end);
+    }
+    return undefined;
+  }
+
+  get dateForSort() {
+    return this.encounterDate || this.dateCreated;
   }
 
   get custodian(): string | undefined {
