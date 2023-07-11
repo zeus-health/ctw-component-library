@@ -7,6 +7,7 @@ import {
   PatientConditionsOutside,
   PatientConditionsOutsideProps,
 } from "../conditions/patient-conditions-outside";
+import { PatientConditionsOutsideBadge } from "../conditions/patient-conditions-outside-badge";
 import { UnreadConditionsNotification } from "../conditions/unread-conditions-notification";
 import { UnreadDocumentsNotification } from "../document/unread-documents-notification";
 import { UnreadImmunizationsNotification } from "../immunizations/unread-immunizations-notification";
@@ -86,7 +87,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     key: "conditions-outside",
     display: () => (
       <div className="ctw-flex ctw-items-center ctw-space-x-2">
-        <UnreadConditionsNotification />
+        <PatientConditionsOutsideBadge />
         <span className="ctw-capitalize">{i18next.t("zap.tabs.conditionsOutside")}</span>
       </div>
     ),
