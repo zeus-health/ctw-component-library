@@ -68,13 +68,10 @@ export const patientConditionsAllColumns = (builderId: string): TableColumn<Cond
       <div>
         <div className="ctw-flow-root group-hover:ctw-underline">
           {capitalize(condition.display)}
-          <span className="ctw-float-right">
-            {condition.ownedByBuilder(builderId) ? (
+          {condition.ownedByBuilder(builderId) ? (
+            <span className="ctw-float-right">
               <FontAwesomeIcon className="ctw-text-content-light" icon={faCircleCheck} />
-            ) : (
-              <></>
-            )}
-          </span>
+            </span>) : null}
         </div>
         <div>{condition.ccsChapter}</div>
       </div>
