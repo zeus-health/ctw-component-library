@@ -55,28 +55,6 @@ import i18next from "@/i18n";
 export type ZusAggregatedProfileTabs = Record<ZAPResourceName, (props: object) => TabGroupItem>;
 
 export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
-  allergies: (props: PatientAllergiesProps = {}) => ({
-    key: "allergies",
-    display: () => (
-      <div className="ctw-flex ctw-items-center ctw-space-x-2">
-        <UnreadAllergiesNotification />
-        <span className="ctw-capitalize">allergies</span>
-      </div>
-    ),
-    render: () => <PatientAllergies {...props} />,
-  }),
-
-  "care-team": (props: PatientCareTeamProps = {}) => ({
-    key: "care-team",
-    display: () => (
-      <div className="ctw-space-x-1">
-        <span className="ctw-capitalize">care team</span>
-        <BetaLabel />
-      </div>
-    ),
-    render: () => <PatientCareTeam {...props} />,
-  }),
-
   conditions: (props: PatientConditionsProps = {}) => ({
     key: "conditions",
     display: () => i18next.t("zap.tabs.conditions"),
@@ -92,34 +70,6 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
       </div>
     ),
     render: () => <PatientConditionsOutside {...props} />,
-  }),
-
-  documents: (props: PatientDocumentsProps = {}) => ({
-    key: "documents",
-    display: () => (
-      <div className="ctw-flex ctw-items-center ctw-space-x-2">
-        <UnreadDocumentsNotification />
-        <div className="ctw-flex ctw-items-center ctw-space-x-1">
-          <span className="ctw-capitalize">documents</span>
-          <BetaLabel />
-        </div>
-      </div>
-    ),
-    render: () => <PatientDocuments {...props} />,
-  }),
-
-  immunizations: (props: PatientImmunizationsProps = {}) => ({
-    key: "immunizations",
-    display: () => (
-      <div className="ctw-flex ctw-items-center ctw-space-x-2">
-        <UnreadImmunizationsNotification />
-        <div className="ctw-flex ctw-items-center ctw-space-x-1">
-          <span className="ctw-capitalize">immunizations</span>
-          <BetaLabel />
-        </div>
-      </div>
-    ),
-    render: () => <PatientImmunizations {...props} />,
   }),
 
   medications: (props: PatientMedicationsProps = {}) => ({
@@ -153,6 +103,67 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     render: () => <PatientDiagnosticReports {...props} />,
   }),
 
+  timeline: (props: PatientTimelineProps = {}) => ({
+    key: "timeline",
+    display: () => (
+      <div className="ctw-space-x-1">
+        <span className="ctw-capitalize">Timeline</span>
+        <BetaLabel />
+      </div>
+    ),
+    render: () => <PatientTimeline {...props} />,
+  }),
+
+  documents: (props: PatientDocumentsProps = {}) => ({
+    key: "documents",
+    display: () => (
+      <div className="ctw-flex ctw-items-center ctw-space-x-2">
+        <UnreadDocumentsNotification />
+        <div className="ctw-flex ctw-items-center ctw-space-x-1">
+          <span className="ctw-capitalize">documents</span>
+          <BetaLabel />
+        </div>
+      </div>
+    ),
+    render: () => <PatientDocuments {...props} />,
+  }),
+
+  allergies: (props: PatientAllergiesProps = {}) => ({
+    key: "allergies",
+    display: () => (
+      <div className="ctw-flex ctw-items-center ctw-space-x-2">
+        <UnreadAllergiesNotification />
+        <span className="ctw-capitalize">allergies</span>
+      </div>
+    ),
+    render: () => <PatientAllergies {...props} />,
+  }),
+
+  immunizations: (props: PatientImmunizationsProps = {}) => ({
+    key: "immunizations",
+    display: () => (
+      <div className="ctw-flex ctw-items-center ctw-space-x-2">
+        <UnreadImmunizationsNotification />
+        <div className="ctw-flex ctw-items-center ctw-space-x-1">
+          <span className="ctw-capitalize">immunizations</span>
+          <BetaLabel />
+        </div>
+      </div>
+    ),
+    render: () => <PatientImmunizations {...props} />,
+  }),
+
+  "care-team": (props: PatientCareTeamProps = {}) => ({
+    key: "care-team",
+    display: () => (
+      <div className="ctw-space-x-1">
+        <span className="ctw-capitalize">care team</span>
+        <BetaLabel />
+      </div>
+    ),
+    render: () => <PatientCareTeam {...props} />,
+  }),
+
   observations: (props: PatientObservationsProps = {}) => ({
     key: "observations",
     display: () => "observations",
@@ -168,16 +179,5 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
       </>
     ),
     render: () => <PatientObservationsOutside {...props} />,
-  }),
-
-  timeline: (props: PatientTimelineProps = {}) => ({
-    key: "timeline",
-    display: () => (
-      <div className="ctw-space-x-1">
-        <span className="ctw-capitalize">Timeline</span>
-        <BetaLabel />
-      </div>
-    ),
-    render: () => <PatientTimeline {...props} />,
   }),
 };
