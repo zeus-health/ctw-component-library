@@ -4,6 +4,11 @@ import {
   PatientConditionsOutsideProps,
 } from "../conditions/patient-conditions-outside";
 import { PatientConditionsOutsideBadge } from "../conditions/patient-conditions-outside-badge";
+import {
+  PatientDiagnosticReports,
+  PatientDiagnosticReportsProps,
+} from "../diagnostic-reports/patient-diagnostic-reports";
+import { UnreadDiagnosticReportsNotification } from "../diagnostic-reports/unread-diagnostic-reports-notification";
 import { UnreadDocumentsNotification } from "../document/unread-documents-notification";
 import { UnreadImmunizationsNotification } from "../immunizations/unread-immunizations-notification";
 import { PatientMedications, PatientMedicationsProps } from "../medications/patient-medications";
@@ -132,6 +137,20 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
       </div>
     ),
     render: () => <PatientMedicationsOutside {...props} />,
+  }),
+
+  "diagnostic-reports": (props: PatientDiagnosticReportsProps = {}) => ({
+    key: "diagnostic-reports",
+    display: () => (
+      <div className="ctw-flex ctw-items-center ctw-space-x-2">
+        <UnreadDiagnosticReportsNotification />
+        <div className="ctw-flex ctw-items-center ctw-space-x-1">
+          <span className="ctw-capitalize">diagnostics</span>
+          <BetaLabel />
+        </div>
+      </div>
+    ),
+    render: () => <PatientDiagnosticReports {...props} />,
   }),
 
   observations: (props: PatientObservationsProps = {}) => ({
