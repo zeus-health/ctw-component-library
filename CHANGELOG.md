@@ -1,5 +1,15 @@
 # ctw-component-library
 
+## 1.29.0
+
+### Minor Changes
+
+- 953f2ce5: Update empty display for immunizations component
+
+### Patch Changes
+
+- 577e6ab8: Fixed FQS-based Diagnostic Reports "all" query
+
 ## 1.28.5
 
 ### Patch Changes
