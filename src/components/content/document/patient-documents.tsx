@@ -120,7 +120,7 @@ const documentData = (document: DocumentModel) => [
   {
     label: "Section Display",
     value: document.sectionDisplays && (
-      <ul className="ctw-m-0 ctw-pl-4">
+      <ul className="ctw-m-0 ctw-list-disc ctw-pl-4">
         {document.sectionDisplays.map((item, index) => (
           // eslint-disable-next-line react/no-array-index-key
           <li key={item + index}>{item}</li>
