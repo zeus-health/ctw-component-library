@@ -18,6 +18,7 @@ import {
 import { Title } from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { TabGroup } from "@/components/core/tab-group/tab-group";
+import { intersection } from "@/utils/nodash";
 
 export type ZAPResourceName =
   | "allergies"
@@ -91,7 +92,14 @@ const ZusAggregatedProfileComponent = ({
     timeline: timelineProps,
   };
 
-  const tabbedContent = resources.map((tabName) => {
+  // Order provided resources by the specified order in zusAggregatedProfileTabs.
+  // This way, the tabs will always be in the same order.
+  const orderedResources = intersection(
+    Object.keys(zusAggregatedProfileTabs) as ZAPResourceName[],
+    resources
+  );
+
+  const tabbedContent = orderedResources.map((tabName) => {
     const props = subcomponentProps[tabName] ?? {};
     return zusAggregatedProfileTabs[tabName](props);
   });
