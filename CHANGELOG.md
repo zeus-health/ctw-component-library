@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.30.1
+
+### Patch Changes
+
+- 4d8085d3: Specify zap tab ordering.
+
 ## 1.30.0
 
 ### Minor Changes
