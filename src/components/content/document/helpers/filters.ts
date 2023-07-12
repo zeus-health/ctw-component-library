@@ -1,3 +1,5 @@
+import { dismissFilter } from "../../resource/filters";
+import { FilterChangeEvent, FilterItem } from "@/components/core/filter-bar/filter-bar-types";
 import { DocumentModel } from "@/fhir/models/document";
 import { isEqual, uniqWith } from "@/utils/nodash";
 
@@ -60,3 +62,10 @@ const valuesToDedupeOn = (document: DocumentModel) => [
   document.custodian,
   document.title,
 ];
+
+export function documentsFilter(): FilterItem[] {
+  const filters: FilterItem[] = [dismissFilter];
+  return filters;
+}
+
+export const defaultDocumentsFilters: FilterChangeEvent = {};
