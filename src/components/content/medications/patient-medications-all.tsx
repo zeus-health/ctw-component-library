@@ -1,13 +1,9 @@
 import cx from "classnames";
 import { useMemo } from "react";
+import { useAddMedicationForm } from "./helpers/add-new-med-drawer";
 import { patientMedicationsAllColumns } from "./helpers/columns";
 import { useMedicationDetailsDrawer } from "./helpers/details";
 import { defaultMedicationFilters, medicationFilters } from "./helpers/filters";
-import {
-  useAddMedicationForm,
-  useConfirmDeleteMedication,
-  useEditMedicationForm,
-} from "./helpers/modal-hooks";
 import { defaultMedicationSort, medicationSortOptions } from "./helpers/sorts";
 import { useToggleRead } from "../hooks/use-toggle-read";
 import { ResourceTable } from "../resource/resource-table";
@@ -15,7 +11,7 @@ import { ResourceTableActions } from "../resource/resource-table-actions";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { RowActionsProps } from "@/components/core/table/table";
-import { MedicationModel } from "@/fhir/models";
+import { MedicationStatementModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { useBaseTranslations } from "@/i18n";
 import { usePatientMedicationsAll } from "@/services/medications";
@@ -41,10 +37,7 @@ function PatientMedicationsAllComponent({
     records: query.data,
   });
 
-  const openDetails = useMedicationDetailsDrawer({
-    canRemove: !readOnly && !onlyAllowAddOutsideMedications,
-    canEdit: !readOnly && !onlyAllowAddOutsideMedications,
-  });
+  const openDetails = useMedicationDetailsDrawer();
 
   const rowActions = useMemo(
     () => (!readOnly ? getRowActions(userBuilderId, onlyAllowAddOutsideMedications) : undefined),
@@ -53,7 +46,7 @@ function PatientMedicationsAllComponent({
 
   const action = !readOnly && !onlyAllowAddOutsideMedications && (
     <button type="button" className="ctw-btn-primary" onClick={() => showAddMedicationForm()}>
-      {t("resource.add", { resource: t("glossary:medication_one") })}
+      Add Medication
     </button>
   );
 
@@ -66,7 +59,7 @@ function PatientMedicationsAllComponent({
         filterOptions={{
           onChange: setFilters,
           defaultState: defaultMedicationFilters,
-          filters: medicationFilters(query.data, true, true),
+          filters: medicationFilters(query.data, true),
         }}
         sortOptions={{
           defaultSort: defaultMedicationSort,
@@ -95,7 +88,7 @@ export const PatientMedicationsAll = withErrorBoundary(
 
 const getRowActions =
   (userBuilderId: string, onlyAllowAddOutsideMedications: boolean) =>
-  ({ record }: RowActionsProps<MedicationModel>) => {
+  ({ record }: RowActionsProps<MedicationStatementModel>) => {
     const { t } = useBaseTranslations();
     const showAddMedicationForm = useAddMedicationForm();
     const showEditMedicationForm = useEditMedicationForm();
