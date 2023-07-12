@@ -9,5 +9,5 @@ export const UnreadDiagnosticReportsNotification = ({
   className,
 }: UnreadDiagnosticReportsNotificationProps) => {
   const query = usePatientAllDiagnosticReports();
-  return <UnreadNotification className={className} data={query.data ?? []} />;
+  return <UnreadNotification className={className} data={query.data} />;
 };
