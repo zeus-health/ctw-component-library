@@ -11,6 +11,7 @@ import {
   PatientAllergies,
   PatientConditions,
   PatientConditionsOutside,
+  PatientDiagnosticReports,
   PatientDocuments,
   PatientImmunizations,
   PatientMedications,
@@ -78,6 +79,11 @@ const components: DemoComponent[] = [
     title: "Patient Conditions Outside",
   },
   {
+    name: "diagnostic-reports",
+    render: () => <PatientDiagnosticReports />,
+    title: "Patient Diagnostic Reports",
+  },
+  {
     name: "documents",
     render: () => <PatientDocuments />,
     title: "Patient Documents",
@@ -121,6 +127,7 @@ const components: DemoComponent[] = [
           "care-team",
           "medications",
           "medications-outside",
+          "diagnostic-reports",
         ]}
         title="ZAP"
       />

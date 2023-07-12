@@ -1,6 +1,6 @@
 import { rest } from "msw";
+import { diagnosticReport } from "./diagnostic-reports";
 import { patient } from "./patient";
-import { diagnosticReport } from "@/components/content/observations/story-helpers/mocks/diagnostic-reports";
 import { mockUnleashFQSEnabledGet } from "@/components/content/story-helpers/mocks/requests/requests";
 
 export function setupObservationMocks() {
