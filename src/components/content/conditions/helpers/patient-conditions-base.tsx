@@ -63,7 +63,7 @@ export const PatientConditionsBase = ({
         filterOptions={{
           onChange: setFilters,
           defaultState: defaultConditionFilters,
-          filters: conditionFilters(query.data ?? [], outside),
+          filters: conditionFilters(query.data ?? [], outside, !outside),
         }}
         sortOptions={{
           defaultSort: defaultConditionSort,

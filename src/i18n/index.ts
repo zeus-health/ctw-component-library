@@ -27,6 +27,7 @@ export const resources = {
       "zap.tabs.medicationsOutside": "medications",
       "zap.tabs.conditions": "$t(glossary:condition_other) list",
       "zap.tabs.conditionsOutside": "outside $t(glossary:condition_other)",
+      "zap.tabs.conditionsAll": "$t(glossary:condition_other)",
     },
   },
 };

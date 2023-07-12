@@ -117,11 +117,11 @@ const components: DemoComponent[] = [
         conditionsOutsideProps={{
           hideRequestRecords: true,
         }}
+        conditionsAllProps={{}}
         includePatientDemographicsForm={false}
         resources={[
           "allergies",
-          "conditions",
-          "conditions-outside",
+          "conditions-all",
           "documents",
           "immunizations",
           "care-team",
