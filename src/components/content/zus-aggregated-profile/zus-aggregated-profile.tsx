@@ -1,3 +1,4 @@
+import { PatientConditionsAllProps } from "../conditions/patient-conditions-all";
 import { PatientConditionsOutsideProps } from "../conditions/patient-conditions-outside";
 import { PatientDiagnosticReportsProps } from "../diagnostic-reports/patient-diagnostic-reports";
 import { PatientMedicationsProps } from "../medications/patient-medications";
@@ -23,6 +24,7 @@ export type ZAPResourceName =
   | "care-team"
   | "conditions"
   | "conditions-outside"
+  | "conditions-all"
   | "diagnostic-reports"
   | "documents"
   | "immunizations"
@@ -45,6 +47,7 @@ export type ZusAggregatedProfileSubComponentProps = Partial<{
   careTeamProps: PatientCareTeamProps;
   conditionsProps: PatientConditionsProps;
   conditionsOutsideProps: PatientConditionsOutsideProps;
+  conditionsAllProps: PatientConditionsAllProps;
   diagnosticReportsProps: PatientDiagnosticReportsProps;
   documentsProps: PatientDocumentsProps;
   immunizationsProps: PatientImmunizationsProps;
@@ -60,6 +63,7 @@ const ZusAggregatedProfileComponent = ({
   careTeamProps,
   conditionsProps,
   conditionsOutsideProps,
+  conditionsAllProps,
   diagnosticReportsProps,
   documentsProps,
   immunizationsProps,
@@ -78,6 +82,7 @@ const ZusAggregatedProfileComponent = ({
     "care-team": careTeamProps,
     conditions: conditionsProps,
     "conditions-outside": conditionsOutsideProps,
+    "conditions-all": conditionsAllProps,
     "diagnostic-reports": diagnosticReportsProps,
     documents: documentsProps,
     immunizations: immunizationsProps,

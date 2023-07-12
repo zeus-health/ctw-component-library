@@ -34,16 +34,18 @@ export async function longPollFQS(
     // Exponential backoff how long we wait between retries.
     await sleep(100 * 2 ** retryCount);
     retryCount += 1;
-
     // Refetch the resource from FQS.
     try {
       const data = await graphClient.request(query);
-      currentTimestamp = Date.parse(String(get(data, "Condition.meta.lastUpdated")));
+      currentTimestamp = Date.parse(String(get(data, `${resourceType}.meta.lastUpdated`)));
     } catch (err) {
       // Ignore errors and retry.
       // This can happen if we just created a new resource that isn't in FQS yet.
     }
-  } while (currentTimestamp < targetTimestamp && Date.now() - startTime < TIMEOUT_MS);
+  } while (
+    (Number.isNaN(currentTimestamp) || currentTimestamp < targetTimestamp) &&
+    Date.now() - startTime < TIMEOUT_MS
+  );
 
   Telemetry.histogramMetric(`fqs.longpoll.all`, Date.now() - startTime);
   Telemetry.histogramMetric(`fqs.longpoll.${resourceType}`, Date.now() - startTime);

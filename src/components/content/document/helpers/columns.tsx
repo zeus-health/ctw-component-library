@@ -1,3 +1,4 @@
+import { ResourceTitleColumn } from "../../resource/helpers/resource-title-column";
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { DocumentModel } from "@/fhir/models/document";
 
@@ -6,7 +7,7 @@ export const patientDocumentColumns: TableColumn<DocumentModel>[] = [
     widthPercent: 35,
     minWidth: 200,
     title: "Title",
-    render: (document) => <div className="group-hover:ctw-underline">{document.title}</div>,
+    render: (document) => <ResourceTitleColumn title={document.title} />,
   },
   {
     widthPercent: 15,

@@ -47,7 +47,7 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
 
   const shouldShowTableHead = typeof showTableHead === "boolean" ? showTableHead : !breakpoints.sm;
 
-  const { toggleRead } = useToggleRead(QUERY_KEY_BASIC);
+  const { toggleRead } = useToggleRead();
 
   const onRowClickWithRead = onRowClick
     ? (record: M) => {
@@ -67,8 +67,8 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
       ? ({ record }: RowActionsProps<M>) => (
           <div className="ctw-flex ctw-space-x-2">
             {featureFlags?.enableViewFhirButton && <ViewFHIR resource={record.resource} />}
-            {RowActions && <RowActions record={record} />}
             {DismissAndReadActions && <DismissAndReadActions record={record} />}
+            {RowActions && <RowActions record={record} />}
           </div>
         )
       : undefined;
@@ -123,7 +123,7 @@ const getDismissAndReadActions =
     const { t } = useBaseTranslations();
 
     const { isLoading: isToggleDismissLoading, toggleDismiss } = useToggleDismiss(QUERY_KEY_BASIC);
-    const { isLoading: isToggleReadLoading, toggleRead } = useToggleRead(QUERY_KEY_BASIC);
+    const { isLoading: isToggleReadLoading, toggleRead } = useToggleRead();
     const archiveLabel = record.isDismissed
       ? t("resourceTable.restore")
       : t("resourceTable.dismiss");

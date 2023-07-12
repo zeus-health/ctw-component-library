@@ -1,9 +1,14 @@
 import { UnreadAllergiesNotification } from "../allergies/unread-allergies-notification";
 import {
+  PatientConditionsAll,
+  PatientConditionsAllProps,
+} from "../conditions/patient-conditions-all";
+import {
   PatientConditionsOutside,
   PatientConditionsOutsideProps,
 } from "../conditions/patient-conditions-outside";
 import { PatientConditionsOutsideBadge } from "../conditions/patient-conditions-outside-badge";
+import { UnreadConditionsNotification } from "../conditions/unread-conditions-notification";
 import {
   PatientDiagnosticReports,
   PatientDiagnosticReportsProps,
@@ -61,6 +66,17 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
       />
     ),
     render: () => <PatientConditionsOutside {...props} />,
+  }),
+
+  "conditions-all": (props: PatientConditionsAllProps = {}) => ({
+    key: "conditions-all",
+    display: () => (
+      <TabHelper
+        notification={<UnreadConditionsNotification />}
+        name={i18next.t("zap.tabs.conditionsAll")}
+      />
+    ),
+    render: () => <PatientConditionsAll {...props} />,
   }),
 
   medications: (props: PatientMedicationsProps = {}) => ({
