@@ -1,9 +1,8 @@
 import { PatientConditionsAllProps } from "../conditions/patient-conditions-all";
 import { PatientConditionsOutsideProps } from "../conditions/patient-conditions-outside";
+import { PatientDiagnosticReportsProps } from "../diagnostic-reports/patient-diagnostic-reports";
 import { PatientMedicationsProps } from "../medications/patient-medications";
 import { PatientMedicationsOutsideProps } from "../medications/patient-medications-outside";
-import { PatientObservationsProps } from "../observations/patient-observations";
-import { PatientObservationsOutsideProps } from "../observations/patient-observations-outside";
 import { PatientTimelineProps } from "../timeline/patient-timeline";
 import ZusSVG from "@/assets/zus.svg";
 import { PatientAllergiesProps } from "@/components/content/allergies/patient-allergies";
@@ -19,6 +18,7 @@ import {
 import { Title } from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { TabGroup } from "@/components/core/tab-group/tab-group";
+import { intersection } from "@/utils/nodash";
 
 export type ZAPResourceName =
   | "allergies"
@@ -26,12 +26,11 @@ export type ZAPResourceName =
   | "conditions"
   | "conditions-outside"
   | "conditions-all"
+  | "diagnostic-reports"
   | "documents"
   | "immunizations"
   | "medications"
   | "medications-outside"
-  | "observations"
-  | "observations-outside"
   | "timeline";
 
 export type ZusAggregatedProfileProps = {
@@ -50,12 +49,11 @@ export type ZusAggregatedProfileSubComponentProps = Partial<{
   conditionsProps: PatientConditionsProps;
   conditionsOutsideProps: PatientConditionsOutsideProps;
   conditionsAllProps: PatientConditionsAllProps;
+  diagnosticReportsProps: PatientDiagnosticReportsProps;
   documentsProps: PatientDocumentsProps;
   immunizationsProps: PatientImmunizationsProps;
   medicationsProps: PatientMedicationsProps;
   medicationsOutsideProps: PatientMedicationsOutsideProps;
-  observationsProps: PatientObservationsProps;
-  observationsOutsideProps: PatientObservationsOutsideProps;
   timelineProps: PatientTimelineProps;
 }>;
 
@@ -67,12 +65,11 @@ const ZusAggregatedProfileComponent = ({
   conditionsProps,
   conditionsOutsideProps,
   conditionsAllProps,
+  diagnosticReportsProps,
   documentsProps,
   immunizationsProps,
   medicationsProps,
   medicationsOutsideProps,
-  observationsProps,
-  observationsOutsideProps,
   timelineProps,
   resources,
   hideTitle = false,
@@ -87,16 +84,22 @@ const ZusAggregatedProfileComponent = ({
     conditions: conditionsProps,
     "conditions-outside": conditionsOutsideProps,
     "conditions-all": conditionsAllProps,
+    "diagnostic-reports": diagnosticReportsProps,
     documents: documentsProps,
     immunizations: immunizationsProps,
     medications: medicationsProps,
     "medications-outside": medicationsOutsideProps,
-    observations: observationsProps,
-    "observations-outside": observationsOutsideProps,
     timeline: timelineProps,
   };
 
-  const tabbedContent = resources.map((tabName) => {
+  // Order provided resources by the specified order in zusAggregatedProfileTabs.
+  // This way, the tabs will always be in the same order.
+  const orderedResources = intersection(
+    Object.keys(zusAggregatedProfileTabs) as ZAPResourceName[],
+    resources
+  );
+
+  const tabbedContent = orderedResources.map((tabName) => {
     const props = subcomponentProps[tabName] ?? {};
     return zusAggregatedProfileTabs[tabName](props);
   });
@@ -154,12 +157,11 @@ const ZusAggregatedProfileComponent = ({
  * "care-team",
  * "conditions",
  * "conditions-outside",
+ * "diagnostic-reports",
  * "documents",
  * "immunizations",
  * "medications",
  * "medications-outside",
- * "observations",
- * "observations-outside",
  * "timelines".
  */
 export const ZusAggregatedProfile = withErrorBoundary(

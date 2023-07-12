@@ -100,12 +100,11 @@ export const ScrollbarsOnOverflowZap: StoryObj<Props> = {
       "conditions-outside",
       "documents",
       "immunizations",
-      "observations",
-      "observations-outside",
       "medications",
       "medications-outside",
       "care-team",
       "timeline",
+      "diagnostic-reports",
     ],
   },
   decorators: [
