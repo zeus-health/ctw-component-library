@@ -19,8 +19,10 @@ import {
   PatientProvider,
   PatientSearch,
   PatientTimeline,
+  ZAPResourceName,
   ZusAggregatedProfile,
 } from ".";
+import { UnreadRecordsNotification } from "./components/content/unread-records-notification";
 
 const {
   VITE_AUTH0_AUDIENCE,
@@ -112,25 +114,31 @@ const components: DemoComponent[] = [
   { name: "timeline", render: () => <PatientTimeline />, title: "Patient Timeline" },
   {
     name: "zap",
-    render: () => (
-      <ZusAggregatedProfile
-        conditionsOutsideProps={{
-          hideRequestRecords: true,
-        }}
-        conditionsAllProps={{ onlyAllowAddOutsideConditions: true }}
-        includePatientDemographicsForm={false}
-        resources={[
-          "allergies",
-          "conditions-all",
-          "documents",
-          "immunizations",
-          "care-team",
-          "medications-all",
-          "diagnostic-reports",
-        ]}
-        title="ZAP"
-      />
-    ),
+    render: () => {
+      const resources: ZAPResourceName[] = [
+        "allergies",
+        "conditions-all",
+        "documents",
+        "immunizations",
+        "care-team",
+        "medications-all",
+        "diagnostic-reports",
+      ];
+      return (
+        <div>
+          Has unread records: <UnreadRecordsNotification resources={resources} />
+          <ZusAggregatedProfile
+            conditionsOutsideProps={{
+              hideRequestRecords: true,
+            }}
+            conditionsAllProps={{ onlyAllowAddOutsideConditions: true }}
+            includePatientDemographicsForm={false}
+            resources={resources}
+            title="ZAP"
+          />
+        </div>
+      );
+    },
   },
 ];
 
