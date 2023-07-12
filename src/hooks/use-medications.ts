@@ -41,7 +41,7 @@ export function useQueryGetSummarizedPatientMedications(): UseQueryResult<
     QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
     [],
     "medications",
-    "req.timing.active_medications",
+    "req.timing.summary_medications",
     getActiveMedicationsFQS,
     getActiveMedications
   );
@@ -63,6 +63,7 @@ export function useQueryAllPatientMedications() {
   const [otherProviderMedications, setOtherProviderMedications] = useState<
     MedicationStatementModel[]
   >([]);
+  const [allMedications, setAllMedications] = useState<MedicationStatementModel[]>([]);
 
   const summarizedMedicationsQuery = useQueryGetSummarizedPatientMedications();
   const builderMedicationsQuery = useQueryGetPatientMedsForBuilder();
@@ -98,6 +99,7 @@ export function useQueryAllPatientMedications() {
 
       setBuilderMedications(splitData.builderMedications);
       setOtherProviderMedications(splitData.otherProviderMedications);
+      setAllMedications([...splitData.builderMedications, ...splitData.otherProviderMedications]);
     } else if (
       fqs.ready &&
       fqs.enabled &&
@@ -121,6 +123,7 @@ export function useQueryAllPatientMedications() {
 
       setBuilderMedications(splitData.builderMedications);
       setOtherProviderMedications(splitData.otherProviderMedications);
+      setAllMedications([...splitData.builderMedications, ...splitData.otherProviderMedications]);
     }
   }, [
     summarizedMedicationsQuery.data,
@@ -141,5 +144,6 @@ export function useQueryAllPatientMedications() {
     isError,
     builderMedications,
     otherProviderMedications,
+    allMedications,
   };
 }

@@ -13,41 +13,33 @@ import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { RowActionsProps } from "@/components/core/table/table";
 import { MedicationStatementModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
+import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { useBaseTranslations } from "@/i18n";
-import { usePatientMedicationsAll } from "@/services/medications";
 
 export type PatientMedicationsAllProps = {
   className?: string;
   readOnly?: boolean;
-  onlyAllowAddOutsideMedications?: boolean;
+  onAddToRecord?: (record: MedicationStatementModel) => void;
 };
 
 function PatientMedicationsAllComponent({
   className,
-  readOnly = false,
-  onlyAllowAddOutsideMedications = false,
+  readOnly,
+  onAddToRecord,
 }: PatientMedicationsAllProps) {
   const userBuilderId = useUserBuilderId();
-  const { t } = useBaseTranslations();
-  const query = usePatientMedicationsAll();
-  const showAddMedicationForm = useAddMedicationForm();
+  const query = useQueryAllPatientMedications();
   const { data, setFilters, setSort } = useFilteredSortedData({
     defaultFilters: defaultMedicationFilters,
     defaultSort: defaultMedicationSort,
-    records: query.data,
+    records: query.allMedications,
   });
 
   const openDetails = useMedicationDetailsDrawer();
 
   const rowActions = useMemo(
-    () => (!readOnly ? getRowActions(userBuilderId, onlyAllowAddOutsideMedications) : undefined),
-    [userBuilderId, readOnly, onlyAllowAddOutsideMedications]
-  );
-
-  const action = !readOnly && !onlyAllowAddOutsideMedications && (
-    <button type="button" className="ctw-btn-primary" onClick={() => showAddMedicationForm()}>
-      Add Medication
-    </button>
+    () => (!readOnly ? getRowActions(userBuilderId, onAddToRecord) : undefined),
+    [userBuilderId, readOnly, onAddToRecord]
   );
 
   return (
@@ -59,14 +51,13 @@ function PatientMedicationsAllComponent({
         filterOptions={{
           onChange: setFilters,
           defaultState: defaultMedicationFilters,
-          filters: medicationFilters(query.data, true),
+          filters: medicationFilters(query.allMedications, true),
         }}
         sortOptions={{
           defaultSort: defaultMedicationSort,
           options: medicationSortOptions,
           onChange: setSort,
         }}
-        action={action}
       />
       <ResourceTable
         showTableHead
@@ -87,33 +78,12 @@ export const PatientMedicationsAll = withErrorBoundary(
 );
 
 const getRowActions =
-  (userBuilderId: string, onlyAllowAddOutsideMedications: boolean) =>
+  (userBuilderId: string, onAddToRecord?: (record: MedicationStatementModel) => void) =>
   ({ record }: RowActionsProps<MedicationStatementModel>) => {
     const { t } = useBaseTranslations();
     const showAddMedicationForm = useAddMedicationForm();
-    const showEditMedicationForm = useEditMedicationForm();
-    const confirmDelete = useConfirmDeleteMedication();
     const { toggleRead } = useToggleRead();
 
-    if (record.ownedByBuilder(userBuilderId) && !onlyAllowAddOutsideMedications) {
-      return (
-        <div className="ctw-flex ctw-space-x-2">
-          {!record.isDeleted && (
-            <button type="button" className="ctw-btn-default" onClick={() => confirmDelete(record)}>
-              Remove
-            </button>
-          )}
-
-          <button
-            type="button"
-            className="ctw-btn-primary"
-            onClick={() => showEditMedicationForm(record)}
-          >
-            Edit
-          </button>
-        </div>
-      );
-    }
     if (!record.ownedByBuilder(userBuilderId)) {
       return (
         <button
@@ -121,7 +91,11 @@ const getRowActions =
           className="ctw-btn-primary"
           onClick={() => {
             toggleRead(record);
-            showAddMedicationForm(record);
+            if (onAddToRecord) {
+              onAddToRecord(record);
+            } else {
+              showAddMedicationForm(record);
+            }
           }}
         >
           {t("resourceTable.add")}

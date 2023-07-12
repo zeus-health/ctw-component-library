@@ -7,5 +7,5 @@ export type UnreadConditionsNotificationProps = {
 
 export const UnreadConditionsNotification = ({ className }: UnreadConditionsNotificationProps) => {
   const query = usePatientConditionsAll();
-  return <UnreadNotification className={className} query={query} />;
+  return <UnreadNotification className={className} data={query.data} />;
 };

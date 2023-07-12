@@ -125,8 +125,7 @@ const components: DemoComponent[] = [
           "documents",
           "immunizations",
           "care-team",
-          "medications",
-          "medications-outside",
+          "medications-all",
           "diagnostic-reports",
         ]}
         title="ZAP"

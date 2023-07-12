@@ -1,5 +1,5 @@
 import { UnreadNotification } from "@/components/core/unread-notification";
-import { usePatientDocuments } from "@/fhir/document";
+import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 
 export type UnreadMedicationsNotificationProps = {
   className?: string;
@@ -8,6 +8,6 @@ export type UnreadMedicationsNotificationProps = {
 export const UnreadMedicationsNotification = ({
   className,
 }: UnreadMedicationsNotificationProps) => {
-  const query = usePatientDocuments();
-  return <UnreadNotification className={className} query={query} />;
+  const query = useQueryAllPatientMedications();
+  return <UnreadNotification className={className} data={query.allMedications} />;
 };
