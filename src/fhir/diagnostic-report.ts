@@ -126,11 +126,7 @@ async function diagnosticReportCommonQueryFQS(
       sort: {
         lastUpdated: "DESC",
       },
-      filter: {
-        tag: {
-          allmatch: [SYSTEM_ZUS_THIRD_PARTY],
-        },
-      },
+      filter: {},
       first: 1000,
     }
   );
