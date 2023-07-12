@@ -68,7 +68,6 @@ export function useQueryAllPatientMedications() {
   const summarizedMedicationsQuery = useQueryGetSummarizedPatientMedications();
   const builderMedicationsQuery = useQueryGetPatientMedsForBuilder();
 
-  // refactor to use new hook!
   useEffect(() => {
     if (
       fqs.ready &&
