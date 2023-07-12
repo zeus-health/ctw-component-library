@@ -84,6 +84,12 @@ export const documentsQuery = gql`
               display
             }
           }
+          context {
+            period {
+              start
+              end
+            }
+          }
         }
       }
     }

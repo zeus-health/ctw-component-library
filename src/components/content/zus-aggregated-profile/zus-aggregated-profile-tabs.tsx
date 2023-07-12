@@ -4,6 +4,7 @@ import {
   PatientConditionsOutsideProps,
 } from "../conditions/patient-conditions-outside";
 import { PatientConditionsOutsideBadge } from "../conditions/patient-conditions-outside-badge";
+import { UnreadDocumentsNotification } from "../document/unread-documents-notification";
 import { UnreadImmunizationsNotification } from "../immunizations/unread-immunizations-notification";
 import { PatientMedications, PatientMedicationsProps } from "../medications/patient-medications";
 import {
@@ -91,9 +92,12 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
   documents: (props: PatientDocumentsProps = {}) => ({
     key: "documents",
     display: () => (
-      <div className="ctw-space-x-1">
-        <span className="ctw-capitalize">documents</span>
-        <BetaLabel />
+      <div className="ctw-flex ctw-items-center ctw-space-x-2">
+        <UnreadDocumentsNotification />
+        <div className="ctw-flex ctw-items-center ctw-space-x-1">
+          <span className="ctw-capitalize">documents</span>
+          <BetaLabel />
+        </div>
       </div>
     ),
     render: () => <PatientDocuments {...props} />,
@@ -104,8 +108,10 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     display: () => (
       <div className="ctw-flex ctw-items-center ctw-space-x-2">
         <UnreadImmunizationsNotification />
-        <span className="ctw-capitalize">immunizations</span>
-        <BetaLabel />
+        <div className="ctw-flex ctw-items-center ctw-space-x-1">
+          <span className="ctw-capitalize">immunizations</span>
+          <BetaLabel />
+        </div>
       </div>
     ),
     render: () => <PatientImmunizations {...props} />,

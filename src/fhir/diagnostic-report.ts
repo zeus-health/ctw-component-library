@@ -68,14 +68,14 @@ function diagnosticReportsFetcherFQS(searchType: SearchType) {
     try {
       const data = await fetchFunction(requestContext, patient);
       if (searchType === "all" && data.DiagnosticReportConnection.edges.length === 0) {
-        Telemetry.countMetric(`req.count.${searchType}_diagnostic_reports.none`, 0, ["FQS"]);
+        Telemetry.countMetric(`req.count.${searchType}_diagnostic_reports.none`, 1, ["fqs"]);
       }
       const result = setupDiagnosticReportModelsWithFQS(
         data.DiagnosticReportConnection.edges.map((x) => x.node)
       );
 
       Telemetry.histogramMetric(`req.count.${searchType}_diagnostic_reports`, result.length, [
-        "FQS",
+        "fqs",
       ]);
       return result;
     } catch (e) {
@@ -126,11 +126,7 @@ async function diagnosticReportCommonQueryFQS(
       sort: {
         lastUpdated: "DESC",
       },
-      filter: {
-        tag: {
-          allmatch: [SYSTEM_ZUS_THIRD_PARTY],
-        },
-      },
+      filter: {},
       first: 1000,
     }
   );

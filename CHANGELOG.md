@@ -1,5 +1,41 @@
 # ctw-component-library
 
+## 1.29.0
+
+### Minor Changes
+
+- 953f2ce5: Update empty display for immunizations component
+
+### Patch Changes
+
+- 577e6ab8: Fixed FQS-based Diagnostic Reports "all" query
+
+## 1.28.5
+
+### Patch Changes
+
+- 1d3a4524: Revamp documents component (add sort, encounter date, cleanup details).
+- 2fa31cb7: Add encounter date to dedupe document logic.
+
+## 1.28.4
+
+### Patch Changes
+
+- 4a50eab0: Resolved incorrect fqs tags on some component metrics
+
+## 1.28.3
+
+### Patch Changes
+
+- 2ae44af3: Add UnreadDocumentsNotification to exported components.
+
+## 1.28.2
+
+### Patch Changes
+
+- b55c825d: Refactor unread notifications and expose className.
+- ab6088ed: Making "View FHIR" button a generic feature in ResourceTable and adding the functionality for documents.
+
 ## 1.28.1
 
 ### Patch Changes

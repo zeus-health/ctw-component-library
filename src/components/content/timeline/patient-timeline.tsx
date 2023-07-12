@@ -20,9 +20,9 @@ export type PatientTimelineProps = {
 export function PatientTimeline({ className }: PatientTimelineProps) {
   const timelineEventsQuery = useTimelineEvents();
   const containerRef = useRef<HTMLDivElement>(null);
-  const { viewOptions, defaultView } = getDateRangeView<TimelineEventModel>("date");
+  const { viewOptions, past6Months } = getDateRangeView<TimelineEventModel>("date");
   const { data, setFilters, setSort, setViewOption } = useFilteredSortedData({
-    defaultView,
+    defaultView: past6Months,
     defaultFilters: defaultTimelineFilters,
     defaultSort: defaultTimelineSort,
     records: timelineEventsQuery.data,
@@ -40,7 +40,7 @@ export function PatientTimeline({ className }: PatientTimelineProps) {
         viewOptions={{
           onChange: setViewOption,
           options: viewOptions,
-          defaultView,
+          defaultView: past6Months,
         }}
         filterOptions={{
           onChange: setFilters,
