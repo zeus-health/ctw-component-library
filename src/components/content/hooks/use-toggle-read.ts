@@ -20,8 +20,6 @@ interface UseToggleReadResult {
 
 /**
  * This hook toggles the read status for the specified FHIR model.
- *
- * @param queriesToInvalidate  Queries to refetch
  */
 export function useToggleRead(): UseToggleReadResult {
   const { getRequestContext } = useCTW();
