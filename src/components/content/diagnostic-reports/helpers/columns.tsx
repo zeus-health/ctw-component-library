@@ -9,6 +9,8 @@ export const patientDiagnosticReportsColumns = (
 ): TableColumn<DiagnosticReportModel>[] => [
   {
     title: "Diagnostic",
+    widthPercent: 40,
+    minWidth: 200,
     render: (diagnosticReport) => (
       <div className="group-hover:ctw-underline">
         <div className="ctw-flow-root">
@@ -27,9 +29,13 @@ export const patientDiagnosticReportsColumns = (
   {
     title: "Date",
     dataIndex: "effectiveStart",
+    widthPercent: 20,
+    minWidth: 128,
   },
   {
     title: "Details",
     dataIndex: "performer",
+    widthPercent: 40,
+    minWidth: 200,
   },
 ];
