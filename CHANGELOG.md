@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 1.30.0
+
+### Minor Changes
+
+- 9b9cebdc: Add diagnostic reports component and drop observation components.
+
+### Patch Changes
+
+- 8384f06a: Add dismissed records filter for documents component.
+- 3239a51d: Add PatientConditionsAll component which displays builder and outside conditions in the same table.
+- b2f4745a: Fix document details list style (force disc/bullets).
+
 ## 1.29.0
 
 ### Minor Changes
