@@ -1,8 +1,7 @@
 import { PatientConditionsOutsideProps } from "../conditions/patient-conditions-outside";
+import { PatientDiagnosticReportsProps } from "../diagnostic-reports/patient-diagnostic-reports";
 import { PatientMedicationsProps } from "../medications/patient-medications";
 import { PatientMedicationsOutsideProps } from "../medications/patient-medications-outside";
-import { PatientObservationsProps } from "../observations/patient-observations";
-import { PatientObservationsOutsideProps } from "../observations/patient-observations-outside";
 import { PatientTimelineProps } from "../timeline/patient-timeline";
 import ZusSVG from "@/assets/zus.svg";
 import { PatientAllergiesProps } from "@/components/content/allergies/patient-allergies";
@@ -24,12 +23,11 @@ export type ZAPResourceName =
   | "care-team"
   | "conditions"
   | "conditions-outside"
+  | "diagnostic-reports"
   | "documents"
   | "immunizations"
   | "medications"
   | "medications-outside"
-  | "observations"
-  | "observations-outside"
   | "timeline";
 
 export type ZusAggregatedProfileProps = {
@@ -47,12 +45,11 @@ export type ZusAggregatedProfileSubComponentProps = Partial<{
   careTeamProps: PatientCareTeamProps;
   conditionsProps: PatientConditionsProps;
   conditionsOutsideProps: PatientConditionsOutsideProps;
+  diagnosticReportsProps: PatientDiagnosticReportsProps;
   documentsProps: PatientDocumentsProps;
   immunizationsProps: PatientImmunizationsProps;
   medicationsProps: PatientMedicationsProps;
   medicationsOutsideProps: PatientMedicationsOutsideProps;
-  observationsProps: PatientObservationsProps;
-  observationsOutsideProps: PatientObservationsOutsideProps;
   timelineProps: PatientTimelineProps;
 }>;
 
@@ -63,12 +60,11 @@ const ZusAggregatedProfileComponent = ({
   careTeamProps,
   conditionsProps,
   conditionsOutsideProps,
+  diagnosticReportsProps,
   documentsProps,
   immunizationsProps,
   medicationsProps,
   medicationsOutsideProps,
-  observationsProps,
-  observationsOutsideProps,
   timelineProps,
   resources,
   hideTitle = false,
@@ -82,12 +78,11 @@ const ZusAggregatedProfileComponent = ({
     "care-team": careTeamProps,
     conditions: conditionsProps,
     "conditions-outside": conditionsOutsideProps,
+    "diagnostic-reports": diagnosticReportsProps,
     documents: documentsProps,
     immunizations: immunizationsProps,
     medications: medicationsProps,
     "medications-outside": medicationsOutsideProps,
-    observations: observationsProps,
-    "observations-outside": observationsOutsideProps,
     timeline: timelineProps,
   };
 
@@ -149,12 +144,11 @@ const ZusAggregatedProfileComponent = ({
  * "care-team",
  * "conditions",
  * "conditions-outside",
+ * "diagnostic-reports",
  * "documents",
  * "immunizations",
  * "medications",
  * "medications-outside",
- * "observations",
- * "observations-outside",
  * "timelines".
  */
 export const ZusAggregatedProfile = withErrorBoundary(
