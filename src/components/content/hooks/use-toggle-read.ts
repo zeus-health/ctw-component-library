@@ -1,5 +1,4 @@
 import { useCallback, useState } from "react";
-import { setTimeout } from "timers";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { toggleRead } from "@/fhir/basic";
 import { FHIRModel } from "@/fhir/models/fhir-model";
