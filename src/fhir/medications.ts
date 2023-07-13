@@ -465,9 +465,9 @@ export async function getActiveMedications(
 
     const medications = applySearchFiltersToResponse(response, searchFilters, true);
     if (medications.length === 0) {
-      Telemetry.countMetric("req.count.active_medications.none");
+      Telemetry.countMetric("req.count.summary_medications.none");
     }
-    Telemetry.histogramMetric("req.count.active_medications", medications.length);
+    Telemetry.histogramMetric("req.count.summary_medications", medications.length);
     return { bundle: response.bundle, medications, basic: [] };
   } catch (e) {
     throw errorResponse("Failed fetching medications for patient", e);
@@ -505,9 +505,9 @@ export async function getActiveMedicationsFQS(
     const nodes = data.MedicationStatementConnection.edges.map((x) => x.node);
     const models = setupMedicationStatementModelsWithFQS(nodes);
     if (models.length === 0) {
-      Telemetry.countMetric("req.count.active_medications.none", 1, ["fqs"]);
+      Telemetry.countMetric("req.count.summary_medications.none", 1, ["fqs"]);
     }
-    Telemetry.histogramMetric("req.count.active_medications", models.length, ["fqs"]);
+    Telemetry.histogramMetric("req.count.summary_medications", models.length, ["fqs"]);
     const results = models.map((x) => x.resource);
     return { bundle: undefined, medications: results, basic: [] };
   } catch (e) {

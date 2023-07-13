@@ -7,5 +7,5 @@ export type UnreadDocumentsNotificationProps = {
 
 export const UnreadDocumentsNotification = ({ className }: UnreadDocumentsNotificationProps) => {
   const query = usePatientDocuments();
-  return <UnreadNotification className={className} query={query} />;
+  return <UnreadNotification className={className} data={query.data} />;
 };

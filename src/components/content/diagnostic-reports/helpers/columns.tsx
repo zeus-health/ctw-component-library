@@ -1,8 +1,6 @@
-import { faCircleCheck } from "@fortawesome/free-regular-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ResourceTitleColumn } from "../../resource/helpers/resource-title-column";
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { DiagnosticReportModel } from "@/fhir/models";
-import { capitalize } from "@/utils/nodash";
 
 export const patientDiagnosticReportsColumns = (
   builderId: string
@@ -11,19 +9,11 @@ export const patientDiagnosticReportsColumns = (
     title: "Diagnostic",
     widthPercent: 40,
     minWidth: 200,
-    render: (diagnosticReport) => (
-      <div className="group-hover:ctw-underline">
-        <div className="ctw-flow-root">
-          {capitalize(diagnosticReport.displayName)}
-          <span className="ctw-float-right">
-            {diagnosticReport.ownedByBuilder(builderId) ? (
-              <FontAwesomeIcon className="ctw-text-content-light" icon={faCircleCheck} />
-            ) : (
-              <></>
-            )}
-          </span>
-        </div>
-      </div>
+    render: (diagnostic) => (
+      <ResourceTitleColumn
+        title={diagnostic.displayName}
+        ownedByBuilder={diagnostic.ownedByBuilder(builderId)}
+      />
     ),
   },
   {
