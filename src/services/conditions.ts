@@ -52,38 +52,84 @@ function usePatientSummaryConditions() {
 export function usePatientConditionsOutside() {
   const fqs = useFQSFeatureToggle("conditions");
   const [conditions, setConditions] = useState<ConditionModel[]>([]);
-  const patientConditionsQuery = usePatientBuilderConditions();
-  const otherConditionsQuery = usePatientSummaryConditions();
+  const builderConditionsQuery = usePatientBuilderConditions();
+  const summaryConditionsQuery = usePatientSummaryConditions();
 
   // This query is a noop when FQS is disabled and will just return an empty list of basic resources.
   const basicQuery = useBasic(fqs);
 
   useEffect(() => {
-    const patientConditions = patientConditionsQuery.data ?? [];
+    const builderConditions = builderConditionsQuery.data ?? [];
     const basics = basicQuery.data ?? [];
-    const otherConditions = filterOtherConditions(
-      otherConditionsQuery.data ?? [],
-      patientConditions,
-      true
+    const outsideConditions = filterOutsideConditions(
+      summaryConditionsQuery.data ?? [],
+      builderConditions
     );
     // If basic data came back from the above useBasic call, manually map any basic data to the condition
     // it corresponds to.
     if (basics.length > 0) {
-      otherConditions.forEach((c, i) => {
+      outsideConditions.forEach((c, i) => {
         const filteredBasics = basics.filter((b) => b.subject?.reference === `Condition/${c.id}`);
-        otherConditions[i].revIncludes = filteredBasics;
+        outsideConditions[i].revIncludes = filteredBasics;
       });
     }
-    setConditions(otherConditions);
-  }, [patientConditionsQuery.data, otherConditionsQuery.data, basicQuery.data]);
+    setConditions(outsideConditions);
+  }, [builderConditionsQuery.data, summaryConditionsQuery.data, basicQuery.data]);
 
   const isLoading =
-    patientConditionsQuery.isLoading || otherConditionsQuery.isLoading || basicQuery.isLoading;
+    builderConditionsQuery.isLoading || summaryConditionsQuery.isLoading || basicQuery.isLoading;
   const isError =
-    patientConditionsQuery.isError || otherConditionsQuery.isError || basicQuery.isError;
+    builderConditionsQuery.isError || summaryConditionsQuery.isError || basicQuery.isError;
   const isFetching =
-    patientConditionsQuery.isFetching ||
-    otherConditionsQuery.isFetching ||
+    builderConditionsQuery.isFetching ||
+    summaryConditionsQuery.isFetching ||
+    basicQuery.isFetching ||
+    !fqs.ready;
+
+  return {
+    isLoading,
+    isError,
+    isFetching,
+    data: conditions,
+  };
+}
+
+export function usePatientConditionsAll() {
+  const fqs = useFQSFeatureToggle("conditions");
+  const [conditions, setConditions] = useState<ConditionModel[]>([]);
+  const builderConditionsQuery = usePatientBuilderConditions();
+  const summaryConditionsQuery = usePatientSummaryConditions();
+
+  // This query is a noop when FQS is disabled and will just return an empty list of basic resources.
+  const basicQuery = useBasic(fqs);
+
+  useEffect(() => {
+    const builderConditions = builderConditionsQuery.data ?? [];
+    const basics = basicQuery.data ?? [];
+    const allConditions = filterOutsideConditions(
+      summaryConditionsQuery.data ?? [],
+      builderConditions
+    );
+    allConditions.push(...builderConditions);
+
+    // If basic data came back from the above useBasic call, manually map any basic data to the condition
+    // it corresponds to.
+    if (basics.length > 0) {
+      allConditions.forEach((c, i) => {
+        const filteredBasics = basics.filter((b) => b.subject?.reference === `Condition/${c.id}`);
+        allConditions[i].revIncludes = filteredBasics;
+      });
+    }
+    setConditions(allConditions);
+  }, [builderConditionsQuery.data, summaryConditionsQuery.data, basicQuery.data]);
+
+  const isLoading =
+    builderConditionsQuery.isLoading || summaryConditionsQuery.isLoading || basicQuery.isLoading;
+  const isError =
+    builderConditionsQuery.isError || summaryConditionsQuery.isError || basicQuery.isError;
+  const isFetching =
+    builderConditionsQuery.isFetching ||
+    summaryConditionsQuery.isFetching ||
     basicQuery.isFetching ||
     !fqs.ready;
 
@@ -148,33 +194,29 @@ export const deleteCondition = async (
   await queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]);
 };
 
-// Filter out other conditions where:
-//  1. Condition is archived and includeArchived is false.
-//  2. CCS Category code starts with FAC or XXX.
-//  4. There is an existing patient condition with a matching known code.
-//     AND The other condition is older than the patient condition OR they
-//     have the same status.
-export const filterOtherConditions = (
-  otherConditions: ConditionModel[],
-  patientConditions: ConditionModel[],
-  includeArchived: boolean
+// Filter out summary conditions so that they only include relevant outside conditions where:
+//  1. CCS Category code starts with FAC or XXX.
+//  2. There is an existing builder-owned condition with a matching known code
+//     AND (the outside condition is older than the builder condition OR they
+//     have the same status). That is - the builder already knows about this condition in its current state.
+export const filterOutsideConditions = (
+  summaryConditions: ConditionModel[],
+  builderConditions: ConditionModel[]
 ): ConditionModel[] =>
-  otherConditions.filter((otherCondition) => {
-    if (otherCondition.isDismissed && !includeArchived) return false;
-
-    if (["FAC", "XXX"].includes(otherCondition.ccsChapterCode ?? "")) {
+  summaryConditions.filter((outsideCondition) => {
+    if (["FAC", "XXX"].includes(outsideCondition.ccsChapterCode ?? "")) {
       return false;
     }
 
-    return !patientConditions.some((patientCondition) => {
-      const otherRecordedDate = otherCondition.resource.recordedDate;
-      const patientRecordedDate = patientCondition.resource.recordedDate;
-      const isMatch = otherCondition.knownCodingsMatch(patientCondition);
-      const isEnteredInError = patientCondition.verificationStatus === "entered-in-error";
+    return !builderConditions.some((builderCondition) => {
+      const otherRecordedDate = outsideCondition.resource.recordedDate;
+      const patientRecordedDate = builderCondition.resource.recordedDate;
+      const isMatch = outsideCondition.knownCodingsMatch(builderCondition);
+      const isEnteredInError = builderCondition.verificationStatus === "entered-in-error";
 
       const isOlder =
         !otherRecordedDate || (patientRecordedDate && otherRecordedDate <= patientRecordedDate);
-      const hasSameStatus = otherCondition.clinicalStatus === patientCondition.clinicalStatus;
+      const hasSameStatus = outsideCondition.clinicalStatus === builderCondition.clinicalStatus;
 
       return isMatch && !isEnteredInError && (isOlder || hasSameStatus);
     });

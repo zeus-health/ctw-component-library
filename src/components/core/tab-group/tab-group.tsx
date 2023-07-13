@@ -97,7 +97,7 @@ function TabGroupComponent({
               className={({ selected }) =>
                 cx(
                   [
-                    "ctw-tab ctw-text-sm ctw-capitalize",
+                    "ctw-tab ctw-whitespace-nowrap ctw-text-sm ctw-capitalize",
                     "hover:after:ctw-bg-content-black",
                     "focus-visible:ctw-outline-primary-dark focus-visible:after:ctw-bg-transparent",
                   ],

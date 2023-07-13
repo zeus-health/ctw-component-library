@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { toggleRead } from "@/fhir/basic";
 import { FHIRModel } from "@/fhir/models/fhir-model";
+import { QUERY_KEY_BASIC } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 
 interface UseToggleReadResult {
@@ -18,10 +19,8 @@ interface UseToggleReadResult {
 
 /**
  * This hook toggles the read status for the specified FHIR model.
- *
- * @param queriesToInvalidate  Queries to refetch
  */
-export function useToggleRead(...queriesToInvalidate: string[]): UseToggleReadResult {
+export function useToggleRead(): UseToggleReadResult {
   const { getRequestContext } = useCTW();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -35,11 +34,7 @@ export function useToggleRead(...queriesToInvalidate: string[]): UseToggleReadRe
     }
     setIsLoading(true);
     await toggleRead(model, await getRequestContext());
-    await Promise.all(
-      queriesToInvalidate.map((queryToInvalidate) =>
-        queryClient.invalidateQueries([queryToInvalidate])
-      )
-    );
+    await queryClient.invalidateQueries([QUERY_KEY_BASIC]);
 
     // Timeout here fixes bug where we would briefly flash
     // the old mark as read/new text.
