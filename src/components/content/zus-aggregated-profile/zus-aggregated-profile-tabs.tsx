@@ -18,10 +18,15 @@ import { UnreadDocumentsNotification } from "../document/unread-documents-notifi
 import { UnreadImmunizationsNotification } from "../immunizations/unread-immunizations-notification";
 import { PatientMedications, PatientMedicationsProps } from "../medications/patient-medications";
 import {
+  PatientMedicationsAll,
+  PatientMedicationsAllProps,
+} from "../medications/patient-medications-all";
+import {
   PatientMedicationsOutside,
   PatientMedicationsOutsideProps,
 } from "../medications/patient-medications-outside";
 import { PatientMedicationsOutsideBadge } from "../medications/patient-medications-outside-badge";
+import { UnreadMedicationsNotification } from "../medications/unread-medications-notification";
 import { PatientTimeline, PatientTimelineProps } from "../timeline/patient-timeline";
 import {
   PatientAllergies,
@@ -94,6 +99,14 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
       />
     ),
     render: () => <PatientMedicationsOutside {...props} />,
+  }),
+
+  "medications-all": (props: PatientMedicationsAllProps = {}) => ({
+    key: "medications-all",
+    display: () => (
+      <TabHelper notification={<UnreadMedicationsNotification />} name="Medications" />
+    ),
+    render: () => <PatientMedicationsAll {...props} />,
   }),
 
   "diagnostic-reports": (props: PatientDiagnosticReportsProps = {}) => ({

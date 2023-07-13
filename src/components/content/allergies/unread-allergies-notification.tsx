@@ -7,5 +7,5 @@ export type UnreadAllergiesNotificationProps = {
 
 export const UnreadAllergiesNotification = ({ className }: UnreadAllergiesNotificationProps) => {
   const query = usePatientAllergies();
-  return <UnreadNotification className={className} query={query} />;
+  return <UnreadNotification className={className} data={query.data} />;
 };
