@@ -37,7 +37,7 @@ function mockRequests() {
   );
 
   const mockAllergyIntolleranceFQSPost = graphql.query("AllergyIntolerance", (_, res, ctx) =>
-    res(ctx.delay(750), ctx.status(200), ctx.data(allergyIntoleranceFQS))
+    res(ctx.status(200), ctx.data(allergyIntoleranceFQS))
   );
 
   return [

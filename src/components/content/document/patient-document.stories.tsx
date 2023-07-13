@@ -41,6 +41,5 @@ export const Basic: StoryObj<Props> = {
 };
 
 export const BasicFQS: StoryObj<Props> = {
-  args: {},
   ...setupDocumentMocks(),
 };
