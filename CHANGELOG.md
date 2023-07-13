@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.30.2
+
+### Patch Changes
+
+- 781bd9e3: Use semibold for unread records.
+- 8ff01263: Add PatientMedicationsAll component which displays builder and outside medications in the same table.
+
 ## 1.30.1
 
 ### Patch Changes
