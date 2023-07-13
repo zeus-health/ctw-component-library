@@ -1,5 +1,40 @@
 # ctw-component-library
 
+## 1.30.2
+
+### Patch Changes
+
+- 781bd9e3: Use semibold for unread records.
+- 8ff01263: Add PatientMedicationsAll component which displays builder and outside medications in the same table.
+
+## 1.30.1
+
+### Patch Changes
+
+- 4d8085d3: Specify zap tab ordering.
+
+## 1.30.0
+
+### Minor Changes
+
+- 9b9cebdc: Add diagnostic reports component and drop observation components.
+
+### Patch Changes
+
+- 8384f06a: Add dismissed records filter for documents component.
+- 3239a51d: Add PatientConditionsAll component which displays builder and outside conditions in the same table.
+- b2f4745a: Fix document details list style (force disc/bullets).
+
+## 1.29.0
+
+### Minor Changes
+
+- 953f2ce5: Update empty display for immunizations component
+
+### Patch Changes
+
+- 577e6ab8: Fixed FQS-based Diagnostic Reports "all" query
+
 ## 1.28.5
 
 ### Patch Changes

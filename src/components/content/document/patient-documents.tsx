@@ -1,6 +1,7 @@
 import cx from "classnames";
 import { useMemo, useRef } from "react";
 import { patientDocumentColumns } from "./helpers/columns";
+import { defaultDocumentsFilters, documentsFilter } from "./helpers/filters";
 import { defaultDocumentSort, documentSortOptions } from "./helpers/sorts";
 import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
@@ -29,8 +30,9 @@ function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocument
   const patientDocumentQuery = usePatientDocuments();
   const rowActions = useMemo(() => getRowActions({ onAddToRecord }), [onAddToRecord]);
   const { viewOptions, allTime } = getDateRangeView<DocumentModel>("dateCreated");
-  const { data, setViewOption, setSort } = useFilteredSortedData({
+  const { data, setViewOption, setSort, setFilters } = useFilteredSortedData({
     defaultSort: defaultDocumentSort,
+    defaultFilters: defaultDocumentsFilters,
     defaultView: allTime,
     records: patientDocumentQuery.data,
   });
@@ -52,6 +54,11 @@ function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocument
       className={cx(className, "ctw-scrollable-pass-through-height")}
     >
       <ResourceTableActions
+        filterOptions={{
+          onChange: setFilters,
+          defaultState: defaultDocumentsFilters,
+          filters: documentsFilter(),
+        }}
         sortOptions={{
           defaultSort: defaultDocumentSort,
           options: documentSortOptions,
@@ -120,7 +127,7 @@ const documentData = (document: DocumentModel) => [
   {
     label: "Section Display",
     value: document.sectionDisplays && (
-      <ul className="ctw-m-0 ctw-pl-4">
+      <ul className="ctw-m-0 ctw-list-disc ctw-pl-4">
         {document.sectionDisplays.map((item, index) => (
           // eslint-disable-next-line react/no-array-index-key
           <li key={item + index}>{item}</li>

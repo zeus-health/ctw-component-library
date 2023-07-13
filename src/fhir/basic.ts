@@ -1,5 +1,7 @@
+import { UseQueryResult } from "@tanstack/react-query";
 import { Basic } from "fhir/r4";
 import { FhirResource } from "fhir-kit-client";
+import { useEffect, useState } from "react";
 import { createOrEditFhirResource } from "./action-helper";
 import { FHIRModel } from "./models/fhir-model";
 import { getUsersPractitionerReference } from "./practitioner";
@@ -78,6 +80,42 @@ export function useBasic(fqs: FQSFeatureToggle) {
             });
     })()
   );
+}
+
+export function useIncludeBasics<R extends fhir4.Resource, T extends FHIRModel<R>>(
+  query: UseQueryResult<T[]>,
+  fqs: FQSFeatureToggle
+) {
+  const [resources, setResources] = useState<T[]>([]);
+  const basicsQuery = useBasic(fqs);
+
+  useEffect(() => {
+    const resources2 = query.data ?? [];
+    const basics = basicsQuery.data ?? [];
+    // If basic data came back from the above useBasic call, manually map any basic data to the condition
+    // it corresponds to.
+    if (basics.length > 0) {
+      resources2.forEach((a, i) => {
+        const filteredBasics = basics.filter(
+          (b) => b.subject?.reference === `${a.resourceType}/${a.id}`
+        );
+        resources2[i].revIncludes = filteredBasics;
+      });
+    }
+
+    setResources([...resources2]); // spread syntax here needed to make sure the array is a new reference in order to trigger a re-render
+  }, [basicsQuery.data, query.data]);
+
+  const isLoading = query.isLoading || basicsQuery.isLoading;
+  const isError = query.isError || basicsQuery.isError;
+  const isFetching = query.isFetching || basicsQuery.isFetching || !fqs.ready;
+
+  return {
+    isLoading,
+    isError,
+    isFetching,
+    data: resources,
+  };
 }
 
 export async function toggleDismiss<T extends fhir4.Resource>(

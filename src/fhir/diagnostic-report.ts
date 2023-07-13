@@ -1,9 +1,11 @@
+import { useIncludeBasics } from "./basic";
 import { searchBuilderRecords, searchCommonRecords } from "./search-helpers";
 import { SYSTEM_ZUS_THIRD_PARTY } from "./system-urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useFeatureFlaggedQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { getIncludedResources } from "@/fhir/bundle";
 import { DiagnosticReportModel, PatientModel } from "@/fhir/models";
+import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import {
   DiagnosticReportGraphqlResponse,
@@ -29,7 +31,9 @@ export function usePatientBuilderDiagnosticReports() {
 }
 
 export function usePatientAllDiagnosticReports() {
-  return useFeatureFlaggedQueryWithPatient(
+  const fqs = useFQSFeatureToggle("diagnosticReports");
+
+  const query = useFeatureFlaggedQueryWithPatient(
     QUERY_KEY_OTHER_PROVIDER_DIAGNOSTIC_REPORTS,
     [],
     "diagnosticReports",
@@ -37,6 +41,8 @@ export function usePatientAllDiagnosticReports() {
     diagnosticReportsFetcherFQS("all"),
     diagnosticReportsFetcherODS("all")
   );
+
+  return useIncludeBasics(query, fqs);
 }
 
 function diagnosticReportsFetcherODS(searchType: SearchType) {
