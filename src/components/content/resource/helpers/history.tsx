@@ -13,13 +13,24 @@ export type HistoryProps = {
 export const History = ({ entries, limit, resourceTypeTitle }: HistoryProps) => {
   const [showAll, setShowAll] = useState(!limit || entries.length <= limit);
 
-  // Sort by date descending, then by version descending
-  // We convert the date string to a Date object so that
-  // it sorts correctly.
+  // Sort entries by:
+  //  1. date descending
+  //  2. has a source document (binaryId present or not)
+  //  3. title ascending
+  //  4. subtitle ascending
+  //  5. versionId descending (this is to ensure consistent ordering)
   const sortedEntries = orderBy(
     entries,
-    [(e) => (e.date ? new Date(e.date) : ""), "versionId"],
-    ["desc", "desc"]
+    [
+      // Convert the date string to a Date object so that it sorts correctly.
+      (e) => (e.date ? new Date(e.date) : ""), // desc
+      // We want to promote entries with a source document to the top.
+      (e) => !!e.binaryId, // desc
+      "title", // asc
+      "subtitle", // asc
+      "versionId", // desc
+    ],
+    ["desc", "desc", "asc", "asc", "desc"]
   );
 
   const displayedEntries = showAll || !limit ? sortedEntries : sortedEntries.slice(0, limit);
