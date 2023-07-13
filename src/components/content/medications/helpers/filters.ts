@@ -6,12 +6,12 @@ import { uniqueValues } from "@/utils/filters";
 
 export function medicationFilters(
   medications: MedicationStatementModel[],
-  outside: boolean
+  includeDismissed: boolean
 ): FilterItem[] {
   const prescriberNames = uniqueValues(medications, "lastPrescriber");
   const filters: FilterItem[] = [];
 
-  if (outside) {
+  if (includeDismissed) {
     filters.push(dismissFilter);
   }
 
