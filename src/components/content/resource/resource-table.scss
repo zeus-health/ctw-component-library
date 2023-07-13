@@ -1,12 +1,9 @@
-.ctw-resource-table {
-  .ctw-tr-dismissed {
-    td,
-    td span,
-    td div {
-      @apply ctw-text-content-lighter;
-    }
-  }
-  .ctw-tr-unread {
-    @apply ctw-font-semibold;
-  }
+.ctw-resource-table .ctw-tr-dismissed td,
+.ctw-resource-table .ctw-tr-dismissed td span,
+.ctw-resource-table .ctw-tr-dismissed td div {
+  @apply ctw-text-content-lighter;
+}
+
+.ctw-resource-table .ctw-tr-unread {
+  @apply ctw-font-semibold;
 }
