@@ -11,7 +11,7 @@ export const LOINC_ANALYTES: Record<string, string> = {
   "4549-2": "a1c",
 
   // TODO: REMOVE THESE BEFORE COMMITTING!
-  "718-7": "a1c",
+  "13458-5": "a1c",
   "704-7": "a1c",
   "736-9": "a1c",
 };
