@@ -10,7 +10,11 @@ export const unleashVariant = (
       enabled,
       variant: {
         name: variantName,
-        payload: variantPayload,
+        payload: {
+          type: "json",
+          value: JSON.stringify(variantPayload),
+        },
+        enabled: true,
       },
     },
   ],

@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 1.32.0
+
+### Minor Changes
+
+- b40d007c: Expand empty table display to include requesting records
+- 783ce18c: Update storybook tests to include FQS queries.
+
+### Patch Changes
+
+- fd0c38fe: Update condition history details and history card null states.
+- ce476a80: Change default colors to use Zus theme.
+
 ## 1.31.1
 
 ### Patch Changes

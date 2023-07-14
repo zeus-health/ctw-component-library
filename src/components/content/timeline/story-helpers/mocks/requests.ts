@@ -1,11 +1,13 @@
-import { rest } from "msw";
+import { graphql, rest } from "msw";
 import { encounters } from "./encounters";
+import { encountersFQS } from "./encounters-fqs";
 import { medicationStatement } from "./medication-statement";
 import { patient } from "./patient";
 import { provenances } from "./provenances";
 import { medicationDispense } from "../../../medications/story-helpers/mocks/medication-dispense";
 import { medicationRequest } from "../../../medications/story-helpers/mocks/medication-request";
 import { diagnosticReport } from "@/components/content/observations/story-helpers/mocks/diagnostic-reports";
+import { diagnosticReportFQS } from "@/components/content/observations/story-helpers/mocks/diagnostic-reports-fqs";
 import { mockUnleashFQSEnabledGet } from "@/components/content/story-helpers/mocks/requests/requests";
 
 export function setupTimelineMocks() {
@@ -55,6 +57,14 @@ function mockRequests() {
     (req, res, ctx) => res(ctx.status(200), ctx.delay(250), ctx.json(diagnosticReport))
   );
 
+  const mockDiagnosticReportFQSPost = graphql.query("DiagnosticReport", (_, res, ctx) =>
+    res(ctx.delay(750), ctx.status(200), ctx.data(diagnosticReportFQS))
+  );
+
+  const mockEncountertFQSPost = graphql.query("Encounter", (_, res, ctx) =>
+    res(ctx.delay(750), ctx.status(200), ctx.data(encountersFQS))
+  );
+
   return [
     mockUnleashGet,
     mockPatientGet,
@@ -64,5 +74,7 @@ function mockRequests() {
     mockMedicationDispenseGet,
     mockMedicationStatementGet,
     mockDiagnosticReportGet,
+    mockDiagnosticReportFQSPost,
+    mockEncountertFQSPost,
   ];
 }
