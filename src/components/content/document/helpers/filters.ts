@@ -26,6 +26,9 @@ const isViewablePreRainbow = (doc: fhir4.DocumentReference) => {
   return creationDate < RAINBOW_CUTOVER_DATE;
 };
 
+// DA creates document references for sections of a CDA and the full CDA.
+// We want to filter out the ones for sections, luckily those
+// will have at most 1 category.
 const isViewablePostRainbow = (docRef: fhir4.DocumentReference) => {
   const document = new DocumentModel(docRef);
 

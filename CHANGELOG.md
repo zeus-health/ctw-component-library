@@ -1,5 +1,43 @@
 # ctw-component-library
 
+## 1.31.1
+
+### Patch Changes
+
+- 664f7764: Increase specificity of unread/dismiss selectors.
+- dd32be7b: Fix issues with new meds component read/dismiss as well as capitalization of medication display
+
+## 1.31.0
+
+### Minor Changes
+
+- 3dc690c4: Add a request header to FQS requests.
+
+## 1.30.2
+
+### Patch Changes
+
+- 781bd9e3: Use semibold for unread records.
+- 8ff01263: Add PatientMedicationsAll component which displays builder and outside medications in the same table.
+
+## 1.30.1
+
+### Patch Changes
+
+- 4d8085d3: Specify zap tab ordering.
+
+## 1.30.0
+
+### Minor Changes
+
+- 9b9cebdc: Add diagnostic reports component and drop observation components.
+
+### Patch Changes
+
+- 8384f06a: Add dismissed records filter for documents component.
+- 3239a51d: Add PatientConditionsAll component which displays builder and outside conditions in the same table.
+- b2f4745a: Fix document details list style (force disc/bullets).
+
 ## 1.29.0
 
 ### Minor Changes

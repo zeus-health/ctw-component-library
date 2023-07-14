@@ -16,6 +16,7 @@ export { default as findIndex } from "lodash/findIndex";
 export { default as flatten } from "lodash/flatten";
 export { default as get } from "lodash/get";
 export { default as identity } from "lodash/identity";
+export { default as intersection } from "lodash/intersection";
 export { default as intersectionWith } from "lodash/intersectionWith";
 export { default as isArray } from "lodash/isArray";
 export { default as isEmpty } from "lodash/isEmpty";

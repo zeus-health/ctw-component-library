@@ -5,10 +5,14 @@ import { ConditionModel } from "@/fhir/models";
 import { conditionStatuses, outsideConditionStatuses } from "@/fhir/models/condition";
 import { uniqueValues } from "@/utils/filters";
 
-export function conditionFilters(conditions: ConditionModel[], outside: boolean): FilterItem[] {
+export function conditionFilters(
+  conditions: ConditionModel[],
+  includeDismiss: boolean,
+  showAllStatuses: boolean
+): FilterItem[] {
   const filters: FilterItem[] = [];
 
-  if (outside) {
+  if (includeDismiss) {
     filters.push(dismissFilter);
   }
 
@@ -19,7 +23,7 @@ export function conditionFilters(conditions: ConditionModel[], outside: boolean)
       icon: faClipboardCheck,
       display: "Status",
       // Create new array as these other ones are readonly.
-      values: [...(outside ? outsideConditionStatuses : conditionStatuses)],
+      values: [...(showAllStatuses ? conditionStatuses : outsideConditionStatuses)],
     },
     {
       key: "ccsChapter",
