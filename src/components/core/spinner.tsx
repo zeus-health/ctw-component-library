@@ -2,11 +2,12 @@ import cx from "classnames";
 
 export type SpinnerProps = {
   className?: string;
+  size?: number;
 };
 
 export const Spinner = ({ className }: SpinnerProps) => (
   <svg
-    className={cx("ctw-inline ctw-h-4 ctw-w-4 ctw-animate-spin", className)}
+    className={cx(`ctw-inline ctw-h-4 ctw-w-4 ctw-animate-spin`, className)}
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
     viewBox="0 0 24 24"

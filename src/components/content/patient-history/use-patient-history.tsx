@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { PatientHistoryStatus } from "./patient-history-message-status";
@@ -6,9 +7,11 @@ import { getZusApiBaseUrl } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
 import {
+  usePatient,
   usePatientPromise,
   useQueryWithPatient,
 } from "@/components/core/providers/patient-provider";
+import { useCTW } from "@/components/core/providers/use-ctw";
 import { PatientModel } from "@/fhir/models";
 import {
   PatientHistoryJobResponse,
@@ -25,7 +28,7 @@ type PatientHistoryDetails = Partial<{
   status: PatientRefreshHistoryMessageStatus;
   createdAt: string;
   providers: PatientHistoryServiceMessage[];
-}> & { lastRetrievedAt: string | number };
+}> & { lastRetrievedAt: string | number; hasJobs: boolean };
 
 export function usePatientHistory(includePatientDemographicsForm?: boolean) {
   const { openDrawer } = useDrawer();
@@ -77,6 +80,7 @@ export function usePatientHistory(includePatientDemographicsForm?: boolean) {
         ),
       });
     },
+    hasJobs: patientHistoryDetails?.hasJobs,
     lastRetrievedAt: patientHistoryDetails?.lastRetrievedAt,
     latestProviderJobs: patientHistoryDetails?.providers,
     lastStatus: patientHistoryDetails?.status,
@@ -157,6 +161,7 @@ export function usePatientHistoryDetails() {
           [];
 
         return {
+          hasJobs: response.data.length > 0,
           lastRetrievedAt: latestDone?.attributes.targetDate ?? latestDone?.attributes.createdAt,
           status:
             latestStatus.length > 0
@@ -171,4 +176,52 @@ export function usePatientHistoryDetails() {
       }
     }
   );
+}
+
+export function useIsFetchingHistory() {
+  const [isFetching, setIsFetching] = useState(true);
+  const [isPolling, setIsPolling] = useState(false);
+  const { getRequestContext } = useCTW();
+  const patient = usePatient();
+  useEffect(() => {
+    async function poll() {
+      if (patient.data && !isPolling) {
+        setIsPolling(true);
+        const requestContext = await getRequestContext();
+        await pollPatientHistory(requestContext, patient.data.id);
+        setIsFetching(false);
+      }
+    }
+    void poll();
+  }, [getRequestContext, patient, isPolling]);
+  return isFetching;
+}
+
+async function pollPatientHistory(requestContext: CTWRequestContext, patientId: string) {
+  try {
+    let isDone = false;
+    do {
+      await sleep(1000); // poll every 1 sec
+      const response = (await getBuilderRefreshHistoryMessages({
+        requestContext,
+        patientId,
+      })) as PatientHistoryJobResponse;
+
+      isDone = response.data[0]?.attributes.providers.every(
+        (provider) =>
+          provider.status === "done" ||
+          provider.status === "error" ||
+          provider.status === "done_with_errors"
+      );
+    } while (!isDone);
+  } catch (e) {
+    Telemetry.logError(e as Error, "Failed fetching patient history details");
+    throw new Error(`Failed fetching patient history details for patient: ${e}`);
+  }
+}
+
+function sleep(ms: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 }
