@@ -61,10 +61,6 @@ export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
     return undefined;
   }
 
-  get dateForSort() {
-    return this.encounterDate || this.dateCreated;
-  }
-
   get custodian(): string | undefined {
     const organizationName = findReference(
       "Organization",

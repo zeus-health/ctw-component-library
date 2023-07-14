@@ -90,11 +90,18 @@ const DetailSummary = ({
   >
     <div className="ctw-flex ctw-items-center ctw-justify-between ctw-rounded-lg ctw-bg-bg-white ctw-p-3 ctw-text-left ctw-outline ctw-outline-1 ctw-outline-bg-dark">
       <div className="ctw-flex ctw-space-x-3">
-        {date && <div className="ctw-min-w-[5rem]">{date}</div>}
-        <div>
-          <div className="ctw-font-semibold ctw-text-content-black">{title}</div>
-          <div className="ctw-text-content-light">{subtitle}</div>
+        <div className="ctw-min-w-[5rem]">
+          {date ?? <span className="ctw-text-content-lighter">Unknown</span>}
         </div>
+        {(title || subtitle) && (
+          <div>
+            <div className="ctw-font-semibold ctw-text-content-black">{title}</div>
+            <div className="ctw-text-content-light">{subtitle}</div>
+          </div>
+        )}
+        {/* Show unknown in the title spot if we don't have one AND if we aren't already
+            showing "Unknown" in the date spot. */}
+        {!title && !subtitle && date && <div className="ctw-text-content-lighter">Unknown</div>}
       </div>
       <div className="ctw-flex ctw-items-center ctw-space-x-3">
         {hasDocument && (

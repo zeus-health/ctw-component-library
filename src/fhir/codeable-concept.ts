@@ -3,10 +3,20 @@
 // E.g. find(concepts, codeableConceptPredicate("C")) will find the first
 
 import { SYSTEM_ENRICHMENT } from "./system-urls";
-import { find } from "@/utils/nodash";
+import { compact, find } from "@/utils/nodash";
 
 export const codeableConceptLabel = (concept?: fhir4.CodeableConcept): string =>
   concept?.text ?? concept?.coding?.[0]?.display ?? concept?.coding?.[0]?.code ?? "";
+
+// Returns text if there is one, otherwise returns the first display text or an empty string.
+export const codeableConceptTextOrDisplay = (concept?: fhir4.CodeableConcept): string => {
+  if (concept?.text) {
+    return concept.text;
+  }
+
+  const firstDisplay = compact(concept?.coding?.map((c) => c.display))[0] as string | undefined;
+  return firstDisplay ?? "";
+};
 
 export function findCoding(
   system: string,

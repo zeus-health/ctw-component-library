@@ -1,8 +1,20 @@
-import { rest } from "msw";
+import { graphql, rest } from "msw";
+import { careTeamFQS } from "./care-team-fqs";
 import { careTeam } from "./careteam";
 import { patient } from "./patient";
+import { mockUnleashFQSEnabledGet } from "@/components/content/story-helpers/mocks/requests/requests";
+
+export function setupCareTeamMocks() {
+  return {
+    parameters: {
+      msw: { handlers: { mocks: mockCareTeamRequests() } },
+    },
+  };
+}
 
 function mockCareTeamRequests() {
+  const mockUnleashGet = mockUnleashFQSEnabledGet("careTeam");
+
   const mockPatientGet = rest.get(
     "https://api.dev.zusapi.com/fhir/Patient",
     // Add ctx.delay(750), delay to show loading, we set this to 750ms to be
@@ -14,13 +26,9 @@ function mockCareTeamRequests() {
     res(ctx.status(200), ctx.json(careTeam))
   );
 
-  return [mockPatientGet, mockCareTeamGet];
-}
+  const mockCareTeamFQSPost = graphql.query("CareTeam", (_, res, ctx) =>
+    res(ctx.delay(750), ctx.status(200), ctx.data(careTeamFQS))
+  );
 
-export function setupCareTeamMocks() {
-  return {
-    parameters: {
-      msw: { handlers: { mocks: mockCareTeamRequests() } },
-    },
-  };
+  return [mockPatientGet, mockCareTeamGet, mockUnleashGet, mockCareTeamFQSPost];
 }
