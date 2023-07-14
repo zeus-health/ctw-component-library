@@ -105,23 +105,21 @@ export const ObservationsColumns = (): TableColumn<ObservationModel>[] => {
                 Trends
               </button>
               {isTrendsShown &&
-                model.trends.map((trend) => {
-                  let fontWeight = "";
-                  if (trend.id === model.id) {
-                    fontWeight = "ctw-font-bold";
-                  }
-                  return (
+                model.trends.map((trend) => (
+                  <div
+                    key={trend.id}
+                    className="ctw-relative ctw-clear-both ctw-columns-2 ctw-py-px"
+                  >
                     <div
-                      key={trend.id}
-                      className="ctw-relative ctw-clear-both ctw-columns-2 ctw-py-px"
+                      className={cx("ctw-relative ctw-top-1 ctw-text-sm", {
+                        "ctw-font-bold": trend.id === model.id,
+                      })}
                     >
-                      <div className={`${fontWeight} ctw-relative ctw-top-1 ctw-text-sm`}>
-                        {trend.effectiveStart}
-                      </div>
-                      <BubbleIcon result={model.value} className={trend.acceptedInterpretations} />
+                      {trend.effectiveStart}
                     </div>
-                  );
-                })}
+                    <BubbleIcon result={model.value} className={trend.acceptedInterpretations} />
+                  </div>
+                ))}
             </div>
           )}
         </div>
