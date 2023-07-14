@@ -12,6 +12,7 @@ import { conditionSortOptions, defaultConditionSort } from "./helpers/sorts";
 import { useToggleRead } from "../hooks/use-toggle-read";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
+import { EmptyTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { RowActionsProps } from "@/components/core/table/table";
@@ -40,6 +41,13 @@ function PatientConditionsAllComponent({
     defaultSort: defaultConditionSort,
     records: query.data,
   });
+
+  const isEmptyQuery = query.data.length === 0;
+  const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
+
+  const empty = (
+    <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="conditions" />
+  );
 
   const openDetails = useConditionDetailsDrawer({
     canRemove: !readOnly && !onlyAllowAddOutsideConditions,
@@ -83,6 +91,7 @@ function PatientConditionsAllComponent({
         onRowClick={openDetails}
         RowActions={rowActions}
         enableDismissAndReadActions
+        emptyMessage={empty}
       />
     </div>
   );
