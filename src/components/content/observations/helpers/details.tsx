@@ -64,19 +64,19 @@ export const Component = ({ diagnosticReport, observationTrends }: ObservationDe
                 // @ts-ignore: Unreachable code error
                 // We are disabling it for this line as the FHIR spec doesn't support this
                 // customized result field that now has the observation resource and not only just a reference.
-                const observation = new ObservationModel(result.resource, {
+                const model = new ObservationModel(result.resource, {
                   [diagnosticReport.id]: diagnosticReport.resource,
                 });
                 if (observationTrends) {
                   let trends = observationTrends.filter((t) =>
-                    observation.resource.code.coding?.some(
+                    model.resource.code.coding?.some(
                       (coding) => coding.code && t.hasSimilarAnalyte(coding.code)
                     )
                   );
                   trends = trends.sort(sortTrends);
-                  observation.trends = trends;
+                  model.trends = trends;
                 }
-                return observation;
+                return model;
               })
             )
           : compact(
@@ -90,9 +90,19 @@ export const Component = ({ diagnosticReport, observationTrends }: ObservationDe
                 if (!observation) {
                   return undefined;
                 }
-                return new ObservationModel(observation, {
+                const model = new ObservationModel(observation, {
                   [diagnosticReport.id]: diagnosticReport.resource,
                 });
+                if (observationTrends) {
+                  let trends = observationTrends.filter((t) =>
+                    model.resource.code.coding?.some(
+                      (coding) => coding.code && t.hasSimilarAnalyte(coding.code)
+                    )
+                  );
+                  trends = trends.sort(sortTrends);
+                  model.trends = trends;
+                }
+                return model;
               })
             )
       );
