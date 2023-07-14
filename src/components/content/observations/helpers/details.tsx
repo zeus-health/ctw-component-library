@@ -150,8 +150,5 @@ function sortTrends(a: ObservationModel, b: ObservationModel) {
   if (a.effectiveStartRaw > b.effectiveStartRaw) {
     return 1;
   }
-  if (a.effectiveStartRaw > b.effectiveStartRaw) {
-    return 1;
-  }
   return 0;
 }
