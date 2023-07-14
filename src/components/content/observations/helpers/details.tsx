@@ -68,13 +68,7 @@ export const Component = ({ diagnosticReport, observationTrends }: ObservationDe
                   [diagnosticReport.id]: diagnosticReport.resource,
                 });
                 if (observationTrends) {
-                  let trends = observationTrends.filter((t) =>
-                    model.resource.code.coding?.some(
-                      (coding) => coding.code && t.hasSimilarAnalyte(coding.code)
-                    )
-                  );
-                  trends = trends.sort(sortTrends);
-                  model.trends = trends;
+                  model.trends = filterAndSortTrends(model, observationTrends);
                 }
                 return model;
               })
@@ -94,13 +88,7 @@ export const Component = ({ diagnosticReport, observationTrends }: ObservationDe
                   [diagnosticReport.id]: diagnosticReport.resource,
                 });
                 if (observationTrends) {
-                  let trends = observationTrends.filter((t) =>
-                    model.resource.code.coding?.some(
-                      (coding) => coding.code && t.hasSimilarAnalyte(coding.code)
-                    )
-                  );
-                  trends = trends.sort(sortTrends);
-                  model.trends = trends;
+                  model.trends = filterAndSortTrends(model, observationTrends);
                 }
                 return model;
               })
@@ -137,18 +125,24 @@ export const Component = ({ diagnosticReport, observationTrends }: ObservationDe
 
 export const ObservationDetails = withErrorBoundary(Component, "Observations");
 
-function sortTrends(a: ObservationModel, b: ObservationModel) {
-  if (!a.effectiveStartRaw && !b.effectiveStartRaw) {
+function filterAndSortTrends(model: ObservationModel, trends: ObservationModel[]) {
+  let filtered = trends.filter((t) =>
+    model.resource.code.coding?.some((coding) => coding.code && t.hasSimilarAnalyte(coding.code))
+  );
+  filtered = filtered.sort((a, b) => {
+    if (!a.effectiveStartRaw && !b.effectiveStartRaw) {
+      return 0;
+    }
+    if (!a.effectiveStartRaw) {
+      return -1;
+    }
+    if (!b.effectiveStartRaw) {
+      return 1;
+    }
+    if (a.effectiveStartRaw > b.effectiveStartRaw) {
+      return 1;
+    }
     return 0;
-  }
-  if (!a.effectiveStartRaw) {
-    return -1;
-  }
-  if (!b.effectiveStartRaw) {
-    return 1;
-  }
-  if (a.effectiveStartRaw > b.effectiveStartRaw) {
-    return 1;
-  }
-  return 0;
+  });
+  return filtered;
 }
