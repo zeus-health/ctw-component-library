@@ -68,7 +68,7 @@ function getHistoryEntry(condition: ConditionModel): HistoryEntryProps {
     },
     {
       label: "Category",
-      value: startCase(condition.categories[0]),
+      value: startCase(condition.category),
     },
     {
       label: "Note",
@@ -113,7 +113,7 @@ const valuesToDedupeOn = (condition: ConditionModel) => [
   condition.verificationStatus,
   condition.recordedDate,
   condition.notes,
-  condition.categories[0],
+  condition.category,
   condition.onset,
   condition.abatement,
   condition.encounter,
