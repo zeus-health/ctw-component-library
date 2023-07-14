@@ -5,9 +5,9 @@ export type SpinnerProps = {
   size?: number;
 };
 
-export const Spinner = ({ className, size = 4 }: SpinnerProps) => (
+export const Spinner = ({ className }: SpinnerProps) => (
   <svg
-    className={cx(`ctw-inline ctw-h-${size} ctw-w-${size} ctw-animate-spin`, className)}
+    className={cx(`ctw-inline ctw-h-4 ctw-w-4 ctw-animate-spin`, className)}
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
     viewBox="0 0 24 24"

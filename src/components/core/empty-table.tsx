@@ -78,7 +78,7 @@ function EmptyTableFetchingHistory(props: EmptyTableProps) {
       <div className="ctw-space-y-3">
         <div className="ctw-space-y-6">
           <div className="ctw-flex ctw-justify-center">
-            <Spinner className="ctw-text-icon-light" size={12} />
+            <Spinner className="ctw-h-12 ctw-w-12 ctw-text-icon-light" />
           </div>
           <div className="ctw-text-center ctw-text-xl ctw-font-medium">Retrieving records now</div>
         </div>
