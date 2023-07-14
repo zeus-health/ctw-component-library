@@ -47,6 +47,10 @@ export const Basic: StoryObj<Props> = {
   ...setupConditionMocks({ otherConditions, patientConditions }),
 };
 
+export const BasicFQS: StoryObj<Props> = {
+  ...setupConditionMocks({ otherConditions, patientConditions }),
+};
+
 export const Empty: StoryObj<Props> = {
   ...setupConditionMocks({
     otherConditions: emptyConditions,

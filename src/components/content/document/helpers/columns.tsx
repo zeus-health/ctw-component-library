@@ -1,37 +1,30 @@
+import { ResourceTitleColumn } from "../../resource/helpers/resource-title-column";
 import { TableColumn } from "@/components/core/table/table-helpers";
-import { ViewFHIR } from "@/components/core/view-fhir";
 import { DocumentModel } from "@/fhir/models/document";
 
-export const patientDocumentColumns = (includeViewFhirResource = false) => {
-  const documentColumns: TableColumn<DocumentModel>[] = [
-    {
-      widthPercent: 20,
-      minWidth: 100,
-      title: "Date Created",
-      render: (document) => <div className="group-hover:ctw-underline">{document.dateCreated}</div>,
-    },
-    {
-      widthPercent: 30,
-      minWidth: 200,
-      title: "Title",
-      render: (document) => <div>{document.title}</div>,
-    },
-    {
-      widthPercent: 30,
-      minWidth: 200,
-      title: "Managing Organization",
-      render: (document) => <div>{document.custodian}</div>,
-    },
-  ];
-  if (includeViewFhirResource) {
-    documentColumns.push({
-      widthPercent: 20,
-      minWidth: 150,
-      render: (document: DocumentModel) => (
-        <ViewFHIR name="Document Resource" resource={document.resource} />
-      ),
-    });
-  }
-
-  return documentColumns;
-};
+export const patientDocumentColumns: TableColumn<DocumentModel>[] = [
+  {
+    widthPercent: 35,
+    minWidth: 200,
+    title: "Title",
+    render: (document) => <ResourceTitleColumn title={document.title} />,
+  },
+  {
+    widthPercent: 15,
+    minWidth: 128,
+    title: "Encounter Date",
+    dataIndex: "encounterDate",
+  },
+  {
+    widthPercent: 15,
+    minWidth: 128,
+    title: "Date Retrieved",
+    dataIndex: "dateCreated",
+  },
+  {
+    widthPercent: 35,
+    minWidth: 200,
+    title: "Author",
+    render: (document) => <div>{document.custodian}</div>,
+  },
+];

@@ -1,7 +1,9 @@
+import { useIncludeBasics } from "./basic";
 import { searchCommonRecords } from "./search-helpers";
 import { PatientModel, useFeatureFlaggedQueryWithPatient } from "..";
 import { applyDocumentFilters } from "@/components/content/document/helpers/filters";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
+import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import { DocumentReferenceGraphqlResponse, documentsQuery } from "@/services/fqs/queries/documents";
 import { orderBy } from "@/utils/nodash";
@@ -9,7 +11,9 @@ import { QUERY_KEY_PATIENT_DOCUMENTS } from "@/utils/query-keys";
 import { Telemetry } from "@/utils/telemetry";
 
 export function usePatientDocuments() {
-  return useFeatureFlaggedQueryWithPatient(
+  const fqs = useFQSFeatureToggle("documents");
+
+  const patientDocumentsQuery = useFeatureFlaggedQueryWithPatient(
     QUERY_KEY_PATIENT_DOCUMENTS,
     [],
     "documents",
@@ -17,6 +21,8 @@ export function usePatientDocuments() {
     getDocumentFromFQS,
     getDocumentFromODS
   );
+
+  return useIncludeBasics(patientDocumentsQuery, fqs);
 }
 
 async function getDocumentFromFQS(requestContext: CTWRequestContext, patient: PatientModel) {
@@ -41,7 +47,7 @@ async function getDocumentFromFQS(requestContext: CTWRequestContext, patient: Pa
       ["desc"]
     );
     if (results.length === 0) {
-      Telemetry.countMetric("req.count.documents.none", 0, ["fqs"]);
+      Telemetry.countMetric("req.count.documents.none", 1, ["fqs"]);
     }
     Telemetry.histogramMetric("req.count.documents", results.length, ["fqs"]);
     return results;

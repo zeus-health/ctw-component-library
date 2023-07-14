@@ -1,6 +1,6 @@
 {
   "name": "@zus-health/ctw-component-library",
-  "version": "1.27.5",
+  "version": "1.33.0",
   "license": "MIT",
   "type": "module",
   "engines": {
@@ -127,7 +127,7 @@
     "@heroicons/react": "^1.0.6",
     "@radix-ui/react-dropdown-menu": "2.0.2",
     "@react-hook/resize-observer": "^1.2.6",
-    "@tanstack/react-query": "^4.3.9",
+    "@tanstack/react-query": "^4.29.23",
     "@unleash/proxy-client-react": "^3.6.0",
     "@xmldom/xmldom": "^0.8.6",
     "date-fns": "^2.30.0",

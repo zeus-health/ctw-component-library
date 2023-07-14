@@ -1,6 +1,7 @@
-import { rest } from "msw";
+import { graphql, rest } from "msw";
+import { diagnosticReport } from "./diagnostic-reports";
+import { diagnosticReportFQS } from "./diagnostic-reports-fqs";
 import { patient } from "./patient";
-import { diagnosticReport } from "@/components/content/observations/story-helpers/mocks/diagnostic-reports";
 import { mockUnleashFQSEnabledGet } from "@/components/content/story-helpers/mocks/requests/requests";
 
 export function setupObservationMocks() {
@@ -29,5 +30,9 @@ function mockRequests() {
     (req, res, ctx) => res(ctx.status(200), ctx.delay(250), ctx.json(diagnosticReport))
   );
 
-  return [mockUnleashGet, mockPatientGet, mockDiagnosticReportGet];
+  const mockDiagnosticReportFQSPost = graphql.query("DiagnosticReport", (_, res, ctx) =>
+    res(ctx.delay(750), ctx.status(200), ctx.data(diagnosticReportFQS))
+  );
+
+  return [mockUnleashGet, mockPatientGet, mockDiagnosticReportGet, mockDiagnosticReportFQSPost];
 }

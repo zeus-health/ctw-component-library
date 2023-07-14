@@ -54,7 +54,12 @@ export async function createOrEditFhirResource(
     // Wait for FQS to have the latest version of the resource.
     // This way callers can safely refetch/invalidateQueries
     // and be sure to get fresh data from FQS.
-    if (isFHIRDomainResource(response) && response.id && response.meta?.lastUpdated) {
+    if (
+      response.resourceType !== "Basic" && // explicit carve-out for Basics until we are querying FQS for them
+      isFHIRDomainResource(response) &&
+      response.id &&
+      response.meta?.lastUpdated
+    ) {
       await longPollFQS(
         requestContext,
         resource.resourceType,

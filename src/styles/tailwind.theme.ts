@@ -20,9 +20,9 @@ export const TailwindTheme = {
     white: "#fff",
     black: "#000",
     primary: {
-      light: "#F3E8FF",
-      main: "#A855F7",
-      dark: "#7E22CE",
+      light: "#D0FBE2",
+      main: "#008052",
+      dark: "#036240",
     },
     icon: {
       default: "#374151",

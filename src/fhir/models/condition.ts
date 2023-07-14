@@ -19,6 +19,7 @@ import {
 } from "@/components/content/forms/actions/conditions";
 import {
   codeableConceptLabel,
+  codeableConceptTextOrDisplay,
   CodePreference,
   findCoding,
   findCodingByOrderOfPreference,
@@ -97,8 +98,13 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
     return this.resource.bodySite?.map((bodySite) => codeableConceptLabel(bodySite)) || [];
   }
 
-  get categories(): string[] {
-    return this.resource.category?.map((category) => codeableConceptLabel(category)) || [];
+  // Returns the first category text or display.
+  get category(): string {
+    return (
+      compact(
+        this.resource.category?.map((category) => codeableConceptTextOrDisplay(category))
+      )[0] ?? ""
+    );
   }
 
   get ccsChapter(): string | undefined {

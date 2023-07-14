@@ -57,7 +57,7 @@ export const PatientHistoryTable = withErrorBoundary(
     // is no data because the value of `usePatientsTable()` hasn't settled yet.
     useEffect(() => {
       if (!isFetching && responsePatients) {
-        // filter out patient who are do not exist.
+        // filter out records where a patient was not found (eg. the patient was deleted after the history request was made)
         setPatients(responsePatients.filter((patient) => patient.patient));
       }
     }, [responsePatients, responseTotal, isError, isFetching]);

@@ -1,10 +1,13 @@
 import cx from "classnames";
 import { useMemo, useRef } from "react";
 import { patientDocumentColumns } from "./helpers/columns";
+import { defaultDocumentsFilters, documentsFilter } from "./helpers/filters";
+import { defaultDocumentSort, documentSortOptions } from "./helpers/sorts";
 import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
+import { EmptyTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { RowActionsProps } from "@/components/core/table/table";
@@ -22,19 +25,24 @@ export type PatientDocumentsProps = {
 
 function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocumentsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { featureFlags } = useCTW();
   const { enabled } = useFQSFeatureToggle("documents");
 
   const patientDocumentQuery = usePatientDocuments();
   const rowActions = useMemo(() => getRowActions({ onAddToRecord }), [onAddToRecord]);
-  const { viewOptions, defaultView } = getDateRangeView<DocumentModel>("dateCreated");
-  const { data, setViewOption } = useFilteredSortedData({
-    defaultView,
+  const { viewOptions, allTime } = getDateRangeView<DocumentModel>("dateCreated");
+  const { data, setViewOption, setSort, setFilters } = useFilteredSortedData({
+    defaultSort: defaultDocumentSort,
+    defaultFilters: defaultDocumentsFilters,
+    defaultView: allTime,
     records: patientDocumentQuery.data,
   });
 
+  const isEmptyQuery = patientDocumentQuery.data.length === 0;
+  const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
+
   const openDetails = useResourceDetailsDrawer({
-    header: (m) => `${m.dateCreated} - ${m.title}`,
+    header: (m) => m.title,
+    subHeader: (m) => m.encounterDate,
     details: documentData,
     enableFQS: enabled,
   });
@@ -46,19 +54,32 @@ function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocument
       className={cx(className, "ctw-scrollable-pass-through-height")}
     >
       <ResourceTableActions
+        filterOptions={{
+          onChange: setFilters,
+          defaultState: defaultDocumentsFilters,
+          filters: documentsFilter(),
+        }}
+        sortOptions={{
+          defaultSort: defaultDocumentSort,
+          options: documentSortOptions,
+          onChange: setSort,
+        }}
         viewOptions={{
           onChange: setViewOption,
           options: viewOptions,
-          defaultView,
+          defaultView: allTime,
         }}
       />
       <ResourceTable
         isLoading={patientDocumentQuery.isLoading}
         data={data}
-        emptyMessage="There are no documents available."
-        columns={patientDocumentColumns(featureFlags?.enableViewFhirButton)}
+        emptyMessage={
+          <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="documents" />
+        }
+        columns={patientDocumentColumns}
         onRowClick={openDetails}
-        rowActions={rowActions}
+        RowActions={rowActions}
+        enableDismissAndReadActions
       />
     </div>
   );
@@ -101,18 +122,17 @@ const RowActions = ({ record, onAddToRecord }: RowActionsProps2) => {
 export const PatientDocuments = withErrorBoundary(PatientDocumentsComponent, "PatientDocuments");
 
 const documentData = (document: DocumentModel) => [
-  { label: "status", value: document.status },
-  { label: "docStatus", value: document.docStatus },
-  { label: "Managing Organization", value: document.custodian },
+  { label: "Date Retrieved", value: document.dateCreated },
+  { label: "Author", value: document.custodian },
   {
     label: "Section Display",
     value: document.sectionDisplays && (
-      <div>
+      <ul className="ctw-m-0 ctw-list-disc ctw-pl-4">
         {document.sectionDisplays.map((item, index) => (
           // eslint-disable-next-line react/no-array-index-key
-          <div key={item + index}>{item}</div>
+          <li key={item + index}>{item}</li>
         ))}
-      </div>
+      </ul>
     ),
   },
 ];

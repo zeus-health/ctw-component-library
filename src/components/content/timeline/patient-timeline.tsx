@@ -8,7 +8,7 @@ import { useObservationsDetailsDrawer } from "../observations/helpers/drawer";
 import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { ResourceTable } from "@/components/content/resource/resource-table";
-import { useCTW } from "@/components/core/providers/use-ctw";
+import { EmptyTable } from "@/components/core/empty-table";
 import { TimelineEventModel } from "@/fhir/models/timeline-event";
 import { useTimelineEvents } from "@/fhir/timeline-event";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
@@ -20,14 +20,17 @@ export type PatientTimelineProps = {
 export function PatientTimeline({ className }: PatientTimelineProps) {
   const timelineEventsQuery = useTimelineEvents();
   const containerRef = useRef<HTMLDivElement>(null);
-  const { featureFlags } = useCTW();
-  const { viewOptions, defaultView } = getDateRangeView<TimelineEventModel>("date");
+  const { viewOptions, past6Months } = getDateRangeView<TimelineEventModel>("date");
   const { data, setFilters, setSort, setViewOption } = useFilteredSortedData({
-    defaultView,
+    defaultView: past6Months,
     defaultFilters: defaultTimelineFilters,
     defaultSort: defaultTimelineSort,
     records: timelineEventsQuery.data,
   });
+
+  const isEmptyQuery = timelineEventsQuery.data.length === 0;
+  const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
+
   const openEncounterDetails = usePatientEncounterDetailsDrawer();
   const openDiagnosticReportDetails = useObservationsDetailsDrawer();
 
@@ -37,7 +40,7 @@ export function PatientTimeline({ className }: PatientTimelineProps) {
         viewOptions={{
           onChange: setViewOption,
           options: viewOptions,
-          defaultView,
+          defaultView: past6Months,
         }}
         filterOptions={{
           onChange: setFilters,
@@ -54,8 +57,13 @@ export function PatientTimeline({ className }: PatientTimelineProps) {
         showTableHead={false}
         isLoading={timelineEventsQuery.isLoading}
         data={data}
-        emptyMessage="There are no timeline records available."
-        columns={patientTimelineColumns(featureFlags?.enableViewFhirButton)}
+        emptyMessage={
+          <EmptyTable
+            hasZeroFilteredRecords={hasZeroFilteredRecords}
+            resourceName="timeline records"
+          />
+        }
+        columns={patientTimelineColumns}
         onRowClick={(record) => {
           switch (record.model.kind) {
             case "Encounter":

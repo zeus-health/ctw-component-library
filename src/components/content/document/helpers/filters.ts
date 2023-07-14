@@ -1,3 +1,5 @@
+import { dismissFilter } from "../../resource/filters";
+import { FilterChangeEvent, FilterItem } from "@/components/core/filter-bar/filter-bar-types";
 import { DocumentModel } from "@/fhir/models/document";
 import { isEqual, uniqWith } from "@/utils/nodash";
 
@@ -24,6 +26,9 @@ const isViewablePreRainbow = (doc: fhir4.DocumentReference) => {
   return creationDate < RAINBOW_CUTOVER_DATE;
 };
 
+// DA creates document references for sections of a CDA and the full CDA.
+// We want to filter out the ones for sections, luckily those
+// will have at most 1 category.
 const isViewablePostRainbow = (docRef: fhir4.DocumentReference) => {
   const document = new DocumentModel(docRef);
 
@@ -55,7 +60,15 @@ export const applyDocumentFilters = (data: fhir4.DocumentReference[]) => {
 };
 
 const valuesToDedupeOn = (document: DocumentModel) => [
+  document.encounterDate,
   document.dateCreated,
   document.custodian,
   document.title,
 ];
+
+export function documentsFilter(): FilterItem[] {
+  const filters: FilterItem[] = [dismissFilter];
+  return filters;
+}
+
+export const defaultDocumentsFilters: FilterChangeEvent = {};

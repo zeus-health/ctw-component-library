@@ -7,6 +7,7 @@ import { Drawer } from "@/components/core/drawer";
 import { Loading } from "@/components/core/loading";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
 import { useCTW } from "@/components/core/providers/use-ctw";
+import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { getBinaryId } from "@/fhir/binaries";
 import { DocumentModel } from "@/fhir/models/document";
 import { FHIRModel } from "@/fhir/models/fhir-model";
@@ -79,6 +80,7 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
   const { getRequestContext } = useCTW();
   const fqsProvenances = useFQSFeatureToggle("provenances");
   const history = getHistory && getHistory(model);
+  const userBuilderId = useUserBuilderId();
 
   // We optionally look for any associated binary CCDAs
   // if getSourceDocument is true.
@@ -141,7 +143,7 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
         <div className="ctw-flex ctw-justify-between">
           <Drawer.CloseButton onClose={onClose} label="Close" />
           <div className="ctw-space-x-3">
-            {!readOnly && onRemove && (
+            {!readOnly && onRemove && model.ownedByBuilder(userBuilderId) && (
               <button
                 type="button"
                 className="ctw-btn-default ctw-w-24"
@@ -157,7 +159,7 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
               </button>
             )}
 
-            {!readOnly && onEdit && (
+            {!readOnly && onEdit && model.ownedByBuilder(userBuilderId) && (
               <button
                 type="button"
                 className="ctw-btn-primary ctw-w-24"
