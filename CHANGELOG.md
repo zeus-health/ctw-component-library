@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.32.1
+
+### Patch Changes
+
+- b9f02c2c: Update sorting for document component.
+- 922acdaf: Improve surfacing category text/display and avoid showing category codes.
+
 ## 1.32.0
 
 ### Minor Changes
