@@ -76,4 +76,20 @@ export const observationsColumns: TableColumn<ObservationModel>[] = [
       </div>
     ),
   },
+  {
+    title: "Trends",
+    render: (model) => (
+      <div className="ctw-flex ctw-text-sm ctw-font-normal">
+        {model.trends.length > 1 && (
+          <div className="ctw-font-normal">
+            Trends:
+            {model.trends.forEach((t) => {
+              console.log("trend", t);
+              return t.kind;
+            })}
+          </div>
+        )}
+      </div>
+    ),
+  },
 ];
