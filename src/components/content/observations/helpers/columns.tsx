@@ -111,7 +111,7 @@ export const ObservationsColumns = (): TableColumn<ObservationModel>[] => {
                     className="ctw-relative ctw-clear-both ctw-columns-2 ctw-py-px"
                   >
                     <div
-                      className={cx("ctw-relative ctw-top-1 ctw-text-sm", {
+                      className={cx("ctw-relative ctw-left-4 ctw-top-1 ctw-text-sm", {
                         "ctw-font-bold": trend.id === model.id,
                       })}
                     >
