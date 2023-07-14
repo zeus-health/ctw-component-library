@@ -42,7 +42,7 @@ function PatientConditionsAllComponent({
     records: query.data,
   });
 
-  const isEmptyQuery = query.data?.length === 0;
+  const isEmptyQuery = query.data.length === 0;
   const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
 
   const empty = (

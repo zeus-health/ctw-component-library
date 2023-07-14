@@ -36,7 +36,7 @@ function PatientMedicationsAllComponent({
     records: query.allMedications,
   });
 
-  const isEmptyQuery = query.data?.length === 0;
+  const isEmptyQuery = query.allMedications.length === 0;
   const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
   const empty = (
     <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="medications" />
