@@ -65,6 +65,7 @@ export const patientMedicationsAllColumns = (
     render: (med) => (
       <ResourceTitleColumn
         title={med.display}
+        capitalizeTitle={false}
         subTitle={med.dosage}
         ownedByBuilder={med.ownedByBuilder(builderId)}
       />
