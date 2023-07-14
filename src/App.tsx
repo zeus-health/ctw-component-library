@@ -117,17 +117,16 @@ const components: DemoComponent[] = [
         conditionsOutsideProps={{
           hideRequestRecords: true,
         }}
-        conditionsAllProps={{}}
+        conditionsAllProps={{ onlyAllowAddOutsideConditions: true }}
         includePatientDemographicsForm={false}
         resources={[
-          "allergies",
           "conditions-all",
+          "medications-all",
+          "diagnostic-reports",
+          "allergies",
           "documents",
           "immunizations",
           "care-team",
-          "medications",
-          "medications-outside",
-          "diagnostic-reports",
         ]}
         title="ZAP"
       />

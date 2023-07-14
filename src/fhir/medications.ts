@@ -126,10 +126,10 @@ function applySearchFiltersToResponse(
 }
 
 /* Note when filtering the bundle may contain data that will no longer be in the returned medications. */
-export async function getBuilderMedications(
+export async function getBuilderMedicationsODS(
   requestContext: CTWRequestContext,
   patient: PatientModel
-): Promise<MedicationResults> {
+) {
   const searchFilters = {
     informationSourceNot: "Patient", // exclude medication statements where the patient is the information source
   } as MedicationFilter;
@@ -145,16 +145,16 @@ export async function getBuilderMedications(
 
     Telemetry.histogramMetric("req.count.builder_medications", medications.length);
 
-    return { bundle: response.bundle, medications, basic: [] };
+    return medications.map((m) => new MedicationStatementModel(m));
   } catch (e) {
     throw errorResponse("Failed fetching medications for patient", e);
   }
 }
 
-export async function getBuilderMedicationStatementsFQS(
+export async function getBuilderMedicationsFQS(
   requestContext: CTWRequestContext,
   patient: PatientModel
-): Promise<MedicationResults> {
+) {
   try {
     const searchFilters = {
       informationSourceNot: "Patient", // exclude medication statements where the patient is the information source
@@ -185,14 +185,13 @@ export async function getBuilderMedicationStatementsFQS(
       nodes,
       requestContext.contextBuilderId || requestContext.builderId
     );
-    const medStatements = setupMedicationStatementModelsWithFQS(nodes);
+    const medStatements = nodes.map((n) => new MedicationStatementModel(n));
     const models = applySearchFiltersToFQSResponse(medStatements, searchFilters, false);
     if (models.length === 0) {
       Telemetry.countMetric("req.count.builder_medications.none", 1, ["fqs"]);
     }
     Telemetry.histogramMetric("req.count.builder_medications", models.length, ["fqs"]);
-    const results = models.map((x) => x.resource);
-    return { bundle: undefined, medications: results, basic: [] };
+    return models;
   } catch (e) {
     throw Telemetry.logError(
       e as Error,
@@ -415,12 +414,6 @@ export async function getMedicationStatements(
   }
 }
 
-function setupMedicationStatementModelsWithFQS(
-  medicationStatementResources: fhir4.MedicationStatement[]
-): MedicationStatementModel[] {
-  return medicationStatementResources.map((ms) => new MedicationStatementModel(ms));
-}
-
 function applySearchFiltersToFQSResponse(
   medicationStatements: MedicationStatementModel[],
   searchFilters: MedicationFilter = {},
@@ -448,10 +441,10 @@ function applySearchFiltersToFQSResponse(
 
 /* Note when filtering the bundle may contain data that will no longer 
 be in the returned medications, such as medications with no RxNorm code. */
-export async function getActiveMedications(
+export async function getSummaryMedicationsODS(
   requestContext: CTWRequestContext,
   patient: PatientModel
-): Promise<MedicationResults> {
+) {
   const searchFilters = {
     _revinclude: "Basic:subject",
   } as Record<string, string>;
@@ -465,10 +458,10 @@ export async function getActiveMedications(
 
     const medications = applySearchFiltersToResponse(response, searchFilters, true);
     if (medications.length === 0) {
-      Telemetry.countMetric("req.count.active_medications.none");
+      Telemetry.countMetric("req.count.summary_medications.none");
     }
-    Telemetry.histogramMetric("req.count.active_medications", medications.length);
-    return { bundle: response.bundle, medications, basic: [] };
+    Telemetry.histogramMetric("req.count.summary_medications", medications.length);
+    return medications.map((m) => new MedicationStatementModel(m));
   } catch (e) {
     throw errorResponse("Failed fetching medications for patient", e);
   }
@@ -476,10 +469,10 @@ export async function getActiveMedications(
 
 /* Note when filtering the bundle may contain data that will no longer 
 be in the returned medications, such as medications with no RxNorm code. */
-export async function getActiveMedicationsFQS(
+export async function getSummaryMedicationsFQS(
   requestContext: CTWRequestContext,
   patient: PatientModel
-): Promise<MedicationResults> {
+) {
   try {
     const graphClient = createGraphqlClient(requestContext);
     const { data } = await fqsRequest<MedicationStatementGraphqlResponse>(
@@ -503,13 +496,11 @@ export async function getActiveMedicationsFQS(
       }
     );
     const nodes = data.MedicationStatementConnection.edges.map((x) => x.node);
-    const models = setupMedicationStatementModelsWithFQS(nodes);
-    if (models.length === 0) {
-      Telemetry.countMetric("req.count.active_medications.none", 1, ["fqs"]);
+    if (nodes.length === 0) {
+      Telemetry.countMetric("req.count.summary_medications.none", 1, ["fqs"]);
     }
-    Telemetry.histogramMetric("req.count.active_medications", models.length, ["fqs"]);
-    const results = models.map((x) => x.resource);
-    return { bundle: undefined, medications: results, basic: [] };
+    Telemetry.histogramMetric("req.count.summary_medications", nodes.length, ["fqs"]);
+    return nodes.map((n) => new MedicationStatementModel(n));
   } catch (e) {
     throw Telemetry.logError(
       e as Error,

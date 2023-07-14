@@ -4,18 +4,13 @@ import { FHIRModel } from "@/fhir/models/fhir-model";
 
 export type UnreadNotificationProps = {
   className?: string;
-  query: {
-    isLoading: boolean;
-    isError: boolean;
-    isFetching: boolean;
-    data: FHIRModel<fhir4.Resource>[];
-  };
+  data: FHIRModel<fhir4.Resource>[];
 };
 
-export const UnreadNotification = ({ className, query }: UnreadNotificationProps) => {
+export const UnreadNotification = ({ className, data }: UnreadNotificationProps) => {
   const userBuilderId = useUserBuilderId();
 
-  const unreadOutsideRecords = query.data.filter(
+  const unreadOutsideRecords = data.filter(
     (record) => !record.isDismissed && !record.isRead && !record.ownedByBuilder(userBuilderId)
   );
 

@@ -9,5 +9,5 @@ export const UnreadImmunizationsNotification = ({
   className,
 }: UnreadImmunizationsNotificationProps) => {
   const query = usePatientImmunizations();
-  return <UnreadNotification className={className} query={query} />;
+  return <UnreadNotification className={className} data={query.data} />;
 };
