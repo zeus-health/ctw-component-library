@@ -11,6 +11,7 @@ import { historyIronDeficiency } from "./history-iron-deficiency";
 import { historyOralContraception } from "./history-oral-contraception";
 import { patient } from "./patient";
 import { patientHistoryMessage } from "./patient-history-message";
+import { patientHistoryMessageNotDone } from "./patient-history-message-not-done";
 import { ProvenanceCondition } from "./provenance-conditions";
 import {
   getMockBasicPost,
@@ -91,9 +92,16 @@ function mockRequests() {
     (_, res, ctx) => res(ctx.delay(750), ctx.status(200), ctx.json(patient))
   );
 
+  let count = 0;
   const mockPatientHistoryGet = rest.get(
     "https://api.dev.zusapi.com/patient-history/jobs",
-    (_, res, ctx) => res(ctx.status(200), ctx.json(patientHistoryMessage))
+    (req, res, ctx) => {
+      count += 1;
+      if (count < 5) {
+        return res(ctx.status(200), ctx.json(patientHistoryMessageNotDone));
+      }
+      return res(ctx.status(200), ctx.json(patientHistoryMessage));
+    }
   );
 
   const mockProvenancePost = rest.post(

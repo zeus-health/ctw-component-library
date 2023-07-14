@@ -1,7 +1,6 @@
 import { SearchParams } from "fhir-kit-client";
 import { HistoryEntryProps } from "../../resource/helpers/history-entry";
 import { useHistory } from "../../resource/history";
-import { CodingList } from "@/components/core/coding-list";
 import { NotesList } from "@/components/core/notes-list";
 import { ConditionModel } from "@/fhir/models";
 import { capitalize, startCase } from "@/utils/nodash";
@@ -68,10 +67,6 @@ function getHistoryEntry(condition: ConditionModel): HistoryEntryProps {
       value: capitalize(condition.verificationStatus),
     },
     {
-      label: "Recorded Date",
-      value: condition.recordedDate,
-    },
-    {
       label: "Category",
       value: startCase(condition.categories[0]),
     },
@@ -80,8 +75,14 @@ function getHistoryEntry(condition: ConditionModel): HistoryEntryProps {
       value: condition.notes.length !== 0 && <NotesList notes={condition.notes} />,
     },
     {
-      label: "Code",
-      value: <CodingList codings={condition.knownCodings} />,
+      label: "Recorded Code(s)",
+      value: (
+        <div className="ctw-space-y-1">
+          {condition.knownCodings.map((coding) => (
+            <div key={`${coding.system}-${coding.code}`}>{coding.display}</div>
+          ))}
+        </div>
+      ),
     },
     {
       label: "Onset Date",
@@ -101,8 +102,7 @@ function getHistoryEntry(condition: ConditionModel): HistoryEntryProps {
     id: condition.id,
     date: condition.recordedDate,
     versionId: condition.versionId,
-    title: startCase(condition.categories[0]),
-    subtitle: condition.patientOrganizationName,
+    title: condition.patientOrganizationName,
     details: detailData,
   };
 }
