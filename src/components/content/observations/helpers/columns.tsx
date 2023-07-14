@@ -1,3 +1,6 @@
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import cx from "classnames";
 import { BubbleIcon } from "./bubble";
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { DiagnosticReportModel, ObservationModel } from "@/fhir/models";
@@ -83,6 +86,12 @@ export const observationsColumns: TableColumn<ObservationModel>[] = [
         {model.trends.length > 1 && (
           <div className="ctw-pt-1">
             <button type="button" className="ctw-btn-clear">
+              <FontAwesomeIcon
+                icon={faChevronRight}
+                className={cx("ctw-h-3 ctw-w-3 ctw-pr-1", {
+                  "ctw-rotate-90": false,
+                })}
+              />
               Trends
             </button>
             {model.trends.map((trend) => {
