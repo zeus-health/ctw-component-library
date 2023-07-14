@@ -2,16 +2,23 @@ import { ObservationModel, PatientModel } from "./models";
 import { SYSTEM_LOINC, SYSTEM_ZUS_OWNER } from "./system-urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
+import { useTrendingLabsFeatureToggle } from "@/hooks/use-feature-toggle";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import { ObservationGraphqlResponse, observationQuery } from "@/services/fqs/queries/observations";
 import { QUERY_KEY_PATIENT_OBSERVATIONS } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export function usePatientObservations(loincCodes: string[]) {
+  const trendingLabs = useTrendingLabsFeatureToggle();
   return useQueryWithPatient(
     `${QUERY_KEY_PATIENT_OBSERVATIONS}_${loincCodes.join("_")}`,
-    [],
-    withTimerMetric(fetchObservations(loincCodes), "req.timing.basic")
+    [trendingLabs.enabled],
+    trendingLabs.enabled
+      ? withTimerMetric(fetchObservations(loincCodes), "req.timing.observations")
+      : async () =>
+          new Promise<ObservationModel[]>((resolve) => {
+            resolve([]);
+          })
   );
 }
 

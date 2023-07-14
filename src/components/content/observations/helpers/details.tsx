@@ -10,7 +10,7 @@ import { getBinaryId } from "@/fhir/binaries";
 import { DiagnosticReportModel, ObservationModel } from "@/fhir/models";
 import { searchProvenances } from "@/fhir/provenance";
 import { findReference } from "@/fhir/resource-helper";
-import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
+import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { compact } from "@/utils/nodash";
 
 export type ObservationDetailsProps = {

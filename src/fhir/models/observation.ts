@@ -9,6 +9,11 @@ export const LOINC_ANALYTES: Record<string, string> = {
   "2345-7": "glucose",
   "4548-4": "a1c",
   "4549-2": "a1c",
+
+  // TODO: REMOVE THESE BEFORE COMMITTING!
+  "13458-5": "a1c",
+  "704-7": "a1c",
+  "736-9": "a1c",
 };
 
 export class ObservationModel extends FHIRModel<fhir4.Observation> {
