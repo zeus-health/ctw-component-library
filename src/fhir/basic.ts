@@ -9,7 +9,7 @@ import { searchCommonRecords } from "./search-helpers";
 import { SYSTEM_BASIC_RESOURCE_TYPE, SYSTEM_ZUS_PROFILE_ACTION } from "./system-urls";
 import { useQueryWithPatient } from "..";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { FQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
+import { FeatureToggle } from "@/hooks/use-feature-toggle";
 import { QUERY_KEY_BASIC } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
@@ -60,7 +60,7 @@ export async function recordProfileAction<T extends fhir4.Resource>(
   }
 }
 
-export function useBasic(fqs: FQSFeatureToggle) {
+export function useBasic(fqs: FeatureToggle) {
   return useQueryWithPatient(
     QUERY_KEY_BASIC,
     [fqs.ready, fqs.enabled],
@@ -84,7 +84,7 @@ export function useBasic(fqs: FQSFeatureToggle) {
 
 export function useIncludeBasics<R extends fhir4.Resource, T extends FHIRModel<R>>(
   query: UseQueryResult<T[]>,
-  fqs: FQSFeatureToggle
+  fqs: FeatureToggle
 ) {
   const [resources, setResources] = useState<T[]>([]);
   const basicsQuery = useBasic(fqs);

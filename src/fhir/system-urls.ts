@@ -31,6 +31,9 @@ export const SYSTEM_ICD10 = "http://hl7.org/fhir/sid/icd-10";
 export const SYSTEM_ICD10_CM = "http://hl7.org/fhir/sid/icd-10-cm";
 
 export const SYSTEM_RXNORM = "http://www.nlm.nih.gov/research/umls/rxnorm";
+
+export const SYSTEM_LOINC = "http://loinc.org";
+
 export const SYSTEM_NDC = "http://hl7.org/fhir/sid/ndc";
 
 export const SYSTEM_SNOMED = "http://snomed.info/sct";

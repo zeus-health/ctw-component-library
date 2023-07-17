@@ -16,7 +16,7 @@ import { useBasic } from "@/fhir/basic";
 import { getIncludedBasics } from "@/fhir/bundle";
 import { ConditionModel } from "@/fhir/models/condition";
 import { searchBuilderRecords, searchSummaryRecords } from "@/fhir/search-helpers";
-import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
+import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import { ConditionGraphqlResponse, conditionsQuery } from "@/services/fqs/queries/conditions";
 import { cloneDeep, orderBy } from "@/utils/nodash";

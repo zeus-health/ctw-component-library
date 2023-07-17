@@ -10,11 +10,12 @@ import { getBinaryId } from "@/fhir/binaries";
 import { DiagnosticReportModel, ObservationModel } from "@/fhir/models";
 import { searchProvenances } from "@/fhir/provenance";
 import { findReference } from "@/fhir/resource-helper";
-import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
+import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { compact } from "@/utils/nodash";
 
 export type ObservationDetailsProps = {
   diagnosticReport: DiagnosticReportModel;
+  observationTrends?: ObservationModel[];
 };
 
 export const diagnosticReportData = (diagnosticReport: DiagnosticReportModel) => [
@@ -25,7 +26,7 @@ export const diagnosticReportData = (diagnosticReport: DiagnosticReportModel) =>
   { label: "Organization", value: diagnosticReport.performer },
 ];
 
-export const Component = ({ diagnosticReport }: ObservationDetailsProps) => {
+export const Component = ({ diagnosticReport, observationTrends }: ObservationDetailsProps) => {
   const [observationEntries, setObservationsEntries] = useState<ObservationModel[]>([]);
   const openCCDAModal = useCCDAModal();
   const [isLoading, setIsLoading] = useState(false);
@@ -59,15 +60,18 @@ export const Component = ({ diagnosticReport }: ObservationDetailsProps) => {
       setObservationsEntries(
         fqsObservations.enabled
           ? compact(
-              diagnosticReport.resource.result?.map(
-                (result) =>
-                  // @ts-ignore: Unreachable code error
-                  // We are disabling it for this line as the FHIR spec doesn't support this
-                  // customized result field that now has the observation resource and not only just a reference.
-                  new ObservationModel(result.resource, {
-                    [diagnosticReport.id]: diagnosticReport.resource,
-                  })
-              )
+              diagnosticReport.resource.result?.map((result) => {
+                // @ts-ignore: Unreachable code error
+                // We are disabling it for this line as the FHIR spec doesn't support this
+                // customized result field that now has the observation resource and not only just a reference.
+                const model = new ObservationModel(result.resource, {
+                  [diagnosticReport.id]: diagnosticReport.resource,
+                });
+                if (observationTrends) {
+                  model.trends = filterAndSortTrends(model, observationTrends);
+                }
+                return model;
+              })
             )
           : compact(
               diagnosticReport.results.map((result) => {
@@ -80,14 +84,18 @@ export const Component = ({ diagnosticReport }: ObservationDetailsProps) => {
                 if (!observation) {
                   return undefined;
                 }
-                return new ObservationModel(observation, {
+                const model = new ObservationModel(observation, {
                   [diagnosticReport.id]: diagnosticReport.resource,
                 });
+                if (observationTrends) {
+                  model.trends = filterAndSortTrends(model, observationTrends);
+                }
+                return model;
               })
             )
       );
     }
-  }, [diagnosticReport, fqsObservations.ready, fqsObservations.enabled]);
+  }, [diagnosticReport, fqsObservations.ready, fqsObservations.enabled, observationTrends]);
 
   return (
     <div className="ctw-space-y-6" data-zus-telemetry-namespace="Observations">
@@ -116,3 +124,25 @@ export const Component = ({ diagnosticReport }: ObservationDetailsProps) => {
 };
 
 export const ObservationDetails = withErrorBoundary(Component, "Observations");
+
+function filterAndSortTrends(model: ObservationModel, trends: ObservationModel[]) {
+  let filtered = trends.filter((t) =>
+    model.resource.code.coding?.some((coding) => coding.code && t.hasSimilarAnalyte(coding.code))
+  );
+  filtered = filtered.sort((a, b) => {
+    if (!a.effectiveStartRaw && !b.effectiveStartRaw) {
+      return 0;
+    }
+    if (!a.effectiveStartRaw) {
+      return -1;
+    }
+    if (!b.effectiveStartRaw) {
+      return 1;
+    }
+    if (a.effectiveStartRaw > b.effectiveStartRaw) {
+      return 1;
+    }
+    return 0;
+  });
+  return filtered;
+}
