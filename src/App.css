@@ -1,7 +1,3 @@
-body {
-  background: lightgray;
-}
-
 #root,
 #headlessui-portal-root {
   max-width: 980px;

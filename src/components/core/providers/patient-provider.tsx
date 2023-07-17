@@ -30,7 +30,7 @@ type PatientUPIDSpecified = {
   systemURL?: never;
 };
 
-type PatientProviderProps = {
+export type PatientProviderProps = {
   children: ReactNode;
   tags?: Tag[];
   onPatientSave?: (data: PatientFormData) => void;

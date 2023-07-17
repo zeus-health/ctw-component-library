@@ -1,0 +1,51 @@
+<html>
+    <script>
+        function getZusAccessToken() {
+            return "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InVjck9lMmZtVHRESV9PZ2QzYk50OCJ9.eyJodHRwczovL3p1c2FwaS5jb20vYnVpbGRlcl9pZCI6ImY0NTk5ZDkwLTZkMjktNDg0My1hMTZkLWFlN2M0NjllYjIyOSIsImh0dHBzOi8venVzYXBpLmNvbS9idWlsZGVyX25hbWUiOiJadXMgSGVhbHRoIiwiaHR0cHM6Ly96dXNhcGkuY29tL3ByYWN0aXRpb25lcl9pZCI6IiIsImh0dHBzOi8venVzYXBpLmNvbS9pc19zdXBlcl9vcmciOiJ0cnVlIiwiaHR0cHM6Ly96dXNhcGkuY29tL3Blcm1pc3Npb25zX3Rva2VuIjoiYTBjYWU1NzUtZjRiMi00OWQxLTg5OGQtYWQ3MDEyNzJjMjg0IiwiaHR0cHM6Ly96dXNhcGkuY29tL2VtYWlsIjoiZWd1bnRoZXJAenVzaGVhbHRoLmNvbSIsImh0dHBzOi8venVzYXBpLmNvbS91c2VyX2lkIjoiOTI3NTU3YmQtY2ExNS00MjlkLWE5OGUtOWJiNGY3ZjE1ZDY5IiwiaHR0cHM6Ly96dXNhcGkuY29tL2FwcF9jbGllbnRfaWQiOiIiLCJodHRwczovL3p1c2FwaS5jb20vdXNlcl90eXBlIjoienVzIiwiaHR0cHM6Ly96dXNhcGkuY29tL3BhdGllbnRfaWQiOiIiLCJodHRwczovL3p1c2FwaS5jb20vYXV0aGVudGljYXRlZF9ieSI6IiIsImlzcyI6Imh0dHBzOi8vYXV0aC5zYW5kYm94Lnp1c2FwaS5jb20vIiwic3ViIjoiZ29vZ2xlLWFwcHN8ZWd1bnRoZXJAenVzaGVhbHRoLmNvbSIsImF1ZCI6WyJodHRwczovL2FwaS5zYW5kYm94Lnp1c2FwaS5jb20iLCJodHRwczovL3p1cy1zYW5kYm94LnVzLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE2ODk2MTcyODcsImV4cCI6MTY4OTYyMDg4NywiYXpwIjoiSXBuOFdzVnNPY0dRSE1KakxabENsRHZldTh5SDl5SGEiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIG9mZmxpbmVfYWNjZXNzIn0.bYhUSfcUFClpySakwf-SKGn06QG2tHhtOEUsqhkIR012s7fn15t2L7wbiamACfoWRzi4zHXqUIx2rLmnuyNtqgtGDt1w8aIKIU0qA4UcBobKvg7s8xiwpfJk4n668riTSW95ilioyjkJo9GNd5o36lhHdwx_hlfQO5jL6p5VYGmfGVgL8gNUnqkxiFSk6xBYTzTf30ixrsdV1EKV6C7uhNAyLQtc6OqlS96JQjw4bwHjZDZOVBPhWdU6ivg1l3HtEF1jkrusTc1ImVzduAS5bnK3LjergkRp6a-gVRoPNGy2qF222wpBhHVFHySIW0VbIJVr1_tlWcyudjI02CgNng";
+        }
+        
+        window.addEventListener('message', ({ data }) => {
+            if (data.type === 'zus-ready') {
+                document
+                    .getElementById('zap')
+                    .contentWindow.postMessage(
+                        {
+                            type: "ZusAggregatedProfileIframeConfig",
+                            config: {
+                                CTWProviderProps: {
+                                    authToken: getZusAccessToken(),
+                                    env: "sandbox",
+                                    builderId: "2c4ff9df-7f87-4253-b2a7-0e8f4944131e",
+                                    theme: {
+                                        colors: {
+                                            primary: {
+                                                main: "#0000ff"
+                                            }
+                                        }
+                                    }
+                                },
+                                PatientProviderProps: {
+                                    patientID: "7a925555-a2e9-46ab-8e67-592f15c67cbf",
+                                    systemURL: "https://zusapi.com/fhir/identifier/universal-id"
+                                },
+                                ZusAggregatedProfileProps: {
+                                    // optional specify resources
+                                }
+                            }
+                        },
+                        'http://localhost:3000'
+                    );
+            }
+        });
+    </script>
+    <body>
+        <iframe
+            id="zap"
+            title="zus-aggregated-profile"
+            height="600"
+            width="1000"
+            src="http://localhost:3000/ZAP"
+            frameBorder="0"
+        ></iframe>        
+    </body>
+</html>
