@@ -1,10 +1,20 @@
 import { FHIRModel } from "./fhir-model";
+import { SYSTEM_LOINC } from "../system-urls";
 import { codeableConceptLabel } from "@/fhir/codeable-concept";
 import { formatDateISOToLocal } from "@/fhir/formatters";
 import { compact } from "@/utils/nodash";
 
+export const LOINC_ANALYTES: Record<string, string> = {
+  "17856-6": "a1c",
+  "2345-7": "glucose",
+  "4548-4": "a1c",
+  "4549-2": "a1c",
+};
+
 export class ObservationModel extends FHIRModel<fhir4.Observation> {
   kind = "Observation" as const;
+
+  private trendData?: ObservationModel[];
 
   get category() {
     return codeableConceptLabel(this.resource.category?.[0]);
@@ -23,9 +33,11 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
   }
 
   get effectiveStart() {
-    return formatDateISOToLocal(
-      this.resource.effectivePeriod?.start || this.resource.effectiveDateTime
-    );
+    return formatDateISOToLocal(this.effectiveStartRaw);
+  }
+
+  get effectiveStartRaw() {
+    return this.resource.effectivePeriod?.start || this.resource.effectiveDateTime;
   }
 
   get identifier() {
@@ -84,6 +96,14 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
     return this.resource.referenceRange?.[0].text;
   }
 
+  get trends() {
+    return this.trendData || [];
+  }
+
+  set trends(t: ObservationModel[]) {
+    this.trendData = t;
+  }
+
   get acceptedInterpretations(): string {
     switch (codeableConceptLabel(this.resource.interpretation?.[0]).toLowerCase()) {
       case "high":
@@ -118,5 +138,17 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
       default:
         return "ctw-text-content-black ctw-bg-bg-light ctw-inline-flex ctw-rounded-xl ctw-leading-5 ctw-font-medium ctw-text-sm ctw-p-1 ctw-px-3";
     }
+  }
+
+  hasSimilarAnalyte(code: string) {
+    const analyte = LOINC_ANALYTES[code];
+    if (!analyte) {
+      return false;
+    }
+    const similarAnalyte = this.resource.code.coding?.some(
+      (coding) =>
+        coding.system === SYSTEM_LOINC && coding.code && analyte === LOINC_ANALYTES[coding.code]
+    );
+    return similarAnalyte;
   }
 }

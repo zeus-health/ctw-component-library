@@ -10,7 +10,7 @@ import { PatientModel } from "@/fhir/models/patient";
 import { getBuilderFhirPatient } from "@/fhir/patient-helper";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 import { Tag } from "@/fhir/types";
-import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
+import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { QUERY_KEY_PATIENT } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import { withTimerMetric } from "@/utils/telemetry";

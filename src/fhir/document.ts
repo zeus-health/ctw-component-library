@@ -3,7 +3,7 @@ import { searchCommonRecords } from "./search-helpers";
 import { PatientModel, useFeatureFlaggedQueryWithPatient } from "..";
 import { applyDocumentFilters } from "@/components/content/document/helpers/filters";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
+import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import { DocumentReferenceGraphqlResponse, documentsQuery } from "@/services/fqs/queries/documents";
 import { orderBy } from "@/utils/nodash";

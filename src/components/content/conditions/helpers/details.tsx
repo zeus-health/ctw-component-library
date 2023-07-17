@@ -3,7 +3,7 @@ import { useConfirmDeleteCondition, useEditConditionForm } from "./modal-hooks";
 import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
 import { NotesList } from "@/components/core/notes-list";
 import { ConditionModel } from "@/fhir/models";
-import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
+import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { capitalize } from "@/utils/nodash";
 
 export const useConditionDetailsDrawer = ({
