@@ -6,7 +6,7 @@ import { Table } from "@/components/core/table/table";
 import { usePatientCareTeam } from "@/fhir/care-team";
 import { CareTeamPractitionerModel } from "@/fhir/models/careteam-practitioner";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
-import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
+import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 
 export type PatientCareTeamProps = {
   className?: string;

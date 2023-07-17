@@ -1,5 +1,60 @@
 # ctw-component-library
 
+## 1.34.0
+
+### Minor Changes
+
+- 2ac573b7: Added trend data to Glucose and A1C labs
+
+### Patch Changes
+
+- e9b13066: Remove role field from dropdown and default to SNOMED 158965000 for role.
+
+## 1.33.0
+
+### Minor Changes
+
+- 54703a9b: Add empty state to new conditions and meds components
+
+## 1.32.1
+
+### Patch Changes
+
+- b9f02c2c: Update sorting for document component.
+- 922acdaf: Improve surfacing category text/display and avoid showing category codes.
+
+## 1.32.0
+
+### Minor Changes
+
+- b40d007c: Expand empty table display to include requesting records
+- 783ce18c: Update storybook tests to include FQS queries.
+
+### Patch Changes
+
+- fd0c38fe: Update condition history details and history card null states.
+- ce476a80: Change default colors to use Zus theme.
+
+## 1.31.1
+
+### Patch Changes
+
+- 664f7764: Increase specificity of unread/dismiss selectors.
+- dd32be7b: Fix issues with new meds component read/dismiss as well as capitalization of medication display
+
+## 1.31.0
+
+### Minor Changes
+
+- 3dc690c4: Add a request header to FQS requests.
+
+## 1.30.2
+
+### Patch Changes
+
+- 781bd9e3: Use semibold for unread records.
+- 8ff01263: Add PatientMedicationsAll component which displays builder and outside medications in the same table.
+
 ## 1.30.1
 
 ### Patch Changes

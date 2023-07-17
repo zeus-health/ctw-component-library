@@ -1,7 +1,7 @@
 import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
 import { CodingList } from "@/components/core/coding-list";
 import { EncounterModel } from "@/fhir/models/encounter";
-import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
+import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { capitalize } from "@/utils/nodash/fp";
 
 export function usePatientEncounterDetailsDrawer() {

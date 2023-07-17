@@ -5,7 +5,7 @@ import { searchCommonRecords } from "./search-helpers";
 import { applyAllergyFilters } from "@/components/content/allergies/helpers/allergies-filter";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useFeatureFlaggedQueryWithPatient } from "@/components/core/providers/patient-provider";
-import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
+import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import { AllergyGraphqlResponse, allergyQuery } from "@/services/fqs/queries/allergies";
 import { QUERY_KEY_PATIENT_ALLERGIES } from "@/utils/query-keys";

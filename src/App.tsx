@@ -116,13 +116,14 @@ const components: DemoComponent[] = [
     name: "zap",
     render: () => {
       const resources: ZAPResourceName[] = [
-        "allergies",
         "conditions-all",
-        "documents",
-        "immunizations",
-        "care-team",
         "medications-all",
         "diagnostic-reports",
+        "timeline",
+        "documents",
+        "allergies",
+        "immunizations",
+        "care-team",
       ];
       return (
         <div>

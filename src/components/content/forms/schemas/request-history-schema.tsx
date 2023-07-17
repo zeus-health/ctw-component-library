@@ -19,25 +19,25 @@ export const getRequestData = (
     value: "",
     readonly: false,
   },
+  {
+    label: "NPI",
+    field: "npi",
+    value: "",
+    readonly: false,
+  },
   [
-    {
-      label: "NPI",
-      field: "npi",
-      value: "",
-      readonly: false,
-    },
-    {
-      label: "Role",
-      field: "role",
-      value: "",
-      readonly: false,
-    },
     {
       label: "Zus patient ID",
       hidden: true,
       field: "id",
       value: patient?.id ?? "",
       readonly: true,
+    },
+    {
+      label: "Role",
+      field: "role",
+      value: "Medical practitioner (SNOMED 158965000)",
+      hidden: true,
     },
   ],
   ...(!includePatientDemographicsForm
@@ -130,7 +130,7 @@ export const requestHistorySchema = z.object({
       required_error: "NPI must be specified.",
     })
     .length(10),
-  role: z.enum(["Doctor", "Nurse", "Other"]).optional(),
+  role: z.enum(["Medical practitioner (SNOMED 158965000)"]).optional(),
   id: z.string().optional(), // patient id (hidden field on form)
 });
 

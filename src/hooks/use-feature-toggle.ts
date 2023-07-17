@@ -1,11 +1,25 @@
 import { useFeatureVariant } from "./use-feature-variant";
 
-export type FQSFeatureToggle = {
+export function useTrendingLabsFeatureToggle(): FeatureToggle {
+  const variant = useFeatureVariant("ctw-trending-labs");
+
+  if (!variant.ready) {
+    return { enabled: false, ready: false };
+  }
+  let enabled = false;
+  if (variant.enabled) {
+    const value = variant.payload?.value;
+    enabled = value === "true";
+  }
+  return { enabled, ready: true };
+}
+
+export type FeatureToggle = {
   enabled: boolean;
   ready: boolean;
 };
 
-export function useFQSFeatureToggle(resourceType: string): FQSFeatureToggle {
+export function useFQSFeatureToggle(resourceType: string): FeatureToggle {
   const variant = useFeatureVariant("ctw-fqs");
 
   if (!variant.ready) {

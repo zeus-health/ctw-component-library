@@ -1,5 +1,5 @@
+import { ObservationsColumns } from "./columns";
 import { ResourceTable } from "../../resource/resource-table";
-import { observationsColumns } from "@/components/content/observations/helpers/columns";
 import { ObservationModel } from "@/fhir/models";
 
 export type ObservationsTableProps = {
@@ -14,7 +14,7 @@ export const ObservationsTable = ({ className, data }: ObservationsTableProps) =
     </div>
     <ResourceTable
       className="ctw-patient-observation-details"
-      columns={observationsColumns}
+      columns={ObservationsColumns()}
       data={data}
       isLoading={false}
       emptyMessage="There are no observations available."

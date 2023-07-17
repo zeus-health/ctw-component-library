@@ -25,6 +25,7 @@ export const createGraphqlClient = (requestContext: CTWRequestContext) => {
   return new GraphQLClient(endpoint, {
     errorPolicy: "all",
     headers: {
+      ...CTW_REQUEST_HEADER,
       authorization: `Bearer ${requestContext.authToken}`,
     },
   });

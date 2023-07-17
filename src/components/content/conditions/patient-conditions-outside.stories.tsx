@@ -1,15 +1,19 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { PatientDocuments, PatientDocumentsProps } from "./patient-documents";
-import { setupDocumentMocks } from "./story-helpers/mocks/requests";
+import {
+  PatientConditionsOutside,
+  PatientConditionsOutsideProps,
+} from "./patient-conditions-outside";
+import { emptyConditions } from "./story-helpers/mocks/empty-conditions";
+import { setupConditionMocks } from "./story-helpers/mocks/requests";
 import { FAKE_AUTH, FAKE_BUILDER_ID, FAKE_PATIENT_UPID } from "../story-helpers/ids";
 import { CTWProvider } from "@/components/core/providers/ctw-provider";
 import { PatientProvider } from "@/components/core/providers/patient-provider";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 
-type Props = PatientDocumentsProps;
+type Props = PatientConditionsOutsideProps;
 
 export default {
-  component: PatientDocuments,
+  component: PatientConditionsOutside,
   tags: ["autodocs"],
   argTypes: {
     className: {
@@ -24,6 +28,7 @@ export default {
   args: {
     className: "Blank",
     readOnly: false,
+    hideRequestRecords: false,
   },
   decorators: [
     (Story, { args }) => (
@@ -36,10 +41,9 @@ export default {
   ],
 } as Meta<Props>;
 
-export const Basic: StoryObj<Props> = {
-  ...setupDocumentMocks(),
-};
-
-export const BasicFQS: StoryObj<Props> = {
-  ...setupDocumentMocks(),
+export const Empty: StoryObj<Props> = {
+  ...setupConditionMocks({
+    otherConditions: emptyConditions,
+    patientConditions: emptyConditions,
+  }),
 };
