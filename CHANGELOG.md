@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.34.1
+
+### Patch Changes
+
+- bd191657: Add UnreadRecordsNotification to alert users if there are any unread records for a patient across multiple resource types.
+
 ## 1.34.0
 
 ### Minor Changes
