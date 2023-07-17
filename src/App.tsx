@@ -21,8 +21,8 @@ import {
   PatientTimeline,
   ZAPResourceName,
   ZusAggregatedProfile,
+  UnreadRecordsNotification,
 } from ".";
-import { UnreadRecordsNotification } from "./components/content/unread-records-notification";
 
 const {
   VITE_AUTH0_AUDIENCE,
@@ -127,7 +127,7 @@ const components: DemoComponent[] = [
       ];
       return (
         <div>
-          Has unread records: <UnreadRecordsNotification resources={resources} />
+          <UnreadRecordsNotification resources={resources} text="Patient has unread records" />
           <ZusAggregatedProfile
             conditionsOutsideProps={{
               hideRequestRecords: true,

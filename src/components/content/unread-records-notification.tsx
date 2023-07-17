@@ -13,11 +13,13 @@ import { usePatientConditionsAll } from "@/services/conditions";
 export type UnreadRecordsNotificationProps = {
   className?: string;
   resources: ZAPResourceName[];
+  text?: string;
 };
 
 export const UnreadRecordsNotification = ({
   className,
   resources,
+  text,
 }: UnreadRecordsNotificationProps) => {
   const userBuilderId = useUserBuilderId();
   const allergiesQuery = usePatientAllergies();
@@ -56,7 +58,7 @@ export const UnreadRecordsNotification = ({
         (record) => !record.isDismissed && !record.isRead && !record.ownedByBuilder(userBuilderId)
       )
     ) {
-      return <UnreadNotificationIcon className={className} />;
+      return <UnreadNotificationIcon className={className} text={text} />;
     }
   }
 

@@ -1,8 +1,17 @@
 import cx from "classnames";
 
+export type BadgeColor =
+  | "primary"
+  | "gray"
+  | "info"
+  | "success"
+  | "caution"
+  | "error"
+  | "notification";
+
 export type BadgeProps = {
   className?: string;
-  color: "primary" | "gray" | "info" | "success" | "caution" | "error" | "notification";
+  color: BadgeColor;
   text: string;
 };
 
