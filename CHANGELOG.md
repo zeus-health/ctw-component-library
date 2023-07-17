@@ -1,5 +1,15 @@
 # ctw-component-library
 
+## 1.34.0
+
+### Minor Changes
+
+- 2ac573b7: Added trend data to Glucose and A1C labs
+
+### Patch Changes
+
+- e9b13066: Remove role field from dropdown and default to SNOMED 158965000 for role.
+
 ## 1.33.0
 
 ### Minor Changes
