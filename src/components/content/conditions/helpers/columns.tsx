@@ -76,6 +76,7 @@ export const patientConditionsAllColumns = (builderId: string): TableColumn<Cond
 
       return (
         <div className="ctw-pc-onset-notes">
+          {condition.type && <div>Type: {condition.type}</div>}
           {condition.onset && (
             <div>
               {onsetText} {condition.onset}
