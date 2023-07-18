@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.35.2
+
+### Patch Changes
+
+- 6e5fd6a2: Add filter for condition CCI code
+
 ## 1.35.1
 
 ### Patch Changes
