@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.35.1
+
+### Patch Changes
+
+- eb22eabb: Resolved bug with lab trend values
+
 ## 1.35.0
 
 ### Minor Changes
