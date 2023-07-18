@@ -42,6 +42,9 @@ function fetchObservations(loincCodes: string[]) {
       const nodes = data.ObservationConnection.edges.map((x) => x.node);
       const observations = nodes.map((o) => new ObservationModel(o));
       const filteredObservations = filterObservationsByLOINCCodes(observations, loincCodes);
+      if (filteredObservations.length === 0) {
+        Telemetry.countMetric("req.count.builder_observations.none", 1, ["fqs"]);
+      }
       Telemetry.histogramMetric(`req.count.builder_observations`, filteredObservations.length, [
         "fqs",
       ]);
