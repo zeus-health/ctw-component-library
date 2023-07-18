@@ -117,7 +117,9 @@ export const ObservationsColumns = (): TableColumn<ObservationModel>[] => {
                     <BubbleIcon
                       result={trend.value}
                       interpretation={trend.interpretation}
-                      className={trend.acceptedInterpretations}
+                      className={cx(`${trend.acceptedInterpretations}`, {
+                        "!ctw-font-bold": trend.id === model.id,
+                      })}
                     />
                   </div>
                 ))}
