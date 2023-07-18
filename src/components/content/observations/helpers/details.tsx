@@ -134,12 +134,15 @@ function filterAndSortTrends(model: ObservationModel, trends: ObservationModel[]
       return 0;
     }
     if (!a.effectiveStartRaw) {
-      return -1;
-    }
-    if (!b.effectiveStartRaw) {
       return 1;
     }
+    if (!b.effectiveStartRaw) {
+      return -1;
+    }
     if (a.effectiveStartRaw > b.effectiveStartRaw) {
+      return -1;
+    }
+    if (a.effectiveStartRaw < b.effectiveStartRaw) {
       return 1;
     }
     return 0;
