@@ -1,5 +1,23 @@
 # ctw-component-library
 
+## 1.35.4
+
+### Patch Changes
+
+- 6eaf775d: Updated Observation trend value to be bold for currently selected trend
+
+## 1.35.3
+
+### Patch Changes
+
+- e0c0a713: Export types for CTWProvider and PatientProvider props.
+
+## 1.35.2
+
+### Patch Changes
+
+- 6e5fd6a2: Add filter for condition CCI code
+
 ## 1.35.1
 
 ### Patch Changes
