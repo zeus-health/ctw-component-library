@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.35.3
+
+### Patch Changes
+
+- e0c0a713: Export types for CTWProvider and PatientProvider props.
+
 ## 1.35.2
 
 ### Patch Changes
