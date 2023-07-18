@@ -1,5 +1,15 @@
 # ctw-component-library
 
+## 1.36.0
+
+### Minor Changes
+
+- 5a05fd21: Removed first-party filter from FQS request when fetching observations and cleaned up corresponding telemetry
+
+### Patch Changes
+
+- 8d6795d8: Add DD metric logging.
+
 ## 1.35.4
 
 ### Patch Changes
