@@ -27,6 +27,7 @@ export * from "@/components/content/patients/patients-search";
 export * from "@/components/content/patients/patients-table";
 export * from "@/components/content/timeline/patient-timeline";
 export * from "@/components/content/zus-aggregated-profile/zus-aggregated-profile";
+export * from "@/components/content/zus-aggregated-profile/zus-aggregated-profile-iframe";
 export * from "@/components/content/unread-records-notification";
 // Core components
 export * from "@/components/core/action-list/action-list";
