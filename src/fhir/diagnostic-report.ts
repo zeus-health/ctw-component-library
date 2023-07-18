@@ -1,10 +1,11 @@
 import { useIncludeBasics } from "./basic";
 import { searchBuilderRecords, searchCommonRecords } from "./search-helpers";
 import { SYSTEM_ZUS_THIRD_PARTY } from "./system-urls";
+import { applyDiagnosticReportFilters } from "@/components/content/diagnostic-reports/helpers/diagnostic-report-query-filters";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useFeatureFlaggedQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { getIncludedResources } from "@/fhir/bundle";
-import { DiagnosticReportModel, PatientModel } from "@/fhir/models";
+import { PatientModel } from "@/fhir/models";
 import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import {
@@ -57,7 +58,7 @@ function diagnosticReportsFetcherODS(searchType: SearchType) {
         Telemetry.countMetric(`req.count.${searchType}_diagnostic_reports.none`);
       }
       Telemetry.histogramMetric(`req.count.${searchType}_diagnostic_reports`, resources.length);
-      return resources.map((r) => new DiagnosticReportModel(r, getIncludedResources(bundle)));
+      return applyDiagnosticReportFilters(resources, getIncludedResources(bundle));
     } catch (e) {
       throw Telemetry.logError(
         e as Error,
@@ -76,14 +77,13 @@ function diagnosticReportsFetcherFQS(searchType: SearchType) {
       if (searchType === "all" && data.DiagnosticReportConnection.edges.length === 0) {
         Telemetry.countMetric(`req.count.${searchType}_diagnostic_reports.none`, 1, ["fqs"]);
       }
-      const result = setupDiagnosticReportModelsWithFQS(
-        data.DiagnosticReportConnection.edges.map((x) => x.node)
-      );
+      const result = data.DiagnosticReportConnection.edges.map((x) => x.node);
 
       Telemetry.histogramMetric(`req.count.${searchType}_diagnostic_reports`, result.length, [
         "fqs",
       ]);
-      return result;
+
+      return applyDiagnosticReportFilters(result);
     } catch (e) {
       throw Telemetry.logError(
         e as Error,
@@ -137,10 +137,4 @@ async function diagnosticReportCommonQueryFQS(
     }
   );
   return data;
-}
-
-function setupDiagnosticReportModelsWithFQS(
-  diagnosticResource: fhir4.DiagnosticReport[]
-): DiagnosticReportModel[] {
-  return diagnosticResource.map((d) => new DiagnosticReportModel(d));
 }
