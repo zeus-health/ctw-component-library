@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.35.0
+
+### Minor Changes
+
+- 8c9d03c6: Update the diagnostic report component with deduping logic.
+
 ## 1.34.1
 
 ### Patch Changes
