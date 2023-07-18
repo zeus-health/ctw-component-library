@@ -87,9 +87,9 @@ export const ObservationsColumns = (): TableColumn<ObservationModel>[] => {
     {
       title: "Trends",
       render: (model) => (
-        <div className="ctw-flex ctw-text-sm ctw-font-normal">
+        <div className="ctw-text-sm ctw-font-normal">
           {model.trends.length > 1 && (
-            <div className="ctw-pt-1">
+            <div className="ctw-pt-2">
               <button
                 aria-label="trends"
                 className="ctw-btn-clear"
@@ -106,18 +106,19 @@ export const ObservationsColumns = (): TableColumn<ObservationModel>[] => {
               </button>
               {isTrendsShown &&
                 model.trends.map((trend) => (
-                  <div
-                    key={trend.id}
-                    className="ctw-relative ctw-clear-both ctw-columns-2 ctw-py-px"
-                  >
+                  <div key={trend.id} className="ctw-ml-4 ctw-py-px">
                     <div
-                      className={cx("ctw-relative ctw-left-4 ctw-top-1 ctw-text-sm", {
+                      className={cx("ctw-relative ctw-top-1 ctw-float-left ctw-w-24 ctw-text-sm", {
                         "ctw-font-bold": trend.id === model.id,
                       })}
                     >
                       {trend.effectiveStart}
                     </div>
-                    <BubbleIcon result={model.value} className={trend.acceptedInterpretations} />
+                    <BubbleIcon
+                      result={trend.value}
+                      interpretation={trend.interpretation}
+                      className={trend.acceptedInterpretations}
+                    />
                   </div>
                 ))}
             </div>

@@ -35,15 +35,11 @@ export const observationQuery = gql`
         node {
           id
           resourceType
-          meta {
-            extension {
-              url
-              valueInstant
+          interpretation {
+            text
+            coding {
+              ...Coding
             }
-          }
-          extension {
-            url
-            valueString
           }
           code {
             text
@@ -56,6 +52,17 @@ export const observationQuery = gql`
             start
             end
           }
+          valueCodeableConcept {
+            text
+            coding {
+              ...Coding
+            }
+          }
+          valueQuantity {
+            value
+            unit
+          }
+          valueString
         }
       }
     }

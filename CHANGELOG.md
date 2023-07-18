@@ -1,5 +1,23 @@
 # ctw-component-library
 
+## 1.35.1
+
+### Patch Changes
+
+- eb22eabb: Resolved bug with lab trend values
+
+## 1.35.0
+
+### Minor Changes
+
+- 8c9d03c6: Update the diagnostic report component with deduping logic.
+
+## 1.34.1
+
+### Patch Changes
+
+- bd191657: Add UnreadRecordsNotification to alert users if there are any unread records for a patient across multiple resource types.
+
 ## 1.34.0
 
 ### Minor Changes

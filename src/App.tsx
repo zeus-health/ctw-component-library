@@ -19,7 +19,9 @@ import {
   PatientProvider,
   PatientSearch,
   PatientTimeline,
+  ZAPResourceName,
   ZusAggregatedProfile,
+  UnreadRecordsNotification,
 } from ".";
 
 const {
@@ -112,25 +114,32 @@ const components: DemoComponent[] = [
   { name: "timeline", render: () => <PatientTimeline />, title: "Patient Timeline" },
   {
     name: "zap",
-    render: () => (
-      <ZusAggregatedProfile
-        conditionsOutsideProps={{
-          hideRequestRecords: true,
-        }}
-        conditionsAllProps={{ onlyAllowAddOutsideConditions: true }}
-        includePatientDemographicsForm={false}
-        resources={[
-          "conditions-all",
-          "medications-all",
-          "diagnostic-reports",
-          "allergies",
-          "documents",
-          "immunizations",
-          "care-team",
-        ]}
-        title="ZAP"
-      />
-    ),
+    render: () => {
+      const resources: ZAPResourceName[] = [
+        "conditions-all",
+        "medications-all",
+        "diagnostic-reports",
+        "timeline",
+        "documents",
+        "allergies",
+        "immunizations",
+        "care-team",
+      ];
+      return (
+        <div>
+          <UnreadRecordsNotification resources={resources} text="Patient has unread records" />
+          <ZusAggregatedProfile
+            conditionsOutsideProps={{
+              hideRequestRecords: true,
+            }}
+            conditionsAllProps={{ onlyAllowAddOutsideConditions: true }}
+            includePatientDemographicsForm={false}
+            resources={resources}
+            title="ZAP"
+          />
+        </div>
+      );
+    },
   },
 ];
 
