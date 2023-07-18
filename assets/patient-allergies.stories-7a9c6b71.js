@@ -1,9 +1,0 @@
-import{R as t}from"./index-6f814c40.js";import{s as c,a as n}from"./allergy-intolerance-ee84f794.js";import{P as u,C as g,F as A,a as E,b as I,c as _,S}from"./patient-allergies-5809f5b4.js";import"./_commonjsHelpers-042e6b4d.js";import"./request-a5123b8d.js";import"./index-135b3e83.js";import"./requests-7f092f0c.js";import"./types-6e67dc97.js";import"./action-list-728c0961.js";import"./index-74f03c09.js";import"./uniqWith-bc165632.js";import"./_baseForOwn-9e8b57a2.js";import"./_baseIsEqual-e6235ae7.js";import"./_baseClone-3dc95c45.js";import"./_baseUniq-405a48ca.js";import"./toNumber-cc3737a8.js";import"./isPlainObject-82e8b885.js";import"./_basePickBy-8ca83e64.js";import"./isEqual-34296d4e.js";import"./mapValues-87eb9295.js";import"./uniq-a7f2cddd.js";import"./extends-cb558dbe.js";import"./table-ac5b60d1.js";import"./spinner-1fa7ac76.js";import"./index-5c03ae20.js";import"./drawer-3e903764.js";import"./index-6de6b113.js";import"./debounce-935219e4.js";import"./data-list-254aa0b0.js";const z={tags:["autodocs"],component:u,decorators:[(l,{args:d})=>t.createElement(g,{env:"dev",authToken:A,builderId:E},t.createElement(I,{patientID:_,systemURL:S},t.createElement(l,{args:d})))]},r={...c({allergyIntolerance:n})},e={...c({allergyIntolerance:n})};var o,s,a;r.parameters={...r.parameters,docs:{...(o=r.parameters)==null?void 0:o.docs,source:{originalSource:`{
-  ...setupAllergiesMocks({
-    allergyIntolerance
-  })
-}`,...(a=(s=r.parameters)==null?void 0:s.docs)==null?void 0:a.source}}};var i,m,p;e.parameters={...e.parameters,docs:{...(i=e.parameters)==null?void 0:i.docs,source:{originalSource:`{
-  ...setupAllergiesMocks({
-    allergyIntolerance
-  })
-}`,...(p=(m=e.parameters)==null?void 0:m.docs)==null?void 0:p.source}}};const G=["Basic","BasicFQS"];export{r as Basic,e as BasicFQS,G as __namedExportsOrder,z as default};
