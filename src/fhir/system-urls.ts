@@ -19,6 +19,8 @@ export const SYSTEM_TASK_STATUS = "https://www.hl7.org/fhir/codesystem-task-stat
 // CODE SYSTEMS
 
 export const SYSTEM_CCS = "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp";
+export const SYSTEM_CCI =
+  "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp";
 
 export const SYSTEM_CVX = "http://hl7.org/fhir/sid/cvx";
 

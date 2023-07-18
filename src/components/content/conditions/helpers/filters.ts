@@ -1,3 +1,4 @@
+import { faClock } from "@fortawesome/free-regular-svg-icons";
 import { faClipboardCheck, faClipboardList } from "@fortawesome/free-solid-svg-icons";
 import { dismissFilter } from "../../resource/filters";
 import { FilterChangeEvent, FilterItem } from "@/components/core/filter-bar/filter-bar-types";
@@ -31,6 +32,13 @@ export function conditionFilters(
       icon: faClipboardList,
       display: "Category",
       values: uniqueValues(conditions, "ccsChapter"),
+    },
+    {
+      key: "type",
+      type: "checkbox",
+      icon: faClock,
+      display: "Type",
+      values: uniqueValues(conditions, "type"),
     }
   );
 
