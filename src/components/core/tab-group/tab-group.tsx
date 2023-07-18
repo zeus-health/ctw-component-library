@@ -2,11 +2,11 @@ import "./tab-group.scss";
 
 import { Tab } from "@headlessui/react";
 import cx from "classnames";
-import { ReactNode, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
+import { ListBox } from "../list-box/list-box";
 import { PatientHistoryStatus } from "@/components/content/patient-history/patient-history-message-status";
 import { usePatientHistory } from "@/components/content/patient-history/use-patient-history";
 import { withErrorBoundary } from "@/components/core/error-boundary";
-import { ListBox } from "@/components/core/list-box/list-box";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 
 export type TabGroupProps = {
@@ -38,14 +38,62 @@ function TabGroupComponent({
   onChange,
   topRightContent,
 }: TabGroupProps) {
-  const [selectedTabIndex, setSelectedTabIndex] = useState(0);
+  // State used for responsive tab dropdown menu.
+  const TAB_SPACING = 20; // Ugly cheat to account for margins between tabs.
+  const topRightContentRef = useRef<HTMLDivElement>(null);
+  const moreMenuRef = useRef<HTMLDivElement>(null);
+  const [tabOverflowCutoff, setTabOverflowCutoff] = useState(content.length);
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
+
+  const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   const patientHistoryDetails = usePatientHistory();
-  const isVertical = !forceHorizontalTabs && breakpoints.sm;
   // Work around for not wanting to pre-mount all tabs.
   // https://github.com/tailwindlabs/headlessui/issues/2276#issuecomment-1456537475
   const [shown, setShown] = useState<Record<number, boolean>>({ 0: true });
+
+  // Calculate how many tabs can fit in the container.
+  useEffect(() => {
+    // Force everything into the more menu if we are in a small breakpoint
+    // and we are not forcing horizontal tabs.
+    if (breakpoints.sm && !forceHorizontalTabs) {
+      setTabOverflowCutoff(0);
+      return;
+    }
+
+    const container = containerRef.current;
+    if (!container) return;
+
+    // Start with the width of the container.
+    let { width } = container.getBoundingClientRect();
+
+    // Subtract the top right content if there is any.
+    if (topRightContentRef.current) {
+      width -= topRightContentRef.current.getBoundingClientRect().width + TAB_SPACING;
+    }
+
+    // Get width of the more menu and its spacing but don't subtract it yet.
+    const moreWidth = (moreMenuRef.current?.getBoundingClientRect().width ?? 0) + TAB_SPACING;
+
+    // Grab our tabs and keep subtracting their widths until we run out of space.
+    const tabs = Array.from(container.querySelectorAll("button.ctw-tab")) as HTMLButtonElement[];
+    setTabOverflowCutoff(
+      tabs.filter((tab, index) => {
+        // Subtract the tabs width and spacing for all but the first tab.
+        width -= tab.getBoundingClientRect().width;
+        if (index > 0) width -= TAB_SPACING;
+
+        // All but the last tab must reserve space for the more menu.
+        if (index < tabs.length - 1) {
+          return width >= moreWidth;
+        }
+
+        // The last tab can use the remaining space and ignore more menu
+        // as we'll not show more menu if we are displaying all tabs.
+        return width >= 0;
+      }).length
+    );
+  }, [breakpoints, forceHorizontalTabs]); // Recalculate when the breakpoint changes (resize observer).
 
   const handleOnChange = (index: number) => {
     setSelectedTabIndex(index);
@@ -67,29 +115,13 @@ function TabGroupComponent({
         date={patientHistoryDetails.lastRetrievedAt}
       />
       <Tab.Group selectedIndex={selectedTabIndex} onChange={handleOnChange}>
-        {isVertical && (
-          <>
-            <ListBox
-              btnClassName="ctw-tab ctw-capitalize"
-              optionsClassName="ctw-tab-list ctw-capitalize"
-              onChange={handleOnChange}
-              items={content}
-            />
-            {showTopRightContent && (
-              <div className="ctw-ml-auto ctw-flex ctw-items-center ctw-px-1.5">
-                {topRightContent}
-              </div>
-            )}
-          </>
-        )}
         <Tab.List
           className={cx(
-            "ctw-border-default ctw-flex ctw-justify-start ctw-border-b ctw-border-divider-light",
-            { "ctw-hidden": isVertical }
+            "ctw-border-default ctw-flex ctw-space-x-5 ctw-border-b ctw-border-divider-light"
           )}
         >
           {/* Renders button for each tab using "display | display()" */}
-          {content.map(({ key, display }) => (
+          {content.map(({ key, display }, index) => (
             <Tab
               key={key}
               data-zus-telemetry-click={`Tab[${key}]`}
@@ -104,7 +136,8 @@ function TabGroupComponent({
                   {
                     "after:ctw-bg-content-black": selected,
                     "ctw-text-content-light": !selected,
-                  }
+                  },
+                  { "ctw-invisible !ctw-absolute": index >= tabOverflowCutoff }
                 )
               }
             >
@@ -112,8 +145,31 @@ function TabGroupComponent({
             </Tab>
           ))}
 
+          {tabOverflowCutoff < content.length && (
+            <ListBox
+              ref={moreMenuRef}
+              selectedIndex={selectedTabIndex - tabOverflowCutoff}
+              btnClassName={cx(
+                "ctw-more-tab ctw-capitalize ctw-flex-shrink-0 ctw-h-full",
+                "hover:after:ctw-bg-content-black",
+                {
+                  "-ctw-ml-5": tabOverflowCutoff === 0,
+                  "after:ctw-bg-content-black": selectedTabIndex - tabOverflowCutoff >= 0,
+                }
+              )}
+              optionsClassName="ctw-tab-list ctw-capitalize"
+              onChange={(index) => handleOnChange(index + tabOverflowCutoff)}
+              items={content.slice(tabOverflowCutoff)}
+            >
+              {tabOverflowCutoff !== 0 ? <span>More</span> : undefined}
+            </ListBox>
+          )}
+
           {showTopRightContent && (
-            <div className="ctw-ml-auto ctw-flex ctw-items-center ctw-px-1.5">
+            <div
+              className="!ctw-ml-auto ctw-mr-1.5 ctw-flex ctw-flex-shrink-0 ctw-items-center ctw-whitespace-nowrap"
+              ref={topRightContentRef}
+            >
               {topRightContent}
             </div>
           )}
