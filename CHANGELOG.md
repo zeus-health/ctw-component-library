@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.35.4
+
+### Patch Changes
+
+- 6eaf775d: Updated Observation trend value to be bold for currently selected trend
+
 ## 1.35.3
 
 ### Patch Changes
