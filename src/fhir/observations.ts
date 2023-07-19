@@ -33,6 +33,7 @@ function fetchObservations(loincCodes: string[]) {
         sort: {
           lastUpdated: "DESC",
         },
+        filter: {},
       });
       const nodes = data.ObservationConnection.edges.map((x) => x.node);
       const observations = nodes.map((o) => new ObservationModel(o));

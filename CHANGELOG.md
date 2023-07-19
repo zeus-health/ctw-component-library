@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.36.1
+
+### Patch Changes
+
+- 417bd27d: Resolved issue where empty filter made Observation request invalid
+
 ## 1.36.0
 
 ### Minor Changes
