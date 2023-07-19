@@ -5,12 +5,14 @@ import { DiagnosticReportModel, ObservationModel } from "@/fhir/models";
 import { LOINC_ANALYTES } from "@/fhir/models/observation";
 import { usePatientObservations } from "@/fhir/observations";
 import { keys } from "@/utils/nodash";
+import { Telemetry } from "@/utils/telemetry";
 
 export function useObservationsDetailsDrawer() {
   const { openDrawer } = useDrawer();
   const { data } = usePatientObservations(keys(LOINC_ANALYTES));
 
   return (diagnosticReport: DiagnosticReportModel) => {
+    Telemetry.countMetric("click.count.observations", 1, ["fqs"]);
     openDrawer({
       component: (props) => (
         <ObservationsDrawer diagnosticReport={diagnosticReport} observations={data} {...props} />
