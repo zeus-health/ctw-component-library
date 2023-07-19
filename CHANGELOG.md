@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 1.37.0
+
+### Minor Changes
+
+- bba15492: Updated FQS Observations query to include filtering by code
+
+### Patch Changes
+
+- 34f1deee: Set default resources for ZAP.
+- 56aaa434: Make unknown condition type display as "Unknown".
+- 0a8aa100: Improve responsiveness of ZAP tabs to collapse overflowed tabs into a more menu.
+
 ## 1.36.1
 
 ### Patch Changes
