@@ -38,13 +38,14 @@ function TabGroupComponent({
   onChange,
   topRightContent,
 }: TabGroupProps) {
+  // Ugly cheat to account for margins between tabs (algins with ctw-space-x-5 on Tab.List)
+  const TAB_SPACING = 20;
   // State used for responsive tab dropdown menu.
-  const TAB_SPACING = 20; // Ugly cheat to account for margins between tabs.
   const topRightContentRef = useRef<HTMLDivElement>(null);
   const moreMenuRef = useRef<HTMLDivElement>(null);
-  const [tabOverflowCutoff, setTabOverflowCutoff] = useState(content.length);
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
+  const [tabOverflowCutoff, setTabOverflowCutoff] = useState(content.length);
 
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   const patientHistoryDetails = usePatientHistory();
@@ -117,6 +118,7 @@ function TabGroupComponent({
       <Tab.Group selectedIndex={selectedTabIndex} onChange={handleOnChange}>
         <Tab.List
           className={cx(
+            // NOTE: Must keep ctw-space-x-5 aligned with the above TAB_SPACING above.
             "ctw-border-default ctw-flex ctw-space-x-5 ctw-border-b ctw-border-divider-light"
           )}
         >
