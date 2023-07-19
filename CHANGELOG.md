@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.37.1
+
+### Patch Changes
+
+- 0743ae85: Updated Observations query to filter by system/code
+- a7d34bd5: Show number of results available for diagnostic reports.
+
 ## 1.37.0
 
 ### Minor Changes
