@@ -115,26 +115,15 @@ const components: DemoComponent[] = [
   {
     name: "zap",
     render: () => {
-      const resources: ZAPResourceName[] = [
-        "conditions-all",
-        "medications-all",
-        "diagnostic-reports",
-        "timeline",
-        "documents",
-        "allergies",
-        "immunizations",
-        "care-team",
-      ];
       return (
         <div>
-          <UnreadRecordsNotification resources={resources} text="Patient has unread records" />
+          <UnreadRecordsNotification text="Patient has unread records" />
           <ZusAggregatedProfile
             conditionsOutsideProps={{
               hideRequestRecords: true,
             }}
             conditionsAllProps={{ onlyAllowAddOutsideConditions: true }}
             includePatientDemographicsForm={false}
-            resources={resources}
             title="ZAP"
           />
         </div>
