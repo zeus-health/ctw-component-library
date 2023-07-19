@@ -12,7 +12,7 @@ export function useObservationsDetailsDrawer() {
   const { data } = usePatientObservations(keys(LOINC_ANALYTES));
 
   return (diagnosticReport: DiagnosticReportModel) => {
-    Telemetry.countMetric("click.count.observations", 1, ["fqs"]);
+    Telemetry.countMetric("click.count.diagnostic_report", 1, ["fqs"]);
     openDrawer({
       component: (props) => (
         <ObservationsDrawer diagnosticReport={diagnosticReport} observations={data} {...props} />
