@@ -143,9 +143,9 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
     );
   }
 
-  get type(): string | undefined {
-    const type = findCoding(SYSTEM_CCI, this.resource.code)?.display;
-    return type?.toLocaleLowerCase() === "both" ? "Chronic and acute" : type;
+  get type() {
+    const type = findCoding(SYSTEM_CCI, this.resource.code)?.display || "Unknown";
+    return type.toLocaleLowerCase() === "both" ? "Chronic and acute" : type;
   }
 
   get encounter(): string | undefined {
