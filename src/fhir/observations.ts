@@ -23,6 +23,7 @@ export function usePatientObservations(loincCodes: string[]) {
 }
 
 function fetchObservations(loincCodes: string[]) {
+  const codes = loincCodes.map((loincCode) => `${SYSTEM_LOINC}|${loincCode}`); // turn supplied loincCodes into system|code format expected by FQS
   return async (requestContext: CTWRequestContext, patient: PatientModel) => {
     try {
       const graphClient = createGraphqlClient(requestContext);
@@ -35,18 +36,17 @@ function fetchObservations(loincCodes: string[]) {
         },
         filter: {
           code: {
-            anymatch: loincCodes,
+            anymatch: codes,
           },
         },
       });
       const nodes = data.ObservationConnection.edges.map((x) => x.node);
       const observations = nodes.map((o) => new ObservationModel(o));
-      const filteredObservations = filterObservationsByLOINCCodes(observations, loincCodes); // enforce system + code on the frontend since FQS only filters by code (not system).
-      if (filteredObservations.length === 0) {
+      if (observations.length === 0) {
         Telemetry.countMetric("req.count.all_observations.none", 1, ["fqs"]);
       }
-      Telemetry.histogramMetric(`req.count.all_observations`, filteredObservations.length, ["fqs"]);
-      return filteredObservations;
+      Telemetry.histogramMetric(`req.count.all_observations`, observations.length, ["fqs"]);
+      return observations;
     } catch (e) {
       throw Telemetry.logError(
         e as Error,
@@ -54,13 +54,4 @@ function fetchObservations(loincCodes: string[]) {
       );
     }
   };
-}
-
-function filterObservationsByLOINCCodes(observations: ObservationModel[], codes: string[]) {
-  const filteredObservations = observations.filter((o) =>
-    o.resource.code.coding?.some(
-      (c) => c.system === SYSTEM_LOINC && codes.some((cc) => cc === c.code)
-    )
-  );
-  return filteredObservations;
 }
