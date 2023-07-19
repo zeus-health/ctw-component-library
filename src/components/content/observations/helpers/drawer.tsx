@@ -8,12 +8,16 @@ import { keys } from "@/utils/nodash";
 
 export function useObservationsDetailsDrawer() {
   const { openDrawer } = useDrawer();
-  const { data } = usePatientObservations(keys(LOINC_ANALYTES));
+  const observations = usePatientObservations(keys(LOINC_ANALYTES));
 
   return (diagnosticReport: DiagnosticReportModel) => {
     openDrawer({
       component: (props) => (
-        <ObservationsDrawer diagnosticReport={diagnosticReport} observations={data} {...props} />
+        <ObservationsDrawer
+          diagnosticReport={diagnosticReport}
+          observations={observations.data}
+          {...props}
+        />
       ),
     });
   };

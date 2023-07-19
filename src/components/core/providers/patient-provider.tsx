@@ -94,6 +94,29 @@ export function usePatient(): UseQueryResult<PatientModel, unknown> {
   );
 }
 
+export function usePatientVersion(version: number): UseQueryResult<PatientModel, unknown> {
+  const { getRequestContext } = useCTW();
+  const patient = usePatient();
+  const patientId = patient.data?.id;
+
+  return useQuery(
+    [QUERY_KEY_PATIENT, patientId, version],
+    withTimerMetric(async () => {
+      const requestContext = await getRequestContext();
+      if (patientId) {
+        const p = (await requestContext.fhirClient.vread({
+          resourceType: "Patient",
+          id: patientId,
+          version: `${version}`,
+        })) as fhir4.Patient;
+        const model = new PatientModel(p);
+        return model;
+      }
+      return {};
+    }, "req.get_builder_fhir_patient")
+  );
+}
+
 export function usePatientPromise() {
   const { getRequestContext } = useCTW();
 
