@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.37.2
+
+### Patch Changes
+
+- 2df4dd3d: Switched ctw urls to use app.zushealth.com.
+
 ## 1.37.1
 
 ### Patch Changes
