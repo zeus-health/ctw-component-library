@@ -33,11 +33,15 @@ function fetchObservations(loincCodes: string[]) {
         sort: {
           lastUpdated: "DESC",
         },
-        filter: {},
+        filter: {
+          code: {
+            anymatch: loincCodes,
+          },
+        },
       });
       const nodes = data.ObservationConnection.edges.map((x) => x.node);
       const observations = nodes.map((o) => new ObservationModel(o));
-      const filteredObservations = filterObservationsByLOINCCodes(observations, loincCodes);
+      const filteredObservations = filterObservationsByLOINCCodes(observations, loincCodes); // enforce system + code on the frontend since FQS only filters by code (not system).
       if (filteredObservations.length === 0) {
         Telemetry.countMetric("req.count.all_observations.none", 1, ["fqs"]);
       }
