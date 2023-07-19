@@ -1,5 +1,5 @@
 import { ObservationModel, PatientModel } from "./models";
-import { SYSTEM_LOINC, SYSTEM_ZUS_OWNER } from "./system-urls";
+import { SYSTEM_LOINC } from "./system-urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { useTrendingLabsFeatureToggle } from "@/hooks/use-feature-toggle";
@@ -14,7 +14,7 @@ export function usePatientObservations(loincCodes: string[]) {
     `${QUERY_KEY_PATIENT_OBSERVATIONS}_${loincCodes.join("_")}`,
     [trendingLabs.enabled],
     trendingLabs.enabled
-      ? withTimerMetric(fetchObservations(loincCodes), "req.timing.observations")
+      ? withTimerMetric(fetchObservations(loincCodes), "req.timing.all_observations")
       : async () =>
           new Promise<ObservationModel[]>((resolve) => {
             resolve([]);
@@ -33,18 +33,14 @@ function fetchObservations(loincCodes: string[]) {
         sort: {
           lastUpdated: "DESC",
         },
-        filter: {
-          tag: {
-            allmatch: [`${SYSTEM_ZUS_OWNER}|builder/${requestContext.builderId}`],
-          },
-        },
       });
       const nodes = data.ObservationConnection.edges.map((x) => x.node);
       const observations = nodes.map((o) => new ObservationModel(o));
       const filteredObservations = filterObservationsByLOINCCodes(observations, loincCodes);
-      Telemetry.histogramMetric(`req.count.builder_observations`, filteredObservations.length, [
-        "fqs",
-      ]);
+      if (filteredObservations.length === 0) {
+        Telemetry.countMetric("req.count.all_observations.none", 1, ["fqs"]);
+      }
+      Telemetry.histogramMetric(`req.count.all_observations`, filteredObservations.length, ["fqs"]);
       return filteredObservations;
     } catch (e) {
       throw Telemetry.logError(
