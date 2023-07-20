@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.39.1
+
+### Patch Changes
+
+- c7e5bba9: Updated trending labs logic to include Patients created on 07/19/2023
+
 ## 1.39.0
 
 ### Minor Changes
