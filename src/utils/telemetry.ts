@@ -1,5 +1,6 @@
 import { datadogLogs } from "@datadog/browser-logs";
 import jwtDecode from "jwt-decode";
+import { Session } from "./session";
 import packageJson from "../../package.json";
 import { getMetricsBaseUrl } from "@/api/urls";
 import { FhirError, fhirErrorResponse } from "@/fhir/errors";
@@ -14,7 +15,7 @@ import {
   AUTH_USER_TYPE,
   ZusJWT,
 } from "@/utils/auth";
-import { compact, snakeCase, trim } from "@/utils/nodash";
+import { compact, snakeCase } from "@/utils/nodash";
 
 type TelemetryEventKey = "zusTelemetryClick" | "zusTelemetryFocus";
 
@@ -154,6 +155,8 @@ export class Telemetry {
     if (accessToken) {
       this.accessToken = accessToken;
       const user = jwtDecode(accessToken) as ZusJWT;
+
+      Session.setSessionUserId(user[AUTH_USER_ID]);
       const decodedUser = {
         id: user[AUTH_USER_ID],
         type: user[AUTH_USER_TYPE],
@@ -164,6 +167,7 @@ export class Telemetry {
         patientId: user[AUTH_PATIENT_ID],
         isSuperOrg: user[AUTH_IS_SUPER_ORG],
       };
+
       if (this.datadogLoggingEnabled) {
         datadogLogs.setUser(decodedUser);
       }
@@ -214,18 +218,11 @@ export class Telemetry {
     return ns || "unknown";
   }
 
-  static trackInteraction(eventType: string, namespace: string, action: string) {
-    // We log this event with namespace breadcrumbs if allowed
-    if (this.telemetryIsAvailable && this.datadogLoggingEnabled) {
-      this.logger.log(`${eventType} event: ${namespace} > ${action}`, {
-        eventType,
-        action,
-        namespace,
-      });
-    }
-    // We send a generic action metric to CTW regardless
-    const leafNamespace = namespace.split(">").map(trim).pop();
-    this.countMetric(`interaction.${action}`, 1, compact([leafNamespace]));
+  static trackInteraction(action: string) {
+    // We send an action metric to CTW
+    this.countMetric(`action.${action}`, 1);
+    // We report an active session to CTW
+    this.reportActiveSession().catch((error) => Telemetry.logError(error as Error));
   }
 
   /**
@@ -249,13 +246,10 @@ export class Telemetry {
     additionalTags: string[] = []
   ) {
     if (
-      process.env.NODE_ENV !== "test" &&
-      ["http://localhost:3000", "http://127.0.0.1:3000"].includes(window.location.origin)
+      !this.environment ||
+      (process.env.NODE_ENV !== "test" &&
+        ["http://localhost:3000", "http://127.0.0.1:3000"].includes(window.location.origin))
     ) {
-      return;
-    }
-
-    if (!this.environment) {
       return;
     }
 
@@ -342,11 +336,7 @@ export class Telemetry {
 
     const targetName = eventTarget?.dataset[telemetryKey] ?? explicitTargetName;
     if (eventTarget && targetName) {
-      if (!this.namespaceMap.has(eventTarget)) {
-        this.namespaceMap.set(eventTarget, this.lookupComponentNamespace(eventTarget));
-      }
-      const namespace = this.namespaceMap.get(eventTarget);
-      this.trackInteraction(this.eventTypes[telemetryKey], namespace, targetName);
+      this.trackInteraction(targetName);
     }
   }
 
@@ -358,6 +348,29 @@ export class Telemetry {
       return target.parentElement;
     }
     return this.closestHTMLElement(target.parentNode);
+  }
+
+  static async reportActiveSession() {
+    // Return if the session is already active or we don't need to report
+    if (
+      Session.isActive() ||
+      !this.environment ||
+      (process.env.NODE_ENV !== "test" &&
+        ["http://localhost:3000", "http://127.0.0.1:3000"].includes(window.location.origin))
+    ) {
+      return;
+    }
+
+    try {
+      // Set last active timestamp so we don't report the same session twice
+      const user = jwtDecode(this.accessToken) as ZusJWT;
+      Session.setSessionUserId(user[AUTH_USER_ID]);
+      Session.setSessionLastActiveTimestamp();
+      await Telemetry.reportMetric("increment", "active_session", 1, []);
+    } catch (error) {
+      // Clear the session last active timestamp because we didn't report it
+      Session.clearSessionLastActiveTimestamp();
+    }
   }
 }
 

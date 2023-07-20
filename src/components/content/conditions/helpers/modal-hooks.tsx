@@ -32,6 +32,7 @@ export function useAddConditionForm() {
     );
 
     openDrawer({
+      telemetryName: "add_condition",
       component: (props) => (
         <DrawerFormWithFields
           title={t("resource.add", { resource: t("glossary:condition_one") })}
@@ -53,6 +54,7 @@ export function useEditConditionForm() {
 
   return (condition: ConditionModel) => {
     openDrawer({
+      telemetryName: "edit_condition",
       component: (props) => (
         <DrawerFormWithFields
           title={t("resource.edit", { resource: t("glossary:condition_one") })}

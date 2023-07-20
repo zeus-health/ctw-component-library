@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.38.0
+
+### Minor Changes
+
+- 0394910b: Only fetch trend data when a Patient was created after 07/19/2023
+
 ## 1.37.2
 
 ### Patch Changes
