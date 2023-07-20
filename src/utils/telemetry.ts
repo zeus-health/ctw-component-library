@@ -296,19 +296,7 @@ export class Telemetry {
       const user = jwtDecode(this.accessToken) as ZusJWT;
       Session.setSessionUserId(user[AUTH_USER_ID]);
       Session.setSessionLastActiveTimestamp();
-      await fetch(`${getMetricsBaseUrl(this.environment)}/report/session`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${this.accessToken}`,
-        },
-        body: JSON.stringify({
-          userId: user[AUTH_USER_ID],
-          builder: user[AUTH_BUILDER_NAME],
-          isSuper: user[AUTH_IS_SUPER_ORG] === "true",
-          ehr: this.ehr,
-        }),
-        mode: "cors",
-      });
+      await Telemetry.reportMetric("increment", "active_session", 1, []);
     } catch (error) {
       // Clear the session last active timestamp because we didn't report it
       Session.clearSessionLastActiveTimestamp();
