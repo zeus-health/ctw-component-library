@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.39.0
+
+### Minor Changes
+
+- a1f9114f: Add unique session tracking whenever an interaction is made.
+  Track drawer opens metrics by drawer type.
+
 ## 1.38.0
 
 ### Minor Changes
