@@ -188,7 +188,7 @@ export class Telemetry {
 
   static trackInteraction(action: string) {
     // We send an action metric to CTW
-    this.countMetric(`interaction.${action}`, 1);
+    this.countMetric(`action.${action}`, 1);
     // We report an active session to CTW
     this.reportActiveSession().catch((error) => Telemetry.logError(error as Error));
   }

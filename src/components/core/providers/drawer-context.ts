@@ -2,6 +2,7 @@ import { createContext } from "react";
 import { DrawerProps } from "../drawer";
 
 export type OpenDrawerProps = {
+  telemetryName?: string;
   component: ({
     title,
     isOpen,
