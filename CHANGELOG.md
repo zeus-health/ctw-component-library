@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.40.0
+
+### Minor Changes
+
+- f67aeb59: Add empty state to care team component
+
 ## 1.39.1
 
 ### Patch Changes
