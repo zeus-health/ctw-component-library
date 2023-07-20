@@ -16,6 +16,7 @@ export function useAddMedicationForm() {
 
   return (medication: MedicationStatementModel) => {
     openDrawer({
+      telemetryName: "add_medication",
       component: (props) => <AddNewMedDrawer medication={medication.resource} {...props} />,
     });
   };
