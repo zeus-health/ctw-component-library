@@ -2,6 +2,7 @@ import cx from "classnames";
 import { useRef } from "react";
 import { patientCareTeamColumns } from "./helpers/columns";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
+import { EmptyTable } from "@/components/core/empty-table";
 import { Table } from "@/components/core/table/table";
 import { usePatientCareTeam } from "@/fhir/care-team";
 import { CareTeamPractitionerModel } from "@/fhir/models/careteam-practitioner";
@@ -50,6 +51,7 @@ export function PatientCareTeam({ className }: PatientCareTeamProps) {
         records={patientCareTeamQuery.data ?? []}
         columns={patientCareTeamColumns}
         handleRowClick={openDetails}
+        emptyMessage={<EmptyTable hasZeroFilteredRecords={false} resourceName="care team" />}
       />
     </div>
   );
