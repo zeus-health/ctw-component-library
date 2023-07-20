@@ -10,7 +10,6 @@ import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { usePatientAllDiagnosticReports } from "@/fhir/diagnostic-report";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
-import { Telemetry } from "@/utils/telemetry";
 
 export type PatientDiagnosticReportsProps = {
   className?: string;
@@ -27,10 +26,7 @@ function PatientDiagnosticReportsComponent({ className }: PatientDiagnosticRepor
   const isEmptyQuery = query.data.length === 0;
   const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
 
-  const OpenDetails = () => {
-    Telemetry.countMetric("click.count.diagnostic_report_component", 1, ["fqs"]);
-    return useObservationsDetailsDrawer();
-  };
+  const openDetails = useObservationsDetailsDrawer();
 
   return (
     <div
@@ -54,7 +50,7 @@ function PatientDiagnosticReportsComponent({ className }: PatientDiagnosticRepor
         isLoading={query.isLoading}
         data={data}
         columns={patientDiagnosticReportsColumns(userBuilderId)}
-        onRowClick={OpenDetails}
+        onRowClick={openDetails}
         enableDismissAndReadActions
         emptyMessage={
           <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="diagnostics" />

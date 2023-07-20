@@ -30,8 +30,10 @@ const devDatadogConfig = {
 };
 
 let origin = "";
+let body: HTMLElement | undefined;
 if (typeof window !== "undefined") {
   origin = window.location.origin;
+  body = window.document.body;
 }
 
 // Assume local development if origin is localhost or just an IP address
@@ -108,6 +110,36 @@ export class Telemetry {
         version: packageJson.version,
       });
     }
+
+    // We are listening to click events propagating to the document body as that
+    // is the lowest level HTMLElement we actually know will both exist at this
+    // time and which won't be removed from the DOM by React causing a small
+    // memory leak.
+    // Additionally, because we aren't listening directly to events on elements
+    // that have `data-zus-telemetry-*` attributes, we don't have the luxury of
+    // knowing whether an event triggered from inside one of these telemetry
+    // elements, so we'll have to traverse the DOM tree ourselves. To minimize
+    // this work we'll put a `depth` level and adjust it over time if needed.
+    // For example, imagine the user clicked an element with CSS selector path
+    // of "button[data-zus-telemetry-click="submit"] > span > span". Because we
+    // are listening on body and not button, we would have to walk up 2 parent
+    // nodes of the DOM before knowing whether this event was relevant to us.
+    body?.addEventListener("click", (event) => {
+      const { target, isTrusted } = event;
+      if (!(isTrusted && target instanceof Element)) {
+        return;
+      }
+      const htmlElement = this.closestHTMLElement(target);
+      if (htmlElement instanceof HTMLElement) {
+        this.processHTMLEvent(htmlElement, "zusTelemetryClick");
+      }
+    });
+    body?.addEventListener("focusin", (event) => {
+      const { target, isTrusted } = event;
+      if (isTrusted && target instanceof HTMLElement) {
+        this.processHTMLEvent(target, "zusTelemetryFocus");
+      }
+    });
 
     isInitialized = true;
   }
@@ -285,6 +317,47 @@ export class Telemetry {
 
   static reportActionFailure(metric: string, tags: string[] = []) {
     Telemetry.countMetric(`action.${metric}.failure`, 1, tags);
+  }
+
+  static processHTMLEvent(
+    target: HTMLElement,
+    telemetryKey: TelemetryEventKey,
+    explicitTargetName?: string
+  ) {
+    let eventTarget: HTMLElement | null = null;
+
+    if (explicitTargetName) {
+      eventTarget = target;
+    } else {
+      let nextTarget: HTMLElement | null = target;
+      let depth = 5;
+      while (!eventTarget && depth > 0 && nextTarget) {
+        if (nextTarget.dataset[telemetryKey]) {
+          eventTarget = nextTarget;
+        }
+        nextTarget = nextTarget.parentElement;
+        depth -= 1;
+      }
+    }
+
+    const targetName = eventTarget?.dataset[telemetryKey] ?? explicitTargetName;
+    if (eventTarget && targetName) {
+      if (!this.namespaceMap.has(eventTarget)) {
+        this.namespaceMap.set(eventTarget, this.lookupComponentNamespace(eventTarget));
+      }
+      const namespace = this.namespaceMap.get(eventTarget);
+      this.trackInteraction(this.eventTypes[telemetryKey], namespace, targetName);
+    }
+  }
+
+  private static closestHTMLElement(target: Element | Node | null): HTMLElement | null {
+    if (!target || target instanceof HTMLElement) {
+      return target;
+    }
+    if (target.parentElement instanceof HTMLElement) {
+      return target.parentElement;
+    }
+    return this.closestHTMLElement(target.parentNode);
   }
 }
 
