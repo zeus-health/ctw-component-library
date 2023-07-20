@@ -8,7 +8,7 @@ export class Session {
     if (timestampStr) {
       const lastActiveTimestamp = parseInt(timestampStr, 10);
       const now = new Date().getTime();
-      return now - SESSION_INACTIVE_TIME_MS > lastActiveTimestamp;
+      return now - SESSION_INACTIVE_TIME_MS < lastActiveTimestamp;
     }
     return false;
   }

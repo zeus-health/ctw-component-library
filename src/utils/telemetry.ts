@@ -284,6 +284,7 @@ export class Telemetry {
   static async reportActiveSession() {
     // Return if the session is already active or we don't need to report
     if (
+      Session.isActive() ||
       !this.environment ||
       (process.env.NODE_ENV !== "test" &&
         ["http://localhost:3000", "http://127.0.0.1:3000"].includes(window.location.origin))
