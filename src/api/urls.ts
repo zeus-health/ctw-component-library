@@ -36,8 +36,8 @@ export const getMetricsBaseUrl = (env: string) => {
     return "http://localhost:3000";
   }
   return ["prod", "production"].includes(env)
-    ? `https://ctw.zusapi.com`
-    : `https://ctw.${env}.zusapi.com`;
+    ? `https://app.zushealth.com`
+    : `https://app.${env}.zushealth.com`;
 };
 
 export const getLensBuilderId = (env: Env) => {
