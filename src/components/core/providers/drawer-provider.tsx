@@ -27,7 +27,9 @@ export function DrawerProvider({ children }: ProviderProps) {
         setIsOpen(false);
         setTimeout(() => {
           setIsOpen(true);
-          Telemetry.trackInteraction(`open_drawer.${props.telemetryName}`.replace(/(\.)$/, ""));
+          Telemetry.trackInteraction(
+            `open_drawer.${props.telemetryName ?? ""}`.replace(/(\.)$/, "")
+          );
         });
       },
     }),
@@ -38,8 +40,6 @@ export function DrawerProvider({ children }: ProviderProps) {
   return (
     <DrawerContext.Provider value={state}>
       {drawerProps.component({
-        title: "",
-        telemetryName: "",
         isOpen,
         onClose: () => {
           setIsOpen(false);
