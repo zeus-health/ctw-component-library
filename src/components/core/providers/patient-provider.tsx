@@ -113,7 +113,7 @@ export function usePatientVersion(version: number): UseQueryResult<PatientModel,
         return model;
       }
       return {};
-    }, "req.get_builder_fhir_patient")
+    }, "req.get_builder_fhir_patient_version")
   );
 }
 
