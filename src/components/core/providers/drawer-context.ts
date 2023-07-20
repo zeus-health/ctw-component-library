@@ -4,14 +4,11 @@ import { DrawerProps } from "../drawer";
 export type OpenDrawerProps = {
   telemetryName?: string;
   component: ({
-    title,
     isOpen,
     onClose,
     onOpen,
     onAfterOpen,
-  }: Pick<DrawerProps, "isOpen" | "onClose" | "onOpen" | "onAfterOpen" | "title">) =>
-    | JSX.Element
-    | undefined;
+  }: Pick<DrawerProps, "isOpen" | "onClose" | "onOpen" | "onAfterOpen">) => JSX.Element | undefined;
 };
 
 export type DrawerState = {
