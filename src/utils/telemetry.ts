@@ -233,6 +233,7 @@ export class Telemetry {
       "service:ctw-component-library",
       `env:${this.environment}`,
       user[AUTH_BUILDER_NAME] ? `builder_name:${user[AUTH_BUILDER_NAME]}` : undefined,
+      `user_id:${user[AUTH_USER_ID]}`,
       `is_super:${user[AUTH_IS_SUPER_ORG] || "false"}`,
       this.ehr ? `ehr:${this.ehr}` : undefined,
       `version:${packageJson.version}`,
