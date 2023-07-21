@@ -29,10 +29,7 @@ function PatientDiagnosticReportsComponent({ className }: PatientDiagnosticRepor
   const openDetails = useObservationsDetailsDrawer();
 
   return (
-    <div
-      className={cx(className, "ctw-scrollable-pass-through-height")}
-      data-zus-telemetry-namespace="DiagnosticReports"
-    >
+    <div className={cx(className, "ctw-scrollable-pass-through-height")}>
       <ResourceTableActions
         filterOptions={{
           onChange: setFilters,
