@@ -98,7 +98,7 @@ export const Component = ({ diagnosticReport, observationTrends }: ObservationDe
   }, [diagnosticReport, fqsObservations.ready, fqsObservations.enabled, observationTrends]);
 
   return (
-    <div className="ctw-space-y-6" data-zus-telemetry-namespace="Observations">
+    <div className="ctw-space-y-6">
       <div className="ctw-text-2xl">{diagnosticReport.displayName}</div>
 
       {isLoading ? (

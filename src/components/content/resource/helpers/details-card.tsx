@@ -8,7 +8,7 @@ export type DetailsProps = {
 };
 
 export const DetailsCard = ({ details, hideEmpty = true, documentButton }: DetailsProps) => (
-  <div className="ctw-rounded-lg ctw-bg-bg-lighter" data-zus-telemetry-namespace="Details">
+  <div className="ctw-rounded-lg ctw-bg-bg-lighter">
     <dl className="ctw-m-0 ctw-space-y-2 ctw-px-4 ctw-py-6">
       <div className="ctw-flex ctw-justify-between ctw-space-x-2 ctw-text-sm ctw-uppercase ctw-text-content-light">
         <div className="ctw-title-container">Details</div>

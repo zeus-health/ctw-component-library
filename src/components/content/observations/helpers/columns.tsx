@@ -87,16 +87,15 @@ export const ObservationsColumns = (): TableColumn<ObservationModel>[] => {
     {
       title: "Trends",
       render: (model) => (
-        <div
-          className="ctw-text-sm ctw-font-normal"
-          data-zus-telemetry-namespace="Trending Observations"
-        >
+        <div className="ctw-text-sm ctw-font-normal">
           {model.trends.length > 1 && (
             <div className="ctw-pt-2">
               <button
                 aria-label="trends"
                 className="ctw-btn-clear"
-                data-zus-telemetry-click={isTrendsShown ? "Collapsed" : "Expanded"}
+                data-zus-telemetry-click={
+                  isTrendsShown ? "CollapsedTrendShown" : "ExpandedTrendShown"
+                }
                 type="button"
                 onClick={() => setIsTrendsShown(!isTrendsShown)}
               >

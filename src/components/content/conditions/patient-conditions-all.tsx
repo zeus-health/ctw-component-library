@@ -66,10 +66,7 @@ function PatientConditionsAllComponent({
   );
 
   return (
-    <div
-      className={cx(className, "ctw-scrollable-pass-through-height")}
-      data-zus-telemetry-namespace="Conditions"
-    >
+    <div className={cx(className, "ctw-scrollable-pass-through-height")}>
       <ResourceTableActions
         filterOptions={{
           onChange: setFilters,

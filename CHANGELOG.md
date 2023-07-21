@@ -1,5 +1,35 @@
 # ctw-component-library
 
+## 1.41.0
+
+### Minor Changes
+
+- 271a3355: Added user_id to telemetry metrics
+
+### Patch Changes
+
+- 2fd3affc: Add click count for diagnostic reports.
+- 93d86d3c: Cleanup of telemetry namespace dataset attributes
+
+## 1.40.0
+
+### Minor Changes
+
+- f67aeb59: Add empty state to care team component
+
+## 1.39.1
+
+### Patch Changes
+
+- c7e5bba9: Updated trending labs logic to include Patients created on 07/19/2023
+
+## 1.39.0
+
+### Minor Changes
+
+- a1f9114f: Add unique session tracking whenever an interaction is made.
+  Track drawer opens metrics by drawer type.
+
 ## 1.38.0
 
 ### Minor Changes

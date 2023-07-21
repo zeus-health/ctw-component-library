@@ -47,11 +47,7 @@ function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocument
   });
 
   return (
-    <div
-      ref={containerRef}
-      data-zus-telemetry-namespace="Documents"
-      className={cx(className, "ctw-scrollable-pass-through-height")}
-    >
+    <div ref={containerRef} className={cx(className, "ctw-scrollable-pass-through-height")}>
       <ResourceTableActions
         filterOptions={{
           onChange: setFilters,

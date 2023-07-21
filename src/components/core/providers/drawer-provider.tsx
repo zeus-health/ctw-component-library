@@ -1,5 +1,6 @@
 import { ReactNode, useContext, useMemo, useState } from "react";
 import { DrawerContext, DrawerState, OpenDrawerProps } from "./drawer-context";
+import { Telemetry } from "@/utils/telemetry";
 
 interface ProviderProps {
   children: ReactNode;
@@ -26,6 +27,9 @@ export function DrawerProvider({ children }: ProviderProps) {
         setIsOpen(false);
         setTimeout(() => {
           setIsOpen(true);
+          Telemetry.trackInteraction(
+            `open_drawer.${props.telemetryName ?? ""}`.replace(/(\.)$/, "")
+          );
         });
       },
     }),
