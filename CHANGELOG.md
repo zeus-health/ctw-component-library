@@ -1,5 +1,16 @@
 # ctw-component-library
 
+## 1.41.0
+
+### Minor Changes
+
+- 271a3355: Added user_id to telemetry metrics
+
+### Patch Changes
+
+- 2fd3affc: Add click count for diagnostic reports.
+- 93d86d3c: Cleanup of telemetry namespace dataset attributes
+
 ## 1.40.0
 
 ### Minor Changes
