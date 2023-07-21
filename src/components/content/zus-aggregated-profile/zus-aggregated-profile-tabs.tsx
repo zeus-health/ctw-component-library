@@ -112,7 +112,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
   "diagnostic-reports": (props: PatientDiagnosticReportsProps = {}) => ({
     key: "diagnostic-reports",
     display: () => (
-      <TabHelper notification={<UnreadDiagnosticReportsNotification />} name="diagnostics" beta />
+      <TabHelper notification={<UnreadDiagnosticReportsNotification />} name="diagnostics" />
     ),
     render: () => <PatientDiagnosticReports {...props} />,
   }),
