@@ -6,12 +6,13 @@ import { patientConditionsColumns } from "./columns";
 import { useConditionDetailsDrawer } from "./details";
 import { conditionFilters, defaultConditionFilters } from "./filters";
 import { conditionSortOptions, defaultConditionSort } from "./sorts";
-import { ResourceTable, ResourceTableProps } from "../../resource/resource-table";
+import { ResourceTable } from "../../resource/resource-table";
 import {
   ResourceTableActions,
   ResourceTableActionsProps,
 } from "../../resource/resource-table-actions";
 import { EmptyTable } from "@/components/core/empty-table";
+import { RowActionsProp } from "@/components/core/table/table-rows";
 import { ConditionModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 
@@ -21,7 +22,7 @@ export type PatientConditionsTableProps = {
   query: { data?: ConditionModel[]; isLoading: boolean };
   outside?: boolean;
   readOnly?: boolean;
-  rowActions?: ResourceTableProps<ConditionModel>["RowActions"];
+  RowActions?: RowActionsProp<ConditionModel>;
   emptyMessage?: string | ReactElement | undefined;
   isLoading?: boolean;
 };
@@ -31,15 +32,11 @@ export const PatientConditionsBase = ({
   className,
   query,
   outside = false,
-  readOnly = false,
-  rowActions,
+  RowActions,
   emptyMessage,
   isLoading,
 }: PatientConditionsTableProps) => {
-  const openDetailsDrawer = useConditionDetailsDrawer({
-    canRemove: !readOnly && !outside,
-    canEdit: !readOnly && !outside,
-  });
+  const openDetailsDrawer = useConditionDetailsDrawer({ RowActions });
 
   const { data, setFilters, setSort } = useFilteredSortedData({
     defaultFilters: defaultConditionFilters,
@@ -79,7 +76,7 @@ export const PatientConditionsBase = ({
         emptyMessage={empty}
         isLoading={isLoading || query.isLoading}
         onRowClick={openDetailsDrawer}
-        RowActions={rowActions}
+        RowActions={RowActions}
       />
     </div>
   );

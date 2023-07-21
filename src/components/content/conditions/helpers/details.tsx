@@ -1,29 +1,21 @@
 import { useConditionHistory } from "./history";
-import { useConfirmDeleteCondition, useEditConditionForm } from "./modal-hooks";
 import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
 import { NotesList } from "@/components/core/notes-list";
+import { RowActionsProp } from "@/components/core/table/table-rows";
 import { ConditionModel } from "@/fhir/models";
-import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { capitalize } from "@/utils/nodash";
 
 export const useConditionDetailsDrawer = ({
-  canEdit,
+  RowActions,
+  enableDismissAndReadActions,
 }: {
-  canEdit: boolean;
-  canRemove: boolean;
-}) => {
-  const { enabled } = useFQSFeatureToggle("conditions");
-  const showEditConditionForm = useEditConditionForm();
-  const confirmDelete = useConfirmDeleteCondition();
-
-  return useResourceDetailsDrawer({
+  RowActions?: RowActionsProp<ConditionModel>;
+  enableDismissAndReadActions?: boolean;
+}) =>
+  useResourceDetailsDrawer({
     header: (condition: ConditionModel) => condition.display,
     subHeader: (condition: ConditionModel) => condition.ccsChapter,
     getSourceDocument: true,
-    readOnly: !canEdit,
-    enableFQS: enabled,
-    onEdit: showEditConditionForm,
-    onRemove: confirmDelete,
     details: (condition: ConditionModel) => [
       { label: "Recorder", value: condition.recorder },
       { label: "Recorded Date", value: condition.recordedDate },
@@ -41,5 +33,6 @@ export const useConditionDetailsDrawer = ({
       },
     ],
     getHistory: useConditionHistory,
+    RowActions,
+    enableDismissAndReadActions,
   });
-};

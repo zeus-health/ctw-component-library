@@ -1,5 +1,6 @@
 import { ReactNode, useEffect, useState } from "react";
 import { History, HistoryEntries } from "./helpers/history";
+import { useAdditionalResourceActions } from "./use-additional-resource-actions";
 import { DocumentButton } from "../CCDA/document-button";
 import { useCCDAModal } from "../CCDA/modal-ccda";
 import { DetailsCard, DetailsProps } from "@/components/content/resource/helpers/details-card";
@@ -7,7 +8,7 @@ import { Drawer } from "@/components/core/drawer";
 import { Loading } from "@/components/core/loading";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
 import { useCTW } from "@/components/core/providers/use-ctw";
-import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
+import { RowActionsProp } from "@/components/core/table/table-rows";
 import { getBinaryId } from "@/fhir/binaries";
 import { DocumentModel } from "@/fhir/models/document";
 import { FHIRModel } from "@/fhir/models/fhir-model";
@@ -24,10 +25,8 @@ export type UseResourceDetailsDrawerProps<T extends fhir4.Resource, M extends FH
   | "getSourceDocument"
   | "details"
   | "getHistory"
-  | "readOnly"
-  | "onEdit"
-  | "onRemove"
-  | "enableFQS"
+  | "RowActions"
+  | "enableDismissAndReadActions"
 >;
 
 export function useResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>(
@@ -53,11 +52,9 @@ type ResourceDetailsDrawerProps<T extends fhir4.Resource, M extends FHIRModel<T>
   isOpen: boolean;
   model: M;
   onClose: () => void;
-  onEdit?: (model: M) => void;
-  onRemove?: (model: M, onDelete?: (model: M) => void) => void;
-  readOnly?: boolean;
+  RowActions?: RowActionsProp<M>;
+  enableDismissAndReadActions?: boolean;
   subHeader?: (model: M) => ReactNode;
-  enableFQS?: boolean;
 };
 
 function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>({
@@ -69,9 +66,8 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
   isOpen,
   model,
   onClose,
-  onEdit,
-  onRemove,
-  readOnly,
+  RowActions,
+  enableDismissAndReadActions,
   subHeader,
 }: ResourceDetailsDrawerProps<T, M>) {
   const openCCDAModal = useCCDAModal();
@@ -80,7 +76,6 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
   const { getRequestContext } = useCTW();
   const fqsProvenances = useFQSFeatureToggle("provenances");
   const history = getHistory && getHistory(model);
-  const userBuilderId = useUserBuilderId();
 
   // We optionally look for any associated binary CCDAs
   // if getSourceDocument is true.
@@ -101,6 +96,16 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
       void load();
     }
   }, [getSourceDocument, model, getRequestContext, fqsProvenances.enabled, fqsProvenances.ready]);
+
+  const rowActionsWithAdditions = useAdditionalResourceActions({
+    RowActions,
+    enableDismissAndReadActions,
+  });
+
+  // We call rowActions right away so we'll know if it returns null and thus we should
+  // hide our footer.
+  const actions =
+    rowActionsWithAdditions && rowActionsWithAdditions({ record: model, onSuccess: onClose });
 
   return (
     <Drawer className={className} title={model.resourceTypeTitle} isOpen={isOpen} onClose={onClose}>
@@ -139,42 +144,14 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
             ))}
         </div>
       </Drawer.Body>
-      <Drawer.Footer>
-        <div className="ctw-flex ctw-justify-between">
-          <Drawer.CloseButton onClose={onClose} label="Close" />
-          <div className="ctw-space-x-3">
-            {!readOnly && onRemove && model.ownedByBuilder(userBuilderId) && (
-              <button
-                type="button"
-                className="ctw-btn-default ctw-w-24"
-                data-zus-telemetry-click="Remove button"
-                onClick={() => {
-                  // Leave the drawer open while the remove
-                  // confirmation modal is open.
-                  // And close the drawer if resource is removed.
-                  onRemove(model, onClose);
-                }}
-              >
-                Remove
-              </button>
-            )}
-
-            {!readOnly && onEdit && model.ownedByBuilder(userBuilderId) && (
-              <button
-                type="button"
-                className="ctw-btn-primary ctw-w-24"
-                data-zus-telemetry-click="Edit button"
-                onClick={() => {
-                  onClose();
-                  onEdit(model);
-                }}
-              >
-                Edit
-              </button>
-            )}
+      {actions && (
+        <Drawer.Footer>
+          <div className="ctw-flex ctw-justify-between">
+            <Drawer.CloseButton onClose={onClose} label="Close" />
+            {actions}
           </div>
-        </div>
-      </Drawer.Footer>
+        </Drawer.Footer>
+      )}
     </Drawer>
   );
 }

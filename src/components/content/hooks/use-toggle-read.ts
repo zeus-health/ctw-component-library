@@ -9,7 +9,7 @@ interface UseToggleReadResult {
   /**
    * Function to call to toggle the read status of the FHIR model
    */
-  toggleRead: (model: FHIRModel<fhir4.Resource>) => void;
+  toggleRead: (model: FHIRModel<fhir4.Resource>) => Promise<void>;
 
   /**
    * True when `toggleRead` is called

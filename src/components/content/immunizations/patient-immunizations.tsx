@@ -11,7 +11,6 @@ import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { usePatientImmunizations } from "@/fhir/immunizations";
 import { ImmunizationModel } from "@/fhir/models/immunization";
-import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 
 export type PatientImmunizationsProps = {
@@ -20,7 +19,6 @@ export type PatientImmunizationsProps = {
 
 function PatientImmunizationsComponent({ className }: PatientImmunizationsProps) {
   const userBuilderId = useUserBuilderId();
-  const { enabled } = useFQSFeatureToggle("immunizations");
   const patientImmunizationsQuery = usePatientImmunizations();
   const { data, setFilters, setSort } = useFilteredSortedData({
     defaultFilters: defaultImmunizationsFilters,
@@ -35,7 +33,7 @@ function PatientImmunizationsComponent({ className }: PatientImmunizationsProps)
     header: (m) => m.description,
     details: immunizationData,
     getSourceDocument: true,
-    enableFQS: enabled,
+    enableDismissAndReadActions: true,
   });
 
   return (

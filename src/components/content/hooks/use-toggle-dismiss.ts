@@ -8,7 +8,7 @@ interface UseToggleDismissResult {
   /**
    * Function to call to toggle the archive status of the FHIR model
    */
-  toggleDismiss: (model: FHIRModel<fhir4.Resource>) => void;
+  toggleDismiss: (model: FHIRModel<fhir4.Resource>) => Promise<void>;
 
   /**
    * True when `toggleArchive` is called

@@ -11,7 +11,6 @@ import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { usePatientAllergies } from "@/fhir/allergies";
 import { AllergyModel } from "@/fhir/models/allergies";
-import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { capitalize } from "@/utils/nodash";
 
@@ -20,7 +19,6 @@ export type PatientAllergiesProps = {
 };
 
 function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
-  const { enabled } = useFQSFeatureToggle("allergies");
   const patientAllergiesQuery = usePatientAllergies();
   const { data, setFilters, setSort } = useFilteredSortedData({
     defaultFilters: defaultAllergyFilters,
@@ -36,7 +34,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
     details: allergyData,
     getHistory: useAllergiesHistory,
     getSourceDocument: true,
-    enableFQS: enabled,
+    enableDismissAndReadActions: true,
   });
 
   return (

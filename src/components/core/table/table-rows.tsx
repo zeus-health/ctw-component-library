@@ -1,13 +1,18 @@
 import cx from "classnames";
-import { ComponentType, ReactElement } from "react";
+import { FunctionComponent, ReactElement } from "react";
 import { TableDataCell } from "./table-data-cell";
 import { TableFullLengthRow } from "./table-full-length-row";
 import { MinRecordItem, TableColumn } from "./table-helpers";
 import { Spinner } from "../spinner";
 import { isFunction } from "@/utils/nodash";
 
+export type RowActionsProp<T extends MinRecordItem> = FunctionComponent<{
+  record: T;
+  onSuccess?: () => void;
+}>;
+
 export type TableRowsProps<T extends MinRecordItem> = {
-  RowActions?: ComponentType<{ record: T }>;
+  RowActions?: RowActionsProp<T>;
   columns: TableColumn<T>[];
   emptyMessage: string | ReactElement;
   getRowClassName?: (record: T) => cx.Argument;
