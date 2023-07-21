@@ -45,8 +45,6 @@ export function Drawer({
 }: DrawerProps) {
   const transitionClasses = "ctw-transform ctw-transition ctw-ease-in-out ctw-duration-300";
 
-  console.log("core drawer className", className);
-
   return (
     <Transition.Root show={isOpen} as={Fragment}>
       <Dialog
