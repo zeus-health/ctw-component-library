@@ -5,7 +5,7 @@ export type TableHeadProps<T extends MinRecordItem> = {
 };
 
 export const TableHead = <T extends MinRecordItem>({ columns }: TableHeadProps<T>) => (
-  <thead data-zus-telemetry-namespace="TableHead">
+  <thead>
     <tr>
       {columns.map((column, index) => (
         <th className="ctw-group" key={column.title ?? index} scope="col">

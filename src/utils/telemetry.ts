@@ -54,14 +54,7 @@ let isInitialized = false;
  * https://docs.datadoghq.com/real_user_monitoring/browser/#configuration
  */
 export class Telemetry {
-  private static namespaceMap = new WeakMap();
-
   private static accessToken = "";
-
-  private static eventTypes: Record<TelemetryEventKey, string> = {
-    zusTelemetryClick: "click",
-    zusTelemetryFocus: "focus",
-  };
 
   private static get telemetryIsAvailable() {
     return isInitialized;
@@ -195,27 +188,6 @@ export class Telemetry {
   static logFhirError(error: FhirError, message: string) {
     const context = fhirErrorResponse(message, error);
     this.logger.error(message, context);
-  }
-
-  /**
-   * Lookup Component Namespace - Events are tracked with dataset attributes
-   * such as `data-zus-telemetry-click="Submit"` which informs us that a submit
-   * button was clicked. However, our "Submit" button may be part of a reusable
-   * form component and to get context as to which component the event took place
-   * in, we traverse up the DOM tree looking for `data-zus-telemetry-namespace`
-   * attributes.
-   */
-  private static lookupComponentNamespace(target: HTMLElement, namespace = ""): string {
-    let ns = namespace;
-    const closest = target.closest("[data-zus-telemetry-namespace]");
-    if (closest instanceof HTMLElement) {
-      const nextNamespace = closest.dataset.zusTelemetryNamespace;
-      ns = !ns ? `${nextNamespace}` : `${nextNamespace} > ${ns}`;
-      if (closest.parentElement) {
-        return this.lookupComponentNamespace(closest.parentElement, ns);
-      }
-    }
-    return ns || "unknown";
   }
 
   static trackInteraction(action: string) {
