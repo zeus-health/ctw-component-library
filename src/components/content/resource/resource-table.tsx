@@ -55,7 +55,7 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
           enableDismissAndReadActions &&
           !record.ownedByBuilder(userBuilderId)
         ) {
-          await toggleRead(record);
+          void toggleRead(record);
         }
         onRowClick(record);
       }
