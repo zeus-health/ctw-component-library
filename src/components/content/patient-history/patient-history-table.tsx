@@ -21,6 +21,7 @@ export type PatientsHistoryTableProps = {
   handleRowClick?: (row: PatientHistoryRequestModel) => void;
   pageSize?: number;
   title?: string;
+  includeBorder?: boolean;
 } & TableOptionProps<PatientModel>;
 
 export type ServiceName = "commonwell" | "surescripts";
@@ -31,6 +32,7 @@ export const PatientHistoryTable = withErrorBoundary(
     handleRowClick,
     pageSize = 10,
     title = "Patient History Request",
+    includeBorder = true,
   }: PatientsHistoryTableProps) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [patients, setPatients] = useState<PatientHistoryRequestModel[]>([]);
@@ -70,8 +72,14 @@ export const PatientHistoryTable = withErrorBoundary(
     }, [isError, isFetching]);
 
     return (
-      <CTWBox.StackedWrapper className={cx("ctw-patients-table", className)}>
-        <CTWBox.Heading title={title} />
+      <CTWBox.StackedWrapper
+        className={cx(
+          "ctw-patients-table-inputs",
+          { "ctw-patients-border": includeBorder },
+          className
+        )}
+      >
+        {title && <CTWBox.Heading title={title} />}
         <ResourceTableActions
           filterOptions={{
             onChange: onFilterChange,
