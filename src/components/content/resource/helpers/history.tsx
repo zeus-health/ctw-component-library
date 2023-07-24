@@ -36,7 +36,7 @@ export const History = ({ entries, limit, resourceTypeTitle }: HistoryProps) => 
   const displayedEntries = showAll || !limit ? sortedEntries : sortedEntries.slice(0, limit);
 
   return (
-    <div className="ctw-space-y-4" data-zus-telemetry-namespace="History">
+    <div className="ctw-space-y-4">
       <div className="ctw-text-lg ctw-font-semibold">History</div>
       {displayedEntries.map((entry, idx) => (
         // We can have multiple items with the same condition id

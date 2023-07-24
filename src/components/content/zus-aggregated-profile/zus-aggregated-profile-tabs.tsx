@@ -112,7 +112,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
   "diagnostic-reports": (props: PatientDiagnosticReportsProps = {}) => ({
     key: "diagnostic-reports",
     display: () => (
-      <TabHelper notification={<UnreadDiagnosticReportsNotification />} name="diagnostics" beta />
+      <TabHelper notification={<UnreadDiagnosticReportsNotification />} name="diagnostics" />
     ),
     render: () => <PatientDiagnosticReports {...props} />,
   }),
@@ -160,8 +160,8 @@ type TabHelperProps = {
 
 function TabHelper({ beta, name, notification }: TabHelperProps) {
   return (
-    <div className="ctw-flex ctw-items-center ctw-space-x-2">
-      {notification}
+    <div className="ctw-flex ctw-items-center ctw-space-x-3">
+      <div className="ctw-absolute -ctw-ml-1">{notification}</div>
       <div className="ctw-flex ctw-items-center ctw-space-x-1">
         <span className="ctw-capitalize">{name}</span>
         {beta && <BetaLabel />}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useFQSFeatureToggle } from "./use-fqs-feature-toggle";
+import { useFQSFeatureToggle } from "./use-feature-toggle";
 import { useFeatureFlaggedQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { useBasic } from "@/fhir/basic";
 import {

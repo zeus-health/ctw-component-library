@@ -13,7 +13,7 @@ import { version } from "../../../../package.json";
 import { OnResourceSaveCallback } from "@/fhir/action-helper";
 import { queryClient } from "@/utils/request";
 
-type CTWProviderProps = {
+export type CTWProviderProps = {
   env: Env;
   builderId?: string;
   enableTelemetry?: boolean;

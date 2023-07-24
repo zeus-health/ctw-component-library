@@ -14,8 +14,8 @@ import { RowActionsProps } from "@/components/core/table/table";
 import { getBinaryDocument } from "@/fhir/binaries";
 import { usePatientDocuments } from "@/fhir/document";
 import { DocumentModel } from "@/fhir/models/document";
+import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
-import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { useBaseTranslations } from "@/i18n";
 
 export type PatientDocumentsProps = {
@@ -48,11 +48,7 @@ function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocument
   });
 
   return (
-    <div
-      ref={containerRef}
-      data-zus-telemetry-namespace="Documents"
-      className={cx(className, "ctw-scrollable-pass-through-height")}
-    >
+    <div ref={containerRef} className={cx(className, "ctw-scrollable-pass-through-height")}>
       <ResourceTableActions
         filterOptions={{
           onChange: setFilters,

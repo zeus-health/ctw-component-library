@@ -10,7 +10,7 @@ import { PatientModel } from "@/fhir/models/patient";
 import { getBuilderFhirPatient } from "@/fhir/patient-helper";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 import { Tag } from "@/fhir/types";
-import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
+import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { QUERY_KEY_PATIENT } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import { withTimerMetric } from "@/utils/telemetry";
@@ -30,7 +30,7 @@ type PatientUPIDSpecified = {
   systemURL?: never;
 };
 
-type PatientProviderProps = {
+export type PatientProviderProps = {
   children: ReactNode;
   tags?: Tag[];
   onPatientSave?: (data: PatientFormData) => void;
@@ -91,6 +91,29 @@ export function usePatient(): UseQueryResult<PatientModel, unknown> {
       });
     }, "req.get_builder_fhir_patient"),
     { staleTime: PATIENT_STALE_TIME }
+  );
+}
+
+export function usePatientVersion(version: number): UseQueryResult<PatientModel, unknown> {
+  const { getRequestContext } = useCTW();
+  const patient = usePatient();
+  const patientId = patient.data?.id;
+
+  return useQuery(
+    [QUERY_KEY_PATIENT, patientId, version],
+    withTimerMetric(async () => {
+      const requestContext = await getRequestContext();
+      if (patientId) {
+        const p = (await requestContext.fhirClient.vread({
+          resourceType: "Patient",
+          id: patientId,
+          version: `${version}`,
+        })) as fhir4.Patient;
+        const model = new PatientModel(p);
+        return model;
+      }
+      return {};
+    }, "req.get_builder_fhir_patient_version")
   );
 }
 

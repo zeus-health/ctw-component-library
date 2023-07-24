@@ -11,8 +11,8 @@ import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { usePatientImmunizations } from "@/fhir/immunizations";
 import { ImmunizationModel } from "@/fhir/models/immunization";
+import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
-import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 
 export type PatientImmunizationsProps = {
   className?: string;
@@ -39,10 +39,7 @@ function PatientImmunizationsComponent({ className }: PatientImmunizationsProps)
   });
 
   return (
-    <div
-      className={cx(className, "ctw-scrollable-pass-through-height")}
-      data-zus-telemetry-namespace="Immunizations"
-    >
+    <div className={cx(className, "ctw-scrollable-pass-through-height")}>
       <ResourceTableActions
         filterOptions={{
           onChange: setFilters,

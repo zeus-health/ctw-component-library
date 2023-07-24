@@ -24,12 +24,12 @@ export const conditionSortOptions: SortOption<ConditionModel>[] = [
     sorts: [{ key: "ccsChapter", dir: "desc" }],
   },
   {
-    display: "Status (A-Z)",
-    sorts: [{ key: "displayStatus", dir: "asc" }],
+    display: "Type (A-Z)",
+    sorts: [{ key: "type", dir: "asc" }],
   },
   {
-    display: "Status (Z-A)",
-    sorts: [{ key: "displayStatus", dir: "desc" }],
+    display: "Type (Z-A)",
+    sorts: [{ key: "type", dir: "desc" }],
   },
   {
     display: "Last Updated (Old to New)",

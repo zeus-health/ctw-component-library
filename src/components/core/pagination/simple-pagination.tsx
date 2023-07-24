@@ -19,10 +19,7 @@ export const SimplePagination = ({
   currentPage,
   hasNext,
 }: SimplePaginationProps) => (
-  <div
-    className="ctw-simple-pagination ctw-flex ctw-justify-end ctw-space-x-3 ctw-px-6 ctw-py-3"
-    data-zus-telemetry-namespace="Pagination"
-  >
+  <div className="ctw-simple-pagination ctw-flex ctw-justify-end ctw-space-x-3 ctw-px-6 ctw-py-3">
     <PaginateButton
       pageToNavigateTo={currentPage - 1}
       setCurrentPage={setCurrentPage}

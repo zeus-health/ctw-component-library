@@ -38,7 +38,7 @@ export const HistoryEntry = ({
   const openCCDAModal = useCCDAModal();
 
   return (
-    <div className="ctw-space-y-1" data-zus-telemetry-namespace="HistoryEntry">
+    <div className="ctw-space-y-1">
       <DetailSummary
         date={date}
         title={title}
@@ -84,7 +84,6 @@ const DetailSummary = ({
     type="button"
     aria-label="details"
     onClick={() => setIsDetailShown(!isDetailShown)}
-    data-zus-telemetry-namespace="DetailSummary"
     data-zus-telemetry-click={isDetailShown ? "Collapse" : "Expand"}
     className="ctw-btn-clean"
   >

@@ -14,7 +14,7 @@ import {
   searchCommonRecords,
 } from "@/fhir/search-helpers";
 import { ResourceMap, ResourceType, ResourceTypeString } from "@/fhir/types";
-import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
+import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { filterResourcesByBuilderId } from "@/services/common";
 import { createGraphqlClient, getHistoryResources, getResourceNodes } from "@/services/fqs/client";
 import { allergyQuery } from "@/services/fqs/queries/allergies";

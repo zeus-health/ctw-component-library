@@ -11,8 +11,8 @@ import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { usePatientAllergies } from "@/fhir/allergies";
 import { AllergyModel } from "@/fhir/models/allergies";
+import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
-import { useFQSFeatureToggle } from "@/hooks/use-fqs-feature-toggle";
 import { capitalize } from "@/utils/nodash";
 
 export type PatientAllergiesProps = {
@@ -40,10 +40,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
   });
 
   return (
-    <div
-      className={cx(className, "ctw-scrollable-pass-through-height")}
-      data-zus-telemetry-namespace="Allergies"
-    >
+    <div className={cx(className, "ctw-scrollable-pass-through-height")}>
       <ResourceTableActions
         filterOptions={{
           onChange: setFilters,
