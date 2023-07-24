@@ -2,8 +2,8 @@ import { faCheck, faChevronDown, IconDefinition } from "@fortawesome/free-solid-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Listbox } from "@headlessui/react";
 import cx from "classnames";
-import { Fragment, useState } from "react";
-import type { ReactNode } from "react";
+import { forwardRef, Fragment, useEffect, useState } from "react";
+import type { ReactNode, Ref } from "react";
 import { MenuItem } from "../menu/menu-item";
 import { FilterOptionSelect } from "@/components/core/filter-bar/filter-bar-types";
 import { isFunction } from "@/utils/nodash";
@@ -23,6 +23,7 @@ export type ListBoxProps = {
   btnClassName?: cx.Argument;
   children?: ReactNode;
   defaultIndex?: number;
+  selectedIndex?: number;
   items: MinListBoxItem[];
   onChange: (index: number, item: ListBoxItem) => void;
   optionsClassName?: cx.Argument;
@@ -36,92 +37,102 @@ export type ListBoxOptionStatus = {
   selected?: boolean;
 };
 
-export function ListBox({
-  useBasicStyles = false,
-  btnClassName,
-  children,
-  optionsClassName,
-  items,
-  defaultIndex = 0,
-  onChange,
-}: ListBoxProps) {
-  const [selectedTabIndex, setSelectedTabIndex] = useState(defaultIndex);
-  const selectedItem = items[selectedTabIndex] ?? {
-    display: "Choose a selection",
-  };
+export const ListBox = forwardRef(
+  (
+    {
+      useBasicStyles = false,
+      btnClassName,
+      children,
+      optionsClassName,
+      items,
+      defaultIndex = 0,
+      selectedIndex,
+      onChange,
+    }: ListBoxProps,
+    ref: Ref<HTMLDivElement>
+  ) => {
+    const [selectedTabIndex, setSelectedTabIndex] = useState(defaultIndex);
+    const selectedItem = items[selectedTabIndex] ?? {
+      display: "Choose a selection",
+    };
 
-  return (
-    <div className="ctw-relative ctw-inline-block">
-      <Listbox
-        value={selectedTabIndex}
-        onChange={(index: number) => {
-          const item = items[index];
-          if (item.divider) return;
-          onChange(index, item);
-          setSelectedTabIndex(index);
-        }}
-      >
-        <Listbox.Button
-          className={cx(
-            btnClassName,
-            !useBasicStyles && "after:ctw-bg-content-black",
-            !useBasicStyles && "focus-visible:ctw-outline-primary-dark",
-            "ctw-relative ctw-cursor-pointer ctw-justify-between ctw-space-x-2 ctw-border-0 ctw-border-transparent"
-          )}
+    useEffect(() => {
+      if (selectedIndex === undefined) return;
+      setSelectedTabIndex(selectedIndex);
+    }, [selectedIndex]);
+
+    return (
+      <div className="ctw-relative ctw-inline-block" ref={ref}>
+        <Listbox
+          value={selectedTabIndex}
+          onChange={(index: number) => {
+            const item = items[index];
+            if (item.divider) return;
+            onChange(index, item);
+            setSelectedTabIndex(index);
+          }}
         >
-          {children || renderDisplay(selectedItem, { listView: false })}
-          {!useBasicStyles && <FontAwesomeIcon icon={faChevronDown} className="ctw-w-2" />}
-        </Listbox.Button>
-        <Listbox.Options className={cx(optionsClassName, "ctw-list-box")}>
-          {items.map((item, index) => {
-            if (item.divider) {
-              return <div key="divider" className="ctw-border-top" />;
-            }
+          <Listbox.Button
+            className={cx(
+              btnClassName,
+              !useBasicStyles && "focus-visible:ctw-outline-primary-dark",
+              "ctw-relative ctw-cursor-pointer ctw-justify-between ctw-space-x-2 ctw-border-0 ctw-border-transparent"
+            )}
+          >
+            {children || renderDisplay(selectedItem, { listView: false })}
+            {!useBasicStyles && <FontAwesomeIcon icon={faChevronDown} className="ctw-w-2" />}
+          </Listbox.Button>
+          <Listbox.Options className={cx(optionsClassName, "ctw-list-box")}>
+            {items.map((item, index) => {
+              if (item.divider) {
+                return <div key="divider" className="ctw-border-top" />;
+              }
 
-            return (
-              <Listbox.Option key={item.key} value={index} as={Fragment}>
-                {({ active, selected }) => (
-                  <li
-                    className={cx(
-                      "ctw-flex ctw-cursor-pointer ctw-justify-between ctw-px-3 ctw-py-2",
-                      "hover:ctw-bg-bg-lighter",
-                      item.className,
-                      {
-                        "ctw-text-medium": active || selected,
-                        "ctw-text-content-black": !(active || selected),
-                        "ctw-bg-bg-lighter": active,
-                      }
-                    )}
-                  >
-                    <span
-                      className={cx("ctw-inline-flex ctw-align-middle", {
-                        "ctw-font-semibold": selected && !useBasicStyles,
-                      })}
+              return (
+                <Listbox.Option key={item.key} value={index} as={Fragment}>
+                  {({ active, selected }) => (
+                    <li
+                      className={cx(
+                        "ctw-flex ctw-cursor-pointer ctw-justify-between ctw-px-3 ctw-py-2",
+                        "hover:ctw-bg-bg-lighter",
+                        item.className,
+                        {
+                          "ctw-text-medium": active || selected,
+                          "ctw-text-content-black": !(active || selected),
+                          "ctw-bg-bg-lighter": active,
+                        }
+                      )}
                     >
-                      {renderDisplay(item, {
-                        active,
-                        selected,
-                        listView: true,
-                      })}
-                    </span>
-                    {!useBasicStyles && selected && !item.key.startsWith("_") && (
-                      <span className="ctw-inline-flex ctw-pb-0.5">
-                        <FontAwesomeIcon
-                          icon={faCheck}
-                          className="ctw-inline-block ctw-h-4 ctw-stroke-0 ctw-align-middle ctw-text-primary-dark"
-                        />
+                      <span
+                        className={cx("ctw-inline-flex ctw-align-middle", {
+                          "ctw-font-semibold": selected && !useBasicStyles,
+                        })}
+                      >
+                        {renderDisplay(item, {
+                          active,
+                          selected,
+                          listView: true,
+                        })}
                       </span>
-                    )}
-                  </li>
-                )}
-              </Listbox.Option>
-            );
-          })}
-        </Listbox.Options>
-      </Listbox>
-    </div>
-  );
-}
+                      {!useBasicStyles && selected && !item.key.startsWith("_") && (
+                        <span className="ctw-inline-flex ctw-pb-0.5">
+                          <FontAwesomeIcon
+                            icon={faCheck}
+                            className="ctw-inline-block ctw-h-4 ctw-stroke-0 ctw-align-middle ctw-text-primary-dark"
+                          />
+                        </span>
+                      )}
+                    </li>
+                  )}
+                </Listbox.Option>
+              );
+            })}
+          </Listbox.Options>
+        </Listbox>
+      </div>
+    );
+  }
+);
 
 // A helper function to render items for both the ListBox button and options.
 function renderDisplay<T extends MinListBoxItem>(item: T, status: ListBoxOptionStatus) {

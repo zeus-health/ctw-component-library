@@ -58,6 +58,7 @@ export function usePatientHistory(includePatientDemographicsForm?: boolean) {
         patient = undefined;
       }
       openDrawer({
+        telemetryName: "patient_history",
         component: (props) => (
           <PatientHistoryRequestDrawer
             includePatientDemographicsForm={includePatientDemographicsForm}

@@ -7,10 +7,7 @@ export type PatientHistoryProps = {
 
 export const PatientHistoryMessage = withErrorBoundary(
   ({ readOnly, onClick }: PatientHistoryProps) => (
-    <div
-      className="ctw-flex ctw-justify-center ctw-space-x-2 ctw-border ctw-border-solid ctw-border-divider-light ctw-p-5"
-      data-zus-telemetry-namespace="PatientHistoryMessage"
-    >
+    <div className="ctw-flex ctw-justify-center ctw-space-x-2 ctw-border ctw-border-solid ctw-border-divider-light ctw-p-5">
       {readOnly ? (
         <span>There are no condition records available.</span>
       ) : (

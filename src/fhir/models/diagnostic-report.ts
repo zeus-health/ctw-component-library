@@ -66,6 +66,10 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
     return this.resource.identifier?.[0].value ?? "";
   }
 
+  get details() {
+    return this.results.length > 0 ? `${this.results.length} results available` : "";
+  }
+
   get performer() {
     return this.organization?.display || this.resource.performer?.[0].display;
   }

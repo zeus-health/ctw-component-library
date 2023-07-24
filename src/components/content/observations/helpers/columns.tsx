@@ -93,6 +93,9 @@ export const ObservationsColumns = (): TableColumn<ObservationModel>[] => {
               <button
                 aria-label="trends"
                 className="ctw-btn-clear"
+                data-zus-telemetry-click={
+                  isTrendsShown ? "CollapsedTrendShown" : "ExpandedTrendShown"
+                }
                 type="button"
                 onClick={() => setIsTrendsShown(!isTrendsShown)}
               >
@@ -117,7 +120,9 @@ export const ObservationsColumns = (): TableColumn<ObservationModel>[] => {
                     <BubbleIcon
                       result={trend.value}
                       interpretation={trend.interpretation}
-                      className={trend.acceptedInterpretations}
+                      className={cx(`${trend.acceptedInterpretations}`, {
+                        "!ctw-font-bold": trend.id === model.id,
+                      })}
                     />
                   </div>
                 ))}

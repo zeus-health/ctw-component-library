@@ -35,8 +35,19 @@ export type ZAPResourceName =
   | "medications-all"
   | "timeline";
 
+export const defaultZAPResources: ZAPResourceName[] = [
+  "conditions-all",
+  "medications-all",
+  "diagnostic-reports",
+  "timeline",
+  "documents",
+  "allergies",
+  "immunizations",
+  "care-team",
+];
+
 export type ZusAggregatedProfileProps = {
-  resources: ZAPResourceName[];
+  resources?: ZAPResourceName[];
   forceHorizontalTabs?: boolean;
   includePatientDemographicsForm?: boolean;
   title?: string;
@@ -75,7 +86,7 @@ const ZusAggregatedProfileComponent = ({
   medicationsOutsideProps,
   medicationsAllProps,
   timelineProps,
-  resources,
+  resources = defaultZAPResources,
   hideTitle = false,
   title = "Outside Records",
   removeBranding = false,

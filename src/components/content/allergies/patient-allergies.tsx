@@ -40,10 +40,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
   });
 
   return (
-    <div
-      className={cx(className, "ctw-scrollable-pass-through-height")}
-      data-zus-telemetry-namespace="Allergies"
-    >
+    <div className={cx(className, "ctw-scrollable-pass-through-height")}>
       <ResourceTableActions
         filterOptions={{
           onChange: setFilters,

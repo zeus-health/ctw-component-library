@@ -24,7 +24,7 @@ export const patientDiagnosticReportsColumns = (
   },
   {
     title: "Details",
-    dataIndex: "performer",
+    dataIndex: "details",
     widthPercent: 40,
     minWidth: 200,
   },

@@ -1,5 +1,6 @@
 import { datadogLogs } from "@datadog/browser-logs";
 import jwtDecode from "jwt-decode";
+import { Session } from "./session";
 import packageJson from "../../package.json";
 import { getMetricsBaseUrl } from "@/api/urls";
 import { FhirError, fhirErrorResponse } from "@/fhir/errors";
@@ -14,7 +15,7 @@ import {
   AUTH_USER_TYPE,
   ZusJWT,
 } from "@/utils/auth";
-import { compact, snakeCase, trim } from "@/utils/nodash";
+import { compact, snakeCase } from "@/utils/nodash";
 
 type TelemetryEventKey = "zusTelemetryClick" | "zusTelemetryFocus";
 
@@ -30,8 +31,10 @@ const devDatadogConfig = {
 };
 
 let origin = "";
+let body: HTMLElement | undefined;
 if (typeof window !== "undefined") {
   origin = window.location.origin;
+  body = window.document.body;
 }
 
 // Assume local development if origin is localhost or just an IP address
@@ -51,14 +54,7 @@ let isInitialized = false;
  * https://docs.datadoghq.com/real_user_monitoring/browser/#configuration
  */
 export class Telemetry {
-  private static namespaceMap = new WeakMap();
-
   private static accessToken = "";
-
-  private static eventTypes: Record<TelemetryEventKey, string> = {
-    zusTelemetryClick: "click",
-    zusTelemetryFocus: "focus",
-  };
 
   private static get telemetryIsAvailable() {
     return isInitialized;
@@ -109,6 +105,36 @@ export class Telemetry {
       });
     }
 
+    // We are listening to click events propagating to the document body as that
+    // is the lowest level HTMLElement we actually know will both exist at this
+    // time and which won't be removed from the DOM by React causing a small
+    // memory leak.
+    // Additionally, because we aren't listening directly to events on elements
+    // that have `data-zus-telemetry-*` attributes, we don't have the luxury of
+    // knowing whether an event triggered from inside one of these telemetry
+    // elements, so we'll have to traverse the DOM tree ourselves. To minimize
+    // this work we'll put a `depth` level and adjust it over time if needed.
+    // For example, imagine the user clicked an element with CSS selector path
+    // of "button[data-zus-telemetry-click="submit"] > span > span". Because we
+    // are listening on body and not button, we would have to walk up 2 parent
+    // nodes of the DOM before knowing whether this event was relevant to us.
+    body?.addEventListener("click", (event) => {
+      const { target, isTrusted } = event;
+      if (!(isTrusted && target instanceof Element)) {
+        return;
+      }
+      const htmlElement = this.closestHTMLElement(target);
+      if (htmlElement instanceof HTMLElement) {
+        this.processHTMLEvent(htmlElement, "zusTelemetryClick");
+      }
+    });
+    body?.addEventListener("focusin", (event) => {
+      const { target, isTrusted } = event;
+      if (isTrusted && target instanceof HTMLElement) {
+        this.processHTMLEvent(target, "zusTelemetryFocus");
+      }
+    });
+
     isInitialized = true;
   }
 
@@ -122,6 +148,8 @@ export class Telemetry {
     if (accessToken) {
       this.accessToken = accessToken;
       const user = jwtDecode(accessToken) as ZusJWT;
+
+      Session.setSessionUserId(user[AUTH_USER_ID]);
       const decodedUser = {
         id: user[AUTH_USER_ID],
         type: user[AUTH_USER_TYPE],
@@ -132,6 +160,7 @@ export class Telemetry {
         patientId: user[AUTH_PATIENT_ID],
         isSuperOrg: user[AUTH_IS_SUPER_ORG],
       };
+
       if (this.datadogLoggingEnabled) {
         datadogLogs.setUser(decodedUser);
       }
@@ -161,39 +190,11 @@ export class Telemetry {
     this.logger.error(message, context);
   }
 
-  /**
-   * Lookup Component Namespace - Events are tracked with dataset attributes
-   * such as `data-zus-telemetry-click="Submit"` which informs us that a submit
-   * button was clicked. However, our "Submit" button may be part of a reusable
-   * form component and to get context as to which component the event took place
-   * in, we traverse up the DOM tree looking for `data-zus-telemetry-namespace`
-   * attributes.
-   */
-  private static lookupComponentNamespace(target: HTMLElement, namespace = ""): string {
-    let ns = namespace;
-    const closest = target.closest("[data-zus-telemetry-namespace]");
-    if (closest instanceof HTMLElement) {
-      const nextNamespace = closest.dataset.zusTelemetryNamespace;
-      ns = !ns ? `${nextNamespace}` : `${nextNamespace} > ${ns}`;
-      if (closest.parentElement) {
-        return this.lookupComponentNamespace(closest.parentElement, ns);
-      }
-    }
-    return ns || "unknown";
-  }
-
-  static trackInteraction(eventType: string, namespace: string, action: string) {
-    // We log this event with namespace breadcrumbs if allowed
-    if (this.telemetryIsAvailable && this.datadogLoggingEnabled) {
-      this.logger.log(`${eventType} event: ${namespace} > ${action}`, {
-        eventType,
-        action,
-        namespace,
-      });
-    }
-    // We send a generic action metric to CTW regardless
-    const leafNamespace = namespace.split(">").map(trim).pop();
-    this.countMetric(`interaction.${action}`, 1, compact([leafNamespace]));
+  static trackInteraction(action: string) {
+    // We send an action metric to CTW
+    this.countMetric(`action.${action}`, 1);
+    // We report an active session to CTW
+    this.reportActiveSession().catch((error) => Telemetry.logError(error as Error));
   }
 
   /**
@@ -217,13 +218,10 @@ export class Telemetry {
     additionalTags: string[] = []
   ) {
     if (
-      process.env.NODE_ENV !== "test" &&
-      ["http://localhost:3000", "http://127.0.0.1:3000"].includes(window.location.origin)
+      !this.environment ||
+      (process.env.NODE_ENV !== "test" &&
+        ["http://localhost:3000", "http://127.0.0.1:3000"].includes(window.location.origin))
     ) {
-      return;
-    }
-
-    if (!this.environment) {
       return;
     }
 
@@ -239,6 +237,7 @@ export class Telemetry {
       "service:ctw-component-library",
       `env:${this.environment}`,
       user[AUTH_BUILDER_NAME] ? `builder_name:${user[AUTH_BUILDER_NAME]}` : undefined,
+      `user_id:${user[AUTH_USER_ID]}`,
       `is_super:${user[AUTH_IS_SUPER_ORG] || "false"}`,
       this.ehr ? `ehr:${this.ehr}` : undefined,
       `version:${packageJson.version}`,
@@ -285,6 +284,66 @@ export class Telemetry {
 
   static reportActionFailure(metric: string, tags: string[] = []) {
     Telemetry.countMetric(`action.${metric}.failure`, 1, tags);
+  }
+
+  static processHTMLEvent(
+    target: HTMLElement,
+    telemetryKey: TelemetryEventKey,
+    explicitTargetName?: string
+  ) {
+    let eventTarget: HTMLElement | null = null;
+
+    if (explicitTargetName) {
+      eventTarget = target;
+    } else {
+      let nextTarget: HTMLElement | null = target;
+      let depth = 5;
+      while (!eventTarget && depth > 0 && nextTarget) {
+        if (nextTarget.dataset[telemetryKey]) {
+          eventTarget = nextTarget;
+        }
+        nextTarget = nextTarget.parentElement;
+        depth -= 1;
+      }
+    }
+
+    const targetName = eventTarget?.dataset[telemetryKey] ?? explicitTargetName;
+    if (eventTarget && targetName) {
+      this.trackInteraction(targetName);
+    }
+  }
+
+  private static closestHTMLElement(target: Element | Node | null): HTMLElement | null {
+    if (!target || target instanceof HTMLElement) {
+      return target;
+    }
+    if (target.parentElement instanceof HTMLElement) {
+      return target.parentElement;
+    }
+    return this.closestHTMLElement(target.parentNode);
+  }
+
+  static async reportActiveSession() {
+    // Return if the session is already active or we don't need to report
+    if (
+      Session.isActive() ||
+      !this.environment ||
+      (process.env.NODE_ENV !== "test" &&
+        ["http://localhost:3000", "http://127.0.0.1:3000"].includes(window.location.origin))
+    ) {
+      return;
+    }
+
+    try {
+      // Set last active timestamp so we don't report the same session twice
+      const user = jwtDecode(this.accessToken) as ZusJWT;
+      Session.setSessionUserId(user[AUTH_USER_ID]);
+      Session.setSessionLastActiveTimestamp();
+      await Telemetry.reportMetric("increment", "active_session", 1, []);
+    } catch (error) {
+      // Clear the session last active timestamp because we didn't report it
+      Session.clearSessionLastActiveTimestamp();
+    }
   }
 }
 

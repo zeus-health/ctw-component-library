@@ -1,5 +1,8 @@
 import fhir4 from "fhir/r4";
-import { ZAPResourceName } from "./zus-aggregated-profile/zus-aggregated-profile";
+import {
+  defaultZAPResources,
+  ZAPResourceName,
+} from "./zus-aggregated-profile/zus-aggregated-profile";
 import { useUserBuilderId } from "../core/providers/user-builder-id";
 import { UnreadNotificationIcon } from "../core/unread-notification-icon";
 import { usePatientAllergies } from "@/fhir/allergies";
@@ -12,13 +15,13 @@ import { usePatientConditionsAll } from "@/services/conditions";
 
 export type UnreadRecordsNotificationProps = {
   className?: string;
-  resources: ZAPResourceName[];
+  resources?: ZAPResourceName[];
   text?: string;
 };
 
 export const UnreadRecordsNotification = ({
   className,
-  resources,
+  resources = defaultZAPResources,
   text,
 }: UnreadRecordsNotificationProps) => {
   const userBuilderId = useUserBuilderId();

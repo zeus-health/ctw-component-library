@@ -1,5 +1,94 @@
 # ctw-component-library
 
+## 1.42.0
+
+### Minor Changes
+
+- 4b9e56a8: Removed beta label from Diagnostic Report tab in ZAP
+
+## 1.41.0
+
+### Minor Changes
+
+- 271a3355: Added user_id to telemetry metrics
+
+### Patch Changes
+
+- 2fd3affc: Add click count for diagnostic reports.
+- 93d86d3c: Cleanup of telemetry namespace dataset attributes
+
+## 1.40.0
+
+### Minor Changes
+
+- f67aeb59: Add empty state to care team component
+
+## 1.39.1
+
+### Patch Changes
+
+- c7e5bba9: Updated trending labs logic to include Patients created on 07/19/2023
+
+## 1.39.0
+
+### Minor Changes
+
+- a1f9114f: Add unique session tracking whenever an interaction is made.
+  Track drawer opens metrics by drawer type.
+
+## 1.38.0
+
+### Minor Changes
+
+- 0394910b: Only fetch trend data when a Patient was created after 07/19/2023
+
+## 1.37.2
+
+### Patch Changes
+
+- 2df4dd3d: Switched ctw urls to use app.zushealth.com.
+
+## 1.37.1
+
+### Patch Changes
+
+- 0743ae85: Updated Observations query to filter by system/code
+- a7d34bd5: Show number of results available for diagnostic reports.
+
+## 1.37.0
+
+### Minor Changes
+
+- bba15492: Updated FQS Observations query to include filtering by code
+
+### Patch Changes
+
+- 34f1deee: Set default resources for ZAP.
+- 56aaa434: Make unknown condition type display as "Unknown".
+- 0a8aa100: Improve responsiveness of ZAP tabs to collapse overflowed tabs into a more menu.
+
+## 1.36.1
+
+### Patch Changes
+
+- 417bd27d: Resolved issue where empty filter made Observation request invalid
+
+## 1.36.0
+
+### Minor Changes
+
+- 5a05fd21: Removed first-party filter from FQS request when fetching observations and cleaned up corresponding telemetry
+
+### Patch Changes
+
+- 8d6795d8: Add DD metric logging.
+
+## 1.35.4
+
+### Patch Changes
+
+- 6eaf775d: Updated Observation trend value to be bold for currently selected trend
+
 ## 1.35.3
 
 ### Patch Changes
