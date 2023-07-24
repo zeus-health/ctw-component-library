@@ -97,8 +97,11 @@ const getRowActions =
         <button
           type="button"
           className="ctw-btn-primary"
-          onClick={async () => {
-            void toggleRead(record);
+          onClick={() => {
+            if (!record.isRead) {
+              void toggleRead(record);
+            }
+
             if (onAddToRecord) {
               onAddToRecord(record);
               onSuccess?.();

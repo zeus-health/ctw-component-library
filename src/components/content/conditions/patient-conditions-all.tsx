@@ -134,7 +134,9 @@ const getRowActions =
           type="button"
           className="ctw-btn-primary"
           onClick={() => {
-            void toggleRead(record);
+            if (!record.isRead) {
+              void toggleRead(record);
+            }
             showAddConditionForm(record);
           }}
         >
