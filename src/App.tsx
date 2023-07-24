@@ -22,6 +22,7 @@ import {
   ZAPResourceName,
   ZusAggregatedProfile,
   UnreadRecordsNotification,
+  ZusAggregatedProfileIframe,
 } from ".";
 
 const {
@@ -118,7 +119,7 @@ const components: DemoComponent[] = [
       return (
         <div>
           <UnreadRecordsNotification text="Patient has unread records" />
-          <ZusAggregatedProfile
+          <ZusAggregatedProfileIframe
             conditionsOutsideProps={{
               hideRequestRecords: true,
             }}
