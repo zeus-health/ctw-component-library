@@ -97,7 +97,7 @@ export const ObservationsColumns = (): TableColumn<ObservationModel>[] => {
                 type="button"
                 onClick={() => {
                   Telemetry.trackInteraction(
-                    isTrendsShown ? "ExpandedTrendShown" : "CollapsedTrendNotShown"
+                    isTrendsShown ? "CollapsedTrendNotShown" : "ExpandedTrendShown"
                   );
                   setIsTrendsShown(!isTrendsShown);
                 }}
