@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.44.0
+
+### Minor Changes
+
+- f65b1625: Add ability to remove title and border from patient history table.
+
 ## 1.43.0
 
 ### Minor Changes
