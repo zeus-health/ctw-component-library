@@ -40,10 +40,7 @@ export const ModalConfirmDelete = ({
   return (
     <Modal onAfterClosed={() => setAlert(undefined)} {...modalProps}>
       {alert && <ErrorAlert header={alert} />}
-      <div
-        className="ctw-items-left ctw-flex ctw-h-full ctw-flex-col ctw-space-y-2 ctw-overflow-y-auto"
-        data-zus-telemetry-namespace="ModalConfirmDelete"
-      >
+      <div className="ctw-items-left ctw-flex ctw-h-full ctw-flex-col ctw-space-y-2 ctw-overflow-y-auto">
         <span className="ctw-text-left ctw-text-lg ctw-font-medium ctw-text-content-black">
           {t("resource.remove.heading", { resource })}
         </span>

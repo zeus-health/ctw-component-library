@@ -12,6 +12,7 @@ export function useObservationsDetailsDrawer() {
 
   return (diagnosticReport: DiagnosticReportModel) => {
     openDrawer({
+      telemetryName: "observations_details",
       component: (props) => (
         <ObservationsDrawer diagnosticReport={diagnosticReport} observations={data} {...props} />
       ),

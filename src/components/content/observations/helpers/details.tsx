@@ -98,7 +98,7 @@ export const Component = ({ diagnosticReport, observationTrends }: ObservationDe
   }, [diagnosticReport, fqsObservations.ready, fqsObservations.enabled, observationTrends]);
 
   return (
-    <div className="ctw-space-y-6" data-zus-telemetry-namespace="Observations">
+    <div className="ctw-space-y-6">
       <div className="ctw-text-2xl">{diagnosticReport.displayName}</div>
 
       {isLoading ? (
@@ -134,12 +134,15 @@ function filterAndSortTrends(model: ObservationModel, trends: ObservationModel[]
       return 0;
     }
     if (!a.effectiveStartRaw) {
-      return -1;
-    }
-    if (!b.effectiveStartRaw) {
       return 1;
     }
+    if (!b.effectiveStartRaw) {
+      return -1;
+    }
     if (a.effectiveStartRaw > b.effectiveStartRaw) {
+      return -1;
+    }
+    if (a.effectiveStartRaw < b.effectiveStartRaw) {
       return 1;
     }
     return 0;

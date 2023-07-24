@@ -4,6 +4,7 @@ import { formatDateISOToLocal, formatStringToDate } from "../formatters";
 import { CCSChapterName } from "../mappings/ccs-chapter-names";
 import { findReference } from "../resource-helper";
 import {
+  SYSTEM_CCI,
   SYSTEM_CCS,
   SYSTEM_CONDITION_CLINICAL,
   SYSTEM_CONDITION_VERIFICATION_STATUS,
@@ -140,6 +141,11 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
       findCodingByOrderOfPreference(CONDITION_CODE_PREFERENCE_ORDER, this.resource.code)?.display ??
       codeableConceptLabel(this.resource.code)
     );
+  }
+
+  get type() {
+    const type = findCoding(SYSTEM_CCI, this.resource.code)?.display || "Unknown";
+    return type.toLocaleLowerCase() === "both" ? "Chronic and acute" : type;
   }
 
   get encounter(): string | undefined {

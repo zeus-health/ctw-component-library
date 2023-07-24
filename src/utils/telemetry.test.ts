@@ -56,6 +56,7 @@ describe("telemetry", () => {
       tags: [
         "service:ctw-component-library",
         "env:test",
+        "user_id:undefined",
         "is_super:false",
         "ehr:unknown",
         versionTag,
