@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.42.0
+
+### Minor Changes
+
+- 4b9e56a8: Removed beta label from Diagnostic Report tab in ZAP
+
 ## 1.41.0
 
 ### Minor Changes
