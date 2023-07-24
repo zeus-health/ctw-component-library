@@ -1,5 +1,22 @@
 # ctw-component-library
 
+## 1.44.0
+
+### Minor Changes
+
+- f65b1625: Add ability to remove title and border from patient history table.
+
+## 1.43.0
+
+### Minor Changes
+
+- c57bc0e2: Display records never requested
+
+### Patch Changes
+
+- 03fbf338: Fix diagnostic-trend click count.
+- 1320ddc6: Only toggle read when adding a condition or medication if the record is not yet marked as having been read.
+
 ## 1.42.0
 
 ### Minor Changes

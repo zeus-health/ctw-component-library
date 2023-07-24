@@ -6,6 +6,7 @@ import { BubbleIcon } from "./bubble";
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { DiagnosticReportModel, ObservationModel } from "@/fhir/models";
 import { capitalize } from "@/utils/nodash";
+import { Telemetry } from "@/utils/telemetry";
 
 export const diagnosticReportColumns: TableColumn<DiagnosticReportModel>[] = [
   {
@@ -93,11 +94,13 @@ export const ObservationsColumns = (): TableColumn<ObservationModel>[] => {
               <button
                 aria-label="trends"
                 className="ctw-btn-clear"
-                data-zus-telemetry-click={
-                  isTrendsShown ? "CollapsedTrendShown" : "ExpandedTrendShown"
-                }
                 type="button"
-                onClick={() => setIsTrendsShown(!isTrendsShown)}
+                onClick={() => {
+                  Telemetry.trackInteraction(
+                    isTrendsShown ? "CollapsedTrendNotShown" : "ExpandedTrendShown"
+                  );
+                  setIsTrendsShown(!isTrendsShown);
+                }}
               >
                 <FontAwesomeIcon
                   icon={faChevronRight}
