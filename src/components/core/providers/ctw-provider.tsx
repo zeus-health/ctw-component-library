@@ -64,8 +64,13 @@ export function CTWProvider({
       builderId,
       featureFlags,
       onResourceSave,
+      ehr,
+      theme,
+      headers,
+      locals,
+      enableTelemetry,
     }),
-    [env, builderId, featureFlags, onResourceSave]
+    [env, builderId, featureFlags, onResourceSave, ehr, theme, headers, locals, enableTelemetry]
   );
 
   return (

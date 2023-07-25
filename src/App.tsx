@@ -117,17 +117,15 @@ const components: DemoComponent[] = [
     name: "zap",
     render: () => {
       return (
-        <div>
-          <UnreadRecordsNotification text="Patient has unread records" />
-          <ZusAggregatedProfileIframe
-            conditionsOutsideProps={{
-              hideRequestRecords: true,
-            }}
-            conditionsAllProps={{ onlyAllowAddOutsideConditions: true }}
-            includePatientDemographicsForm={false}
-            title="ZAP"
-          />
-        </div>
+        <ZusAggregatedProfileIframe
+          height="600"
+          conditionsOutsideProps={{
+            hideRequestRecords: true,
+          }}
+          conditionsAllProps={{ onlyAllowAddOutsideConditions: true }}
+          includePatientDemographicsForm={false}
+          title="ZAP"
+        />
       );
     },
   },
