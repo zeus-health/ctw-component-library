@@ -4,10 +4,12 @@ import { isEqual, uniqWith } from "@/utils/nodash";
 
 export const applyDiagnosticReportFilters = (
   data: fhir4.DiagnosticReport[],
-  includedResources?: ResourceMap, 
+  includedResources?: ResourceMap,
   trends?: ObservationModel[]
 ) => {
-  const diagnosticModel = data.map((dr) => new DiagnosticReportModel(dr, includedResources, undefined, trends));
+  const diagnosticModel = data.map(
+    (dr) => new DiagnosticReportModel(dr, includedResources, undefined, trends)
+  );
   const diagnosticReportData = uniqWith(diagnosticModel, (a, b) =>
     isEqual(valuesToDedupeOn(a), valuesToDedupeOn(b))
   );
