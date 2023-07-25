@@ -103,6 +103,7 @@ const ZusAggregatedProfileIframeComponent = ({
     zapProps,
     zapURL,
     sentZapConfig,
+    featureFlags,
   ]);
 
   if (zapURL) {
