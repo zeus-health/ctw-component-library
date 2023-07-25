@@ -49,15 +49,15 @@ function PatientConditionsAllComponent({
     <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="conditions" />
   );
 
-  const openDetails = useConditionDetailsDrawer({
-    canRemove: !readOnly && !onlyAllowAddOutsideConditions,
-    canEdit: !readOnly && !onlyAllowAddOutsideConditions,
-  });
-
-  const rowActions = useMemo(
+  const RowActions = useMemo(
     () => (!readOnly ? getRowActions(userBuilderId, onlyAllowAddOutsideConditions) : undefined),
     [userBuilderId, readOnly, onlyAllowAddOutsideConditions]
   );
+
+  const openDetails = useConditionDetailsDrawer({
+    RowActions,
+    enableDismissAndReadActions: true,
+  });
 
   const action = !readOnly && !onlyAllowAddOutsideConditions && (
     <button type="button" className="ctw-btn-primary" onClick={() => showAddConditionForm()}>
@@ -86,7 +86,7 @@ function PatientConditionsAllComponent({
         data={data}
         columns={patientConditionsAllColumns(userBuilderId)}
         onRowClick={openDetails}
-        RowActions={rowActions}
+        RowActions={RowActions}
         enableDismissAndReadActions
         emptyMessage={empty}
       />
@@ -127,6 +127,7 @@ const getRowActions =
         </div>
       );
     }
+
     if (!record.ownedByBuilder(userBuilderId)) {
       return (
         <button
@@ -134,7 +135,7 @@ const getRowActions =
           className="ctw-btn-primary"
           onClick={() => {
             if (!record.isRead) {
-              toggleRead(record);
+              void toggleRead(record);
             }
             showAddConditionForm(record);
           }}

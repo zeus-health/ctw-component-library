@@ -1,3 +1,4 @@
+import { useAdditionalResourceActions } from "../../resource/use-additional-resource-actions";
 import { ObservationDetails } from "@/components/content/observations/helpers/details";
 import { Drawer } from "@/components/core/drawer";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
@@ -35,17 +36,19 @@ export function ObservationsDrawer({
   isOpen,
   onClose,
 }: ObservationsDrawerProps) {
+  const ResourceActions = useAdditionalResourceActions({ enableDismissAndReadActions: true });
+
   return (
-    <Drawer
-      className={className}
-      title="Diagnostic Report"
-      isOpen={isOpen}
-      onClose={onClose}
-      showCloseFooter
-    >
+    <Drawer className={className} title="Diagnostic Report" isOpen={isOpen} onClose={onClose}>
       <Drawer.Body>
         <ObservationDetails diagnosticReport={diagnosticReport} observationTrends={observations} />
       </Drawer.Body>
+      <Drawer.Footer>
+        <div className="ctw-flex ctw-justify-between">
+          <Drawer.CloseButton onClose={onClose} label="Close" />
+          {ResourceActions && <ResourceActions record={diagnosticReport} onSuccess={onClose} />}
+        </div>
+      </Drawer.Footer>
     </Drawer>
   );
 }

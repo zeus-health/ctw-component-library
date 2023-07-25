@@ -1,0 +1,8 @@
+.ctw-drawer {
+  .ctw-footer {
+    // Boost font size for footer buttons.
+    button {
+      @apply ctw-text-base;
+    }
+  }
+}
