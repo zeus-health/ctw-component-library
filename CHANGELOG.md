@@ -1,5 +1,28 @@
 # ctw-component-library
 
+## 1.44.1
+
+### Patch Changes
+
+- e613bd0f: Add table row actions to details drawer (dismiss/add/mark as new/etc).
+
+## 1.44.0
+
+### Minor Changes
+
+- f65b1625: Add ability to remove title and border from patient history table.
+
+## 1.43.0
+
+### Minor Changes
+
+- c57bc0e2: Display records never requested
+
+### Patch Changes
+
+- 03fbf338: Fix diagnostic-trend click count.
+- 1320ddc6: Only toggle read when adding a condition or medication if the record is not yet marked as having been read.
+
 ## 1.42.0
 
 ### Minor Changes

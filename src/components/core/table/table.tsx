@@ -8,7 +8,7 @@ import { MinRecordItem, TableColumn } from "./table-helpers";
 import { TableRows, TableRowsProps } from "./table-rows";
 import { DEFAULT_PAGE_SIZE, PaginationList } from "../pagination/pagination-list";
 
-export type RowActionsProps<T extends MinRecordItem> = { record: T };
+export type RowActionsProps<T extends MinRecordItem> = { record: T; onSuccess?: () => void };
 
 export type TableProps<T extends MinRecordItem> = {
   children?: ReactNode;

@@ -4,13 +4,14 @@ import { useMedicationDetailsDrawer } from "./details";
 import { defaultMedicationFilters } from "./filters";
 import { defaultMedicationSort, medicationSortOptions } from "./sorts";
 import { ViewOption } from "../../resource/helpers/view-button";
-import { ResourceTable, ResourceTableProps } from "../../resource/resource-table";
+import { ResourceTable } from "../../resource/resource-table";
 import {
   ResourceTableActions,
   ResourceTableActionsProps,
 } from "../../resource/resource-table-actions";
 import { EmptyTable } from "@/components/core/empty-table";
 import { FilterItem } from "@/components/core/filter-bar/filter-bar-types";
+import { RowActionsProp } from "@/components/core/table/table-rows";
 import { MedicationStatementModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import "./patient-medications.scss";
@@ -19,7 +20,7 @@ export type PatientMedicationsBaseProps = {
   action?: ResourceTableActionsProps<MedicationStatementModel>["action"];
   className?: string;
   query: { data?: MedicationStatementModel[]; isLoading: boolean };
-  rowActions?: ResourceTableProps<MedicationStatementModel>["RowActions"];
+  rowActions?: RowActionsProp<MedicationStatementModel>;
   filters: FilterItem[];
   defaultView?: ViewOption<MedicationStatementModel>;
   views?: ViewOption<MedicationStatementModel>[];
@@ -37,7 +38,7 @@ export const PatientMedicationsBase = ({
   views,
   onOpenHistoryDrawer,
 }: PatientMedicationsBaseProps) => {
-  const openDetailsDrawer = useMedicationDetailsDrawer();
+  const openDetailsDrawer = useMedicationDetailsDrawer({ RowActions: rowActions });
   const { data, setFilters, setSort, setViewOption } = useFilteredSortedData({
     defaultView,
     defaultFilters: defaultMedicationFilters,

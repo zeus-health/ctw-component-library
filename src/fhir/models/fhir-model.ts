@@ -21,6 +21,10 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
 
   private revIncludedResources?: Resource[];
 
+  private optimisticIsRead?: boolean;
+
+  private optimisticIsDismissed?: boolean;
+
   constructor(resource: T, includedResources?: ResourceMap, revIncludes?: Resource[]) {
     this.resource = resource;
     this.includedResources = includedResources;
@@ -41,6 +45,10 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
   }
 
   get isDismissed(): boolean {
+    if (this.optimisticIsDismissed !== undefined) {
+      return this.optimisticIsDismissed;
+    }
+
     const basic = this.getLatestBasicResourceByActions(["archive", "unarchive"]);
     return some(basic?.code.coding, {
       system: SYSTEM_ZUS_PROFILE_ACTION,
@@ -48,12 +56,30 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
     });
   }
 
+  // Optimistically toggle the isDismiss state.
+  // This is useful to be able to change the state of the UI
+  // without having to wait for the toggleRead API call.
+  optimisticToggleIsDismiss(): void {
+    this.optimisticIsDismissed = !this.isDismissed;
+  }
+
   get isRead(): boolean {
+    if (this.optimisticIsRead !== undefined) {
+      return this.optimisticIsRead;
+    }
+
     const basic = this.getLatestBasicResourceByActions(["read", "unread"]);
     return some(basic?.code.coding, {
       system: SYSTEM_ZUS_PROFILE_ACTION,
       code: "read",
     });
+  }
+
+  // Optimistically toggle the isRead state.
+  // This is useful to be able to change the state of the UI
+  // without having to wait for the toggleRead API call.
+  optimisticToggleIsRead(): void {
+    this.optimisticIsRead = !this.isRead;
   }
 
   // Returns true if this resource is a summary/lens resource.

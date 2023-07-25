@@ -42,7 +42,7 @@ const PatientConditionsOutsideComponent = ({
       className={className}
       query={query}
       readOnly={readOnly}
-      rowActions={readOnly ? undefined : RowActions}
+      RowActions={readOnly ? undefined : RowActions}
       isLoading={patientHistoryQuery.isLoading}
     />
   );
@@ -53,7 +53,7 @@ export const PatientConditionsOutside = withErrorBoundary(
   "PatientConditions"
 );
 
-const RowActions = ({ record }: RowActionsProps<ConditionModel>) => {
+const RowActions = ({ record, onSuccess }: RowActionsProps<ConditionModel>) => {
   const { t } = useBaseTranslations();
   const showAddConditionForm = useAddConditionForm();
   const { isLoading, toggleDismiss } = useToggleDismiss(
@@ -68,8 +68,9 @@ const RowActions = ({ record }: RowActionsProps<ConditionModel>) => {
         type="button"
         className="ctw-btn-default"
         disabled={isLoading}
-        onClick={() => {
-          toggleDismiss(record);
+        onClick={async () => {
+          await toggleDismiss(record);
+          onSuccess?.();
         }}
       >
         {isLoading ? (

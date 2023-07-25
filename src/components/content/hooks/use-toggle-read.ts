@@ -9,7 +9,7 @@ interface UseToggleReadResult {
   /**
    * Function to call to toggle the read status of the FHIR model
    */
-  toggleRead: (model: FHIRModel<fhir4.Resource>) => void;
+  toggleRead: (model: FHIRModel<fhir4.Resource>) => Promise<void>;
 
   /**
    * True when `toggleRead` is called
@@ -35,10 +35,7 @@ export function useToggleRead(): UseToggleReadResult {
     setIsLoading(true);
     await toggleRead(model, await getRequestContext());
     await queryClient.invalidateQueries([QUERY_KEY_BASIC]);
-
-    // Timeout here fixes bug where we would briefly flash
-    // the old mark as read/new text.
-    setTimeout(() => setIsLoading(false), 0);
+    setIsLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

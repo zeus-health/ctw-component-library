@@ -59,7 +59,7 @@ const getRowActions =
 
 type RowActionsProps2 = RowActionsProps<MedicationStatementModel> & ExtraRowActionProps;
 
-const RowActions = ({ record, onAddToRecord }: RowActionsProps2) => {
+const RowActions = ({ record, onSuccess, onAddToRecord }: RowActionsProps2) => {
   const { t } = useBaseTranslations();
   const showAddMedicationForm = useAddMedicationForm();
   const { isLoading, toggleDismiss: toggleArchive } = useToggleDismiss(
@@ -74,8 +74,9 @@ const RowActions = ({ record, onAddToRecord }: RowActionsProps2) => {
         type="button"
         className="ctw-btn-default"
         disabled={isLoading}
-        onClick={() => {
-          toggleArchive(record);
+        onClick={async () => {
+          await toggleArchive(record);
+          onSuccess?.();
         }}
       >
         {isLoading ? (
@@ -96,6 +97,7 @@ const RowActions = ({ record, onAddToRecord }: RowActionsProps2) => {
         onClick={() => {
           if (onAddToRecord) {
             onAddToRecord(record);
+            onSuccess?.();
           } else {
             showAddMedicationForm(record);
           }
