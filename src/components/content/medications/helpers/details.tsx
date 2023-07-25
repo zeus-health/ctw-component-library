@@ -2,10 +2,17 @@ import { useMedicationHistoryEntries } from "./history";
 import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
 import { entryFromArray } from "@/components/core/data-list";
 import { Loading } from "@/components/core/loading";
+import { RowActionsProp } from "@/components/core/table/table-rows";
 import { useLastPrescriber } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models";
 
-export const useMedicationDetailsDrawer = () =>
+export const useMedicationDetailsDrawer = ({
+  RowActions,
+  enableDismissAndReadActions,
+}: {
+  RowActions?: RowActionsProp<MedicationStatementModel>;
+  enableDismissAndReadActions?: boolean;
+}) =>
   useResourceDetailsDrawer({
     header: (medication: MedicationStatementModel) => medication.display,
     getHistory: useMedicationHistoryEntries,
@@ -23,6 +30,8 @@ export const useMedicationDetailsDrawer = () =>
       { label: "Last Prescribed Date", value: medication.lastPrescribedDate },
       ...entryFromArray("Note", medication.notesDisplay),
     ],
+    RowActions,
+    enableDismissAndReadActions,
   });
 
 function LastPrescriber({ medication }: { medication: MedicationStatementModel }) {

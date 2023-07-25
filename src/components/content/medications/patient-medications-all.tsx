@@ -42,12 +42,15 @@ function PatientMedicationsAllComponent({
     <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="medications" />
   );
 
-  const openDetails = useMedicationDetailsDrawer();
-
   const rowActions = useMemo(
     () => (!readOnly ? getRowActions(userBuilderId, onAddToRecord) : undefined),
     [userBuilderId, readOnly, onAddToRecord]
   );
+
+  const openDetails = useMedicationDetailsDrawer({
+    RowActions: rowActions,
+    enableDismissAndReadActions: true,
+  });
 
   return (
     <div className={cx(className, "ctw-scrollable-pass-through-height")}>
@@ -84,7 +87,7 @@ export const PatientMedicationsAll = withErrorBoundary(
 
 const getRowActions =
   (userBuilderId: string, onAddToRecord?: (record: MedicationStatementModel) => void) =>
-  ({ record }: RowActionsProps<MedicationStatementModel>) => {
+  ({ record, onSuccess }: RowActionsProps<MedicationStatementModel>) => {
     const { t } = useBaseTranslations();
     const showAddMedicationForm = useAddMedicationForm();
     const { toggleRead } = useToggleRead();
@@ -96,10 +99,12 @@ const getRowActions =
           className="ctw-btn-primary"
           onClick={() => {
             if (!record.isRead) {
-              toggleRead(record);
+              void toggleRead(record);
             }
+
             if (onAddToRecord) {
               onAddToRecord(record);
+              onSuccess?.();
             } else {
               showAddMedicationForm(record);
             }

@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 1.44.1
+
+### Patch Changes
+
+- e613bd0f: Add table row actions to details drawer (dismiss/add/mark as new/etc).
+
+## 1.44.0
+
+### Minor Changes
+
+- f65b1625: Add ability to remove title and border from patient history table.
+
 ## 1.43.0
 
 ### Minor Changes

@@ -124,7 +124,7 @@ export async function toggleDismiss<T extends fhir4.Resource>(
 ) {
   const existingBasic = model.getLatestBasicResourceByActions(["archive", "unarchive"]);
   const profileAction = model.isDismissed ? "unarchive" : "archive";
-
+  model.optimisticToggleIsDismiss();
   await recordProfileAction(existingBasic, model, requestContext, profileAction);
 }
 
@@ -134,7 +134,7 @@ export async function toggleRead<T extends fhir4.Resource>(
 ) {
   const existingBasic = model.getLatestBasicResourceByActions(["read", "unread"]);
   const profileAction = model.isRead ? "unread" : "read";
-
+  model.optimisticToggleIsRead();
   await recordProfileAction(existingBasic, model, requestContext, profileAction);
 }
 

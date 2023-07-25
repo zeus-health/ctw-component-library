@@ -8,7 +8,7 @@ interface UseToggleDismissResult {
   /**
    * Function to call to toggle the archive status of the FHIR model
    */
-  toggleDismiss: (model: FHIRModel<fhir4.Resource>) => void;
+  toggleDismiss: (model: FHIRModel<fhir4.Resource>) => Promise<void>;
 
   /**
    * True when `toggleArchive` is called
@@ -34,10 +34,7 @@ export function useToggleDismiss(...queriesToInvalidate: string[]): UseToggleDis
         queryClient.invalidateQueries([queryToInvalidate])
       )
     );
-
-    // Timeout here fixes bug where we would briefly flash
-    // the old dismiss/restore text.
-    setTimeout(() => setIsLoading(false), 0);
+    setIsLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
