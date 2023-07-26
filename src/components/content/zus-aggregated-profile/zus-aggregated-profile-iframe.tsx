@@ -44,7 +44,6 @@ const ZusAggregatedProfileIframeComponent = ({
       setZAPURL("http://localhost:5173");
 
       window.addEventListener("message", ({ data }) => {
-        console.log("Message!", data);
         if (data.type === ZusAggregatedProfileOnResourceSaveMessageType) {
           requestContext.onResourceSave(data.resource, data.action, data.error);
         }

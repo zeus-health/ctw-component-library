@@ -228,7 +228,6 @@ export class Telemetry {
     if (this.skipMetrics()) {
       return;
     }
-    debugger;
 
     let user;
     const name = this.normalizeMetricName(metric);
