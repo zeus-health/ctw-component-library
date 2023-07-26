@@ -14,6 +14,7 @@ export type ZusAggregatedProfileIframeProps = {
 
 export const ZusAggregatedProfileIframeConfigMessageType = "ZusAggregatedProfileIframeConfig";
 export const ZusAggregatedProfileIframeReadyMessageType = "ZusAggregatedProfileIframeReady";
+export const ZusAggregatedProfileOnResourceSaveMessageType = "ZusAggregatedProfileOnResourceSave";
 
 const ZusAggregatedProfileIframeComponent = ({
   height = "100%",
@@ -39,11 +40,15 @@ const ZusAggregatedProfileIframeComponent = ({
   useEffect(() => {
     async function load() {
       const requestContext = await getRequestContext();
-      if (requestContext.env === "production") {
-        setZAPURL("https://zap.zusapi.com");
-      } else {
-        setZAPURL(`https://zap.${requestContext.env}.zusapi.com`);
-      }
+      // setZAPURL(getZusServiceUrl(requestContext.env, "zap"));
+      setZAPURL("http://localhost:5173");
+
+      window.addEventListener("message", ({ data }) => {
+        console.log("Message!", data);
+        if (data.type === ZusAggregatedProfileOnResourceSaveMessageType) {
+          requestContext.onResourceSave(data.resource, data.action, data.error);
+        }
+      });
     }
 
     void load();

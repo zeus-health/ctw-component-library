@@ -1,5 +1,6 @@
 import { datadogLogs } from "@datadog/browser-logs";
 import jwtDecode from "jwt-decode";
+import { undefined } from "zod";
 import { Session } from "./session";
 import packageJson from "../../package.json";
 import { getMetricsBaseUrl } from "@/api/urls";
@@ -208,6 +209,13 @@ export class Telemetry {
       .replace(/[^a-z0-9_.]/gi, "");
   }
 
+  /*
+   * In dev/test environments we should skip sending any metrics
+   */
+  static skipMetrics() {
+    return !this.environment || /(localhost|127\.0\.0\.1)/.test(window.location.origin);
+  }
+
   /**
    * Report a metric to CTW
    */
@@ -217,13 +225,10 @@ export class Telemetry {
     value: number,
     additionalTags: string[] = []
   ) {
-    if (
-      !this.environment ||
-      (process.env.NODE_ENV !== "test" &&
-        ["http://localhost:3000", "http://127.0.0.1:3000"].includes(window.location.origin))
-    ) {
+    if (this.skipMetrics()) {
       return;
     }
+    debugger;
 
     let user;
     const name = this.normalizeMetricName(metric);
@@ -325,12 +330,7 @@ export class Telemetry {
 
   static async reportActiveSession() {
     // Return if the session is already active or we don't need to report
-    if (
-      Session.isActive() ||
-      !this.environment ||
-      (process.env.NODE_ENV !== "test" &&
-        ["http://localhost:3000", "http://127.0.0.1:3000"].includes(window.location.origin))
-    ) {
+    if (Session.isActive() || this.skipMetrics()) {
       return;
     }
 
