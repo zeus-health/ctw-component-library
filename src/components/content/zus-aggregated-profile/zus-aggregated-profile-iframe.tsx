@@ -69,16 +69,11 @@ const ZusAggregatedProfileIframeComponent = ({
         headers: requestContext.headers,
         locals: requestContext.locals,
         theme: requestContext.theme,
-        // TODO
-        // onResourceSave
       } as CTWProviderProps;
 
       const patientProviderProps = {
         patientID: patient.data?.UPID,
         systemURL: SYSTEM_ZUS_UNIVERSAL_ID,
-        // TODO
-        // onPatientSave
-        // onResourceSave
       } as PatientProviderProps;
 
       iframe.contentWindow?.postMessage(

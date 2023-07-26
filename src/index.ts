@@ -12,6 +12,7 @@ export * from "@/components/content/diagnostic-reports/patient-diagnostic-report
 export * from "@/components/content/diagnostic-reports/unread-diagnostic-reports-notification";
 export * from "@/components/content/document/patient-documents";
 export * from "@/components/content/document/unread-documents-notification";
+export * from "@/components/content/forms/actions/patients";
 export * from "@/components/content/immunizations/patient-immunizations";
 export * from "@/components/content/immunizations/unread-immunizations-notification";
 export * from "@/components/content/medications/patient-medications";
