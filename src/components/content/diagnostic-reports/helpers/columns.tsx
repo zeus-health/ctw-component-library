@@ -27,7 +27,8 @@ export const patientDiagnosticReportsColumns = (
   {
     widthPercent: 1,
     minWidth: 32,
-    render: (diagnostic) => (diagnostic.trends ? <FontAwesomeIcon icon={faArrowTrendUp} /> : null),
+    render: (diagnostic) =>
+      diagnostic.hasTrends ? <FontAwesomeIcon icon={faArrowTrendUp} /> : null,
   },
   {
     title: "Details",

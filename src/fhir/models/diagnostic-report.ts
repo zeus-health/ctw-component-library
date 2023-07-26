@@ -13,7 +13,7 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
 
   private observationModels?: ObservationModel[];
 
-  private hasTrends?: boolean;
+  public hasTrends: boolean;
 
   constructor(
     resource: DiagnosticReport,
@@ -22,6 +22,7 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
     trends?: ObservationModel[]
   ) {
     super(resource, includedResources, revIncludes);
+    this.hasTrends = false;
     if (resource.id) {
       const resourceId = resource.id;
       this.observationModels = this.resource.result?.map((result) => {
@@ -105,7 +106,7 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
     }
     const tResult = this.results.length > 1 ? "results" : "result";
     let display = `${this.results.length} ${tResult}`;
-    if (this.trends) {
+    if (this.hasTrends) {
       display += ", result trend available";
     }
     return display;
@@ -135,10 +136,6 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
 
   get observations() {
     return this.observationModels ?? [];
-  }
-
-  get trends() {
-    return this.hasTrends || false;
   }
 }
 
