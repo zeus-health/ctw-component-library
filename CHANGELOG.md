@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.45.0
+
+### Minor Changes
+
+- 6d287e57: Added trend indicator to Diagnostic Report component results
+
 ## 1.44.2
 
 ### Patch Changes
