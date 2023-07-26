@@ -100,17 +100,11 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
   }
 
   get details() {
-    let display = "";
-    switch (this.results.length) {
-      case 0:
-        return "";
-      case 1:
-        display = `${this.results.length} result`;
-        break;
-      default:
-        display = `${this.results.length} results`;
-        break;
+    if (!this.results.length) {
+      return "";
     }
+    const tResult = this.results.length > 1 ? "results" : "result";
+    let display = `${this.results.length} ${tResult}`;
     if (this.trends) {
       display += ", result trend available";
     }
