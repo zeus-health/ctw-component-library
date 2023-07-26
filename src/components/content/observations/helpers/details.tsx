@@ -15,7 +15,6 @@ import { compact } from "@/utils/nodash";
 
 export type ObservationDetailsProps = {
   diagnosticReport: DiagnosticReportModel;
-  observationTrends?: ObservationModel[];
 };
 
 export const diagnosticReportData = (diagnosticReport: DiagnosticReportModel) => [
@@ -26,7 +25,7 @@ export const diagnosticReportData = (diagnosticReport: DiagnosticReportModel) =>
   { label: "Organization", value: diagnosticReport.performer },
 ];
 
-export const Component = ({ diagnosticReport, observationTrends }: ObservationDetailsProps) => {
+export const Component = ({ diagnosticReport }: ObservationDetailsProps) => {
   const [observationEntries, setObservationsEntries] = useState<ObservationModel[]>([]);
   const openCCDAModal = useCCDAModal();
   const [isLoading, setIsLoading] = useState(false);
@@ -59,20 +58,7 @@ export const Component = ({ diagnosticReport, observationTrends }: ObservationDe
     if (fqsObservations.ready) {
       setObservationsEntries(
         fqsObservations.enabled
-          ? compact(
-              diagnosticReport.resource.result?.map((result) => {
-                // @ts-ignore: Unreachable code error
-                // We are disabling it for this line as the FHIR spec doesn't support this
-                // customized result field that now has the observation resource and not only just a reference.
-                const model = new ObservationModel(result.resource, {
-                  [diagnosticReport.id]: diagnosticReport.resource,
-                });
-                if (observationTrends) {
-                  model.trends = filterAndSortTrends(model, observationTrends);
-                }
-                return model;
-              })
-            )
+          ? compact(diagnosticReport.observations)
           : compact(
               diagnosticReport.results.map((result) => {
                 const observation = findReference(
@@ -84,18 +70,12 @@ export const Component = ({ diagnosticReport, observationTrends }: ObservationDe
                 if (!observation) {
                   return undefined;
                 }
-                const model = new ObservationModel(observation, {
-                  [diagnosticReport.id]: diagnosticReport.resource,
-                });
-                if (observationTrends) {
-                  model.trends = filterAndSortTrends(model, observationTrends);
-                }
-                return model;
+                return diagnosticReport.observations.find((o) => o.id === observation.id);
               })
             )
       );
     }
-  }, [diagnosticReport, fqsObservations.ready, fqsObservations.enabled, observationTrends]);
+  }, [diagnosticReport, fqsObservations.ready, fqsObservations.enabled]);
 
   return (
     <div className="ctw-space-y-6">
@@ -124,28 +104,3 @@ export const Component = ({ diagnosticReport, observationTrends }: ObservationDe
 };
 
 export const ObservationDetails = withErrorBoundary(Component, "Observations");
-
-function filterAndSortTrends(model: ObservationModel, trends: ObservationModel[]) {
-  let filtered = trends.filter((t) =>
-    model.resource.code.coding?.some((coding) => coding.code && t.hasSimilarAnalyte(coding.code))
-  );
-  filtered = filtered.sort((a, b) => {
-    if (!a.effectiveStartRaw && !b.effectiveStartRaw) {
-      return 0;
-    }
-    if (!a.effectiveStartRaw) {
-      return 1;
-    }
-    if (!b.effectiveStartRaw) {
-      return -1;
-    }
-    if (a.effectiveStartRaw > b.effectiveStartRaw) {
-      return -1;
-    }
-    if (a.effectiveStartRaw < b.effectiveStartRaw) {
-      return 1;
-    }
-    return 0;
-  });
-  return filtered;
-}
