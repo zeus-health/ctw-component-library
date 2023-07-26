@@ -1,6 +1,5 @@
 import { datadogLogs } from "@datadog/browser-logs";
 import jwtDecode from "jwt-decode";
-import { undefined } from "zod";
 import { Session } from "./session";
 import packageJson from "../../package.json";
 import { getMetricsBaseUrl } from "@/api/urls";
@@ -213,7 +212,10 @@ export class Telemetry {
    * In dev/test environments we should skip sending any metrics
    */
   static skipMetrics() {
-    return !this.environment || /(localhost|127\.0\.0\.1)/.test(window.location.origin);
+    return (
+      !this.environment ||
+      (process.env.NODE_ENV !== "test" && /(localhost|127\.0\.0\.1)/.test(window.location.origin))
+    );
   }
 
   /**
