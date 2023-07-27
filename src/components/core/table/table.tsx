@@ -79,8 +79,9 @@ export const Table = <T extends MinRecordItem>({
   useEffect(() => {
     if (hidePagination && hasData) {
       setCount(records.length);
+    } else {
+      setCount(pageSize);
     }
-    setCount(pageSize);
   }, [records, pageSize, hidePagination, hasData]);
 
   return (
