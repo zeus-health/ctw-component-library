@@ -101,10 +101,6 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
     return this.resource.identifier?.[0].value ?? "";
   }
 
-  get trends() {
-    return this.hasTrends || false;
-  }
-
   get details() {
     if (!this.results.length) {
       return "";
