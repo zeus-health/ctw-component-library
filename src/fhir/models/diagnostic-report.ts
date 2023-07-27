@@ -32,6 +32,7 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
         const model = new ObservationModel(result.resource, {
           [resourceId]: resource,
         });
+        // console.log("trends", trends);
         if (trends) {
           model.trends = filterAndSortTrends(model, trends);
           if (model.trends.length >= 2) {
@@ -98,6 +99,10 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
 
   get identifier() {
     return this.resource.identifier?.[0].value ?? "";
+  }
+
+  get trends() {
+    return this.hasTrends || false;
   }
 
   get details() {
@@ -221,6 +226,7 @@ export const inferEndDateFromResults = (results: (Observation | undefined)[] | u
     }, undefined as unknown as string);
 
 function filterAndSortTrends(model: ObservationModel, trends: ObservationModel[]) {
+  console.log("trends", trends);
   let filtered = trends.filter((t) =>
     model.resource.code.coding?.some((coding) => coding.code && t.hasSimilarAnalyte(coding.code))
   );
