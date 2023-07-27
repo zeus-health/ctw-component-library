@@ -1,8 +1,7 @@
 import { FHIRModel } from "./fhir-model";
 import { SYSTEM_LOINC } from "../system-urls";
 import { codeableConceptLabel } from "@/fhir/codeable-concept";
-import { formatDateISOToLocal } from "@/fhir/formatters";
-import { compact } from "@/utils/nodash";
+import { formatDateISOToLocal, formatPeriod, formatQuantity, formatRange } from "@/fhir/formatters";
 
 export const LOINC_ANALYTES: Record<string, string> = {
   "17856-6": "a1c",
@@ -48,13 +47,44 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
     return this.resource.performer?.[0].display;
   }
 
-  get value() {
-    return compact([
-      this.resource.valueQuantity?.value ||
-        this.resource.valueString ||
-        codeableConceptLabel(this.resource.valueCodeableConcept),
-      this.resource.valueQuantity?.unit,
-    ]).join(" ");
+  get value(): string {
+    if (this.resource.valueBoolean !== undefined) {
+      return this.resource.valueBoolean ? "true" : "false";
+    }
+
+    if (this.resource.valueCodeableConcept) {
+      return codeableConceptLabel(this.resource.valueCodeableConcept);
+    }
+
+    if (this.resource.valueDateTime) {
+      return this.resource.valueDateTime;
+    }
+
+    if (this.resource.valueInteger !== undefined) {
+      return String(this.resource.valueInteger);
+    }
+
+    if (this.resource.valuePeriod) {
+      return formatPeriod(this.resource.valuePeriod);
+    }
+
+    if (this.resource.valueQuantity) {
+      return formatQuantity(this.resource.valueQuantity);
+    }
+
+    if (this.resource.valueRange) {
+      return formatRange(this.resource.valueRange);
+    }
+
+    if (this.resource.valueString) {
+      return this.resource.valueString;
+    }
+
+    if (this.resource.valueTime) {
+      return this.resource.valueTime;
+    }
+
+    return "";
   }
 
   get unit() {

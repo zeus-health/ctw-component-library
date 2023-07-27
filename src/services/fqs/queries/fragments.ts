@@ -226,6 +226,7 @@ export const fragmentObservation = gql`
       }
     }
     valueQuantity {
+      comparator
       unit
       value
       system
@@ -244,14 +245,12 @@ export const fragmentObservation = gql`
     valueInteger
     valueRange {
       low {
-        comparator
         unit
         value
         system
         code
       }
       high {
-        comparator
         unit
         value
         system
@@ -267,7 +266,6 @@ export const fragmentObservation = gql`
         code
       }
       denominator {
-        comparator
         unit
         value
         system
