@@ -21,7 +21,6 @@ export type ResourceTableProps<T extends MinRecordItem> = {
   RowActions?: TableProps<T>["RowActions"];
   showTableHead?: boolean;
   enableDismissAndReadActions?: boolean;
-  hidePagination?: boolean;
 };
 
 export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>({
@@ -34,7 +33,6 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
   RowActions,
   showTableHead,
   enableDismissAndReadActions,
-  hidePagination = false,
 }: ResourceTableProps<M>) => {
   const patient = usePatient();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -102,7 +100,6 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
         RowActions={RowActionsWithAdditions}
         columns={columns}
         handleRowClick={onRowClickWithRead}
-        hidePagination={hidePagination}
       />
     </div>
   );
