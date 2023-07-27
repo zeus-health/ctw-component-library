@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.45.1
+
+### Patch Changes
+
+- 0ba334f0: Reverted "Remove the load more feature in the diagnostic report drawer."
+
 ## 1.45.0
 
 ### Minor Changes
