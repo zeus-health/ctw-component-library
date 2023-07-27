@@ -75,6 +75,14 @@ export const Table = <T extends MinRecordItem>({
 
   const hasData = !isLoading && records.length > 0;
 
+  // useeffect to set the count to the default page size when the records change
+  useEffect(() => {
+    if (hidePagination && hasData) {
+      setCount(records.length);
+    }
+    setCount(pageSize);
+  }, [records, pageSize, hidePagination, hasData]);
+
   return (
     <div
       className={cx("ctw-scrollable-pass-through-height ctw-space-y-4", {
