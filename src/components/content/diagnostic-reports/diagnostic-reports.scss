@@ -1,5 +1,12 @@
 .ctw-diagnostic-reports {
-    .ctw-table-stacked table tbody tr td.ctw-trend-indicator-cell { display: inline; padding-right: 0; }
-    .ctw-table-stacked table tbody tr td.ctw-trend-indicator-cell > * { padding-right: 0.5rem; }
-    .ctw-table-stacked table tbody tr td.ctw-details-cell { display: inline }
+  .ctw-table-stacked table tbody tr td.ctw-trend-indicator-cell {
+    display: inline;
+    padding-right: 0;
+  }
+  .ctw-table-stacked table tbody tr td.ctw-trend-indicator-cell > * {
+    padding-right: 0.5rem;
+  }
+  .ctw-table-stacked table tbody tr td.ctw-details-cell {
+    display: inline;
+  }
 }
