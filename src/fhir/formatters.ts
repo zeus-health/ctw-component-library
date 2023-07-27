@@ -163,6 +163,6 @@ export function formatRange(range: fhir4.Range) {
 }
 
 export function formatQuantity(quantity: fhir4.Quantity) {
-  const { value, unit, comparator } = quantity;
-  return compact([comparator, value, unit]).join(" ");
+  const { value, unit } = quantity;
+  return compact([value, unit]).join(" ");
 }

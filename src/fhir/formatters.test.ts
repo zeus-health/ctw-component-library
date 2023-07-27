@@ -91,15 +91,6 @@ describe("formatters", () => {
   });
 
   describe("formatQuantity", () => {
-    test("returns formatted string when value, unit, and comparator are provided", () => {
-      const quantity: fhir4.Quantity = {
-        value: 1.2,
-        unit: "mg",
-        comparator: ">",
-      };
-      expect(formatQuantity(quantity)).toEqual("> 1.2 mg");
-    });
-
     test("returns formatted string when value and unit are provided", () => {
       const quantity: fhir4.Quantity = {
         value: 1.2,
