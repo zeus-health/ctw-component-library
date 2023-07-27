@@ -163,7 +163,6 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
       (coding) =>
         coding.system === SYSTEM_LOINC && coding.code && analyte === LOINC_ANALYTES[coding.code]
     );
-    console.log("similarAnalyte", similarAnalyte);
     return similarAnalyte;
   }
 }

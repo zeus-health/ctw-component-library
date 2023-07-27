@@ -226,7 +226,6 @@ export const inferEndDateFromResults = (results: (Observation | undefined)[] | u
     }, undefined as unknown as string);
 
 function filterAndSortTrends(model: ObservationModel, trends: ObservationModel[]) {
-  console.log("trends", trends);
   let filtered = trends.filter((t) =>
     model.resource.code.coding?.some((coding) => coding.code && t.hasSimilarAnalyte(coding.code))
   );
