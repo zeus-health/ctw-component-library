@@ -1,4 +1,5 @@
 import cx from "classnames";
+import "./diagnostic-reports.scss";
 import { patientDiagnosticReportsColumns } from "./helpers/columns";
 import { defaultDiagnosticReportFilters, diagnosticReportFilter } from "./helpers/filters";
 import { defaultDiagnosticReportSort, diagnosticReportSortOptions } from "./helpers/sorts";
@@ -29,7 +30,7 @@ function PatientDiagnosticReportsComponent({ className }: PatientDiagnosticRepor
   const openDetails = useObservationsDetailsDrawer();
 
   return (
-    <div className={cx(className, "ctw-scrollable-pass-through-height")}>
+    <div className={cx(className, "ctw-scrollable-pass-through-height", "ctw-diagnostic-reports")}>
       <ResourceTableActions
         filterOptions={{
           onChange: setFilters,
