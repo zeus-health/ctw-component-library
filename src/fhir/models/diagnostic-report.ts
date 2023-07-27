@@ -32,6 +32,7 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
         const model = new ObservationModel(result.resource, {
           [resourceId]: resource,
         });
+
         if (trends) {
           model.trends = filterAndSortTrends(model, trends);
           if (model.trends.length >= 2) {
