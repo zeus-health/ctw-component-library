@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.45.3
+
+### Patch Changes
+
+- e2b39aa0: Updated trending indicator display on small breakpoints
+
 ## 1.45.2
 
 ### Patch Changes
