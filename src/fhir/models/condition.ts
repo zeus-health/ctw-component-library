@@ -26,7 +26,7 @@ import {
   findCodingByOrderOfPreference,
   findCodingWithEnrichment,
 } from "@/fhir/codeable-concept";
-import { compact, find, intersectionWith, uniqWith } from "@/utils/nodash";
+import { capitalize, compact, find, intersectionWith, uniqWith } from "@/utils/nodash";
 
 type VerificationStatus =
   | "unconfirmed"
@@ -137,9 +137,9 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
   }
 
   get display(): string | undefined {
-    return (
+    return capitalize(
       findCodingByOrderOfPreference(CONDITION_CODE_PREFERENCE_ORDER, this.resource.code)?.display ??
-      codeableConceptLabel(this.resource.code)
+        codeableConceptLabel(this.resource.code)
     );
   }
 

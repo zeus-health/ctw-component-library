@@ -3,6 +3,7 @@ import { FHIRModel } from "./fhir-model";
 import { codeableConceptLabel } from "../codeable-concept";
 import { formatISODateStringToDate } from "../formatters";
 import { findReference } from "../resource-helper";
+import { capitalize } from "@/utils/nodash";
 
 export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
   kind = "Document" as const;
@@ -34,7 +35,7 @@ export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
   }
 
   get title(): string | undefined {
-    return this.resource.content[0].attachment.title;
+    return capitalize(this.resource.content[0].attachment.title);
   }
 
   get dateCreated(): string | undefined {

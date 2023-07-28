@@ -15,6 +15,7 @@ export const patientDiagnosticReportsColumns = (
       <ResourceTitleColumn
         title={diagnostic.displayName}
         ownedByBuilder={diagnostic.ownedByBuilder(builderId)}
+        capitalizeTitle={false}
       />
     ),
   },
@@ -27,6 +28,7 @@ export const patientDiagnosticReportsColumns = (
   {
     widthPercent: 1,
     minWidth: 32,
+    className: "ctw-trend-indicator-cell",
     render: (diagnostic) =>
       diagnostic.hasTrends ? <FontAwesomeIcon icon={faArrowTrendUp} /> : null,
   },
@@ -35,5 +37,6 @@ export const patientDiagnosticReportsColumns = (
     dataIndex: "details",
     widthPercent: 39,
     minWidth: 200,
+    className: "ctw-details-cell",
   },
 ];

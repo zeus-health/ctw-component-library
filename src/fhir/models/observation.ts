@@ -9,6 +9,20 @@ export const LOINC_ANALYTES: Record<string, string> = {
   "2345-7": "glucose",
   "4548-4": "a1c",
   "4549-2": "a1c",
+  "13457-7": "Cholesterol in LDL [Mass/volume] in Serum or Plasma by Direct assay",
+  "2089-1": "Cholesterol in LDL [Mass/volume] in Serum or Plasma by Direct assay",
+  "39469-2": "Cholesterol in LDL [Mass/volume] in Serum or Plasma by Direct assay",
+  "46985-8": "Cholesterol in LDL [Mass/volume] in Serum or Plasma by Direct assay",
+  "48620-9": "Cholesterol [Mass/volume] in Serum or Plasma",
+  "35200-5": "Cholesterol [Mass/volume] in Serum or Plasma",
+  "2086-7": "Cholesterol in HDL [Mass/volume] in Serum or Plasma",
+  "49130-8": "Cholesterol in HDL [Mass/volume] in Serum or Plasma",
+  "9832-7": "Cholesterol in HDL [Mass/volume] in Serum or Plasma",
+  "12951-0": "Triglyceride [Mass/volume] in Serum or Plasma",
+  "3043-7": "Triglyceride [Mass/volume] in Serum or Plasma",
+  "14927-8": "Triglyceride [Mass/volume] in Serum or Plasma",
+  "3048-6": "Triglyceride [Mass/volume] in Serum or Plasma",
+  "3049-4": "Triglyceride [Mass/volume] in Serum or Plasma",
 };
 
 export class ObservationModel extends FHIRModel<fhir4.Observation> {

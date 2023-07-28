@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 1.45.3
+
+### Patch Changes
+
+- e2b39aa0: Updated trending indicator display on small breakpoints
+
+## 1.45.2
+
+### Patch Changes
+
+- 7c75a854: Add trending feature to lipid data.
+
 ## 1.45.1
 
 ### Patch Changes
