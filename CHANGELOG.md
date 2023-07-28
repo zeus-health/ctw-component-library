@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.45.6
+
+### Patch Changes
+
+- 21fb1c67: Remove the beta label from timeline.
+
 ## 1.45.5
 
 ### Patch Changes
