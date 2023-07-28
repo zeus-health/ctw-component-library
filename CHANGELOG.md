@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.45.4
+
+### Patch Changes
+
+- 2a5b770e: Fix capitalization logic for resource table titles.
+- 0875afdd: Fix show all for the diagnostic report.
+
 ## 1.45.3
 
 ### Patch Changes
