@@ -1,10 +1,7 @@
 import { ObservationModel, PatientModel } from "./models";
 import { SYSTEM_LOINC } from "./system-urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import {
-  usePatientVersion,
-  useQueryWithPatient,
-} from "@/components/core/providers/patient-provider";
+import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { useTrendingLabsFeatureToggle } from "@/hooks/use-feature-toggle";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import { ObservationGraphqlResponse, observationQuery } from "@/services/fqs/queries/observations";
@@ -13,25 +10,20 @@ import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export function usePatientObservations(loincCodes: string[]) {
   const trendingLabs = useTrendingLabsFeatureToggle();
-  const patient = usePatientVersion(1);
 
-  // TODO: Remove the usePatientVersion() call above and conditional below once DRT backfills Observations.
   return useQueryWithPatient(
-    `${QUERY_KEY_PATIENT_OBSERVATIONS}_${loincCodes.join("_")}`,
-    [trendingLabs.enabled, patient.data],
-    trendingLabs.enabled &&
-      patient.data?.resource &&
-      patient.data.resource.meta &&
-      patient.data.resource.meta.lastUpdated &&
+    QUERY_KEY_PATIENT_OBSERVATIONS,
+    [trendingLabs.enabled, loincCodes],
+    async (requestContext, patient) =>
       // Don't fetching observations if this patient was created before 07/19/2023.
       // This is a temporary work around until FQS backfills observations for all patients.
       // See https://zeushealth.atlassian.net/browse/CDEV-296
-      patient.data.resource.meta.lastUpdated >= "2023-07-19"
-      ? withTimerMetric(fetchObservations(loincCodes), "req.timing.all_observations")
-      : async () =>
-          new Promise<ObservationModel[]>((resolve) => {
-            resolve([]);
-          })
+      trendingLabs.enabled && patient.createdAt && patient.createdAt >= "2023-07-19"
+        ? withTimerMetric(fetchObservations(loincCodes), "req.timing.all_observations")(
+            requestContext,
+            patient
+          )
+        : []
   );
 }
 
