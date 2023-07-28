@@ -15,6 +15,7 @@ export const patientDiagnosticReportsColumns = (
       <ResourceTitleColumn
         title={diagnostic.displayName}
         ownedByBuilder={diagnostic.ownedByBuilder(builderId)}
+        capitalizeTitle={false}
       />
     ),
   },

@@ -4,7 +4,7 @@ import { findReference } from "../resource-helper";
 import { SYSTEM_NDC, SYSTEM_RXNORM, SYSTEM_SNOMED } from "../system-urls";
 import { codeableConceptLabel, CodePreference, findCoding } from "@/fhir/codeable-concept";
 import { displayOnset } from "@/fhir/display-onset";
-import { compact, uniqWith } from "@/utils/nodash";
+import { capitalize, compact, uniqWith } from "@/utils/nodash";
 
 export class AllergyModel extends FHIRModel<fhir4.AllergyIntolerance> {
   kind = "Allergy" as const;
@@ -26,7 +26,7 @@ export class AllergyModel extends FHIRModel<fhir4.AllergyIntolerance> {
   }
 
   get display(): string | undefined {
-    return codeableConceptLabel(this.resource.code);
+    return capitalize(codeableConceptLabel(this.resource.code));
   }
 
   get lowercaseDisplay(): string {
