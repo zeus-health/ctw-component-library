@@ -6,10 +6,10 @@ import { codeableConceptLabel, findCodingByOrderOfPreference } from "@/fhir/code
 import { formatDateISOToLocal } from "@/fhir/formatters";
 import { findReference } from "@/fhir/resource-helper";
 import {
+  SYSTEM_CPT,
   SYSTEM_DIAGNOSTIC_SERVICE_SECTION_ID,
   SYSTEM_LOINC,
   SYSTEM_SNOMED,
-  SYSTEM_CPT,
 } from "@/fhir/system-urls";
 import { find } from "@/utils/nodash";
 
