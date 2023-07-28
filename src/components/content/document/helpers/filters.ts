@@ -39,6 +39,11 @@ const isViewablePostRainbow = (docRef: fhir4.DocumentReference) => {
   );
 };
 
+// DA creates document references for sections of a CDA and the full CDA.
+// Sections will have at most 1 category.
+export const isSectionDocument = (document: DocumentModel) =>
+  document.category && document.category.length < 2;
+
 const isRenderableBinary = (doc: fhir4.DocumentReference): boolean => {
   const thirdPartyTag = doc.meta?.tag?.find((tag) => tag.system === THIRD_PARTY_SOURCE_SYSTEM);
   const isSupportedThirdParty = ["commonwell", "carequality"].includes(thirdPartyTag?.code || "");

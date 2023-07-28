@@ -1,28 +1,32 @@
 import { useIncludeBasics } from "./basic";
 import { searchCommonRecords } from "./search-helpers";
-import { PatientModel, useFeatureFlaggedQueryWithPatient } from "..";
+import { PatientModel, useQueryWithPatient } from "..";
 import { applyDocumentFilters } from "@/components/content/document/helpers/filters";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import { DocumentReferenceGraphqlResponse, documentsQuery } from "@/services/fqs/queries/documents";
 import { orderBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_DOCUMENTS } from "@/utils/query-keys";
-import { Telemetry } from "@/utils/telemetry";
+import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
-export function usePatientDocuments() {
-  const fqs = useFQSFeatureToggle("documents");
+export function usePatientTopLevelDocuments() {
+  const documents = usePatientDocuments2();
+  const filteredDocuments = orderBy(
+    applyDocumentFilters(documents),
+    [(document) => document.resource.content[0].attachment.creation || ""],
+    ["desc"]
+  );
+  return filteredDocuments;
+}
 
-  const patientDocumentsQuery = useFeatureFlaggedQueryWithPatient(
+export function usePatientDocuments2() {
+  const patientDocumentsQuery = useQueryWithPatient(
     QUERY_KEY_PATIENT_DOCUMENTS,
     [],
-    "documents",
-    "req.timing.documents",
-    getDocumentFromFQS,
-    getDocumentFromODS
+    withTimerMetric(getDocumentFromFQS, "req.timing.documents", ["fqs"])
   );
 
-  return useIncludeBasics(patientDocumentsQuery, fqs);
+  return useIncludeBasics(patientDocumentsQuery, { enabled: true, ready: true });
 }
 
 async function getDocumentFromFQS(requestContext: CTWRequestContext, patient: PatientModel) {
@@ -41,16 +45,11 @@ async function getDocumentFromFQS(requestContext: CTWRequestContext, patient: Pa
       }
     );
     const nodes = data.DocumentReferenceConnection.edges.map((x) => x.node);
-    const results = orderBy(
-      applyDocumentFilters(nodes),
-      [(document) => document.resource.content[0].attachment.creation || ""],
-      ["desc"]
-    );
-    if (results.length === 0) {
+    if (nodes.length === 0) {
       Telemetry.countMetric("req.count.documents.none", 1, ["fqs"]);
     }
-    Telemetry.histogramMetric("req.count.documents", results.length, ["fqs"]);
-    return results;
+    Telemetry.histogramMetric("req.count.documents", nodes.length, ["fqs"]);
+    return nodes;
   } catch (e) {
     throw new Error(`Failed fetching document information for patient: ${e}`);
   }
