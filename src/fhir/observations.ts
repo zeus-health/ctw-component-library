@@ -23,7 +23,10 @@ export function usePatientObservations(loincCodes: string[]) {
       patient.data?.resource &&
       patient.data.resource.meta &&
       patient.data.resource.meta.lastUpdated &&
-      patient.data.resource.meta.lastUpdated >= "2023-07-19" // don't bother fetching observations if this patient was created before 07/19
+      // Don't fetching observations if this patient was created before 07/19/2023.
+      // This is a temporary work around until FQS backfills observations for all patients.
+      // See https://zeushealth.atlassian.net/browse/CDEV-296
+      patient.data.resource.meta.lastUpdated >= "2023-07-19"
       ? withTimerMetric(fetchObservations(loincCodes), "req.timing.all_observations")
       : async () =>
           new Promise<ObservationModel[]>((resolve) => {
