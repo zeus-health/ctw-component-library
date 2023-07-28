@@ -1,3 +1,4 @@
+import type { DiagnosticReportModel } from "./diagnostic-report";
 import { FHIRModel } from "./fhir-model";
 import { SYSTEM_LOINC } from "../system-urls";
 import { codeableConceptLabel } from "@/fhir/codeable-concept";
@@ -27,10 +28,25 @@ export const LOINC_ANALYTES: Record<string, string> = {
 export class ObservationModel extends FHIRModel<fhir4.Observation> {
   kind = "Observation" as const;
 
-  private trendData?: ObservationModel[];
+  private trendData: ObservationModel[];
+
+  public diagnosticReportModel?: DiagnosticReportModel;
+
+  constructor(resource: fhir4.Observation, trendData?: ObservationModel[]) {
+    super(resource);
+    this.trendData = filterAndSortTrends(this.resource, trendData ?? []);
+  }
 
   get category() {
     return codeableConceptLabel(this.resource.category?.[0]);
+  }
+
+  get diagnosticReport() {
+    return this.diagnosticReportModel;
+  }
+
+  setDiagnosticReport(diagnosticReport: DiagnosticReportModel) {
+    this.diagnosticReportModel = diagnosticReport;
   }
 
   get display() {
@@ -141,11 +157,7 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
   }
 
   get trends() {
-    return this.trendData || [];
-  }
-
-  set trends(t: ObservationModel[]) {
-    this.trendData = t;
+    return this.trendData;
   }
 
   get acceptedInterpretations(): string {
@@ -183,16 +195,45 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
         return "ctw-text-content-black ctw-bg-bg-light ctw-inline-flex ctw-rounded-xl ctw-leading-5 ctw-font-medium ctw-text-sm ctw-p-1 ctw-px-3";
     }
   }
+}
 
-  hasSimilarAnalyte(code: string) {
-    const analyte = LOINC_ANALYTES[code];
-    if (!analyte) {
-      return false;
+function filterAndSortTrends(resource: fhir4.Observation, trends: ObservationModel[]) {
+  let filtered = trends.filter((t) =>
+    resource.code.coding?.some((coding) => coding.code && hasSimilarAnalyte(t, coding.code))
+  );
+
+  filtered = filtered.sort((a, b) => {
+    const aStart = a.effectiveStartRaw;
+    const bStart = b.effectiveStartRaw;
+
+    if (!aStart && !bStart) {
+      return 0;
     }
-    const similarAnalyte = this.resource.code.coding?.some(
-      (coding) =>
-        coding.system === SYSTEM_LOINC && coding.code && analyte === LOINC_ANALYTES[coding.code]
-    );
-    return similarAnalyte;
+    if (!aStart) {
+      return 1;
+    }
+    if (!bStart) {
+      return -1;
+    }
+    if (aStart > bStart) {
+      return -1;
+    }
+    if (aStart < bStart) {
+      return 1;
+    }
+    return 0;
+  });
+  return filtered;
+}
+
+function hasSimilarAnalyte(model: ObservationModel, code: string) {
+  const analyte = LOINC_ANALYTES[code];
+  if (!analyte) {
+    return false;
   }
+  const similarAnalyte = model.resource.code.coding?.some(
+    (coding) =>
+      coding.system === SYSTEM_LOINC && coding.code && analyte === LOINC_ANALYTES[coding.code]
+  );
+  return similarAnalyte;
 }

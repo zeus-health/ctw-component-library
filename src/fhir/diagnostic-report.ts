@@ -1,6 +1,6 @@
 import { useIncludeBasics } from "./basic";
 import { LOINC_ANALYTES, ObservationModel } from "./models/observation";
-import { usePatientObservations } from "./observations";
+import { usePatientObservationsTrendData } from "./observations";
 import { searchBuilderRecords, searchCommonRecords } from "./search-helpers";
 import { SYSTEM_ZUS_THIRD_PARTY } from "./system-urls";
 import { applyDiagnosticReportFilters } from "@/components/content/diagnostic-reports/helpers/diagnostic-report-query-filters";
@@ -24,34 +24,34 @@ import { Telemetry } from "@/utils/telemetry";
 type SearchType = "builder" | "all";
 
 export function usePatientBuilderDiagnosticReports() {
-  const { data } = usePatientObservations(keys(LOINC_ANALYTES));
+  const { data } = usePatientObservationsTrendData(keys(LOINC_ANALYTES));
   return useFeatureFlaggedQueryWithPatient(
     QUERY_KEY_PATIENT_DIAGNOSTIC_REPORTS,
-    [data],
+    [data?.map((o) => o.id)], // Only use the IDs in our key (fixes issue with ciruclar references).
     "diagnosticReports",
     "req.timing.builder_diagnostic_reports",
-    diagnosticReportsFetcherFQS("builder", data),
-    diagnosticReportsFetcherODS("builder", data)
+    diagnosticReportsFetcherFQS("builder", data ?? []),
+    diagnosticReportsFetcherODS("builder", data ?? [])
   );
 }
 
 export function usePatientAllDiagnosticReports() {
   const fqs = useFQSFeatureToggle("diagnosticReports");
-  const { data } = usePatientObservations(keys(LOINC_ANALYTES));
+  const { data } = usePatientObservationsTrendData(keys(LOINC_ANALYTES));
 
   const query = useFeatureFlaggedQueryWithPatient(
     QUERY_KEY_OTHER_PROVIDER_DIAGNOSTIC_REPORTS,
-    [data],
+    [data?.map((o) => o.id)], // Only use the IDs in our key (fixes issue with ciruclar references).
     "diagnosticReports",
     "req.timing.all_diagnostic_reports",
-    diagnosticReportsFetcherFQS("all", data),
-    diagnosticReportsFetcherODS("all", data)
+    diagnosticReportsFetcherFQS("all", data ?? []),
+    diagnosticReportsFetcherODS("all", data ?? [])
   );
 
   return useIncludeBasics(query, fqs);
 }
 
-function diagnosticReportsFetcherODS(searchType: SearchType, trends?: ObservationModel[]) {
+function diagnosticReportsFetcherODS(searchType: SearchType, trendData: ObservationModel[]) {
   const fetchFunction = searchType === "builder" ? searchBuilderRecords : searchCommonRecords;
   return async (requestContext: CTWRequestContext, patient: PatientModel) => {
     try {
@@ -63,7 +63,7 @@ function diagnosticReportsFetcherODS(searchType: SearchType, trends?: Observatio
         Telemetry.countMetric(`req.count.${searchType}_diagnostic_reports.none`);
       }
       Telemetry.histogramMetric(`req.count.${searchType}_diagnostic_reports`, resources.length);
-      return applyDiagnosticReportFilters(resources, getIncludedResources(bundle), trends);
+      return applyDiagnosticReportFilters(resources, getIncludedResources(bundle), trendData);
     } catch (e) {
       throw Telemetry.logError(
         e as Error,
@@ -73,7 +73,7 @@ function diagnosticReportsFetcherODS(searchType: SearchType, trends?: Observatio
   };
 }
 
-function diagnosticReportsFetcherFQS(searchType: SearchType, trends?: ObservationModel[]) {
+function diagnosticReportsFetcherFQS(searchType: SearchType, trendData: ObservationModel[]) {
   const fetchFunction =
     searchType === "builder" ? diagnosticReportBuilderQueryFQS : diagnosticReportCommonQueryFQS;
   return async (requestContext: CTWRequestContext, patient: PatientModel) => {
@@ -88,7 +88,7 @@ function diagnosticReportsFetcherFQS(searchType: SearchType, trends?: Observatio
         "fqs",
       ]);
 
-      return applyDiagnosticReportFilters(result, undefined, trends);
+      return applyDiagnosticReportFilters(result, undefined, trendData);
     } catch (e) {
       throw Telemetry.logError(
         e as Error,

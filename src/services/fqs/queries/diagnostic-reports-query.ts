@@ -103,38 +103,7 @@ export const diagnosticReportQuery = gql`
           contained {
             resource {
               ... on Observation {
-                id
-                resourceType
-                status
-                category {
-                  text
-                  coding {
-                    code
-                    display
-                    system
-                    extension {
-                      url
-                      valueString
-                    }
-                  }
-                }
-                effectivePeriod {
-                  start
-                  end
-                }
-                effectiveDateTime
-                interpretation {
-                  text
-                  coding {
-                    code
-                    display
-                    system
-                    extension {
-                      url
-                      valueString
-                    }
-                  }
-                }
+                ...Observation
               }
             }
           }
