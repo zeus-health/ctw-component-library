@@ -4,7 +4,6 @@ import { FHIRModel } from "./fhir-model";
 import { codeableConceptLabel } from "../codeable-concept";
 import { formatDateISOToLocal } from "../formatters";
 import { ResourceMap } from "../types";
-import { isSectionDocument } from "@/components/content/document/helpers/filters";
 import { isNullFlavorSystem } from "@/fhir/mappings/null-flavor";
 import { compact, flatten, uniq } from "@/utils/nodash";
 
@@ -21,7 +20,8 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
     revIncludes?: Resource[]
   ) {
     super(resource, includedResources, revIncludes);
-    if (provenance && provenance.length > 0) {
+    this.clinicalNotes = [];
+    if (provenance.length > 0) {
       let binaryIDReference = "";
       for (let i = 0; i < provenance.length; i += 1) {
         const entity = provenance[i].entity?.find((e) => {
@@ -38,11 +38,10 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
       if (binaryIDReference) {
         const binaryID = binaryIDReference.split("/")[1];
         this.clinicalNotes = documents.filter(
-          (d) => d.binaryId === binaryID && isSectionDocument(d)
+          (d) => d.binaryId === binaryID && !!d.category && d.category.length < 2
         );
       }
     }
-    this.clinicalNotes = [];
   }
 
   get class(): string | undefined {

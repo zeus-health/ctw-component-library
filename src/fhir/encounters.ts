@@ -56,7 +56,6 @@ function getEncountersFromFQS(documents: DocumentModel[]) {
       });
       const nodes = data.EncounterConnection.edges.map((x) => x.node);
       const results = setupEncounterModels(nodes, documents);
-      console.log("results", results);
       if (results.length === 0) {
         Telemetry.countMetric("req.count.encounters.none", 1, ["fqs"]);
       }

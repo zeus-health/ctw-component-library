@@ -20,7 +20,7 @@ export class TimelineEventModel extends FHIRModel<TimelineEventResource> {
     super(resource, includedResources, revIncludes);
     switch (resource.resourceType) {
       case "Encounter":
-        this.model = new EncounterModel(resource, includedResources, revIncludes);
+        this.model = new EncounterModel(resource, [], [], includedResources, revIncludes);
         break;
       case "DiagnosticReport":
         this.model = new DiagnosticReportModel(resource, includedResources, revIncludes);

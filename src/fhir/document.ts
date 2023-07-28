@@ -1,5 +1,6 @@
+import { useEffect, useState } from "react";
 import { useIncludeBasics } from "./basic";
-import { searchCommonRecords } from "./search-helpers";
+import { DocumentModel } from "./models/document";
 import { PatientModel, useQueryWithPatient } from "..";
 import { applyDocumentFilters } from "@/components/content/document/helpers/filters";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
@@ -10,16 +11,27 @@ import { QUERY_KEY_PATIENT_DOCUMENTS } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export function usePatientTopLevelDocuments() {
-  const documents = usePatientDocuments2();
-  const filteredDocuments = orderBy(
-    applyDocumentFilters(documents),
-    [(document) => document.resource.content[0].attachment.creation || ""],
-    ["desc"]
-  );
-  return filteredDocuments;
+  const { data, isError, isFetching, isLoading } = usePatientDocuments();
+  const [filteredData, setFilteredData] = useState([] as DocumentModel[]);
+
+  useEffect(() => {
+    const filteredDocuments = orderBy(
+      applyDocumentFilters(data),
+      [(document) => document.resource.content[0].attachment.creation || ""],
+      ["desc"]
+    );
+    setFilteredData(filteredDocuments);
+  }, [data, isError, isFetching, isLoading]);
+
+  return {
+    data: filteredData,
+    isError,
+    isFetching,
+    isLoading,
+  };
 }
 
-export function usePatientDocuments2() {
+export function usePatientDocuments() {
   const patientDocumentsQuery = useQueryWithPatient(
     QUERY_KEY_PATIENT_DOCUMENTS,
     [],
@@ -45,32 +57,12 @@ async function getDocumentFromFQS(requestContext: CTWRequestContext, patient: Pa
       }
     );
     const nodes = data.DocumentReferenceConnection.edges.map((x) => x.node);
-    if (nodes.length === 0) {
+    const models = nodes.map((d) => new DocumentModel(d));
+    if (models.length === 0) {
       Telemetry.countMetric("req.count.documents.none", 1, ["fqs"]);
     }
-    Telemetry.histogramMetric("req.count.documents", nodes.length, ["fqs"]);
-    return nodes;
-  } catch (e) {
-    throw new Error(`Failed fetching document information for patient: ${e}`);
-  }
-}
-
-async function getDocumentFromODS(requestContext: CTWRequestContext, patient: PatientModel) {
-  try {
-    const { resources } = await searchCommonRecords("DocumentReference", requestContext, {
-      patientUPID: patient.UPID,
-    });
-    const results = orderBy(
-      applyDocumentFilters(resources),
-      [(document) => document.resource.content[0].attachment.creation || ""],
-
-      ["desc"]
-    );
-    if (results.length === 0) {
-      Telemetry.countMetric("req.count.documents.none");
-    }
-    Telemetry.histogramMetric("req.count.documents", results.length);
-    return results;
+    Telemetry.histogramMetric("req.count.documents", models.length, ["fqs"]);
+    return models;
   } catch (e) {
     throw new Error(`Failed fetching document information for patient: ${e}`);
   }
