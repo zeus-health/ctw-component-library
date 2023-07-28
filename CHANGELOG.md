@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.45.5
+
+### Patch Changes
+
+- cf13358b: Update the loinc codes for more trending features.
+- 1bc578eb: Add support for more observation value types.
+
 ## 1.45.4
 
 ### Patch Changes
