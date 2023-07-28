@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cx from "classnames";
 import { useState } from "react";
 import { BubbleIcon } from "./bubble";
+import { useObservationsDetailsDrawer } from "./drawer";
 import { ObservationModel } from "@/fhir/models";
 import { Telemetry } from "@/utils/telemetry";
 
@@ -12,6 +13,7 @@ export type ObservationTrendsProps = {
 
 export const ObservationTrends = ({ model }: ObservationTrendsProps) => {
   const [isTrendsShown, setIsTrendsShown] = useState(false);
+  const openDiagnosticReportDetails = useObservationsDetailsDrawer();
 
   return (
     <div className="ctw-text-sm ctw-font-normal">
@@ -53,6 +55,17 @@ export const ObservationTrends = ({ model }: ObservationTrendsProps) => {
                     "!ctw-font-bold": trend.id === model.id,
                   })}
                 />
+
+                {trend.diagnosticReport && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      trend.diagnosticReport && openDiagnosticReportDetails(trend.diagnosticReport)
+                    }
+                  >
+                    go
+                  </button>
+                )}
               </div>
             ))}
         </div>
