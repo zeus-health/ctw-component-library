@@ -41,18 +41,25 @@ export const ObservationTrends = ({ model }: ObservationTrendsProps) => {
           {isTrendsShown &&
             model.trends.map((trend) => (
               <div
+                tabIndex={0}
+                role="button"
                 key={trend.id}
-                className={cx("ctw-group ctw-ml-4 ctw-py-1", {
+                className={cx("ctw-group/trends ctw-ml-4 ctw-py-1", {
                   "ctw-cursor-pointer hover:ctw-bg-bg-lighter": trend.diagnosticReport,
                 })}
                 onClick={() =>
                   trend.diagnosticReport && openDiagnosticReportDetails(trend.diagnosticReport)
                 }
+                onKeyDown={(e) =>
+                  e.key === "Enter" &&
+                  trend.diagnosticReport &&
+                  openDiagnosticReportDetails(trend.diagnosticReport)
+                }
               >
                 <div
                   className={cx("ctw-relative ctw-top-1 ctw-float-left ctw-w-24 ctw-text-sm", {
                     "ctw-font-bold": trend.id === model.id,
-                    "group-hover:ctw-underline": trend.diagnosticReport,
+                    "group-hover/trends:ctw-underline": trend.diagnosticReport,
                   })}
                 >
                   {trend.effectiveStart}
