@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.45.8
+
+### Patch Changes
+
+- 84717c08: Added support for contained resources to Diagnostics Report Drawer
+
 ## 1.45.7
 
 ### Patch Changes
