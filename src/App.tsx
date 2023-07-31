@@ -22,6 +22,7 @@ import {
   ZAPResourceName,
   ZusAggregatedProfile,
   UnreadRecordsNotification,
+  PatientMedicationsAll,
 } from ".";
 
 const {
@@ -104,6 +105,11 @@ const components: DemoComponent[] = [
     name: "medications-outside",
     render: () => <PatientMedicationsOutside />,
     title: "Patient Medications Outside",
+  },
+  {
+    name: "medications-all",
+    render: () => <PatientMedicationsAll />,
+    title: "Patient Medications (All)",
   },
   {
     name: "patient-history",
