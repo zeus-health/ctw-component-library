@@ -44,7 +44,7 @@ export const ObservationTrends = ({ model }: ObservationTrendsProps) => {
                 tabIndex={0}
                 role="button"
                 key={trend.id}
-                className={cx("ctw-group/trends ctw-ml-4 ctw-py-1", {
+                className={cx("ctw-group/trends ctw-py-1 ctw-pl-4", {
                   "ctw-cursor-pointer hover:ctw-bg-bg-lighter": trend.diagnosticReport,
                 })}
                 onClick={() =>
