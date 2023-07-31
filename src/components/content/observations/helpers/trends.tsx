@@ -1,4 +1,4 @@
-import { faArrowRight, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faArrowTrendUp, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cx from "classnames";
 import { useState } from "react";
@@ -30,13 +30,13 @@ export const ObservationTrends = ({ model }: ObservationTrendsProps) => {
               setIsTrendsShown(!isTrendsShown);
             }}
           >
+            <FontAwesomeIcon icon={faArrowTrendUp} /> Trends
             <FontAwesomeIcon
               icon={faChevronRight}
               className={cx("ctw-h-3 ctw-w-3 ctw-pr-1", {
                 "ctw-rotate-90": isTrendsShown,
               })}
             />
-            Trends
           </button>
           {isTrendsShown &&
             model.trends.map((trend) => (
@@ -44,9 +44,12 @@ export const ObservationTrends = ({ model }: ObservationTrendsProps) => {
                 tabIndex={0}
                 role="button"
                 key={trend.id}
-                className={cx("ctw-group/trends ctw-flex ctw-items-center ctw-py-1 ctw-pl-4", {
-                  "ctw-cursor-pointer hover:ctw-bg-bg-lighter": trend.diagnosticReport,
-                })}
+                className={cx(
+                  "ctw-group/trends ctw-flex ctw-items-center ctw-justify-between ctw-py-1 ctw-pl-4",
+                  {
+                    "ctw-cursor-pointer hover:ctw-bg-bg-lighter": trend.diagnosticReport,
+                  }
+                )}
                 onClick={() =>
                   trend.diagnosticReport && openDiagnosticReportDetails(trend.diagnosticReport)
                 }
@@ -57,7 +60,7 @@ export const ObservationTrends = ({ model }: ObservationTrendsProps) => {
                 }
               >
                 <div
-                  className={cx("ctw-relative ctw-top-1 ctw-float-left ctw-w-24 ctw-text-sm", {
+                  className={cx("ctw-relative ctw-w-24 ctw-text-sm", {
                     "ctw-font-bold": trend.id === model.id,
                     "group-hover/trends:ctw-underline": trend.diagnosticReport,
                   })}
@@ -71,11 +74,14 @@ export const ObservationTrends = ({ model }: ObservationTrendsProps) => {
                     "!ctw-font-bold": trend.id === model.id,
                   })}
                 />
+
                 {trend.diagnosticReport && (
-                  <FontAwesomeIcon
-                    icon={faArrowRight}
-                    className="ctw-invisible ctw-flex-grow ctw-text-content-lighter group-hover/trends:ctw-visible"
-                  />
+                  <div>
+                    <FontAwesomeIcon
+                      icon={faArrowRight}
+                      className="ctw-invisible ctw-pr-2 ctw-text-content-lighter group-hover/trends:ctw-visible"
+                    />
+                  </div>
                 )}
               </div>
             ))}
