@@ -1,4 +1,4 @@
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cx from "classnames";
 import { useState } from "react";
@@ -44,7 +44,7 @@ export const ObservationTrends = ({ model }: ObservationTrendsProps) => {
                 tabIndex={0}
                 role="button"
                 key={trend.id}
-                className={cx("ctw-group/trends ctw-py-1 ctw-pl-4", {
+                className={cx("ctw-group/trends ctw-flex ctw-items-center ctw-py-1 ctw-pl-4", {
                   "ctw-cursor-pointer hover:ctw-bg-bg-lighter": trend.diagnosticReport,
                 })}
                 onClick={() =>
@@ -71,6 +71,12 @@ export const ObservationTrends = ({ model }: ObservationTrendsProps) => {
                     "!ctw-font-bold": trend.id === model.id,
                   })}
                 />
+                {trend.diagnosticReport && (
+                  <FontAwesomeIcon
+                    icon={faArrowRight}
+                    className="ctw-invisible ctw-flex-grow ctw-text-content-lighter group-hover/trends:ctw-visible"
+                  />
+                )}
               </div>
             ))}
         </div>
