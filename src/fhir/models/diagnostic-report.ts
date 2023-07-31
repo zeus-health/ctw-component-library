@@ -28,7 +28,7 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
       this.observationModels = this.resource.result?.map((result) => {
         const reference = findReference(
           "Observation",
-          resource.contained.map((r) => r.resource),
+          resource.contained,
           includedResources,
           result
         );
