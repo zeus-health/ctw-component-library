@@ -1,15 +1,21 @@
-import { Coding, DiagnosticReport, Observation } from "fhir/r4";
+import { Coding, DiagnosticReport, Observation, Reference } from "fhir/r4";
 import * as dr from "./diagnostic-report";
+import { ObservationModel } from "./observation";
+import { SYSTEM_LOINC } from "../system-urls";
 
-const syntheticObservation = (): Observation => ({
+const syntheticObservation = (coding: Coding[], text?: string): Observation => ({
   resourceType: "Observation",
-  status: "unknown",
-  code: {},
+  status: "final",
+  code: {
+    coding,
+    text,
+  },
 });
 
-const syntheticDiagnosticReport = (codings: Coding[], text?: string): DiagnosticReport => ({
+const syntheticDiagnosticReport = (coding: Coding[], text?: string): DiagnosticReport => ({
+  id: "123",
   code: {
-    coding: codings,
+    coding,
     text,
   },
   resourceType: "DiagnosticReport",
@@ -41,6 +47,83 @@ describe("Diagnostic Report Model Tests", () => {
     });
   });
 
+  describe("constructor", () => {
+    const d = syntheticDiagnosticReport([]);
+    const o1 = new ObservationModel(
+      syntheticObservation([
+        {
+          code: "17856-6", // a1c
+          system: SYSTEM_LOINC,
+        },
+      ]),
+      { [d.id as string]: d }
+    );
+    const o2 = new ObservationModel(
+      syntheticObservation([
+        {
+          code: "4548-4", // a1c
+          system: SYSTEM_LOINC,
+        },
+      ]),
+      { [d.id as string]: d }
+    );
+    const o3 = new ObservationModel(
+      syntheticObservation([
+        {
+          code: "2345-7", // glucose
+          system: SYSTEM_LOINC,
+        },
+      ]),
+      { [d.id as string]: d }
+    );
+    const o4 = new ObservationModel(
+      syntheticObservation([
+        {
+          code: "2345-7", // glucose
+          system: SYSTEM_LOINC,
+        },
+      ]),
+      { [d.id as string]: d }
+    );
+
+    test("no trends", () => {
+      const model = new dr.DiagnosticReportModel(d, undefined, undefined, []);
+      expect(model.hasTrends).toBe(false);
+      expect(model.observations).toEqual([]);
+    });
+
+    test("unassociated trends", () => {
+      d.result = [o1 as Reference, o3 as Reference];
+      const model = new dr.DiagnosticReportModel(d, undefined, undefined, [o1, o3]);
+      expect(model.hasTrends).toBe(false);
+      expect(model.observations).toHaveLength(2);
+      expect(model.observations[0].trends).toEqual([o1]);
+      expect(model.observations[1].trends).toEqual([o3]);
+    });
+
+    test("associated trends", () => {
+      d.result = [o1 as Reference, o3 as Reference];
+      const model = new dr.DiagnosticReportModel(d, undefined, undefined, [o1, o2, o3, o4]);
+      expect(model.hasTrends).toBe(true);
+      expect(model.observations).toHaveLength(2);
+      expect(model.observations[0].trends).toEqual([o1, o2]);
+      expect(model.observations[1].trends).toEqual([o3, o4]);
+    });
+
+    test("associated trends w/ incorrectly coded glucose (LOINC)", () => {
+      const d1 = syntheticDiagnosticReport([
+        {
+          code: "4548-4",
+          system: SYSTEM_LOINC,
+        },
+      ]);
+      d.result = [o3 as Reference];
+      const model = new dr.DiagnosticReportModel(d1, undefined, undefined, [o3, o4]);
+      expect(model.hasTrends).toBe(false);
+      expect(model.observations).toHaveLength(0);
+    });
+  });
+
   describe("infer start date", () => {
     interface TestType {
       obs: (Observation | undefined)[] | undefined;
@@ -55,19 +138,19 @@ describe("Diagnostic Report Model Tests", () => {
       {
         expectedValue: "04/01/2022",
         obs: [
-          set("effectiveDateTime", syntheticObservation(), "2022-04-02"),
-          set("effectiveDateTime", syntheticObservation(), "2022-04-01"),
+          set("effectiveDateTime", syntheticObservation([]), "2022-04-02"),
+          set("effectiveDateTime", syntheticObservation([]), "2022-04-01"),
         ],
       },
       {
         expectedValue: "04/01/2022",
-        obs: [undefined, set("effectiveDateTime", syntheticObservation(), "2022-04-01")],
+        obs: [undefined, set("effectiveDateTime", syntheticObservation([]), "2022-04-01")],
       },
       {
         expectedValue: "04/01/2022",
         obs: [
           undefined,
-          set("effectivePeriod", syntheticObservation(), { start: "2022-04-01", end: undefined }),
+          set("effectivePeriod", syntheticObservation([]), { start: "2022-04-01", end: undefined }),
         ],
       },
     ];

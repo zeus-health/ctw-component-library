@@ -230,7 +230,7 @@ function filterAndSortTrends(
   diagnostic: DiagnosticReport,
   observation: ObservationModel,
   trends: ObservationModel[]
-) {
+): ObservationModel[] {
   let filtered = trends.filter((t) =>
     observation.resource.code.coding?.some((coding) => {
       if (isIncorrectlyCodedGlucose(diagnostic, t)) {
@@ -275,8 +275,10 @@ function isIncorrectlyCodedGlucose(diagnostic: DiagnosticReport, trend: Observat
       (coding.system === SYSTEM_CPT && coding.code === "83036") ||
       coding.display?.toLowerCase().indexOf("a1c") !== -1
   );
+  console.log("diagnosticFlagged", diagnosticFlagged);
   const trendFlagged = trend.resource.code.coding?.some(
     (coding) => coding.system === SYSTEM_LOINC && coding.code === "2345-7"
   );
+  console.log("trendFlagged", trendFlagged);
   return trendRelatesToDiagnostic && diagnosticFlagged && trendFlagged;
 }
