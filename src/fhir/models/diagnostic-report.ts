@@ -26,10 +26,17 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
     if (resource.id) {
       const resourceId = resource.id;
       this.observationModels = this.resource.result?.map((result) => {
-        // @ts-ignore: Unreachable code error
+        const reference = findReference(
+          "Observation",
+          resource.contained.map((r) => r.resource),
+          includedResources,
+          result
+        );
+
+        // @ts-ignore
         // We are disabling it for this line as the FHIR spec doesn't support this
         // customized result field that now has the observation resource and not only just a reference.
-        const model = new ObservationModel(result.resource, {
+        const model = new ObservationModel(result.resource || reference, {
           [resourceId]: resource,
         });
 
