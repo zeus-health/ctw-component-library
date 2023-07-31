@@ -48,7 +48,7 @@ export const ObservationsColumns = (): TableColumn<ObservationModel>[] => [
           ? model.interpretation &&
             model.value && (
               <div className="ctw-text-sm ctw-font-normal">
-                Result:
+                Result:{" "}
                 <BubbleIcon
                   interpretation={model.interpretation}
                   result={model.value}
