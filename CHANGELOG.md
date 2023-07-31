@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.45.7
+
+### Patch Changes
+
+- b4911c58: Add date range view to medications component
+
 ## 1.45.6
 
 ### Patch Changes
