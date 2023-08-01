@@ -59,7 +59,7 @@ export const ObservationTrends = ({ model }: ObservationTrendsProps) => {
               >
                 <div
                   className={cx("ctw-relative ctw-w-24 ctw-text-sm", {
-                    "ctw-font-bold": trend.id === model.id,
+                    "ctw-font-semibold": trend.id === model.id,
                     "group-hover/trends:ctw-underline": trend.diagnosticReport,
                   })}
                 >
@@ -69,7 +69,7 @@ export const ObservationTrends = ({ model }: ObservationTrendsProps) => {
                   result={trend.value}
                   interpretation={trend.interpretation}
                   className={cx(`${trend.acceptedInterpretations} ctw-w-fit`, {
-                    "!ctw-font-bold": trend.id === model.id,
+                    "!ctw-font-semibold": trend.id === model.id,
                   })}
                 />
 
