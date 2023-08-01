@@ -1,3 +1,4 @@
+import sanitizeHtml from "sanitize-html";
 import { NotesEntry } from "./notes-entry";
 import { DocumentModel } from "@/fhir/models/document";
 
@@ -9,8 +10,11 @@ function getNoteDisplay(noteText: string | undefined) {
   if (noteText === undefined) {
     return undefined;
   }
+  const cleanNote = sanitizeHtml(noteText, {
+    disallowedTagsMode: "escape",
+  });
   // eslint-disable-next-line react/no-danger
-  return <div dangerouslySetInnerHTML={{ __html: noteText }} />;
+  return <div dangerouslySetInnerHTML={{ __html: cleanNote }} />;
 }
 
 export const Notes = ({ entries }: NotesProps) => (
