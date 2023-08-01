@@ -276,16 +276,16 @@ function filterAndSortTrends(
  */
 function isIncorrectlyCodedGlucose(diagnostic: DiagnosticReport, trend: ObservationModel) {
   const trendRelatesToDiagnostic = diagnostic.result?.some((ref) => ref.id === trend.resource.id);
-  const diagnosticFlagged = diagnostic.code.coding?.some(
-    (coding) =>
+  const diagnosticFlagged = diagnostic.code.coding?.some((coding) => {
+    const a1cDisplay = coding.display?.toLowerCase().indexOf("a1c");
+    return (
       (coding.system === SYSTEM_LOINC && coding.code === "4548-4") ||
       (coding.system === SYSTEM_CPT && coding.code === "83036") ||
-      coding.display?.toLowerCase().indexOf("a1c") !== -1
-  );
-  console.log("diagnosticFlagged", diagnosticFlagged);
+      (a1cDisplay !== undefined && a1cDisplay > -1)
+    );
+  });
   const trendFlagged = trend.resource.code.coding?.some(
     (coding) => coding.system === SYSTEM_LOINC && coding.code === "2345-7"
   );
-  console.log("trendFlagged", trendFlagged);
   return trendRelatesToDiagnostic && diagnosticFlagged && trendFlagged;
 }

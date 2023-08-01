@@ -1,9 +1,10 @@
 import { Coding, DiagnosticReport, Observation, Reference } from "fhir/r4";
 import * as dr from "./diagnostic-report";
 import { ObservationModel } from "./observation";
-import { SYSTEM_LOINC } from "../system-urls";
+import { SYSTEM_CPT, SYSTEM_LOINC } from "../system-urls";
 
 const syntheticObservation = (coding: Coding[], text?: string): Observation => ({
+  id: "123",
   resourceType: "Observation",
   status: "final",
   code: {
@@ -48,43 +49,51 @@ describe("Diagnostic Report Model Tests", () => {
   });
 
   describe("constructor", () => {
-    const d = syntheticDiagnosticReport([]);
-    const o1 = new ObservationModel(
-      syntheticObservation([
-        {
-          code: "17856-6", // a1c
-          system: SYSTEM_LOINC,
-        },
-      ]),
-      { [d.id as string]: d }
-    );
-    const o2 = new ObservationModel(
-      syntheticObservation([
-        {
-          code: "4548-4", // a1c
-          system: SYSTEM_LOINC,
-        },
-      ]),
-      { [d.id as string]: d }
-    );
-    const o3 = new ObservationModel(
-      syntheticObservation([
-        {
-          code: "2345-7", // glucose
-          system: SYSTEM_LOINC,
-        },
-      ]),
-      { [d.id as string]: d }
-    );
-    const o4 = new ObservationModel(
-      syntheticObservation([
-        {
-          code: "2345-7", // glucose
-          system: SYSTEM_LOINC,
-        },
-      ]),
-      { [d.id as string]: d }
-    );
+    let d: DiagnosticReport;
+    let o1: ObservationModel;
+    let o2: ObservationModel;
+    let o3: ObservationModel;
+    let o4: ObservationModel;
+
+    beforeEach(() => {
+      d = syntheticDiagnosticReport([]);
+      o1 = new ObservationModel(
+        syntheticObservation([
+          {
+            code: "17856-6", // a1c
+            system: SYSTEM_LOINC,
+          },
+        ]),
+        { [d.id as string]: d }
+      );
+      o2 = new ObservationModel(
+        syntheticObservation([
+          {
+            code: "4548-4", // a1c
+            system: SYSTEM_LOINC,
+          },
+        ]),
+        { [d.id as string]: d }
+      );
+      o3 = new ObservationModel(
+        syntheticObservation([
+          {
+            code: "2345-7", // glucose
+            system: SYSTEM_LOINC,
+          },
+        ]),
+        { [d.id as string]: d }
+      );
+      o4 = new ObservationModel(
+        syntheticObservation([
+          {
+            code: "2345-7", // glucose
+            system: SYSTEM_LOINC,
+          },
+        ]),
+        { [d.id as string]: d }
+      );
+    });
 
     test("no trends", () => {
       const model = new dr.DiagnosticReportModel(d, undefined, undefined, []);
@@ -111,16 +120,65 @@ describe("Diagnostic Report Model Tests", () => {
     });
 
     test("associated trends w/ incorrectly coded glucose (LOINC)", () => {
-      const d1 = syntheticDiagnosticReport([
+      d = syntheticDiagnosticReport([
         {
           code: "4548-4",
           system: SYSTEM_LOINC,
         },
       ]);
+      o3 = new ObservationModel(
+        syntheticObservation([
+          {
+            code: "2345-7", // glucose
+            system: SYSTEM_LOINC,
+          },
+        ])
+      );
       d.result = [o3 as Reference];
-      const model = new dr.DiagnosticReportModel(d1, undefined, undefined, [o3, o4]);
+      const model = new dr.DiagnosticReportModel(d, undefined, undefined, [o3, o4]);
       expect(model.hasTrends).toBe(false);
-      expect(model.observations).toHaveLength(0);
+      expect(model.observations).toHaveLength(1);
+    });
+
+    test("associated trends w/ incorrectly coded glucose (CPT)", () => {
+      d = syntheticDiagnosticReport([
+        {
+          code: "83036",
+          system: SYSTEM_CPT,
+        },
+      ]);
+      o3 = new ObservationModel(
+        syntheticObservation([
+          {
+            code: "2345-7", // glucose
+            system: SYSTEM_LOINC,
+          },
+        ])
+      );
+      d.result = [o3 as Reference];
+      const model = new dr.DiagnosticReportModel(d, undefined, undefined, [o3, o4]);
+      expect(model.hasTrends).toBe(false);
+      expect(model.observations).toHaveLength(1);
+    });
+
+    test("associated trends w/ incorrectly coded glucose (display)", () => {
+      d = syntheticDiagnosticReport([
+        {
+          display: "a1c",
+        },
+      ]);
+      o3 = new ObservationModel(
+        syntheticObservation([
+          {
+            code: "2345-7", // glucose
+            system: SYSTEM_LOINC,
+          },
+        ])
+      );
+      d.result = [o3 as Reference];
+      const model = new dr.DiagnosticReportModel(d, undefined, undefined, [o3, o4]);
+      expect(model.hasTrends).toBe(false);
+      expect(model.observations).toHaveLength(1);
     });
   });
 
