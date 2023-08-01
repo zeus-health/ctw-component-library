@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.46.0
+
+### Minor Changes
+
+- a0782f7e: No longer show incorrectly coded glucose trends
+
 ## 1.45.8
 
 ### Patch Changes
