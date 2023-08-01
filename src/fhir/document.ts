@@ -17,7 +17,7 @@ export function usePatientTopLevelDocuments() {
   useEffect(() => {
     const filteredDocuments = orderBy(
       applyDocumentFilters(data),
-      [(document) => document.resource.content[0].attachment.creation || ""],
+      "resource.content[0].attachment.creation",
       ["desc"]
     );
     setFilteredData(filteredDocuments);
