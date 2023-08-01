@@ -120,3 +120,49 @@ export function formatDate(dateStr: string | undefined, pattern: string): string
 
   return format(new Date(dateStr), pattern);
 }
+
+export function formatPeriod(period: fhir4.Period) {
+  const { start, end } = period;
+  if (!start && !end) return "";
+
+  if (!start || !end) {
+    return formatDateISOToLocal(start ?? end) ?? "";
+  }
+
+  return `${formatDateISOToLocal(start)} - ${formatDateISOToLocal(end)}`;
+}
+
+// Returns the low and high value and units of a range or unknown if not available.
+// Examples:
+// "" # blank when both low.value and high.value don't exist
+// "2.4 mmol/L" # Shows single value when low or high is missing
+// "1.2 l/L - 2.4 mmol/L" # Shows both units if they both exist and are different
+// "1.2 - 2.4 mmol/L" # Shows single unit at end when one unit isn't provided
+// "1.2 - 2.4" # Drops units when both low.unit and high.unit are not provided
+export function formatRange(range: fhir4.Range) {
+  const { low, high } = range;
+
+  // No values, show blank.
+  if (low?.value === undefined && high?.value === undefined) return "";
+
+  const unit = low?.unit ?? high?.unit;
+  const unitStr = unit ? ` ${unit}` : "";
+
+  // Only one value, show that value and the unit if it exists.
+  if (low?.value === undefined || high?.value === undefined) {
+    const value = low?.value ?? high?.value ?? "";
+    return `${value}${unitStr}`;
+  }
+
+  // Both values exist, show both values and both units if units exist and are different.
+  if (low.unit !== undefined && high.unit !== undefined && low.unit !== high.unit) {
+    return `${low.value} ${low.unit} - ${high.value} ${high.unit}`;
+  }
+
+  return `${low.value} - ${high.value}${unitStr}`;
+}
+
+export function formatQuantity(quantity: fhir4.Quantity) {
+  const { value, unit } = quantity;
+  return compact([value, unit]).join(" ");
+}

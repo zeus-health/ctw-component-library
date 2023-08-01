@@ -88,7 +88,9 @@ export const PatientsTable = withErrorBoundary(
     }, [isError, isFetching]);
 
     return (
-      <CTWBox.StackedWrapper className={cx("ctw-patients-table", className)}>
+      <CTWBox.StackedWrapper
+        className={cx("ctw-patients-border ctw-patients-table-inputs", className)}
+      >
         <CTWBox.Heading title={title}>
           <div className="ctw-relative">
             <div className="ctw-search-icon-wrapper">
@@ -96,7 +98,7 @@ export const PatientsTable = withErrorBoundary(
             </div>
             <input
               type="text"
-              className="ctw-patients-table-search"
+              className="ctw-patients-table-inputs-search"
               placeholder="Search"
               name="searchPatientName"
               onChange={(e) => debouncedSearch(e.currentTarget.value)}
@@ -135,8 +137,8 @@ const columns: TableColumn<PatientModel>[] = [
     title: "Contact",
     render: ({ email, phoneNumber }) => (
       <>
-        <div className="ctw-patients-table-email">{email}</div>
-        <div className="ctw-patients-table-phone">{phoneNumber}</div>
+        <div className="ctw-patients-table-inputs-email">{email}</div>
+        <div className="ctw-patients-table-inputs-phone">{phoneNumber}</div>
       </>
     ),
   },

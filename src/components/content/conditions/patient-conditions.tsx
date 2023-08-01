@@ -33,21 +33,25 @@ const PatientConditionsComponent = ({ className, readOnly = false }: PatientCond
       className={cx(className)}
       query={query}
       readOnly={readOnly}
-      rowActions={readOnly ? undefined : RowActions}
+      RowActions={readOnly ? undefined : RowActions}
     />
   );
 };
 
 export const PatientConditions = withErrorBoundary(PatientConditionsComponent, "PatientConditions");
 
-const RowActions = ({ record }: RowActionsProps<ConditionModel>) => {
+const RowActions = ({ record, onSuccess }: RowActionsProps<ConditionModel>) => {
   const showEditConditionForm = useEditConditionForm();
   const confirmDelete = useConfirmDeleteCondition();
 
   return (
     <div className="ctw-flex ctw-space-x-2">
       {!record.isDeleted && (
-        <button type="button" className="ctw-btn-default" onClick={() => confirmDelete(record)}>
+        <button
+          type="button"
+          className="ctw-btn-default"
+          onClick={() => confirmDelete(record, onSuccess)}
+        >
           Remove
         </button>
       )}

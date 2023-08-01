@@ -1,14 +1,51 @@
 import { FHIRModel } from "./fhir-model";
 import { SYSTEM_LOINC } from "../system-urls";
 import { codeableConceptLabel } from "@/fhir/codeable-concept";
-import { formatDateISOToLocal } from "@/fhir/formatters";
-import { compact } from "@/utils/nodash";
+import { formatDateISOToLocal, formatPeriod, formatQuantity, formatRange } from "@/fhir/formatters";
 
 export const LOINC_ANALYTES: Record<string, string> = {
   "17856-6": "a1c",
   "2345-7": "glucose",
   "4548-4": "a1c",
   "4549-2": "a1c",
+  "18262-6": "Cholesterol in LDL [Mass/volume] in Serum or Plasma by Direct assay",
+  "13457-7": "Cholesterol in LDL [Mass/volume] in Serum or Plasma by Direct assay",
+  "2089-1": "Cholesterol in LDL [Mass/volume] in Serum or Plasma by Direct assay",
+  "39469-2": "Cholesterol in LDL [Mass/volume] in Serum or Plasma by Direct assay",
+  "46985-8": "Cholesterol in LDL [Mass/volume] in Serum or Plasma by Direct assay",
+  "2093-3": "Cholesterol [Mass/volume] in Serum or Plasma",
+  "48620-9": "Cholesterol [Mass/volume] in Serum or Plasma",
+  "35200-5": "Cholesterol [Mass/volume] in Serum or Plasma",
+  "2085-9": "Cholesterol in HDL [Mass/volume] in Serum or Plasma",
+  "2086-7": "Cholesterol in HDL [Mass/volume] in Serum or Plasma",
+  "49130-8": "Cholesterol in HDL [Mass/volume] in Serum or Plasma",
+  "9832-7": "Cholesterol in HDL [Mass/volume] in Serum or Plasma",
+  "2571-8": "Triglyceride [Mass/volume] in Serum or Plasma",
+  "12951-0": "Triglyceride [Mass/volume] in Serum or Plasma",
+  "3043-7": "Triglyceride [Mass/volume] in Serum or Plasma",
+  "14927-8": "Triglyceride [Mass/volume] in Serum or Plasma",
+  "3048-6": "Triglyceride [Mass/volume] in Serum or Plasma",
+  "3049-4": "Triglyceride [Mass/volume] in Serum or Plasma",
+  "48643-1":
+    "Glomerular filtration rate/1.73 sq M.predicted among blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)",
+  "33914-3":
+    "Glomerular filtration rate/1.73 sq M.predicted among blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)",
+  "77147-7":
+    "Glomerular filtration rate/1.73 sq M.predicted among blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)",
+  "50044-7":
+    "Glomerular filtration rate/1.73 sq M.predicted among blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)",
+  "70969-1":
+    "Glomerular filtration rate/1.73 sq M.predicted among blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)",
+  "48642-3":
+    "Glomerular filtration rate/1.73 sq M.predicted among blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)",
+  "88294-4":
+    "Glomerular filtration rate/1.73 sq M.predicted among blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)",
+  "88293-6":
+    "Glomerular filtration rate/1.73 sq M.predicted among blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)",
+  "62238-1":
+    "Glomerular filtration rate/1.73 sq M.predicted among blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)",
+  "69405-9":
+    "Glomerular filtration rate/1.73 sq M.predicted among blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)",
 };
 
 export class ObservationModel extends FHIRModel<fhir4.Observation> {
@@ -48,13 +85,44 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
     return this.resource.performer?.[0].display;
   }
 
-  get value() {
-    return compact([
-      this.resource.valueQuantity?.value ||
-        this.resource.valueString ||
-        codeableConceptLabel(this.resource.valueCodeableConcept),
-      this.resource.valueQuantity?.unit,
-    ]).join(" ");
+  get value(): string {
+    if (this.resource.valueBoolean !== undefined) {
+      return this.resource.valueBoolean ? "true" : "false";
+    }
+
+    if (this.resource.valueCodeableConcept) {
+      return codeableConceptLabel(this.resource.valueCodeableConcept);
+    }
+
+    if (this.resource.valueDateTime) {
+      return this.resource.valueDateTime;
+    }
+
+    if (this.resource.valueInteger !== undefined) {
+      return String(this.resource.valueInteger);
+    }
+
+    if (this.resource.valuePeriod) {
+      return formatPeriod(this.resource.valuePeriod);
+    }
+
+    if (this.resource.valueQuantity) {
+      return formatQuantity(this.resource.valueQuantity);
+    }
+
+    if (this.resource.valueRange) {
+      return formatRange(this.resource.valueRange);
+    }
+
+    if (this.resource.valueString) {
+      return this.resource.valueString;
+    }
+
+    if (this.resource.valueTime) {
+      return this.resource.valueTime;
+    }
+
+    return "";
   }
 
   get unit() {

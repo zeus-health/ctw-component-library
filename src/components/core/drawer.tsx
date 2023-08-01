@@ -1,3 +1,5 @@
+import "./drawer.scss";
+
 import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import cx from "classnames";
@@ -47,7 +49,7 @@ export function Drawer({
     <Transition.Root show={isOpen} as={Fragment}>
       <Dialog
         as="div"
-        className={cx("ctw-relative ctw-z-[10000]", className)}
+        className={cx("ctw-drawer ctw-relative ctw-z-[10000]", className)}
         onClose={() => {
           if (!disableCloseOnBlur) {
             onClose();
@@ -122,7 +124,7 @@ export function Drawer({
 }
 
 Drawer.Footer = ({ children }: { children: ReactNode }) => (
-  <div className="ctw-border-default ctw-border-t ctw-p-6">{children}</div>
+  <div className="ctw-footer ctw-border-default ctw-border-t ctw-p-6">{children}</div>
 );
 
 Drawer.CloseButton = ({ label, onClose }: { label: string; onClose: () => void }) => (

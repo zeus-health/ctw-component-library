@@ -8,7 +8,7 @@ import { MinRecordItem, TableColumn } from "./table-helpers";
 import { TableRows, TableRowsProps } from "./table-rows";
 import { DEFAULT_PAGE_SIZE, PaginationList } from "../pagination/pagination-list";
 
-export type RowActionsProps<T extends MinRecordItem> = { record: T };
+export type RowActionsProps<T extends MinRecordItem> = { record: T; onSuccess?: () => void };
 
 export type TableProps<T extends MinRecordItem> = {
   children?: ReactNode;
@@ -74,6 +74,15 @@ export const Table = <T extends MinRecordItem>({
   }, [scrollContainerRef, isLoading]);
 
   const hasData = !isLoading && records.length > 0;
+
+  // useeffect to set the count to the default page size when the records change
+  useEffect(() => {
+    if (hidePagination && hasData) {
+      setCount(records.length);
+    } else {
+      setCount(pageSize);
+    }
+  }, [records, pageSize, hidePagination, hasData]);
 
   return (
     <div

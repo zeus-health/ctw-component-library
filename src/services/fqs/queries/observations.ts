@@ -1,6 +1,6 @@
 import { Observation } from "fhir/r4";
 import { gql } from "graphql-request";
-import { fragmentCoding } from "./fragments";
+import { fragmentObservation } from "./fragments";
 import { GraphqlConnectionNode, GraphqlPageInfo } from "../client";
 
 export interface ObservationConnection {
@@ -13,7 +13,8 @@ export interface ObservationGraphqlResponse {
 }
 
 export const observationQuery = gql`
-  ${fragmentCoding}
+  ${fragmentObservation}
+
   query ObservationConnection(
     $upid: ID!
     $cursor: String!
@@ -33,36 +34,7 @@ export const observationQuery = gql`
       }
       edges {
         node {
-          id
-          resourceType
-          interpretation {
-            text
-            coding {
-              ...Coding
-            }
-          }
-          code {
-            text
-            coding {
-              ...Coding
-            }
-          }
-          effectiveDateTime
-          effectivePeriod {
-            start
-            end
-          }
-          valueCodeableConcept {
-            text
-            coding {
-              ...Coding
-            }
-          }
-          valueQuantity {
-            value
-            unit
-          }
-          valueString
+          ...Observation
         }
       }
     }

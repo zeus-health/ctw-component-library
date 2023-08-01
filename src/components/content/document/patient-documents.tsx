@@ -14,7 +14,6 @@ import { RowActionsProps } from "@/components/core/table/table";
 import { getBinaryDocument } from "@/fhir/binaries";
 import { usePatientDocuments } from "@/fhir/document";
 import { DocumentModel } from "@/fhir/models/document";
-import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { useBaseTranslations } from "@/i18n";
 
@@ -25,7 +24,6 @@ export type PatientDocumentsProps = {
 
 function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocumentsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { enabled } = useFQSFeatureToggle("documents");
 
   const patientDocumentQuery = usePatientDocuments();
   const rowActions = useMemo(() => getRowActions({ onAddToRecord }), [onAddToRecord]);
@@ -44,7 +42,8 @@ function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocument
     header: (m) => m.title,
     subHeader: (m) => m.encounterDate,
     details: documentData,
-    enableFQS: enabled,
+    RowActions: rowActions,
+    enableDismissAndReadActions: true,
   });
 
   return (
@@ -92,7 +91,7 @@ const getRowActions =
 
 type RowActionsProps2 = RowActionsProps<DocumentModel> & ExtraRowActionProps;
 
-const RowActions = ({ record, onAddToRecord }: RowActionsProps2) => {
+const RowActions = ({ record, onSuccess, onAddToRecord }: RowActionsProps2) => {
   const { t } = useBaseTranslations();
   const { getRequestContext } = useCTW();
   const { binaryId } = record;
@@ -107,6 +106,7 @@ const RowActions = ({ record, onAddToRecord }: RowActionsProps2) => {
         onClick={async () => {
           const binary = await getBinaryDocument(await getRequestContext(), binaryId);
           onAddToRecord(record, binary);
+          onSuccess?.();
         }}
       >
         {t("resourceTable.add")}

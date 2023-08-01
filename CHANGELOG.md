@@ -1,5 +1,90 @@
 # ctw-component-library
 
+## 1.45.8
+
+### Patch Changes
+
+- 84717c08: Added support for contained resources to Diagnostics Report Drawer
+
+## 1.45.7
+
+### Patch Changes
+
+- b4911c58: Add date range view to medications component
+
+## 1.45.6
+
+### Patch Changes
+
+- 21fb1c67: Remove the beta label from timeline.
+
+## 1.45.5
+
+### Patch Changes
+
+- cf13358b: Update the loinc codes for more trending features.
+- 1bc578eb: Add support for more observation value types.
+
+## 1.45.4
+
+### Patch Changes
+
+- 2a5b770e: Fix capitalization logic for resource table titles.
+- 0875afdd: Fix show all for the diagnostic report.
+
+## 1.45.3
+
+### Patch Changes
+
+- e2b39aa0: Updated trending indicator display on small breakpoints
+
+## 1.45.2
+
+### Patch Changes
+
+- 7c75a854: Add trending feature to lipid data.
+
+## 1.45.1
+
+### Patch Changes
+
+- 0ba334f0: Reverted "Remove the load more feature in the diagnostic report drawer."
+
+## 1.45.0
+
+### Minor Changes
+
+- 6d287e57: Added trend indicator to Diagnostic Report component results
+
+## 1.44.2
+
+### Patch Changes
+
+- 91643026: Remove the load more feature in the diagnostic report drawer.
+
+## 1.44.1
+
+### Patch Changes
+
+- e613bd0f: Add table row actions to details drawer (dismiss/add/mark as new/etc).
+
+## 1.44.0
+
+### Minor Changes
+
+- f65b1625: Add ability to remove title and border from patient history table.
+
+## 1.43.0
+
+### Minor Changes
+
+- c57bc0e2: Display records never requested
+
+### Patch Changes
+
+- 03fbf338: Fix diagnostic-trend click count.
+- 1320ddc6: Only toggle read when adding a condition or medication if the record is not yet marked as having been read.
+
 ## 1.42.0
 
 ### Minor Changes

@@ -18,6 +18,7 @@ export const ObservationsTable = ({ className, data }: ObservationsTableProps) =
       data={data}
       isLoading={false}
       emptyMessage="There are no observations available."
+      hidePagination
     />
   </div>
 );

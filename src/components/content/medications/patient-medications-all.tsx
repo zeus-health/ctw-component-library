@@ -6,6 +6,7 @@ import { useMedicationDetailsDrawer } from "./helpers/details";
 import { defaultMedicationFilters, medicationFilters } from "./helpers/filters";
 import { defaultMedicationSort, medicationSortOptions } from "./helpers/sorts";
 import { useToggleRead } from "../hooks/use-toggle-read";
+import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { EmptyTable } from "@/components/core/empty-table";
@@ -30,9 +31,14 @@ function PatientMedicationsAllComponent({
 }: PatientMedicationsAllProps) {
   const userBuilderId = useUserBuilderId();
   const query = useQueryAllPatientMedications();
-  const { data, setFilters, setSort } = useFilteredSortedData({
+
+  const { viewOptions, past6Months } =
+    getDateRangeView<MedicationStatementModel>("lastActivityDate");
+
+  const { data, setFilters, setSort, setViewOption } = useFilteredSortedData({
     defaultFilters: defaultMedicationFilters,
     defaultSort: defaultMedicationSort,
+    defaultView: past6Months,
     records: query.allMedications,
   });
 
@@ -42,12 +48,15 @@ function PatientMedicationsAllComponent({
     <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="medications" />
   );
 
-  const openDetails = useMedicationDetailsDrawer();
-
   const rowActions = useMemo(
     () => (!readOnly ? getRowActions(userBuilderId, onAddToRecord) : undefined),
     [userBuilderId, readOnly, onAddToRecord]
   );
+
+  const openDetails = useMedicationDetailsDrawer({
+    RowActions: rowActions,
+    enableDismissAndReadActions: true,
+  });
 
   return (
     <div className={cx(className, "ctw-scrollable-pass-through-height")}>
@@ -61,6 +70,11 @@ function PatientMedicationsAllComponent({
           defaultSort: defaultMedicationSort,
           options: medicationSortOptions,
           onChange: setSort,
+        }}
+        viewOptions={{
+          onChange: setViewOption,
+          options: viewOptions,
+          defaultView: past6Months,
         }}
       />
       <ResourceTable
@@ -84,7 +98,7 @@ export const PatientMedicationsAll = withErrorBoundary(
 
 const getRowActions =
   (userBuilderId: string, onAddToRecord?: (record: MedicationStatementModel) => void) =>
-  ({ record }: RowActionsProps<MedicationStatementModel>) => {
+  ({ record, onSuccess }: RowActionsProps<MedicationStatementModel>) => {
     const { t } = useBaseTranslations();
     const showAddMedicationForm = useAddMedicationForm();
     const { toggleRead } = useToggleRead();
@@ -95,9 +109,13 @@ const getRowActions =
           type="button"
           className="ctw-btn-primary"
           onClick={() => {
-            toggleRead(record);
+            if (!record.isRead) {
+              void toggleRead(record);
+            }
+
             if (onAddToRecord) {
               onAddToRecord(record);
+              onSuccess?.();
             } else {
               showAddMedicationForm(record);
             }
