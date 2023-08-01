@@ -22,13 +22,18 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
     super(resource, includedResources, revIncludes);
 
     this.observationModels =
-      this.resource.result?.map(
-        (result) =>
-          // @ts-ignore: Unreachable code error
-          // We are disabling it for this line as the FHIR spec doesn't support this
-          // customized result field that now has the observation resource and not only just a reference.
-          new ObservationModel(result.resource, trendData)
-      ) ?? [];
+      this.resource.result?.map((result) => {
+        const reference = findReference(
+          "Observation",
+          resource.contained,
+          includedResources,
+          result
+        );
+        // @ts-ignore: Unreachable code error
+        // We are disabling it for this line as the FHIR spec doesn't support this
+        // customized result field that now has the observation resource and not only just a reference.
+        return new ObservationModel(result.resource || reference, trendData);
+      }) ?? [];
 
     const trends = trendData?.filter((o) => this.observationModels.some((om) => om.id === o.id));
     trends?.forEach((t) => t.setDiagnosticReport(this));

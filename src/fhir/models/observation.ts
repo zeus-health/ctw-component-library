@@ -1,6 +1,7 @@
 import type { DiagnosticReportModel } from "./diagnostic-report";
+import { DiagnosticReport } from "fhir/r4";
 import { FHIRModel } from "./fhir-model";
-import { SYSTEM_LOINC } from "../system-urls";
+import { SYSTEM_CPT, SYSTEM_LOINC } from "../system-urls";
 import { codeableConceptLabel } from "@/fhir/codeable-concept";
 import { formatDateISOToLocal, formatPeriod, formatQuantity, formatRange } from "@/fhir/formatters";
 
@@ -56,9 +57,13 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
 
   public diagnosticReportModel?: DiagnosticReportModel;
 
-  constructor(resource: fhir4.Observation, trendData?: ObservationModel[]) {
+  constructor(
+    resource: fhir4.Observation,
+    trendData?: ObservationModel[],
+    diagnosticReport?: DiagnosticReportModel
+  ) {
     super(resource);
-    this.trendData = filterAndSortTrends(this.resource, trendData ?? []);
+    this.trendData = filterAndSortTrends(this.resource, trendData ?? [], diagnosticReport);
   }
 
   get category() {
@@ -221,28 +226,34 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
   }
 }
 
-function filterAndSortTrends(resource: fhir4.Observation, trends: ObservationModel[]) {
+function filterAndSortTrends(
+  observation: fhir4.Observation,
+  trends: ObservationModel[],
+  diagnostic?: DiagnosticReportModel
+): ObservationModel[] {
   let filtered = trends.filter((t) =>
-    resource.code.coding?.some((coding) => coding.code && hasSimilarAnalyte(t, coding.code))
+    observation.code.coding?.some((coding) => {
+      if (diagnostic && isIncorrectlyCodedGlucose(diagnostic.resource, t)) {
+        return false;
+      }
+      const similarAnalyte = coding.code && hasSimilarAnalyte(t, coding.code);
+      return similarAnalyte;
+    })
   );
-
   filtered = filtered.sort((a, b) => {
-    const aStart = a.effectiveStartRaw;
-    const bStart = b.effectiveStartRaw;
-
-    if (!aStart && !bStart) {
+    if (!a.effectiveStartRaw && !b.effectiveStartRaw) {
       return 0;
     }
-    if (!aStart) {
+    if (!a.effectiveStartRaw) {
       return 1;
     }
-    if (!bStart) {
+    if (!b.effectiveStartRaw) {
       return -1;
     }
-    if (aStart > bStart) {
+    if (a.effectiveStartRaw > b.effectiveStartRaw) {
       return -1;
     }
-    if (aStart < bStart) {
+    if (a.effectiveStartRaw < b.effectiveStartRaw) {
       return 1;
     }
     return 0;
@@ -260,4 +271,25 @@ function hasSimilarAnalyte(model: ObservationModel, code: string) {
       coding.system === SYSTEM_LOINC && coding.code && analyte === LOINC_ANALYTES[coding.code]
   );
   return similarAnalyte;
+}
+
+/**
+ * Return true if the provided diagnostic and trend combination are incorrectly coded,
+ * and therefore should not be displayed in the trends.
+ *
+ * https://zeushealth.atlassian.net/browse/CDEV-310
+ */
+function isIncorrectlyCodedGlucose(diagnostic: DiagnosticReport, trend: ObservationModel) {
+  const diagnosticFlagged = diagnostic.code.coding?.some((coding) => {
+    const a1cDisplay = coding.display?.toLowerCase().indexOf("a1c");
+    return (
+      (coding.system === SYSTEM_LOINC && coding.code === "4548-4") ||
+      (coding.system === SYSTEM_CPT && coding.code === "83036") ||
+      (a1cDisplay !== undefined && a1cDisplay > -1)
+    );
+  });
+  const trendFlagged = trend.resource.code.coding?.some(
+    (coding) => coding.system === SYSTEM_LOINC && coding.code === "2345-7"
+  );
+  return diagnosticFlagged && trendFlagged;
 }

@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 1.46.0
+
+### Minor Changes
+
+- a0782f7e: No longer show incorrectly coded glucose trends
+
+## 1.45.8
+
+### Patch Changes
+
+- 84717c08: Added support for contained resources to Diagnostics Report Drawer
+
 ## 1.45.7
 
 ### Patch Changes

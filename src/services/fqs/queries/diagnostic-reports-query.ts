@@ -102,9 +102,7 @@ export const diagnosticReportQuery = gql`
           }
           contained {
             resource {
-              ... on Observation {
-                ...Observation
-              }
+              ...Observation
             }
           }
         }

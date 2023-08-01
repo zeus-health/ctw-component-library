@@ -22,6 +22,8 @@ export const SYSTEM_CCS = "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccs
 export const SYSTEM_CCI =
   "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp";
 
+export const SYSTEM_CPT = "http://www.ama-assn.org/go/cpt";
+
 export const SYSTEM_CVX = "http://hl7.org/fhir/sid/cvx";
 
 export const SYSTEM_ICD9 = "http://hl7.org/fhir/sid/icd-9";
