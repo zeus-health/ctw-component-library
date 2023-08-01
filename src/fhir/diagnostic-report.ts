@@ -88,6 +88,14 @@ function diagnosticReportsFetcherFQS(searchType: SearchType, trendData: Observat
         "fqs",
       ]);
 
+      trendData.forEach((observation, i) => {
+        const diagnosticReport = result.find((dr) =>
+          dr.result?.some((r) => r.reference === `Observation/${observation.id}`)
+        );
+        // eslint-disable-next-line no-param-reassign
+        trendData[i].diagnosticReport = diagnosticReport;
+      });
+
       return applyDiagnosticReportFilters(result, undefined, trendData);
     } catch (e) {
       throw Telemetry.logError(

@@ -29,14 +29,13 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
           includedResources,
           result
         );
-        // @ts-ignore: Unreachable code error
-        // We are disabling it for this line as the FHIR spec doesn't support this
-        // customized result field that now has the observation resource and not only just a reference.
-        return new ObservationModel(result.resource || reference, trendData);
-      }) ?? [];
 
-    const trends = trendData?.filter((o) => this.observationModels.some((om) => om.id === o.id));
-    trends?.forEach((t) => t.setDiagnosticReport(this));
+        // @ts-ignore
+        const model = new ObservationModel(result.resource || reference);
+        model.setTrends(trendData || []);
+        model.diagnosticReport = resource;
+        return model;
+      }) ?? [];
   }
 
   get category() {
@@ -109,7 +108,7 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
   }
 
   get hasTrends() {
-    return this.observations.some((o) => o.trends.length > 1);
+    return this.observations.some((o) => o.trends && o.trends.length > 1);
   }
 
   get performer() {

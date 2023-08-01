@@ -4,7 +4,7 @@ import cx from "classnames";
 import { useState } from "react";
 import { BubbleIcon } from "./bubble";
 import { useObservationsDetailsDrawer } from "./drawer";
-import { ObservationModel } from "@/fhir/models";
+import { DiagnosticReportModel, ObservationModel } from "@/fhir/models";
 import { Telemetry } from "@/utils/telemetry";
 
 export type ObservationTrendsProps = {
@@ -17,7 +17,7 @@ export const ObservationTrends = ({ model }: ObservationTrendsProps) => {
 
   return (
     <div className="ctw-text-sm ctw-font-normal">
-      {model.trends.length > 1 && (
+      {!model.isIncorrectlyCodedGlucose && model.trends && model.trends.length > 1 && (
         <div className="ctw-pt-2">
           <button
             aria-label="trends"
@@ -49,12 +49,13 @@ export const ObservationTrends = ({ model }: ObservationTrendsProps) => {
                   "ctw-cursor-pointer hover:ctw-bg-bg-lighter": trend.diagnosticReport,
                 })}
                 onClick={() =>
-                  trend.diagnosticReport && openDiagnosticReportDetails(trend.diagnosticReport)
+                  trend.diagnosticReport &&
+                  openDiagnosticReportDetails(new DiagnosticReportModel(trend.diagnosticReport))
                 }
                 onKeyDown={(e) =>
                   e.key === "Enter" &&
                   trend.diagnosticReport &&
-                  openDiagnosticReportDetails(trend.diagnosticReport)
+                  openDiagnosticReportDetails(new DiagnosticReportModel(trend.diagnosticReport))
                 }
               >
                 <div
