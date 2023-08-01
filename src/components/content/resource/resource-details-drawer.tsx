@@ -1,5 +1,6 @@
 import { ReactNode, useEffect, useState } from "react";
 import { History, HistoryEntries } from "./helpers/history";
+import { Notes } from "./helpers/notes";
 import { useAdditionalResourceActions } from "./use-additional-resource-actions";
 import { DocumentButton } from "../CCDA/document-button";
 import { useCCDAModal } from "../CCDA/modal-ccda";
@@ -11,6 +12,7 @@ import { useCTW } from "@/components/core/providers/use-ctw";
 import { RowActionsProp } from "@/components/core/table/table-rows";
 import { getBinaryId } from "@/fhir/binaries";
 import { DocumentModel } from "@/fhir/models/document";
+import { EncounterModel } from "@/fhir/models/encounter";
 import { FHIRModel } from "@/fhir/models/fhir-model";
 import { searchProvenances } from "@/fhir/provenance";
 import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
@@ -143,6 +145,8 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
                 resourceTypeTitle={model.resourceTypeTitle}
               />
             ))}
+
+          {model instanceof EncounterModel && <Notes entries={model.clinicalNotes} />}
         </div>
       </Drawer.Body>
       {actions && (

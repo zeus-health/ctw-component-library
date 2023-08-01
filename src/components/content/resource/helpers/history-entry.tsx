@@ -2,15 +2,10 @@ import { faFileLines } from "@fortawesome/free-regular-svg-icons";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cx from "classnames";
-import { ReactNode, useState } from "react";
-import { DetailsCard } from "./details-card";
+import { useState } from "react";
+import { DetailEntry, DetailsCard } from "./details-card";
 import { DocumentButton } from "../../CCDA/document-button";
 import { useCCDAModal } from "../../CCDA/modal-ccda";
-
-export type DetailEntry = {
-  label: string;
-  value: ReactNode;
-};
 
 export type HistoryEntryProps = {
   binaryId?: string;
@@ -65,7 +60,7 @@ export const HistoryEntry = ({
   );
 };
 
-const DetailSummary = ({
+export const DetailSummary = ({
   date,
   title,
   subtitle,
