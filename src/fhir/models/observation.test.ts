@@ -9,7 +9,7 @@ const syntheticObservation = (coding: Coding[], text?: string): Observation => (
   resourceType: "Observation",
   status: "final",
   code: {
-    coding, l
+    coding,
     text,
   },
 });
