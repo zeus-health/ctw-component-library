@@ -74,4 +74,8 @@ export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
   get sectionDisplays(): string[] | undefined {
     return this.resource.category?.map((coding) => codeableConceptLabel(coding)) || undefined;
   }
+
+  get text(): string | undefined {
+    return this.resource.text?.div;
+  }
 }
