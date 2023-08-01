@@ -40,49 +40,52 @@ export const ObservationTrends = ({ model }: ObservationTrendsProps) => {
             />
           </button>
           {isTrendsShown &&
-            model.trends.map((trend) => (
-              <div
-                tabIndex={0}
-                role="button"
-                key={trend.id}
-                className={cx("ctw-group/trends ctw-grid ctw-grid-cols-3 ctw-py-1 ctw-pl-4", {
-                  "ctw-cursor-pointer hover:ctw-bg-bg-lighter": trend.diagnosticReport,
-                })}
-                onClick={() =>
-                  trend.diagnosticReport && openDiagnosticReportDetails(trend.diagnosticReport)
-                }
-                onKeyDown={(e) =>
-                  e.key === "Enter" &&
-                  trend.diagnosticReport &&
-                  openDiagnosticReportDetails(trend.diagnosticReport)
-                }
-              >
-                <div
-                  className={cx("ctw-relative ctw-w-24 ctw-text-sm", {
-                    "ctw-font-semibold": trend.id === model.id,
-                    "group-hover/trends:ctw-underline": trend.diagnosticReport,
-                  })}
-                >
-                  {trend.effectiveStart}
-                </div>
-                <BubbleIcon
-                  result={trend.value}
-                  interpretation={trend.interpretation}
-                  className={cx(`${trend.acceptedInterpretations} ctw-w-fit`, {
-                    "!ctw-font-semibold": trend.id === model.id,
-                  })}
-                />
-
-                {trend.diagnosticReport && (
-                  <div className="ctw-justify-self-end">
-                    <FontAwesomeIcon
-                      icon={faArrowRight}
-                      className="ctw-invisible ctw-pr-2 ctw-text-content-lighter group-hover/trends:ctw-visible"
+            model.trends.map(
+              (trend) =>
+                !trend.isIncorrectlyCodedGlucose && (
+                  <div
+                    tabIndex={0}
+                    role="button"
+                    key={trend.id}
+                    className={cx("ctw-group/trends ctw-grid ctw-grid-cols-3 ctw-py-1 ctw-pl-4", {
+                      "ctw-cursor-pointer hover:ctw-bg-bg-lighter": trend.diagnosticReport,
+                    })}
+                    onClick={() =>
+                      trend.diagnosticReport && openDiagnosticReportDetails(trend.diagnosticReport)
+                    }
+                    onKeyDown={(e) =>
+                      e.key === "Enter" &&
+                      trend.diagnosticReport &&
+                      openDiagnosticReportDetails(trend.diagnosticReport)
+                    }
+                  >
+                    <div
+                      className={cx("ctw-relative ctw-w-24 ctw-text-sm", {
+                        "ctw-font-semibold": trend.id === model.id,
+                        "group-hover/trends:ctw-underline": trend.diagnosticReport,
+                      })}
+                    >
+                      {trend.effectiveStart}
+                    </div>
+                    <BubbleIcon
+                      result={trend.value}
+                      interpretation={trend.interpretation}
+                      className={cx(`${trend.acceptedInterpretations} ctw-w-fit`, {
+                        "!ctw-font-semibold": trend.id === model.id,
+                      })}
                     />
+
+                    {trend.diagnosticReport && (
+                      <div className="ctw-justify-self-end">
+                        <FontAwesomeIcon
+                          icon={faArrowRight}
+                          className="ctw-invisible ctw-pr-2 ctw-text-content-lighter group-hover/trends:ctw-visible"
+                        />
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            ))}
+                )
+            )}
         </div>
       )}
     </div>
