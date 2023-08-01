@@ -15,7 +15,7 @@ import {
   AUTH_USER_TYPE,
   ZusJWT,
 } from "@/utils/auth";
-import { compact, snakeCase } from "@/utils/nodash";
+import { compact, pickBy, snakeCase } from "@/utils/nodash";
 
 type TelemetryEventKey = "zusTelemetryClick" | "zusTelemetryFocus";
 
@@ -37,6 +37,15 @@ if (typeof window !== "undefined") {
   body = window.document.body;
 }
 
+const ignoredOrigins = [
+  // Local dev server
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+  // Local embedded ZAP server
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+];
+
 // Assume local development if origin is localhost or just an IP address
 const isLocalDevelopment = /https?:\/\/(localhost|\d+\.\d+\.\d+\.\d+)/i.test(origin);
 // Avoid initializing telemetry multiple times
@@ -57,7 +66,14 @@ export class Telemetry {
   private static accessToken = "";
 
   private static get telemetryIsAvailable() {
-    return isInitialized;
+    return Boolean(this.environment && isInitialized);
+  }
+
+  private static get isAllowedToSendMetrics() {
+    return Boolean(
+      this.telemetryIsAvailable &&
+        (!ignoredOrigins.includes(window.location.origin) || process.env.NODE_ENV === "test")
+    );
   }
 
   private static datadogLoggingEnabled = false;
@@ -195,6 +211,7 @@ export class Telemetry {
     this.countMetric(`action.${action}`, 1);
     // We report an active session to CTW
     this.reportActiveSession().catch((error) => Telemetry.logError(error as Error));
+    this.analyticsEvent(action).catch((error) => Telemetry.logError(error as Error));
   }
 
   /**
@@ -217,11 +234,7 @@ export class Telemetry {
     value: number,
     additionalTags: string[] = []
   ) {
-    if (
-      !this.environment ||
-      (process.env.NODE_ENV !== "test" &&
-        ["http://localhost:3000", "http://127.0.0.1:3000"].includes(window.location.origin))
-    ) {
+    if (!this.isAllowedToSendMetrics) {
       return;
     }
 
@@ -252,6 +265,46 @@ export class Telemetry {
       body: JSON.stringify({ name, type, tags, value }),
       mode: "cors",
     });
+  }
+
+  /**
+   * Report User analytic events
+   */
+  static async analyticsEvent(eventName: string) {
+    if (!this.isAllowedToSendMetrics) {
+      return;
+    }
+
+    try {
+      const user = jwtDecode(this.accessToken) as ZusJWT;
+
+      await fetch(`${getMetricsBaseUrl(this.environment)}/report/analytic`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${this.accessToken}`,
+        },
+        // Base64 encode the event name and user information
+        body: btoa(
+          JSON.stringify({
+            event: eventName,
+            userId: user[AUTH_USER_ID],
+            userProperties: pickBy({
+              email: user[AUTH_EMAIL],
+              builder: user[AUTH_BUILDER_NAME] || undefined,
+              isSuper: user[AUTH_IS_SUPER_ORG] === "true",
+            }),
+            metadata: {
+              ehr: this.ehr || undefined,
+              env: this.environment,
+              libraryVersion: packageJson.version,
+            },
+          })
+        ),
+        mode: "cors",
+      });
+    } catch {
+      // Nothing to do here.
+    }
   }
 
   static countMetric(name: string, value = 1, tags: string[] = []) {
@@ -325,12 +378,7 @@ export class Telemetry {
 
   static async reportActiveSession() {
     // Return if the session is already active or we don't need to report
-    if (
-      Session.isActive() ||
-      !this.environment ||
-      (process.env.NODE_ENV !== "test" &&
-        ["http://localhost:3000", "http://127.0.0.1:3000"].includes(window.location.origin))
-    ) {
+    if (Session.isActive() || !this.isAllowedToSendMetrics) {
       return;
     }
 
