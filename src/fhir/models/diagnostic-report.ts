@@ -275,7 +275,6 @@ function filterAndSortTrends(
  * https://zeushealth.atlassian.net/browse/CDEV-310
  */
 function isIncorrectlyCodedGlucose(diagnostic: DiagnosticReport, trend: ObservationModel) {
-  const trendRelatesToDiagnostic = diagnostic.result?.some((ref) => ref.id === trend.resource.id);
   const diagnosticFlagged = diagnostic.code.coding?.some((coding) => {
     const a1cDisplay = coding.display?.toLowerCase().indexOf("a1c");
     return (
@@ -287,5 +286,5 @@ function isIncorrectlyCodedGlucose(diagnostic: DiagnosticReport, trend: Observat
   const trendFlagged = trend.resource.code.coding?.some(
     (coding) => coding.system === SYSTEM_LOINC && coding.code === "2345-7"
   );
-  return trendRelatesToDiagnostic && diagnosticFlagged && trendFlagged;
+  return diagnosticFlagged && trendFlagged;
 }
