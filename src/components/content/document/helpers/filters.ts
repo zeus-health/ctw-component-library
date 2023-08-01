@@ -42,7 +42,7 @@ const isViewablePostRainbow = (docRef: fhir4.DocumentReference) => {
 // DA creates document references for sections of a CDA and the full CDA.
 // Sections will have at most 1 category.
 export function isSectionDocument(document: DocumentModel) {
-  return !!document.category && document.category.length < 2;
+  return document.category?.length < 2;
 }
 
 const isRenderableBinary = (doc: fhir4.DocumentReference): boolean => {
