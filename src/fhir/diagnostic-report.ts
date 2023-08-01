@@ -7,7 +7,7 @@ import { applyDiagnosticReportFilters } from "@/components/content/diagnostic-re
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useFeatureFlaggedQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { getIncludedResources } from "@/fhir/bundle";
-import { PatientModel } from "@/fhir/models";
+import { DiagnosticReportModel, PatientModel } from "@/fhir/models";
 import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import {
@@ -92,8 +92,15 @@ function diagnosticReportsFetcherFQS(searchType: SearchType, trendData: Observat
         const diagnosticReport = result.find((dr) =>
           dr.result?.some((r) => r.reference === `Observation/${observation.id}`)
         );
-        // eslint-disable-next-line no-param-reassign
-        trendData[i].diagnosticReport = diagnosticReport;
+        if (diagnosticReport) {
+          // eslint-disable-next-line no-param-reassign
+          trendData[i].diagnosticReport = new DiagnosticReportModel(
+            diagnosticReport,
+            undefined,
+            undefined,
+            trendData
+          );
+        }
       });
 
       return applyDiagnosticReportFilters(result, undefined, trendData);

@@ -33,7 +33,7 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
         // @ts-ignore
         const model = new ObservationModel(result.resource || reference);
         model.setTrends(trendData || []);
-        model.diagnosticReport = resource;
+        model.diagnosticReport = this;
         return model;
       }) ?? [];
   }

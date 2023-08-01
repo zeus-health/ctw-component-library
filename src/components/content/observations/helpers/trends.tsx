@@ -4,7 +4,7 @@ import cx from "classnames";
 import { useState } from "react";
 import { BubbleIcon } from "./bubble";
 import { useObservationsDetailsDrawer } from "./drawer";
-import { DiagnosticReportModel, ObservationModel } from "@/fhir/models";
+import { ObservationModel } from "@/fhir/models";
 import { Telemetry } from "@/utils/telemetry";
 
 export type ObservationTrendsProps = {
@@ -49,13 +49,12 @@ export const ObservationTrends = ({ model }: ObservationTrendsProps) => {
                   "ctw-cursor-pointer hover:ctw-bg-bg-lighter": trend.diagnosticReport,
                 })}
                 onClick={() =>
-                  trend.diagnosticReport &&
-                  openDiagnosticReportDetails(new DiagnosticReportModel(trend.diagnosticReport))
+                  trend.diagnosticReport && openDiagnosticReportDetails(trend.diagnosticReport)
                 }
                 onKeyDown={(e) =>
                   e.key === "Enter" &&
                   trend.diagnosticReport &&
-                  openDiagnosticReportDetails(new DiagnosticReportModel(trend.diagnosticReport))
+                  openDiagnosticReportDetails(trend.diagnosticReport)
                 }
               >
                 <div

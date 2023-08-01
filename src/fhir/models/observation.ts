@@ -1,4 +1,4 @@
-import { DiagnosticReport } from "fhir/r4";
+import type { DiagnosticReportModel } from "./diagnostic-report";
 import { FHIRModel } from "./fhir-model";
 import { SYSTEM_CPT, SYSTEM_LOINC } from "../system-urls";
 import { codeableConceptLabel } from "@/fhir/codeable-concept";
@@ -52,11 +52,9 @@ export const LOINC_ANALYTES: Record<string, string> = {
 export class ObservationModel extends FHIRModel<fhir4.Observation> {
   kind = "Observation" as const;
 
-  public diagnosticReport?: DiagnosticReport;
+  public diagnosticReport?: DiagnosticReportModel;
 
   private trendData?: ObservationModel[];
-
-  private filteredTrendData?: ObservationModel[];
 
   get category() {
     return codeableConceptLabel(this.resource.category?.[0]);
@@ -221,7 +219,7 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
    */
   get isIncorrectlyCodedGlucose() {
     if (this.diagnosticReport) {
-      const diagnosticFlagged = this.diagnosticReport.code.coding?.some((coding) => {
+      const diagnosticFlagged = this.diagnosticReport.resource.code.coding?.some((coding) => {
         const a1cDisplay = coding.display?.toLowerCase().indexOf("a1c");
         return (
           (coding.system === SYSTEM_LOINC && coding.code === "4548-4") ||
