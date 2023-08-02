@@ -27,17 +27,20 @@ const syntheticDiagnosticReport = (coding: Coding[], text?: string): DiagnosticR
 describe("ObservationModel", () => {
   describe("constructor", () => {
     test("no trends", () => {
+      const diagnosticReport = new DiagnosticReportModel(syntheticDiagnosticReport([]));
       const resource = syntheticObservation([
         {
           code: "2345-7", // glucose
           system: SYSTEM_LOINC,
         },
       ]);
-      const model = new ObservationModel(resource, []);
-      expect(model.trends).toEqual([]);
+      const model = new ObservationModel(resource);
+      model.diagnosticReport = diagnosticReport;
+      expect(model.trends).toBeUndefined();
     });
 
     test("unassociated trends", () => {
+      const diagnosticReport = new DiagnosticReportModel(syntheticDiagnosticReport([]));
       const resource1 = syntheticObservation([
         {
           code: "2345-7", // glucose
@@ -52,11 +55,19 @@ describe("ObservationModel", () => {
       ]);
       const trend1 = new ObservationModel(resource1);
       const trend2 = new ObservationModel(resource2);
-      const model = new ObservationModel(resource1, [trend1, trend2]);
+      const trends = [trend1, trend2].map((t) => {
+        const trend = t;
+        trend.diagnosticReport = diagnosticReport;
+        return t;
+      });
+      const model = new ObservationModel(resource1);
+      model.diagnosticReport = diagnosticReport;
+      model.setTrends(trends);
       expect(model.trends).toEqual([trend1]);
     });
 
     test("associated trends", () => {
+      const diagnosticReport = new DiagnosticReportModel(syntheticDiagnosticReport([]));
       const resource1 = syntheticObservation([
         {
           code: "2345-7", // glucose
@@ -71,7 +82,14 @@ describe("ObservationModel", () => {
       ]);
       const trend1 = new ObservationModel(resource1);
       const trend2 = new ObservationModel(resource2);
-      const model = new ObservationModel(resource1, [trend1, trend2]);
+      const trends = [trend1, trend2].map((t) => {
+        const trend = t;
+        trend.diagnosticReport = diagnosticReport;
+        return t;
+      });
+      const model = new ObservationModel(resource1);
+      model.diagnosticReport = diagnosticReport;
+      model.setTrends(trends);
       expect(model.trends).toEqual([trend1, trend2]);
     });
 
@@ -98,7 +116,14 @@ describe("ObservationModel", () => {
       ]);
       const trend1 = new ObservationModel(resource1);
       const trend2 = new ObservationModel(resource2);
-      const model = new ObservationModel(resource1, [trend1, trend2], diagnosticReport);
+      const trends = [trend1, trend2].map((t) => {
+        const trend = t;
+        trend.diagnosticReport = diagnosticReport;
+        return t;
+      });
+      const model = new ObservationModel(resource1);
+      model.diagnosticReport = diagnosticReport;
+      model.setTrends(trends);
       expect(model.trends).toEqual([]);
     });
 
@@ -125,7 +150,14 @@ describe("ObservationModel", () => {
       ]);
       const trend1 = new ObservationModel(resource1);
       const trend2 = new ObservationModel(resource2);
-      const model = new ObservationModel(resource1, [trend1, trend2], diagnosticReport);
+      const trends = [trend1, trend2].map((t) => {
+        const trend = t;
+        trend.diagnosticReport = diagnosticReport;
+        return t;
+      });
+      const model = new ObservationModel(resource1);
+      model.diagnosticReport = diagnosticReport;
+      model.setTrends(trends);
       expect(model.trends).toEqual([]);
     });
 
@@ -151,7 +183,14 @@ describe("ObservationModel", () => {
       ]);
       const trend1 = new ObservationModel(resource1);
       const trend2 = new ObservationModel(resource2);
-      const model = new ObservationModel(resource1, [trend1, trend2], diagnosticReport);
+      const trends = [trend1, trend2].map((t) => {
+        const trend = t;
+        trend.diagnosticReport = diagnosticReport;
+        return t;
+      });
+      const model = new ObservationModel(resource1);
+      model.diagnosticReport = diagnosticReport;
+      model.setTrends(trends);
       expect(model.trends).toEqual([]);
     });
 
@@ -191,11 +230,14 @@ describe("ObservationModel", () => {
       const trend2 = new ObservationModel(resource2);
       const trend3 = new ObservationModel(resource3);
       const trend4 = new ObservationModel(resource4);
-      const model = new ObservationModel(
-        resource3,
-        [trend1, trend2, trend3, trend4],
-        diagnosticReport
-      );
+      const trends = [trend1, trend2, trend3, trend4].map((t) => {
+        const trend = t;
+        trend.diagnosticReport = diagnosticReport;
+        return t;
+      });
+      const model = new ObservationModel(resource3);
+      model.diagnosticReport = diagnosticReport;
+      model.setTrends(trends);
       expect(model.trends).toEqual([trend3, trend4]);
     });
   });
