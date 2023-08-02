@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.47.1
+
+### Patch Changes
+
+- fa136b59: Add more labs for the trending feature.
+
 ## 1.47.0
 
 ### Minor Changes
