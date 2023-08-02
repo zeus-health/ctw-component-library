@@ -30,7 +30,8 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
           result
         );
 
-        // @ts-ignore
+        // @ts-ignore: The FHIR spec doesn't support this customized result field that now has the
+        // observation resource and not only just a reference.
         const model = new ObservationModel(result.resource || reference);
         model.diagnosticReport = this;
         model.setTrends(trendData || []);
