@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.47.0
+
+### Minor Changes
+
+- 41d766bb: Add ability to link the respective observation that is found in the trending feature.
+
 ## 1.46.0
 
 ### Minor Changes
