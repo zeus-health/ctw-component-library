@@ -34,9 +34,17 @@ export const patientEncounterColumns: TableColumn<EncounterModel>[] = [
     title: "Details",
     render: (encounter) => {
       const diagnoses = compact(encounter.diagnoses);
+      const notes = compact(encounter.clinicalNotes.map((note) => note.title));
       return (
       <div>
-        {/* TODO: add clinical notes to encounter table CDEV-306 */}
+        {notes.length > 0  && (
+          <SimpleMoreList
+            items={notes}
+            limit={3}
+            total={notes.length}
+            prefix="Notes:"
+          />
+        )}
         {diagnoses.length > 0  && (
           <SimpleMoreList
             items={diagnoses}
