@@ -47,6 +47,16 @@ export const LOINC_ANALYTES: Record<string, string> = {
     "Glomerular filtration rate/1.73 sq M.predicted among blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)",
   "69405-9":
     "Glomerular filtration rate/1.73 sq M.predicted among blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)",
+  "2160-0": "Creatinine [Mass/volume] in Serum or Plasma",
+  "3094-0": "Urea nitrogen [Mass/volume] in Serum or Plasma",
+  "2823-3": "Potassium [Moles/volume] in Serum or Plasma",
+  "19123-9": "Magnesium [Mass/volume] in Serum or Plasma",
+  "3016-3": "Thyrotropin [Units/volume] in Serum or Plasma",
+  "11580-8": "Thyrotropin [Units/volume] in Serum or Plasma",
+  "3024-7": "Thyroxine (T4) free [Mass/volume] in Serum or Plasma",
+  "3040-3": "Lipase [Enzymatic activity/volume] in Serum or Plasma",
+  "2777-1": "Phosphate [Mass/volume] in Serum or Plasma",
+  "10839-9": "Troponin I.cardiac [Mass/volume] in Serum or Plasma",
 };
 
 export class ObservationModel extends FHIRModel<fhir4.Observation> {
