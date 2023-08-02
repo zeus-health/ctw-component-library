@@ -7,7 +7,7 @@ import { applyDiagnosticReportFilters } from "@/components/content/diagnostic-re
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useFeatureFlaggedQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { getIncludedResources } from "@/fhir/bundle";
-import { PatientModel } from "@/fhir/models";
+import { DiagnosticReportModel, PatientModel } from "@/fhir/models";
 import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import {
@@ -88,7 +88,24 @@ function diagnosticReportsFetcherFQS(searchType: SearchType, trendData: Observat
         "fqs",
       ]);
 
-      return applyDiagnosticReportFilters(result, undefined, trendData);
+      // Enrich the supplied trend data with its parent diagnostic report.
+      const enrichedTrendData = trendData.map((o) => {
+        const observation = o;
+        const diagnosticReport = result.find((dr) =>
+          dr.result?.some((r) => r.reference === `Observation/${observation.id}`)
+        );
+        if (diagnosticReport) {
+          observation.diagnosticReport = new DiagnosticReportModel(
+            diagnosticReport,
+            undefined,
+            undefined,
+            trendData
+          );
+        }
+        return observation;
+      });
+
+      return applyDiagnosticReportFilters(result, undefined, enrichedTrendData);
     } catch (e) {
       throw Telemetry.logError(
         e as Error,

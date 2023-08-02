@@ -1,5 +1,4 @@
 import type { DiagnosticReportModel } from "./diagnostic-report";
-import { DiagnosticReport } from "fhir/r4";
 import { FHIRModel } from "./fhir-model";
 import { SYSTEM_CPT, SYSTEM_LOINC } from "../system-urls";
 import { codeableConceptLabel } from "@/fhir/codeable-concept";
@@ -53,29 +52,12 @@ export const LOINC_ANALYTES: Record<string, string> = {
 export class ObservationModel extends FHIRModel<fhir4.Observation> {
   kind = "Observation" as const;
 
-  private trendData: ObservationModel[];
+  public diagnosticReport?: DiagnosticReportModel;
 
-  public diagnosticReportModel?: DiagnosticReportModel;
-
-  constructor(
-    resource: fhir4.Observation,
-    trendData?: ObservationModel[],
-    diagnosticReport?: DiagnosticReportModel
-  ) {
-    super(resource);
-    this.trendData = filterAndSortTrends(this.resource, trendData ?? [], diagnosticReport);
-  }
+  private trendData?: ObservationModel[];
 
   get category() {
     return codeableConceptLabel(this.resource.category?.[0]);
-  }
-
-  get diagnosticReport() {
-    return this.diagnosticReportModel;
-  }
-
-  setDiagnosticReport(diagnosticReport: DiagnosticReportModel) {
-    this.diagnosticReportModel = diagnosticReport;
   }
 
   get display() {
@@ -189,6 +171,10 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
     return this.trendData;
   }
 
+  setTrends(trends: ObservationModel[]) {
+    this.trendData = filterAndSortTrends(this.resource, trends);
+  }
+
   get acceptedInterpretations(): string {
     switch (codeableConceptLabel(this.resource.interpretation?.[0]).toLowerCase()) {
       case "high":
@@ -224,19 +210,42 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
         return "ctw-text-content-black ctw-bg-bg-light ctw-inline-flex ctw-rounded-xl ctw-leading-5 ctw-font-medium ctw-text-sm ctw-p-1 ctw-px-3";
     }
   }
+
+  /**
+   * Return true if the provided diagnostic and trend combination are incorrectly coded,
+   * and therefore should not be displayed in the trends.
+   *
+   * https://zeushealth.atlassian.net/browse/CDEV-310
+   */
+  get isIncorrectlyCodedGlucose() {
+    if (this.diagnosticReport) {
+      const diagnosticFlagged = this.diagnosticReport.resource.code.coding?.some((coding) => {
+        const a1cDisplay = coding.display?.toLowerCase().indexOf("a1c");
+        return (
+          (coding.system === SYSTEM_LOINC && coding.code === "4548-4") ||
+          (coding.system === SYSTEM_CPT && coding.code === "83036") ||
+          (a1cDisplay !== undefined && a1cDisplay > -1)
+        );
+      });
+      const trendFlagged = this.resource.code.coding?.some(
+        (coding) => coding.system === SYSTEM_LOINC && coding.code === "2345-7"
+      );
+      return diagnosticFlagged && trendFlagged;
+    }
+    return false;
+  }
 }
 
 function filterAndSortTrends(
   observation: fhir4.Observation,
-  trends: ObservationModel[],
-  diagnostic?: DiagnosticReportModel
+  trends: ObservationModel[]
 ): ObservationModel[] {
-  let filtered = trends.filter((t) =>
+  let filtered = trends.filter((trend) =>
     observation.code.coding?.some((coding) => {
-      if (diagnostic && isIncorrectlyCodedGlucose(diagnostic.resource, t)) {
+      if (trend.isIncorrectlyCodedGlucose) {
         return false;
       }
-      const similarAnalyte = coding.code && hasSimilarAnalyte(t, coding.code);
+      const similarAnalyte = coding.code && hasSimilarAnalyte(trend, coding.code);
       return similarAnalyte;
     })
   );
@@ -271,25 +280,4 @@ function hasSimilarAnalyte(model: ObservationModel, code: string) {
       coding.system === SYSTEM_LOINC && coding.code && analyte === LOINC_ANALYTES[coding.code]
   );
   return similarAnalyte;
-}
-
-/**
- * Return true if the provided diagnostic and trend combination are incorrectly coded,
- * and therefore should not be displayed in the trends.
- *
- * https://zeushealth.atlassian.net/browse/CDEV-310
- */
-function isIncorrectlyCodedGlucose(diagnostic: DiagnosticReport, trend: ObservationModel) {
-  const diagnosticFlagged = diagnostic.code.coding?.some((coding) => {
-    const a1cDisplay = coding.display?.toLowerCase().indexOf("a1c");
-    return (
-      (coding.system === SYSTEM_LOINC && coding.code === "4548-4") ||
-      (coding.system === SYSTEM_CPT && coding.code === "83036") ||
-      (a1cDisplay !== undefined && a1cDisplay > -1)
-    );
-  });
-  const trendFlagged = trend.resource.code.coding?.some(
-    (coding) => coding.system === SYSTEM_LOINC && coding.code === "2345-7"
-  );
-  return diagnosticFlagged && trendFlagged;
 }
