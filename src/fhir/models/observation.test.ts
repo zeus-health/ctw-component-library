@@ -226,14 +226,10 @@ describe("ObservationModel", () => {
           system: SYSTEM_LOINC,
         },
       ]);
-      const trend1 = new ObservationModel(resource1);
-      const trend2 = new ObservationModel(resource2);
-      const trend3 = new ObservationModel(resource3);
-      const trend4 = new ObservationModel(resource4);
-      const trends = [trend1, trend2, trend3, trend4].map((t) => {
-        const trend = t;
+      const trends = [resource1, resource2, resource3, resource4].map((r) => {
+        const trend = new ObservationModel(r);
         trend.diagnosticReport = diagnosticReport;
-        return t;
+        return trend;
       });
       const model = new ObservationModel(resource3);
       model.diagnosticReport = diagnosticReport;
