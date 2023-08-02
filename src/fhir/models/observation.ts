@@ -240,7 +240,7 @@ function filterAndSortTrends(
   observation: fhir4.Observation,
   trends: ObservationModel[]
 ): ObservationModel[] {
-  let filtered = trends.filter((trend) =>
+  const filtered = trends.filter((trend) =>
     observation.code.coding?.some((coding) => {
       if (trend.isIncorrectlyCodedGlucose) {
         return false;
