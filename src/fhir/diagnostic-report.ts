@@ -88,22 +88,24 @@ function diagnosticReportsFetcherFQS(searchType: SearchType, trendData: Observat
         "fqs",
       ]);
 
-      trendData.forEach((observation, i) => {
+      // Enrich the supplied trend data with its parent diagnostic report.
+      const enrichedTrendData = trendData.map((o) => {
+        const observation = o;
         const diagnosticReport = result.find((dr) =>
           dr.result?.some((r) => r.reference === `Observation/${observation.id}`)
         );
         if (diagnosticReport) {
-          // eslint-disable-next-line no-param-reassign
-          trendData[i].diagnosticReport = new DiagnosticReportModel(
+          observation.diagnosticReport = new DiagnosticReportModel(
             diagnosticReport,
             undefined,
             undefined,
             trendData
           );
         }
+        return observation;
       });
 
-      return applyDiagnosticReportFilters(result, undefined, trendData);
+      return applyDiagnosticReportFilters(result, undefined, enrichedTrendData);
     } catch (e) {
       throw Telemetry.logError(
         e as Error,
