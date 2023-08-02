@@ -248,17 +248,11 @@ function filterAndSortTrends(
       return coding.code && hasSimilarAnalyte(trend, coding.code);
     })
   );
-  filtered = filtered.sort((a, b) => {
-    if (!a.effectiveStartRaw && !b.effectiveStartRaw) {
-      return 0;
-    }
+  return filtered.sort((a, b) => {
     if (!a.effectiveStartRaw) {
-      return 1;
+      return !b.effectiveStartRaw ? 0 : 1;
     }
-    if (!b.effectiveStartRaw) {
-      return -1;
-    }
-    if (a.effectiveStartRaw > b.effectiveStartRaw) {
+    if (!b.effectiveStartRaw || a.effectiveStartRaw > b.effectiveStartRaw) {
       return -1;
     }
     if (a.effectiveStartRaw < b.effectiveStartRaw) {
