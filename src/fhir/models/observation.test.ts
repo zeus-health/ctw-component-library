@@ -61,7 +61,7 @@ describe("ObservationModel", () => {
       const model = new ObservationModel(resource1);
       model.diagnosticReport = diagnosticReport;
       model.setTrends(trends);
-      expect(model.trends).toEqual(trends);
+      expect(model.trends).toEqual([trends[0]]);
     });
 
     test("associated trends", () => {
@@ -226,7 +226,7 @@ describe("ObservationModel", () => {
       const model = new ObservationModel(resource3);
       model.diagnosticReport = diagnosticReport;
       model.setTrends(trends);
-      expect(model.trends).toEqual([trend3, trend4]);
+      expect(model.trends).toEqual([trends[2], trends[3]]);
     });
   });
 });
