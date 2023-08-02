@@ -245,8 +245,7 @@ function filterAndSortTrends(
       if (trend.isIncorrectlyCodedGlucose) {
         return false;
       }
-      const similarAnalyte = coding.code && hasSimilarAnalyte(trend, coding.code);
-      return similarAnalyte;
+      return coding.code && hasSimilarAnalyte(trend, coding.code);
     })
   );
   filtered = filtered.sort((a, b) => {
