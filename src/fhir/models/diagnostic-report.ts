@@ -5,32 +5,24 @@ import { ResourceMap } from "../types";
 import { codeableConceptLabel, findCodingByOrderOfPreference } from "@/fhir/codeable-concept";
 import { formatDateISOToLocal } from "@/fhir/formatters";
 import { findReference } from "@/fhir/resource-helper";
-import {
-  SYSTEM_CPT,
-  SYSTEM_DIAGNOSTIC_SERVICE_SECTION_ID,
-  SYSTEM_LOINC,
-  SYSTEM_SNOMED,
-} from "@/fhir/system-urls";
+import { SYSTEM_DIAGNOSTIC_SERVICE_SECTION_ID, SYSTEM_SNOMED } from "@/fhir/system-urls";
 import { find } from "@/utils/nodash";
 
 export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
   kind = "DiagnosticReport" as const;
 
-  private observationModels?: ObservationModel[];
-
-  public hasTrends: boolean;
+  private observationModels: ObservationModel[];
 
   constructor(
     resource: DiagnosticReport,
     includedResources?: ResourceMap,
     revIncludes?: fhir4.Resource[],
-    trends?: ObservationModel[]
+    trendData?: ObservationModel[]
   ) {
     super(resource, includedResources, revIncludes);
-    this.hasTrends = false;
-    if (resource.id) {
-      const resourceId = resource.id;
-      this.observationModels = this.resource.result?.map((result) => {
+
+    this.observationModels =
+      this.resource.result?.map((result) => {
         const reference = findReference(
           "Observation",
           resource.contained,
@@ -38,22 +30,13 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
           result
         );
 
-        // @ts-ignore
-        // We are disabling it for this line as the FHIR spec doesn't support this
-        // customized result field that now has the observation resource and not only just a reference.
-        const model = new ObservationModel(result.resource || reference, {
-          [resourceId]: resource,
-        });
-
-        if (trends) {
-          model.trends = filterAndSortTrends(resource, model, trends);
-          if (model.trends.length >= 2) {
-            this.hasTrends = true;
-          }
-        }
+        // @ts-ignore: The FHIR spec doesn't support this customized result field that now has the
+        // observation resource and not only just a reference.
+        const model = new ObservationModel(result.resource || reference);
+        model.diagnosticReport = this;
+        model.setTrends(trendData || []);
         return model;
-      });
-    }
+      }) ?? [];
   }
 
   get category() {
@@ -125,6 +108,10 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
     return display;
   }
 
+  get hasTrends() {
+    return this.observations.some((o) => o.trends && o.trends.length > 1);
+  }
+
   get performer() {
     return this.organization?.display || this.resource.performer?.[0].display;
   }
@@ -148,7 +135,7 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
   }
 
   get observations() {
-    return this.observationModels ?? [];
+    return this.observationModels;
   }
 }
 
@@ -232,59 +219,3 @@ export const inferEndDateFromResults = (results: (Observation | undefined)[] | u
       }
       return Date.parse(d) > Date.parse(min) ? d : min;
     }, undefined as unknown as string);
-
-function filterAndSortTrends(
-  diagnostic: DiagnosticReport,
-  observation: ObservationModel,
-  trends: ObservationModel[]
-): ObservationModel[] {
-  let filtered = trends.filter((t) =>
-    observation.resource.code.coding?.some((coding) => {
-      if (isIncorrectlyCodedGlucose(diagnostic, t)) {
-        return false;
-      }
-      const hasSimilarAnalyte = coding.code && t.hasSimilarAnalyte(coding.code);
-      return hasSimilarAnalyte;
-    })
-  );
-  filtered = filtered.sort((a, b) => {
-    if (!a.effectiveStartRaw && !b.effectiveStartRaw) {
-      return 0;
-    }
-    if (!a.effectiveStartRaw) {
-      return 1;
-    }
-    if (!b.effectiveStartRaw) {
-      return -1;
-    }
-    if (a.effectiveStartRaw > b.effectiveStartRaw) {
-      return -1;
-    }
-    if (a.effectiveStartRaw < b.effectiveStartRaw) {
-      return 1;
-    }
-    return 0;
-  });
-  return filtered;
-}
-
-/**
- * Return true if the provided diagnostic and trend combination are incorrectly coded,
- * and therefore should not be displayed in the trends.
- *
- * https://zeushealth.atlassian.net/browse/CDEV-310
- */
-function isIncorrectlyCodedGlucose(diagnostic: DiagnosticReport, trend: ObservationModel) {
-  const diagnosticFlagged = diagnostic.code.coding?.some((coding) => {
-    const a1cDisplay = coding.display?.toLowerCase().indexOf("a1c");
-    return (
-      (coding.system === SYSTEM_LOINC && coding.code === "4548-4") ||
-      (coding.system === SYSTEM_CPT && coding.code === "83036") ||
-      (a1cDisplay !== undefined && a1cDisplay > -1)
-    );
-  });
-  const trendFlagged = trend.resource.code.coding?.some(
-    (coding) => coding.system === SYSTEM_LOINC && coding.code === "2345-7"
-  );
-  return diagnosticFlagged && trendFlagged;
-}

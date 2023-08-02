@@ -1,5 +1,6 @@
+import type { DiagnosticReportModel } from "./diagnostic-report";
 import { FHIRModel } from "./fhir-model";
-import { SYSTEM_LOINC } from "../system-urls";
+import { SYSTEM_CPT, SYSTEM_LOINC } from "../system-urls";
 import { codeableConceptLabel } from "@/fhir/codeable-concept";
 import { formatDateISOToLocal, formatPeriod, formatQuantity, formatRange } from "@/fhir/formatters";
 
@@ -50,6 +51,8 @@ export const LOINC_ANALYTES: Record<string, string> = {
 
 export class ObservationModel extends FHIRModel<fhir4.Observation> {
   kind = "Observation" as const;
+
+  public diagnosticReport?: DiagnosticReportModel;
 
   private trendData?: ObservationModel[];
 
@@ -165,11 +168,11 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
   }
 
   get trends() {
-    return this.trendData || [];
+    return this.trendData;
   }
 
-  set trends(t: ObservationModel[]) {
-    this.trendData = t;
+  setTrends(trends: ObservationModel[]) {
+    this.trendData = filterAndSortTrends(this.resource, trends);
   }
 
   get acceptedInterpretations(): string {
@@ -208,15 +211,66 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
     }
   }
 
-  hasSimilarAnalyte(code: string) {
-    const analyte = LOINC_ANALYTES[code];
-    if (!analyte) {
-      return false;
+  /**
+   * Return true if the provided diagnostic and trend combination are incorrectly coded,
+   * and therefore should not be displayed in the trends.
+   *
+   * https://zeushealth.atlassian.net/browse/CDEV-310
+   */
+  get isIncorrectlyCodedGlucose() {
+    if (this.diagnosticReport) {
+      const diagnosticFlagged = this.diagnosticReport.resource.code.coding?.some((coding) => {
+        const a1cDisplay = coding.display?.toLowerCase().indexOf("a1c");
+        return (
+          (coding.system === SYSTEM_LOINC && coding.code === "4548-4") ||
+          (coding.system === SYSTEM_CPT && coding.code === "83036") ||
+          (a1cDisplay !== undefined && a1cDisplay > -1)
+        );
+      });
+      const trendFlagged = this.resource.code.coding?.some(
+        (coding) => coding.system === SYSTEM_LOINC && coding.code === "2345-7"
+      );
+      return diagnosticFlagged && trendFlagged;
     }
-    const similarAnalyte = this.resource.code.coding?.some(
-      (coding) =>
-        coding.system === SYSTEM_LOINC && coding.code && analyte === LOINC_ANALYTES[coding.code]
-    );
-    return similarAnalyte;
+    return false;
   }
+}
+
+function filterAndSortTrends(
+  observation: fhir4.Observation,
+  trends: ObservationModel[]
+): ObservationModel[] {
+  const filtered = trends.filter((trend) =>
+    observation.code.coding?.some((coding) => {
+      if (trend.isIncorrectlyCodedGlucose) {
+        return false;
+      }
+      return coding.code && hasSimilarAnalyte(trend, coding.code);
+    })
+  );
+  return filtered.sort((a, b) => {
+    if (!a.effectiveStartRaw) {
+      return !b.effectiveStartRaw ? 0 : 1;
+    }
+    if (!b.effectiveStartRaw || a.effectiveStartRaw > b.effectiveStartRaw) {
+      return -1;
+    }
+    if (a.effectiveStartRaw < b.effectiveStartRaw) {
+      return 1;
+    }
+    return 0;
+  });
+  return filtered;
+}
+
+function hasSimilarAnalyte(model: ObservationModel, code: string) {
+  const analyte = LOINC_ANALYTES[code];
+  if (!analyte) {
+    return false;
+  }
+  const similarAnalyte = model.resource.code.coding?.some(
+    (coding) =>
+      coding.system === SYSTEM_LOINC && coding.code && analyte === LOINC_ANALYTES[coding.code]
+  );
+  return similarAnalyte;
 }
