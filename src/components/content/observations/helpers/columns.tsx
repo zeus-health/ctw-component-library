@@ -44,24 +44,14 @@ export const ObservationsColumns = (): TableColumn<ObservationModel>[] => [
     title: "Result",
     render: (model) => (
       <div className="ctw-flex">
-        {model.interpretation
-          ? model.interpretation &&
-            model.value && (
-              <div className="ctw-text-sm ctw-font-normal">
-                Result:{" "}
-                <BubbleIcon
-                  interpretation={model.interpretation}
-                  result={model.value}
-                  className={model.acceptedInterpretations}
-                />
-              </div>
-            )
-          : model.value && (
-              <div className="ctw-text-sm ctw-font-normal">
-                Result:{" "}
-                <BubbleIcon result={model.value} className={model.acceptedInterpretations} />
-              </div>
-            )}
+        <div className="ctw-text-sm ctw-font-normal">
+          Result:{" "}
+          <BubbleIcon
+            interpretation={model.interpretation}
+            result={model.value}
+            className={model.acceptedInterpretations}
+          />
+        </div>
       </div>
     ),
   },
