@@ -26,9 +26,7 @@ const ZusAggregatedProfileIframeComponent = (props: ZusAggregatedProfileProps) =
   useEffect(() => {
     // listener to know when iframe ZAP is ready
     const onMessageReady = ({ data }: WindowEventMap["message"]) => {
-      console.log("onMessageReady - Are we ready?");
       if (data.type === ZusAggregatedProfileIframeReadyMessageType) {
-        console.log("onMessageReady - We ready..");
         setHostedZapReady(true);
       }
     };
@@ -93,7 +91,6 @@ const ZusAggregatedProfileIframeComponent = (props: ZusAggregatedProfileProps) =
     }
 
     if (hostedZapReady) {
-      console.log(theme.theme);
       void load();
     }
   }, [
