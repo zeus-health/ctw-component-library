@@ -12,7 +12,7 @@ import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { RowActionsProps } from "@/components/core/table/table";
 import { getBinaryDocument } from "@/fhir/binaries";
-import { usePatientDocuments } from "@/fhir/document";
+import { usePatientTopLevelDocuments } from "@/fhir/document";
 import { DocumentModel } from "@/fhir/models/document";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { useBaseTranslations } from "@/i18n";
@@ -25,7 +25,7 @@ export type PatientDocumentsProps = {
 function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocumentsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const patientDocumentQuery = usePatientDocuments();
+  const patientDocumentQuery = usePatientTopLevelDocuments();
   const rowActions = useMemo(() => getRowActions({ onAddToRecord }), [onAddToRecord]);
   const { viewOptions, allTime } = getDateRangeView<DocumentModel>("dateCreated");
   const { data, setViewOption, setSort, setFilters } = useFilteredSortedData({

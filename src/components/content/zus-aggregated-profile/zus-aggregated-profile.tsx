@@ -1,6 +1,7 @@
 import { PatientConditionsAllProps } from "../conditions/patient-conditions-all";
 import { PatientConditionsOutsideProps } from "../conditions/patient-conditions-outside";
 import { PatientDiagnosticReportsProps } from "../diagnostic-reports/patient-diagnostic-reports";
+import { PatientEncountersProps } from "../encounters/patient-encounters";
 import { PatientMedicationsProps } from "../medications/patient-medications";
 import { PatientMedicationsAllProps } from "../medications/patient-medications-all";
 import { PatientMedicationsOutsideProps } from "../medications/patient-medications-outside";
@@ -33,13 +34,14 @@ export type ZAPResourceName =
   | "medications"
   | "medications-outside"
   | "medications-all"
-  | "timeline";
+  | "timeline"
+  | "encounters";
 
 export const defaultZAPResources: ZAPResourceName[] = [
   "conditions-all",
   "medications-all",
   "diagnostic-reports",
-  "timeline",
+  "encounters",
   "documents",
   "allergies",
   "immunizations",
@@ -69,6 +71,7 @@ export type ZusAggregatedProfileSubComponentProps = Partial<{
   medicationsOutsideProps: PatientMedicationsOutsideProps;
   medicationsAllProps: PatientMedicationsAllProps;
   timelineProps: PatientTimelineProps;
+  encounterProps: PatientEncountersProps;
 }>;
 
 const ZusAggregatedProfileComponent = ({
@@ -86,6 +89,7 @@ const ZusAggregatedProfileComponent = ({
   medicationsOutsideProps,
   medicationsAllProps,
   timelineProps,
+  encounterProps,
   resources = defaultZAPResources,
   hideTitle = false,
   title = "Outside Records",
@@ -106,6 +110,7 @@ const ZusAggregatedProfileComponent = ({
     "medications-outside": medicationsOutsideProps,
     "medications-all": medicationsAllProps,
     timeline: timelineProps,
+    encounters: encounterProps,
   };
 
   // Order provided resources by the specified order in zusAggregatedProfileTabs.

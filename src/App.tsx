@@ -23,7 +23,10 @@ import {
   ZusAggregatedProfile,
   ZusAggregatedProfileIframe,
 } from ".";
+
 import { Theme } from "@/styles/tailwind.theme";
+
+import { PatientEncounters } from "./components/content/encounters/patient-encounters";
 
 const {
   VITE_AUTH0_AUDIENCE,
@@ -118,6 +121,7 @@ const components: DemoComponent[] = [
   },
   { name: "patient-search", render: () => <PatientSearch />, title: "Patient Search" },
   { name: "timeline", render: () => <PatientTimeline />, title: "Patient Timeline" },
+  { name: "encounters", render: () => <PatientEncounters />, title: "Patient Encounters" },
   {
     name: "zap",
     render: () => {

@@ -133,7 +133,7 @@ describe("document filters tests", () => {
       questDoc,
       firstPartyDoc,
       carequalityDoc,
-    ];
+    ].map((i) => new DocumentModel(i));
     const expectedOutput = [
       commonwellDoc,
       commonwelPreRainbowDoc,

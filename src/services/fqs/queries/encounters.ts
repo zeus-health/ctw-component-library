@@ -5,8 +5,12 @@ import { GraphqlConnectionNode, GraphqlPageInfo } from "../client";
 
 export interface EncounterConnection {
   pageInfo: GraphqlPageInfo;
-  edges: GraphqlConnectionNode<Encounter>[];
+  edges: GraphqlConnectionNode<EncounterWithProvenance>[];
 }
+
+export type EncounterWithProvenance = Encounter & {
+  ProvenanceList: fhir4.Provenance[];
+};
 
 export interface EncounterGraphqlResponse {
   EncounterConnection: EncounterConnection;
