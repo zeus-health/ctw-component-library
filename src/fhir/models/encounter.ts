@@ -22,26 +22,9 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
   ) {
     super(resource, includedResources, revIncludes);
     this.clinicalNotes = [];
-    if (provenance.length > 0) {
-      let binaryIDReference = "";
-      for (let i = 0; i < provenance.length; i += 1) {
-        const entity = provenance[i].entity?.find((e) => {
-          if (e.what.reference !== undefined) {
-            return true;
-          }
-          return false;
-        });
-        if (entity && entity.what.reference) {
-          binaryIDReference = entity.what.reference;
-          break;
-        }
-      }
-      if (binaryIDReference) {
-        const binaryID = binaryIDReference.split("/")[1];
-        this.clinicalNotes = documents.filter(
-          (d) => d.binaryId === binaryID && isSectionDocument(d)
-        );
-      }
+    const binaryID = getBinaryIDFromProvenace(provenance);
+    if (binaryID) {
+      this.clinicalNotes = documents.filter((d) => d.binaryId === binaryID && isSectionDocument(d));
     }
   }
 
@@ -125,4 +108,26 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
 
     return display ?? "Unknown";
   }
+}
+
+function getBinaryIDFromProvenace(provenance: fhir4.Provenance[]) {
+  if (provenance.length > 0) {
+    let binaryIDReference = "";
+    for (let i = 0; i < provenance.length; i += 1) {
+      const entity = provenance[i].entity?.find((e) => {
+        if (e.what.reference !== undefined) {
+          return true;
+        }
+        return false;
+      });
+      if (entity && entity.what.reference) {
+        binaryIDReference = entity.what.reference;
+        break;
+      }
+    }
+    if (binaryIDReference) {
+      return binaryIDReference.split("/")[1];
+    }
+  }
+  return undefined;
 }
