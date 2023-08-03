@@ -56,16 +56,12 @@ export function PatientEncounters({ className }: PatientEncountersProps) {
         isLoading={encountersQuery.isLoading}
         data={data}
         emptyMessage={
-          <EmptyTable
-            hasZeroFilteredRecords={hasZeroFilteredRecords}
-            resourceName="encounters"
-          />
+          <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="encounters" />
         }
         columns={patientEncounterColumns}
         onRowClick={(record) => {
-              openEncounterDetails(record);
-          }
-        }
+          openEncounterDetails(record);
+        }}
       />
     </div>
   );
