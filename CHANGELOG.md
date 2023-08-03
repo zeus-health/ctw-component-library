@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.47.2
+
+### Patch Changes
+
+- c69c3cf5: Improve appearance of ZAP's "More" button, disallowing wrapping and enforcing font size consistency with the tabs.
+
 ## 1.47.1
 
 ### Patch Changes
