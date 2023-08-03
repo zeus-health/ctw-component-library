@@ -152,7 +152,7 @@ function TabGroupComponent({
               ref={moreMenuRef}
               selectedIndex={selectedTabIndex - tabOverflowCutoff}
               btnClassName={cx(
-                "ctw-more-tab ctw-capitalize ctw-flex-shrink-0 ctw-h-full",
+                "ctw-more-tab ctw-text-sm ctw-whitespace-nowrap ctw-capitalize ctw-flex-shrink-0 ctw-h-full",
                 "hover:after:ctw-bg-content-black",
                 {
                   "-ctw-ml-5": tabOverflowCutoff === 0,

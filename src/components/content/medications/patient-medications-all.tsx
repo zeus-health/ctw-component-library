@@ -6,6 +6,7 @@ import { useMedicationDetailsDrawer } from "./helpers/details";
 import { defaultMedicationFilters, medicationFilters } from "./helpers/filters";
 import { defaultMedicationSort, medicationSortOptions } from "./helpers/sorts";
 import { useToggleRead } from "../hooks/use-toggle-read";
+import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { EmptyTable } from "@/components/core/empty-table";
@@ -30,9 +31,14 @@ function PatientMedicationsAllComponent({
 }: PatientMedicationsAllProps) {
   const userBuilderId = useUserBuilderId();
   const query = useQueryAllPatientMedications();
-  const { data, setFilters, setSort } = useFilteredSortedData({
+
+  const { viewOptions, past6Months } =
+    getDateRangeView<MedicationStatementModel>("lastActivityDate");
+
+  const { data, setFilters, setSort, setViewOption } = useFilteredSortedData({
     defaultFilters: defaultMedicationFilters,
     defaultSort: defaultMedicationSort,
+    defaultView: past6Months,
     records: query.allMedications,
   });
 
@@ -64,6 +70,11 @@ function PatientMedicationsAllComponent({
           defaultSort: defaultMedicationSort,
           options: medicationSortOptions,
           onChange: setSort,
+        }}
+        viewOptions={{
+          onChange: setViewOption,
+          options: viewOptions,
+          defaultView: past6Months,
         }}
       />
       <ResourceTable

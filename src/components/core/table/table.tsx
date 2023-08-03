@@ -45,7 +45,7 @@ export const Table = <T extends MinRecordItem>({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showLeftShadow, setShowLeftShadow] = useState(false);
   const [showRightShadow, setShowRightShadow] = useState(false);
-  const [count, setCount] = useState(hidePagination ? records.length : pageSize);
+  const [count, setCount] = useState(pageSize);
 
   const updateShadows = () => {
     const container = scrollContainerRef.current;
@@ -74,6 +74,15 @@ export const Table = <T extends MinRecordItem>({
   }, [scrollContainerRef, isLoading]);
 
   const hasData = !isLoading && records.length > 0;
+
+  // useeffect to set the count to the default page size when the records change
+  useEffect(() => {
+    if (hidePagination && hasData) {
+      setCount(records.length);
+    } else {
+      setCount(pageSize);
+    }
+  }, [records, pageSize, hidePagination, hasData]);
 
   return (
     <div

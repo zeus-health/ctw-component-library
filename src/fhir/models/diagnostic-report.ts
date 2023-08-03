@@ -1,5 +1,7 @@
-import { Coding, Observation } from "fhir/r4";
+import { Coding, DiagnosticReport, Observation } from "fhir/r4";
 import { FHIRModel } from "./fhir-model";
+import { ObservationModel } from "./observation";
+import { ResourceMap } from "../types";
 import { codeableConceptLabel, findCodingByOrderOfPreference } from "@/fhir/codeable-concept";
 import { formatDateISOToLocal } from "@/fhir/formatters";
 import { findReference } from "@/fhir/resource-helper";
@@ -8,6 +10,34 @@ import { find } from "@/utils/nodash";
 
 export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
   kind = "DiagnosticReport" as const;
+
+  private observationModels: ObservationModel[];
+
+  constructor(
+    resource: DiagnosticReport,
+    includedResources?: ResourceMap,
+    revIncludes?: fhir4.Resource[],
+    trendData?: ObservationModel[]
+  ) {
+    super(resource, includedResources, revIncludes);
+
+    this.observationModels =
+      this.resource.result?.map((result) => {
+        const reference = findReference(
+          "Observation",
+          resource.contained,
+          includedResources,
+          result
+        );
+
+        // @ts-ignore: The FHIR spec doesn't support this customized result field that now has the
+        // observation resource and not only just a reference.
+        const model = new ObservationModel(result.resource || reference);
+        model.diagnosticReport = this;
+        model.setTrends(trendData || []);
+        return model;
+      }) ?? [];
+  }
 
   get category() {
     const category = codeableConceptLabel(this.resource.category?.[0]) || this.reportCategory;
@@ -67,7 +97,19 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
   }
 
   get details() {
-    return this.results.length > 0 ? `${this.results.length} results available` : "";
+    if (!this.results.length) {
+      return "";
+    }
+    const tResult = this.results.length > 1 ? "results" : "result";
+    let display = `${this.results.length} ${tResult}`;
+    if (this.hasTrends) {
+      display += ", result trend available";
+    }
+    return display;
+  }
+
+  get hasTrends() {
+    return this.observations.some((o) => o.trends && o.trends.length > 1);
   }
 
   get performer() {
@@ -90,6 +132,10 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
 
   get results() {
     return this.resource.result ?? [];
+  }
+
+  get observations() {
+    return this.observationModels;
   }
 }
 

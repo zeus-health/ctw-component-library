@@ -2,6 +2,7 @@ import { Basic, Resource } from "fhir/r4";
 import {
   SYSTEM_ENRICHMENT,
   SYSTEM_SUMMARY,
+  SYSTEM_ZUS_CREATED_AT,
   SYSTEM_ZUS_OWNER,
   SYSTEM_ZUS_PROFILE_ACTION,
   SYSTEM_ZUS_THIRD_PARTY,
@@ -29,6 +30,10 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
     this.resource = resource;
     this.includedResources = includedResources;
     this.revIncludedResources = revIncludes;
+  }
+
+  get createdAt(): string | undefined {
+    return find(this.resource.meta?.extension, { url: SYSTEM_ZUS_CREATED_AT })?.valueInstant;
   }
 
   get id(): string {

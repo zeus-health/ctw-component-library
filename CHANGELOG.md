@@ -1,5 +1,85 @@
 # ctw-component-library
 
+## 1.47.2
+
+### Patch Changes
+
+- c69c3cf5: Improve appearance of ZAP's "More" button, disallowing wrapping and enforcing font size consistency with the tabs.
+
+## 1.47.1
+
+### Patch Changes
+
+- fa136b59: Add more labs for the trending feature.
+
+## 1.47.0
+
+### Minor Changes
+
+- 41d766bb: Add ability to link the respective observation that is found in the trending feature.
+
+## 1.46.0
+
+### Minor Changes
+
+- a0782f7e: No longer show incorrectly coded glucose trends
+
+## 1.45.8
+
+### Patch Changes
+
+- 84717c08: Added support for contained resources to Diagnostics Report Drawer
+
+## 1.45.7
+
+### Patch Changes
+
+- b4911c58: Add date range view to medications component
+
+## 1.45.6
+
+### Patch Changes
+
+- 21fb1c67: Remove the beta label from timeline.
+
+## 1.45.5
+
+### Patch Changes
+
+- cf13358b: Update the loinc codes for more trending features.
+- 1bc578eb: Add support for more observation value types.
+
+## 1.45.4
+
+### Patch Changes
+
+- 2a5b770e: Fix capitalization logic for resource table titles.
+- 0875afdd: Fix show all for the diagnostic report.
+
+## 1.45.3
+
+### Patch Changes
+
+- e2b39aa0: Updated trending indicator display on small breakpoints
+
+## 1.45.2
+
+### Patch Changes
+
+- 7c75a854: Add trending feature to lipid data.
+
+## 1.45.1
+
+### Patch Changes
+
+- 0ba334f0: Reverted "Remove the load more feature in the diagnostic report drawer."
+
+## 1.45.0
+
+### Minor Changes
+
+- 6d287e57: Added trend indicator to Diagnostic Report component results
+
 ## 1.44.2
 
 ### Patch Changes

@@ -15,13 +15,12 @@ import {
   PatientDocuments,
   PatientImmunizations,
   PatientMedications,
+  PatientMedicationsAll,
   PatientMedicationsOutside,
   PatientProvider,
   PatientSearch,
   PatientTimeline,
-  ZAPResourceName,
   ZusAggregatedProfile,
-  UnreadRecordsNotification,
   ZusAggregatedProfileIframe,
 } from ".";
 import { Theme } from "@/styles/tailwind.theme";
@@ -106,6 +105,11 @@ const components: DemoComponent[] = [
     name: "medications-outside",
     render: () => <PatientMedicationsOutside />,
     title: "Patient Medications Outside",
+  },
+  {
+    name: "medications-all",
+    render: () => <PatientMedicationsAll />,
+    title: "Patient Medications (All)",
   },
   {
     name: "patient-history",
