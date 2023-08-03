@@ -52,6 +52,10 @@ export const documentsQuery = gql`
               ...Coding
             }
           }
+          text {
+            id
+            div
+          }
           category {
             text
             coding {

@@ -38,6 +38,16 @@ export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
     return capitalize(this.resource.content[0].attachment.title);
   }
 
+  get noteTitle(): string {
+    if (this.resource.type?.coding?.[0].display) {
+      return this.resource.type.coding[0].display;
+    }
+    if (this.resource.category?.[0].text) {
+      return this.resource.category[0].text;
+    }
+    return "Unknown";
+  }
+
   get dateCreated(): string | undefined {
     return formatISODateStringToDate(
       this.resource.date || this.resource.content[0].attachment.creation
@@ -74,5 +84,9 @@ export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
 
   get sectionDisplays(): string[] | undefined {
     return this.resource.category?.map((coding) => codeableConceptLabel(coding)) || undefined;
+  }
+
+  get text(): string | undefined {
+    return this.resource.text?.div;
   }
 }
