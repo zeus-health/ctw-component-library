@@ -10,11 +10,7 @@ export class TimelineEventModel extends FHIRModel<TimelineEventResource> {
 
   public model: EncounterModel | DiagnosticReportModel;
 
-  constructor(
-    resource: TimelineEventResource
-    // includedResources?: ResourceMap,
-    // revIncludes?: Resource[]
-  ) {
+  constructor(resource: TimelineEventResource) {
     super(resource);
     switch (resource.resourceType) {
       case "Encounter":
