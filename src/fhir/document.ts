@@ -20,6 +20,12 @@ export function usePatientTopLevelDocuments() {
       "resource.content[0].attachment.creation",
       ["desc"]
     );
+    if (!isFetching && !isLoading) {
+      if (filteredDocuments.length === 0) {
+        Telemetry.countMetric("req.count.documents.none", 1, ["fqs"]);
+      }
+      Telemetry.histogramMetric("req.count.documents", filteredDocuments.length, ["fqs"]);
+    }
     setFilteredData(filteredDocuments);
   }, [data, isError, isFetching, isLoading]);
 
@@ -58,10 +64,6 @@ async function getDocumentFromFQS(requestContext: CTWRequestContext, patient: Pa
     );
     const nodes = data.DocumentReferenceConnection.edges.map((x) => x.node);
     const models = nodes.map((d) => new DocumentModel(d));
-    if (models.length === 0) {
-      Telemetry.countMetric("req.count.documents.none", 1, ["fqs"]);
-    }
-    Telemetry.histogramMetric("req.count.documents", models.length, ["fqs"]);
     return models;
   } catch (e) {
     throw new Error(`Failed fetching document information for patient: ${e}`);
