@@ -34,26 +34,22 @@ export const patientEncounterColumns: TableColumn<EncounterModel>[] = [
     title: "Details",
     render: (encounter) => {
       const diagnoses = compact(encounter.diagnoses);
-      const notes = compact(encounter.clinicalNotes.map((note) => note.title));
+      const notes = compact(encounter.clinicalNotes.map((note) => note.noteTitle));
       return (
-      <div>
-        {notes.length > 0  && (
-          <SimpleMoreList
-            items={notes}
-            limit={3}
-            total={notes.length}
-            prefix="Notes:"
-          />
-        )}
-        {diagnoses.length > 0  && (
-          <SimpleMoreList
-            items={diagnoses}
-            limit={3}
-            total={diagnoses.length}
-            prefix="Diagnosis:"
-          />
-        )}
-      </div>
-    )},
+        <div>
+          {notes.length > 0 && (
+            <SimpleMoreList items={notes} limit={3} total={notes.length} prefix="Notes:" />
+          )}
+          {diagnoses.length > 0 && (
+            <SimpleMoreList
+              items={diagnoses}
+              limit={3}
+              total={diagnoses.length}
+              prefix="Diagnosis:"
+            />
+          )}
+        </div>
+      );
+    },
   },
 ];
