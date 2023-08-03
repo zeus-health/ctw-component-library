@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.47.4
+
+### Patch Changes
+
+- 53762c16: Add ability to track trend activity.
+
 ## 1.47.3
 
 ### Patch Changes
