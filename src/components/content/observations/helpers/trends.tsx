@@ -50,9 +50,15 @@ export const ObservationTrends = ({ model }: ObservationTrendsProps) => {
                     className={cx("ctw-group/trends ctw-grid ctw-grid-cols-3 ctw-py-1 ctw-pl-4", {
                       "ctw-cursor-pointer hover:ctw-bg-bg-lighter": trend.diagnosticReport,
                     })}
-                    onClick={() =>
-                      trend.diagnosticReport && openDiagnosticReportDetails(trend.diagnosticReport)
-                    }
+                    onClick={() => {
+                      Telemetry.trackInteraction(
+                        trend.diagnosticReport ? "trendClicked" : "noTrend"
+                      );
+                      return (
+                        trend.diagnosticReport &&
+                        openDiagnosticReportDetails(trend.diagnosticReport)
+                      );
+                    }}
                     onKeyDown={(e) =>
                       e.key === "Enter" &&
                       trend.diagnosticReport &&
