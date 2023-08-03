@@ -82,8 +82,9 @@ export function ThemeProvider({
       // the full true theme being applied.
       theme: merge({}, DefaultTheme, theme),
       ctwThemeRef,
+      locals,
     }),
-    [theme, ctwThemeRef]
+    [theme, locals, ctwThemeRef]
   );
 
   return (

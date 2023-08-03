@@ -64,8 +64,9 @@ export function CTWProvider({
       builderId,
       featureFlags,
       onResourceSave,
+      headers,
     }),
-    [env, builderId, featureFlags, onResourceSave]
+    [env, builderId, featureFlags, onResourceSave, headers]
   );
 
   return (

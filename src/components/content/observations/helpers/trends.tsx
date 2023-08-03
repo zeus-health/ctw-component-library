@@ -24,9 +24,7 @@ export const ObservationTrends = ({ model }: ObservationTrendsProps) => {
             className="ctw-btn-clear ctw-space-x-3"
             type="button"
             onClick={() => {
-              Telemetry.trackInteraction(
-                isTrendsShown ? "CollapsedTrendNotShown" : "ExpandedTrendShown"
-              );
+              Telemetry.trackInteraction(isTrendsShown ? "collapse_trend" : "expand_trend");
               setIsTrendsShown(!isTrendsShown);
             }}
           >
@@ -51,9 +49,7 @@ export const ObservationTrends = ({ model }: ObservationTrendsProps) => {
                       "ctw-cursor-pointer hover:ctw-bg-bg-lighter": trend.diagnosticReport,
                     })}
                     onClick={() => {
-                      Telemetry.trackInteraction(
-                        trend.diagnosticReport ? "trendClicked" : "noTrend"
-                      );
+                      Telemetry.trackInteraction("open_diagnostic_report");
                       return (
                         trend.diagnosticReport &&
                         openDiagnosticReportDetails(trend.diagnosticReport)

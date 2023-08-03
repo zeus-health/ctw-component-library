@@ -13,18 +13,19 @@ import {
   PatientConditionsOutside,
   PatientDiagnosticReports,
   PatientDocuments,
+  PatientEncounters,
   PatientImmunizations,
   PatientMedications,
+  PatientMedicationsAll,
   PatientMedicationsOutside,
   PatientProvider,
   PatientSearch,
   PatientTimeline,
-  ZAPResourceName,
   ZusAggregatedProfile,
-  UnreadRecordsNotification,
-  PatientMedicationsAll,
+  ZusAggregatedProfileIframe,
 } from ".";
-import { PatientEncounters } from "./components/content/encounters/patient-encounters";
+
+import { Theme } from "@/styles/tailwind.theme";
 
 const {
   VITE_AUTH0_AUDIENCE,
@@ -51,7 +52,7 @@ type DemoComponent = {
 const componentsToRender = VITE_DEMO_APP_COMPONENTS.split(",").map(trim);
 
 // Feel free to play with this theme object
-const theme = {
+const theme: Theme = {
   colors: {
     notification: {
       main: "#a855f7",
@@ -124,15 +125,29 @@ const components: DemoComponent[] = [
     name: "zap",
     render: () => {
       return (
-        <div>
-          <UnreadRecordsNotification text="Patient has unread records" />
-          <ZusAggregatedProfile
+        <ZusAggregatedProfile
+          title="ZAP"
+          conditionsOutsideProps={{
+            hideRequestRecords: true,
+          }}
+          conditionsAllProps={{ onlyAllowAddOutsideConditions: true }}
+          includePatientDemographicsForm={false}
+        />
+      );
+    },
+  },
+  {
+    name: "iframe-zap",
+    render: () => {
+      return (
+        <div style={{ height: "600px" }}>
+          <ZusAggregatedProfileIframe
+            title="IFrame ZAP"
             conditionsOutsideProps={{
               hideRequestRecords: true,
             }}
             conditionsAllProps={{ onlyAllowAddOutsideConditions: true }}
             includePatientDemographicsForm={false}
-            title="ZAP"
           />
         </div>
       );

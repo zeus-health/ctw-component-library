@@ -6,6 +6,13 @@ export const getZusApiBaseUrl = (env: Env) =>
 export const getZusServiceUrl = (env: Env, service: string) =>
   env === "production" ? `https://${service}.zusapi.com` : `https://${service}.${env}.zusapi.com`;
 
+export const getZusZapUrl = (env: Env) => {
+  if (import.meta.env.VITE_LOCAL_ZAP_URL) {
+    return import.meta.env.VITE_LOCAL_ZAP_URL;
+  }
+  return env === "production" ? "https://zap.zushealth.com" : `https://zap.${env}.zushealth.com`;
+};
+
 export const getZusProxyApiBaseUrl = (env: Env) => {
   const { VITE_LOCAL_EHR_HOOKS_URL } = import.meta.env;
   if (VITE_LOCAL_EHR_HOOKS_URL) {
