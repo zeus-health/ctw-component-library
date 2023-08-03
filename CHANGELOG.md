@@ -1,5 +1,14 @@
 # ctw-component-library
 
+## 1.49.0
+
+### Minor Changes
+
+- d4a0645c: Added component ZusAggregatedProfileIframe.
+  Addressed SSR telemetry issue.
+  Fixed theme bug where sometimes CSS vars --ctw-white and --ctw-black had NaN in them.
+- 00414ce7: Update index.ts
+
 ## 1.48.0
 
 ### Minor Changes
