@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.48.0
+
+### Minor Changes
+
+- 1e4ba69f: Create new Encounters & Notes component and remove Timeline from MegaZAP
+
 ## 1.47.4
 
 ### Patch Changes
