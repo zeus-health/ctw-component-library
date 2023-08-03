@@ -3,13 +3,14 @@ import { Env } from "@/components/core/providers/types";
 export const getZusApiBaseUrl = (env: Env) =>
   env === "production" ? `https://api.zusapi.com` : `https://api.${env}.zusapi.com`;
 
-export const getZusServiceUrl = (env: Env, service: string) => {
-  if (service === "zap" && import.meta.env.VITE_LOCAL_ZAP_URL) {
+export const getZusServiceUrl = (env: Env, service: string) =>
+  env === "production" ? `https://${service}.zusapi.com` : `https://${service}.${env}.zusapi.com`;
+
+export const getZusZapUrl = (env: Env) => {
+  if (import.meta.env.VITE_LOCAL_ZAP_URL) {
     return import.meta.env.VITE_LOCAL_ZAP_URL;
   }
-  return env === "production"
-    ? `https://${service}.zusapi.com`
-    : `https://${service}.${env}.zusapi.com`;
+  return env === "production" ? "https://zap.zushealth.com" : `https://zap.${env}.zushealth.com`;
 };
 
 export const getZusProxyApiBaseUrl = (env: Env) => {

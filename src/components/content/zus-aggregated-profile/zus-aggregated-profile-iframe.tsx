@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ZusAggregatedProfileProps } from "./zus-aggregated-profile";
-import { getZusServiceUrl } from "@/api/urls";
+import { getZusZapUrl } from "@/api/urls";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { CTWProviderProps } from "@/components/core/providers/ctw-provider";
@@ -44,7 +44,7 @@ const ZusAggregatedProfileIframeComponent = (props: ZusAggregatedProfileProps) =
     };
     void (async () => {
       requestContext = await getRequestContext();
-      setZapUrl(getZusServiceUrl(requestContext.env, "zap"));
+      setZapUrl(getZusZapUrl(requestContext.env));
     })();
 
     window.addEventListener("message", onMessageSave);
@@ -116,7 +116,7 @@ const ZusAggregatedProfileIframeComponent = (props: ZusAggregatedProfileProps) =
       title="zus-aggregated-profile"
       height="100%"
       width="100%"
-      src={`${zapURL}/zap/v1`}
+      src={`${zapURL}/v1`}
       className="ctw-border-0"
     />
   );
