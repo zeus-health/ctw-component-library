@@ -17,8 +17,8 @@ export const defaultBreakpoints = {
 export const TailwindTheme = {
   colors: {
     transparent: "transparent",
-    white: "#fff",
-    black: "#000",
+    white: "#ffffff",
+    black: "#000000",
     primary: {
       light: "#D0FBE2",
       main: "#008052",

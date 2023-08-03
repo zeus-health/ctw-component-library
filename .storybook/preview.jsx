@@ -71,6 +71,11 @@ export const parameters = {
   msw: {
     handlers: {
       metrics: [rest.post("*/report/metric", (_, res, ctx) => res(ctx.status(200), ctx.json({})))],
+      unleashMetrics: [
+        rest.post("https://unleash-proxy-*.zusapi.com/proxy/client/metrics", async (_, res, ctx) =>
+          res(ctx.status(200), ctx.json({}))
+        ),
+      ],
     },
   },
 };

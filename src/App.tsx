@@ -24,6 +24,7 @@ import {
   UnreadRecordsNotification,
   ZusAggregatedProfileIframe,
 } from ".";
+import { Theme } from "@/styles/tailwind.theme";
 
 const {
   VITE_AUTH0_AUDIENCE,
@@ -50,7 +51,7 @@ type DemoComponent = {
 const componentsToRender = VITE_DEMO_APP_COMPONENTS.split(",").map(trim);
 
 // Feel free to play with this theme object
-const theme = {
+const theme: Theme = {
   colors: {
     notification: {
       main: "#a855f7",
@@ -117,15 +118,31 @@ const components: DemoComponent[] = [
     name: "zap",
     render: () => {
       return (
-        <ZusAggregatedProfileIframe
-          height="600"
+        <ZusAggregatedProfile
+          title="ZAP"
           conditionsOutsideProps={{
             hideRequestRecords: true,
           }}
           conditionsAllProps={{ onlyAllowAddOutsideConditions: true }}
           includePatientDemographicsForm={false}
-          title="ZAP"
         />
+      );
+    },
+  },
+  {
+    name: "iframe-zap",
+    render: () => {
+      return (
+        <div style={{ height: "600px" }}>
+          <ZusAggregatedProfileIframe
+            title="IFrame ZAP"
+            conditionsOutsideProps={{
+              hideRequestRecords: true,
+            }}
+            conditionsAllProps={{ onlyAllowAddOutsideConditions: true }}
+            includePatientDemographicsForm={false}
+          />
+        </div>
       );
     },
   },

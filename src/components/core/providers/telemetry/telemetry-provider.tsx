@@ -1,4 +1,4 @@
-import { PropsWithChildren, useEffect } from "react";
+import { createContext, PropsWithChildren, useEffect, useMemo } from "react";
 import { useGetAuthToken } from "../authentication/use-get-auth-token";
 import { Env } from "../types";
 import { Telemetry } from "@/utils/telemetry";
@@ -10,6 +10,8 @@ type TelemetryProviderProps = {
   ehr?: string;
 };
 
+const Context = createContext({});
+
 export function TelemetryProvider({
   children,
   env,
@@ -18,6 +20,15 @@ export function TelemetryProvider({
   ehr,
 }: PropsWithChildren<TelemetryProviderProps>) {
   const getAuthToken = useGetAuthToken();
+  const contextValue = useMemo(
+    () => ({
+      builderId,
+      ehr,
+      enableTelemetry,
+      env,
+    }),
+    [builderId, ehr, enableTelemetry, env]
+  );
 
   useEffect(() => {
     Telemetry.init(env, ehr, enableTelemetry);
@@ -27,5 +38,5 @@ export function TelemetryProvider({
       .catch(() => Telemetry.clearUser());
   }, [builderId, env, ehr, enableTelemetry, getAuthToken]);
 
-  return <>{children}</>;
+  return <Context.Provider value={contextValue}>{children}</Context.Provider>;
 }

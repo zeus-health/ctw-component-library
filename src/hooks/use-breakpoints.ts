@@ -21,7 +21,7 @@ type BreakpointKeys = keyof typeof defaultBreakpoints;
 export type Breakpoints = Record<BreakpointKeys, boolean>;
 
 export function useBreakpoints<T extends HTMLElement>(target: RefObject<T>) {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const [breakpoints, setBreakpoints] = useState<Breakpoints>(
     mapValues(defaultBreakpoints, () => false)
   );

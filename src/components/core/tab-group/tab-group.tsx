@@ -126,7 +126,7 @@ function TabGroupComponent({
           {content.map(({ key, display }, index) => (
             <Tab
               key={key}
-              data-zus-telemetry-click={`Tab[${key}]`}
+              data-zus-telemetry-click={`open_tab.${key}`}
               onClick={onClickBlur}
               className={({ selected }) =>
                 cx(

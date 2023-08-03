@@ -96,9 +96,7 @@ export const ObservationsColumns = (): TableColumn<ObservationModel>[] => {
                 className="ctw-btn-clear"
                 type="button"
                 onClick={() => {
-                  Telemetry.trackInteraction(
-                    isTrendsShown ? "CollapsedTrendNotShown" : "ExpandedTrendShown"
-                  );
+                  Telemetry.trackInteraction(isTrendsShown ? "collapse_trends" : "expand_trends");
                   setIsTrendsShown(!isTrendsShown);
                 }}
               >

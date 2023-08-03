@@ -24,10 +24,7 @@ export type CTWState = {
 export type CTWRequestContext = {
   env: Env;
   ehr?: string;
-  theme?: Theme;
-  locals?: Locals;
   headers?: HeadersInit;
-  enableTelemetry: boolean;
   authToken: string;
   // The user's builder ID.
   builderId: string;

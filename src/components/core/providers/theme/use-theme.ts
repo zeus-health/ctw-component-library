@@ -1,8 +1,12 @@
 import { useContext } from "react";
 import { ThemeContext } from "./context";
-import { Theme } from "@/styles/tailwind.theme";
+import { CTWStateContext } from "@/components/core/providers/ctw-context";
 
-export function useTheme(): Required<Theme> {
+export function useTheme() {
   const context = useContext(ThemeContext);
-  return context.theme;
+  const ctw = useContext(CTWStateContext);
+  return {
+    theme: context.theme,
+    locals: ctw?.locals,
+  };
 }
