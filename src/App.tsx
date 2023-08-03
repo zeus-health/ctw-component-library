@@ -13,6 +13,7 @@ import {
   PatientConditionsOutside,
   PatientDiagnosticReports,
   PatientDocuments,
+  PatientEncounters,
   PatientImmunizations,
   PatientMedications,
   PatientMedicationsAll,
@@ -25,8 +26,6 @@ import {
 } from ".";
 
 import { Theme } from "@/styles/tailwind.theme";
-
-import { PatientEncounters } from "./components/content/encounters/patient-encounters";
 
 const {
   VITE_AUTH0_AUDIENCE,

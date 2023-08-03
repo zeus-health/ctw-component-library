@@ -13,6 +13,7 @@ export * from "@/components/content/diagnostic-reports/unread-diagnostic-reports
 export * from "@/components/content/document/patient-documents";
 export * from "@/components/content/document/unread-documents-notification";
 export * from "@/components/content/forms/actions/patients";
+export * from "@/components/content/encounters/patient-encounters";
 export * from "@/components/content/immunizations/patient-immunizations";
 export * from "@/components/content/immunizations/unread-immunizations-notification";
 export * from "@/components/content/medications/patient-medications";
