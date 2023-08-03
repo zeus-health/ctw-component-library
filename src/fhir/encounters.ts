@@ -3,8 +3,7 @@ import { usePatientDocuments } from "./document";
 import { PatientModel } from "./models";
 import { DocumentModel } from "./models/document";
 import { EncounterModel } from "./models/encounter";
-import { searchCommonRecords } from "./search-helpers";
-import { useFeatureFlaggedQueryWithPatient } from "..";
+import { useQueryWithPatient } from "..";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import {
@@ -13,17 +12,14 @@ import {
   EncounterWithProvenance,
 } from "@/services/fqs/queries/encounters";
 import { QUERY_KEY_PATIENT_ENCOUNTERS } from "@/utils/query-keys";
-import { Telemetry } from "@/utils/telemetry";
+import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export function usePatientEncounters() {
   const { data } = usePatientDocuments();
-  return useFeatureFlaggedQueryWithPatient(
+  return useQueryWithPatient(
     QUERY_KEY_PATIENT_ENCOUNTERS,
     [data],
-    "encounters",
-    "req.timing.encounters",
-    getEncountersFromFQS(data),
-    getEncountersFromODS(data)
+    withTimerMetric(getEncountersFromFQS(data), `req.timing.encounters`, ["fqs"])
   );
 }
 
@@ -64,33 +60,6 @@ function getEncountersFromFQS(documents: DocumentModel[]) {
     } catch (e) {
       Telemetry.logError(e as Error, "Failed fetching encounter timeline information for patient");
       throw new Error(`Failed fetching encounter timeline information for patient: ${e}`);
-    }
-  };
-}
-
-function getEncountersFromODS(documents: DocumentModel[]) {
-  return async (requestContext: CTWRequestContext, patient: PatientModel) => {
-    try {
-      const { bundle, resources: encounters } = await searchCommonRecords(
-        "Encounter",
-        requestContext,
-        {
-          patientUPID: patient.UPID,
-        }
-      );
-      const results = setupEncounterModels(
-        encounters as EncounterWithProvenance[],
-        documents,
-        bundle
-      );
-      if (results.length === 0) {
-        Telemetry.countMetric("req.count.encounters.none");
-      }
-      Telemetry.histogramMetric("req.count.encounters", results.length);
-      return results;
-    } catch (e) {
-      Telemetry.logError(e as Error, "Failed fetching timeline information for patient");
-      throw new Error(`Failed fetching timeline information for patient: ${e}`);
     }
   };
 }

@@ -19,7 +19,7 @@ export function usePatientTopLevelDocuments() {
       applyDocumentFilters(data),
       "resource.content[0].attachment.creation",
       ["desc"]
-    );
+    ) as DocumentModel[];
     if (!isFetching && !isLoading) {
       if (filteredDocuments.length === 0) {
         Telemetry.countMetric("req.count.documents.none", 1, ["fqs"]);
