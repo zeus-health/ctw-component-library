@@ -1,18 +1,68 @@
+import type { DiagnosticReportModel } from "./diagnostic-report";
 import { FHIRModel } from "./fhir-model";
-import { SYSTEM_LOINC } from "../system-urls";
+import { SYSTEM_CPT, SYSTEM_LOINC } from "../system-urls";
 import { codeableConceptLabel } from "@/fhir/codeable-concept";
-import { formatDateISOToLocal } from "@/fhir/formatters";
-import { compact } from "@/utils/nodash";
+import { formatDateISOToLocal, formatPeriod, formatQuantity, formatRange } from "@/fhir/formatters";
 
 export const LOINC_ANALYTES: Record<string, string> = {
   "17856-6": "a1c",
   "2345-7": "glucose",
   "4548-4": "a1c",
   "4549-2": "a1c",
+  "18262-6": "Cholesterol in LDL [Mass/volume] in Serum or Plasma by Direct assay",
+  "13457-7": "Cholesterol in LDL [Mass/volume] in Serum or Plasma by Direct assay",
+  "2089-1": "Cholesterol in LDL [Mass/volume] in Serum or Plasma by Direct assay",
+  "39469-2": "Cholesterol in LDL [Mass/volume] in Serum or Plasma by Direct assay",
+  "46985-8": "Cholesterol in LDL [Mass/volume] in Serum or Plasma by Direct assay",
+  "2093-3": "Cholesterol [Mass/volume] in Serum or Plasma",
+  "48620-9": "Cholesterol [Mass/volume] in Serum or Plasma",
+  "35200-5": "Cholesterol [Mass/volume] in Serum or Plasma",
+  "2085-9": "Cholesterol in HDL [Mass/volume] in Serum or Plasma",
+  "2086-7": "Cholesterol in HDL [Mass/volume] in Serum or Plasma",
+  "49130-8": "Cholesterol in HDL [Mass/volume] in Serum or Plasma",
+  "9832-7": "Cholesterol in HDL [Mass/volume] in Serum or Plasma",
+  "2571-8": "Triglyceride [Mass/volume] in Serum or Plasma",
+  "12951-0": "Triglyceride [Mass/volume] in Serum or Plasma",
+  "3043-7": "Triglyceride [Mass/volume] in Serum or Plasma",
+  "14927-8": "Triglyceride [Mass/volume] in Serum or Plasma",
+  "3048-6": "Triglyceride [Mass/volume] in Serum or Plasma",
+  "3049-4": "Triglyceride [Mass/volume] in Serum or Plasma",
+  "48643-1":
+    "Glomerular filtration rate/1.73 sq M.predicted among blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)",
+  "33914-3":
+    "Glomerular filtration rate/1.73 sq M.predicted among blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)",
+  "77147-7":
+    "Glomerular filtration rate/1.73 sq M.predicted among blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)",
+  "50044-7":
+    "Glomerular filtration rate/1.73 sq M.predicted among blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)",
+  "70969-1":
+    "Glomerular filtration rate/1.73 sq M.predicted among blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)",
+  "48642-3":
+    "Glomerular filtration rate/1.73 sq M.predicted among blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)",
+  "88294-4":
+    "Glomerular filtration rate/1.73 sq M.predicted among blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)",
+  "88293-6":
+    "Glomerular filtration rate/1.73 sq M.predicted among blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)",
+  "62238-1":
+    "Glomerular filtration rate/1.73 sq M.predicted among blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)",
+  "69405-9":
+    "Glomerular filtration rate/1.73 sq M.predicted among blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)",
+  "2160-0": "Creatinine [Mass/volume] in Serum or Plasma",
+  "3094-0": "Urea nitrogen [Mass/volume] in Serum or Plasma",
+  "2823-3": "Potassium [Moles/volume] in Serum or Plasma",
+  "19123-9": "Magnesium [Mass/volume] in Serum or Plasma",
+  "3016-3": "Thyrotropin [Units/volume] in Serum or Plasma",
+  "11580-8": "Thyrotropin [Units/volume] in Serum or Plasma",
+  "3024-7": "Thyroxine (T4) free [Mass/volume] in Serum or Plasma",
+  "3040-3": "Lipase [Enzymatic activity/volume] in Serum or Plasma",
+  "2777-1": "Phosphate [Mass/volume] in Serum or Plasma",
+  "10839-9": "Troponin I.cardiac [Mass/volume] in Serum or Plasma",
 };
 
 export class ObservationModel extends FHIRModel<fhir4.Observation> {
   kind = "Observation" as const;
+
+  public diagnosticReport?: DiagnosticReportModel;
 
   private trendData?: ObservationModel[];
 
@@ -48,13 +98,44 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
     return this.resource.performer?.[0].display;
   }
 
-  get value() {
-    return compact([
-      this.resource.valueQuantity?.value ||
-        this.resource.valueString ||
-        codeableConceptLabel(this.resource.valueCodeableConcept),
-      this.resource.valueQuantity?.unit,
-    ]).join(" ");
+  get value(): string {
+    if (this.resource.valueBoolean !== undefined) {
+      return this.resource.valueBoolean ? "true" : "false";
+    }
+
+    if (this.resource.valueCodeableConcept) {
+      return codeableConceptLabel(this.resource.valueCodeableConcept);
+    }
+
+    if (this.resource.valueDateTime) {
+      return this.resource.valueDateTime;
+    }
+
+    if (this.resource.valueInteger !== undefined) {
+      return String(this.resource.valueInteger);
+    }
+
+    if (this.resource.valuePeriod) {
+      return formatPeriod(this.resource.valuePeriod);
+    }
+
+    if (this.resource.valueQuantity) {
+      return formatQuantity(this.resource.valueQuantity);
+    }
+
+    if (this.resource.valueRange) {
+      return formatRange(this.resource.valueRange);
+    }
+
+    if (this.resource.valueString) {
+      return this.resource.valueString;
+    }
+
+    if (this.resource.valueTime) {
+      return this.resource.valueTime;
+    }
+
+    return "";
   }
 
   get unit() {
@@ -97,11 +178,11 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
   }
 
   get trends() {
-    return this.trendData || [];
+    return this.trendData;
   }
 
-  set trends(t: ObservationModel[]) {
-    this.trendData = t;
+  setTrends(trends: ObservationModel[]) {
+    this.trendData = filterAndSortTrends(this.resource, trends);
   }
 
   get acceptedInterpretations(): string {
@@ -140,15 +221,66 @@ export class ObservationModel extends FHIRModel<fhir4.Observation> {
     }
   }
 
-  hasSimilarAnalyte(code: string) {
-    const analyte = LOINC_ANALYTES[code];
-    if (!analyte) {
-      return false;
+  /**
+   * Return true if the provided diagnostic and trend combination are incorrectly coded,
+   * and therefore should not be displayed in the trends.
+   *
+   * https://zeushealth.atlassian.net/browse/CDEV-310
+   */
+  get isIncorrectlyCodedGlucose() {
+    if (this.diagnosticReport) {
+      const diagnosticFlagged = this.diagnosticReport.resource.code.coding?.some((coding) => {
+        const a1cDisplay = coding.display?.toLowerCase().indexOf("a1c");
+        return (
+          (coding.system === SYSTEM_LOINC && coding.code === "4548-4") ||
+          (coding.system === SYSTEM_CPT && coding.code === "83036") ||
+          (a1cDisplay !== undefined && a1cDisplay > -1)
+        );
+      });
+      const trendFlagged = this.resource.code.coding?.some(
+        (coding) => coding.system === SYSTEM_LOINC && coding.code === "2345-7"
+      );
+      return diagnosticFlagged && trendFlagged;
     }
-    const similarAnalyte = this.resource.code.coding?.some(
-      (coding) =>
-        coding.system === SYSTEM_LOINC && coding.code && analyte === LOINC_ANALYTES[coding.code]
-    );
-    return similarAnalyte;
+    return false;
   }
+}
+
+function filterAndSortTrends(
+  observation: fhir4.Observation,
+  trends: ObservationModel[]
+): ObservationModel[] {
+  const filtered = trends.filter((trend) =>
+    observation.code.coding?.some((coding) => {
+      if (trend.isIncorrectlyCodedGlucose) {
+        return false;
+      }
+      return coding.code && hasSimilarAnalyte(trend, coding.code);
+    })
+  );
+  return filtered.sort((a, b) => {
+    if (!a.effectiveStartRaw) {
+      return !b.effectiveStartRaw ? 0 : 1;
+    }
+    if (!b.effectiveStartRaw || a.effectiveStartRaw > b.effectiveStartRaw) {
+      return -1;
+    }
+    if (a.effectiveStartRaw < b.effectiveStartRaw) {
+      return 1;
+    }
+    return 0;
+  });
+  return filtered;
+}
+
+function hasSimilarAnalyte(model: ObservationModel, code: string) {
+  const analyte = LOINC_ANALYTES[code];
+  if (!analyte) {
+    return false;
+  }
+  const similarAnalyte = model.resource.code.coding?.some(
+    (coding) =>
+      coding.system === SYSTEM_LOINC && coding.code && analyte === LOINC_ANALYTES[coding.code]
+  );
+  return similarAnalyte;
 }

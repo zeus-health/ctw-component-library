@@ -11,36 +11,32 @@ import { find } from "@/utils/nodash";
 export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
   kind = "DiagnosticReport" as const;
 
-  private observationModels?: ObservationModel[];
-
-  public hasTrends: boolean;
+  private observationModels: ObservationModel[];
 
   constructor(
     resource: DiagnosticReport,
     includedResources?: ResourceMap,
     revIncludes?: fhir4.Resource[],
-    trends?: ObservationModel[]
+    trendData?: ObservationModel[]
   ) {
     super(resource, includedResources, revIncludes);
-    this.hasTrends = false;
-    if (resource.id) {
-      const resourceId = resource.id;
-      this.observationModels = this.resource.result?.map((result) => {
-        // @ts-ignore: Unreachable code error
-        // We are disabling it for this line as the FHIR spec doesn't support this
-        // customized result field that now has the observation resource and not only just a reference.
-        const model = new ObservationModel(result.resource, {
-          [resourceId]: resource,
-        });
-        if (trends) {
-          model.trends = filterAndSortTrends(model, trends);
-          if (model.trends.length >= 2) {
-            this.hasTrends = true;
-          }
-        }
+
+    this.observationModels =
+      this.resource.result?.map((result) => {
+        const reference = findReference(
+          "Observation",
+          resource.contained,
+          includedResources,
+          result
+        );
+
+        // @ts-ignore: The FHIR spec doesn't support this customized result field that now has the
+        // observation resource and not only just a reference.
+        const model = new ObservationModel(result.resource || reference);
+        model.diagnosticReport = this;
+        model.setTrends(trendData || []);
         return model;
-      });
-    }
+      }) ?? [];
   }
 
   get category() {
@@ -112,6 +108,10 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
     return display;
   }
 
+  get hasTrends() {
+    return this.observations.some((o) => o.trends && o.trends.length > 1);
+  }
+
   get performer() {
     return this.organization?.display || this.resource.performer?.[0].display;
   }
@@ -135,7 +135,7 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
   }
 
   get observations() {
-    return this.observationModels ?? [];
+    return this.observationModels;
   }
 }
 
@@ -219,28 +219,3 @@ export const inferEndDateFromResults = (results: (Observation | undefined)[] | u
       }
       return Date.parse(d) > Date.parse(min) ? d : min;
     }, undefined as unknown as string);
-
-function filterAndSortTrends(model: ObservationModel, trends: ObservationModel[]) {
-  let filtered = trends.filter((t) =>
-    model.resource.code.coding?.some((coding) => coding.code && t.hasSimilarAnalyte(coding.code))
-  );
-  filtered = filtered.sort((a, b) => {
-    if (!a.effectiveStartRaw && !b.effectiveStartRaw) {
-      return 0;
-    }
-    if (!a.effectiveStartRaw) {
-      return 1;
-    }
-    if (!b.effectiveStartRaw) {
-      return -1;
-    }
-    if (a.effectiveStartRaw > b.effectiveStartRaw) {
-      return -1;
-    }
-    if (a.effectiveStartRaw < b.effectiveStartRaw) {
-      return 1;
-    }
-    return 0;
-  });
-  return filtered;
-}

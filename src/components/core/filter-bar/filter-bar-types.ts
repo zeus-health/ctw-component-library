@@ -31,7 +31,7 @@ export type FilterOptionSelect = {
 export type FilterOptionCheckbox = {
   type: "checkbox";
   // Using strings in `values` will set both key and display automatically
-  values: (string | { key: string; name: string; display: ReactNode })[];
+  values: (string | { key: string; name: string; display?: ReactNode })[];
 } & MinFilterItem;
 
 export type FilterOptionTag = {

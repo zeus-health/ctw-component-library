@@ -120,7 +120,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
 
   timeline: (props: PatientTimelineProps = {}) => ({
     key: "timeline",
-    display: () => <TabHelper name="timeline" beta />,
+    display: () => <TabHelper name="timeline" />,
     render: () => <PatientTimeline {...props} />,
   }),
 

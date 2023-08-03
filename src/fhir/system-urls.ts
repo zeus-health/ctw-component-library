@@ -22,6 +22,8 @@ export const SYSTEM_CCS = "https://www.hcup-us.ahrq.gov/toolssoftware/ccsr/dxccs
 export const SYSTEM_CCI =
   "http://www.hcup-us.ahrq.gov/toolssoftware/chronic_icd10/chronic_icd10.jsp";
 
+export const SYSTEM_CPT = "http://www.ama-assn.org/go/cpt";
+
 export const SYSTEM_CVX = "http://hl7.org/fhir/sid/cvx";
 
 export const SYSTEM_ICD9 = "http://hl7.org/fhir/sid/icd-9";
@@ -45,6 +47,7 @@ export const SYSTEM_SNOMED = "http://snomed.info/sct";
 export const SYSTEM_SUMMARY = "https://zusapi.com/summary";
 
 export const SYSTEM_ZUS_BUILDER_ID = "https://zusapi.com/builder_id";
+export const SYSTEM_ZUS_CREATED_AT = "https://zusapi.com/created-at";
 export const SYSTEM_ZUS_LENS = "https://zusapi.com/lens";
 export const SYSTEM_ZUS_SUMMARY = "https://zusapi.com/summary";
 export const SYSTEM_ZUS_OWNER = "https://zusapi.com/accesscontrol/owner";
