@@ -53,7 +53,7 @@ function TabGroupComponent({
   // https://github.com/tailwindlabs/headlessui/issues/2276#issuecomment-1456537475
   const [shown, setShown] = useState<Record<number, boolean>>({ 0: true });
 
-  // Calculate how many tabs can fit in the container.
+  // Calculate how many tabs can fit in the container,
   useEffect(() => {
     // Force everything into the more menu if we are in a small breakpoint
     // and we are not forcing horizontal tabs.
@@ -105,6 +105,7 @@ function TabGroupComponent({
   };
 
   const showTopRightContent = !!topRightContent;
+  const shownContent = content.slice(tabOverflowCutoff);
 
   return (
     <div
@@ -159,9 +160,12 @@ function TabGroupComponent({
                   "after:ctw-bg-content-black": selectedTabIndex - tabOverflowCutoff >= 0,
                 }
               )}
-              optionsClassName="ctw-tab-list ctw-capitalize"
+              optionsClassName={cx(
+                "ctw-tab-list ctw-capitalize",
+                !showTopRightContent && shownContent.length > 1 && "ctw-right-0" // Right-align dropdown if it is rightmost (and not leftmost)
+              )}
               onChange={(index) => handleOnChange(index + tabOverflowCutoff)}
-              items={content.slice(tabOverflowCutoff)}
+              items={shownContent}
             >
               {tabOverflowCutoff !== 0 ? <span>More</span> : undefined}
             </ListBox>
