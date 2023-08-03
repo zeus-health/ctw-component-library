@@ -3,11 +3,17 @@ type SimpleMoreListProps = {
   items: string[];
   limit: number;
   total: number;
+  prefix?: string;
 };
 
-export const SimpleMoreList = ({ className, items, limit, total }: SimpleMoreListProps) => (
+export const SimpleMoreList = ({ className, items, limit, total, prefix }: SimpleMoreListProps) => {
+  const displayItems = items;
+  if (prefix) {
+    displayItems[0] = `${prefix} ${displayItems[0]}`;
+  }
+  return (
   <div className={className}>
-    {items.slice(0, limit).map((item, index) => (
+    {displayItems.slice(0, limit).map((item, index) => (
       // eslint-disable-next-line react/no-array-index-key
       <div key={item + index}>
         <div>{item}</div>
@@ -15,4 +21,4 @@ export const SimpleMoreList = ({ className, items, limit, total }: SimpleMoreLis
     ))}
     {total > limit && <div className="ctw-font-medium">+ {total - limit} more</div>}
   </div>
-);
+)};
