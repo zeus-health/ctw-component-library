@@ -21,7 +21,6 @@ export const Notes = ({ entries }: NotesProps) => (
   <div className="ctw-space-y-4">
     <div className="ctw-text-lg ctw-font-semibold">Notes</div>
     {entries.map((entry, idx) => (
-      // We can have multiple items with the same condition id
       // eslint-disable-next-line react/no-array-index-key
       <div key={`${entry.id}-${idx}`}>
         <NotesEntry
