@@ -37,6 +37,10 @@ export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
     return this.resource.content[0].attachment.title;
   }
 
+  get noteTitle(): string | undefined {
+    return this.resource.type?.coding?.[0].display;
+  }
+
   get dateCreated(): string | undefined {
     return formatISODateStringToDate(
       this.resource.date || this.resource.content[0].attachment.creation
