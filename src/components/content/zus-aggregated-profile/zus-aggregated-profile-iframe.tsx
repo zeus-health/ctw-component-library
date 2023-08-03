@@ -17,8 +17,8 @@ const ZusAggregatedProfileIframeComponent = (props: ZusAggregatedProfileProps) =
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [hostedZapReady, setHostedZapReady] = useState(false);
   const [sentZapConfig, setSentZapConfig] = useState(false);
-  const { getRequestContext, featureFlags } = useCTW();
   const [zapURL, setZapUrl] = useState<string | undefined>(undefined);
+  const { getRequestContext, featureFlags } = useCTW();
   const patient = usePatientContext();
   const telemetry = useTelemetry();
   const theme = useTheme();
@@ -42,12 +42,11 @@ const ZusAggregatedProfileIframeComponent = (props: ZusAggregatedProfileProps) =
         requestContext?.onResourceSave(data.resource, data.action, data.error);
       }
     };
-    async function load() {
+    void (async () => {
       requestContext = await getRequestContext();
       setZapUrl(getZusServiceUrl(requestContext.env, "zap"));
-    }
+    })();
 
-    void load();
     window.addEventListener("message", onMessageSave);
     return () => window.removeEventListener("message", onMessageSave);
   }, [getRequestContext]);
@@ -108,19 +107,19 @@ const ZusAggregatedProfileIframeComponent = (props: ZusAggregatedProfileProps) =
     telemetry.ehr,
   ]);
 
-  if (zapURL) {
-    return (
-      <iframe
-        ref={iframeRef}
-        title="zus-aggregated-profile"
-        height="100%"
-        width="100%"
-        src={`${zapURL}/zap-1`}
-        className="ctw-border-0"
-      />
-    );
+  if (!zapURL) {
+    return false;
   }
-  return <>Loading</>;
+  return (
+    <iframe
+      ref={iframeRef}
+      title="zus-aggregated-profile"
+      height="100%"
+      width="100%"
+      src={`${zapURL}/zap/v1`}
+      className="ctw-border-0"
+    />
+  );
 };
 
 export const ZusAggregatedProfileIframe = withErrorBoundary(

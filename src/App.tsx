@@ -64,8 +64,8 @@ const theme: Theme = {
 const locals = {
   en: {
     glossary: {
-      condition_one: "problem",
-      condition_other: "problems",
+      condition_one: "condition",
+      condition_other: "conditions",
     },
     main: {
       "zap.tabs.conditionsOutside": "conditions",
