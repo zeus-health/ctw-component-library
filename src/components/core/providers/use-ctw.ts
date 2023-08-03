@@ -22,7 +22,6 @@ export function useCTW() {
     );
     const requestContext: CTWRequestContext = {
       authToken,
-      ehr: context.ehr,
       headers: context.headers,
       fhirClient,
       fhirWriteBackClient,
