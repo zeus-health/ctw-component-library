@@ -34,7 +34,7 @@ export const patientEncounterColumns: TableColumn<EncounterModel>[] = [
     title: "Details",
     render: (encounter) => {
       const diagnoses = compact(encounter.diagnoses);
-      const notes = compact(encounter.clinicalNotes.map((note) => note.noteTitle));
+      const notes = encounter.clinicalNotes.map((note) => note.noteTitle);
       return (
         <div>
           {notes.length > 0 && (
