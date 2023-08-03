@@ -19,7 +19,7 @@ export const patientEncounterColumns: TableColumn<EncounterModel>[] = [
     ),
   },
   {
-    title: "Organization",
+    title: "Provider",
     render: (encounter) => (
       <>
         {compact([encounter.participants, encounter.location]).map((detail) => (
