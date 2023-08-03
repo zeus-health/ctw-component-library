@@ -146,7 +146,9 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
               />
             ))}
 
-          {model instanceof EncounterModel && <Notes entries={model.clinicalNotes} />}
+          {model instanceof EncounterModel && model.clinicalNotes.length > 0 && (
+            <Notes entries={model.clinicalNotes} />
+          )}
         </div>
       </Drawer.Body>
       {actions && (
