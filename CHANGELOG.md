@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.47.3
+
+### Patch Changes
+
+- 17f20e11: The dropdown for hidden tabs will re-align themselves if there's no room to their right.
+
 ## 1.47.2
 
 ### Patch Changes
