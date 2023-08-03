@@ -25,7 +25,7 @@ export const Notes = ({ entries }: NotesProps) => (
       <div key={`${entry.id}-${idx}`}>
         <NotesEntry
           id={entry.id}
-          title={entry.title}
+          title={entry.noteTitle}
           hideEmpty={false}
           details={{
             value: getNoteDisplay(entry.text),
