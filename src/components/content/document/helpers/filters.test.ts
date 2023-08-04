@@ -1,4 +1,5 @@
-import { applyDocumentFilters, THIRD_PARTY_SOURCE_SYSTEM, ZUS_CREATION_DATE_URL } from "./filters";
+import { applyDocumentFilters, ZUS_CREATION_DATE_URL } from "./filters";
+import { THIRD_PARTY_SOURCE_SYSTEM } from "../../resource/helpers/filters";
 import { DocumentModel } from "@/fhir/models/document";
 
 interface SyntheticDocRefProps {
