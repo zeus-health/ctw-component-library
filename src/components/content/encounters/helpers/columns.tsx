@@ -1,3 +1,4 @@
+import { ResourceTitleColumn } from "../../resource/helpers/resource-title-column";
 import { SimpleMoreList } from "@/components/core/simple-more-list";
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { EncounterModel } from "@/fhir/models/encounter";
@@ -12,11 +13,7 @@ export const patientEncounterColumns: TableColumn<EncounterModel>[] = [
   },
   {
     title: "Title",
-    render: (encounter) => (
-      <div>
-        <div>{encounter.typeDisplay}</div>
-      </div>
-    ),
+    render: (encounter) => <ResourceTitleColumn title={encounter.typeDisplay} />,
   },
   {
     title: "Provider",
