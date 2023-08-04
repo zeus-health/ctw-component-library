@@ -92,7 +92,6 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
     }
 
     if (model instanceof DocumentModel) {
-      console.log("model instanceof DocumentModel");
       // Special handling for document models which already have a binaryID.
       setBinaryId(model.binaryId);
     } else if (getSourceDocument && fqsProvenances.ready) {
