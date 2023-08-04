@@ -1,11 +1,5 @@
 # ctw-component-library
 
-## 1.50.1
-
-### Patch Changes
-
-- 6fde67b7: In drawers, do not show the Source Document link when the document is not renderable.
-
 ## 1.50.0
 
 ### Minor Changes
