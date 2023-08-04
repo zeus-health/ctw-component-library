@@ -1,5 +1,16 @@
 # ctw-component-library
 
+## 1.51.0
+
+### Minor Changes
+
+- c5e680ad: Remove beta indicator for Encounters & Notes
+
+### Patch Changes
+
+- ff1103c0: In drawers, do not show the Source Document link when the document is not renderable.
+- 22e68219: Show all "Show Document" buttons even if unrenderable, to prevent bug where the button does not appear for renderable documents.
+
 ## 1.50.1
 
 ### Patch Changes
