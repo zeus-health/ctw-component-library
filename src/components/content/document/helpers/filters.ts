@@ -39,18 +39,24 @@ const isViewablePostRainbow = (docRef: fhir4.DocumentReference) => {
   );
 };
 
+// DA creates document references for sections of a CDA and the full CDA.
+// Sections will have at most 1 category.
+export function isSectionDocument(document: DocumentModel) {
+  return document.category && document.category.length < 2;
+}
+
 const isRenderableBinary = (doc: fhir4.DocumentReference): boolean => {
   const thirdPartyTag = doc.meta?.tag?.find((tag) => tag.system === THIRD_PARTY_SOURCE_SYSTEM);
   const isSupportedThirdParty = ["commonwell", "carequality"].includes(thirdPartyTag?.code || "");
   return isSupportedThirdParty;
 };
 
-export const applyDocumentFilters = (data: fhir4.DocumentReference[]) => {
-  const documentModels = data
-    .filter(
-      (doc) => (isViewablePreRainbow(doc) || isViewablePostRainbow(doc)) && isRenderableBinary(doc)
-    )
-    .map((document) => new DocumentModel(document));
+export const applyDocumentFilters = (data: DocumentModel[]) => {
+  const documentModels = data.filter(
+    (doc) =>
+      (isViewablePreRainbow(doc.resource) || isViewablePostRainbow(doc.resource)) &&
+      isRenderableBinary(doc.resource)
+  );
 
   const documentData = uniqWith(documentModels, (a, b) =>
     isEqual(valuesToDedupeOn(a), valuesToDedupeOn(b))

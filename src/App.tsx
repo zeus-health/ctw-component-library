@@ -13,16 +13,19 @@ import {
   PatientConditionsOutside,
   PatientDiagnosticReports,
   PatientDocuments,
+  PatientEncounters,
   PatientImmunizations,
   PatientMedications,
+  PatientMedicationsAll,
   PatientMedicationsOutside,
   PatientProvider,
   PatientSearch,
   PatientTimeline,
-  ZAPResourceName,
   ZusAggregatedProfile,
-  UnreadRecordsNotification,
+  ZusAggregatedProfileIFrame,
 } from ".";
+
+import { Theme } from "@/styles/tailwind.theme";
 
 const {
   VITE_AUTH0_AUDIENCE,
@@ -49,7 +52,7 @@ type DemoComponent = {
 const componentsToRender = VITE_DEMO_APP_COMPONENTS.split(",").map(trim);
 
 // Feel free to play with this theme object
-const theme = {
+const theme: Theme = {
   colors: {
     notification: {
       main: "#a855f7",
@@ -106,25 +109,45 @@ const components: DemoComponent[] = [
     title: "Patient Medications Outside",
   },
   {
+    name: "medications-all",
+    render: () => <PatientMedicationsAll />,
+    title: "Patient Medications (All)",
+  },
+  {
     name: "patient-history",
     render: () => <PatientHistoryTable />,
     title: "Patient History Table",
   },
   { name: "patient-search", render: () => <PatientSearch />, title: "Patient Search" },
   { name: "timeline", render: () => <PatientTimeline />, title: "Patient Timeline" },
+  { name: "encounters", render: () => <PatientEncounters />, title: "Patient Encounters" },
   {
     name: "zap",
     render: () => {
       return (
-        <div>
-          <UnreadRecordsNotification text="Patient has unread records" />
-          <ZusAggregatedProfile
+        <ZusAggregatedProfile
+          title="ZAP"
+          conditionsOutsideProps={{
+            hideRequestRecords: true,
+          }}
+          conditionsAllProps={{ onlyAllowAddOutsideConditions: true }}
+          includePatientDemographicsForm={false}
+        />
+      );
+    },
+  },
+  {
+    name: "iframe-zap",
+    render: () => {
+      return (
+        <div style={{ height: "600px" }}>
+          <ZusAggregatedProfileIFrame
+            title="IFrame ZAP"
             conditionsOutsideProps={{
               hideRequestRecords: true,
             }}
             conditionsAllProps={{ onlyAllowAddOutsideConditions: true }}
             includePatientDemographicsForm={false}
-            title="ZAP"
           />
         </div>
       );

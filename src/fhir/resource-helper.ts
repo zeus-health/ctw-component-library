@@ -22,10 +22,28 @@ export function findReference<T extends ResourceTypeString>(
   }
 
   if (reference.reference?.startsWith("#")) {
-    return find(contained, {
+    // TODO: Remove this once we no longer support ODS, as this format is specific to ODS/FHIR.
+    let found = find(contained, {
       id: reference.reference.substring(1), // Remove preceding # when looking up contained resource.
       resourceType,
     }) as ResourceType<T> | undefined;
+    if (found) {
+      return found;
+    }
+
+    // FQS returns contained resources nested another level deep (e.g. as {resource: {}} vs just {}),
+    // so we need to look there for contained values.
+    found = find(contained, {
+      resource: {
+        id: reference.reference.substring(1), // Remove preceding # when looking up contained resource.
+        resourceType,
+      },
+    }) as ResourceType<T> | undefined;
+    if (found) {
+      // @ts-ignore: We need to return the unnested resource here vs the nested one.
+      return found.resource;
+    }
+    return undefined;
   }
 
   if (

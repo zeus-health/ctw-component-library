@@ -1,5 +1,80 @@
 # ctw-component-library
 
+## 1.50.1
+
+### Patch Changes
+
+- 6fde67b7: In drawers, do not show the Source Document link when the document is not renderable.
+
+## 1.50.0
+
+### Minor Changes
+
+- b08c9b43: Rename ZusAggregatedProfileIframe to ZusAggregatedProfileIFrame
+
+## 1.49.0
+
+### Minor Changes
+
+- d4a0645c: Added component ZusAggregatedProfileIframe.
+  Addressed SSR telemetry issue.
+  Fixed theme bug where sometimes CSS vars --ctw-white and --ctw-black had NaN in them.
+- 00414ce7: Update index.ts
+
+## 1.48.0
+
+### Minor Changes
+
+- 1e4ba69f: Create new Encounters & Notes component and remove Timeline from MegaZAP
+
+## 1.47.4
+
+### Patch Changes
+
+- 53762c16: Add ability to track trend activity.
+
+## 1.47.3
+
+### Patch Changes
+
+- 17f20e11: The dropdown for hidden tabs will re-align themselves if there's no room to their right.
+
+## 1.47.2
+
+### Patch Changes
+
+- c69c3cf5: Improve appearance of ZAP's "More" button, disallowing wrapping and enforcing font size consistency with the tabs.
+
+## 1.47.1
+
+### Patch Changes
+
+- fa136b59: Add more labs for the trending feature.
+
+## 1.47.0
+
+### Minor Changes
+
+- 41d766bb: Add ability to link the respective observation that is found in the trending feature.
+
+## 1.46.0
+
+### Minor Changes
+
+- a0782f7e: No longer show incorrectly coded glucose trends
+
+## 1.45.8
+
+### Patch Changes
+
+- 84717c08: Added support for contained resources to Diagnostics Report Drawer
+
+## 1.45.7
+
+### Patch Changes
+
+- b4911c58: Add date range view to medications component
+
 ## 1.45.6
 
 ### Patch Changes

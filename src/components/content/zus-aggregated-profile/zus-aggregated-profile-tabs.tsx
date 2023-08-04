@@ -15,6 +15,7 @@ import {
 } from "../diagnostic-reports/patient-diagnostic-reports";
 import { UnreadDiagnosticReportsNotification } from "../diagnostic-reports/unread-diagnostic-reports-notification";
 import { UnreadDocumentsNotification } from "../document/unread-documents-notification";
+import { PatientEncounters, PatientEncountersProps } from "../encounters/patient-encounters";
 import { UnreadImmunizationsNotification } from "../immunizations/unread-immunizations-notification";
 import { PatientMedications, PatientMedicationsProps } from "../medications/patient-medications";
 import {
@@ -121,6 +122,12 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
     key: "timeline",
     display: () => <TabHelper name="timeline" />,
     render: () => <PatientTimeline {...props} />,
+  }),
+
+  encounters: (props: PatientEncountersProps = {}) => ({
+    key: "encounters",
+    display: () => <TabHelper name="Encounters & Notes" />,
+    render: () => <PatientEncounters {...props} />,
   }),
 
   documents: (props: PatientDocumentsProps = {}) => ({
