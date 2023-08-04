@@ -37,15 +37,6 @@ if (typeof window !== "undefined") {
   body = window.document.body;
 }
 
-const ignoredOrigins = [
-  // Local dev server
-  "http://localhost:3000",
-  "http://127.0.0.1:3000",
-  // Local embedded ZAP server
-  "http://localhost:5173",
-  "http://127.0.0.1:5173",
-];
-
 // Assume local development if origin is localhost or just an IP address
 const isLocalDevelopment = /https?:\/\/(localhost|\d+\.\d+\.\d+\.\d+)/i.test(origin);
 // Avoid initializing telemetry or event listeners multiple times
@@ -68,13 +59,6 @@ export class Telemetry {
 
   private static get telemetryIsAvailable() {
     return Boolean(this.environment && isInitialized);
-  }
-
-  private static get isAllowedToSendMetrics() {
-    return Boolean(
-      this.telemetryIsAvailable &&
-        (!ignoredOrigins.includes(window.location.origin) || process.env.NODE_ENV === "test")
-    );
   }
 
   private static datadogLoggingEnabled = false;
@@ -232,7 +216,7 @@ export class Telemetry {
   /*
    * In dev/test environments we should skip sending any metrics
    */
-  static skipMetrics() {
+  static shouldSkipSendingMetrics() {
     return (
       !this.environment ||
       (process.env.NODE_ENV !== "test" && /(localhost|127\.0\.0\.1)/.test(window.location.origin))
@@ -248,7 +232,7 @@ export class Telemetry {
     value: number,
     additionalTags: string[] = []
   ) {
-    if (this.skipMetrics()) {
+    if (this.shouldSkipSendingMetrics()) {
       return;
     }
 
@@ -285,7 +269,7 @@ export class Telemetry {
    * Report User analytic events
    */
   static async analyticsEvent(eventName: string, eventProperties: Record<string, unknown> = {}) {
-    if (!this.isAllowedToSendMetrics) {
+    if (this.shouldSkipSendingMetrics()) {
       return;
     }
 
@@ -393,7 +377,7 @@ export class Telemetry {
 
   static async reportActiveSession() {
     // Return if the session is already active or we don't need to report
-    if (Session.isActive() || this.skipMetrics()) {
+    if (Session.isActive() || this.shouldSkipSendingMetrics()) {
       return;
     }
 
