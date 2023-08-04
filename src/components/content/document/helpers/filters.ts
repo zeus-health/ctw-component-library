@@ -1,9 +1,9 @@
 import { dismissFilter } from "../../resource/filters";
+import { isRenderableBinary } from "../../resource/helpers/filters";
 import { FilterChangeEvent, FilterItem } from "@/components/core/filter-bar/filter-bar-types";
 import { DocumentModel } from "@/fhir/models/document";
 import { isEqual, uniqWith } from "@/utils/nodash";
 
-export const THIRD_PARTY_SOURCE_SYSTEM = "https://zusapi.com/thirdparty/source";
 export const ZUS_CREATION_DATE_URL = "https://zusapi.com/created-at";
 const RAINBOW_CUTOVER_DATE = new Date("2023-03-08T05:00:00.000Z");
 
@@ -44,12 +44,6 @@ const isViewablePostRainbow = (docRef: fhir4.DocumentReference) => {
 export function isSectionDocument(document: DocumentModel) {
   return document.category && document.category.length < 2;
 }
-
-export const isRenderableBinary = (doc: fhir4.DocumentReference): boolean => {
-  const thirdPartyTag = doc.meta?.tag?.find((tag) => tag.system === THIRD_PARTY_SOURCE_SYSTEM);
-  const isSupportedThirdParty = ["commonwell", "carequality"].includes(thirdPartyTag?.code || "");
-  return isSupportedThirdParty;
-};
 
 export const applyDocumentFilters = (data: DocumentModel[]) => {
   const documentModels = data.filter(
