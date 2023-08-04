@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.50.0
+
+### Minor Changes
+
+- b08c9b43: Rename ZusAggregatedProfileIframe to ZusAggregatedProfileIFrame
+
 ## 1.49.0
 
 ### Minor Changes
