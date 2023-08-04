@@ -190,6 +190,9 @@ export class Telemetry {
 
   static trackView(viewName: string) {
     this.countMetric(`component.${viewName}.loaded`);
+    this.analyticsEvent("view", {
+      name: viewName,
+    }).catch((error) => Telemetry.logError(error as Error));
   }
 
   static logError(error: Error, overrideMessage?: string): Error {
@@ -281,7 +284,7 @@ export class Telemetry {
   /**
    * Report User analytic events
    */
-  static async analyticsEvent(eventName: string) {
+  static async analyticsEvent(eventName: string, eventProperties: Record<string, unknown> = {}) {
     if (!this.isAllowedToSendMetrics) {
       return;
     }
@@ -305,6 +308,7 @@ export class Telemetry {
               isSuper: user[AUTH_IS_SUPER_ORG] === "true",
             }),
             metadata: {
+              ...eventProperties,
               ehr: this.ehr || undefined,
               env: this.environment,
               libraryVersion: packageJson.version,
