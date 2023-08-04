@@ -22,7 +22,7 @@ import {
   PatientSearch,
   PatientTimeline,
   ZusAggregatedProfile,
-  ZusAggregatedProfileIframe,
+  ZusAggregatedProfileIFrame,
 } from ".";
 
 import { Theme } from "@/styles/tailwind.theme";
@@ -141,7 +141,7 @@ const components: DemoComponent[] = [
     render: () => {
       return (
         <div style={{ height: "600px" }}>
-          <ZusAggregatedProfileIframe
+          <ZusAggregatedProfileIFrame
             title="IFrame ZAP"
             conditionsOutsideProps={{
               hideRequestRecords: true,
