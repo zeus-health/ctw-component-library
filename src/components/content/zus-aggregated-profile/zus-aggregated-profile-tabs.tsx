@@ -126,7 +126,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
 
   encounters: (props: PatientEncountersProps = {}) => ({
     key: "encounters",
-    display: () => <TabHelper name="Encounters & Notes" beta />,
+    display: () => <TabHelper name="Encounters & Notes" />,
     render: () => <PatientEncounters {...props} />,
   }),
 
