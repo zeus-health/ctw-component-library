@@ -9,11 +9,11 @@ import { useTelemetry } from "@/components/core/providers/telemetry/use-telemetr
 import { useTheme } from "@/components/core/providers/theme/use-theme";
 import { useCTW } from "@/components/core/providers/use-ctw";
 
-export const ZusAggregatedProfileIframeConfigMessageType = "ZusAggregatedProfileIframeConfig";
-export const ZusAggregatedProfileIframeReadyMessageType = "ZusAggregatedProfileIframeReady";
+export const ZusAggregatedProfileIFrameConfigMessageType = "ZusAggregatedProfileIFrameConfig";
+export const ZusAggregatedProfileIFrameReadyMessageType = "ZusAggregatedProfileIFrameReady";
 export const ZusAggregatedProfileOnResourceSaveMessageType = "ZusAggregatedProfileOnResourceSave";
 
-const ZusAggregatedProfileIframeComponent = (props: ZusAggregatedProfileProps) => {
+const ZusAggregatedProfileIFrameComponent = (props: ZusAggregatedProfileProps) => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [hostedZapReady, setHostedZapReady] = useState(false);
   const [sentZapConfig, setSentZapConfig] = useState(false);
@@ -26,7 +26,7 @@ const ZusAggregatedProfileIframeComponent = (props: ZusAggregatedProfileProps) =
   useEffect(() => {
     // listener to know when iframe ZAP is ready
     const onMessageReady = ({ data }: WindowEventMap["message"]) => {
-      if (data.type === ZusAggregatedProfileIframeReadyMessageType) {
+      if (data.type === ZusAggregatedProfileIFrameReadyMessageType) {
         setHostedZapReady(true);
       }
     };
@@ -76,7 +76,7 @@ const ZusAggregatedProfileIframeComponent = (props: ZusAggregatedProfileProps) =
 
       iframeRef.current?.contentWindow?.postMessage(
         {
-          type: ZusAggregatedProfileIframeConfigMessageType,
+          type: ZusAggregatedProfileIFrameConfigMessageType,
           config: {
             CTWProviderProps: ctwProviderProps,
             PatientProviderProps: patientProviderProps,
@@ -122,8 +122,8 @@ const ZusAggregatedProfileIframeComponent = (props: ZusAggregatedProfileProps) =
   );
 };
 
-export const ZusAggregatedProfileIframe = withErrorBoundary(
-  ZusAggregatedProfileIframeComponent,
-  "ZusAggregatedProfileIframe",
+export const ZusAggregatedProfileIFrame = withErrorBoundary(
+  ZusAggregatedProfileIFrameComponent,
+  "ZusAggregatedProfileIFrame",
   true
 );
