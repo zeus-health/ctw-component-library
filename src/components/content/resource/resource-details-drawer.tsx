@@ -4,6 +4,7 @@ import { Notes } from "./helpers/notes";
 import { useAdditionalResourceActions } from "./use-additional-resource-actions";
 import { DocumentButton } from "../CCDA/document-button";
 import { useCCDAModal } from "../CCDA/modal-ccda";
+import { isRenderableBinary } from "../document/helpers/filters";
 import { DetailsCard, DetailsProps } from "@/components/content/resource/helpers/details-card";
 import { Drawer } from "@/components/core/drawer";
 import { Loading } from "@/components/core/loading";
@@ -92,8 +93,7 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
     }
 
     if (model instanceof DocumentModel) {
-      // Special handling for document models
-      // which already have a binaryID.
+      // Special handling for document models which already have a binaryID.
       setBinaryId(model.binaryId);
     } else if (getSourceDocument && fqsProvenances.ready) {
       void load();
@@ -125,7 +125,9 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
             <DetailsCard
               details={details(model)}
               documentButton={
-                binaryId && (
+                binaryId &&
+                model instanceof DocumentModel &&
+                isRenderableBinary(model.resource) && (
                   <DocumentButton
                     onClick={() => openCCDAModal(binaryId, model.resourceTypeTitle)}
                     text="Source Document"
