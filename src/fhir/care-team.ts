@@ -31,9 +31,9 @@ async function getCareTeamFQS(requestContext: CTWRequestContext, patient: Patien
     const results = applyCareTeamFilters(nodes, {});
 
     if (results.length === 0) {
-      Telemetry.countMetric("req.count.care_teams.none", 1, ["fqs"]);
+      Telemetry.countMetric("req.count.care_teams.none", 1);
     }
-    Telemetry.histogramMetric("req.count.care_teams", results.length, ["fqs"]);
+    Telemetry.histogramMetric("req.count.care_teams", results.length);
     return results;
   } catch (e) {
     throw new Error(`Failed fetching care teams information for patient: ${e}`);

@@ -64,8 +64,7 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
           clientSideFiltersFQS,
           getFiltersFQS?.(model)
         ),
-      `req.${model.resourceType.toLowerCase()}_history`,
-      ["fqs"]
+      `req.${model.resourceType.toLowerCase()}_history`
     ),
     fqsProvenances.ready && useHistoryUnleash.ready
   );

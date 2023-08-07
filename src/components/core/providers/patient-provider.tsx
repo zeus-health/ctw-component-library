@@ -173,8 +173,7 @@ export function useFeatureFlaggedQueryWithPatient<T, T2>(
   const query = withTimerMetric(
     async (requestContext: CTWRequestContext, patient: PatientModel) =>
       queryFQS(requestContext, patient),
-    metric,
-    ["fqs"]
+    metric
   );
 
   return useQueryWithPatient(queryKey, [...keys, fqs.ready, fqs.enabled], query, fqs.ready);

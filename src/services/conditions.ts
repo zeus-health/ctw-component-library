@@ -240,7 +240,7 @@ async function fetchPatientBuilderConditionsFQS(
     );
     let conditions = setupConditionModelsWithFQS(nodes);
     conditions = filterAndSort(conditions);
-    Telemetry.histogramMetric(`req.count.builder_conditions`, conditions.length, ["fqs"]);
+    Telemetry.histogramMetric(`req.count.builder_conditions`, conditions.length);
     return conditions;
   } catch (e) {
     throw Telemetry.logError(e as Error, `Failed fetching conditions for patient: ${patient.UPID}`);
@@ -273,9 +273,9 @@ async function fetchPatientSummaryConditionsFQS(
     const conditions = setupConditionModelsWithFQS(nodes);
     const results = filterAndSort(conditions);
     if (results.length === 0) {
-      Telemetry.countMetric("req.count.summary_conditions.none", 1, ["fqs"]);
+      Telemetry.countMetric("req.count.summary_conditions.none", 1);
     }
-    Telemetry.histogramMetric("req.count.summary_conditions", results.length, ["fqs"]);
+    Telemetry.histogramMetric("req.count.summary_conditions", results.length);
     return results;
   } catch (e) {
     throw Telemetry.logError(

@@ -40,9 +40,9 @@ async function getAllergyIntoleranceFromFQS(
     const nodes = data.AllergyIntoleranceConnection.edges.map((x) => x.node);
     const results = applyAllergyFilters(nodes, requestContext.builderId);
     if (results.length === 0) {
-      Telemetry.countMetric("req.count.allergies.none", 1, ["fqs"]);
+      Telemetry.countMetric("req.count.allergies.none", 1);
     }
-    Telemetry.histogramMetric("req.count.allergies", results.length, ["fqs"]);
+    Telemetry.histogramMetric("req.count.allergies", results.length);
     return results;
   } catch (e) {
     throw new Error(`Failed fetching allergies information for patient ${patient.UPID}`);

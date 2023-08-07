@@ -51,9 +51,9 @@ function fetchObservationsTrendData(loincCodes: string[]) {
       const observations = nodes.map((o) => new ObservationModel(o));
 
       if (observations.length === 0) {
-        Telemetry.countMetric("req.count.all_observations.none", 1, ["fqs"]);
+        Telemetry.countMetric("req.count.all_observations.none", 1);
       }
-      Telemetry.histogramMetric(`req.count.all_observations`, observations.length, ["fqs"]);
+      Telemetry.histogramMetric(`req.count.all_observations`, observations.length);
 
       return observations;
     } catch (e) {

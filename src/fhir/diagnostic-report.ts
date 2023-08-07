@@ -54,13 +54,11 @@ function diagnosticReportsFetcherFQS(searchType: SearchType, trendData: Observat
     try {
       const data = await fetchFunction(requestContext, patient);
       if (searchType === "all" && data.DiagnosticReportConnection.edges.length === 0) {
-        Telemetry.countMetric(`req.count.${searchType}_diagnostic_reports.none`, 1, ["fqs"]);
+        Telemetry.countMetric(`req.count.${searchType}_diagnostic_reports.none`, 1);
       }
       const result = data.DiagnosticReportConnection.edges.map((x) => x.node);
 
-      Telemetry.histogramMetric(`req.count.${searchType}_diagnostic_reports`, result.length, [
-        "fqs",
-      ]);
+      Telemetry.histogramMetric(`req.count.${searchType}_diagnostic_reports`, result.length);
 
       // Enrich the supplied trend data with its parent diagnostic report.
       const enrichedTrendData = trendData.map((o) => {
