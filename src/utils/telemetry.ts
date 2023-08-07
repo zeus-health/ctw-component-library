@@ -275,6 +275,7 @@ export class Telemetry {
         event: eventName,
         metadata: {
           ...eventProperties,
+          ehr: this.ehr || undefined,
           libraryVersion: packageJson.version,
         },
       };
