@@ -9,6 +9,7 @@ export function usePatientEncounterDetailsDrawer() {
     subHeader: (m) => m.typeDisplay,
     getSourceDocument: true,
     details: encounterData,
+    enableDismissAndReadActions: true,
   });
 }
 
