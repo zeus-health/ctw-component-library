@@ -48,7 +48,7 @@ describe("telemetry", () => {
     expect(reportMetricSpy).toHaveBeenCalledTimes(1);
     expect(reportMetricSpy).toBeCalledWith("timing", "AmI.or-AmI Not", 0, []);
     expect(fetches.length).toEqual(1);
-    expect(fetches[0].url).toEqual("http://localhost:3000/report/metric");
+    expect(fetches[0].url).toEqual("http://localhost:3001/report/metric");
     const versionTag = `version:${packageJson.version}`;
     expect(await fetches[0].json()).toEqual({
       name: "am_i.or_am_i_not",
