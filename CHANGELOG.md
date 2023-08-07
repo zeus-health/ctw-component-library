@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.52.0
+
+### Minor Changes
+
+- 0c2d0fe6: Update telemetry metrics to support Encounters & Notes monitoring
+
 ## 1.51.0
 
 ### Minor Changes
