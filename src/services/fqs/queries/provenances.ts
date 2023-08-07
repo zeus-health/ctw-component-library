@@ -45,6 +45,12 @@ function provenanceQuery(resourceType: ResourceTypeString, targetId: string, ind
     provenance${index}: ${resourceType}(id: "${targetId}") {
       ProvenanceList(_reference: "target") {
         id
+        meta {
+          tag {
+            system
+            code
+          }
+        }
         target {
           reference
         }
