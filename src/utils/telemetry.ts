@@ -266,9 +266,9 @@ export class Telemetry {
    * Report User analytic events
    */
   static async analyticsEvent(eventName: string, eventProperties: Record<string, unknown> = {}) {
-    if (this.shouldSkipSendingMetrics()) {
-      return;
-    }
+    // if (this.shouldSkipSendingMetrics()) {
+    //   return;
+    // }
 
     try {
       const analyticEvent = {
