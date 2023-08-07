@@ -1,7 +1,5 @@
 import { useIncludeBasics } from "./basic";
-import { getIncludedResources } from "./bundle";
 import { PatientModel } from "./models";
-import { searchCommonRecords } from "./search-helpers";
 import { useFeatureFlaggedQueryWithPatient } from "..";
 import { applyImmunizationFilters } from "@/components/content/immunizations/helpers/filters";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
@@ -22,8 +20,7 @@ export function usePatientImmunizations() {
     [],
     "immunizations",
     "req.timing.immunizations",
-    getImmunizationFromFQS,
-    getImmunizationFromODS
+    getImmunizationFromFQS
   );
 
   return useIncludeBasics(patientImmunizationsQuery, fqs);
@@ -46,31 +43,6 @@ async function getImmunizationFromFQS(requestContext: CTWRequestContext, patient
     );
     const nodes = data.ImmunizationConnection.edges.map((x) => x.node);
     const results = applyImmunizationFilters(nodes, requestContext.builderId);
-    if (results.length === 0) {
-      Telemetry.countMetric("req.count.immunizations.none");
-    }
-    Telemetry.histogramMetric("req.count.immunizations", results.length);
-    return results;
-  } catch (e) {
-    throw new Error(`Failed fetching immunization information for patient: ${e}`);
-  }
-}
-
-async function getImmunizationFromODS(requestContext: CTWRequestContext, patient: PatientModel) {
-  try {
-    const { bundle, resources: immunizations } = await searchCommonRecords(
-      "Immunization",
-      requestContext,
-      {
-        patientUPID: patient.UPID,
-      }
-    );
-    const includedResources = getIncludedResources(bundle);
-    const results = applyImmunizationFilters(
-      immunizations,
-      requestContext.builderId,
-      includedResources
-    );
     if (results.length === 0) {
       Telemetry.countMetric("req.count.immunizations.none");
     }

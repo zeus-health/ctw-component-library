@@ -1,5 +1,3 @@
-import { getIncludedResources } from "./bundle";
-import { searchCommonRecords } from "./search-helpers";
 import { CTWRequestContext, PatientModel, useFeatureFlaggedQueryWithPatient } from "..";
 import { applyCareTeamFilters } from "@/components/content/care-team/helpers/filters";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
@@ -13,27 +11,8 @@ export function usePatientCareTeam() {
     [],
     "careTeams",
     "req.timing.care_teams",
-    getCareTeamFQS,
-    getCareTeamODS
+    getCareTeamFQS
   );
-}
-
-async function getCareTeamODS(requestContext: CTWRequestContext, patient: PatientModel) {
-  try {
-    const { bundle, resources } = await searchCommonRecords("CareTeam", requestContext, {
-      patientUPID: patient.UPID,
-      _include: "CareTeam:participant",
-    });
-    const includedResources = getIncludedResources(bundle);
-    const results = applyCareTeamFilters(resources, includedResources);
-    if (results.length === 0) {
-      Telemetry.countMetric("req.count.care_teams.none");
-    }
-    Telemetry.histogramMetric("req.count.care_teams", results.length);
-    return results;
-  } catch (e) {
-    throw new Error(`Failed fetching care team information for patient: ${e}`);
-  }
 }
 
 async function getCareTeamFQS(requestContext: CTWRequestContext, patient: PatientModel) {

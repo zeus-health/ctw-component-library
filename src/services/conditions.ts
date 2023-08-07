@@ -13,9 +13,7 @@ import { getLensBuilderId } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useFeatureFlaggedQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { useBasic } from "@/fhir/basic";
-import { getIncludedBasics } from "@/fhir/bundle";
 import { ConditionModel } from "@/fhir/models/condition";
-import { searchBuilderRecords, searchSummaryRecords } from "@/fhir/search-helpers";
 import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import { ConditionGraphqlResponse, conditionsQuery } from "@/services/fqs/queries/conditions";
@@ -33,8 +31,7 @@ export function usePatientBuilderConditions() {
     [],
     "conditions",
     "req.timing.builder_conditions",
-    fetchPatientBuilderConditionsFQS,
-    fetchPatientBuilderConditionsODS
+    fetchPatientBuilderConditionsFQS
   );
 }
 
@@ -44,8 +41,7 @@ function usePatientSummaryConditions() {
     [],
     "conditions",
     "req.timing.summary_conditions",
-    fetchPatientSummaryConditionsFQS,
-    fetchPatientSummaryConditionsODS
+    fetchPatientSummaryConditionsFQS
   );
 }
 
@@ -139,14 +135,6 @@ export function usePatientConditionsAll() {
     isFetching,
     data: conditions,
   };
-}
-
-function setupConditionModels(
-  conditionResources: fhir4.Condition[],
-  bundle: fhir4.Bundle
-): ConditionModel[] {
-  const basicsMap = getIncludedBasics(bundle);
-  return conditionResources.map((c) => new ConditionModel(c, undefined, basicsMap.get(c.id ?? "")));
 }
 
 function setupConditionModelsWithFQS(conditionResources: fhir4.Condition[]): ConditionModel[] {
@@ -259,26 +247,6 @@ async function fetchPatientBuilderConditionsFQS(
   }
 }
 
-async function fetchPatientBuilderConditionsODS(
-  requestContext: CTWRequestContext,
-  patient: PatientModel
-) {
-  try {
-    const { bundle, resources: conditions } = await searchBuilderRecords(
-      "Condition",
-      requestContext,
-      {
-        patientUPID: patient.UPID,
-      }
-    );
-    const results = filterAndSort(setupConditionModels(conditions, bundle));
-    Telemetry.histogramMetric("req.count.builder_conditions", results.length);
-    return results;
-  } catch (e) {
-    throw Telemetry.logError(e as Error, `Failed fetching conditions for patient: ${patient.UPID}`);
-  }
-}
-
 async function fetchPatientSummaryConditionsFQS(
   requestContext: CTWRequestContext,
   patient: PatientModel
@@ -308,33 +276,6 @@ async function fetchPatientSummaryConditionsFQS(
       Telemetry.countMetric("req.count.summary_conditions.none", 1, ["fqs"]);
     }
     Telemetry.histogramMetric("req.count.summary_conditions", results.length, ["fqs"]);
-    return results;
-  } catch (e) {
-    throw Telemetry.logError(
-      e as Error,
-      `Failed fetching conditions outside for patient: ${patient.UPID}`
-    );
-  }
-}
-
-async function fetchPatientSummaryConditionsODS(
-  requestContext: CTWRequestContext,
-  patient: PatientModel
-) {
-  try {
-    const { bundle, resources: conditions } = await searchSummaryRecords(
-      "Condition",
-      requestContext,
-      {
-        _revinclude: "Basic:subject",
-        patientUPID: patient.UPID,
-      }
-    );
-    const results = filterAndSort(setupConditionModels(conditions, bundle));
-    if (results.length === 0) {
-      Telemetry.countMetric("req.count.summary_conditions.none");
-    }
-    Telemetry.histogramMetric("req.count.summary_conditions", results.length);
     return results;
   } catch (e) {
     throw Telemetry.logError(

@@ -4,9 +4,7 @@ import { useFeatureFlaggedQueryWithPatient } from "@/components/core/providers/p
 import { useBasic } from "@/fhir/basic";
 import {
   getBuilderMedicationsFQS,
-  getBuilderMedicationsODS,
   getSummaryMedicationsFQS,
-  getSummaryMedicationsODS,
   splitMedications,
 } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
@@ -22,8 +20,7 @@ export function usePatientBuilderMedications() {
     [],
     "medications",
     "req.timing.builder_medications",
-    getBuilderMedicationsFQS,
-    getBuilderMedicationsODS
+    getBuilderMedicationsFQS
   );
 }
 
@@ -33,8 +30,7 @@ export function usePatientSummaryMedications() {
     [],
     "medications",
     "req.timing.summary_medications",
-    getSummaryMedicationsFQS,
-    getSummaryMedicationsODS
+    getSummaryMedicationsFQS
   );
 }
 

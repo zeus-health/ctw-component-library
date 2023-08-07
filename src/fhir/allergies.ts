@@ -1,7 +1,5 @@
 import { useIncludeBasics } from "./basic";
-import { getIncludedResources } from "./bundle";
 import { PatientModel } from "./models";
-import { searchCommonRecords } from "./search-helpers";
 import { applyAllergyFilters } from "@/components/content/allergies/helpers/allergies-filter";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useFeatureFlaggedQueryWithPatient } from "@/components/core/providers/patient-provider";
@@ -19,8 +17,7 @@ export function usePatientAllergies() {
     [],
     "allergies",
     "req.timing.allergies",
-    getAllergyIntoleranceFromFQS,
-    getAllergyIntoleranceFromODS
+    getAllergyIntoleranceFromFQS
   );
 
   return useIncludeBasics(patientAllergiesQuery, fqs);
@@ -46,30 +43,6 @@ async function getAllergyIntoleranceFromFQS(
       Telemetry.countMetric("req.count.allergies.none", 1, ["fqs"]);
     }
     Telemetry.histogramMetric("req.count.allergies", results.length, ["fqs"]);
-    return results;
-  } catch (e) {
-    throw new Error(`Failed fetching allergies information for patient ${patient.UPID}`);
-  }
-}
-
-async function getAllergyIntoleranceFromODS(
-  requestContext: CTWRequestContext,
-  patient: PatientModel
-) {
-  try {
-    const { bundle, resources } = await searchCommonRecords("AllergyIntolerance", requestContext, {
-      patientUPID: patient.UPID,
-      _include: ["AllergyIntolerance:patient"],
-      "_include:iterate": "Patient:organization",
-      _revinclude: "Basic:subject",
-    });
-
-    const includedResources = getIncludedResources(bundle);
-    const results = applyAllergyFilters(resources, requestContext.builderId, includedResources);
-    if (results.length === 0) {
-      Telemetry.countMetric("req.count.allergies.none");
-    }
-    Telemetry.histogramMetric("req.count.allergies", results.length);
     return results;
   } catch (e) {
     throw new Error(`Failed fetching allergies information for patient ${patient.UPID}`);
