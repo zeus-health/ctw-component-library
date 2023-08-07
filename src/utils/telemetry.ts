@@ -15,7 +15,7 @@ import {
   AUTH_USER_TYPE,
   ZusJWT,
 } from "@/utils/auth";
-import { compact, pickBy, snakeCase } from "@/utils/nodash";
+import { compact, snakeCase } from "@/utils/nodash";
 
 type TelemetryEventKey = "zusTelemetryClick" | "zusTelemetryFocus";
 
@@ -174,9 +174,6 @@ export class Telemetry {
 
   static trackView(viewName: string) {
     this.countMetric(`component.${viewName}.loaded`);
-    this.analyticsEvent("view", {
-      name: viewName,
-    }).catch((error) => Telemetry.logError(error as Error));
   }
 
   static logError(error: Error, overrideMessage?: string): Error {
@@ -274,7 +271,13 @@ export class Telemetry {
     }
 
     try {
-      const user = jwtDecode(this.accessToken) as ZusJWT;
+      const analyticEvent = {
+        event: eventName,
+        metadata: {
+          ...eventProperties,
+          libraryVersion: packageJson.version,
+        },
+      };
 
       await fetch(`${getMetricsBaseUrl(this.environment)}/report/analytic`, {
         method: "POST",
@@ -282,23 +285,7 @@ export class Telemetry {
           Authorization: `Bearer ${this.accessToken}`,
         },
         // Base64 encode the event name and user information
-        body: btoa(
-          JSON.stringify({
-            event: eventName,
-            userId: user[AUTH_USER_ID],
-            userProperties: pickBy({
-              email: user[AUTH_EMAIL],
-              builder: user[AUTH_BUILDER_NAME] || undefined,
-              isSuper: user[AUTH_IS_SUPER_ORG] === "true",
-            }),
-            metadata: {
-              ...eventProperties,
-              ehr: this.ehr || undefined,
-              env: this.environment,
-              libraryVersion: packageJson.version,
-            },
-          })
-        ),
+        body: btoa(JSON.stringify(analyticEvent)),
         mode: "cors",
       });
     } catch {
