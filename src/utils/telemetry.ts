@@ -286,7 +286,7 @@ export class Telemetry {
           Authorization: `Bearer ${this.accessToken}`,
         },
         // Base64 encode the event name and user information
-        body: btoa(JSON.stringify(analyticEvent)),
+        body: JSON.stringify(analyticEvent),
         mode: "cors",
       });
     } catch {
