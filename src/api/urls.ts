@@ -40,7 +40,7 @@ export const getMetricsBaseUrl = (env: string) => {
     // Locally we just want to send to 3000. This provides 2 outcomes:
     // - If CTW is running locally on 3000, we can test with to dev Datadog
     // - Else, the requests fail silently
-    return "http://localhost:3000";
+    return import.meta.env.VITE_LOCAL_METRICS_URL || "http://localhost:3001";
   }
   return ["prod", "production"].includes(env)
     ? `https://app.zushealth.com`
