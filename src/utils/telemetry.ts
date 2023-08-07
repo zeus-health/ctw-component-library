@@ -58,7 +58,7 @@ export class Telemetry {
   private static accessToken = "";
 
   private static get telemetryIsAvailable() {
-    return isInitialized;
+    return Boolean(this.environment && isInitialized);
   }
 
   private static datadogLoggingEnabled = false;
@@ -196,6 +196,7 @@ export class Telemetry {
     this.countMetric(`action.${action}`, 1);
     // We report an active session to CTW
     this.reportActiveSession().catch((error) => Telemetry.logError(error as Error));
+    this.analyticsEvent(action).catch((error) => Telemetry.logError(error as Error));
   }
 
   /**
@@ -212,7 +213,7 @@ export class Telemetry {
   /*
    * In dev/test environments we should skip sending any metrics
    */
-  static skipMetrics() {
+  static shouldSkipSendingMetrics() {
     return (
       !this.environment ||
       (process.env.NODE_ENV !== "test" && /(localhost|127\.0\.0\.1)/.test(window.location.origin))
@@ -228,7 +229,7 @@ export class Telemetry {
     value: number,
     additionalTags: string[] = []
   ) {
-    if (this.skipMetrics()) {
+    if (this.shouldSkipSendingMetrics()) {
       return;
     }
 
@@ -259,6 +260,38 @@ export class Telemetry {
       body: JSON.stringify({ name, type, tags, value }),
       mode: "cors",
     });
+  }
+
+  /**
+   * Report User analytic events
+   */
+  static async analyticsEvent(eventName: string, eventProperties: Record<string, unknown> = {}) {
+    if (this.shouldSkipSendingMetrics()) {
+      return;
+    }
+
+    try {
+      const analyticEvent = {
+        event: eventName,
+        metadata: {
+          ...eventProperties,
+          ehr: this.ehr || undefined,
+          libraryVersion: packageJson.version,
+        },
+      };
+
+      await fetch(`${getMetricsBaseUrl(this.environment)}/report/analytic`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${this.accessToken}`,
+        },
+        // Base64 encode the event name and user information
+        body: JSON.stringify(analyticEvent),
+        mode: "cors",
+      });
+    } catch {
+      // Nothing to do here.
+    }
   }
 
   static countMetric(name: string, value = 1, tags: string[] = []) {
@@ -332,7 +365,7 @@ export class Telemetry {
 
   static async reportActiveSession() {
     // Return if the session is already active or we don't need to report
-    if (Session.isActive() || this.skipMetrics()) {
+    if (Session.isActive() || this.shouldSkipSendingMetrics()) {
       return;
     }
 

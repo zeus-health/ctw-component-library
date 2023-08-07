@@ -38,7 +38,7 @@ export function useResourceDetailsDrawer<T extends fhir4.Resource, M extends FHI
 
   return (model: M) => {
     openDrawer({
-      telemetryName: "resource_details",
+      telemetryName: model.resourceType,
       component: (drawerProps) => (
         <ResourceDetailsDrawer model={model} {...props} {...drawerProps} />
       ),

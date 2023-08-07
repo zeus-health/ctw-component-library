@@ -27,5 +27,6 @@ export const RequestRecordsButton = withErrorBoundary(
       </button>
     );
   },
-  "RequestRecordsButton"
+  "RequestRecordsButton",
+  false
 );

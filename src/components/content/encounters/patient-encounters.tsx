@@ -8,6 +8,7 @@ import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { ResourceTable } from "@/components/content/resource/resource-table";
 import { EmptyTable } from "@/components/core/empty-table";
+import { withErrorBoundary } from "@/components/core/error-boundary";
 import { usePatientEncounters } from "@/fhir/encounters";
 import { EncounterModel } from "@/fhir/models/encounter";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
@@ -16,7 +17,7 @@ export type PatientEncountersProps = {
   className?: cx.Argument;
 };
 
-export function PatientEncounters({ className }: PatientEncountersProps) {
+function PatientEncountersComponent({ className }: PatientEncountersProps) {
   const encountersQuery = usePatientEncounters();
   const containerRef = useRef<HTMLDivElement>(null);
   const { viewOptions, allTime } = getDateRangeView<EncounterModel>("periodStart");
@@ -54,15 +55,16 @@ export function PatientEncounters({ className }: PatientEncountersProps) {
       <ResourceTable
         showTableHead
         isLoading={encountersQuery.isLoading}
+        columns={patientEncounterColumns}
         data={data}
         emptyMessage={
           <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="encounters" />
         }
-        columns={patientEncounterColumns}
-        onRowClick={(record) => {
-          openEncounterDetails(record);
-        }}
+        enableDismissAndReadActions
+        onRowClick={openEncounterDetails}
       />
     </div>
   );
 }
+
+export const PatientEncounters = withErrorBoundary(PatientEncountersComponent, "PatientEncounters");
