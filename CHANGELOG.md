@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.53.1
+
+### Patch Changes
+
+- 4ef61e93: Unit tests for whether a resource has a renderable document.
+
 ## 1.53.0
 
 ### Minor Changes
