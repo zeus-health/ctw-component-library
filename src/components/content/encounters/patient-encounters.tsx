@@ -55,14 +55,13 @@ function PatientEncountersComponent({ className }: PatientEncountersProps) {
       <ResourceTable
         showTableHead
         isLoading={encountersQuery.isLoading}
+        columns={patientEncounterColumns}
         data={data}
         emptyMessage={
           <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="encounters" />
         }
-        columns={patientEncounterColumns}
-        onRowClick={(record) => {
-          openEncounterDetails(record);
-        }}
+        enableDismissAndReadActions
+        onRowClick={openEncounterDetails}
       />
     </div>
   );
