@@ -1,4 +1,3 @@
-import { SearchParams } from "fhir-kit-client";
 import { HistoryEntryProps } from "../../resource/helpers/history-entry";
 import { useHistory } from "../../resource/history";
 import { NotesList } from "@/components/core/notes-list";
@@ -12,32 +11,9 @@ export function useConditionHistory(condition: ConditionModel) {
     model: condition,
     queryKey: QUERY_KEY_CONDITION_HISTORY,
     valuesToDedupeOn,
-    getSearchParams,
     getFiltersFQS,
     getHistoryEntry,
   });
-}
-
-function getSearchParams(condition: ConditionModel) {
-  const tokens = condition.knownCodings.map((coding) => `${coding.system}|${coding.code}`);
-
-  const searchParams: SearchParams = {
-    _include: ["Condition:patient", "Condition:encounter"],
-    "_include:iterate": "Patient:organization",
-  };
-
-  // If we have any known codings, then do an OR search.
-  // Otherwise fall back to searching for this single condition.
-  // That way, conditions that don't have any good codes to match on
-  // will only show themselves in the history.
-  if (tokens.length > 0) {
-    searchParams.code = tokens.join(",");
-  } else {
-    // eslint-disable-next-line no-underscore-dangle
-    searchParams._id = condition.id;
-  }
-
-  return searchParams;
 }
 
 function getFiltersFQS(condition: ConditionModel) {
