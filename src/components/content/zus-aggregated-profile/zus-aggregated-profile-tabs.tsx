@@ -127,7 +127,6 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
   encounters: (props: PatientEncountersProps = {}) => ({
     key: "encounters",
     display: () => (
-      // TODO: Swap out the Notification component
       <TabHelper notification={<UnreadMedicationsNotification />} name="Encounters & Notes" />
     ),
     render: () => <PatientEncounters {...props} />,
