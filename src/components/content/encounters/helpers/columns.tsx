@@ -4,7 +4,7 @@ import { TableColumn } from "@/components/core/table/table-helpers";
 import { EncounterModel } from "@/fhir/models/encounter";
 import { compact } from "@/utils/nodash";
 
-export const patientEncounterColumns: TableColumn<EncounterModel>[] = [
+export const patientEncounterColumns = (builderId: string): TableColumn<EncounterModel>[] => [
   {
     title: "Date",
     widthPercent: 10,
@@ -13,7 +13,12 @@ export const patientEncounterColumns: TableColumn<EncounterModel>[] = [
   },
   {
     title: "Title",
-    render: (encounter) => <ResourceTitleColumn title={encounter.typeDisplay} />,
+    render: (encounter) => (
+      <ResourceTitleColumn
+        title={encounter.typeDisplay}
+        ownedByBuilder={encounter.ownedByBuilder(builderId)}
+      />
+    ),
   },
   {
     title: "Provider",
