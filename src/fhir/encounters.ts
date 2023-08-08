@@ -19,7 +19,7 @@ export function usePatientEncounters() {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_ENCOUNTERS,
     [data],
-    withTimerMetric(getEncountersFromFQS(data), `req.timing.encounters`, ["fqs"])
+    withTimerMetric(getEncountersFromFQS(data), `req.timing.encounters`)
   );
 }
 
@@ -53,9 +53,9 @@ function getEncountersFromFQS(documents: DocumentModel[]) {
       const nodes = data.EncounterConnection.edges.map((x) => x.node);
       const results = setupEncounterModels(nodes, documents);
       if (results.length === 0) {
-        Telemetry.countMetric("req.count.encounters.none", 1, ["fqs"]);
+        Telemetry.countMetric("req.count.encounters.none", 1);
       }
-      Telemetry.histogramMetric("req.count.encounters", results.length, ["fqs"]);
+      Telemetry.histogramMetric("req.count.encounters", results.length);
       return results;
     } catch (e) {
       Telemetry.logError(e as Error, "Failed fetching encounter timeline information for patient");

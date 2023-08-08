@@ -1,39 +1,16 @@
-import { getIncludedResources } from "./bundle";
-import { searchCommonRecords } from "./search-helpers";
-import { CTWRequestContext, PatientModel, useFeatureFlaggedQueryWithPatient } from "..";
+import { CTWRequestContext, PatientModel, useQueryWithPatient } from "..";
 import { applyCareTeamFilters } from "@/components/content/care-team/helpers/filters";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import { CareTeamGraphqlResponse, careTeamsQuery } from "@/services/fqs/queries/care-teams";
 import { QUERY_KEY_CARETEAM } from "@/utils/query-keys";
-import { Telemetry } from "@/utils/telemetry";
+import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export function usePatientCareTeam() {
-  return useFeatureFlaggedQueryWithPatient(
+  return useQueryWithPatient(
     QUERY_KEY_CARETEAM,
     [],
-    "careTeams",
-    "req.timing.care_teams",
-    getCareTeamFQS,
-    getCareTeamODS
+    withTimerMetric(getCareTeamFQS, "req.timing.care_teams")
   );
-}
-
-async function getCareTeamODS(requestContext: CTWRequestContext, patient: PatientModel) {
-  try {
-    const { bundle, resources } = await searchCommonRecords("CareTeam", requestContext, {
-      patientUPID: patient.UPID,
-      _include: "CareTeam:participant",
-    });
-    const includedResources = getIncludedResources(bundle);
-    const results = applyCareTeamFilters(resources, includedResources);
-    if (results.length === 0) {
-      Telemetry.countMetric("req.count.care_teams.none");
-    }
-    Telemetry.histogramMetric("req.count.care_teams", results.length);
-    return results;
-  } catch (e) {
-    throw new Error(`Failed fetching care team information for patient: ${e}`);
-  }
 }
 
 async function getCareTeamFQS(requestContext: CTWRequestContext, patient: PatientModel) {
@@ -52,9 +29,9 @@ async function getCareTeamFQS(requestContext: CTWRequestContext, patient: Patien
     const results = applyCareTeamFilters(nodes, {});
 
     if (results.length === 0) {
-      Telemetry.countMetric("req.count.care_teams.none", 1, ["fqs"]);
+      Telemetry.countMetric("req.count.care_teams.none", 1);
     }
-    Telemetry.histogramMetric("req.count.care_teams", results.length, ["fqs"]);
+    Telemetry.histogramMetric("req.count.care_teams", results.length);
     return results;
   } catch (e) {
     throw new Error(`Failed fetching care teams information for patient: ${e}`);
