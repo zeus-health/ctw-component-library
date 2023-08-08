@@ -159,39 +159,6 @@ export async function searchBuilderRecords<T extends ResourceTypeString>(
   return records;
 }
 
-export async function searchLensRecords<T extends ResourceTypeString>(
-  resourceType: T,
-  requestContext: CTWRequestContext,
-  searchParams?: SearchParams
-): Promise<SearchReturn<T>> {
-  const tagFilter = SUMMARY_TAGS;
-  const params = mergeParams(searchParams, {
-    _tag: tagFilter,
-  });
-  const builderId = requestContext.contextBuilderId || requestContext.builderId;
-  const records = await searchAllRecords(resourceType, requestContext, params);
-  // Filter using the lens builderId for data from the builder that exists in the post-kludge world.
-  let { entry, resources } = filterSearchReturnByBuilderId(
-    records,
-    getLensBuilderId(requestContext.env),
-    builderId
-  );
-
-  /* Filter using the user's builderId for data from the builder that exists in the pre-kludge world.
-  This will help avoid getting duplicate results or no there is no data for the builder. 
-  Once we have been in the post-kludge world long enough we can remove this functionality. */
-  if (resources.length === 0 && entry.length === 0) {
-    ({ entry, resources } = filterSearchReturnByBuilderId(records, builderId));
-  }
-
-  records.resources = resources;
-  records.bundle.entry = entry;
-  records.bundle.total = entry.length;
-  records.total = resources.length;
-
-  return records;
-}
-
 // Like searchAllRecords, but filters down to only summary records.
 export async function searchSummaryRecords<T extends ResourceTypeString>(
   resourceType: T,

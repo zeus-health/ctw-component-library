@@ -22,9 +22,9 @@ export function usePatientTopLevelDocuments() {
     ) as DocumentModel[];
     if (!isFetching && !isLoading) {
       if (filteredDocuments.length === 0) {
-        Telemetry.countMetric("req.count.documents.none", 1, ["fqs"]);
+        Telemetry.countMetric("req.count.documents.none", 1);
       }
-      Telemetry.histogramMetric("req.count.documents", filteredDocuments.length, ["fqs"]);
+      Telemetry.histogramMetric("req.count.documents", filteredDocuments.length);
     }
     setFilteredData(filteredDocuments);
   }, [data, isError, isFetching, isLoading]);
@@ -41,7 +41,7 @@ export function usePatientDocuments() {
   const patientDocumentsQuery = useQueryWithPatient(
     QUERY_KEY_PATIENT_DOCUMENTS,
     [],
-    withTimerMetric(getDocumentFromFQS, "req.timing.documents", ["fqs"])
+    withTimerMetric(getDocumentFromFQS, "req.timing.documents")
   );
 
   return useIncludeBasics(patientDocumentsQuery, { enabled: true, ready: true });

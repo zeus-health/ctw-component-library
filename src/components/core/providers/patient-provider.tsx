@@ -162,27 +162,20 @@ export function useQueryWithPatient<T, T2>(
   );
 }
 
+// Need to keep this function for builder-scoped queries.
 export function useFeatureFlaggedQueryWithPatient<T, T2>(
   queryKey: string,
   keys: T2[],
   variant: string,
   metric: string,
-  queryFQS: (requestContext: CTWRequestContext, patient: PatientModel, keys?: T2[]) => Promise<T>,
-  queryODS: (requestContext: CTWRequestContext, patient: PatientModel, keys?: T2[]) => Promise<T>
+  queryFQS: (requestContext: CTWRequestContext, patient: PatientModel, keys?: T2[]) => Promise<T>
 ) {
   const fqs = useFQSFeatureToggle(variant);
-  const query = fqs.enabled
-    ? withTimerMetric(
-        async (requestContext: CTWRequestContext, patient: PatientModel) =>
-          queryFQS(requestContext, patient),
-        metric,
-        ["fqs"]
-      )
-    : withTimerMetric(
-        async (requestContext: CTWRequestContext, patient: PatientModel) =>
-          queryODS(requestContext, patient),
-        metric
-      );
+  const query = withTimerMetric(
+    async (requestContext: CTWRequestContext, patient: PatientModel) =>
+      queryFQS(requestContext, patient),
+    metric
+  );
 
   return useQueryWithPatient(queryKey, [...keys, fqs.ready, fqs.enabled], query, fqs.ready);
 }
