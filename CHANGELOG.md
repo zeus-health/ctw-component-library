@@ -1,5 +1,15 @@
 # ctw-component-library
 
+## 1.54.0
+
+### Minor Changes
+
+- 03b766ed: Remove ODS related queries for upid-based fetching for all resources.
+
+### Patch Changes
+
+- 1407148e: Fixed flexbox table width bug in Firefox
+
 ## 1.53.1
 
 ### Patch Changes
