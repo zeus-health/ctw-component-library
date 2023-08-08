@@ -4,7 +4,7 @@ import { usePatientObservationsTrendData } from "./observations";
 import { SYSTEM_ZUS_THIRD_PARTY } from "./system-urls";
 import { applyDiagnosticReportFilters } from "@/components/content/diagnostic-reports/helpers/diagnostic-report-query-filters";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { useFeatureFlaggedQueryWithPatient } from "@/components/core/providers/patient-provider";
+import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { DiagnosticReportModel, PatientModel } from "@/fhir/models";
 import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
@@ -17,18 +17,19 @@ import {
   QUERY_KEY_OTHER_PROVIDER_DIAGNOSTIC_REPORTS,
   QUERY_KEY_PATIENT_DIAGNOSTIC_REPORTS,
 } from "@/utils/query-keys";
-import { Telemetry } from "@/utils/telemetry";
+import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 type SearchType = "builder" | "all";
 
 export function usePatientBuilderDiagnosticReports() {
   const { data } = usePatientObservationsTrendData(keys(LOINC_ANALYTES));
-  return useFeatureFlaggedQueryWithPatient(
+  return useQueryWithPatient(
     QUERY_KEY_PATIENT_DIAGNOSTIC_REPORTS,
     [data?.map((o) => o.id)], // Only use the IDs in our key (fixes issue with ciruclar references).
-    "diagnosticReports",
-    "req.timing.builder_diagnostic_reports",
-    diagnosticReportsFetcherFQS("builder", data ?? [])
+    withTimerMetric(
+      diagnosticReportsFetcherFQS("builder", data ?? []),
+      "req.timing.builder_diagnostic_reports"
+    )
   );
 }
 
@@ -36,12 +37,13 @@ export function usePatientAllDiagnosticReports() {
   const fqs = useFQSFeatureToggle("diagnosticReports");
   const { data } = usePatientObservationsTrendData(keys(LOINC_ANALYTES));
 
-  const query = useFeatureFlaggedQueryWithPatient(
+  const query = useQueryWithPatient(
     QUERY_KEY_OTHER_PROVIDER_DIAGNOSTIC_REPORTS,
     [data?.map((o) => o.id)], // Only use the IDs in our key (fixes issue with ciruclar references).
-    "diagnosticReports",
-    "req.timing.all_diagnostic_reports",
-    diagnosticReportsFetcherFQS("all", data ?? [])
+    withTimerMetric(
+      diagnosticReportsFetcherFQS("all", data ?? []),
+      "req.timing.all_diagnostic_reports"
+    )
   );
 
   return useIncludeBasics(query, fqs);

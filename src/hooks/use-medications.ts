@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useFQSFeatureToggle } from "./use-feature-toggle";
-import { useFeatureFlaggedQueryWithPatient } from "@/components/core/providers/patient-provider";
+import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { useBasic } from "@/fhir/basic";
 import {
   getBuilderMedicationsFQS,
@@ -12,25 +12,22 @@ import {
   QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
   QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
 } from "@/utils/query-keys";
+import { withTimerMetric } from "@/utils/telemetry";
 
 // Gets patient medications for the builder, excluding meds where the information source is patient.
 export function usePatientBuilderMedications() {
-  return useFeatureFlaggedQueryWithPatient(
+  return useQueryWithPatient(
     QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
     [],
-    "medications",
-    "req.timing.builder_medications",
-    getBuilderMedicationsFQS
+    withTimerMetric(getBuilderMedicationsFQS, "req.timing.builder_medications")
   );
 }
 
 export function usePatientSummaryMedications() {
-  return useFeatureFlaggedQueryWithPatient(
+  return useQueryWithPatient(
     QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
     [],
-    "medications",
-    "req.timing.summary_medications",
-    getSummaryMedicationsFQS
+    withTimerMetric(getSummaryMedicationsFQS, "req.timing.summary_medications")
   );
 }
 

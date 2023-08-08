@@ -2,22 +2,20 @@ import { useIncludeBasics } from "./basic";
 import { PatientModel } from "./models";
 import { applyAllergyFilters } from "@/components/content/allergies/helpers/allergies-filter";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { useFeatureFlaggedQueryWithPatient } from "@/components/core/providers/patient-provider";
+import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import { AllergyGraphqlResponse, allergyQuery } from "@/services/fqs/queries/allergies";
 import { QUERY_KEY_PATIENT_ALLERGIES } from "@/utils/query-keys";
-import { Telemetry } from "@/utils/telemetry";
+import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export function usePatientAllergies() {
   const fqs = useFQSFeatureToggle("allergies");
 
-  const patientAllergiesQuery = useFeatureFlaggedQueryWithPatient(
+  const patientAllergiesQuery = useQueryWithPatient(
     QUERY_KEY_PATIENT_ALLERGIES,
     [],
-    "allergies",
-    "req.timing.allergies",
-    getAllergyIntoleranceFromFQS
+    withTimerMetric(getAllergyIntoleranceFromFQS, "req.timing.allergies")
   );
 
   return useIncludeBasics(patientAllergiesQuery, fqs);

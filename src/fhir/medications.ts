@@ -23,7 +23,7 @@ import {
   SYSTEM_ZUS_THIRD_PARTY,
 } from "./system-urls";
 import { ResourceMap } from "./types";
-import { useFeatureFlaggedQueryWithPatient } from "..";
+import { useQueryWithPatient } from "..";
 import { getLensBuilderId } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { MedicationModel } from "@/fhir/models/medication";
@@ -64,7 +64,7 @@ import {
 } from "@/utils/nodash/fp";
 import { QUERY_KEY_MEDICATION_HISTORY } from "@/utils/query-keys";
 import { sort } from "@/utils/sort";
-import { Telemetry } from "@/utils/telemetry";
+import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export type InformationSource =
   | "Patient"
@@ -417,12 +417,10 @@ export function splitMedications(
 }
 
 export function useMedicationHistory(medication?: fhir4.MedicationStatement) {
-  return useFeatureFlaggedQueryWithPatient(
+  return useQueryWithPatient(
     QUERY_KEY_MEDICATION_HISTORY,
     [medication?.id],
-    "medications",
-    "req.timing.medication_history",
-    getMedicationHistoryFQS(medication)
+    withTimerMetric(getMedicationHistoryFQS(medication), "req.timing.medication_history")
   );
 }
 

@@ -162,6 +162,7 @@ export function useQueryWithPatient<T, T2>(
   );
 }
 
+// Need to keep this function for builder-scoped queries.
 export function useFeatureFlaggedQueryWithPatient<T, T2>(
   queryKey: string,
   keys: T2[],

@@ -1,17 +1,15 @@
-import { CTWRequestContext, PatientModel, useFeatureFlaggedQueryWithPatient } from "..";
+import { CTWRequestContext, PatientModel, useQueryWithPatient } from "..";
 import { applyCareTeamFilters } from "@/components/content/care-team/helpers/filters";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import { CareTeamGraphqlResponse, careTeamsQuery } from "@/services/fqs/queries/care-teams";
 import { QUERY_KEY_CARETEAM } from "@/utils/query-keys";
-import { Telemetry } from "@/utils/telemetry";
+import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export function usePatientCareTeam() {
-  return useFeatureFlaggedQueryWithPatient(
+  return useQueryWithPatient(
     QUERY_KEY_CARETEAM,
     [],
-    "careTeams",
-    "req.timing.care_teams",
-    getCareTeamFQS
+    withTimerMetric(getCareTeamFQS, "req.timing.care_teams")
   );
 }
 

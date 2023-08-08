@@ -1,6 +1,6 @@
 import { useIncludeBasics } from "./basic";
 import { PatientModel } from "./models";
-import { useFeatureFlaggedQueryWithPatient } from "..";
+import { useQueryWithPatient } from "..";
 import { applyImmunizationFilters } from "@/components/content/immunizations/helpers/filters";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
@@ -10,17 +10,15 @@ import {
   immunizationsQuery,
 } from "@/services/fqs/queries/immunizations";
 import { QUERY_KEY_PATIENT_IMMUNIZATIONS } from "@/utils/query-keys";
-import { Telemetry } from "@/utils/telemetry";
+import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export function usePatientImmunizations() {
   const fqs = useFQSFeatureToggle("immunizations");
 
-  const patientImmunizationsQuery = useFeatureFlaggedQueryWithPatient(
+  const patientImmunizationsQuery = useQueryWithPatient(
     QUERY_KEY_PATIENT_IMMUNIZATIONS,
     [],
-    "immunizations",
-    "req.timing.immunizations",
-    getImmunizationFromFQS
+    withTimerMetric(getImmunizationFromFQS, "req.timing.immunizations")
   );
 
   return useIncludeBasics(patientImmunizationsQuery, fqs);

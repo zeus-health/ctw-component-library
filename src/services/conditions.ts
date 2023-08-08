@@ -11,7 +11,7 @@ import {
 } from "../fhir/system-urls";
 import { getLensBuilderId } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { useFeatureFlaggedQueryWithPatient } from "@/components/core/providers/patient-provider";
+import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { useBasic } from "@/fhir/basic";
 import { ConditionModel } from "@/fhir/models/condition";
 import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
@@ -23,25 +23,21 @@ import {
   QUERY_KEY_PATIENT_CONDITIONS,
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
-import { Telemetry } from "@/utils/telemetry";
+import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export function usePatientBuilderConditions() {
-  return useFeatureFlaggedQueryWithPatient(
+  return useQueryWithPatient(
     QUERY_KEY_PATIENT_CONDITIONS,
     [],
-    "conditions",
-    "req.timing.builder_conditions",
-    fetchPatientBuilderConditionsFQS
+    withTimerMetric(fetchPatientBuilderConditionsFQS, "req.timing.builder_conditions")
   );
 }
 
 function usePatientSummaryConditions() {
-  return useFeatureFlaggedQueryWithPatient(
+  return useQueryWithPatient(
     QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
     [],
-    "conditions",
-    "req.timing.summary_conditions",
-    fetchPatientSummaryConditionsFQS
+    withTimerMetric(fetchPatientSummaryConditionsFQS, "req.timing.summary_conditions")
   );
 }
 
