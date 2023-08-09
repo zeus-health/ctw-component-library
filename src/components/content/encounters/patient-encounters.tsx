@@ -33,9 +33,7 @@ function PatientEncountersComponent({ className }: PatientEncountersProps) {
   const isEmptyQuery = encountersQuery.data && encountersQuery.data.length === 0;
   const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
 
-  const openEncounterDetails = usePatientEncounterDetailsDrawer({
-    enableDismissAndReadActions: true,
-  });
+  const openEncounterDetails = usePatientEncounterDetailsDrawer();
 
   return (
     <div className={cx(className, "ctw-scrollable-pass-through-height")} ref={containerRef}>
