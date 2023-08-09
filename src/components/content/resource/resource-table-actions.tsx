@@ -30,7 +30,7 @@ export const ResourceTableActions = <T extends MinRecordItem>({
     <div
       className={cx(
         className,
-        "ctw-flex ctw-flex-wrap ctw-items-center ctw-justify-between ctw-py-2 sm:ctw-pt-1.5"
+        "ctw-flex ctw-items-start ctw-justify-between ctw-py-2 sm:ctw-pt-1.5"
       )}
     >
       <div className="ctw-flex ctw-flex-wrap ctw-gap-x-2">
@@ -38,8 +38,7 @@ export const ResourceTableActions = <T extends MinRecordItem>({
         {sortOptions && <SortButton {...sortOptions} />}
         {filterOptions && filterOptions.filters.length > 0 && <FilterBar {...filterOptions} />}
       </div>
-
-      {action}
+      <div className="ctw-ml-auto ctw-whitespace-nowrap">{action}</div>
     </div>
   );
 };
