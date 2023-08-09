@@ -1,4 +1,4 @@
-import { applyDocumentFilters, ZUS_CREATION_DATE_URL } from "./filters";
+import { applyDocumentFilters, isEmptyClinicalNote, ZUS_CREATION_DATE_URL } from "./filters";
 import { THIRD_PARTY_SOURCE_SYSTEM } from "../../resource/helpers/filters";
 import { DocumentModel } from "@/fhir/models/document";
 
@@ -144,5 +144,32 @@ describe("document filters tests", () => {
     const actualOutput = applyDocumentFilters(input);
 
     expect(actualOutput).toStrictEqual(expectedOutput);
+  });
+});
+
+describe("test isEmptyClinicalNote", () => {
+  const testEmptyDoc = {
+    id: "test-doc",
+    text: {
+      div: "<div>No Instructions</div>",
+    },
+  } as fhir4.DocumentReference;
+  const emptyDoc = new DocumentModel(testEmptyDoc);
+
+  const testNotEmptyDoc = {
+    id: "test-doc",
+    text: {
+      div: "<div>This is a very useful clinical note</div>",
+    },
+  } as fhir4.DocumentReference;
+  const notEmptyDoc = new DocumentModel(testNotEmptyDoc);
+
+  test("test isEmptyClincalNote", () => {
+    const input = [emptyDoc, notEmptyDoc];
+    const expectedOutput = [true, false];
+    input.forEach((doc, index) => {
+      const actualOutput = isEmptyClinicalNote(doc);
+      expect(actualOutput).toStrictEqual(expectedOutput[index]);
+    });
   });
 });

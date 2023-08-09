@@ -5,7 +5,10 @@ import { codeableConceptLabel } from "../codeable-concept";
 import { formatDateISOToLocal } from "../formatters";
 import { findReference } from "../resource-helper";
 import { ResourceMap } from "../types";
-import { isSectionDocument } from "@/components/content/document/helpers/filters";
+import {
+  isEmptyClinicalNote,
+  isSectionDocument,
+} from "@/components/content/document/helpers/filters";
 import { isNullFlavorSystem } from "@/fhir/mappings/null-flavor";
 import { compact, flatten, uniq } from "@/utils/nodash";
 
@@ -25,7 +28,9 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
     this.clinicalNotes = [];
     const binaryID = getBinaryIDFromProvenace(provenance);
     if (binaryID) {
-      this.clinicalNotes = documents.filter((d) => d.binaryId === binaryID && isSectionDocument(d));
+      this.clinicalNotes = documents.filter(
+        (d) => d.binaryId === binaryID && isSectionDocument(d) && !isEmptyClinicalNote(d)
+      );
     }
   }
 

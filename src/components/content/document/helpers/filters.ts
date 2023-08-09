@@ -1,3 +1,4 @@
+import { EmptyNotes } from "./empty-notes";
 import { dismissFilter } from "../../resource/filters";
 import { isRenderableBinary } from "../../resource/helpers/filters";
 import { FilterChangeEvent, FilterItem } from "@/components/core/filter-bar/filter-bar-types";
@@ -43,6 +44,23 @@ const isViewablePostRainbow = (docRef: fhir4.DocumentReference) => {
 // Sections will have at most 1 category.
 export function isSectionDocument(document: DocumentModel) {
   return document.category && document.category.length < 2;
+}
+
+// isEmptyClinicalNote is used to filter out empty clinical notes
+// where the note text is null or empty string or
+// is less than 500 chars and contains one of the substrings in EmptyNotes
+export function isEmptyClinicalNote(document: DocumentModel) {
+  const noteText = document.text;
+  if (!noteText) {
+    return true;
+  }
+
+  return EmptyNotes.some((emptyNoteStr) => {
+    if (noteText.length < 500 && noteText.toLowerCase().includes(emptyNoteStr)) {
+      return true;
+    }
+    return false;
+  });
 }
 
 export const applyDocumentFilters = (data: DocumentModel[]) => {
