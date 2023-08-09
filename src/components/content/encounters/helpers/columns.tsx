@@ -29,6 +29,7 @@ export const patientEncounterColumns = (builderId: string): TableColumn<Encounte
             {detail.toLocaleLowerCase()}
           </div>
         ))}
+        {encounter.typeSpecialty && <div>Speciality: {encounter.typeSpecialty}</div>}
       </>
     ),
   },
