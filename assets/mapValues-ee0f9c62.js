@@ -1,0 +1,1 @@
+import{g as n}from"./_commonjsHelpers-de833af9.js";import{a as u,b as m,c as b}from"./_baseForOwn-08ea2c1d.js";var l=b,p=u,f=m;function V(r,a){var s={};return a=f(a),p(r,function(o,e,t){l(s,e,a(o,e,t))}),s}var c=V;const _=n(c);export{c as a,_ as m};
