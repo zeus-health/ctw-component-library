@@ -1,6 +1,7 @@
 import { useToggleDismiss } from "../hooks/use-toggle-dismiss";
 import { useToggleRead } from "../hooks/use-toggle-read";
 import { useCTW } from "@/components/core/providers/use-ctw";
+import { useRequestContext } from "@/components/core/providers/use-request-context";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { Spinner } from "@/components/core/spinner";
 import { RowActionsProps, TableProps } from "@/components/core/table/table";
@@ -50,6 +51,7 @@ const getDismissAndReadActions =
   (userBuilderId: string) =>
   ({ record, onSuccess }: RowActionsProps<FHIRModel<fhir4.Resource>>) => {
     const { t } = useBaseTranslations();
+    const requestContext = useRequestContext();
 
     const { isLoading: isToggleDismissLoading, toggleDismiss } = useToggleDismiss(QUERY_KEY_BASIC);
     const { isLoading: isToggleReadLoading, toggleRead } = useToggleRead();
@@ -58,6 +60,11 @@ const getDismissAndReadActions =
       : t("resourceTable.dismiss");
 
     const readLabel = record.isRead ? t("resourceTable.unread") : t("resourceTable.read");
+
+    // In production we want to avoid non-builder users from inadvertantly marking records as read
+    // In lower environments this is allowed for demos/testing
+    const disableReadButton =
+      requestContext?.env === "production" && requestContext.userType !== "builder";
 
     return record.ownedByBuilder(userBuilderId) ? null : (
       <div className="ctw-flex ctw-space-x-2">
@@ -85,7 +92,7 @@ const getDismissAndReadActions =
         <button
           type="button"
           className="ctw-btn-default"
-          disabled={isToggleDismissLoading || isToggleReadLoading}
+          disabled={disableReadButton || isToggleDismissLoading || isToggleReadLoading}
           onClick={async () => {
             await toggleRead(record);
             onSuccess?.();

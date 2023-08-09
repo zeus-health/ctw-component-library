@@ -3,6 +3,7 @@ import { DocumentModel } from "./document";
 import { FHIRModel } from "./fhir-model";
 import { codeableConceptLabel } from "../codeable-concept";
 import { formatDateISOToLocal } from "../formatters";
+import { findReference } from "../resource-helper";
 import { ResourceMap } from "../types";
 import {
   isEmptyClinicalNote,
@@ -78,6 +79,20 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
 
   get typeCodings(): Coding[] {
     return compact(flatten(this.resource.type?.map((t) => t.coding)));
+  }
+
+  get typeSpecialty() {
+    const locations = compact(
+      this.resource.location?.map((l) => {
+        const location = findReference("Location", undefined, undefined, l.location);
+        return location?.type?.map((t) => codeableConceptLabel(t));
+      })
+    );
+    const uniqueLocations = uniq(flatten(locations)).filter(
+      (l) => l !== "Not Indicated" && l !== "Unknown" && l !== "NoInformation"
+    );
+
+    return uniqueLocations.length ? uniqueLocations.join(", ") : undefined;
   }
 
   get typeDisplay(): string | undefined {

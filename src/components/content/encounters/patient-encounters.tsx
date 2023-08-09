@@ -9,6 +9,7 @@ import { ResourceTableActions } from "../resource/resource-table-actions";
 import { ResourceTable } from "@/components/content/resource/resource-table";
 import { EmptyTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
+import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { usePatientEncounters } from "@/fhir/encounters";
 import { EncounterModel } from "@/fhir/models/encounter";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
@@ -18,6 +19,7 @@ export type PatientEncountersProps = {
 };
 
 function PatientEncountersComponent({ className }: PatientEncountersProps) {
+  const userBuilderId = useUserBuilderId();
   const encountersQuery = usePatientEncounters();
   const containerRef = useRef<HTMLDivElement>(null);
   const { viewOptions, allTime } = getDateRangeView<EncounterModel>("periodStart");
@@ -55,7 +57,7 @@ function PatientEncountersComponent({ className }: PatientEncountersProps) {
       <ResourceTable
         showTableHead
         isLoading={encountersQuery.isLoading}
-        columns={patientEncounterColumns}
+        columns={patientEncounterColumns(userBuilderId)}
         data={data}
         emptyMessage={
           <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="encounters" />

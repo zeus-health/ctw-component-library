@@ -1,9 +1,10 @@
+import { ResourceTitleColumn } from "../../resource/helpers/resource-title-column";
 import { SimpleMoreList } from "@/components/core/simple-more-list";
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { EncounterModel } from "@/fhir/models/encounter";
 import { compact } from "@/utils/nodash";
 
-export const patientEncounterColumns: TableColumn<EncounterModel>[] = [
+export const patientEncounterColumns = (builderId: string): TableColumn<EncounterModel>[] => [
   {
     title: "Date",
     widthPercent: 10,
@@ -13,9 +14,10 @@ export const patientEncounterColumns: TableColumn<EncounterModel>[] = [
   {
     title: "Title",
     render: (encounter) => (
-      <div>
-        <div>{encounter.typeDisplay}</div>
-      </div>
+      <ResourceTitleColumn
+        title={encounter.typeDisplay}
+        ownedByBuilder={encounter.ownedByBuilder(builderId)}
+      />
     ),
   },
   {
@@ -27,6 +29,7 @@ export const patientEncounterColumns: TableColumn<EncounterModel>[] = [
             {detail.toLocaleLowerCase()}
           </div>
         ))}
+        {encounter.typeSpecialty && <div>Speciality: {encounter.typeSpecialty}</div>}
       </>
     ),
   },
