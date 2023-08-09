@@ -27,6 +27,7 @@ export const patientEncounterColumns: TableColumn<EncounterModel>[] = [
             {detail.toLocaleLowerCase()}
           </div>
         ))}
+        {encounter.typeSpecialty && <div>Speciality: {encounter.typeSpecialty}</div>}
       </>
     ),
   },

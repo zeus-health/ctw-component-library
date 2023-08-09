@@ -83,6 +83,14 @@ export const fragmentEncounter = gql`
       location {
         reference
         display
+        resource {
+          ... on Location {
+            name
+            type {
+              ...CodeableConcept
+            }
+          }
+        }
       }
       status
       period {
