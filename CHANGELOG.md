@@ -1,5 +1,18 @@
 # ctw-component-library
 
+## 1.55.0
+
+### Minor Changes
+
+- 69338e37: Update date range and remove type field for encounters details drawer
+- b66d2fc7: Filter out 'empty' clinical notes from Encounters & Notes component
+- 63e3cfa0: Add functionality to Encounters & Notes table, including unread notifactions and the ability to dismiss or mark as viewed.
+  Additionally, makes the "Mark as Viewed" button appear disabled to Zus employees.
+
+### Patch Changes
+
+- 97528b07: Add speciality to the encounter provider column.
+
 ## 1.54.0
 
 ### Minor Changes
