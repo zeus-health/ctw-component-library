@@ -33,7 +33,7 @@ export const ResourceTableActions = <T extends MinRecordItem>({
         "ctw-flex ctw-items-start ctw-justify-between ctw-py-2 sm:ctw-pt-1.5"
       )}
     >
-      <div className="ctw-flex ctw-flex-wrap ctw-gap-x-2">
+      <div className="ctw-flex ctw-flex-wrap ctw-gap-x-2 ctw-gap-y-2">
         {viewOptions && <ViewButton {...viewOptions} />}
         {sortOptions && <SortButton {...sortOptions} />}
         {filterOptions && filterOptions.filters.length > 0 && <FilterBar {...filterOptions} />}

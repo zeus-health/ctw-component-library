@@ -174,7 +174,12 @@ export const FilterBar = ({ className, onChange, filters, defaultState = {} }: F
   ];
 
   return (
-    <div className={cx(className, "ctw-relative ctw-flex ctw-items-center ctw-space-x-2")}>
+    <div
+      className={cx(
+        className,
+        "ctw-items-left ctw-relative ctw-flex ctw-flex-col ctw-space-x-2 md:ctw-flex-row md:ctw-items-center"
+      )}
+    >
       {activeFilters.map((filter) => (
         <FilterBarPill
           isOpen={recentlyAdded === filter.key}
@@ -203,7 +208,7 @@ export const FilterBar = ({ className, onChange, filters, defaultState = {} }: F
           }
         }}
       >
-        <div className="ctw-space-x-1">
+        <div className="ctw-space-x-1 ctw-whitespace-nowrap ctw-py-2 md:ctw-py-0">
           <FontAwesomeIcon icon={faPlus} className="ctw-w-4" />
           <span>Add Filters</span>
         </div>
