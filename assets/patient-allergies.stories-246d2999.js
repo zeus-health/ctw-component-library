@@ -1,9 +1,0 @@
-import{R as t}from"./index-9f32f44c.js";import{s as c,a as n}from"./allergy-intolerance-40367c03.js";import{P as u,C as g,F as A,a as E,b as I,c as _,S}from"./patient-allergies-79e06766.js";import"./_commonjsHelpers-de833af9.js";import"./request-00a5930a.js";import"./index-e0a0619e.js";import"./requests-4293153d.js";import"./types-6e67dc97.js";import"./action-list-0976f1a2.js";import"./index-a587463d.js";import"./uniqWith-f2b2c1e6.js";import"./_baseForOwn-08ea2c1d.js";import"./_baseIsEqual-74322f1d.js";import"./_baseClone-ba6de10d.js";import"./_baseUniq-8479e386.js";import"./toNumber-dd36697e.js";import"./isPlainObject-d4db42a0.js";import"./_basePickBy-17caa762.js";import"./isEqual-e588e918.js";import"./mapValues-ee0f9c62.js";import"./uniq-58a1564f.js";import"./table-09f63989.js";import"./spinner-096fc82a.js";import"./extends-b9971653.js";import"./is-plain-object-bdfa9f57.js";import"./___vite-browser-external_commonjs-proxy-25acf8c4.js";import"./index-9c2d1831.js";import"./debounce-97855a51.js";import"./data-list-2854f463.js";const z={tags:["autodocs"],component:u,decorators:[(l,{args:d})=>t.createElement(g,{env:"dev",authToken:A,builderId:E},t.createElement(I,{patientID:_,systemURL:S},t.createElement(l,{args:d})))]},r={...c({allergyIntolerance:n})},e={...c({allergyIntolerance:n})};var o,s,a;r.parameters={...r.parameters,docs:{...(o=r.parameters)==null?void 0:o.docs,source:{originalSource:`{
-  ...setupAllergiesMocks({
-    allergyIntolerance
-  })
-}`,...(a=(s=r.parameters)==null?void 0:s.docs)==null?void 0:a.source}}};var i,m,p;e.parameters={...e.parameters,docs:{...(i=e.parameters)==null?void 0:i.docs,source:{originalSource:`{
-  ...setupAllergiesMocks({
-    allergyIntolerance
-  })
-}`,...(p=(m=e.parameters)==null?void 0:m.docs)==null?void 0:p.source}}};const G=["Basic","BasicFQS"];export{r as Basic,e as BasicFQS,G as __namedExportsOrder,z as default};
