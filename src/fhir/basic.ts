@@ -10,6 +10,7 @@ import { SYSTEM_BASIC_RESOURCE_TYPE, SYSTEM_ZUS_PROFILE_ACTION } from "./system-
 import { useQueryWithPatient } from "..";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { FeatureToggle } from "@/hooks/use-feature-toggle";
+import { cloneDeep } from "@/utils/nodash";
 import { QUERY_KEY_BASIC } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
@@ -86,13 +87,12 @@ function mapBasics<R extends fhir4.Resource, T extends FHIRModel<R>>(
   queryData: T[],
   basicsData: Basic[]
 ) {
-  const resources = queryData;
-  const basics = basicsData;
+  const resources = cloneDeep(queryData);
   // If basic data came back from the above useBasic call, manually map any basic data to the resources
   // it corresponds to.
-  if (basics.length > 0) {
+  if (basicsData.length > 0) {
     resources.forEach((a, i) => {
-      const filteredBasics = basics.filter(
+      const filteredBasics = basicsData.filter(
         (b) => b.subject?.reference === `${a.resourceType}/${a.id}`
       );
       resources[i].revIncludes = filteredBasics;
