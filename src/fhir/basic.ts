@@ -86,19 +86,19 @@ function mapBasics<R extends fhir4.Resource, T extends FHIRModel<R>>(
   queryData: T[],
   basicsData: Basic[]
 ) {
-  const resources2 = queryData;
+  const resources = queryData;
   const basics = basicsData;
   // If basic data came back from the above useBasic call, manually map any basic data to the resources
   // it corresponds to.
   if (basics.length > 0) {
-    resources2.forEach((a, i) => {
+    resources.forEach((a, i) => {
       const filteredBasics = basics.filter(
         (b) => b.subject?.reference === `${a.resourceType}/${a.id}`
       );
-      resources2[i].revIncludes = filteredBasics;
+      resources[i].revIncludes = filteredBasics;
     });
   }
-  return resources2;
+  return resources;
 }
 
 export function useIncludeBasics<R extends fhir4.Resource, T extends FHIRModel<R>>(
