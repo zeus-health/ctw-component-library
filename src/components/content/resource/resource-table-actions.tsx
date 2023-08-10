@@ -26,25 +26,30 @@ export const ResourceTableActions = <T extends MinRecordItem>({
     return null;
   }
 
-  const vo = viewOptions;
-  if (vo) {
-    vo.className = cx(vo.className, "ctw-mt-2");
-  }
-  const so = sortOptions;
-  if (so) {
-    so.className = cx(so.className, "ctw-mt-2");
-  }
-
   return (
     <div
       className={cx(
         className,
-        "ctw-flex ctw-items-start ctw-justify-between ctw-py-2 sm:ctw-pt-1.5"
+        "ctw-flex ctw-items-start ctw-justify-between ctw-pt-2 sm:ctw-pt-1.5"
       )}
     >
-      <div className="ctw-flex ctw-flex-wrap ctw-gap-x-2 ctw-gap-y-2">
-        {vo && <ViewButton {...vo} />}
-        {so && <SortButton {...so} />}
+      <div className="ctw-flex ctw-flex-col ctw-flex-wrap ctw-gap-x-2 md:ctw-flex-row">
+        {viewOptions && (
+          <ViewButton
+            className={cx(viewOptions.className, "ctw-mb-2 !ctw-py-0")}
+            defaultView={viewOptions.defaultView}
+            onChange={viewOptions.onChange}
+            options={viewOptions.options}
+          />
+        )}
+        {sortOptions && (
+          <SortButton
+            className={cx(sortOptions.className, "ctw-mb-2")}
+            defaultSort={sortOptions.defaultSort}
+            onChange={sortOptions.onChange}
+            options={sortOptions.options}
+          />
+        )}
         {filterOptions && filterOptions.filters.length > 0 && <FilterBar {...filterOptions} />}
       </div>
       <div className="ctw-ml-auto ctw-whitespace-nowrap">{action}</div>

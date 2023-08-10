@@ -10,7 +10,7 @@ type FilterBarTagPillProps = {
 };
 
 const buttonClassName =
-  "ctw-flex ctw-items-center ctw-max-w-[15rem] ctw-capitalize ctw-text-content-black ctw-bg-bg-dark ctw-text-sm ctw-rounded ctw-py-2 ctw-px-3 ctw-relative ctw-cursor-pointer ctw-border-0 ctw-border-transparent ctw-whitespace-nowrap ctw-mt-2";
+  "ctw-flex ctw-items-center ctw-max-w-[15rem] ctw-capitalize ctw-text-content-black ctw-bg-bg-dark ctw-text-sm ctw-rounded ctw-py-2 ctw-px-3 ctw-relative ctw-cursor-pointer ctw-border-0 ctw-border-transparent ctw-whitespace-nowrap ctw-mb-2 ctw-mr-2";
 
 export function FilterBarTagPill({ filter, onRemove }: FilterBarTagPillProps) {
   return (

@@ -177,7 +177,7 @@ export const FilterBar = ({ className, onChange, filters, defaultState = {} }: F
     <div
       className={cx(
         className,
-        "ctw-items-left ctw-relative ctw-flex ctw-flex-col ctw-flex-wrap ctw-space-x-0 ctw-space-y-2 md:ctw-flex-row md:ctw-items-center md:ctw-space-x-2"
+        "ctw-items-left ctw-relative ctw-flex ctw-flex-col ctw-flex-wrap md:ctw-flex-row md:ctw-items-center"
       )}
     >
       {activeFilters.map((filter) => (
@@ -195,7 +195,7 @@ export const FilterBar = ({ className, onChange, filters, defaultState = {} }: F
 
       <ListBox
         useBasicStyles
-        btnClassName="!ctw-text-content-light ctw-btn-clear !ctw-font-normal"
+        btnClassName="!ctw-text-content-light ctw-btn-clear !ctw-font-normal ctw-mb-2"
         items={menuItems}
         onChange={(_index, item) => {
           switch (item.key) {
@@ -208,7 +208,7 @@ export const FilterBar = ({ className, onChange, filters, defaultState = {} }: F
           }
         }}
       >
-        <div className="ctw-space-x-1 ctw-whitespace-nowrap ctw-py-2 md:ctw-py-0">
+        <div className="ctw-space-x-1 ctw-whitespace-nowrap ctw-py-2">
           <FontAwesomeIcon icon={faPlus} className="ctw-w-4" />
           <span>Add Filters</span>
         </div>
