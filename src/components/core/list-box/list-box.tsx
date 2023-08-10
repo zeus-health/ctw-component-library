@@ -22,7 +22,6 @@ export type MinListBoxItem = ListBoxItem | { divider: true };
 export type ListBoxProps = {
   btnClassName?: cx.Argument;
   children?: ReactNode;
-  containerClassName?: cx.Argument;
   defaultIndex?: number;
   selectedIndex?: number;
   items: MinListBoxItem[];
@@ -44,7 +43,6 @@ export const ListBox = forwardRef(
       useBasicStyles = false,
       btnClassName,
       children,
-      containerClassName,
       optionsClassName,
       items,
       defaultIndex = 0,
@@ -64,7 +62,7 @@ export const ListBox = forwardRef(
     }, [selectedIndex]);
 
     return (
-      <div className={cx(containerClassName, "ctw-relative ctw-inline-block")} ref={ref}>
+      <div className="ctw-relative ctw-inline-block" ref={ref}>
         <Listbox
           value={selectedTabIndex}
           onChange={(index: number) => {

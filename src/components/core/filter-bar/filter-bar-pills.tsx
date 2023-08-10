@@ -4,7 +4,6 @@ import { FilterBarSelectPill } from "./filter-bar-pills/select-pill";
 import { FilterBarTagPill } from "./filter-bar-pills/tag-pill";
 
 type FilterBarPillProps = {
-  className?: string;
   onRemove: (key: string) => void;
   filter: FilterItem;
   filterValues: FilterValuesRecord;
