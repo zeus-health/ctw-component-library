@@ -36,7 +36,7 @@ export const ResourceTableActions = <T extends MinRecordItem>({
       <div className="ctw-flex ctw-flex-col ctw-flex-wrap ctw-gap-x-2 md:ctw-flex-row">
         {viewOptions && (
           <ViewButton
-            className={cx(viewOptions.className, "ctw-mb-2 !ctw-py-0")}
+            className={cx(viewOptions.className, "ctw-mb-2")}
             defaultView={viewOptions.defaultView}
             onChange={viewOptions.onChange}
             options={viewOptions.options}
