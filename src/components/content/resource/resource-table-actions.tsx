@@ -26,6 +26,15 @@ export const ResourceTableActions = <T extends MinRecordItem>({
     return null;
   }
 
+  const vo = viewOptions;
+  if (vo) {
+    vo.className = cx(vo.className, "ctw-mt-2");
+  }
+  const so = sortOptions;
+  if (so) {
+    so.className = cx(so.className, "ctw-mt-2");
+  }
+
   return (
     <div
       className={cx(
@@ -34,8 +43,8 @@ export const ResourceTableActions = <T extends MinRecordItem>({
       )}
     >
       <div className="ctw-flex ctw-flex-wrap ctw-gap-x-2 ctw-gap-y-2">
-        {viewOptions && <ViewButton {...viewOptions} />}
-        {sortOptions && <SortButton {...sortOptions} />}
+        {vo && <ViewButton {...vo} />}
+        {so && <SortButton {...so} />}
         {filterOptions && filterOptions.filters.length > 0 && <FilterBar {...filterOptions} />}
       </div>
       <div className="ctw-ml-auto ctw-whitespace-nowrap">{action}</div>

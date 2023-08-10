@@ -177,7 +177,7 @@ export const FilterBar = ({ className, onChange, filters, defaultState = {} }: F
     <div
       className={cx(
         className,
-        "ctw-items-left ctw-relative ctw-flex ctw-flex-col ctw-space-x-2 md:ctw-flex-row md:ctw-items-center"
+        "ctw-items-left ctw-relative ctw-flex ctw-flex-col ctw-flex-wrap ctw-space-x-0 ctw-space-y-2 md:ctw-flex-row md:ctw-items-center md:ctw-space-x-2"
       )}
     >
       {activeFilters.map((filter) => (
@@ -195,7 +195,7 @@ export const FilterBar = ({ className, onChange, filters, defaultState = {} }: F
 
       <ListBox
         useBasicStyles
-        btnClassName="!ctw-text-content-light ctw-btn-clear !ctw-font-normal !ctw-py-2"
+        btnClassName="!ctw-text-content-light ctw-btn-clear !ctw-font-normal"
         items={menuItems}
         onChange={(_index, item) => {
           switch (item.key) {
