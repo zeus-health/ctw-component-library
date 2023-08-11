@@ -6,6 +6,7 @@ import { patientConditionsColumns } from "./columns";
 import { useConditionDetailsDrawer } from "./details";
 import { conditionFilters } from "./filters";
 import { conditionSortOptions, defaultConditionSort } from "./sorts";
+import { statusView } from "./views";
 import { ResourceTable } from "../../resource/resource-table";
 import {
   ResourceTableActions,
@@ -38,9 +39,12 @@ export const PatientConditionsBase = ({
 }: PatientConditionsTableProps) => {
   const openDetailsDrawer = useConditionDetailsDrawer({ RowActions });
 
-  const { data, setFilters, setSort } = useFilteredSortedData({
+  const { viewOptions, current } = statusView;
+
+  const { data, setFilters, setSort, setViewOption } = useFilteredSortedData({
     defaultSort: defaultConditionSort,
     records: query.data,
+    defaultView: current,
   });
 
   const isEmptyQuery = query.data?.length === 0;
@@ -64,6 +68,11 @@ export const PatientConditionsBase = ({
           defaultSort: defaultConditionSort,
           options: conditionSortOptions,
           onChange: setSort,
+        }}
+        viewOptions={{
+          onChange: setViewOption,
+          options: viewOptions,
+          defaultView: current,
         }}
         action={action}
       />

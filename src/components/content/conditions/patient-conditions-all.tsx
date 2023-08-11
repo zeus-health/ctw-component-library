@@ -9,6 +9,7 @@ import {
   useEditConditionForm,
 } from "./helpers/modal-hooks";
 import { conditionSortOptions, defaultConditionSort } from "./helpers/sorts";
+import { statusView } from "./helpers/views";
 import { useToggleRead } from "../hooks/use-toggle-read";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
@@ -36,9 +37,13 @@ function PatientConditionsAllComponent({
   const { t } = useBaseTranslations();
   const query = usePatientConditionsAll();
   const showAddConditionForm = useAddConditionForm();
-  const { data, setFilters, setSort } = useFilteredSortedData({
+
+  const { viewOptions, current } = statusView;
+
+  const { data, setFilters, setSort, setViewOption } = useFilteredSortedData({
     defaultSort: defaultConditionSort,
     records: query.data,
+    defaultView: current,
   });
 
   const isEmptyQuery = query.data.length === 0;
@@ -75,6 +80,11 @@ function PatientConditionsAllComponent({
           defaultSort: defaultConditionSort,
           options: conditionSortOptions,
           onChange: setSort,
+        }}
+        viewOptions={{
+          onChange: setViewOption,
+          options: viewOptions,
+          defaultView: current,
         }}
         action={action}
       />
