@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cx from "classnames";
 import { useState } from "react";
 import { DetailEntry, DetailsCard } from "./details-card";
+import { Telemetry } from "@/utils/telemetry";
 
 export type NotesEntryProps = {
   details: DetailEntry;
@@ -42,8 +43,10 @@ export const NoteSummary = ({
   <button
     type="button"
     aria-label="details"
-    onClick={() => setIsDetailShown(!isDetailShown)}
-    data-zus-telemetry-click={isDetailShown ? "Collapse" : "Expand"}
+    onClick={() => {
+      Telemetry.trackInteraction(isDetailShown ? "collapse_note" : "expand_note");
+      setIsDetailShown(!isDetailShown);
+    }}
     className="ctw-btn-clean"
   >
     <div className="ctw-flex ctw-items-center ctw-justify-between ctw-rounded-lg ctw-bg-bg-white ctw-p-3 ctw-text-left ctw-outline ctw-outline-1 ctw-outline-bg-dark">
