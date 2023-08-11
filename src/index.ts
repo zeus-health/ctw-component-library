@@ -58,6 +58,7 @@ export * from "@/components/core/table/table-helpers";
 export * from "@/components/core/toggle";
 export * from "@/components/core/toggle-control";
 export * from "@/hooks/use-medications";
+export * from "@/components/content/resource/resource-table-actions";
 // Models
 export * from "@/fhir/models";
 export * from "@/fhir/medications";
