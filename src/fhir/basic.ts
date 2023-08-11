@@ -10,6 +10,7 @@ import { SYSTEM_BASIC_RESOURCE_TYPE, SYSTEM_ZUS_PROFILE_ACTION } from "./system-
 import { useQueryWithPatient } from "..";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { FeatureToggle } from "@/hooks/use-feature-toggle";
+import { cloneDeep } from "@/utils/nodash";
 import { QUERY_KEY_BASIC } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
@@ -82,38 +83,47 @@ export function useBasic(fqs: FeatureToggle) {
   );
 }
 
+function mapBasics<R extends fhir4.Resource, T extends FHIRModel<R>>(
+  queryData: T[],
+  basicsData: Basic[]
+) {
+  const resources = cloneDeep(queryData);
+  // If basic data came back from the above useBasic call, manually map any basic data to the resources
+  // it corresponds to.
+  if (basicsData.length > 0) {
+    resources.forEach((a, i) => {
+      const filteredBasics = basicsData.filter(
+        (b) => b.subject?.reference === `${a.resourceType}/${a.id}`
+      );
+      resources[i].revIncludes = filteredBasics;
+    });
+  }
+  return resources;
+}
+
 export function useIncludeBasics<R extends fhir4.Resource, T extends FHIRModel<R>>(
   query: UseQueryResult<T[]>,
   fqs: FeatureToggle
 ) {
-  const [resources, setResources] = useState<T[]>([]);
   const basicsQuery = useBasic(fqs);
+  const initialResources = mapBasics(query.data || [], basicsQuery.data || []);
+  const [resources, setResources] = useState<T[]>(initialResources);
 
   useEffect(() => {
-    const resources2 = query.data ?? [];
-    const basics = basicsQuery.data ?? [];
-    // If basic data came back from the above useBasic call, manually map any basic data to the condition
-    // it corresponds to.
-    if (basics.length > 0) {
-      resources2.forEach((a, i) => {
-        const filteredBasics = basics.filter(
-          (b) => b.subject?.reference === `${a.resourceType}/${a.id}`
-        );
-        resources2[i].revIncludes = filteredBasics;
-      });
-    }
-
+    const resources2 = mapBasics(query.data || [], basicsQuery.data || []);
     setResources([...resources2]); // spread syntax here needed to make sure the array is a new reference in order to trigger a re-render
   }, [basicsQuery.data, query.data]);
 
   const isLoading = query.isLoading || basicsQuery.isLoading;
   const isError = query.isError || basicsQuery.isError;
   const isFetching = query.isFetching || basicsQuery.isFetching || !fqs.ready;
+  const isFetched = query.isFetched && basicsQuery.isFetched;
 
   return {
     isLoading,
     isError,
     isFetching,
+    isFetched,
     data: resources,
   };
 }

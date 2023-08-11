@@ -15,11 +15,19 @@ import { QUERY_KEY_PATIENT_ENCOUNTERS } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export function usePatientEncounters() {
-  const { data } = usePatientDocuments();
+  const { data, isFetched } = usePatientDocuments();
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_ENCOUNTERS,
     [data],
-    withTimerMetric(getEncountersFromFQS(data), `req.timing.encounters`)
+    (() => {
+      if (!isFetched) {
+        return async () =>
+          new Promise<EncounterModel[]>((resolve) => {
+            resolve([]);
+          });
+      }
+      return withTimerMetric(getEncountersFromFQS(data), `req.timing.encounters`);
+    })()
   );
 }
 
