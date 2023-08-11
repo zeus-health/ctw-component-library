@@ -45,7 +45,7 @@ export const NoteSummary = ({
     aria-label="details"
     onClick={() => {
       Telemetry.trackInteraction(isDetailShown ? "collapse_note" : "expand_note");
-      setIsDetailShown(!isDetailShown);
+      return setIsDetailShown(!isDetailShown);
     }}
     className="ctw-btn-clean"
   >
