@@ -191,12 +191,16 @@ export class Telemetry {
     this.logger.error(message, context);
   }
 
-  static trackInteraction(action: string) {
+  static trackInteraction(
+    action: string,
+    metadata: Record<string, unknown> & { datadogMetricName?: string } = {}
+  ) {
+    const datadogMetricName = `action.${metadata.datadogMetricName ?? action}`;
     // We send an action metric to CTW
-    this.countMetric(`action.${action}`, 1);
+    this.countMetric(datadogMetricName, 1);
     // We report an active session to CTW
     this.reportActiveSession().catch((error) => Telemetry.logError(error as Error));
-    this.analyticsEvent(action).catch((error) => Telemetry.logError(error as Error));
+    this.analyticsEvent(action, metadata).catch((error) => Telemetry.logError(error as Error));
   }
 
   /**

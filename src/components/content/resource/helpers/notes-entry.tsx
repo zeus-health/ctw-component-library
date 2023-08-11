@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cx from "classnames";
 import { useState } from "react";
 import { DetailEntry, DetailsCard } from "./details-card";
+import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 
 export type NotesEntryProps = {
   details: DetailEntry;
@@ -38,33 +39,41 @@ export const NoteSummary = ({
   title?: string;
   isDetailShown: boolean;
   setIsDetailShown: React.Dispatch<React.SetStateAction<boolean>>;
-}) => (
-  <button
-    type="button"
-    aria-label="details"
-    onClick={() => setIsDetailShown(!isDetailShown)}
-    data-zus-telemetry-click={isDetailShown ? "Collapse" : "Expand"}
-    className="ctw-btn-clean"
-  >
-    <div className="ctw-flex ctw-items-center ctw-justify-between ctw-rounded-lg ctw-bg-bg-white ctw-p-3 ctw-text-left ctw-outline ctw-outline-1 ctw-outline-bg-dark">
-      <div className="ctw-flex ctw-space-x-3">
-        {title && (
-          <div>
-            <div className="ctw-font-semibold ctw-text-content-black">{title}</div>
+}) => {
+  const { trackInteraction } = useAnalytics();
+
+  return (
+    <button
+      type="button"
+      aria-label="details"
+      onClick={() => {
+        setIsDetailShown(!isDetailShown);
+        trackInteraction("btn_expand_details", {
+          direction: isDetailShown ? "collapse" : "expand",
+        });
+      }}
+      className="ctw-btn-clean"
+    >
+      <div className="ctw-flex ctw-items-center ctw-justify-between ctw-rounded-lg ctw-bg-bg-white ctw-p-3 ctw-text-left ctw-outline ctw-outline-1 ctw-outline-bg-dark">
+        <div className="ctw-flex ctw-space-x-3">
+          {title && (
+            <div>
+              <div className="ctw-font-semibold ctw-text-content-black">{title}</div>
+            </div>
+          )}
+          {!title && <div className="ctw-text-content-lighter">Unknown</div>}
+        </div>
+        <div className="ctw-flex ctw-items-center ctw-space-x-3">
+          <div className="ctw-justify-right ctw-flex">
+            <FontAwesomeIcon
+              icon={faChevronRight}
+              className={cx("ctw-h-3 ctw-w-3 ctw-text-content-lighter", {
+                "ctw-rotate-90": isDetailShown,
+              })}
+            />
           </div>
-        )}
-        {!title && <div className="ctw-text-content-lighter">Unknown</div>}
-      </div>
-      <div className="ctw-flex ctw-items-center ctw-space-x-3">
-        <div className="ctw-justify-right ctw-flex">
-          <FontAwesomeIcon
-            icon={faChevronRight}
-            className={cx("ctw-h-3 ctw-w-3 ctw-text-content-lighter", {
-              "ctw-rotate-90": isDetailShown,
-            })}
-          />
         </div>
       </div>
-    </div>
-  </button>
-);
+    </button>
+  );
+};

@@ -47,7 +47,6 @@ export const FormField = ({
           id={inputProps.name}
           disabled={inputProps.disabled}
           defaultValue={value}
-          data-zus-telemetry-focus={inputProps.name}
         >
           {!options.some((option) => option.value === defaultValue) && (
             <option value={defaultValue} disabled>

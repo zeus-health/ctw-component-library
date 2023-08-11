@@ -19,6 +19,7 @@ import {
 } from "@/components/content/zus-aggregated-profile/zus-aggregated-profile-tabs";
 import { Title } from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
+import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { TabGroup } from "@/components/core/tab-group/tab-group";
 import { intersection } from "@/utils/nodash";
 
@@ -126,29 +127,33 @@ const ZusAggregatedProfileComponent = ({
   });
 
   return (
-    <div className="ctw-zus-aggregated-profile ctw-scrollable-pass-through-height ctw-text-base">
-      {!hideTitle && (
-        <Title className="ctw-border-b-2 ctw-border-l-0 ctw-border-r-0 ctw-border-t-0 ctw-border-solid ctw-border-divider-light">
-          <h3 className="ctw-m-0 ctw-inline-block ctw-p-0 ctw-pb-3 ctw-text-lg ctw-font-medium">
-            {title}
-            {!removeBranding && (
-              <span className="ctw-text-sm ctw-font-light ctw-italic ctw-text-content-light">
-                Powered by <img src={ZusSVG} alt="Zus" className="-ctw-mb-1.5" />
-              </span>
-            )}
-          </h3>
-        </Title>
-      )}
-      <TabGroup
-        content={tabbedContent}
-        forceHorizontalTabs={forceHorizontalTabs}
-        topRightContent={
-          removeRequestRecords ? undefined : (
-            <RequestRecordsButton includePatientDemographicsForm={includePatientDemographicsForm} />
-          )
-        }
-      />
-    </div>
+    <AnalyticsProvider componentName="ZusAggregatedProfile">
+      <div className="ctw-zus-aggregated-profile ctw-scrollable-pass-through-height ctw-text-base">
+        {!hideTitle && (
+          <Title className="ctw-border-b-2 ctw-border-l-0 ctw-border-r-0 ctw-border-t-0 ctw-border-solid ctw-border-divider-light">
+            <h3 className="ctw-m-0 ctw-inline-block ctw-p-0 ctw-pb-3 ctw-text-lg ctw-font-medium">
+              {title}
+              {!removeBranding && (
+                <span className="ctw-text-sm ctw-font-light ctw-italic ctw-text-content-light">
+                  Powered by <img src={ZusSVG} alt="Zus" className="-ctw-mb-1.5" />
+                </span>
+              )}
+            </h3>
+          </Title>
+        )}
+        <TabGroup
+          content={tabbedContent}
+          forceHorizontalTabs={forceHorizontalTabs}
+          topRightContent={
+            removeRequestRecords ? undefined : (
+              <RequestRecordsButton
+                includePatientDemographicsForm={includePatientDemographicsForm}
+              />
+            )
+          }
+        />
+      </div>
+    </AnalyticsProvider>
   );
 };
 

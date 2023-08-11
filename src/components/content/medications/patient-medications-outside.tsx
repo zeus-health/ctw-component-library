@@ -5,6 +5,7 @@ import { PatientMedicationsBase } from "./helpers/patient-medications-base";
 import { useToggleDismiss } from "../hooks/use-toggle-dismiss";
 import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { withErrorBoundary } from "@/components/core/error-boundary";
+import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { RowActionsProps } from "@/components/core/table/table";
 import { MedicationStatementModel } from "@/fhir/models";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
@@ -61,6 +62,7 @@ type RowActionsProps2 = RowActionsProps<MedicationStatementModel> & ExtraRowActi
 
 const RowActions = ({ record, onSuccess, onAddToRecord }: RowActionsProps2) => {
   const { t } = useBaseTranslations();
+  const { trackInteraction } = useAnalytics();
   const showAddMedicationForm = useAddMedicationForm();
   const { isLoading, toggleDismiss: toggleArchive } = useToggleDismiss(
     QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
@@ -91,7 +93,6 @@ const RowActions = ({ record, onSuccess, onAddToRecord }: RowActionsProps2) => {
       <button
         type="button"
         className="ctw-btn-primary ctw-ml-1 ctw-capitalize"
-        data-zus-telemetry-click="Add to record"
         data-testid="add-to-record"
         disabled={isLoading}
         onClick={() => {
@@ -101,6 +102,7 @@ const RowActions = ({ record, onSuccess, onAddToRecord }: RowActionsProps2) => {
           } else {
             showAddMedicationForm(record);
           }
+          trackInteraction("btn_add_to_record");
         }}
       >
         {t("resourceTable.add")}
