@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.55.2
+
+### Patch Changes
+
+- e38a1b5e: Resolved various responsive styling issues with the sort + filter bar
+
 ## 1.55.1
 
 ### Patch Changes
