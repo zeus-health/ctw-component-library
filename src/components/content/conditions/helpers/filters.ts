@@ -44,11 +44,3 @@ export function conditionFilters(
 
   return filters;
 }
-
-export const defaultConditionFilters: FilterChangeEvent = {
-  displayStatus: {
-    key: "displayStatus",
-    selected: ["Active", "Pending", "Unknown"],
-    type: "checkbox",
-  },
-};

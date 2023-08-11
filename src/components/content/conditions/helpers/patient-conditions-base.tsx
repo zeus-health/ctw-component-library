@@ -4,7 +4,7 @@ import cx from "classnames";
 import { ReactElement } from "react";
 import { patientConditionsColumns } from "./columns";
 import { useConditionDetailsDrawer } from "./details";
-import { conditionFilters, defaultConditionFilters } from "./filters";
+import { conditionFilters } from "./filters";
 import { conditionSortOptions, defaultConditionSort } from "./sorts";
 import { ResourceTable } from "../../resource/resource-table";
 import {
@@ -39,7 +39,6 @@ export const PatientConditionsBase = ({
   const openDetailsDrawer = useConditionDetailsDrawer({ RowActions });
 
   const { data, setFilters, setSort } = useFilteredSortedData({
-    defaultFilters: defaultConditionFilters,
     defaultSort: defaultConditionSort,
     records: query.data,
   });
@@ -59,7 +58,6 @@ export const PatientConditionsBase = ({
       <ResourceTableActions
         filterOptions={{
           onChange: setFilters,
-          defaultState: defaultConditionFilters,
           filters: conditionFilters(query.data ?? [], outside, !outside),
         }}
         sortOptions={{

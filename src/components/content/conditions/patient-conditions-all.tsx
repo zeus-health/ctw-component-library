@@ -2,7 +2,7 @@ import cx from "classnames";
 import { useMemo } from "react";
 import { patientConditionsAllColumns } from "./helpers/columns";
 import { useConditionDetailsDrawer } from "./helpers/details";
-import { conditionFilters, defaultConditionFilters } from "./helpers/filters";
+import { conditionFilters } from "./helpers/filters";
 import {
   useAddConditionForm,
   useConfirmDeleteCondition,
@@ -37,7 +37,6 @@ function PatientConditionsAllComponent({
   const query = usePatientConditionsAll();
   const showAddConditionForm = useAddConditionForm();
   const { data, setFilters, setSort } = useFilteredSortedData({
-    defaultFilters: defaultConditionFilters,
     defaultSort: defaultConditionSort,
     records: query.data,
   });
@@ -70,7 +69,6 @@ function PatientConditionsAllComponent({
       <ResourceTableActions
         filterOptions={{
           onChange: setFilters,
-          defaultState: defaultConditionFilters,
           filters: conditionFilters(query.data, true, true),
         }}
         sortOptions={{
