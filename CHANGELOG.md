@@ -1,5 +1,13 @@
 # ctw-component-library
 
+## 1.55.1
+
+### Patch Changes
+
+- fc3118b3: Fix double loading encounters from FQS in both ZAP and Encounters & Notes component
+- ed1bbd4f: Use deepClone to copy function param so they can be modified
+- c3bce7fc: export resource table-actions component.
+
 ## 1.55.0
 
 ### Minor Changes
