@@ -30,10 +30,10 @@ export const ResourceTableActions = <T extends MinRecordItem>({
     <div
       className={cx(
         className,
-        "ctw-flex ctw-items-start ctw-justify-between ctw-pt-2 sm:ctw-pt-1.5"
+        "ctw-flex ctw-items-start ctw-justify-between ctw-space-x-2 ctw-pt-2 sm:ctw-pt-1.5"
       )}
     >
-      <div className="ctw-flex ctw-flex-col ctw-flex-wrap ctw-gap-x-2 md:ctw-flex-row">
+      <div className="ctw-flex ctw-flex-col ctw-flex-wrap ctw-gap-x-2 sm:ctw-flex-row">
         {viewOptions && (
           <ViewButton
             className={cx(viewOptions.className, "ctw-mb-2")}
