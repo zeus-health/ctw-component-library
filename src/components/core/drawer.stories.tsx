@@ -1,7 +1,9 @@
 import { expect } from "@storybook/jest";
 import { Meta, StoryObj } from "@storybook/react";
 import { userEvent, within } from "@storybook/testing-library";
+import { rest } from "msw";
 import { useState } from "react";
+import { patient } from "@/components/content/care-team/story-helpers/mocks/patient";
 import {
   FAKE_AUTH,
   FAKE_BUILDER_ID,
@@ -15,6 +17,7 @@ import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 export default {
   component: Drawer,
   tags: ["autodocs"],
+  parameters: setupDrawerMocks(),
   // Setup a button to open drawer stories.
   decorators: [
     (Story, { args }) => {
@@ -100,3 +103,20 @@ export const Test: StoryObj<DrawerProps> = {
     userEvent.click(canvas.getByLabelText("close"));
   },
 };
+
+// Drawers need their own mocks for CTWProvider and PatientProvider.
+export function setupDrawerMocks() {
+  return {
+    parameters: {
+      msw: {
+        handlers: {
+          mocks: [
+            rest.get("https://api.dev.zusapi.com/fhir/Patient", (req, res, ctx) =>
+              res(ctx.status(200), ctx.json(patient))
+            ),
+          ],
+        },
+      },
+    },
+  };
+}
