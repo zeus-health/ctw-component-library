@@ -6,7 +6,7 @@ import { patientConditionsColumns } from "./columns";
 import { useConditionDetailsDrawer } from "./details";
 import { conditionFilters } from "./filters";
 import { conditionSortOptions, defaultConditionSort } from "./sorts";
-import { statusView } from "./views";
+import { ConditionViewOptions, statusView } from "./views";
 import { ResourceTable } from "../../resource/resource-table";
 import {
   ResourceTableActions,
@@ -62,7 +62,12 @@ export const PatientConditionsBase = ({
       <ResourceTableActions
         filterOptions={{
           onChange: setFilters,
-          filters: conditionFilters(query.data ?? [], outside, !outside),
+          filters: conditionFilters(
+            query.data ?? [],
+            outside,
+            !outside,
+            current.display as ConditionViewOptions
+          ),
         }}
         sortOptions={{
           defaultSort: defaultConditionSort,

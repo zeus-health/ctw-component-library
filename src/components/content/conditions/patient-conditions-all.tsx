@@ -9,7 +9,7 @@ import {
   useEditConditionForm,
 } from "./helpers/modal-hooks";
 import { conditionSortOptions, defaultConditionSort } from "./helpers/sorts";
-import { statusView } from "./helpers/views";
+import { ConditionViewOptions, statusView } from "./helpers/views";
 import { useToggleRead } from "../hooks/use-toggle-read";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
@@ -74,7 +74,12 @@ function PatientConditionsAllComponent({
       <ResourceTableActions
         filterOptions={{
           onChange: setFilters,
-          filters: conditionFilters(query.data, true, true),
+          filters: conditionFilters(
+            query.data,
+            true,
+            true,
+            current.display as ConditionViewOptions
+          ),
         }}
         sortOptions={{
           defaultSort: defaultConditionSort,
