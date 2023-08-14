@@ -8,6 +8,7 @@ import { ResourceTableActions } from "../resource/resource-table-actions";
 import { entryFromArray } from "@/components/core/data-list";
 import { EmptyTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
+import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { usePatientImmunizations } from "@/fhir/immunizations";
 import { ImmunizationModel } from "@/fhir/models/immunization";
@@ -37,34 +38,36 @@ function PatientImmunizationsComponent({ className }: PatientImmunizationsProps)
   });
 
   return (
-    <div className={cx(className, "ctw-scrollable-pass-through-height")}>
-      <ResourceTableActions
-        filterOptions={{
-          onChange: setFilters,
-          defaultState: defaultImmunizationsFilters,
-          filters: immunizationsFilter(),
-        }}
-        sortOptions={{
-          defaultSort: defaultImmunizationSort,
-          options: immunizationSortOptions,
-          onChange: setSort,
-        }}
-      />
-      <ResourceTable
-        showTableHead
-        isLoading={patientImmunizationsQuery.isLoading}
-        data={data}
-        columns={patientImmunizationsColumns(userBuilderId)}
-        onRowClick={openDetails}
-        enableDismissAndReadActions
-        emptyMessage={
-          <EmptyTable
-            hasZeroFilteredRecords={hasZeroFilteredRecords}
-            resourceName="immunizations"
-          />
-        }
-      />
-    </div>
+    <AnalyticsProvider componentName="PatientImmunizations">
+      <div className={cx(className, "ctw-scrollable-pass-through-height")}>
+        <ResourceTableActions
+          filterOptions={{
+            onChange: setFilters,
+            defaultState: defaultImmunizationsFilters,
+            filters: immunizationsFilter(),
+          }}
+          sortOptions={{
+            defaultSort: defaultImmunizationSort,
+            options: immunizationSortOptions,
+            onChange: setSort,
+          }}
+        />
+        <ResourceTable
+          showTableHead
+          isLoading={patientImmunizationsQuery.isLoading}
+          data={data}
+          columns={patientImmunizationsColumns(userBuilderId)}
+          onRowClick={openDetails}
+          enableDismissAndReadActions
+          emptyMessage={
+            <EmptyTable
+              hasZeroFilteredRecords={hasZeroFilteredRecords}
+              resourceName="immunizations"
+            />
+          }
+        />
+      </div>
+    </AnalyticsProvider>
   );
 }
 

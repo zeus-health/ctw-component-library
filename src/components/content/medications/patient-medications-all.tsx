@@ -11,6 +11,7 @@ import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { EmptyTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
+import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { RowActionsProps } from "@/components/core/table/table";
 import { MedicationStatementModel } from "@/fhir/models";
@@ -59,35 +60,37 @@ function PatientMedicationsAllComponent({
   });
 
   return (
-    <div className={cx(className, "ctw-scrollable-pass-through-height")}>
-      <ResourceTableActions
-        filterOptions={{
-          onChange: setFilters,
-          defaultState: defaultMedicationFilters,
-          filters: medicationFilters(query.allMedications, true),
-        }}
-        sortOptions={{
-          defaultSort: defaultMedicationSort,
-          options: medicationSortOptions,
-          onChange: setSort,
-        }}
-        viewOptions={{
-          onChange: setViewOption,
-          options: viewOptions,
-          defaultView: past6Months,
-        }}
-      />
-      <ResourceTable
-        showTableHead
-        isLoading={query.isLoading}
-        data={data}
-        columns={patientMedicationsAllColumns(userBuilderId)}
-        onRowClick={openDetails}
-        RowActions={rowActions}
-        enableDismissAndReadActions
-        emptyMessage={empty}
-      />
-    </div>
+    <AnalyticsProvider componentName="PatientMedicationsAll">
+      <div className={cx(className, "ctw-scrollable-pass-through-height")}>
+        <ResourceTableActions
+          filterOptions={{
+            onChange: setFilters,
+            defaultState: defaultMedicationFilters,
+            filters: medicationFilters(query.allMedications, true),
+          }}
+          sortOptions={{
+            defaultSort: defaultMedicationSort,
+            options: medicationSortOptions,
+            onChange: setSort,
+          }}
+          viewOptions={{
+            onChange: setViewOption,
+            options: viewOptions,
+            defaultView: past6Months,
+          }}
+        />
+        <ResourceTable
+          showTableHead
+          isLoading={query.isLoading}
+          data={data}
+          columns={patientMedicationsAllColumns(userBuilderId)}
+          onRowClick={openDetails}
+          RowActions={rowActions}
+          enableDismissAndReadActions
+          emptyMessage={empty}
+        />
+      </div>
+    </AnalyticsProvider>
   );
 }
 

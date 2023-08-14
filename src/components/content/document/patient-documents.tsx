@@ -9,6 +9,7 @@ import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { EmptyTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
+import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { RowActionsProps } from "@/components/core/table/table";
@@ -48,36 +49,38 @@ function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocument
   });
 
   return (
-    <div ref={containerRef} className={cx(className, "ctw-scrollable-pass-through-height")}>
-      <ResourceTableActions
-        filterOptions={{
-          onChange: setFilters,
-          defaultState: defaultDocumentsFilters,
-          filters: documentsFilter(),
-        }}
-        sortOptions={{
-          defaultSort: defaultDocumentSort,
-          options: documentSortOptions,
-          onChange: setSort,
-        }}
-        viewOptions={{
-          onChange: setViewOption,
-          options: viewOptions,
-          defaultView: allTime,
-        }}
-      />
-      <ResourceTable
-        isLoading={patientDocumentQuery.isLoading}
-        data={data}
-        emptyMessage={
-          <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="documents" />
-        }
-        columns={patientDocumentColumns}
-        onRowClick={openDetails}
-        RowActions={rowActions}
-        enableDismissAndReadActions
-      />
-    </div>
+    <AnalyticsProvider componentName="PatientDocuments">
+      <div ref={containerRef} className={cx(className, "ctw-scrollable-pass-through-height")}>
+        <ResourceTableActions
+          filterOptions={{
+            onChange: setFilters,
+            defaultState: defaultDocumentsFilters,
+            filters: documentsFilter(),
+          }}
+          sortOptions={{
+            defaultSort: defaultDocumentSort,
+            options: documentSortOptions,
+            onChange: setSort,
+          }}
+          viewOptions={{
+            onChange: setViewOption,
+            options: viewOptions,
+            defaultView: allTime,
+          }}
+        />
+        <ResourceTable
+          isLoading={patientDocumentQuery.isLoading}
+          data={data}
+          emptyMessage={
+            <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="documents" />
+          }
+          columns={patientDocumentColumns}
+          onRowClick={openDetails}
+          RowActions={rowActions}
+          enableDismissAndReadActions
+        />
+      </div>
+    </AnalyticsProvider>
   );
 }
 
