@@ -6,6 +6,8 @@ function statusFilter(statuses: ConditionStatuses[]) {
   return (data: ConditionModel[]) => data.filter((c) => statuses.includes(c.displayStatus));
 }
 
+export type ConditionViewOptions = "Current" | "Past" | "All";
+
 const viewOptions: ViewOption<ConditionModel>[] = [
   {
     display: "Current",
