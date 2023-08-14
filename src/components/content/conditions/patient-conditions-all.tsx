@@ -40,7 +40,7 @@ function PatientConditionsAllComponent({
 
   const { viewOptions, current } = statusView;
 
-  const { data, setFilters, setSort, setViewOption } = useFilteredSortedData({
+  const { data, setFilters, setSort, viewOption, setViewOption } = useFilteredSortedData({
     defaultSort: defaultConditionSort,
     records: query.data,
     defaultView: current,
@@ -78,7 +78,7 @@ function PatientConditionsAllComponent({
             query.data,
             true,
             true,
-            current.display as ConditionViewOptions
+            viewOption?.display as ConditionViewOptions
           ),
         }}
         sortOptions={{

@@ -41,7 +41,7 @@ export const PatientConditionsBase = ({
 
   const { viewOptions, current } = statusView;
 
-  const { data, setFilters, setSort, setViewOption } = useFilteredSortedData({
+  const { data, setFilters, setSort, viewOption, setViewOption } = useFilteredSortedData({
     defaultSort: defaultConditionSort,
     records: query.data,
     defaultView: current,
@@ -66,7 +66,7 @@ export const PatientConditionsBase = ({
             query.data ?? [],
             outside,
             !outside,
-            current.display as ConditionViewOptions
+            viewOption?.display as ConditionViewOptions
           ),
         }}
         sortOptions={{
