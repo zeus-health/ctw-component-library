@@ -1,6 +1,10 @@
 import { useContext } from "react";
 import { TelemetryContext } from "./context";
+import { Telemetry } from "@/utils/telemetry";
 
 export function useTelemetry() {
-  return useContext(TelemetryContext);
+  return {
+    Telemetry,
+    context: useContext(TelemetryContext),
+  };
 }

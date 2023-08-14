@@ -17,6 +17,7 @@ import { FHIRModel } from "@/fhir/models/fhir-model";
 import { searchProvenances } from "@/fhir/provenance";
 import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { UseQueryResultBasic } from "@/utils/request";
+import { Telemetry } from "@/utils/telemetry";
 
 const HISTORY_PAGE_LIMIT = 20;
 
@@ -126,7 +127,10 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
               documentButton={
                 binaryId && (
                   <DocumentButton
-                    onClick={() => openCCDAModal(binaryId, model.resourceTypeTitle)}
+                    onClick={() => {
+                      Telemetry.trackInteraction(`${model.resourceType}.view_source_document`);
+                      return openCCDAModal(binaryId, model.resourceTypeTitle);
+                    }}
                     text="Source Document"
                   />
                 )
