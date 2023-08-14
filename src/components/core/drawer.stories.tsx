@@ -2,7 +2,9 @@ import { expect } from "@storybook/jest";
 import { Meta, StoryObj } from "@storybook/react";
 import { userEvent, within } from "@storybook/testing-library";
 import { useState } from "react";
+import { FAKE_AUTH, FAKE_BUILDER_ID } from "@/components/content/story-helpers/ids";
 import { Drawer, DrawerProps } from "@/components/core/drawer";
+import { CTWProvider } from "@/components/core/providers/ctw-provider";
 
 export default {
   component: Drawer,
@@ -12,19 +14,21 @@ export default {
     (Story, { args }) => {
       const [drawerIsOpen, setDrawerIsOpen] = useState(false);
       return (
-        <div id="headlessui-portal-root">
-          <p>To open up the drawer, simply press the button below</p>
-          <button type="button" className="ctw-btn-primary" onClick={() => setDrawerIsOpen(true)}>
-            Open
-          </button>
-          <Story
-            args={{
-              ...args,
-              isOpen: drawerIsOpen,
-              onClose: () => setDrawerIsOpen(false),
-            }}
-          />
-        </div>
+        <CTWProvider env="dev" authToken={FAKE_AUTH} builderId={FAKE_BUILDER_ID}>
+          <div id="headlessui-portal-root">
+            <p>To open up the drawer, simply press the button below</p>
+            <button type="button" className="ctw-btn-primary" onClick={() => setDrawerIsOpen(true)}>
+              Open
+            </button>
+            <Story
+              args={{
+                ...args,
+                isOpen: drawerIsOpen,
+                onClose: () => setDrawerIsOpen(false),
+              }}
+            />
+          </div>
+        </CTWProvider>
       );
     },
   ],
