@@ -1,8 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Table, TableProps } from "./table";
 import { TableColumn } from "./table-helpers";
-import { FAKE_AUTH, FAKE_BUILDER_ID } from "@/components/content/story-helpers/ids";
+import {
+  FAKE_AUTH,
+  FAKE_BUILDER_ID,
+  FAKE_PATIENT_UPID,
+} from "@/components/content/story-helpers/ids";
 import { CTWProvider } from "@/components/core/providers/ctw-provider";
+import { PatientProvider } from "@/components/core/providers/patient-provider";
+import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 
 type Record = {
   key: string;
@@ -14,6 +20,15 @@ type Props = TableProps<Record>;
 export default {
   component: Table,
   tags: ["autodocs"],
+  decorators: [
+    (Story, { args }) => (
+      <CTWProvider env="dev" authToken={FAKE_AUTH} builderId={FAKE_BUILDER_ID}>
+        <PatientProvider patientID={FAKE_PATIENT_UPID} systemURL={SYSTEM_ZUS_UNIVERSAL_ID}>
+          <Story args={args} />
+        </PatientProvider>
+      </CTWProvider>
+    ),
+  ],
   argTypes: {
     emptyMessage: {
       options: ["Default", "String", "ReactElement"],
@@ -21,14 +36,12 @@ export default {
         Default: undefined,
         String: "Ain't no records here friend",
         ReactElement: (
-          <CTWProvider env="dev" authToken={FAKE_AUTH} builderId={FAKE_BUILDER_ID}>
-            <div className="ctw-space-y-4">
-              <div className="ctw-text-error-main">
-                I said <b>NO RECORDS</b> found!
-              </div>
-              <div>I hope that is OK</div>
+          <div className="ctw-space-y-4">
+            <div className="ctw-text-error-main">
+              I said <b>NO RECORDS</b> found!
             </div>
-          </CTWProvider>
+            <div>I hope that is OK</div>
+          </div>
         ),
       },
     },
