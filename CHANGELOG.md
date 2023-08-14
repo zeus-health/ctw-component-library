@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.56.0
+
+### Minor Changes
+
+- 19a3e19c: Updated Medication Last Fill Date sort text
+- 2863f8d1: Add telemetry metrics for source document and notes
+
 ## 1.55.2
 
 ### Patch Changes
