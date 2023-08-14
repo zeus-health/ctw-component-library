@@ -1,4 +1,5 @@
 import cx from "classnames";
+import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 
 export type SimplePaginationProps = {
   currentPage: number;
@@ -43,13 +44,21 @@ const PaginateButton = ({
   setCurrentPage,
   children,
   className,
-}: PaginateButtonProps) => (
-  <button
-    type="button"
-    className={cx("ctw-btn-default", className)}
-    data-zus-telemetry-click="paginate"
-    onClick={() => setCurrentPage(pageToNavigateTo)}
-  >
-    {children}
-  </button>
-);
+}: PaginateButtonProps) => {
+  const { trackInteraction } = useAnalytics();
+
+  return (
+    <button
+      type="button"
+      className={cx("ctw-btn-default", className)}
+      onClick={() => {
+        setCurrentPage(pageToNavigateTo);
+        trackInteraction("btn_paginate", {
+          page: pageToNavigateTo,
+        });
+      }}
+    >
+      {children}
+    </button>
+  );
+};

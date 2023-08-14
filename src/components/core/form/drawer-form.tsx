@@ -2,6 +2,7 @@ import { ReactNode, useState } from "react";
 import { Drawer, DrawerProps } from "../drawer";
 import { SaveButton } from "@/components/content/forms/save-button";
 import { ErrorAlert } from "@/components/core/alert";
+import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { getFormResponseErrors } from "@/utils/errors";
@@ -32,6 +33,7 @@ export const DrawerForm = <T,>({
     requestErrors?: string[];
   }>();
   const { getRequestContext } = useCTW();
+  const { trackInteraction } = useAnalytics();
 
   const reset = () => {
     setErrors({});
@@ -108,7 +110,10 @@ export const DrawerForm = <T,>({
     <Drawer {...drawerProps} onClose={onClose} onAfterClosed={reset} disableCloseOnBlur>
       <form
         className="ctw-flex ctw-h-full ctw-flex-col ctw-overflow-y-auto"
-        onSubmit={onFormSubmit}
+        onSubmit={(event) => {
+          void onFormSubmit(event);
+          trackInteraction("submit_form");
+        }}
         noValidate // Removes the browser tooltip functionality.
       >
         <Drawer.Body>

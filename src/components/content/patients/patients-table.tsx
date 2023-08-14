@@ -9,6 +9,7 @@ import { useCallback, useEffect, useState } from "react";
 import * as CTWBox from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Pagination } from "@/components/core/pagination/pagination";
+import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { useQueryWithCTW } from "@/components/core/providers/use-query-with-ctw";
 import { Table } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
@@ -88,41 +89,43 @@ export const PatientsTable = withErrorBoundary(
     }, [isError, isFetching]);
 
     return (
-      <CTWBox.StackedWrapper
-        className={cx("ctw-patients-border ctw-patients-table-inputs", className)}
-      >
-        <CTWBox.Heading title={title}>
-          <div className="ctw-relative">
-            <div className="ctw-search-icon-wrapper">
-              <SearchIcon className="ctw-search-icon" />
+      <AnalyticsProvider componentName="PatientsTable">
+        <CTWBox.StackedWrapper
+          className={cx("ctw-patients-border ctw-patients-table-inputs", className)}
+        >
+          <CTWBox.Heading title={title}>
+            <div className="ctw-relative">
+              <div className="ctw-search-icon-wrapper">
+                <SearchIcon className="ctw-search-icon" />
+              </div>
+              <input
+                type="text"
+                className="ctw-patients-table-inputs-search"
+                placeholder="Search"
+                name="searchPatientName"
+                onChange={(e) => debouncedSearch(e.currentTarget.value)}
+              />
             </div>
-            <input
-              type="text"
-              className="ctw-patients-table-inputs-search"
-              placeholder="Search"
-              name="searchPatientName"
-              onChange={(e) => debouncedSearch(e.currentTarget.value)}
-            />
-          </div>
-        </CTWBox.Heading>
-        <div className="ctw-overflow-hidden">
-          <Table
-            records={patients}
-            columns={columns}
-            handleRowClick={handleRowClick}
-            pageSize={pageSize}
-            hidePagination
-          >
-            <Pagination
-              setCurrentPage={setCurrentPage}
-              total={total}
-              currentPage={currentPage}
+          </CTWBox.Heading>
+          <div className="ctw-overflow-hidden">
+            <Table
+              records={patients}
+              columns={columns}
+              handleRowClick={handleRowClick}
               pageSize={pageSize}
-              isLoading={isFetching}
-            />
-          </Table>
-        </div>
-      </CTWBox.StackedWrapper>
+              hidePagination
+            >
+              <Pagination
+                setCurrentPage={setCurrentPage}
+                total={total}
+                currentPage={currentPage}
+                pageSize={pageSize}
+                isLoading={isFetching}
+              />
+            </Table>
+          </div>
+        </CTWBox.StackedWrapper>
+      </AnalyticsProvider>
     );
   },
   "PatientsTable"

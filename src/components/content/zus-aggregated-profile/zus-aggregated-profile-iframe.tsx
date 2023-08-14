@@ -20,7 +20,7 @@ const ZusAggregatedProfileIFrameComponent = (props: ZusAggregatedProfileProps) =
   const [zapURL, setZapUrl] = useState<string | undefined>(undefined);
   const { getRequestContext, featureFlags } = useCTW();
   const patient = usePatientContext();
-  const telemetry = useTelemetry();
+  const telemetry = useTelemetry().context;
   const theme = useTheme();
 
   useEffect(() => {

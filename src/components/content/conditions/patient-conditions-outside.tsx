@@ -4,6 +4,7 @@ import { useToggleDismiss } from "../hooks/use-toggle-dismiss";
 import { PatientHistoryAction } from "../patient-history/patient-history-action";
 import { usePatientHistory } from "../patient-history/use-patient-history";
 import { withErrorBoundary } from "@/components/core/error-boundary";
+import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { Spinner } from "@/components/core/spinner";
 import { RowActionsProps } from "@/components/core/table/table";
 import { ConditionModel } from "@/fhir/models";
@@ -36,15 +37,17 @@ const PatientConditionsOutsideComponent = ({
   );
 
   return (
-    <PatientConditionsBase
-      outside
-      action={action}
-      className={className}
-      query={query}
-      readOnly={readOnly}
-      RowActions={readOnly ? undefined : RowActions}
-      isLoading={patientHistoryQuery.isLoading}
-    />
+    <AnalyticsProvider componentName="PatientConditionsOutside">
+      <PatientConditionsBase
+        outside
+        action={action}
+        className={className}
+        query={query}
+        readOnly={readOnly}
+        RowActions={readOnly ? undefined : RowActions}
+        isLoading={patientHistoryQuery.isLoading}
+      />
+    </AnalyticsProvider>
   );
 };
 
