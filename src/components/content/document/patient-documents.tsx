@@ -106,6 +106,7 @@ const RowActions = ({ record, onSuccess, onAddToRecord }: RowActionsProps2) => {
       <button
         type="button"
         className="ctw-btn-primary ctw-ml-1 ctw-capitalize"
+        data-testid="add-to-record"
         onClick={async () => {
           const binary = await getBinaryDocument(await getRequestContext(), binaryId);
           onAddToRecord(record, binary);
