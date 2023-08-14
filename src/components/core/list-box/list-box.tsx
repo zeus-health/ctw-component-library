@@ -64,13 +64,7 @@ export const ListBox = forwardRef(
     }, [selectedIndex]);
 
     return (
-      <div
-        className={cx(
-          containerClassName,
-          "ctw-relative ctw-inline-block"
-        )}
-        ref={ref}
-      >
+      <div className={cx(containerClassName, "ctw-relative ctw-inline-block")} ref={ref}>
         <Listbox
           value={selectedTabIndex}
           onChange={(index: number) => {
