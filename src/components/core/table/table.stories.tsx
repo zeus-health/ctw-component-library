@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Table, TableProps } from "./table";
 import { TableColumn } from "./table-helpers";
+import { FAKE_AUTH, FAKE_BUILDER_ID } from "@/components/content/story-helpers/ids";
+import { CTWProvider } from "@/components/core/providers/ctw-provider";
 
 type Record = {
   key: string;
@@ -19,12 +21,14 @@ export default {
         Default: undefined,
         String: "Ain't no records here friend",
         ReactElement: (
-          <div className="ctw-space-y-4">
-            <div className="ctw-text-error-main">
-              I said <b>NO RECORDS</b> found!
+          <CTWProvider env="dev" authToken={FAKE_AUTH} builderId={FAKE_BUILDER_ID}>
+            <div className="ctw-space-y-4">
+              <div className="ctw-text-error-main">
+                I said <b>NO RECORDS</b> found!
+              </div>
+              <div>I hope that is OK</div>
             </div>
-            <div>I hope that is OK</div>
-          </div>
+          </CTWProvider>
         ),
       },
     },
