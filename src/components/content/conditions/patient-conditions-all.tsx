@@ -14,6 +14,7 @@ import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { EmptyTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
+import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { RowActionsProps } from "@/components/core/table/table";
 import { ConditionModel } from "@/fhir/models";
@@ -66,31 +67,33 @@ function PatientConditionsAllComponent({
   );
 
   return (
-    <div className={cx(className, "ctw-scrollable-pass-through-height")}>
-      <ResourceTableActions
-        filterOptions={{
-          onChange: setFilters,
-          defaultState: defaultConditionFilters,
-          filters: conditionFilters(query.data, true, true),
-        }}
-        sortOptions={{
-          defaultSort: defaultConditionSort,
-          options: conditionSortOptions,
-          onChange: setSort,
-        }}
-        action={action}
-      />
-      <ResourceTable
-        showTableHead
-        isLoading={query.isLoading}
-        data={data}
-        columns={patientConditionsAllColumns(userBuilderId)}
-        onRowClick={openDetails}
-        RowActions={RowActions}
-        enableDismissAndReadActions
-        emptyMessage={empty}
-      />
-    </div>
+    <AnalyticsProvider componentName="PatientConditionsAll">
+      <div className={cx(className, "ctw-scrollable-pass-through-height")}>
+        <ResourceTableActions
+          filterOptions={{
+            onChange: setFilters,
+            defaultState: defaultConditionFilters,
+            filters: conditionFilters(query.data, true, true),
+          }}
+          sortOptions={{
+            defaultSort: defaultConditionSort,
+            options: conditionSortOptions,
+            onChange: setSort,
+          }}
+          action={action}
+        />
+        <ResourceTable
+          showTableHead
+          isLoading={query.isLoading}
+          data={data}
+          columns={patientConditionsAllColumns(userBuilderId)}
+          onRowClick={openDetails}
+          RowActions={RowActions}
+          enableDismissAndReadActions
+          emptyMessage={empty}
+        />
+      </div>
+    </AnalyticsProvider>
   );
 }
 
