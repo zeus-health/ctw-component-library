@@ -201,6 +201,8 @@ export const FilterBar = ({ className, onChange, filters, defaultState = {} }: F
       <ListBox
         useBasicStyles
         btnClassName="!ctw-text-content-light ctw-btn-clear !ctw-font-normal"
+        // Add a right margin that's equal to the min-width of the dropdown-action-menu, minus the width of the "add filters" div (89px)
+        containerClassName="ctw-mr-[calc(15rem-89px)]"
         items={menuItems}
         onChange={(_index, item) => {
           switch (item.key) {
