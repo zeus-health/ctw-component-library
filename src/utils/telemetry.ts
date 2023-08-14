@@ -195,12 +195,14 @@ export class Telemetry {
     action: string,
     metadata: Record<string, unknown> & { datadogMetricName?: string } = {}
   ) {
-    const datadogMetricName = `action.${metadata.datadogMetricName ?? action}`;
+    // If `datadogMetricName` is not provided, we default to the action name.
+    // This allows us to send a different metric name to DataDog if needed.
+    const { datadogMetricName = action, ...eventMetadata } = metadata;
     // We send an action metric to CTW
-    this.countMetric(datadogMetricName, 1);
+    this.countMetric(`action.${datadogMetricName}`, 1);
     // We report an active session to CTW
     this.reportActiveSession().catch((error) => Telemetry.logError(error as Error));
-    this.analyticsEvent(action, metadata).catch((error) => Telemetry.logError(error as Error));
+    this.analyticsEvent(action, eventMetadata).catch((error) => Telemetry.logError(error as Error));
   }
 
   /**

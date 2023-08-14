@@ -21,8 +21,6 @@ export function useAnalytics() {
         if (patient.data?.UPID) {
           eventMetadata.upid = patient.data.UPID;
         }
-        console.log("trackInteraction", action);
-        console.log(eventMetadata);
         return telemetry.Telemetry.trackInteraction(action, eventMetadata);
       },
     }),

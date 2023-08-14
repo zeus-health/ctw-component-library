@@ -28,7 +28,9 @@ export function DrawerProvider({ children }: ProviderProps) {
         setIsOpen(false);
         setTimeout(() => {
           setIsOpen(true);
-          analytics.trackInteraction("open_drawer");
+          analytics.trackInteraction("open_drawer", {
+            datadogMetricName: `open_drawer.${props.telemetryName ?? ""}`.replace(/(\.)$/, ""),
+          });
         });
       },
     }),
