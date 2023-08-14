@@ -166,7 +166,7 @@ function TabGroupComponent({
               )}
               optionsClassName={cx(
                 "ctw-tab-list ctw-capitalize",
-                !showTopRightContent && shownContent.length > 1 && "ctw-right-0" // Right-align dropdown if it is rightmost (and not leftmost)
+                !showTopRightContent && tabOverflowCutoff > 2 && "ctw-right-0" // Right-align dropdown if it is rightmost (and not leftmost)
               )}
               onChange={(index) => handleOnChange(index + tabOverflowCutoff)}
               items={shownContent}
