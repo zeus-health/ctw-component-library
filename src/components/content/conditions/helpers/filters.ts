@@ -3,7 +3,7 @@ import { faClipboardCheck, faClipboardList } from "@fortawesome/free-solid-svg-i
 import intersectionWith from "lodash/intersectionWith";
 import { ConditionViewOptions } from "./views";
 import { dismissFilter } from "../../resource/filters";
-import { FilterItem } from "@/components/core/filter-bar/filter-bar-types";
+import { FilterChangeEvent, FilterItem } from "@/components/core/filter-bar/filter-bar-types";
 import { ConditionModel } from "@/fhir/models";
 import {
   ConditionStatuses,
@@ -75,3 +75,11 @@ export function conditionFilters(
 
   return filters;
 }
+
+export const defaultConditionFilters: FilterChangeEvent = {
+  displayStatus: {
+    key: "displayStatus",
+    selected: ["Active", "Pending", "Unknown"],
+    type: "checkbox",
+  },
+};
