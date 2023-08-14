@@ -92,6 +92,9 @@ export const Test: StoryObj<DrawerProps> = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
+    await new Promise((resolve) => {
+      setTimeout(resolve, 1000);
+    });
     // Verify drawer doesn't show right away.
     expect(canvas.queryByText(/drawer title/i)).toBeNull();
 
@@ -107,15 +110,13 @@ export const Test: StoryObj<DrawerProps> = {
 // Drawers need their own mocks for CTWProvider and PatientProvider.
 export function setupDrawerMocks() {
   return {
-    parameters: {
-      msw: {
-        handlers: {
-          mocks: [
-            rest.get("https://api.dev.zusapi.com/fhir/Patient", (req, res, ctx) =>
-              res(ctx.status(200), ctx.json(patient))
-            ),
-          ],
-        },
+    msw: {
+      handlers: {
+        mocks: [
+          rest.get("https://api.dev.zusapi.com/fhir/Patient", (req, res, ctx) =>
+            res(ctx.status(200), ctx.json(patient))
+          ),
+        ],
       },
     },
   };
