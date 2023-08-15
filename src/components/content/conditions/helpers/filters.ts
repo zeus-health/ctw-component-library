@@ -1,20 +1,50 @@
 import { faClock } from "@fortawesome/free-regular-svg-icons";
 import { faClipboardCheck, faClipboardList } from "@fortawesome/free-solid-svg-icons";
+import { ConditionViewOptions } from "./views";
 import { dismissFilter } from "../../resource/filters";
 import { FilterChangeEvent, FilterItem } from "@/components/core/filter-bar/filter-bar-types";
 import { ConditionModel } from "@/fhir/models";
-import { conditionStatuses, outsideConditionStatuses } from "@/fhir/models/condition";
+import {
+  ConditionStatuses,
+  conditionStatuses,
+  outsideConditionStatuses,
+} from "@/fhir/models/condition";
 import { uniqueValues } from "@/utils/filters";
+import { intersectionWith } from "@/utils/nodash/fp";
 
 export function conditionFilters(
   conditions: ConditionModel[],
   includeDismiss: boolean,
-  showAllStatuses: boolean
+  showAllStatuses: boolean,
+  onlyShowOptionsForStatus?: ConditionViewOptions
 ): FilterItem[] {
   const filters: FilterItem[] = [];
-
   if (includeDismiss) {
     filters.push(dismissFilter);
+  }
+
+  let statusesToShow: ConditionStatuses[] = showAllStatuses
+    ? [...conditionStatuses.filter((status) => status !== "Entered in Error")]
+    : [...outsideConditionStatuses];
+
+  if (onlyShowOptionsForStatus) {
+    switch (onlyShowOptionsForStatus) {
+      case "Current":
+        statusesToShow = intersectionWith((a, b) => a === b, statusesToShow, [
+          "Active",
+          "Pending",
+          "Unknown",
+        ]);
+        break;
+      case "Past":
+        statusesToShow = intersectionWith((a, b) => a === b, statusesToShow, [
+          "Inactive",
+          "Refuted",
+        ]);
+        break;
+      default:
+        break;
+    }
   }
 
   filters.push(
@@ -24,7 +54,7 @@ export function conditionFilters(
       icon: faClipboardCheck,
       display: "Status",
       // Create new array as these other ones are readonly.
-      values: [...(showAllStatuses ? conditionStatuses : outsideConditionStatuses)],
+      values: statusesToShow,
     },
     {
       key: "ccsChapter",
