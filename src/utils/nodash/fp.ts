@@ -7,6 +7,7 @@ export { default as filter } from "lodash/fp/filter";
 export { default as find } from "lodash/fp/find";
 export { default as get } from "lodash/fp/get";
 export { default as groupBy } from "lodash/fp/groupBy";
+export { default as intersectionWith } from "lodash/fp/intersectionWith";
 export { default as isEqual } from "lodash/fp/isEqual";
 export { default as isFunction } from "lodash/fp/isFunction";
 export { default as keys } from "lodash/fp/keys";

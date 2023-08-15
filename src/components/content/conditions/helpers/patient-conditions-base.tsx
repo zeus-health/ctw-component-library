@@ -4,8 +4,9 @@ import cx from "classnames";
 import { ReactElement } from "react";
 import { patientConditionsColumns } from "./columns";
 import { useConditionDetailsDrawer } from "./details";
-import { conditionFilters, defaultConditionFilters } from "./filters";
+import { conditionFilters } from "./filters";
 import { conditionSortOptions, defaultConditionSort } from "./sorts";
+import { ConditionViewOptions, statusView } from "./views";
 import { ResourceTable } from "../../resource/resource-table";
 import {
   ResourceTableActions,
@@ -38,10 +39,12 @@ export const PatientConditionsBase = ({
 }: PatientConditionsTableProps) => {
   const openDetailsDrawer = useConditionDetailsDrawer({ RowActions });
 
-  const { data, setFilters, setSort } = useFilteredSortedData({
-    defaultFilters: defaultConditionFilters,
+  const { viewOptions, current } = statusView;
+
+  const { data, setFilters, setSort, viewOption, setViewOption } = useFilteredSortedData({
     defaultSort: defaultConditionSort,
     records: query.data,
+    defaultView: current,
   });
 
   const isEmptyQuery = query.data?.length === 0;
@@ -59,13 +62,22 @@ export const PatientConditionsBase = ({
       <ResourceTableActions
         filterOptions={{
           onChange: setFilters,
-          defaultState: defaultConditionFilters,
-          filters: conditionFilters(query.data ?? [], outside, !outside),
+          filters: conditionFilters(
+            query.data ?? [],
+            outside,
+            !outside,
+            viewOption?.display as ConditionViewOptions
+          ),
         }}
         sortOptions={{
           defaultSort: defaultConditionSort,
           options: conditionSortOptions,
           onChange: setSort,
+        }}
+        viewOptions={{
+          onChange: setViewOption,
+          options: viewOptions,
+          defaultView: current,
         }}
         action={action}
       />

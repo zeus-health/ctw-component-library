@@ -1,5 +1,13 @@
 # ctw-component-library
 
+## 1.56.1
+
+### Patch Changes
+
+- abb36563: Fix dropdown alignment bug in ZAP.
+- 1e570c05: Added AnalyticsProvider and useAnalytics hook.
+- 76fcb62f: For conditions table, add time-based view and a status filter that adjusts its options based on that.
+
 ## 1.56.0
 
 ### Minor Changes
