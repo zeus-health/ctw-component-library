@@ -1,6 +1,5 @@
 import { faClock } from "@fortawesome/free-regular-svg-icons";
 import { faClipboardCheck, faClipboardList } from "@fortawesome/free-solid-svg-icons";
-import intersectionWith from "lodash/fp/intersectionWith";
 import { ConditionViewOptions } from "./views";
 import { dismissFilter } from "../../resource/filters";
 import { FilterChangeEvent, FilterItem } from "@/components/core/filter-bar/filter-bar-types";
@@ -11,6 +10,7 @@ import {
   outsideConditionStatuses,
 } from "@/fhir/models/condition";
 import { uniqueValues } from "@/utils/filters";
+import { intersectionWith } from "@/utils/nodash/fp";
 
 export function conditionFilters(
   conditions: ConditionModel[],
