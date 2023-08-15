@@ -1,6 +1,6 @@
 import { faClock } from "@fortawesome/free-regular-svg-icons";
 import { faClipboardCheck, faClipboardList } from "@fortawesome/free-solid-svg-icons";
-import intersectionWith from "lodash/intersectionWith";
+import intersectionWith from "lodash/fp/intersectionWith";
 import { ConditionViewOptions } from "./views";
 import { dismissFilter } from "../../resource/filters";
 import { FilterChangeEvent, FilterItem } from "@/components/core/filter-bar/filter-bar-types";
@@ -24,24 +24,23 @@ export function conditionFilters(
   }
 
   let statusesToShow: ConditionStatuses[] = showAllStatuses
-    ? [...conditionStatuses]
+    ? [...conditionStatuses.filter((status) => status !== "Entered in Error")]
     : [...outsideConditionStatuses];
 
   if (onlyShowOptionsForStatus) {
     switch (onlyShowOptionsForStatus) {
       case "Current":
-        statusesToShow = intersectionWith(
-          statusesToShow,
-          ["Active", "Pending", "Unknown"],
-          (a, b) => a === b
-        );
+        statusesToShow = intersectionWith((a, b) => a === b, statusesToShow, [
+          "Active",
+          "Pending",
+          "Unknown",
+        ]);
         break;
       case "Past":
-        statusesToShow = intersectionWith(
-          statusesToShow,
-          ["Inactive", "Refuted"],
-          (a, b) => a === b
-        );
+        statusesToShow = intersectionWith((a, b) => a === b, statusesToShow, [
+          "Inactive",
+          "Refuted",
+        ]);
         break;
       default:
         break;
