@@ -2,7 +2,7 @@ import { TableColumn } from "@/components/core/table/table-helpers";
 import { MedicationDispenseModel } from "@/fhir/models";
 
 export const patientMedicationDispenseColumns = () => {
-  const immunizationColumns: TableColumn<MedicationDispenseModel>[] = [
+  const dispenseColumns: TableColumn<MedicationDispenseModel>[] = [
     {
       title: "TimeStamp",
       render: (m) => (
@@ -37,5 +37,5 @@ export const patientMedicationDispenseColumns = () => {
     },
   ];
 
-  return immunizationColumns;
+  return dispenseColumns;
 };
