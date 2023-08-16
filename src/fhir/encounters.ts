@@ -21,10 +21,7 @@ export function usePatientEncounters() {
     [data],
     (() => {
       if (!isFetched) {
-        return async () =>
-          new Promise<EncounterModel[]>((resolve) => {
-            resolve([]);
-          });
+        return async () => new Promise<EncounterModel[]>(() => {});
       }
       return withTimerMetric(getEncountersFromFQS(data), `req.timing.encounters`);
     })()
