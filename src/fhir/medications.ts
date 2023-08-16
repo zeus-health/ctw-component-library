@@ -6,18 +6,8 @@ import type {
   MedicationStatement,
 } from "fhir/r4";
 import { useEffect, useState } from "react";
-import { bundleToResourceMap, getIncludedResources, getMergedIncludedResources } from "./bundle";
+import { bundleToResourceMap } from "./bundle";
 import { getIdentifyingRxNormCode } from "./medication";
-import { MedicationDispenseModel } from "./models";
-import { MedicationRequestModel } from "./models/medication-request";
-import {
-  searchAllRecords,
-  searchBuilderRecords,
-  searchCommonRecords,
-  searchLensRecords,
-  SearchReturn,
-  searchSummaryRecords,
-} from "./search-helpers";
 import {
   CTW_EXTENSION_LENS_AGGREGATED_FROM,
   LENS_EXTENSION_AGGREGATED_FROM,
@@ -27,15 +17,13 @@ import {
   LENS_EXTENSION_MEDICATION_LAST_PRESCRIBER,
   LENS_EXTENSION_MEDICATION_QUANTITY,
   LENS_EXTENSION_MEDICATION_REFILLS,
-  SYSTEM_RXNORM,
   SYSTEM_SUMMARY,
   SYSTEM_ZUS_OWNER,
   SYSTEM_ZUS_SUMMARY,
   SYSTEM_ZUS_THIRD_PARTY,
-  SYSTEM_ZUS_UNIVERSAL_ID,
 } from "./system-urls";
-import { ResourceMap, ResourceTypeString } from "./types";
-import { useFeatureFlaggedQueryWithPatient } from "..";
+import { ResourceMap } from "./types";
+import { useQueryWithPatient } from "..";
 import { getLensBuilderId } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { MedicationModel } from "@/fhir/models/medication";
@@ -59,7 +47,6 @@ import {
   MedicationStatementGraphqlResponse,
   medicationStatementQuery,
 } from "@/services/fqs/queries/medication-statements";
-import { errorResponse } from "@/utils/errors";
 import { cloneDeep, sortBy, uniqWith } from "@/utils/nodash";
 import {
   compact,
@@ -71,14 +58,13 @@ import {
   last,
   map,
   mapValues,
-  omit,
   pipe,
   propEq,
   split,
 } from "@/utils/nodash/fp";
 import { QUERY_KEY_MEDICATION_HISTORY } from "@/utils/query-keys";
 import { sort } from "@/utils/sort";
-import { Telemetry } from "@/utils/telemetry";
+import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export type InformationSource =
   | "Patient"
@@ -98,58 +84,6 @@ export type MedicationResults = {
   medications: fhir4.MedicationStatement[];
   basic: fhir4.Basic[];
 };
-
-const omitClientFilters = omit(["informationSourceNot", "informationSource"]);
-
-function applySearchFiltersToResponse(
-  response: SearchReturn<"MedicationStatement">,
-  searchFilters: MedicationFilter = {},
-  removeMedsWithNoRxNorm = false
-) {
-  let medications = removeMedsWithNoRxNorm
-    ? filterMedicationsWithNoRxNorms(response.resources, response.bundle)
-    : response.resources;
-
-  if (searchFilters.informationSource) {
-    medications = medications.filter(
-      (medication) => medication.informationSource?.type === searchFilters.informationSource
-    );
-  }
-
-  if (searchFilters.informationSourceNot) {
-    medications = medications.filter(
-      (medication) => medication.informationSource?.type !== searchFilters.informationSourceNot
-    );
-  }
-
-  return medications;
-}
-
-/* Note when filtering the bundle may contain data that will no longer be in the returned medications. */
-export async function getBuilderMedicationsODS(
-  requestContext: CTWRequestContext,
-  patient: PatientModel
-) {
-  const searchFilters = {
-    informationSourceNot: "Patient", // exclude medication statements where the patient is the information source
-  } as MedicationFilter;
-
-  try {
-    const response = await searchBuilderRecords("MedicationStatement", requestContext, {
-      patientUPID: patient.UPID,
-      _include: "MedicationStatement:medication",
-      ...omitClientFilters(searchFilters),
-    });
-
-    const medications = applySearchFiltersToResponse(response, searchFilters, false);
-
-    Telemetry.histogramMetric("req.count.builder_medications", medications.length);
-
-    return medications.map((m) => new MedicationStatementModel(m));
-  } catch (e) {
-    throw errorResponse("Failed fetching medications for patient", e);
-  }
-}
 
 export async function getBuilderMedicationsFQS(
   requestContext: CTWRequestContext,
@@ -188,9 +122,9 @@ export async function getBuilderMedicationsFQS(
     const medStatements = nodes.map((n) => new MedicationStatementModel(n));
     const models = applySearchFiltersToFQSResponse(medStatements, searchFilters, false);
     if (models.length === 0) {
-      Telemetry.countMetric("req.count.builder_medications.none", 1, ["fqs"]);
+      Telemetry.countMetric("req.count.builder_medications.none", 1);
     }
-    Telemetry.histogramMetric("req.count.builder_medications", models.length, ["fqs"]);
+    Telemetry.histogramMetric("req.count.builder_medications", models.length);
     return models;
   } catch (e) {
     throw Telemetry.logError(
@@ -350,70 +284,6 @@ export async function getMedicationRequestsForPatientByIdFQS(
   }
 }
 
-export async function getCommonMedicationRequests(
-  requestContext: CTWRequestContext,
-  patient: PatientModel,
-  keys: object[] = []
-) {
-  const [searchFilters = {}] = keys;
-
-  try {
-    const { bundle, resources } = await searchCommonRecords("MedicationRequest", requestContext, {
-      patientUPID: patient.UPID,
-      ...omitClientFilters(searchFilters),
-    });
-
-    return resources.map((r) => new MedicationRequestModel(r, getIncludedResources(bundle)));
-  } catch (e) {
-    throw errorResponse("Failed fetching medication requests for patient", e);
-  }
-}
-
-export async function getCommonMedicationDispenses(
-  requestContext: CTWRequestContext,
-  patient: PatientModel,
-  keys: object[] = []
-) {
-  const [searchFilters = {}] = keys;
-
-  try {
-    const { bundle, resources } = await searchCommonRecords("MedicationDispense", requestContext, {
-      patientUPID: patient.UPID,
-      ...omitClientFilters(searchFilters),
-      _include: ["MedicationRequest:medication", "MedicationDispense:performer"],
-    });
-
-    return resources.map((r) => new MedicationDispenseModel(r, getIncludedResources(bundle)));
-  } catch (e) {
-    throw errorResponse("Failed fetching medication dispenses for patient", e);
-  }
-}
-
-export async function getMedicationStatements(
-  requestContext: CTWRequestContext,
-  patient: PatientModel,
-  keys: (string | undefined)[] = []
-) {
-  const [rxNorm] = keys;
-  if (!rxNorm) {
-    return [];
-  }
-  try {
-    const { bundle, resources } = await searchSummaryRecords(
-      "MedicationStatement",
-      requestContext,
-      {
-        patientUPID: patient.UPID,
-        code: `${SYSTEM_RXNORM}|${rxNorm}`,
-      }
-    );
-
-    return resources.map((r) => new MedicationStatementModel(r, getIncludedResources(bundle)));
-  } catch (e) {
-    throw errorResponse("Failed fetching medication statements for patient", e);
-  }
-}
-
 function applySearchFiltersToFQSResponse(
   medicationStatements: MedicationStatementModel[],
   searchFilters: MedicationFilter = {},
@@ -437,34 +307,6 @@ function applySearchFiltersToFQSResponse(
   }
 
   return medications;
-}
-
-/* Note when filtering the bundle may contain data that will no longer 
-be in the returned medications, such as medications with no RxNorm code. */
-export async function getSummaryMedicationsODS(
-  requestContext: CTWRequestContext,
-  patient: PatientModel
-) {
-  const searchFilters = {
-    _revinclude: "Basic:subject",
-  } as Record<string, string>;
-
-  try {
-    const response = await searchLensRecords("MedicationStatement", requestContext, {
-      patientUPID: patient.UPID,
-      _include: "MedicationStatement:medication",
-      ...omitClientFilters(searchFilters),
-    });
-
-    const medications = applySearchFiltersToResponse(response, searchFilters, true);
-    if (medications.length === 0) {
-      Telemetry.countMetric("req.count.summary_medications.none");
-    }
-    Telemetry.histogramMetric("req.count.summary_medications", medications.length);
-    return medications.map((m) => new MedicationStatementModel(m));
-  } catch (e) {
-    throw errorResponse("Failed fetching medications for patient", e);
-  }
 }
 
 /* Note when filtering the bundle may contain data that will no longer 
@@ -497,9 +339,9 @@ export async function getSummaryMedicationsFQS(
     );
     const nodes = data.MedicationStatementConnection.edges.map((x) => x.node);
     if (nodes.length === 0) {
-      Telemetry.countMetric("req.count.summary_medications.none", 1, ["fqs"]);
+      Telemetry.countMetric("req.count.summary_medications.none", 1);
     }
-    Telemetry.histogramMetric("req.count.summary_medications", nodes.length, ["fqs"]);
+    Telemetry.histogramMetric("req.count.summary_medications", nodes.length);
     return nodes.map((n) => new MedicationStatementModel(n));
   } catch (e) {
     throw Telemetry.logError(
@@ -575,13 +417,10 @@ export function splitMedications(
 }
 
 export function useMedicationHistory(medication?: fhir4.MedicationStatement) {
-  return useFeatureFlaggedQueryWithPatient(
+  return useQueryWithPatient(
     QUERY_KEY_MEDICATION_HISTORY,
     [medication?.id],
-    "medications",
-    "req.timing.medication_history",
-    getMedicationHistoryFQS(medication),
-    getMedicationHistoryODS(medication)
+    withTimerMetric(getMedicationHistoryFQS(medication), "req.timing.medication_history")
   );
 }
 
@@ -620,111 +459,6 @@ export function useLastPrescriber(medication?: fhir4.MedicationStatement) {
   }, [lastPrescriber, historyQuery.data]);
 
   return { isLoading: historyQuery.isFetching, lastPrescriber };
-}
-
-type NoopSearchResults = { resources: []; bundle: undefined };
-function searchWrapper<T extends ResourceTypeString>(
-  resourceType: T,
-  requestContext: CTWRequestContext,
-  patientUPID: string,
-  ids: string[] = [],
-  included: string[] = []
-): Promise<SearchReturn<T>> | NoopSearchResults {
-  if (ids.length > 0) {
-    return searchAllRecords(resourceType, requestContext, {
-      _id: ids.join(","),
-      _include: [`${resourceType}:patient`, `${resourceType}:medication`, ...included],
-      "_include:iterate": "Patient:organization",
-      // UPID required as a query param to engage "CPR mode" and provide access to other builder's data.
-      // TODO: However, the CPR query will not run correctly if the Zus-Account header is set, thus
-      // this is incompatible with our current builder selector.
-      "patient.identifier": `${SYSTEM_ZUS_UNIVERSAL_ID}|${patientUPID}`,
-    });
-  }
-  return { resources: [], bundle: undefined };
-}
-
-function getMedicationHistoryODS(medication?: fhir4.MedicationStatement) {
-  return async (requestContext: CTWRequestContext, patient: PatientModel) => {
-    if (!medication) {
-      return { medications: [], includedResources: {} as ResourceMap };
-    }
-
-    try {
-      const aggregatedFromReferences = new MedicationStatementModel(medication).aggregatedFrom;
-
-      const getRefId = pipe(get("reference"), split("/"), last);
-      const resources = pipe(
-        groupBy(get("type")),
-        mapValues(map(getRefId))
-      )(aggregatedFromReferences);
-      const [
-        medicationStatementResponse,
-        medicationAdministrationResponse,
-        medicationRequestResponse,
-        medicationDispenseResponse,
-      ] = await Promise.all([
-        searchWrapper(
-          "MedicationStatement",
-          requestContext,
-          patient.UPID,
-          resources.MedicationStatement
-        ),
-        searchWrapper(
-          "MedicationAdministration",
-          requestContext,
-          patient.UPID,
-          resources.MedicationAdministration
-        ),
-        searchWrapper(
-          "MedicationRequest",
-          requestContext,
-          patient.UPID,
-          resources.MedicationRequest,
-          ["MedicationRequest:requester"]
-        ),
-        searchWrapper(
-          "MedicationDispense",
-          requestContext,
-          patient.UPID,
-          resources.MedicationDispense,
-          ["MedicationDispense:performer", "MedicationDispense:prescription"]
-        ),
-      ]);
-
-      const includedResources = getMergedIncludedResources(
-        compact([
-          medicationStatementResponse.bundle,
-          medicationAdministrationResponse.bundle,
-          medicationRequestResponse.bundle,
-          medicationDispenseResponse.bundle,
-        ])
-      );
-
-      let medicationResources = compact([
-        ...medicationStatementResponse.resources,
-        ...medicationAdministrationResponse.resources,
-        ...medicationRequestResponse.resources,
-        ...medicationDispenseResponse.resources,
-      ]).map((m) => new MedicationModel(m, includedResources));
-
-      // force ODS results to be sorted by id just like FQS results to ensure both functions return the same output.
-      medicationResources = sortBy(medicationResources, (a) => a.resource.id);
-
-      const medications = sort(
-        uniqWith(
-          medicationResources,
-          (a, b) => a.date === b.date && a.resource.resourceType === b.resource.resourceType
-        ),
-        "date",
-        "desc",
-        true
-      );
-      return { medications, includedResources };
-    } catch (e) {
-      throw new Error(`Failed fetching medication history for medication ${medication.id}: ${e}`);
-    }
-  };
 }
 
 function getMedicationHistoryFQS(medication?: fhir4.MedicationStatement) {

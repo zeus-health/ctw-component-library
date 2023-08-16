@@ -7,6 +7,7 @@ import { ListBox } from "../list-box/list-box";
 import { PatientHistoryStatus } from "@/components/content/patient-history/patient-history-message-status";
 import { usePatientHistory } from "@/components/content/patient-history/use-patient-history";
 import { withErrorBoundary } from "@/components/core/error-boundary";
+import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 
 export type TabGroupProps = {
@@ -49,11 +50,12 @@ function TabGroupComponent({
 
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   const patientHistoryDetails = usePatientHistory();
+  const { trackInteraction } = useAnalytics();
   // Work around for not wanting to pre-mount all tabs.
   // https://github.com/tailwindlabs/headlessui/issues/2276#issuecomment-1456537475
   const [shown, setShown] = useState<Record<number, boolean>>({ 0: true });
 
-  // Calculate how many tabs can fit in the container.
+  // Calculate how many tabs can fit in the container,
   useEffect(() => {
     // Force everything into the more menu if we are in a small breakpoint
     // and we are not forcing horizontal tabs.
@@ -105,6 +107,7 @@ function TabGroupComponent({
   };
 
   const showTopRightContent = !!topRightContent;
+  const shownContent = content.slice(tabOverflowCutoff);
 
   return (
     <div
@@ -126,8 +129,10 @@ function TabGroupComponent({
           {content.map(({ key, display }, index) => (
             <Tab
               key={key}
-              data-zus-telemetry-click={`Tab[${key}]`}
-              onClick={onClickBlur}
+              onClick={() => {
+                onClickBlur();
+                trackInteraction("open_tab", { tab: key });
+              }}
               className={({ selected }) =>
                 cx(
                   [
@@ -152,16 +157,19 @@ function TabGroupComponent({
               ref={moreMenuRef}
               selectedIndex={selectedTabIndex - tabOverflowCutoff}
               btnClassName={cx(
-                "ctw-more-tab ctw-capitalize ctw-flex-shrink-0 ctw-h-full",
+                "ctw-more-tab ctw-text-sm ctw-whitespace-nowrap ctw-capitalize ctw-flex-shrink-0 ctw-h-full",
                 "hover:after:ctw-bg-content-black",
                 {
                   "-ctw-ml-5": tabOverflowCutoff === 0,
                   "after:ctw-bg-content-black": selectedTabIndex - tabOverflowCutoff >= 0,
                 }
               )}
-              optionsClassName="ctw-tab-list ctw-capitalize"
+              optionsClassName={cx(
+                "ctw-tab-list ctw-capitalize",
+                !showTopRightContent && tabOverflowCutoff > 2 && "ctw-right-0" // Right-align dropdown if it is rightmost (and not leftmost)
+              )}
               onChange={(index) => handleOnChange(index + tabOverflowCutoff)}
-              items={content.slice(tabOverflowCutoff)}
+              items={shownContent}
             >
               {tabOverflowCutoff !== 0 ? <span>More</span> : undefined}
             </ListBox>

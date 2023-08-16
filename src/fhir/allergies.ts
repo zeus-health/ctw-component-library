@@ -1,26 +1,21 @@
 import { useIncludeBasics } from "./basic";
-import { getIncludedResources } from "./bundle";
 import { PatientModel } from "./models";
-import { searchCommonRecords } from "./search-helpers";
 import { applyAllergyFilters } from "@/components/content/allergies/helpers/allergies-filter";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { useFeatureFlaggedQueryWithPatient } from "@/components/core/providers/patient-provider";
+import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import { AllergyGraphqlResponse, allergyQuery } from "@/services/fqs/queries/allergies";
 import { QUERY_KEY_PATIENT_ALLERGIES } from "@/utils/query-keys";
-import { Telemetry } from "@/utils/telemetry";
+import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export function usePatientAllergies() {
   const fqs = useFQSFeatureToggle("allergies");
 
-  const patientAllergiesQuery = useFeatureFlaggedQueryWithPatient(
+  const patientAllergiesQuery = useQueryWithPatient(
     QUERY_KEY_PATIENT_ALLERGIES,
     [],
-    "allergies",
-    "req.timing.allergies",
-    getAllergyIntoleranceFromFQS,
-    getAllergyIntoleranceFromODS
+    withTimerMetric(getAllergyIntoleranceFromFQS, "req.timing.allergies")
   );
 
   return useIncludeBasics(patientAllergiesQuery, fqs);
@@ -43,31 +38,7 @@ async function getAllergyIntoleranceFromFQS(
     const nodes = data.AllergyIntoleranceConnection.edges.map((x) => x.node);
     const results = applyAllergyFilters(nodes, requestContext.builderId);
     if (results.length === 0) {
-      Telemetry.countMetric("req.count.allergies.none", 1, ["fqs"]);
-    }
-    Telemetry.histogramMetric("req.count.allergies", results.length, ["fqs"]);
-    return results;
-  } catch (e) {
-    throw new Error(`Failed fetching allergies information for patient ${patient.UPID}`);
-  }
-}
-
-async function getAllergyIntoleranceFromODS(
-  requestContext: CTWRequestContext,
-  patient: PatientModel
-) {
-  try {
-    const { bundle, resources } = await searchCommonRecords("AllergyIntolerance", requestContext, {
-      patientUPID: patient.UPID,
-      _include: ["AllergyIntolerance:patient"],
-      "_include:iterate": "Patient:organization",
-      _revinclude: "Basic:subject",
-    });
-
-    const includedResources = getIncludedResources(bundle);
-    const results = applyAllergyFilters(resources, requestContext.builderId, includedResources);
-    if (results.length === 0) {
-      Telemetry.countMetric("req.count.allergies.none");
+      Telemetry.countMetric("req.count.allergies.none", 1);
     }
     Telemetry.histogramMetric("req.count.allergies", results.length);
     return results;

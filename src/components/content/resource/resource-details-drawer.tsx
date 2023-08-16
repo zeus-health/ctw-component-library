@@ -1,5 +1,6 @@
 import { ReactNode, useEffect, useState } from "react";
 import { History, HistoryEntries } from "./helpers/history";
+import { Notes } from "./helpers/notes";
 import { useAdditionalResourceActions } from "./use-additional-resource-actions";
 import { DocumentButton } from "../CCDA/document-button";
 import { useCCDAModal } from "../CCDA/modal-ccda";
@@ -11,10 +12,12 @@ import { useCTW } from "@/components/core/providers/use-ctw";
 import { RowActionsProp } from "@/components/core/table/table-rows";
 import { getBinaryId } from "@/fhir/binaries";
 import { DocumentModel } from "@/fhir/models/document";
+import { EncounterModel } from "@/fhir/models/encounter";
 import { FHIRModel } from "@/fhir/models/fhir-model";
 import { searchProvenances } from "@/fhir/provenance";
 import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { UseQueryResultBasic } from "@/utils/request";
+import { Telemetry } from "@/utils/telemetry";
 
 const HISTORY_PAGE_LIMIT = 20;
 
@@ -36,7 +39,7 @@ export function useResourceDetailsDrawer<T extends fhir4.Resource, M extends FHI
 
   return (model: M) => {
     openDrawer({
-      telemetryName: "resource_details",
+      telemetryName: model.resourceType,
       component: (drawerProps) => (
         <ResourceDetailsDrawer model={model} {...props} {...drawerProps} />
       ),
@@ -90,8 +93,7 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
     }
 
     if (model instanceof DocumentModel) {
-      // Special handling for document models
-      // which already have a binaryID.
+      // Special handling for document models which already have a binaryID.
       setBinaryId(model.binaryId);
     } else if (getSourceDocument && fqsProvenances.ready) {
       void load();
@@ -125,7 +127,10 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
               documentButton={
                 binaryId && (
                   <DocumentButton
-                    onClick={() => openCCDAModal(binaryId, model.resourceTypeTitle)}
+                    onClick={() => {
+                      Telemetry.trackInteraction(`${model.resourceType}.view_source_document`);
+                      return openCCDAModal(binaryId, model.resourceTypeTitle);
+                    }}
                     text="Source Document"
                   />
                 )
@@ -143,6 +148,10 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
                 resourceTypeTitle={model.resourceTypeTitle}
               />
             ))}
+
+          {model instanceof EncounterModel && model.clinicalNotes.length > 0 && (
+            <Notes entries={model.clinicalNotes} />
+          )}
         </div>
       </Drawer.Body>
       {actions && (

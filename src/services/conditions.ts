@@ -11,11 +11,9 @@ import {
 } from "../fhir/system-urls";
 import { getLensBuilderId } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { useFeatureFlaggedQueryWithPatient } from "@/components/core/providers/patient-provider";
+import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { useBasic } from "@/fhir/basic";
-import { getIncludedBasics } from "@/fhir/bundle";
 import { ConditionModel } from "@/fhir/models/condition";
-import { searchBuilderRecords, searchSummaryRecords } from "@/fhir/search-helpers";
 import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import { ConditionGraphqlResponse, conditionsQuery } from "@/services/fqs/queries/conditions";
@@ -25,27 +23,21 @@ import {
   QUERY_KEY_PATIENT_CONDITIONS,
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
-import { Telemetry } from "@/utils/telemetry";
+import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export function usePatientBuilderConditions() {
-  return useFeatureFlaggedQueryWithPatient(
+  return useQueryWithPatient(
     QUERY_KEY_PATIENT_CONDITIONS,
     [],
-    "conditions",
-    "req.timing.builder_conditions",
-    fetchPatientBuilderConditionsFQS,
-    fetchPatientBuilderConditionsODS
+    withTimerMetric(fetchPatientBuilderConditionsFQS, "req.timing.builder_conditions")
   );
 }
 
 function usePatientSummaryConditions() {
-  return useFeatureFlaggedQueryWithPatient(
+  return useQueryWithPatient(
     QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
     [],
-    "conditions",
-    "req.timing.summary_conditions",
-    fetchPatientSummaryConditionsFQS,
-    fetchPatientSummaryConditionsODS
+    withTimerMetric(fetchPatientSummaryConditionsFQS, "req.timing.summary_conditions")
   );
 }
 
@@ -139,14 +131,6 @@ export function usePatientConditionsAll() {
     isFetching,
     data: conditions,
   };
-}
-
-function setupConditionModels(
-  conditionResources: fhir4.Condition[],
-  bundle: fhir4.Bundle
-): ConditionModel[] {
-  const basicsMap = getIncludedBasics(bundle);
-  return conditionResources.map((c) => new ConditionModel(c, undefined, basicsMap.get(c.id ?? "")));
 }
 
 function setupConditionModelsWithFQS(conditionResources: fhir4.Condition[]): ConditionModel[] {
@@ -252,28 +236,8 @@ async function fetchPatientBuilderConditionsFQS(
     );
     let conditions = setupConditionModelsWithFQS(nodes);
     conditions = filterAndSort(conditions);
-    Telemetry.histogramMetric(`req.count.builder_conditions`, conditions.length, ["fqs"]);
+    Telemetry.histogramMetric(`req.count.builder_conditions`, conditions.length);
     return conditions;
-  } catch (e) {
-    throw Telemetry.logError(e as Error, `Failed fetching conditions for patient: ${patient.UPID}`);
-  }
-}
-
-async function fetchPatientBuilderConditionsODS(
-  requestContext: CTWRequestContext,
-  patient: PatientModel
-) {
-  try {
-    const { bundle, resources: conditions } = await searchBuilderRecords(
-      "Condition",
-      requestContext,
-      {
-        patientUPID: patient.UPID,
-      }
-    );
-    const results = filterAndSort(setupConditionModels(conditions, bundle));
-    Telemetry.histogramMetric("req.count.builder_conditions", results.length);
-    return results;
   } catch (e) {
     throw Telemetry.logError(e as Error, `Failed fetching conditions for patient: ${patient.UPID}`);
   }
@@ -305,34 +269,7 @@ async function fetchPatientSummaryConditionsFQS(
     const conditions = setupConditionModelsWithFQS(nodes);
     const results = filterAndSort(conditions);
     if (results.length === 0) {
-      Telemetry.countMetric("req.count.summary_conditions.none", 1, ["fqs"]);
-    }
-    Telemetry.histogramMetric("req.count.summary_conditions", results.length, ["fqs"]);
-    return results;
-  } catch (e) {
-    throw Telemetry.logError(
-      e as Error,
-      `Failed fetching conditions outside for patient: ${patient.UPID}`
-    );
-  }
-}
-
-async function fetchPatientSummaryConditionsODS(
-  requestContext: CTWRequestContext,
-  patient: PatientModel
-) {
-  try {
-    const { bundle, resources: conditions } = await searchSummaryRecords(
-      "Condition",
-      requestContext,
-      {
-        _revinclude: "Basic:subject",
-        patientUPID: patient.UPID,
-      }
-    );
-    const results = filterAndSort(setupConditionModels(conditions, bundle));
-    if (results.length === 0) {
-      Telemetry.countMetric("req.count.summary_conditions.none");
+      Telemetry.countMetric("req.count.summary_conditions.none", 1);
     }
     Telemetry.histogramMetric("req.count.summary_conditions", results.length);
     return results;

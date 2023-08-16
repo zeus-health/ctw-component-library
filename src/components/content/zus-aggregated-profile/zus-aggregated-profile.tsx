@@ -1,6 +1,7 @@
 import { PatientConditionsAllProps } from "../conditions/patient-conditions-all";
 import { PatientConditionsOutsideProps } from "../conditions/patient-conditions-outside";
 import { PatientDiagnosticReportsProps } from "../diagnostic-reports/patient-diagnostic-reports";
+import { PatientEncountersProps } from "../encounters/patient-encounters";
 import { PatientMedicationsProps } from "../medications/patient-medications";
 import { PatientMedicationsAllProps } from "../medications/patient-medications-all";
 import { PatientMedicationsOutsideProps } from "../medications/patient-medications-outside";
@@ -18,6 +19,7 @@ import {
 } from "@/components/content/zus-aggregated-profile/zus-aggregated-profile-tabs";
 import { Title } from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
+import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { TabGroup } from "@/components/core/tab-group/tab-group";
 import { intersection } from "@/utils/nodash";
 
@@ -33,13 +35,14 @@ export type ZAPResourceName =
   | "medications"
   | "medications-outside"
   | "medications-all"
-  | "timeline";
+  | "timeline"
+  | "encounters";
 
 export const defaultZAPResources: ZAPResourceName[] = [
   "conditions-all",
   "medications-all",
   "diagnostic-reports",
-  "timeline",
+  "encounters",
   "documents",
   "allergies",
   "immunizations",
@@ -69,6 +72,7 @@ export type ZusAggregatedProfileSubComponentProps = Partial<{
   medicationsOutsideProps: PatientMedicationsOutsideProps;
   medicationsAllProps: PatientMedicationsAllProps;
   timelineProps: PatientTimelineProps;
+  encounterProps: PatientEncountersProps;
 }>;
 
 const ZusAggregatedProfileComponent = ({
@@ -86,6 +90,7 @@ const ZusAggregatedProfileComponent = ({
   medicationsOutsideProps,
   medicationsAllProps,
   timelineProps,
+  encounterProps,
   resources = defaultZAPResources,
   hideTitle = false,
   title = "Outside Records",
@@ -106,6 +111,7 @@ const ZusAggregatedProfileComponent = ({
     "medications-outside": medicationsOutsideProps,
     "medications-all": medicationsAllProps,
     timeline: timelineProps,
+    encounters: encounterProps,
   };
 
   // Order provided resources by the specified order in zusAggregatedProfileTabs.
@@ -121,29 +127,33 @@ const ZusAggregatedProfileComponent = ({
   });
 
   return (
-    <div className="ctw-zus-aggregated-profile ctw-scrollable-pass-through-height">
-      {!hideTitle && (
-        <Title className="ctw-border-b-2 ctw-border-l-0 ctw-border-r-0 ctw-border-t-0 ctw-border-solid ctw-border-divider-light">
-          <h3 className="ctw-m-0 ctw-inline-block ctw-p-0 ctw-pb-3 ctw-text-lg ctw-font-medium">
-            {title}
-            {!removeBranding && (
-              <span className="ctw-text-sm ctw-font-light ctw-italic ctw-text-content-light">
-                Powered by <img src={ZusSVG} alt="Zus" className="-ctw-mb-1.5" />
-              </span>
-            )}
-          </h3>
-        </Title>
-      )}
-      <TabGroup
-        content={tabbedContent}
-        forceHorizontalTabs={forceHorizontalTabs}
-        topRightContent={
-          removeRequestRecords ? undefined : (
-            <RequestRecordsButton includePatientDemographicsForm={includePatientDemographicsForm} />
-          )
-        }
-      />
-    </div>
+    <AnalyticsProvider componentName="ZusAggregatedProfile">
+      <div className="ctw-zus-aggregated-profile ctw-scrollable-pass-through-height ctw-text-base">
+        {!hideTitle && (
+          <Title className="ctw-border-b-2 ctw-border-l-0 ctw-border-r-0 ctw-border-t-0 ctw-border-solid ctw-border-divider-light">
+            <h3 className="ctw-m-0 ctw-inline-block ctw-p-0 ctw-pb-3 ctw-text-lg ctw-font-medium">
+              {title}
+              {!removeBranding && (
+                <span className="ctw-text-sm ctw-font-light ctw-italic ctw-text-content-light">
+                  Powered by <img src={ZusSVG} alt="Zus" className="-ctw-mb-1.5" />
+                </span>
+              )}
+            </h3>
+          </Title>
+        )}
+        <TabGroup
+          content={tabbedContent}
+          forceHorizontalTabs={forceHorizontalTabs}
+          topRightContent={
+            removeRequestRecords ? undefined : (
+              <RequestRecordsButton
+                includePatientDemographicsForm={includePatientDemographicsForm}
+              />
+            )
+          }
+        />
+      </div>
+    </AnalyticsProvider>
   );
 };
 

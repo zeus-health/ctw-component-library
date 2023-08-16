@@ -1,8 +1,10 @@
 import { gql } from "graphql-request";
 import { fragmentCodeableConcept } from "./codeable-concept";
+import { fragmentReference } from "../fragments";
 
 export const fragmentEncounter = gql`
   ${fragmentCodeableConcept}
+  ${fragmentReference}
 
   fragment Encounter on Encounter {
     id
@@ -57,6 +59,14 @@ export const fragmentEncounter = gql`
       start
       end
     }
+    ProvenanceList(_reference: "target") {
+      id
+      entity {
+        what {
+          ...Reference
+        }
+      }
+    }
     length {
       value
       unit
@@ -73,6 +83,14 @@ export const fragmentEncounter = gql`
       location {
         reference
         display
+        resource {
+          ... on Location {
+            name
+            type {
+              ...CodeableConcept
+            }
+          }
+        }
       }
       status
       period {

@@ -1,6 +1,6 @@
 import { ReactNode, useContext, useMemo, useState } from "react";
 import { DrawerContext, DrawerState, OpenDrawerProps } from "./drawer-context";
-import { Telemetry } from "@/utils/telemetry";
+import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 
 interface ProviderProps {
   children: ReactNode;
@@ -16,6 +16,7 @@ export function DrawerProvider({ children }: ProviderProps) {
     // overwritten when openDrawer() is used.
     component: dummyChild,
   });
+  const analytics = useAnalytics();
 
   const state = useMemo(
     () => ({
@@ -27,14 +28,14 @@ export function DrawerProvider({ children }: ProviderProps) {
         setIsOpen(false);
         setTimeout(() => {
           setIsOpen(true);
-          Telemetry.trackInteraction(
-            `open_drawer.${props.telemetryName ?? ""}`.replace(/(\.)$/, "")
-          );
+          analytics.trackInteraction("open_drawer", {
+            datadogMetricName: `open_drawer.${props.telemetryName ?? ""}`.replace(/(\.)$/, ""),
+          });
         });
       },
     }),
 
-    []
+    [analytics]
   );
 
   return (

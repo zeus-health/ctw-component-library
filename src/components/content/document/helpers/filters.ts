@@ -1,9 +1,10 @@
+import { EmptyNotes } from "./empty-notes";
 import { dismissFilter } from "../../resource/filters";
+import { isRenderableBinary } from "../../resource/helpers/filters";
 import { FilterChangeEvent, FilterItem } from "@/components/core/filter-bar/filter-bar-types";
 import { DocumentModel } from "@/fhir/models/document";
 import { isEqual, uniqWith } from "@/utils/nodash";
 
-export const THIRD_PARTY_SOURCE_SYSTEM = "https://zusapi.com/thirdparty/source";
 export const ZUS_CREATION_DATE_URL = "https://zusapi.com/created-at";
 const RAINBOW_CUTOVER_DATE = new Date("2023-03-08T05:00:00.000Z");
 
@@ -39,18 +40,35 @@ const isViewablePostRainbow = (docRef: fhir4.DocumentReference) => {
   );
 };
 
-const isRenderableBinary = (doc: fhir4.DocumentReference): boolean => {
-  const thirdPartyTag = doc.meta?.tag?.find((tag) => tag.system === THIRD_PARTY_SOURCE_SYSTEM);
-  const isSupportedThirdParty = ["commonwell", "carequality"].includes(thirdPartyTag?.code || "");
-  return isSupportedThirdParty;
-};
+// DA creates document references for sections of a CDA and the full CDA.
+// Sections will have at most 1 category.
+export function isSectionDocument(document: DocumentModel) {
+  return document.category && document.category.length < 2;
+}
 
-export const applyDocumentFilters = (data: fhir4.DocumentReference[]) => {
-  const documentModels = data
-    .filter(
-      (doc) => (isViewablePreRainbow(doc) || isViewablePostRainbow(doc)) && isRenderableBinary(doc)
-    )
-    .map((document) => new DocumentModel(document));
+// isEmptyClinicalNote is used to filter out empty clinical notes
+// where the note text is null or empty string or
+// is less than 500 chars and contains one of the substrings in EmptyNotes
+export function isEmptyClinicalNote(document: DocumentModel) {
+  const noteText = document.text;
+  if (!noteText) {
+    return true;
+  }
+
+  return EmptyNotes.some((emptyNoteStr) => {
+    if (noteText.length < 500 && noteText.toLowerCase().includes(emptyNoteStr)) {
+      return true;
+    }
+    return false;
+  });
+}
+
+export const applyDocumentFilters = (data: DocumentModel[]) => {
+  const documentModels = data.filter(
+    (doc) =>
+      (isViewablePreRainbow(doc.resource) || isViewablePostRainbow(doc.resource)) &&
+      isRenderableBinary(doc.resource)
+  );
 
   const documentData = uniqWith(documentModels, (a, b) =>
     isEqual(valuesToDedupeOn(a), valuesToDedupeOn(b))

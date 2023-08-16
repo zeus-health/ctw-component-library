@@ -1,5 +1,149 @@
 # ctw-component-library
 
+## 1.56.1
+
+### Patch Changes
+
+- abb36563: Fix dropdown alignment bug in ZAP.
+- 1e570c05: Added AnalyticsProvider and useAnalytics hook.
+- 76fcb62f: For conditions table, add time-based view and a status filter that adjusts its options based on that.
+
+## 1.56.0
+
+### Minor Changes
+
+- 19a3e19c: Updated Medication Last Fill Date sort text
+- 2863f8d1: Add telemetry metrics for source document and notes
+
+## 1.55.2
+
+### Patch Changes
+
+- e38a1b5e: Resolved various responsive styling issues with the sort + filter bar
+
+## 1.55.1
+
+### Patch Changes
+
+- fc3118b3: Fix double loading encounters from FQS in both ZAP and Encounters & Notes component
+- ed1bbd4f: Use deepClone to copy function param so they can be modified
+- c3bce7fc: export resource table-actions component.
+
+## 1.55.0
+
+### Minor Changes
+
+- 69338e37: Update date range and remove type field for encounters details drawer
+- b66d2fc7: Filter out 'empty' clinical notes from Encounters & Notes component
+- 63e3cfa0: Add functionality to Encounters & Notes table, including unread notifactions and the ability to dismiss or mark as viewed.
+  Additionally, makes the "Mark as Viewed" button appear disabled to Zus employees.
+
+### Patch Changes
+
+- 97528b07: Add speciality to the encounter provider column.
+
+## 1.54.0
+
+### Minor Changes
+
+- 03b766ed: Remove ODS related queries for upid-based fetching for all resources.
+
+### Patch Changes
+
+- 1407148e: Fixed flexbox table width bug in Firefox
+
+## 1.53.1
+
+### Patch Changes
+
+- 4ef61e93: Unit tests for whether a resource has a renderable document.
+
+## 1.53.0
+
+### Minor Changes
+
+- 832faab1: Added analytics reporting to Telemetry class
+
+## 1.52.0
+
+### Minor Changes
+
+- 0c2d0fe6: Update telemetry metrics to support Encounters & Notes monitoring
+
+## 1.51.0
+
+### Minor Changes
+
+- c5e680ad: Remove beta indicator for Encounters & Notes
+
+### Patch Changes
+
+- ff1103c0: In drawers, do not show the Source Document link when the document is not renderable.
+- 22e68219: Show all "Show Document" buttons even if unrenderable, to prevent bug where the button does not appear for renderable documents.
+
+## 1.50.1
+
+### Patch Changes
+
+- 6fde67b7: In drawers, do not show the Source Document link when the document is not renderable.
+
+## 1.50.0
+
+### Minor Changes
+
+- b08c9b43: Rename ZusAggregatedProfileIframe to ZusAggregatedProfileIFrame
+
+## 1.49.0
+
+### Minor Changes
+
+- d4a0645c: Added component ZusAggregatedProfileIframe.
+  Addressed SSR telemetry issue.
+  Fixed theme bug where sometimes CSS vars --ctw-white and --ctw-black had NaN in them.
+- 00414ce7: Update index.ts
+
+## 1.48.0
+
+### Minor Changes
+
+- 1e4ba69f: Create new Encounters & Notes component and remove Timeline from MegaZAP
+
+## 1.47.4
+
+### Patch Changes
+
+- 53762c16: Add ability to track trend activity.
+
+## 1.47.3
+
+### Patch Changes
+
+- 17f20e11: The dropdown for hidden tabs will re-align themselves if there's no room to their right.
+
+## 1.47.2
+
+### Patch Changes
+
+- c69c3cf5: Improve appearance of ZAP's "More" button, disallowing wrapping and enforcing font size consistency with the tabs.
+
+## 1.47.1
+
+### Patch Changes
+
+- fa136b59: Add more labs for the trending feature.
+
+## 1.47.0
+
+### Minor Changes
+
+- 41d766bb: Add ability to link the respective observation that is found in the trending feature.
+
+## 1.46.0
+
+### Minor Changes
+
+- a0782f7e: No longer show incorrectly coded glucose trends
+
 ## 1.45.8
 
 ### Patch Changes

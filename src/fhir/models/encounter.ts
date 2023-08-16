@@ -1,12 +1,38 @@
-import { Coding } from "fhir/r4";
+import { Coding, Resource } from "fhir/r4";
+import { DocumentModel } from "./document";
 import { FHIRModel } from "./fhir-model";
 import { codeableConceptLabel } from "../codeable-concept";
 import { formatDateISOToLocal } from "../formatters";
+import { findReference } from "../resource-helper";
+import { ResourceMap } from "../types";
+import {
+  isEmptyClinicalNote,
+  isSectionDocument,
+} from "@/components/content/document/helpers/filters";
 import { isNullFlavorSystem } from "@/fhir/mappings/null-flavor";
 import { compact, flatten, uniq } from "@/utils/nodash";
 
 export class EncounterModel extends FHIRModel<fhir4.Encounter> {
   kind = "Encounter" as const;
+
+  public clinicalNotes: DocumentModel[];
+
+  constructor(
+    resource: fhir4.Encounter,
+    provenance: fhir4.Provenance[],
+    documents: DocumentModel[],
+    includedResources?: ResourceMap,
+    revIncludes?: Resource[]
+  ) {
+    super(resource, includedResources, revIncludes);
+    this.clinicalNotes = [];
+    const binaryID = getBinaryIDFromProvenace(provenance);
+    if (binaryID) {
+      this.clinicalNotes = documents.filter(
+        (d) => d.binaryId === binaryID && isSectionDocument(d) && !isEmptyClinicalNote(d)
+      );
+    }
+  }
 
   get class(): string | undefined {
     const { display, code } = this.resource.class;
@@ -55,6 +81,20 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
     return compact(flatten(this.resource.type?.map((t) => t.coding)));
   }
 
+  get typeSpecialty() {
+    const locations = compact(
+      this.resource.location?.map((l) => {
+        const location = findReference("Location", undefined, undefined, l.location);
+        return location?.type?.map((t) => codeableConceptLabel(t));
+      })
+    );
+    const uniqueLocations = uniq(flatten(locations)).filter(
+      (l) => l !== "Not Indicated" && l !== "Unknown" && l !== "NoInformation"
+    );
+
+    return uniqueLocations.length ? uniqueLocations.join(", ") : undefined;
+  }
+
   get typeDisplay(): string | undefined {
     const { display: classDisplay, system: classSystem } = this.resource.class;
     const classCode = (this.resource.class.code ?? "").toUpperCase();
@@ -88,4 +128,26 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
 
     return display ?? "Unknown";
   }
+}
+
+function getBinaryIDFromProvenace(provenance: fhir4.Provenance[]) {
+  if (provenance.length > 0) {
+    let binaryIDReference = "";
+    for (let i = 0; i < provenance.length; i += 1) {
+      const entity = provenance[i].entity?.find((e) => {
+        if (e.what.reference !== undefined) {
+          return true;
+        }
+        return false;
+      });
+      if (entity && entity.what.reference) {
+        binaryIDReference = entity.what.reference;
+        break;
+      }
+    }
+    if (binaryIDReference) {
+      return binaryIDReference.split("/")[1];
+    }
+  }
+  return undefined;
 }

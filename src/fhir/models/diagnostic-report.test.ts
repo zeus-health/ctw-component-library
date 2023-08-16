@@ -1,15 +1,21 @@
+import { faker } from "@faker-js/faker";
 import { Coding, DiagnosticReport, Observation } from "fhir/r4";
 import * as dr from "./diagnostic-report";
 
-const syntheticObservation = (): Observation => ({
+const syntheticObservation = (coding: Coding[], text?: string): Observation => ({
+  id: faker.datatype.uuid(),
   resourceType: "Observation",
-  status: "unknown",
-  code: {},
+  status: "final",
+  code: {
+    coding,
+    text,
+  },
 });
 
-const syntheticDiagnosticReport = (codings: Coding[], text?: string): DiagnosticReport => ({
+const syntheticDiagnosticReport = (coding: Coding[], text?: string): DiagnosticReport => ({
+  id: faker.datatype.uuid(),
   code: {
-    coding: codings,
+    coding,
     text,
   },
   resourceType: "DiagnosticReport",
@@ -55,19 +61,19 @@ describe("Diagnostic Report Model Tests", () => {
       {
         expectedValue: "04/01/2022",
         obs: [
-          set("effectiveDateTime", syntheticObservation(), "2022-04-02"),
-          set("effectiveDateTime", syntheticObservation(), "2022-04-01"),
+          set("effectiveDateTime", syntheticObservation([]), "2022-04-02"),
+          set("effectiveDateTime", syntheticObservation([]), "2022-04-01"),
         ],
       },
       {
         expectedValue: "04/01/2022",
-        obs: [undefined, set("effectiveDateTime", syntheticObservation(), "2022-04-01")],
+        obs: [undefined, set("effectiveDateTime", syntheticObservation([]), "2022-04-01")],
       },
       {
         expectedValue: "04/01/2022",
         obs: [
           undefined,
-          set("effectivePeriod", syntheticObservation(), { start: "2022-04-01", end: undefined }),
+          set("effectivePeriod", syntheticObservation([]), { start: "2022-04-01", end: undefined }),
         ],
       },
     ];

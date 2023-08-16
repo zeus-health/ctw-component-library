@@ -38,6 +38,7 @@ export function useFilteredSortedData<T extends object>({
   return {
     setFilters,
     setSort: setSortOption,
+    viewOption,
     setViewOption,
     data,
     filters,

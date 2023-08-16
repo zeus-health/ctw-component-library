@@ -1,29 +1,23 @@
-import { Resource } from "fhir/r4";
 import { DiagnosticReportModel } from "./diagnostic-report";
 import { EncounterModel } from "./encounter";
 import { FHIRModel } from "./fhir-model";
-import { ResourceMap } from "../types";
 import { compact } from "@/utils/nodash";
 
-export type TimelineEventResource = fhir4.Encounter | fhir4.DiagnosticReport;
+export type TimelineEventResource = EncounterModel | DiagnosticReportModel;
 
 export class TimelineEventModel extends FHIRModel<TimelineEventResource> {
   kind = "TimelineEvent" as const;
 
   public model: EncounterModel | DiagnosticReportModel;
 
-  constructor(
-    resource: TimelineEventResource,
-    includedResources?: ResourceMap,
-    revIncludes?: Resource[]
-  ) {
-    super(resource, includedResources, revIncludes);
+  constructor(resource: TimelineEventResource) {
+    super(resource);
     switch (resource.resourceType) {
       case "Encounter":
-        this.model = new EncounterModel(resource, includedResources, revIncludes);
+        this.model = resource;
         break;
       case "DiagnosticReport":
-        this.model = new DiagnosticReportModel(resource, includedResources, revIncludes);
+        this.model = resource;
         break;
       default:
         throw new Error("This resource is not in type TimelineEvent");

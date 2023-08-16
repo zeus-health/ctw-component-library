@@ -39,8 +39,9 @@ if (typeof window !== "undefined") {
 
 // Assume local development if origin is localhost or just an IP address
 const isLocalDevelopment = /https?:\/\/(localhost|\d+\.\d+\.\d+\.\d+)/i.test(origin);
-// Avoid initializing telemetry multiple times
+// Avoid initializing telemetry or event listeners multiple times
 let isInitialized = false;
+let listenersHaveBeenAdded = false;
 
 /**
  * Bootstrap APM Tracing
@@ -57,7 +58,7 @@ export class Telemetry {
   private static accessToken = "";
 
   private static get telemetryIsAvailable() {
-    return isInitialized;
+    return Boolean(this.environment && isInitialized);
   }
 
   private static datadogLoggingEnabled = false;
@@ -88,13 +89,9 @@ export class Telemetry {
     this.setEnv(environment);
     this.ehr = ehr;
 
-    if (this.telemetryIsAvailable) {
-      return;
-    }
-
     // Turning on Datadog Logging is conditional. However, the event handlers
     // that explicitly send internal /report/metrics to ctw are not optional.
-    if (allowDataDogLogging) {
+    if (!this.telemetryIsAvailable && allowDataDogLogging) {
       datadogLogs.init({
         ...(isLocalDevelopment ? devDatadogConfig : prodDatadogConfig),
         env: this.environment,
@@ -105,35 +102,39 @@ export class Telemetry {
       });
     }
 
-    // We are listening to click events propagating to the document body as that
-    // is the lowest level HTMLElement we actually know will both exist at this
-    // time and which won't be removed from the DOM by React causing a small
-    // memory leak.
-    // Additionally, because we aren't listening directly to events on elements
-    // that have `data-zus-telemetry-*` attributes, we don't have the luxury of
-    // knowing whether an event triggered from inside one of these telemetry
-    // elements, so we'll have to traverse the DOM tree ourselves. To minimize
-    // this work we'll put a `depth` level and adjust it over time if needed.
-    // For example, imagine the user clicked an element with CSS selector path
-    // of "button[data-zus-telemetry-click="submit"] > span > span". Because we
-    // are listening on body and not button, we would have to walk up 2 parent
-    // nodes of the DOM before knowing whether this event was relevant to us.
-    body?.addEventListener("click", (event) => {
-      const { target, isTrusted } = event;
-      if (!(isTrusted && target instanceof Element)) {
-        return;
-      }
-      const htmlElement = this.closestHTMLElement(target);
-      if (htmlElement instanceof HTMLElement) {
-        this.processHTMLEvent(htmlElement, "zusTelemetryClick");
-      }
-    });
-    body?.addEventListener("focusin", (event) => {
-      const { target, isTrusted } = event;
-      if (isTrusted && target instanceof HTMLElement) {
-        this.processHTMLEvent(target, "zusTelemetryFocus");
-      }
-    });
+    // We need to ensure that this will run in browser context, not just server.
+    if (!listenersHaveBeenAdded && body) {
+      // We are listening to click events propagating to the document body as that
+      // is the lowest level HTMLElement we actually know will both exist at this
+      // time and which won't be removed from the DOM by React causing a small
+      // memory leak.
+      // Additionally, because we aren't listening directly to events on elements
+      // that have `data-zus-telemetry-*` attributes, we don't have the luxury of
+      // knowing whether an event triggered from inside one of these telemetry
+      // elements, so we'll have to traverse the DOM tree ourselves. To minimize
+      // this work we'll put a `depth` level and adjust it over time if needed.
+      // For example, imagine the user clicked an element with CSS selector path
+      // of "button[data-zus-telemetry-click="submit"] > span > span". Because we
+      // are listening on body and not button, we would have to walk up 2 parent
+      // nodes of the DOM before knowing whether this event was relevant to us.
+      body.addEventListener("click", (event: MouseEvent) => {
+        const { target, isTrusted } = event;
+        if (!(isTrusted && target instanceof Element)) {
+          return;
+        }
+        const htmlElement = this.closestHTMLElement(target);
+        if (htmlElement instanceof HTMLElement) {
+          this.processHTMLEvent(htmlElement, "zusTelemetryClick");
+        }
+      });
+      body.addEventListener("focusin", (event) => {
+        const { target, isTrusted } = event;
+        if (isTrusted && target instanceof HTMLElement) {
+          this.processHTMLEvent(target, "zusTelemetryFocus");
+        }
+      });
+      listenersHaveBeenAdded = true;
+    }
 
     isInitialized = true;
   }
@@ -190,11 +191,18 @@ export class Telemetry {
     this.logger.error(message, context);
   }
 
-  static trackInteraction(action: string) {
+  static trackInteraction(
+    action: string,
+    metadata: Record<string, unknown> & { datadogMetricName?: string } = {}
+  ) {
+    // If `datadogMetricName` is not provided, we default to the action name.
+    // This allows us to send a different metric name to DataDog if needed.
+    const { datadogMetricName = action, ...eventMetadata } = metadata;
     // We send an action metric to CTW
-    this.countMetric(`action.${action}`, 1);
+    this.countMetric(`action.${datadogMetricName}`, 1);
     // We report an active session to CTW
     this.reportActiveSession().catch((error) => Telemetry.logError(error as Error));
+    this.analyticsEvent(action, eventMetadata).catch((error) => Telemetry.logError(error as Error));
   }
 
   /**
@@ -208,6 +216,16 @@ export class Telemetry {
       .replace(/[^a-z0-9_.]/gi, "");
   }
 
+  /*
+   * In dev/test environments we should skip sending any metrics
+   */
+  static shouldSkipSendingMetrics() {
+    return (
+      !this.environment ||
+      (process.env.NODE_ENV !== "test" && /(localhost|127\.0\.0\.1)/.test(window.location.origin))
+    );
+  }
+
   /**
    * Report a metric to CTW
    */
@@ -217,11 +235,7 @@ export class Telemetry {
     value: number,
     additionalTags: string[] = []
   ) {
-    if (
-      !this.environment ||
-      (process.env.NODE_ENV !== "test" &&
-        ["http://localhost:3000", "http://127.0.0.1:3000"].includes(window.location.origin))
-    ) {
+    if (this.shouldSkipSendingMetrics()) {
       return;
     }
 
@@ -252,6 +266,38 @@ export class Telemetry {
       body: JSON.stringify({ name, type, tags, value }),
       mode: "cors",
     });
+  }
+
+  /**
+   * Report User analytic events
+   */
+  static async analyticsEvent(eventName: string, eventProperties: Record<string, unknown> = {}) {
+    if (this.shouldSkipSendingMetrics()) {
+      return;
+    }
+
+    try {
+      const analyticEvent = {
+        event: eventName,
+        metadata: {
+          ...eventProperties,
+          ehr: this.ehr || undefined,
+          libraryVersion: packageJson.version,
+        },
+      };
+
+      await fetch(`${getMetricsBaseUrl(this.environment)}/report/analytic`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${this.accessToken}`,
+        },
+        // Base64 encode the event name and user information
+        body: JSON.stringify(analyticEvent),
+        mode: "cors",
+      });
+    } catch {
+      // Nothing to do here.
+    }
   }
 
   static countMetric(name: string, value = 1, tags: string[] = []) {
@@ -325,12 +371,7 @@ export class Telemetry {
 
   static async reportActiveSession() {
     // Return if the session is already active or we don't need to report
-    if (
-      Session.isActive() ||
-      !this.environment ||
-      (process.env.NODE_ENV !== "test" &&
-        ["http://localhost:3000", "http://127.0.0.1:3000"].includes(window.location.origin))
-    ) {
+    if (Session.isActive() || this.shouldSkipSendingMetrics()) {
       return;
     }
 

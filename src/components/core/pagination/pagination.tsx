@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { Fragment } from "react";
 import "./pagination.scss";
 import { Loading } from "@/components/core/loading";
+import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { uniq } from "@/utils/nodash";
 
 export type PaginationProps = {
@@ -116,14 +117,18 @@ const Page = ({
   className,
   disabled = false,
 }: PageProps) => {
+  const { trackInteraction } = useAnalytics();
   const active = page === currentPage;
+
   return (
     <button
       type="button"
       disabled={disabled}
-      onClick={() => setCurrentPage(page)}
+      onClick={() => {
+        setCurrentPage(page);
+        trackInteraction("btn_paginate", { page });
+      }}
       className={cx(className, "ctw-pagination-page-btn", { active, disabled })}
-      data-zus-telemetry-click="paginate"
     >
       {children || page}
     </button>

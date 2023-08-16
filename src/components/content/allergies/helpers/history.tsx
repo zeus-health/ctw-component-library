@@ -1,5 +1,4 @@
 import { AllergyIntolerance } from "fhir/r4";
-import { SearchParams } from "fhir-kit-client";
 import { HistoryEntryProps } from "../../resource/helpers/history-entry";
 import { useHistory } from "../../resource/history";
 import { AllergyModel } from "@/fhir/models/allergies";
@@ -13,28 +12,9 @@ export function useAllergiesHistory(allergy: AllergyModel) {
     queryKey: QUERY_KEY_ALLERGY_HISTORY,
     includeVersionHistory: false,
     valuesToDedupeOn,
-    getSearchParams,
     getHistoryEntry,
     clientSideFiltersFQS,
   });
-}
-
-function getSearchParams(allergy: AllergyModel) {
-  const tokens = allergy.knownCodings.map((coding) => `${coding.system}|${coding.code}`);
-
-  const searchParams: SearchParams = {
-    _include: ["AllergyIntolerance:patient"],
-    "_include:iterate": "Patient:organization",
-  };
-
-  if (tokens.length > 0) {
-    searchParams.code = tokens.join(",");
-  } else {
-    // eslint-disable-next-line no-underscore-dangle
-    searchParams._id = allergy.id;
-  }
-
-  return searchParams;
 }
 
 function clientSideFiltersFQS(model: AllergyModel, allergies: AllergyIntolerance[]) {

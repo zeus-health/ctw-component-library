@@ -1,17 +1,19 @@
 import { Provenance } from "fhir/r4";
+import { isRenderableBinary } from "@/components/content/resource/helpers/filters";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { find, some } from "@/utils/nodash";
 import { QUERY_KEY_BINARY } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import { withTimerMetric } from "@/utils/telemetry";
 
+// Get the binary ID from provenance, if document is renderable
 export function getBinaryId(provenances: Provenance[], targetId: string): string | undefined {
   for (let i = 0; i < provenances.length; i += 1) {
     const provenance = provenances[i];
 
     const hasTarget = some(provenance.target, (t) => t.reference?.includes(targetId));
 
-    if (hasTarget) {
+    if (hasTarget && isRenderableBinary(provenance)) {
       const source = find(provenance.entity, { role: "source" });
       if (source?.what.reference) {
         // Return the ID portion of the reference.

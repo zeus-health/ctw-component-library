@@ -17,6 +17,7 @@ export type CTWState = {
 
 export type CTWRequestContext = {
   env: Env;
+  headers?: HeadersInit;
   authToken: string;
   // The user's builder ID.
   builderId: string;

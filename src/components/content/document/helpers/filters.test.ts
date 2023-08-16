@@ -1,7 +1,8 @@
-import { applyDocumentFilters, THIRD_PARTY_SOURCE_SYSTEM, ZUS_CREATION_DATE_URL } from "./filters";
+import { applyDocumentFilters, isEmptyClinicalNote, ZUS_CREATION_DATE_URL } from "./filters";
+import { THIRD_PARTY_SOURCE_SYSTEM } from "../../resource/helpers/filters";
 import { DocumentModel } from "@/fhir/models/document";
 
-interface SyntheticDocRefProps {
+interface MockDocRefProps {
   id: string;
   title: string;
   postRainbowCategories: boolean;
@@ -11,7 +12,7 @@ interface SyntheticDocRefProps {
   binaryCreationDate?: string;
 }
 
-const createSyntheticDocRef = (props: SyntheticDocRefProps): fhir4.DocumentReference => ({
+export const createMockDocRef = (props: MockDocRefProps): fhir4.DocumentReference => ({
   id: props.id,
   resourceType: "DocumentReference",
   status: "current",
@@ -64,7 +65,7 @@ const createSyntheticDocRef = (props: SyntheticDocRefProps): fhir4.DocumentRefer
 });
 
 describe("document filters tests", () => {
-  const commonwellDoc = createSyntheticDocRef({
+  const commonwellDoc = createMockDocRef({
     id: "1",
     title: "post rainbow commonwell",
     docRefDate: "2023-04-17T12:34:56.000Z",
@@ -73,7 +74,7 @@ describe("document filters tests", () => {
     postRainbowCategories: true,
   });
 
-  const commonwelPreRainbowDoc = createSyntheticDocRef({
+  const commonwelPreRainbowDoc = createMockDocRef({
     id: "1a",
     title: "pre rainbow commonwell",
     docRefDate: "2022-04-17T12:34:56.000Z",
@@ -82,14 +83,14 @@ describe("document filters tests", () => {
     postRainbowCategories: false,
   });
 
-  const commonwellNoDateDoc = createSyntheticDocRef({
+  const commonwellNoDateDoc = createMockDocRef({
     id: "2",
     title: "no odate commonwell",
     thirdPartyOwner: "commonwell",
     postRainbowCategories: false,
   });
 
-  const surescriptsDoc = createSyntheticDocRef({
+  const surescriptsDoc = createMockDocRef({
     id: "2",
     title: "post rainbow surescript",
     docRefDate: "2023-04-17T12:34:56.000Z",
@@ -98,7 +99,7 @@ describe("document filters tests", () => {
     postRainbowCategories: true,
   });
 
-  const questDoc = createSyntheticDocRef({
+  const questDoc = createMockDocRef({
     id: "3",
     title: "post rainbow quest",
     docRefDate: "2023-04-17T12:34:56.000Z",
@@ -107,7 +108,7 @@ describe("document filters tests", () => {
     postRainbowCategories: true,
   });
 
-  const firstPartyDoc = createSyntheticDocRef({
+  const firstPartyDoc = createMockDocRef({
     id: "4",
     title: "first party",
     docRefDate: "2023-04-17T12:34:56.000Z",
@@ -115,7 +116,7 @@ describe("document filters tests", () => {
     postRainbowCategories: false,
   });
 
-  const carequalityDoc = createSyntheticDocRef({
+  const carequalityDoc = createMockDocRef({
     id: "1",
     title: "post rainbow carequality",
     docRefDate: "2023-04-17T12:34:56.000Z",
@@ -133,7 +134,7 @@ describe("document filters tests", () => {
       questDoc,
       firstPartyDoc,
       carequalityDoc,
-    ];
+    ].map((i) => new DocumentModel(i));
     const expectedOutput = [
       commonwellDoc,
       commonwelPreRainbowDoc,
@@ -143,5 +144,32 @@ describe("document filters tests", () => {
     const actualOutput = applyDocumentFilters(input);
 
     expect(actualOutput).toStrictEqual(expectedOutput);
+  });
+});
+
+describe("test isEmptyClinicalNote", () => {
+  const testEmptyDoc = {
+    id: "test-doc",
+    text: {
+      div: "<div>No Instructions</div>",
+    },
+  } as fhir4.DocumentReference;
+  const emptyDoc = new DocumentModel(testEmptyDoc);
+
+  const testNotEmptyDoc = {
+    id: "test-doc",
+    text: {
+      div: "<div>This is a very useful clinical note</div>",
+    },
+  } as fhir4.DocumentReference;
+  const notEmptyDoc = new DocumentModel(testNotEmptyDoc);
+
+  test("test isEmptyClincalNote", () => {
+    const input = [emptyDoc, notEmptyDoc];
+    const expectedOutput = [true, false];
+    input.forEach((doc, index) => {
+      const actualOutput = isEmptyClinicalNote(doc);
+      expect(actualOutput).toStrictEqual(expectedOutput[index]);
+    });
   });
 });
