@@ -13,7 +13,7 @@ export function usePatientMedicationDispense() {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_MEDICATION_DISPENSE,
     [],
-    withTimerMetric(getMedicationDispenseFromFQS, "req.timing.medication-dispense")
+    withTimerMetric(getMedicationDispenseFromFQS, "req.timing.medication_dispense")
   );
 }
 

@@ -5,35 +5,19 @@ export const patientMedicationDispenseColumns = () => {
   const dispenseColumns: TableColumn<MedicationDispenseModel>[] = [
     {
       title: "TimeStamp",
-      render: (m) => (
-        <div>
-          <div>{m.alertTimeStamp}</div>
-        </div>
-      ),
+      render: (m) => <div>{m.alertTimeStamp}</div>,
     },
     {
       title: "Medication",
-      render: (m) => (
-        <div>
-          <div>{m.medicationDisplayName}</div>
-        </div>
-      ),
+      render: (m) => <div>{m.medicationDisplayName}</div>,
     },
     {
       title: "Performer Details",
-      render: (m) => (
-        <div>
-          <div>{m.performerDetails.name}</div>
-        </div>
-      ),
+      render: (m) => <div>{m.performerDetails.name}</div>,
     },
     {
       title: "Last Known Fill",
-      render: (m) => (
-        <div>
-          <div>{m.whenHandedOver ? m.whenHandedOver : m.whenPrepared}</div>
-        </div>
-      ),
+      render: (m) => <div>{m.whenHandedOver ? m.whenHandedOver : m.whenPrepared}</div>,
     },
   ];
 
