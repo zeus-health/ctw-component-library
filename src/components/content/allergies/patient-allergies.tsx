@@ -8,6 +8,7 @@ import { ResourceTableActions } from "../resource/resource-table-actions";
 import { patientAllergiesColumns } from "@/components/content/allergies/helpers/column";
 import { EmptyTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
+import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { usePatientAllergies } from "@/fhir/allergies";
 import { AllergyModel } from "@/fhir/models/allergies";
@@ -38,31 +39,33 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
   });
 
   return (
-    <div className={cx(className, "ctw-scrollable-pass-through-height")}>
-      <ResourceTableActions
-        filterOptions={{
-          onChange: setFilters,
-          defaultState: defaultAllergyFilters,
-          filters: allergyFilter(),
-        }}
-        sortOptions={{
-          defaultSort: defaultAllergySort,
-          options: allergySortOptions,
-          onChange: setSort,
-        }}
-      />
-      <ResourceTable
-        showTableHead
-        isLoading={patientAllergiesQuery.isLoading}
-        data={data}
-        columns={patientAllergiesColumns(userBuilderId)}
-        onRowClick={openDetails}
-        enableDismissAndReadActions
-        emptyMessage={
-          <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="allergies" />
-        }
-      />
-    </div>
+    <AnalyticsProvider componentName="PatientAllergies">
+      <div className={cx(className, "ctw-scrollable-pass-through-height")}>
+        <ResourceTableActions
+          filterOptions={{
+            onChange: setFilters,
+            defaultState: defaultAllergyFilters,
+            filters: allergyFilter(),
+          }}
+          sortOptions={{
+            defaultSort: defaultAllergySort,
+            options: allergySortOptions,
+            onChange: setSort,
+          }}
+        />
+        <ResourceTable
+          showTableHead
+          isLoading={patientAllergiesQuery.isLoading}
+          data={data}
+          columns={patientAllergiesColumns(userBuilderId)}
+          onRowClick={openDetails}
+          enableDismissAndReadActions
+          emptyMessage={
+            <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="allergies" />
+          }
+        />
+      </div>
+    </AnalyticsProvider>
   );
 }
 

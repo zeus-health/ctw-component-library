@@ -14,7 +14,7 @@ type FilterBarSelectPillProps = {
 };
 
 const buttonClassName =
-  "ctw-flex ctw-items-center ctw-capitalize ctw-text-content-black ctw-bg-bg-dark ctw-text-sm ctw-rounded ctw-py-2 ctw-px-3 ctw-relative ctw-cursor-pointer ctw-border-0 ctw-border-transparent";
+  "ctw-flex ctw-items-center ctw-capitalize ctw-text-content-black ctw-bg-bg-dark ctw-text-sm ctw-rounded ctw-py-2 ctw-px-3 ctw-relative ctw-cursor-pointer ctw-border-0 ctw-border-transparent ctw-whitespace-nowrap ctw-mb-2 ctw-mr-2";
 const renderDisplay = (display: string | ((status: ListBoxOptionStatus) => string | ReactNode)) =>
   isFunction(display) ? display({ active: false }) : display;
 const builtInButton = (name: string, key: string, icon: IconDefinition) => ({

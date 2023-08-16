@@ -3,7 +3,8 @@ import { Trans, useTranslation } from "react-i18next";
 import { ErrorAlert } from "./alert";
 import { Modal, ModalProps } from "./modal";
 import { Spinner } from "./spinner";
-import { Telemetry } from "@/utils/telemetry";
+import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
+import { useTelemetry } from "@/components/core/providers/telemetry/use-telemetry";
 
 export type ModalConfirmDeleteProps = {
   resource: string;
@@ -22,6 +23,8 @@ export const ModalConfirmDelete = ({
   const [alert, setAlert] = useState<string>();
   const [isDeleting, setIsDeleting] = useState(false);
   const { t } = useTranslation();
+  const { trackInteraction } = useAnalytics();
+  const { Telemetry } = useTelemetry();
 
   const onConfirm = async () => {
     try {
@@ -54,18 +57,22 @@ export const ModalConfirmDelete = ({
       <div className="ctw-flex ctw-w-full ctw-space-x-4">
         <button
           type="button"
-          onClick={onClose}
+          onClick={() => {
+            onClose();
+            trackInteraction("btn_cancel");
+          }}
           className="ctw-btn-default ctw-flex-1"
-          data-zus-telemetry-click="Cancel button"
         >
           Cancel
         </button>
         <button
           type="button"
           disabled={isDeleting}
-          onClick={onConfirm}
+          onClick={() => {
+            void onConfirm();
+            trackInteraction("btn_remove");
+          }}
           className="ctw-btn-primary ctw-save-button ctw-flex-1"
-          data-zus-telemetry-click="Remove button"
         >
           {isDeleting ? "Removing..." : "Remove"}
           {isDeleting && <Spinner className="ctw-ml-2 ctw-text-white" />}

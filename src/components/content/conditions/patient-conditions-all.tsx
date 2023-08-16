@@ -9,11 +9,13 @@ import {
   useEditConditionForm,
 } from "./helpers/modal-hooks";
 import { conditionSortOptions, defaultConditionSort } from "./helpers/sorts";
+import { ConditionViewOptions, statusView } from "./helpers/views";
 import { useToggleRead } from "../hooks/use-toggle-read";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { EmptyTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
+import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { RowActionsProps } from "@/components/core/table/table";
 import { ConditionModel } from "@/fhir/models";
@@ -36,10 +38,13 @@ function PatientConditionsAllComponent({
   const { t } = useBaseTranslations();
   const query = usePatientConditionsAll();
   const showAddConditionForm = useAddConditionForm();
-  const { data, setFilters, setSort } = useFilteredSortedData({
-    defaultFilters: defaultConditionFilters,
+
+  const { viewOptions, current } = statusView;
+
+  const { data, setFilters, setSort, viewOption, setViewOption } = useFilteredSortedData({
     defaultSort: defaultConditionSort,
     records: query.data,
+    defaultView: current,
   });
 
   const isEmptyQuery = query.data.length === 0;
@@ -66,31 +71,43 @@ function PatientConditionsAllComponent({
   );
 
   return (
-    <div className={cx(className, "ctw-scrollable-pass-through-height")}>
-      <ResourceTableActions
-        filterOptions={{
-          onChange: setFilters,
-          defaultState: defaultConditionFilters,
-          filters: conditionFilters(query.data, true, true),
-        }}
-        sortOptions={{
-          defaultSort: defaultConditionSort,
-          options: conditionSortOptions,
-          onChange: setSort,
-        }}
-        action={action}
-      />
-      <ResourceTable
-        showTableHead
-        isLoading={query.isLoading}
-        data={data}
-        columns={patientConditionsAllColumns(userBuilderId)}
-        onRowClick={openDetails}
-        RowActions={RowActions}
-        enableDismissAndReadActions
-        emptyMessage={empty}
-      />
-    </div>
+    <AnalyticsProvider componentName="PatientConditionsAll">
+      <div className={cx(className, "ctw-scrollable-pass-through-height")}>
+        <ResourceTableActions
+          filterOptions={{
+            onChange: setFilters,
+            defaultState: defaultConditionFilters,
+            filters: conditionFilters(
+              query.data,
+              true,
+              true,
+              viewOption?.display as ConditionViewOptions
+            ),
+          }}
+          sortOptions={{
+            defaultSort: defaultConditionSort,
+            options: conditionSortOptions,
+            onChange: setSort,
+          }}
+          viewOptions={{
+            onChange: setViewOption,
+            options: viewOptions,
+            defaultView: current,
+          }}
+          action={action}
+        />
+        <ResourceTable
+          showTableHead
+          isLoading={query.isLoading}
+          data={data}
+          columns={patientConditionsAllColumns(userBuilderId)}
+          onRowClick={openDetails}
+          RowActions={RowActions}
+          enableDismissAndReadActions
+          emptyMessage={empty}
+        />
+      </div>
+    </AnalyticsProvider>
   );
 }
 

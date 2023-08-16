@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { filterChangeEvent, filterChangeEventToValuesRecord } from "./filter-bar-utils";
 import { FilterBarPill } from "@/components/core/filter-bar/filter-bar-pills";
 import { ListBox, MinListBoxItem } from "@/components/core/list-box/list-box";
+import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { omit, partition, uniq } from "@/utils/nodash/fp";
 import { isEmptyValue } from "@/utils/types";
 
@@ -53,6 +54,7 @@ export const FilterBar = ({ className, onChange, filters, defaultState = {} }: F
   const [initialState] = useState<FilterValuesRecord>(
     filterChangeEventToValuesRecord(defaultState)
   );
+  const { trackInteraction } = useAnalytics();
 
   useEffect(() => {
     // Validating that the "_remove" filter is never passed in from parent
@@ -65,12 +67,14 @@ export const FilterBar = ({ className, onChange, filters, defaultState = {} }: F
     setActiveFilterKeys([]);
     setActiveFilterValues({});
     onChange({});
+    trackInteraction("filter", { action: "clear" });
   };
 
   const resetAllFilters = () => {
     setActiveFilterValues(initialState);
     setActiveFilterKeys(Object.keys(initialState));
     onChange(filterChangeEvent(filters, Object.keys(initialState), initialState));
+    trackInteraction("filter", { action: "reset" });
   };
 
   // Add or remove a filter from the activated filters list
@@ -99,6 +103,7 @@ export const FilterBar = ({ className, onChange, filters, defaultState = {} }: F
     }
     // Finally we fire off a change event
     onChange(filterChangeEvent(filters, updatedKeys, activeFilterValues));
+    trackInteraction("filter", { action: remove ? "toggle_off" : "toggle_on", value: key });
   };
 
   // The update function for checkbox and select pills to call on change
@@ -174,7 +179,12 @@ export const FilterBar = ({ className, onChange, filters, defaultState = {} }: F
   ];
 
   return (
-    <div className={cx(className, "ctw-relative ctw-flex ctw-items-center ctw-space-x-2")}>
+    <div
+      className={cx(
+        className,
+        "ctw-items-left ctw-relative ctw-flex ctw-flex-col ctw-flex-wrap sm:ctw-flex-row sm:ctw-items-center"
+      )}
+    >
       {activeFilters.map((filter) => (
         <FilterBarPill
           isOpen={recentlyAdded === filter.key}
@@ -190,7 +200,7 @@ export const FilterBar = ({ className, onChange, filters, defaultState = {} }: F
 
       <ListBox
         useBasicStyles
-        btnClassName="!ctw-text-content-light ctw-btn-clear !ctw-font-normal !ctw-py-2"
+        btnClassName="!ctw-text-content-light ctw-btn-clear !ctw-font-normal"
         items={menuItems}
         onChange={(_index, item) => {
           switch (item.key) {
@@ -203,7 +213,7 @@ export const FilterBar = ({ className, onChange, filters, defaultState = {} }: F
           }
         }}
       >
-        <div className="ctw-space-x-1">
+        <div className="ctw-mb-2 ctw-space-x-1 ctw-whitespace-nowrap ctw-py-2">
           <FontAwesomeIcon icon={faPlus} className="ctw-w-4" />
           <span>Add Filters</span>
         </div>

@@ -6,6 +6,7 @@ import {
 } from "./helpers/modal-hooks";
 import { PatientConditionsBase } from "./helpers/patient-conditions-base";
 import { withErrorBoundary } from "@/components/core/error-boundary";
+import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { RowActionsProps } from "@/components/core/table/table";
 import { ConditionModel } from "@/fhir/models";
 import { useBaseTranslations } from "@/i18n";
@@ -28,13 +29,15 @@ const PatientConditionsComponent = ({ className, readOnly = false }: PatientCond
   );
 
   return (
-    <PatientConditionsBase
-      action={action}
-      className={cx(className)}
-      query={query}
-      readOnly={readOnly}
-      RowActions={readOnly ? undefined : RowActions}
-    />
+    <AnalyticsProvider componentName="PatientConditions">
+      <PatientConditionsBase
+        action={action}
+        className={cx(className)}
+        query={query}
+        readOnly={readOnly}
+        RowActions={readOnly ? undefined : RowActions}
+      />
+    </AnalyticsProvider>
   );
 };
 

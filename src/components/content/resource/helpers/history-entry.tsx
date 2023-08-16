@@ -6,6 +6,7 @@ import { useState } from "react";
 import { DetailEntry, DetailsCard } from "./details-card";
 import { DocumentButton } from "../../CCDA/document-button";
 import { useCCDAModal } from "../../CCDA/modal-ccda";
+import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 
 export type HistoryEntryProps = {
   binaryId?: string;
@@ -74,42 +75,50 @@ const DetailSummary = ({
   isDetailShown: boolean;
   hasDocument?: boolean;
   setIsDetailShown: React.Dispatch<React.SetStateAction<boolean>>;
-}) => (
-  <button
-    type="button"
-    aria-label="details"
-    onClick={() => setIsDetailShown(!isDetailShown)}
-    data-zus-telemetry-click={isDetailShown ? "Collapse" : "Expand"}
-    className="ctw-btn-clean"
-  >
-    <div className="ctw-flex ctw-items-center ctw-justify-between ctw-rounded-lg ctw-bg-bg-white ctw-p-3 ctw-text-left ctw-outline ctw-outline-1 ctw-outline-bg-dark">
-      <div className="ctw-flex ctw-space-x-3">
-        <div className="ctw-min-w-[5rem]">
-          {date ?? <span className="ctw-text-content-lighter">Unknown</span>}
-        </div>
-        {(title || subtitle) && (
-          <div>
-            <div className="ctw-font-semibold ctw-text-content-black">{title}</div>
-            <div className="ctw-text-content-light">{subtitle}</div>
+}) => {
+  const { trackInteraction } = useAnalytics();
+
+  return (
+    <button
+      type="button"
+      aria-label="details"
+      onClick={() => {
+        setIsDetailShown(!isDetailShown);
+        trackInteraction("expand_detail", {
+          direction: isDetailShown ? "collapse" : "expand",
+        });
+      }}
+      className="ctw-btn-clean"
+    >
+      <div className="ctw-flex ctw-items-center ctw-justify-between ctw-rounded-lg ctw-bg-bg-white ctw-p-3 ctw-text-left ctw-outline ctw-outline-1 ctw-outline-bg-dark">
+        <div className="ctw-flex ctw-space-x-3">
+          <div className="ctw-min-w-[5rem]">
+            {date ?? <span className="ctw-text-content-lighter">Unknown</span>}
           </div>
-        )}
-        {/* Show unknown in the title spot if we don't have one AND if we aren't already
+          {(title || subtitle) && (
+            <div>
+              <div className="ctw-font-semibold ctw-text-content-black">{title}</div>
+              <div className="ctw-text-content-light">{subtitle}</div>
+            </div>
+          )}
+          {/* Show unknown in the title spot if we don't have one AND if we aren't already
             showing "Unknown" in the date spot. */}
-        {!title && !subtitle && date && <div className="ctw-text-content-lighter">Unknown</div>}
-      </div>
-      <div className="ctw-flex ctw-items-center ctw-space-x-3">
-        {hasDocument && (
-          <FontAwesomeIcon icon={faFileLines} className="ctw-h-5 ctw-text-content-light" />
-        )}
-        <div className="ctw-justify-right ctw-flex">
-          <FontAwesomeIcon
-            icon={faChevronRight}
-            className={cx("ctw-h-3 ctw-w-3 ctw-text-content-lighter", {
-              "ctw-rotate-90": isDetailShown,
-            })}
-          />
+          {!title && !subtitle && date && <div className="ctw-text-content-lighter">Unknown</div>}
+        </div>
+        <div className="ctw-flex ctw-items-center ctw-space-x-3">
+          {hasDocument && (
+            <FontAwesomeIcon icon={faFileLines} className="ctw-h-5 ctw-text-content-light" />
+          )}
+          <div className="ctw-justify-right ctw-flex">
+            <FontAwesomeIcon
+              icon={faChevronRight}
+              className={cx("ctw-h-3 ctw-w-3 ctw-text-content-lighter", {
+                "ctw-rotate-90": isDetailShown,
+              })}
+            />
+          </div>
         </div>
       </div>
-    </div>
-  </button>
-);
+    </button>
+  );
+};
