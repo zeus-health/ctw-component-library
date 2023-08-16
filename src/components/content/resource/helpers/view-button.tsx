@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cx from "classnames";
 import { useState } from "react";
 import { DropdownMenuAction } from "@/components/core/dropdown-action-menu";
-import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { FilterEntry } from "@/utils/filters";
 
 export type ViewOption<T extends object> = {
@@ -25,7 +24,6 @@ export const ViewButton = <T extends object>({
   options,
 }: ViewButtonProps<T>) => {
   const [selected, setSelected] = useState<ViewOption<T>>(defaultView);
-  const { trackInteraction } = useAnalytics();
 
   return (
     <DropdownMenuAction
@@ -35,9 +33,6 @@ export const ViewButton = <T extends object>({
         const selectedOption = options.filter((option) => option.display === item.key)[0];
         onChange(selectedOption);
         setSelected(selectedOption);
-        trackInteraction("change_view", {
-          value: selectedOption.display,
-        });
       }}
       items={options.map((option) => ({
         key: option.display,

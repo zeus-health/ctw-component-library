@@ -1,7 +1,6 @@
 import cx from "classnames";
 import { usePatientHistory } from "./use-patient-history";
 import { withErrorBoundary } from "@/components/core/error-boundary";
-import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 
 type RequestRecordsButtonProps = {
   className?: cx.Argument;
@@ -16,16 +15,13 @@ export const RequestRecordsButton = withErrorBoundary(
     displayText = "Request Records",
   }: RequestRecordsButtonProps) => {
     const { openHistoryRequestDrawer } = usePatientHistory(includePatientDemographicsForm);
-    const { trackInteraction } = useAnalytics();
 
     return (
       <button
         type="button"
         className={cx("ctw-btn-clear ctw-link", className)}
-        onClick={() => {
-          void openHistoryRequestDrawer();
-          trackInteraction("btn_request_records");
-        }}
+        onClick={openHistoryRequestDrawer}
+        data-zus-telemetry-click="Request records"
       >
         {displayText}
       </button>

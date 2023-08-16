@@ -3,7 +3,6 @@ import { useRef } from "react";
 import { patientCareTeamColumns } from "./helpers/columns";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { EmptyTable } from "@/components/core/empty-table";
-import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { Table } from "@/components/core/table/table";
 import { usePatientCareTeam } from "@/fhir/care-team";
 import { CareTeamPractitionerModel } from "@/fhir/models/careteam-practitioner";
@@ -33,27 +32,25 @@ export function PatientCareTeam({ className }: PatientCareTeamProps) {
   });
 
   return (
-    <AnalyticsProvider componentName="PatientCareTeam">
-      <div
-        ref={containerRef}
-        className={cx(
-          "ctw-scrollable-pass-through-height ctw-border ctw-border-solid ctw-border-divider-light ctw-bg-white",
-          className,
-          {
-            "ctw-stacked": breakpoints.sm,
-          }
-        )}
-      >
-        <Table
-          stacked={breakpoints.sm}
-          isLoading={patientCareTeamQuery.isLoading}
-          records={patientCareTeamQuery.data ?? []}
-          columns={patientCareTeamColumns}
-          handleRowClick={openDetails}
-          emptyMessage={<EmptyTable hasZeroFilteredRecords={false} resourceName="care team" />}
-        />
-      </div>
-    </AnalyticsProvider>
+    <div
+      ref={containerRef}
+      className={cx(
+        "ctw-scrollable-pass-through-height ctw-border ctw-border-solid ctw-border-divider-light ctw-bg-white",
+        className,
+        {
+          "ctw-stacked": breakpoints.sm,
+        }
+      )}
+    >
+      <Table
+        stacked={breakpoints.sm}
+        isLoading={patientCareTeamQuery.isLoading}
+        records={patientCareTeamQuery.data ?? []}
+        columns={patientCareTeamColumns}
+        handleRowClick={openDetails}
+        emptyMessage={<EmptyTable hasZeroFilteredRecords={false} resourceName="care team" />}
+      />
+    </div>
   );
 }
 

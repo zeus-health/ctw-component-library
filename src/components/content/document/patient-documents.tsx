@@ -9,8 +9,6 @@ import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { EmptyTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
-import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
-import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { RowActionsProps } from "@/components/core/table/table";
 import { getBinaryDocument } from "@/fhir/binaries";
@@ -49,38 +47,36 @@ function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocument
   });
 
   return (
-    <AnalyticsProvider componentName="PatientDocuments">
-      <div ref={containerRef} className={cx(className, "ctw-scrollable-pass-through-height")}>
-        <ResourceTableActions
-          filterOptions={{
-            onChange: setFilters,
-            defaultState: defaultDocumentsFilters,
-            filters: documentsFilter(),
-          }}
-          sortOptions={{
-            defaultSort: defaultDocumentSort,
-            options: documentSortOptions,
-            onChange: setSort,
-          }}
-          viewOptions={{
-            onChange: setViewOption,
-            options: viewOptions,
-            defaultView: allTime,
-          }}
-        />
-        <ResourceTable
-          isLoading={patientDocumentQuery.isLoading}
-          data={data}
-          emptyMessage={
-            <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="documents" />
-          }
-          columns={patientDocumentColumns}
-          onRowClick={openDetails}
-          RowActions={rowActions}
-          enableDismissAndReadActions
-        />
-      </div>
-    </AnalyticsProvider>
+    <div ref={containerRef} className={cx(className, "ctw-scrollable-pass-through-height")}>
+      <ResourceTableActions
+        filterOptions={{
+          onChange: setFilters,
+          defaultState: defaultDocumentsFilters,
+          filters: documentsFilter(),
+        }}
+        sortOptions={{
+          defaultSort: defaultDocumentSort,
+          options: documentSortOptions,
+          onChange: setSort,
+        }}
+        viewOptions={{
+          onChange: setViewOption,
+          options: viewOptions,
+          defaultView: allTime,
+        }}
+      />
+      <ResourceTable
+        isLoading={patientDocumentQuery.isLoading}
+        data={data}
+        emptyMessage={
+          <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="documents" />
+        }
+        columns={patientDocumentColumns}
+        onRowClick={openDetails}
+        RowActions={rowActions}
+        enableDismissAndReadActions
+      />
+    </div>
   );
 }
 
@@ -97,7 +93,6 @@ type RowActionsProps2 = RowActionsProps<DocumentModel> & ExtraRowActionProps;
 
 const RowActions = ({ record, onSuccess, onAddToRecord }: RowActionsProps2) => {
   const { t } = useBaseTranslations();
-  const { trackInteraction } = useAnalytics();
   const { getRequestContext } = useCTW();
   const { binaryId } = record;
 
@@ -106,12 +101,12 @@ const RowActions = ({ record, onSuccess, onAddToRecord }: RowActionsProps2) => {
       <button
         type="button"
         className="ctw-btn-primary ctw-ml-1 ctw-capitalize"
+        data-zus-telemetry-click="Add to record"
         data-testid="add-to-record"
         onClick={async () => {
           const binary = await getBinaryDocument(await getRequestContext(), binaryId);
           onAddToRecord(record, binary);
           onSuccess?.();
-          trackInteraction("btn_add_to_record");
         }}
       >
         {t("resourceTable.add")}

@@ -191,18 +191,12 @@ export class Telemetry {
     this.logger.error(message, context);
   }
 
-  static trackInteraction(
-    action: string,
-    metadata: Record<string, unknown> & { datadogMetricName?: string } = {}
-  ) {
-    // If `datadogMetricName` is not provided, we default to the action name.
-    // This allows us to send a different metric name to DataDog if needed.
-    const { datadogMetricName = action, ...eventMetadata } = metadata;
+  static trackInteraction(action: string) {
     // We send an action metric to CTW
-    this.countMetric(`action.${datadogMetricName}`, 1);
+    this.countMetric(`action.${action}`, 1);
     // We report an active session to CTW
     this.reportActiveSession().catch((error) => Telemetry.logError(error as Error));
-    this.analyticsEvent(action, eventMetadata).catch((error) => Telemetry.logError(error as Error));
+    this.analyticsEvent(action).catch((error) => Telemetry.logError(error as Error));
   }
 
   /**

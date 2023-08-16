@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cx from "classnames";
 import { useState } from "react";
 import { DropdownMenuAction } from "@/components/core/dropdown-action-menu";
-import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { Sort } from "@/utils/sort";
 
 export type SortOption<T extends object> = {
@@ -25,7 +24,6 @@ export const SortButton = <T extends object>({
   options,
 }: SortButtonProps<T>) => {
   const [selected, setSelected] = useState<SortOption<T>>(defaultSort);
-  const { trackInteraction } = useAnalytics();
 
   return (
     <DropdownMenuAction
@@ -34,10 +32,6 @@ export const SortButton = <T extends object>({
       onItemSelect={(item) => {
         const selectedOption = options.filter((option) => option.display === item.key)[0];
         onChange(selectedOption);
-        trackInteraction("sort", {
-          value: item.key,
-          dir: selectedOption.sorts[0].dir,
-        });
         setSelected(selectedOption);
       }}
       items={options.map((option) => ({

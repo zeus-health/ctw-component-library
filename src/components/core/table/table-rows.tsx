@@ -4,7 +4,6 @@ import { TableDataCell } from "./table-data-cell";
 import { TableFullLengthRow } from "./table-full-length-row";
 import { MinRecordItem, TableColumn } from "./table-helpers";
 import { Spinner } from "../spinner";
-import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { isFunction } from "@/utils/nodash";
 
 export type RowActionsProp<T extends MinRecordItem> = FunctionComponent<{
@@ -31,8 +30,6 @@ export const TableRows = <T extends MinRecordItem>({
   RowActions,
   getRowClassName,
 }: TableRowsProps<T>) => {
-  const { trackInteraction } = useAnalytics();
-
   if (isLoading) {
     return (
       <TableFullLengthRow colSpan={columns.length}>
@@ -56,6 +53,7 @@ export const TableRows = <T extends MinRecordItem>({
     <>
       {records.map((record) => (
         <tr
+          data-zus-telemetry-click={handleRowClick ? "Table row" : null}
           // ctw-mx-px fixes bug where side borders disappear on hover when stacked.
           className={cx(
             "ctw-group ctw-relative ctw-mx-px",
@@ -71,10 +69,7 @@ export const TableRows = <T extends MinRecordItem>({
               return;
             }
 
-            if (handleRowClick) {
-              handleRowClick(record);
-              trackInteraction("click_row");
-            }
+            if (handleRowClick) handleRowClick(record);
           }}
         >
           {columns.map((column, index) => (

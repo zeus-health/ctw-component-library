@@ -7,7 +7,6 @@ import { ListBox } from "../list-box/list-box";
 import { PatientHistoryStatus } from "@/components/content/patient-history/patient-history-message-status";
 import { usePatientHistory } from "@/components/content/patient-history/use-patient-history";
 import { withErrorBoundary } from "@/components/core/error-boundary";
-import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 
 export type TabGroupProps = {
@@ -50,7 +49,6 @@ function TabGroupComponent({
 
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   const patientHistoryDetails = usePatientHistory();
-  const { trackInteraction } = useAnalytics();
   // Work around for not wanting to pre-mount all tabs.
   // https://github.com/tailwindlabs/headlessui/issues/2276#issuecomment-1456537475
   const [shown, setShown] = useState<Record<number, boolean>>({ 0: true });
@@ -129,10 +127,8 @@ function TabGroupComponent({
           {content.map(({ key, display }, index) => (
             <Tab
               key={key}
-              onClick={() => {
-                onClickBlur();
-                trackInteraction("open_tab", { tab: key });
-              }}
+              data-zus-telemetry-click={`open_tab.${key}`}
+              onClick={onClickBlur}
               className={({ selected }) =>
                 cx(
                   [

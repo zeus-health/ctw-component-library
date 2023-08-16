@@ -9,7 +9,6 @@ import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { ResourceTable } from "@/components/content/resource/resource-table";
 import { EmptyTable } from "@/components/core/empty-table";
-import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { TimelineEventModel } from "@/fhir/models/timeline-event";
 import { useTimelineEvents } from "@/fhir/timeline-event";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
@@ -36,49 +35,47 @@ export function PatientTimeline({ className }: PatientTimelineProps) {
   const openDiagnosticReportDetails = useObservationsDetailsDrawer();
 
   return (
-    <AnalyticsProvider componentName="PatientTimeline">
-      <div className={cx(className, "ctw-scrollable-pass-through-height")} ref={containerRef}>
-        <ResourceTableActions
-          viewOptions={{
-            onChange: setViewOption,
-            options: viewOptions,
-            defaultView: past6Months,
-          }}
-          filterOptions={{
-            onChange: setFilters,
-            defaultState: defaultTimelineFilters,
-            filters: timelineFilters(timelineEventsQuery.data),
-          }}
-          sortOptions={{
-            defaultSort: defaultTimelineSort,
-            options: timelineSortOptions,
-            onChange: setSort,
-          }}
-        />
-        <ResourceTable
-          showTableHead={false}
-          isLoading={timelineEventsQuery.isLoading}
-          data={data}
-          emptyMessage={
-            <EmptyTable
-              hasZeroFilteredRecords={hasZeroFilteredRecords}
-              resourceName="timeline records"
-            />
+    <div className={cx(className, "ctw-scrollable-pass-through-height")} ref={containerRef}>
+      <ResourceTableActions
+        viewOptions={{
+          onChange: setViewOption,
+          options: viewOptions,
+          defaultView: past6Months,
+        }}
+        filterOptions={{
+          onChange: setFilters,
+          defaultState: defaultTimelineFilters,
+          filters: timelineFilters(timelineEventsQuery.data),
+        }}
+        sortOptions={{
+          defaultSort: defaultTimelineSort,
+          options: timelineSortOptions,
+          onChange: setSort,
+        }}
+      />
+      <ResourceTable
+        showTableHead={false}
+        isLoading={timelineEventsQuery.isLoading}
+        data={data}
+        emptyMessage={
+          <EmptyTable
+            hasZeroFilteredRecords={hasZeroFilteredRecords}
+            resourceName="timeline records"
+          />
+        }
+        columns={patientTimelineColumns}
+        onRowClick={(record) => {
+          switch (record.model.kind) {
+            case "Encounter":
+              openEncounterDetails(record.model);
+              break;
+            case "DiagnosticReport":
+              openDiagnosticReportDetails(record.model);
+              break;
+            default:
           }
-          columns={patientTimelineColumns}
-          onRowClick={(record) => {
-            switch (record.model.kind) {
-              case "Encounter":
-                openEncounterDetails(record.model);
-                break;
-              case "DiagnosticReport":
-                openDiagnosticReportDetails(record.model);
-                break;
-              default:
-            }
-          }}
-        />
-      </div>
-    </AnalyticsProvider>
+        }}
+      />
+    </div>
   );
 }

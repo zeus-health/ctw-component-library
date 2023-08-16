@@ -1,14 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Table, TableProps } from "./table";
 import { TableColumn } from "./table-helpers";
-import {
-  FAKE_AUTH,
-  FAKE_BUILDER_ID,
-  FAKE_PATIENT_UPID,
-} from "@/components/content/story-helpers/ids";
-import { CTWProvider } from "@/components/core/providers/ctw-provider";
-import { PatientProvider } from "@/components/core/providers/patient-provider";
-import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 
 type Record = {
   key: string;
@@ -20,15 +12,6 @@ type Props = TableProps<Record>;
 export default {
   component: Table,
   tags: ["autodocs"],
-  decorators: [
-    (Story, { args }) => (
-      <CTWProvider env="dev" authToken={FAKE_AUTH} builderId={FAKE_BUILDER_ID}>
-        <PatientProvider patientID={FAKE_PATIENT_UPID} systemURL={SYSTEM_ZUS_UNIVERSAL_ID}>
-          <Story args={args} />
-        </PatientProvider>
-      </CTWProvider>
-    ),
-  ],
   argTypes: {
     emptyMessage: {
       options: ["Default", "String", "ReactElement"],

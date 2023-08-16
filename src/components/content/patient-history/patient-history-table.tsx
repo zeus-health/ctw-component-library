@@ -9,7 +9,6 @@ import { ResourceTableActions } from "../resource/resource-table-actions";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { FilterChangeEvent } from "@/components/core/filter-bar/filter-bar-types";
 import { SimplePagination } from "@/components/core/pagination/simple-pagination";
-import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { Table } from "@/components/core/table/table";
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { PatientModel } from "@/fhir/models";
@@ -73,40 +72,38 @@ export const PatientHistoryTable = withErrorBoundary(
     }, [isError, isFetching]);
 
     return (
-      <AnalyticsProvider componentName="PatientHistoryTable">
-        <CTWBox.StackedWrapper
-          className={cx(
-            "ctw-patients-table-inputs",
-            { "ctw-patients-border": includeBorder },
-            className
-          )}
-        >
-          {title && <CTWBox.Heading title={title} />}
-          <ResourceTableActions
-            filterOptions={{
-              onChange: onFilterChange,
-              filters: patientHistoryFilters(),
-              defaultState: defaultPatientHistoryFilters,
-            }}
-            className="ctw-ml-2"
-          />
-          <div className="ctw-overflow-hidden">
-            <Table
-              records={patients}
-              columns={columns}
-              pageSize={pageSize}
-              handleRowClick={handleRowClick}
-              hidePagination
-            >
-              <SimplePagination
-                currentPage={currentPage}
-                setCurrentPage={setCurrentPage}
-                hasNext={hasNext}
-              />
-            </Table>
-          </div>
-        </CTWBox.StackedWrapper>
-      </AnalyticsProvider>
+      <CTWBox.StackedWrapper
+        className={cx(
+          "ctw-patients-table-inputs",
+          { "ctw-patients-border": includeBorder },
+          className
+        )}
+      >
+        {title && <CTWBox.Heading title={title} />}
+        <ResourceTableActions
+          filterOptions={{
+            onChange: onFilterChange,
+            filters: patientHistoryFilters(),
+            defaultState: defaultPatientHistoryFilters,
+          }}
+          className="ctw-ml-2"
+        />
+        <div className="ctw-overflow-hidden">
+          <Table
+            records={patients}
+            columns={columns}
+            pageSize={pageSize}
+            handleRowClick={handleRowClick}
+            hidePagination
+          >
+            <SimplePagination
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              hasNext={hasNext}
+            />
+          </Table>
+        </div>
+      </CTWBox.StackedWrapper>
     );
   },
   "PatientsHistoryTable"

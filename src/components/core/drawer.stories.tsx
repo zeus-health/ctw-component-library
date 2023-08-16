@@ -1,14 +1,8 @@
+import { expect } from "@storybook/jest";
 import { Meta, StoryObj } from "@storybook/react";
+import { userEvent, within } from "@storybook/testing-library";
 import { useState } from "react";
-import {
-  FAKE_AUTH,
-  FAKE_BUILDER_ID,
-  FAKE_PATIENT_UPID,
-} from "@/components/content/story-helpers/ids";
 import { Drawer, DrawerProps } from "@/components/core/drawer";
-import { CTWProvider } from "@/components/core/providers/ctw-provider";
-import { PatientProvider } from "@/components/core/providers/patient-provider";
-import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 
 export default {
   component: Drawer,
@@ -18,27 +12,19 @@ export default {
     (Story, { args }) => {
       const [drawerIsOpen, setDrawerIsOpen] = useState(false);
       return (
-        <CTWProvider env="dev" authToken={FAKE_AUTH} builderId={FAKE_BUILDER_ID}>
-          <PatientProvider patientID={FAKE_PATIENT_UPID} systemURL={SYSTEM_ZUS_UNIVERSAL_ID}>
-            <div id="headlessui-portal-root">
-              <p>To open up the drawer, simply press the button below</p>
-              <button
-                type="button"
-                className="ctw-btn-primary"
-                onClick={() => setDrawerIsOpen(true)}
-              >
-                Open
-              </button>
-              <Story
-                args={{
-                  ...args,
-                  isOpen: drawerIsOpen,
-                  onClose: () => setDrawerIsOpen(false),
-                }}
-              />
-            </div>
-          </PatientProvider>
-        </CTWProvider>
+        <div id="headlessui-portal-root">
+          <p>To open up the drawer, simply press the button below</p>
+          <button type="button" className="ctw-btn-primary" onClick={() => setDrawerIsOpen(true)}>
+            Open
+          </button>
+          <Story
+            args={{
+              ...args,
+              isOpen: drawerIsOpen,
+              onClose: () => setDrawerIsOpen(false),
+            }}
+          />
+        </div>
       );
     },
   ],
@@ -79,5 +65,22 @@ export const Basic: StoryObj<DrawerProps> = {
         <Drawer.Footer>Drawer Footer</Drawer.Footer>
       </>
     ),
+  },
+};
+
+export const Test: StoryObj<DrawerProps> = {
+  ...Basic,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Verify drawer doesn't show right away.
+    expect(canvas.queryByText(/drawer title/i)).toBeNull();
+
+    // Open drawer and verify our three areas appear.
+    userEvent.click(canvas.getByRole("button"));
+    expect(canvas.getByText(/drawer title/i)).toBeInTheDocument();
+    expect(canvas.getByTestId("scrollable-content-0")).toBeInTheDocument();
+    expect(canvas.getByText(/drawer footer/i)).toBeInTheDocument();
+    userEvent.click(canvas.getByLabelText("close"));
   },
 };

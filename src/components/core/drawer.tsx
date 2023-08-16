@@ -5,7 +5,6 @@ import { XIcon } from "@heroicons/react/outline";
 import cx from "classnames";
 import type { ReactNode } from "react";
 import { Fragment } from "react";
-import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 
 export type DrawerProps = {
   className?: string;
@@ -44,7 +43,6 @@ export function Drawer({
   title,
   disableCloseOnBlur = false,
 }: DrawerProps) {
-  const { trackInteraction } = useAnalytics();
   const transitionClasses = "ctw-transform ctw-transition ctw-ease-in-out ctw-duration-300";
 
   return (
@@ -98,12 +96,8 @@ export function Drawer({
                         <button
                           type="button"
                           aria-label="close"
-                          onClick={() => {
-                            onClose();
-                            trackInteraction("close_drawer", {
-                              target: "btn_header_close_icon",
-                            });
-                          }}
+                          onClick={onClose}
+                          data-zus-telemetry-click="Close icon"
                           className="ctw-btn-clear"
                         >
                           <span className="ctw-sr-only">Close panel</span>
@@ -115,15 +109,7 @@ export function Drawer({
                     {children}
                     {showCloseFooter && (
                       <Drawer.Footer>
-                        <Drawer.CloseButton
-                          label="Close"
-                          onClose={() => {
-                            onClose();
-                            trackInteraction("close_drawer", {
-                              target: "btn_footer",
-                            });
-                          }}
-                        />
+                        <Drawer.CloseButton label="Close" onClose={onClose} />
                       </Drawer.Footer>
                     )}
                   </div>
@@ -142,7 +128,12 @@ Drawer.Footer = ({ children }: { children: ReactNode }) => (
 );
 
 Drawer.CloseButton = ({ label, onClose }: { label: string; onClose: () => void }) => (
-  <button type="button" className="ctw-btn-clear !ctw-px-4 !ctw-py-2" onClick={onClose}>
+  <button
+    type="button"
+    className="ctw-btn-clear !ctw-px-4 !ctw-py-2"
+    data-zus-telemetry-click={`${label} button`}
+    onClick={onClose}
+  >
     {label}
   </button>
 );

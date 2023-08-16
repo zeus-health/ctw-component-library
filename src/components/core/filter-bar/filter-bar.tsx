@@ -10,7 +10,6 @@ import { useEffect, useState } from "react";
 import { filterChangeEvent, filterChangeEventToValuesRecord } from "./filter-bar-utils";
 import { FilterBarPill } from "@/components/core/filter-bar/filter-bar-pills";
 import { ListBox, MinListBoxItem } from "@/components/core/list-box/list-box";
-import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { omit, partition, uniq } from "@/utils/nodash/fp";
 import { isEmptyValue } from "@/utils/types";
 
@@ -54,7 +53,6 @@ export const FilterBar = ({ className, onChange, filters, defaultState = {} }: F
   const [initialState] = useState<FilterValuesRecord>(
     filterChangeEventToValuesRecord(defaultState)
   );
-  const { trackInteraction } = useAnalytics();
 
   useEffect(() => {
     // Validating that the "_remove" filter is never passed in from parent
@@ -67,14 +65,12 @@ export const FilterBar = ({ className, onChange, filters, defaultState = {} }: F
     setActiveFilterKeys([]);
     setActiveFilterValues({});
     onChange({});
-    trackInteraction("filter", { action: "clear" });
   };
 
   const resetAllFilters = () => {
     setActiveFilterValues(initialState);
     setActiveFilterKeys(Object.keys(initialState));
     onChange(filterChangeEvent(filters, Object.keys(initialState), initialState));
-    trackInteraction("filter", { action: "reset" });
   };
 
   // Add or remove a filter from the activated filters list
@@ -103,7 +99,6 @@ export const FilterBar = ({ className, onChange, filters, defaultState = {} }: F
     }
     // Finally we fire off a change event
     onChange(filterChangeEvent(filters, updatedKeys, activeFilterValues));
-    trackInteraction("filter", { action: remove ? "toggle_off" : "toggle_on", value: key });
   };
 
   // The update function for checkbox and select pills to call on change
