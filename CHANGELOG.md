@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.56.3
+
+### Patch Changes
+
+- 6bf2611d: Bump @storybook/test-runner from 0.11.0 to 0.13.0
+
 ## 1.56.2
 
 ### Patch Changes
