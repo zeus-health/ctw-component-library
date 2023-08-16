@@ -8,7 +8,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cx from "classnames";
 import { useEffect, useState } from "react";
 import { filterChangeEvent, filterChangeEventToValuesRecord } from "./filter-bar-utils";
-import dropdownActionMenuStyles from "../dropdown-action-menu.module.scss";
 import { FilterBarPill } from "@/components/core/filter-bar/filter-bar-pills";
 import { ListBox, MinListBoxItem } from "@/components/core/list-box/list-box";
 import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
@@ -203,7 +202,7 @@ export const FilterBar = ({ className, onChange, filters, defaultState = {} }: F
         useBasicStyles
         btnClassName="!ctw-text-content-light ctw-btn-clear !ctw-font-normal"
         // Add a right margin that's equal to the min-width of the dropdown-action-menu, minus the width of the "add filters" div (88px)
-        containerClassName={`ctw-mr-[calc(${dropdownActionMenuStyles.minWidth}-88px)]`}
+        className="ctw-mr-[calc(15rem-88px)]"
         items={menuItems}
         onChange={(_index, item) => {
           switch (item.key) {
