@@ -68,6 +68,14 @@ export class MedicationDispenseModel extends FHIRModel<fhir4.MedicationDispense>
     )?.valueString;
   }
 
+  get alertTimeStamp(): string | undefined {
+    const time = this.resource.extension?.find(
+      (e) => e.url === "http://surescripts.net/fhir/CodeSystem/notification-generated-time"
+    )?.valueInstant;
+
+    return formatDateISOToLocal(time);
+  }
+
   get whenHandedOver() {
     return formatDateISOToLocal(this.resource.whenHandedOver);
   }

@@ -4,6 +4,14 @@ import { MedicationDispenseModel } from "@/fhir/models";
 export const patientMedicationDispenseColumns = () => {
   const immunizationColumns: TableColumn<MedicationDispenseModel>[] = [
     {
+      title: "TimeStamp",
+      render: (m) => (
+        <div>
+          <div>{m.alertTimeStamp}</div>
+        </div>
+      ),
+    },
+    {
       title: "Medication",
       render: (m) => (
         <div>
@@ -20,18 +28,10 @@ export const patientMedicationDispenseColumns = () => {
       ),
     },
     {
-      title: "Handed Over",
+      title: "Last Known Fill",
       render: (m) => (
         <div>
           <div>{m.whenHandedOver ? m.whenHandedOver : m.whenPrepared}</div>
-        </div>
-      ),
-    },
-    {
-      title: "PMARefillNotPickedUp",
-      render: (m) => (
-        <div>
-          <div>{m.PMARefillNotPickedUp}</div>
         </div>
       ),
     },

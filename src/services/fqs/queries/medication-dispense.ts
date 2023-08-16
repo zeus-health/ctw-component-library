@@ -38,6 +38,7 @@ export const medicationDispenseQuery = gql`
           extension {
             url
             valueString
+            valueInstant
           }
           contained {
             resource {
