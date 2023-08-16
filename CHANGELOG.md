@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.56.2
+
+### Patch Changes
+
+- 55e9da0b: Resolved issue with encounters showing "no data" before data was requested
+- 14f93046: Updated "Add Filters" button to take up as much space as the dropdown menu it opens
+
 ## 1.56.1
 
 ### Patch Changes
