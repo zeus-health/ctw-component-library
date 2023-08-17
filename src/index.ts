@@ -20,6 +20,7 @@ export * from "@/components/content/medications/patient-medications";
 export * from "@/components/content/medications/patient-medications-outside";
 export * from "@/components/content/medications/patient-medications-profile";
 export * from "@/components/content/medications/patient-medications-all";
+export * from "@/components/content/medication-dispense/patient-medication-dispense";
 export * from "@/components/content/medications/patient-medications-outside-badge";
 export * from "@/components/content/medications/unread-medications-notification";
 export * from "@/components/content/patient-history/patient-history-last-retrieved";
