@@ -6,7 +6,7 @@ import { withErrorBoundary } from "@/components/core/error-boundary";
 import { usePatientMedicationDispense } from "@/fhir/medication-dispense";
 
 export type PatientMedDispenseProps = {
-  className?: string;
+  className?: cx.Argument;
 };
 
 function PatientMedDispenseComponent({ className }: PatientMedDispenseProps) {
