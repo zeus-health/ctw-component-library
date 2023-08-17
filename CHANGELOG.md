@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.57.1
+
+### Patch Changes
+
+- 7d61f31c: Remove default filter from the Conditions table that shows all conditions.
+
 ## 1.57.0
 
 ### Minor Changes
