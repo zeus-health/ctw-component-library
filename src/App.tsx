@@ -123,7 +123,7 @@ const components: DemoComponent[] = [
   { name: "timeline", render: () => <PatientTimeline />, title: "Patient Timeline" },
   { name: "encounters", render: () => <PatientEncounters />, title: "Patient Encounters" },
   {
-    name: "medDispense",
+    name: "medication-dispense",
     render: () => <PatientMedicationDispense />,
     title: "Patient Medication Dispense",
   },
