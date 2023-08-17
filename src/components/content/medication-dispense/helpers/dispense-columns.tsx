@@ -17,7 +17,7 @@ export const patientMedicationDispenseColumns = () => {
     },
     {
       title: "Last Known Fill",
-      render: (m) => m.whenHandedOver ? m.whenHandedOver : m.whenPrepared,
+      render: (m) => (m.whenHandedOver ? m.whenHandedOver : m.whenPrepared),
     },
   ];
 
