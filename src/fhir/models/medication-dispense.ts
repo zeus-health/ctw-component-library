@@ -62,6 +62,20 @@ export class MedicationDispenseModel extends FHIRModel<fhir4.MedicationDispense>
     return getMedicationDisplayName(this.resource, this.includedResources);
   }
 
+  get PMARefillNotPickedUp(): string | undefined {
+    return this.resource.extension?.find(
+      (e) => e.url === "http://surescripts.net/fhir/CodeSystem/patient-notification-types"
+    )?.valueString;
+  }
+
+  get alertTimeStamp(): string | undefined {
+    const time = this.resource.extension?.find(
+      (e) => e.url === "http://surescripts.net/fhir/CodeSystem/notification-generated-time"
+    )?.valueInstant;
+
+    return formatDateISOToLocal(time);
+  }
+
   get whenHandedOver() {
     return formatDateISOToLocal(this.resource.whenHandedOver);
   }

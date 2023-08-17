@@ -26,6 +26,7 @@ import {
 } from ".";
 
 import { Theme } from "@/styles/tailwind.theme";
+import { PatientMedicationDispense } from "./components/content/medication-dispense/patient-medication-dispense";
 
 const {
   VITE_AUTH0_AUDIENCE,
@@ -121,6 +122,12 @@ const components: DemoComponent[] = [
   { name: "patient-search", render: () => <PatientSearch />, title: "Patient Search" },
   { name: "timeline", render: () => <PatientTimeline />, title: "Patient Timeline" },
   { name: "encounters", render: () => <PatientEncounters />, title: "Patient Encounters" },
+  {
+    name: "medication-dispense",
+    render: () => <PatientMedicationDispense />,
+    title: "Patient Medication Dispense",
+  },
+
   {
     name: "zap",
     render: () => {
