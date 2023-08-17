@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.57.0
+
+### Minor Changes
+
+- 23f153ca: Introduce a med dispense component that dictates refill pickup.
+
 ## 1.56.3
 
 ### Patch Changes
