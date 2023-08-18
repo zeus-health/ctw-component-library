@@ -141,6 +141,7 @@
     "patch-package": "^6.5.1",
     "react-i18next": "^12.2.0",
     "react-jason": "^1.1.2",
+    "react-super-responsive-table": "^5.2.1",
     "sanitize-html": "^2.11.0",
     "unleash-proxy-client": "^2.5.0",
     "use-isomorphic-layout-effect": "^1.1.2",
