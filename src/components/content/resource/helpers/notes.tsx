@@ -1,3 +1,4 @@
+import { Interweave } from "interweave";
 import sanitizeHtml from "sanitize-html";
 import { NotesEntry } from "./notes-entry";
 import { DocumentModel } from "@/fhir/models/document";
@@ -13,8 +14,8 @@ function getNoteDisplay(noteText: string | undefined) {
   const cleanNote = sanitizeHtml(noteText, {
     disallowedTagsMode: "escape",
   });
-  // eslint-disable-next-line react/no-danger
-  return <div dangerouslySetInnerHTML={{ __html: cleanNote }} />;
+
+  return <Interweave content={cleanNote} />;
 }
 
 export const Notes = ({ entries }: NotesProps) => (

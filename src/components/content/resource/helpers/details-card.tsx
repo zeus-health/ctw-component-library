@@ -25,14 +25,14 @@ export const DetailsCard = ({ details, hideEmpty = true, documentButton }: Detai
             return (
               // eslint-disable-next-line react/no-array-index-key
               <div key={idx} className="ctw-text-gray-900 ctw-flex ctw-items-baseline">
-                <div className="ctw-m-0">{value}</div>
+                <div className="ctw-m-0 ctw-w-full">{value}</div>
               </div>
             );
           }
           return (
             <div key={label} className="ctw-text-gray-900 ctw-flex ctw-items-baseline">
               <dt className="ctw-w-1/3 ctw-flex-shrink-0 ctw-font-medium">{label}</dt>
-              <dd className="ctw-m-0">{value}</dd>
+              <dd className="ctw-m-0 ctw-w-full">{value}</dd>
             </div>
           );
         })}
