@@ -22,7 +22,7 @@ function getNoteDisplay(noteText: string | undefined) {
       case "TABLE":
         return <Table>{children}</Table>;
       case "THEAD":
-        return <Thead>{children}</Thead>;
+        return <Thead>{...children}</Thead>;
       case "TBODY":
         return <Tbody>{children}</Tbody>;
       case "TR":
