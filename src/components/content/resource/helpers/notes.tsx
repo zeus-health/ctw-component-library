@@ -1,4 +1,4 @@
-import { Element, Interweave, Node } from "interweave";
+import { Interweave, Node } from "interweave";
 import { Table, Tbody, Td, Th, Thead, Tr } from "react-super-responsive-table";
 import sanitizeHtml from "sanitize-html";
 import { NotesEntry } from "./notes-entry";
@@ -38,67 +38,7 @@ function getNoteDisplay(noteText: string | undefined) {
 
   return (
     <div>
-      <Interweave
-        content={`<table>
-            <tr>
-               <th>Student Name</th>
-               <th>Father Name</th>
-               <th>Maths</th>
-               <th>English</th>
-               <th>Sociology</th>
-               <th>Frencg LangComputer</th>
-               <th>Politics</th>
-               <th>Technical Writing</th>
-               <th>Sociology</th>
-               <th>Finance</th>
-               <th>Biblical Studies</th>
-               <th>Economics</th>
-            </tr>
-            <tr>
-               <td>Jilla</td>
-               <td>Smith</td>
-               <td>90</td>
-               <td>80</td>
-               <td>60</td>
-               <td>92</td>
-               <td>45</td>
-               <td>65</td>
-               <td>78</td>
-               <td>88</td>
-               <td>65</td>
-               <td>71</td>
-            </tr>
-            <tr>
-               <td>Eva</td>
-               <td>John</td>
-               <td>50</td>
-               <td>50</td>
-               <td>78</td>
-               <td>80</td>
-               <td>60</td>
-               <td>50</td>
-               <td>50</td>
-               <td>52</td>
-               <td>50</td>
-               <td>81</td>
-            </tr>
-            <tr>
-               <td>Nourine</td>
-               <td>Watson</td>
-               <td>63</td>
-               <td>90</td>
-               <td>37</td>
-               <td>65</td>
-               <td>89</td>
-               <td>78</td>
-               <td>47</td>
-               <td>69</td>
-               <td>44</td>
-               <td>98</td>
-            </tr>
-         </table>`}
-        transform={turnTablesResponsive}
-      />
+      <Interweave content={cleanNote} transform={turnTablesResponsive} />
     </div>
   );
 }
