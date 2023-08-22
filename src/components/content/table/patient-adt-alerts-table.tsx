@@ -3,19 +3,15 @@ import type { PatientModel } from "@/fhir/models/patient";
 import { SearchIcon } from "@heroicons/react/solid";
 import type { Argument } from "classnames";
 import cx from "classnames";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import * as CTWBox from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
-import { Pagination } from "@/components/core/pagination/pagination";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { useQueryWithCTW } from "@/components/core/providers/use-query-with-ctw";
 import { Table } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
-import { getADTFromODS } from "@/fhir/encounters";
-import { EncounterModel } from "@/fhir/models/encounter";
-import { getBuilderPatientsList } from "@/fhir/patient-helper";
-import { debounce } from "@/utils/nodash";
-import { QUERY_KEY_PATIENTS_ADT_LIST, QUERY_KEY_PATIENTS_LIST } from "@/utils/query-keys";
+import { getADTPatientsFromODS } from "@/fhir/encounters";
+import { QUERY_KEY_PATIENTS_ADT_LIST } from "@/utils/query-keys";
 
 export type PatientsADTTableProps = {
   className?: cx.Argument;
@@ -24,33 +20,15 @@ export type PatientsADTTableProps = {
   title?: string;
 } & TableOptionProps<PatientModel>;
 
-// Set of props that are optional configurations for the table.
 export type TableOptionProps<T extends MinRecordItem> = {
   getRowClasses?: (row: T) => Argument; // Adds a row hover effect and calls onClick.
   onRowClick?: (row: T) => void;
 };
 
-export function usePatientsList(pageSize: number, pageOffset: number, searchNameValue?: string) {
-  return useQueryWithCTW(
-    QUERY_KEY_PATIENTS_LIST,
-    [pageSize, pageOffset, searchNameValue],
-    getBuilderPatientsList
-  );
+export function usePatientsList() {
+  return useQueryWithCTW(QUERY_KEY_PATIENTS_ADT_LIST, [], getADTPatientsFromODS);
 }
 
-export function usePatientADTAlerts() {
-  return useQueryWithCTW(QUERY_KEY_PATIENTS_ADT_LIST, [], getADTFromODS);
-}
-
-/**
- * PatientsTable displays a paginated list of all patients for a builder. In
- * addition to having configurable page size, lazy loading and name search, the
- * component accepts an `onRowClick` prop so developers can add their own
- * logic when a row is clicked. The `onRowClick` receives the targeted
- * `PatientModel` as its sole argument, which contains the underlying FHIR
- * object as `.resource`.
- *
- */
 export const PatientsADTAlertsTable = withErrorBoundary(
   ({
     className,
@@ -58,47 +36,19 @@ export const PatientsADTAlertsTable = withErrorBoundary(
     pageSize = 5,
     title = "Patients ADT Alerts",
   }: PatientsADTTableProps) => {
-    const [currentPage, setCurrentPage] = useState(1);
-    const [total, setTotal] = useState(0);
     const [patients, setPatients] = useState<PatientModel[]>([]);
-    const [encounters, setEncounters] = useState<EncounterModel[]>([]);
-    const [searchNameValue, setSearchNameValue] = useState<string | undefined>();
-    const {
-      data: { patients: responsePatients, total: responseTotal } = {},
-      isFetching,
-      isError,
-    } = usePatientsList(pageSize, currentPage - 1, searchNameValue);
+    const { data: adtData, isFetching, isError } = usePatientsList();
 
-    const adtData = usePatientADTAlerts();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const debouncedSearch = useCallback(
-      debounce((value) => {
-        setSearchNameValue(value);
-        setCurrentPage(1);
-        setTotal(0);
-        setPatients([]);
-      }, 100),
-      []
-    );
-
-    // Here we are setting the total and patients only when we know that useQuery
-    // isn't fetching. This will prevent empty intermediate states where there
-    // is no data because the value of `usePatientsTable()` hasn't settled yet.
     useEffect(() => {
-      if (!isFetching && responsePatients && adtData.data) {
-        setTotal(responseTotal ?? 0);
-        setPatients(responsePatients);
-        setEncounters(adtData.data);
+      if (!isFetching && adtData) {
+        setPatients(adtData);
       }
-    }, [responsePatients, responseTotal, isError, isFetching, adtData.data]);
+    }, [isError, isFetching, adtData]);
 
     // This resets our state when there is an error fetching patients from ODS.
     useEffect(() => {
       if (isError) {
-        setTotal(0);
         setPatients([]);
-        setEncounters([]);
       }
     }, [isError, isFetching]);
 
@@ -112,13 +62,6 @@ export const PatientsADTAlertsTable = withErrorBoundary(
               <div className="ctw-search-icon-wrapper">
                 <SearchIcon className="ctw-search-icon" />
               </div>
-              <input
-                type="text"
-                className="ctw-patients-table-inputs-search"
-                placeholder="Search"
-                name="searchPatientName"
-                onChange={(e) => debouncedSearch(e.currentTarget.value)}
-              />
             </div>
           </CTWBox.Heading>
           <div className="ctw-overflow-hidden">
@@ -128,15 +71,7 @@ export const PatientsADTAlertsTable = withErrorBoundary(
               handleRowClick={handleRowClick}
               pageSize={pageSize}
               hidePagination
-            >
-              <Pagination
-                setCurrentPage={setCurrentPage}
-                total={total}
-                currentPage={currentPage}
-                pageSize={pageSize}
-                isLoading={isFetching}
-              />
-            </Table>
+            />
           </div>
         </CTWBox.StackedWrapper>
       </AnalyticsProvider>

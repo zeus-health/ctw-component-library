@@ -321,3 +321,22 @@ async function fetchAllPages(fhirClient: Client, bundle: fhir4.Bundle) {
 
   return { ...bundle, link: undefined, entry: entries, total: entries.length };
 }
+
+export async function searchEncounterBuilderRecords<T extends ResourceTypeString>(
+  resourceType: T,
+  requestContext: CTWRequestContext,
+  searchParams?: SearchParams
+): Promise<SearchReturn<T>> {
+  const records = await searchAllRecords(resourceType, requestContext, searchParams);
+
+  // Filter using the user's builder ID.
+  const { entry, resources } = filterSearchReturnByBuilderId(
+    records,
+    requestContext.contextBuilderId || requestContext.builderId
+  );
+
+  records.resources = resources;
+  records.bundle.entry = entry;
+
+  return records;
+}

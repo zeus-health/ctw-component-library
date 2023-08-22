@@ -1,10 +1,10 @@
 import { SearchParams } from "fhir-kit-client";
-import { getIncludedBasics } from "./bundle";
+import { getIncludedBasics, getIncludedResources } from "./bundle";
 import { usePatientDocuments } from "./document";
 import { PatientModel } from "./models";
 import { DocumentModel } from "./models/document";
 import { EncounterModel } from "./models/encounter";
-import { searchBuilderRecords } from "./search-helpers";
+import { searchEncounterBuilderRecords } from "./search-helpers";
 import { useQueryWithPatient } from "..";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
@@ -14,7 +14,7 @@ import {
   EncounterWithProvenance,
 } from "@/services/fqs/queries/encounters";
 import { errorResponse } from "@/utils/errors";
-import { pickBy } from "@/utils/nodash";
+import { compact, pickBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_ENCOUNTERS } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
@@ -73,21 +73,37 @@ function getEncountersFromFQS(documents: DocumentModel[]) {
   };
 }
 
-export async function getADTFromODS(requestContext: CTWRequestContext) {
+export async function getADTPatientsFromODS(requestContext: CTWRequestContext) {
   const searchParams = pickBy({
     _tag: "https://zusapi.com/thirdparty/source|bamboohealth,collective-medical",
     status: "in-progress",
+    _include: "Encounter:patient",
   }) as SearchParams;
 
   try {
-    const { resources } = await searchBuilderRecords("Encounter", requestContext, searchParams);
+    const { resources, bundle } = await searchEncounterBuilderRecords(
+      "Encounter",
+      requestContext,
+      searchParams
+    ); // reosurces now has patients and encounters in it
 
-    console.log("resources", resources);
+    const includedResources = getIncludedResources(bundle);
 
     const encounterResources = resources.map((e) => new EncounterModel(e, [], [], undefined, []));
 
     const filteredResources = encounterResources.filter((e) => !!e.periodEnd);
-    return filteredResources;
+
+    const encounterPatients = compact(
+      filteredResources.map((e) =>
+        e.resource.subject?.reference
+          ? new PatientModel(includedResources[e.resource.subject.reference] as fhir4.Patient)
+          : undefined
+      )
+    );
+
+    console.log("encounterPatients", encounterPatients);
+
+    return encounterPatients;
   } catch (e) {
     throw errorResponse("Failed fetching encounter alert information", e);
   }
