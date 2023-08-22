@@ -1,3 +1,5 @@
+import "./zus-aggregated-profile.scss";
+
 import { PatientConditionsAllProps } from "../conditions/patient-conditions-all";
 import { PatientConditionsOutsideProps } from "../conditions/patient-conditions-outside";
 import { PatientDiagnosticReportsProps } from "../diagnostic-reports/patient-diagnostic-reports";
