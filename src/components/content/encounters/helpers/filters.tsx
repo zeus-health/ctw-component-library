@@ -5,11 +5,11 @@ import { EncounterModel } from "@/fhir/models/encounter";
 const noteTypeValues = [
   {
     name: "Assessments / Plans",
-    key: "51847-2,18776-5",
+    key: ["51847-2", "18776-5"].join(","),
   },
   {
     name: "Diagnostic Narratives",
-    key: "34109-9,30954-2",
+    key: ["34109-9", "30954-2"].join(","),
   },
   {
     name: "Discharge Summary",
@@ -55,7 +55,7 @@ export function encounterFilters(encounters: EncounterModel[] | undefined): Filt
       return hasValueMatch || hasOtherMatch;
     },
     values: [
-      ...noteTypeValues,
+      ...noteTypeValues.map((v) => ({ ...v })),
       {
         name: "Other",
         key: "other",
