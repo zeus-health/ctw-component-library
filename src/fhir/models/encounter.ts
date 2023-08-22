@@ -4,6 +4,7 @@ import { FHIRModel } from "./fhir-model";
 import { codeableConceptLabel } from "../codeable-concept";
 import { formatDateISOToLocal } from "../formatters";
 import { findReference } from "../resource-helper";
+import { SYSTEM_ZUS_CREATED_AT } from "../system-urls";
 import { ResourceMap } from "../types";
 import {
   isEmptyClinicalNote,
@@ -32,6 +33,13 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
         (d) => d.binaryId === binaryID && isSectionDocument(d) && !isEmptyClinicalNote(d)
       );
     }
+  }
+
+  get lastUpdated(): string | undefined {
+    return (
+      this.resource.meta?.lastUpdated ||
+      this.resource.meta?.extension?.find((e) => e.url === SYSTEM_ZUS_CREATED_AT)?.valueDateTime
+    );
   }
 
   get class(): string | undefined {
