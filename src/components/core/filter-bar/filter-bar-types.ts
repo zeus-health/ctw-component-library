@@ -32,7 +32,7 @@ export type FilterOptionCheckbox = {
   type: "checkbox";
   // Using strings in `values` will set both key and display automatically
   values: (string | { key: string; name: string; display?: ReactNode })[];
-  predicate?: (value: unknown, selected: string[] | undefined) => boolean;
+  predicate?: (value: unknown, index: number, array: unknown[]) => boolean;
 } & MinFilterItem;
 
 export type FilterOptionTag = {
@@ -53,7 +53,7 @@ export type Filter =
       key: string;
       selected: string[] | undefined;
       type: "checkbox";
-      predicate?: (value: unknown, selected: string[] | undefined) => boolean;
+      predicate?: (value: unknown, index: number, array: unknown[]) => boolean;
     }
   | {
       key: string;

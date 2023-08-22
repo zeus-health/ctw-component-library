@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ViewOption } from "@/components/content/resource/helpers/view-button";
-import { Filter, FilterChangeEvent } from "@/components/core/filter-bar/filter-bar-types";
+import { FilterChangeEvent } from "@/components/core/filter-bar/filter-bar-types";
 import { SortOption } from "@/components/core/sort-button/sort-button";
 import { applyFilters } from "@/utils/filters";
 import { compact } from "@/utils/nodash";
@@ -24,12 +24,9 @@ export function useFilteredSortedData<T extends object>({
   const [sortOption, setSortOption] = useState(defaultSort);
   const [data, setData] = useState(records ?? []);
 
-  const hasPredicate = (filter: Filter | undefined) =>
-    filter?.type === "checkbox" && filter.predicate;
   useEffect(() => {
     const filteredData = applyFilters(records ?? [], [
-      ...compact(Object.values(filters).filter((x) => !hasPredicate(x))),
-      ...compact(Object.values(filters).filter(hasPredicate)).map((filter) => filter.predicate),
+      ...compact(Object.values(filters)),
       ...(viewOption?.filters ?? []),
     ]);
 

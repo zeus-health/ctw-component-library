@@ -13,9 +13,28 @@ export function encounterFilters(encounters: EncounterModel[] | undefined): Filt
     display: "Note Type",
     values: [
       {
+        name: "Assessments / Plans",
+        key: "51847-2, 18776-5",
+      },
+      {
+        name: "Diagnostic Narratives",
+        key: "34109-9, 30954-2",
+      },
+      {
+        name: "Discharge Summary",
+        key: "18842-5",
+      },
+      {
         name: "History of Present Illness",
-        display: "History of Present Illness",
         key: "10164-2",
+      },
+      {
+        name: "Reason for Visit",
+        key: "29299-5",
+      },
+      {
+        name: "Other",
+        key: "other",
       },
     ],
   });

@@ -38,7 +38,7 @@ export function FilterBarCheckboxPill({
 
   const selectedItems = items
     .filter((item) => item.isSelected)
-    .map((item) => item.display || item.key);
+    .map((item) => item.display || item.name || item.key);
 
   return (
     <DropdownMenuAction
