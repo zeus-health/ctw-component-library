@@ -25,15 +25,17 @@ export const applyFilters = <T extends object>(data: T[], filters?: (Filter | Fi
       switch (filterItem.type) {
         case "checkbox":
           if (isArray(filterItem.selected)) {
-            const filteredList = filterItem.selected.filter((item) => {
-              if (filterItem.predicate) {
-                return compact(uniq(data.filter(filterItem.predicate)));
+            if (filterItem.predicate) {
+              if (filterItem.selected.length === 0) {
+                return true;
               }
-              return compact(uniq(data.map((c) => c[filterItem.key as keyof T]))).includes(
+              return filterItem.predicate(filterItem.selected, entry);
+            }
+            const filteredList = filterItem.selected.filter((item) =>
+              compact(uniq(data.map((c) => c[filterItem.key as keyof T]))).includes(
                 item as T[keyof T]
-              );
-            });
-
+              )
+            );
             return filteredList.includes(targetFilter);
           }
           break;
