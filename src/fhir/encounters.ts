@@ -75,7 +75,7 @@ function getEncountersFromFQS(documents: DocumentModel[]) {
 
 export async function getADTFromODS(requestContext: CTWRequestContext) {
   const searchParams = pickBy({
-    _tag: "https://zusapi.com/thirdparty/source%7Cbamboohealth,collective-medical",
+    _tag: "https://zusapi.com/thirdparty/source|bamboohealth,collective-medical",
     status: "in-progress",
   }) as SearchParams;
 
