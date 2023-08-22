@@ -1,8 +1,10 @@
+import { SearchParams } from "fhir-kit-client";
 import { getIncludedBasics } from "./bundle";
 import { usePatientDocuments } from "./document";
 import { PatientModel } from "./models";
 import { DocumentModel } from "./models/document";
 import { EncounterModel } from "./models/encounter";
+import { searchBuilderRecords } from "./search-helpers";
 import { useQueryWithPatient } from "..";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
@@ -11,6 +13,8 @@ import {
   encountersQuery,
   EncounterWithProvenance,
 } from "@/services/fqs/queries/encounters";
+import { errorResponse } from "@/utils/errors";
+import { pickBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_ENCOUNTERS } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
@@ -67,4 +71,24 @@ function getEncountersFromFQS(documents: DocumentModel[]) {
       throw new Error(`Failed fetching encounter timeline information for patient: ${e}`);
     }
   };
+}
+
+export async function getADTFromODS(requestContext: CTWRequestContext) {
+  const searchParams = pickBy({
+    _tag: "https://zusapi.com/thirdparty/source%7Cbamboohealth,collective-medical",
+    status: "in-progress",
+  }) as SearchParams;
+
+  try {
+    const { resources } = await searchBuilderRecords("Encounter", requestContext, searchParams);
+
+    console.log("resources", resources);
+
+    const encounterResources = resources.map((e) => new EncounterModel(e, [], [], undefined, []));
+
+    const filteredResources = encounterResources.filter((e) => !!e.periodEnd);
+    return filteredResources;
+  } catch (e) {
+    throw errorResponse("Failed fetching encounter alert information", e);
+  }
 }

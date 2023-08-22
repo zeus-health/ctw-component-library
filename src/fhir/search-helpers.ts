@@ -13,7 +13,7 @@ import { getLensBuilderId } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { filter, mapValues, mergeWith, some } from "@/utils/nodash";
 
-const MAX_COUNT = 250;
+const MAX_COUNT = 500;
 
 // Set env to true to fetch all pages from ODS.
 const DEBUG_ODS_FETCH_ALL_PAGES = import.meta.env.VITE_DEBUG_ODS_FETCH_ALL_PAGES;
