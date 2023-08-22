@@ -88,7 +88,7 @@ export function ThemeProvider({
   );
 
   return (
-    <div ref={ctwThemeRef} className="ctw-theme">
+    <div ref={ctwThemeRef} className="ctw-theme ctw-scrollable-pass-through-height">
       <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>
     </div>
   );
