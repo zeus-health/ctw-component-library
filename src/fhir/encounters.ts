@@ -101,8 +101,6 @@ export async function getADTPatientsFromODS(requestContext: CTWRequestContext) {
       )
     );
 
-    console.log("encounterPatients", encounterPatients);
-
     return encounterPatients;
   } catch (e) {
     throw errorResponse("Failed fetching encounter alert information", e);
