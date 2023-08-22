@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.57.2
+
+### Patch Changes
+
+- 444b9953: Allow the unread encounters notification icon to show up outside of the components.
+- aa1e7b1f: Address issue where observations with a value of 0 do not render
+
 ## 1.57.1
 
 ### Patch Changes
