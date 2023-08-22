@@ -85,7 +85,7 @@ export async function getADTPatientsFromODS(requestContext: CTWRequestContext) {
       "Encounter",
       requestContext,
       searchParams
-    ); // reosurces now has patients and encounters in it
+    ); // reosurces now have patients and encounters in it
 
     const includedResources = getIncludedResources(bundle);
 

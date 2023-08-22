@@ -128,7 +128,6 @@ const components: DemoComponent[] = [
     render: () => <PatientMedicationDispense />,
     title: "Patient Medication Dispense",
   },
-
   {
     name: "patient-adt-table",
     render: () => <PatientsADTAlertsTable />,

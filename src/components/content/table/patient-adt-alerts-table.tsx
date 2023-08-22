@@ -25,7 +25,7 @@ export type TableOptionProps<T extends MinRecordItem> = {
   onRowClick?: (row: T) => void;
 };
 
-export function usePatientsList() {
+export function usePatientADTList() {
   return useQueryWithCTW(QUERY_KEY_PATIENTS_ADT_LIST, [], getADTPatientsFromODS);
 }
 
@@ -37,7 +37,7 @@ export const PatientsADTAlertsTable = withErrorBoundary(
     title = "Patients ADT Alerts",
   }: PatientsADTTableProps) => {
     const [patients, setPatients] = useState<PatientModel[]>([]);
-    const { data: adtData, isFetching, isError } = usePatientsList();
+    const { data: adtData, isFetching, isError } = usePatientADTList();
 
     useEffect(() => {
       if (!isFetching && adtData) {
