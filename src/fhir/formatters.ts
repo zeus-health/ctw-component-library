@@ -1,5 +1,5 @@
 import { format, formatISO, isValid, parse, parseISO } from "date-fns";
-import { compact } from "@/utils/nodash/fp";
+import { filter } from "@/utils/nodash/fp";
 
 // Formats a date from YYYY-MM-DD to MM/DD/YYYY.
 export function formatDateISOToLocal(dateStr?: string): string | undefined {
@@ -98,7 +98,7 @@ export function maybeFormatDateStringToLocal(dateStr?: string): string | undefin
 // Formats an age as value followed by unit, or whichever one is available.
 export function formatAge(age: fhir4.Age): string {
   const { value, unit } = age;
-  return compact([value, unit]).join(" ");
+  return compactToTruthyAndZero([value, unit]).join(" ");
 }
 
 // Formats a string ISO date to MM/DD/YYY.
@@ -164,5 +164,12 @@ export function formatRange(range: fhir4.Range) {
 
 export function formatQuantity(quantity: fhir4.Quantity) {
   const { value, unit } = quantity;
-  return compact([value, unit]).join(" ");
+  return compactToTruthyAndZero([value, unit]).join(" ");
+}
+
+export const compactToTruthyAndZero = <T>(arr: T[] | null | undefined) =>
+  filter(onlyTruthyAndZero, arr);
+
+export function onlyTruthyAndZero(val: unknown | undefined) {
+  return val || val === 0;
 }
