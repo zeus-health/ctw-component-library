@@ -119,7 +119,7 @@
     "vitest-fetch-mock": "^0.2.2"
   },
   "dependencies": {
-    "@datadog/browser-logs": "^4.45.0",
+    "@datadog/browser-logs": "^4.47.0",
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
     "@fortawesome/free-regular-svg-icons": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
