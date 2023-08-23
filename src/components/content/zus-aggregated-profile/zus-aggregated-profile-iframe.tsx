@@ -11,7 +11,7 @@ import { useCTW } from "@/components/core/providers/use-ctw";
 
 // Theming for iframe which can't be handled via global tailwind theme
 export type IFrameTheme = {
-  fontFamily?: "Inter" | "Avenir" | "Roboto";
+  fontFamily?: "Avenir" | "Roboto";
   fontSize?: string;
   lineHeight?: string;
 };

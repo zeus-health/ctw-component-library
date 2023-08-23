@@ -8,7 +8,6 @@ import "./App.css";
 
 import {
   CTWProvider,
-  IFrameTheme,
   PatientAllergies,
   PatientConditions,
   PatientConditionsOutside,
@@ -26,7 +25,6 @@ import {
   ZusAggregatedProfileIFrame,
 } from ".";
 
-import { Theme } from "@/styles/tailwind.theme";
 import { PatientMedicationDispense } from "./components/content/medication-dispense/patient-medication-dispense";
 import { PatientsADTAlertsTable } from "./components/content/table/patient-adt-alerts-table";
 import { ThemeProviderProps } from "@/components/core/providers/theme/theme-provider";
