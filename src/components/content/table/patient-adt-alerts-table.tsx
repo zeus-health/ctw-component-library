@@ -1,15 +1,14 @@
 import type { TableColumn } from "@/components/core/table/table-helpers";
 import type { PatientModel } from "@/fhir/models/patient";
 import { SearchIcon } from "@heroicons/react/solid";
-import type { Argument } from "classnames";
 import cx from "classnames";
 import { useEffect, useState } from "react";
+import { TableOptionProps } from "../patients/patients-table";
 import * as CTWBox from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { useQueryWithCTW } from "@/components/core/providers/use-query-with-ctw";
 import { Table } from "@/components/core/table/table";
-import { MinRecordItem } from "@/components/core/table/table-helpers";
 import { getADTPatientsFromODS } from "@/fhir/encounters";
 import { QUERY_KEY_PATIENTS_ADT_LIST } from "@/utils/query-keys";
 
@@ -19,11 +18,6 @@ export type PatientsADTTableProps = {
   pageSize?: number;
   title?: string;
 } & TableOptionProps<PatientModel>;
-
-export type TableOptionProps<T extends MinRecordItem> = {
-  getRowClasses?: (row: T) => Argument; // Adds a row hover effect and calls onClick.
-  onRowClick?: (row: T) => void;
-};
 
 export function usePatientADTList() {
   return useQueryWithCTW(QUERY_KEY_PATIENTS_ADT_LIST, [], getADTPatientsFromODS);
