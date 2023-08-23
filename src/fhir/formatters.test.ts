@@ -1,6 +1,35 @@
-import { formatPeriod, formatPhoneNumber, formatQuantity, formatRange } from "./formatters";
+import {
+  formatAge,
+  formatPeriod,
+  formatPhoneNumber,
+  formatQuantity,
+  formatRange,
+} from "./formatters";
 
 describe("formatters", () => {
+  describe("formatAge", () => {
+    test("returns formatted string when zero is the age", () => {
+      const age: fhir4.Age = {
+        value: 0,
+        unit: "years",
+      };
+      expect(formatAge(age)).toEqual("0 years");
+    });
+
+    test("returns formatted string when non-zero is the age", () => {
+      const age: fhir4.Age = {
+        value: 1,
+        unit: "year",
+      };
+      expect(formatAge(age)).toEqual("1 year");
+    });
+
+    test("returns blank string when empty age", () => {
+      const age: fhir4.Age = {};
+      expect(formatAge(age)).toEqual("");
+    });
+  });
+
   test("formatPhoneNumber correctly formats phone number", () => {
     const phoneNumber = "1234567890";
     expect(formatPhoneNumber(phoneNumber)).toEqual("123-456-7890");
@@ -109,6 +138,14 @@ describe("formatters", () => {
     test("returns empty string when no value is provided", () => {
       const quantity: fhir4.Quantity = {};
       expect(formatQuantity(quantity)).toEqual("");
+    });
+
+    test("returns 0% string when value is zero", () => {
+      const quantity: fhir4.Quantity = {
+        value: 0,
+        unit: "%",
+      };
+      expect(formatQuantity(quantity)).toEqual("0 %");
     });
   });
 });
