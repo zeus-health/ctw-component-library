@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.59.0
+
+### Minor Changes
+
+- 78dae2fc: CTWProvider theme now accepts optional `iframe` theming to support custom fonts for the embedded ZAP.
+
 ## 1.58.1
 
 ### Patch Changes
