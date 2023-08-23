@@ -1,5 +1,36 @@
 # ctw-component-library
 
+## 1.59.0
+
+### Minor Changes
+
+- 78dae2fc: CTWProvider theme now accepts optional `iframe` theming to support custom fonts for the embedded ZAP.
+
+## 1.58.1
+
+### Patch Changes
+
+- fbaf450e: Add export capablities for the table.
+
+## 1.58.0
+
+### Minor Changes
+
+- 2aceeb90: Adding an ADT alert table for patients that were recently discharged.
+
+## 1.57.3
+
+### Patch Changes
+
+- 9c04fbb4: Add 100 percent height to fix height issue in iframe.
+
+## 1.57.2
+
+### Patch Changes
+
+- 444b9953: Allow the unread encounters notification icon to show up outside of the components.
+- aa1e7b1f: Address issue where observations with a value of 0 do not render
+
 ## 1.57.1
 
 ### Patch Changes
