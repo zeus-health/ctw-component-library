@@ -1,12 +1,13 @@
 import { PropsWithChildren, useEffect, useMemo, useRef, useState } from "react";
 import { ThemeContext } from "./context";
+import { IFrameTheme } from "@/components/content/zus-aggregated-profile/zus-aggregated-profile-iframe";
 import i18next, { Locals } from "@/i18n";
 import { DefaultTheme, EmptyTailwindCSSVars, mapToCSSVar, Theme } from "@/styles/tailwind.theme";
 import { merge } from "@/utils/nodash";
 import "../../main.scss";
 
 export type ThemeProviderProps = {
-  theme?: Theme;
+  theme?: Theme & { iframe?: IFrameTheme };
   locals?: Locals;
 };
 
@@ -74,18 +75,19 @@ export function ThemeProvider({
     }
   }, [locals]);
 
-  const contextValue = useMemo(
-    () => ({
+  const contextValue = useMemo(() => {
+    const { iframe, ...tailwindTheme } = theme;
+    return {
       // Set our context theme to our default theme merged
       // with any of the provided theme overwrites.
       // This way consumers of useTheme can get access to
       // the full true theme being applied.
-      theme: merge({}, DefaultTheme, theme),
+      theme: merge({}, DefaultTheme, tailwindTheme),
+      iframeTheme: iframe,
       ctwThemeRef,
       locals,
-    }),
-    [theme, locals, ctwThemeRef]
-  );
+    };
+  }, [theme, locals, ctwThemeRef]);
 
   return (
     <div ref={ctwThemeRef} className="ctw-theme ctw-scrollable-pass-through-height">

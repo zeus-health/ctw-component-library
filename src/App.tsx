@@ -8,6 +8,7 @@ import "./App.css";
 
 import {
   CTWProvider,
+  IFrameTheme,
   PatientAllergies,
   PatientConditions,
   PatientConditionsOutside,
@@ -54,12 +55,17 @@ type DemoComponent = {
 const componentsToRender = VITE_DEMO_APP_COMPONENTS.split(",").map(trim);
 
 // Feel free to play with this theme object
-const theme: Theme = {
+const theme: Theme & { iframe?: IFrameTheme } = {
   colors: {
     notification: {
       main: "#a855f7",
       light: "#f3e8ff",
     },
+  },
+  iframe: {
+    fontFamily: "Roboto",
+    fontSize: "16px",
+    lineHeight: "1.5",
   },
 };
 
