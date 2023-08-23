@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.58.0
+
+### Minor Changes
+
+- 2aceeb90: Adding an ADT alert table for patients that were recently discharged.
+
 ## 1.57.3
 
 ### Patch Changes
