@@ -2,6 +2,7 @@ import { faClipboardCheck } from "@fortawesome/free-solid-svg-icons";
 import { FilterChangeEvent, FilterItem } from "@/components/core/filter-bar/filter-bar-types";
 import { EncounterModel } from "@/fhir/models/encounter";
 import { SYSTEM_LOINC } from "@/fhir/system-urls";
+import { compact } from "@/utils/nodash";
 
 export const noteTypeValues = [
   {
@@ -32,20 +33,33 @@ export const defaultEncounterFilters: FilterChangeEvent = {};
 export function encounterFilters(encounters: EncounterModel[] | undefined): FilterItem[] {
   const filters: FilterItem[] = [];
 
-  filters.push({
-    key: "noteType",
-    type: "checkbox",
-    icon: faClipboardCheck,
-    display: "Note Type",
-    predicate: noteTypePredicate,
-    values: [
-      ...noteTypeValues.map((v) => ({ ...v })),
-      {
-        name: "Other",
-        key: "other",
-      },
-    ],
-  });
+  const availableNoteTypeValues = noteTypeValues.filter((value) =>
+    encounters?.some((encounter) => noteTypePredicate([value.key], encounter))
+  );
+  const hasOtherEncounterNoteTypes =
+    encounters &&
+    encounters.filter(
+      (encounter) => !noteTypeValues.some((value) => noteTypePredicate([value.key], encounter))
+    ).length > 0;
+
+  if (availableNoteTypeValues.length > 0 || hasOtherEncounterNoteTypes) {
+    filters.push({
+      key: "noteType",
+      type: "checkbox",
+      icon: faClipboardCheck,
+      display: "Note Type",
+      predicate: noteTypePredicate,
+      values: compact([
+        ...availableNoteTypeValues,
+        hasOtherEncounterNoteTypes
+          ? {
+              name: "Other",
+              key: "other",
+            }
+          : undefined,
+      ]),
+    });
+  }
 
   return filters;
 }
