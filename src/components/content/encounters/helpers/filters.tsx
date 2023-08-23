@@ -23,6 +23,15 @@ export function dedupeAndMergeEncounters(encounters: EncounterModel[]): Encounte
   // Group up the encounters that need to be merged
   const dupeGroups = new Map<string, EncounterModel[]>();
   encounters.forEach((encounter) => {
+    const key: string = JSON.stringify({
+      upid: encounter.patientUPID,
+      periodStart: encounter.periodStart || "",
+      class: encounter.resource.class,
+      type: encounter.resource.type,
+      location: encounter.location || "",
+    });
+    const val = dupeGroups.get(key);
+
     if (
       !encounter.patientUPID ||
       !encounter.periodStart ||
@@ -31,31 +40,26 @@ export function dedupeAndMergeEncounters(encounters: EncounterModel[]): Encounte
       !encounter.location
     ) {
       // Only group it if all necessary values are non-null.
-      dedupedEncounters.push(encounter);
+      dupeGroups.set(key, [encounter]);
+    } else if (val) {
+      val.push(encounter);
     } else {
-      const key: string = JSON.stringify({
-        upid: encounter.patientUPID,
-        periodStart: encounter.periodStart || "",
-        class: encounter.resource.class,
-        type: encounter.resource.type,
-        location: encounter.location || "",
-      });
-      const val = dupeGroups.get(key);
-      if (val) {
-        val.push(encounter);
-      } else {
-        dupeGroups.set(key, [encounter]);
-      }
+      dupeGroups.set(key, [encounter]);
     }
   });
 
   // Merge the encounters in each group
   dupeGroups.forEach((encs) => {
+    // If there's only one encounter in the group, no need to merge
+    if (encs.length === 1) {
+      dedupedEncounters.push(encs[0]);
+      return;
+    }
     // Sort them to prioritize the most recently updated encounter
     encs.sort((a, b) => {
       const aVal = a.lastUpdated ? new Date(a.lastUpdated).valueOf() : 0;
       const bVal = b.lastUpdated ? new Date(b.lastUpdated).valueOf() : 0;
-      return bVal - aVal;
+      return aVal - bVal;
     });
     const mergedEncounter: EncounterModel = encs[0];
 
