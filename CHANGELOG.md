@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.60.0
+
+### Minor Changes
+
+- 5964ff23: Added Note Type filtering to Encounters
+
 ## 1.59.0
 
 ### Minor Changes
