@@ -25,9 +25,9 @@ import {
   ZusAggregatedProfileIFrame,
 } from ".";
 
-import { Theme } from "@/styles/tailwind.theme";
 import { PatientMedicationDispense } from "./components/content/medication-dispense/patient-medication-dispense";
 import { PatientsADTAlertsTable } from "./components/content/table/patient-adt-alerts-table";
+import { ThemeProviderProps } from "@/components/core/providers/theme/theme-provider";
 
 const {
   VITE_AUTH0_AUDIENCE,
@@ -54,12 +54,17 @@ type DemoComponent = {
 const componentsToRender = VITE_DEMO_APP_COMPONENTS.split(",").map(trim);
 
 // Feel free to play with this theme object
-const theme: Theme = {
+const theme: ThemeProviderProps["theme"] = {
   colors: {
     notification: {
       main: "#a855f7",
       light: "#f3e8ff",
     },
+  },
+  iframe: {
+    fontFamily: "Roboto",
+    fontSize: "16px",
+    lineHeight: "1.5",
   },
 };
 
