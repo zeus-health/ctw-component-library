@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.58.1
+
+### Patch Changes
+
+- fbaf450e: Add export capablities for the table.
+
 ## 1.58.0
 
 ### Minor Changes
