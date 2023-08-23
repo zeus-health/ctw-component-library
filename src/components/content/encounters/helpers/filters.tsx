@@ -1,8 +1,9 @@
 import { faClipboardCheck } from "@fortawesome/free-solid-svg-icons";
 import { FilterChangeEvent, FilterItem } from "@/components/core/filter-bar/filter-bar-types";
 import { EncounterModel } from "@/fhir/models/encounter";
+import { SYSTEM_LOINC } from "@/fhir/system-urls";
 
-const noteTypeValues = [
+export const noteTypeValues = [
   {
     name: "Assessments / Plans",
     key: ["51847-2", "18776-5"].join(","),
@@ -25,6 +26,8 @@ const noteTypeValues = [
   },
 ];
 
+export const defaultEncounterFilters: FilterChangeEvent = {};
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function encounterFilters(encounters: EncounterModel[] | undefined): FilterItem[] {
   const filters: FilterItem[] = [];
@@ -34,26 +37,7 @@ export function encounterFilters(encounters: EncounterModel[] | undefined): Filt
     type: "checkbox",
     icon: faClipboardCheck,
     display: "Note Type",
-    predicate: (values, item) => {
-      // Values can contain comma separated values, so we need to split them.
-      const parsedValues = values.flatMap((value) => value.split(","));
-      const parsedAllValues = noteTypeValues.flatMap((v) => v.key.split(","));
-
-      const encounter = item as EncounterModel;
-      const hasValueMatch = encounter.clinicalNotes.some((note) =>
-        note.category?.some((category) =>
-          category.coding?.some((coding) => coding.code && parsedValues.includes(coding.code))
-        )
-      );
-      const hasOtherMatch =
-        parsedValues.includes("other") &&
-        !encounter.clinicalNotes.some((note) =>
-          note.category?.some((category) =>
-            category.coding?.some((coding) => coding.code && parsedAllValues.includes(coding.code))
-          )
-        );
-      return hasValueMatch || hasOtherMatch;
-    },
+    predicate: noteTypePredicate,
     values: [
       ...noteTypeValues.map((v) => ({ ...v })),
       {
@@ -66,17 +50,31 @@ export function encounterFilters(encounters: EncounterModel[] | undefined): Filt
   return filters;
 }
 
-export const defaultEncounterFilters: FilterChangeEvent = {
-  // TODO: filtering on has clinical notes (CDEV-307)
-};
+export function noteTypePredicate(values: string[], item: object): boolean {
+  if (values.length === 0) return true;
 
-export function noteTypeFilter(selectedNoteTypes: string[]) {
-  return (data: EncounterModel[]) =>
-    data.filter((d) =>
-      d.clinicalNotes.some((note) =>
-        note.category?.some((category) =>
-          category.coding?.some((coding) => coding.code && selectedNoteTypes.includes(coding.code))
+  // Values can contain comma separated values, so we need to split them.
+  const parsedValues = values.flatMap((value) => value.split(","));
+  const parsedAllValues = noteTypeValues.flatMap((v) => v.key.split(","));
+
+  const encounter = item as EncounterModel;
+  const hasValueMatch = encounter.clinicalNotes.some((note) =>
+    note.category?.some((category) =>
+      category.coding?.some(
+        (coding) =>
+          coding.system === SYSTEM_LOINC && coding.code && parsedValues.includes(coding.code)
+      )
+    )
+  );
+  const hasOtherMatch =
+    parsedValues.includes("other") &&
+    !encounter.clinicalNotes.some((note) =>
+      note.category?.some((category) =>
+        category.coding?.some(
+          (coding) =>
+            coding.system === SYSTEM_LOINC && coding.code && parsedAllValues.includes(coding.code)
         )
       )
     );
+  return hasValueMatch || hasOtherMatch;
 }
