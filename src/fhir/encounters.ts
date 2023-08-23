@@ -101,7 +101,11 @@ export async function getADTPatientsFromODS(requestContext: CTWRequestContext) {
       )
     );
 
-    return encounterPatients;
+    const uniquePatients = Array.from(new Set(encounterPatients.map((p) => p.id))).map((id) =>
+      encounterPatients.find((p) => p.id === id)
+    );
+
+    return uniquePatients as PatientModel[];
   } catch (e) {
     throw errorResponse("Failed fetching encounter alert information", e);
   }
