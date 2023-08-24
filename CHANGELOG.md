@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.60.1
+
+### Patch Changes
+
+- fccfad34: Dedupes encounters.
+
 ## 1.60.0
 
 ### Minor Changes
