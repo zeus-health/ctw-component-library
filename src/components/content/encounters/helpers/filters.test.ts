@@ -1,6 +1,8 @@
 import { vi } from "vitest";
-import { dedupeAndMergeEncounters } from "./filters";
+import { dedupeAndMergeEncounters, noteTypePredicate, noteTypeValues } from "./filters";
+import { DocumentModel } from "@/fhir/models/document";
 import { EncounterModel } from "@/fhir/models/encounter";
+import { SYSTEM_LOINC } from "@/fhir/system-urls";
 
 describe("encounter dedupe tests", () => {
   const encNew = new EncounterModel(
@@ -233,10 +235,6 @@ describe("encounter dedupe tests", () => {
     ]);
   });
 });
-import { noteTypePredicate, noteTypeValues } from "./filters";
-import { DocumentModel } from "@/fhir/models/document";
-import { EncounterModel } from "@/fhir/models/encounter";
-import { SYSTEM_LOINC } from "@/fhir/system-urls";
 
 describe("noteTypePredicate", () => {
   const docs = noteTypeValues.flatMap((values) =>
