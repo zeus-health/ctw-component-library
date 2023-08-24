@@ -9,6 +9,13 @@ import { useTelemetry } from "@/components/core/providers/telemetry/use-telemetr
 import { useTheme } from "@/components/core/providers/theme/use-theme";
 import { useCTW } from "@/components/core/providers/use-ctw";
 
+// Theming for iframe which can't be handled via global tailwind theme
+export type IFrameTheme = {
+  fontFamily?: "Avenir" | "Roboto";
+  fontSize?: string;
+  lineHeight?: string;
+};
+
 export const ZusAggregatedProfileIFrameConfigMessageType = "ZusAggregatedProfileIFrameConfig";
 export const ZusAggregatedProfileIFrameReadyMessageType = "ZusAggregatedProfileIFrameReady";
 export const ZusAggregatedProfileOnResourceSaveMessageType = "ZusAggregatedProfileOnResourceSave";
@@ -81,6 +88,7 @@ const ZusAggregatedProfileIFrameComponent = (props: ZusAggregatedProfileProps) =
             CTWProviderProps: ctwProviderProps,
             PatientProviderProps: patientProviderProps,
             ZusAggregatedProfileProps: props,
+            iframeTheme: theme.iframeTheme,
           },
         },
         zapURL as string
@@ -105,6 +113,7 @@ const ZusAggregatedProfileIFrameComponent = (props: ZusAggregatedProfileProps) =
     theme.locals,
     telemetry.enableTelemetry,
     telemetry.ehr,
+    theme.iframeTheme,
   ]);
 
   if (!zapURL) {
