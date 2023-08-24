@@ -1,5 +1,7 @@
 import { Interweave, Node } from "interweave";
 import { Table, Tbody, Td, Th, Thead, Tr } from "react-super-responsive-table";
+import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
+import "./note-style.scss";
 import sanitizeHtml from "sanitize-html";
 import { NotesEntry } from "./notes-entry";
 import { DocumentModel } from "@/fhir/models/document";
@@ -20,7 +22,11 @@ function getNoteDisplay(noteText: string | undefined) {
   function turnTablesResponsive(node: HTMLElement, children: Node[]): React.ReactNode {
     switch (node.tagName) {
       case "TABLE":
-        return <Table>{children}</Table>;
+        return (
+          <Table className="ctw-my-3 ctw-border-solid ctw-border-divider-light ctw-bg-bg-lighter">
+            {children}
+          </Table>
+        );
       case "THEAD":
         return <Thead>{...children}</Thead>;
       case "TBODY":
@@ -30,7 +36,7 @@ function getNoteDisplay(noteText: string | undefined) {
       case "TH":
         return <Th>{children}</Th>;
       case "TD":
-        return <Td>{children}</Td>;
+        return <Td className="ctw-overflow-scroll">{children}</Td>;
       default:
         return undefined;
     }
