@@ -21,6 +21,9 @@ export function filterChangeEvent(
         key: filter.key,
         type: filter.type,
         selected: filter.type === "tag" ? true : activeFilterValues[filter.key],
+        ...(filter.type === "checkbox" && filter.predicate
+          ? { predicate: filter.predicate }
+          : null),
       },
     };
   }, {});
