@@ -8,7 +8,7 @@ import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 
 type Props = PatientImmunizationsProps;
 
-export default {
+const meta: Meta<typeof PatientImmunizations> = {
   component: PatientImmunizations,
   tags: ["autodocs"],
   argTypes: {
@@ -23,7 +23,6 @@ export default {
   },
   args: {
     className: "Blank",
-    readOnly: false,
   },
   decorators: [
     (Story, { args }) => (
@@ -34,7 +33,9 @@ export default {
       </CTWProvider>
     ),
   ],
-} as Meta<Props>;
+};
+
+export default meta;
 
 export const Basic: StoryObj<Props> = {
   ...setupImmunizationMocks(),

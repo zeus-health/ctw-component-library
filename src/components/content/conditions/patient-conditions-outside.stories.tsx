@@ -12,7 +12,7 @@ import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 
 type Props = PatientConditionsOutsideProps;
 
-export default {
+const meta: Meta<typeof PatientConditionsOutside> = {
   component: PatientConditionsOutside,
   tags: ["autodocs"],
   argTypes: {
@@ -39,7 +39,9 @@ export default {
       </CTWProvider>
     ),
   ],
-} as Meta<Props>;
+};
+
+export default meta;
 
 export const Empty: StoryObj<Props> = {
   ...setupConditionMocks({

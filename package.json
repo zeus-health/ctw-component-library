@@ -63,18 +63,18 @@
     "@changesets/cli": "^2.26.2",
     "@faker-js/faker": "^7.6.0",
     "@kensho-technologies/eslint-config": "^26.1.2",
-    "@storybook/addon-actions": "^7.0.24",
-    "@storybook/addon-docs": "^7.0.18",
-    "@storybook/addon-essentials": "^7.0.18",
-    "@storybook/addon-interactions": "^7.1.1",
-    "@storybook/addon-links": "^7.0.20",
-    "@storybook/jest": "^0.1.0",
-    "@storybook/react": "^7.0.18",
-    "@storybook/react-vite": "^7.0.18",
+    "@storybook/addon-actions": "^7.3.2",
+    "@storybook/addon-docs": "^7.3.2",
+    "@storybook/addon-essentials": "^7.3.2",
+    "@storybook/addon-interactions": "^7.3.2",
+    "@storybook/addon-links": "^7.3.2",
+    "@storybook/jest": "^0.2.1",
+    "@storybook/react": "^7.3.2",
+    "@storybook/react-vite": "^7.3.2",
     "@storybook/test-runner": "^0.13.0",
-    "@storybook/testing-library": "^0.1.0",
+    "@storybook/testing-library": "^0.2.0",
     "@tailwindcss/line-clamp": "^0.4.4",
-    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/jest-dom": "^6.1.1",
     "@testing-library/react": "12.1.5",
     "@testing-library/user-event": "^14.4.3",
     "@types/dompurify": "^2.4.0",
@@ -83,9 +83,12 @@
     "@types/lodash": "^4.14.182",
     "@types/node": "^18.16.16",
     "@types/react": "^16.14.0",
+    "@types/jest": "27.4.1",
     "@types/react-dom": "^16.9.8",
     "@types/sanitize-html": "^2.9.0",
     "@types/uuid": "^8.3.4",
+    "@typescript-eslint/eslint-plugin": "^6.4.1",
+    "@typescript-eslint/parser": "^6.4.1",
     "@vitejs/plugin-react": "^3.1.0",
     "autoprefixer": "^10.4.12",
     "classnames": "^2.3.2",
@@ -109,10 +112,10 @@
     "relative-deps": "^1.0.7",
     "rename-css-selectors": "^4.1.0",
     "sass": "^1.55.0",
-    "storybook": "^7.1.1",
+    "storybook": "^7.3.2",
     "tailwindcss": "^3.1.6",
     "tsc-alias": "^1.8.6",
-    "typescript": "^4.7.4",
+    "typescript": "^4.9.3",
     "vite": "^4.4.6",
     "vite-tsconfig-paths": "^4.0.8",
     "vitest": "^0.32.2",
@@ -151,8 +154,12 @@
   "msw": {
     "workerDirectory": "public"
   },
-  "overrides": {
-    "form-data": "4.0.0"
+  "packageManager": "pnpm@8.6.10",
+  "pnpm": {
+    "overrides": {
+      "form-data": "4.0.0",
+      "@types/react": "^16.14.0"
+    }
   },
   "relativeDependencies": {}
 }

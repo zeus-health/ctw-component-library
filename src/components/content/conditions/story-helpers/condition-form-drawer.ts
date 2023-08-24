@@ -18,7 +18,7 @@ export function conditionFormDrawer(canvasElement: HTMLElement) {
 
     cancel: () => userEvent.click(drawer.getByRole("button", { name: "Cancel" })),
     save: async () => {
-      userEvent.click(drawer.getByRole("button", { name: "Save" }));
+      await userEvent.click(drawer.getByRole("button", { name: "Save" }));
       await waitForElementToBeRemoved(() => canvas.queryByRole("dialog"));
     },
   };

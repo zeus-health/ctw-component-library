@@ -17,7 +17,7 @@ type Record = {
 
 type Props = TableProps<Record>;
 
-export default {
+const meta: Meta<typeof Table> = {
   component: Table,
   tags: ["autodocs"],
   decorators: [
@@ -59,7 +59,9 @@ export default {
     showTableHead: undefined,
     stacked: undefined,
   },
-} as Meta<Props>;
+};
+
+export default meta;
 
 const columns: TableColumn<Record>[] = [
   {

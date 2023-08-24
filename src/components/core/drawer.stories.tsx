@@ -10,7 +10,7 @@ import { CTWProvider } from "@/components/core/providers/ctw-provider";
 import { PatientProvider } from "@/components/core/providers/patient-provider";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 
-export default {
+const meta: Meta<typeof Drawer> = {
   component: Drawer,
   tags: ["autodocs"],
   // Setup a button to open drawer stories.
@@ -54,7 +54,9 @@ export default {
     showCloseFooter: undefined,
     title: undefined,
   },
-} as Meta<DrawerProps>;
+};
+
+export default meta;
 
 export const Basic: StoryObj<DrawerProps> = {
   args: {

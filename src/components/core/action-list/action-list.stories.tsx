@@ -7,7 +7,7 @@ import {
 
 type Props = ActionListProps<MinActionItem>;
 
-export default {
+const meta: Meta<typeof ActionList> = {
   component: ActionList,
   tags: ["autodocs"],
   args: {
@@ -22,7 +22,9 @@ export default {
     secondaryActionText: undefined,
     undoActionText: undefined,
   },
-} as Meta<Props>;
+};
+
+export default meta;
 
 const item = (id = "", title = "", subtitle = "", complete = false) => ({
   id,

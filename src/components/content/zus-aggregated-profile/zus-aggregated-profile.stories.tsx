@@ -14,7 +14,7 @@ import { CTWProvider } from "@/components/core/providers/ctw-provider";
 import { PatientProvider } from "@/components/core/providers/patient-provider";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 
-export default {
+const meta: Meta<typeof ZusAggregatedProfile> = {
   tags: ["autodocs"],
   component: ZusAggregatedProfile,
   decorators: [
@@ -39,7 +39,9 @@ export default {
     medicationsOutsideProps: undefined,
     removeBranding: undefined,
   },
-} as Meta<Props>;
+};
+
+export default meta;
 
 const { decorators, parameters } = setupZusAggregatedProfileMocks({
   allergyIntolerance,

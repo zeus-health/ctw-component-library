@@ -14,21 +14,11 @@ import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 
 type Props = PatientConditionsProfileProps;
 
-export default {
+const meta: Meta<typeof PatientConditionsProfile> = {
   component: PatientConditionsProfile,
   tags: ["autodocs"],
-  argTypes: {
-    className: {
-      options: ["Blank", "Fixed Width"],
-      control: "select",
-      mapping: {
-        Blank: "",
-        "Fixed Width": "ctw-m-auto ctw-max-w-[600px]",
-      },
-    },
-  },
+  argTypes: {},
   args: {
-    className: "Blank",
     readOnly: false,
     hideRequestRecords: false,
   },
@@ -41,7 +31,9 @@ export default {
       </CTWProvider>
     ),
   ],
-} as Meta<Props>;
+};
+
+export default meta;
 
 export const Basic: StoryObj<Props> = {
   ...setupConditionMocks({ otherConditions, patientConditions }),

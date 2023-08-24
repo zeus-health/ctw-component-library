@@ -15,7 +15,7 @@ const HookWrapper = () => {
   );
 };
 
-export default {
+const meta: Meta<typeof HookWrapper> = {
   title: "hooks/usePatientHistory",
   component: HookWrapper,
   decorators: [
@@ -27,7 +27,9 @@ export default {
       </CTWProvider>
     ),
   ],
-} as Meta;
+};
+
+export default meta;
 
 export const Basic: StoryObj = {
   ...setupPatientHistoryMocks(),

@@ -1,9 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Spinner, SpinnerProps } from "@/components/core/spinner";
 
-export default {
+const meta: Meta<typeof Spinner> = {
   component: Spinner,
   tags: ["autodocs"],
-} as Meta<SpinnerProps>;
+};
+
+export default meta;
 
 export const Basic: StoryObj<SpinnerProps> = {};

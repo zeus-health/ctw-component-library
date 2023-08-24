@@ -9,7 +9,7 @@ type Props = PatientsTableProps;
 
 const MOCKED_PATIENT_COUNT = 17;
 
-export default {
+const meta: Meta<typeof PatientSearch> = {
   tags: ["autodocs"],
   component: PatientSearch,
   decorators: [
@@ -20,6 +20,8 @@ export default {
     ),
   ],
   ...setupPatientsTableMocks(MOCKED_PATIENT_COUNT),
-} as Meta<Props>;
+};
+
+export default meta;
 
 export const Basic: StoryObj<Props> = {};

@@ -12,7 +12,7 @@ import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 
 type Props = PatientAllergiesProps;
 
-export default {
+const meta: Meta<typeof PatientAllergies> = {
   tags: ["autodocs"],
   component: PatientAllergies,
   decorators: [
@@ -24,7 +24,7 @@ export default {
       </CTWProvider>
     ),
   ],
-} as Meta<Props>;
+};
 
 export const Basic: StoryObj<Props> = {
   ...setupAllergiesMocks({ allergyIntolerance }),
@@ -33,3 +33,5 @@ export const Basic: StoryObj<Props> = {
 export const BasicFQS: StoryObj<Props> = {
   ...setupAllergiesMocks({ allergyIntolerance }),
 };
+
+export default meta;

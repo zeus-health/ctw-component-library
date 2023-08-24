@@ -1,25 +1,31 @@
 const { mergeConfig } = require("vite");
 
 module.exports = {
-  stories: ["../src/**/*.stories.@(js|jsx|ts|tsx|mdx)"],
+  stories: ["../src/**.mdx", "../src/**.stories.@(js|jsx|mjs|ts|tsx)"],
+
   addons: [
     "@storybook/addon-links",
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
   ],
+
   features: {
     // Disabling debugger for now as it currently doesn't
     // really work.
     interactionsDebugger: false,
   },
+
   framework: {
     name: "@storybook/react-vite",
     options: {},
   },
+
   core: {
     disableTelemetry: true,
   },
+
   staticDirs: ["../public"],
+
   // Build configuration
   async viteFinal(config, { configType }) {
     const overrides = {
@@ -33,5 +39,9 @@ module.exports = {
       overrides.build.sourcemap = false;
     }
     return mergeConfig(config, overrides);
+  },
+
+  docs: {
+    autodocs: true,
   },
 };

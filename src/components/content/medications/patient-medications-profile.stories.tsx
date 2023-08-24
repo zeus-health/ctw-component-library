@@ -12,7 +12,7 @@ import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 
 type Props = PatientMedicationsProps;
 
-export default {
+const meta: Meta<typeof PatientMedicationsProfile> = {
   tags: ["autodocs"],
   component: PatientMedicationsProfile,
   decorators: [
@@ -38,9 +38,10 @@ export default {
   args: {
     readOnly: false,
     forceHorizontalTabs: false,
-    onAddToRecord: "Drawer",
   },
-} as Meta<Props>;
+};
+
+export default meta;
 
 export const Basic: StoryObj<Props> = {
   ...setupMedicationMocks({ providerMedications, otherProviderMedications }),

@@ -17,24 +17,24 @@ function renderButtons() {
 describe("button-tabs", () => {
   it("should render all buttons", () => {
     const { container } = renderButtons();
-    expect(container).toHaveTextContent("First Tab");
-    expect(container).toHaveTextContent("Second Tab");
-    expect(container).toHaveTextContent("Third Tab");
+    expect(container.textContent).toContain("First Tab");
+    expect(container.textContent).toContain("Second Tab");
+    expect(container.textContent).toContain("Third Tab");
   });
 
   it("should default to first tab", () => {
     const { container } = renderButtons();
-    expect(container).toHaveTextContent("First Panel");
-    expect(container).not.toHaveTextContent("Second Panel");
-    expect(container).not.toHaveTextContent("Third Panel");
+    expect(container.textContent).toContain("First Panel");
+    expect(container.textContent).not.toContain("Second Panel");
+    expect(container.textContent).not.toContain("Third Panel");
   });
 
   it("should switch tabs when button clicked", () => {
     const { getByText, container } = renderButtons();
     fireEvent.click(getByText("Second Tab"));
 
-    expect(container).not.toHaveTextContent("First Panel");
-    expect(container).toHaveTextContent("Second Panel");
-    expect(container).not.toHaveTextContent("Third Panel");
+    expect(container.textContent).not.toContain("First Panel");
+    expect(container.textContent).toContain("Second Panel");
+    expect(container.textContent).not.toContain("Third Panel");
   });
 });
