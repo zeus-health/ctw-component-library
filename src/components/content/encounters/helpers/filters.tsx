@@ -1,19 +1,68 @@
+import { faClipboardCheck } from "@fortawesome/free-solid-svg-icons";
 import { FilterChangeEvent, FilterItem } from "@/components/core/filter-bar/filter-bar-types";
 import { EncounterModel } from "@/fhir/models/encounter";
-import { mergeWith } from "@/utils/nodash";
+import { SYSTEM_LOINC } from "@/fhir/system-urls";
+import { compact, mergeWith } from "@/utils/nodash";
+
+export const noteTypeValues = [
+  {
+    name: "Assessments / Plans",
+    key: ["51847-2", "18776-5"].join(","),
+  },
+  {
+    name: "Diagnostic Narratives",
+    key: ["34109-9", "30954-2"].join(","),
+  },
+  {
+    name: "Discharge Summary",
+    key: "18842-5",
+  },
+  {
+    name: "History of Present Illness",
+    key: "10164-2",
+  },
+  {
+    name: "Reason for Visit",
+    key: "29299-5",
+  },
+];
+
+export const defaultEncounterFilters: FilterChangeEvent = {};
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function encounterFilters(encounters: EncounterModel[] | undefined): FilterItem[] {
   const filters: FilterItem[] = [];
 
-  // TODO: filtering on has clinical notes (CDEV-307)
+  const availableNoteTypeValues = noteTypeValues.filter((value) =>
+    encounters?.some((encounter) => noteTypePredicate([value.key], encounter))
+  );
+  const hasOtherEncounterNoteTypes =
+    encounters &&
+    encounters.filter(
+      (encounter) => !noteTypeValues.some((value) => noteTypePredicate([value.key], encounter))
+    ).length > 0;
+
+  if (availableNoteTypeValues.length > 0 || hasOtherEncounterNoteTypes) {
+    filters.push({
+      key: "noteType",
+      type: "checkbox",
+      icon: faClipboardCheck,
+      display: "Note Type",
+      predicate: noteTypePredicate,
+      values: compact([
+        ...availableNoteTypeValues,
+        hasOtherEncounterNoteTypes
+          ? {
+              name: "Other",
+              key: "other",
+            }
+          : undefined,
+      ]),
+    });
+  }
 
   return filters;
 }
-
-export const defaultEncounterFilters: FilterChangeEvent = {
-  // TODO: filtering on has clinical notes (CDEV-307)
-};
 
 // Dedupes encounters by patient, periodStart, class, type, and location.
 // Merges their properties to maximize information.
@@ -73,4 +122,33 @@ export function dedupeAndMergeEncounters(encounters: EncounterModel[]): Encounte
   });
 
   return dedupedEncounters;
+}
+
+export function noteTypePredicate(values: string[], item: object): boolean {
+  if (values.length === 0) return true;
+
+  // Values can contain comma separated values, so we need to split them.
+  const parsedValues = values.flatMap((value) => value.split(","));
+  const parsedAllValues = noteTypeValues.flatMap((v) => v.key.split(","));
+
+  const encounter = item as EncounterModel;
+  const hasValueMatch = encounter.clinicalNotes.some((note) =>
+    note.category?.some((category) =>
+      category.coding?.some(
+        (coding) =>
+          coding.system === SYSTEM_LOINC && coding.code && parsedValues.includes(coding.code)
+      )
+    )
+  );
+  const hasOtherMatch =
+    parsedValues.includes("other") &&
+    !encounter.clinicalNotes.some((note) =>
+      note.category?.some((category) =>
+        category.coding?.some(
+          (coding) =>
+            coding.system === SYSTEM_LOINC && coding.code && parsedAllValues.includes(coding.code)
+        )
+      )
+    );
+  return hasValueMatch || hasOtherMatch;
 }
