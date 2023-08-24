@@ -1,0 +1,13 @@
+// Resets any default HTML styling
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.responsiveTable thead tr {
+  border-bottom: 2px solid #fff;
+}
+
+.responsiveTable tbody tr {
+  border: 1px solid #fff;
+}
