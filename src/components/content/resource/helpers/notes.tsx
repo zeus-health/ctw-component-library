@@ -2,7 +2,7 @@ import { Interweave, Node } from "interweave";
 import { Table, Tbody, Td, Th, Thead, Tr } from "react-super-responsive-table";
 import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
 import "./note-style.scss";
-import sanitizeHtml from "sanitize-html";
+import * as sanitizeHtml from "sanitize-html";
 import { NotesEntry } from "./notes-entry";
 import { DocumentModel } from "@/fhir/models/document";
 
