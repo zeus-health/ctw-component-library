@@ -43,7 +43,7 @@ function getNoteDisplay(noteText: string | undefined) {
   }
 
   return (
-    <div>
+    <div className="ctw-note">
       <Interweave content={cleanNote} transform={turnTablesResponsive} />
     </div>
   );

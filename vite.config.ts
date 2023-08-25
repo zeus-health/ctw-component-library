@@ -6,8 +6,12 @@ import { dependencies, peerDependencies } from "./package.json";
 const DEPS_TO_BUNDLE = ["graphql-request", "graphql"];
 
 export default defineConfig({
-  define: {
-    global: {},
+  optimizeDeps: {
+    esbuildOptions: {
+      define: {
+        global: "globalThis",
+      },
+    },
   },
   plugins: [
     plugin({
