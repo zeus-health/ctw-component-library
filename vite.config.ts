@@ -9,7 +9,7 @@ export default defineConfig({
   optimizeDeps: {
     esbuildOptions: {
       define: {
-        global: "window",
+        global: "globalThis",
       },
     },
   },

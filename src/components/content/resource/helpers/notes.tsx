@@ -11,6 +11,8 @@ export type NotesProps = {
 };
 
 function getNoteDisplay(noteText: string | undefined) {
+  console.log(noteText);
+
   if (noteText === undefined) {
     return undefined;
   }
@@ -18,7 +20,6 @@ function getNoteDisplay(noteText: string | undefined) {
     disallowedTagsMode: "escape",
   });
 
-  // eslint-disable-next-line consistent-return
   function turnTablesResponsive(node: HTMLElement, children: Node[]): React.ReactNode {
     switch (node.tagName) {
       case "TABLE":
