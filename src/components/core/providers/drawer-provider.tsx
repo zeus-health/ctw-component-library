@@ -32,7 +32,7 @@ export function DrawerProvider({ children }: ProviderProps) {
             // Datadog we write the drawer name into the metric name itself (prop ignored by analytics)
             datadogMetricName: `open_drawer.${props.telemetryName ?? ""}`.replace(/(\.)$/, ""),
             // For analytics, we pass the name of the drawer as an event attribute name
-            name: props.telemetryName,
+            value: props.telemetryName,
           });
         });
       },
