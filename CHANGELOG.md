@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.60.2
+
+### Patch Changes
+
+- 678c7b82: Fix open_drawer analytic to send drawer name.
+
 ## 1.60.1
 
 ### Patch Changes
