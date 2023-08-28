@@ -1,3 +1,4 @@
+import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { useToggleDismiss } from "../hooks/use-toggle-dismiss";
 import { useToggleRead } from "../hooks/use-toggle-read";
 import { useCTW } from "@/components/core/providers/use-ctw";
@@ -52,6 +53,7 @@ const getDismissAndReadActions =
   ({ record, onSuccess }: RowActionsProps<FHIRModel<fhir4.Resource>>) => {
     const { t } = useBaseTranslations();
     const requestContext = useRequestContext();
+    const { trackInteraction } = useAnalytics();
 
     const { isLoading: isToggleDismissLoading, toggleDismiss } = useToggleDismiss(QUERY_KEY_BASIC);
     const { isLoading: isToggleReadLoading, toggleRead } = useToggleRead();
@@ -73,6 +75,9 @@ const getDismissAndReadActions =
           className="ctw-btn-default"
           disabled={isToggleDismissLoading || isToggleReadLoading}
           onClick={async () => {
+            trackInteraction("toggle_dismiss", {
+              action: record.isDismissed ? "restore" : "dismiss",
+            });
             await toggleDismiss(record);
             if (!record.isRead) {
               await toggleRead(record);
@@ -94,6 +99,7 @@ const getDismissAndReadActions =
           className="ctw-btn-default"
           disabled={disableReadButton || isToggleDismissLoading || isToggleReadLoading}
           onClick={async () => {
+            trackInteraction("btn_toggle_read");
             await toggleRead(record);
             onSuccess?.();
           }}
