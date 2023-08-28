@@ -2,4 +2,4 @@
 "@zus-health/ctw-component-library": patch
 ---
 
-import sanitizeHtml correctly
+Remove sanitize-html in favor of DOMPurify
