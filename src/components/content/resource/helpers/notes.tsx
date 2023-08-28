@@ -1,4 +1,5 @@
 import DOMPurify from "dompurify";
+import { Interweave } from "interweave";
 import { NotesEntry } from "./notes-entry";
 import { DocumentModel } from "@/fhir/models/document";
 
@@ -11,8 +12,12 @@ function getNoteDisplay(noteText: string | undefined) {
     return undefined;
   }
   const cleanNote = DOMPurify.sanitize(noteText);
-  // eslint-disable-next-line react/no-danger
-  return <div dangerouslySetInnerHTML={{ __html: cleanNote }} />;
+
+  return (
+    <div className="ctw-overflow-auto">
+      <Interweave content={cleanNote} />
+    </div>
+  );
 }
 
 export const Notes = ({ entries }: NotesProps) => (
