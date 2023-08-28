@@ -13,7 +13,11 @@ function getNoteDisplay(noteText: string | undefined) {
   }
   const cleanNote = DOMPurify.sanitize(noteText);
 
-  return <Interweave content={cleanNote} />;
+  return (
+    <div className="ctw-overflow-auto">
+      <Interweave content={cleanNote} />
+    </div>
+  );
 }
 
 export const Notes = ({ entries }: NotesProps) => (
