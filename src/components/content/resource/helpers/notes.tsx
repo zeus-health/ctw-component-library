@@ -1,5 +1,5 @@
+import DOMPurify from "dompurify";
 import { Interweave } from "interweave";
-import sanitizeHtml from "sanitize-html";
 import { NotesEntry } from "./notes-entry";
 import { DocumentModel } from "@/fhir/models/document";
 
@@ -11,9 +11,7 @@ function getNoteDisplay(noteText: string | undefined) {
   if (noteText === undefined) {
     return undefined;
   }
-  const cleanNote = sanitizeHtml(noteText, {
-    disallowedTagsMode: "escape",
-  });
+  const cleanNote = DOMPurify.sanitize(noteText);
 
   return <Interweave content={cleanNote} />;
 }
