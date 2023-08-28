@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.60.3
+
+### Patch Changes
+
+- 32fc03d7: Remove sanitize-html in favor of DOMPurify
+
 ## 1.60.2
 
 ### Patch Changes
