@@ -12,27 +12,13 @@ import {
   ObservationModel,
 } from "@/fhir/models";
 
-export type AiSearchResultRowProps = {
-  result: AiSearchResult;
-};
-
-export const AiSearchResultRow = ({ result }: AiSearchResultRowProps) => {
-  const { document } = result;
-  return (
-    <div className="ctw-border-b-1 ctw-w-full ctw-border-0 ctw-border-solid ctw-border-divider-light ctw-text-left">
-      <ResourceRow document={document} />
-    </div>
-  );
-};
-
 type ResourceRowProps = {
   document: AiSearchResult["document"];
 };
 
-function ResourceRow(props: ResourceRowProps) {
+export function AiSearchResultRow(props: ResourceRowProps) {
   const { resource, ...result } = props.document;
   const resourceType = result.metadata.resource_type;
-  const id = result.metadata.resource_id;
 
   switch (resourceType) {
     case "AllergyIntolerance":
@@ -51,12 +37,7 @@ function ResourceRow(props: ResourceRowProps) {
       return <ResultObservation result={result} resource={resource as ObservationModel} />;
 
     default:
-      return (
-        <div>
-          <p>
-            {resourceType}/{id}
-          </p>
-        </div>
-      );
+      // Unknown resource type
+      return null;
   }
 }

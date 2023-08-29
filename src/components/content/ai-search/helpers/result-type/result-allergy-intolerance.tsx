@@ -21,10 +21,10 @@ export function ResultAllergyIntolerance({ result, resource }: ResultAllergyInto
     enableDismissAndReadActions: true,
   });
   return (
-    <div className="ctw-ai-search-result-allergy-intolerance">
+    <div className="ctw-ai-search-result-allergy-intolerance ctw-text-left">
       <div className="ctw-flex ctw-flex-row ctw-items-end ctw-justify-between">
         <h3 className="ctw-mb-0">AllergyIntolerance: {resource.display}</h3>
-        <FeedbackForm name={metadata.resource_id} />
+        <FeedbackForm name={`${metadata.resource_type}/${metadata.resource_id}`} />
       </div>
       <button
         type="button"

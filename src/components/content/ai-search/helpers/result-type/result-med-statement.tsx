@@ -13,10 +13,10 @@ export function ResultMedStatement({ result, resource }: ResultMedStatementProps
   const openDetails = useMedicationDetailsDrawer({});
 
   return (
-    <div className="ctw-ai-search-result-med-statement">
+    <div className="ctw-ai-search-result-med-statement ctw-text-left">
       <div className="ctw-flex ctw-flex-row ctw-items-end ctw-justify-between">
         <h3 className="ctw-mb-0">Medication: {resource.display}</h3>
-        <FeedbackForm name={metadata.resource_id} />
+        <FeedbackForm name={`${metadata.resource_type}/${metadata.resource_id}`} />
       </div>
       <button
         type="button"

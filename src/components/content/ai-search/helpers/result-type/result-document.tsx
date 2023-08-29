@@ -19,10 +19,10 @@ export function ResultDocument({ result, resource }: ResultDocumentProps) {
   });
 
   return (
-    <div className="ctw-ai-search-result-document">
+    <div className="ctw-ai-search-result-document ctw-text-left">
       <div className="ctw-flex ctw-flex-row ctw-items-end ctw-justify-between">
         <h3 className="ctw-mb-0">CCDA: {resource.title}</h3>
-        <FeedbackForm name={metadata.resource_id} />
+        <FeedbackForm name={`${metadata.resource_type}/${metadata.resource_id}`} />
       </div>
       <button
         type="button"

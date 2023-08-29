@@ -13,10 +13,11 @@ export const FeedbackForm = ({ name }: { name: string }) => {
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
     if (isSubmitted) {
+      // We only need to show the final message for a few seconds and then hide it
       setShowFinalMessage(true);
       timeoutId = setTimeout(() => {
         setShowFinalMessage(false);
-      }, 2000);
+      }, 2500);
     }
     return () => clearTimeout(timeoutId);
   }, [isSubmitted]);

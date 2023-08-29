@@ -15,10 +15,10 @@ export function ResultObservation({ result, resource }: ResultObservationProps) 
   const { metadata, page_content: content } = result;
 
   return (
-    <div className="ctw-ai-search-result-observation">
+    <div className="ctw-ai-search-result-observation ctw-text-left">
       <div className="ctw-flex ctw-flex-row ctw-items-end ctw-justify-between">
         <h3 className="ctw-mb-0">Observation: {resource.display}</h3>
-        <FeedbackForm name={metadata.resource_id} />
+        <FeedbackForm name={`${metadata.resource_type}/${metadata.resource_id}`} />
       </div>
       <button
         type="button"

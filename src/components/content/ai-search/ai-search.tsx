@@ -64,7 +64,7 @@ export const AiSearch = withErrorBoundary(({ className, hideTitle = false }: AiS
         )}
       >
         <RenderIf condition={!hideTitle}>
-          <Title className="ctw-border-b-2 ctw-border-l-0 ctw-border-r-0 ctw-border-t-0 ctw-border-solid ctw-border-divider-light">
+          <Title className="ctw-border-b-2 ctw-border-solid ctw-border-divider-light">
             <h3 className="ctw-m-0 ctw-inline-block ctw-p-0 ctw-pb-3 ctw-text-lg ctw-font-medium ctw-capitalize">
               Search outside records
             </h3>
@@ -97,21 +97,22 @@ export const AiSearch = withErrorBoundary(({ className, hideTitle = false }: AiS
 
         <div className="ctw-ai-search-results-list ctw-ml-0">
           <RenderIf condition={showSearchResults}>
-            <FeedbackProvider id={results.query}>
+            {/* FeedbackProvider will allow all the feedback forms to get the id of the query */}
+            <FeedbackProvider id={results.id}>
               <div className="ctw-ai-search-results ctw-align-left ctw-ml-0 ctw-space-y-2">
                 <div>
                   <span className="ctw-font-medium">Answer: </span>
                   <span className="ctw-font-normal">
                     {results.response}
-                    <FeedbackForm name={results.id} />
+                    <FeedbackForm name="query-response" />
                   </span>
                 </div>
 
+                {/* Search Results */}
                 <h4 className="ctw-text-left ctw-text-content-light">Results:</h4>
-
                 {results.results.map((result: AiSearchResult) => {
                   const { page_content: key = "" } = result;
-                  return <AiSearchResultRow key={key} result={result} />;
+                  return <AiSearchResultRow key={key} document={result.document} />;
                 })}
               </div>
 
