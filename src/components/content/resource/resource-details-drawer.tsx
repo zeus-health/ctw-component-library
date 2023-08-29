@@ -59,7 +59,6 @@ type ResourceDetailsDrawerProps<T extends fhir4.Resource, M extends FHIRModel<T>
   RowActions?: RowActionsProp<M>;
   enableDismissAndReadActions?: boolean;
   subHeader?: (model: M) => ReactNode;
-  patientUpid?: string;
 };
 
 function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>({
@@ -74,7 +73,6 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
   RowActions,
   enableDismissAndReadActions,
   subHeader,
-  patientUpid,
 }: ResourceDetailsDrawerProps<T, M>) {
   const openCCDAModal = useCCDAModal();
   const [isLoading, setIsLoading] = useState(false);
@@ -112,19 +110,8 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
   const actions =
     rowActionsWithAdditions && rowActionsWithAdditions({ record: model, onSuccess: onClose });
 
-  const trackingMetadata: Record<string, unknown> = {
-    patientUpid,
-    resourceType: model.resourceType,
-  };
-
   return (
-    <Drawer
-      className={className}
-      title={model.resourceTypeTitle}
-      isOpen={isOpen}
-      onClose={onClose}
-      trackingMetadata={trackingMetadata}
-    >
+    <Drawer className={className} title={model.resourceTypeTitle} isOpen={isOpen} onClose={onClose}>
       <Drawer.Body>
         <div className="ctw-space-y-4">
           <div className="ctw-space-y-2">
@@ -141,7 +128,7 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
                 binaryId && (
                   <DocumentButton
                     onClick={() => {
-                      Telemetry.trackInteraction(`view_source_document`, trackingMetadata);
+                      Telemetry.trackInteraction(`${model.resourceType}.view_source_document`);
                       return openCCDAModal(binaryId, model.resourceTypeTitle);
                     }}
                     text="Source Document"

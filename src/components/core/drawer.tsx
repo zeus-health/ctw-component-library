@@ -23,7 +23,6 @@ export type DrawerProps = {
   /** Prevent drawer from closing on ESC or background click. */
   disableCloseOnBlur?: boolean;
   title: string;
-  trackingMetadata?: Record<string, unknown>;
 };
 
 /**
@@ -44,7 +43,6 @@ export function Drawer({
   showCloseFooter,
   title,
   disableCloseOnBlur = false,
-  trackingMetadata,
 }: DrawerProps) {
   const { trackInteraction } = useAnalytics();
   const transitionClasses = "ctw-transform ctw-transition ctw-ease-in-out ctw-duration-300";
@@ -104,7 +102,6 @@ export function Drawer({
                             onClose();
                             trackInteraction("close_drawer", {
                               target: "btn_header_close_icon",
-                              ...trackingMetadata,
                             });
                           }}
                           className="ctw-btn-clear"
@@ -124,7 +121,6 @@ export function Drawer({
                             onClose();
                             trackInteraction("close_drawer", {
                               target: "btn_footer",
-                              ...trackingMetadata,
                             });
                           }}
                         />
