@@ -113,10 +113,10 @@ function AiSearchComponent({ className, hideTitle = false }: AiSearchProps) {
 
               {/* Search Results */}
               <h4 className="ctw-text-left ctw-text-content-light">Results:</h4>
-              {results.results.map((result: AiSearchResult) => {
-                const { page_content: key = "" } = result;
-                return <AiSearchResultRow key={key} document={result.document} />;
-              })}
+              {results.results.map((result: AiSearchResult, idx) => (
+                // eslint-disable-next-line react/no-array-index-key
+                <AiSearchResultRow key={idx} document={result.document} />
+              ))}
             </div>
 
             <div>
