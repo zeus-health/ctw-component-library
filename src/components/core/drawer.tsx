@@ -5,7 +5,10 @@ import { XIcon } from "@heroicons/react/outline";
 import cx from "classnames";
 import type { ReactNode } from "react";
 import { Fragment } from "react";
-import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
+import {
+  TrackingMetadata,
+  useAnalytics,
+} from "@/components/core/providers/analytics/use-analytics";
 
 export type DrawerProps = {
   className?: string;
@@ -23,7 +26,7 @@ export type DrawerProps = {
   /** Prevent drawer from closing on ESC or background click. */
   disableCloseOnBlur?: boolean;
   title: string;
-  trackingMetadata?: Record<string, unknown>;
+  trackingMetadata?: TrackingMetadata;
 };
 
 /**
