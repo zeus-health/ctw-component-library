@@ -62,9 +62,35 @@ async function getDocumentFromFQS(requestContext: CTWRequestContext, patient: Pa
         },
       }
     );
-    const nodes = data.DocumentReferenceConnection.edges.map((x) => x.node);
-    const models = nodes.map((d) => new DocumentModel(d));
-    return models;
+    return data.DocumentReferenceConnection.edges.map((x) => new DocumentModel(x.node));
+  } catch (e) {
+    throw new Error(`Failed fetching document information for patient: ${e}`);
+  }
+}
+
+export async function getDocumentsByIdFromFQS(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  ids: string[] = []
+) {
+  try {
+    const graphClient = createGraphqlClient(requestContext);
+    const { data } = await fqsRequest<DocumentReferenceGraphqlResponse>(
+      graphClient,
+      documentsQuery,
+      {
+        upid: patient.UPID,
+        cursor: "",
+        first: 1000,
+        filter: {
+          id: ["in", ids],
+        },
+        sort: {
+          lastUpdated: "DESC",
+        },
+      }
+    );
+    return data.DocumentReferenceConnection.edges.map((x) => new DocumentModel(x.node));
   } catch (e) {
     throw new Error(`Failed fetching document information for patient: ${e}`);
   }

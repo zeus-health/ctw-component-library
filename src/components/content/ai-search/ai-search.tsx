@@ -98,7 +98,7 @@ export const AiSearch = withErrorBoundary(({ className, hideTitle = false }: AiS
         <div className="ctw-ai-search-results-list ctw-ml-0">
           <RenderIf condition={showSearchResults}>
             <FeedbackProvider id={results.query}>
-              <div className="ctw-ai-search-results ctw-ml-0 ctw-space-y-2">
+              <div className="ctw-ai-search-results ctw-align-left ctw-ml-0 ctw-space-y-2">
                 <div>
                   <span className="ctw-font-medium">Answer: </span>
                   <span className="ctw-font-normal">
@@ -107,7 +107,7 @@ export const AiSearch = withErrorBoundary(({ className, hideTitle = false }: AiS
                   </span>
                 </div>
 
-                <h3>Results:</h3>
+                <h4 className="ctw-text-left ctw-text-content-light">Results:</h4>
 
                 {results.results.map((result: AiSearchResult) => {
                   const { page_content: key = "" } = result;
@@ -115,7 +115,7 @@ export const AiSearch = withErrorBoundary(({ className, hideTitle = false }: AiS
                 })}
               </div>
 
-              <div className="ctw-ai-search-results ctw-ml-0 ctw-space-y-2">
+              <div>
                 <span className="ctw-font-medium">Found {results.results.length} Results</span>
               </div>
             </FeedbackProvider>

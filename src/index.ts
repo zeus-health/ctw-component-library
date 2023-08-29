@@ -1,4 +1,5 @@
 // Content components
+export * from "@/components/content/ai-search/ai-search";
 export * from "@/components/content/allergies/patient-allergies";
 export * from "@/components/content/allergies/unread-allergies-notification";
 export * from "@/components/content/conditions/patient-conditions";

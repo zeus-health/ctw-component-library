@@ -1,4 +1,6 @@
+export { AllergyModel } from "@/fhir/models/allergies";
 export { ConditionModel } from "@/fhir/models/condition";
+export { DocumentModel } from "@/fhir/models/document";
 export { DiagnosticReportModel } from "@/fhir/models/diagnostic-report";
 export { MedicationDispenseModel } from "@/fhir/models/medication-dispense";
 export { MedicationModel } from "@/fhir/models/medication";

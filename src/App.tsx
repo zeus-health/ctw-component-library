@@ -7,6 +7,7 @@ import { SecuredApp } from "@/SecuredApp";
 import "./App.css";
 
 import {
+  AiSearch,
   CTWProvider,
   PatientAllergies,
   PatientConditions,
@@ -62,9 +63,8 @@ const theme: ThemeProviderProps["theme"] = {
     },
   },
   iframe: {
-    fontFamily: "Roboto",
+    fontFamily: "Avenir",
     fontSize: "16px",
-    lineHeight: "1.5",
   },
 };
 
@@ -83,6 +83,7 @@ const locals = {
 };
 
 const components: DemoComponent[] = [
+  { name: "ai-search", render: () => <AiSearch />, title: "AI Search" },
   { name: "allergies", render: () => <PatientAllergies />, title: "Patient Allergies" },
   { name: "conditions", render: () => <PatientConditions />, title: "Patient Conditions" },
   {
@@ -155,6 +156,24 @@ const components: DemoComponent[] = [
     },
   },
   {
+    name: "zap-ai-search",
+    render: () => {
+      return (
+        <ZusAggregatedProfile
+          hideTitle
+          includeAiSearch
+          removeBranding
+          title="ZAP"
+          conditionsOutsideProps={{
+            hideRequestRecords: true,
+          }}
+          conditionsAllProps={{ onlyAllowAddOutsideConditions: true }}
+          includePatientDemographicsForm={false}
+        />
+      );
+    },
+  },
+  {
     name: "iframe-zap",
     render: () => {
       return (
@@ -211,6 +230,7 @@ function App() {
   if (VITE_AUTH0_DOMAIN && VITE_AUTH0_CLIENT_ID && VITE_AUTH0_AUDIENCE) {
     return (
       <Auth0Provider
+        cacheLocation="localstorage"
         domain={VITE_AUTH0_DOMAIN}
         clientId={VITE_AUTH0_CLIENT_ID}
         audience={VITE_AUTH0_AUDIENCE}

@@ -4,10 +4,12 @@ import { Tab } from "@headlessui/react";
 import cx from "classnames";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { ListBox } from "../list-box/list-box";
+import { AiSearch } from "@/components/content/ai-search/ai-search";
 import { PatientHistoryStatus } from "@/components/content/patient-history/patient-history-message-status";
 import { usePatientHistory } from "@/components/content/patient-history/use-patient-history";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
+import { RenderIf } from "@/components/core/render-if";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 
 export type TabGroupProps = {
@@ -15,6 +17,8 @@ export type TabGroupProps = {
   className?: string;
   content: TabGroupItem[];
   forceHorizontalTabs?: boolean;
+  includeAiSearch?: boolean;
+  aiSearchIsOpen?: boolean;
   onChange?: (index: number) => void; // optional event
   topRightContent?: ReactNode;
 };
@@ -35,6 +39,7 @@ function TabGroupComponent({
   children,
   className,
   forceHorizontalTabs = false,
+  aiSearchIsOpen = false,
   content,
   onChange,
   topRightContent,
@@ -118,6 +123,7 @@ function TabGroupComponent({
         status={patientHistoryDetails.lastStatus}
         date={patientHistoryDetails.lastRetrievedAt}
       />
+
       <Tab.Group selectedIndex={selectedTabIndex} onChange={handleOnChange}>
         <Tab.List
           className={cx(
@@ -126,33 +132,41 @@ function TabGroupComponent({
           )}
         >
           {/* Renders button for each tab using "display | display()" */}
-          {content.map(({ key, display }, index) => (
-            <Tab
-              key={key}
-              onClick={() => {
-                onClickBlur();
-                trackInteraction("open_tab", { tab: key });
-              }}
-              className={({ selected }) =>
-                cx(
-                  [
-                    "ctw-tab ctw-whitespace-nowrap ctw-text-sm ctw-capitalize",
-                    "hover:after:ctw-bg-content-black",
-                    "focus-visible:ctw-outline-primary-dark focus-visible:after:ctw-bg-transparent",
-                  ],
-                  {
-                    "after:ctw-bg-content-black": selected,
-                    "ctw-text-content-light": !selected,
-                  },
-                  { "ctw-invisible !ctw-absolute": index >= tabOverflowCutoff }
-                )
-              }
-            >
-              {display()}
-            </Tab>
-          ))}
+          <RenderIf condition={!aiSearchIsOpen}>
+            {content.map(({ key, display }, index) => (
+              <Tab
+                key={key}
+                onClick={() => {
+                  onClickBlur();
+                  trackInteraction("open_tab", { tab: key });
+                }}
+                className={({ selected }) =>
+                  cx(
+                    [
+                      "ctw-tab ctw-whitespace-nowrap ctw-text-sm ctw-capitalize",
+                      "hover:after:ctw-bg-content-black",
+                      "focus-visible:ctw-outline-primary-dark focus-visible:after:ctw-bg-transparent",
+                    ],
+                    {
+                      "after:ctw-bg-content-black": selected,
+                      "ctw-text-content-light": !selected,
+                    },
+                    { "ctw-invisible !ctw-absolute": index >= tabOverflowCutoff }
+                  )
+                }
+              >
+                {display()}
+              </Tab>
+            ))}
+          </RenderIf>
 
-          {tabOverflowCutoff < content.length && (
+          <RenderIf condition={aiSearchIsOpen}>
+            <h3 className="ctw-m-0 ctw-inline-block ctw-pb-0 ctw-pt-2 ctw-text-lg ctw-font-medium">
+              Search Outside Records
+            </h3>
+          </RenderIf>
+
+          <RenderIf condition={!aiSearchIsOpen && tabOverflowCutoff < content.length}>
             <ListBox
               ref={moreMenuRef}
               selectedIndex={selectedTabIndex - tabOverflowCutoff}
@@ -173,36 +187,43 @@ function TabGroupComponent({
             >
               {tabOverflowCutoff !== 0 ? <span>More</span> : undefined}
             </ListBox>
-          )}
+          </RenderIf>
 
-          {showTopRightContent && (
+          <RenderIf condition={showTopRightContent}>
             <div
               className="!ctw-ml-auto ctw-mr-1.5 ctw-flex ctw-flex-shrink-0 ctw-items-center ctw-whitespace-nowrap"
               ref={topRightContentRef}
             >
               {topRightContent}
             </div>
-          )}
+          </RenderIf>
         </Tab.List>
 
         {/* Children are always rendered and appear above the active panel */}
         {children}
 
         {/* Renders body of each tab using "render()" */}
-        <Tab.Panels className="ctw-scrollable-pass-through-height">
-          {content.map((item, index) => (
-            <Tab.Panel
-              key={item.key}
-              className={cx("ctw-scrollable-pass-through-height")}
-              // Don't unmount our tabs. This fixes an issue
-              // where ZAP filters/sort selections would get reset
-              // when switching to a new tab and back again.
-              unmount={false}
-            >
-              {shown[index] && item.render(breakpoints.sm)}
-            </Tab.Panel>
-          ))}
-        </Tab.Panels>
+        {aiSearchIsOpen ? (
+          <AiSearch
+            hideTitle
+            className="ctw-mt-3 ctw-flex ctw-space-x-5 ctw-border-b ctw-border-divider-light"
+          />
+        ) : (
+          <Tab.Panels className="ctw-scrollable-pass-through-height">
+            {content.map((item, index) => (
+              <Tab.Panel
+                key={item.key}
+                className={cx("ctw-scrollable-pass-through-height")}
+                // Don't unmount our tabs. This fixes an issue
+                // where ZAP filters/sort selections would get reset
+                // when switching to a new tab and back again.
+                unmount={false}
+              >
+                {shown[index] && item.render(breakpoints.sm)}
+              </Tab.Panel>
+            ))}
+          </Tab.Panels>
+        )}
       </Tab.Group>
     </div>
   );

@@ -19,11 +19,3 @@
     @apply ctw-m-0;
   }
 }
-
-.ctw-search-icon-wrapper {
-  @apply ctw-pointer-events-none ctw-absolute ctw-inset-y-0 ctw-left-0 ctw-flex ctw-items-center ctw-pl-3;
-
-  .ctw-search-icon {
-    @apply ctw-h-5 ctw-w-5 ctw-text-content-lighter;
-  }
-}

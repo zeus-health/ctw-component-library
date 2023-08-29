@@ -6,7 +6,7 @@ import type {
   MedicationStatement,
 } from "fhir/r4";
 import { useEffect, useState } from "react";
-import { bundleToResourceMap } from "./bundle";
+import { bundleToResourceMap, getIncludedResources } from "./bundle";
 import { getIdentifyingRxNormCode } from "./medication";
 import {
   CTW_EXTENSION_LENS_AGGREGATED_FROM,
@@ -21,6 +21,7 @@ import {
   SYSTEM_ZUS_OWNER,
   SYSTEM_ZUS_SUMMARY,
   SYSTEM_ZUS_THIRD_PARTY,
+  SYSTEM_ZUS_UNIVERSAL_ID,
 } from "./system-urls";
 import { ResourceMap } from "./types";
 import { useQueryWithPatient } from "..";
@@ -29,6 +30,7 @@ import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { MedicationModel } from "@/fhir/models/medication";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import { PatientModel } from "@/fhir/models/patient";
+import { searchAllRecords } from "@/fhir/search-helpers";
 import { filterResourcesByBuilderId } from "@/services/common";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import {
@@ -198,8 +200,7 @@ export async function getMedicationAdministrationsForPatientByIdFQS(
         },
       }
     );
-    const nodes = data.MedicationAdministrationConnection.edges.map((x) => x.node);
-    return nodes;
+    return data.MedicationAdministrationConnection.edges.map((x) => x.node);
   } catch (e) {
     throw Telemetry.logError(
       e as Error,
@@ -347,6 +348,59 @@ export async function getSummaryMedicationsFQS(
     throw Telemetry.logError(
       e as Error,
       `Failed fetching active medications for patient: ${patient.UPID}`
+    );
+  }
+}
+
+export async function getMedicationStatementsByIdODS(
+  requestContext: CTWRequestContext,
+  patientUPID: string,
+  medicationStatementIds: string[] = []
+) {
+  if (medicationStatementIds.length > 0) {
+    const { bundle, resources } = await searchAllRecords("MedicationStatement", requestContext, {
+      _id: medicationStatementIds.join(","),
+      _include: [`MedicationStatement:patient`, "MedicationStatement:medication"],
+      "_include:iterate": "Patient:organization",
+      "patient.identifier": `${SYSTEM_ZUS_UNIVERSAL_ID}|${patientUPID}`,
+    });
+
+    return resources.map((r) => new MedicationStatementModel(r, getIncludedResources(bundle)));
+  }
+
+  return [];
+}
+
+export async function getMedicationStatementsByIdFQS(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  medicationStatementIds: string[] = []
+) {
+  try {
+    const graphClient = createGraphqlClient(requestContext);
+    const { data } = await fqsRequest<MedicationStatementGraphqlResponse>(
+      graphClient,
+      medicationStatementQuery,
+      {
+        upid: patient.UPID,
+        cursor: "",
+        sort: {},
+        first: 500,
+        filter: {
+          ids: {
+            anymatch: medicationStatementIds,
+          },
+        },
+      }
+    );
+
+    return data.MedicationStatementConnection.edges.map(
+      (x) => new MedicationStatementModel(x.node)
+    );
+  } catch (e) {
+    throw Telemetry.logError(
+      e as Error,
+      `Failed fetching list of medication statements by id for patient: ${patient.UPID}`
     );
   }
 }

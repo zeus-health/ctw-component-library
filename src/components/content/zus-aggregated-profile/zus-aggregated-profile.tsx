@@ -1,5 +1,8 @@
 import "./zus-aggregated-profile.scss";
 
+import { XIcon } from "@heroicons/react/outline";
+import { SearchIcon } from "@heroicons/react/solid";
+import { useState } from "react";
 import { PatientConditionsAllProps } from "../conditions/patient-conditions-all";
 import { PatientConditionsOutsideProps } from "../conditions/patient-conditions-outside";
 import { PatientDiagnosticReportsProps } from "../diagnostic-reports/patient-diagnostic-reports";
@@ -22,6 +25,7 @@ import {
 import { Title } from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
+import { RenderIf, RenderIfElse } from "@/components/core/render-if";
 import { TabGroup } from "@/components/core/tab-group/tab-group";
 import { intersection } from "@/utils/nodash";
 
@@ -56,6 +60,7 @@ export type ZusAggregatedProfileProps = {
   forceHorizontalTabs?: boolean;
   includePatientDemographicsForm?: boolean;
   title?: string;
+  includeAiSearch?: boolean;
   hideTitle?: boolean;
   removeBranding?: boolean;
   removeRequestRecords?: boolean;
@@ -79,6 +84,7 @@ export type ZusAggregatedProfileSubComponentProps = Partial<{
 
 const ZusAggregatedProfileComponent = ({
   forceHorizontalTabs = false,
+  includeAiSearch = false,
   includePatientDemographicsForm,
   allergiesProps,
   careTeamProps,
@@ -99,6 +105,9 @@ const ZusAggregatedProfileComponent = ({
   removeBranding = false,
   removeRequestRecords = false,
 }: ZusAggregatedProfileProps) => {
+  const [aiSearchIsOpen, setAiSearchIsOpen] = useState(false);
+  const toggleAiSearchIsOpen = () => setAiSearchIsOpen(!aiSearchIsOpen);
+
   // Get the configuration for each tab group by resource type
   const subcomponentProps: Record<keyof ZusAggregatedProfileTabs, unknown> = {
     allergies: allergiesProps,
@@ -146,12 +155,40 @@ const ZusAggregatedProfileComponent = ({
         <TabGroup
           content={tabbedContent}
           forceHorizontalTabs={forceHorizontalTabs}
+          aiSearchIsOpen={aiSearchIsOpen}
           topRightContent={
-            removeRequestRecords ? undefined : (
-              <RequestRecordsButton
-                includePatientDemographicsForm={includePatientDemographicsForm}
-              />
-            )
+            <div className="ctw-tab !ctw-ml-1.5">
+              {/* Hide Request Records button if opted-out or AI Search is open */}
+              <RenderIf condition={!removeRequestRecords && !aiSearchIsOpen}>
+                <RequestRecordsButton
+                  className="ctw-mr-1.5"
+                  includePatientDemographicsForm={includePatientDemographicsForm}
+                />
+              </RenderIf>
+
+              {/* If AI Search is included, show "search" and "close search" buttons */}
+              <RenderIf condition={includeAiSearch}>
+                <button
+                  type="button"
+                  className="ctw-btn-clear ctw-link ctw-mr-1 ctw-flex ctw-items-end ctw-whitespace-nowrap ctw-text-content-lighter"
+                  onClick={toggleAiSearchIsOpen}
+                >
+                  <RenderIf condition={aiSearchIsOpen}>
+                    <span className="ctw-mr-1 ctw-text-sm">Close Search</span>
+                  </RenderIf>
+                  <RenderIfElse condition={aiSearchIsOpen}>
+                    {/* Close Icon */}
+                    <span>
+                      <XIcon className="ctw-h-4 ctw-w-4" />
+                    </span>
+                    {/* ELSE Search Icon */}
+                    <span>
+                      <SearchIcon className="ctw-h-4 ctw-w-4" />
+                    </span>
+                  </RenderIfElse>
+                </button>
+              </RenderIf>
+            </div>
           }
         />
       </div>

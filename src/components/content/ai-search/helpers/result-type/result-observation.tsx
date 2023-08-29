@@ -31,7 +31,7 @@ export function ResultObservation({ result, resource }: ResultObservationProps) 
         <ResourceTable
           columns={ObservationsColumns()}
           data={[resource]}
-          emptyMessage="There are no observations available."
+          emptyMessage="Unable to display observation data."
           hidePagination
         />
       )}
