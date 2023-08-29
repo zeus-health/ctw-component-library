@@ -25,6 +25,7 @@ import {
 import { Title } from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
+import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { RenderIf, RenderIfElse } from "@/components/core/render-if";
 import { TabGroup } from "@/components/core/tab-group/tab-group";
 import { intersection } from "@/utils/nodash";
@@ -105,8 +106,14 @@ const ZusAggregatedProfileComponent = ({
   removeBranding = false,
   removeRequestRecords = false,
 }: ZusAggregatedProfileProps) => {
+  const { trackInteraction } = useAnalytics();
   const [aiSearchIsOpen, setAiSearchIsOpen] = useState(false);
-  const toggleAiSearchIsOpen = () => setAiSearchIsOpen(!aiSearchIsOpen);
+  const toggleAiSearchIsOpen = () => {
+    setAiSearchIsOpen(!aiSearchIsOpen);
+    trackInteraction("toggle_ai_search", {
+      value: aiSearchIsOpen ? "close" : "open",
+    });
+  };
 
   // Get the configuration for each tab group by resource type
   const subcomponentProps: Record<keyof ZusAggregatedProfileTabs, unknown> = {
