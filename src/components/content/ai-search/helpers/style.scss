@@ -1,0 +1,24 @@
+.ctw-ai-search {
+  @apply ctw-flex ctw-items-center;
+  .ctw-ai-search-results {
+    @apply ctw-max-w-3xl ctw-space-y-5 ctw-px-1.5 ctw-py-4 ctw-text-center;
+    width: 650px;
+    max-width: 650px;
+  }
+
+  .ctw-ai-search-input {
+    @apply ctw-w-full;
+    max-width: 650px;
+  }
+
+  .ctw-ai-search-results-list {
+    @apply ctw-m-0;
+    min-height: 600px;
+  }
+
+  .ctw-ai-search-result-observation {
+    .ctw-table-container {
+      @apply ctw-border-b-0 ctw-border-t-0;
+    }
+  }
+}
