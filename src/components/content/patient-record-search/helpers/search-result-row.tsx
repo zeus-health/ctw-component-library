@@ -1,4 +1,4 @@
-import type { AiSearchResult } from "@/services/ai-search/ai-search";
+import type { PatientRecordSearchResult } from "@/services/patient-record-search/patient-record-search";
 import { ResultAllergyIntolerance } from "./result-type/result-allergy-intolerance";
 import { ResultCondition } from "./result-type/result-condition";
 import { ResultDocument } from "./result-type/result-document";
@@ -13,10 +13,10 @@ import {
 } from "@/fhir/models";
 
 type ResourceRowProps = {
-  document: AiSearchResult["document"];
+  document: PatientRecordSearchResult["document"];
 };
 
-export function AiSearchResultRow(props: ResourceRowProps) {
+export function SearchResultRow(props: ResourceRowProps) {
   const { resource, ...result } = props.document;
   const resourceType = result.metadata.resource_type;
 

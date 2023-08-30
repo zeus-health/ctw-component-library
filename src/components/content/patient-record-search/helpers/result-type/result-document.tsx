@@ -1,11 +1,11 @@
-import type { AiSearchResponseRawDocument } from "@/services/ai-search/ai-search";
-import { FeedbackForm } from "@/components/content/ai-search/helpers/feedback-form";
+import type { PatientRecordSearchResponseRawDocument } from "@/services/patient-record-search/patient-record-search";
 import { documentData } from "@/components/content/document/patient-documents";
+import { FeedbackForm } from "@/components/content/patient-record-search/helpers/feedback-form";
 import { useResourceDetailsDrawer } from "@/components/content/resource/resource-details-drawer";
 import { DocumentModel } from "@/fhir/models";
 
 type ResultDocumentProps = {
-  result: AiSearchResponseRawDocument;
+  result: PatientRecordSearchResponseRawDocument;
   resource: DocumentModel;
 };
 
@@ -19,7 +19,7 @@ export function ResultDocument({ result, resource }: ResultDocumentProps) {
   });
 
   return (
-    <div className="ctw-ai-search-result-document ctw-text-left">
+    <div className="ctw-patient-record-search-result-document ctw-text-left">
       <div className="ctw-flex ctw-flex-row ctw-items-end ctw-justify-between">
         <h3 className="ctw-mb-0">CCDA: {resource.title}</h3>
         <FeedbackForm name={`${metadata.resource_type}/${metadata.resource_id}`} />

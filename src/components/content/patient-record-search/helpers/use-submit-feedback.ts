@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { getZusServiceUrl } from "@/api/urls";
-import { FeedbackContext } from "@/components/content/ai-search/helpers/feedback-provider";
+import { FeedbackContext } from "@/components/content/patient-record-search/helpers/feedback-provider";
 import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { useCTW } from "@/components/core/providers/use-ctw";
 

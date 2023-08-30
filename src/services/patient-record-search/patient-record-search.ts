@@ -19,17 +19,20 @@ import { fetchConditionsByIdFQS } from "@/services/conditions";
 import { groupBy, keyBy, mapValues } from "@/utils/nodash";
 import { QUERY_KEY_AI_SEARCH } from "@/utils/query-keys";
 
-type AiSearchResourceType =
+type PatientRecordSearchResourceType =
   | "AllergyIntolerance"
   | "Condition"
   | "DocumentReference"
   | "MedicationStatement"
   | "Observation";
 
-type ResourceByTypeMapping = Record<AiSearchResourceType, AiSearchResponseRawDocument[]>;
-type ResourceIdByTypeMapping = Record<AiSearchResourceType, string[]>;
+type ResourceByTypeMapping = Record<
+  PatientRecordSearchResourceType,
+  PatientRecordSearchResponseRawDocument[]
+>;
+type ResourceIdByTypeMapping = Record<PatientRecordSearchResourceType, string[]>;
 
-export type AiSearchResponseRawDocument = {
+export type PatientRecordSearchResponseRawDocument = {
   original_content?: fhir4.Resource;
   page_content: string;
   summary: string;
@@ -40,24 +43,24 @@ export type AiSearchResponseRawDocument = {
   };
   metadata: {
     resource_id: string;
-    resource_type: AiSearchResourceType;
+    resource_type: PatientRecordSearchResourceType;
     subject: string;
     upid: string;
   };
 };
 
-export type AiSearchResponseRaw = {
-  documents: AiSearchResponseRawDocument[];
+export type PatientRecordSearchResponseRaw = {
+  documents: PatientRecordSearchResponseRawDocument[];
   query: string;
   query_id: string;
   response: string;
   service_version: string;
 };
 
-export type AiSearchResult = {
+export type PatientRecordSearchResult = {
   page_content: string;
   upid: string;
-  document: AiSearchResponseRawDocument & {
+  document: PatientRecordSearchResponseRawDocument & {
     resource?:
       | AllergyModel
       | ConditionModel
@@ -67,19 +70,19 @@ export type AiSearchResult = {
   };
 };
 
-export type AiSearchResults = {
+export type PatientRecordSearchResults = {
   id: string;
-  results: readonly AiSearchResult[];
+  results: readonly PatientRecordSearchResult[];
   query: string;
   response: string;
   total: number;
 };
 
-export const EMPTY_SEARCH_RESULTS: Readonly<AiSearchResults> = Object.freeze({
+export const EMPTY_SEARCH_RESULTS: Readonly<PatientRecordSearchResults> = Object.freeze({
   id: "",
   query: "",
   response: "",
-  results: Object.freeze([] as AiSearchResult[]),
+  results: Object.freeze([] as PatientRecordSearchResult[]),
   total: 0,
 });
 
@@ -91,8 +94,8 @@ const EMPTY_RESOURCE_BY_TYPE_MAPPING: ResourceByTypeMapping = Object.freeze({
   Observation: [],
 });
 
-class AiSearch {
-  private response: AiSearchResponseRaw;
+class PatientRecordSearch {
+  private response: PatientRecordSearchResponseRaw;
 
   private resources: {
     AllergyIntolerance: Record<string, AllergyModel>;
@@ -108,15 +111,15 @@ class AiSearch {
     Observation: {},
   };
 
-  constructor(aiSearchResponse: AiSearchResponseRaw) {
-    this.response = aiSearchResponse;
+  constructor(patientRecordSearchResponse: PatientRecordSearchResponseRaw) {
+    this.response = patientRecordSearchResponse;
   }
 
   get id(): string {
     return this.response.query_id;
   }
 
-  get results(): AiSearchResult[] {
+  get results(): PatientRecordSearchResult[] {
     return this.response.documents.map((group) => {
       const resource = this.resources[group.metadata.resource_type][group.metadata.resource_id];
       return {
@@ -171,7 +174,9 @@ class AiSearch {
   }
 }
 
-export function useAiSearch(searchTerm?: string): UseQueryResult<AiSearchResults> {
+export function usePatientRecordSearch(
+  searchTerm?: string
+): UseQueryResult<PatientRecordSearchResults> {
   return useQueryWithPatient(
     QUERY_KEY_AI_SEARCH,
     [searchTerm],
@@ -210,7 +215,9 @@ export function useAiSearch(searchTerm?: string): UseQueryResult<AiSearchResults
           }
         );
 
-        const aiSearchResult = new AiSearch((await response.json()) as AiSearchResponseRaw);
+        const patientRecordSearchResult = new PatientRecordSearch(
+          (await response.json()) as PatientRecordSearchResponseRaw
+        );
 
         const {
           AllergyIntolerance: allergyIds,
@@ -218,7 +225,7 @@ export function useAiSearch(searchTerm?: string): UseQueryResult<AiSearchResults
           DocumentReference: documentIds,
           MedicationStatement: medicationIds,
           Observation: observationIds,
-        } = aiSearchResult.resourceIds;
+        } = patientRecordSearchResult.resourceIds;
 
         const allergies = await fetchResourcesById(allergyIds, getAllergyIntolerancesById);
         const conditions = await fetchResourcesById(conditionIds, fetchConditionsByIdFQS);
@@ -226,7 +233,7 @@ export function useAiSearch(searchTerm?: string): UseQueryResult<AiSearchResults
         const medications = await fetchResourcesById(medicationIds, getMedicationStatementsByIdFQS);
         const observations = await fetchResourcesById(observationIds, fetchObservationsById);
 
-        aiSearchResult.setResources({
+        patientRecordSearchResult.setResources({
           allergies,
           conditions,
           documents,
@@ -235,11 +242,11 @@ export function useAiSearch(searchTerm?: string): UseQueryResult<AiSearchResults
         });
 
         return {
-          id: aiSearchResult.id,
-          query: aiSearchResult.queryString,
-          response: aiSearchResult.responseString,
-          results: aiSearchResult.results,
-          total: aiSearchResult.results.length,
+          id: patientRecordSearchResult.id,
+          query: patientRecordSearchResult.queryString,
+          response: patientRecordSearchResult.responseString,
+          results: patientRecordSearchResult.results,
+          total: patientRecordSearchResult.results.length,
         };
       }
 

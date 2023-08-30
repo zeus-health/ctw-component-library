@@ -2,9 +2,9 @@ import { XIcon } from "@heroicons/react/outline";
 import { SearchIcon } from "@heroicons/react/solid";
 import cx from "classnames";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { AiSearchResultRow } from "./helpers/ai-search-result-row";
-import { FeedbackForm } from "@/components/content/ai-search/helpers/feedback-form";
-import { FeedbackProvider } from "@/components/content/ai-search/helpers/feedback-provider";
+import { SearchResultRow } from "./helpers/search-result-row";
+import { FeedbackForm } from "@/components/content/patient-record-search/helpers/feedback-form";
+import { FeedbackProvider } from "@/components/content/patient-record-search/helpers/feedback-provider";
 import { Title } from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Loading } from "@/components/core/loading";
@@ -12,37 +12,37 @@ import { AnalyticsProvider } from "@/components/core/providers/analytics/analyti
 import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { RenderIf } from "@/components/core/render-if";
 import {
-  AiSearchResult,
-  AiSearchResults,
   EMPTY_SEARCH_RESULTS,
-  useAiSearch,
-} from "@/services/ai-search/ai-search";
+  PatientRecordSearchResult,
+  PatientRecordSearchResults,
+  usePatientRecordSearch,
+} from "@/services/patient-record-search/patient-record-search";
 import "./helpers/style.scss";
 
-export type AiSearchProps = {
+export type PatientRecordSearchProps = {
   hideTitle?: boolean;
   className?: cx.Argument;
 };
 
-function AiSearchComponent({ className, hideTitle = false }: AiSearchProps) {
-  const [results, setResults] = useState<AiSearchResults>(EMPTY_SEARCH_RESULTS);
+function PatientRecordSearchComponent({ className, hideTitle = false }: PatientRecordSearchProps) {
+  const [results, setResults] = useState<PatientRecordSearchResults>(EMPTY_SEARCH_RESULTS);
   const [searchInputValue, setSearchInputValue] = useState<string>("");
   const [searchedValue, setSearchedValue] = useState<string>();
-  const aiSearch = useAiSearch(searchedValue);
+  const patientRecordSearch = usePatientRecordSearch(searchedValue);
   const { trackInteraction } = useAnalytics();
 
   useEffect(() => {
-    const { data, isFetching, isError } = aiSearch;
+    const { data, isFetching, isError } = patientRecordSearch;
     if (!isFetching && !isError && data) {
       setResults(data);
     }
-  }, [aiSearch]);
+  }, [patientRecordSearch]);
 
   const handleSubmitForm = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setResults(EMPTY_SEARCH_RESULTS);
     setSearchedValue(searchInputValue);
-    trackInteraction("search", { value: "ai-search" });
+    trackInteraction("search", { value: "patient-record-search" });
   };
 
   const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
@@ -50,20 +50,21 @@ function AiSearchComponent({ className, hideTitle = false }: AiSearchProps) {
   };
 
   const clearSearch = () => {
-    trackInteraction("clear_search", { value: "ai-search" });
+    trackInteraction("clear_search", { value: "patient-record-search" });
     setSearchInputValue("");
     setSearchedValue("");
     setResults(EMPTY_SEARCH_RESULTS);
   };
 
   const showSearchResults = results.results.length > 0;
-  const showLoadingSpinner = !showSearchResults && (aiSearch.isLoading || aiSearch.isLoading);
+  const showLoadingSpinner =
+    !showSearchResults && (patientRecordSearch.isLoading || patientRecordSearch.isLoading);
 
   return (
     <div
       className={cx(
         className,
-        "ctw-ai-search ctw-scrollable-pass-through-height ctw-space-x-0 ctw-space-y-2 ctw-text-base"
+        "ctw-patient-record-search ctw-scrollable-pass-through-height ctw-space-x-0 ctw-space-y-2 ctw-text-base"
       )}
     >
       <RenderIf condition={!hideTitle}>
@@ -74,7 +75,7 @@ function AiSearchComponent({ className, hideTitle = false }: AiSearchProps) {
         </Title>
       </RenderIf>
 
-      <form className="ctw-ai-search-input ctw-relative" onSubmit={handleSubmitForm}>
+      <form className="ctw-patient-record-search-input ctw-relative" onSubmit={handleSubmitForm}>
         <div className="ctw-search-icon-wrapper">
           <SearchIcon className="ctw-search-icon" />
         </div>
@@ -83,7 +84,7 @@ function AiSearchComponent({ className, hideTitle = false }: AiSearchProps) {
           type="text"
           className="ctw-w-full ctw-rounded-md ctw-border ctw-border-solid ctw-border-icon-light ctw-bg-bg-white ctw-px-3 ctw-py-2 ctw-pl-10 ctw-pr-3 ctw-text-sm ctw-shadow-sm"
           placeholder="Search"
-          name="aiSearch"
+          name="patientRecordSearch"
           value={searchInputValue}
           onChange={handleChangeInput}
         />
@@ -98,11 +99,11 @@ function AiSearchComponent({ className, hideTitle = false }: AiSearchProps) {
         </div>
       </RenderIf>
 
-      <div className="ctw-ai-search-results-list ctw-ml-0">
+      <div className="ctw-patient-record-search-results-list ctw-ml-0">
         <RenderIf condition={showSearchResults}>
           {/* FeedbackProvider will allow all the feedback forms to get the id of the query */}
           <FeedbackProvider id={results.id}>
-            <div className="ctw-ai-search-results ctw-align-left ctw-ml-0 ctw-space-y-2">
+            <div className="ctw-patient-record-search-results ctw-align-left ctw-ml-0 ctw-space-y-2">
               <div>
                 <span className="ctw-font-medium">Answer: </span>
                 <span className="ctw-font-normal">
@@ -113,9 +114,9 @@ function AiSearchComponent({ className, hideTitle = false }: AiSearchProps) {
 
               {/* Search Results */}
               <h4 className="ctw-text-left ctw-text-content-light">Results:</h4>
-              {results.results.map((result: AiSearchResult, idx) => (
+              {results.results.map((result: PatientRecordSearchResult, idx) => (
                 // eslint-disable-next-line react/no-array-index-key
-                <AiSearchResultRow key={idx} document={result.document} />
+                <SearchResultRow key={idx} document={result.document} />
               ))}
             </div>
 
@@ -129,11 +130,11 @@ function AiSearchComponent({ className, hideTitle = false }: AiSearchProps) {
   );
 }
 
-export const AiSearch = withErrorBoundary(
-  (props: AiSearchProps) => (
-    <AnalyticsProvider componentName="AiSearch">
-      <AiSearchComponent {...props} />
+export const PatientRecordSearch = withErrorBoundary(
+  (props: PatientRecordSearchProps) => (
+    <AnalyticsProvider componentName="PatientRecordSearch">
+      <PatientRecordSearchComponent {...props} />
     </AnalyticsProvider>
   ),
-  "AiSearch"
+  "PatientRecordSearch"
 );

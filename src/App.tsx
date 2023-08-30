@@ -7,7 +7,7 @@ import { SecuredApp } from "@/SecuredApp";
 import "./App.css";
 
 import {
-  AiSearch,
+  PatientRecordSearch,
   CTWProvider,
   PatientAllergies,
   PatientConditions,
@@ -83,7 +83,7 @@ const locals = {
 };
 
 const components: DemoComponent[] = [
-  { name: "ai-search", render: () => <AiSearch />, title: "AI Search" },
+  { name: "ai-search", render: () => <PatientRecordSearch />, title: "AI Search" },
   { name: "allergies", render: () => <PatientAllergies />, title: "Patient Allergies" },
   { name: "conditions", render: () => <PatientConditions />, title: "Patient Conditions" },
   {
@@ -146,7 +146,7 @@ const components: DemoComponent[] = [
       return (
         <ZusAggregatedProfile
           title="ZAP"
-          includeAiSearch
+          includePatientRecordSearch
           conditionsOutsideProps={{
             hideRequestRecords: true,
           }}

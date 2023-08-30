@@ -1,10 +1,10 @@
-import type { AiSearchResponseRawDocument } from "@/services/ai-search/ai-search";
-import { FeedbackForm } from "@/components/content/ai-search/helpers/feedback-form";
+import type { PatientRecordSearchResponseRawDocument } from "@/services/patient-record-search/patient-record-search";
 import { useConditionDetailsDrawer } from "@/components/content/conditions/helpers/details";
+import { FeedbackForm } from "@/components/content/patient-record-search/helpers/feedback-form";
 import { ConditionModel } from "@/fhir/models";
 
 type ResultConditionProps = {
-  result: AiSearchResponseRawDocument;
+  result: PatientRecordSearchResponseRawDocument;
   resource: ConditionModel;
 };
 
@@ -13,7 +13,7 @@ export function ResultCondition({ result, resource }: ResultConditionProps) {
   const openDetails = useConditionDetailsDrawer({});
 
   return (
-    <div className="ctw-ai-search-result-condition ctw-text-left">
+    <div className="ctw-patient-record-search-result-condition ctw-text-left">
       <div className="ctw-flex ctw-flex-row ctw-items-end ctw-justify-between">
         <h3 className="ctw-mb-0">Condition: {resource.display}</h3>
         <FeedbackForm name={`${metadata.resource_type}/${metadata.resource_id}`} />

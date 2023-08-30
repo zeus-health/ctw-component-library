@@ -4,9 +4,9 @@ import { Tab } from "@headlessui/react";
 import cx from "classnames";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { ListBox } from "../list-box/list-box";
-import { AiSearch } from "@/components/content/ai-search/ai-search";
 import { PatientHistoryStatus } from "@/components/content/patient-history/patient-history-message-status";
 import { usePatientHistory } from "@/components/content/patient-history/use-patient-history";
+import { PatientRecordSearch } from "@/components/content/patient-record-search/patient-record-search";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { RenderIf } from "@/components/core/render-if";
@@ -17,8 +17,8 @@ export type TabGroupProps = {
   className?: string;
   content: TabGroupItem[];
   forceHorizontalTabs?: boolean;
-  includeAiSearch?: boolean;
-  aiSearchIsOpen?: boolean;
+  includePatientRecordSearch?: boolean;
+  patientRecordSearchIsOpen?: boolean;
   onChange?: (index: number) => void; // optional event
   topRightContent?: ReactNode;
 };
@@ -39,7 +39,7 @@ function TabGroupComponent({
   children,
   className,
   forceHorizontalTabs = false,
-  aiSearchIsOpen = false,
+  patientRecordSearchIsOpen = false,
   content,
   onChange,
   topRightContent,
@@ -132,7 +132,7 @@ function TabGroupComponent({
           )}
         >
           {/* Renders button for each tab using "display | display()" */}
-          <RenderIf condition={!aiSearchIsOpen}>
+          <RenderIf condition={!patientRecordSearchIsOpen}>
             {content.map(({ key, display }, index) => (
               <Tab
                 key={key}
@@ -160,13 +160,13 @@ function TabGroupComponent({
             ))}
           </RenderIf>
 
-          <RenderIf condition={aiSearchIsOpen}>
+          <RenderIf condition={patientRecordSearchIsOpen}>
             <h3 className="ctw-m-0 ctw-inline-block ctw-pb-0 ctw-pt-2 ctw-text-lg ctw-font-medium">
               Search Outside Records
             </h3>
           </RenderIf>
 
-          <RenderIf condition={!aiSearchIsOpen && tabOverflowCutoff < content.length}>
+          <RenderIf condition={!patientRecordSearchIsOpen && tabOverflowCutoff < content.length}>
             <ListBox
               ref={moreMenuRef}
               selectedIndex={selectedTabIndex - tabOverflowCutoff}
@@ -203,8 +203,8 @@ function TabGroupComponent({
         {children}
 
         {/* Renders body of each tab using "render()" */}
-        {aiSearchIsOpen ? (
-          <AiSearch
+        {patientRecordSearchIsOpen ? (
+          <PatientRecordSearch
             hideTitle
             className="ctw-mt-3 ctw-flex ctw-space-x-5 ctw-border-b ctw-border-divider-light"
           />

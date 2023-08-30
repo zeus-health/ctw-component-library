@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { FeedbackForm } from "@/components/content/ai-search/helpers/feedback-form";
 import { ObservationsColumns } from "@/components/content/observations/helpers/columns";
+import { FeedbackForm } from "@/components/content/patient-record-search/helpers/feedback-form";
 import { ResourceTable } from "@/components/content/resource/resource-table";
 import { ObservationModel } from "@/fhir/models";
-import { AiSearchResponseRawDocument } from "@/services/ai-search/ai-search";
+import { PatientRecordSearchResponseRawDocument } from "@/services/patient-record-search/patient-record-search";
 
 type ResultObservationProps = {
-  result: AiSearchResponseRawDocument;
+  result: PatientRecordSearchResponseRawDocument;
   resource: ObservationModel;
 };
 
@@ -15,7 +15,7 @@ export function ResultObservation({ result, resource }: ResultObservationProps) 
   const { metadata, page_content: content } = result;
 
   return (
-    <div className="ctw-ai-search-result-observation ctw-text-left">
+    <div className="ctw-patient-record-search-result-observation ctw-text-left">
       <div className="ctw-flex ctw-flex-row ctw-items-end ctw-justify-between">
         <h3 className="ctw-mb-0">Observation: {resource.display}</h3>
         <FeedbackForm name={`${metadata.resource_type}/${metadata.resource_id}`} />

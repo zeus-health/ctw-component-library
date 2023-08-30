@@ -61,7 +61,7 @@ export type ZusAggregatedProfileProps = {
   forceHorizontalTabs?: boolean;
   includePatientDemographicsForm?: boolean;
   title?: string;
-  includeAiSearch?: boolean;
+  includePatientRecordSearch?: boolean;
   hideTitle?: boolean;
   removeBranding?: boolean;
   removeRequestRecords?: boolean;
@@ -85,7 +85,7 @@ export type ZusAggregatedProfileSubComponentProps = Partial<{
 
 const ZusAggregatedProfileComponent = ({
   forceHorizontalTabs = false,
-  includeAiSearch = false,
+  includePatientRecordSearch = false,
   includePatientDemographicsForm,
   allergiesProps,
   careTeamProps,
@@ -107,11 +107,11 @@ const ZusAggregatedProfileComponent = ({
   removeRequestRecords = false,
 }: ZusAggregatedProfileProps) => {
   const { trackInteraction } = useAnalytics();
-  const [aiSearchIsOpen, setAiSearchIsOpen] = useState(false);
-  const toggleAiSearchIsOpen = () => {
-    setAiSearchIsOpen(!aiSearchIsOpen);
+  const [patientRecordSearchIsOpen, setPatientRecordSearchIsOpen] = useState(false);
+  const togglePatientRecordSearchIsOpen = () => {
+    setPatientRecordSearchIsOpen(!patientRecordSearchIsOpen);
     trackInteraction("toggle_ai_search", {
-      value: aiSearchIsOpen ? "close" : "open",
+      value: patientRecordSearchIsOpen ? "close" : "open",
     });
   };
 
@@ -162,11 +162,11 @@ const ZusAggregatedProfileComponent = ({
         <TabGroup
           content={tabbedContent}
           forceHorizontalTabs={forceHorizontalTabs}
-          aiSearchIsOpen={aiSearchIsOpen}
+          patientRecordSearchIsOpen={patientRecordSearchIsOpen}
           topRightContent={
             <div className="ctw-tab !ctw-ml-1.5">
               {/* Hide Request Records button if opted-out or AI Search is open */}
-              <RenderIf condition={!removeRequestRecords && !aiSearchIsOpen}>
+              <RenderIf condition={!removeRequestRecords && !patientRecordSearchIsOpen}>
                 <RequestRecordsButton
                   className="ctw-mr-1.5"
                   includePatientDemographicsForm={includePatientDemographicsForm}
@@ -174,16 +174,16 @@ const ZusAggregatedProfileComponent = ({
               </RenderIf>
 
               {/* If AI Search is included, show "search" and "close search" buttons */}
-              <RenderIf condition={includeAiSearch}>
+              <RenderIf condition={includePatientRecordSearch}>
                 <button
                   type="button"
                   className="ctw-btn-clear ctw-link ctw-mr-1 ctw-flex ctw-items-end ctw-whitespace-nowrap ctw-text-content-lighter"
-                  onClick={toggleAiSearchIsOpen}
+                  onClick={togglePatientRecordSearchIsOpen}
                 >
-                  <RenderIf condition={aiSearchIsOpen}>
+                  <RenderIf condition={patientRecordSearchIsOpen}>
                     <span className="ctw-mr-1 ctw-text-sm">Close Search</span>
                   </RenderIf>
-                  <RenderIfElse condition={aiSearchIsOpen}>
+                  <RenderIfElse condition={patientRecordSearchIsOpen}>
                     {/* Close Icon */}
                     <span>
                       <XIcon className="ctw-h-4 ctw-w-4" />

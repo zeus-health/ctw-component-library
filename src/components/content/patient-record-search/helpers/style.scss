@@ -1,22 +1,22 @@
-.ctw-ai-search {
+.ctw-patient-record-search {
   @apply ctw-flex ctw-items-center;
-  .ctw-ai-search-results {
+  .ctw-patient-record-search-results {
     @apply ctw-max-w-3xl ctw-px-1.5 ctw-py-4 ctw-text-center;
     width: 650px;
     max-width: 650px;
   }
 
-  .ctw-ai-search-input {
+  .ctw-patient-record-search-input {
     @apply ctw-w-full;
     max-width: 650px;
   }
 
-  .ctw-ai-search-results-list {
+  .ctw-patient-record-search-results-list {
     @apply ctw-m-0;
     min-height: 600px;
   }
 
-  .ctw-ai-search-result-observation {
+  .ctw-patient-record-search-result-observation {
     .ctw-table-container {
       @apply ctw-border-b-0 ctw-border-t-0;
     }

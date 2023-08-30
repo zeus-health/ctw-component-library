@@ -1,6 +1,6 @@
 import { ThumbDownIcon, ThumbUpIcon } from "@heroicons/react/outline";
 import { ChangeEvent, useEffect, useState } from "react";
-import { useSubmitFeedback } from "@/components/content/ai-search/helpers/use-submit-feedback";
+import { useSubmitFeedback } from "@/components/content/patient-record-search/helpers/use-submit-feedback";
 import { Loading } from "@/components/core/loading";
 
 export const FeedbackForm = ({ name }: { name: string }) => {
