@@ -9,6 +9,7 @@ import { ErrorAlert } from "@/components/core/alert";
 import { Title } from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Loading } from "@/components/core/loading";
+import { DEFAULT_PAGE_SIZE, PaginationList } from "@/components/core/pagination/pagination-list";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { RenderIf } from "@/components/core/render-if";
@@ -27,6 +28,7 @@ export type PatientRecordSearchProps = {
 
 function PatientRecordSearchComponent({ className, hideTitle = false }: PatientRecordSearchProps) {
   const [results, setResults] = useState<PatientRecordSearchResults>(EMPTY_SEARCH_RESULTS);
+  const [count, setCount] = useState(0);
   const [searchInputValue, setSearchInputValue] = useState("");
   const [searchWasQuestion, setSearchWasQuestion] = useState(false);
   const [searchedValue, setSearchedValue] = useState<string>();
@@ -46,6 +48,7 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
     setSearchWasQuestion(query[query.length - 1] === "?");
     setSearchedValue(query);
     setResults(EMPTY_SEARCH_RESULTS);
+    setCount(DEFAULT_PAGE_SIZE);
     trackInteraction("search", { value: "patient-record-search" });
   };
 
@@ -125,15 +128,14 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
 
               {/* Search Results */}
               <h4 className="ctw-text-left ctw-text-content-light">Results:</h4>
-              {results.results.map((result: PatientRecordSearchResult, idx) => (
+              {results.results.slice(0, count).map((result: PatientRecordSearchResult, idx) => (
                 // eslint-disable-next-line react/no-array-index-key
                 <SearchResultRow key={idx} document={result.document} />
               ))}
-
-              <div>
-                <span className="ctw-font-medium">Found {results.results.length} Results</span>
-              </div>
             </FeedbackProvider>
+            {!patientRecordSearch.isLoading && (
+              <PaginationList total={results.results.length} count={count} changeCount={setCount} />
+            )}
           </RenderIf>
         </div>
       </div>
