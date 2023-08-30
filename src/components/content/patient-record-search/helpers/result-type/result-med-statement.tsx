@@ -20,7 +20,7 @@ export function ResultMedStatement({ result, resource }: ResultMedStatementProps
       </div>
       <button
         type="button"
-        className="ctw-btn-clear ctw-btn ctw-font-medium"
+        className="ctw-btn-clear ctw-btn ctw-font-medium hover:ctw-underline"
         onClick={() => openDetails(resource)}
       >
         <p className="ctw-line-clamp-3 ctw-overflow-ellipsis ctw-text-left">{content}</p>
