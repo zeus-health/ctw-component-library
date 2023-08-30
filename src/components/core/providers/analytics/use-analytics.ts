@@ -8,10 +8,14 @@ export type TrackedEvent =
   | "close_drawer"
   | "close_ccda_modal" // todo: add srcComponent
   | "open_ccda_modal"
-  | "change_view"; // todo: add metadata for view-button.tsx
+  | "change_view" // todo: add metadata for view-button.tsx
+  | "expand_item"
+  | "collapse_item";
+
+export type TrackedComponent = "resource-details-drawer" | "modal-ccda" | "history-entry";
 
 export type TrackableProperty = {
-  componentHierarchy: string[];
+  componentHierarchy: TrackedComponent[];
   patientID: string;
   resourceType: string;
   target: unknown;
@@ -22,7 +26,7 @@ export type TrackingMetadata = Partial<TrackableProperty>;
 
 // Helper to produce a copy of the given metadata or create a new one, with the given component added to the hierarchy.
 export function newTrackingDataForComponent(
-  componentName: string,
+  componentName: TrackedComponent,
   prevMetadata: TrackingMetadata = {}
 ): TrackingMetadata {
   const srcComponents = prevMetadata.componentHierarchy || [];
