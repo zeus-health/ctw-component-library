@@ -5,6 +5,7 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { SearchResultRow } from "./helpers/search-result-row";
 import { FeedbackForm } from "@/components/content/patient-record-search/helpers/feedback-form";
 import { FeedbackProvider } from "@/components/content/patient-record-search/helpers/feedback-provider";
+import { ErrorAlert } from "@/components/core/alert";
 import { Title } from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Loading } from "@/components/core/loading";
@@ -26,7 +27,8 @@ export type PatientRecordSearchProps = {
 
 function PatientRecordSearchComponent({ className, hideTitle = false }: PatientRecordSearchProps) {
   const [results, setResults] = useState<PatientRecordSearchResults>(EMPTY_SEARCH_RESULTS);
-  const [searchInputValue, setSearchInputValue] = useState<string>("");
+  const [searchInputValue, setSearchInputValue] = useState("");
+  const [searchWasQuestion, setSearchWasQuestion] = useState(false);
   const [searchedValue, setSearchedValue] = useState<string>();
   const patientRecordSearch = usePatientRecordSearch(searchedValue);
   const { trackInteraction } = useAnalytics();
@@ -40,8 +42,10 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
 
   const handleSubmitForm = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const query = searchInputValue.trim();
+    setSearchWasQuestion(query[query.length - 1] === "?");
+    setSearchedValue(query);
     setResults(EMPTY_SEARCH_RESULTS);
-    setSearchedValue(searchInputValue);
     trackInteraction("search", { value: "patient-record-search" });
   };
 
@@ -68,7 +72,7 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
       )}
     >
       <RenderIf condition={!hideTitle}>
-        <Title className="ctw-border-b-2 ctw-border-solid ctw-border-divider-light">
+        <Title className="ctw-border-0 ctw-border-b-0 ctw-border-solid ctw-border-divider-light">
           <h3 className="ctw-m-0 ctw-inline-block ctw-p-0 ctw-pb-3 ctw-text-lg ctw-font-medium ctw-capitalize">
             search records
           </h3>
@@ -99,18 +103,25 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
         </div>
       </RenderIf>
 
-      <div className="ctw-patient-record-search-results-list ctw-ml-0">
-        <RenderIf condition={showSearchResults}>
-          {/* FeedbackProvider will allow all the feedback forms to get the id of the query */}
-          <FeedbackProvider id={results.id}>
-            <div className="ctw-patient-record-search-results ctw-align-left ctw-ml-0 ctw-space-y-2">
-              <div>
-                <span className="ctw-font-medium">Answer: </span>
+      <div className="ctw-patient-record-search-results-list ctw-scrollable-pass-through-height">
+        <div className="ctw-patient-record-search-results ctw-align-left ctw-ml-0 ctw-space-y-2">
+          <RenderIf condition={patientRecordSearch.isError}>
+            <div className="ctw-w-full">
+              <ErrorAlert header="Sorry">
+                Unfortunately, there was a problem fetching patient record search results.
+              </ErrorAlert>
+            </div>
+          </RenderIf>
+
+          <RenderIf condition={showSearchResults}>
+            {/* FeedbackProvider will allow all the feedback forms to get the id of the query */}
+            <FeedbackProvider id={results.id}>
+              <RenderIf condition={searchWasQuestion}>
                 <span className="ctw-font-normal">
                   {results.response}
                   <FeedbackForm name="query-response" />
                 </span>
-              </div>
+              </RenderIf>
 
               {/* Search Results */}
               <h4 className="ctw-text-left ctw-text-content-light">Results:</h4>
@@ -118,13 +129,13 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
                 // eslint-disable-next-line react/no-array-index-key
                 <SearchResultRow key={idx} document={result.document} />
               ))}
-            </div>
 
-            <div>
-              <span className="ctw-font-medium">Found {results.results.length} Results</span>
-            </div>
-          </FeedbackProvider>
-        </RenderIf>
+              <div>
+                <span className="ctw-font-medium">Found {results.results.length} Results</span>
+              </div>
+            </FeedbackProvider>
+          </RenderIf>
+        </div>
       </div>
     </div>
   );

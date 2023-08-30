@@ -83,7 +83,6 @@ const locals = {
 };
 
 const components: DemoComponent[] = [
-  { name: "ai-search", render: () => <PatientRecordSearch />, title: "AI Search" },
   { name: "allergies", render: () => <PatientAllergies />, title: "Patient Allergies" },
   { name: "conditions", render: () => <PatientConditions />, title: "Patient Conditions" },
   {
@@ -127,6 +126,7 @@ const components: DemoComponent[] = [
     title: "Patient History Table",
   },
   { name: "patient-search", render: () => <PatientSearch />, title: "Patient Search" },
+  { name: "patient-record-search", render: () => <PatientRecordSearch />, title: "Search Records" },
   { name: "timeline", render: () => <PatientTimeline />, title: "Patient Timeline" },
   { name: "encounters", render: () => <PatientEncounters />, title: "Patient Encounters" },
   {
