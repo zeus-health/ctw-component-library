@@ -1,5 +1,13 @@
 # ctw-component-library
 
+## 1.60.4
+
+### Patch Changes
+
+- e1dd6592: Display notes more securely and scroll upon overflow in a note.
+- 51d268af: Expose use-ctw hook.
+- 069f5c3b: Increase security for displaying CCDA docs.
+
 ## 1.60.3
 
 ### Patch Changes
