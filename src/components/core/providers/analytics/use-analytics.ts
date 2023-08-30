@@ -16,6 +16,8 @@ export type TrackedComponent =
   | "resource-details-drawer"
   | "modal-ccda"
   | "history-entry"
+  | "history"
+  | "detail-summary"
   | "drawer";
 
 export type TrackableProperty = {

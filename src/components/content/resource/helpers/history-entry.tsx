@@ -38,6 +38,7 @@ export const HistoryEntry = ({
   const [isDetailShown, setIsDetailShown] = useState(false);
   const openCCDAModal = useCCDAModal();
   const { trackInteraction } = useAnalytics();
+  const newTrackingMetadata = newTrackingDataForComponent("history-entry", trackingMetadata);
 
   return (
     <div className="ctw-space-y-1">
@@ -48,6 +49,7 @@ export const HistoryEntry = ({
         isDetailShown={isDetailShown}
         setIsDetailShown={setIsDetailShown}
         hasDocument={!!binaryId}
+        trackingMetadata={newTrackingMetadata}
       />
       {isDetailShown && (
         <DetailsCard
@@ -57,10 +59,7 @@ export const HistoryEntry = ({
             binaryId && (
               <DocumentButton
                 onClick={() => {
-                  trackInteraction(
-                    "open_ccda_modal",
-                    newTrackingDataForComponent("history-entry", trackingMetadata)
-                  );
+                  trackInteraction("open_ccda_modal", newTrackingMetadata);
                   void openCCDAModal(binaryId, resourceTypeTitle);
                 }}
                 text="Source Document"
@@ -100,7 +99,7 @@ const DetailSummary = ({
         setIsDetailShown(!isDetailShown);
         trackInteraction(
           isDetailShown ? "collapse_item" : "expand_item",
-          newTrackingDataForComponent("history-entry", trackingMetadata)
+          newTrackingDataForComponent("detail-summary", trackingMetadata)
         );
       }}
       className="ctw-btn-clean"
