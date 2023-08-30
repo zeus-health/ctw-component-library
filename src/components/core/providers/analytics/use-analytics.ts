@@ -3,11 +3,33 @@ import { AnalyticsContext } from "./context";
 import { usePatient } from "@/components/core/providers/patient-provider";
 import { useTelemetry } from "@/components/core/providers/telemetry/use-telemetry";
 
-export type TrackedAction = `view_source_document` | "close_drawer" | "close_ccda_modal";
+export type TrackedEvent =
+  | "view_source_document"
+  | "close_drawer"
+  | "close_ccda_modal" // todo: add srcComponent
+  | "change_view"; // todo: add metadata for view-button.tsx
 
-export type TrackedProperties = "srcComponent" | "patientID" | "resourceType" | "target";
+export type TrackableProperty = {
+  componentHierarchy: string[];
+  patientID: string;
+  resourceType: string;
+  target: unknown;
+  value: unknown;
+};
 
-export type TrackingMetadata = Partial<Record<TrackedProperties, unknown>>;
+export type TrackingMetadata = Partial<TrackableProperty>;
+
+// Helper to produce a copy of the given metadata or create a new one, with the given component added to the hierarchy.
+export function newTrackingDataForComponent(
+  componentName: string,
+  prevMetadata: TrackingMetadata = {}
+): TrackingMetadata {
+  const srcComponents = prevMetadata.componentHierarchy || [];
+  return {
+    ...prevMetadata,
+    componentHierarchy: [...srcComponents, componentName],
+  };
+}
 
 export function useAnalytics() {
   const analytics = useContext(AnalyticsContext);
@@ -18,7 +40,7 @@ export function useAnalytics() {
     () => ({
       // Helper to include patient UPID and optionally also the component name
       // with metadata when tracking interactions
-      trackInteraction(action: TrackedAction, metadata: TrackingMetadata = {}) {
+      trackInteraction(action: TrackedEvent, metadata: TrackingMetadata = {}) {
         const eventMetadata: Record<string, unknown> = { ...metadata };
 
         if (analytics.componentName) {
