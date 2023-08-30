@@ -146,24 +146,7 @@ const components: DemoComponent[] = [
       return (
         <ZusAggregatedProfile
           title="ZAP"
-          conditionsOutsideProps={{
-            hideRequestRecords: true,
-          }}
-          conditionsAllProps={{ onlyAllowAddOutsideConditions: true }}
-          includePatientDemographicsForm={false}
-        />
-      );
-    },
-  },
-  {
-    name: "zap-ai-search",
-    render: () => {
-      return (
-        <ZusAggregatedProfile
-          hideTitle
           includeAiSearch
-          removeBranding
-          title="ZAP"
           conditionsOutsideProps={{
             hideRequestRecords: true,
           }}
