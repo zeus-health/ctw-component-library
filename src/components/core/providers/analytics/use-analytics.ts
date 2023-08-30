@@ -12,7 +12,11 @@ export type TrackedEvent =
   | "expand_item"
   | "collapse_item";
 
-export type TrackedComponent = "resource-details-drawer" | "modal-ccda" | "history-entry";
+export type TrackedComponent =
+  | "resource-details-drawer"
+  | "modal-ccda"
+  | "history-entry"
+  | "drawer";
 
 export type TrackableProperty = {
   componentHierarchy: TrackedComponent[];
