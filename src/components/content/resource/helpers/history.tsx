@@ -12,7 +12,7 @@ export type HistoryProps = {
   entries: HistoryEntries;
   limit?: number;
   resourceTypeTitle: string;
-  trackingMetadata: TrackingMetadata;
+  trackingMetadata?: TrackingMetadata;
 };
 
 export const History = ({ entries, limit, resourceTypeTitle, trackingMetadata }: HistoryProps) => {
