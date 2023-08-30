@@ -112,7 +112,7 @@ const ZusAggregatedProfileComponent = ({
   const [zapTitle, setZapTitle] = useState(title);
   const togglePatientRecordSearchIsOpen = () => {
     setPatientRecordSearchIsOpen(!patientRecordSearchIsOpen);
-    setZapTitle(patientRecordSearchIsOpen ? title : "Search Patient Records");
+    setZapTitle(patientRecordSearchIsOpen ? title : "Search");
     trackInteraction("toggle_ai_search", {
       value: patientRecordSearchIsOpen ? "close" : "open",
     });
