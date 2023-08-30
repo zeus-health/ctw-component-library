@@ -6,7 +6,11 @@ import { useState } from "react";
 import { DetailEntry, DetailsCard } from "./details-card";
 import { DocumentButton } from "../../CCDA/document-button";
 import { useCCDAModal } from "../../CCDA/modal-ccda";
-import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
+import {
+  newTrackingDataForComponent,
+  TrackingMetadata,
+  useAnalytics,
+} from "@/components/core/providers/analytics/use-analytics";
 
 export type HistoryEntryProps = {
   binaryId?: string;
@@ -19,7 +23,7 @@ export type HistoryEntryProps = {
   versionId?: string;
 };
 
-type Props = HistoryEntryProps & { resourceTypeTitle: string };
+type Props = HistoryEntryProps & { resourceTypeTitle: string; trackingMetadata?: TrackingMetadata };
 
 export const HistoryEntry = ({
   binaryId,
@@ -29,9 +33,11 @@ export const HistoryEntry = ({
   subtitle,
   title,
   resourceTypeTitle,
+  trackingMetadata,
 }: Props) => {
   const [isDetailShown, setIsDetailShown] = useState(false);
   const openCCDAModal = useCCDAModal();
+  const { trackInteraction } = useAnalytics();
 
   return (
     <div className="ctw-space-y-1">
@@ -50,7 +56,13 @@ export const HistoryEntry = ({
           documentButton={
             binaryId && (
               <DocumentButton
-                onClick={() => openCCDAModal(binaryId, resourceTypeTitle)}
+                onClick={() => {
+                  trackInteraction(
+                    "open_ccda_modal",
+                    newTrackingDataForComponent("history-entry", trackingMetadata)
+                  );
+                  void openCCDAModal(binaryId, resourceTypeTitle);
+                }}
                 text="Source Document"
               />
             )
@@ -68,6 +80,7 @@ const DetailSummary = ({
   isDetailShown,
   hasDocument = false,
   setIsDetailShown,
+  trackingMetadata,
 }: {
   date?: string;
   title?: string;
@@ -75,6 +88,7 @@ const DetailSummary = ({
   isDetailShown: boolean;
   hasDocument?: boolean;
   setIsDetailShown: React.Dispatch<React.SetStateAction<boolean>>;
+  trackingMetadata?: TrackingMetadata;
 }) => {
   const { trackInteraction } = useAnalytics();
 
@@ -84,9 +98,10 @@ const DetailSummary = ({
       aria-label="details"
       onClick={() => {
         setIsDetailShown(!isDetailShown);
-        trackInteraction("expand_detail", {
-          direction: isDetailShown ? "collapse" : "expand",
-        });
+        trackInteraction(
+          isDetailShown ? "collapse_item" : "expand_item",
+          newTrackingDataForComponent("history-entry", trackingMetadata)
+        );
       }}
       className="ctw-btn-clean"
     >

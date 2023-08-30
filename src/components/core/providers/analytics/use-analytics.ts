@@ -7,6 +7,7 @@ export type TrackedEvent =
   | "view_source_document"
   | "close_drawer"
   | "close_ccda_modal" // todo: add srcComponent
+  | "open_ccda_modal"
   | "change_view"; // todo: add metadata for view-button.tsx
 
 export type TrackableProperty = {
