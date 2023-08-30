@@ -2,7 +2,7 @@ import { faClipboardCheck } from "@fortawesome/free-solid-svg-icons";
 import { FilterChangeEvent, FilterItem } from "@/components/core/filter-bar/filter-bar-types";
 import { EncounterModel } from "@/fhir/models/encounter";
 import { SYSTEM_LOINC } from "@/fhir/system-urls";
-import { compact } from "@/utils/nodash";
+import { compact, mergeWith } from "@/utils/nodash";
 
 export const noteTypeValues = [
   {
@@ -62,6 +62,66 @@ export function encounterFilters(encounters: EncounterModel[] | undefined): Filt
   }
 
   return filters;
+}
+
+// Dedupes encounters by patient, periodStart, class, type, and location.
+// Merges their properties to maximize information.
+export function dedupeAndMergeEncounters(encounters: EncounterModel[]): EncounterModel[] {
+  const dedupedEncounters: EncounterModel[] = [];
+
+  // Group up the encounters that need to be merged
+  const dupeGroups = new Map<string, EncounterModel[]>();
+  encounters.forEach((encounter) => {
+    const key: string = JSON.stringify({
+      upid: encounter.patientUPID,
+      periodStart: encounter.periodStart || "",
+      class: encounter.resource.class,
+      type: encounter.resource.type,
+      location: encounter.location || "",
+    });
+    const val = dupeGroups.get(key);
+
+    if (
+      !encounter.patientUPID ||
+      !encounter.periodStart ||
+      !encounter.class ||
+      !encounter.resource.type ||
+      !encounter.location
+    ) {
+      // Only group it if all necessary values are non-null.
+      dupeGroups.set(key, [encounter]);
+    } else if (val) {
+      val.push(encounter);
+    } else {
+      dupeGroups.set(key, [encounter]);
+    }
+  });
+
+  // Merge the encounters in each group
+  dupeGroups.forEach((encs) => {
+    // If there's only one encounter in the group, no need to merge
+    if (encs.length === 1) {
+      dedupedEncounters.push(encs[0]);
+      return;
+    }
+    // Sort them to prioritize the most recently updated encounter
+    encs.sort((a, b) => {
+      const aVal = a.lastUpdated ? new Date(a.lastUpdated).valueOf() : 0;
+      const bVal = b.lastUpdated ? new Date(b.lastUpdated).valueOf() : 0;
+      return aVal - bVal;
+    });
+    const mergedEncounter: EncounterModel = encs[0];
+
+    if (encs.length > 1) {
+      const sortedEncResources = encs.map((enc) => enc.resource);
+      // Merge the encounters
+      const mergedResource = sortedEncResources.reduce((merged, curr) => mergeWith(merged, curr));
+      mergedEncounter.resource = mergedResource;
+    }
+    dedupedEncounters.push(mergedEncounter);
+  });
+
+  return dedupedEncounters;
 }
 
 export function noteTypePredicate(values: string[], item: object): boolean {
