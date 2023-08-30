@@ -70,7 +70,7 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
       <RenderIf condition={!hideTitle}>
         <Title className="ctw-border-b-2 ctw-border-solid ctw-border-divider-light">
           <h3 className="ctw-m-0 ctw-inline-block ctw-p-0 ctw-pb-3 ctw-text-lg ctw-font-medium ctw-capitalize">
-            Search outside records
+            search records
           </h3>
         </Title>
       </RenderIf>
