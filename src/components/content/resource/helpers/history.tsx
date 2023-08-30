@@ -1,5 +1,9 @@
 import { useState } from "react";
 import { HistoryEntry, HistoryEntryProps } from "./history-entry";
+import {
+  newTrackingDataForComponent,
+  TrackingMetadata,
+} from "@/components/core/providers/analytics/use-analytics";
 import { orderBy } from "@/utils/nodash";
 
 export type HistoryEntries = HistoryEntryProps[];
@@ -8,9 +12,10 @@ export type HistoryProps = {
   entries: HistoryEntries;
   limit?: number;
   resourceTypeTitle: string;
+  trackingMetadata: TrackingMetadata;
 };
 
-export const History = ({ entries, limit, resourceTypeTitle }: HistoryProps) => {
+export const History = ({ entries, limit, resourceTypeTitle, trackingMetadata }: HistoryProps) => {
   const [showAll, setShowAll] = useState(!limit || entries.length <= limit);
 
   // Sort entries by:
@@ -51,6 +56,7 @@ export const History = ({ entries, limit, resourceTypeTitle }: HistoryProps) => 
             hideEmpty={entry.hideEmpty}
             binaryId={entry.binaryId}
             resourceTypeTitle={resourceTypeTitle}
+            trackingMetadata={newTrackingDataForComponent("history", trackingMetadata)}
           />
         </div>
       ))}
