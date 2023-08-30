@@ -156,6 +156,7 @@ const ZusAggregatedProfileComponent = ({
               {zapTitle}
               {!removeBranding && (
                 <span className="ctw-text-sm ctw-font-light ctw-italic ctw-text-content-light">
+                  {" "}
                   Powered by <img src={ZusSVG} alt="Zus" className="-ctw-mb-1.5" />
                 </span>
               )}
@@ -238,12 +239,15 @@ const ZusAggregatedProfileComponent = ({
  * "care-team",
  * "conditions",
  * "conditions-outside",
+ * "conditions-all",
  * "diagnostic-reports",
  * "documents",
+ * "encounters",
  * "immunizations",
  * "medications",
  * "medications-outside",
- * "timelines".
+ * "medications-all",
+ * "timeline"
  */
 export const ZusAggregatedProfile = withErrorBoundary(
   ZusAggregatedProfileComponent,
