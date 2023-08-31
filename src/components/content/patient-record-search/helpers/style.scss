@@ -12,8 +12,8 @@
   }
 
   .ctw-patient-record-search-results-list {
-    @apply ctw-m-0 ctw-ml-0;
-    min-height: 600px;
+    @apply ctw-m-0 ctw-ml-0 ctw-space-y-2.5;
+    min-height: 400px;
   }
 
   .ctw-patient-record-search-result {
@@ -36,20 +36,24 @@
     }
   }
 
+  .ctw-search-result-heading {
+    @apply ctw-mb-0 ctw-text-lg ctw-font-bold;
+  }
+
   .ctw-patient-record-search-details {
     @apply ctw-mb-0 ctw-w-full ctw-hyphens-auto ctw-break-words ctw-text-sm ctw-text-content-black;
 
-    > {
-      @apply ctw-text-sm;
+    [data-label] {
+      @apply ctw-text-sm ctw-text-content-black;
       // Search details can utilize data-label to display a label for the data. If they are empty divs or have the
       // "ctw-without-label" class, they will not display that label.
-      :not([data-label=""])::before {
-        @apply ctw-mr-1 ctw-font-medium;
+      &:not([data-label=""])::before {
+        @apply ctw-mr-1;
         content: attr(data-label) ": ";
         display: inline-block;
         float: left;
       }
-      > :empty {
+      &:empty {
         display: none;
       }
     }
