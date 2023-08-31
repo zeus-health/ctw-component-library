@@ -15,7 +15,7 @@ export const patientConditionsColumns: TableColumn<ConditionModel>[] = [
     ),
   },
   {
-    title: "Status",
+    title: "Last Updated",
     minWidth: 128,
     render: (condition) => (
       <div>

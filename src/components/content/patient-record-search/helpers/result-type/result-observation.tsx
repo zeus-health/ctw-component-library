@@ -15,7 +15,9 @@ export function ResultObservation({ result, resource }: ResultObservationProps) 
   return (
     <div className="ctw-patient-record-search-result-observation ctw-text-left">
       <div className="ctw-flex ctw-flex-row ctw-items-end ctw-justify-between">
-        <h3 className="ctw-mb-0">Observation: {resource.display}</h3>
+        <h3 className="ctw-mb-0">
+          Observation: <span className="ctw-capitalize">{resource.display}</span>
+        </h3>
         <FeedbackForm name={`${metadata.resource_type}/${metadata.resource_id}`} />
       </div>
 

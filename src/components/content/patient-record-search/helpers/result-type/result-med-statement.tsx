@@ -18,7 +18,7 @@ export function ResultMedStatement({ result, resource }: ResultMedStatementProps
     <div className="ctw-patient-record-search-result-med-statement ctw-text-left">
       <div className="ctw-flex ctw-flex-row ctw-items-end ctw-justify-between">
         <h3 className="ctw-mb-0">
-          Medication: {resource.display} {resource.dosage}
+          Medication: <span className="ctw-capitalize">{resource.display}</span> {resource.dosage}
         </h3>
         <FeedbackForm name={`${metadata.resource_type}/${metadata.resource_id}`} />
       </div>

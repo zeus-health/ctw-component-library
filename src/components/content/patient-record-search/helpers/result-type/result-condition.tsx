@@ -20,7 +20,8 @@ export function ResultCondition({ result, resource }: ResultConditionProps) {
     <div className="ctw-patient-record-search-result-condition ctw-text-left">
       <div className="ctw-flex ctw-flex-row ctw-items-end ctw-justify-between">
         <h3 className="ctw-mb-0">
-          Condition: {resource.display} {resource.ccsChapter}
+          Condition: <span className="ctw-capitalize">{resource.display}</span>{" "}
+          {resource.ccsChapter}
         </h3>
         <FeedbackForm name={`${metadata.resource_type}/${metadata.resource_id}`} />
       </div>
@@ -35,7 +36,7 @@ export function ResultCondition({ result, resource }: ResultConditionProps) {
           <div data-label={onsetLabel}>{resource.onset}</div>
         </RenderIf>
         <RenderIf condition={!!notes}>
-          <div data-label="Notes">
+          <div data-label="Last Updated">
             <div className="ctw-line-clamp-2 ctw-overflow-hidden">{notes}</div>
           </div>
         </RenderIf>
