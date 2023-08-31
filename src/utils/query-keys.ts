@@ -1,3 +1,4 @@
+export const QUERY_KEY_AI_SEARCH = "ai_search";
 export const QUERY_KEY_AUTH_TOKEN = "auth_token";
 export const QUERY_KEY_BASIC = "basic";
 export const QUERY_KEY_BINARY = "binary";

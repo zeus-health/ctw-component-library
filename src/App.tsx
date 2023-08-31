@@ -7,6 +7,7 @@ import { SecuredApp } from "@/SecuredApp";
 import "./App.css";
 
 import {
+  PatientRecordSearch,
   CTWProvider,
   PatientAllergies,
   PatientConditions,
@@ -62,9 +63,8 @@ const theme: ThemeProviderProps["theme"] = {
     },
   },
   iframe: {
-    fontFamily: "Roboto",
+    fontFamily: "Avenir",
     fontSize: "16px",
-    lineHeight: "1.5",
   },
 };
 
@@ -126,6 +126,7 @@ const components: DemoComponent[] = [
     title: "Patient History Table",
   },
   { name: "patient-search", render: () => <PatientSearch />, title: "Patient Search" },
+  { name: "patient-record-search", render: () => <PatientRecordSearch />, title: "Search Records" },
   { name: "timeline", render: () => <PatientTimeline />, title: "Patient Timeline" },
   { name: "encounters", render: () => <PatientEncounters />, title: "Patient Encounters" },
   {
@@ -145,6 +146,7 @@ const components: DemoComponent[] = [
       return (
         <ZusAggregatedProfile
           title="ZAP"
+          includePatientRecordSearch
           conditionsOutsideProps={{
             hideRequestRecords: true,
           }}
@@ -211,6 +213,7 @@ function App() {
   if (VITE_AUTH0_DOMAIN && VITE_AUTH0_CLIENT_ID && VITE_AUTH0_AUDIENCE) {
     return (
       <Auth0Provider
+        cacheLocation="localstorage"
         domain={VITE_AUTH0_DOMAIN}
         clientId={VITE_AUTH0_CLIENT_ID}
         audience={VITE_AUTH0_AUDIENCE}

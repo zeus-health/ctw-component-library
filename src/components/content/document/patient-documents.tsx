@@ -122,7 +122,7 @@ const RowActions = ({ record, onSuccess, onAddToRecord }: RowActionsProps2) => {
 
 export const PatientDocuments = withErrorBoundary(PatientDocumentsComponent, "PatientDocuments");
 
-const documentData = (document: DocumentModel) => [
+export const documentData = (document: DocumentModel) => [
   { label: "Date Retrieved", value: document.dateCreated },
   { label: "Author", value: document.custodian },
   {

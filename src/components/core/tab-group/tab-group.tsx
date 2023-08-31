@@ -8,6 +8,7 @@ import { PatientHistoryStatus } from "@/components/content/patient-history/patie
 import { usePatientHistory } from "@/components/content/patient-history/use-patient-history";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
+import { RenderIf } from "@/components/core/render-if";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 
 export type TabGroupProps = {
@@ -15,6 +16,7 @@ export type TabGroupProps = {
   className?: string;
   content: TabGroupItem[];
   forceHorizontalTabs?: boolean;
+  patientRecordSearchIsOpen?: boolean;
   onChange?: (index: number) => void; // optional event
   topRightContent?: ReactNode;
 };
@@ -39,7 +41,7 @@ function TabGroupComponent({
   onChange,
   topRightContent,
 }: TabGroupProps) {
-  // Ugly cheat to account for margins between tabs (algins with ctw-space-x-5 on Tab.List)
+  // Ugly cheat to account for margins between tabs (aligns with ctw-space-x-5 on Tab.List)
   const TAB_SPACING = 20;
   // State used for responsive tab dropdown menu.
   const topRightContentRef = useRef<HTMLDivElement>(null);
@@ -57,7 +59,7 @@ function TabGroupComponent({
 
   // Calculate how many tabs can fit in the container,
   useEffect(() => {
-    // Force everything into the more menu if we are in a small breakpoint
+    // Force everything into the more menu if we are in a small breakpoint,
     // and we are not forcing horizontal tabs.
     if (breakpoints.sm && !forceHorizontalTabs) {
       setTabOverflowCutoff(0);
@@ -118,6 +120,7 @@ function TabGroupComponent({
         status={patientHistoryDetails.lastStatus}
         date={patientHistoryDetails.lastRetrievedAt}
       />
+
       <Tab.Group selectedIndex={selectedTabIndex} onChange={handleOnChange}>
         <Tab.List
           className={cx(
@@ -152,7 +155,7 @@ function TabGroupComponent({
             </Tab>
           ))}
 
-          {tabOverflowCutoff < content.length && (
+          <RenderIf condition={tabOverflowCutoff < content.length}>
             <ListBox
               ref={moreMenuRef}
               selectedIndex={selectedTabIndex - tabOverflowCutoff}
@@ -173,16 +176,16 @@ function TabGroupComponent({
             >
               {tabOverflowCutoff !== 0 ? <span>More</span> : undefined}
             </ListBox>
-          )}
+          </RenderIf>
 
-          {showTopRightContent && (
+          <RenderIf condition={showTopRightContent}>
             <div
               className="!ctw-ml-auto ctw-mr-1.5 ctw-flex ctw-flex-shrink-0 ctw-items-center ctw-whitespace-nowrap"
               ref={topRightContentRef}
             >
               {topRightContent}
             </div>
-          )}
+          </RenderIf>
         </Tab.List>
 
         {/* Children are always rendered and appear above the active panel */}

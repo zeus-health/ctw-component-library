@@ -2,6 +2,10 @@ body {
   background: lightgray;
 }
 
+#root {
+  @apply ctw-rounded-2xl ctw-bg-bg-light;
+}
+
 #root,
 #headlessui-portal-root {
   max-width: 980px;
