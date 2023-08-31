@@ -6,6 +6,7 @@ import { DocumentModel } from "./models/document";
 import { EncounterModel } from "./models/encounter";
 import { searchEncounterBuilderRecords } from "./search-helpers";
 import { useQueryWithPatient } from "..";
+import { dedupeAndMergeEncounters } from "@/components/content/encounters/helpers/filters";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import {
@@ -65,7 +66,7 @@ function getEncountersFromFQS(documents: DocumentModel[]) {
         Telemetry.countMetric("req.count.encounters.none", 1);
       }
       Telemetry.histogramMetric("req.count.encounters", results.length);
-      return results;
+      return dedupeAndMergeEncounters(results);
     } catch (e) {
       Telemetry.logError(e as Error, "Failed fetching encounter timeline information for patient");
       throw new Error(`Failed fetching encounter timeline information for patient: ${e}`);

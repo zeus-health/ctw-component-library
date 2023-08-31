@@ -1,5 +1,31 @@
 # ctw-component-library
 
+## 1.60.4
+
+### Patch Changes
+
+- e1dd6592: Display notes more securely and scroll upon overflow in a note.
+- 51d268af: Expose use-ctw hook.
+- 069f5c3b: Increase security for displaying CCDA docs.
+
+## 1.60.3
+
+### Patch Changes
+
+- 32fc03d7: Remove sanitize-html in favor of DOMPurify
+
+## 1.60.2
+
+### Patch Changes
+
+- 678c7b82: Fix open_drawer analytic to send drawer name.
+
+## 1.60.1
+
+### Patch Changes
+
+- fccfad34: Dedupes encounters.
+
 ## 1.60.0
 
 ### Minor Changes
