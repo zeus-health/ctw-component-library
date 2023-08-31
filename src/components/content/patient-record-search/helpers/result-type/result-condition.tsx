@@ -10,7 +10,7 @@ type ResultConditionProps = {
 };
 
 export function ResultCondition({ result, resource }: ResultConditionProps) {
-  const { metadata, page_content: content } = result;
+  const { metadata } = result;
   const openDetails = useConditionDetailsDrawer({});
 
   const onsetLabel = resource.isSummaryResource ? "Earliest known onset:" : "Onset:";
