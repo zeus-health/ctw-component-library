@@ -44,4 +44,9 @@
     @apply ctw-m-0 ctw-border-0 ctw-p-0;
     @apply ctw-line-clamp-3 ctw-overflow-ellipsis;
   }
+
+  .ctw-patient-record-search-feedback {
+    @apply ctw-ml-1.5 ctw-mr-1.5 ctw-inline-block ctw-text-sm ctw-font-light;
+    min-width: 38px; // Keeps the icons from stacking on top of each other
+  }
 }

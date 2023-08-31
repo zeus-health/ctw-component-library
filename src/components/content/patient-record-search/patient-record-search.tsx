@@ -136,7 +136,13 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
               ))}
             </FeedbackProvider>
             {!patientRecordSearch.isLoading && (
-              <PaginationList total={results.results.length} count={count} changeCount={setCount} />
+              <div className="ctw-mt-5">
+                <PaginationList
+                  total={results.results.length}
+                  count={count}
+                  changeCount={setCount}
+                />
+              </div>
             )}
           </RenderIf>
         </div>

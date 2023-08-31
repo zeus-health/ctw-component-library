@@ -64,7 +64,7 @@ export const FeedbackForm = ({ name }: { name: string }) => {
 
   if (isSubmitted) {
     return showFinalMessage ? (
-      <div className="ctw-ml-1.5 ctw-mr-1.5 ctw-inline-block ctw-text-sm ctw-font-light">
+      <div className="ctw-patient-record-search-feedback">
         <span>
           {isError
             ? `There was an error submitting your feedback; ${errorMessage}`
@@ -75,7 +75,7 @@ export const FeedbackForm = ({ name }: { name: string }) => {
   }
 
   return (
-    <div className="ctw-ml-1.5 ctw-mr-1.5 ctw-inline-block ctw-text-sm ctw-font-light">
+    <div className="ctw-patient-record-search-feedback">
       {!showTextInput && (
         <>
           <button

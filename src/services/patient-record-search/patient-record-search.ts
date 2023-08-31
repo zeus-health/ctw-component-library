@@ -15,6 +15,7 @@ import {
 } from "@/fhir/models";
 import { DocumentModel } from "@/fhir/models/document";
 import { fetchObservationsById } from "@/fhir/observations";
+import { LENS_EXTENSION_ID } from "@/fhir/system-urls";
 import { fetchConditionsByIdFQS } from "@/services/conditions";
 import { groupBy, keyBy, mapValues } from "@/utils/nodash";
 import { QUERY_KEY_AI_SEARCH } from "@/utils/query-keys";
@@ -133,6 +134,16 @@ class PatientRecordSearch {
     });
   }
 
+  get filteredResults(): PatientRecordSearchResult[] {
+    return this.results.filter((result) => {
+      if (["Condition", "MedicationStatement"].includes(result.document.metadata.resource_type)) {
+        const extensions = result.document.resource?.resource.extension ?? [];
+        return extensions.some(({ url }) => url === LENS_EXTENSION_ID);
+      }
+      return !!result.document.resource;
+    });
+  }
+
   get queryString(): string {
     return this.response.query;
   }
@@ -245,8 +256,8 @@ export function usePatientRecordSearch(
           id: patientRecordSearchResult.id,
           query: patientRecordSearchResult.queryString,
           response: patientRecordSearchResult.responseString,
-          results: patientRecordSearchResult.results,
-          total: patientRecordSearchResult.results.length,
+          results: patientRecordSearchResult.filteredResults,
+          total: patientRecordSearchResult.filteredResults.length,
         };
       }
 
