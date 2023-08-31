@@ -19,11 +19,7 @@ export function ResultDocument({ result, resource }: ResultDocumentProps) {
   });
 
   return (
-    <button
-      type="button"
-      onClick={() => openDetails(resource)}
-      className="ctw-patient-record-search-result ctw-text-left"
-    >
+    <div className="ctw-patient-record-search-result">
       <div className="ctw-flex ctw-flex-row ctw-items-end ctw-justify-between">
         <h3 className="ctw-mb-0">
           CCDA: <span className="ctw-capitalize">{resource.title}</span>
@@ -31,13 +27,19 @@ export function ResultDocument({ result, resource }: ResultDocumentProps) {
         <FeedbackForm name={`${metadata.resource_type}/${metadata.resource_id}`} />
       </div>
 
-      <div className="ctw-patient-record-search-details">
-        <div data-label="Encounter Date">{resource.encounterDate}</div>
-        <div data-label="Date Retrieved">{resource.dateCreated}</div>
-        <div data-label="Author">{resource.custodian}</div>
-      </div>
+      <button
+        type="button"
+        className="ctw-patient-record-search-result-btn"
+        onClick={() => openDetails(resource)}
+      >
+        <div className="ctw-patient-record-search-details">
+          <div data-label="Encounter Date">{resource.encounterDate}</div>
+          <div data-label="Date Retrieved">{resource.dateCreated}</div>
+          <div data-label="Author">{resource.custodian}</div>
+        </div>
 
-      <div className="ctw-patient-record-search-text">{content}</div>
-    </button>
+        <div className="ctw-patient-record-search-text">{content}</div>
+      </button>
+    </div>
   );
 }
