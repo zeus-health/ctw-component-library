@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.61.1
+
+### Patch Changes
+
+- c44b9d55: Fixed PatientRecordSearch results heading and vertical spacing styles.
+
 ## 1.61.0
 
 ### Minor Changes
