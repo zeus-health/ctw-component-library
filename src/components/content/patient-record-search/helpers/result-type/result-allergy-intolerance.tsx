@@ -26,12 +26,26 @@ export function ResultAllergyIntolerance({ result, resource }: ResultAllergyInto
         <h3 className="ctw-mb-0">AllergyIntolerance: {resource.display}</h3>
         <FeedbackForm name={`${metadata.resource_type}/${metadata.resource_id}`} />
       </div>
+
+      <div className="ctw-patient-record-search-details">
+        <div data-label="Last Updated">
+          <div>
+            {resource.recordedDate} {resource.managingOrganization}
+          </div>
+        </div>
+        <div data-label="Details">
+          {!!resource.manifestations && resource.manifestations !== "unknown" && (
+            <div>Reaction: {capitalize(resource.manifestations)}</div>
+          )}
+        </div>
+      </div>
+
       <button
         type="button"
-        className="ctw-btn-clear ctw-btn ctw-font-medium hover:ctw-underline"
+        className="ctw-patient-record-search-text-btn"
         onClick={() => openDetails(resource)}
       >
-        <p className="ctw-line-clamp-3 ctw-overflow-ellipsis ctw-text-left">{content}</p>
+        {content}
       </button>
     </div>
   );

@@ -2,7 +2,7 @@
   @apply ctw-flex ctw-items-center;
   .ctw-patient-record-search-results {
     @apply ctw-max-w-3xl ctw-px-1.5 ctw-py-4 ctw-text-center;
-    width: 650px;
+    width: 100%;
     max-width: 650px;
   }
 
@@ -20,5 +20,28 @@
     .ctw-table-container {
       @apply ctw-border-b-0 ctw-border-t-0;
     }
+  }
+
+  .ctw-patient-record-search-details {
+    @apply ctw-mb-0 ctw-hyphens-auto ctw-break-words ctw-text-sm ctw-text-content-black;
+
+    // Search details can utilize data-label to display a label for the data
+    > ::before {
+      @apply ctw-mr-1 ctw-font-medium;
+      content: attr(data-label) ": ";
+      display: inline-block;
+      float: left;
+    }
+    > :empty {
+      display: none;
+    }
+  }
+
+  .ctw-patient-record-search-text-btn {
+    @apply ctw-cursor-pointer ctw-bg-transparent ctw-outline-none;
+    @apply ctw-w-full ctw-text-left ctw-text-sm ctw-font-medium ctw-text-primary-dark;
+    @apply hover:ctw-text-primary-main hover:ctw-underline;
+    @apply ctw-m-0 ctw-border-0 ctw-p-0;
+    @apply ctw-line-clamp-3 ctw-overflow-ellipsis;
   }
 }

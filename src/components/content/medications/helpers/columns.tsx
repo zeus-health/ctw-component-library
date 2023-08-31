@@ -17,7 +17,7 @@ export const patientMedicationColumns: TableColumn<MedicationStatementModel>[] =
   {
     title: "Dispensed",
     render: (medication) => (
-      <div className="ctw-stacked-concat">
+      <div data-label="Dispensed" className="ctw-stacked-concat">
         {medication.quantity && <div>{medication.quantity}</div>}
         {medication.refills && <div>{medication.refills} refills</div>}
       </div>

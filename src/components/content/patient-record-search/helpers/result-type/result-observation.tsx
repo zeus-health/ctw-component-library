@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { ObservationsColumns } from "@/components/content/observations/helpers/columns";
 import { FeedbackForm } from "@/components/content/patient-record-search/helpers/feedback-form";
 import { ResourceTable } from "@/components/content/resource/resource-table";
@@ -11,7 +10,6 @@ type ResultObservationProps = {
 };
 
 export function ResultObservation({ result, resource }: ResultObservationProps) {
-  const [showResource, setShowResource] = useState(false);
   const { metadata, page_content: content } = result;
 
   return (
@@ -20,21 +18,17 @@ export function ResultObservation({ result, resource }: ResultObservationProps) 
         <h3 className="ctw-mb-0">Observation: {resource.display}</h3>
         <FeedbackForm name={`${metadata.resource_type}/${metadata.resource_id}`} />
       </div>
-      <button
-        type="button"
-        className="ctw-btn-clear ctw-btn ctw-font-medium hover:ctw-underline"
-        onClick={() => setShowResource(!showResource)}
-      >
-        <p className="ctw-line-clamp-3 ctw-overflow-ellipsis ctw-text-left">{content}</p>
-      </button>
-      {showResource && (
+
+      <div className="ctw-patient-record-search-details">
         <ResourceTable
           columns={ObservationsColumns()}
           data={[resource]}
           emptyMessage="Unable to display observation data."
           hidePagination
         />
-      )}
+      </div>
+
+      {content}
     </div>
   );
 }

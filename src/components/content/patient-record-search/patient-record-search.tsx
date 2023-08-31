@@ -107,7 +107,7 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
       </RenderIf>
 
       <div className="ctw-patient-record-search-results-list ctw-scrollable-pass-through-height">
-        <div className="ctw-patient-record-search-results ctw-align-left ctw-ml-0 ctw-space-y-2">
+        <div className="ctw-patient-record-search-results ctw-align-left ctw-ml-0">
           <RenderIf condition={patientRecordSearch.isError}>
             <div className="ctw-w-full">
               <ErrorAlert header="Sorry">
@@ -127,7 +127,9 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
               </RenderIf>
 
               {/* Search Results */}
-              <h4 className="ctw-text-left ctw-text-content-light">Results:</h4>
+              <span className="ctw-text-1xl ctw-text-content-dark ctw-block ctw-text-left ctw-font-medium">
+                Results:
+              </span>
               {results.results.slice(0, count).map((result: PatientRecordSearchResult, idx) => (
                 // eslint-disable-next-line react/no-array-index-key
                 <SearchResultRow key={idx} document={result.document} />
