@@ -19,7 +19,7 @@ export function ResultCondition({ result, resource }: ResultConditionProps) {
   return (
     <div className="ctw-patient-record-search-result">
       <div className="ctw-flex ctw-flex-row ctw-items-end ctw-justify-between">
-        <h3 className="ctw-mb-0">
+        <h3 className="ctw-search-result-heading">
           Condition: <span>{resource.display}</span>
         </h3>
         <FeedbackForm name={`${metadata.resource_type}/${metadata.resource_id}`} />

@@ -101,7 +101,7 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
       </form>
 
       <RenderIf condition={showLoadingSpinner}>
-        <div className="ctw-flex ctw-justify-center ctw-space-x-1 ctw-align-middle">
+        <div className="ctw-mt-3 ctw-flex ctw-justify-center ctw-space-x-1 ctw-align-middle">
           <Loading />
         </div>
       </RenderIf>
