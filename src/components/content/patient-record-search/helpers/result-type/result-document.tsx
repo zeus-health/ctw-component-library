@@ -26,7 +26,7 @@ export function ResultDocument({ result, resource }: ResultDocumentProps) {
     >
       <div className="ctw-flex ctw-flex-row ctw-items-end ctw-justify-between">
         <h3 className="ctw-mb-0">
-          CCDA: <span className="ctw-capitalize">{resource.title}</span>
+          Document: <span>{resource.title}</span>
         </h3>
         <FeedbackForm name={`${metadata.resource_type}/${metadata.resource_id}`} />
       </div>

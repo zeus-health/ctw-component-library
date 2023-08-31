@@ -10,13 +10,13 @@ type ResultObservationProps = {
 };
 
 export function ResultObservation({ result, resource }: ResultObservationProps) {
-  const { metadata, page_content: content } = result;
+  const { metadata } = result;
 
   return (
     <div className="ctw-patient-record-search ctw-text-left">
       <div className="ctw-flex ctw-flex-row ctw-items-end ctw-justify-between">
         <h3 className="ctw-mb-0">
-          Observation: <span className="ctw-capitalize">{resource.display}</span>
+          Observation: <span>{resource.display}</span>
         </h3>
         <FeedbackForm name={`${metadata.resource_type}/${metadata.resource_id}`} />
       </div>
@@ -29,8 +29,6 @@ export function ResultObservation({ result, resource }: ResultObservationProps) 
           hidePagination
         />
       </div>
-
-      <div className="ctw-patient-record-search-text">{content}</div>
     </div>
   );
 }

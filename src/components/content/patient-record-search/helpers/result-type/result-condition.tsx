@@ -24,13 +24,13 @@ export function ResultCondition({ result, resource }: ResultConditionProps) {
     >
       <div className="ctw-flex ctw-flex-row ctw-items-end ctw-justify-between">
         <h3 className="ctw-mb-0">
-          Condition: <span className="ctw-capitalize">{resource.display}</span>{" "}
-          {resource.ccsChapter}
+          Condition: <span>{resource.display}</span>
         </h3>
         <FeedbackForm name={`${metadata.resource_type}/${metadata.resource_id}`} />
       </div>
 
       <div className="ctw-patient-record-search-details">
+        <div data-label="CCS Chapter">{resource.ccsChapter}</div>
         <div data-label="Status">
           <div>
             {resource.recordedDate} {resource.recorder}
@@ -45,8 +45,6 @@ export function ResultCondition({ result, resource }: ResultConditionProps) {
           </div>
         </RenderIf>
       </div>
-
-      <div className="ctw-patient-record-search-text">{content}</div>
     </button>
   );
 }

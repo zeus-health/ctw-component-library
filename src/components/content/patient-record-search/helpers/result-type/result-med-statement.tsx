@@ -10,7 +10,7 @@ type ResultMedStatementProps = {
 };
 
 export function ResultMedStatement({ result, resource }: ResultMedStatementProps) {
-  const { metadata, page_content: content } = result;
+  const { metadata } = result;
   const openDetails = useMedicationDetailsDrawer({});
   const { lastPrescribedDate, lastPrescriber } = resource;
 
@@ -22,12 +22,13 @@ export function ResultMedStatement({ result, resource }: ResultMedStatementProps
     >
       <div className="ctw-flex ctw-flex-row ctw-items-end ctw-justify-between">
         <h3 className="ctw-mb-0">
-          Medication: <span className="ctw-capitalize">{resource.display}</span> {resource.dosage}
+          Medication: <span>{resource.display}</span>
         </h3>
         <FeedbackForm name={`${metadata.resource_type}/${metadata.resource_id}`} />
       </div>
 
       <div className="ctw-patient-record-search-details ctw-table-stacked">
+        <div data-label="Dosage">{resource.dosage}</div>
         <div data-label="Dispensed" className="ctw-stacked-concat">
           {resource.quantity && <div>{resource.quantity}</div>}
           {resource.refills && <div>{resource.refills} refills</div>}
@@ -39,8 +40,6 @@ export function ResultMedStatement({ result, resource }: ResultMedStatementProps
           </div>
         </RenderIf>
       </div>
-
-      <div className="ctw-patient-record-search-text">{content}</div>
     </button>
   );
 }

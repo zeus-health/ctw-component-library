@@ -17,7 +17,7 @@
   }
 
   .ctw-patient-record-search-result {
-    @apply ctw-cursor-pointer ctw-border-0 ctw-bg-transparent ctw-p-0 ctw-outline-none;
+    @apply ctw-w-full ctw-cursor-pointer ctw-border-0 ctw-bg-transparent ctw-p-0 ctw-outline-none;
 
     &:hover {
       .ctw-patient-record-search-text {
