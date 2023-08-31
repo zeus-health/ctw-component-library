@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.60.5
+
+### Patch Changes
+
+- 85b80dca: Export fqs client.
+
 ## 1.60.4
 
 ### Patch Changes

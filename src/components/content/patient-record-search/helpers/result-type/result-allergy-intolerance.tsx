@@ -21,11 +21,7 @@ export function ResultAllergyIntolerance({ result, resource }: ResultAllergyInto
     enableDismissAndReadActions: true,
   });
   return (
-    <button
-      type="button"
-      onClick={() => openDetails(resource)}
-      className="ctw-patient-record-search-result ctw-text-left"
-    >
+    <div className="ctw-patient-record-search-result">
       <div className="ctw-flex ctw-flex-row ctw-items-end ctw-justify-between">
         <h3 className="ctw-mb-0">
           AllergyIntolerance: <span className="ctw-capitalize">{resource.display}</span>
@@ -33,20 +29,26 @@ export function ResultAllergyIntolerance({ result, resource }: ResultAllergyInto
         <FeedbackForm name={`${metadata.resource_type}/${metadata.resource_id}`} />
       </div>
 
-      <div className="ctw-patient-record-search-details">
-        <div data-label="Last Updated">
-          <div>
-            {resource.recordedDate} {resource.managingOrganization}
+      <button
+        type="button"
+        className="ctw-patient-record-search-result-btn"
+        onClick={() => openDetails(resource)}
+      >
+        <div className="ctw-patient-record-search-details">
+          <div data-label="Last Updated">
+            <div>
+              {resource.recordedDate} {resource.managingOrganization}
+            </div>
+          </div>
+          <div data-label="Details">
+            {!!resource.manifestations && resource.manifestations !== "unknown" && (
+              <div>Reaction: {capitalize(resource.manifestations)}</div>
+            )}
           </div>
         </div>
-        <div data-label="Details">
-          {!!resource.manifestations && resource.manifestations !== "unknown" && (
-            <div>Reaction: {capitalize(resource.manifestations)}</div>
-          )}
-        </div>
-      </div>
 
-      <div className="ctw-patient-record-search-text">{content}</div>
-    </button>
+        <div className="ctw-patient-record-search-text">{content}</div>
+      </button>
+    </div>
   );
 }
