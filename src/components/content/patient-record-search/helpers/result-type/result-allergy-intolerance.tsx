@@ -21,7 +21,11 @@ export function ResultAllergyIntolerance({ result, resource }: ResultAllergyInto
     enableDismissAndReadActions: true,
   });
   return (
-    <div className="ctw-patient-record-search-result-allergy-intolerance ctw-text-left">
+    <button
+      type="button"
+      onClick={() => openDetails(resource)}
+      className="ctw-patient-record-search-result ctw-text-left"
+    >
       <div className="ctw-flex ctw-flex-row ctw-items-end ctw-justify-between">
         <h3 className="ctw-mb-0">
           AllergyIntolerance: <span className="ctw-capitalize">{resource.display}</span>
@@ -42,13 +46,7 @@ export function ResultAllergyIntolerance({ result, resource }: ResultAllergyInto
         </div>
       </div>
 
-      <button
-        type="button"
-        className="ctw-patient-record-search-text-btn"
-        onClick={() => openDetails(resource)}
-      >
-        {content}
-      </button>
-    </div>
+      <div className="ctw-patient-record-search-text">{content}</div>
+    </button>
   );
 }

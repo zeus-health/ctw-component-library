@@ -13,7 +13,7 @@ export function ResultObservation({ result, resource }: ResultObservationProps) 
   const { metadata, page_content: content } = result;
 
   return (
-    <div className="ctw-patient-record-search-result-observation ctw-text-left">
+    <div className="ctw-patient-record-search ctw-text-left">
       <div className="ctw-flex ctw-flex-row ctw-items-end ctw-justify-between">
         <h3 className="ctw-mb-0">
           Observation: <span className="ctw-capitalize">{resource.display}</span>
@@ -30,7 +30,7 @@ export function ResultObservation({ result, resource }: ResultObservationProps) 
         />
       </div>
 
-      {content}
+      <div className="ctw-patient-record-search-text">{content}</div>
     </div>
   );
 }

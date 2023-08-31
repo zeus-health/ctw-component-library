@@ -15,7 +15,11 @@ export function ResultMedStatement({ result, resource }: ResultMedStatementProps
   const { lastPrescribedDate, lastPrescriber } = resource;
 
   return (
-    <div className="ctw-patient-record-search-result-med-statement ctw-text-left">
+    <button
+      type="button"
+      onClick={() => openDetails(resource)}
+      className="ctw-patient-record-search-result ctw-text-left"
+    >
       <div className="ctw-flex ctw-flex-row ctw-items-end ctw-justify-between">
         <h3 className="ctw-mb-0">
           Medication: <span className="ctw-capitalize">{resource.display}</span> {resource.dosage}
@@ -36,13 +40,7 @@ export function ResultMedStatement({ result, resource }: ResultMedStatementProps
         </RenderIf>
       </div>
 
-      <button
-        type="button"
-        className="ctw-patient-record-search-text-btn"
-        onClick={() => openDetails(resource)}
-      >
-        {content}
-      </button>
-    </div>
+      <div className="ctw-patient-record-search-text">{content}</div>
+    </button>
   );
 }
