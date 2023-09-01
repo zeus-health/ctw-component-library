@@ -15,7 +15,7 @@ export function ResultMedStatement({ result, resource }: ResultMedStatementProps
   const { lastPrescribedDate, lastPrescriber } = resource;
 
   return (
-    <div className="ctw-patient-record-search-result ctw-btn">
+    <div className="ctw-patient-record-search-result">
       <div className="ctw-flex ctw-flex-row ctw-items-end ctw-justify-between">
         <h3 className="ctw-search-result-heading">
           Medication: <span>{resource.display}</span>
