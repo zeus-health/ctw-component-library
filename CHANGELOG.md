@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.61.2
+
+### Patch Changes
+
+- 2b6bfc42: Fix medications search result width
+
 ## 1.61.1
 
 ### Patch Changes
