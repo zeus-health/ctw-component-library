@@ -63,7 +63,8 @@ export const SYSTEM_ZUS_USER_TYPE = "https://zusapi.com/user_type";
 export const SYSTEM_ENRICHMENT = "https://zusapi.com/terminology/enrichment";
 
 // LENS
-
+export const LENS_EXTENSION_AGGREGATED_FROM = "https://zusapi.com/lens/extension/aggregatedFrom";
+export const LENS_EXTENSION_ID = "https://zusapi.com/lens/id";
 export const LENS_EXTENSION_MEDICATION_LAST_FILL_DATE =
   "https://zusapi.com/lens/extension/medicationLastFillDate";
 export const LENS_EXTENSION_MEDICATION_LAST_PRESCRIBED_DATE =
@@ -76,7 +77,6 @@ export const LENS_EXTENSION_MEDICATION_REFILLS =
   "https://zusapi.com/lens/extension/medicationRefills";
 export const LENS_EXTENSION_MEDICATION_LAST_PRESCRIBER =
   "https://zusapi.com/lens/extension/medicationLastPrescriber";
-export const LENS_EXTENSION_AGGREGATED_FROM = "https://zusapi.com/lens/extension/aggregatedFrom";
 
 // MISC
 

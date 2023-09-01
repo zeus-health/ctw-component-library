@@ -243,6 +243,31 @@ async function fetchPatientBuilderConditionsFQS(
   }
 }
 
+export async function fetchConditionsByIdFQS(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  ids: string[]
+) {
+  try {
+    const graphClient = createGraphqlClient(requestContext);
+    const { data } = await fqsRequest<ConditionGraphqlResponse>(graphClient, conditionsQuery, {
+      upid: patient.UPID,
+      cursor: "",
+      first: 500,
+      sort: {},
+      filter: {
+        ids: {
+          anymatch: ids,
+        },
+      },
+    });
+    const nodes = data.ConditionConnection.edges.map((x) => x.node);
+    return setupConditionModelsWithFQS(nodes);
+  } catch (e) {
+    throw Telemetry.logError(e as Error, `Failed fetching conditions for patient: ${patient.UPID}`);
+  }
+}
+
 async function fetchPatientSummaryConditionsFQS(
   requestContext: CTWRequestContext,
   patient: PatientModel

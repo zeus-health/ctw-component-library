@@ -198,8 +198,7 @@ export async function getMedicationAdministrationsForPatientByIdFQS(
         },
       }
     );
-    const nodes = data.MedicationAdministrationConnection.edges.map((x) => x.node);
-    return nodes;
+    return data.MedicationAdministrationConnection.edges.map((x) => x.node);
   } catch (e) {
     throw Telemetry.logError(
       e as Error,
@@ -347,6 +346,40 @@ export async function getSummaryMedicationsFQS(
     throw Telemetry.logError(
       e as Error,
       `Failed fetching active medications for patient: ${patient.UPID}`
+    );
+  }
+}
+
+export async function getMedicationStatementsByIdFQS(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  medicationStatementIds: string[] = []
+) {
+  try {
+    const graphClient = createGraphqlClient(requestContext);
+    const { data } = await fqsRequest<MedicationStatementGraphqlResponse>(
+      graphClient,
+      medicationStatementQuery,
+      {
+        upid: patient.UPID,
+        cursor: "",
+        sort: {},
+        first: 500,
+        filter: {
+          ids: {
+            anymatch: medicationStatementIds,
+          },
+        },
+      }
+    );
+
+    return data.MedicationStatementConnection.edges.map(
+      (x) => new MedicationStatementModel(x.node)
+    );
+  } catch (e) {
+    throw Telemetry.logError(
+      e as Error,
+      `Failed fetching list of medication statements by id for patient: ${patient.UPID}`
     );
   }
 }

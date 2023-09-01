@@ -47,8 +47,9 @@ function fetchObservationsTrendData(loincCodes: string[]) {
         },
       });
 
-      const nodes = data.ObservationConnection.edges.map((x) => x.node);
-      const observations = nodes.map((o) => new ObservationModel(o));
+      const observations = data.ObservationConnection.edges.map(
+        ({ node }) => new ObservationModel(node)
+      );
 
       if (observations.length === 0) {
         Telemetry.countMetric("req.count.all_observations.none", 1);
@@ -63,4 +64,32 @@ function fetchObservationsTrendData(loincCodes: string[]) {
       );
     }
   };
+}
+
+export async function fetchObservationsById(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  ids: string[]
+) {
+  try {
+    const graphClient = createGraphqlClient(requestContext);
+    const { data } = await fqsRequest<ObservationGraphqlResponse>(graphClient, observationQuery, {
+      upid: patient.UPID,
+      cursor: "",
+      first: 500,
+      sort: {},
+      filter: {
+        ids: {
+          anymatch: ids,
+        },
+      },
+    });
+
+    return data.ObservationConnection.edges.map(({ node }) => new ObservationModel(node));
+  } catch (e) {
+    throw Telemetry.logError(
+      e as Error,
+      `Failed fetching observations by ID for patient: ${patient.UPID}`
+    );
+  }
 }
