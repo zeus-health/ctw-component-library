@@ -17,7 +17,7 @@ import { QUERY_KEY_BASIC, QUERY_KEY_OTHER_PROVIDER_MEDICATIONS } from "@/utils/q
 export type PatientMedicationsOutsideProps = {
   className?: string;
   onOpenHistoryDrawer?: () => void;
-  onAddToRecord?: (record: MedicationStatementModel) => void;
+  onAddToRecord?: (record: MedicationStatementModel) => Promise<void> | void;
   readOnly?: boolean;
 };
 
