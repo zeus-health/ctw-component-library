@@ -17,7 +17,7 @@
   }
 
   .ctw-patient-record-search-result {
-    @apply ctw-w-full ctw-text-left;
+    @apply ctw-mt-1.5 ctw-w-full ctw-text-left;
 
     .ctw-patient-record-search-result-btn {
       @apply ctw-cursor-pointer ctw-border-0 ctw-bg-transparent ctw-p-0 ctw-text-left ctw-outline-none;
@@ -38,6 +38,8 @@
 
   .ctw-search-result-heading {
     @apply ctw-mb-0 ctw-text-lg ctw-font-bold;
+
+    margin-block-start: 1rem;
   }
 
   .ctw-patient-record-search-details {
