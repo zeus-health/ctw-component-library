@@ -35,9 +35,7 @@ export const ViewButton = <T extends object>({
         const selectedOption = options.filter((option) => option.display === item.key)[0];
         onChange(selectedOption);
         setSelected(selectedOption);
-        trackInteraction("change_view", {
-          value: selectedOption.display,
-        });
+        trackInteraction("change_view", { value: selectedOption.display });
       }}
       items={options.map((option) => ({
         key: option.display,

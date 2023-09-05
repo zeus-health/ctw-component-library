@@ -7,11 +7,7 @@ import { useCCDAModal } from "../CCDA/modal-ccda";
 import { DetailsCard, DetailsProps } from "@/components/content/resource/helpers/details-card";
 import { Drawer } from "@/components/core/drawer";
 import { Loading } from "@/components/core/loading";
-import {
-  newTrackingDataForComponent,
-  TrackingMetadata,
-  useAnalytics,
-} from "@/components/core/providers/analytics/use-analytics";
+import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { RowActionsProp } from "@/components/core/table/table-rows";
@@ -63,7 +59,6 @@ type ResourceDetailsDrawerProps<T extends fhir4.Resource, M extends FHIRModel<T>
   RowActions?: RowActionsProp<M>;
   enableDismissAndReadActions?: boolean;
   subHeader?: (model: M) => ReactNode;
-  trackingMetadata?: TrackingMetadata;
 };
 
 function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>({
@@ -78,7 +73,6 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
   RowActions,
   enableDismissAndReadActions,
   subHeader,
-  trackingMetadata,
 }: ResourceDetailsDrawerProps<T, M>) {
   const openCCDAModal = useCCDAModal();
   const [isLoading, setIsLoading] = useState(false);
@@ -115,25 +109,10 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
   // hide our footer.
   const actions =
     rowActionsWithAdditions && rowActionsWithAdditions({ record: model, onSuccess: onClose });
-
-  const newTrackingMetadata: TrackingMetadata = newTrackingDataForComponent(
-    "resource-details-drawer",
-    {
-      patientID: model.patientUPID,
-      resourceType: model.resourceType,
-      ...trackingMetadata,
-    }
-  );
   const { trackInteraction } = useAnalytics();
 
   return (
-    <Drawer
-      className={className}
-      title={model.resourceTypeTitle}
-      isOpen={isOpen}
-      onClose={onClose}
-      trackingMetadata={newTrackingMetadata}
-    >
+    <Drawer className={className} title={model.resourceTypeTitle} isOpen={isOpen} onClose={onClose}>
       <Drawer.Body>
         <div className="ctw-space-y-4">
           <div className="ctw-space-y-2">
@@ -150,7 +129,9 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
                 binaryId && (
                   <DocumentButton
                     onClick={() => {
-                      trackInteraction(`view_source_document`, newTrackingMetadata);
+                      trackInteraction(`open_source_document`, {
+                        target: "resource_details_drawer",
+                      });
                       return openCCDAModal(binaryId, model.resourceTypeTitle);
                     }}
                     text="Source Document"

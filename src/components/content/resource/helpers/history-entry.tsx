@@ -7,7 +7,6 @@ import { DetailEntry, DetailsCard } from "./details-card";
 import { DocumentButton } from "../../CCDA/document-button";
 import { useCCDAModal } from "../../CCDA/modal-ccda";
 import {
-  newTrackingDataForComponent,
   TrackingMetadata,
   useAnalytics,
 } from "@/components/core/providers/analytics/use-analytics";
@@ -33,12 +32,10 @@ export const HistoryEntry = ({
   subtitle,
   title,
   resourceTypeTitle,
-  trackingMetadata,
 }: Props) => {
   const [isDetailShown, setIsDetailShown] = useState(false);
   const openCCDAModal = useCCDAModal();
   const { trackInteraction } = useAnalytics();
-  const newTrackingMetadata = newTrackingDataForComponent("history-entry", trackingMetadata);
 
   return (
     <div className="ctw-space-y-1">
@@ -49,7 +46,6 @@ export const HistoryEntry = ({
         isDetailShown={isDetailShown}
         setIsDetailShown={setIsDetailShown}
         hasDocument={!!binaryId}
-        trackingMetadata={newTrackingMetadata}
       />
       {isDetailShown && (
         <DetailsCard
@@ -59,7 +55,7 @@ export const HistoryEntry = ({
             binaryId && (
               <DocumentButton
                 onClick={() => {
-                  trackInteraction("open_ccda_modal", newTrackingMetadata);
+                  trackInteraction("open_source_document_from_history");
                   void openCCDAModal(binaryId, resourceTypeTitle);
                 }}
                 text="Source Document"
@@ -79,7 +75,6 @@ const DetailSummary = ({
   isDetailShown,
   hasDocument = false,
   setIsDetailShown,
-  trackingMetadata,
 }: {
   date?: string;
   title?: string;
@@ -87,7 +82,6 @@ const DetailSummary = ({
   isDetailShown: boolean;
   hasDocument?: boolean;
   setIsDetailShown: React.Dispatch<React.SetStateAction<boolean>>;
-  trackingMetadata?: TrackingMetadata;
 }) => {
   const { trackInteraction } = useAnalytics();
 
@@ -97,10 +91,7 @@ const DetailSummary = ({
       aria-label="details"
       onClick={() => {
         setIsDetailShown(!isDetailShown);
-        trackInteraction(
-          isDetailShown ? "collapse_item" : "expand_item",
-          newTrackingDataForComponent("detail-summary", trackingMetadata)
-        );
+        trackInteraction(isDetailShown ? "collapse_history_entry" : "expand_history_entry");
       }}
       className="ctw-btn-clean"
     >

@@ -5,7 +5,6 @@ import { useAnalytics } from "@/components/core/providers/analytics/use-analytic
 import { useModal } from "@/components/core/providers/modal-provider";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { getBinaryDocument } from "@/fhir/binaries";
-import { usePatientContext } from "@/index";
 
 export function useCCDAModal() {
   const { openModal } = useModal();
@@ -29,7 +28,6 @@ export type CCDAModalProps = {
 
 export const CCDAModal = ({ rawBinary, fileName, onClose, ...modalProps }: CCDAModalProps) => {
   const { trackInteraction } = useAnalytics();
-  const { patientID } = usePatientContext();
 
   return (
     <Modal {...modalProps}>
@@ -46,7 +44,7 @@ export const CCDAModal = ({ rawBinary, fileName, onClose, ...modalProps }: CCDAM
               aria-label="close"
               onClick={() => {
                 onClose();
-                trackInteraction("close_ccda_modal", { patientID });
+                trackInteraction("close_document");
               }}
               className="ctw-btn-clear"
             >

@@ -6,7 +6,6 @@ import cx from "classnames";
 import type { ReactNode } from "react";
 import { Fragment } from "react";
 import {
-  newTrackingDataForComponent,
   TrackingMetadata,
   useAnalytics,
 } from "@/components/core/providers/analytics/use-analytics";
@@ -48,11 +47,9 @@ export function Drawer({
   showCloseFooter,
   title,
   disableCloseOnBlur = false,
-  trackingMetadata,
 }: DrawerProps) {
   const { trackInteraction } = useAnalytics();
   const transitionClasses = "ctw-transform ctw-transition ctw-ease-in-out ctw-duration-300";
-  const newTrackingMetadata = newTrackingDataForComponent("drawer", trackingMetadata);
 
   return (
     <Transition.Root show={isOpen} as={Fragment}>
@@ -108,8 +105,7 @@ export function Drawer({
                           onClick={() => {
                             onClose();
                             trackInteraction("close_drawer", {
-                              target: "btn_header_close_icon",
-                              ...newTrackingMetadata,
+                              target: "header_close_icon",
                             });
                           }}
                           className="ctw-btn-clear"
@@ -128,8 +124,7 @@ export function Drawer({
                           onClose={() => {
                             onClose();
                             trackInteraction("close_drawer", {
-                              target: "btn_footer",
-                              ...newTrackingMetadata,
+                              target: "footer_close_icon",
                             });
                           }}
                         />
