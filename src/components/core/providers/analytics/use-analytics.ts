@@ -15,16 +15,13 @@ type Action =
   // Documents
   | "open_source_document"
   | "close_document"
-  | "expand_document_section"
-  | "collapse_document_section"
+  | "toggle_document_section"
   | "download_document"
   | "add_to_record"
   // History
-  | "expand_history_entry"
-  | "collapse_history_entry"
+  | "toggle_history_entry"
   // Notes
-  | "expand_note"
-  | "collapse_note"
+  | "toggle_note"
   // Drawers
   | "open_drawer"
   | "close_drawer"
@@ -35,8 +32,7 @@ type Action =
   | "request_records"
   | "open_diagnostic_report"
   // Trends
-  | "expand_trend"
-  | "collapse_trend"
+  | "toggle_trend"
   // Tables
   | "change_view"
   | "change_filter"

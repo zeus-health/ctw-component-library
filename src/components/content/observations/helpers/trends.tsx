@@ -27,7 +27,9 @@ export const ObservationTrends = ({ model }: ObservationTrendsProps) => {
               className="ctw-btn-clear ctw-space-x-3"
               type="button"
               onClick={() => {
-                trackInteraction(isTrendsShown ? "collapse_trend" : "expand_trend");
+                trackInteraction("toggle_trend", {
+                  action: isTrendsShown ? "collapse_trend" : "expand_trend",
+                });
                 setIsTrendsShown(!isTrendsShown);
               }}
             >

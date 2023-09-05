@@ -91,7 +91,9 @@ const DetailSummary = ({
       aria-label="details"
       onClick={() => {
         setIsDetailShown(!isDetailShown);
-        trackInteraction(isDetailShown ? "collapse_history_entry" : "expand_history_entry");
+        trackInteraction("toggle_history_entry", {
+          action: isDetailShown ? "collapse_history_entry" : "expand_history_entry",
+        });
       }}
       className="ctw-btn-clean"
     >

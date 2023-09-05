@@ -48,7 +48,9 @@ export const NoteSummary = ({
       aria-label="details"
       className="ctw-btn-clean"
       onClick={() => {
-        trackInteraction(isDetailShown ? "collapse_note" : "expand_note");
+        trackInteraction("toggle_note", {
+          action: isDetailShown ? "collapse_note" : "expand_note",
+        });
         return setIsDetailShown(!isDetailShown);
       }}
     >

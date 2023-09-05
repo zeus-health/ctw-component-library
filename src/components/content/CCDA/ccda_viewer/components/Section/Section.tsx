@@ -18,7 +18,9 @@ export const Section = ({
 
   const handleClick = () => {
     setIsOpen(!isOpen);
-    trackInteraction(isOpen ? "collapse_document_section" : "expand_document_section");
+    trackInteraction("toggle_document_section", {
+      action: isOpen ? "collapse_document_section" : "expand_document_section",
+    });
   };
   return (
     <div className="ctw-ccda-section-container">
