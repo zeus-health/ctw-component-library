@@ -1,5 +1,37 @@
 # ctw-component-library
 
+## 1.61.2
+
+### Patch Changes
+
+- 2b6bfc42: Fix medications search result width
+
+## 1.61.1
+
+### Patch Changes
+
+- c44b9d55: Fixed PatientRecordSearch results heading and vertical spacing styles.
+
+## 1.61.0
+
+### Minor Changes
+
+- 965ec255: Added AISearch poc component
+
+## 1.60.5
+
+### Patch Changes
+
+- 85b80dca: Export fqs client.
+
+## 1.60.4
+
+### Patch Changes
+
+- e1dd6592: Display notes more securely and scroll upon overflow in a note.
+- 51d268af: Expose use-ctw hook.
+- 069f5c3b: Increase security for displaying CCDA docs.
+
 ## 1.60.3
 
 ### Patch Changes

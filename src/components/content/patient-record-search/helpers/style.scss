@@ -1,0 +1,68 @@
+.ctw-patient-record-search {
+  @apply ctw-flex ctw-items-center;
+  .ctw-patient-record-search-results {
+    @apply ctw-max-w-3xl ctw-px-1.5 ctw-py-4 ctw-text-center;
+    width: 100%;
+    max-width: 650px;
+  }
+
+  .ctw-patient-record-search-input {
+    @apply ctw-w-full;
+    max-width: 650px;
+  }
+
+  .ctw-patient-record-search-results-list {
+    @apply ctw-m-0 ctw-ml-0 ctw-space-y-2.5;
+    min-height: 400px;
+  }
+
+  .ctw-patient-record-search-result {
+    @apply ctw-mt-1.5 ctw-w-full ctw-text-left;
+
+    .ctw-patient-record-search-result-btn {
+      @apply ctw-cursor-pointer ctw-border-0 ctw-bg-transparent ctw-p-0 ctw-text-left ctw-outline-none;
+
+      &:hover {
+        .ctw-patient-record-search-text {
+          @apply ctw-text-content-black ctw-underline;
+        }
+      }
+    }
+    .ctw-patient-record-search-text {
+      @apply ctw-w-full ctw-text-left ctw-text-sm ctw-font-medium;
+      @apply ctw-text-content-light;
+      @apply ctw-m-0;
+      @apply ctw-line-clamp-3 ctw-overflow-ellipsis;
+    }
+  }
+
+  .ctw-search-result-heading {
+    @apply ctw-mb-0 ctw-text-lg ctw-font-bold;
+
+    margin-block-start: 1rem;
+  }
+
+  .ctw-patient-record-search-details {
+    @apply ctw-mb-0 ctw-w-full ctw-hyphens-auto ctw-break-words ctw-text-sm ctw-text-content-black;
+
+    [data-label] {
+      @apply ctw-text-sm ctw-text-content-black;
+      // Search details can utilize data-label to display a label for the data. If they are empty divs or have the
+      // "ctw-without-label" class, they will not display that label.
+      &:not([data-label=""])::before {
+        @apply ctw-mr-1;
+        content: attr(data-label) ": ";
+        display: inline-block;
+        float: left;
+      }
+      &:empty {
+        display: none;
+      }
+    }
+  }
+
+  .ctw-patient-record-search-feedback {
+    @apply ctw-ml-1.5 ctw-mr-1.5 ctw-inline-block ctw-text-sm ctw-font-light;
+    min-width: 38px; // Keeps the icons from stacking on top of each other
+  }
+}

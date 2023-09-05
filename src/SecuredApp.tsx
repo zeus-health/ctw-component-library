@@ -21,7 +21,9 @@ const SecuredAppComponent = ({ AppComponent }: SecuredAppProps) => {
   }, [getAccessTokenSilently]);
 
   return (
-    <>
+    <div className="ctw-space-y-5">
+      {authToken && <AppComponent accessToken={authToken} />}
+
       <button
         type="button"
         onClick={() => {
@@ -32,9 +34,7 @@ const SecuredAppComponent = ({ AppComponent }: SecuredAppProps) => {
       >
         Log Out
       </button>
-
-      {authToken && <AppComponent accessToken={authToken} />}
-    </>
+    </div>
   );
 };
 

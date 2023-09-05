@@ -16,7 +16,7 @@ export type ResourceTableProps<T extends MinRecordItem> = {
   columns: TableProps<T>["columns"];
   data: T[];
   emptyMessage?: string | ReactElement;
-  isLoading: boolean;
+  isLoading?: boolean;
   onRowClick?: TableProps<T>["handleRowClick"];
   RowActions?: TableProps<T>["RowActions"];
   showTableHead?: boolean;
@@ -29,7 +29,7 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
   columns,
   data,
   emptyMessage,
-  isLoading,
+  isLoading = false,
   onRowClick,
   RowActions,
   showTableHead,

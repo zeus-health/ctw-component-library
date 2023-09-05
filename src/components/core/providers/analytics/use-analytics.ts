@@ -67,6 +67,10 @@ export function useAnalytics() {
         }
         return telemetry.Telemetry.trackInteraction(action, eventMetadata);
       },
+
+      analyticsEvent(action: string, eventMetadata = {}) {
+        return telemetry.Telemetry.analyticsEvent(action, eventMetadata);
+      },
     }),
     [analytics.componentName, patient.data?.UPID, telemetry.Telemetry]
   );

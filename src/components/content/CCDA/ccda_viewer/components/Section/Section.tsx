@@ -1,5 +1,6 @@
 /* eslint-disable react/no-danger */ // silent linter for dangerouslySetInnerHTML because it is taken care of using dompurify
 import DOMPurify from "dompurify";
+import { Interweave } from "interweave";
 import { useState } from "react";
 import { fixHtml } from "../../helpers";
 import { SectionType } from "../../types";
@@ -29,11 +30,7 @@ export const Section = ({
       </div>
       {isOpen && (
         <div className="ctw-ccda-section-wrapper">
-          <div
-            dangerouslySetInnerHTML={{
-              __html: DOMPurify.sanitize(fixHtml(humanReadable)),
-            }}
-          />
+          <Interweave content={DOMPurify.sanitize(fixHtml(humanReadable))} />
         </div>
       )}
     </div>

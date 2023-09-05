@@ -1,5 +1,5 @@
 import { useIncludeBasics } from "./basic";
-import { PatientModel } from "./models";
+import { AllergyModel, PatientModel } from "./models";
 import { applyAllergyFilters } from "@/components/content/allergies/helpers/allergies-filter";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
@@ -35,8 +35,8 @@ async function getAllergyIntoleranceFromFQS(
         lastUpdated: "DESC",
       },
     });
-    const nodes = data.AllergyIntoleranceConnection.edges.map((x) => x.node);
-    const results = applyAllergyFilters(nodes, requestContext.builderId);
+    const models = data.AllergyIntoleranceConnection.edges.map((x) => new AllergyModel(x.node));
+    const results = applyAllergyFilters(models, requestContext.builderId);
     if (results.length === 0) {
       Telemetry.countMetric("req.count.allergies.none", 1);
     }
@@ -44,5 +44,29 @@ async function getAllergyIntoleranceFromFQS(
     return results;
   } catch (e) {
     throw new Error(`Failed fetching allergies information for patient ${patient.UPID}`);
+  }
+}
+
+export async function getAllergyIntolerancesById(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  ids: string[]
+) {
+  try {
+    const graphClient = createGraphqlClient(requestContext);
+    const { data } = await fqsRequest<AllergyGraphqlResponse>(graphClient, allergyQuery, {
+      upid: patient.UPID,
+      cursor: "",
+      first: 500,
+      filter: {
+        ids: {
+          anymatch: ids,
+        },
+      },
+      sort: {},
+    });
+    return data.AllergyIntoleranceConnection.edges.map((x) => new AllergyModel(x.node));
+  } catch (e) {
+    throw new Error(`Failed fetching allergies by ID for patient ${patient.UPID}`);
   }
 }

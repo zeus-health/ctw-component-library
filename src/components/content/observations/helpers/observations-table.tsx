@@ -16,7 +16,6 @@ export const ObservationsTable = ({ className, data }: ObservationsTableProps) =
       className="ctw-patient-observation-details"
       columns={ObservationsColumns()}
       data={data}
-      isLoading={false}
       emptyMessage="There are no observations available."
       hidePagination
     />

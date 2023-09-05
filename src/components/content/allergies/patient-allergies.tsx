@@ -76,7 +76,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
 
 export const PatientAllergies = withErrorBoundary(PatientAllergiesComponent, "PatientAllergies");
 
-const allergyData = (allergy: AllergyModel) => [
+export const allergyData = (allergy: AllergyModel) => [
   { label: "Recorded Date", value: allergy.recordedDate },
   { label: "Recording Organization", value: allergy.managingOrganization },
   { label: "Status", value: allergy.clinicalStatus },

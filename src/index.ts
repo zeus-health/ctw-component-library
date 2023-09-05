@@ -1,4 +1,5 @@
 // Content components
+export * from "@/components/content/patient-record-search/patient-record-search";
 export * from "@/components/content/allergies/patient-allergies";
 export * from "@/components/content/allergies/unread-allergies-notification";
 export * from "@/components/content/conditions/patient-conditions";
@@ -44,6 +45,7 @@ export * from "@/components/core/pagination/pagination";
 export * from "@/components/core/pagination/pagination-list";
 export * as CTWBox from "@/components/core/ctw-box";
 export * from "@/components/core/form/drawer-form-with-fields";
+export * from "@/components/core/providers/use-ctw";
 // Zus Providers and Hooks
 export * from "@/components/core/drawer";
 export * from "@/components/core/error-boundary";
@@ -62,6 +64,7 @@ export * from "@/components/core/toggle";
 export * from "@/components/core/toggle-control";
 export * from "@/hooks/use-medications";
 export * from "@/components/content/resource/resource-table-actions";
+export * from "@/services/fqs/client";
 // Models
 export * from "@/fhir/models";
 export * from "@/fhir/medications";
