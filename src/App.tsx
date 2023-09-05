@@ -136,7 +136,7 @@ const components: DemoComponent[] = [
   },
   {
     name: "patient-adt-table",
-    render: () => <PatientsADTAlertsTable />,
+    render: () => <PatientsADTAlertsTable data={[]} />,
     title: "Patient ADT Alerts Table",
   },
 
