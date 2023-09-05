@@ -67,14 +67,14 @@ export const FilterBar = ({ className, onChange, filters, defaultState = {} }: F
     setActiveFilterKeys([]);
     setActiveFilterValues({});
     onChange({});
-    trackInteraction("filter", { action: "clear" });
+    trackInteraction("change_filter", { action: "clear" });
   };
 
   const resetAllFilters = () => {
     setActiveFilterValues(initialState);
     setActiveFilterKeys(Object.keys(initialState));
     onChange(filterChangeEvent(filters, Object.keys(initialState), initialState));
-    trackInteraction("filter", { action: "reset" });
+    trackInteraction("change_filter", { action: "reset" });
   };
 
   // Add or remove a filter from the activated filters list
@@ -103,7 +103,7 @@ export const FilterBar = ({ className, onChange, filters, defaultState = {} }: F
     }
     // Finally we fire off a change event
     onChange(filterChangeEvent(filters, updatedKeys, activeFilterValues));
-    trackInteraction("filter", { action: remove ? "toggle_off" : "toggle_on", value: key });
+    trackInteraction("change_filter", { action: remove ? "deselect" : "select", value: key });
   };
 
   // The update function for checkbox and select pills to call on change

@@ -1,14 +1,18 @@
 import { createContext } from "react";
+import { TrackingMetadata } from "./analytics/use-analytics";
 import { DrawerProps } from "../drawer";
 
 export type OpenDrawerProps = {
-  telemetryName?: string;
+  trackingMetadata?: TrackingMetadata;
   component: ({
     isOpen,
     onClose,
     onOpen,
     onAfterOpen,
-  }: Pick<DrawerProps, "isOpen" | "onClose" | "onOpen" | "onAfterOpen">) => JSX.Element | undefined;
+    trackingMetadata,
+  }: Pick<DrawerProps, "isOpen" | "onClose" | "onOpen" | "onAfterOpen" | "trackingMetadata">) =>
+    | JSX.Element
+    | undefined;
 };
 
 export type DrawerState = {

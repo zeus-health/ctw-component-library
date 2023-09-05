@@ -41,9 +41,7 @@ export type DrawerFormWithFieldsProps<T> = {
   title: string;
   header?: ReactNode;
   data?: FormEntry[];
-} & Pick<DrawerFormProps<T>, "onClose" | "isOpen" | "action" | "schema">;
-
-export type FormActionTypes = "Edit" | "Add";
+} & Pick<DrawerFormProps<T>, "onClose" | "isOpen" | "action" | "schema" | "trackingMetadata">;
 
 export const DrawerFormWithFields = <T,>({
   title,

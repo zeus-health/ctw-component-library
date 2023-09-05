@@ -49,7 +49,7 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
     setSearchedValue(query);
     setResults(EMPTY_SEARCH_RESULTS);
     setCount(DEFAULT_PAGE_SIZE);
-    trackInteraction("search", { value: "patient-record-search" });
+    trackInteraction("search", { action: "patient-record-search" });
   };
 
   const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +57,7 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
   };
 
   const clearSearch = () => {
-    trackInteraction("clear_search", { value: "patient-record-search" });
+    trackInteraction("clear_search", { action: "patient-record-search" });
     setSearchInputValue("");
     setSearchedValue("");
     setResults(EMPTY_SEARCH_RESULTS);

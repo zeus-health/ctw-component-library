@@ -7,14 +7,14 @@ import { useAnalytics } from "@/components/core/providers/analytics/use-analytic
 import { useTelemetry } from "@/components/core/providers/telemetry/use-telemetry";
 
 export type ModalConfirmDeleteProps = {
-  resource: string;
+  title: string;
   resourceName: string;
   onDelete: () => Promise<void>;
   onClose: () => void;
 } & Omit<ModalProps, "title" | "children" | "onAfterClosed">;
 
 export const ModalConfirmDelete = ({
-  resource,
+  title,
   resourceName,
   onDelete,
   onClose,
@@ -45,12 +45,12 @@ export const ModalConfirmDelete = ({
       {alert && <ErrorAlert header={alert} />}
       <div className="ctw-items-left ctw-flex ctw-h-full ctw-flex-col ctw-space-y-2 ctw-overflow-y-auto">
         <span className="ctw-text-left ctw-text-lg ctw-font-medium ctw-text-content-black">
-          {t("resource.remove.heading", { resource })}
+          {t("resource.remove.heading", { title })}
         </span>
         <span className="ctw-subtext ctw-max-w-sm ctw-text-left ctw-text-content-light">
           <Trans i18nKey="resource.remove.body">
             This will remove <span className="ctw-font-medium">{{ resourceName }}</span> from this
-            patient&apos;s {{ resource }} list.
+            patient&apos;s {{ title }} list.
           </Trans>
         </span>
       </div>
@@ -59,7 +59,7 @@ export const ModalConfirmDelete = ({
           type="button"
           onClick={() => {
             onClose();
-            trackInteraction("btn_cancel");
+            trackInteraction("cancel_delete_request");
           }}
           className="ctw-btn-default ctw-flex-1"
         >
@@ -70,7 +70,7 @@ export const ModalConfirmDelete = ({
           disabled={isDeleting}
           onClick={() => {
             void onConfirm();
-            trackInteraction("btn_remove");
+            trackInteraction("confirm_delete_request");
           }}
           className="ctw-btn-primary ctw-save-button ctw-flex-1"
         >

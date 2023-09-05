@@ -6,7 +6,10 @@ import { useState } from "react";
 import { DetailEntry, DetailsCard } from "./details-card";
 import { DocumentButton } from "../../CCDA/document-button";
 import { useCCDAModal } from "../../CCDA/modal-ccda";
-import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
+import {
+  TrackingMetadata,
+  useAnalytics,
+} from "@/components/core/providers/analytics/use-analytics";
 
 export type HistoryEntryProps = {
   binaryId?: string;
@@ -19,7 +22,7 @@ export type HistoryEntryProps = {
   versionId?: string;
 };
 
-type Props = HistoryEntryProps & { resourceTypeTitle: string };
+type Props = HistoryEntryProps & { resourceTypeTitle: string; trackingMetadata?: TrackingMetadata };
 
 export const HistoryEntry = ({
   binaryId,
@@ -32,6 +35,7 @@ export const HistoryEntry = ({
 }: Props) => {
   const [isDetailShown, setIsDetailShown] = useState(false);
   const openCCDAModal = useCCDAModal();
+  const { trackInteraction } = useAnalytics();
 
   return (
     <div className="ctw-space-y-1">
@@ -50,7 +54,10 @@ export const HistoryEntry = ({
           documentButton={
             binaryId && (
               <DocumentButton
-                onClick={() => openCCDAModal(binaryId, resourceTypeTitle)}
+                onClick={() => {
+                  trackInteraction("open_source_document", { target: "history_entry" });
+                  void openCCDAModal(binaryId, resourceTypeTitle);
+                }}
                 text="Source Document"
               />
             )
@@ -84,8 +91,8 @@ const DetailSummary = ({
       aria-label="details"
       onClick={() => {
         setIsDetailShown(!isDetailShown);
-        trackInteraction("expand_detail", {
-          direction: isDetailShown ? "collapse" : "expand",
+        trackInteraction("toggle_history_entry", {
+          action: isDetailShown ? "collapse_history_entry" : "expand_history_entry",
         });
       }}
       className="ctw-btn-clean"

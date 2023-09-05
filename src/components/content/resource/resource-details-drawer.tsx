@@ -7,6 +7,7 @@ import { useCCDAModal } from "../CCDA/modal-ccda";
 import { DetailsCard, DetailsProps } from "@/components/content/resource/helpers/details-card";
 import { Drawer } from "@/components/core/drawer";
 import { Loading } from "@/components/core/loading";
+import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { RowActionsProp } from "@/components/core/table/table-rows";
@@ -17,7 +18,6 @@ import { FHIRModel } from "@/fhir/models/fhir-model";
 import { searchProvenances } from "@/fhir/provenance";
 import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { UseQueryResultBasic } from "@/utils/request";
-import { Telemetry } from "@/utils/telemetry";
 
 const HISTORY_PAGE_LIMIT = 20;
 
@@ -39,10 +39,10 @@ export function useResourceDetailsDrawer<T extends fhir4.Resource, M extends FHI
 
   return (model: M) => {
     openDrawer({
-      telemetryName: model.resourceType,
       component: (drawerProps) => (
         <ResourceDetailsDrawer model={model} {...props} {...drawerProps} />
       ),
+      trackingMetadata: { resourceType: model.resourceType },
     });
   };
 }
@@ -109,6 +109,7 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
   // hide our footer.
   const actions =
     rowActionsWithAdditions && rowActionsWithAdditions({ record: model, onSuccess: onClose });
+  const { trackInteraction } = useAnalytics();
 
   return (
     <Drawer className={className} title={model.resourceTypeTitle} isOpen={isOpen} onClose={onClose}>
@@ -128,7 +129,9 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
                 binaryId && (
                   <DocumentButton
                     onClick={() => {
-                      Telemetry.trackInteraction(`${model.resourceType}.view_source_document`);
+                      trackInteraction(`open_source_document`, {
+                        target: "resource_details_drawer",
+                      });
                       return openCCDAModal(binaryId, model.resourceTypeTitle);
                     }}
                     text="Source Document"
