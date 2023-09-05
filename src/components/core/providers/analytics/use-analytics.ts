@@ -39,10 +39,8 @@ type Action =
   | "sort"
   | "open_tab"
   // Records
-  | "restore_record"
-  | "dismiss_record"
-  | "mark_record_as_read"
-  | "mark_record_as_unread"
+  | "toggle_record_archive"
+  | "toggle_record_read"
   | "click_row"
   | "change_page";
 

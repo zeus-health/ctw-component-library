@@ -75,7 +75,9 @@ const getDismissAndReadActions =
           className="ctw-btn-default"
           disabled={isToggleDismissLoading || isToggleReadLoading}
           onClick={async () => {
-            trackInteraction(record.isDismissed ? "restore_record" : "dismiss_record");
+            trackInteraction("toggle_record_archive", {
+              action: record.isDismissed ? "restore" : "dismiss",
+            });
             await toggleDismiss(record);
             if (!record.isRead) {
               await toggleRead(record);
@@ -98,9 +100,9 @@ const getDismissAndReadActions =
           disabled={disableReadButton || isToggleDismissLoading || isToggleReadLoading}
           onClick={async () => {
             if (record.isRead) {
-              trackInteraction("mark_record_as_unread");
+              trackInteraction("toggle_record_read", { action: "mark_as_unread" });
             } else {
-              trackInteraction("mark_record_as_read");
+              trackInteraction("toggle_record_read", { action: "mark_as_read" });
             }
             await toggleRead(record);
             onSuccess?.();
