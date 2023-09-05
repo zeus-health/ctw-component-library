@@ -24,6 +24,7 @@ import {
   PatientTimeline,
   ZusAggregatedProfile,
   ZusAggregatedProfileIFrame,
+  MedicationStatementModel,
 } from ".";
 
 import { PatientMedicationDispense } from "./components/content/medication-dispense/patient-medication-dispense";
@@ -64,7 +65,7 @@ const theme: ThemeProviderProps["theme"] = {
   },
   iframe: {
     fontFamily: "Avenir",
-    fontSize: "16px",
+    fontSize: "160px",
   },
 };
 
@@ -152,6 +153,12 @@ const components: DemoComponent[] = [
           }}
           conditionsAllProps={{ onlyAllowAddOutsideConditions: true }}
           includePatientDemographicsForm={false}
+          resources={["medications-outside", "medications-all", "medications"]}
+          medicationsOutsideProps={{
+            onAddToRecord: async (record: MedicationStatementModel) => {
+              console.log("onAddToRecord", record);
+            },
+          }}
         />
       );
     },
@@ -168,6 +175,12 @@ const components: DemoComponent[] = [
             }}
             conditionsAllProps={{ onlyAllowAddOutsideConditions: true }}
             includePatientDemographicsForm={false}
+            resources={["medications-outside", "medications-all", "medications"]}
+            medicationsOutsideProps={{
+              onAddToRecord: async (record: MedicationStatementModel) => {
+                console.log("onAddToRecord", record);
+              },
+            }}
           />
         </div>
       );

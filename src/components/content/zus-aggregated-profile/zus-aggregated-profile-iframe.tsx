@@ -1,4 +1,3 @@
-import fhir4 from "fhir/r4";
 import { useEffect, useRef, useState } from "react";
 import { ZusAggregatedProfileProps } from "./zus-aggregated-profile";
 import { getZusZapUrl } from "@/api/urls";
@@ -10,6 +9,7 @@ import { useTelemetry } from "@/components/core/providers/telemetry/use-telemetr
 import { useTheme } from "@/components/core/providers/theme/use-theme";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { MedicationStatementModel } from "@/fhir/models";
+import { omit } from "@/utils/nodash/fp";
 
 // Theming for iframe which can't be handled via global tailwind theme
 export type IFrameTheme = {
@@ -24,6 +24,25 @@ export const ZusAggregatedProfileOnResourceSaveMessageType = "ZusAggregatedProfi
 export const ZusAggregatedProfileMedsOutsideAddToRecordMessageType =
   "ZusAggregatedProfileMedsOutsideAddToRecord";
 
+type EventData =
+  | {
+      type: "ZusAggregatedProfileMedsOutsideAddToRecord";
+      payload: {
+        resource: fhir4.MedicationStatement;
+        includedResources?: Record<string, fhir4.Resource>;
+        component: string;
+      };
+      id: string;
+    }
+  | {
+      type:
+        | "ZusAggregatedProfileIFrameConfig"
+        | "ZusAggregatedProfileIFrameReady"
+        | "ZusAggregatedProfileOnResourceSave";
+    };
+
+type MessageResponsePayload = { id: string; type: string; payload?: unknown; error?: string };
+
 const ZusAggregatedProfileIFrameComponent = (props: ZusAggregatedProfileProps) => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [hostedZapReady, setHostedZapReady] = useState(false);
@@ -33,25 +52,19 @@ const ZusAggregatedProfileIFrameComponent = (props: ZusAggregatedProfileProps) =
   const patient = usePatientContext();
   const telemetry = useTelemetry().context;
   const theme = useTheme();
-  const [onAddToRecord, setOnAddToRecord] = useState<(e: WindowEventMap["message"]) => void>();
+  const [onAddToRecord, setOnAddToRecord] = useState<(e: MessageEvent<EventData>) => void>();
 
   useEffect(() => {
-    const onAddToRecordHandler = async ({
-      data,
-    }: MessageEvent<{
-      type: string;
-      payload: {
-        resource: fhir4.MedicationStatement;
-        includedResources?: Record<string, fhir4.Resource>;
-      };
-      id: string;
-    }>) => {
+    const onAddToRecordHandler = async ({ data }: MessageEvent<EventData>) => {
       if (data.type === ZusAggregatedProfileMedsOutsideAddToRecordMessageType) {
         const medicationStatement = new MedicationStatementModel(
           data.payload.resource,
           data.payload.includedResources
         );
-        const response: { id: string; error?: string } = { id: data.id };
+        const response: MessageResponsePayload = {
+          id: data.id,
+          type: data.type,
+        };
         try {
           await props.medicationsOutsideProps?.onAddToRecord?.(medicationStatement);
         } catch (e) {
@@ -68,8 +81,8 @@ const ZusAggregatedProfileIFrameComponent = (props: ZusAggregatedProfileProps) =
       window.removeEventListener("message", onAddToRecord);
     }
 
-    // Set the current listener, so we can remove it later if this effect is called again.
-    setOnAddToRecord(onAddToRecordHandler);
+    // Set the current listener so we can remove it later if this effect is called again.
+    setOnAddToRecord(() => onAddToRecordHandler);
     return () => window.removeEventListener("message", onAddToRecordHandler);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -80,7 +93,7 @@ const ZusAggregatedProfileIFrameComponent = (props: ZusAggregatedProfileProps) =
 
   useEffect(() => {
     // listener to know when iframe ZAP is ready
-    const onMessageReady = ({ data }: WindowEventMap["message"]) => {
+    const onMessageReady = ({ data }: MessageEvent<EventData>) => {
       if (data.type === ZusAggregatedProfileIFrameReadyMessageType) {
         setHostedZapReady(true);
       }
@@ -92,7 +105,7 @@ const ZusAggregatedProfileIFrameComponent = (props: ZusAggregatedProfileProps) =
   useEffect(() => {
     // set up ZAP URL and listener for resource save
     let requestContext: CTWRequestContext | undefined;
-    const onMessageSave = ({ data }: WindowEventMap["message"]) => {
+    const onMessageSave = ({ data }: MessageEvent) => {
       if (data.type === ZusAggregatedProfileOnResourceSaveMessageType) {
         requestContext?.onResourceSave(data.resource, data.action, data.error);
       }
@@ -135,7 +148,14 @@ const ZusAggregatedProfileIFrameComponent = (props: ZusAggregatedProfileProps) =
           config: {
             CTWProviderProps: ctwProviderProps,
             PatientProviderProps: patientProviderProps,
-            ZusAggregatedProfileProps: props,
+            ZusAggregatedProfileProps: {
+              ...props,
+              medicationsOutsideProps: props.medicationsOutsideProps
+                ? {
+                    ...omit("onAddToRecord", props.medicationsOutsideProps),
+                  }
+                : undefined,
+            },
             iframeTheme: theme.iframeTheme,
           },
         },
