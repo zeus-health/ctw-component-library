@@ -104,7 +104,7 @@ const RowActions = ({ record, onSuccess, onAddToRecord }: RowActionsProps2) => {
             } else {
               showAddMedicationForm(record);
             }
-            trackInteraction("btn_add_to_record");
+            trackInteraction("add_to_record");
           }}
         >
           {t("resourceTable.add")}

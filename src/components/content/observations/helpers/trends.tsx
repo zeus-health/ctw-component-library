@@ -27,7 +27,9 @@ export const ObservationTrends = ({ model }: ObservationTrendsProps) => {
               className="ctw-btn-clear ctw-space-x-3"
               type="button"
               onClick={() => {
-                trackInteraction(isTrendsShown ? "collapse_trend" : "expand_trend");
+                trackInteraction("toggle_trend", {
+                  action: isTrendsShown ? "collapse_trend" : "expand_trend",
+                });
                 setIsTrendsShown(!isTrendsShown);
               }}
             >
@@ -53,13 +55,13 @@ export const ObservationTrends = ({ model }: ObservationTrendsProps) => {
                       })}
                       onClick={() => {
                         if (trend.diagnosticReport) {
-                          trackInteraction("open_diagnostic_report");
+                          trackInteraction("open_diagnostic_report", { target: "btn" });
                           openDiagnosticReportDetails(trend.diagnosticReport);
                         }
                       }}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" && trend.diagnosticReport) {
-                          trackInteraction("open_diagnostic_report");
+                          trackInteraction("open_diagnostic_report", { target: "enter_key" });
                           openDiagnosticReportDetails(trend.diagnosticReport);
                         }
                       }}

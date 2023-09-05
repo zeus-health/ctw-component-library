@@ -5,7 +5,10 @@ import { XIcon } from "@heroicons/react/outline";
 import cx from "classnames";
 import type { ReactNode } from "react";
 import { Fragment } from "react";
-import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
+import {
+  TrackingMetadata,
+  useAnalytics,
+} from "@/components/core/providers/analytics/use-analytics";
 
 export type DrawerProps = {
   className?: string;
@@ -23,6 +26,7 @@ export type DrawerProps = {
   /** Prevent drawer from closing on ESC or background click. */
   disableCloseOnBlur?: boolean;
   title: string;
+  trackingMetadata?: TrackingMetadata;
 };
 
 /**
@@ -101,7 +105,7 @@ export function Drawer({
                           onClick={() => {
                             onClose();
                             trackInteraction("close_drawer", {
-                              target: "btn_header_close_icon",
+                              target: "header_close_icon",
                             });
                           }}
                           className="ctw-btn-clear"
@@ -120,7 +124,7 @@ export function Drawer({
                           onClose={() => {
                             onClose();
                             trackInteraction("close_drawer", {
-                              target: "btn_footer",
+                              target: "footer_close_icon",
                             });
                           }}
                         />

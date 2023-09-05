@@ -126,7 +126,7 @@ const Page = ({
       disabled={disabled}
       onClick={() => {
         setCurrentPage(page);
-        trackInteraction("btn_paginate", { page });
+        trackInteraction("change_page", { page });
       }}
       className={cx(className, "ctw-pagination-page-btn", { active, disabled })}
     >

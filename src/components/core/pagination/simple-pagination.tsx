@@ -53,7 +53,7 @@ const PaginateButton = ({
       className={cx("ctw-btn-default", className)}
       onClick={() => {
         setCurrentPage(pageToNavigateTo);
-        trackInteraction("btn_paginate", {
+        trackInteraction("change_page", {
           page: pageToNavigateTo,
         });
       }}

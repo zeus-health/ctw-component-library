@@ -1,5 +1,15 @@
 # ctw-component-library
 
+## 1.62.0
+
+### Minor Changes
+
+- e3e05117: Rewire the table to read from snowflake data.
+
+### Patch Changes
+
+- 1ca4d013: Add more user interaction tracking.
+
 ## 1.61.2
 
 ### Patch Changes

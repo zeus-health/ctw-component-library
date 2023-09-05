@@ -44,7 +44,7 @@ export const CCDAModal = ({ rawBinary, fileName, onClose, ...modalProps }: CCDAM
               aria-label="close"
               onClick={() => {
                 onClose();
-                trackInteraction("close_ccda_modal");
+                trackInteraction("close_document");
               }}
               className="ctw-btn-clear"
             >
