@@ -9,7 +9,6 @@ import { patientAllergiesColumns } from "@/components/content/allergies/helpers/
 import { EmptyTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
-import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { usePatientAllergies } from "@/fhir/allergies";
 import { AllergyModel } from "@/fhir/models/allergies";
@@ -30,7 +29,6 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
   const userBuilderId = useUserBuilderId();
   const isEmptyQuery = patientAllergiesQuery.data.length === 0;
   const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
-  const { trackInteraction } = useAnalytics();
 
   const openDetails = useResourceDetailsDrawer({
     header: (m) => capitalize(m.display),
@@ -60,10 +58,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
           isLoading={patientAllergiesQuery.isLoading}
           data={data}
           columns={patientAllergiesColumns(userBuilderId)}
-          onRowClick={(m) => {
-            trackInteraction("open_table_entry");
-            openDetails(m);
-          }}
+          onRowClick={(m) => openDetails(m)}
           enableDismissAndReadActions
           emptyMessage={
             <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="allergies" />

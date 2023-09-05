@@ -34,7 +34,7 @@ type Action =
   | "dismiss_record"
   | "mark_record_as_read"
   | "mark_record_as_unread"
-  | "open_table_entry";
+  | "click_row";
 
 // Properties to include in metadata if applicable,
 // beyond the default of component and patient.
