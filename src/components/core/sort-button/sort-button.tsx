@@ -34,12 +34,9 @@ export const SortButton = <T extends object>({
       onItemSelect={(item) => {
         const selectedOption = options.filter((option) => option.display === item.key)[0];
         onChange(selectedOption);
-        trackInteraction({
-          action: "sort",
-          metadata: {
-            value: item.key,
-            dir: selectedOption.sorts[0].dir,
-          },
+        trackInteraction("sort", {
+          value: item.key,
+          dir: selectedOption.sorts[0].dir,
         });
         setSelected(selectedOption);
       }}

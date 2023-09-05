@@ -9,15 +9,22 @@ import { SortDir } from "@/utils/sort";
 type Action =
   // App-level
   | "logout"
+  | "toggle_ai_search"
+  | "search"
+  | "clear_search"
   // Documents
   | "open_source_document"
   | "close_document"
   | "expand_document_section"
   | "collapse_document_section"
   | "download_document"
+  | "add_to_record"
   // History
   | "expand_history_entry"
   | "collapse_history_entry"
+  // Notes
+  | "expand_note"
+  | "collapse_note"
   // Drawers
   | "open_drawer"
   | "close_drawer"
@@ -25,16 +32,23 @@ type Action =
   | "submit_form" // actions include "create_resource", "edit_resource"
   | "cancel_delete_request"
   | "confirm_delete_request"
+  | "request_records"
+  | "open_diagnostic_report"
+  // Trends
+  | "expand_trend"
+  | "collapse_trend"
   // Tables
   | "change_view"
   | "change_filter"
   | "sort"
+  | "open_tab"
   // Records
   | "restore_record"
   | "dismiss_record"
   | "mark_record_as_read"
   | "mark_record_as_unread"
-  | "click_row";
+  | "click_row"
+  | "change_page";
 
 // Properties to include in metadata if applicable,
 // beyond the default of component and patient.
@@ -45,6 +59,7 @@ export type TrackingMetadata = {
   action?: string; // Further differentiates actions
   dir?: SortDir;
   datadogMetricName?: string;
+  page?: number; // Which page number the action triggered or triggured on
 };
 
 export function useAnalytics() {

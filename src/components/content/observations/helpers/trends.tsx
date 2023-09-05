@@ -53,13 +53,13 @@ export const ObservationTrends = ({ model }: ObservationTrendsProps) => {
                       })}
                       onClick={() => {
                         if (trend.diagnosticReport) {
-                          trackInteraction("open_diagnostic_report");
+                          trackInteraction("open_diagnostic_report", { target: "btn" });
                           openDiagnosticReportDetails(trend.diagnosticReport);
                         }
                       }}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" && trend.diagnosticReport) {
-                          trackInteraction("open_diagnostic_report");
+                          trackInteraction("open_diagnostic_report", { target: "enter_key" });
                           openDiagnosticReportDetails(trend.diagnosticReport);
                         }
                       }}

@@ -9,8 +9,8 @@ export function useObservationsDetailsDrawer() {
 
   return (diagnosticReport: DiagnosticReportModel) => {
     openDrawer({
-      telemetryName: "observations_details",
       component: (props) => <ObservationsDrawer diagnosticReport={diagnosticReport} {...props} />,
+      trackingMetadata: { action: "observations_details" },
     });
   };
 }

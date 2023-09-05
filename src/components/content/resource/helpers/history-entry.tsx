@@ -55,7 +55,7 @@ export const HistoryEntry = ({
             binaryId && (
               <DocumentButton
                 onClick={() => {
-                  trackInteraction("open_source_document_from_history");
+                  trackInteraction("open_source_document", { target: "history_entry" });
                   void openCCDAModal(binaryId, resourceTypeTitle);
                 }}
                 text="Source Document"
