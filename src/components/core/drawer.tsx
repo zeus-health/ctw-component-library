@@ -105,7 +105,7 @@ export function Drawer({
                           onClick={() => {
                             onClose();
                             trackInteraction("close_drawer", {
-                              source: "header_close_icon",
+                              target: "header_close_icon",
                             });
                           }}
                           className="ctw-btn-clear"
@@ -124,7 +124,7 @@ export function Drawer({
                           onClose={() => {
                             onClose();
                             trackInteraction("close_drawer", {
-                              source: "footer_close_icon",
+                              target: "footer_close_icon",
                             });
                           }}
                         />
