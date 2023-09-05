@@ -1,3 +1,4 @@
+import { Resource } from "fhir/r4";
 import { useEffect, useRef, useState } from "react";
 import { ZusAggregatedProfileProps } from "./zus-aggregated-profile";
 import { getZusZapUrl } from "@/api/urls";
@@ -21,24 +22,26 @@ export type IFrameTheme = {
 export const ZusAggregatedProfileIFrameConfigMessageType = "ZusAggregatedProfileIFrameConfig";
 export const ZusAggregatedProfileIFrameReadyMessageType = "ZusAggregatedProfileIFrameReady";
 export const ZusAggregatedProfileOnResourceSaveMessageType = "ZusAggregatedProfileOnResourceSave";
-export const ZusAggregatedProfileMedsOutsideAddToRecordMessageType =
-  "ZusAggregatedProfileMedsOutsideAddToRecord";
+export const ZusAggregatedProfileOnAddToRecordMessageType = "ZusAggregatedProfileOnAddToRecord";
 
-type EventData =
+export type ZusEventData =
   | {
-      type: "ZusAggregatedProfileMedsOutsideAddToRecord";
+      type: "ZusAggregatedProfileOnAddToRecord";
       payload: {
         resource: fhir4.MedicationStatement;
         includedResources?: Record<string, fhir4.Resource>;
-        component: string;
+        component: "medications-outside" | "medications-all";
       };
       id: string;
     }
   | {
-      type:
-        | "ZusAggregatedProfileIFrameConfig"
-        | "ZusAggregatedProfileIFrameReady"
-        | "ZusAggregatedProfileOnResourceSave";
+      type: "ZusAggregatedProfileOnResourceSave";
+      resource: Resource;
+      action: "create" | "update";
+      error?: string;
+    }
+  | {
+      type: "ZusAggregatedProfileIFrameConfig" | "ZusAggregatedProfileIFrameReady";
     };
 
 type MessageResponsePayload = { id: string; type: string; payload?: unknown; error?: string };
@@ -52,11 +55,11 @@ const ZusAggregatedProfileIFrameComponent = (props: ZusAggregatedProfileProps) =
   const patient = usePatientContext();
   const telemetry = useTelemetry().context;
   const theme = useTheme();
-  const [onAddToRecord, setOnAddToRecord] = useState<(e: MessageEvent<EventData>) => void>();
+  const [onAddToRecord, setOnAddToRecord] = useState<(e: MessageEvent<ZusEventData>) => void>();
 
   useEffect(() => {
-    const onAddToRecordHandler = async ({ data }: MessageEvent<EventData>) => {
-      if (data.type === ZusAggregatedProfileMedsOutsideAddToRecordMessageType) {
+    const onAddToRecordHandler = async ({ data }: MessageEvent<ZusEventData>) => {
+      if (data.type === ZusAggregatedProfileOnAddToRecordMessageType) {
         const medicationStatement = new MedicationStatementModel(
           data.payload.resource,
           data.payload.includedResources
@@ -66,7 +69,16 @@ const ZusAggregatedProfileIFrameComponent = (props: ZusAggregatedProfileProps) =
           type: data.type,
         };
         try {
-          await props.medicationsOutsideProps?.onAddToRecord?.(medicationStatement);
+          switch (data.payload.component) {
+            case "medications-outside":
+              await props.medicationsOutsideProps?.onAddToRecord?.(medicationStatement);
+              break;
+            case "medications-all":
+              await props.medicationsAllProps?.onAddToRecord?.(medicationStatement);
+              break;
+            default:
+              response.error = `Unhandled onAddToRecord for component: ${data.payload.component}`;
+          }
         } catch (e) {
           response.error = e instanceof Error ? e.message : "Unknown error";
         }
@@ -93,7 +105,7 @@ const ZusAggregatedProfileIFrameComponent = (props: ZusAggregatedProfileProps) =
 
   useEffect(() => {
     // listener to know when iframe ZAP is ready
-    const onMessageReady = ({ data }: MessageEvent<EventData>) => {
+    const onMessageReady = ({ data }: MessageEvent<ZusEventData>) => {
       if (data.type === ZusAggregatedProfileIFrameReadyMessageType) {
         setHostedZapReady(true);
       }
@@ -105,9 +117,9 @@ const ZusAggregatedProfileIFrameComponent = (props: ZusAggregatedProfileProps) =
   useEffect(() => {
     // set up ZAP URL and listener for resource save
     let requestContext: CTWRequestContext | undefined;
-    const onMessageSave = ({ data }: MessageEvent) => {
+    const onMessageSave = ({ data }: MessageEvent<ZusEventData>) => {
       if (data.type === ZusAggregatedProfileOnResourceSaveMessageType) {
-        requestContext?.onResourceSave(data.resource, data.action, data.error);
+        requestContext?.onResourceSave(data.resource, data.action, new Error(data.error));
       }
     };
     void (async () => {

@@ -65,7 +65,7 @@ const theme: ThemeProviderProps["theme"] = {
   },
   iframe: {
     fontFamily: "Avenir",
-    fontSize: "160px",
+    fontSize: "16px",
   },
 };
 
@@ -153,12 +153,6 @@ const components: DemoComponent[] = [
           }}
           conditionsAllProps={{ onlyAllowAddOutsideConditions: true }}
           includePatientDemographicsForm={false}
-          resources={["medications-outside", "medications-all", "medications"]}
-          medicationsOutsideProps={{
-            onAddToRecord: async (record: MedicationStatementModel) => {
-              console.log("onAddToRecord", record);
-            },
-          }}
         />
       );
     },
