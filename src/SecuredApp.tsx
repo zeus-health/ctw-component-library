@@ -26,10 +26,7 @@ const SecuredAppComponent = ({ AppComponent }: SecuredAppProps) => {
 
       <button
         type="button"
-        onClick={() => {
-          trackInteraction("logout");
-          logout({ returnTo });
-        }}
+        onClick={() => logout({ returnTo })}
         className="ctw-w-full ctw-cursor-pointer ctw-bg-transparent ctw-p-0 ctw-text-base ctw-outline-none"
       >
         Log Out
