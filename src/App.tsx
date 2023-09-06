@@ -64,7 +64,7 @@ const theme: ThemeProviderProps["theme"] = {
   },
   iframe: {
     fontFamily: "Avenir",
-    fontSize: "16px",
+    headerSize: "12px",
   },
 };
 
@@ -146,6 +146,7 @@ const components: DemoComponent[] = [
       return (
         <ZusAggregatedProfile
           title="ZAP"
+          capitalizeTitle
           includePatientRecordSearch
           conditionsOutsideProps={{
             hideRequestRecords: true,

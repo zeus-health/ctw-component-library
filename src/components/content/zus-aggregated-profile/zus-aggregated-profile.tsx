@@ -2,6 +2,7 @@ import "./zus-aggregated-profile.scss";
 
 import { XIcon } from "@heroicons/react/outline";
 import { SearchIcon } from "@heroicons/react/solid";
+import cx from "classnames";
 import { useState } from "react";
 import { PatientConditionsAllProps } from "../conditions/patient-conditions-all";
 import { PatientConditionsOutsideProps } from "../conditions/patient-conditions-outside";
@@ -65,6 +66,7 @@ export type ZusAggregatedProfileProps = {
   includePatientRecordSearch?: boolean;
   hideTitle?: boolean;
   removeBranding?: boolean;
+  capitalizeTitle?: boolean;
   removeRequestRecords?: boolean;
 } & ZusAggregatedProfileSubComponentProps;
 
@@ -104,6 +106,7 @@ const ZusAggregatedProfileComponent = ({
   resources = defaultZAPResources,
   hideTitle = false,
   title = "Outside Records",
+  capitalizeTitle = false,
   removeBranding = false,
   removeRequestRecords = false,
 }: ZusAggregatedProfileProps) => {
@@ -149,18 +152,25 @@ const ZusAggregatedProfileComponent = ({
 
   return (
     <AnalyticsProvider componentName="ZusAggregatedProfile">
-      <div className="ctw-zus-aggregated-profile ctw-scrollable-pass-through-height ctw-text-base">
+      <div className="ctw-zus-aggregated-profile ctw-scrollable-pass-through-height">
         {!hideTitle && (
-          <Title className="ctw-border-b-2 ctw-border-l-0 ctw-border-r-0 ctw-border-t-0 ctw-border-solid ctw-border-divider-light">
-            <h3 className="ctw-m-0 ctw-inline-block ctw-p-0 ctw-pb-3 ctw-text-lg ctw-font-medium">
-              {zapTitle}
+          <Title
+            className={cx(
+              `ctw-border-b-2 ctw-border-l-0 ctw-border-r-0 ctw-border-t-0 ctw-border-solid ctw-border-divider-light ctw-bg-zap-headerBg`,
+              { "ctw-uppercase": capitalizeTitle }
+            )}
+          >
+            <div className="ctw-flex ctw-items-center ctw-space-x-1 ctw-py-3">
+              <h3 className="ctw-m-0 ctw-inline-block ctw-p-0  ctw-font-medium">{zapTitle}</h3>
               {!removeBranding && (
-                <span className="ctw-text-sm ctw-font-light ctw-italic ctw-text-content-light">
-                  {" "}
-                  Powered by <img src={ZusSVG} alt="Zus" className="-ctw-mb-1.5" />
-                </span>
+                <div className="ctw-flex ctw-items-center ctw-space-x-2">
+                  <span className="ctw-text-sm ctw-font-light ctw-italic ctw-text-content-light">
+                    Powered by
+                  </span>
+                  <img src={ZusSVG} alt="Zus" />
+                </div>
               )}
-            </h3>
+            </div>
 
             {/* If AI Search is included, show "search" and "close search" buttons */}
             <RenderIf condition={includePatientRecordSearch}>
