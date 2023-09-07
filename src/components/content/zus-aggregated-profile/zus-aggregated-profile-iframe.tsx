@@ -179,7 +179,7 @@ const ZusAggregatedProfileIFrameComponent = (props: ZusAggregatedProfileProps) =
       iframeRef.current?.contentWindow?.postMessage(
         {
           type: ZapIFrameConfigMessageType,
-          config: {
+          payload: {
             CTWProviderProps: ctwProviderProps,
             PatientProviderProps: patientProviderProps,
             ZusAggregatedProfileProps: {
