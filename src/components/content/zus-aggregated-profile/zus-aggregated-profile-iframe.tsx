@@ -27,24 +27,22 @@ export type ZapIFrameConfig = {
   ZusAggregatedProfileProps: ZusAggregatedProfileProps;
   iframeTheme: IFrameTheme;
 };
-export const ZapMessageTypes = {
-  onPatientSave: "ZusAggregatedProfileOnPatientSave" as const,
-  onAddToRecord: "ZusAggregatedProfileOnAddToRecord" as const,
-  onResourceSave: "ZusAggregatedProfileOnResourceSave" as const,
-  iframeConfig: "ZusAggregatedProfileIFrameConfig" as const,
-  iframeReady: "ZusAggregatedProfileIFrameReady" as const,
-};
-type ZapMessageTypesType = typeof ZapMessageTypes;
+export const ZapIFrameConfigMessageType = "ZusAggregatedProfileIFrameConfig";
+export const ZapIFrameReadyMessageType = "ZusAggregatedProfileIFrameReady";
+export const ZapOnResourceSaveMessageType = "ZusAggregatedProfileOnResourceSave";
+export const ZapOnPatientSaveMessageType = "ZusAggregatedProfileOnPatientSave";
+export const ZapOnAddToRecordMessageType = "ZusAggregatedProfileOnAddToRecord";
+
 export type ZapMessageEventData<EventType, EventPayload = never> = {
   type: EventType;
   payload?: EventPayload;
   error?: string;
   id?: string;
 };
-export type ZapMessageEventIFrameConfig = ZapMessageEventData<ZapMessageTypesType["iframeConfig"]>;
-export type ZapMessageEventIFrameReady = ZapMessageEventData<ZapMessageTypesType["iframeReady"]>;
+export type ZapMessageEventIFrameConfig = ZapMessageEventData<typeof ZapIFrameConfigMessageType>;
+export type ZapMessageEventIFrameReady = ZapMessageEventData<typeof ZapIFrameReadyMessageType>;
 export type ZapMessageEventOnResourceSave = ZapMessageEventData<
-  ZapMessageTypesType["onResourceSave"],
+  typeof ZapOnResourceSaveMessageType,
   {
     resource: Resource;
     action: "create" | "update";
@@ -52,7 +50,7 @@ export type ZapMessageEventOnResourceSave = ZapMessageEventData<
   }
 >;
 export type ZapMessageEventOnAddToRecord = ZapMessageEventData<
-  ZapMessageTypesType["onAddToRecord"],
+  typeof ZapOnAddToRecordMessageType,
   {
     resource: fhir4.MedicationStatement;
     includedResources?: Record<string, fhir4.Resource>;
@@ -79,7 +77,7 @@ const ZusAggregatedProfileIFrameComponent = (props: ZusAggregatedProfileProps) =
 
   useEffect(() => {
     const onAddToRecordHandler = async ({ data }: ZapMessageEvent) => {
-      if (data.type === ZapMessageTypes.onAddToRecord && typeof data.payload !== "undefined") {
+      if (data.type === ZapOnAddToRecordMessageType && typeof data.payload !== "undefined") {
         const medicationStatement = new MedicationStatementModel(
           data.payload.resource,
           data.payload.includedResources
@@ -126,7 +124,7 @@ const ZusAggregatedProfileIFrameComponent = (props: ZusAggregatedProfileProps) =
   useEffect(() => {
     // listener to know when iframe ZAP is ready
     const onMessageReady = ({ data }: ZapMessageEvent) => {
-      if (data.type === ZapMessageTypes.iframeReady) {
+      if (data.type === ZapIFrameReadyMessageType) {
         setHostedZapReady(true);
       }
     };
@@ -138,7 +136,7 @@ const ZusAggregatedProfileIFrameComponent = (props: ZusAggregatedProfileProps) =
     // set up ZAP URL and listener for resource save
     let requestContext: CTWRequestContext | undefined;
     const onMessageSave = ({ data }: ZapMessageEvent) => {
-      if (data.type === ZapMessageTypes.onResourceSave && typeof data.payload !== "undefined") {
+      if (data.type === ZapOnResourceSaveMessageType && typeof data.payload !== "undefined") {
         const { resource, action, error } = data.payload;
         requestContext?.onResourceSave(resource, action, new Error(error));
       }
@@ -177,7 +175,7 @@ const ZusAggregatedProfileIFrameComponent = (props: ZusAggregatedProfileProps) =
 
       iframeRef.current?.contentWindow?.postMessage(
         {
-          type: ZapMessageTypes.iframeConfig,
+          type: ZapIFrameConfigMessageType,
           config: {
             CTWProviderProps: ctwProviderProps,
             PatientProviderProps: patientProviderProps,
