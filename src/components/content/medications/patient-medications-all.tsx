@@ -22,7 +22,7 @@ import { useBaseTranslations } from "@/i18n";
 export type PatientMedicationsAllProps = {
   className?: string;
   readOnly?: boolean;
-  onAddToRecord?: (record: MedicationStatementModel) => void;
+  onAddToRecord?: (record: MedicationStatementModel) => Promise<void> | void;
 };
 
 function PatientMedicationsAllComponent({
