@@ -56,6 +56,7 @@ export type ZapOnAddToRecordMessageEvent = ZapMessageEventData<
     component: "medications-outside" | "medications-all";
   }
 >;
+
 export type ZapMessageEvent = MessageEvent<
   | ZapOnAddToRecordMessageEvent
   | ZapOnResourceSaveMessageEvent
