@@ -36,7 +36,7 @@ export const ZapOnAddToRecordMessageType = "ZusAggregatedProfileOnAddToRecord";
 export type ZapMessageEventData<EventType, EventPayload = undefined> = {
   type: EventType;
   id?: string;
-} & ({ payload: EventPayload; error: never } | { payload: never; error: string });
+} & ({ payload: EventPayload; error?: never } | { payload?: never; error: string });
 
 export type ZapIFrameConfigMessageEvent = ZapMessageEventData<typeof ZapIFrameConfigMessageType>;
 export type ZapIFrameReadyMessageEvent = ZapMessageEventData<typeof ZapIFrameReadyMessageType>;
@@ -76,7 +76,7 @@ const ZusAggregatedProfileIFrameComponent = (props: ZusAggregatedProfileProps) =
 
   useEffect(() => {
     const onAddToRecordHandler = async ({ data }: ZapMessageEvent) => {
-      if (data.type === ZapOnAddToRecordMessageType && typeof data.payload !== "undefined") {
+      if (data.type === ZapOnAddToRecordMessageType && typeof data.error !== "string") {
         const medicationStatement = new MedicationStatementModel(
           data.payload.resource,
           data.payload.includedResources
@@ -142,7 +142,7 @@ const ZusAggregatedProfileIFrameComponent = (props: ZusAggregatedProfileProps) =
     })();
 
     const onMessageSave = ({ data }: ZapMessageEvent) => {
-      if (data.type === ZapOnResourceSaveMessageType && typeof data.payload !== "undefined") {
+      if (data.type === ZapOnResourceSaveMessageType && typeof data.error !== "string") {
         const { resource, action, error } = data.payload;
         requestContext?.onResourceSave(resource, action, new Error(error));
       }
