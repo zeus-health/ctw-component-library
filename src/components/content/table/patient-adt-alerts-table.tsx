@@ -1,29 +1,34 @@
 import type { TableColumn } from "@/components/core/table/table-helpers";
 import type { PatientModel } from "@/fhir/models/patient";
 import { SearchIcon } from "@heroicons/react/solid";
+import { WithRequired } from "@tanstack/react-query";
 import cx from "classnames";
 import { TableOptionProps } from "../patients/patients-table";
 import * as CTWBox from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
+import { SimpleMoreList } from "@/components/core/simple-more-list";
 import { Table } from "@/components/core/table/table";
+import { EncounterModel } from "@/fhir/models/encounter";
 
-export type PatientsADTTableProps = {
+export type EncounterWithPatientModel = WithRequired<EncounterModel, "patient">;
+
+export type ADTTableProps = {
   className?: cx.Argument;
-  handleRowClick?: (row: PatientModel) => void;
+  handleRowClick?: (row: EncounterWithPatientModel) => void;
   pageSize?: number;
   title?: string;
-  data: PatientModel[];
-} & TableOptionProps<PatientModel>;
+  data: EncounterWithPatientModel[];
+} & TableOptionProps<EncounterWithPatientModel>;
 
-export const PatientsADTAlertsTable = withErrorBoundary(
+export const ADTAlertsTable = withErrorBoundary(
   ({
     className,
     handleRowClick,
     pageSize = 5,
     title = "Patients ADT Alerts",
     data,
-  }: PatientsADTTableProps) => (
+  }: ADTTableProps) => (
     // This resets our state when there is an error fetching patients from ODS.
 
     <AnalyticsProvider componentName="PatientsTable">
@@ -52,27 +57,53 @@ export const PatientsADTAlertsTable = withErrorBoundary(
   "PatientsTable"
 );
 
-const columns: TableColumn<PatientModel>[] = [
+const columns: TableColumn<EncounterWithPatientModel>[] = [
   {
-    title: "Name",
-    render: (patient) => <PatientNameColumn patient={patient} />,
+    title: "Patient",
+    render: (e) => <PatientColumn patient={e.patient} />,
   },
   {
     title: "Contact",
-    render: ({ email, phoneNumber }) => (
+    render: (e) => {
+      const { email, phoneNumber } = e.patient;
+      return (
+        <>
+          <div className="ctw-patients-table-inputs-email">{email}</div>
+          <div className="ctw-patients-table-inputs-phone">{phoneNumber}</div>
+        </>
+      );
+    },
+  },
+  {
+    title: "Date",
+    render: (e) => e.periodStart,
+  },
+  {
+    title: "Status",
+    render: (e) => (
       <>
-        <div className="ctw-patients-table-inputs-email">{email}</div>
-        <div className="ctw-patients-table-inputs-phone">{phoneNumber}</div>
+        <div>{e.periodEnd ? "Discharged" : "Active"}</div>
+        <div>{e.typeDisplay}</div>
       </>
+    ),
+  },
+  {
+    title: "Location",
+    render: (e) => e.location,
+  },
+  {
+    title: "Diagnosis",
+    render: (e) => (
+      <SimpleMoreList items={e.diagnoses ?? []} limit={3} total={e.diagnoses?.length ?? 0} />
     ),
   },
 ];
 
-type PatientNameColumnProps = {
+type PatientColumnProps = {
   patient: PatientModel;
 };
 
-const PatientNameColumn = ({ patient }: PatientNameColumnProps) => (
+const PatientColumn = ({ patient }: PatientColumnProps) => (
   <div className="ctw-flex ctw-items-center">
     <div className="ctw-ml-4">
       <div className="ctw-flex ctw-font-medium">
