@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.63.0
+
+### Minor Changes
+
+- 0fedb2ff: Support onRecordSave for medications components in the iframe ZAP.
+
 ## 1.62.0
 
 ### Minor Changes
