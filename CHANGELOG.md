@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.63.1
+
+### Patch Changes
+
+- e2eb5cd9: Show empty table if test patient and no pt hx requests have been made
+- 37e7e3bb: Hide last patient history request for test patients
+
 ## 1.63.0
 
 ### Minor Changes
