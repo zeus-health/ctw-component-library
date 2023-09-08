@@ -27,7 +27,7 @@ import {
 } from ".";
 
 import { PatientMedicationDispense } from "./components/content/medication-dispense/patient-medication-dispense";
-import { ADTAlertsTable } from "./components/content/patients-adt/patients-adt-alerts";
+import { ADTAlertsTable } from "./components/content/patients-adt/patients-adt-alerts-table";
 import { ThemeProviderProps } from "@/components/core/providers/theme/theme-provider";
 
 const {
