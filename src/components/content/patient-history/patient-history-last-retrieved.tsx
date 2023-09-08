@@ -18,7 +18,7 @@ export const PatientHistoryLastRetrieved = () => {
     return (
       <div className="ctw-space-x-1 ctw-text-sm ctw-italic ctw-text-black">
         <span>Last Retrieved</span>
-        <span>{formatISODateStringToDate(patientHistory.lastRetrievedAt)}</span>
+        <span>{formatISODateStringToDate(lastRetrievedAt)}</span>
       </div>
     );
   }
