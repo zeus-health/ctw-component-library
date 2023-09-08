@@ -29,7 +29,7 @@ export const ADTAlertsTable = withErrorBoundary(
     title = "Patients ADT Alerts",
     data,
   }: ADTTableProps) => (
-    // This resets our state when there is an error fetching patients from ODS.
+    // This resets our state when there is an error fetching data from ODS.
 
     <AnalyticsProvider componentName="PatientsTable">
       <CTWBox.StackedWrapper
