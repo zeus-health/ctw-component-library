@@ -186,4 +186,19 @@ export class PatientModel extends FHIRModel<fhir4.Patient> {
   get suffix(): string | undefined {
     return this.bestName.suffix?.join(" ");
   }
+
+  get isTestPatient(): boolean {
+    // no security tags means not a test patient
+    if (!this.resource.meta || !this.resource.meta.security) {
+      return false;
+    }
+
+    return (
+      this.resource.meta.security.filter(
+        (secTag) =>
+          secTag.system === "http://terminology.hl7.org/CodeSystem/v3-ActReason" &&
+          secTag.code === "HTEST"
+      ).length > 0
+    );
+  }
 }
