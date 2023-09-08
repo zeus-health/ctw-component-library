@@ -11,6 +11,7 @@ import { PatientMedicationsProps } from "../medications/patient-medications";
 import { PatientMedicationsAllProps } from "../medications/patient-medications-all";
 import { PatientMedicationsOutsideProps } from "../medications/patient-medications-outside";
 import { PatientTimelineProps } from "../timeline/patient-timeline";
+import ZusSVG from "@/assets/zus.svg";
 import { PatientAllergiesProps } from "@/components/content/allergies/patient-allergies";
 import { PatientCareTeamProps } from "@/components/content/care-team/patient-careteam";
 import { PatientConditionsProps } from "@/components/content/conditions/patient-conditions";
@@ -28,7 +29,6 @@ import { AnalyticsProvider } from "@/components/core/providers/analytics/analyti
 import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { RenderIf } from "@/components/core/render-if";
 import { TabGroup } from "@/components/core/tab-group/tab-group";
-import { ZusIcon } from "@/components/core/zus-icon";
 import { intersection } from "@/utils/nodash";
 
 export type ZAPResourceName =
@@ -157,7 +157,7 @@ const ZusAggregatedProfileComponent = ({
               {!removeBranding && (
                 <span className="ctw-text-sm ctw-font-light ctw-italic ctw-text-content-light">
                   {" "}
-                  Powered by <ZusIcon className="-ctw-mb-1.5" />
+                  Powered by <img src={ZusSVG} alt="Zus" className="-ctw-mb-1.5" />
                 </span>
               )}
             </h3>
