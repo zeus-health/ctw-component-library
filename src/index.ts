@@ -46,6 +46,7 @@ export * from "@/components/core/pagination/pagination-list";
 export * as CTWBox from "@/components/core/ctw-box";
 export * from "@/components/core/form/drawer-form-with-fields";
 export * from "@/components/core/providers/use-ctw";
+export * from "@/components/core/icons/zus-icon";
 // Zus Providers and Hooks
 export * from "@/components/core/drawer";
 export * from "@/components/core/error-boundary";
