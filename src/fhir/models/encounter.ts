@@ -87,7 +87,7 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
   }
 
   get status() {
-    return this.resource.class;
+    return this.resource.status;
   }
 
   get typeCodings(): Coding[] {
