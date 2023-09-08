@@ -150,7 +150,6 @@ const components: DemoComponent[] = [
           conditionsOutsideProps={{
             hideRequestRecords: true,
           }}
-          conditionsAllProps={{ onlyAllowAddOutsideConditions: true }}
           includePatientDemographicsForm={false}
         />
       );
