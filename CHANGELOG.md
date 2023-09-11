@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.65.2
+
+### Patch Changes
+
+- 2c18ca57: Update encountermodel and table.
+
 ## 1.65.1
 
 ### Patch Changes
