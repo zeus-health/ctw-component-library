@@ -1,5 +1,16 @@
 # ctw-component-library
 
+## 1.64.0
+
+### Minor Changes
+
+- 78c716a4: Export ZusIcon
+
+### Patch Changes
+
+- 63554009: Fix display of delete confirmation modal.
+- 232a8f56: Add columns to ADT table
+
 ## 1.63.1
 
 ### Patch Changes
