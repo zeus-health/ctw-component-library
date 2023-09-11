@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.65.3
+
+### Patch Changes
+
+- f5689b7d: Export encounterModel.
+
 ## 1.65.2
 
 ### Patch Changes
