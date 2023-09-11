@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.65.4
+
+### Patch Changes
+
+- 871a76eb: Exports the ADT drawer.
+
 ## 1.65.3
 
 ### Patch Changes
