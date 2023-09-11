@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.65.0
+
+### Minor Changes
+
+- e19cb86f: ZusIcon includes zus name only with prop "includeZusText"
+
 ## 1.64.0
 
 ### Minor Changes
