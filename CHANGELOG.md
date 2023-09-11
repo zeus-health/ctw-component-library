@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.65.5
+
+### Patch Changes
+
+- 704420ab: Add some missing spaces in the ADT drawer table.
+
 ## 1.65.4
 
 ### Patch Changes
