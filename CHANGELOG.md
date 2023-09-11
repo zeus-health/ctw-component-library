@@ -1,5 +1,29 @@
 # ctw-component-library
 
+## 1.65.3
+
+### Patch Changes
+
+- f5689b7d: Export encounterModel.
+
+## 1.65.2
+
+### Patch Changes
+
+- 2c18ca57: Update encountermodel and table.
+
+## 1.65.1
+
+### Patch Changes
+
+- 2973ed1c: ZusIcon viewport dynamically adjusts based on whether "zus" text is visible.
+
+## 1.65.0
+
+### Minor Changes
+
+- e19cb86f: ZusIcon includes zus name only with prop "includeZusText"
+
 ## 1.64.0
 
 ### Minor Changes
