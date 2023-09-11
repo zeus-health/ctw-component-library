@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.65.1
+
+### Patch Changes
+
+- 2973ed1c: ZusIcon viewport dynamically adjusts based on whether "zus" text is visible.
+
 ## 1.65.0
 
 ### Minor Changes
