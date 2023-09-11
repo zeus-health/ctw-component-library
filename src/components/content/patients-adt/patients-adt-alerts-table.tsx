@@ -3,11 +3,11 @@ import type { PatientModel } from "@/fhir/models/patient";
 import { SearchIcon } from "@heroicons/react/solid";
 import cx from "classnames";
 import { TableOptionProps } from "../patients/patients-table";
+import { ResourceTable } from "../resource/resource-table";
 import * as CTWBox from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { SimpleMoreList } from "@/components/core/simple-more-list";
-import { Table } from "@/components/core/table/table";
 import { EncounterModel } from "@/fhir/models/encounter";
 
 export type ADTTableProps = {
@@ -19,13 +19,7 @@ export type ADTTableProps = {
 } & TableOptionProps<EncounterModel>;
 
 export const ADTAlertsTable = withErrorBoundary(
-  ({
-    className,
-    handleRowClick,
-    pageSize = 5,
-    title = "Patients ADT Alerts",
-    data,
-  }: ADTTableProps) => (
+  ({ className, handleRowClick, title = "Patients ADT Alerts", data }: ADTTableProps) => (
     // This resets our state when there is an error fetching data from ODS.
 
     <AnalyticsProvider componentName="PatientsTable">
@@ -40,13 +34,7 @@ export const ADTAlertsTable = withErrorBoundary(
           </div>
         </CTWBox.Heading>
         <div className="ctw-overflow-hidden">
-          <Table
-            records={data}
-            columns={columns}
-            handleRowClick={handleRowClick}
-            pageSize={pageSize}
-            hidePagination
-          />
+          <ResourceTable data={data} columns={columns} onRowClick={handleRowClick} />
         </div>
       </CTWBox.StackedWrapper>
     </AnalyticsProvider>
