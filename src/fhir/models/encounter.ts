@@ -1,6 +1,7 @@
 import { Coding, Resource } from "fhir/r4";
 import { DocumentModel } from "./document";
 import { FHIRModel } from "./fhir-model";
+import { PatientModel } from "./patient";
 import { codeableConceptLabel } from "../codeable-concept";
 import { formatDateISOToLocal } from "../formatters";
 import { findReference } from "../resource-helper";
@@ -18,6 +19,8 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
 
   public clinicalNotes: DocumentModel[];
 
+  public readonly patient?: PatientModel;
+
   constructor(
     resource: fhir4.Encounter,
     provenance: fhir4.Provenance[],
@@ -33,6 +36,8 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
         (d) => d.binaryId === binaryID && isSectionDocument(d) && !isEmptyClinicalNote(d)
       );
     }
+    const patient = findReference("Patient", undefined, includedResources, resource.subject);
+    this.patient = patient ? new PatientModel(patient) : undefined;
   }
 
   get lastUpdated(): string | undefined {

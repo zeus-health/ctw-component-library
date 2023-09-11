@@ -27,7 +27,7 @@ import {
 } from ".";
 
 import { PatientMedicationDispense } from "./components/content/medication-dispense/patient-medication-dispense";
-import { PatientsADTAlertsTable } from "./components/content/table/patient-adt-alerts-table";
+import { ADTAlertsTable } from "./components/content/patients-adt/patients-adt-alerts-table";
 import { ThemeProviderProps } from "@/components/core/providers/theme/theme-provider";
 
 const {
@@ -136,7 +136,7 @@ const components: DemoComponent[] = [
   },
   {
     name: "patient-adt-table",
-    render: () => <PatientsADTAlertsTable data={[]} />,
+    render: () => <ADTAlertsTable data={[]} />,
     title: "Patient ADT Alerts Table",
   },
 
