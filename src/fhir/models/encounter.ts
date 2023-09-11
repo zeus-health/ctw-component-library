@@ -19,8 +19,6 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
 
   public clinicalNotes: DocumentModel[];
 
-  public readonly patient?: PatientModel;
-
   constructor(
     resource: fhir4.Encounter,
     provenance: fhir4.Provenance[],
@@ -36,8 +34,6 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
         (d) => d.binaryId === binaryID && isSectionDocument(d) && !isEmptyClinicalNote(d)
       );
     }
-    const patient = findReference("Patient", undefined, includedResources, resource.subject);
-    this.patient = patient ? new PatientModel(patient) : undefined;
   }
 
   get lastUpdated(): string | undefined {
@@ -45,6 +41,11 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
       this.resource.meta?.lastUpdated ||
       this.resource.meta?.extension?.find((e) => e.url === SYSTEM_ZUS_CREATED_AT)?.valueDateTime
     );
+  }
+
+  get patient(): PatientModel | undefined {
+    const patient = findReference("Patient", undefined, undefined, this.resource.subject);
+    return patient ? new PatientModel(patient) : undefined;
   }
 
   get class(): string | undefined {
