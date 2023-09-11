@@ -3,7 +3,12 @@ type ZusIconProps = {
   includeZusText?: boolean;
 };
 export const ZusIcon = ({ className, includeZusText = false }: ZusIconProps) => (
-  <svg viewBox="0 0 47 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+  <svg
+    viewBox={includeZusText ? "0 0 47 24" : "0 0 24 24"}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
     <title>Zus Health</title>
     <g clip-path="url(#clip0_105_5210)">
       <path
