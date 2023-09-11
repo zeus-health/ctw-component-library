@@ -10,3 +10,4 @@ export { OperationOutcomeModel } from "@/fhir/models/operation-outcome";
 export { OrganizationModel } from "@/fhir/models/organization";
 export { PatientModel } from "@/fhir/models/patient";
 export { PractitionerModel } from "@/fhir/models/practitioner";
+export { EncounterModel } from "@/fhir/models/encounter";
