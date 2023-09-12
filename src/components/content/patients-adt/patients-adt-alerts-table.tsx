@@ -17,7 +17,6 @@ import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 
 export type ADTTableProps = {
   className?: cx.Argument;
-  pageSize?: number;
   query: UseQueryResult<EncounterModel[], unknown>;
 } & TableOptionProps<EncounterModel>;
 
