@@ -146,7 +146,6 @@ const components: DemoComponent[] = [
       return (
         <ZusAggregatedProfile
           title="ZAP"
-          capitalizeTitle
           includePatientRecordSearch
           conditionsOutsideProps={{
             hideRequestRecords: true,

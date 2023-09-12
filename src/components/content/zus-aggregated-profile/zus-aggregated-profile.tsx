@@ -106,7 +106,6 @@ const ZusAggregatedProfileComponent = ({
   resources = defaultZAPResources,
   hideTitle = false,
   title = "Outside Records",
-  capitalizeTitle = false,
   removeBranding = false,
   removeRequestRecords = false,
 }: ZusAggregatedProfileProps) => {
@@ -156,8 +155,7 @@ const ZusAggregatedProfileComponent = ({
         {!hideTitle && (
           <Title
             className={cx(
-              `ctw-border-b-2 ctw-border-l-0 ctw-border-r-0 ctw-border-t-0 ctw-border-solid ctw-border-divider-light ctw-bg-zap-headerBg`,
-              { "ctw-uppercase": capitalizeTitle }
+              `ctw-border-b-2 ctw-border-l-0 ctw-border-r-0 ctw-border-t-0 ctw-border-solid ctw-border-divider-light ctw-bg-zap-headerBg`
             )}
           >
             <div className="ctw-flex ctw-items-center ctw-space-x-1 ctw-py-3">
