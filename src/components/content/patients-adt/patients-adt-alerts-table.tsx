@@ -1,46 +1,60 @@
 import type { TableColumn } from "@/components/core/table/table-helpers";
 import type { PatientModel } from "@/fhir/models/patient";
-import { SearchIcon } from "@heroicons/react/solid";
 import cx from "classnames";
+import { useADTAlertDetailsDrawer } from "./modal-hooks";
+import { defaultEncounterFilters } from "../encounters/helpers/filters";
 import { TableOptionProps } from "../patients/patients-table";
+import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { ResourceTable } from "../resource/resource-table";
-import * as CTWBox from "@/components/core/ctw-box";
+import { ResourceTableActions } from "../resource/resource-table-actions";
+import { EmptyTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { SimpleMoreList } from "@/components/core/simple-more-list";
 import { EncounterModel } from "@/fhir/models/encounter";
+import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 
 export type ADTTableProps = {
   className?: cx.Argument;
-  handleRowClick?: (row: EncounterModel) => void;
-  pageSize?: number;
-  title?: string;
+  isLoading?: boolean;
   data: EncounterModel[];
 } & TableOptionProps<EncounterModel>;
 
-export const ADTAlertsTable = withErrorBoundary(
-  ({ className, handleRowClick, title = "Patients ADT Alerts", data }: ADTTableProps) => (
-    // This resets our state when there is an error fetching data from ODS.
+function ADTTableComponent({ className, isLoading = false, data }: ADTTableProps) {
+  const openADTDetails = useADTAlertDetailsDrawer();
 
-    <AnalyticsProvider componentName="PatientsTable">
-      <CTWBox.StackedWrapper
-        className={cx("ctw-patients-border ctw-patients-table-inputs", className)}
-      >
-        <CTWBox.Heading title={title}>
-          <div className="ctw-relative">
-            <div className="ctw-search-icon-wrapper">
-              <SearchIcon className="ctw-search-icon" />
-            </div>
-          </div>
-        </CTWBox.Heading>
-        <div className="ctw-overflow-hidden">
-          <ResourceTable data={data} columns={columns} onRowClick={handleRowClick} />
-        </div>
-      </CTWBox.StackedWrapper>
+  const { viewOptions, past30days } = getDateRangeView<EncounterModel>("periodStart");
+  const { data: dataFiltered, setViewOption } = useFilteredSortedData({
+    defaultView: past30days,
+    defaultFilters: defaultEncounterFilters,
+    records: data,
+  });
+
+  return (
+    <AnalyticsProvider componentName="ADTTable">
+      <div className={cx("ctw-scrollable-pass-through-height", className)}>
+        <ResourceTableActions
+          viewOptions={{
+            onChange: setViewOption,
+            options: viewOptions,
+            defaultView: past30days,
+          }}
+        />
+        <ResourceTable
+          data={dataFiltered}
+          columns={columns}
+          isLoading={isLoading}
+          emptyMessage={
+            <EmptyTable hasZeroFilteredRecords={data.length === 0} resourceName="encounters" />
+          }
+          onRowClick={openADTDetails}
+        />
+      </div>
     </AnalyticsProvider>
-  ),
-  "PatientsTable"
-);
+  );
+}
+
+export const ADTAlertsTable = withErrorBoundary(ADTTableComponent, "ADTTable");
 
 const columns: TableColumn<EncounterModel>[] = [
   {
