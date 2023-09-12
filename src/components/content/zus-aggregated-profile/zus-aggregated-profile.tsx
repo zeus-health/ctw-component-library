@@ -66,7 +66,6 @@ export type ZusAggregatedProfileProps = {
   includePatientRecordSearch?: boolean;
   hideTitle?: boolean;
   removeBranding?: boolean;
-  capitalizeTitle?: boolean;
   removeRequestRecords?: boolean;
 } & ZusAggregatedProfileSubComponentProps;
 
