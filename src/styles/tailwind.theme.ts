@@ -76,6 +76,9 @@ export const TailwindTheme = {
       dark: "#E5E7EB",
       black: "#111827",
     },
+    zap: {
+      headerBg: "#ffffff",
+    },
   },
 };
 

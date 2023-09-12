@@ -65,7 +65,7 @@ const theme: ThemeProviderProps["theme"] = {
   },
   iframe: {
     fontFamily: "Avenir",
-    fontSize: "16px",
+    headerSize: "12px",
   },
 };
 
