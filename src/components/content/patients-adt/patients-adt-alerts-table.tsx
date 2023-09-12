@@ -1,6 +1,5 @@
 import type { TableColumn } from "@/components/core/table/table-helpers";
 import type { PatientModel } from "@/fhir/models/patient";
-import { UseQueryResult } from "@tanstack/react-query/build/lib/types";
 import cx from "classnames";
 import { useADTAlertDetailsDrawer } from "./modal-hooks";
 import { defaultEncounterFilters } from "../encounters/helpers/filters";
@@ -17,18 +16,18 @@ import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 
 export type ADTTableProps = {
   className?: cx.Argument;
-  query: UseQueryResult<EncounterModel[], unknown>;
+  isLoading?: boolean;
+  data: EncounterModel[];
 } & TableOptionProps<EncounterModel>;
 
-function ADTTableComponent({ className, query }: ADTTableProps) {
-  const { isLoading } = query;
+function ADTTableComponent({ className, isLoading = false, data }: ADTTableProps) {
   const openADTDetails = useADTAlertDetailsDrawer();
 
   const { viewOptions, past30days } = getDateRangeView<EncounterModel>("periodStart");
-  const { data, setViewOption } = useFilteredSortedData({
+  const { data: dataFiltered, setViewOption } = useFilteredSortedData({
     defaultView: past30days,
     defaultFilters: defaultEncounterFilters,
-    records: query.data,
+    records: data,
   });
 
   return (
@@ -42,7 +41,7 @@ function ADTTableComponent({ className, query }: ADTTableProps) {
           }}
         />
         <ResourceTable
-          data={data}
+          data={dataFiltered}
           columns={columns}
           isLoading={isLoading}
           emptyMessage={
