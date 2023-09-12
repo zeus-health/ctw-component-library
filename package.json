@@ -144,7 +144,7 @@
     "use-isomorphic-layout-effect": "^1.1.2",
     "uuid": "^9.0.0",
     "xml-beautify": "^1.2.3",
-    "xpath": "^0.0.32",
+    "xpath": "^0.0.33",
     "zod": "^3.19.0"
   },
   "msw": {
