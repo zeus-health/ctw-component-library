@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.65.6
+
+### Patch Changes
+
+- 03975654: Add ability to override zus aggregate profile header with more config options.
+
 ## 1.65.5
 
 ### Patch Changes
