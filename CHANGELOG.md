@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.65.7
+
+### Patch Changes
+
+- abbe7f1a: Refactor and add relative time based views to the ADT table.
+
 ## 1.65.6
 
 ### Patch Changes
