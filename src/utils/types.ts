@@ -18,3 +18,5 @@ export const isEmptyValue = (value: unknown) =>
 export type DeepPartial<T> = {
   [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K];
 };
+
+export type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
