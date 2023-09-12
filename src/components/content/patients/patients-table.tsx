@@ -16,7 +16,7 @@ import { Table } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
 import { getBuilderPatientsList } from "@/fhir/patient-helper";
 import { debounce } from "@/utils/nodash";
-import { QUERY_KEY_PATIENTS_LIST } from "@/utils/query-keys";
+import { queryKeyPatientsList } from "@/utils/query-keys";
 
 export type PatientsTableProps = {
   className?: cx.Argument;
@@ -34,7 +34,7 @@ export type TableOptionProps<T extends MinRecordItem> = {
 export function usePatientsList(pageSize: number, pageOffset: number, searchNameValue?: string) {
   const userBuilderId = useUserBuilderId();
   return useQueryWithCTW(
-    `${QUERY_KEY_PATIENTS_LIST}_${userBuilderId}`, // Unique query key for each builder
+    queryKeyPatientsList(userBuilderId),
     [pageSize, pageOffset, searchNameValue],
     getBuilderPatientsList
   );
