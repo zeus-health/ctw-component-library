@@ -4,19 +4,17 @@ import ZusSVG from "@/assets/zus.svg";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { ComboboxField, ComboxboxFieldOption } from "@/components/core/form/combobox-field";
 import { useQueryWithCTW } from "@/components/core/providers/use-query-with-ctw";
-import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { PatientModel } from "@/fhir/models";
 import { getBuilderPatientListWithSearch } from "@/fhir/patient-helper";
-import { queryKeyPatientsList } from "@/utils/query-keys";
+import { QUERY_KEY_PATIENTS_LIST } from "@/utils/query-keys";
 
 export function usePatientSearchList(
   pageSize: number,
   pageOffset: number,
   searchNameValue?: string
 ) {
-  const userBuilderId = useUserBuilderId();
   return useQueryWithCTW(
-    queryKeyPatientsList(userBuilderId),
+    QUERY_KEY_PATIENTS_LIST,
     [pageSize, pageOffset, searchNameValue],
     getBuilderPatientListWithSearch,
     !!searchNameValue
