@@ -2,7 +2,7 @@ import type { TableColumn } from "@/components/core/table/table-helpers";
 import type { PatientModel } from "@/fhir/models/patient";
 import cx from "classnames";
 import { useADTAlertDetailsDrawer } from "./modal-hooks";
-import { defaultEncounterFilters } from "../encounters/helpers/filters";
+import { dedupeAndMergeEncounters, defaultEncounterFilters } from "../encounters/helpers/filters";
 import { TableOptionProps } from "../patients/patients-table";
 import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { ResourceTable } from "../resource/resource-table";
@@ -29,6 +29,7 @@ function ADTTableComponent({ className, isLoading = false, data }: ADTTableProps
     defaultFilters: defaultEncounterFilters,
     records: data,
   });
+  const dataDeduped = dedupeAndMergeEncounters(dataFiltered, "patientsADT");
 
   return (
     <AnalyticsProvider componentName="ADTTable">
@@ -41,7 +42,7 @@ function ADTTableComponent({ className, isLoading = false, data }: ADTTableProps
           }}
         />
         <ResourceTable
-          data={dataFiltered}
+          data={dataDeduped}
           columns={columns}
           isLoading={isLoading}
           emptyMessage={
