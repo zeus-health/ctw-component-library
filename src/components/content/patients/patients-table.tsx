@@ -11,6 +11,7 @@ import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Pagination } from "@/components/core/pagination/pagination";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { useQueryWithCTW } from "@/components/core/providers/use-query-with-ctw";
+import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { Table } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
 import { getBuilderPatientsList } from "@/fhir/patient-helper";
@@ -31,8 +32,9 @@ export type TableOptionProps<T extends MinRecordItem> = {
 };
 
 export function usePatientsList(pageSize: number, pageOffset: number, searchNameValue?: string) {
+  const userBuilderId = useUserBuilderId();
   return useQueryWithCTW(
-    QUERY_KEY_PATIENTS_LIST,
+    `${QUERY_KEY_PATIENTS_LIST}_${userBuilderId}`, // Unique query key for each builder
     [pageSize, pageOffset, searchNameValue],
     getBuilderPatientsList
   );
