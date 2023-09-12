@@ -32,7 +32,7 @@ function ADTTableComponent({ className, query }: ADTTableProps) {
   });
 
   return (
-    <AnalyticsProvider componentName="PatientsTable">
+    <AnalyticsProvider componentName="ADTTable">
       <div className={cx("ctw-scrollable-pass-through-height", className)}>
         <ResourceTableActions
           viewOptions={{
@@ -55,7 +55,7 @@ function ADTTableComponent({ className, query }: ADTTableProps) {
   );
 }
 
-export const ADTAlertsTable = withErrorBoundary(ADTTableComponent, "PatientsTable");
+export const ADTAlertsTable = withErrorBoundary(ADTTableComponent, "ADTTable");
 
 const columns: TableColumn<EncounterModel>[] = [
   {
