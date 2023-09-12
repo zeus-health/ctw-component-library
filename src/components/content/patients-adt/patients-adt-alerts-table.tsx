@@ -3,28 +3,24 @@ import type { PatientModel } from "@/fhir/models/patient";
 import { SearchIcon } from "@heroicons/react/solid";
 import cx from "classnames";
 import { TableOptionProps } from "../patients/patients-table";
+import { ResourceTable } from "../resource/resource-table";
 import * as CTWBox from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
-import { Table } from "@/components/core/table/table";
+import { SimpleMoreList } from "@/components/core/simple-more-list";
+import { EncounterModel } from "@/fhir/models/encounter";
 
-export type PatientsADTTableProps = {
+export type ADTTableProps = {
   className?: cx.Argument;
-  handleRowClick?: (row: PatientModel) => void;
+  handleRowClick?: (row: EncounterModel) => void;
   pageSize?: number;
   title?: string;
-  data: PatientModel[];
-} & TableOptionProps<PatientModel>;
+  data: EncounterModel[];
+} & TableOptionProps<EncounterModel>;
 
-export const PatientsADTAlertsTable = withErrorBoundary(
-  ({
-    className,
-    handleRowClick,
-    pageSize = 5,
-    title = "Patients ADT Alerts",
-    data,
-  }: PatientsADTTableProps) => (
-    // This resets our state when there is an error fetching patients from ODS.
+export const ADTAlertsTable = withErrorBoundary(
+  ({ className, handleRowClick, title = "Patients ADT Alerts", data }: ADTTableProps) => (
+    // This resets our state when there is an error fetching data from ODS.
 
     <AnalyticsProvider componentName="PatientsTable">
       <CTWBox.StackedWrapper
@@ -38,13 +34,7 @@ export const PatientsADTAlertsTable = withErrorBoundary(
           </div>
         </CTWBox.Heading>
         <div className="ctw-overflow-hidden">
-          <Table
-            records={data}
-            columns={columns}
-            handleRowClick={handleRowClick}
-            pageSize={pageSize}
-            hidePagination
-          />
+          <ResourceTable data={data} columns={columns} onRowClick={handleRowClick} />
         </div>
       </CTWBox.StackedWrapper>
     </AnalyticsProvider>
@@ -52,27 +42,41 @@ export const PatientsADTAlertsTable = withErrorBoundary(
   "PatientsTable"
 );
 
-const columns: TableColumn<PatientModel>[] = [
+const columns: TableColumn<EncounterModel>[] = [
   {
-    title: "Name",
-    render: (patient) => <PatientNameColumn patient={patient} />,
+    title: "Patient",
+    render: (e) => e.patient && <PatientColumn patient={e.patient} />,
   },
   {
-    title: "Contact",
-    render: ({ email, phoneNumber }) => (
+    title: "Date",
+    render: (e) => e.periodStart,
+  },
+  {
+    title: "Status",
+    render: (e) => (
       <>
-        <div className="ctw-patients-table-inputs-email">{email}</div>
-        <div className="ctw-patients-table-inputs-phone">{phoneNumber}</div>
+        <div>{e.periodEnd ? "Discharged" : "Active"}</div>
+        <div>{e.typeDisplay}</div>
       </>
+    ),
+  },
+  {
+    title: "Location",
+    render: (e) => e.location,
+  },
+  {
+    title: "Diagnosis",
+    render: (e) => (
+      <SimpleMoreList items={e.diagnoses ?? []} limit={3} total={e.diagnoses?.length ?? 0} />
     ),
   },
 ];
 
-type PatientNameColumnProps = {
+type PatientColumnProps = {
   patient: PatientModel;
 };
 
-const PatientNameColumn = ({ patient }: PatientNameColumnProps) => (
+const PatientColumn = ({ patient }: PatientColumnProps) => (
   <div className="ctw-flex ctw-items-center">
     <div className="ctw-ml-4">
       <div className="ctw-flex ctw-font-medium">

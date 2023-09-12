@@ -1,6 +1,7 @@
 import { Coding, Resource } from "fhir/r4";
 import { DocumentModel } from "./document";
 import { FHIRModel } from "./fhir-model";
+import { PatientModel } from "./patient";
 import { codeableConceptLabel } from "../codeable-concept";
 import { formatDateISOToLocal } from "../formatters";
 import { findReference } from "../resource-helper";
@@ -40,6 +41,11 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
       this.resource.meta?.lastUpdated ||
       this.resource.meta?.extension?.find((e) => e.url === SYSTEM_ZUS_CREATED_AT)?.valueDateTime
     );
+  }
+
+  get patient(): PatientModel | undefined {
+    const patient = findReference("Patient", undefined, undefined, this.resource.subject);
+    return patient ? new PatientModel(patient) : undefined;
   }
 
   get class(): string | undefined {

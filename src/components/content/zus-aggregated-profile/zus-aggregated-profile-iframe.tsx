@@ -18,7 +18,7 @@ import { omit } from "@/utils/nodash/fp";
 // Theming for iframe which can't be handled via global tailwind theme
 export type IFrameTheme = {
   fontFamily?: "Avenir" | "Roboto";
-  fontSize?: string;
+  headerSize?: string;
   lineHeight?: string;
 };
 export type ZapIFrameConfig = {

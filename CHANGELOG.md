@@ -1,5 +1,58 @@
 # ctw-component-library
 
+## 1.65.6
+
+### Patch Changes
+
+- 03975654: Add ability to override zus aggregate profile header with more config options.
+
+## 1.65.5
+
+### Patch Changes
+
+- 704420ab: Add some missing spaces in the ADT drawer table.
+
+## 1.65.4
+
+### Patch Changes
+
+- 871a76eb: Exports the ADT drawer.
+
+## 1.65.3
+
+### Patch Changes
+
+- f5689b7d: Export encounterModel.
+
+## 1.65.2
+
+### Patch Changes
+
+- 2c18ca57: Update encountermodel and table.
+
+## 1.65.1
+
+### Patch Changes
+
+- 2973ed1c: ZusIcon viewport dynamically adjusts based on whether "zus" text is visible.
+
+## 1.65.0
+
+### Minor Changes
+
+- e19cb86f: ZusIcon includes zus name only with prop "includeZusText"
+
+## 1.64.0
+
+### Minor Changes
+
+- 78c716a4: Export ZusIcon
+
+### Patch Changes
+
+- 63554009: Fix display of delete confirmation modal.
+- 232a8f56: Add columns to ADT table
+
 ## 1.63.1
 
 ### Patch Changes
