@@ -58,7 +58,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
           isLoading={patientAllergiesQuery.isLoading}
           data={data}
           columns={patientAllergiesColumns(userBuilderId)}
-          onRowClick={openDetails}
+          onRowClick={(m) => openDetails(m)}
           enableDismissAndReadActions
           emptyMessage={
             <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="allergies" />

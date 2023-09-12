@@ -30,9 +30,12 @@ export function DrawerProvider({ children }: ProviderProps) {
           setIsOpen(true);
           analytics.trackInteraction("open_drawer", {
             // Datadog we write the drawer name into the metric name itself (prop ignored by analytics)
-            datadogMetricName: `open_drawer.${props.telemetryName ?? ""}`.replace(/(\.)$/, ""),
-            // For analytics, we pass the name of the drawer as an event attribute
-            value: props.telemetryName,
+            datadogMetricName: `open_drawer.${props.trackingMetadata?.action ?? ""}`.replace(
+              /(\.)$/,
+              ""
+            ),
+            // We pass details of the drawer
+            ...props.trackingMetadata,
           });
         });
       },

@@ -30,7 +30,8 @@ export * from "@/components/content/patient-history/patient-history-table";
 export * from "@/components/content/patient-history/use-patient-history";
 export * from "@/components/content/patients/patients-search";
 export * from "@/components/content/patients/patients-table";
-export * from "@/components/content/table/patient-adt-alerts-table";
+export * from "@/components/content/patients-adt/patients-adt-alerts-table";
+export * from "@/components/content/patients-adt/modal-hooks";
 export * from "@/components/content/timeline/patient-timeline";
 export * from "@/components/content/zus-aggregated-profile/zus-aggregated-profile";
 export * from "@/components/content/zus-aggregated-profile/zus-aggregated-profile-iframe";
@@ -46,6 +47,7 @@ export * from "@/components/core/pagination/pagination-list";
 export * as CTWBox from "@/components/core/ctw-box";
 export * from "@/components/core/form/drawer-form-with-fields";
 export * from "@/components/core/providers/use-ctw";
+export * from "@/components/core/icons/zus-icon";
 // Zus Providers and Hooks
 export * from "@/components/core/drawer";
 export * from "@/components/core/error-boundary";

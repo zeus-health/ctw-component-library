@@ -5,16 +5,23 @@ import { useState } from "react";
 import { fixHtml } from "../../helpers";
 import { SectionType } from "../../types";
 import "../../../styles.scss";
+import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 
 export const Section = ({
   title,
   humanReadable,
 }: Omit<SectionType, "code">): JSX.Element | null => {
   const [isOpen, setIsOpen] = useState(true);
+  const { trackInteraction } = useAnalytics();
 
   if (!humanReadable) return null;
 
-  const handleClick = () => setIsOpen(!isOpen);
+  const handleClick = () => {
+    setIsOpen(!isOpen);
+    trackInteraction("toggle_document_section", {
+      action: isOpen ? "collapse_document_section" : "expand_document_section",
+    });
+  };
   return (
     <div className="ctw-ccda-section-container">
       <div className="ctw-ccda-section-header-wrapper">

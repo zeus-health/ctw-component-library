@@ -32,13 +32,13 @@ export function useAddConditionForm() {
     );
 
     openDrawer({
-      telemetryName: "add_condition",
       component: (props) => (
         <DrawerFormWithFields
           title={t("resource.add", { resource: t("glossary:condition_one") })}
           schema={conditionAddSchema}
           action={curry(createOrEditCondition)(condition, patientId)}
           data={getAddConditionData({ condition })}
+          trackingMetadata={{ action: "create_resource", resourceType: "condition" }}
           {...props}
         />
       ),
@@ -54,7 +54,6 @@ export function useEditConditionForm() {
 
   return (condition: ConditionModel) => {
     openDrawer({
-      telemetryName: "edit_condition",
       component: (props) => (
         <DrawerFormWithFields
           title={t("resource.edit", { resource: t("glossary:condition_one") })}
@@ -63,6 +62,7 @@ export function useEditConditionForm() {
           action={curry(createOrEditCondition)(condition, patientId)}
           data={getEditingPatientConditionData({ condition })}
           {...props}
+          trackingMetadata={{ action: "edit_resource", resourceType: "condition" }}
         />
       ),
     });
@@ -84,7 +84,7 @@ export function useConfirmDeleteCondition() {
     openModal({
       component: (props) => (
         <ModalConfirmDelete
-          resource={t("glossary:condition_one")}
+          title={t("glossary:condition_one")}
           resourceName={name}
           onDelete={async () => {
             const requestContext = await getRequestContext();

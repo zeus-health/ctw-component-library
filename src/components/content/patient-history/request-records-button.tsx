@@ -24,7 +24,7 @@ export const RequestRecordsButton = withErrorBoundary(
         className={cx("ctw-btn-clear ctw-link", className)}
         onClick={() => {
           void openHistoryRequestDrawer();
-          trackInteraction("btn_request_records");
+          trackInteraction("request_records");
         }}
       >
         {displayText}

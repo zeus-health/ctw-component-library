@@ -1,5 +1,81 @@
 # ctw-component-library
 
+## 1.65.5
+
+### Patch Changes
+
+- 704420ab: Add some missing spaces in the ADT drawer table.
+
+## 1.65.4
+
+### Patch Changes
+
+- 871a76eb: Exports the ADT drawer.
+
+## 1.65.3
+
+### Patch Changes
+
+- f5689b7d: Export encounterModel.
+
+## 1.65.2
+
+### Patch Changes
+
+- 2c18ca57: Update encountermodel and table.
+
+## 1.65.1
+
+### Patch Changes
+
+- 2973ed1c: ZusIcon viewport dynamically adjusts based on whether "zus" text is visible.
+
+## 1.65.0
+
+### Minor Changes
+
+- e19cb86f: ZusIcon includes zus name only with prop "includeZusText"
+
+## 1.64.0
+
+### Minor Changes
+
+- 78c716a4: Export ZusIcon
+
+### Patch Changes
+
+- 63554009: Fix display of delete confirmation modal.
+- 232a8f56: Add columns to ADT table
+
+## 1.63.1
+
+### Patch Changes
+
+- e2eb5cd9: Show empty table if test patient and no pt hx requests have been made
+- 37e7e3bb: Hide last patient history request for test patients
+
+## 1.63.0
+
+### Minor Changes
+
+- 0fedb2ff: Support onRecordSave for medications components in the iframe ZAP.
+
+## 1.62.0
+
+### Minor Changes
+
+- e3e05117: Rewire the table to read from snowflake data.
+
+### Patch Changes
+
+- 1ca4d013: Add more user interaction tracking.
+
+## 1.61.2
+
+### Patch Changes
+
+- 2b6bfc42: Fix medications search result width
+
 ## 1.61.1
 
 ### Patch Changes

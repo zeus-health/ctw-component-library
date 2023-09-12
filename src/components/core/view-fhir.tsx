@@ -15,8 +15,8 @@ export function useFHIRDrawer() {
 
   return (name: string, resource: fhir4.Resource) => {
     openDrawer({
-      telemetryName: "view_fhir",
       component: (props) => <FHIRDrawer name={name} resource={resource} {...props} />,
+      trackingMetadata: { action: "view_fhir" },
     });
   };
 }

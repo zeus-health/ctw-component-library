@@ -134,7 +134,7 @@ function TabGroupComponent({
               key={key}
               onClick={() => {
                 onClickBlur();
-                trackInteraction("open_tab", { tab: key });
+                trackInteraction("open_tab", { value: key });
               }}
               className={({ selected }) =>
                 cx(

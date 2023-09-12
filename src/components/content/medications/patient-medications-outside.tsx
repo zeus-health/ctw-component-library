@@ -17,7 +17,7 @@ import { QUERY_KEY_BASIC, QUERY_KEY_OTHER_PROVIDER_MEDICATIONS } from "@/utils/q
 export type PatientMedicationsOutsideProps = {
   className?: string;
   onOpenHistoryDrawer?: () => void;
-  onAddToRecord?: (record: MedicationStatementModel) => void;
+  onAddToRecord?: (record: MedicationStatementModel) => Promise<void> | void;
   readOnly?: boolean;
 };
 
@@ -104,7 +104,7 @@ const RowActions = ({ record, onSuccess, onAddToRecord }: RowActionsProps2) => {
             } else {
               showAddMedicationForm(record);
             }
-            trackInteraction("btn_add_to_record");
+            trackInteraction("add_to_record");
           }}
         >
           {t("resourceTable.add")}

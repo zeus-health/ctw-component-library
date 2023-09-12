@@ -1,6 +1,7 @@
 import { faInbox, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { RefreshIcon } from "./icons/refresh";
+import { usePatient } from "./providers/patient-provider";
 import { Spinner } from "./spinner";
 import { RequestRecordsButton } from "../content/patient-history/request-records-button";
 import {
@@ -15,7 +16,8 @@ export type EmptyTableProps = {
 
 export const EmptyTable = (props: EmptyTableProps) => {
   const patientHistoryQuery = usePatientHistory();
-  if (patientHistoryQuery.isLoading) {
+  const patient = usePatient();
+  if (patientHistoryQuery.isLoading || patient.isLoading) {
     return (
       <div className="ctw-flex ctw-justify-center ctw-space-x-2">
         <span>Loading...</span>
@@ -25,7 +27,7 @@ export const EmptyTable = (props: EmptyTableProps) => {
   }
 
   const requestMade = patientHistoryQuery.hasJobs;
-  if (!requestMade) {
+  if (!requestMade && !patient.data?.isTestPatient) {
     return (
       <div className="ctw-space-y-3">
         <div className="ctw-space-y-6">
@@ -41,6 +43,11 @@ export const EmptyTable = (props: EmptyTableProps) => {
         </div>
       </div>
     );
+  }
+
+  // if no request was made but the patient is a test patient
+  if (!requestMade && patient.data?.isTestPatient) {
+    return <div />;
   }
 
   if (!patientHistoryQuery.lastRetrievedAt) {

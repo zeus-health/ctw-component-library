@@ -5,6 +5,7 @@ import xpath from "xpath";
 import { CcdaViewer } from "./ccda_viewer";
 import "./styles.scss";
 import { DocumentButton } from "./document-button";
+import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 
 const xmlTypes = ["/xml", "/xhtml+xml", "application/xml"];
 
@@ -21,6 +22,7 @@ export const Base64BinaryField = ({ data, contentType, fileName }: Base64BinaryF
   const ref = useRef<HTMLAnchorElement>(null);
   const [fileUrl, setFileUrl] = useState<string>();
   const [fileTitle, setFileTitle] = useState<string>();
+  const { trackInteraction } = useAnalytics();
 
   const ccdaDoc = useMemo(() => {
     if (!isSpecificContentType(xmlTypes, contentType)) return undefined;
@@ -51,6 +53,8 @@ export const Base64BinaryField = ({ data, contentType, fileName }: Base64BinaryF
     setFileUrl(objectURL);
     setFileTitle(`CCDA-${fileName}`);
     ref.current?.click();
+
+    trackInteraction("download_document");
   }
 
   return (

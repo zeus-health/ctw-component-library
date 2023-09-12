@@ -111,7 +111,7 @@ const RowActions = ({ record, onSuccess, onAddToRecord }: RowActionsProps2) => {
           const binary = await getBinaryDocument(await getRequestContext(), binaryId);
           onAddToRecord(record, binary);
           onSuccess?.();
-          trackInteraction("btn_add_to_record");
+          trackInteraction("add_to_record");
         }}
       >
         {t("resourceTable.add")}
