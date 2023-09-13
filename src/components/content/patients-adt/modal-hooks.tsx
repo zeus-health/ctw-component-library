@@ -5,12 +5,13 @@ export function useADTAlertDetailsDrawer() {
   return useResourceDetailsDrawer({
     header: (adt) =>
       `${adt.patient?.display}${
-        adt.patient?.gender ? ` (${adt.patient.gender[0].toUpperCase})` : ""
+        adt.patient?.gender ? ` (${adt.patient.gender[0].toUpperCase()})` : ""
       }`,
     subHeader: (adt) => `${adt.patient?.dob} (${adt.patient?.age})`,
     getSourceDocument: true,
     details: encounterData,
     enableDismissAndReadActions: false, // We haven't gotten to supporting this yet
+    // todo: getHistory
   });
 }
 
