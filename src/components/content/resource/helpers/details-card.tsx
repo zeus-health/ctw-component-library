@@ -16,22 +16,13 @@ export type DetailsProps = {
 const MIN_SOURCE_COLUMNS_IN_NOTE = 2;
 const MAX_DEPTH_FIND_TABLE_TO_TRANSPOSE = 6;
 
-const WHITESPACE_REGEX = /^\[\\n\\r\\s\\+$/;
-
 export const recursivelyTransposeTables = (node: ReactNode, curDepth: number): ReactNode => {
   if (!node || curDepth >= MAX_DEPTH_FIND_TABLE_TO_TRANSPOSE) {
     return node;
   }
 
   // if this doesn't have a props then skip it
-  if (node instanceof Boolean) {
-    return node;
-  }
-
-  if (node instanceof String) {
-    if ((node as string).match(WHITESPACE_REGEX)) {
-      return undefined;
-    }
+  if (node instanceof Boolean || node instanceof String) {
     return node;
   }
 
@@ -50,21 +41,7 @@ export const recursivelyTransposeTables = (node: ReactNode, curDepth: number): R
   if (props.content) {
     // try to render it
     const el = parse(props.content as string, {});
-    const newChildren = recursivelyTransposeTables(el, curDepth + 1);
-    const retval = cloneDeep(node);
-    (retval as ReactElement).props.content = undefined;
-
-    // react doesn't want arrays of one; rather, it wants either an object or
-    // an array of 2 or more children
-    if (!Array.isArray(newChildren)) {
-      (retval as ReactElement).props.children = newChildren;
-    } else if (newChildren.length === 1 && newChildren[0]) {
-      // eslint-disable-next-line prefer-destructuring
-      (retval as ReactElement).props.children = newChildren[0];
-    } else {
-      (retval as ReactElement).props.children = newChildren;
-    }
-    return retval;
+    return recursivelyTransposeTables(el, curDepth + 1);
   }
 
   if (!props.children) {
