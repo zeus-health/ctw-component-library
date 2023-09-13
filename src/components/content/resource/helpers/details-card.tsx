@@ -1,5 +1,5 @@
 import parse from "html-react-parser";
-import React, { ReactElement, ReactNode } from "react";
+import React, { ReactElement, ReactNode, useEffect, useState } from "react";
 import { cloneDeep } from "@/utils/nodash";
 
 export type DetailEntry = {
@@ -177,32 +177,45 @@ const transposeTable = (tbl: ReactElement): ReactElement => {
   );
 };
 
-export const DetailsCard = ({ details, hideEmpty = true, documentButton }: DetailsProps) => (
-  <div className="ctw-rounded-lg ctw-bg-bg-lighter">
-    <dl className="ctw-m-0 ctw-space-y-2 ctw-px-4 ctw-py-6">
-      <div className="ctw-flex ctw-justify-between ctw-space-x-2 ctw-text-sm ctw-uppercase ctw-text-content-light">
-        <div className="ctw-title-container">Details</div>
-        <div className="ctw-flex">{documentButton}</div>
-      </div>
-      {details
-        .filter((d) => !hideEmpty || d.value || d.value === 0)
-        .map(({ label, value }, idx) => {
-          const valueWithTransposedTables = recursivelyTransposeTables(value, 0);
-          if (!label) {
+export const DetailsCard = ({ details, hideEmpty = true, documentButton }: DetailsProps) => {
+  const [transposedValues, setTransposedValues] = useState([] as ReactNode[]);
+
+  // transposing the tables can take 1-2 seconds, so wrapping in an useEffect to
+  // prevent the screen from freezing
+  useEffect(() => {
+    const newlyTransposedValues = details.map((detail) =>
+      recursivelyTransposeTables(detail.value, 0)
+    );
+    setTransposedValues(newlyTransposedValues);
+  }, [details]);
+
+  return (
+    <div className="ctw-rounded-lg ctw-bg-bg-lighter">
+      <dl className="ctw-m-0 ctw-space-y-2 ctw-px-4 ctw-py-6">
+        <div className="ctw-flex ctw-justify-between ctw-space-x-2 ctw-text-sm ctw-uppercase ctw-text-content-light">
+          <div className="ctw-title-container">Details</div>
+          <div className="ctw-flex">{documentButton}</div>
+        </div>
+        {details
+          .filter((d) => !hideEmpty || d.value || d.value === 0)
+          .map(({ label }, idx) => {
+            const valueWithTransposedTables = transposedValues[idx];
+            if (!label) {
+              return (
+                // eslint-disable-next-line react/no-array-index-key
+                <div key={idx} className="ctw-text-gray-900 ctw-flex ctw-items-baseline">
+                  <div className="ctw-m-0 ctw-w-full">{valueWithTransposedTables}</div>
+                </div>
+              );
+            }
             return (
-              // eslint-disable-next-line react/no-array-index-key
-              <div key={idx} className="ctw-text-gray-900 ctw-flex ctw-items-baseline">
-                <div className="ctw-m-0 ctw-w-full">{valueWithTransposedTables}</div>
+              <div key={label} className="ctw-text-gray-900 ctw-flex ctw-items-baseline">
+                <dt className="ctw-w-1/3 ctw-flex-shrink-0 ctw-font-medium">{label}</dt>
+                <dd className="ctw-m-0 ctw-w-full">{valueWithTransposedTables}</dd>
               </div>
             );
-          }
-          return (
-            <div key={label} className="ctw-text-gray-900 ctw-flex ctw-items-baseline">
-              <dt className="ctw-w-1/3 ctw-flex-shrink-0 ctw-font-medium">{label}</dt>
-              <dd className="ctw-m-0 ctw-w-full">{valueWithTransposedTables}</dd>
-            </div>
-          );
-        })}
-    </dl>
-  </div>
-);
+          })}
+      </dl>
+    </div>
+  );
+};
