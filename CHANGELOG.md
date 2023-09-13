@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.65.8
+
+### Patch Changes
+
+- 893da9a1: Dedupe ADT table.
+
 ## 1.65.7
 
 ### Patch Changes
