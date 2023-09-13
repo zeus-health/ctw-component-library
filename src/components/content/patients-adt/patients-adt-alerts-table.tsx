@@ -30,8 +30,6 @@ function ADTTableComponent({ className, isLoading = false, data }: ADTTableProps
     records: data,
   });
   const dataDeduped = dedupeAndMergeEncounters(dataFiltered, "patientsADT");
-  console.log(isLoading ? "Loading" : "Done Loading");
-  console.log("Number of records to show is", dataDeduped.length);
 
   return (
     <AnalyticsProvider componentName="ADTTable">
