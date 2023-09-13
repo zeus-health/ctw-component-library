@@ -1,7 +1,7 @@
 import { XIcon } from "@heroicons/react/outline";
 import { SearchIcon } from "@heroicons/react/solid";
 import cx from "classnames";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from "react";
 import { SearchResultRow } from "./helpers/search-result-row";
 import { FeedbackForm } from "@/components/content/patient-record-search/helpers/feedback-form";
 import { FeedbackProvider } from "@/components/content/patient-record-search/helpers/feedback-provider";
@@ -42,15 +42,18 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
     }
   }, [patientRecordSearch]);
 
-  const handleSubmitForm = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const query = searchInputValue.trim();
-    setSearchWasQuestion(query[query.length - 1] === "?");
-    setSearchedValue(query);
-    setResults(EMPTY_SEARCH_RESULTS);
-    setCount(DEFAULT_PAGE_SIZE);
-    trackInteraction("search", { action: "patient-record-search" });
-  };
+  const handleSubmitForm = useCallback(
+    () => (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      const query = searchInputValue.trim();
+      setSearchWasQuestion(query[query.length - 1] === "?");
+      setSearchedValue(query);
+      setResults(EMPTY_SEARCH_RESULTS);
+      setCount(DEFAULT_PAGE_SIZE);
+      trackInteraction("search", { action: "patient-record-search" });
+    },
+    [searchInputValue, trackInteraction]
+  );
 
   const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchInputValue(event.target.value);
@@ -82,7 +85,7 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
         </Title>
       </RenderIf>
 
-      <form className="ctw-patient-record-search-input ctw-relative" onSubmit={handleSubmitForm}>
+      <form className="ctw-patient-record-search-input ctw-relative" onSubmit={handleSubmitForm()}>
         <div className="ctw-search-icon-wrapper">
           <SearchIcon className="ctw-search-icon" />
         </div>
