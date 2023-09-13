@@ -66,7 +66,7 @@ function getEncountersFromFQS(documents: DocumentModel[]) {
         Telemetry.countMetric("req.count.encounters.none", 1);
       }
       Telemetry.histogramMetric("req.count.encounters", results.length);
-      return dedupeAndMergeEncounters(results);
+      return dedupeAndMergeEncounters(results, "patientEncounter");
     } catch (e) {
       Telemetry.logError(e as Error, "Failed fetching encounter timeline information for patient");
       throw new Error(`Failed fetching encounter timeline information for patient: ${e}`);
