@@ -43,7 +43,7 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
   }, [patientRecordSearch]);
 
   const handleSubmitForm = useCallback(
-    () => (event: FormEvent<HTMLFormElement>) => {
+    (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       const query = searchInputValue.trim();
       setSearchWasQuestion(query[query.length - 1] === "?");
@@ -85,7 +85,7 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
         </Title>
       </RenderIf>
 
-      <form className="ctw-patient-record-search-input ctw-relative" onSubmit={handleSubmitForm()}>
+      <form className="ctw-patient-record-search-input ctw-relative" onSubmit={handleSubmitForm}>
         <div className="ctw-search-icon-wrapper">
           <SearchIcon className="ctw-search-icon" />
         </div>
