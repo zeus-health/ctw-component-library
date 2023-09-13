@@ -154,7 +154,7 @@ const ZusAggregatedProfileComponent = ({
         {!hideTitle && (
           <Title
             className={cx(
-              `ctw-bg-zap-headerBg ctw-border-b-2 ctw-border-l-0 ctw-border-r-0 ctw-border-t-0 ctw-border-solid ctw-border-divider-light`
+              `ctw-border-b-2 ctw-border-l-0 ctw-border-r-0 ctw-border-t-0 ctw-border-solid ctw-border-divider-light ctw-bg-zap-headerBg`
             )}
           >
             <div className="ctw-flex ctw-items-center ctw-space-x-1 ctw-py-3">
