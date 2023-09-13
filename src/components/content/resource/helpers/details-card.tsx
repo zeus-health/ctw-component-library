@@ -115,7 +115,7 @@ const transposeTable = (tbl: ReactElement): ReactElement => {
   }
 
   let transposeIdx = 0;
-  dataRows.forEach((dataRow) => {
+  dataRows.forEach((dataRow, rowIdx) => {
     // each data row should equate to N new tranpose rows, one for
     // each column in the original data table
     newRows.push(
@@ -134,8 +134,15 @@ const transposeTable = (tbl: ReactElement): ReactElement => {
       ))
     );
 
-    // TODO: add a classname to denote where to create a stronger line between
-    //       rows
+    if (rowIdx > 0) {
+      // get the next tranposed row that aligns with the next data row
+      const tr = newRows[transposeIdx];
+      newRows[transposeIdx] = (
+        <tr key={tr.key} className="ctw-outline">
+          {tr.props.children}
+        </tr>
+      );
+    }
 
     // now for each cell in the data row
     const dataCells = Array.isArray(dataRow.props.children)
@@ -153,7 +160,11 @@ const transposeTable = (tbl: ReactElement): ReactElement => {
         <td key={`data-${transposeIdx}-${cellIdx}`}>{dataCell.props.children}</td>,
       ];
 
-      newRows[transposeIdx] = <tr key={`transposed-${transposeIdx}`}>{updatedCells}</tr>;
+      newRows[transposeIdx] = (
+        <tr key={`transposed-${transposeIdx}`} className={tr.props.className}>
+          {updatedCells}
+        </tr>
+      );
 
       transposeIdx += 1;
     });

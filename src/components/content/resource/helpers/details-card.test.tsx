@@ -122,6 +122,65 @@ describe("detail card tests", () => {
         ),
       },
       {
+        skip: true,
+        name: "one table, two data rows, no thead row",
+        value: (
+          <div>
+            <table>
+              <thead>
+                <th>Col 1</th>
+                <th>Col 2</th>
+                <th>Col 3</th>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>hi</td>
+                  <td>hi again</td>
+                  <td>hi again again</td>
+                </tr>
+                <tr>
+                  <td>goodbye</td>
+                  <td>goodbye again</td>
+                  <td>goodbye again again</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        ),
+        expected: (
+          <div>
+            <table>
+              <tbody>
+                <tr key="transposed-0">
+                  <td key="col-0">Col 1</td>
+                  <td key="data-0-0">hi</td>
+                </tr>
+                <tr key="transposed-1">
+                  <td key="col-1">Col 2</td>
+                  <td key="data-1-1">hi again</td>
+                </tr>
+                <tr key="transposed-2">
+                  <td key="col-2">Col 3</td>
+                  <td key="data-2-2">hi again again</td>
+                </tr>
+                <tr key="transposed-3" className="ctw-outline">
+                  <td key="col-0">Col 1</td>
+                  <td key="data-3-0">goodbye</td>
+                </tr>
+                <tr key="transposed-4">
+                  <td key="col-1">Col 2</td>
+                  <td key="data-4-1">goodbye again</td>
+                </tr>
+                <tr key="transposed-5">
+                  <td key="col-2">Col 3</td>
+                  <td key="data-5-2">goodbye again again</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        ),
+      },
+      {
         name: "one table, one data row, thead row, content",
         value: <div content={smallDivContent} />,
         expected: (
