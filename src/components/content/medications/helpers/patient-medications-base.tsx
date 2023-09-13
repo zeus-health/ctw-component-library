@@ -4,12 +4,12 @@ import { useMedicationDetailsDrawer } from "./details";
 import { defaultMedicationFilters } from "./filters";
 import { defaultMedicationSort, medicationSortOptions } from "./sorts";
 import { ViewOption } from "../../resource/helpers/view-button";
-import { ResourceTable } from "../../resource/resource-table";
+import { PatientResourceTable } from "../../resource/patient-resource-table";
 import {
   ResourceTableActions,
   ResourceTableActionsProps,
 } from "../../resource/resource-table-actions";
-import { EmptyTable } from "@/components/core/empty-table";
+import { EmptyPatientTable } from "@/components/core/empty-table";
 import { FilterItem } from "@/components/core/filter-bar/filter-bar-types";
 import { RowActionsProp } from "@/components/core/table/table-rows";
 import { MedicationStatementModel } from "@/fhir/models";
@@ -79,12 +79,15 @@ export const PatientMedicationsBase = ({
         action={action}
       />
 
-      <ResourceTable
+      <PatientResourceTable
         className="ctw-patient-medications"
         columns={patientMedicationColumns}
         data={data}
         emptyMessage={
-          <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="medications" />
+          <EmptyPatientTable
+            hasZeroFilteredRecords={hasZeroFilteredRecords}
+            resourceName="medications"
+          />
         }
         isLoading={query.isLoading}
         onRowClick={handleRowClick}

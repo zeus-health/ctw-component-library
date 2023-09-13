@@ -4,9 +4,9 @@ import { patientDiagnosticReportsColumns } from "./helpers/columns";
 import { defaultDiagnosticReportFilters, diagnosticReportFilter } from "./helpers/filters";
 import { defaultDiagnosticReportSort, diagnosticReportSortOptions } from "./helpers/sorts";
 import { useObservationsDetailsDrawer } from "../observations/helpers/drawer";
-import { ResourceTable } from "../resource/resource-table";
+import { PatientResourceTable } from "../resource/patient-resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
-import { EmptyTable } from "@/components/core/empty-table";
+import { EmptyPatientTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
@@ -47,7 +47,7 @@ function PatientDiagnosticReportsComponent({ className }: PatientDiagnosticRepor
             onChange: setSort,
           }}
         />
-        <ResourceTable
+        <PatientResourceTable
           showTableHead
           isLoading={query.isLoading}
           data={data}
@@ -55,7 +55,7 @@ function PatientDiagnosticReportsComponent({ className }: PatientDiagnosticRepor
           onRowClick={openDetails}
           enableDismissAndReadActions
           emptyMessage={
-            <EmptyTable
+            <EmptyPatientTable
               hasZeroFilteredRecords={hasZeroFilteredRecords}
               resourceName="diagnostics"
             />

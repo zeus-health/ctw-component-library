@@ -7,9 +7,9 @@ import { defaultMedicationFilters, medicationFilters } from "./helpers/filters";
 import { defaultMedicationSort, medicationSortOptions } from "./helpers/sorts";
 import { useToggleRead } from "../hooks/use-toggle-read";
 import { getDateRangeView } from "../resource/helpers/view-date-range";
-import { ResourceTable } from "../resource/resource-table";
+import { PatientResourceTable } from "../resource/patient-resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
-import { EmptyTable } from "@/components/core/empty-table";
+import { EmptyPatientTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
@@ -46,7 +46,7 @@ function PatientMedicationsAllComponent({
   const isEmptyQuery = query.allMedications.length === 0;
   const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
   const empty = (
-    <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="medications" />
+    <EmptyPatientTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="medications" />
   );
 
   const rowActions = useMemo(
@@ -79,7 +79,7 @@ function PatientMedicationsAllComponent({
             defaultView: past6Months,
           }}
         />
-        <ResourceTable
+        <PatientResourceTable
           showTableHead
           isLoading={query.isLoading}
           data={data}

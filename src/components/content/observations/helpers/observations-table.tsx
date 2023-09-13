@@ -1,5 +1,5 @@
 import { ObservationsColumns } from "./columns";
-import { ResourceTable } from "../../resource/resource-table";
+import { PatientResourceTable } from "../../resource/patient-resource-table";
 import { ObservationModel } from "@/fhir/models";
 
 export type ObservationsTableProps = {
@@ -12,7 +12,7 @@ export const ObservationsTable = ({ className, data }: ObservationsTableProps) =
     <div className="ctw-text-base ctw-font-medium ctw-uppercase ctw-text-content-black">
       Results
     </div>
-    <ResourceTable
+    <PatientResourceTable
       className="ctw-patient-observation-details"
       columns={ObservationsColumns()}
       data={data}

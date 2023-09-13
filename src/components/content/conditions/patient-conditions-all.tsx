@@ -11,9 +11,9 @@ import {
 import { conditionSortOptions, defaultConditionSort } from "./helpers/sorts";
 import { ConditionViewOptions, statusView } from "./helpers/views";
 import { useToggleRead } from "../hooks/use-toggle-read";
-import { ResourceTable } from "../resource/resource-table";
+import { PatientResourceTable } from "../resource/patient-resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
-import { EmptyTable } from "@/components/core/empty-table";
+import { EmptyPatientTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
@@ -51,7 +51,7 @@ function PatientConditionsAllComponent({
   const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
 
   const empty = (
-    <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="conditions" />
+    <EmptyPatientTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="conditions" />
   );
 
   const RowActions = useMemo(
@@ -95,7 +95,7 @@ function PatientConditionsAllComponent({
           }}
           action={action}
         />
-        <ResourceTable
+        <PatientResourceTable
           showTableHead
           isLoading={query.isLoading}
           data={data}
