@@ -1,5 +1,13 @@
 # ctw-component-library
 
+## 1.65.10
+
+### Patch Changes
+
+- f7e85a43: Fix ADT table empty message and animation for opening drawers.
+- d19aab56: Transpose wide tables in drawer for better readability
+- 889464f1: Only show one date if encounter start and end dates are the same
+
 ## 1.65.9
 
 ### Patch Changes
