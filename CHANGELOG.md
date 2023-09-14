@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.65.11
+
+### Patch Changes
+
+- 44d0a431: Refactored out redundant useEffect in PatientSearch.
+
 ## 1.65.10
 
 ### Patch Changes

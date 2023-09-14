@@ -31,7 +31,6 @@ export function SearchResult<T extends FHIRModel<fhir4.Resource>>({
           >
             {heading}
           </button>
-          &nbsp;
           <Badge color="primary" text={label} />
         </span>
         <FeedbackForm name={`${resource.resourceType}/${resource.id}`} />
