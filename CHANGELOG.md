@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.65.12
+
+### Patch Changes
+
+- 5d8b5aa2: Improvements to search UI
+
 ## 1.65.11
 
 ### Patch Changes

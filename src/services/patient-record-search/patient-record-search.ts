@@ -202,13 +202,14 @@ export function usePatientRecordSearch(
         const body = JSON.stringify({
           query: searchTerm,
           upid: patient.UPID,
-          include: ["keyword", "semantic"],
+          include: ["keyword"], // , "semantic"],
+          n_results: 10,
           resource_types: [
             "AllergyIntolerance",
             "Condition",
             "DocumentReference",
             "MedicationStatement",
-            "Observation",
+            // "Observation",
           ],
         });
 
