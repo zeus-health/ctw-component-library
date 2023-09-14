@@ -6,6 +6,7 @@ import { useConditionDetailsDrawer } from "../../conditions/helpers/details";
 import { documentData } from "../../document/patient-documents";
 import { useMedicationDetailsDrawer } from "../../medications/helpers/details";
 import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
+import { getRelevantContentFromDocumentSearchResult } from "@/components/content/patient-record-search/helpers/relevant-content";
 import {
   AllergyModel,
   ConditionModel,
@@ -136,23 +137,3 @@ export function SearchResultRow(props: ResourceRowProps) {
       return null;
   }
 }
-
-const getRelevantContentFromDocumentSearchResult = (
-  content: string,
-  spans: { begin: number; end: number }[]
-) => {
-  let relevantContent: JSX.Element;
-  if (spans.length === 0) {
-    relevantContent = <>{content}</>;
-  } else {
-    // TODO - this could be improved to highlight all of the spans and not just the first one
-    relevantContent = (
-      <>
-        <span>{content.substring(spans[0].begin - 100, spans[0].begin)}</span>
-        <span className="ctw-font-semibold">{content.substring(spans[0].begin, spans[0].end)}</span>
-        <span>{content.substring(spans[0].end, spans[0].end + 300)}</span>
-      </>
-    );
-  }
-  return relevantContent;
-};
