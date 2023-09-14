@@ -183,15 +183,15 @@ describe("encounter dedupe tests", () => {
 
   test("don't dedupe", () => {
     const encs = [encOld, encPatientless, encDiff];
-    expect(dedupeAndMergeEncounters(encs)).toEqual(encs);
+    expect(dedupeAndMergeEncounters(encs, "patientEncounter")).toEqual(encs);
   });
   test("dedupe", () => {
     const encs = [encOld, encNew];
-    expect(dedupeAndMergeEncounters(encs).length).toBe(1);
+    expect(dedupeAndMergeEncounters(encs, "patientEncounter").length).toBe(1);
   });
   test("merge", () => {
     const encs = [encOld, encNew];
-    expect(dedupeAndMergeEncounters(encs)).toEqual([
+    expect(dedupeAndMergeEncounters(encs, "patientEncounter")).toEqual([
       new EncounterModel(
         {
           resourceType: "Encounter",

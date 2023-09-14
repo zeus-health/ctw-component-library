@@ -1,78 +1,69 @@
 import type { TableColumn } from "@/components/core/table/table-helpers";
 import type { PatientModel } from "@/fhir/models/patient";
-import { SearchIcon } from "@heroicons/react/solid";
-import { WithRequired } from "@tanstack/react-query";
 import cx from "classnames";
+import { useADTAlertDetailsDrawer } from "./modal-hooks";
+import { dedupeAndMergeEncounters, defaultEncounterFilters } from "../encounters/helpers/filters";
 import { TableOptionProps } from "../patients/patients-table";
-import * as CTWBox from "@/components/core/ctw-box";
+import { getDateRangeView } from "../resource/helpers/view-date-range";
+import { ResourceTable } from "../resource/resource-table";
+import { ResourceTableActions } from "../resource/resource-table-actions";
+import { EmptyTableNoneFound } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { SimpleMoreList } from "@/components/core/simple-more-list";
-import { Table } from "@/components/core/table/table";
 import { EncounterModel } from "@/fhir/models/encounter";
-
-export type EncounterWithPatientModel = WithRequired<EncounterModel, "patient">;
+import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 
 export type ADTTableProps = {
   className?: cx.Argument;
-  handleRowClick?: (row: EncounterWithPatientModel) => void;
-  pageSize?: number;
-  title?: string;
-  data: EncounterWithPatientModel[];
-} & TableOptionProps<EncounterWithPatientModel>;
+  isLoading?: boolean;
+  data: EncounterModel[];
+} & TableOptionProps<EncounterModel>;
 
-export const ADTAlertsTable = withErrorBoundary(
-  ({
-    className,
-    handleRowClick,
-    pageSize = 5,
-    title = "Patients ADT Alerts",
-    data,
-  }: ADTTableProps) => (
-    // This resets our state when there is an error fetching data from ODS.
+function ADTTableComponent({ className, isLoading = false, data }: ADTTableProps) {
+  const openADTDetails = useADTAlertDetailsDrawer();
 
-    <AnalyticsProvider componentName="PatientsTable">
-      <CTWBox.StackedWrapper
-        className={cx("ctw-patients-border ctw-patients-table-inputs", className)}
-      >
-        <CTWBox.Heading title={title}>
-          <div className="ctw-relative">
-            <div className="ctw-search-icon-wrapper">
-              <SearchIcon className="ctw-search-icon" />
-            </div>
-          </div>
-        </CTWBox.Heading>
-        <div className="ctw-overflow-hidden">
-          <Table
-            records={data}
-            columns={columns}
-            handleRowClick={handleRowClick}
-            pageSize={pageSize}
-            hidePagination
-          />
-        </div>
-      </CTWBox.StackedWrapper>
+  const { viewOptions, past30days } = getDateRangeView<EncounterModel>("periodStart");
+  const { data: dataFiltered, setViewOption } = useFilteredSortedData({
+    defaultView: past30days,
+    defaultFilters: defaultEncounterFilters,
+    records: data,
+  });
+  const dataDeduped = dedupeAndMergeEncounters(dataFiltered, "patientsADT");
+
+  return (
+    <AnalyticsProvider componentName="ADTTable">
+      <div className={cx("ctw-scrollable-pass-through-height", className)}>
+        <ResourceTableActions
+          viewOptions={{
+            onChange: setViewOption,
+            options: viewOptions,
+            defaultView: past30days,
+          }}
+        />
+        <ResourceTable
+          data={dataDeduped}
+          columns={columns}
+          isLoading={isLoading}
+          emptyMessage={
+            <EmptyTableNoneFound
+              hasZeroFilteredRecords={dataDeduped.length === 0}
+              resourceName="encounters"
+            />
+          }
+          onRowClick={openADTDetails}
+        />
+      </div>
     </AnalyticsProvider>
-  ),
-  "PatientsTable"
-);
+  );
+}
 
-const columns: TableColumn<EncounterWithPatientModel>[] = [
+export const ADTAlertsTable = withErrorBoundary(ADTTableComponent, "ADTTable");
+
+const columns: TableColumn<EncounterModel>[] = [
   {
     title: "Patient",
-    render: (e) => <PatientColumn patient={e.patient} />,
-  },
-  {
-    title: "Contact",
-    render: (e) => {
-      const { email, phoneNumber } = e.patient;
-      return (
-        <>
-          <div className="ctw-patients-table-inputs-email">{email}</div>
-          <div className="ctw-patients-table-inputs-phone">{phoneNumber}</div>
-        </>
-      );
-    },
+    render: (e) => e.patient && <PatientColumn patient={e.patient} />,
   },
   {
     title: "Date",

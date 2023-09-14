@@ -2,11 +2,11 @@ import cx from "classnames";
 import { allergyFilter, defaultAllergyFilters } from "./helpers/filters";
 import { useAllergiesHistory } from "./helpers/history";
 import { allergySortOptions, defaultAllergySort } from "./helpers/sort";
+import { PatientResourceTable } from "../resource/patient-resource-table";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
-import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { patientAllergiesColumns } from "@/components/content/allergies/helpers/column";
-import { EmptyTable } from "@/components/core/empty-table";
+import { EmptyPatientTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
@@ -53,7 +53,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
             onChange: setSort,
           }}
         />
-        <ResourceTable
+        <PatientResourceTable
           showTableHead
           isLoading={patientAllergiesQuery.isLoading}
           data={data}
@@ -61,7 +61,10 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
           onRowClick={(m) => openDetails(m)}
           enableDismissAndReadActions
           emptyMessage={
-            <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="allergies" />
+            <EmptyPatientTable
+              hasZeroFilteredRecords={hasZeroFilteredRecords}
+              resourceName="allergies"
+            />
           }
         />
       </div>

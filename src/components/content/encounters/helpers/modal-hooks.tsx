@@ -1,11 +1,24 @@
+import { differenceInDays } from "date-fns";
 import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
 import { EncounterModel } from "@/fhir/models/encounter";
+import { parseWithoutFormat } from "@/utils/dates";
 import { capitalize } from "@/utils/nodash/fp";
 
 export function usePatientEncounterDetailsDrawer() {
   return useResourceDetailsDrawer({
     header: (m) => {
       if (m.periodStart && m.periodEnd) {
+        const parsedStartDate = parseWithoutFormat(m.periodStart);
+        const parsedEndDate = parseWithoutFormat(m.periodEnd);
+
+        if (
+          parsedStartDate &&
+          parsedEndDate &&
+          differenceInDays(parsedStartDate, parsedEndDate) === 0
+        ) {
+          return `${m.periodStart}`;
+        }
+
         return `${m.periodStart} - ${m.periodEnd}`;
       }
       if (m.periodStart) {
