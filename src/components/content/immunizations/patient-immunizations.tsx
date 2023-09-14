@@ -2,11 +2,11 @@ import cx from "classnames";
 import { patientImmunizationsColumns } from "./helpers/columns";
 import { defaultImmunizationsFilters, immunizationsFilter } from "./helpers/filters";
 import { defaultImmunizationSort, immunizationSortOptions } from "./helpers/sort";
+import { PatientResourceTable } from "../resource/patient-resource-table";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
-import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { entryFromArray } from "@/components/core/data-list";
-import { EmptyTable } from "@/components/core/empty-table";
+import { EmptyPatientTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
@@ -52,7 +52,7 @@ function PatientImmunizationsComponent({ className }: PatientImmunizationsProps)
             onChange: setSort,
           }}
         />
-        <ResourceTable
+        <PatientResourceTable
           showTableHead
           isLoading={patientImmunizationsQuery.isLoading}
           data={data}
@@ -60,7 +60,7 @@ function PatientImmunizationsComponent({ className }: PatientImmunizationsProps)
           onRowClick={openDetails}
           enableDismissAndReadActions
           emptyMessage={
-            <EmptyTable
+            <EmptyPatientTable
               hasZeroFilteredRecords={hasZeroFilteredRecords}
               resourceName="immunizations"
             />
