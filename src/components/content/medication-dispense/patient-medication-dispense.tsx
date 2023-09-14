@@ -1,7 +1,7 @@
 import cx from "classnames";
 import { patientMedicationDispenseColumns } from "./helpers/dispense-columns";
-import { ResourceTable } from "../resource/resource-table";
-import { EmptyTable } from "@/components/core/empty-table";
+import { PatientResourceTable } from "../resource/patient-resource-table";
+import { EmptyPatientTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { usePatientMedicationDispense } from "@/fhir/medication-dispense";
 
@@ -16,13 +16,13 @@ function PatientMedDispenseComponent({ className }: PatientMedDispenseProps) {
 
   return (
     <div className={cx(className, "ctw-scrollable-pass-through-height")}>
-      <ResourceTable
+      <PatientResourceTable
         showTableHead
         isLoading={patientMedicationDispenseQuery.isLoading}
         data={patientMedicationDispenseQuery.data ?? []}
         columns={patientMedicationDispenseColumns()}
         emptyMessage={
-          <EmptyTable
+          <EmptyPatientTable
             hasZeroFilteredRecords={hasZeroFilteredRecords}
             resourceName="medicationdispense"
           />

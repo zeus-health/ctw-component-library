@@ -7,12 +7,12 @@ import { useConditionDetailsDrawer } from "./details";
 import { conditionFilters } from "./filters";
 import { conditionSortOptions, defaultConditionSort } from "./sorts";
 import { ConditionViewOptions, statusView } from "./views";
-import { ResourceTable } from "../../resource/resource-table";
+import { PatientResourceTable } from "../../resource/patient-resource-table";
 import {
   ResourceTableActions,
   ResourceTableActionsProps,
 } from "../../resource/resource-table-actions";
-import { EmptyTable } from "@/components/core/empty-table";
+import { EmptyPatientTable } from "@/components/core/empty-table";
 import { RowActionsProp } from "@/components/core/table/table-rows";
 import { ConditionModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
@@ -53,7 +53,10 @@ export const PatientConditionsBase = ({
   let empty = emptyMessage;
   if (emptyMessage === undefined) {
     empty = (
-      <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="conditions" />
+      <EmptyPatientTable
+        hasZeroFilteredRecords={hasZeroFilteredRecords}
+        resourceName="conditions"
+      />
     );
   }
 
@@ -81,7 +84,7 @@ export const PatientConditionsBase = ({
         }}
         action={action}
       />
-      <ResourceTable
+      <PatientResourceTable
         className="ctw-patient-conditions"
         columns={patientConditionsColumns}
         data={data}
