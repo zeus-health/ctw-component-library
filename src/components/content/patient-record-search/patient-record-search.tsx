@@ -1,7 +1,7 @@
 import { XIcon } from "@heroicons/react/outline";
 import { SearchIcon } from "@heroicons/react/solid";
 import cx from "classnames";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from "react";
 import { SearchResultRow } from "./helpers/search-result-row";
 import { FeedbackForm } from "@/components/content/patient-record-search/helpers/feedback-form";
 import { FeedbackProvider } from "@/components/content/patient-record-search/helpers/feedback-provider";
@@ -42,30 +42,29 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
     }
   }, [patientRecordSearch]);
 
-  const handleSubmitForm = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const query = searchInputValue.trim();
-    setSearchWasQuestion(query[query.length - 1] === "?");
-    setSearchedValue(query);
-    setResults(EMPTY_SEARCH_RESULTS);
-    setCount(DEFAULT_PAGE_SIZE);
-    trackInteraction("search", { action: "patient-record-search" });
-  };
+  const handleSubmitForm = useCallback(
+    (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      const query = searchInputValue.trim();
+      setSearchWasQuestion(query[query.length - 1] === "?");
+      setSearchedValue(query);
+      setResults(EMPTY_SEARCH_RESULTS);
+      setCount(DEFAULT_PAGE_SIZE);
+      trackInteraction("search", { action: "patient-record-search" });
+    },
+    [searchInputValue, trackInteraction]
+  );
 
   const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchInputValue(event.target.value);
   };
 
-  const clearSearch = () => {
+  const clearSearch = useCallback(() => {
     trackInteraction("clear_search", { action: "patient-record-search" });
     setSearchInputValue("");
     setSearchedValue("");
     setResults(EMPTY_SEARCH_RESULTS);
-  };
-
-  const showSearchResults = results.results.length > 0;
-  const showLoadingSpinner =
-    !showSearchResults && (patientRecordSearch.isLoading || patientRecordSearch.isLoading);
+  }, [trackInteraction]);
 
   return (
     <div
@@ -100,42 +99,50 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
         </button>
       </form>
 
-      <RenderIf condition={showLoadingSpinner}>
+      {patientRecordSearch.isFetching || patientRecordSearch.isLoading ? (
         <div className="ctw-mt-3 ctw-flex ctw-justify-center ctw-space-x-1 ctw-align-middle">
           <Loading />
         </div>
-      </RenderIf>
-
-      <div className="ctw-patient-record-search-results-list ctw-scrollable-pass-through-height">
-        <div className="ctw-patient-record-search-results ctw-align-left ctw-ml-0">
-          <RenderIf condition={patientRecordSearch.isError}>
-            <div className="ctw-w-full">
-              <ErrorAlert header="Sorry">
-                Unfortunately, there was a problem fetching patient record search results.
-              </ErrorAlert>
-            </div>
-          </RenderIf>
-
-          <RenderIf condition={showSearchResults}>
-            {/* FeedbackProvider will allow all the feedback forms to get the id of the query */}
-            <FeedbackProvider id={results.id}>
-              <RenderIf condition={searchWasQuestion}>
-                <span className="ctw-font-normal">
-                  {results.response}
-                  <FeedbackForm name="query-response" />
-                </span>
-              </RenderIf>
-
-              {/* Search Results */}
+      ) : (
+        <div className="ctw-patient-record-search-results-list ctw-scrollable-pass-through-height">
+          <div className="ctw-patient-record-search-results ctw-align-left ctw-ml-0">
+            <RenderIf condition={!results.query}>
               <span className="ctw-text-1xl ctw-text-content-dark ctw-block ctw-text-left ctw-font-medium">
-                Results:
+                Search patient conditions, medications, documents and allergies.
               </span>
-              {results.results.slice(0, count).map((result: PatientRecordSearchResult, idx) => (
-                // eslint-disable-next-line react/no-array-index-key
-                <SearchResultRow key={idx} document={result.document} />
-              ))}
-            </FeedbackProvider>
-            {!patientRecordSearch.isLoading && (
+            </RenderIf>
+
+            <RenderIf condition={!!results.query && results.results.length === 0}>
+              <span className="ctw-text-1xl ctw-text-content-dark ctw-block ctw-text-left ctw-font-medium">
+                Search did not return any results.
+              </span>
+            </RenderIf>
+
+            <RenderIf condition={!!results.query && patientRecordSearch.isError}>
+              <div className="ctw-w-full">
+                <ErrorAlert header="Error">There was an error running your search.</ErrorAlert>
+              </div>
+            </RenderIf>
+
+            <RenderIf condition={!!results.query && results.results.length > 0}>
+              {/* FeedbackProvider will allow all the feedback forms to get the id of the query */}
+              <FeedbackProvider id={results.id}>
+                <RenderIf condition={searchWasQuestion}>
+                  <span className="ctw-font-normal">
+                    {results.response}
+                    <FeedbackForm name="query-response" />
+                  </span>
+                </RenderIf>
+
+                {/* Search Results */}
+                <span className="ctw-text-1xl ctw-text-content-dark ctw-block ctw-text-left ctw-font-medium">
+                  Found {results.results.length} results
+                </span>
+                {results.results.slice(0, count).map((result: PatientRecordSearchResult, idx) => (
+                  // eslint-disable-next-line react/no-array-index-key
+                  <SearchResultRow key={idx} document={result.document} />
+                ))}
+              </FeedbackProvider>
               <div className="ctw-mt-5">
                 <PaginationList
                   total={results.results.length}
@@ -143,10 +150,10 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
                   changeCount={setCount}
                 />
               </div>
-            )}
-          </RenderIf>
+            </RenderIf>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

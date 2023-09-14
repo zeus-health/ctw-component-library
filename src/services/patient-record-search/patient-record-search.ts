@@ -78,7 +78,6 @@ export type PatientRecordSearchResults = {
   response: string;
   total: number;
 };
-
 export const EMPTY_SEARCH_RESULTS: Readonly<PatientRecordSearchResults> = Object.freeze({
   id: "",
   query: "",
@@ -86,7 +85,6 @@ export const EMPTY_SEARCH_RESULTS: Readonly<PatientRecordSearchResults> = Object
   results: Object.freeze([] as PatientRecordSearchResult[]),
   total: 0,
 });
-
 const EMPTY_RESOURCE_BY_TYPE_MAPPING: ResourceByTypeMapping = Object.freeze({
   AllergyIntolerance: [],
   Condition: [],
@@ -202,13 +200,14 @@ export function usePatientRecordSearch(
         const body = JSON.stringify({
           query: searchTerm,
           upid: patient.UPID,
-          include: ["keyword", "semantic"],
+          include: ["keyword"], // , "semantic"],
+          n_results: 10,
           resource_types: [
             "AllergyIntolerance",
             "Condition",
             "DocumentReference",
             "MedicationStatement",
-            "Observation",
+            // "Observation",
           ],
         });
 

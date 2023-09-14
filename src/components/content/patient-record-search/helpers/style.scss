@@ -17,46 +17,37 @@
   }
 
   .ctw-patient-record-search-result {
-    @apply ctw-mt-1.5 ctw-w-full ctw-text-left;
+    @apply ctw-mt-4 ctw-w-full ctw-text-left;
 
-    .ctw-patient-record-search-result-btn {
-      @apply ctw-cursor-pointer ctw-border-0 ctw-bg-transparent ctw-p-0 ctw-text-left ctw-outline-none;
-
-      &:hover {
-        .ctw-patient-record-search-text {
-          @apply ctw-text-content-black ctw-underline;
-        }
-      }
-    }
     .ctw-patient-record-search-text {
-      @apply ctw-w-full ctw-text-left ctw-text-sm ctw-font-medium;
-      @apply ctw-text-content-light;
+      @apply ctw-w-full ctw-text-left ctw-text-sm;
       @apply ctw-m-0;
       @apply ctw-line-clamp-3 ctw-overflow-ellipsis;
     }
-  }
 
-  .ctw-search-result-heading {
-    @apply ctw-mb-0 ctw-text-lg ctw-font-bold;
-
-    margin-block-start: 1rem;
-  }
-
-  .ctw-patient-record-search-details {
-    @apply ctw-mb-0 ctw-w-full ctw-hyphens-auto ctw-break-words ctw-text-sm ctw-text-content-black;
-
-    [data-label] {
-      @apply ctw-text-sm ctw-text-content-black;
-      // Search details can utilize data-label to display a label for the data. If they are empty divs or have the
-      // "ctw-without-label" class, they will not display that label.
-      &:not([data-label=""])::before {
-        @apply ctw-mr-1;
-        content: attr(data-label) ": ";
-        display: inline-block;
-        float: left;
+    .ctw-patient-record-search-result-btn {
+      @apply ctw-mb-0 ctw-cursor-pointer ctw-border-0 ctw-bg-transparent ctw-pl-0 ctw-text-left ctw-text-xl ctw-font-semibold;
+      &:hover {
+        @apply ctw-underline;
       }
-      &:empty {
-        display: none;
+    }
+
+    .ctw-patient-record-search-details {
+      @apply ctw-mb-0 ctw-mt-1 ctw-w-full ctw-hyphens-auto ctw-break-words ctw-text-sm;
+
+      [data-label] {
+        @apply ctw-text-sm ctw-text-content-light;
+        // Search details can utilize data-label to display a label for the data. If they are empty divs or have the
+        // "ctw-without-label" class, they will not display that label.
+        &:not([data-label=""])::before {
+          @apply ctw-mr-1;
+          content: attr(data-label) ": ";
+          display: inline-block;
+          float: left;
+        }
+        &:empty {
+          display: none;
+        }
       }
     }
   }
