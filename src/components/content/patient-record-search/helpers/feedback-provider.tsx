@@ -1,14 +1,14 @@
 import { createContext, PropsWithChildren, useMemo } from "react";
 
 type FeedbackContext = {
-  id: string;
+  id?: string;
 };
 
 export const FeedbackContext = createContext<FeedbackContext>({
   id: "",
 });
 
-export function FeedbackProvider({ children, id }: PropsWithChildren<FeedbackContext>) {
+export function FeedbackProvider({ children, id = "" }: PropsWithChildren<FeedbackContext>) {
   const contextValue = useMemo(
     () => ({
       id,

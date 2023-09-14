@@ -2,8 +2,6 @@ import cx from "classnames";
 import { ReactElement, useRef } from "react";
 import { useAdditionalResourceActions } from "./use-additional-resource-actions";
 import { useToggleRead } from "../hooks/use-toggle-read";
-import { AuthError } from "@/components/core/auth-error";
-import { usePatient } from "@/components/core/providers/patient-provider";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { Table, TableProps } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
@@ -36,7 +34,6 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
   enableDismissAndReadActions,
   hidePagination = false,
 }: ResourceTableProps<M>) => {
-  const patient = usePatient();
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const userBuilderId = useUserBuilderId();
@@ -63,26 +60,6 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
       }
     : undefined;
 
-  // Use correct empty message when there are auth errors or failure fetching patient data.
-  let emptyMessage2 = emptyMessage;
-  if (
-    patient.error &&
-    typeof patient.error === "object" &&
-    "status" in patient.error &&
-    patient.error.status === 401
-  ) {
-    emptyMessage2 = <AuthError />;
-  } else if (!patient.data) {
-    emptyMessage2 = <div className="ctw-space-y-4">Patient not found.</div>;
-  }
-
-  // We're loading, if our patient is loading OR
-  // if we have our patient data but the passed in isLoading is true.
-  // We have to check for patient.data because most queries are only
-  // enabled when we have a patient UPID, without one, those queries
-  // will stay in the loading state forever.
-  const isLoading2 = patient.isLoading || (!!patient.data && isLoading);
-
   return (
     <div
       ref={containerRef}
@@ -96,8 +73,8 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
         })}
         showTableHead={shouldShowTableHead}
         stacked={breakpoints.sm}
-        emptyMessage={emptyMessage2}
-        isLoading={isLoading2}
+        emptyMessage={emptyMessage}
+        isLoading={isLoading}
         records={data}
         RowActions={RowActionsWithAdditions}
         columns={columns}

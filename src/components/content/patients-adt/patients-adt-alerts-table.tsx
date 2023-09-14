@@ -7,7 +7,7 @@ import { TableOptionProps } from "../patients/patients-table";
 import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
-import { EmptyTable } from "@/components/core/empty-table";
+import { EmptyTableNoneFound } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { SimpleMoreList } from "@/components/core/simple-more-list";
@@ -46,7 +46,10 @@ function ADTTableComponent({ className, isLoading = false, data }: ADTTableProps
           columns={columns}
           isLoading={isLoading}
           emptyMessage={
-            <EmptyTable hasZeroFilteredRecords={data.length === 0} resourceName="encounters" />
+            <EmptyTableNoneFound
+              hasZeroFilteredRecords={dataDeduped.length === 0}
+              resourceName="encounters"
+            />
           }
           onRowClick={openADTDetails}
         />

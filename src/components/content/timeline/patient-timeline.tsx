@@ -8,7 +8,7 @@ import { useObservationsDetailsDrawer } from "../observations/helpers/drawer";
 import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { ResourceTable } from "@/components/content/resource/resource-table";
-import { EmptyTable } from "@/components/core/empty-table";
+import { EmptyPatientTable } from "@/components/core/empty-table";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { TimelineEventModel } from "@/fhir/models/timeline-event";
 import { useTimelineEvents } from "@/fhir/timeline-event";
@@ -60,7 +60,7 @@ export function PatientTimeline({ className }: PatientTimelineProps) {
           isLoading={timelineEventsQuery.isLoading}
           data={data}
           emptyMessage={
-            <EmptyTable
+            <EmptyPatientTable
               hasZeroFilteredRecords={hasZeroFilteredRecords}
               resourceName="timeline records"
             />
