@@ -141,18 +141,18 @@ const getRelevantContentFromDocumentSearchResult = (
   content: string,
   spans: { begin: number; end: number }[]
 ) => {
-  let relevantContent: JSX.Element;
   if (spans.length === 0) {
-    relevantContent = <>{content}</>;
-  } else {
-    // TODO - this could be improved to highlight all of the spans and not just the first one
-    relevantContent = (
-      <>
-        <span>{content.substring(spans[0].begin - 100, spans[0].begin)}</span>
-        <span className="ctw-font-semibold">{content.substring(spans[0].begin, spans[0].end)}</span>
-        <span>{content.substring(spans[0].end, spans[0].end + 300)}</span>
-      </>
-    );
+    return <>{content}</>;
   }
-  return relevantContent;
+
+  // TODO - this could be improved to highlight all of the spans and not just the first one
+  return (
+    <>
+      <span>{content.substring(spans[0].begin - 100, spans[0].begin - 2)}</span>
+      <span className="ctw-font-semibold">
+        {content.substring(spans[0].begin - 2, spans[0].end - 2)}
+      </span>
+      <span>{content.substring(spans[0].end - 2, spans[0].end + 300)}</span>
+    </>
+  );
 };

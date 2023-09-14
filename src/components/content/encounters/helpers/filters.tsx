@@ -64,32 +64,49 @@ export function encounterFilters(encounters: EncounterModel[] | undefined): Filt
   return filters;
 }
 
+export const ENCOUNTER_DEDUPE_UTILS = {
+  patientEncounter: {
+    generateKey: (encounter: EncounterModel) =>
+      JSON.stringify({
+        upid: encounter.patientUPID,
+        periodStart: encounter.periodStart || "",
+        class: encounter.resource.class,
+        type: encounter.resource.type,
+        location: encounter.location || "",
+      }),
+    hasRequiredFields: (encounter: EncounterModel) =>
+      encounter.patientUPID &&
+      encounter.periodStart &&
+      encounter.class &&
+      encounter.resource.type &&
+      encounter.location,
+  },
+  patientsADT: {
+    generateKey: (encounter: EncounterModel) =>
+      JSON.stringify({
+        upid: encounter.patientUPID,
+        periodStart: encounter.periodStart || "",
+        location: encounter.location || "",
+      }),
+    hasRequiredFields: (encounter: EncounterModel) =>
+      encounter.patientUPID && encounter.periodStart && encounter.location,
+  },
+};
+
 // Dedupes encounters by patient, periodStart, class, type, and location.
 // Merges their properties to maximize information.
-export function dedupeAndMergeEncounters(encounters: EncounterModel[]): EncounterModel[] {
-  const dedupedEncounters: EncounterModel[] = [];
-
+export function dedupeAndMergeEncounters(
+  encounters: EncounterModel[],
+  dedupeMethod: keyof typeof ENCOUNTER_DEDUPE_UTILS
+): EncounterModel[] {
   // Group up the encounters that need to be merged
   const dupeGroups = new Map<string, EncounterModel[]>();
-  encounters.forEach((encounter) => {
-    const key: string = JSON.stringify({
-      upid: encounter.patientUPID,
-      periodStart: encounter.periodStart || "",
-      class: encounter.resource.class,
-      type: encounter.resource.type,
-      location: encounter.location || "",
-    });
+  encounters.forEach((encounter, i) => {
+    const key: string = ENCOUNTER_DEDUPE_UTILS[dedupeMethod].generateKey(encounter);
     const val = dupeGroups.get(key);
 
-    if (
-      !encounter.patientUPID ||
-      !encounter.periodStart ||
-      !encounter.class ||
-      !encounter.resource.type ||
-      !encounter.location
-    ) {
-      // Only group it if all necessary values are non-null.
-      dupeGroups.set(key, [encounter]);
+    if (!ENCOUNTER_DEDUPE_UTILS[dedupeMethod].hasRequiredFields(encounter)) {
+      dupeGroups.set(key + i, [encounter]); // If it's missing values, put it in a lone group.
     } else if (val) {
       val.push(encounter);
     } else {
@@ -97,7 +114,14 @@ export function dedupeAndMergeEncounters(encounters: EncounterModel[]): Encounte
     }
   });
 
-  // Merge the encounters in each group
+  const dedupedEncounters = mergeEncounters(dupeGroups);
+
+  return dedupedEncounters;
+}
+
+function mergeEncounters(dupeGroups: Map<string, EncounterModel[]>): EncounterModel[] {
+  const dedupedEncounters: EncounterModel[] = [];
+
   dupeGroups.forEach((encs) => {
     // If there's only one encounter in the group, no need to merge
     if (encs.length === 1) {

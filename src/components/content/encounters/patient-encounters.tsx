@@ -5,9 +5,9 @@ import { defaultEncounterFilters, encounterFilters } from "./helpers/filters";
 import { usePatientEncounterDetailsDrawer } from "./helpers/modal-hooks";
 import { defaultEncounterSort, encounterSortOptions } from "./helpers/sorts";
 import { getDateRangeView } from "../resource/helpers/view-date-range";
+import { PatientResourceTable } from "../resource/patient-resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
-import { ResourceTable } from "@/components/content/resource/resource-table";
-import { EmptyTable } from "@/components/core/empty-table";
+import { EmptyPatientTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
@@ -56,13 +56,16 @@ function PatientEncountersComponent({ className }: PatientEncountersProps) {
             onChange: setSort,
           }}
         />
-        <ResourceTable
+        <PatientResourceTable
           showTableHead
           isLoading={encountersQuery.isLoading}
           columns={patientEncounterColumns(userBuilderId)}
           data={data}
           emptyMessage={
-            <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="encounters" />
+            <EmptyPatientTable
+              hasZeroFilteredRecords={hasZeroFilteredRecords}
+              resourceName="encounters"
+            />
           }
           enableDismissAndReadActions
           onRowClick={openEncounterDetails}

@@ -14,7 +14,7 @@ export type EmptyTableProps = {
   hasZeroFilteredRecords: boolean;
 };
 
-export const EmptyTable = (props: EmptyTableProps) => {
+export const EmptyPatientTable = (props: EmptyTableProps) => {
   const patientHistoryQuery = usePatientHistory();
   const patient = usePatient();
   if (patientHistoryQuery.isLoading || patient.isLoading) {
@@ -56,7 +56,7 @@ export const EmptyTable = (props: EmptyTableProps) => {
   return <EmptyTableNoneFound {...props} />;
 };
 
-function EmptyTableNoneFound({ resourceName, hasZeroFilteredRecords }: EmptyTableProps) {
+export function EmptyTableNoneFound({ resourceName, hasZeroFilteredRecords }: EmptyTableProps) {
   let icon = faInbox;
   let errorText = `No ${resourceName}`;
   let subText = "We didn't find any records for this patient.";

@@ -33,6 +33,8 @@ export function getDateRangeView<T extends object>(field: Extract<keyof T, strin
   ];
   return {
     viewOptions,
+    past30days: viewOptions[0],
+    past3months: viewOptions[1],
     past6Months: viewOptions[2],
     allTime: viewOptions[4],
   };

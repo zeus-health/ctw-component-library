@@ -1,5 +1,79 @@
 # ctw-component-library
 
+## 1.65.11
+
+### Patch Changes
+
+- 44d0a431: Refactored out redundant useEffect in PatientSearch.
+
+## 1.65.10
+
+### Patch Changes
+
+- f7e85a43: Fix ADT table empty message and animation for opening drawers.
+- d19aab56: Transpose wide tables in drawer for better readability
+- 889464f1: Only show one date if encounter start and end dates are the same
+
+## 1.65.9
+
+### Patch Changes
+
+- 97e6ca6d: Wrapped SearchPatientRecords onSubmit handler in useCallback.
+
+## 1.65.8
+
+### Patch Changes
+
+- 893da9a1: Dedupe ADT table.
+
+## 1.65.7
+
+### Patch Changes
+
+- abbe7f1a: Refactor and add relative time based views to the ADT table.
+
+## 1.65.6
+
+### Patch Changes
+
+- 03975654: Add ability to override zus aggregate profile header with more config options.
+
+## 1.65.5
+
+### Patch Changes
+
+- 704420ab: Add some missing spaces in the ADT drawer table.
+
+## 1.65.4
+
+### Patch Changes
+
+- 871a76eb: Exports the ADT drawer.
+
+## 1.65.3
+
+### Patch Changes
+
+- f5689b7d: Export encounterModel.
+
+## 1.65.2
+
+### Patch Changes
+
+- 2c18ca57: Update encountermodel and table.
+
+## 1.65.1
+
+### Patch Changes
+
+- 2973ed1c: ZusIcon viewport dynamically adjusts based on whether "zus" text is visible.
+
+## 1.65.0
+
+### Minor Changes
+
+- e19cb86f: ZusIcon includes zus name only with prop "includeZusText"
+
 ## 1.64.0
 
 ### Minor Changes

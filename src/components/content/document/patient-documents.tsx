@@ -4,10 +4,10 @@ import { patientDocumentColumns } from "./helpers/columns";
 import { defaultDocumentsFilters, documentsFilter } from "./helpers/filters";
 import { defaultDocumentSort, documentSortOptions } from "./helpers/sorts";
 import { getDateRangeView } from "../resource/helpers/view-date-range";
+import { PatientResourceTable } from "../resource/patient-resource-table";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
-import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
-import { EmptyTable } from "@/components/core/empty-table";
+import { EmptyPatientTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
@@ -68,11 +68,14 @@ function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocument
             defaultView: allTime,
           }}
         />
-        <ResourceTable
+        <PatientResourceTable
           isLoading={patientDocumentQuery.isLoading}
           data={data}
           emptyMessage={
-            <EmptyTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="documents" />
+            <EmptyPatientTable
+              hasZeroFilteredRecords={hasZeroFilteredRecords}
+              resourceName="documents"
+            />
           }
           columns={patientDocumentColumns}
           onRowClick={openDetails}
