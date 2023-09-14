@@ -94,12 +94,14 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
       ) : (
         <div className="ctw-patient-record-search-results-list ctw-scrollable-pass-through-height">
           <div className="ctw-patient-record-search-results ctw-align-left ctw-ml-0">
+            {/* user hasn't made any search yet */}
             <RenderIf condition={!patientRecordSearch.data?.query}>
               <span className="ctw-text-1xl ctw-text-content-dark ctw-block ctw-text-left ctw-font-medium">
                 Search patient conditions, medications, documents and allergies.
               </span>
             </RenderIf>
 
+            {/* user has made a search but there are no results */}
             <RenderIf
               condition={
                 !!patientRecordSearch.data?.query && patientRecordSearch.data.results.length === 0
@@ -110,12 +112,14 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
               </span>
             </RenderIf>
 
+            {/* user has made a search but there was an error */}
             <RenderIf condition={!!patientRecordSearch.data?.query && patientRecordSearch.isError}>
               <div className="ctw-w-full">
                 <ErrorAlert header="Error">There was an error running your search.</ErrorAlert>
               </div>
             </RenderIf>
 
+            {/* user has made a search and there are results */}
             <RenderIf
               condition={
                 !!patientRecordSearch.data?.query && patientRecordSearch.data.results.length > 0
