@@ -80,7 +80,11 @@ describe("detail card tests", () => {
   describe("transpose", () => {
     const tests = [
       {
-        skip: true,
+        name: "just string",
+        value: "Discharged to home care or self care (routine discharge)",
+        expected: "Discharged to home care or self care (routine discharge)",
+      },
+      {
         name: "one table, one data row, no thead row",
         value: (
           <div>
@@ -122,7 +126,6 @@ describe("detail card tests", () => {
         ),
       },
       {
-        skip: true,
         name: "one table, two data rows, no thead row",
         value: (
           <div>
