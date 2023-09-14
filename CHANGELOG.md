@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.65.13
+
+### Patch Changes
+
+- 856d6bae: Show discharge disposition in encounter table if available
+- d37007a6: Adds default sort and sorting settings to the ADT table
+
 ## 1.65.12
 
 ### Patch Changes
