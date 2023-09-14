@@ -2,7 +2,8 @@ import type { TableColumn } from "@/components/core/table/table-helpers";
 import type { PatientModel } from "@/fhir/models/patient";
 import cx from "classnames";
 import { useADTAlertDetailsDrawer } from "./modal-hooks";
-import { dedupeAndMergeEncounters, defaultEncounterFilters } from "../encounters/helpers/filters";
+import { dedupeAndMergeEncounters } from "../encounters/helpers/filters";
+import { defaultEncounterSort, encounterSortOptions } from "../encounters/helpers/sorts";
 import { TableOptionProps } from "../patients/patients-table";
 import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { ResourceTable } from "../resource/resource-table";
@@ -24,12 +25,16 @@ function ADTTableComponent({ className, isLoading = false, data }: ADTTableProps
   const openADTDetails = useADTAlertDetailsDrawer();
 
   const { viewOptions, past30days } = getDateRangeView<EncounterModel>("periodStart");
-  const { data: dataFiltered, setViewOption } = useFilteredSortedData({
+  const {
+    data: data2,
+    setViewOption,
+    setSort,
+  } = useFilteredSortedData({
     defaultView: past30days,
-    defaultFilters: defaultEncounterFilters,
+    defaultSort: defaultEncounterSort,
     records: data,
   });
-  const dataDeduped = dedupeAndMergeEncounters(dataFiltered, "patientsADT");
+  const deta3 = dedupeAndMergeEncounters(data2, "patientsADT");
 
   return (
     <AnalyticsProvider componentName="ADTTable">
@@ -40,14 +45,19 @@ function ADTTableComponent({ className, isLoading = false, data }: ADTTableProps
             options: viewOptions,
             defaultView: past30days,
           }}
+          sortOptions={{
+            defaultSort: defaultEncounterSort,
+            options: encounterSortOptions,
+            onChange: setSort,
+          }}
         />
         <ResourceTable
-          data={dataDeduped}
+          data={deta3}
           columns={columns}
           isLoading={isLoading}
           emptyMessage={
             <EmptyTableNoneFound
-              hasZeroFilteredRecords={dataDeduped.length === 0}
+              hasZeroFilteredRecords={deta3.length === 0}
               resourceName="encounters"
             />
           }
