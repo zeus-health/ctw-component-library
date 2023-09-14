@@ -2,4 +2,4 @@
 "@zus-health/ctw-component-library": patch
 ---
 
-Dedupe ADT table.
+Fix ADT table empty message and animation for opening drawers.
