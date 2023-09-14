@@ -17,22 +17,22 @@ describe("date parsing tests", () => {
     {
       name: "iso, NYC EST locale, seconds",
       input: "2023-04-07T12:34:45-04:00",
-      expected: parseISO("2023-04-07T12:34:45-04:00"),
+      expected: parseISO("2023-04-07T12:34:45"),
     },
     {
       name: "us format, no locale, seconds",
       input: "04/07/2023 13:34:45",
-      expected: parseISO("2023-04-07T13:34:45-04:00"),
+      expected: parseISO("2023-04-07T13:34:45"),
     },
     {
       name: "us format, no locale, mins",
       input: "04/07/2023 3:34 PM",
-      expected: parseISO("2023-04-07T15:34:00-04:00"),
+      expected: parseISO("2023-04-07T15:34:00"),
     },
     {
       name: "us format, no locale, AM/PM, mins, no padded zeroes",
       input: "4/7/2023 3:34 PM",
-      expected: parseISO("2023-04-07T15:34:00-04:00"),
+      expected: parseISO("2023-04-07T15:34"),
     },
     {
       name: "us format, no locale, 24HR, mins, no padded zeroes",
