@@ -14,6 +14,7 @@ import { AnalyticsProvider } from "@/components/core/providers/analytics/analyti
 import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { RenderIf } from "@/components/core/render-if";
 import {
+  EMPTY_SEARCH_RESULTS,
   PatientRecordSearchResult,
   usePatientRecordSearch,
 } from "@/services/patient-record-search/patient-record-search";
@@ -29,7 +30,12 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
   const [searchTextInputValue, setSearchTextInputValue] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const [searchWasQuestion, setSearchWasQuestion] = useState(false);
-  const patientRecordSearch = usePatientRecordSearch(searchValue);
+  const {
+    data = EMPTY_SEARCH_RESULTS,
+    isFetching,
+    isLoading,
+    isError,
+  } = usePatientRecordSearch(searchValue);
   const { trackInteraction } = useAnalytics();
 
   const handleSubmitForm = useCallback(
@@ -53,6 +59,9 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
     setSearchTextInputValue("");
     setSearchValue("");
   }, [trackInteraction]);
+
+  const userHasSearched = !!data.query;
+  const hasResults = data.results.length > 0;
 
   return (
     <div
@@ -87,70 +96,53 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
         </button>
       </form>
 
-      {patientRecordSearch.isFetching || patientRecordSearch.isLoading ? (
+      {isFetching || isLoading ? (
         <div className="ctw-mt-3 ctw-flex ctw-justify-center ctw-space-x-1 ctw-align-middle">
           <Loading />
         </div>
       ) : (
         <div className="ctw-patient-record-search-results-list ctw-scrollable-pass-through-height">
           <div className="ctw-patient-record-search-results ctw-align-left ctw-ml-0">
-            {/* user hasn't made any search yet */}
-            <RenderIf condition={!patientRecordSearch.data?.query}>
+            <RenderIf condition={!userHasSearched}>
               <span className="ctw-text-1xl ctw-text-content-dark ctw-block ctw-text-left ctw-font-medium">
                 Search patient conditions, medications, documents and allergies.
               </span>
             </RenderIf>
 
-            {/* user has made a search but there are no results */}
-            <RenderIf
-              condition={
-                !!patientRecordSearch.data?.query && patientRecordSearch.data.results.length === 0
-              }
-            >
+            <RenderIf condition={userHasSearched && !hasResults}>
               <span className="ctw-text-1xl ctw-text-content-dark ctw-block ctw-text-left ctw-font-medium">
                 Search did not return any results.
               </span>
             </RenderIf>
 
-            {/* user has made a search but there was an error */}
-            <RenderIf condition={!!patientRecordSearch.data?.query && patientRecordSearch.isError}>
+            <RenderIf condition={userHasSearched && isError}>
               <div className="ctw-w-full">
                 <ErrorAlert header="Error">There was an error running your search.</ErrorAlert>
               </div>
             </RenderIf>
 
             {/* user has made a search and there are results */}
-            <RenderIf
-              condition={
-                !!patientRecordSearch.data?.query && patientRecordSearch.data.results.length > 0
-              }
-            >
+            <RenderIf condition={userHasSearched && hasResults}>
               {/* FeedbackProvider will allow all the feedback forms to get the id of the query */}
-              <FeedbackProvider id={patientRecordSearch.data?.id}>
+              <FeedbackProvider id={data.id}>
                 <RenderIf condition={searchWasQuestion}>
                   <span className="ctw-font-normal">
-                    {patientRecordSearch.data?.response}
+                    {data.response}
                     <FeedbackForm name="query-response" />
                   </span>
                 </RenderIf>
 
                 {/* Search Results */}
                 <span className="ctw-text-1xl ctw-text-content-dark ctw-block ctw-text-left ctw-font-medium">
-                  Found {patientRecordSearch.data?.results.length} results
+                  Found {data.results.length} results
                 </span>
-                {patientRecordSearch.data?.results
-                  .slice(0, count)
-                  .map((result: PatientRecordSearchResult, idx) => (
-                    // eslint-disable-next-line react/no-array-index-key
-                    <SearchResultRow key={idx} document={result.document} />
-                  ))}
+                {data.results.slice(0, count).map((result: PatientRecordSearchResult, idx) => (
+                  // eslint-disable-next-line react/no-array-index-key
+                  <SearchResultRow key={idx} document={result.document} />
+                ))}
               </FeedbackProvider>
               <div className="ctw-mt-5">
-                <PaginationList
-                  total={patientRecordSearch.data?.results.length ?? 0}
-                  count={count}
-                  changeCount={setCount}
-                />
+                <PaginationList total={data.results.length} count={count} changeCount={setCount} />
               </div>
             </RenderIf>
           </div>
