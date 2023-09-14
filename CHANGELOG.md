@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 1.65.9
+
+### Patch Changes
+
+- 97e6ca6d: Wrapped SearchPatientRecords onSubmit handler in useCallback.
+
+## 1.65.8
+
+### Patch Changes
+
+- 893da9a1: Dedupe ADT table.
+
 ## 1.65.7
 
 ### Patch Changes
