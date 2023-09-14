@@ -1,4 +1,3 @@
-/* eslint-disable react/no-array-index-key */
 import React from "react";
 import { TableInfo } from "../../types";
 import "../../../styles.scss";

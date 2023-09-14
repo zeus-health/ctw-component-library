@@ -79,21 +79,21 @@ export type PatientRecordSearchResults = {
   total: number;
 };
 
-export const EMPTY_SEARCH_RESULTS: Readonly<PatientRecordSearchResults> = Object.freeze({
+export const EMPTY_SEARCH_RESULTS: PatientRecordSearchResults = {
   id: "",
   query: "",
   response: "",
-  results: Object.freeze([] as PatientRecordSearchResult[]),
+  results: [] as PatientRecordSearchResult[],
   total: 0,
-});
+};
 
-const EMPTY_RESOURCE_BY_TYPE_MAPPING: ResourceByTypeMapping = Object.freeze({
+const EMPTY_RESOURCE_BY_TYPE_MAPPING: ResourceByTypeMapping = {
   AllergyIntolerance: [],
   Condition: [],
   DocumentReference: [],
   MedicationStatement: [],
   Observation: [],
-});
+};
 
 class PatientRecordSearch {
   private response: PatientRecordSearchResponseRaw;
@@ -186,7 +186,7 @@ class PatientRecordSearch {
 }
 
 export function usePatientRecordSearch(
-  searchTerm?: string
+  searchTerm: string
 ): UseQueryResult<PatientRecordSearchResults> {
   return useQueryWithPatient(
     QUERY_KEY_AI_SEARCH,

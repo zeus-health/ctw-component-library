@@ -122,14 +122,7 @@ const transposeTable = (tbl: ReactElement): ReactElement => {
       ...headerRows.map((col, colIdx) => (
         // the child should be just one text value
         <tr key={`transposed-${transposeIdx}`}>
-          <td
-            key={
-              // eslint-disable-next-line react/no-array-index-key
-              `col-${colIdx}`
-            }
-          >
-            {col.props.children}
-          </td>
+          <td key={`col-${colIdx}`}>{col.props.children}</td>
         </tr>
       ))
     );
@@ -156,7 +149,6 @@ const transposeTable = (tbl: ReactElement): ReactElement => {
         : ([tr.props.children] as ReactElement[]);
       const updatedCells = [
         ...currentCells,
-        // eslint-disable-next-line react/no-array-index-key
         <td key={`data-${transposeIdx}-${cellIdx}`}>{dataCell.props.children}</td>,
       ];
 
@@ -202,7 +194,6 @@ export const DetailsCard = ({ details, hideEmpty = true, documentButton }: Detai
             const valueWithTransposedTables = transposedValues[idx];
             if (!label) {
               return (
-                // eslint-disable-next-line react/no-array-index-key
                 <div key={idx} className="ctw-text-gray-900 ctw-flex ctw-items-baseline">
                   <div className="ctw-m-0 ctw-w-full">{valueWithTransposedTables}</div>
                 </div>

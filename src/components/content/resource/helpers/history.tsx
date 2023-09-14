@@ -40,7 +40,6 @@ export const History = ({ entries, limit, resourceTypeTitle }: HistoryProps) => 
       <div className="ctw-text-lg ctw-font-semibold">History</div>
       {displayedEntries.map((entry, idx) => (
         // We can have multiple items with the same condition id
-        // eslint-disable-next-line react/no-array-index-key
         <div key={`${entry.id}-${idx}`}>
           <HistoryEntry
             id={entry.id}

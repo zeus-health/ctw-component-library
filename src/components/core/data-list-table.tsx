@@ -22,7 +22,6 @@ export function DataListStack({ entries, limit }: DataListStackProps) {
             {entry.data.map(({ label, value }, labelIndex) => (
               <div
                 // label is not guarenteed to be unique so append index.
-                // eslint-disable-next-line react/no-array-index-key
                 key={label + labelIndex}
                 className="ctw-text-gray-900 ctw-flex ctw-items-baseline ctw-space-x-4"
               >
