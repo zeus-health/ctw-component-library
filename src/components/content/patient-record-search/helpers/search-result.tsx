@@ -39,7 +39,9 @@ export function SearchResult<T extends FHIRModel<fhir4.Resource>>({
 
       <div className="ctw-patient-record-search-details">
         {details?.map((detail) => (
-          <div data-label={detail.label}>{detail.value}</div>
+          <div key={detail.label} data-label={detail.label}>
+            {detail.value}
+          </div>
         ))}
       </div>
     </div>
