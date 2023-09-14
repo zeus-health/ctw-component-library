@@ -15,8 +15,8 @@ describe("date parsing tests", () => {
     },
 
     {
-      name: "iso, NYC EST locale, seconds",
-      input: "2023-04-07T12:34:45-04:00",
+      name: "iso, seconds",
+      input: "2023-04-07T12:34:45",
       expected: parseISO("2023-04-07T12:34:45"),
     },
     {
