@@ -64,6 +64,7 @@ export const careTeamData = (careTeamPractitioner: CareTeamPractitionerModel) =>
     value: careTeamPractitioner.telecom && (
       <div>
         {careTeamPractitioner.telecom.map((item, index) => (
+          // eslint-disable-next-line react/no-array-index-key
           <div key={index}>{item.value}</div>
         ))}
       </div>

@@ -129,6 +129,7 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
                   Results:
                 </span>
                 {displayedResults.map((result: PatientRecordSearchResult, idx) => (
+                  // eslint-disable-next-line react/no-array-index-key
                   <SearchResultRow key={idx} document={result.document} />
                 ))}
                 {!isLoading && (

@@ -14,6 +14,7 @@ export const SimpleMoreList = ({ className, items, limit, total, prefix }: Simpl
   return (
     <div className={className}>
       {displayItems.slice(0, limit).map((item, index) => (
+        // eslint-disable-next-line react/no-array-index-key
         <div key={item + index}>
           <div>{item}</div>
         </div>

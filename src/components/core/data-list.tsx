@@ -23,6 +23,7 @@ export function DataList({ title, data }: DataListProps) {
         {data.map(({ label, value = "" }, index) => (
           <div
             // label is not guaranteed to be unique so append index.
+            // eslint-disable-next-line react/no-array-index-key
             key={label + index}
             className="ctw-flex ctw-items-baseline ctw-space-x-4 ctw-text-content-black"
           >

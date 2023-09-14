@@ -65,6 +65,7 @@ export const Basic: StoryObj<DrawerProps> = {
           <h4>Drawer Body</h4>
           <ol>
             {[...Array(10)].map((_, i) => (
+              // eslint-disable-next-line react/no-array-index-key
               <li key={i} data-testid={`scrollable-content-${i}`}>
                 Lorem ipsum dolor sit amet, his te vulputate cotidieque concludaturque, no nulla
                 dicit vocibus ius. Eos ne recusabo scriptorem, admodum ullamcorper te mei. Eros

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import { BasicRow } from "./BasicRow";
 import { TupleRow } from "./TupleRow";
 import { TableInfo } from "../../types";
