@@ -1,5 +1,4 @@
 import type { PatientRecordSearchResult } from "@/services/patient-record-search/patient-record-search";
-import { capitalize } from "lodash";
 import { SearchResult } from "./search-result";
 import { useAllergiesHistory } from "../../allergies/helpers/history";
 import { allergyData } from "../../allergies/patient-allergies";
@@ -13,6 +12,7 @@ import {
   DocumentModel,
   MedicationStatementModel,
 } from "@/fhir/models";
+import { capitalize } from "@/utils/nodash";
 
 type ResourceRowProps = {
   document: PatientRecordSearchResult["document"];
