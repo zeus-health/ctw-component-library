@@ -30,14 +30,14 @@ describe("date parsing tests", () => {
       expected: parseISO("2023-04-07T15:34:00-04:00"),
     },
     {
-      name: "us format, no locale, mins, no padded zeroes",
+      name: "us format, no locale, AM/PM, mins, no padded zeroes",
       input: "4/7/2023 3:34 PM",
       expected: parseISO("2023-04-07T15:34:00-04:00"),
     },
     {
-      name: "us format, no locale, mins, no padded zeroes",
+      name: "us format, no locale, 24HR, mins, no padded zeroes",
       input: "4/7/2023 15:34",
-      expected: parseISO("2023-04-07T15:34:00-04:00"),
+      expected: parseISO("2023-04-07T15:34:00"),
     },
   ];
 
