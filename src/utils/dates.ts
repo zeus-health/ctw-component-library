@@ -1,4 +1,6 @@
 import { parse, parseISO } from "date-fns";
+// eslint-disable-next-line import/no-named-default
+import { default as LOCALE_US } from "date-fns/locale/en-US";
 
 const DATE_FORMATS = [
   // 04/17/1983 3:50:00.000 PM
@@ -31,7 +33,9 @@ export const parseWithoutFormat = (dateTime: string): Date | undefined => {
   // next try our custom patterns that we expect
   for (let dateFormatIdx = 0; dateFormatIdx < DATE_FORMATS.length; dateFormatIdx += 1) {
     const dateFormat = DATE_FORMATS[dateFormatIdx];
-    retval = parse(dateTime, dateFormat, new Date());
+    retval = parse(dateTime, dateFormat, new Date(), {
+      locale: LOCALE_US,
+    });
     if (!Number.isNaN(retval.getMilliseconds())) {
       return retval;
     }
