@@ -36,10 +36,12 @@ export const patientEncounterColumns = (builderId: string): TableColumn<Encounte
   {
     title: "Details",
     render: (encounter) => {
+      const { dischargeDisposition } = encounter;
       const diagnoses = compact(encounter.diagnoses);
       const notes = encounter.clinicalNotes.map((note) => note.noteTitle);
       return (
         <div>
+          {dischargeDisposition && <div>Discharge: {dischargeDisposition}</div>}
           {notes.length > 0 && (
             <SimpleMoreList items={notes} limit={3} total={notes.length} prefix="Notes:" />
           )}
