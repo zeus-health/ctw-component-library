@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.65.15
+
+### Patch Changes
+
+- b3c0a641: Fix error state in search component.
+- aba449c6: Address various clinical note rendering issues
+
 ## 1.65.14
 
 ### Patch Changes
