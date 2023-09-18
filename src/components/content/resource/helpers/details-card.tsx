@@ -73,6 +73,11 @@ export const recursivelyTransposeTables = (node: ReactNode, curDepth: number): R
 };
 
 const transposeTable = (tbl: ReactElement): ReactElement => {
+  // if there's no children, then return with original tbl
+  if (!tbl.props || !tbl.props.children || !Array.isArray(tbl.props.children)) {
+    return tbl;
+  }
+
   // find the thead, otherwise skip
   const theads = (tbl.props.children as ReactElement[]).filter((child) => child.type === "thead");
   if (theads.length !== 1) {
