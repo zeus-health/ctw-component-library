@@ -1,5 +1,18 @@
 # ctw-component-library
 
+## 1.65.14
+
+### Patch Changes
+
+- 056c8e8d: Fixed issue where clinical notes were not visible
+
+## 1.65.13
+
+### Patch Changes
+
+- 856d6bae: Show discharge disposition in encounter table if available
+- d37007a6: Adds default sort and sorting settings to the ADT table
+
 ## 1.65.12
 
 ### Patch Changes

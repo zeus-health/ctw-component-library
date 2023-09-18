@@ -196,9 +196,14 @@ export const DetailsCard = ({ details, hideEmpty = true, documentButton }: Detai
           <div className="ctw-title-container">Details</div>
           <div className="ctw-flex">{documentButton}</div>
         </div>
-        {details
-          .filter((d) => !hideEmpty || d.value || d.value === 0)
-          .map(({ label }, idx) => {
+        {transposedValues.length > 0 &&
+          details.map(({ label, value }, idx) => {
+            // if we want to hide empty rows and the value is falsy and the value
+            // is not zero, then hide it
+            if (hideEmpty && !value && value !== 0) {
+              return <></>;
+            }
+
             const valueWithTransposedTables = transposedValues[idx];
             if (!label) {
               return (

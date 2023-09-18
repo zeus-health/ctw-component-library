@@ -66,6 +66,7 @@ export * from "@/components/core/toggle";
 export * from "@/components/core/toggle-control";
 export * from "@/hooks/use-medications";
 export * from "@/components/content/resource/resource-table-actions";
+export * from "@/components/content/resource/helpers/filters";
 export * from "@/services/fqs/client";
 // Models
 export * from "@/fhir/models";
