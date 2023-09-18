@@ -111,9 +111,6 @@ const transposeTable = (tbl: ReactElement): ReactElement => {
     return tbl;
   }
 
-  // header values as the first column in the rows
-  const newRows = [] as JSX.Element[];
-
   const dataRows = Array.isArray(tbody.props.children)
     ? (tbody.props.children as ReactElement[])
     : ([tbody.props.children] as ReactElement[]);
@@ -121,29 +118,28 @@ const transposeTable = (tbl: ReactElement): ReactElement => {
     return tbl;
   }
 
-  // let transposeIdx = 0;
-  dataRows.forEach((dataRow, rowIdx) => {
+  const newRows = dataRows.reduce((acc, dataRow, rowIdx) => {
     // now for each cell in the data row
     const dataCells = Array.isArray(dataRow.props.children)
       ? (dataRow.props.children as ReactElement[])
       : ([dataRow.props.children] as ReactElement[]);
 
-    dataCells.forEach((dataCell, cellIdx) => {
+    const newDivs = dataCells.reduce((accRow, dataCell, cellIdx) => {
       const headerRow = headerRows[cellIdx];
 
-      newRows.push(
+      return [
+        ...accRow,
         // eslint-disable-next-line react/no-array-index-key
         <div key={`cell-${rowIdx}-${cellIdx}`}>
-          <p>
-            <b>{headerRow.props.children}</b>
-          </p>
+          <p className="ctw-font-medium">{headerRow.props.children}</p>
           <p>{dataCell.props.children}</p>
-        </div>
-      );
-    });
+        </div>,
+      ];
+    }, [] as ReactElement[]);
 
+    // add an extra div we need to separate data rows
     if (dataRows.length - 1 > rowIdx) {
-      newRows.push(
+      newDivs.push(
         <div
           // eslint-disable-next-line react/no-array-index-key
           key={`transpose-separator-${rowIdx}`}
@@ -151,7 +147,9 @@ const transposeTable = (tbl: ReactElement): ReactElement => {
         />
       );
     }
-  });
+
+    return [...acc, ...newDivs];
+  }, [] as ReactElement[]);
 
   return <div className="ctw-note-transposed">{newRows}</div>;
 };

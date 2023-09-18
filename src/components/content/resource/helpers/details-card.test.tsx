@@ -108,21 +108,15 @@ describe("detail card tests", () => {
           <div>
             <div className="ctw-note-transposed">
               <div key="cell-0-0">
-                <p>
-                  <b>Col 1</b>
-                </p>
+                <p className="ctw-font-medium">Col 1</p>
                 <p>hi</p>
               </div>
               <div key="cell-0-1">
-                <p>
-                  <b>Col 2</b>
-                </p>
+                <p className="ctw-font-medium">Col 2</p>
                 <p>hi again</p>
               </div>
               <div key="cell-0-2">
-                <p>
-                  <b>Col 3</b>
-                </p>
+                <p className="ctw-font-medium">Col 3</p>
                 <p>hi again again</p>
               </div>
             </div>
@@ -158,40 +152,28 @@ describe("detail card tests", () => {
           <div>
             <div className="ctw-note-transposed">
               <div key="cell-0-0">
-                <p>
-                  <b>Col 1</b>
-                </p>
+                <p className="ctw-font-medium">Col 1</p>
                 <p>hi</p>
               </div>
               <div key="cell-0-1">
-                <p>
-                  <b>Col 2</b>
-                </p>
+                <p className="ctw-font-medium">Col 2</p>
                 <p>hi again</p>
               </div>
               <div key="cell-0-2">
-                <p>
-                  <b>Col 3</b>
-                </p>
+                <p className="ctw-font-medium">Col 3</p>
                 <p>hi again again</p>
               </div>
               <div key="transpose-separator-0" className="ctw-note-transposed-row-separator" />
               <div key="cell-1-0">
-                <p>
-                  <b>Col 1</b>
-                </p>
+                <p className="ctw-font-medium">Col 1</p>
                 <p>goodbye</p>
               </div>
               <div key="cell-1-1">
-                <p>
-                  <b>Col 2</b>
-                </p>
+                <p className="ctw-font-medium">Col 2</p>
                 <p>goodbye again</p>
               </div>
               <div key="cell-1-2">
-                <p>
-                  <b>Col 3</b>
-                </p>
+                <p className="ctw-font-medium">Col 3</p>
                 <p>goodbye again again</p>
               </div>
             </div>
@@ -205,21 +187,15 @@ describe("detail card tests", () => {
         expected: (
           <div className="ctw-note-transposed">
             <div key="cell-0-0">
-              <p>
-                <b>Col 1</b>
-              </p>
+              <p className="ctw-font-medium">Col 1</p>
               <p>hi</p>
             </div>
             <div key="cell-0-1">
-              <p>
-                <b>Col 2</b>
-              </p>
+              <p className="ctw-font-medium">Col 2</p>
               <p>hi again</p>
             </div>
             <div key="cell-0-2">
-              <p>
-                <b>Col 3</b>
-              </p>
+              <p className="ctw-font-medium">Col 3</p>
               <p>hi again again</p>
             </div>
           </div>
@@ -235,15 +211,11 @@ describe("detail card tests", () => {
                 <h2 key={0}>Consultation (Within 1 month) - Closed</h2>
                 <div className="ctw-note-transposed">
                   <div key="cell-0-0">
-                    <p>
-                      <b>Specialty</b>
-                    </p>
+                    <p className="ctw-font-medium">Specialty</p>
                     <p>Neurology</p>
                   </div>
                   <div key="cell-0-1">
-                    <p>
-                      <b>Diagnoses / Procedures</b>
-                    </p>
+                    <p className="ctw-font-medium">Diagnoses / Procedures</p>
                     <p>
                       <p key="0">Diagnoses</p>
                       <p key="1">Muscular dystrophy.</p>
@@ -251,9 +223,7 @@ describe("detail card tests", () => {
                     </p>
                   </div>
                   <div key="cell-0-2">
-                    <p>
-                      <b>Referred By Contact</b>
-                    </p>
+                    <p className="ctw-font-medium">Referred By Contact</p>
                     <p>
                       <p key="0">Knight, Bryan J, DO</p>
                       <p key="1">1 Lincolon St</p>
@@ -265,9 +235,7 @@ describe("detail card tests", () => {
                     </p>
                   </div>
                   <div key="cell-0-3">
-                    <p>
-                      <b>Referred To Contact</b>
-                    </p>
+                    <p className="ctw-font-medium">Referred To Contact</p>
                     <p>
                       <p key="0">Acme Health</p>
                       <p key="1">200 Jefferson St</p>
@@ -278,45 +246,31 @@ describe("detail card tests", () => {
                 </div>
                 <div className="ctw-note-transposed">
                   <div key="cell-0-0">
-                    <p>
-                      <b>Referral ID</b>
-                    </p>
+                    <p className="ctw-font-medium">Referral ID</p>
                     <p>789456789456</p>
                   </div>
                   <div key="cell-0-1">
-                    <p>
-                      <b>Status</b>
-                    </p>
+                    <p className="ctw-font-medium">Status</p>
                     <p>Closed</p>
                   </div>
                   <div key="cell-0-2">
-                    <p>
-                      <b>Reason</b>
-                    </p>
+                    <p className="ctw-font-medium">Reason</p>
                     <p>{null}</p>
                   </div>
                   <div key="cell-0-3">
-                    <p>
-                      <b>Start Date</b>
-                    </p>
+                    <p className="ctw-font-medium">Start Date</p>
                     <p>12/25/2022</p>
                   </div>
                   <div key="cell-0-4">
-                    <p>
-                      <b>Expiration Date</b>
-                    </p>
+                    <p className="ctw-font-medium">Expiration Date</p>
                     <p>12/25/2022</p>
                   </div>
                   <div key="cell-0-5">
-                    <p>
-                      <b>Visits Requested</b>
-                    </p>
+                    <p className="ctw-font-medium">Visits Requested</p>
                     <p>1</p>
                   </div>
                   <div key="cell-0-6">
-                    <p>
-                      <b>Visits Authorized</b>
-                    </p>
+                    <p className="ctw-font-medium">Visits Authorized</p>
                     <p>1</p>
                   </div>
                 </div>
