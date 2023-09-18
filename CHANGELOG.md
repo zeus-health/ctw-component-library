@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.65.14
+
+### Patch Changes
+
+- 056c8e8d: Fixed issue where clinical notes were not visible
+
 ## 1.65.13
 
 ### Patch Changes
