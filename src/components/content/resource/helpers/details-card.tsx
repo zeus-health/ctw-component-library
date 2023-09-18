@@ -2,6 +2,8 @@ import parse from "html-react-parser";
 import React, { ReactElement, ReactNode, useEffect, useState } from "react";
 import { cloneDeep } from "@/utils/nodash";
 
+import "./note-style.scss";
+
 export type DetailEntry = {
   label?: string;
   value: ReactNode;
@@ -13,7 +15,7 @@ export type DetailsProps = {
   documentButton?: ReactNode;
 };
 
-const MIN_SOURCE_COLUMNS_IN_NOTE = 2;
+const MIN_SOURCE_COLUMNS_IN_NOTE_TO_TRANSPOSE = 3;
 const MAX_DEPTH_FIND_TABLE_TO_TRANSPOSE = 6;
 
 export const recursivelyTransposeTables = (node: ReactNode, curDepth: number): ReactNode => {
@@ -105,7 +107,7 @@ const transposeTable = (tbl: ReactElement): ReactElement => {
     headerRows = [thead.props.children.props.children] as ReactElement[];
   }
 
-  if (headerRows.length <= MIN_SOURCE_COLUMNS_IN_NOTE) {
+  if (headerRows.length < MIN_SOURCE_COLUMNS_IN_NOTE_TO_TRANSPOSE) {
     return tbl;
   }
 
@@ -119,67 +121,39 @@ const transposeTable = (tbl: ReactElement): ReactElement => {
     return tbl;
   }
 
-  let transposeIdx = 0;
+  // let transposeIdx = 0;
   dataRows.forEach((dataRow, rowIdx) => {
-    // each data row should equate to N new tranpose rows, one for
-    // each column in the original data table
-    newRows.push(
-      ...headerRows.map((col, colIdx) => (
-        // the child should be just one text value
-        <tr key={`transposed-${transposeIdx}`}>
-          <td
-            key={
-              // eslint-disable-next-line react/no-array-index-key
-              `col-${colIdx}`
-            }
-          >
-            {col.props.children}
-          </td>
-        </tr>
-      ))
-    );
-
-    if (rowIdx > 0) {
-      // get the next tranposed row that aligns with the next data row
-      const tr = newRows[transposeIdx];
-      newRows[transposeIdx] = (
-        <tr key={tr.key} className="ctw-outline">
-          {tr.props.children}
-        </tr>
-      );
-    }
-
     // now for each cell in the data row
     const dataCells = Array.isArray(dataRow.props.children)
       ? (dataRow.props.children as ReactElement[])
       : ([dataRow.props.children] as ReactElement[]);
 
     dataCells.forEach((dataCell, cellIdx) => {
-      const tr = newRows[transposeIdx];
-      const currentCells = Array.isArray(tr.props.children)
-        ? (tr.props.children as ReactElement[])
-        : ([tr.props.children] as ReactElement[]);
-      const updatedCells = [
-        ...currentCells,
+      const headerRow = headerRows[cellIdx];
+
+      newRows.push(
         // eslint-disable-next-line react/no-array-index-key
-        <td key={`data-${transposeIdx}-${cellIdx}`}>{dataCell.props.children}</td>,
-      ];
-
-      newRows[transposeIdx] = (
-        <tr key={`transposed-${transposeIdx}`} className={tr.props.className}>
-          {updatedCells}
-        </tr>
+        <div key={`cell-${rowIdx}-${cellIdx}`}>
+          <p>
+            <b>{headerRow.props.children}</b>
+          </p>
+          <p>{dataCell.props.children}</p>
+        </div>
       );
-
-      transposeIdx += 1;
     });
+
+    if (dataRows.length - 1 > rowIdx) {
+      newRows.push(
+        <div
+          // eslint-disable-next-line react/no-array-index-key
+          key={`transpose-separator-${rowIdx}`}
+          className="ctw-note-transposed-row-separator"
+        />
+      );
+    }
   });
 
-  return (
-    <table>
-      <tbody>{newRows}</tbody>
-    </table>
-  );
+  return <div className="ctw-note-transposed">{newRows}</div>;
 };
 
 export const DetailsCard = ({ details, hideEmpty = true, documentButton }: DetailsProps) => {

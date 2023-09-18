@@ -106,22 +106,26 @@ describe("detail card tests", () => {
         ),
         expected: (
           <div>
-            <table>
-              <tbody>
-                <tr key="transposed-0">
-                  <td key="col-0">Col 1</td>
-                  <td key="data-0-0">hi</td>
-                </tr>
-                <tr key="transposed-1">
-                  <td key="col-1">Col 2</td>
-                  <td key="data-1-1">hi again</td>
-                </tr>
-                <tr key="transposed-2">
-                  <td key="col-2">Col 3</td>
-                  <td key="data-2-2">hi again again</td>
-                </tr>
-              </tbody>
-            </table>
+            <div className="ctw-note-transposed">
+              <div key="cell-0-0">
+                <p>
+                  <b>Col 1</b>
+                </p>
+                <p>hi</p>
+              </div>
+              <div key="cell-0-1">
+                <p>
+                  <b>Col 2</b>
+                </p>
+                <p>hi again</p>
+              </div>
+              <div key="cell-0-2">
+                <p>
+                  <b>Col 3</b>
+                </p>
+                <p>hi again again</p>
+              </div>
+            </div>
           </div>
         ),
       },
@@ -152,57 +156,73 @@ describe("detail card tests", () => {
         ),
         expected: (
           <div>
-            <table>
-              <tbody>
-                <tr key="transposed-0">
-                  <td key="col-0">Col 1</td>
-                  <td key="data-0-0">hi</td>
-                </tr>
-                <tr key="transposed-1">
-                  <td key="col-1">Col 2</td>
-                  <td key="data-1-1">hi again</td>
-                </tr>
-                <tr key="transposed-2">
-                  <td key="col-2">Col 3</td>
-                  <td key="data-2-2">hi again again</td>
-                </tr>
-                <tr key="transposed-3" className="ctw-outline">
-                  <td key="col-0">Col 1</td>
-                  <td key="data-3-0">goodbye</td>
-                </tr>
-                <tr key="transposed-4">
-                  <td key="col-1">Col 2</td>
-                  <td key="data-4-1">goodbye again</td>
-                </tr>
-                <tr key="transposed-5">
-                  <td key="col-2">Col 3</td>
-                  <td key="data-5-2">goodbye again again</td>
-                </tr>
-              </tbody>
-            </table>
+            <div className="ctw-note-transposed">
+              <div key="cell-0-0">
+                <p>
+                  <b>Col 1</b>
+                </p>
+                <p>hi</p>
+              </div>
+              <div key="cell-0-1">
+                <p>
+                  <b>Col 2</b>
+                </p>
+                <p>hi again</p>
+              </div>
+              <div key="cell-0-2">
+                <p>
+                  <b>Col 3</b>
+                </p>
+                <p>hi again again</p>
+              </div>
+              <div key="transpose-separator-0" className="ctw-note-transposed-row-separator" />
+              <div key="cell-1-0">
+                <p>
+                  <b>Col 1</b>
+                </p>
+                <p>goodbye</p>
+              </div>
+              <div key="cell-1-1">
+                <p>
+                  <b>Col 2</b>
+                </p>
+                <p>goodbye again</p>
+              </div>
+              <div key="cell-1-2">
+                <p>
+                  <b>Col 3</b>
+                </p>
+                <p>goodbye again again</p>
+              </div>
+            </div>
           </div>
         ),
       },
+
       {
         name: "one table, one data row, thead row, content",
         value: <div content={smallDivContent} />,
         expected: (
-          <table>
-            <tbody>
-              <tr key="transposed-0">
-                <td key="col-0">Col 1</td>
-                <td key="data-0-0">hi</td>
-              </tr>
-              <tr key="transposed-1">
-                <td key="col-1">Col 2</td>
-                <td key="data-1-1">hi again</td>
-              </tr>
-              <tr key="transposed-2">
-                <td key="col-2">Col 3</td>
-                <td key="data-2-2">hi again again</td>
-              </tr>
-            </tbody>
-          </table>
+          <div className="ctw-note-transposed">
+            <div key="cell-0-0">
+              <p>
+                <b>Col 1</b>
+              </p>
+              <p>hi</p>
+            </div>
+            <div key="cell-0-1">
+              <p>
+                <b>Col 2</b>
+              </p>
+              <p>hi again</p>
+            </div>
+            <div key="cell-0-2">
+              <p>
+                <b>Col 3</b>
+              </p>
+              <p>hi again again</p>
+            </div>
+          </div>
         ),
       },
       {
@@ -213,75 +233,93 @@ describe("detail card tests", () => {
             <ul>
               <li>
                 <h2 key={0}>Consultation (Within 1 month) - Closed</h2>
-                <table>
-                  <tbody>
-                    <tr key="transposed-0">
-                      <td key="col-0">Specialty</td>
-                      <td key="data-0-0">Neurology</td>
-                    </tr>
-                    <tr key="transposed-1">
-                      <td key="col-1">Diagnoses / Procedures</td>
-                      <td key="data-1-1">
-                        <p key="0">Diagnoses</p>
-                        <p key="1">Muscular dystrophy.</p>
-                        <br key="2">{null}</br>
-                      </td>
-                    </tr>
-                    <tr key="transposed-2">
-                      <td key="col-2">Referred By Contact</td>
-                      <td key="data-2-2">
-                        <p key="0">Knight, Bryan J, DO</p>
-                        <p key="1">1 Lincolon St</p>
-                        <p key="2">Ste 2400</p>
-                        <p key="3">Boston, MA 02111</p>
-                        <p key="4">Phone: 508-555-5555</p>
-                        <p key="5">Fax: 781-555-5555</p>
-                        <p key="6">Email: bknight@zushealth.com</p>
-                      </td>
-                    </tr>
-                    <tr key="transposed-3">
-                      <td key="col-3">Referred To Contact</td>
-                      <td key="data-3-3">
-                        <p key="0">Acme Health</p>
-                        <p key="1">200 Jefferson St</p>
-                        <p key="2">Newton, MA 02462-1607</p>
-                        <p key="3">Phone: 617-555-5555</p>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <table>
-                  <tbody>
-                    <tr key="transposed-0">
-                      <td key="col-0">Referral ID</td>
-                      <td key="data-0-0">789456789456</td>
-                    </tr>
-                    <tr key="transposed-1">
-                      <td key="col-1">Status</td>
-                      <td key="data-1-1">Closed</td>
-                    </tr>
-                    <tr key="transposed-2">
-                      <td key="col-2">Reason</td>
-                      <td key="data-2-2">{null}</td>
-                    </tr>
-                    <tr key="transposed-3">
-                      <td key="col-3">Start Date</td>
-                      <td key="data-3-3">12/25/2022</td>
-                    </tr>
-                    <tr key="transposed-4">
-                      <td key="col-4">Expiration Date</td>
-                      <td key="data-4-4">12/25/2022</td>
-                    </tr>
-                    <tr key="transposed-5">
-                      <td key="col-5">Visits Requested</td>
-                      <td key="data-5-5">1</td>
-                    </tr>
-                    <tr key="transposed-6">
-                      <td key="col-6">Visits Authorized</td>
-                      <td key="data-6-6">1</td>
-                    </tr>
-                  </tbody>
-                </table>
+                <div className="ctw-note-transposed">
+                  <div key="cell-0-0">
+                    <p>
+                      <b>Specialty</b>
+                    </p>
+                    <p>Neurology</p>
+                  </div>
+                  <div key="cell-0-1">
+                    <p>
+                      <b>Diagnoses / Procedures</b>
+                    </p>
+                    <p>
+                      <p key="0">Diagnoses</p>
+                      <p key="1">Muscular dystrophy.</p>
+                      <br key="2">{null}</br>
+                    </p>
+                  </div>
+                  <div key="cell-0-2">
+                    <p>
+                      <b>Referred By Contact</b>
+                    </p>
+                    <p>
+                      <p key="0">Knight, Bryan J, DO</p>
+                      <p key="1">1 Lincolon St</p>
+                      <p key="2">Ste 2400</p>
+                      <p key="3">Boston, MA 02111</p>
+                      <p key="4">Phone: 508-555-5555</p>
+                      <p key="5">Fax: 781-555-5555</p>
+                      <p key="6">Email: bknight@zushealth.com</p>
+                    </p>
+                  </div>
+                  <div key="cell-0-3">
+                    <p>
+                      <b>Referred To Contact</b>
+                    </p>
+                    <p>
+                      <p key="0">Acme Health</p>
+                      <p key="1">200 Jefferson St</p>
+                      <p key="2">Newton, MA 02462-1607</p>
+                      <p key="3">Phone: 617-555-5555</p>
+                    </p>
+                  </div>
+                </div>
+                <div className="ctw-note-transposed">
+                  <div key="cell-0-0">
+                    <p>
+                      <b>Referral ID</b>
+                    </p>
+                    <p>789456789456</p>
+                  </div>
+                  <div key="cell-0-1">
+                    <p>
+                      <b>Status</b>
+                    </p>
+                    <p>Closed</p>
+                  </div>
+                  <div key="cell-0-2">
+                    <p>
+                      <b>Reason</b>
+                    </p>
+                    <p>{null}</p>
+                  </div>
+                  <div key="cell-0-3">
+                    <p>
+                      <b>Start Date</b>
+                    </p>
+                    <p>12/25/2022</p>
+                  </div>
+                  <div key="cell-0-4">
+                    <p>
+                      <b>Expiration Date</b>
+                    </p>
+                    <p>12/25/2022</p>
+                  </div>
+                  <div key="cell-0-5">
+                    <p>
+                      <b>Visits Requested</b>
+                    </p>
+                    <p>1</p>
+                  </div>
+                  <div key="cell-0-6">
+                    <p>
+                      <b>Visits Authorized</b>
+                    </p>
+                    <p>1</p>
+                  </div>
+                </div>
                 <table key="3">
                   <thead key="1">
                     <tr key="1">
