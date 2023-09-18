@@ -183,7 +183,9 @@ const transposeTable = (tbl: ReactElement): ReactElement => {
 };
 
 export const DetailsCard = ({ details, hideEmpty = true, documentButton }: DetailsProps) => {
-  const [transposedValues, setTransposedValues] = useState([] as ReactNode[]);
+  const [transposedValues, setTransposedValues] = useState(
+    details.map(() => <div>Loading Note...</div>) as ReactNode[]
+  );
 
   // transposing the tables can take 1-2 seconds, so wrapping in an useEffect to
   // prevent the screen from freezing
@@ -206,7 +208,8 @@ export const DetailsCard = ({ details, hideEmpty = true, documentButton }: Detai
             // if we want to hide empty rows and the value is falsy and the value
             // is not zero, then hide it
             if (hideEmpty && !value && value !== 0) {
-              return <></>;
+              // eslint-disable-next-line react/no-array-index-key
+              return <div key={idx} />;
             }
 
             const valueWithTransposedTables = transposedValues[idx];
