@@ -76,7 +76,7 @@ export const recursivelyTransposeTables = (node: ReactNode, curDepth: number): R
 
 const transposeTable = (tbl: ReactElement): ReactElement => {
   // if there's no children, then return with original tbl
-  if (!tbl.props || !tbl.props.children || !Array.isArray(tbl.props.children)) {
+  if (!Array.isArray(tbl.props?.children)) {
     return tbl;
   }
 
