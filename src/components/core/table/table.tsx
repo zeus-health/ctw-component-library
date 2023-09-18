@@ -6,7 +6,7 @@ import { TableColGroup } from "./table-colgroup";
 import { TableHead } from "./table-head";
 import { MinRecordItem, TableColumn } from "./table-helpers";
 import { TableRows, TableRowsProps } from "./table-rows";
-import { DEFAULT_PAGE_SIZE, ExpandList } from "../pagination/expand-list";
+import { DEFAULT_PAGE_SIZE, PaginationList } from "../pagination/pagination-list";
 
 export type RowActionsProps<T extends MinRecordItem> = { record: T; onSuccess?: () => void };
 
@@ -22,7 +22,6 @@ export type TableProps<T extends MinRecordItem> = {
   records: T[];
   showTableHead?: boolean;
   stacked?: boolean;
-  paginationType?: string;
 } & Pick<TableRowsProps<T>, "handleRowClick" | "RowActions" | "getRowClassName">;
 
 export type TableBaseProps<T extends MinRecordItem> = Omit<TableProps<T>, "records" | "columns">;
@@ -39,7 +38,6 @@ export const Table = <T extends MinRecordItem>({
   RowActions,
   getRowClassName,
   hidePagination = false,
-  paginationType,
   pageSize = DEFAULT_PAGE_SIZE,
   children,
 }: TableProps<T>) => {
@@ -116,19 +114,9 @@ export const Table = <T extends MinRecordItem>({
           </table>
         </div>
       </div>
-
-      {() => {
-        if (!hidePagination && !isLoading) {
-          switch (paginationType) {
-            case "expand":
-              return <ExpandList total={records.length} count={count} changeCount={setCount} />;
-            default:
-              return undefined;
-          }
-        }
-        return undefined;
-      }}
-
+      {!hidePagination && !isLoading && (
+        <PaginationList total={records.length} count={count} changeCount={setCount} />
+      )}
       {children}
     </div>
   );
