@@ -121,7 +121,6 @@ const transposeTable = (tbl: ReactElement): ReactElement => {
     return tbl;
   }
 
-  // let transposeIdx = 0;
   dataRows.forEach((dataRow, rowIdx) => {
     // now for each cell in the data row
     const dataCells = Array.isArray(dataRow.props.children)
