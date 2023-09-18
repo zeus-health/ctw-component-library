@@ -198,7 +198,9 @@ export const DetailsCard = ({ details, hideEmpty = true, documentButton }: Detai
         </div>
         {transposedValues.length > 0 &&
           details.map(({ label, value }, idx) => {
-            if (!hideEmpty || (!value && value !== 0)) {
+            // if we want to hide empty rows and the value is falsy and the value
+            // is not zero, then hide it
+            if (hideEmpty && !value && value !== 0) {
               return <></>;
             }
 
