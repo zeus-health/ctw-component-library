@@ -60,7 +60,7 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
     setSearchValue("");
   }, [trackInteraction]);
 
-  const userHasSearched = !!data.query;
+  const userHasSearched = !!searchValue;
   const hasResults = data.results.length > 0;
 
   return (
@@ -109,13 +109,13 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
               </span>
             </RenderIf>
 
-            <RenderIf condition={userHasSearched && !hasResults}>
+            <RenderIf condition={userHasSearched && !hasResults && !isError}>
               <span className="ctw-text-1xl ctw-text-content-dark ctw-block ctw-text-left ctw-font-medium">
                 Search did not return any results.
               </span>
             </RenderIf>
 
-            <RenderIf condition={userHasSearched && isError}>
+            <RenderIf condition={isError}>
               <div className="ctw-w-full">
                 <ErrorAlert header="Error">There was an error running your search.</ErrorAlert>
               </div>
