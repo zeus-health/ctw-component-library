@@ -4,33 +4,27 @@ import { DocumentModel } from "@/fhir/models/document";
 
 export const patientDocumentColumns: TableColumn<DocumentModel>[] = [
   {
-    widthPercent: 25,
+    widthPercent: 35,
     minWidth: 200,
     title: "Title",
     render: (document) => <ResourceTitleColumn title={document.title} />,
   },
   {
-    widthPercent: 20,
+    widthPercent: 15,
     minWidth: 128,
-    title: "Date",
-    render: (document) => (
-      <div>
-        {document.encounterDate && <div>Encounter: {document.encounterDate}</div>}
-        {document.dateCreated && <div>Retrieved: {document.dateCreated}</div>}
-      </div>
-    ),
+    title: "Encounter Date",
+    dataIndex: "encounterDate",
   },
   {
-    widthPercent: 55,
+    widthPercent: 15,
+    minWidth: 128,
+    title: "Date Retrieved",
+    dataIndex: "dateCreated",
+  },
+  {
+    widthPercent: 35,
     minWidth: 200,
-    title: "Details",
-    render: (document) => (
-      <div>
-        {document.custodian && <div>Author: {document.custodian}</div>}
-        {document.sectionDisplays && document.sectionDisplays.length > 1 && (
-          <div>{document.sectionDisplays.length} sections</div>
-        )}
-      </div>
-    ),
+    title: "Author",
+    render: (document) => <div>{document.custodian}</div>,
   },
 ];

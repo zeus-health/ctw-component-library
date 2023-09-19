@@ -1,4 +1,5 @@
 import { ResourceTitleColumn } from "../../resource/helpers/resource-title-column";
+import { SimpleMoreList } from "@/components/core/simple-more-list";
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { EncounterModel } from "@/fhir/models/encounter";
 import { compact } from "@/utils/nodash";
@@ -23,12 +24,19 @@ export const patientEncounterColumns = (builderId: string): TableColumn<Encounte
     title: "Provider",
     render: (encounter) => (
       <>
-        {compact([encounter.participants, encounter.location]).map((detail) => (
-          <div className="ctw-capitalize" key={detail}>
-            {detail.toLocaleLowerCase()}
-          </div>
-        ))}
-        {encounter.typeSpecialty && <div>Speciality: {encounter.typeSpecialty}</div>}
+        {encounter.location && <div className="ctw-pb-2">Location: {encounter.location}</div>}
+        {encounter.typeSpecialty && (
+          <div className="ctw-pb-2">Speciality: {encounter.typeSpecialty}</div>
+        )}
+        {encounter.participants && encounter.participants.length > 0 && (
+          <SimpleMoreList
+            className="ctw-pb-2"
+            items={encounter.participants}
+            limit={2}
+            total={encounter.participants.length}
+            prefix="Providers:"
+          />
+        )}
       </>
     ),
   },
@@ -40,15 +48,21 @@ export const patientEncounterColumns = (builderId: string): TableColumn<Encounte
       const notes = encounter.clinicalNotes.map((note) => note.title ?? "").sort();
       return (
         <div>
-          {dischargeDisposition && <div>Discharge: {dischargeDisposition}</div>}
+          {dischargeDisposition && (
+            <div className="ctw-pb-2">Discharge: {dischargeDisposition}</div>
+          )}
+          {diagnoses.length > 0 && (
+            <SimpleMoreList
+              className="ctw-pb-2"
+              items={diagnoses}
+              limit={1}
+              total={diagnoses.length}
+              prefix="Diagnoses:"
+            />
+          )}
           {notes.length > 0 && (
             <div>
               {notes.length} note{notes.length > 1 ? "s" : ""}
-            </div>
-          )}
-          {diagnoses.length > 0 && (
-            <div>
-              {diagnoses.length} {diagnoses.length > 1 ? "diagnoses" : "diagnosis"}
             </div>
           )}
         </div>
