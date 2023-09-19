@@ -44,6 +44,6 @@ export const encounterData = (encounter: EncounterModel) => [
   { label: "Location", value: encounter.location },
   { label: "Participants", value: encounter.participants },
   { label: "Reason", value: encounter.reason },
-  { label: "Diagnosis", value: encounter.diagnoses?.join(", ") },
+  { label: "Diagnoses", value: encounter.diagnoses?.join(", ") },
   { label: "Discharge Disposition", value: encounter.dischargeDisposition },
 ];

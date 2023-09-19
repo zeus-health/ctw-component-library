@@ -24,6 +24,7 @@ import {
   PatientTimeline,
   ZusAggregatedProfile,
   ZusAggregatedProfileIFrame,
+  PatientConditionsAll,
 } from ".";
 
 import { PatientMedicationDispense } from "./components/content/medication-dispense/patient-medication-dispense";
@@ -85,12 +86,7 @@ const locals = {
 
 const components: DemoComponent[] = [
   { name: "allergies", render: () => <PatientAllergies />, title: "Patient Allergies" },
-  { name: "conditions", render: () => <PatientConditions />, title: "Patient Conditions" },
-  {
-    name: "conditions-outside",
-    render: () => <PatientConditionsOutside />,
-    title: "Patient Conditions Outside",
-  },
+  { name: "conditions", render: () => <PatientConditionsAll />, title: "Patient Conditions" },
   {
     name: "diagnostic-reports",
     render: () => <PatientDiagnosticReports />,
@@ -108,16 +104,6 @@ const components: DemoComponent[] = [
   },
   {
     name: "medications",
-    render: () => <PatientMedications />,
-    title: "Patient Medications",
-  },
-  {
-    name: "medications-outside",
-    render: () => <PatientMedicationsOutside />,
-    title: "Patient Medications Outside",
-  },
-  {
-    name: "medications-all",
     render: () => <PatientMedicationsAll />,
     title: "Patient Medications (All)",
   },
@@ -142,9 +128,7 @@ const components: DemoComponent[] = [
         <ZusAggregatedProfile
           title="ZAP"
           includePatientRecordSearch
-          conditionsOutsideProps={{
-            hideRequestRecords: true,
-          }}
+          resources={["encounters", "documents"]}
           includePatientDemographicsForm={false}
         />
       );

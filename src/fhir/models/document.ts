@@ -3,7 +3,6 @@ import { FHIRModel } from "./fhir-model";
 import { codeableConceptLabel } from "../codeable-concept";
 import { formatISODateStringToDate } from "../formatters";
 import { findReference } from "../resource-helper";
-import { capitalize } from "@/utils/nodash";
 
 export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
   kind = "Document" as const;
@@ -35,17 +34,19 @@ export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
   }
 
   get title(): string | undefined {
-    return capitalize(this.resource.content[0].attachment.title);
-  }
+    // If there is more than 1 category then consider this a "top level"
+    // document
+    if (this.isTopLevelDocument) {
+      return this.resource.content[0].attachment.title ?? this.resource.description;
+    }
 
-  get noteTitle(): string {
-    if (this.resource.type?.coding?.[0].display) {
-      return this.resource.type.coding[0].display;
+    // If it's not a top level document then try returning the label for the category.
+    if (!!this.category && this.category.length > 0) {
+      return codeableConceptLabel(this.category[0]);
     }
-    if (this.resource.category?.[0].text) {
-      return this.resource.category[0].text;
-    }
-    return "Unknown";
+
+    // Fall back to the description
+    return this.resource.description ?? "Unknown";
   }
 
   get dateCreated(): string | undefined {
@@ -88,5 +89,9 @@ export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
 
   get text(): string | undefined {
     return this.resource.text?.div;
+  }
+
+  get isTopLevelDocument(): boolean {
+    return !!this.resource.category && this.resource.category.length > 1;
   }
 }

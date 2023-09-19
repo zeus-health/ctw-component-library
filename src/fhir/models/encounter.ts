@@ -81,6 +81,13 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
     return formatDateISOToLocal(this.resource.period?.start);
   }
 
+  get dateDisplay() {
+    if (this.periodStart !== this.periodEnd && this.periodEnd) {
+      return `${this.periodStart} - ${this.periodEnd}`;
+    }
+    return this.periodStart;
+  }
+
   get reason(): string | undefined {
     const reasons = compact(this.resource.reasonCode?.map((d) => codeableConceptLabel(d)));
 

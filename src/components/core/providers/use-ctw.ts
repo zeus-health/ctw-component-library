@@ -41,6 +41,6 @@ export function useCTW() {
 
   return {
     getRequestContext,
-    featureFlags: context.featureFlags,
+    featureFlags: { enableViewFhirButton: true }, // context.featureFlags,
   };
 }

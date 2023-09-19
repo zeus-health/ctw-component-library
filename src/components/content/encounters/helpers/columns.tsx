@@ -1,5 +1,4 @@
 import { ResourceTitleColumn } from "../../resource/helpers/resource-title-column";
-import { SimpleMoreList } from "@/components/core/simple-more-list";
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { EncounterModel } from "@/fhir/models/encounter";
 import { compact } from "@/utils/nodash";
@@ -9,7 +8,7 @@ export const patientEncounterColumns = (builderId: string): TableColumn<Encounte
     title: "Date",
     widthPercent: 10,
     minWidth: 120,
-    dataIndex: "periodStart",
+    dataIndex: "dateDisplay",
   },
   {
     title: "Title",
@@ -38,20 +37,19 @@ export const patientEncounterColumns = (builderId: string): TableColumn<Encounte
     render: (encounter) => {
       const { dischargeDisposition } = encounter;
       const diagnoses = compact(encounter.diagnoses);
-      const notes = encounter.clinicalNotes.map((note) => note.noteTitle);
+      const notes = encounter.clinicalNotes.map((note) => note.title ?? "").sort();
       return (
         <div>
           {dischargeDisposition && <div>Discharge: {dischargeDisposition}</div>}
           {notes.length > 0 && (
-            <SimpleMoreList items={notes} limit={3} total={notes.length} prefix="Notes:" />
+            <div>
+              {notes.length} note{notes.length > 1 ? "s" : ""}
+            </div>
           )}
           {diagnoses.length > 0 && (
-            <SimpleMoreList
-              items={diagnoses}
-              limit={3}
-              total={diagnoses.length}
-              prefix="Diagnosis:"
-            />
+            <div>
+              {diagnoses.length} {diagnoses.length > 1 ? "diagnoses" : "diagnosis"}
+            </div>
           )}
         </div>
       );
