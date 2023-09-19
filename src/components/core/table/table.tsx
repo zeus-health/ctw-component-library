@@ -6,7 +6,7 @@ import { TableColGroup } from "./table-colgroup";
 import { TableHead } from "./table-head";
 import { MinRecordItem, TableColumn } from "./table-helpers";
 import { TableRows, TableRowsProps } from "./table-rows";
-import { DEFAULT_PAGE_SIZE, PaginationList } from "../pagination/pagination-list";
+import { DEFAULT_PAGE_SIZE, ExpandList } from "../pagination/expand-list";
 
 export type RowActionsProps<T extends MinRecordItem> = { record: T; onSuccess?: () => void };
 
@@ -115,7 +115,7 @@ export const Table = <T extends MinRecordItem>({
         </div>
       </div>
       {!hidePagination && !isLoading && (
-        <PaginationList total={records.length} count={count} changeCount={setCount} />
+        <ExpandList total={records.length} count={count} changeCount={setCount} />
       )}
       {children}
     </div>

@@ -1,6 +1,7 @@
 import type { TableColumn } from "@/components/core/table/table-helpers";
 import type { PatientModel } from "@/fhir/models/patient";
 import cx from "classnames";
+import { useState } from "react";
 import { useADTAlertDetailsDrawer } from "./modal-hooks";
 import { dedupeAndMergeEncounters } from "../encounters/helpers/filters";
 import { defaultEncounterSort, encounterSortOptions } from "../encounters/helpers/sorts";
@@ -10,10 +11,13 @@ import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { EmptyTableNoneFound } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
+import { Pagination } from "@/components/core/pagination/pagination";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { SimpleMoreList } from "@/components/core/simple-more-list";
 import { EncounterModel } from "@/fhir/models/encounter";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
+
+const PAGE_SIZE = 10;
 
 export type ADTTableProps = {
   className?: cx.Argument;
@@ -24,6 +28,7 @@ export type ADTTableProps = {
 function ADTTableComponent({ className, isLoading = false, data }: ADTTableProps) {
   const openADTDetails = useADTAlertDetailsDrawer();
 
+  const [currentPage, setCurrentPage] = useState(1);
   const { viewOptions, past30days } = getDateRangeView<EncounterModel>("periodStart");
   const {
     data: data2,
@@ -34,7 +39,7 @@ function ADTTableComponent({ className, isLoading = false, data }: ADTTableProps
     defaultSort: defaultEncounterSort,
     records: data,
   });
-  const deta3 = dedupeAndMergeEncounters(data2, "patientsADT");
+  const dataFinal = dedupeAndMergeEncounters(data2, "patientsADT");
 
   return (
     <AnalyticsProvider componentName="ADTTable">
@@ -52,17 +57,25 @@ function ADTTableComponent({ className, isLoading = false, data }: ADTTableProps
           }}
         />
         <ResourceTable
-          data={deta3}
+          data={dataFinal.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)}
           columns={columns}
           isLoading={isLoading}
           emptyMessage={
             <EmptyTableNoneFound
-              hasZeroFilteredRecords={deta3.length === 0}
+              hasZeroFilteredRecords={dataFinal.length === 0}
               resourceName="encounters"
             />
           }
           onRowClick={openADTDetails}
-        />
+          hidePagination
+        >
+          <Pagination
+            currentPage={currentPage}
+            pageSize={PAGE_SIZE}
+            setCurrentPage={setCurrentPage}
+            total={dataFinal.length}
+          />
+        </ResourceTable>
       </div>
     </AnalyticsProvider>
   );

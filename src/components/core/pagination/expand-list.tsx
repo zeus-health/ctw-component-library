@@ -1,12 +1,12 @@
 export const DEFAULT_PAGE_SIZE = 10;
 
-export type PaginationListProps = {
+export type ExpandListProps = {
   total: number;
   count: number;
   changeCount: (amount: number) => void;
 };
 
-export const PaginationList = ({ total, count, changeCount }: PaginationListProps) => {
+export const ExpandList = ({ total, count, changeCount }: ExpandListProps) => {
   const allShown = count >= total || total === 0;
   const hasPages = total > DEFAULT_PAGE_SIZE;
 
