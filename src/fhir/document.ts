@@ -56,7 +56,7 @@ async function getDocumentFromFQS(requestContext: CTWRequestContext, patient: Pa
       {
         upid: patient.UPID,
         cursor: "",
-        first: 1000,
+        first: 50,
         sort: {
           lastUpdated: "DESC",
         },

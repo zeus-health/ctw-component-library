@@ -32,6 +32,7 @@ export const Notes = ({ entries }: NotesProps) => (
           hideEmpty={false}
           details={{
             value: getNoteDisplay(entry.text),
+            transposeTables: true,
           }}
         />
       </div>
