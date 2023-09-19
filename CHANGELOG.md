@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.65.16
+
+### Patch Changes
+
+- 007a1ee9: Add full pagination to ADT table.
+- 4a9d23e1: Add letterSpacing and fontWeight to iframeTheme Props
+
 ## 1.65.15
 
 ### Patch Changes
