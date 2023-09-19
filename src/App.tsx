@@ -128,7 +128,6 @@ const components: DemoComponent[] = [
         <ZusAggregatedProfile
           title="ZAP"
           includePatientRecordSearch
-          resources={["encounters", "documents"]}
           includePatientDemographicsForm={false}
         />
       );
