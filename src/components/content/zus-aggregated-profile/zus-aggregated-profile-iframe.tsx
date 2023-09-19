@@ -20,6 +20,8 @@ export type IFrameTheme = {
   fontFamily?: "Avenir" | "Roboto";
   headerSize?: string;
   lineHeight?: string;
+  letterSpacing?: string;
+  fontWeight?: string;
 };
 export type ZapIFrameConfig = {
   CTWProviderProps: CTWProviderProps;
