@@ -43,7 +43,7 @@ export * from "@/components/core/badge";
 export * from "@/components/core/beta-label";
 export * from "@/components/core/list-box/list-box";
 export * from "@/components/core/pagination/pagination";
-export * from "@/components/core/pagination/pagination-list";
+export * from "@/components/core/pagination/expand-list";
 export * as CTWBox from "@/components/core/ctw-box";
 export * from "@/components/core/form/drawer-form-with-fields";
 export * from "@/components/core/providers/use-ctw";

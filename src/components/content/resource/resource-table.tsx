@@ -1,5 +1,5 @@
 import cx from "classnames";
-import { ReactElement, useRef } from "react";
+import { ReactElement, ReactNode, useRef } from "react";
 import { useAdditionalResourceActions } from "./use-additional-resource-actions";
 import { useToggleRead } from "../hooks/use-toggle-read";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
@@ -20,6 +20,7 @@ export type ResourceTableProps<T extends MinRecordItem> = {
   showTableHead?: boolean;
   enableDismissAndReadActions?: boolean;
   hidePagination?: boolean;
+  children?: ReactNode;
 };
 
 export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>({
@@ -33,6 +34,7 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
   showTableHead,
   enableDismissAndReadActions,
   hidePagination = false,
+  children,
 }: ResourceTableProps<M>) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
@@ -80,7 +82,9 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
         columns={columns}
         handleRowClick={onRowClickWithRead}
         hidePagination={hidePagination}
-      />
+      >
+        {children}
+      </Table>
     </div>
   );
 };

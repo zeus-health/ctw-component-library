@@ -9,7 +9,7 @@ import { ErrorAlert } from "@/components/core/alert";
 import { Title } from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Loading } from "@/components/core/loading";
-import { DEFAULT_PAGE_SIZE, PaginationList } from "@/components/core/pagination/pagination-list";
+import { DEFAULT_PAGE_SIZE, ExpandList } from "@/components/core/pagination/expand-list";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { RenderIf } from "@/components/core/render-if";
@@ -142,7 +142,7 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
                 ))}
               </FeedbackProvider>
               <div className="ctw-mt-5">
-                <PaginationList total={data.results.length} count={count} changeCount={setCount} />
+                <ExpandList total={data.results.length} count={count} changeCount={setCount} />
               </div>
             </RenderIf>
           </div>
