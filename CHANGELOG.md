@@ -1,5 +1,26 @@
 # ctw-component-library
 
+## 1.65.17
+
+### Patch Changes
+
+- 27d54932: Fix sorting logic for document dates
+- 2eadd9cb: Update to display in encounters & documents components.
+
+## 1.65.16
+
+### Patch Changes
+
+- 007a1ee9: Add full pagination to ADT table.
+- 4a9d23e1: Add letterSpacing and fontWeight to iframeTheme Props
+
+## 1.65.15
+
+### Patch Changes
+
+- b3c0a641: Fix error state in search component.
+- aba449c6: Address various clinical note rendering issues
+
 ## 1.65.14
 
 ### Patch Changes

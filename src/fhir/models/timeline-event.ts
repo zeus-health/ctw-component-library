@@ -60,7 +60,7 @@ export class TimelineEventModel extends FHIRModel<TimelineEventResource> {
   get actorDetails(): string[] {
     switch (this.model.kind) {
       case "Encounter":
-        return compact([this.model.participants, this.model.location]);
+        return compact([this.model.participantsDisplay, this.model.location]);
       case "DiagnosticReport":
         return compact([this.model.performer]);
       default:

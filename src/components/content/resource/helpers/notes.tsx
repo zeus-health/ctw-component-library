@@ -28,10 +28,11 @@ export const Notes = ({ entries }: NotesProps) => (
       <div key={`${entry.id}-${idx}`}>
         <NotesEntry
           id={entry.id}
-          title={entry.noteTitle}
+          title={entry.title}
           hideEmpty={false}
           details={{
             value: getNoteDisplay(entry.text),
+            transposeTables: true,
           }}
         />
       </div>
