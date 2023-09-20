@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.65.17
+
+### Patch Changes
+
+- 27d54932: Fix sorting logic for document dates
+- 2eadd9cb: Update to display in encounters & documents components.
+
 ## 1.65.16
 
 ### Patch Changes
