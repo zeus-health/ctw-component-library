@@ -10,7 +10,6 @@ export function useAllergiesHistory(allergy: AllergyModel) {
     resourceType: "AllergyIntolerance",
     model: allergy,
     queryKey: QUERY_KEY_ALLERGY_HISTORY,
-    includeVersionHistory: false,
     valuesToDedupeOn,
     getHistoryEntry,
     clientSideFiltersFQS,
