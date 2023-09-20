@@ -1,4 +1,3 @@
-import { GraphQLClient } from "graphql-request";
 import { HistoryEntryProps } from "./helpers/history-entry";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
@@ -9,19 +8,16 @@ import { searchProvenances } from "@/fhir/provenance";
 import { excludeTagsinPatientRecordSearch } from "@/fhir/search-helpers";
 import { ResourceType, ResourceTypeString } from "@/fhir/types";
 import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
-import { filterResourcesByBuilderId } from "@/services/common";
-import { createGraphqlClient, getHistoryResources, getResourceNodes } from "@/services/fqs/client";
+import { createGraphqlClient, getResourceNodes } from "@/services/fqs/client";
 import { allergyQuery } from "@/services/fqs/queries/allergies";
 import { conditionsQuery } from "@/services/fqs/queries/conditions";
-import { versionsQuery } from "@/services/fqs/queries/versions";
-import { compact, isEqual, orderBy, some, uniqWith } from "@/utils/nodash";
+import { isEqual, orderBy, uniqWith } from "@/utils/nodash";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export type UseHistoryProps<T extends ResourceTypeString, M extends FHIRModel<ResourceType<T>>> = {
   resourceType: T;
   model: M;
   queryKey: string;
-  includeVersionHistory?: boolean;
   valuesToDedupeOn: (m: M) => unknown;
   getHistoryEntry: (m: M) => HistoryEntryProps;
   getFiltersFQS?: (m: M) => object | undefined;
@@ -32,7 +28,6 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
   resourceType,
   model,
   queryKey,
-  includeVersionHistory = true,
   valuesToDedupeOn,
   getHistoryEntry,
   getFiltersFQS,
@@ -55,7 +50,6 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
         fetchResourcesFQS(
           resourceType,
           model,
-          includeVersionHistory,
           requestContext,
           patient,
           valuesToDedupeOn,
@@ -80,23 +74,6 @@ export function dedupeHistory<T extends fhir4.Resource, M extends FHIRModel<T>>(
   return uniqWith(enrichedFirst, (a, b) => isEqual(valuesToDedupeOn(a), valuesToDedupeOn(b)));
 }
 
-// Look for either status or verificationStatus to be entered-in-error.
-// This should cover all resources we use.
-function wasEnteredInError(resource: fhir4.FhirResource) {
-  if ("status" in resource && resource.status === "entered-in-error") {
-    return true;
-  }
-
-  if (
-    "verificationStatus" in resource &&
-    some(resource.verificationStatus?.coding, { code: "entered-in-error" })
-  ) {
-    return true;
-  }
-
-  return false;
-}
-
 function getResourceFQSQuery(resourceType: ResourceTypeString) {
   switch (resourceType) {
     case "Condition":
@@ -108,38 +85,12 @@ function getResourceFQSQuery(resourceType: ResourceTypeString) {
   }
 }
 
-async function getVersionHistoryFQS<T extends ResourceTypeString>(
-  resourceType: T,
-  requestContext: CTWRequestContext,
-  graphClient: GraphQLClient,
-  resources: ResourceType<T>[]
-): Promise<ResourceType<T>[]> {
-  let builderResources = filterResourcesByBuilderId(resources, requestContext.builderId);
-
-  // Filter out any resources that are currently marked as entered in error.
-  builderResources = builderResources.filter((r) => !wasEnteredInError(r));
-
-  const resourceIds = compact(builderResources.map((resource) => resource.id));
-
-  if (!resourceIds.length) {
-    return [];
-  }
-
-  const versionQuery = versionsQuery(resourceType, resourceIds);
-
-  const versions = getHistoryResources<T>(await graphClient.request(versionQuery));
-
-  // Don't show any versions that were entered in error.
-  return versions.filter((version) => !wasEnteredInError(version));
-}
-
 async function fetchResourcesFQS<
   T extends ResourceTypeString,
   M extends FHIRModel<ResourceType<T>>
 >(
   resourceType: T,
   model: M,
-  includeVersionHistory: boolean,
   requestContext: CTWRequestContext,
   patient: PatientModel,
   valuesToDedupeOn: (m: M) => unknown,
@@ -166,25 +117,14 @@ async function fetchResourcesFQS<
           )
         : [model.resource];
 
-    let versions: ResourceType<T>[] = [];
-
     let filteredResources = filterLensAndSummary(resources, resourceType);
 
     if (clientSideFiltersFQS) {
       filteredResources = clientSideFiltersFQS(model, filteredResources);
     }
 
-    if (includeVersionHistory) {
-      versions = await getVersionHistoryFQS(
-        resourceType,
-        requestContext,
-        graphClient,
-        filteredResources
-      );
-    }
-
     const constructor = model.constructor as new (r: ResourceType<T>) => M;
-    const models = [...filteredResources, ...versions].map((c) => new constructor(c));
+    const models = filteredResources.map((c) => new constructor(c));
 
     const entries = dedupeHistory(models, valuesToDedupeOn).map(getHistoryEntry);
 
