@@ -53,25 +53,32 @@ export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
     return this.resource.type?.coding?.some((x) => x.code === "34133-9") ?? false;
   }
 
+  get contextPeriodStartDate(): string | undefined {
+    return formatDateISOToLocal(this.resource.context?.period?.start);
+  }
+
+  get contextPeriodEndDate(): string | undefined {
+    return formatDateISOToLocal(this.resource.context?.period?.end);
+  }
+
   get encounterDate(): string | undefined {
     if (this.isClinicalSummary) {
       return undefined;
     }
 
-    const { start, end } = this.resource.context?.period || {};
-    const formattedStart = formatDateISOToLocal(start);
-    const formattedEnd = formatDateISOToLocal(end);
+    const start = this.contextPeriodStartDate;
+    const end = this.contextPeriodEndDate;
 
-    if (formattedStart && formattedEnd && formattedStart !== formattedEnd) {
-      return `${formattedStart} - ${formattedEnd}`;
+    if (start && end && start !== end) {
+      return `${start} - ${end}`;
     }
 
     if (start) {
-      return formattedStart;
+      return start;
     }
 
     if (end) {
-      return formattedEnd;
+      return end;
     }
 
     return undefined;
