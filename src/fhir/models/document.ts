@@ -1,9 +1,6 @@
-import { differenceInYears } from "date-fns";
 import { FHIRModel } from "./fhir-model";
-import { codeableConceptLabel } from "../codeable-concept";
-import { formatISODateStringToDate } from "../formatters";
+import { formatDateISOToLocal, formatISODateStringToDate } from "../formatters";
 import { findReference } from "../resource-helper";
-import { capitalize } from "@/utils/nodash";
 
 export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
   kind = "Document" as const;
@@ -35,16 +32,14 @@ export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
   }
 
   get title(): string | undefined {
-    return capitalize(this.resource.content[0].attachment.title);
-  }
+    if (this.resource.description) {
+      return this.resource.description;
+    }
 
-  get noteTitle(): string {
-    if (this.resource.type?.coding?.[0].display) {
-      return this.resource.type.coding[0].display;
+    if (this.resource.content.length > 0 && this.resource.content[0].attachment.title) {
+      return this.resource.content[0].attachment.title;
     }
-    if (this.resource.category?.[0].text) {
-      return this.resource.category[0].text;
-    }
+
     return "Unknown";
   }
 
@@ -54,21 +49,31 @@ export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
     );
   }
 
+  get isClinicalSummary(): boolean {
+    return this.resource.type?.coding?.some((x) => x.code === "34133-9") ?? false;
+  }
+
   get encounterDate(): string | undefined {
+    if (this.isClinicalSummary) {
+      return undefined;
+    }
+
     const { start, end } = this.resource.context?.period || {};
-    if (start && end) {
-      const years = differenceInYears(new Date(end), new Date(start));
-      if (years > 0) {
-        // Omit if end - start >= 1 year.
-        // This implies that it is a summary document.
-        return undefined;
-      }
-      return formatISODateStringToDate(start);
+    const formattedStart = formatDateISOToLocal(start);
+    const formattedEnd = formatDateISOToLocal(end);
+
+    if (formattedStart && formattedEnd && formattedStart !== formattedEnd) {
+      return `${formattedStart} - ${formattedEnd}`;
+    }
+
+    if (start) {
+      return formattedStart;
     }
 
     if (end) {
-      return formatISODateStringToDate(end);
+      return formattedEnd;
     }
+
     return undefined;
   }
 
@@ -82,11 +87,11 @@ export class DocumentModel extends FHIRModel<fhir4.DocumentReference> {
     return this.resource.custodian?.display || organizationName;
   }
 
-  get sectionDisplays(): string[] | undefined {
-    return this.resource.category?.map((coding) => codeableConceptLabel(coding)) || undefined;
-  }
-
   get text(): string | undefined {
     return this.resource.text?.div;
+  }
+
+  get isTopLevelDocument(): boolean {
+    return !!this.resource.category && this.resource.category.length > 1;
   }
 }
