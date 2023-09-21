@@ -1,7 +1,7 @@
 import "./drawer.scss";
 
 import { Dialog, Transition } from "@headlessui/react";
-import { XIcon } from "@heroicons/react/outline";
+import { ArrowLeftIcon, XIcon } from "@heroicons/react/outline";
 import cx from "classnames";
 import type { ReactNode } from "react";
 import { Fragment, useRef } from "react";
@@ -9,6 +9,7 @@ import {
   TrackingMetadata,
   useAnalytics,
 } from "@/components/core/providers/analytics/use-analytics";
+import { useTheme } from "@/components/core/providers/theme/use-theme";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 
 export type DrawerProps = {
@@ -100,6 +101,8 @@ function DrawerContent({
   const { trackInteraction } = useAnalytics();
   const ref = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(ref);
+  const theme = useTheme();
+  const showBackButton = !!theme.iframeTheme;
 
   return (
     <div ref={ref} className="ctw-fixed ctw-inset-0 ctw-overflow-hidden">
@@ -125,11 +128,21 @@ function DrawerContent({
               <div className="ctw-flex ctw-h-full ctw-flex-col ctw-bg-white ctw-shadow-xl">
                 <div
                   className={cx(
+                    {
+                      "ctw-flex-row-reverse": showBackButton,
+                    },
                     "ctw-flex ctw-h-14 ctw-flex-shrink-0 ctw-items-center ctw-justify-between ctw-border-0 ctw-border-b ctw-border-solid ctw-border-content-lighter",
                     breakpoints.sm ? "ctw-px-3" : "ctw-px-6"
                   )}
                 >
-                  <Dialog.Title className="ctw-pl-2 ctw-text-lg ctw-font-semibold ctw-text-content-black">
+                  <Dialog.Title
+                    className={cx(
+                      {
+                        "ctw-ml-1 ctw-mr-auto": showBackButton,
+                      },
+                      "ctw-pl-2 ctw-text-lg ctw-font-semibold ctw-text-content-black"
+                    )}
+                  >
                     {title}
                   </Dialog.Title>
                   <div className="ctw-ml-3 ctw-flex ctw-h-7 ctw-items-center">
@@ -145,7 +158,10 @@ function DrawerContent({
                       className="ctw-btn-clear"
                     >
                       <span className="ctw-sr-only">Close panel</span>
-                      <XIcon className="ctw-h-6 ctw-w-6" aria-hidden="true" />
+                      {!showBackButton && <XIcon className="ctw-h-6 ctw-w-6" aria-hidden="true" />}
+                      {showBackButton && (
+                        <ArrowLeftIcon className="ctw-h-6 ctw-w-6" aria-hidden="true" />
+                      )}
                     </button>
                   </div>
                 </div>

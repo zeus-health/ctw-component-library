@@ -43,7 +43,6 @@ export function DropdownMenuAction({
   buttonClassName,
   pinnedActions = [],
   isOpen,
-  container,
 }: DropdownMenuProps) {
   const ctwThemeRef = useCtwThemeRef();
   const [isMenuOpen, setIsMenuOpen] = useState(isOpen);
@@ -57,53 +56,57 @@ export function DropdownMenuAction({
         <RadixDropdownMenu.Trigger className={cx(buttonClassName)} aria-label="dropdown">
           {children}
         </RadixDropdownMenu.Trigger>
-        {/* <RadixDropdownMenu.Portal container={container ?? ctwThemeRef.current}> */}
-        <RadixDropdownMenu.Content
-          align="start"
-          // Prevent focus from closing menu, this fixes
-          // an issue with interactive testing where a "click"
-          // would fire twice, once for the mousedown and
-          // again for focus on the button being clicked.
-          onFocusOutside={(event) => event.preventDefault()}
-          className="ctw-dropdown-action-menu ctw-bg-bg-white"
-          collisionPadding={10}
-        >
-          {items.map((menuItem) => (
-            <RadixDropdownMenu.Item
-              key={menuItem.key}
-              className={cx("ctw-dropdown-action-menu-item ctw-bg-bg-white")}
-              onClick={(e) => {
-                if (type === "checkbox") {
-                  e.preventDefault();
-                }
+        <RadixDropdownMenu.Portal container={ctwThemeRef.current}>
+          <RadixDropdownMenu.Content
+            align="start"
+            // Prevent focus from closing menu, this fixes
+            // an issue with interactive testing where a "click"
+            // would fire twice, once for the mousedown and
+            // again for focus on the button being clicked.
+            onFocusOutside={(event) => event.preventDefault()}
+            className="ctw-dropdown-action-menu ctw-bg-bg-white"
+            collisionPadding={10}
+          >
+            {items.map((menuItem) => (
+              <RadixDropdownMenu.Item
+                key={menuItem.key}
+                className={cx("ctw-dropdown-action-menu-item ctw-bg-bg-white")}
+                onClick={(e) => {
+                  if (type === "checkbox") {
+                    e.preventDefault();
+                  }
 
-                onItemSelect({
-                  key: menuItem.key,
-                  name: menuItem.name,
-                  value: !menuItem.isSelected,
-                });
-              }}
-            >
-              <RenderCorrectFieldType inputType={type} menuItem={menuItem} onClick={onItemSelect} />
-            </RadixDropdownMenu.Item>
-          ))}
+                  onItemSelect({
+                    key: menuItem.key,
+                    name: menuItem.name,
+                    value: !menuItem.isSelected,
+                  });
+                }}
+              >
+                <RenderCorrectFieldType
+                  inputType={type}
+                  menuItem={menuItem}
+                  onClick={onItemSelect}
+                />
+              </RadixDropdownMenu.Item>
+            ))}
 
-          {pinnedActions.length > 0 && (
-            <>
-              <RadixDropdownMenu.Separator className="ctw-dropdown-separator" />
-              {pinnedActions.map((menuItem) => (
-                <RadixDropdownMenu.Item
-                  onClick={() => menuItem.action()}
-                  key={menuItem.name}
-                  className={cx(menuItem.className, "ctw-dropdown-action-menu-item")}
-                >
-                  <MenuItem icon={menuItem.icon}>{menuItem.name}</MenuItem>
-                </RadixDropdownMenu.Item>
-              ))}
-            </>
-          )}
-        </RadixDropdownMenu.Content>
-        {/* </RadixDropdownMenu.Portal> */}
+            {pinnedActions.length > 0 && (
+              <>
+                <RadixDropdownMenu.Separator className="ctw-dropdown-separator" />
+                {pinnedActions.map((menuItem) => (
+                  <RadixDropdownMenu.Item
+                    onClick={() => menuItem.action()}
+                    key={menuItem.name}
+                    className={cx(menuItem.className, "ctw-dropdown-action-menu-item")}
+                  >
+                    <MenuItem icon={menuItem.icon}>{menuItem.name}</MenuItem>
+                  </RadixDropdownMenu.Item>
+                ))}
+              </>
+            )}
+          </RadixDropdownMenu.Content>
+        </RadixDropdownMenu.Portal>
       </RadixDropdownMenu.Root>
     </Menu>
   );

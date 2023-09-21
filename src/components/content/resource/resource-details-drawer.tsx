@@ -109,7 +109,6 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
   const rowActionsWithAdditions = useAdditionalResourceActions({
     rowActions,
     enableDismissAndReadActions,
-    isInDrawer: true,
   });
 
   // We call rowActions right away so we'll know if it returns null and thus we should

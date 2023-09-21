@@ -30,7 +30,6 @@ export function ObservationsDrawer({
 }: ObservationsDrawerProps) {
   const ResourceActions = useAdditionalResourceActions({
     enableDismissAndReadActions: true,
-    isInDrawer: true,
   });
 
   return (

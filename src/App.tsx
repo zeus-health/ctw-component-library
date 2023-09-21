@@ -64,10 +64,10 @@ const theme: ThemeProviderProps["theme"] = {
       light: "#f3e8ff",
     },
   },
-  iframe: {
-    fontFamily: "Avenir",
-    headerSize: "12px",
-  },
+  // iframe: {
+  //   fontFamily: "Avenir",
+  //   headerSize: "12px",
+  // },
 };
 
 // Glossary for translation

@@ -2,10 +2,10 @@ import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cx from "classnames";
 import { Resource } from "fhir/r4";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useToggleDismiss } from "../hooks/use-toggle-dismiss";
 import { useToggleRead } from "../hooks/use-toggle-read";
-import { DropdownMenuAction } from "@/components/core/dropdown-action-menu";
+import { DropdownMenuSimple } from "@/components/core/dropdown-menu-simple";
 import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { useRequestContext } from "@/components/core/providers/use-request-context";
@@ -22,18 +22,13 @@ import { QUERY_KEY_BASIC } from "@/utils/query-keys";
 export type ResourceTableProps<T extends MinRecordItem> = {
   rowActions?: (r: T) => TableProps<T>["rowActions"];
   enableDismissAndReadActions?: boolean;
-  // We need to know if this renders in drawer so we can pass an html ref to the dropdown menu. Otherwise the dropdown
-  // uses the ctwThemeRef which only works outside the drawer.
-  isInDrawer?: boolean;
 };
 
 export const useAdditionalResourceActions = <T extends Resource, M extends FHIRModel<T>>({
   rowActions,
   enableDismissAndReadActions,
-  isInDrawer = false,
 }: ResourceTableProps<M>) => {
   const { featureFlags } = useCTW();
-  const ref = useRef<HTMLDivElement>(null);
   const [selectedAction, setSelectedAction] = useState("card");
   const dismissAndReadActions = useDismissAndReadActions(enableDismissAndReadActions);
 
@@ -49,12 +44,11 @@ export const useAdditionalResourceActions = <T extends Resource, M extends FHIRM
       };
 
       return (
-        <div className="ctw-flex ctw-space-x-2" ref={ref}>
+        <div className="ctw-flex ctw-space-x-2">
           {featureFlags?.enableViewFhirButton && <ViewFHIR resource={record.resource} />}
           {combinedActions.length > 0 && (
-            <DropdownMenuAction
-              type="select"
-              container={isInDrawer ? ref.current : undefined}
+            <DropdownMenuSimple
+              align="end"
               buttonClassName={cx("ctw-bg-transparent ctw-border-none ctw-bg-blue ctw-p-0")}
               onItemSelect={(item) => {
                 const selectedOption = combinedActions.filter(
@@ -84,7 +78,7 @@ export const useAdditionalResourceActions = <T extends Resource, M extends FHIRM
                 )}
                 <FontAwesomeIcon icon={faChevronDown} className="ctw-w-2" />
               </div>
-            </DropdownMenuAction>
+            </DropdownMenuSimple>
           )}
         </div>
       );
