@@ -25,7 +25,7 @@ export type UseResourceDetailsDrawerProps<T extends fhir4.Resource, M extends FH
   | "details"
   | "RowActions"
   | "enableDismissAndReadActions"
-  | "children"
+  | "renderChild"
 >;
 
 export function useResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>(
@@ -54,7 +54,7 @@ type ResourceDetailsDrawerProps<T extends fhir4.Resource, M extends FHIRModel<T>
   RowActions?: RowActionsProp<M>;
   enableDismissAndReadActions?: boolean;
   subHeader?: (model: M) => ReactNode;
-  children?: (model: M) => ReactNode;
+  renderChild?: (model: M) => ReactNode;
 };
 
 function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>({
@@ -68,7 +68,7 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
   RowActions,
   enableDismissAndReadActions,
   subHeader,
-  children,
+  renderChild: children,
 }: ResourceDetailsDrawerProps<T, M>) {
   const openCCDAModal = useCCDAModal();
   const [isLoading, setIsLoading] = useState(false);

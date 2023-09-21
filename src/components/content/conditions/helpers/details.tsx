@@ -32,7 +32,7 @@ export const useConditionDetailsDrawer = ({
         value: condition.notes.length !== 0 && <NotesList notes={condition.notes} />,
       },
     ],
-    children: useConditionHistory,
+    renderChild: useConditionHistory,
     RowActions,
     enableDismissAndReadActions,
   });

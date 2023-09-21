@@ -26,7 +26,7 @@ export function SearchResultRow(props: ResourceRowProps) {
   const openAllergyDetails = useResourceDetailsDrawer({
     header: (m) => capitalize(m.display),
     details: allergyData,
-    children: allergyHistory,
+    renderChild: allergyHistory,
     getSourceDocument: true,
   });
   const openDocumentDetails = useResourceDetailsDrawer({

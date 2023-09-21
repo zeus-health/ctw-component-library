@@ -38,7 +38,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
   const openDetails = useResourceDetailsDrawer({
     header: (m) => capitalize(m.display),
     details: allergyData,
-    children: allergyHistory,
+    renderChild: allergyHistory,
     getSourceDocument: true,
     enableDismissAndReadActions: true,
   });

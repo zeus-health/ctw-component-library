@@ -20,7 +20,7 @@ export const useMedicationDetailsDrawer = ({
 }) =>
   useResourceDetailsDrawer({
     header: (medication: MedicationStatementModel) => medication.display,
-    children: medicationHistory,
+    renderChild: medicationHistory,
     details: (medication: MedicationStatementModel) => [
       { label: "Status", value: medication.displayStatus },
       { label: "Last Fill Date", value: medication.lastFillDate },
