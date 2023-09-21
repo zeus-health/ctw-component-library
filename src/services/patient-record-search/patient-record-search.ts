@@ -214,7 +214,7 @@ export function usePatientRecordSearch(
           query: searchTerm,
           upid: patient.UPID,
           include: searchOptions,
-          n_results: includeAnswer ? 4 : 10,
+          n_results: includeAnswer ? 4 : 10, // TODO: This is a temporary hack to be kind to the search API when requesting the generative AI response.
           resource_types: [
             "AllergyIntolerance",
             "Condition",
