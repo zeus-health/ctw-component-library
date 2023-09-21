@@ -17,7 +17,6 @@ import { FHIRModel } from "@/fhir/models/fhir-model";
 import { searchProvenances } from "@/fhir/provenance";
 import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { sortBy } from "@/utils/nodash";
-import { UseQueryResultBasic } from "@/utils/request";
 
 export type UseResourceDetailsDrawerProps<T extends fhir4.Resource, M extends FHIRModel<T>> = Pick<
   ResourceDetailsDrawerProps<T, M>,
