@@ -19,9 +19,16 @@ export const documentsQuery = gql`
     $upid: ID!
     $cursor: String!
     $sort: DocumentReferenceSortParams!
+    $filter: DocumentReferenceFilterParams! = {}
     $first: Int!
   ) {
-    DocumentReferenceConnection(upid: $upid, after: $cursor, sort: $sort, first: $first) {
+    DocumentReferenceConnection(
+      upid: $upid
+      after: $cursor
+      sort: $sort
+      filter: $filter
+      first: $first
+    ) {
       pageInfo {
         hasNextPage
       }

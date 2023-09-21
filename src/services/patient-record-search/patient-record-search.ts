@@ -9,21 +9,27 @@ import { getMedicationStatementsByIdFQS } from "@/fhir/medications";
 import {
   AllergyModel,
   ConditionModel,
+  DiagnosticReportModel,
+  EncounterModel,
   MedicationStatementModel,
   ObservationModel,
   PatientModel,
 } from "@/fhir/models";
+import { CareTeamModel } from "@/fhir/models/careteam";
 import { DocumentModel } from "@/fhir/models/document";
 import { fetchObservationsById } from "@/fhir/observations";
 import { LENS_EXTENSION_ID } from "@/fhir/system-urls";
 import { fetchConditionsByIdFQS } from "@/services/conditions";
-import { groupBy, keyBy, mapValues } from "@/utils/nodash";
+import { groupBy, keyBy, mapValues, uniq } from "@/utils/nodash";
 import { QUERY_KEY_AI_SEARCH } from "@/utils/query-keys";
 
 type PatientRecordSearchResourceType =
   | "AllergyIntolerance"
+  | "CareTeam"
   | "Condition"
+  | "DiagnosticReport"
   | "DocumentReference"
+  | "Encounter"
   | "MedicationStatement"
   | "Observation";
 
@@ -64,7 +70,10 @@ export type PatientRecordSearchResult = {
   document: PatientRecordSearchResponseRawDocument & {
     resource?:
       | AllergyModel
+      | CareTeamModel
       | ConditionModel
+      | DiagnosticReportModel
+      | EncounterModel
       | DocumentModel
       | MedicationStatementModel
       | ObservationModel;
@@ -89,8 +98,11 @@ export const EMPTY_SEARCH_RESULTS: PatientRecordSearchResults = {
 
 const EMPTY_RESOURCE_BY_TYPE_MAPPING: ResourceByTypeMapping = {
   AllergyIntolerance: [],
+  CareTeam: [],
   Condition: [],
+  DiagnosticReport: [],
   DocumentReference: [],
+  Encounter: [],
   MedicationStatement: [],
   Observation: [],
 };
@@ -100,14 +112,20 @@ class PatientRecordSearch {
 
   private resources: {
     AllergyIntolerance: Record<string, AllergyModel>;
+    CareTeam: Record<string, CareTeamModel>;
     Condition: Record<string, ConditionModel>;
+    DiagnosticReport: Record<string, DiagnosticReportModel>;
     DocumentReference: Record<string, DocumentModel>;
+    Encounter: Record<string, EncounterModel>;
     MedicationStatement: Record<string, MedicationStatementModel>;
     Observation: Record<string, ObservationModel>;
   } = {
     AllergyIntolerance: {},
+    CareTeam: {},
     Condition: {},
+    DiagnosticReport: {},
     DocumentReference: {},
+    Encounter: {},
     MedicationStatement: {},
     Observation: {},
   };
@@ -186,7 +204,8 @@ class PatientRecordSearch {
 }
 
 export function usePatientRecordSearch(
-  searchTerm: string
+  searchTerm: string,
+  includeAnswer: boolean
 ): UseQueryResult<PatientRecordSearchResults> {
   return useQueryWithPatient(
     QUERY_KEY_AI_SEARCH,
@@ -196,20 +215,35 @@ export function usePatientRecordSearch(
       const fetchResourcesById = async <T>(
         ids: string[],
         fn: (r: CTWRequestContext, p: PatientModel, ids: string[]) => Promise<T[]>
-      ): Promise<T[]> => (ids.length === 0 ? [] : fn(requestContext, patient, ids));
+      ): Promise<T[]> => (ids.length === 0 ? [] : fn(requestContext, patient, uniq(ids)));
+
+      const searchOptions = [];
+
+      if (includeAnswer) {
+        searchOptions.push("answer");
+      }
+
+      if (searchTerm.split(" ").length <= 2) {
+        searchOptions.push("keyword");
+      } else {
+        searchOptions.push("semantic");
+      }
 
       if (searchTerm) {
         const body = JSON.stringify({
           query: searchTerm,
           upid: patient.UPID,
-          include: ["keyword"], // , "semantic"],
-          n_results: 10,
+          include: searchOptions,
+          n_results: 2,
           resource_types: [
             "AllergyIntolerance",
             "Condition",
             "DocumentReference",
             "MedicationStatement",
+            "DiagnosticReport",
             // "Observation",
+            // "Encounter",
+            // "Care Team"
           ],
         });
 
@@ -253,11 +287,17 @@ export function usePatientRecordSearch(
           observations,
         });
 
+        console.log(documents.length);
+        console.log(patientRecordSearchResult.results.length);
+        console.log(patientRecordSearchResult.filteredResults.length);
+
         return {
           id: patientRecordSearchResult.id,
           query: patientRecordSearchResult.queryString,
           response: patientRecordSearchResult.responseString,
-          results: patientRecordSearchResult.filteredResults,
+          results: patientRecordSearchResult.filteredResults.sort((r) =>
+            r.document.reason.search_type.includes("semantic") ? 1 : -1
+          ),
           total: patientRecordSearchResult.filteredResults.length,
         };
       }

@@ -1,9 +1,7 @@
 import { useFeatureVariant } from "./use-feature-variant";
 
-export function useFeatureToggle(
-  feature: "ctw-trending-labs" | "ctw-patient-record-search"
-): FeatureToggle {
-  const variant = useFeatureVariant(feature);
+export function useTrendingLabsFeatureToggle(): FeatureToggle {
+  const variant = useFeatureVariant("ctw-trending-labs");
 
   if (!variant.ready) {
     return { enabled: false, ready: false };
@@ -12,9 +10,6 @@ export function useFeatureToggle(
   if (variant.enabled) {
     const value = variant.payload?.value;
     enabled = value === "true";
-  }
-  if (feature === "ctw-patient-record-search") {
-    debugger;
   }
   return { enabled, ready: true };
 }

@@ -35,14 +35,14 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
     isFetching,
     isLoading,
     isError,
-  } = usePatientRecordSearch(searchValue);
+  } = usePatientRecordSearch(searchValue, searchWasQuestion);
   const { trackInteraction } = useAnalytics();
 
   const handleSubmitForm = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       const query = searchTextInputValue.trim();
-      setSearchWasQuestion(query[query.length - 1] === "?");
+      setSearchWasQuestion(query.endsWith("?"));
       setSearchValue(query);
       setCount(DEFAULT_PAGE_SIZE);
       trackInteraction("search", { action: "patient-record-search" });
@@ -103,48 +103,48 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
       ) : (
         <div className="ctw-patient-record-search-results-list ctw-scrollable-pass-through-height">
           <div className="ctw-patient-record-search-results ctw-align-left ctw-ml-0">
-            <RenderIf condition={!userHasSearched}>
-              <span className="ctw-text-1xl ctw-text-content-dark ctw-block ctw-text-left ctw-font-medium">
-                Search patient conditions, medications, documents and allergies.
-              </span>
-            </RenderIf>
+            {/* FeedbackProvider will allow all the feedback forms to get the id of the query */}
+            <FeedbackProvider id={data.id}>
+              <RenderIf condition={!userHasSearched}>
+                <span className="ctw-text-1xl ctw-text-content-dark ctw-block ctw-text-left ctw-font-medium">
+                  Search patient conditions, medications, documents and allergies.
+                </span>
+              </RenderIf>
 
-            <RenderIf condition={userHasSearched && !hasResults && !isError}>
-              <span className="ctw-text-1xl ctw-text-content-dark ctw-block ctw-text-left ctw-font-medium">
-                Search did not return any results.
-              </span>
-            </RenderIf>
+              <RenderIf condition={isError}>
+                <div className="ctw-w-full">
+                  <ErrorAlert header="Error">There was an error running your search.</ErrorAlert>
+                </div>
+              </RenderIf>
 
-            <RenderIf condition={isError}>
-              <div className="ctw-w-full">
-                <ErrorAlert header="Error">There was an error running your search.</ErrorAlert>
-              </div>
-            </RenderIf>
+              <RenderIf condition={userHasSearched && searchWasQuestion && !isError}>
+                <div className="ctw-pb-5 ctw-font-normal">
+                  {data.response}
+                  <FeedbackForm name="query-response" />
+                </div>
+              </RenderIf>
 
-            {/* user has made a search and there are results */}
-            <RenderIf condition={userHasSearched && hasResults}>
-              {/* FeedbackProvider will allow all the feedback forms to get the id of the query */}
-              <FeedbackProvider id={data.id}>
-                <RenderIf condition={searchWasQuestion}>
-                  <span className="ctw-font-normal">
-                    {data.response}
-                    <FeedbackForm name="query-response" />
-                  </span>
-                </RenderIf>
+              <RenderIf condition={userHasSearched && !hasResults && !isError}>
+                <span className="ctw-text-1xl ctw-text-content-dark ctw-block ctw-text-left ctw-font-medium">
+                  Search did not find results.
+                </span>
+              </RenderIf>
 
+              {/* user has made a search and there are results */}
+              <RenderIf condition={userHasSearched && hasResults}>
                 {/* Search Results */}
                 <span className="ctw-text-1xl ctw-text-content-dark ctw-block ctw-text-left ctw-font-medium">
-                  Found {data.results.length} results
+                  Found {data.results.length} results.
                 </span>
                 {data.results.slice(0, count).map((result: PatientRecordSearchResult, idx) => (
                   // eslint-disable-next-line react/no-array-index-key
                   <SearchResultRow key={idx} document={result.document} />
                 ))}
-              </FeedbackProvider>
-              <div className="ctw-mt-5">
-                <ExpandList total={data.results.length} count={count} changeCount={setCount} />
-              </div>
-            </RenderIf>
+                <div className="ctw-mt-5">
+                  <ExpandList total={data.results.length} count={count} changeCount={setCount} />
+                </div>
+              </RenderIf>
+            </FeedbackProvider>
           </div>
         </div>
       )}

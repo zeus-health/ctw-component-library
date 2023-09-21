@@ -31,6 +31,7 @@ import { PatientMedicationDispense } from "./components/content/medication-dispe
 import { ADTAlertsTable } from "./components/content/patients-adt/patients-adt-alerts-table";
 import { ThemeProviderProps } from "@/components/core/providers/theme/theme-provider";
 import { UseQueryResult } from "@tanstack/react-query";
+import { render } from "react-dom";
 
 const {
   VITE_AUTH0_AUDIENCE,
@@ -127,8 +128,8 @@ const components: DemoComponent[] = [
       return (
         <ZusAggregatedProfile
           title="ZAP"
-          includePatientRecordSearch
           includePatientDemographicsForm={false}
+          //resources={["conditions-all", "medications-all", "documents", "allergies"]}
         />
       );
     },

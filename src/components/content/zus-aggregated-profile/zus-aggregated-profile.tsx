@@ -2,6 +2,7 @@ import "./zus-aggregated-profile.scss";
 
 import { XIcon } from "@heroicons/react/outline";
 import { SearchIcon } from "@heroicons/react/solid";
+import { useUnleashClient } from "@unleash/proxy-client-react";
 import cx from "classnames";
 import { useState } from "react";
 import { PatientConditionsAllProps } from "../conditions/patient-conditions-all";
@@ -30,7 +31,6 @@ import { AnalyticsProvider } from "@/components/core/providers/analytics/analyti
 import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { RenderIf } from "@/components/core/render-if";
 import { TabGroup } from "@/components/core/tab-group/tab-group";
-import { useFeatureToggle } from "@/hooks/use-feature-toggle";
 import { intersection } from "@/utils/nodash";
 
 export type ZAPResourceName =
@@ -113,12 +113,13 @@ const ZusAggregatedProfileComponent = ({
   const togglePatientRecordSearchIsOpen = () => {
     setPatientRecordSearchIsOpen(!patientRecordSearchIsOpen);
     setZapTitle(patientRecordSearchIsOpen ? title : "Search");
-    trackInteraction("toggle_ai_search", {
+    trackInteraction("toggle_patient_record_search", {
       value: patientRecordSearchIsOpen ? "close" : "open",
     });
   };
 
-  const patientRecordSearchToggle = useFeatureToggle("ctw-patient-record-search");
+  const unleash = useUnleashClient();
+  const isSearchEnabled = unleash.isEnabled("ctw-patient-record-search");
 
   // Get the configuration for each tab group by resource type
   const subcomponentProps: Record<keyof ZusAggregatedProfileTabs, unknown> = {
@@ -171,7 +172,7 @@ const ZusAggregatedProfileComponent = ({
             </div>
 
             {/* If AI Search is included, show "search" and "close search" buttons */}
-            <RenderIf condition={patientRecordSearchToggle.enabled}>
+            <RenderIf condition={isSearchEnabled}>
               <button
                 type="button"
                 className="ctw-btn-clear ctw-link ctw-mr-1 ctw-flex ctw-items-end ctw-whitespace-nowrap ctw-text-content-lighter"

@@ -10,6 +10,7 @@ import { getRelevantContentFromDocumentSearchResult } from "@/components/content
 import {
   AllergyModel,
   ConditionModel,
+  DiagnosticReportModel,
   DocumentModel,
   MedicationStatementModel,
 } from "@/fhir/models";
@@ -20,7 +21,7 @@ type ResourceRowProps = {
 };
 
 export function SearchResultRow(props: ResourceRowProps) {
-  const { resource, ...result } = props.document;
+  const { resource, reason, ...result } = props.document;
   const resourceType = result.metadata.resource_type;
 
   const openConditionDetails = useConditionDetailsDrawer({});
@@ -36,6 +37,7 @@ export function SearchResultRow(props: ResourceRowProps) {
     details: documentData,
   });
   const openMedicationDetails = useMedicationDetailsDrawer({});
+  const searchType = reason.search_type.length > 0 ? reason.search_type[0] : undefined;
 
   switch (resourceType) {
     case "AllergyIntolerance": {
@@ -46,6 +48,7 @@ export function SearchResultRow(props: ResourceRowProps) {
           label="Allergy"
           resource={allergy}
           openDetails={openAllergyDetails}
+          searchType={searchType}
           details={[
             { label: "Last Updated", value: allergy.recordedDate },
             { label: "Reaction", value: allergy.manifestations },
@@ -61,6 +64,7 @@ export function SearchResultRow(props: ResourceRowProps) {
           label="Condition"
           resource={condition}
           openDetails={openConditionDetails}
+          searchType={searchType}
           details={[
             {
               label: "Last Updated",
@@ -85,7 +89,8 @@ export function SearchResultRow(props: ResourceRowProps) {
           label="Document"
           resource={document}
           openDetails={openDocumentDetails}
-          text={getRelevantContentFromDocumentSearchResult(result.page_content, result.reason.span)}
+          searchType={searchType}
+          text={getRelevantContentFromDocumentSearchResult(result.page_content, reason.span)}
           details={[
             {
               label: "Encounter",
@@ -112,6 +117,7 @@ export function SearchResultRow(props: ResourceRowProps) {
           label="Medication"
           resource={medication}
           openDetails={openMedicationDetails}
+          searchType={searchType}
           details={[
             {
               label: "Dosage",
@@ -128,6 +134,20 @@ export function SearchResultRow(props: ResourceRowProps) {
                 : undefined,
             },
           ]}
+        />
+      );
+    }
+
+    case "DiagnosticReport": {
+      const diagnosticReport = resource as DiagnosticReportModel;
+      return (
+        <SearchResult
+          heading={diagnosticReport.displayName}
+          label="Diagnostic Report"
+          resource={diagnosticReport}
+          // openDetails={openMedicationDetails}
+          searchType={searchType}
+          details={[]}
         />
       );
     }

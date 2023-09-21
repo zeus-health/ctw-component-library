@@ -9,7 +9,7 @@ import { SortDir } from "@/utils/sort";
 type Action =
   // App-level
   | "logout"
-  | "toggle_ai_search"
+  | "toggle_patient_record_search"
   | "search"
   | "clear_search"
   // Documents

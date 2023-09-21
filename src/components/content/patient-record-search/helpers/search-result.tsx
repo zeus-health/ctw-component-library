@@ -1,4 +1,5 @@
 import fhir4 from "fhir/r4";
+import { capitalize } from "lodash";
 import { FeedbackForm } from "@/components/content/patient-record-search/helpers/feedback-form";
 import { Badge } from "@/components/core/badge";
 import { FHIRModel } from "@/fhir/models/fhir-model";
@@ -10,6 +11,7 @@ type SearchResultProps<T extends FHIRModel<fhir4.Resource>> = {
   openDetails?: (record: T) => void;
   text?: string | JSX.Element;
   details?: { label: string; value?: string }[];
+  searchType?: string;
 };
 
 export function SearchResult<T extends FHIRModel<fhir4.Resource>>({
@@ -19,6 +21,7 @@ export function SearchResult<T extends FHIRModel<fhir4.Resource>>({
   label,
   text,
   details,
+  searchType,
 }: SearchResultProps<T>) {
   return (
     <div className="ctw-patient-record-search-result">
@@ -31,7 +34,8 @@ export function SearchResult<T extends FHIRModel<fhir4.Resource>>({
           >
             {heading}
           </button>
-          <Badge color="primary" text={label} />
+          <Badge className="ctw-mr-1" color="primary" text={label} />
+          {searchType && <Badge color="info" text={capitalize(searchType)} />}
         </span>
         <FeedbackForm name={`${resource.resourceType}/${resource.id}`} />
       </div>
