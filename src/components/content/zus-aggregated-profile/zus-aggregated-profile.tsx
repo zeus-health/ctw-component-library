@@ -30,6 +30,7 @@ import { AnalyticsProvider } from "@/components/core/providers/analytics/analyti
 import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { RenderIf } from "@/components/core/render-if";
 import { TabGroup } from "@/components/core/tab-group/tab-group";
+import { useFeatureToggle } from "@/hooks/use-feature-toggle";
 import { intersection } from "@/utils/nodash";
 
 export type ZAPResourceName =
@@ -63,7 +64,6 @@ export type ZusAggregatedProfileProps = {
   forceHorizontalTabs?: boolean;
   includePatientDemographicsForm?: boolean;
   title?: string;
-  includePatientRecordSearch?: boolean;
   hideTitle?: boolean;
   removeBranding?: boolean;
   removeRequestRecords?: boolean;
@@ -87,7 +87,6 @@ export type ZusAggregatedProfileSubComponentProps = Partial<{
 
 const ZusAggregatedProfileComponent = ({
   forceHorizontalTabs = false,
-  includePatientRecordSearch = false,
   includePatientDemographicsForm,
   allergiesProps,
   careTeamProps,
@@ -118,6 +117,8 @@ const ZusAggregatedProfileComponent = ({
       value: patientRecordSearchIsOpen ? "close" : "open",
     });
   };
+
+  const patientRecordSearchToggle = useFeatureToggle("ctw-patient-record-search");
 
   // Get the configuration for each tab group by resource type
   const subcomponentProps: Record<keyof ZusAggregatedProfileTabs, unknown> = {
@@ -170,7 +171,7 @@ const ZusAggregatedProfileComponent = ({
             </div>
 
             {/* If AI Search is included, show "search" and "close search" buttons */}
-            <RenderIf condition={includePatientRecordSearch}>
+            <RenderIf condition={patientRecordSearchToggle.enabled}>
               <button
                 type="button"
                 className="ctw-btn-clear ctw-link ctw-mr-1 ctw-flex ctw-items-end ctw-whitespace-nowrap ctw-text-content-lighter"
