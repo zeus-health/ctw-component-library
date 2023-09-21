@@ -13,7 +13,7 @@ import {
   ResourceTableActionsProps,
 } from "../../resource/resource-table-actions";
 import { EmptyPatientTable } from "@/components/core/empty-table";
-import { RowActionsProp } from "@/components/core/table/table-rows";
+import { RowActionsConfigProp } from "@/components/core/table/table-rows";
 import { ConditionModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 
@@ -23,7 +23,7 @@ export type PatientConditionsTableProps = {
   query: { data?: ConditionModel[]; isLoading: boolean };
   outside?: boolean;
   readOnly?: boolean;
-  RowActions?: RowActionsProp<ConditionModel>;
+  rowActions?: (r: ConditionModel) => RowActionsConfigProp<ConditionModel>;
   emptyMessage?: string | ReactElement | undefined;
   isLoading?: boolean;
 };
@@ -33,11 +33,11 @@ export const PatientConditionsBase = ({
   className,
   query,
   outside = false,
-  RowActions,
+  rowActions,
   emptyMessage,
   isLoading,
 }: PatientConditionsTableProps) => {
-  const openDetailsDrawer = useConditionDetailsDrawer({ RowActions });
+  const openDetailsDrawer = useConditionDetailsDrawer({ rowActions });
 
   const { viewOptions, current } = statusView;
 
@@ -91,7 +91,7 @@ export const PatientConditionsBase = ({
         emptyMessage={empty}
         isLoading={isLoading || query.isLoading}
         onRowClick={openDetailsDrawer}
-        RowActions={RowActions}
+        rowActions={rowActions}
       />
     </div>
   );

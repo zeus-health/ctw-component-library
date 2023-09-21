@@ -142,7 +142,7 @@
 
   .ctw-theme > [data-radix-popper-content-wrapper] {
     // We add important here because radix z-index will take precedence if we don't.
-    z-index: 10000 !important;
+    z-index: 20000 !important;
   }
 
   .ctw-border-top {

@@ -1,5 +1,5 @@
 import cx from "classnames";
-import { useMemo, useRef } from "react";
+import { useRef } from "react";
 import { patientDocumentColumns } from "./helpers/columns";
 import { defaultDocumentsFilters, documentsFilter } from "./helpers/filters";
 import { defaultDocumentSort, documentSortOptions } from "./helpers/sorts";
@@ -12,7 +12,7 @@ import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { useCTW } from "@/components/core/providers/use-ctw";
-import { RowActionsProps } from "@/components/core/table/table";
+import { RowActionsConfigProp } from "@/components/core/table/table-rows";
 import { getBinaryDocument } from "@/fhir/binaries";
 import { usePatientTopLevelDocuments } from "@/fhir/document";
 import { DocumentModel } from "@/fhir/models/document";
@@ -28,7 +28,7 @@ function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocument
   const containerRef = useRef<HTMLDivElement>(null);
 
   const patientDocumentQuery = usePatientTopLevelDocuments();
-  const rowActions = useMemo(() => getRowActions({ onAddToRecord }), [onAddToRecord]);
+  const rowActions = useRowActions(onAddToRecord);
   const { viewOptions, allTime } = getDateRangeView<DocumentModel>("dateCreated");
   const { data, setViewOption, setSort, setFilters } = useFilteredSortedData({
     defaultSort: defaultDocumentSort,
@@ -44,7 +44,7 @@ function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocument
     header: (m) => m.title,
     subHeader: (m) => m.encounterDate,
     details: documentData,
-    RowActions: rowActions,
+    rowActions,
     enableDismissAndReadActions: true,
   });
 
@@ -79,7 +79,7 @@ function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocument
           }
           columns={patientDocumentColumns}
           onRowClick={openDetails}
-          RowActions={rowActions}
+          rowActions={rowActions}
           enableDismissAndReadActions
         />
       </div>
@@ -87,41 +87,31 @@ function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocument
   );
 }
 
-type ExtraRowActionProps = {
-  onAddToRecord?: (document: DocumentModel, binary: fhir4.Binary) => void;
-};
-
-const getRowActions =
-  ({ onAddToRecord }: ExtraRowActionProps) =>
-  (props: RowActionsProps<DocumentModel>) =>
-    <RowActions {...props} onAddToRecord={onAddToRecord} />;
-
-type RowActionsProps2 = RowActionsProps<DocumentModel> & ExtraRowActionProps;
-
-const RowActions = ({ record, onSuccess, onAddToRecord }: RowActionsProps2) => {
+function useRowActions(onAddToRecord?: (document: DocumentModel, binary: fhir4.Binary) => void) {
   const { t } = useBaseTranslations();
   const { trackInteraction } = useAnalytics();
   const { getRequestContext } = useCTW();
-  const { binaryId } = record;
+  return (record: DocumentModel): RowActionsConfigProp<DocumentModel> => {
+    const { binaryId } = record;
 
-  return onAddToRecord && binaryId ? (
-    <div className="ctw-flex ctw-space-x-2">
-      <button
-        type="button"
-        className="ctw-btn-primary ctw-ml-1 ctw-capitalize"
-        data-testid="add-to-record"
-        onClick={async () => {
+    if (!binaryId || !onAddToRecord) {
+      return [];
+    }
+
+    return [
+      {
+        className: "ctw-btn-primary ctw-ml-1 ctw-capitalize",
+        testId: "add-to-record",
+        text: t("resourceTable.add"),
+        onClick: async () => {
           const binary = await getBinaryDocument(await getRequestContext(), binaryId);
           onAddToRecord(record, binary);
-          onSuccess?.();
           trackInteraction("add_to_record");
-        }}
-      >
-        {t("resourceTable.add")}
-      </button>
-    </div>
-  ) : null;
-};
+        },
+      },
+    ];
+  };
+}
 
 export const PatientDocuments = withErrorBoundary(PatientDocumentsComponent, "PatientDocuments");
 

@@ -5,21 +5,32 @@ import { TableFullLengthRow } from "./table-full-length-row";
 import { MinRecordItem, TableColumn } from "./table-helpers";
 import { Spinner } from "../spinner";
 import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
+import { RowActionsProps } from "@/components/core/table/table";
 import { isFunction } from "@/utils/nodash";
 
-export type RowActionsProp<T extends MinRecordItem> = FunctionComponent<{
-  record: T;
-  onSuccess?: () => void;
-}>;
+export type RowActionsProp<T extends MinRecordItem> = FunctionComponent<RowActionsProps<T>>;
+
+export type RowActionsConfigProp<T extends MinRecordItem> =
+  | {
+      text: string;
+      onClick: (record: T, onSuccess?: () => void) => void;
+      className: cx.Argument;
+      disabled?: boolean;
+      testId?: string;
+      render?: RowActionsProp<T>;
+    }[]
+  | undefined;
 
 export type TableRowsProps<T extends MinRecordItem> = {
   RowActions?: RowActionsProp<T>;
+  rowActions?: RowActionsConfigProp<T>;
   columns: TableColumn<T>[];
   emptyMessage: string | ReactElement;
   getRowClassName?: (record: T) => cx.Argument;
   handleRowClick?: (record: T) => void;
   isLoading: boolean;
   records: T[];
+  stacked: boolean;
 };
 
 export const TableRows = <T extends MinRecordItem>({
@@ -30,6 +41,7 @@ export const TableRows = <T extends MinRecordItem>({
   handleRowClick,
   RowActions,
   getRowClassName,
+  stacked,
 }: TableRowsProps<T>) => {
   const { trackInteraction } = useAnalytics();
 
@@ -92,7 +104,7 @@ export const TableRows = <T extends MinRecordItem>({
               className="ctw-table-row-actions group-hover:ctw-visible"
               onClick={(event) => event.stopPropagation()}
             >
-              <RowActions record={record} />
+              <RowActions record={record} stacked={stacked} />
             </td>
           )}
         </tr>
