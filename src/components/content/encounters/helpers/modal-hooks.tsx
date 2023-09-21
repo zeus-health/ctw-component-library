@@ -39,13 +39,31 @@ export function usePatientEncounterDetailsDrawer() {
 }
 
 export const encounterData = (encounter: EncounterModel) => [
-  { label: "Period Start", value: encounter.periodStart },
-  { label: "Period End", value: encounter.periodEnd },
+  { label: "Start", value: encounter.periodStart },
+  { label: "End", value: encounter.periodEnd },
   { label: "Status", value: capitalize(encounter.status) },
   { label: "Class", value: encounter.class },
   { label: "Location", value: encounter.location },
-  { label: "Participants", value: encounter.participants },
+  {
+    label: "Providers",
+    value: encounter.participants && encounter.participants.length > 0 && (
+      <ul className="ctw-m-0 ctw-list-disc ctw-pl-4">
+        {encounter.participants.map((p) => (
+          <li key={p}>{p}</li>
+        ))}
+      </ul>
+    ),
+  },
   { label: "Reason", value: encounter.reason },
-  { label: "Diagnosis", value: encounter.diagnoses?.join(", ") },
+  {
+    label: "Diagnoses",
+    value: encounter.diagnoses && encounter.diagnoses.length > 0 && (
+      <ul className="ctw-m-0 ctw-list-disc ctw-pl-4">
+        {encounter.diagnoses.map((d) => (
+          <li key={d}>{d}</li>
+        ))}
+      </ul>
+    ),
+  },
   { label: "Discharge Disposition", value: encounter.dischargeDisposition },
 ];

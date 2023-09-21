@@ -7,6 +7,7 @@ import "./note-style.scss";
 export type DetailEntry = {
   label?: string;
   value: ReactNode;
+  transposeTables?: boolean;
 };
 
 export type DetailsProps = {
@@ -163,7 +164,7 @@ export const DetailsCard = ({ details, hideEmpty = true, documentButton }: Detai
   // prevent the screen from freezing
   useEffect(() => {
     const newlyTransposedValues = details.map((detail) =>
-      recursivelyTransposeTables(detail.value, 0)
+      detail.transposeTables ? recursivelyTransposeTables(detail.value, 0) : detail.value
     );
     setTransposedValues(newlyTransposedValues);
   }, [details]);

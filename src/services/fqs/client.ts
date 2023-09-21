@@ -20,6 +20,8 @@ export interface GenericConnection<T extends ResourceTypeString> {
   edges: GraphqlConnectionNode<ResourceType<T>>[];
 }
 
+export const MAX_OBJECTS_PER_REQUEST = 1000;
+
 export const createGraphqlClient = (requestContext: CTWRequestContext) => {
   const endpoint = `${getZusServiceUrl(requestContext.env, "fqs")}/query`;
   return new GraphQLClient(endpoint, {
@@ -32,7 +34,16 @@ export const createGraphqlClient = (requestContext: CTWRequestContext) => {
 };
 
 export const fqsRequest = async <T>(client: GraphQLClient, query: string, variables: object) => {
-  const { data, errors } = await client.rawRequest<T>(query, variables as Variables);
+  const updatedVariables = { ...variables };
+  if (
+    "first" in updatedVariables &&
+    typeof updatedVariables.first === "number" &&
+    updatedVariables.first > MAX_OBJECTS_PER_REQUEST
+  ) {
+    updatedVariables.first = MAX_OBJECTS_PER_REQUEST;
+  }
+
+  const { data, errors } = await client.rawRequest<T>(query, updatedVariables as Variables);
   const fhirData = graphQLToFHIR(data);
   if (errors) {
     if (data) {

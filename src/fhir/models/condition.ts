@@ -234,7 +234,7 @@ export class ConditionModel extends FHIRModel<fhir4.Condition> {
     );
 
     if (reference) {
-      return new PatientModel(reference, this.includedResources).organization?.name;
+      return new PatientModel(reference, this.includedResources).organizationDisplayName;
     }
 
     return undefined;

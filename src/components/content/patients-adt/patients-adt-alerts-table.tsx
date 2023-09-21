@@ -2,6 +2,7 @@ import type { TableColumn } from "@/components/core/table/table-helpers";
 import type { PatientModel } from "@/fhir/models/patient";
 import cx from "classnames";
 import { useState } from "react";
+import { adtFilter, defaultADTFilters } from "./filters";
 import { useADTAlertDetailsDrawer } from "./modal-hooks";
 import { dedupeAndMergeEncounters } from "../encounters/helpers/filters";
 import { defaultEncounterSort, encounterSortOptions } from "../encounters/helpers/sorts";
@@ -33,9 +34,11 @@ function ADTTableComponent({ className, isLoading = false, data }: ADTTableProps
   const {
     data: data2,
     setViewOption,
+    setFilters,
     setSort,
   } = useFilteredSortedData({
     defaultView: past30days,
+    defaultFilters: defaultADTFilters,
     defaultSort: defaultEncounterSort,
     records: data,
   });
@@ -54,6 +57,11 @@ function ADTTableComponent({ className, isLoading = false, data }: ADTTableProps
             defaultSort: defaultEncounterSort,
             options: encounterSortOptions,
             onChange: setSort,
+          }}
+          filterOptions={{
+            onChange: setFilters,
+            defaultState: defaultADTFilters,
+            filters: adtFilter(),
           }}
         />
         <ResourceTable
