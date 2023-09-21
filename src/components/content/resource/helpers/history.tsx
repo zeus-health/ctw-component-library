@@ -1,17 +1,29 @@
 import { useState } from "react";
 import { HistoryEntry, HistoryEntryProps } from "./history-entry";
+import { Loading } from "@/components/core/loading";
+import { FHIRModel } from "@/fhir/models/fhir-model";
 import { orderBy } from "@/utils/nodash";
+import { UseQueryResultBasic } from "@/utils/request";
 
 export type HistoryEntries = HistoryEntryProps[];
 
-export type HistoryProps = {
-  entries: HistoryEntries;
+export type HistoryProps<M> = {
   limit?: number;
-  resourceTypeTitle: string;
+  getHistory?: (model: M) => UseQueryResultBasic<HistoryEntries | undefined>;
+  model: M;
 };
 
-export const History = ({ entries, limit, resourceTypeTitle }: HistoryProps) => {
+const DEFAULT_HISTORY_PAGE_LIMIT = 20;
+
+export function History<T extends fhir4.Resource, M extends FHIRModel<T>>({
+  limit = DEFAULT_HISTORY_PAGE_LIMIT,
+  getHistory,
+  model,
+}: HistoryProps<M>) {
+  const history = getHistory && getHistory(model);
+  const entries: HistoryEntries = history?.data ?? [];
   const [showAll, setShowAll] = useState(!limit || entries.length <= limit);
+  const { resourceTypeTitle } = model;
 
   // Sort entries by:
   //  1. date descending
@@ -35,7 +47,20 @@ export const History = ({ entries, limit, resourceTypeTitle }: HistoryProps) => 
 
   const displayedEntries = showAll || !limit ? sortedEntries : sortedEntries.slice(0, limit);
 
-  return (
+  // {history &&
+  //   (history.isLoading ? (
+  //     <Loading message="Loading history..." />
+  //   ) : (
+  //     <History
+  //       entries={history.data ?? []}
+  //       limit={HISTORY_PAGE_LIMIT}
+  //       resourceTypeTitle={model.resourceTypeTitle}
+  //     />
+  //   ))}
+
+  return history && history.isLoading ? (
+    <Loading message="Loading history..." />
+  ) : (
     <div className="ctw-space-y-4">
       <div className="ctw-text-lg ctw-font-semibold">History</div>
       {displayedEntries.map((entry, idx) => (
@@ -65,4 +90,4 @@ export const History = ({ entries, limit, resourceTypeTitle }: HistoryProps) => 
       )}
     </div>
   );
-};
+}

@@ -1,7 +1,6 @@
 import type { PatientRecordSearchResult } from "@/services/patient-record-search/patient-record-search";
 import { SearchResult } from "./search-result";
-import { useAllergiesHistory } from "../../allergies/helpers/history";
-import { allergyData } from "../../allergies/patient-allergies";
+import { allergyData, allergyHistory } from "../../allergies/patient-allergies";
 import { useConditionDetailsDrawer } from "../../conditions/helpers/details";
 import { documentData } from "../../document/patient-documents";
 import { useMedicationDetailsDrawer } from "../../medications/helpers/details";
@@ -27,7 +26,7 @@ export function SearchResultRow(props: ResourceRowProps) {
   const openAllergyDetails = useResourceDetailsDrawer({
     header: (m) => capitalize(m.display),
     details: allergyData,
-    getHistory: useAllergiesHistory,
+    children: allergyHistory,
     getSourceDocument: true,
   });
   const openDocumentDetails = useResourceDetailsDrawer({
