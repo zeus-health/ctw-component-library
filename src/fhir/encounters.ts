@@ -111,3 +111,31 @@ export async function getADTPatientsFromODS(requestContext: CTWRequestContext) {
     throw errorResponse("Failed fetching encounter alert information", e);
   }
 }
+
+export async function fetchEncountersById(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  ids: string[]
+) {
+  try {
+    const graphClient = createGraphqlClient(requestContext);
+    const { data } = await fqsRequest<EncounterGraphqlResponse>(graphClient, encountersQuery, {
+      upid: patient.UPID,
+      cursor: "",
+      first: 500,
+      sort: {},
+      filter: {
+        ids: {
+          anymatch: ids,
+        },
+      },
+    });
+
+    return data.EncounterConnection.edges.map(({ node }) => new EncounterModel(node));
+  } catch (e) {
+    throw Telemetry.logError(
+      e as Error,
+      `Failed fetching encounters by ID for patient: ${patient.UPID}`
+    );
+  }
+}

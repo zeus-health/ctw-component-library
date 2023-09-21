@@ -4,6 +4,7 @@ import { getZusServiceUrl } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { getAllergyIntolerancesById } from "@/fhir/allergies";
+import { fetchDiagnosticReportsById } from "@/fhir/diagnostic-report";
 import { getDocumentsByIdFromFQS } from "@/fhir/document";
 import { getMedicationStatementsByIdFQS } from "@/fhir/medications";
 import {
@@ -194,12 +195,18 @@ class PatientRecordSearch {
     documents: DocumentModel[];
     medications: MedicationStatementModel[];
     observations: ObservationModel[];
+    diagnosticReports: DiagnosticReportModel[];
+    encounters: EncounterModel[];
+    careTeam: CareTeamModel[];
   }) {
     this.resources.AllergyIntolerance = keyBy(params.allergies, "id");
     this.resources.Condition = keyBy(params.conditions, "id");
     this.resources.DocumentReference = keyBy(params.documents, "id");
     this.resources.MedicationStatement = keyBy(params.medications, "id");
     this.resources.Observation = keyBy(params.observations, "id");
+    this.resources.DiagnosticReport = keyBy(params.diagnosticReports, "id");
+    this.resources.Encounter = keyBy(params.encounters, "id");
+    this.resources.CareTeam = keyBy(params.careTeam, "id");
   }
 }
 
@@ -217,15 +224,13 @@ export function usePatientRecordSearch(
         fn: (r: CTWRequestContext, p: PatientModel, ids: string[]) => Promise<T[]>
       ): Promise<T[]> => (ids.length === 0 ? [] : fn(requestContext, patient, uniq(ids)));
 
-      const searchOptions = [];
+      const searchOptions = ["keyword"];
 
       if (includeAnswer) {
         searchOptions.push("answer");
       }
 
-      if (searchTerm.split(" ").length <= 2) {
-        searchOptions.push("keyword");
-      } else {
+      if (searchTerm.split(" ").length > 2) {
         searchOptions.push("semantic");
       }
 
@@ -234,7 +239,7 @@ export function usePatientRecordSearch(
           query: searchTerm,
           upid: patient.UPID,
           include: searchOptions,
-          n_results: 2,
+          n_results: includeAnswer ? 4 : 10,
           resource_types: [
             "AllergyIntolerance",
             "Condition",
@@ -271,6 +276,9 @@ export function usePatientRecordSearch(
           DocumentReference: documentIds,
           MedicationStatement: medicationIds,
           Observation: observationIds,
+          DiagnosticReport: diagnosticReportIds,
+          Encounter: encounterIds,
+          CareTeam: careTeamIds,
         } = patientRecordSearchResult.resourceIds;
 
         const allergies = await fetchResourcesById(allergyIds, getAllergyIntolerancesById);
@@ -278,6 +286,11 @@ export function usePatientRecordSearch(
         const documents = await fetchResourcesById(documentIds, getDocumentsByIdFromFQS);
         const medications = await fetchResourcesById(medicationIds, getMedicationStatementsByIdFQS);
         const observations = await fetchResourcesById(observationIds, fetchObservationsById);
+        const diagnosticReports = await fetchResourcesById(
+          diagnosticReportIds,
+          fetchDiagnosticReportsById
+        );
+        const encounters = await fetchResourcesById(encounterIds, fetchEncountersByIdFQS);
 
         patientRecordSearchResult.setResources({
           allergies,
@@ -285,11 +298,10 @@ export function usePatientRecordSearch(
           documents,
           medications,
           observations,
+          diagnosticReports,
+          encounters: [],
+          careTeam: [],
         });
-
-        console.log(documents.length);
-        console.log(patientRecordSearchResult.results.length);
-        console.log(patientRecordSearchResult.filteredResults.length);
 
         return {
           id: patientRecordSearchResult.id,

@@ -1,7 +1,5 @@
 import "./zus-aggregated-profile.scss";
 
-import { XIcon } from "@heroicons/react/outline";
-import { SearchIcon } from "@heroicons/react/solid";
 import { useUnleashClient } from "@unleash/proxy-client-react";
 import cx from "classnames";
 import { useState } from "react";
@@ -20,7 +18,10 @@ import { PatientConditionsProps } from "@/components/content/conditions/patient-
 import { PatientDocumentsProps } from "@/components/content/document/patient-documents";
 import { PatientImmunizationsProps } from "@/components/content/immunizations/patient-immunizations";
 import { RequestRecordsButton } from "@/components/content/patient-history/request-records-button";
-import { PatientRecordSearch } from "@/components/content/patient-record-search/patient-record-search";
+import {
+  PatientRecordSearch,
+  PatientRecordSearchTab,
+} from "@/components/content/patient-record-search/patient-record-search";
 import {
   ZusAggregatedProfileTabs,
   zusAggregatedProfileTabs,
@@ -150,6 +151,10 @@ const ZusAggregatedProfileComponent = ({
     return zusAggregatedProfileTabs[tabName](props);
   });
 
+  if (isSearchEnabled) {
+    tabbedContent.push(PatientRecordSearchTab);
+  }
+
   return (
     <AnalyticsProvider componentName="ZusAggregatedProfile">
       <div className="ctw-zus-aggregated-profile ctw-scrollable-pass-through-height">
@@ -170,53 +175,27 @@ const ZusAggregatedProfileComponent = ({
                 </div>
               )}
             </div>
-
-            {/* If AI Search is included, show "search" and "close search" buttons */}
-            <RenderIf condition={isSearchEnabled}>
-              <button
-                type="button"
-                className="ctw-btn-clear ctw-link ctw-mr-1 ctw-flex ctw-items-end ctw-whitespace-nowrap ctw-text-content-lighter"
-                onClick={togglePatientRecordSearchIsOpen}
-              >
-                <span className="ctw-mr-1 ctw-text-sm">
-                  {patientRecordSearchIsOpen ? "Close Search" : "Patient Record Search"}
-                </span>
-                <span>
-                  {patientRecordSearchIsOpen ? (
-                    <XIcon className="ctw-h-4 ctw-w-4" />
-                  ) : (
-                    <SearchIcon className="ctw-h-4 ctw-w-4" />
-                  )}
-                </span>
-              </button>
-            </RenderIf>
           </Title>
         )}
 
         {/* If Patient Search is open, show it instead of tabs */}
         <RenderIf condition={patientRecordSearchIsOpen}>
-          <PatientRecordSearch
-            hideTitle
-            className="ctw-mt-3 ctw-flex ctw-space-x-5 ctw-border-b ctw-border-divider-light"
-          />
+          <PatientRecordSearch className="ctw-mt-3 ctw-flex ctw-space-x-5 ctw-border-b ctw-border-divider-light" />
         </RenderIf>
 
-        {/* Show tabs when Patient Search isn't open */}
-        <RenderIf condition={!patientRecordSearchIsOpen}>
-          <TabGroup
-            content={tabbedContent}
-            forceHorizontalTabs={forceHorizontalTabs}
-            patientRecordSearchIsOpen={patientRecordSearchIsOpen}
-            topRightContent={
-              <RenderIf condition={!removeRequestRecords}>
-                <RequestRecordsButton
-                  className="ctw-mr-1.5"
-                  includePatientDemographicsForm={includePatientDemographicsForm}
-                />
-              </RenderIf>
-            }
-          />
-        </RenderIf>
+        <TabGroup
+          content={tabbedContent}
+          forceHorizontalTabs={forceHorizontalTabs}
+          patientRecordSearchIsOpen={patientRecordSearchIsOpen}
+          topRightContent={
+            <RenderIf condition={!removeRequestRecords}>
+              <RequestRecordsButton
+                className="ctw-ml-2 ctw-mr-1.5"
+                includePatientDemographicsForm={includePatientDemographicsForm}
+              />
+            </RenderIf>
+          }
+        />
       </div>
     </AnalyticsProvider>
   );

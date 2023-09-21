@@ -5,11 +5,12 @@ import { SYSTEM_ZUS_THIRD_PARTY } from "./system-urls";
 import { applyDiagnosticReportFilters } from "@/components/content/diagnostic-reports/helpers/diagnostic-report-query-filters";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
-import { DiagnosticReportModel, PatientModel } from "@/fhir/models";
+import { DiagnosticReportModel, DiagnosticReportModel, PatientModel } from "@/fhir/models";
 import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import {
   DiagnosticReportGraphqlResponse,
+  diagnosticReportQuery,
   diagnosticReportQuery,
 } from "@/services/fqs/queries/diagnostic-reports-query";
 import { keys } from "@/utils/nodash";
@@ -133,4 +134,36 @@ async function diagnosticReportCommonQueryFQS(
     }
   );
   return data;
+}
+
+export async function fetchDiagnosticReportsById(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  ids: string[]
+) {
+  try {
+    const graphClient = createGraphqlClient(requestContext);
+    const { data } = await fqsRequest<DiagnosticReportGraphqlResponse>(
+      graphClient,
+      diagnosticReportQuery,
+      {
+        upid: patient.UPID,
+        cursor: "",
+        first: 500,
+        sort: {},
+        filter: {
+          ids: {
+            anymatch: ids,
+          },
+        },
+      }
+    );
+
+    return data.DiagnosticReportConnection.edges.map(({ node }) => new DiagnosticReportModel(node));
+  } catch (e) {
+    throw Telemetry.logError(
+      e as Error,
+      `Failed fetching diagnostic reports by ID for patient: ${patient.UPID}`
+    );
+  }
 }

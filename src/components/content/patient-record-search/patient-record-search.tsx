@@ -6,7 +6,6 @@ import { SearchResultRow } from "./helpers/search-result-row";
 import { FeedbackForm } from "@/components/content/patient-record-search/helpers/feedback-form";
 import { FeedbackProvider } from "@/components/content/patient-record-search/helpers/feedback-provider";
 import { ErrorAlert } from "@/components/core/alert";
-import { Title } from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Loading } from "@/components/core/loading";
 import { DEFAULT_PAGE_SIZE, ExpandList } from "@/components/core/pagination/expand-list";
@@ -21,11 +20,10 @@ import {
 import "./helpers/style.scss";
 
 export type PatientRecordSearchProps = {
-  hideTitle?: boolean;
   className?: cx.Argument;
 };
 
-function PatientRecordSearchComponent({ className, hideTitle = false }: PatientRecordSearchProps) {
+function PatientRecordSearchComponent({ className }: PatientRecordSearchProps) {
   const [count, setCount] = useState(DEFAULT_PAGE_SIZE);
   const [searchTextInputValue, setSearchTextInputValue] = useState("");
   const [searchValue, setSearchValue] = useState("");
@@ -67,17 +65,9 @@ function PatientRecordSearchComponent({ className, hideTitle = false }: PatientR
     <div
       className={cx(
         className,
-        "ctw-patient-record-search ctw-scrollable-pass-through-height ctw-space-x-0 ctw-space-y-2 ctw-text-base"
+        "ctw-patient-record-search ctw-scrollable-pass-through-height ctw-space-x-0 ctw-space-y-2 ctw-pt-5 ctw-text-base"
       )}
     >
-      <RenderIf condition={!hideTitle}>
-        <Title className="ctw-border-0 ctw-border-b-0 ctw-border-solid ctw-border-divider-light">
-          <h3 className="ctw-m-0 ctw-inline-block ctw-p-0 ctw-pb-3 ctw-text-lg ctw-font-medium ctw-capitalize">
-            search records
-          </h3>
-        </Title>
-      </RenderIf>
-
       <form className="ctw-patient-record-search-input ctw-relative" onSubmit={handleSubmitForm}>
         <div className="ctw-search-icon-wrapper">
           <SearchIcon className="ctw-search-icon" />
@@ -160,3 +150,18 @@ export const PatientRecordSearch = withErrorBoundary(
   ),
   "PatientRecordSearch"
 );
+
+export const PatientRecordSearchTab = {
+  key: "patient-record-search",
+  display: () => (
+    <div className="ctw-flex ctw-items-center ctw-space-x-3">
+      <div className="ctw-absolute -ctw-ml-1">
+        <SearchIcon className="ctw-h-3 ctw-w-3" />
+      </div>
+      <div className="ctw-flex ctw-items-center ctw-space-x-1">
+        <span className="ctw-capitalize">search</span>
+      </div>
+    </div>
+  ),
+  render: () => <PatientRecordSearch />,
+};
