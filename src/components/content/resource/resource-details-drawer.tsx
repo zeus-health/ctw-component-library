@@ -68,7 +68,7 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
   RowActions,
   enableDismissAndReadActions,
   subHeader,
-  renderChild: children,
+  renderChild,
 }: ResourceDetailsDrawerProps<T, M>) {
   const openCCDAModal = useCCDAModal();
   const [isLoading, setIsLoading] = useState(false);
@@ -136,7 +136,7 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
             />
           )}
 
-          {children}
+          {renderChild && renderChild(model)}
 
           {model instanceof EncounterModel && model.clinicalNotes.length > 0 && (
             <Notes entries={model.clinicalNotes} />
