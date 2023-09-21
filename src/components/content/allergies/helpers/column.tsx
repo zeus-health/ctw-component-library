@@ -19,7 +19,7 @@ export const patientAllergiesColumns = (builderId: string) => {
       render: (allergy) => (
         <div>
           <div>{allergy.recordedDate}</div>
-          <div>{allergy.managingOrganization}</div>
+          <div>{allergy.patientOrganizationName}</div>
         </div>
       ),
     },

@@ -13,7 +13,7 @@ export interface ConditionGraphqlResponse {
 }
 
 export const conditionsQuery = gql`
-  ${fragmentCondition(false)}
+  ${fragmentCondition}
   query Conditions(
     $upid: ID!
     $cursor: String!

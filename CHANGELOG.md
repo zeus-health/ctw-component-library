@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.66.0
+
+### Minor Changes
+
+- dd0758b6: Remove version history from resource history drawer
+
 ## 1.65.17
 
 ### Patch Changes

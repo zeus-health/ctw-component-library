@@ -1,4 +1,5 @@
 import { FHIRModel } from "./fhir-model";
+import { PatientModel } from "./patient";
 import { formatDateISOToLocal } from "../formatters";
 import { findReference } from "../resource-helper";
 import { SYSTEM_NDC, SYSTEM_RXNORM, SYSTEM_SNOMED } from "../system-urls";
@@ -45,22 +46,19 @@ export class AllergyModel extends FHIRModel<fhir4.AllergyIntolerance> {
     return manifestations.join(", ");
   }
 
-  get managingOrganization(): string | undefined {
-    const organizationDisplay = findReference(
+  get patientOrganizationName(): string | undefined {
+    const reference = findReference(
       "Patient",
       this.resource.contained,
       this.includedResources,
       this.resource.patient
     );
 
-    const organizationName = findReference(
-      "Organization",
-      this.resource.contained,
-      this.includedResources,
-      organizationDisplay?.managingOrganization
-    )?.name;
+    if (reference) {
+      return new PatientModel(reference, this.includedResources).organizationDisplayName;
+    }
 
-    return organizationDisplay?.managingOrganization?.display || organizationName;
+    return undefined;
   }
 
   get note(): string | undefined {
