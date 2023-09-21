@@ -1,4 +1,4 @@
-import HistoryEntries from "../../resource/helpers/history";
+import { HistoryEntries } from "../../resource/helpers/history";
 import { HistoryEntryProps } from "@/components/content/resource/helpers/history-entry";
 import { useMedicationHistory } from "@/fhir/medications";
 import { MedicationModel } from "@/fhir/models/medication";

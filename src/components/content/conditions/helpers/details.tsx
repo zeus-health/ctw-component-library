@@ -1,9 +1,14 @@
 import { useConditionHistory } from "./history";
+import { History } from "../../resource/helpers/history";
 import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
 import { NotesList } from "@/components/core/notes-list";
 import { RowActionsProp } from "@/components/core/table/table-rows";
 import { ConditionModel } from "@/fhir/models";
 import { capitalize } from "@/utils/nodash";
+
+const conditionHistory = (m: ConditionModel) => (
+  <History getHistory={useConditionHistory} model={m} />
+);
 
 export const useConditionDetailsDrawer = ({
   RowActions,
@@ -11,7 +16,7 @@ export const useConditionDetailsDrawer = ({
 }: {
   RowActions?: RowActionsProp<ConditionModel>;
   enableDismissAndReadActions?: boolean;
-}) =>
+}) => {
   useResourceDetailsDrawer({
     header: (condition: ConditionModel) => condition.display,
     subHeader: (condition: ConditionModel) => condition.ccsChapter,
@@ -32,7 +37,8 @@ export const useConditionDetailsDrawer = ({
         value: condition.notes.length !== 0 && <NotesList notes={condition.notes} />,
       },
     ],
-    renderChild: useConditionHistory,
+    renderChild: conditionHistory,
     RowActions,
     enableDismissAndReadActions,
   });
+};

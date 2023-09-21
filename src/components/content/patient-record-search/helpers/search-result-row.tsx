@@ -59,7 +59,7 @@ export function SearchResultRow(props: ResourceRowProps) {
           heading={condition.display}
           label="Condition"
           resource={condition}
-          openDetails={openConditionDetails}
+          openDetails={() => openConditionDetails}
           details={[
             {
               label: "Last Updated",
