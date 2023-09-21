@@ -41,14 +41,14 @@ function getHistoryEntry(allergy: AllergyModel): HistoryEntryProps {
     id: allergy.id,
     date: allergy.recordedDate,
     versionId: allergy.versionId,
-    title: allergy.managingOrganization,
+    title: allergy.patientOrganizationName,
     details: detailData,
   };
 }
 
 const valuesToDedupeOn = (allergy: AllergyModel) => [
   allergy.recordedDate,
-  allergy.managingOrganization,
+  allergy.patientOrganizationName,
   allergy.clinicalStatus,
   allergy.onset,
   allergy.manifestations,

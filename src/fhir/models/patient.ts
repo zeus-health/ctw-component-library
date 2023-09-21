@@ -69,6 +69,16 @@ export class PatientModel extends FHIRModel<fhir4.Patient> {
     return undefined;
   }
 
+  get organizationDisplayName(): string | undefined {
+    if (this.organization) {
+      return this.organization.name;
+    }
+    if (this.isThirdPartyData) {
+      return "Sourced from EHR Network";
+    }
+    return undefined;
+  }
+
   get use(): fhir4.HumanName["use"] | undefined {
     return this.bestName.use;
   }

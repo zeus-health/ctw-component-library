@@ -92,6 +92,10 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
     return find(this.resource.meta?.tag, { system: SYSTEM_SUMMARY }) !== undefined;
   }
 
+  get isThirdPartyData(): boolean {
+    return this.resource.meta?.tag?.some((t) => t.system === SYSTEM_ZUS_THIRD_PARTY) ?? false;
+  }
+
   get patientUPID(): string | undefined {
     if (isFHIRDomainResource(this.resource)) {
       return find(this.resource.extension, { url: SYSTEM_ZUS_UNIVERSAL_ID })?.valueString;
