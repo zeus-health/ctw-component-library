@@ -47,17 +47,6 @@ export function History<T extends fhir4.Resource, M extends FHIRModel<T>>({
 
   const displayedEntries = showAll || !limit ? sortedEntries : sortedEntries.slice(0, limit);
 
-  // {history &&
-  //   (history.isLoading ? (
-  //     <Loading message="Loading history..." />
-  //   ) : (
-  //     <History
-  //       entries={history.data ?? []}
-  //       limit={HISTORY_PAGE_LIMIT}
-  //       resourceTypeTitle={model.resourceTypeTitle}
-  //     />
-  //   ))}
-
   return history && history.isLoading ? (
     <Loading message="Loading history..." />
   ) : (
