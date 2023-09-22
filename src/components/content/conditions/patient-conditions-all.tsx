@@ -38,7 +38,7 @@ function PatientConditionsAllComponent({
   const { t } = useBaseTranslations();
   const query = usePatientConditionsAll();
   const showAddConditionForm = useAddConditionForm();
-  const rowActions = useRowActions(userBuilderId, onlyAllowAddOutsideConditions, readOnly);
+  const rowActions = useRowActions(userBuilderId, onlyAllowAddOutsideConditions);
   const { viewOptions, current } = statusView;
 
   const { data, setFilters, setSort, viewOption, setViewOption } = useFilteredSortedData({
@@ -100,7 +100,7 @@ function PatientConditionsAllComponent({
           data={data}
           columns={patientConditionsAllColumns(userBuilderId)}
           onRowClick={openDetails}
-          rowActions={rowActions}
+          rowActions={readOnly ? undefined : rowActions}
           enableDismissAndReadActions
           emptyMessage={empty}
         />
@@ -116,8 +116,7 @@ export const PatientConditionsAll = withErrorBoundary(
 
 function useRowActions(
   userBuilderId: string,
-  onlyAllowAddOutsideConditions: boolean,
-  readOnly: boolean
+  onlyAllowAddOutsideConditions: boolean
 ): (r: ConditionModel) => RowActionsConfigProp<ConditionModel> {
   const { t } = useBaseTranslations();
   const showAddConditionForm = useAddConditionForm();
@@ -127,9 +126,6 @@ function useRowActions(
 
   return useCallback(
     (record: ConditionModel): RowActionsConfigProp<ConditionModel> => {
-      if (readOnly) {
-        return [];
-      }
       if (record.ownedByBuilder(userBuilderId) && !onlyAllowAddOutsideConditions) {
         return [
           {
@@ -167,7 +163,6 @@ function useRowActions(
     [
       confirmDelete,
       onlyAllowAddOutsideConditions,
-      readOnly,
       showAddConditionForm,
       showEditConditionForm,
       t,
