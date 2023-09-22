@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.67.1
+
+### Patch Changes
+
+- e5f85d1e: Export fhir action helper.
+
 ## 1.67.0
 
 ### Minor Changes
