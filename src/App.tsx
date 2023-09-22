@@ -124,13 +124,7 @@ const components: DemoComponent[] = [
   {
     name: "zap",
     render: () => {
-      return (
-        <ZusAggregatedProfile
-          title="ZAP"
-          includePatientRecordSearch
-          includePatientDemographicsForm={false}
-        />
-      );
+      return <ZusAggregatedProfile title="ZAP" includePatientDemographicsForm={false} />;
     },
   },
   {

@@ -61,7 +61,6 @@ export type ZusAggregatedProfileProps = {
   forceHorizontalTabs?: boolean;
   includePatientDemographicsForm?: boolean;
   title?: string;
-  includePatientRecordSearch?: boolean;
   hideTitle?: boolean;
   removeBranding?: boolean;
   removeRequestRecords?: boolean;
@@ -85,7 +84,6 @@ export type ZusAggregatedProfileSubComponentProps = Partial<{
 
 const ZusAggregatedProfileComponent = ({
   forceHorizontalTabs = false,
-  includePatientRecordSearch = false,
   includePatientDemographicsForm,
   allergiesProps,
   careTeamProps,
