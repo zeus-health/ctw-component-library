@@ -1,4 +1,4 @@
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cx from "classnames";
 import { Resource } from "fhir/r4";
@@ -22,11 +22,14 @@ import { QUERY_KEY_BASIC } from "@/utils/query-keys";
 export type ResourceTableProps<T extends MinRecordItem> = {
   rowActions?: (r: T) => TableProps<T>["rowActions"];
   enableDismissAndReadActions?: boolean;
+  // Will adjust the way the dropdown menu appears if the content will be rendered in a footer
+  isInFooter?: boolean;
 };
 
 export const useAdditionalResourceActions = <T extends Resource, M extends FHIRModel<T>>({
   rowActions,
   enableDismissAndReadActions,
+  isInFooter = false,
 }: ResourceTableProps<M>) => {
   const { featureFlags } = useCTW();
   const [selectedAction, setSelectedAction] = useState("card");
@@ -39,10 +42,6 @@ export const useAdditionalResourceActions = <T extends Resource, M extends FHIRM
     if (!combinedActions.length && !featureFlags?.enableViewFhirButton) return null;
 
     if (stacked) {
-      const selected = combinedActions.filter((option) => option.text === selectedAction)[0] ?? {
-        text: "Select Action",
-      };
-
       return (
         <div className="ctw-flex ctw-space-x-2">
           {featureFlags?.enableViewFhirButton && <ViewFHIR resource={record.resource} />}
@@ -67,16 +66,14 @@ export const useAdditionalResourceActions = <T extends Resource, M extends FHIRM
                 isSelected: selectedAction === text,
               }))}
             >
-              <div
-                className={cx(
-                  selected.className,
-                  "ctw-btn-primary ctw-flex ctw-items-center ctw-space-x-2"
-                )}
-              >
-                {selected.render?.({ record, onSuccess, stacked }) ?? (
-                  <span className="ctw-mr-1.5 ctw-font-normal">{selected.text}</span>
-                )}
-                <FontAwesomeIcon icon={faChevronDown} className="ctw-w-2" />
+              <div className="ctw-btn-primary ctw-flex ctw-items-center ctw-space-x-2 !ctw-py-0 ctw-font-normal">
+                <span className="!ctw-border-r-1 ctw-mr-1.5 ctw-divide-bg-light ctw-border-0 ctw-border-solid ctw-py-2 ctw-pr-4 !ctw-text-white">
+                  select action
+                </span>
+                <FontAwesomeIcon
+                  icon={isInFooter ? faChevronUp : faChevronDown}
+                  className="ctw-w-2 !ctw-text-white"
+                />
               </div>
             </DropdownMenuSimple>
           )}

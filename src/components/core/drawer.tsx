@@ -101,8 +101,9 @@ function DrawerContent({
   const { trackInteraction } = useAnalytics();
   const ref = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(ref);
-  const theme = useTheme();
-  const showBackButton = !!theme.iframeTheme;
+  // We want to show the back button if we are in an iframe because the drawer and iframe use the same
+  // real estate which makes it seem like closing the drawer feel like "going back" to the zap.
+  const showBackButton = !!useTheme().iframeTheme;
 
   return (
     <div ref={ref} className="ctw-fixed ctw-inset-0 ctw-overflow-hidden">

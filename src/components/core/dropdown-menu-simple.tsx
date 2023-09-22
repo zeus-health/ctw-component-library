@@ -25,8 +25,7 @@ export type DropdownMenuSimpleProps = {
   items: OptionsItem[];
   onItemSelect: (clickedItem: { key: string; name: string; value: boolean }) => void;
   isOpen?: boolean;
-  align?: "start" | "end" | "center";
-};
+} & Partial<Pick<RadixDropdownMenu.MenuContentProps, "align" | "side">>;
 
 export function DropdownMenuSimple({
   children,
@@ -34,6 +33,7 @@ export function DropdownMenuSimple({
   onItemSelect,
   buttonClassName,
   isOpen,
+  side,
   align = "start",
 }: DropdownMenuSimpleProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(isOpen);
@@ -49,6 +49,7 @@ export function DropdownMenuSimple({
         </RadixDropdownMenu.Trigger>
         <RadixDropdownMenu.Content
           align={align}
+          side={side}
           // Prevent focus from closing menu, this fixes
           // an issue with interactive testing where a "click"
           // would fire twice, once for the mousedown and

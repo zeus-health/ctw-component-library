@@ -164,4 +164,8 @@
       @apply ctw-h-5 ctw-w-5 ctw-text-content-lighter;
     }
   }
+  // Tailwind is not generating this css rule for some reason.
+  .ctw-border-r-1 {
+    border-right-width: 1px;
+  }
 }

@@ -171,11 +171,7 @@ const DemoApp = ({ accessToken = "" }) => (
   >
     <PatientProvider patientID={VITE_PATIENT_ID} systemURL={VITE_SYSTEM_URL}>
       {demoComponents.map((demo, index) => (
-        <ErrorBoundary key={demo.name}>
-          <div style={{ background: "white", minWidth: "350px", padding: "0" }}>
-            {demo.render()}
-          </div>
-        </ErrorBoundary>
+        <ErrorBoundary key={demo.name}>{demo.render()}</ErrorBoundary>
       ))}
     </PatientProvider>
   </CTWProvider>
