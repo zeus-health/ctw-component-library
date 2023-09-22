@@ -65,7 +65,7 @@ function PatientRecordSearchComponent({ className }: PatientRecordSearchProps) {
     <div
       className={cx(
         className,
-        "ctw-patient-record-search ctw-scrollable-pass-through-height ctw-space-x-0 ctw-space-y-2 ctw-text-base"
+        "ctw-patient-record-search ctw-scrollable-pass-through-height ctw-space-x-0 ctw-space-y-2 ctw-pt-5 ctw-text-base"
       )}
     >
       <form className="ctw-patient-record-search-input ctw-relative" onSubmit={handleSubmitForm}>
@@ -150,3 +150,18 @@ export const PatientRecordSearch = withErrorBoundary(
   ),
   "PatientRecordSearch"
 );
+
+export const PatientRecordSearchTab = {
+  key: "patient-record-search",
+  display: () => (
+    <div className="ctw-flex ctw-items-center ctw-space-x-3">
+      <div className="ctw-absolute -ctw-ml-1">
+        <SearchIcon className="ctw-h-3 ctw-w-3" />
+      </div>
+      <div className="ctw-flex ctw-items-center ctw-space-x-1">
+        <span className="ctw-capitalize">search</span>
+      </div>
+    </div>
+  ),
+  render: () => <PatientRecordSearch />,
+};

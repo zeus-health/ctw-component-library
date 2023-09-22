@@ -17,6 +17,7 @@ export function getRelevantContentFromDocumentSearchResult(text: string, spans: 
   parts[0] = parts[0].slice(parts[0].length - 100);
   return (
     <>
+      {spans[0].begin > 0 && <span>...</span>}
       {parts.map((part, i) =>
         i % 2 === 0 ? (
           // eslint-disable-next-line react/no-array-index-key
