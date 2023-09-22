@@ -2,7 +2,6 @@ import "./zus-aggregated-profile.scss";
 
 import { useUnleashClient } from "@unleash/proxy-client-react";
 import cx from "classnames";
-import { useState } from "react";
 import { PatientConditionsAllProps } from "../conditions/patient-conditions-all";
 import { PatientConditionsOutsideProps } from "../conditions/patient-conditions-outside";
 import { PatientDiagnosticReportsProps } from "../diagnostic-reports/patient-diagnostic-reports";
@@ -104,7 +103,6 @@ const ZusAggregatedProfileComponent = ({
   removeBranding = false,
   removeRequestRecords = false,
 }: ZusAggregatedProfileProps) => {
-  const [zapTitle, _] = useState(title);
   const unleash = useUnleashClient();
   const isSearchEnabled = unleash.isEnabled("ctw-patient-record-search");
 
@@ -151,7 +149,7 @@ const ZusAggregatedProfileComponent = ({
             )}
           >
             <div className="ctw-flex ctw-items-center ctw-space-x-1 ctw-py-3">
-              <h3 className="ctw-m-0 ctw-inline-block ctw-p-0  ctw-font-medium">{zapTitle}</h3>
+              <h3 className="ctw-m-0 ctw-inline-block ctw-p-0  ctw-font-medium">{title}</h3>
               {!removeBranding && (
                 <div className="ctw-flex ctw-items-center ctw-space-x-2">
                   <span className="ctw-text-sm ctw-font-light ctw-italic ctw-text-content-light">
