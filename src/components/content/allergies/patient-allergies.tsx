@@ -76,7 +76,7 @@ export const PatientAllergies = withErrorBoundary(PatientAllergiesComponent, "Pa
 
 export const allergyData = (allergy: AllergyModel) => [
   { label: "Recorded Date", value: allergy.recordedDate },
-  { label: "Recording Organization", value: allergy.managingOrganization },
+  { label: "Recording Organization", value: allergy.patientOrganizationName },
   { label: "Status", value: allergy.clinicalStatus },
   { label: "Type", value: capitalize(allergy.type) },
   { label: "Onset", value: allergy.onset },

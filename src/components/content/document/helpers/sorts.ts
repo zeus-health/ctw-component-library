@@ -13,7 +13,7 @@ export const documentSortOptions: SortOption<DocumentModel>[] = [
   {
     display: "Date (Old to New)",
     sorts: [
-      { key: "encounterDate", dir: "asc", isDate: true },
+      { key: "contextPeriodStartDate", dir: "asc", isDate: true },
       { key: "dateCreated", dir: "asc", isDate: true },
       { key: "title", dir: "asc" },
     ],
@@ -21,7 +21,7 @@ export const documentSortOptions: SortOption<DocumentModel>[] = [
   {
     display: "Date (New To Old)",
     sorts: [
-      { key: "encounterDate", dir: "desc", isDate: true },
+      { key: "contextPeriodStartDate", dir: "desc", isDate: true },
       { key: "dateCreated", dir: "desc", isDate: true },
       { key: "title", dir: "asc" },
     ],

@@ -17,6 +17,7 @@ import { EncounterModel } from "@/fhir/models/encounter";
 import { FHIRModel } from "@/fhir/models/fhir-model";
 import { searchProvenances } from "@/fhir/provenance";
 import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
+import { sortBy } from "@/utils/nodash";
 import { UseQueryResultBasic } from "@/utils/request";
 
 const HISTORY_PAGE_LIMIT = 20;
@@ -153,7 +154,7 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
             ))}
 
           {model instanceof EncounterModel && model.clinicalNotes.length > 0 && (
-            <Notes entries={model.clinicalNotes} />
+            <Notes entries={sortBy(model.clinicalNotes, "title")} />
           )}
         </div>
       </Drawer.Body>

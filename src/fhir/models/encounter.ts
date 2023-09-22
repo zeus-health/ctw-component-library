@@ -66,11 +66,12 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
     return locations.length ? locations.join(", ") : undefined;
   }
 
-  get participants(): string | undefined {
-    const participants = compact(
-      uniq(this.resource.participant?.map((p) => p.individual?.display))
-    );
-    return participants.length ? participants.join(", ") : undefined;
+  get participantsDisplay(): string | undefined {
+    return this.participants?.join(", ");
+  }
+
+  get participants(): string[] | undefined {
+    return compact(uniq(this.resource.participant?.map((p) => p.individual?.display)));
   }
 
   get periodEnd() {
@@ -79,6 +80,13 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
 
   get periodStart() {
     return formatDateISOToLocal(this.resource.period?.start);
+  }
+
+  get dateDisplay() {
+    if (this.periodStart !== this.periodEnd && this.periodEnd) {
+      return `${this.periodStart} - ${this.periodEnd}`;
+    }
+    return this.periodStart;
   }
 
   get reason(): string | undefined {

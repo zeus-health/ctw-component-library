@@ -20,7 +20,7 @@ export function versionsQuery(resourceType: ResourceTypeString, resourceIds: str
 function getResourceFragment(resourceType: ResourceTypeString) {
   switch (resourceType) {
     case "Condition":
-      return fragmentCondition(true);
+      return fragmentCondition;
     default:
       throw new Error(`Resource type to FQS query not implemented yet for ${resourceType}`);
   }

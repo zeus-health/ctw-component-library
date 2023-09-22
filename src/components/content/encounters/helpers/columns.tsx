@@ -9,7 +9,7 @@ export const patientEncounterColumns = (builderId: string): TableColumn<Encounte
     title: "Date",
     widthPercent: 10,
     minWidth: 120,
-    dataIndex: "periodStart",
+    dataIndex: "dateDisplay",
   },
   {
     title: "Title",
@@ -24,12 +24,19 @@ export const patientEncounterColumns = (builderId: string): TableColumn<Encounte
     title: "Provider",
     render: (encounter) => (
       <>
-        {compact([encounter.participants, encounter.location]).map((detail) => (
-          <div className="ctw-capitalize" key={detail}>
-            {detail.toLocaleLowerCase()}
-          </div>
-        ))}
-        {encounter.typeSpecialty && <div>Speciality: {encounter.typeSpecialty}</div>}
+        {encounter.location && <div className="ctw-pb-2">Location: {encounter.location}</div>}
+        {encounter.typeSpecialty && (
+          <div className="ctw-pb-2">Speciality: {encounter.typeSpecialty}</div>
+        )}
+        {encounter.participants && encounter.participants.length > 0 && (
+          <SimpleMoreList
+            className="ctw-pb-2"
+            items={encounter.participants}
+            limit={2}
+            total={encounter.participants.length}
+            prefix="Providers:"
+          />
+        )}
       </>
     ),
   },
@@ -38,20 +45,25 @@ export const patientEncounterColumns = (builderId: string): TableColumn<Encounte
     render: (encounter) => {
       const { dischargeDisposition } = encounter;
       const diagnoses = compact(encounter.diagnoses);
-      const notes = encounter.clinicalNotes.map((note) => note.noteTitle);
+      const notes = encounter.clinicalNotes.map((note) => note.title ?? "").sort();
       return (
         <div>
-          {dischargeDisposition && <div>Discharge: {dischargeDisposition}</div>}
-          {notes.length > 0 && (
-            <SimpleMoreList items={notes} limit={3} total={notes.length} prefix="Notes:" />
+          {dischargeDisposition && (
+            <div className="ctw-pb-2">Discharge: {dischargeDisposition}</div>
           )}
           {diagnoses.length > 0 && (
             <SimpleMoreList
+              className="ctw-pb-2"
               items={diagnoses}
-              limit={3}
+              limit={1}
               total={diagnoses.length}
-              prefix="Diagnosis:"
+              prefix="Diagnoses:"
             />
+          )}
+          {notes.length > 0 && (
+            <div>
+              {notes.length} note{notes.length > 1 ? "s" : ""}
+            </div>
           )}
         </div>
       );

@@ -1,5 +1,28 @@
 # ctw-component-library
 
+## 1.67.0
+
+### Minor Changes
+
+- f3ecf16f: Add filtering capablities to ADT table.
+
+### Patch Changes
+
+- d7e31e4d: Display 'Sourced from EHR Network' instead of 'Unknown' for third party data that doesn't have a manging org.
+
+## 1.66.0
+
+### Minor Changes
+
+- dd0758b6: Remove version history from resource history drawer
+
+## 1.65.17
+
+### Patch Changes
+
+- 27d54932: Fix sorting logic for document dates
+- 2eadd9cb: Update to display in encounters & documents components.
+
 ## 1.65.16
 
 ### Patch Changes

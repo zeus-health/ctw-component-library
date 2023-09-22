@@ -1,10 +1,7 @@
 import { fragmentCoding, fragmentPatient } from "../fragments";
 
-export function fragmentCondition(isConditionHistory: boolean) {
-  const patientFragment = isConditionHistory ? "" : fragmentPatient;
-  const subjectFragment = isConditionHistory
-    ? ""
-    : `subject {
+const patientFragment = fragmentPatient;
+const subjectFragment = `subject {
       reference
       resource {
         ... on Patient {
@@ -19,7 +16,8 @@ export function fragmentCondition(isConditionHistory: boolean) {
         }
       }
     }`;
-  return `
+
+export const fragmentCondition = `
     ${fragmentCoding}
     ${patientFragment}
     fragment Condition on Condition {
@@ -129,4 +127,3 @@ export function fragmentCondition(isConditionHistory: boolean) {
       }
     }
   `;
-}
