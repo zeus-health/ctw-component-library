@@ -16,6 +16,7 @@ export type OptionsItem = {
   key: string;
   name: string;
   display?: ReactNode;
+  disabled?: boolean;
   isSelected?: boolean;
 };
 
@@ -63,15 +64,22 @@ export function DropdownMenuSimple({
               key={menuItem.key}
               className={cx("ctw-dropdown-action-menu-item ctw-bg-bg-white")}
               onClick={() => {
-                onItemSelect({
-                  key: menuItem.key,
-                  name: menuItem.name,
-                  value: !menuItem.isSelected,
-                });
+                if (!menuItem.disabled) {
+                  onItemSelect({
+                    key: menuItem.key,
+                    name: menuItem.name,
+                    value: !menuItem.isSelected,
+                  });
+                }
               }}
             >
-              <div className="ctw-flex ctw-w-full ctw-justify-between">
-                <span>{menuItem.display ? menuItem.display : menuItem.name}</span>
+              <div
+                className={cx("ctw-flex ctw-w-full ctw-justify-between", {
+                  "ctw-text-content-lighter": menuItem.disabled,
+                  "!ctw-text-content-black": !menuItem.disabled,
+                })}
+              >
+                {menuItem.display ? menuItem.display : menuItem.name}
               </div>
             </RadixDropdownMenu.Item>
           ))}

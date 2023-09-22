@@ -60,10 +60,11 @@ export const useAdditionalResourceActions = <T extends Resource, M extends FHIRM
                   selectedOption.onClick(record, onSuccess);
                 }, 1);
               }}
-              items={combinedActions.map(({ text }) => ({
-                key: text,
-                name: text,
-                isSelected: selectedAction === text,
+              items={combinedActions.map((item) => ({
+                key: item.text,
+                name: item.text,
+                isSelected: selectedAction === item.text,
+                disabled: item.disabled,
               }))}
             >
               <div className="ctw-btn-primary ctw-flex ctw-items-center ctw-space-x-2 !ctw-py-0 ctw-font-normal">

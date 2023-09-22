@@ -62,10 +62,12 @@ function PatientConditionsAllComponent({
   const action = !readOnly && !onlyAllowAddOutsideConditions && (
     <button
       type="button"
-      className="ctw-btn-primary ctw-flex ctw-w-full ctw-text-center"
+      className="ctw-btn-primary ctw-flex ctw-w-full ctw-items-center"
       onClick={() => showAddConditionForm()}
     >
-      {t("resource.add", { resource: t("glossary:condition_one") })}
+      <span className="ctw-w-full">
+        {t("resource.add", { resource: t("glossary:condition_one") })}
+      </span>
     </button>
   );
 
