@@ -1,10 +1,15 @@
 import { useMedicationHistoryEntries } from "./history";
+import { History } from "../../resource/helpers/history";
 import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
 import { entryFromArray } from "@/components/core/data-list";
 import { Loading } from "@/components/core/loading";
 import { RowActionsProp } from "@/components/core/table/table-rows";
 import { useLastPrescriber } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models";
+
+const medicationHistory = (m: MedicationStatementModel) => (
+  <History getHistory={useMedicationHistoryEntries} model={m} />
+);
 
 export const useMedicationDetailsDrawer = ({
   RowActions,
@@ -15,7 +20,7 @@ export const useMedicationDetailsDrawer = ({
 }) =>
   useResourceDetailsDrawer({
     header: (medication: MedicationStatementModel) => medication.display,
-    getHistory: useMedicationHistoryEntries,
+    renderChild: medicationHistory,
     details: (medication: MedicationStatementModel) => [
       { label: "Status", value: medication.displayStatus },
       { label: "Last Fill Date", value: medication.lastFillDate },
