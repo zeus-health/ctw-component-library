@@ -1,15 +1,16 @@
 import type { PatientRecordSearchResult } from "@/services/patient-record-search/patient-record-search";
 import { SearchResult } from "./search-result";
-import { useAllergiesHistory } from "../../allergies/helpers/history";
-import { allergyData } from "../../allergies/patient-allergies";
+import { allergyData, allergyHistory } from "../../allergies/patient-allergies";
 import { useConditionDetailsDrawer } from "../../conditions/helpers/details";
 import { documentData } from "../../document/patient-documents";
 import { useMedicationDetailsDrawer } from "../../medications/helpers/details";
+import { useObservationsDetailsDrawer } from "../../observations/helpers/drawer";
 import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
 import { getRelevantContentFromDocumentSearchResult } from "@/components/content/patient-record-search/helpers/relevant-content";
 import {
   AllergyModel,
   ConditionModel,
+  DiagnosticReportModel,
   DocumentModel,
   MedicationStatementModel,
 } from "@/fhir/models";
@@ -27,7 +28,7 @@ export function SearchResultRow(props: ResourceRowProps) {
   const openAllergyDetails = useResourceDetailsDrawer({
     header: (m) => capitalize(m.display),
     details: allergyData,
-    getHistory: useAllergiesHistory,
+    renderChild: allergyHistory,
     getSourceDocument: true,
   });
   const openDocumentDetails = useResourceDetailsDrawer({
@@ -36,6 +37,7 @@ export function SearchResultRow(props: ResourceRowProps) {
     details: documentData,
   });
   const openMedicationDetails = useMedicationDetailsDrawer({});
+  const openDiagnosticReportDetails = useObservationsDetailsDrawer();
 
   switch (resourceType) {
     case "AllergyIntolerance": {
@@ -60,7 +62,7 @@ export function SearchResultRow(props: ResourceRowProps) {
           heading={condition.display}
           label="Condition"
           resource={condition}
-          openDetails={openConditionDetails}
+          openDetails={() => openConditionDetails}
           details={[
             {
               label: "Last Updated",
@@ -126,6 +128,28 @@ export function SearchResultRow(props: ResourceRowProps) {
               value: medication.lastPrescribedDate
                 ? `${medication.lastPrescribedDate} ${medication.lastPrescriber}`
                 : undefined,
+            },
+          ]}
+        />
+      );
+    }
+
+    case "DiagnosticReport": {
+      const diagnosticReport = resource as DiagnosticReportModel;
+      return (
+        <SearchResult
+          heading={diagnosticReport.displayName}
+          label="Diagnostic Report"
+          resource={diagnosticReport}
+          openDetails={openDiagnosticReportDetails}
+          details={[
+            {
+              label: "Date",
+              value: diagnosticReport.effectiveStart,
+            },
+            {
+              label: "",
+              value: diagnosticReport.details,
             },
           ]}
         />

@@ -72,5 +72,6 @@ export * from "@/services/fqs/client";
 export * from "@/fhir/models";
 export * from "@/fhir/medications";
 // Utility
+export * from "@/fhir/action-helper";
 export * from "@/utils/invalidate-queries";
 export { version } from "../package.json";
