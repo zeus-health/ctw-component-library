@@ -1,6 +1,4 @@
 import { ReactNode, useEffect, useState } from "react";
-import { History, HistoryEntries } from "./helpers/history";
-import { Notes } from "./helpers/notes";
 import { useAdditionalResourceActions } from "./use-additional-resource-actions";
 import { DocumentButton } from "../CCDA/document-button";
 import { useCCDAModal } from "../CCDA/modal-ccda";
@@ -13,14 +11,9 @@ import { useCTW } from "@/components/core/providers/use-ctw";
 import { RowActionsProp } from "@/components/core/table/table-rows";
 import { getBinaryId } from "@/fhir/binaries";
 import { DocumentModel } from "@/fhir/models/document";
-import { EncounterModel } from "@/fhir/models/encounter";
 import { FHIRModel } from "@/fhir/models/fhir-model";
 import { searchProvenances } from "@/fhir/provenance";
 import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
-import { sortBy } from "@/utils/nodash";
-import { UseQueryResultBasic } from "@/utils/request";
-
-const HISTORY_PAGE_LIMIT = 20;
 
 export type UseResourceDetailsDrawerProps<T extends fhir4.Resource, M extends FHIRModel<T>> = Pick<
   ResourceDetailsDrawerProps<T, M>,
@@ -28,9 +21,9 @@ export type UseResourceDetailsDrawerProps<T extends fhir4.Resource, M extends FH
   | "subHeader"
   | "getSourceDocument"
   | "details"
-  | "getHistory"
   | "RowActions"
   | "enableDismissAndReadActions"
+  | "renderChild"
 >;
 
 export function useResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>(
@@ -51,7 +44,6 @@ export function useResourceDetailsDrawer<T extends fhir4.Resource, M extends FHI
 type ResourceDetailsDrawerProps<T extends fhir4.Resource, M extends FHIRModel<T>> = {
   className?: string;
   details: (model: M) => DetailsProps["details"];
-  getHistory?: (model: M) => UseQueryResultBasic<HistoryEntries | undefined>;
   getSourceDocument?: boolean;
   header: (model: M) => ReactNode;
   isOpen: boolean;
@@ -60,12 +52,12 @@ type ResourceDetailsDrawerProps<T extends fhir4.Resource, M extends FHIRModel<T>
   RowActions?: RowActionsProp<M>;
   enableDismissAndReadActions?: boolean;
   subHeader?: (model: M) => ReactNode;
+  renderChild?: (model: M) => ReactNode;
 };
 
 function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>({
   className,
   details,
-  getHistory,
   getSourceDocument,
   header,
   isOpen,
@@ -74,13 +66,13 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
   RowActions,
   enableDismissAndReadActions,
   subHeader,
+  renderChild,
 }: ResourceDetailsDrawerProps<T, M>) {
   const openCCDAModal = useCCDAModal();
   const [isLoading, setIsLoading] = useState(false);
   const [binaryId, setBinaryId] = useState<string>();
   const { getRequestContext } = useCTW();
   const fqsProvenances = useFQSFeatureToggle("provenances");
-  const history = getHistory && getHistory(model);
 
   // We optionally look for any associated binary CCDAs
   // if getSourceDocument is true.
@@ -141,21 +133,7 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
               }
             />
           )}
-
-          {history &&
-            (history.isLoading ? (
-              <Loading message="Loading history..." />
-            ) : (
-              <History
-                entries={history.data ?? []}
-                limit={HISTORY_PAGE_LIMIT}
-                resourceTypeTitle={model.resourceTypeTitle}
-              />
-            ))}
-
-          {model instanceof EncounterModel && model.clinicalNotes.length > 0 && (
-            <Notes entries={sortBy(model.clinicalNotes, "title")} />
-          )}
+          {renderChild && renderChild(model)}
         </div>
       </Drawer.Body>
       {actions && (

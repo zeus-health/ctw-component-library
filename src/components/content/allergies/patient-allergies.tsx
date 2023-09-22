@@ -2,6 +2,7 @@ import cx from "classnames";
 import { allergyFilter, defaultAllergyFilters } from "./helpers/filters";
 import { useAllergiesHistory } from "./helpers/history";
 import { allergySortOptions, defaultAllergySort } from "./helpers/sort";
+import { History } from "../resource/helpers/history";
 import { PatientResourceTable } from "../resource/patient-resource-table";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { ResourceTableActions } from "../resource/resource-table-actions";
@@ -19,6 +20,10 @@ export type PatientAllergiesProps = {
   className?: string;
 };
 
+export const allergyHistory = (m: AllergyModel) => (
+  <History getHistory={useAllergiesHistory} model={m} />
+);
+
 function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
   const patientAllergiesQuery = usePatientAllergies();
   const { data, setFilters, setSort } = useFilteredSortedData({
@@ -33,7 +38,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
   const openDetails = useResourceDetailsDrawer({
     header: (m) => capitalize(m.display),
     details: allergyData,
-    getHistory: useAllergiesHistory,
+    renderChild: allergyHistory,
     getSourceDocument: true,
     enableDismissAndReadActions: true,
   });
@@ -58,7 +63,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
           isLoading={patientAllergiesQuery.isLoading}
           data={data}
           columns={patientAllergiesColumns(userBuilderId)}
-          onRowClick={(m) => openDetails(m)}
+          onRowClick={openDetails}
           enableDismissAndReadActions
           emptyMessage={
             <EmptyPatientTable
