@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.67.3
+
+### Patch Changes
+
+- fb673842: Fix relevant content where spans are empty
+
 ## 1.67.2
 
 ### Patch Changes
