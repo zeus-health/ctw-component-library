@@ -134,3 +134,33 @@ async function diagnosticReportCommonQueryFQS(
   );
   return data;
 }
+
+export async function fetchDiagnosticReportsById(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  ids: string[] = []
+) {
+  try {
+    const graphClient = createGraphqlClient(requestContext);
+    const { data } = await fqsRequest<DiagnosticReportGraphqlResponse>(
+      graphClient,
+      diagnosticReportQuery,
+      {
+        upid: patient.UPID,
+        cursor: "",
+        first: 1000,
+        filter: {
+          ids: {
+            anymatch: ids,
+          },
+        },
+        sort: {
+          lastUpdated: "DESC",
+        },
+      }
+    );
+    return data.DiagnosticReportConnection.edges.map((x) => new DiagnosticReportModel(x.node));
+  } catch (e) {
+    throw new Error(`Failed fetching document information for patient: ${e}`);
+  }
+}

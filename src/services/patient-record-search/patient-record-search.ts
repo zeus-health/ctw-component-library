@@ -4,11 +4,13 @@ import { getZusServiceUrl } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { getAllergyIntolerancesById } from "@/fhir/allergies";
+import { fetchDiagnosticReportsById } from "@/fhir/diagnostic-report";
 import { getDocumentsByIdFromFQS } from "@/fhir/document";
 import { getMedicationStatementsByIdFQS } from "@/fhir/medications";
 import {
   AllergyModel,
   ConditionModel,
+  DiagnosticReportModel,
   MedicationStatementModel,
   ObservationModel,
   PatientModel,
@@ -25,7 +27,8 @@ type PatientRecordSearchResourceType =
   | "Condition"
   | "DocumentReference"
   | "MedicationStatement"
-  | "Observation";
+  | "Observation"
+  | "DiagnosticReport";
 
 type ResourceByTypeMapping = Record<
   PatientRecordSearchResourceType,
@@ -67,7 +70,8 @@ export type PatientRecordSearchResult = {
       | ConditionModel
       | DocumentModel
       | MedicationStatementModel
-      | ObservationModel;
+      | ObservationModel
+      | DiagnosticReportModel;
   };
 };
 
@@ -92,6 +96,7 @@ const EMPTY_RESOURCE_BY_TYPE_MAPPING: ResourceByTypeMapping = {
   Condition: [],
   DocumentReference: [],
   MedicationStatement: [],
+  DiagnosticReport: [],
   Observation: [],
 };
 
@@ -103,12 +108,14 @@ class PatientRecordSearch {
     Condition: Record<string, ConditionModel>;
     DocumentReference: Record<string, DocumentModel>;
     MedicationStatement: Record<string, MedicationStatementModel>;
+    DiagnosticReport: Record<string, DiagnosticReportModel>;
     Observation: Record<string, ObservationModel>;
   } = {
     AllergyIntolerance: {},
     Condition: {},
     DocumentReference: {},
     MedicationStatement: {},
+    DiagnosticReport: {},
     Observation: {},
   };
 
@@ -175,12 +182,14 @@ class PatientRecordSearch {
     conditions: ConditionModel[];
     documents: DocumentModel[];
     medications: MedicationStatementModel[];
+    diagnosticReports: DiagnosticReportModel[];
     observations: ObservationModel[];
   }) {
     this.resources.AllergyIntolerance = keyBy(params.allergies, "id");
     this.resources.Condition = keyBy(params.conditions, "id");
     this.resources.DocumentReference = keyBy(params.documents, "id");
     this.resources.MedicationStatement = keyBy(params.medications, "id");
+    this.resources.DiagnosticReport = keyBy(params.diagnosticReports, "id");
     this.resources.Observation = keyBy(params.observations, "id");
   }
 }
@@ -220,6 +229,7 @@ export function usePatientRecordSearch(
             "Condition",
             "DocumentReference",
             "MedicationStatement",
+            "DiagnosticReport",
             // "Observation",
           ],
         });
@@ -247,6 +257,7 @@ export function usePatientRecordSearch(
           Condition: conditionIds,
           DocumentReference: documentIds,
           MedicationStatement: medicationIds,
+          DiagnosticReport: diagnosticReportIds,
           Observation: observationIds,
         } = patientRecordSearchResult.resourceIds;
 
@@ -255,6 +266,10 @@ export function usePatientRecordSearch(
         const documents = await fetchResourcesById(documentIds, getDocumentsByIdFromFQS);
         const medications = await fetchResourcesById(medicationIds, getMedicationStatementsByIdFQS);
         const observations = await fetchResourcesById(observationIds, fetchObservationsById);
+        const diagnosticReports = await fetchResourcesById(
+          diagnosticReportIds,
+          fetchDiagnosticReportsById
+        );
 
         patientRecordSearchResult.setResources({
           allergies,
@@ -262,6 +277,7 @@ export function usePatientRecordSearch(
           documents,
           medications,
           observations,
+          diagnosticReports,
         });
 
         return {

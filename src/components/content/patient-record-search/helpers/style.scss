@@ -26,7 +26,7 @@
     }
 
     .ctw-patient-record-search-result-btn {
-      @apply ctw-mb-0 ctw-mr-1.5 ctw-cursor-pointer ctw-border-0 ctw-bg-transparent ctw-pl-0 ctw-text-left ctw-text-xl ctw-font-semibold;
+      @apply ctw-mb-0 ctw-mr-1.5 ctw-cursor-pointer ctw-border-0 ctw-bg-transparent ctw-pl-0 ctw-text-left ctw-text-lg ctw-font-semibold;
       &:hover {
         @apply ctw-underline;
       }
