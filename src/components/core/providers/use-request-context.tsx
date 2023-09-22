@@ -8,13 +8,7 @@ export function useRequestContext() {
 
   useEffect(() => {
     async function load() {
-      let isMounted = true;
-      await getRequestContext().then((context) => {
-        if (isMounted) setRequestContext(context);
-      });
-      return () => {
-        isMounted = false;
-      };
+      setRequestContext(await getRequestContext());
     }
 
     void load();
