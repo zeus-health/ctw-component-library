@@ -100,7 +100,7 @@ function PatientConditionsAllComponent({
           isLoading={query.isLoading}
           data={data}
           columns={patientConditionsAllColumns(userBuilderId)}
-          onRowClick={() => openDetails}
+          onRowClick={openDetails}
           RowActions={RowActions}
           enableDismissAndReadActions
           emptyMessage={empty}

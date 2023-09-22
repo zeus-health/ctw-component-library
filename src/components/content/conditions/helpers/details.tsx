@@ -16,7 +16,7 @@ export const useConditionDetailsDrawer = ({
 }: {
   RowActions?: RowActionsProp<ConditionModel>;
   enableDismissAndReadActions?: boolean;
-}) => {
+}) =>
   useResourceDetailsDrawer({
     header: (condition: ConditionModel) => condition.display,
     subHeader: (condition: ConditionModel) => condition.ccsChapter,
@@ -41,4 +41,3 @@ export const useConditionDetailsDrawer = ({
     RowActions,
     enableDismissAndReadActions,
   });
-};
