@@ -1,5 +1,15 @@
 # ctw-component-library
 
+## 1.67.2
+
+### Patch Changes
+
+- a17eb193: Fix use patient query by only running it if patientId is provided.
+- f4dab1c5: Code refactoring to make resource drawers more extensible.
+- 71d1bb55: Add diagnostic reports to search results.
+- 34bd51dc: Move search to a tab in the ZAP.
+- 934f9696: Enable semantic and generative AI search results.
+
 ## 1.67.1
 
 ### Patch Changes
