@@ -17,7 +17,7 @@ import { DocumentModel } from "@/fhir/models/document";
 import { fetchObservationsById } from "@/fhir/observations";
 import { LENS_EXTENSION_ID } from "@/fhir/system-urls";
 import { fetchConditionsByIdFQS } from "@/services/conditions";
-import { groupBy, keyBy, mapValues } from "@/utils/nodash";
+import { groupBy, keyBy, mapValues, uniq } from "@/utils/nodash";
 import { QUERY_KEY_AI_SEARCH } from "@/utils/query-keys";
 
 type PatientRecordSearchResourceType =
@@ -186,7 +186,8 @@ class PatientRecordSearch {
 }
 
 export function usePatientRecordSearch(
-  searchTerm: string
+  searchTerm: string,
+  includeAnswer: boolean
 ): UseQueryResult<PatientRecordSearchResults> {
   return useQueryWithPatient(
     QUERY_KEY_AI_SEARCH,
@@ -196,14 +197,24 @@ export function usePatientRecordSearch(
       const fetchResourcesById = async <T>(
         ids: string[],
         fn: (r: CTWRequestContext, p: PatientModel, ids: string[]) => Promise<T[]>
-      ): Promise<T[]> => (ids.length === 0 ? [] : fn(requestContext, patient, ids));
+      ): Promise<T[]> => (ids.length === 0 ? [] : fn(requestContext, patient, uniq(ids)));
 
       if (searchTerm) {
+        const searchOptions = ["keyword"];
+
+        if (includeAnswer) {
+          searchOptions.push("answer");
+        }
+
+        if (searchTerm.split(" ").length > 2) {
+          searchOptions.push("semantic");
+        }
+
         const body = JSON.stringify({
           query: searchTerm,
           upid: patient.UPID,
-          include: ["keyword"], // , "semantic"],
-          n_results: 10,
+          include: searchOptions,
+          n_results: includeAnswer ? 4 : 10, // TODO: This is a temporary hack to be kind to the search API when requesting the generative AI response.
           resource_types: [
             "AllergyIntolerance",
             "Condition",
@@ -257,7 +268,9 @@ export function usePatientRecordSearch(
           id: patientRecordSearchResult.id,
           query: patientRecordSearchResult.queryString,
           response: patientRecordSearchResult.responseString,
-          results: patientRecordSearchResult.filteredResults,
+          results: patientRecordSearchResult.filteredResults.sort((r) =>
+            r.document.reason.search_type.includes("semantic") ? 1 : -1
+          ),
           total: patientRecordSearchResult.filteredResults.length,
         };
       }

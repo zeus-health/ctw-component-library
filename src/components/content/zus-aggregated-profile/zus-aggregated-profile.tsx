@@ -193,10 +193,7 @@ const ZusAggregatedProfileComponent = ({
 
         {/* If Patient Search is open, show it instead of tabs */}
         <RenderIf condition={patientRecordSearchIsOpen}>
-          <PatientRecordSearch
-            hideTitle
-            className="ctw-mt-3 ctw-flex ctw-space-x-5 ctw-border-b ctw-border-divider-light"
-          />
+          <PatientRecordSearch className="ctw-mt-3 ctw-flex ctw-space-x-5 ctw-border-b ctw-border-divider-light" />
         </RenderIf>
 
         {/* Show tabs when Patient Search isn't open */}

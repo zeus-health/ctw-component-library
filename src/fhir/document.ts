@@ -83,7 +83,9 @@ export async function getDocumentsByIdFromFQS(
         cursor: "",
         first: 1000,
         filter: {
-          id: ["in", ids],
+          ids: {
+            anymatch: ids,
+          },
         },
         sort: {
           lastUpdated: "DESC",
