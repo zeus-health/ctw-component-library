@@ -3,10 +3,7 @@ import "./diagnostic-reports.scss";
 import { patientDiagnosticReportsColumns } from "./helpers/columns";
 import { defaultDiagnosticReportFilters, diagnosticReportFilter } from "./helpers/filters";
 import { defaultDiagnosticReportSort, diagnosticReportSortOptions } from "./helpers/sorts";
-import {
-  useObservationsDetailsDrawer,
-  useObservationsDetailsDrawer,
-} from "../observations/helpers/drawer";
+import { useObservationsDetailsDrawer } from "../observations/helpers/drawer";
 import { PatientResourceTable } from "../resource/patient-resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { EmptyPatientTable } from "@/components/core/empty-table";

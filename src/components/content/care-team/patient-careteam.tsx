@@ -6,7 +6,7 @@ import { EmptyPatientTable } from "@/components/core/empty-table";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { Table } from "@/components/core/table/table";
-import { usePatientCareTeam, usePatientCareTeam } from "@/fhir/care-team";
+import { usePatientCareTeam } from "@/fhir/care-team";
 import { CareTeamPractitionerModel } from "@/fhir/models/careteam-practitioner";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 
