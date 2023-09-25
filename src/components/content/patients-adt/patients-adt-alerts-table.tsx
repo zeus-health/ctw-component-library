@@ -13,7 +13,7 @@ import { ResourceTableActions } from "../resource/resource-table-actions";
 import { EmptyTableNoneFound } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Pagination } from "@/components/core/pagination/pagination";
-import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
+import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { SimpleMoreList } from "@/components/core/simple-more-list";
 import { EncounterModel } from "@/fhir/models/encounter";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
@@ -43,49 +43,52 @@ function ADTTableComponent({ className, isLoading = false, data }: ADTTableProps
     records: data,
   });
   const dataFinal = dedupeAndMergeEncounters(data2, "patientsADT");
+  const { trackInteraction } = useAnalytics();
 
   return (
-    <AnalyticsProvider componentName="ADTTable">
-      <div className={cx("ctw-scrollable-pass-through-height", className)}>
-        <ResourceTableActions
-          viewOptions={{
-            onChange: setViewOption,
-            options: viewOptions,
-            defaultView: past30days,
-          }}
-          sortOptions={{
-            defaultSort: defaultEncounterSort,
-            options: encounterSortOptions,
-            onChange: setSort,
-          }}
-          filterOptions={{
-            onChange: setFilters,
-            defaultState: defaultADTFilters,
-            filters: adtFilter(),
-          }}
-        />
-        <ResourceTable
-          data={dataFinal.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)}
-          columns={columns}
-          isLoading={isLoading}
-          emptyMessage={
-            <EmptyTableNoneFound
-              hasZeroFilteredRecords={dataFinal.length === 0}
-              resourceName="encounters"
-            />
-          }
-          onRowClick={openADTDetails}
-          hidePagination
-        >
-          <Pagination
-            currentPage={currentPage}
-            pageSize={PAGE_SIZE}
-            setCurrentPage={setCurrentPage}
-            total={dataFinal.length}
+    <div className={cx("ctw-scrollable-pass-through-height", className)}>
+      <ResourceTableActions
+        viewOptions={{
+          onChange: setViewOption,
+          options: viewOptions,
+          defaultView: past30days,
+        }}
+        sortOptions={{
+          defaultSort: defaultEncounterSort,
+          options: encounterSortOptions,
+          onChange: setSort,
+        }}
+        filterOptions={{
+          onChange: setFilters,
+          defaultState: defaultADTFilters,
+          filters: adtFilter(),
+        }}
+      />
+      <ResourceTable
+        data={dataFinal.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)}
+        columns={columns}
+        isLoading={isLoading}
+        emptyMessage={
+          <EmptyTableNoneFound
+            hasZeroFilteredRecords={dataFinal.length === 0}
+            resourceName="encounters"
+            trackInteraction={trackInteraction}
           />
-        </ResourceTable>
-      </div>
-    </AnalyticsProvider>
+        }
+        onRowClick={(enc) => {
+          trackInteraction("view_adt_details");
+          openADTDetails(enc);
+        }}
+        hidePagination
+      >
+        <Pagination
+          currentPage={currentPage}
+          pageSize={PAGE_SIZE}
+          setCurrentPage={setCurrentPage}
+          total={dataFinal.length}
+        />
+      </ResourceTable>
+    </div>
   );
 }
 
