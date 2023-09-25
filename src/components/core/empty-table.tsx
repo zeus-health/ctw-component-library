@@ -1,6 +1,7 @@
 import { faInbox, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { RefreshIcon } from "./icons/refresh";
+import { useAnalytics } from "./providers/analytics/use-analytics";
 import { usePatient } from "./providers/patient-provider";
 import { Spinner } from "./spinner";
 import { RequestRecordsButton } from "../content/patient-history/request-records-button";
@@ -60,6 +61,9 @@ export function EmptyTableNoneFound({ resourceName, hasZeroFilteredRecords }: Em
   let icon = faInbox;
   let errorText = `No ${resourceName}`;
   let subText = "We didn't find any records for this patient.";
+  const { trackInteraction } = useAnalytics();
+
+  trackInteraction("empty_table");
   if (hasZeroFilteredRecords) {
     icon = faMagnifyingGlass;
     errorText = `No matching ${resourceName} found`;
