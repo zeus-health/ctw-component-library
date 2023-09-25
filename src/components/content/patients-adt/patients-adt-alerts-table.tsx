@@ -79,6 +79,7 @@ function ADTTableComponent({ className, isLoading = false, data }: ADTTableProps
           openADTDetails(enc);
         }}
         hidePagination
+        enableDismissAndReadActions
       >
         <Pagination
           currentPage={currentPage}
