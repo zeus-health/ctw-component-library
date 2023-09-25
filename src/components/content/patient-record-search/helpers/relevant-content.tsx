@@ -4,6 +4,9 @@ type Span = {
 };
 
 export function getRelevantContentFromDocumentSearchResult(text: string, spans: Span[]) {
+  if (spans.length === 0) {
+    return <>{text}</>;
+  }
   const sortedSpans = getNonOverlappingSpans(spans);
   let idx = 0;
   const parts: string[] = [];
