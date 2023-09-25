@@ -16,7 +16,6 @@ import { ResourceTableActions } from "../resource/resource-table-actions";
 import { EmptyPatientTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
-import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { RowActionsProps } from "@/components/core/table/table";
 import { ConditionModel } from "@/fhir/models";
@@ -41,7 +40,6 @@ function PatientConditionsAllComponent({
   const showAddConditionForm = useAddConditionForm();
 
   const { viewOptions, current } = statusView;
-  const { trackInteraction } = useAnalytics();
 
   const { data, setFilters, setSort, viewOption, setViewOption } = useFilteredSortedData({
     defaultSort: defaultConditionSort,
@@ -53,11 +51,7 @@ function PatientConditionsAllComponent({
   const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
 
   const empty = (
-    <EmptyPatientTable
-      hasZeroFilteredRecords={hasZeroFilteredRecords}
-      resourceName="conditions"
-      trackInteraction={trackInteraction}
-    />
+    <EmptyPatientTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="conditions" />
   );
 
   const RowActions = useMemo(

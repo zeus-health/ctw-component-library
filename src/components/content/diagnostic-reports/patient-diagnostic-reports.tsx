@@ -9,7 +9,6 @@ import { ResourceTableActions } from "../resource/resource-table-actions";
 import { EmptyPatientTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
-import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { usePatientAllDiagnosticReports } from "@/fhir/diagnostic-report";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
@@ -30,7 +29,6 @@ function PatientDiagnosticReportsComponent({ className }: PatientDiagnosticRepor
   const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
 
   const openDetails = useObservationsDetailsDrawer();
-  const { trackInteraction } = useAnalytics();
 
   return (
     <AnalyticsProvider componentName="PatientDiagnosticReports">
@@ -60,7 +58,6 @@ function PatientDiagnosticReportsComponent({ className }: PatientDiagnosticRepor
             <EmptyPatientTable
               hasZeroFilteredRecords={hasZeroFilteredRecords}
               resourceName="diagnostics"
-              trackInteraction={trackInteraction}
             />
           }
         />

@@ -18,7 +18,6 @@ import { MedicationStatementModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { useBaseTranslations } from "@/i18n";
-import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 
 export type PatientMedicationsAllProps = {
   className?: string;
@@ -33,7 +32,6 @@ function PatientMedicationsAllComponent({
 }: PatientMedicationsAllProps) {
   const userBuilderId = useUserBuilderId();
   const query = useQueryAllPatientMedications();
-  const { trackInteraction } = useAnalytics();
 
   const { viewOptions, past6Months } =
     getDateRangeView<MedicationStatementModel>("lastActivityDate");
@@ -48,11 +46,7 @@ function PatientMedicationsAllComponent({
   const isEmptyQuery = query.allMedications.length === 0;
   const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
   const empty = (
-    <EmptyPatientTable
-      hasZeroFilteredRecords={hasZeroFilteredRecords}
-      resourceName="medications"
-      trackInteraction={trackInteraction}
-    />
+    <EmptyPatientTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="medications" />
   );
 
   const rowActions = useMemo(

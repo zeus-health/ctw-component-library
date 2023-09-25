@@ -1,7 +1,7 @@
 import { faInbox, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { RefreshIcon } from "./icons/refresh";
-import { Action, TrackingMetadata } from "./providers/analytics/use-analytics";
+import { useAnalytics } from "./providers/analytics/use-analytics";
 import { usePatient } from "./providers/patient-provider";
 import { Spinner } from "./spinner";
 import { RequestRecordsButton } from "../content/patient-history/request-records-button";
@@ -13,7 +13,6 @@ import {
 export type EmptyTableProps = {
   resourceName: string;
   hasZeroFilteredRecords: boolean;
-  trackInteraction: (action: Action, metadata?: TrackingMetadata) => void;
 };
 
 export const EmptyPatientTable = (props: EmptyTableProps) => {
@@ -58,14 +57,12 @@ export const EmptyPatientTable = (props: EmptyTableProps) => {
   return <EmptyTableNoneFound {...props} />;
 };
 
-export function EmptyTableNoneFound({
-  resourceName,
-  hasZeroFilteredRecords,
-  trackInteraction,
-}: EmptyTableProps) {
+export function EmptyTableNoneFound({ resourceName, hasZeroFilteredRecords }: EmptyTableProps) {
   let icon = faInbox;
   let errorText = `No ${resourceName}`;
   let subText = "We didn't find any records for this patient.";
+  const { trackInteraction } = useAnalytics();
+
   trackInteraction("empty_table");
   if (hasZeroFilteredRecords) {
     icon = faMagnifyingGlass;

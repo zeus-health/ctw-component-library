@@ -13,7 +13,6 @@ import {
   ResourceTableActionsProps,
 } from "../../resource/resource-table-actions";
 import { EmptyPatientTable } from "@/components/core/empty-table";
-import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { RowActionsProp } from "@/components/core/table/table-rows";
 import { ConditionModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
@@ -50,7 +49,6 @@ export const PatientConditionsBase = ({
 
   const isEmptyQuery = query.data?.length === 0;
   const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
-  const { trackInteraction } = useAnalytics();
 
   let empty = emptyMessage;
   if (emptyMessage === undefined) {
@@ -58,7 +56,6 @@ export const PatientConditionsBase = ({
       <EmptyPatientTable
         hasZeroFilteredRecords={hasZeroFilteredRecords}
         resourceName="conditions"
-        trackInteraction={trackInteraction}
       />
     );
   }
