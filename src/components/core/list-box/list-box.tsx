@@ -106,7 +106,7 @@ export const ListBox = forwardRef(
                       )}
                     >
                       <span
-                        className={cx("ctw-inline-flex ctw-align-middle", {
+                        className={cx("ctw-inline-flex ctw-whitespace-nowrap ctw-align-middle", {
                           "ctw-font-semibold": selected && !useBasicStyles,
                         })}
                       >
