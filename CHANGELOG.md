@@ -1,5 +1,15 @@
 # ctw-component-library
 
+## 1.68.0
+
+### Minor Changes
+
+- dac8f017: Styled ZAP and Drawer for sub 400px viewports.
+
+### Patch Changes
+
+- ea8ecddb: Add tracking events for the ADT table.
+
 ## 1.67.4
 
 ### Patch Changes
