@@ -6,7 +6,7 @@ import { usePatientHistory } from "../patient-history/use-patient-history";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { Spinner } from "@/components/core/spinner";
-import { RowActionsProps } from "@/components/core/table/table";
+import { RowActionsConfigProp } from "@/components/core/table/table-rows";
 import { ConditionModel } from "@/fhir/models";
 import { useBaseTranslations } from "@/i18n";
 import { usePatientConditionsOutside } from "@/services/conditions";
@@ -28,6 +28,7 @@ const PatientConditionsOutsideComponent = ({
   const hasNoOutsideDataAndHasNeverRequestedPatientHistory =
     patientHistoryQuery.lastRetrievedAt === undefined && query.data.length === 0;
 
+  const rowActions = useRowActions();
   const action = (
     <PatientHistoryAction
       hideRequestRecords={
@@ -44,7 +45,7 @@ const PatientConditionsOutsideComponent = ({
         className={className}
         query={query}
         readOnly={readOnly}
-        RowActions={readOnly ? undefined : RowActions}
+        rowActions={readOnly ? undefined : rowActions}
         isLoading={patientHistoryQuery.isLoading}
       />
     </AnalyticsProvider>
@@ -56,43 +57,40 @@ export const PatientConditionsOutside = withErrorBoundary(
   "PatientConditions"
 );
 
-const RowActions = ({ record, onSuccess }: RowActionsProps<ConditionModel>) => {
+function useRowActions(): (r: ConditionModel) => RowActionsConfigProp<ConditionModel> {
   const { t } = useBaseTranslations();
   const showAddConditionForm = useAddConditionForm();
   const { isLoading, toggleDismiss } = useToggleDismiss(
     QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
     QUERY_KEY_BASIC
   );
-  const archiveLabel = record.isDismissed ? t("resourceTable.restore") : t("resourceTable.dismiss");
 
-  return (
-    <div className="ctw-flex ctw-space-x-2">
-      <button
-        type="button"
-        className="ctw-btn-default"
-        disabled={isLoading}
-        onClick={async () => {
+  return (record: ConditionModel): RowActionsConfigProp<ConditionModel> => {
+    const archiveLabel = record.isDismissed
+      ? t("resourceTable.restore")
+      : t("resourceTable.dismiss");
+    return [
+      {
+        text: archiveLabel,
+        className: "ctw-btn-default",
+        onClick: async () => {
           await toggleDismiss(record);
-          onSuccess?.();
-        }}
-      >
-        {isLoading ? (
-          <div className="ctw-flex">
-            <Spinner className="ctw-mx-4 ctw-align-middle" />
-          </div>
-        ) : (
-          archiveLabel
-        )}
-      </button>
-
-      <button
-        type="button"
-        className="ctw-btn-primary"
-        disabled={isLoading}
-        onClick={() => showAddConditionForm(record)}
-      >
-        {t("resourceTable.add")}
-      </button>
-    </div>
-  );
-};
+        },
+        disabled: isLoading,
+        render() {
+          return (
+            <div className="ctw-flex">
+              {isLoading ? <Spinner className="ctw-mx-4 ctw-align-middle" /> : archiveLabel}
+            </div>
+          );
+        },
+      },
+      {
+        text: t("resourceTable.add"),
+        className: "ctw-btn-primary",
+        disabled: isLoading,
+        onClick: () => showAddConditionForm(record),
+      },
+    ];
+  };
+}

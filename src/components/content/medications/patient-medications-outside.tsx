@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { useAddMedicationForm } from "./helpers/add-new-med-drawer";
 import { medicationFilters } from "./helpers/filters";
 import { PatientMedicationsBase } from "./helpers/patient-medications-base";
@@ -7,7 +6,7 @@ import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
-import { RowActionsProps } from "@/components/core/table/table";
+import { RowActionsConfigProp } from "@/components/core/table/table-rows";
 import { MedicationStatementModel } from "@/fhir/models";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { useBaseTranslations } from "@/i18n";
@@ -28,20 +27,22 @@ const PatientMedicationsOutsideComponent = ({
   onOpenHistoryDrawer,
 }: PatientMedicationsOutsideProps) => {
   const { otherProviderMedications, isLoading } = useQueryAllPatientMedications();
-  const rowActions = useMemo(() => getRowActions({ onAddToRecord }), [onAddToRecord]);
+  const rowActions = useRowActions(onAddToRecord);
   const { viewOptions, past6Months } =
     getDateRangeView<MedicationStatementModel>("lastActivityDate");
 
   return (
-    <PatientMedicationsBase
-      className={className}
-      query={{ data: otherProviderMedications, isLoading }}
-      filters={medicationFilters(otherProviderMedications, true)}
-      rowActions={readOnly ? undefined : rowActions}
-      views={viewOptions}
-      defaultView={past6Months}
-      onOpenHistoryDrawer={onOpenHistoryDrawer}
-    />
+    <AnalyticsProvider componentName="PatientMedicationsOutside">
+      <PatientMedicationsBase
+        className={className}
+        query={{ data: otherProviderMedications, isLoading }}
+        filters={medicationFilters(otherProviderMedications, true)}
+        rowActions={readOnly ? undefined : rowActions}
+        views={viewOptions}
+        defaultView={past6Months}
+        onOpenHistoryDrawer={onOpenHistoryDrawer}
+      />
+    </AnalyticsProvider>
   );
 };
 
@@ -50,18 +51,7 @@ export const PatientMedicationsOutside = withErrorBoundary(
   "PatientMedicationsOutside"
 );
 
-type ExtraRowActionProps = {
-  onAddToRecord?: (record: MedicationStatementModel) => void;
-};
-
-const getRowActions =
-  ({ onAddToRecord }: ExtraRowActionProps) =>
-  (props: RowActionsProps<MedicationStatementModel>) =>
-    <RowActions {...props} onAddToRecord={onAddToRecord} />;
-
-type RowActionsProps2 = RowActionsProps<MedicationStatementModel> & ExtraRowActionProps;
-
-const RowActions = ({ record, onSuccess, onAddToRecord }: RowActionsProps2) => {
+function useRowActions(onAddToRecord?: (record: MedicationStatementModel) => void) {
   const { t } = useBaseTranslations();
   const { trackInteraction } = useAnalytics();
   const showAddMedicationForm = useAddMedicationForm();
@@ -69,47 +59,42 @@ const RowActions = ({ record, onSuccess, onAddToRecord }: RowActionsProps2) => {
     QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
     QUERY_KEY_BASIC
   );
-  const archiveLabel = record.isDismissed ? t("resourceTable.restore") : t("resourceTable.dismiss");
 
-  return (
-    <AnalyticsProvider componentName="PatientMedicationsOutside">
-      <div className="ctw-flex ctw-space-x-2">
-        <button
-          type="button"
-          className="ctw-btn-default"
-          disabled={isLoading}
-          onClick={async () => {
-            await toggleArchive(record);
-            onSuccess?.();
-          }}
-        >
-          {isLoading ? (
+  return (record: MedicationStatementModel): RowActionsConfigProp<MedicationStatementModel> => {
+    const archiveLabel = record.isDismissed
+      ? t("resourceTable.restore")
+      : t("resourceTable.dismiss");
+    return [
+      {
+        text: archiveLabel,
+        className: "ctw-btn-default",
+        disabled: isLoading,
+        onClick: async () => {
+          await toggleArchive(record);
+        },
+        render() {
+          return (
             <div className="ctw-flex">
-              <Spinner className="ctw-mx-4 ctw-align-middle" />
+              {isLoading && <Spinner className="ctw-mx-4 ctw-align-middle" />}
+              {!isLoading && archiveLabel}
             </div>
-          ) : (
-            archiveLabel
-          )}
-        </button>
-
-        <button
-          type="button"
-          className="ctw-btn-primary ctw-ml-1 ctw-capitalize"
-          data-testid="add-to-record"
-          disabled={isLoading}
-          onClick={() => {
-            if (onAddToRecord) {
-              onAddToRecord(record);
-              onSuccess?.();
-            } else {
-              showAddMedicationForm(record);
-            }
-            trackInteraction("add_to_record");
-          }}
-        >
-          {t("resourceTable.add")}
-        </button>
-      </div>
-    </AnalyticsProvider>
-  );
-};
+          );
+        },
+      },
+      {
+        text: t("resourceTable.add"),
+        className: "ctw-btn-primary ctw-ml-1 ctw-capitalize",
+        testId: "add-to-record",
+        disabled: isLoading,
+        onClick: () => {
+          if (onAddToRecord) {
+            onAddToRecord(record);
+          } else {
+            showAddMedicationForm(record);
+          }
+          trackInteraction("add_to_record");
+        },
+      },
+    ];
+  };
+}
