@@ -8,7 +8,7 @@ import { dedupeAndMergeEncounters } from "../encounters/helpers/filters";
 import { defaultEncounterSort, encounterSortOptions } from "../encounters/helpers/sorts";
 import { TableOptionProps } from "../patients/patients-table";
 import { getDateRangeView } from "../resource/helpers/view-date-range";
-import { ResourceTable } from "../resource/resource-table";
+import { PatientResourceTable } from "../resource/patient-resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { EmptyTableNoneFound } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
@@ -64,7 +64,7 @@ function ADTTableComponent({ className, isLoading = false, data }: ADTTableProps
           filters: adtFilter(),
         }}
       />
-      <ResourceTable
+      <PatientResourceTable
         data={dataFinal.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)}
         columns={columns}
         isLoading={isLoading}
@@ -79,6 +79,7 @@ function ADTTableComponent({ className, isLoading = false, data }: ADTTableProps
           openADTDetails(enc);
         }}
         hidePagination
+        enableDismissAndReadActions
       >
         <Pagination
           currentPage={currentPage}
@@ -86,7 +87,7 @@ function ADTTableComponent({ className, isLoading = false, data }: ADTTableProps
           setCurrentPage={setCurrentPage}
           total={dataFinal.length}
         />
-      </ResourceTable>
+      </PatientResourceTable>
     </div>
   );
 }
