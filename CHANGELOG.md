@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.68.2
+
+### Patch Changes
+
+- 3804825f: Adds ability to read and dismiss records.
+
 ## 1.68.1
 
 ### Patch Changes
