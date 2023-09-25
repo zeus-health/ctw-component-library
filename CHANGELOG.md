@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.67.4
+
+### Patch Changes
+
+- 835209e8: Fix issue with condition drawer in search results
+
 ## 1.67.3
 
 ### Patch Changes
