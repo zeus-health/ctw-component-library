@@ -72,7 +72,6 @@ function ADTTableComponent({ className, isLoading = false, data }: ADTTableProps
           <EmptyTableNoneFound
             hasZeroFilteredRecords={dataFinal.length === 0}
             resourceName="encounters"
-            trackInteraction={trackInteraction}
           />
         }
         onRowClick={(enc) => {
