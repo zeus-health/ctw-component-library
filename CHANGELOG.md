@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.68.1
+
+### Patch Changes
+
+- d2946def: Fix whitespace breaking on "add filter" dropdown.
+
 ## 1.68.0
 
 ### Minor Changes
