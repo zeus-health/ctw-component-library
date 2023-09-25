@@ -4,8 +4,9 @@ import { patientCareTeamColumns } from "./helpers/columns";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { EmptyPatientTable } from "@/components/core/empty-table";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
+import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { Table } from "@/components/core/table/table";
-import { usePatientCareTeam } from "@/fhir/care-team";
+import { usePatientCareTeam, usePatientCareTeam } from "@/fhir/care-team";
 import { CareTeamPractitionerModel } from "@/fhir/models/careteam-practitioner";
 import { useBreakpoints } from "@/hooks/use-breakpoints";
 
@@ -24,6 +25,7 @@ export function PatientCareTeam({ className }: PatientCareTeamProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
   const patientCareTeamQuery = usePatientCareTeam();
+  const { trackInteraction } = useAnalytics();
 
   const openDetails = useResourceDetailsDrawer({
     header: (m) => m.practitionerName,
@@ -51,7 +53,11 @@ export function PatientCareTeam({ className }: PatientCareTeamProps) {
           columns={patientCareTeamColumns}
           handleRowClick={openDetails}
           emptyMessage={
-            <EmptyPatientTable hasZeroFilteredRecords={false} resourceName="care team" />
+            <EmptyPatientTable
+              hasZeroFilteredRecords={false}
+              resourceName="care team"
+              trackInteraction={trackInteraction}
+            />
           }
         />
       </div>

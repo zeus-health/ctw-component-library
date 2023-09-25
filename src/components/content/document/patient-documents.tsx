@@ -39,6 +39,7 @@ function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocument
 
   const isEmptyQuery = patientDocumentQuery.data.length === 0;
   const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
+  const { trackInteraction } = useAnalytics();
 
   const openDetails = useResourceDetailsDrawer({
     header: (m) => m.title,
@@ -75,6 +76,7 @@ function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocument
             <EmptyPatientTable
               hasZeroFilteredRecords={hasZeroFilteredRecords}
               resourceName="documents"
+              trackInteraction={trackInteraction}
             />
           }
           columns={patientDocumentColumns}

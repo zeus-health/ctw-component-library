@@ -10,6 +10,7 @@ import { ResourceTableActions } from "../resource/resource-table-actions";
 import { EmptyPatientTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
+import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { usePatientEncounters } from "@/fhir/encounters";
 import { EncounterModel } from "@/fhir/models/encounter";
@@ -33,6 +34,7 @@ function PatientEncountersComponent({ className }: PatientEncountersProps) {
 
   const isEmptyQuery = encountersQuery.data && encountersQuery.data.length === 0;
   const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
+  const { trackInteraction } = useAnalytics();
 
   const openEncounterDetails = usePatientEncounterDetailsDrawer();
 
@@ -65,6 +67,7 @@ function PatientEncountersComponent({ className }: PatientEncountersProps) {
             <EmptyPatientTable
               hasZeroFilteredRecords={hasZeroFilteredRecords}
               resourceName="encounters"
+              trackInteraction={trackInteraction}
             />
           }
           enableDismissAndReadActions

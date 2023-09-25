@@ -15,6 +15,7 @@ import { RowActionsProp } from "@/components/core/table/table-rows";
 import { MedicationStatementModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import "./patient-medications.scss";
+import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 
 export type PatientMedicationsBaseProps = {
   action?: ResourceTableActionsProps<MedicationStatementModel>["action"];
@@ -48,6 +49,7 @@ export const PatientMedicationsBase = ({
 
   const isEmptyQuery = query.data?.length === 0;
   const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
+  const { trackInteraction } = useAnalytics();
 
   function handleRowClick(medication: MedicationStatementModel) {
     onOpenHistoryDrawer?.();
@@ -87,6 +89,7 @@ export const PatientMedicationsBase = ({
           <EmptyPatientTable
             hasZeroFilteredRecords={hasZeroFilteredRecords}
             resourceName="medications"
+            trackInteraction={trackInteraction}
           />
         }
         isLoading={query.isLoading}

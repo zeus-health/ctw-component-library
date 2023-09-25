@@ -9,6 +9,7 @@ import { entryFromArray } from "@/components/core/data-list";
 import { EmptyPatientTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
+import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
 import { usePatientImmunizations } from "@/fhir/immunizations";
 import { ImmunizationModel } from "@/fhir/models/immunization";
@@ -29,6 +30,7 @@ function PatientImmunizationsComponent({ className }: PatientImmunizationsProps)
 
   const isEmptyQuery = patientImmunizationsQuery.data.length === 0;
   const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
+  const { trackInteraction } = useAnalytics();
 
   const openDetails = useResourceDetailsDrawer({
     header: (m) => m.description,
@@ -63,6 +65,7 @@ function PatientImmunizationsComponent({ className }: PatientImmunizationsProps)
             <EmptyPatientTable
               hasZeroFilteredRecords={hasZeroFilteredRecords}
               resourceName="immunizations"
+              trackInteraction={trackInteraction}
             />
           }
         />

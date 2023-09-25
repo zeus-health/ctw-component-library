@@ -10,6 +10,7 @@ import { ResourceTableActions } from "../resource/resource-table-actions";
 import { ResourceTable } from "@/components/content/resource/resource-table";
 import { EmptyPatientTable } from "@/components/core/empty-table";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
+import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { TimelineEventModel } from "@/fhir/models/timeline-event";
 import { useTimelineEvents } from "@/fhir/timeline-event";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
@@ -34,6 +35,7 @@ export function PatientTimeline({ className }: PatientTimelineProps) {
 
   const openEncounterDetails = usePatientEncounterDetailsDrawer();
   const openDiagnosticReportDetails = useObservationsDetailsDrawer();
+  const { trackInteraction } = useAnalytics();
 
   return (
     <AnalyticsProvider componentName="PatientTimeline">
@@ -63,6 +65,7 @@ export function PatientTimeline({ className }: PatientTimelineProps) {
             <EmptyPatientTable
               hasZeroFilteredRecords={hasZeroFilteredRecords}
               resourceName="timeline records"
+              trackInteraction={trackInteraction}
             />
           }
           columns={patientTimelineColumns}
