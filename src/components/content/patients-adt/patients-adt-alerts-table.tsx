@@ -8,7 +8,7 @@ import { dedupeAndMergeEncounters } from "../encounters/helpers/filters";
 import { defaultEncounterSort, encounterSortOptions } from "../encounters/helpers/sorts";
 import { TableOptionProps } from "../patients/patients-table";
 import { getDateRangeView } from "../resource/helpers/view-date-range";
-import { PatientResourceTable } from "../resource/patient-resource-table";
+import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { EmptyTableNoneFound } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
@@ -64,7 +64,7 @@ function ADTTableComponent({ className, isLoading = false, data }: ADTTableProps
           filters: adtFilter(),
         }}
       />
-      <PatientResourceTable
+      <ResourceTable
         data={dataFinal.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)}
         columns={columns}
         isLoading={isLoading}
@@ -87,7 +87,7 @@ function ADTTableComponent({ className, isLoading = false, data }: ADTTableProps
           setCurrentPage={setCurrentPage}
           total={dataFinal.length}
         />
-      </PatientResourceTable>
+      </ResourceTable>
     </div>
   );
 }
