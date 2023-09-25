@@ -1,5 +1,5 @@
 import cx from "classnames";
-import { useMemo } from "react";
+import { useCallback } from "react";
 import { patientConditionsAllColumns } from "./helpers/columns";
 import { useConditionDetailsDrawer } from "./helpers/details";
 import { conditionFilters } from "./helpers/filters";
@@ -17,7 +17,7 @@ import { EmptyPatientTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
-import { RowActionsProps } from "@/components/core/table/table";
+import { RowActionsConfigProp } from "@/components/core/table/table-rows";
 import { ConditionModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { useBaseTranslations } from "@/i18n";
@@ -38,7 +38,7 @@ function PatientConditionsAllComponent({
   const { t } = useBaseTranslations();
   const query = usePatientConditionsAll();
   const showAddConditionForm = useAddConditionForm();
-
+  const rowActions = useRowActions(userBuilderId, onlyAllowAddOutsideConditions);
   const { viewOptions, current } = statusView;
 
   const { data, setFilters, setSort, viewOption, setViewOption } = useFilteredSortedData({
@@ -54,19 +54,20 @@ function PatientConditionsAllComponent({
     <EmptyPatientTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="conditions" />
   );
 
-  const RowActions = useMemo(
-    () => (!readOnly ? getRowActions(userBuilderId, onlyAllowAddOutsideConditions) : undefined),
-    [userBuilderId, readOnly, onlyAllowAddOutsideConditions]
-  );
-
   const openDetails = useConditionDetailsDrawer({
-    RowActions,
+    rowActions,
     enableDismissAndReadActions: true,
   });
 
   const action = !readOnly && !onlyAllowAddOutsideConditions && (
-    <button type="button" className="ctw-btn-primary" onClick={() => showAddConditionForm()}>
-      {t("resource.add", { resource: t("glossary:condition_one") })}
+    <button
+      type="button"
+      className="ctw-btn-primary ctw-flex ctw-w-full ctw-items-center"
+      onClick={() => showAddConditionForm()}
+    >
+      <span className="ctw-w-full">
+        {t("resource.add", { resource: t("glossary:condition_one") })}
+      </span>
     </button>
   );
 
@@ -101,7 +102,7 @@ function PatientConditionsAllComponent({
           data={data}
           columns={patientConditionsAllColumns(userBuilderId)}
           onRowClick={openDetails}
-          RowActions={RowActions}
+          rowActions={readOnly ? undefined : rowActions}
           enableDismissAndReadActions
           emptyMessage={empty}
         />
@@ -115,50 +116,60 @@ export const PatientConditionsAll = withErrorBoundary(
   "PatientConditionsAll"
 );
 
-const getRowActions =
-  (userBuilderId: string, onlyAllowAddOutsideConditions: boolean) =>
-  ({ record }: RowActionsProps<ConditionModel>) => {
-    const { t } = useBaseTranslations();
-    const showAddConditionForm = useAddConditionForm();
-    const showEditConditionForm = useEditConditionForm();
-    const confirmDelete = useConfirmDeleteCondition();
-    const { toggleRead } = useToggleRead();
+function useRowActions(
+  userBuilderId: string,
+  onlyAllowAddOutsideConditions: boolean
+): (r: ConditionModel) => RowActionsConfigProp<ConditionModel> {
+  const { t } = useBaseTranslations();
+  const showAddConditionForm = useAddConditionForm();
+  const showEditConditionForm = useEditConditionForm();
+  const confirmDelete = useConfirmDeleteCondition();
+  const { toggleRead } = useToggleRead();
 
-    if (record.ownedByBuilder(userBuilderId) && !onlyAllowAddOutsideConditions) {
-      return (
-        <div className="ctw-flex ctw-space-x-2">
-          {!record.isDeleted && (
-            <button type="button" className="ctw-btn-default" onClick={() => confirmDelete(record)}>
-              Remove
-            </button>
-          )}
+  return useCallback(
+    (record: ConditionModel): RowActionsConfigProp<ConditionModel> => {
+      if (record.ownedByBuilder(userBuilderId) && !onlyAllowAddOutsideConditions) {
+        return [
+          {
+            className: "ctw-btn-default",
+            onClick: () => confirmDelete(record),
+            text: "Remove",
+          },
+          {
+            className: "ctw-btn-primary",
+            onClick: () => {
+              showEditConditionForm(record);
+            },
+            text: "Edit",
+          },
+        ];
+      }
 
-          <button
-            type="button"
-            className="ctw-btn-primary"
-            onClick={() => showEditConditionForm(record)}
-          >
-            Edit
-          </button>
-        </div>
-      );
-    }
+      if (!record.ownedByBuilder(userBuilderId)) {
+        return [
+          {
+            className: "ctw-btn-primary",
+            text: t("resourceTable.add"),
+            onClick: () => {
+              if (!record.isRead) {
+                void toggleRead(record);
+              }
+              showAddConditionForm(record);
+            },
+          },
+        ];
+      }
 
-    if (!record.ownedByBuilder(userBuilderId)) {
-      return (
-        <button
-          type="button"
-          className="ctw-btn-primary"
-          onClick={() => {
-            if (!record.isRead) {
-              void toggleRead(record);
-            }
-            showAddConditionForm(record);
-          }}
-        >
-          {t("resourceTable.add")}
-        </button>
-      );
-    }
-    return null;
-  };
+      return [];
+    },
+    [
+      confirmDelete,
+      onlyAllowAddOutsideConditions,
+      showAddConditionForm,
+      showEditConditionForm,
+      t,
+      toggleRead,
+      userBuilderId,
+    ]
+  );
+}

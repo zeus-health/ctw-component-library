@@ -7,11 +7,18 @@ export function useRequestContext() {
   const [requestContext, setRequestContext] = useState<CTWRequestContext>();
 
   useEffect(() => {
+    let isMounted = true;
     async function load() {
-      setRequestContext(await getRequestContext());
+      const ctx = await getRequestContext();
+      if (isMounted) {
+        setRequestContext(ctx);
+      }
     }
 
     void load();
+    return () => {
+      isMounted = false;
+    };
   }, [getRequestContext]);
 
   return requestContext;

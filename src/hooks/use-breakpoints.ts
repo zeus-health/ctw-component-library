@@ -1,5 +1,5 @@
 import useResizeObserverTemp from "@react-hook/resize-observer";
-import { RefObject, useState } from "react";
+import { RefObject, useCallback, useState } from "react";
 import { useIsomorphicLayoutEffect } from "./use-isomorphic-layout-effect";
 import { useTheme } from "@/components/core/providers/theme/use-theme";
 import { defaultBreakpoints } from "@/styles/tailwind.theme";
@@ -26,7 +26,7 @@ export function useBreakpoints<T extends HTMLElement>(target: RefObject<T>) {
     mapValues(defaultBreakpoints, () => false)
   );
 
-  function updateBreakpoints() {
+  const updateBreakpoints = useCallback(() => {
     const targetEl = target.current;
     if (!targetEl) return;
     const { width } = targetEl.getBoundingClientRect();
@@ -43,12 +43,12 @@ export function useBreakpoints<T extends HTMLElement>(target: RefObject<T>) {
       breakpointsTmp[key as keyof Breakpoints] = width < value;
     });
     setBreakpoints(breakpointsTmp);
-  }
+  }, [target, theme.breakpoints]);
 
   // Update on initial render (useIsomorphicLayoutEffect) and
   // on any resizes.
-  useIsomorphicLayoutEffect(updateBreakpoints, [target, theme]);
-  useResizeObserver(target, (_) => updateBreakpoints());
+  useIsomorphicLayoutEffect(updateBreakpoints, [target.current, theme]);
+  useResizeObserver(target, updateBreakpoints);
 
   return breakpoints;
 }

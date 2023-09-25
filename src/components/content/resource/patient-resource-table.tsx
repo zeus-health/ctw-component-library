@@ -11,7 +11,7 @@ export const PatientResourceTable = <T extends fhir4.Resource, M extends FHIRMod
   emptyMessage,
   isLoading = false,
   onRowClick,
-  RowActions,
+  rowActions,
   showTableHead,
   enableDismissAndReadActions,
   hidePagination = false,
@@ -46,8 +46,8 @@ export const PatientResourceTable = <T extends fhir4.Resource, M extends FHIRMod
       emptyMessage={emptyMessage2}
       isLoading={isLoading2}
       onRowClick={onRowClick}
-      RowActions={RowActions}
       showTableHead={showTableHead}
+      rowActions={rowActions}
       enableDismissAndReadActions={enableDismissAndReadActions}
       hidePagination={hidePagination}
     />

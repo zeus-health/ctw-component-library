@@ -3,7 +3,7 @@ import { History } from "../../resource/helpers/history";
 import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
 import { entryFromArray } from "@/components/core/data-list";
 import { Loading } from "@/components/core/loading";
-import { RowActionsProp } from "@/components/core/table/table-rows";
+import { RowActionsConfigProp } from "@/components/core/table/table-rows";
 import { useLastPrescriber } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models";
 
@@ -12,10 +12,10 @@ const medicationHistory = (m: MedicationStatementModel) => (
 );
 
 export const useMedicationDetailsDrawer = ({
-  RowActions,
+  rowActions,
   enableDismissAndReadActions,
 }: {
-  RowActions?: RowActionsProp<MedicationStatementModel>;
+  rowActions?: (m: MedicationStatementModel) => RowActionsConfigProp<MedicationStatementModel>;
   enableDismissAndReadActions?: boolean;
 }) =>
   useResourceDetailsDrawer({
@@ -35,7 +35,7 @@ export const useMedicationDetailsDrawer = ({
       { label: "Last Prescribed Date", value: medication.lastPrescribedDate },
       ...entryFromArray("Note", medication.notesDisplay),
     ],
-    RowActions,
+    rowActions,
     enableDismissAndReadActions,
   });
 

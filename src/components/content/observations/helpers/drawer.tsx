@@ -28,7 +28,9 @@ export function ObservationsDrawer({
   isOpen,
   onClose,
 }: ObservationsDrawerProps) {
-  const ResourceActions = useAdditionalResourceActions({ enableDismissAndReadActions: true });
+  const ResourceActions = useAdditionalResourceActions({
+    enableDismissAndReadActions: true,
+  });
 
   return (
     <Drawer className={className} title="Diagnostic Report" isOpen={isOpen} onClose={onClose}>
@@ -38,7 +40,7 @@ export function ObservationsDrawer({
       <Drawer.Footer>
         <div className="ctw-flex ctw-justify-between">
           <Drawer.CloseButton onClose={onClose} label="Close" />
-          {ResourceActions && <ResourceActions record={diagnosticReport} onSuccess={onClose} />}
+          <ResourceActions record={diagnosticReport} onSuccess={onClose} />
         </div>
       </Drawer.Footer>
     </Drawer>
