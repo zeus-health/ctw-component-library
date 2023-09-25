@@ -1,6 +1,7 @@
 import type { TableColumn } from "@/components/core/table/table-helpers";
 import type { PatientModel } from "@/fhir/models/patient";
 import cx from "classnames";
+import { gql } from "graphql-request";
 import { useState } from "react";
 import { adtFilter, defaultADTFilters } from "./filters";
 import { useADTAlertDetailsDrawer } from "./modal-hooks";
@@ -14,25 +15,36 @@ import { EmptyTableNoneFound } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Pagination } from "@/components/core/pagination/pagination";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
+import { useCTW } from "@/components/core/providers/use-ctw";
 import { SimpleMoreList } from "@/components/core/simple-more-list";
 import { EncounterModel } from "@/fhir/models/encounter";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
+import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
+import { EncounterGraphqlResponse } from "@/services/fqs/queries/encounters";
 
 const PAGE_SIZE = 10;
+
+interface PatientEncAndNotesItem {
+  adt_id: string;
+  upid: string;
+  cw_ceq_id: string;
+  binary_id: string;
+}
 
 export type ADTTableProps = {
   className?: cx.Argument;
   isLoading?: boolean;
   data: EncounterModel[];
+  encAndNotesData: PatientEncAndNotesItem[];
 } & TableOptionProps<EncounterModel>;
 
-function ADTTableComponent({ className, isLoading = false, data }: ADTTableProps) {
+function ADTTableComponent({ className, isLoading = false, data, encAndNotesData }: ADTTableProps) {
   const openADTDetails = useADTAlertDetailsDrawer();
-
   const [currentPage, setCurrentPage] = useState(1);
   const { viewOptions, past30days } = getDateRangeView<EncounterModel>("periodStart");
+  const { getRequestContext } = useCTW();
   const {
-    data: data2,
+    data: dataFilteredSorted,
     setViewOption,
     setFilters,
     setSort,
@@ -42,7 +54,29 @@ function ADTTableComponent({ className, isLoading = false, data }: ADTTableProps
     defaultSort: defaultEncounterSort,
     records: data,
   });
-  const dataFinal = dedupeAndMergeEncounters(data2, "patientsADT");
+
+  const dataFilteredSortedDeduped = dedupeAndMergeEncounters(dataFilteredSorted, "patientsADT");
+  dataFilteredSortedDeduped.forEach(async (e: EncounterModel) => {
+    const requestContext = await getRequestContext();
+    const encAndNote = encAndNotesData.find((item) => item.adt_id === e.id);
+    const gqlQuery = gql`
+      query EncounterConnection($cw_ceq_id: String!) {
+        EncounterConnection(filter: { ids: { match: $cw_ceq_id } }) {
+          edges {
+            node {
+              id
+            }
+          }
+        }
+      }
+    `;
+    const graphClient = createGraphqlClient(requestContext);
+    const { data: fqsData } = await fqsRequest<EncounterGraphqlResponse>(graphClient, gqlQuery, {
+      cw_ceq_id: encAndNote?.cw_ceq_id,
+    });
+    const nodes = fqsData.EncounterConnection.edges.map((x) => x.node);
+    e.relatedEncounter = nodes;
+  });
 
   return (
     <AnalyticsProvider componentName="ADTTable">
@@ -65,12 +99,15 @@ function ADTTableComponent({ className, isLoading = false, data }: ADTTableProps
           }}
         />
         <ResourceTable
-          data={dataFinal.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)}
+          data={dataFilteredSortedDeduped.slice(
+            (currentPage - 1) * PAGE_SIZE,
+            currentPage * PAGE_SIZE
+          )}
           columns={columns}
           isLoading={isLoading}
           emptyMessage={
             <EmptyTableNoneFound
-              hasZeroFilteredRecords={dataFinal.length === 0}
+              hasZeroFilteredRecords={dataFilteredSortedDeduped.length === 0}
               resourceName="encounters"
             />
           }
@@ -81,7 +118,7 @@ function ADTTableComponent({ className, isLoading = false, data }: ADTTableProps
             currentPage={currentPage}
             pageSize={PAGE_SIZE}
             setCurrentPage={setCurrentPage}
-            total={dataFinal.length}
+            total={dataFilteredSortedDeduped.length}
           />
         </ResourceTable>
       </div>

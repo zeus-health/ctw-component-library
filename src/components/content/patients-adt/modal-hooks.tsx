@@ -1,6 +1,23 @@
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { EncounterModel } from "@/fhir/models/encounter";
 
+const encountersAndNotes = (adt: EncounterModel) => (
+  <RelatedEncounters encounters={adt.relatedEncounters} />
+);
+
+function RelatedEncounters({ encounters }: { encounters: EncounterModel[] }) {
+  return (
+    <div>
+      <h4 className="text-base font-semibold">Related Encounters</h4>
+      <ul className="list-disc list-inside">
+        {encounters.map((encounter) => (
+          <li key={encounter.id}>{encounter.typeDisplay}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 export function useADTAlertDetailsDrawer() {
   return useResourceDetailsDrawer({
     header: (adt) =>
@@ -11,7 +28,7 @@ export function useADTAlertDetailsDrawer() {
     getSourceDocument: true,
     details: encounterData,
     enableDismissAndReadActions: false, // We haven't gotten to supporting this yet
-    // todo: getHistory
+    onRowClick: (adt) => encountersAndNotes(adt),
   });
 }
 

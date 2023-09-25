@@ -40,12 +40,17 @@ function setupEncounterModels(
 ): EncounterModel[] {
   if (bundle) {
     const basicsMap = getIncludedBasics(bundle);
-    return resources.map(
-      (c) =>
-        new EncounterModel(c, c.ProvenanceList, documents, undefined, basicsMap.get(c.id ?? ""))
-    );
+    return resources.map((c) => {
+      const enc = new EncounterModel(c, c.ProvenanceList, undefined, basicsMap.get(c.id ?? ""));
+      enc.documents = documents;
+      return enc;
+    });
   }
-  return resources.map((c) => new EncounterModel(c, c.ProvenanceList, documents));
+  return resources.map((c) => {
+    const enc = new EncounterModel(c, c.ProvenanceList);
+    enc.documents = documents;
+    return enc;
+  });
 }
 
 function getEncountersFromFQS(documents: DocumentModel[]) {
@@ -90,7 +95,7 @@ export async function getADTPatientsFromODS(requestContext: CTWRequestContext) {
 
     const includedResources = getIncludedResources(bundle);
 
-    const encounterResources = resources.map((e) => new EncounterModel(e, [], [], undefined, []));
+    const encounterResources = resources.map((e) => new EncounterModel(e, [], undefined, []));
 
     const filteredResources = encounterResources.filter((e) => !!e.periodEnd);
 

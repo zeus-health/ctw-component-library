@@ -19,16 +19,23 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
 
   public clinicalNotes: DocumentModel[];
 
+  private provenance: fhir4.Provenance[];
+
+  public relatedEncounterId: string | undefined;
+
   constructor(
     resource: fhir4.Encounter,
     provenance: fhir4.Provenance[],
-    documents: DocumentModel[],
     includedResources?: ResourceMap,
     revIncludes?: Resource[]
   ) {
     super(resource, includedResources, revIncludes);
     this.clinicalNotes = [];
-    const binaryID = getBinaryIDFromProvenace(provenance);
+    this.provenance = provenance;
+  }
+
+  set documents(documents: DocumentModel[]) {
+    const binaryID = getBinaryIDFromProvenace(this.provenance);
     if (binaryID) {
       this.clinicalNotes = documents.filter(
         (d) => d.binaryId === binaryID && isSectionDocument(d) && !isEmptyClinicalNote(d)
