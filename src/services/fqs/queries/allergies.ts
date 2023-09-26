@@ -22,7 +22,7 @@ export const allergyQuery = gql`
   ${fragmentPatient}
   ${fragmentEncounterReference}
   ${fragmentPractitioner}
-  query AllergyIntolerance(
+  query Allergies(
     $upid: ID!
     $cursor: String!
     $sort: AllergyIntoleranceSortParams!

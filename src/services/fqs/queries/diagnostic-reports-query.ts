@@ -35,7 +35,7 @@ export const getDiagnosticReportQuery = (includeObservations: boolean) => gql`
   ${fragmentPatient}
   ${fragmentPractitioner}
   ${includeObservations ? fragmentObservation : ""}
-  query DiagnosticReportConnection(
+  query DiagnosticReports(
     $upid: ID!
     $cursor: String!
     $sort: DiagnosticReportSortParams!

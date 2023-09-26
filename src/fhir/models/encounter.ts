@@ -19,6 +19,8 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
 
   public clinicalNotes: DocumentModel[];
 
+  public provenance: fhir4.Provenance[];
+
   constructor(
     resource: fhir4.Encounter,
     provenance: fhir4.Provenance[],
@@ -27,6 +29,7 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
     revIncludes?: Resource[]
   ) {
     super(resource, includedResources, revIncludes);
+    this.provenance = provenance;
     this.clinicalNotes = [];
     const binaryID = getBinaryIDFromProvenace(provenance);
     if (binaryID) {
