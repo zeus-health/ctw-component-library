@@ -1,8 +1,9 @@
+import { dismissFilter } from "../resource/filters";
 import { FilterChangeEvent, FilterItem } from "@/components/core/filter-bar/filter-bar-types";
 import { EncounterModel } from "@/fhir/models";
 
 export function adtFilter(): FilterItem[] {
-  const filters: FilterItem[] = [];
+  const filters: FilterItem[] = [dismissFilter];
 
   filters.push({
     key: "adtStatus",

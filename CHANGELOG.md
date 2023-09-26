@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.68.3
+
+### Patch Changes
+
+- f5b0236a: Add ability to show dismissed records via filter.
+
 ## 1.68.2
 
 ### Patch Changes
