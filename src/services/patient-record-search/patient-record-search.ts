@@ -4,7 +4,7 @@ import { getZusServiceUrl } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { getAllergyIntolerancesById } from "@/fhir/allergies";
-import { fetchDiagnosticReportsById } from "@/fhir/diagnostic-report";
+import { fetchDiagnosticReportsFromFQSById } from "@/fhir/diagnostic-report";
 import { getDocumentsByIdFromFQS } from "@/fhir/document";
 import { getMedicationStatementsByIdFQS } from "@/fhir/medications";
 import {
@@ -268,7 +268,7 @@ export function usePatientRecordSearch(
         const observations = await fetchResourcesById(observationIds, fetchObservationsById);
         const diagnosticReports = await fetchResourcesById(
           diagnosticReportIds,
-          fetchDiagnosticReportsById
+          fetchDiagnosticReportsFromFQSById
         );
 
         patientRecordSearchResult.setResources({

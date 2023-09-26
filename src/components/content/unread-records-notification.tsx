@@ -6,7 +6,7 @@ import {
 import { useUserBuilderId } from "../core/providers/user-builder-id";
 import { UnreadNotificationIcon } from "../core/unread-notification-icon";
 import { usePatientAllergies } from "@/fhir/allergies";
-import { usePatientAllDiagnosticReports } from "@/fhir/diagnostic-report";
+import { usePatientDiagnosticReports } from "@/fhir/diagnostic-report";
 import { usePatientTopLevelDocuments } from "@/fhir/document";
 import { usePatientImmunizations } from "@/fhir/immunizations";
 import { FHIRModel } from "@/fhir/models/fhir-model";
@@ -27,7 +27,7 @@ export const UnreadRecordsNotification = ({
   const userBuilderId = useUserBuilderId();
   const allergiesQuery = usePatientAllergies();
   const conditionsQuery = usePatientConditionsAll();
-  const diagnosticReportsQuery = usePatientAllDiagnosticReports();
+  const diagnosticReportsQuery = usePatientDiagnosticReports(20);
   const documentsQuery = usePatientTopLevelDocuments();
   const immunizationsQuery = usePatientImmunizations();
   const medicationsQuery = useQueryAllPatientMedications();

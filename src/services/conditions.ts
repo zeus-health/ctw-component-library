@@ -12,7 +12,7 @@ import {
 import { getLensBuilderId } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
-import { useBasic } from "@/fhir/basic";
+import { usePatientBasicResources } from "@/fhir/basic";
 import { ConditionModel } from "@/fhir/models/condition";
 import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
@@ -42,13 +42,12 @@ function usePatientSummaryConditions() {
 }
 
 export function usePatientConditionsOutside() {
-  const fqs = useFQSFeatureToggle("conditions");
   const [conditions, setConditions] = useState<ConditionModel[]>([]);
   const builderConditionsQuery = usePatientBuilderConditions();
   const summaryConditionsQuery = usePatientSummaryConditions();
 
   // This query is a noop when FQS is disabled and will just return an empty list of basic resources.
-  const basicQuery = useBasic(fqs);
+  const basicQuery = usePatientBasicResources();
 
   useEffect(() => {
     const builderConditions = builderConditionsQuery.data ?? [];
@@ -73,10 +72,7 @@ export function usePatientConditionsOutside() {
   const isError =
     builderConditionsQuery.isError || summaryConditionsQuery.isError || basicQuery.isError;
   const isFetching =
-    builderConditionsQuery.isFetching ||
-    summaryConditionsQuery.isFetching ||
-    basicQuery.isFetching ||
-    !fqs.ready;
+    builderConditionsQuery.isFetching || summaryConditionsQuery.isFetching || basicQuery.isFetching;
 
   return {
     isLoading,
@@ -93,7 +89,7 @@ export function usePatientConditionsAll() {
   const summaryConditionsQuery = usePatientSummaryConditions();
 
   // This query is a noop when FQS is disabled and will just return an empty list of basic resources.
-  const basicQuery = useBasic(fqs);
+  const basicQuery = usePatientBasicResources();
 
   useEffect(() => {
     const builderConditions = builderConditionsQuery.data ?? [];

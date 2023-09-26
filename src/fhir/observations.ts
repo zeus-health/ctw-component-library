@@ -2,29 +2,25 @@ import { ObservationModel, PatientModel } from "./models";
 import { SYSTEM_LOINC } from "./system-urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
-import { useTrendingLabsFeatureToggle } from "@/hooks/use-feature-toggle";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import { ObservationGraphqlResponse, observationQuery } from "@/services/fqs/queries/observations";
 import { QUERY_KEY_PATIENT_OBSERVATIONS } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 // Returns observation models for the patient that represent trend data (matching loincCodes).
-export function usePatientObservationsTrendData(loincCodes: string[]) {
-  const trendingLabs = useTrendingLabsFeatureToggle();
-
+export function usePatientObservations(loincCodes: string[]) {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_OBSERVATIONS,
-    [trendingLabs.enabled, loincCodes],
+    [loincCodes],
     async (requestContext, patient) =>
-      // Don't fetching observations if this patient was created before 07/19/2023.
+      // IS THIS STILL NEEDED?
+      // Don't fetch observations if this patient was created before 07/19/2023.
       // This is a temporary work around until FQS backfills observations for all patients.
       // See https://zeushealth.atlassian.net/browse/CDEV-296
-      trendingLabs.enabled && patient.createdAt && patient.createdAt >= "2023-07-19"
-        ? withTimerMetric(fetchObservationsTrendData(loincCodes), "req.timing.all_observations")(
-            requestContext,
-            patient
-          )
-        : []
+      withTimerMetric(fetchObservationsTrendData(loincCodes), "req.timing.all_observations")(
+        requestContext,
+        patient
+      )
   );
 }
 
