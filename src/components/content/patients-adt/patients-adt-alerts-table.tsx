@@ -35,7 +35,7 @@ export type ADTTableProps = {
   className?: cx.Argument;
   isLoading?: boolean;
   data: EncounterModel[];
-  encAndNotesData: PatientEncAndNotesItem[];
+  encAndNotesData?: PatientEncAndNotesItem[];
 } & TableOptionProps<EncounterModel>;
 
 function ADTTableComponent({ className, isLoading = false, data, encAndNotesData }: ADTTableProps) {
@@ -56,27 +56,30 @@ function ADTTableComponent({ className, isLoading = false, data, encAndNotesData
   });
 
   const dataFilteredSortedDeduped = dedupeAndMergeEncounters(dataFilteredSorted, "patientsADT");
-  dataFilteredSortedDeduped.forEach(async (e: EncounterModel) => {
-    const requestContext = await getRequestContext();
-    const encAndNote = encAndNotesData.find((item) => item.adt_id === e.id);
-    const gqlQuery = gql`
-      query EncounterConnection($cw_ceq_id: String!) {
-        EncounterConnection(filter: { ids: { match: $cw_ceq_id } }) {
-          edges {
-            node {
-              id
+  if (encAndNotesData) {
+    dataFilteredSortedDeduped.forEach(async (e: EncounterModel) => {
+      const requestContext = await getRequestContext();
+      const encAndNote = encAndNotesData.find((item) => item.adt_id === e.id);
+      const gqlQuery = gql`
+        query EncounterConnection($cw_ceq_id: String!) {
+          EncounterConnection(filter: { ids: { match: $cw_ceq_id } }) {
+            edges {
+              node {
+                id
+              }
             }
           }
         }
-      }
-    `;
-    const graphClient = createGraphqlClient(requestContext);
-    const { data: fqsData } = await fqsRequest<EncounterGraphqlResponse>(graphClient, gqlQuery, {
-      cw_ceq_id: encAndNote?.cw_ceq_id,
+      `;
+      const graphClient = createGraphqlClient(requestContext);
+      const { data: fqsData } = await fqsRequest<EncounterGraphqlResponse>(graphClient, gqlQuery, {
+        cw_ceq_id: encAndNote?.cw_ceq_id,
+      });
+      const nodes = fqsData.EncounterConnection.edges.map((x) => x.node);
+      const node = nodes[0];
+      e.relatedEncounter = new EncounterModel(node, node.ProvenanceList);
     });
-    const nodes = fqsData.EncounterConnection.edges.map((x) => x.node);
-    e.relatedEncounter = nodes;
-  });
+  }
 
   return (
     <AnalyticsProvider componentName="ADTTable">

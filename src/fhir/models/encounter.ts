@@ -21,7 +21,7 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
 
   private provenance: fhir4.Provenance[];
 
-  public relatedEncounterId: string | undefined;
+  public relatedEncounter: EncounterModel | undefined;
 
   constructor(
     resource: fhir4.Encounter,

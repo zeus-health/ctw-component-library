@@ -2,10 +2,13 @@ import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { EncounterModel } from "@/fhir/models/encounter";
 
 const encountersAndNotes = (adt: EncounterModel) => (
-  <RelatedEncounters encounters={adt.relatedEncounters} />
+  <RelatedEncounters encounters={adt.relatedEncounter ? [adt.relatedEncounter] : []} />
 );
 
 function RelatedEncounters({ encounters }: { encounters: EncounterModel[] }) {
+  if (encounters.length === 0) {
+    return null;
+  }
   return (
     <div>
       <h4 className="text-base font-semibold">Related Encounters</h4>
@@ -28,7 +31,7 @@ export function useADTAlertDetailsDrawer() {
     getSourceDocument: true,
     details: encounterData,
     enableDismissAndReadActions: false, // We haven't gotten to supporting this yet
-    onRowClick: (adt) => encountersAndNotes(adt),
+    renderChild: encountersAndNotes,
   });
 }
 
