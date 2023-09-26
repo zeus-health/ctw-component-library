@@ -13,10 +13,6 @@ export function usePatientObservations(loincCodes: string[]) {
     QUERY_KEY_PATIENT_OBSERVATIONS,
     [loincCodes],
     async (requestContext, patient) =>
-      // IS THIS STILL NEEDED?
-      // Don't fetch observations if this patient was created before 07/19/2023.
-      // This is a temporary work around until FQS backfills observations for all patients.
-      // See https://zeushealth.atlassian.net/browse/CDEV-296
       withTimerMetric(fetchObservationsTrendData(loincCodes), "req.timing.all_observations")(
         requestContext,
         patient
