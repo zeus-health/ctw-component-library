@@ -6,7 +6,7 @@ import { SortDir } from "@/utils/sort";
 
 // Tracked events indicate the effect the user initiated.
 // They don't indicate details like patient, overarching component, or cause, which belong in metadata.
-type Action =
+export type Action =
   // App-level
   | "logout"
   | "toggle_ai_search"
@@ -38,11 +38,14 @@ type Action =
   | "change_filter"
   | "sort"
   | "open_tab"
+  | "empty_table"
   // Records
   | "toggle_record_archive"
   | "toggle_record_read"
   | "click_row"
-  | "change_page";
+  | "change_page"
+  // ADT-table
+  | "view_adt_details";
 
 // Properties to include in metadata if applicable,
 // beyond the default of component and patient.

@@ -32,6 +32,7 @@ export type DropdownMenuProps = {
   customOptionRender?: (optionsItem: OptionsItem) => JSX.Element;
   pinnedActions?: MenuItem[];
   isOpen?: boolean;
+  container?: HTMLDivElement | null;
 };
 
 export function DropdownMenuAction({
@@ -63,7 +64,7 @@ export function DropdownMenuAction({
             // would fire twice, once for the mousedown and
             // again for focus on the button being clicked.
             onFocusOutside={(event) => event.preventDefault()}
-            className="ctw-dropdown-action-menu"
+            className="ctw-dropdown-action-menu ctw-bg-bg-white"
             collisionPadding={10}
           >
             {items.map((menuItem) => (

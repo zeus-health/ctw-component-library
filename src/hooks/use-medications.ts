@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { useFQSFeatureToggle } from "./use-feature-toggle";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
-import { useBasic } from "@/fhir/basic";
+import { usePatientBasicResources } from "@/fhir/basic";
 import {
   getBuilderMedicationsFQS,
   getSummaryMedicationsFQS,
@@ -37,7 +36,6 @@ export function usePatientSummaryMedications() {
  * useful when creating content such as the <PatientMedications /> component.
  */
 export function useQueryAllPatientMedications() {
-  const fqs = useFQSFeatureToggle("medications");
   const [expandedBuilderMedications, setExpandedBuilderMedications] = useState<
     MedicationStatementModel[]
   >([]);
@@ -50,7 +48,7 @@ export function useQueryAllPatientMedications() {
   const builderMedicationsQuery = usePatientBuilderMedications();
 
   // This query is a noop when FQS is disabled and will just return an empty list of basic resources.
-  const basicQuery = useBasic(fqs);
+  const basicQuery = usePatientBasicResources();
 
   useEffect(() => {
     const builderMedications = builderMedicationsQuery.data ?? [];
@@ -82,8 +80,7 @@ export function useQueryAllPatientMedications() {
   const isFetching =
     builderMedicationsQuery.isFetching ||
     summaryMedicationsQuery.isFetching ||
-    basicQuery.isFetching ||
-    !fqs.ready;
+    basicQuery.isFetching;
 
   return {
     isLoading,

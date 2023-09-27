@@ -1,127 +1,132 @@
+import { useEffect, useState } from "react";
 import { useIncludeBasics } from "./basic";
-import { LOINC_ANALYTES, ObservationModel } from "./models/observation";
-import { usePatientObservationsTrendData } from "./observations";
-import { SYSTEM_ZUS_THIRD_PARTY } from "./system-urls";
-import { applyDiagnosticReportFilters } from "@/components/content/diagnostic-reports/helpers/diagnostic-report-query-filters";
+import { LOINC_ANALYTES } from "./models/observation";
+import { usePatientObservations } from "./observations";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { DiagnosticReportModel, PatientModel } from "@/fhir/models";
-import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
-import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
+import { createGraphqlClient, fqsRequest, MAX_OBJECTS_PER_REQUEST } from "@/services/fqs/client";
 import {
   DiagnosticReportGraphqlResponse,
-  diagnosticReportQuery,
+  getDiagnosticReportQuery,
 } from "@/services/fqs/queries/diagnostic-reports-query";
-import { keys } from "@/utils/nodash";
-import {
-  QUERY_KEY_OTHER_PROVIDER_DIAGNOSTIC_REPORTS,
-  QUERY_KEY_PATIENT_DIAGNOSTIC_REPORTS,
-} from "@/utils/query-keys";
+import { isEqual, keys, uniqWith } from "@/utils/nodash";
+import { QUERY_KEY_PATIENT_DIAGNOSTIC_REPORTS } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
-type SearchType = "builder" | "all";
-
-export function usePatientBuilderDiagnosticReports() {
-  const { data } = usePatientObservationsTrendData(keys(LOINC_ANALYTES));
-  return useQueryWithPatient(
-    QUERY_KEY_PATIENT_DIAGNOSTIC_REPORTS,
-    [data?.map((o) => o.id)], // Only use the IDs in our key (fixes issue with ciruclar references).
-    withTimerMetric(
-      diagnosticReportsFetcherFQS("builder", data ?? []),
-      "req.timing.builder_diagnostic_reports"
-    )
-  );
-}
-
-export function usePatientAllDiagnosticReports() {
-  const fqs = useFQSFeatureToggle("diagnosticReports");
-  const { data } = usePatientObservationsTrendData(keys(LOINC_ANALYTES));
-
+// Gets diagnostic reports for the patient with an option to include observations, though be aware that
+// including observations increases query time.
+export function usePatientDiagnosticReports(
+  limit = MAX_OBJECTS_PER_REQUEST,
+  includeObservations = false
+) {
   const query = useQueryWithPatient(
-    QUERY_KEY_OTHER_PROVIDER_DIAGNOSTIC_REPORTS,
-    [data?.map((o) => o.id)], // Only use the IDs in our key (fixes issue with ciruclar references).
+    QUERY_KEY_PATIENT_DIAGNOSTIC_REPORTS,
+    [limit, includeObservations], // Only use the IDs in our key (fixes issue with ciruclar references).
     withTimerMetric(
-      diagnosticReportsFetcherFQS("all", data ?? []),
-      "req.timing.all_diagnostic_reports"
+      getDiagnosticReports(limit, includeObservations),
+      "req.timing.diagnostic_reports"
     )
   );
 
-  return useIncludeBasics(query, fqs);
+  return useIncludeBasics(query);
 }
 
-function diagnosticReportsFetcherFQS(searchType: SearchType, trendData: ObservationModel[]) {
-  const fetchFunction =
-    searchType === "builder" ? diagnosticReportBuilderQueryFQS : diagnosticReportCommonQueryFQS;
+// Gets diagnostic reports for the patient with trending data for each observation in the diagnostic report.
+// Each observation in the trend also includes a link back to its parent diagnostic report.
+// This is an expensive operation that consumes a lot of memory!
+export function usePatientDiagnosticReportsWithTrendData(limit = MAX_OBJECTS_PER_REQUEST) {
+  const observationsQuery = usePatientObservations(keys(LOINC_ANALYTES));
+  const diagnosticReportsQuery = usePatientDiagnosticReports(limit, true);
+  const [diagnosticReportsWithTrends, setDiagnosticReportsWithTrends] = useState<
+    DiagnosticReportModel[]
+  >([]);
+
+  useEffect(() => {
+    const observations = observationsQuery.data ?? [];
+    const diagnosticReports = diagnosticReportsQuery.data;
+
+    const valuesToDedupeOn = (dr: DiagnosticReportModel) => [dr.displayName, dr.effectiveStart];
+    const uniqueDiagnosticReports = uniqWith(diagnosticReports, (a, b) =>
+      isEqual(valuesToDedupeOn(a), valuesToDedupeOn(b))
+    );
+
+    const observationsWithDiagnosticReportBackLink = observations.map((o) => {
+      const observation = o;
+      const diagnosticReport = uniqueDiagnosticReports.find((dr) =>
+        dr.results.some((r) => r.reference === `Observation/${observation.id}`)
+      );
+      if (diagnosticReport) {
+        // TODO - this seems like overkill, why do we need a full model here?
+        observation.diagnosticReport = new DiagnosticReportModel(
+          diagnosticReport.resource,
+          undefined,
+          undefined,
+          observations
+        );
+      }
+      return observation;
+    });
+
+    setDiagnosticReportsWithTrends(
+      uniqueDiagnosticReports.map(
+        (dr) =>
+          new DiagnosticReportModel(
+            dr.resource,
+            undefined,
+            undefined,
+            observationsWithDiagnosticReportBackLink
+          )
+      )
+    );
+  }, [observationsQuery.data, diagnosticReportsQuery.data]);
+
+  const isLoading = observationsQuery.isLoading || diagnosticReportsQuery.isLoading;
+  const isError = observationsQuery.isError || diagnosticReportsQuery.isError;
+  const isFetching = observationsQuery.isFetching || diagnosticReportsQuery.isFetching;
+
+  return {
+    isLoading,
+    isError,
+    isFetching,
+    data: diagnosticReportsWithTrends,
+  };
+}
+
+function getDiagnosticReports(limit: number, includeObservations: boolean) {
   return async (requestContext: CTWRequestContext, patient: PatientModel) => {
     try {
-      const data = await fetchFunction(requestContext, patient);
-      if (searchType === "all" && data.DiagnosticReportConnection.edges.length === 0) {
-        Telemetry.countMetric(`req.count.${searchType}_diagnostic_reports.none`, 1);
-      }
-      const result = data.DiagnosticReportConnection.edges.map((x) => x.node);
-
-      Telemetry.histogramMetric(`req.count.${searchType}_diagnostic_reports`, result.length);
-
-      // Enrich the supplied trend data with its parent diagnostic report.
-      const enrichedTrendData = trendData.map((o) => {
-        const observation = o;
-        const diagnosticReport = result.find((dr) =>
-          dr.result?.some((r) => r.reference === `Observation/${observation.id}`)
-        );
-        if (diagnosticReport) {
-          observation.diagnosticReport = new DiagnosticReportModel(
-            diagnosticReport,
-            undefined,
-            undefined,
-            trendData
-          );
-        }
-        return observation;
-      });
-
-      return applyDiagnosticReportFilters(result, undefined, enrichedTrendData);
-    } catch (e) {
-      throw Telemetry.logError(
-        e as Error,
-        `Failed fetching ${searchType} DiagnosticReport resources (FQS)`
+      const data = await fetchDiagnosticReportsFromFQS(
+        requestContext,
+        patient,
+        limit,
+        includeObservations
       );
+      if (data.DiagnosticReportConnection.edges.length === 0) {
+        Telemetry.countMetric(`req.count.diagnostic_reports.none`, 1);
+      }
+      const result = data.DiagnosticReportConnection.edges.map(
+        (x) => new DiagnosticReportModel(x.node)
+      );
+
+      Telemetry.histogramMetric(`req.count.diagnostic_reports`, result.length);
+      return result;
+    } catch (e) {
+      throw Telemetry.logError(e as Error, `Failed fetching DiagnosticReport resources`);
     }
   };
 }
 
-async function diagnosticReportBuilderQueryFQS(
+async function fetchDiagnosticReportsFromFQS(
   requestContext: CTWRequestContext,
-  patient: PatientModel
+  patient: PatientModel,
+  limit: number,
+  includeObservations: boolean
 ) {
   const graphClient = createGraphqlClient(requestContext);
   const { data } = await fqsRequest<DiagnosticReportGraphqlResponse>(
     graphClient,
-    diagnosticReportQuery,
-    {
-      upid: patient.UPID,
-      cursor: "",
-      sort: {
-        lastUpdated: "DESC",
-      },
-      filter: {
-        tag: {
-          nonematch: [SYSTEM_ZUS_THIRD_PARTY],
-        },
-      },
-      first: 1000,
-    }
-  );
-  return data;
-}
-
-async function diagnosticReportCommonQueryFQS(
-  requestContext: CTWRequestContext,
-  patient: PatientModel
-) {
-  const graphClient = createGraphqlClient(requestContext);
-  const { data } = await fqsRequest<DiagnosticReportGraphqlResponse>(
-    graphClient,
-    diagnosticReportQuery,
+    getDiagnosticReportQuery(includeObservations),
     {
       upid: patient.UPID,
       cursor: "",
@@ -129,8 +134,38 @@ async function diagnosticReportCommonQueryFQS(
         lastUpdated: "DESC",
       },
       filter: {},
-      first: 1000,
+      first: limit,
     }
   );
   return data;
+}
+
+export async function fetchDiagnosticReportsFromFQSById(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  ids: string[] = []
+) {
+  try {
+    const graphClient = createGraphqlClient(requestContext);
+    const { data } = await fqsRequest<DiagnosticReportGraphqlResponse>(
+      graphClient,
+      getDiagnosticReportQuery(false),
+      {
+        upid: patient.UPID,
+        cursor: "",
+        first: 1000,
+        filter: {
+          ids: {
+            anymatch: ids,
+          },
+        },
+        sort: {
+          lastUpdated: "DESC",
+        },
+      }
+    );
+    return data.DiagnosticReportConnection.edges.map((x) => new DiagnosticReportModel(x.node));
+  } catch (e) {
+    throw new Error(`Failed fetching document information for patient: ${e}`);
+  }
 }

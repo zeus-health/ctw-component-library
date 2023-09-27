@@ -2,7 +2,6 @@ import { DiagnosticReport } from "fhir/r4";
 import { gql } from "graphql-request";
 import {
   fragmentCoding,
-  fragmentMedicationRequest,
   fragmentObservation,
   fragmentPatient,
   fragmentPractitioner,
@@ -18,12 +17,24 @@ export interface DiagnosticReportGraphqlResponse {
   DiagnosticReportConnection: DiagnosticReportConnection;
 }
 
-export const diagnosticReportQuery = gql`
+const observationsProperties = gql`result {
+  reference
+  display
+  resource {
+    ...Observation
+  }
+}
+contained {
+  resource {
+    ...Observation
+  }
+}`;
+
+export const getDiagnosticReportQuery = (includeObservations: boolean) => gql`
   ${fragmentCoding}
   ${fragmentPatient}
   ${fragmentPractitioner}
-  ${fragmentMedicationRequest}
-  ${fragmentObservation}
+  ${includeObservations ? fragmentObservation : ""}
   query DiagnosticReportConnection(
     $upid: ID!
     $cursor: String!
@@ -54,12 +65,6 @@ export const diagnosticReportQuery = gql`
           extension {
             url
             valueString
-          }
-          basedOn {
-            reference
-            resource {
-              ...MedicationRequest
-            }
           }
           status
           category {
@@ -93,18 +98,7 @@ export const diagnosticReportQuery = gql`
               ...Practitioner
             }
           }
-          result {
-            reference
-            display
-            resource {
-              ...Observation
-            }
-          }
-          contained {
-            resource {
-              ...Observation
-            }
-          }
+          ${includeObservations ? observationsProperties : ""}
         }
       }
     }

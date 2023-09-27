@@ -1,5 +1,61 @@
 # ctw-component-library
 
+## 1.68.3
+
+### Patch Changes
+
+- f5b0236a: Add ability to show dismissed records via filter.
+
+## 1.68.2
+
+### Patch Changes
+
+- 3804825f: Adds ability to read and dismiss records.
+
+## 1.68.1
+
+### Patch Changes
+
+- d2946def: Fix whitespace breaking on "add filter" dropdown.
+
+## 1.68.0
+
+### Minor Changes
+
+- dac8f017: Styled ZAP and Drawer for sub 400px viewports.
+
+### Patch Changes
+
+- ea8ecddb: Add tracking events for the ADT table.
+
+## 1.67.4
+
+### Patch Changes
+
+- 835209e8: Fix issue with condition drawer in search results
+
+## 1.67.3
+
+### Patch Changes
+
+- fb673842: Fix relevant content where spans are empty
+
+## 1.67.2
+
+### Patch Changes
+
+- a17eb193: Fix use patient query by only running it if patientId is provided.
+- f4dab1c5: Code refactoring to make resource drawers more extensible.
+- 71d1bb55: Add diagnostic reports to search results.
+- 34bd51dc: Move search to a tab in the ZAP.
+- 934f9696: Enable semantic and generative AI search results.
+
+## 1.67.1
+
+### Patch Changes
+
+- e5f85d1e: Export fhir action helper.
+
 ## 1.67.0
 
 ### Minor Changes

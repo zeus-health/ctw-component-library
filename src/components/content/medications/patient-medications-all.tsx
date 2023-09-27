@@ -1,5 +1,4 @@
 import cx from "classnames";
-import { useMemo } from "react";
 import { useAddMedicationForm } from "./helpers/add-new-med-drawer";
 import { patientMedicationsAllColumns } from "./helpers/columns";
 import { useMedicationDetailsDrawer } from "./helpers/details";
@@ -13,7 +12,7 @@ import { EmptyPatientTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
-import { RowActionsProps } from "@/components/core/table/table";
+import { RowActionsConfigProp } from "@/components/core/table/table-rows";
 import { MedicationStatementModel } from "@/fhir/models";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
@@ -49,13 +48,10 @@ function PatientMedicationsAllComponent({
     <EmptyPatientTable hasZeroFilteredRecords={hasZeroFilteredRecords} resourceName="medications" />
   );
 
-  const rowActions = useMemo(
-    () => (!readOnly ? getRowActions(userBuilderId, onAddToRecord) : undefined),
-    [userBuilderId, readOnly, onAddToRecord]
-  );
+  const rowActions = useRowActions(onAddToRecord);
 
   const openDetails = useMedicationDetailsDrawer({
-    RowActions: rowActions,
+    rowActions,
     enableDismissAndReadActions: true,
   });
 
@@ -85,7 +81,7 @@ function PatientMedicationsAllComponent({
           data={data}
           columns={patientMedicationsAllColumns(userBuilderId)}
           onRowClick={openDetails}
-          RowActions={rowActions}
+          rowActions={readOnly ? undefined : rowActions}
           enableDismissAndReadActions
           emptyMessage={empty}
         />
@@ -99,34 +95,30 @@ export const PatientMedicationsAll = withErrorBoundary(
   "PatientMedicationsAll"
 );
 
-const getRowActions =
-  (userBuilderId: string, onAddToRecord?: (record: MedicationStatementModel) => void) =>
-  ({ record, onSuccess }: RowActionsProps<MedicationStatementModel>) => {
-    const { t } = useBaseTranslations();
-    const showAddMedicationForm = useAddMedicationForm();
-    const { toggleRead } = useToggleRead();
+function useRowActions(onAddToRecord?: (record: MedicationStatementModel) => void) {
+  const { t } = useBaseTranslations();
+  const userBuilderId = useUserBuilderId();
+  const showAddMedicationForm = useAddMedicationForm();
+  const { toggleRead } = useToggleRead();
 
-    if (!record.ownedByBuilder(userBuilderId)) {
-      return (
-        <button
-          type="button"
-          className="ctw-btn-primary"
-          onClick={() => {
-            if (!record.isRead) {
-              void toggleRead(record);
-            }
+  return (record: MedicationStatementModel): RowActionsConfigProp<MedicationStatementModel> =>
+    !record.ownedByBuilder(userBuilderId)
+      ? []
+      : [
+          {
+            text: t("resourceTable.add"),
+            className: "ctw-btn-primary",
+            onClick: () => {
+              if (!record.isRead) {
+                void toggleRead(record);
+              }
 
-            if (onAddToRecord) {
-              onAddToRecord(record);
-              onSuccess?.();
-            } else {
-              showAddMedicationForm(record);
-            }
-          }}
-        >
-          {t("resourceTable.add")}
-        </button>
-      );
-    }
-    return null;
-  };
+              if (onAddToRecord) {
+                onAddToRecord(record);
+              } else {
+                showAddMedicationForm(record);
+              }
+            },
+          },
+        ];
+}

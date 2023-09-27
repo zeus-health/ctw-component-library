@@ -7,8 +7,13 @@ import { TableHead } from "./table-head";
 import { MinRecordItem, TableColumn } from "./table-helpers";
 import { TableRows, TableRowsProps } from "./table-rows";
 import { DEFAULT_PAGE_SIZE, ExpandList } from "../pagination/expand-list";
+import { useBreakpoints } from "@/hooks/use-breakpoints";
 
-export type RowActionsProps<T extends MinRecordItem> = { record: T; onSuccess?: () => void };
+export type RowActionsProps<T extends MinRecordItem> = {
+  record: T;
+  onSuccess?: () => void;
+  stacked?: boolean;
+};
 
 export type TableProps<T extends MinRecordItem> = {
   children?: ReactNode;
@@ -22,7 +27,7 @@ export type TableProps<T extends MinRecordItem> = {
   records: T[];
   showTableHead?: boolean;
   stacked?: boolean;
-} & Pick<TableRowsProps<T>, "handleRowClick" | "RowActions" | "getRowClassName">;
+} & Pick<TableRowsProps<T>, "handleRowClick" | "RowActions" | "rowActions" | "getRowClassName">;
 
 export type TableBaseProps<T extends MinRecordItem> = Omit<TableProps<T>, "records" | "columns">;
 
@@ -46,6 +51,7 @@ export const Table = <T extends MinRecordItem>({
   const [showLeftShadow, setShowLeftShadow] = useState(false);
   const [showRightShadow, setShowRightShadow] = useState(false);
   const [count, setCount] = useState(pageSize);
+  const breakpoints = useBreakpoints(tableRef);
 
   const updateShadows = () => {
     const container = scrollContainerRef.current;
@@ -109,6 +115,7 @@ export const Table = <T extends MinRecordItem>({
                 columns={columns}
                 isLoading={isLoading}
                 emptyMessage={message}
+                stacked={breakpoints.sm}
               />
             </tbody>
           </table>

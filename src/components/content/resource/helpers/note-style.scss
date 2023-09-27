@@ -30,3 +30,9 @@
 .ctw-note-transposed-row-separator {
   border-top: solid 1px #000;
 }
+
+[aria-label="details"].ctw-btn-clean {
+  @media (max-width: 400px) {
+    line-height: 1rem;
+  }
+}

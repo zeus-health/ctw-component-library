@@ -44,7 +44,7 @@ export function usePatientDocuments() {
     withTimerMetric(getDocumentFromFQS, "req.timing.documents")
   );
 
-  return useIncludeBasics(patientDocumentsQuery, { enabled: true, ready: true });
+  return useIncludeBasics(patientDocumentsQuery);
 }
 
 async function getDocumentFromFQS(requestContext: CTWRequestContext, patient: PatientModel) {
@@ -83,7 +83,9 @@ export async function getDocumentsByIdFromFQS(
         cursor: "",
         first: 1000,
         filter: {
-          id: ["in", ids],
+          ids: {
+            anymatch: ids,
+          },
         },
         sort: {
           lastUpdated: "DESC",

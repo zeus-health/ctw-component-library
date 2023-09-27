@@ -1,5 +1,5 @@
 import { UnreadNotification } from "@/components/core/unread-notification";
-import { usePatientAllDiagnosticReports } from "@/fhir/diagnostic-report";
+import { usePatientDiagnosticReports } from "@/fhir/diagnostic-report";
 
 export type UnreadDiagnosticReportsNotificationProps = {
   className?: string;
@@ -8,6 +8,6 @@ export type UnreadDiagnosticReportsNotificationProps = {
 export const UnreadDiagnosticReportsNotification = ({
   className,
 }: UnreadDiagnosticReportsNotificationProps) => {
-  const query = usePatientAllDiagnosticReports();
+  const query = usePatientDiagnosticReports(20);
   return <UnreadNotification className={className} data={query.data} />;
 };

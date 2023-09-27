@@ -3,7 +3,6 @@ import { PatientModel } from "./models";
 import { useQueryWithPatient } from "..";
 import { applyImmunizationFilters } from "@/components/content/immunizations/helpers/filters";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import {
   ImmunizationGraphqlResponse,
@@ -13,15 +12,13 @@ import { QUERY_KEY_PATIENT_IMMUNIZATIONS } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export function usePatientImmunizations() {
-  const fqs = useFQSFeatureToggle("immunizations");
-
   const patientImmunizationsQuery = useQueryWithPatient(
     QUERY_KEY_PATIENT_IMMUNIZATIONS,
     [],
     withTimerMetric(getImmunizationFromFQS, "req.timing.immunizations")
   );
 
-  return useIncludeBasics(patientImmunizationsQuery, fqs);
+  return useIncludeBasics(patientImmunizationsQuery);
 }
 
 async function getImmunizationFromFQS(requestContext: CTWRequestContext, patient: PatientModel) {

@@ -90,7 +90,7 @@ export function usePatient(): UseQueryResult<PatientModel, unknown> {
         _tag: tags?.map((tag) => `${tag.system}|${tag.code}`) ?? [],
       });
     }, "req.get_builder_fhir_patient"),
-    { staleTime: PATIENT_STALE_TIME }
+    { staleTime: PATIENT_STALE_TIME, enabled: !!patientID }
   );
 }
 
