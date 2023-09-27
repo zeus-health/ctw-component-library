@@ -13,10 +13,12 @@ export function usePatientObservations(loincCodes: string[]) {
     QUERY_KEY_PATIENT_OBSERVATIONS,
     [loincCodes],
     async (requestContext, patient) =>
-      withTimerMetric(fetchObservationsTrendData(loincCodes), "req.timing.all_observations")(
-        requestContext,
-        patient
-      )
+      patient.createdAt && patient.createdAt >= "2023-07-19"
+        ? withTimerMetric(fetchObservationsTrendData(loincCodes), "req.timing.all_observations")(
+            requestContext,
+            patient
+          )
+        : []
   );
 }
 
