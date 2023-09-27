@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.68.4
+
+### Patch Changes
+
+- 3f7593fb: Refactor data access for diagnostic reports.
+- 3e4345bd: Refactor data access for encounters and documents.
+
 ## 1.68.3
 
 ### Patch Changes
