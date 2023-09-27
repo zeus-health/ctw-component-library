@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { usePatientAllDiagnosticReports } from "./diagnostic-report";
+import { usePatientDiagnosticReports } from "./diagnostic-report";
 import { usePatientEncounters } from "./encounters";
 import { TimelineEventModel } from "./models/timeline-event";
 import { compact, concat, flatten, some } from "@/utils/nodash";
@@ -8,7 +8,7 @@ import { applySorts } from "@/utils/sort";
 export function useTimelineEvents() {
   const [timelineEvents, setTimelineEvents] = useState<TimelineEventModel[]>();
   const patientEncountersQuery = usePatientEncounters();
-  const diagnosticReportQuery = usePatientAllDiagnosticReports();
+  const diagnosticReportQuery = usePatientDiagnosticReports();
 
   const queries = [patientEncountersQuery, diagnosticReportQuery];
 

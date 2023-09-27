@@ -10,7 +10,7 @@ import { EmptyPatientTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
-import { usePatientAllDiagnosticReports } from "@/fhir/diagnostic-report";
+import { usePatientDiagnosticReportsWithTrendData } from "@/fhir/diagnostic-report";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 
 export type PatientDiagnosticReportsProps = {
@@ -18,7 +18,7 @@ export type PatientDiagnosticReportsProps = {
 };
 
 function PatientDiagnosticReportsComponent({ className }: PatientDiagnosticReportsProps) {
-  const query = usePatientAllDiagnosticReports();
+  const query = usePatientDiagnosticReportsWithTrendData();
   const { data, setFilters, setSort } = useFilteredSortedData({
     defaultFilters: defaultDiagnosticReportFilters,
     defaultSort: defaultDiagnosticReportSort,
