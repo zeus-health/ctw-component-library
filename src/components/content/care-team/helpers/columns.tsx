@@ -3,9 +3,9 @@ import { CareTeamPractitionerModel } from "@/fhir/models/careteam-practitioner";
 
 export const patientCareTeamColumns: TableColumn<CareTeamPractitionerModel>[] = [
   {
-    widthPercent: 20,
+    widthPercent: 30,
     minWidth: 150,
-    title: "Practitioner",
+    title: "Provider",
     render: (careTeam) => (
       <>
         <div>{careTeam.practitionerName}</div>
@@ -20,15 +20,15 @@ export const patientCareTeamColumns: TableColumn<CareTeamPractitionerModel>[] = 
     render: (careTeam) => <div>{careTeam.role}</div>,
   },
   {
-    widthPercent: 20,
+    widthPercent: 30,
     minWidth: 150,
     title: "Specialty",
-    render: (careTeam) => <div>{careTeam.qualification}</div>,
+    render: (careTeam) => <div>{careTeam.specialty}</div>,
   },
   {
     widthPercent: 20,
     minWidth: 150,
-    title: "Noted On",
+    title: "Member Since",
     render: (careTeam) => <div>{careTeam.effectiveStartDate}</div>,
   },
 ];

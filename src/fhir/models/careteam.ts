@@ -8,6 +8,10 @@ import { find } from "@/utils/nodash";
 export class CareTeamModel extends FHIRModel<fhir4.CareTeam> {
   kind = "CareTeam" as const;
 
+  get categoryDisplay() {
+    return codeableConceptLabel(this.resource.category ? this.resource.category[0] : undefined);
+  }
+
   get status() {
     return this.resource.status;
   }

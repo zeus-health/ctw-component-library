@@ -32,7 +32,7 @@ export class CareTeamPractitionerModel extends FHIRModel<fhir4.Practitioner> {
     return this.careTeam.role;
   }
 
-  get qualification() {
+  get specialty() {
     return this.careTeam.practitionerQualification;
   }
 
