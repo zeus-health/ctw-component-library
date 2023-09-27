@@ -15,7 +15,7 @@ export interface ObservationGraphqlResponse {
 export const observationQuery = gql`
   ${fragmentObservation}
 
-  query ObservationConnection(
+  query Observations(
     $upid: ID!
     $cursor: String!
     $sort: ObservationSortParams!

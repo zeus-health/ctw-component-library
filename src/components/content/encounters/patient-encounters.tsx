@@ -11,7 +11,7 @@ import { EmptyPatientTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { useUserBuilderId } from "@/components/core/providers/user-builder-id";
-import { usePatientEncounters } from "@/fhir/encounters";
+import { usePatientEncountersWithClinicalNotes } from "@/fhir/encounters";
 import { EncounterModel } from "@/fhir/models/encounter";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 
@@ -21,7 +21,7 @@ export type PatientEncountersProps = {
 
 function PatientEncountersComponent({ className }: PatientEncountersProps) {
   const userBuilderId = useUserBuilderId();
-  const encountersQuery = usePatientEncounters();
+  const encountersQuery = usePatientEncountersWithClinicalNotes();
   const containerRef = useRef<HTMLDivElement>(null);
   const { viewOptions, allTime } = getDateRangeView<EncounterModel>("periodStart");
   const { data, setFilters, setSort, setViewOption } = useFilteredSortedData({
@@ -31,7 +31,7 @@ function PatientEncountersComponent({ className }: PatientEncountersProps) {
     records: encountersQuery.data,
   });
 
-  const isEmptyQuery = encountersQuery.data && encountersQuery.data.length === 0;
+  const isEmptyQuery = encountersQuery.data.length === 0;
   const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
 
   const openEncounterDetails = usePatientEncounterDetailsDrawer();
