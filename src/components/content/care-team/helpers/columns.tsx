@@ -29,6 +29,6 @@ export const patientCareTeamColumns: TableColumn<CareTeamPractitionerModel>[] = 
     widthPercent: 20,
     minWidth: 150,
     title: "Last Updated",
-    render: (careTeam) => <div>{careTeam.effectiveEndDate}</div>,
+    render: (careTeam) => <div>{careTeam.effectiveStartDate}</div>,
   },
 ];

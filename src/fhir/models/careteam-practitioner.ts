@@ -36,10 +36,6 @@ export class CareTeamPractitionerModel extends FHIRModel<fhir4.Practitioner> {
     return this.careTeam.practitionerQualification;
   }
 
-  get telecom() {
-    return this.careTeam.careTeamTelecom;
-  }
-
   get status() {
     return this.careTeam.status;
   }
