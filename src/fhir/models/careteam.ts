@@ -1,7 +1,7 @@
 import { FHIRModel } from "./fhir-model";
 import { PractitionerModel } from "./practitioner";
 import { codeableConceptLabel } from "../codeable-concept";
-import { formatDateISOToLocal } from "../formatters";
+import { formatDateISOToLocal, formatPhoneNumber } from "../formatters";
 import { findReference } from "../resource-helper";
 import { find } from "@/utils/nodash";
 
@@ -28,8 +28,9 @@ export class CareTeamModel extends FHIRModel<fhir4.CareTeam> {
     return this.resource.participant;
   }
 
-  get careTeamTelecom() {
-    return this.resource.telecom;
+  get phone(): string | undefined {
+    const phone = this.resource.telecom?.find((t) => t.system === "phone");
+    return formatPhoneNumber(phone?.value);
   }
 
   get managingOrganization() {

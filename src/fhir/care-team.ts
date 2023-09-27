@@ -58,7 +58,7 @@ export const getFilteredCareTeamMembers = (data: fhir4.CareTeam[]) => {
   const sortedCareTeamPractitionerModels = orderBy(
     filteredCareTeamMembers,
     ["effectiveStartDate", "id"],
-    ["asc", "desc"]
+    ["desc", "desc"]
   );
 
   return uniqWith(sortedCareTeamPractitionerModels, (a, b) =>

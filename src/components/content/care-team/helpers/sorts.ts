@@ -11,14 +11,14 @@ export const careTeamSortOptions: SortOption<CareTeamPractitionerModel>[] = [
     sorts: [{ key: "practitionerName", dir: "desc" }],
   },
   {
-    display: "Member Since (Old to New)",
+    display: "Last Updated (Old to New)",
     sorts: [
       { key: "effectiveStartDate", dir: "asc", isDate: true },
       { key: "practitionerName", dir: "asc" },
     ],
   },
   {
-    display: "Member Since (New To Old)",
+    display: "Last Updated (New To Old)",
     sorts: [
       { key: "effectiveStartDate", dir: "desc", isDate: true },
       { key: "practitionerName", dir: "asc" },
