@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.68.6
+
+### Patch Changes
+
+- e52111ac: Fix status check on immunizations and improving de-duping logic for care team.
+
 ## 1.68.5
 
 ### Patch Changes
