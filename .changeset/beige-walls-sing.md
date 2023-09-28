@@ -2,4 +2,4 @@
 "@zus-health/ctw-component-library": patch
 ---
 
-Remove beta labels and update care team component
+Update care team component and only show completed immunizations.
