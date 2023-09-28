@@ -1,14 +1,16 @@
 import { useIncludeBasics } from "./basic";
 import { PatientModel } from "./models";
+import { ImmunizationModel } from "./models/immunization";
 import { useQueryWithPatient } from "..";
-import { applyImmunizationFilters } from "@/components/content/immunizations/helpers/filters";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import {
   ImmunizationGraphqlResponse,
   immunizationsQuery,
 } from "@/services/fqs/queries/immunizations";
+import { orderBy, uniqBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_IMMUNIZATIONS } from "@/utils/query-keys";
+import { sort } from "@/utils/sort";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export function usePatientImmunizations() {
@@ -37,7 +39,7 @@ async function getImmunizationFromFQS(requestContext: CTWRequestContext, patient
       }
     );
     const nodes = data.ImmunizationConnection.edges.map((x) => x.node);
-    const results = applyImmunizationFilters(nodes, requestContext.builderId);
+    const results = getFilteredImmunizations(nodes, requestContext.builderId);
     if (results.length === 0) {
       Telemetry.countMetric("req.count.immunizations.none");
     }
@@ -47,3 +49,18 @@ async function getImmunizationFromFQS(requestContext: CTWRequestContext, patient
     throw new Error(`Failed fetching immunization information for patient: ${e}`);
   }
 }
+
+export const getFilteredImmunizations = (data: fhir4.Immunization[], builderId: string) => {
+  const immunizations = data.map((immunization) => new ImmunizationModel(immunization));
+
+  const sortedByDate = sort(
+    immunizations.filter((x) => x.status === "completed"),
+    "occurrence",
+    "desc",
+    true
+  );
+
+  // Bump builder owned allergies to the front, so uniqBy favors them!
+  const builderOwnedFirst = orderBy(sortedByDate, (a) => a.ownedByBuilder(builderId), "desc");
+  return uniqBy(builderOwnedFirst, "uniqueKey");
+};
