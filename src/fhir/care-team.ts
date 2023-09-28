@@ -66,4 +66,6 @@ export const getFilteredCareTeamMembers = (data: fhir4.CareTeam[]) => {
   );
 };
 
-const valuesToDedupeOn = (careTeam: CareTeamPractitionerModel) => [careTeam.practitionerName];
+const valuesToDedupeOn = (careTeam: CareTeamPractitionerModel) => [
+  careTeam.practitionerName.toLocaleUpperCase(),
+];
