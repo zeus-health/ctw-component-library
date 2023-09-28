@@ -54,7 +54,7 @@ export const getFilteredImmunizations = (data: fhir4.Immunization[], builderId: 
   const immunizations = data.map((immunization) => new ImmunizationModel(immunization));
 
   const sortedByDate = sort(
-    immunizations.filter((x) => x.status === "completed"),
+    immunizations.filter((x) => x.status === "Completed"),
     "occurrence",
     "desc",
     true
