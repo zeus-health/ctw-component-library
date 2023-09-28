@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.68.5
+
+### Patch Changes
+
+- 70d85f63: Update care team component and only show completed immunizations.
+- f6e870f2: Show clinical notes in document details drawer.
+
 ## 1.68.4
 
 ### Patch Changes
