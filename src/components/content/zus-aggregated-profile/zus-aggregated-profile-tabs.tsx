@@ -135,7 +135,9 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
 
   documents: (props: PatientDocumentsProps = {}) => ({
     key: "documents",
-    display: () => <TabHelper notification={<UnreadDocumentsNotification />} name="documents" />,
+    display: () => (
+      <TabHelper notification={<UnreadDocumentsNotification />} name="documents" beta />
+    ),
     render: () => <PatientDocuments {...props} />,
   }),
 
@@ -155,7 +157,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
 
   "care-team": (props: PatientCareTeamProps = {}) => ({
     key: "care-team",
-    display: () => <TabHelper name="care team" />,
+    display: () => <TabHelper name="care team" beta />,
     render: () => <PatientCareTeam {...props} />,
   }),
 };
