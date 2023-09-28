@@ -32,3 +32,18 @@ export const encountersQuery = gql`
     }
   }
 `;
+
+export const encounterADTQuery = gql`
+  query EncounterADTConnection($upid: ID!, $filter: AllergyIntoleranceFilterParams! = {}) {
+    AllergyIntoleranceConnection(upid: $upid, filter: $filter) {
+      pageInfo {
+        hasNextPage
+      }
+      edges {
+        node {
+          id
+        }
+      }
+    }
+  }
+`;

@@ -1,7 +1,6 @@
 import type { TableColumn } from "@/components/core/table/table-helpers";
 import type { PatientModel } from "@/fhir/models/patient";
 import cx from "classnames";
-import { gql } from "graphql-request";
 import { useState } from "react";
 import { adtFilter, defaultADTFilters } from "./filters";
 import { useADTAlertDetailsDrawer } from "./modal-hooks";
@@ -20,7 +19,7 @@ import { SimpleMoreList } from "@/components/core/simple-more-list";
 import { EncounterModel } from "@/fhir/models/encounter";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
-import { EncounterGraphqlResponse } from "@/services/fqs/queries/encounters";
+import { encounterADTQuery, EncounterGraphqlResponse } from "@/services/fqs/queries/encounters";
 
 const PAGE_SIZE = 10;
 
@@ -56,28 +55,35 @@ function ADTTableComponent({ className, isLoading = false, data, encAndNotesData
   });
 
   const dataFilteredSortedDeduped = dedupeAndMergeEncounters(dataFilteredSorted, "patientsADT");
+
+  console.log("encAndNotesData", encAndNotesData);
   if (encAndNotesData) {
-    dataFilteredSortedDeduped.forEach(async (e: EncounterModel) => {
+    dataFilteredSorted.forEach(async (e: EncounterModel) => {
       const requestContext = await getRequestContext();
-      const encAndNote = encAndNotesData.find((item) => item.adt_id === e.id);
-      const gqlQuery = gql`
-        query EncounterConnection($cw_ceq_id: String!) {
-          EncounterConnection(filter: { ids: { match: $cw_ceq_id } }) {
-            edges {
-              node {
-                id
-              }
-            }
-          }
-        }
-      `;
-      const graphClient = createGraphqlClient(requestContext);
-      const { data: fqsData } = await fqsRequest<EncounterGraphqlResponse>(graphClient, gqlQuery, {
-        cw_ceq_id: encAndNote?.cw_ceq_id,
+      const encAndNote = encAndNotesData.find((adtItem) => {
+        console.log("item", adtItem);
+        console.log("adtEncounter", e);
+        console.log("ADT_ID found equal to encounter id", adtItem.adt_id === e.resource.id);
+        return adtItem.adt_id === e.resource.id;
       });
-      const nodes = fqsData.EncounterConnection.edges.map((x) => x.node);
-      const node = nodes[0];
-      e.relatedEncounter = new EncounterModel(node, node.ProvenanceList);
+      console.log("encAndNote", encAndNote);
+      if (encAndNote?.upid && encAndNote.cw_ceq_id) {
+        const graphClient = createGraphqlClient(requestContext);
+        const { data: fqsData } = await fqsRequest<EncounterGraphqlResponse>(
+          graphClient,
+          encounterADTQuery,
+          {
+            upid: encAndNote.upid,
+            filter: {
+              anymatch: [encAndNote.cw_ceq_id],
+            },
+          }
+        );
+        console.log("fqsData", fqsData);
+        const nodes = fqsData.EncounterConnection.edges.map((x) => x.node);
+        const node = nodes[0];
+        e.relatedEncounter = new EncounterModel(node, node.ProvenanceList);
+      }
     });
   }
 

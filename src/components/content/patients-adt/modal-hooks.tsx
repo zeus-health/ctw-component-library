@@ -9,6 +9,7 @@ function RelatedEncounters({ encounters }: { encounters: EncounterModel[] }) {
   if (encounters.length === 0) {
     return null;
   }
+  console.log("encounters inside relatedEncounters", encounters);
   return (
     <div>
       <h4 className="text-base font-semibold">Related Encounters</h4>
