@@ -3,7 +3,7 @@ import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { PatientHistoryStatus } from "./patient-history-message-status";
 import { PatientHistoryRequestDrawer } from "../patient-history-request-drawer";
-import { getZusApiBaseUrl } from "@/api/urls";
+import { getZusServiceUrl } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
 import {
@@ -107,7 +107,7 @@ export async function getBuilderRefreshHistoryMessages({
   status,
   excludeFutureJobs,
 }: GetBuilderRefreshHistoryMessagesParams) {
-  const baseUrl = new URL(`${getZusApiBaseUrl(requestContext.env)}/patient-history/jobs?`);
+  const baseUrl = new URL(`${getZusServiceUrl(requestContext.env, "patient-history")}/jobs?`);
 
   const paramsObj = omitBy(
     {
