@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.68.7
+
+### Patch Changes
+
+- 8886a7f9: Fix issue where having no UPID causes clients apps to crash.
+
 ## 1.68.6
 
 ### Patch Changes
