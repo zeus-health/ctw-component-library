@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.68.9
+
+### Patch Changes
+
+- e457472f: Add Overview tab for users with access to search.
+
 ## 1.68.8
 
 ### Patch Changes
