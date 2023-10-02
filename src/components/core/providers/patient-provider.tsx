@@ -147,6 +147,14 @@ export function useQueryWithPatient<T, T2>(
   const { getRequestContext } = useCTW();
   const patientResponse = usePatient();
 
+  if (patientResponse.isSuccess && !patientResponse.data.UPID) {
+    throw new Error(
+      `Patient with ID ${JSON.stringify(
+        patientResponse.data.resource.identifier
+      )} does not have a UPID`
+    );
+  }
+
   return useQuery(
     [queryKey, patientResponse.data?.UPID, ...keys],
     async () => {
