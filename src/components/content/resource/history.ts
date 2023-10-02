@@ -54,7 +54,7 @@ export function useHistory<T extends ResourceTypeString, M extends FHIRModel<Res
           patient,
           valuesToDedupeOn,
           getHistoryEntry,
-          fqsProvenances.enabled,
+          fqsProvenances.enabled ?? false,
           clientSideFiltersFQS,
           getFiltersFQS?.(model)
         ),
