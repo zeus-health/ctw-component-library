@@ -36,7 +36,7 @@ export type ADTTableProps = {
   className?: cx.Argument;
   isLoading?: boolean;
   data: EncounterModel[];
-  encounterAndNotesData?: AdtTemplate[];
+  encounterAndNotesData?: AdtTemplate;
 } & TableOptionProps<EncounterModel>;
 
 function ADTTableComponent({
@@ -64,19 +64,24 @@ function ADTTableComponent({
   const dataFilteredSortedDeduped = dedupeAndMergeEncounters(dataFilteredSorted, "patientsADT");
 
   if (encounterAndNotesData) {
-    dataFilteredSorted.forEach(async (e: EncounterModel) => {
+    dataFilteredSortedDeduped.forEach(async (e: EncounterModel) => {
       const requestContext = await getRequestContext();
-      const encAndNote = encounterAndNotesData.find((adtItem) => adtItem.get(e.resource.id ?? ""));
-      const encounter = encAndNote?.get(e.resource.id ?? "");
-      if (encAndNote && encounter) {
+      if (!encounterAndNotesData.has(e.resource.id ?? "")) {
+        return;
+      }
+      const encAndNote = encounterAndNotesData.get(e.resource.id ?? "");
+      console.log("encAndNote", encAndNote);
+      if (encAndNote?.cwcq_encounter_id) {
         const graphClient = createGraphqlClient(requestContext);
         const { data: fqsData } = await fqsRequest<EncounterGraphqlResponse>(
           graphClient,
           encounterADTQuery,
           {
-            upid: encounter.upid,
+            upid: encAndNote.upid,
             filter: {
-              anymatch: [encounter.cwcq_encounter_id],
+              ids: {
+                anymatch: [encAndNote.cwcq_encounter_id],
+              },
             },
           }
         );
