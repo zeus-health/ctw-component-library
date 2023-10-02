@@ -5,7 +5,7 @@ import { withErrorBoundary } from "@/components/core/error-boundary";
 export const PatientOverviewComponent = () => (
   <div className="ctw-flex ctw-w-full ctw-flex-row">
     <div className="ctw-mx-2 ctw-my-5 ctw-h-fit ctw-basis-2/6 ctw-rounded-lg ctw-border ctw-border-solid ctw-border-divider-light">
-      <div className="ctw-space-y-2 ctw-px-2 ctw-py-2">
+      <div className="ctw-space-y-2 ctw-p-2">
         <div className="ctw-px-3 ctw-pt-2">
           <PatientHistoryLastRetrievedWithAction />
         </div>

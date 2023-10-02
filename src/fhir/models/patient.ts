@@ -3,8 +3,8 @@ import fhir4 from "fhir/r4";
 import { FHIRModel } from "./fhir-model";
 import { OrganizationModel } from "./organization";
 import { formatDateISOToLocal, formatPhoneNumber } from "../formatters";
+import { SYSTEM_ZUS_UNIVERSAL_ID } from "../system-urls";
 import { findReference } from "@/fhir/resource-helper";
-import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 import { cloneDeep, find } from "@/utils/nodash";
 
 export const MaritalStatuses = [
@@ -91,13 +91,11 @@ export class PatientModel extends FHIRModel<fhir4.Patient> {
     );
   }
 
-  get UPID(): string {
+  get UPID(): string | undefined {
     const upid = find(this.resource.identifier, {
       system: SYSTEM_ZUS_UNIVERSAL_ID,
     })?.value;
-    if (!upid) {
-      throw Error(`Patient with ID ${this.resource.identifier} does not have a UPID`);
-    }
+
     return upid;
   }
 
