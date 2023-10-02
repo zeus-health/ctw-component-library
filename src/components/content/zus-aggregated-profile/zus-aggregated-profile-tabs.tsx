@@ -29,7 +29,7 @@ import {
 } from "../medications/patient-medications-outside";
 import { PatientMedicationsOutsideBadge } from "../medications/patient-medications-outside-badge";
 import { UnreadMedicationsNotification } from "../medications/unread-medications-notification";
-import { Overview } from "../overview/patient-overview";
+import { PatientOverview } from "../overview/patient-overview";
 import { PatientTimeline, PatientTimelineProps } from "../timeline/patient-timeline";
 import {
   PatientAllergies,
@@ -62,7 +62,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
   overview: () => ({
     key: "overview",
     display: () => <TabHelper name="overview" beta />,
-    render: () => <Overview />,
+    render: () => <PatientOverview />,
   }),
 
   conditions: (props: PatientConditionsProps = {}) => ({

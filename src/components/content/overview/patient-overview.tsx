@@ -1,7 +1,8 @@
 import { PatientHistoryLastRetrievedWithAction } from "../patient-history/patient-history-action";
 import { PatientRecordSearch } from "../patient-record-search/patient-record-search";
+import { withErrorBoundary } from "@/components/core/error-boundary";
 
-export const Overview = () => (
+export const PatientOverviewComponent = () => (
   <div className="ctw-flex ctw-w-full ctw-flex-row">
     <div className="ctw-mx-2 ctw-my-5 ctw-h-fit ctw-basis-2/6 ctw-rounded-lg ctw-border ctw-border-solid ctw-border-divider-light">
       <div className="ctw-space-y-2 ctw-px-2 ctw-py-2">
@@ -37,3 +38,5 @@ export const Overview = () => (
     </div>
   </div>
 );
+
+export const PatientOverview = withErrorBoundary(PatientOverviewComponent, "PatientOverview");
