@@ -70,7 +70,6 @@ function ADTTableComponent({
         return;
       }
       const encAndNote = encounterAndNotesData.get(e.resource.id ?? "");
-      console.log("encAndNote", encAndNote);
       if (encAndNote?.cwcq_encounter_id) {
         const graphClient = createGraphqlClient(requestContext);
         const { data: fqsData } = await fqsRequest<EncounterGraphqlResponse>(
@@ -85,7 +84,6 @@ function ADTTableComponent({
             },
           }
         );
-        console.log("fqsData", fqsData);
         const nodes = fqsData.EncounterConnection.edges.map((x) => x.node);
         const node = nodes[0];
         e.relatedEncounter = new EncounterModel(node, node.ProvenanceList);
