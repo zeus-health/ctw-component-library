@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.68.8
+
+### Patch Changes
+
+- ac4e23c8: Update patient-history endpoint
+
 ## 1.68.7
 
 ### Patch Changes
