@@ -2,4 +2,4 @@
 "@zus-health/ctw-component-library": patch
 ---
 
-New overview tab
+Add Overview tab for users with access to search.

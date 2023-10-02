@@ -12,24 +12,18 @@ export const PatientHistoryLastRetrieved = () => {
     return <div />;
   }
 
-  const { lastRetrievedAt } = patientHistory;
+  let { lastRetrievedAt } = patientHistory;
+
+  // if this is a test patient with no last retrieved date then just show today
+  if (!lastRetrievedAt && patient.data?.isTestPatient) {
+    lastRetrievedAt = Date.now();
+  }
 
   if (lastRetrievedAt) {
     return (
       <div className="ctw-space-x-1 ctw-text-sm ctw-italic ctw-text-black">
-        <span>Last Retrieved</span>
+        <span>Records last retrieved</span>
         <span>{formatISODateStringToDate(lastRetrievedAt)}</span>
-      </div>
-    );
-  }
-
-  // if this is a test patient, don't show the "records never requested" as it's confusing
-  // to the end user
-  if (!lastRetrievedAt && patient.data?.isTestPatient) {
-    return (
-      <div className="ctw-space-x-1 ctw-text-sm ctw-italic ctw-text-black">
-        <span>Last Retrieved</span>
-        <span>{formatISODateStringToDate(Date.now())}</span>
       </div>
     );
   }

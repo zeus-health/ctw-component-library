@@ -1,18 +1,18 @@
-import { PatientHistoryAction } from "../patient-history/patient-history-action";
+import { PatientHistoryLastRetrievedWithAction } from "../patient-history/patient-history-action";
 import { PatientRecordSearch } from "../patient-record-search/patient-record-search";
 
 export const Overview = () => (
   <div className="ctw-flex ctw-w-full ctw-flex-row">
-    <div className="ctw-mx-2 ctw-my-5 ctw-h-fit ctw-basis-2/6 ctw-rounded-lg ctw-border-solid ctw-border-divider-light">
+    <div className="ctw-mx-2 ctw-my-5 ctw-h-fit ctw-basis-2/6 ctw-rounded-lg ctw-border ctw-border-solid ctw-border-divider-light">
       <div className="ctw-space-y-2 ctw-px-2 ctw-py-2">
         <div className="ctw-px-3 ctw-pt-2">
-          <PatientHistoryAction />
+          <PatientHistoryLastRetrievedWithAction />
         </div>
         <div className="ctw-border-0 ctw-border-t ctw-border-solid ctw-border-divider-light ctw-px-3 ctw-pt-3">
           <div className="ctw-pb-2">
             <a
               href="https://share.hsforms.com/10NmAPiu7Qd2OXbxAHnseiwcjai8"
-              className="ctw-text-primary-main"
+              className="ctw-link"
               target="_blank"
               rel="noreferrer"
             >
@@ -22,7 +22,7 @@ export const Overview = () => (
           <div>
             <a
               href="https://docs.zushealth.com/changelog"
-              className="ctw-text-primary-main"
+              className="ctw-link"
               target="_blank"
               rel="noreferrer"
             >
