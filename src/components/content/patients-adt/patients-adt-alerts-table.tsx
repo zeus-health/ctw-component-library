@@ -23,21 +23,28 @@ import { encounterADTQuery, EncounterGraphqlResponse } from "@/services/fqs/quer
 
 const PAGE_SIZE = 10;
 
-interface PatientEncAndNotesItem {
-  adt_id: string;
-  upid: string;
-  cw_ceq_id: string;
-  binary_id: string;
-}
+type AdtTemplate = Map<
+  string,
+  {
+    upid: string;
+    cwcq_encounter_id: string;
+    binary_id: string;
+  }
+>;
 
 export type ADTTableProps = {
   className?: cx.Argument;
   isLoading?: boolean;
   data: EncounterModel[];
-  encAndNotesData?: PatientEncAndNotesItem[];
+  encounterAndNotesData?: AdtTemplate[];
 } & TableOptionProps<EncounterModel>;
 
-function ADTTableComponent({ className, isLoading = false, data, encAndNotesData }: ADTTableProps) {
+function ADTTableComponent({
+  className,
+  isLoading = false,
+  data,
+  encounterAndNotesData,
+}: ADTTableProps) {
   const openADTDetails = useADTAlertDetailsDrawer();
   const [currentPage, setCurrentPage] = useState(1);
   const { viewOptions, past30days } = getDateRangeView<EncounterModel>("periodStart");
@@ -56,26 +63,20 @@ function ADTTableComponent({ className, isLoading = false, data, encAndNotesData
 
   const dataFilteredSortedDeduped = dedupeAndMergeEncounters(dataFilteredSorted, "patientsADT");
 
-  console.log("encAndNotesData", encAndNotesData);
-  if (encAndNotesData) {
+  if (encounterAndNotesData) {
     dataFilteredSorted.forEach(async (e: EncounterModel) => {
       const requestContext = await getRequestContext();
-      const encAndNote = encAndNotesData.find((adtItem) => {
-        console.log("item", adtItem);
-        console.log("adtEncounter", e);
-        console.log("ADT_ID found equal to encounter id", adtItem.adt_id === e.resource.id);
-        return adtItem.adt_id === e.resource.id;
-      });
-      console.log("encAndNote", encAndNote);
-      if (encAndNote?.upid && encAndNote.cw_ceq_id) {
+      const encAndNote = encounterAndNotesData.find((adtItem) => adtItem.get(e.resource.id ?? ""));
+      const encounter = encAndNote?.get(e.resource.id ?? "");
+      if (encAndNote && encounter) {
         const graphClient = createGraphqlClient(requestContext);
         const { data: fqsData } = await fqsRequest<EncounterGraphqlResponse>(
           graphClient,
           encounterADTQuery,
           {
-            upid: encAndNote.upid,
+            upid: encounter.upid,
             filter: {
-              anymatch: [encAndNote.cw_ceq_id],
+              anymatch: [encounter.cwcq_encounter_id],
             },
           }
         );
