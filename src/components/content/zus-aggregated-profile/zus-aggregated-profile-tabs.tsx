@@ -150,7 +150,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
   immunizations: (props: PatientImmunizationsProps = {}) => ({
     key: "immunizations",
     display: () => (
-      <TabHelper notification={<UnreadImmunizationsNotification />} name="immunizations" beta />
+      <TabHelper notification={<UnreadImmunizationsNotification />} name="immunizations" />
     ),
     render: () => <PatientImmunizations {...props} />,
   }),

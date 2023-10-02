@@ -15,7 +15,7 @@ export interface DocumentReferenceGraphqlResponse {
 export const documentsQuery = gql`
   ${fragmentCoding}
   ${fragmentOrganization}
-  query DocumentReference(
+  query Documents(
     $upid: ID!
     $cursor: String!
     $sort: DocumentReferenceSortParams!
