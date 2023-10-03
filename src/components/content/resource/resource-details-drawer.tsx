@@ -107,7 +107,7 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
   return (
     <Drawer className={className} title={model.resourceTypeTitle} isOpen={isOpen} onClose={onClose}>
       <Drawer.Body>
-        <div className="ctw-space-y-4">
+        <div className="ctw-space-y-6">
           <div className="ctw-space-y-2">
             <div className="ctw-text-3xl">{header(model)}</div>
             {subHeader && <div>{subHeader(model)}</div>}

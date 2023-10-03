@@ -106,3 +106,48 @@ export const documentsQuery = gql`
     }
   }
 `;
+
+export const documentADTQuery = gql`
+  query DocumentADTConnection($upid: ID!, $filter: DocumentReferenceFilterParams! = {}) {
+    DocumentReferenceConnection(upid: $upid, filter: $filter) {
+      pageInfo {
+        hasNextPage
+      }
+      edges {
+        node {
+          id
+          resourceType
+          text {
+            id
+            div
+          }
+          description
+          content {
+            attachment {
+              contentType
+              language
+              data
+              url
+              size
+              hash
+              title
+              creation
+            }
+            format {
+              system
+              version
+              code
+              display
+            }
+          }
+          context {
+            period {
+              start
+              end
+            }
+          }
+        }
+      }
+    }
+  }
+`;

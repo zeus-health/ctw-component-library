@@ -1,13 +1,13 @@
 import DOMPurify from "dompurify";
 import { Interweave } from "interweave";
-import { NotesEntry } from "./notes-entry";
+import { NotesEntrySimple } from "./notes-entry";
 import { DocumentModel } from "@/fhir/models/document";
 
 export type NotesProps = {
   entries: DocumentModel[];
 };
 
-function getNoteDisplay(noteText: string | undefined) {
+export function getNoteDisplay(noteText: string | undefined) {
   if (noteText === undefined) {
     return undefined;
   }
@@ -26,7 +26,7 @@ export const Notes = ({ entries }: NotesProps) => (
     {entries.map((entry, idx) => (
       // eslint-disable-next-line react/no-array-index-key
       <div key={`${entry.id}-${idx}`}>
-        <NotesEntry
+        <NotesEntrySimple
           id={entry.id}
           title={entry.title}
           hideEmpty={false}

@@ -68,7 +68,7 @@ export const HistoryEntry = ({
   );
 };
 
-const DetailSummary = ({
+export const DetailSummary = ({
   date,
   title,
   subtitle,

@@ -17,6 +17,8 @@ import { compact, flatten, uniq } from "@/utils/nodash";
 export class EncounterModel extends FHIRModel<fhir4.Encounter> {
   kind = "Encounter" as const;
 
+  public binaryId?: string;
+
   public clinicalNotes: DocumentModel[];
 
   private provenance: fhir4.Provenance[];
@@ -35,7 +37,7 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
   }
 
   set documents(documents: DocumentModel[]) {
-    const binaryID = getBinaryIDFromProvenace(this.provenance);
+    const binaryID = getBinaryIDFromProvenance(this.provenance);
     if (binaryID) {
       this.clinicalNotes = documents.filter(
         (d) => d.binaryId === binaryID && isSectionDocument(d) && !isEmptyClinicalNote(d)
@@ -159,7 +161,7 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
   }
 }
 
-function getBinaryIDFromProvenace(provenance: fhir4.Provenance[]) {
+export function getBinaryIDFromProvenance(provenance: fhir4.Provenance[]) {
   if (provenance.length > 0) {
     let binaryIDReference = "";
     for (let i = 0; i < provenance.length; i += 1) {

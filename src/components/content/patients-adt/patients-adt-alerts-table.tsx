@@ -70,9 +70,10 @@ function ADTTableComponent({
         return;
       }
       const encAndNote = encounterAndNotesData.get(e.resource.id ?? "");
-      if (encAndNote?.cwcq_encounter_id) {
+      if (encAndNote) {
         const graphClient = createGraphqlClient(requestContext);
-        const { data: fqsData } = await fqsRequest<EncounterGraphqlResponse>(
+
+        const { data: encounterFqsData } = await fqsRequest<EncounterGraphqlResponse>(
           graphClient,
           encounterADTQuery,
           {
@@ -84,9 +85,12 @@ function ADTTableComponent({
             },
           }
         );
-        const nodes = fqsData.EncounterConnection.edges.map((x) => x.node);
-        const node = nodes[0];
-        e.relatedEncounter = new EncounterModel(node, node.ProvenanceList);
+        const encounterNodes = encounterFqsData.EncounterConnection.edges.map((x) => x.node);
+        const encounterNode = encounterNodes[0];
+        e.relatedEncounter = new EncounterModel(encounterNode, encounterNode.ProvenanceList);
+
+        e.relatedEncounter.binaryId = encAndNote.binary_id.replaceAll('"', "");
+        console.log("binary id log", e.relatedEncounter.binaryId);
       }
     });
   }
