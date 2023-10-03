@@ -161,7 +161,7 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
 
   // Returns a string that would setup this model.
   //   E.g. "new ConditionModel({...resource})"
-  // Used by Storybook in "show code" feature.
+  // Helpful for debugging / console logging.
   // This way we get copyable code for the model
   // instead of "[object Object]".
   toString() {
