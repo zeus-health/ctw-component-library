@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.68.10
+
+### Patch Changes
+
+- 84eeab06: Fix bug where ccda date is off by one day.
+
 ## 1.68.9
 
 ### Patch Changes
