@@ -158,14 +158,4 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
     }
     return splitTag[1] === builderId;
   }
-
-  // Returns a string that would setup this model.
-  //   E.g. "new ConditionModel({...resource})"
-  // Used by Storybook in "show code" feature.
-  // This way we get copyable code for the model
-  // instead of "[object Object]".
-  toString() {
-    const modelName = this.constructor.name;
-    return `new ${modelName}(${JSON.stringify(this.resource, null, 2)}\n)`;
-  }
 }
