@@ -2,7 +2,7 @@
  * @type {import('@types/eslint').Linter.BaseConfig}
  */
 module.exports = {
-  extends: ["@kensho-technologies/eslint-config", "prettier", "plugin:storybook/recommended"],
+  extends: ["@kensho-technologies/eslint-config", "prettier"],
   plugins: ["unused-imports", "sort-exports"],
   // Ignore js files as we now have typescript parsing rules.
   // See https://stackoverflow.com/a/65063702 for more.
@@ -68,15 +68,7 @@ module.exports = {
       "error",
       {
         // The following files can depend on devDependencies.
-        devDependencies: [
-          "*.config.*",
-          "*.env.*",
-          "scripts/**/*",
-          "**/*.stories.*",
-          "**/story-helpers/**/*",
-          "**/*.test.*",
-          "test/**/*",
-        ],
+        devDependencies: ["*.config.*", "*.env.*", "scripts/**/*", "**/*.test.*", "test/**/*"],
       },
     ],
     "@typescript-eslint/no-restricted-imports": [
