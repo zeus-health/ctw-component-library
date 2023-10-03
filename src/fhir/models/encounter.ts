@@ -120,6 +120,21 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
     return uniqueLocations.length ? uniqueLocations.join(", ") : undefined;
   }
 
+  get physicalType() {
+    const locations = compact(
+      this.resource.location?.map((l) => {
+        const location = findReference("Location", undefined, undefined, l.location);
+        return codeableConceptLabel(location?.physicalType);
+      })
+    );
+
+    const uniqueLocations = uniq(locations).filter(
+      (l) => l !== "Not Indicated" && l !== "Unknown" && l !== "NoInformation"
+    );
+
+    return uniqueLocations.length ? uniqueLocations.join(", ") : undefined;
+  }
+
   get typeDisplay(): string | undefined {
     const { display: classDisplay, system: classSystem } = this.resource.class;
     const classCode = (this.resource.class.code ?? "").toUpperCase();
