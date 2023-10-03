@@ -1,13 +1,16 @@
 import cx from "classnames";
 import { useRef } from "react";
 import { patientCareTeamColumns } from "./helpers/columns";
+import { careTeamSortOptions, defaultCareTeamSort } from "./helpers/sorts";
+import { getDateRangeView } from "../resource/helpers/view-date-range";
+import { PatientResourceTable } from "../resource/patient-resource-table";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
+import { ResourceTableActions } from "../resource/resource-table-actions";
 import { EmptyPatientTable } from "@/components/core/empty-table";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
-import { Table } from "@/components/core/table/table";
-import { usePatientCareTeam } from "@/fhir/care-team";
+import { usePatientCareTeamMembers } from "@/fhir/care-team";
 import { CareTeamPractitionerModel } from "@/fhir/models/careteam-practitioner";
-import { useBreakpoints } from "@/hooks/use-breakpoints";
+import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 
 export type PatientCareTeamProps = {
   className?: string;
@@ -22,37 +25,50 @@ export type CareTeamDetailsDrawerProps = {
 
 export function PatientCareTeam({ className }: PatientCareTeamProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const breakpoints = useBreakpoints(containerRef);
-  const patientCareTeamQuery = usePatientCareTeam();
+
+  const patientCareTeamQuery = usePatientCareTeamMembers();
+  const { viewOptions, allTime } =
+    getDateRangeView<CareTeamPractitionerModel>("effectiveStartDate");
+  const { data, setViewOption, setSort } = useFilteredSortedData({
+    defaultSort: defaultCareTeamSort,
+    defaultView: allTime,
+    records: patientCareTeamQuery.data,
+  });
 
   const openDetails = useResourceDetailsDrawer({
     header: (m) => m.practitionerName,
-    subHeader: (m) => m.qualification,
     details: careTeamData,
-    getSourceDocument: true,
   });
+
+  const isEmptyQuery = patientCareTeamQuery.data && patientCareTeamQuery.data.length === 0;
+  const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
 
   return (
     <AnalyticsProvider componentName="PatientCareTeam">
-      <div
-        ref={containerRef}
-        className={cx(
-          "ctw-scrollable-pass-through-height ctw-border ctw-border-solid ctw-border-divider-light ctw-bg-white",
-          className,
-          {
-            "ctw-stacked": breakpoints.sm,
-          }
-        )}
-      >
-        <Table
-          stacked={breakpoints.sm}
+      <div ref={containerRef} className={cx(className, "ctw-scrollable-pass-through-height")}>
+        <ResourceTableActions
+          sortOptions={{
+            defaultSort: defaultCareTeamSort,
+            options: careTeamSortOptions,
+            onChange: setSort,
+          }}
+          viewOptions={{
+            onChange: setViewOption,
+            options: viewOptions,
+            defaultView: allTime,
+          }}
+        />
+        <PatientResourceTable
           isLoading={patientCareTeamQuery.isLoading}
-          records={patientCareTeamQuery.data ?? []}
-          columns={patientCareTeamColumns}
-          handleRowClick={openDetails}
+          data={data}
           emptyMessage={
-            <EmptyPatientTable hasZeroFilteredRecords={false} resourceName="care team" />
+            <EmptyPatientTable
+              hasZeroFilteredRecords={hasZeroFilteredRecords}
+              resourceName="documents"
+            />
           }
+          columns={patientCareTeamColumns}
+          onRowClick={openDetails}
         />
       </div>
     </AnalyticsProvider>
@@ -61,17 +77,9 @@ export function PatientCareTeam({ className }: PatientCareTeamProps) {
 
 export const careTeamData = (careTeamPractitioner: CareTeamPractitionerModel) => [
   { label: "Organization", value: careTeamPractitioner.managingOrganization },
-  {
-    label: "CareTeam Telecom",
-    value: careTeamPractitioner.telecom && (
-      <div>
-        {careTeamPractitioner.telecom.map((item, index) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <div key={index}>{item.value}</div>
-        ))}
-      </div>
-    ),
-  },
+  { label: "Care Team", value: careTeamPractitioner.careTeam.categoryDisplay },
+  { label: "Phone", value: careTeamPractitioner.careTeam.phone },
   { label: "Role", value: careTeamPractitioner.role },
-  { label: "Status", value: careTeamPractitioner.status },
+  { label: "Specialty", value: careTeamPractitioner.specialty },
+  { label: "Member Since", value: careTeamPractitioner.effectiveStartDate },
 ];

@@ -4,14 +4,14 @@ import { DocumentModel } from "./models/document";
 import { PatientModel, useQueryWithPatient } from "..";
 import { applyDocumentFilters } from "@/components/content/document/helpers/filters";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
+import { createGraphqlClient, fqsRequest, MAX_OBJECTS_PER_REQUEST } from "@/services/fqs/client";
 import { DocumentReferenceGraphqlResponse, documentsQuery } from "@/services/fqs/queries/documents";
 import { orderBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_DOCUMENTS } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
-export function usePatientTopLevelDocuments() {
-  const { data, isError, isFetching, isLoading } = usePatientDocuments();
+export function usePatientTopLevelDocuments(limit = MAX_OBJECTS_PER_REQUEST) {
+  const { data, isError, isFetching, isLoading } = usePatientDocuments(limit);
   const [filteredData, setFilteredData] = useState([] as DocumentModel[]);
 
   useEffect(() => {
@@ -37,35 +37,37 @@ export function usePatientTopLevelDocuments() {
   };
 }
 
-export function usePatientDocuments() {
+export function usePatientDocuments(limit = MAX_OBJECTS_PER_REQUEST) {
   const patientDocumentsQuery = useQueryWithPatient(
     QUERY_KEY_PATIENT_DOCUMENTS,
-    [],
-    withTimerMetric(getDocumentFromFQS, "req.timing.documents")
+    [limit],
+    withTimerMetric(getDocumentsFromFQS(limit), "req.timing.documents")
   );
 
   return useIncludeBasics(patientDocumentsQuery);
 }
 
-async function getDocumentFromFQS(requestContext: CTWRequestContext, patient: PatientModel) {
-  try {
-    const graphClient = createGraphqlClient(requestContext);
-    const { data } = await fqsRequest<DocumentReferenceGraphqlResponse>(
-      graphClient,
-      documentsQuery,
-      {
-        upid: patient.UPID,
-        cursor: "",
-        first: 1000,
-        sort: {
-          lastUpdated: "DESC",
-        },
-      }
-    );
-    return data.DocumentReferenceConnection.edges.map((x) => new DocumentModel(x.node));
-  } catch (e) {
-    throw new Error(`Failed fetching document information for patient: ${e}`);
-  }
+function getDocumentsFromFQS(limit: number) {
+  return async (requestContext: CTWRequestContext, patient: PatientModel) => {
+    try {
+      const graphClient = createGraphqlClient(requestContext);
+      const { data } = await fqsRequest<DocumentReferenceGraphqlResponse>(
+        graphClient,
+        documentsQuery,
+        {
+          upid: patient.UPID,
+          cursor: "",
+          first: limit,
+          sort: {
+            lastUpdated: "DESC",
+          },
+        }
+      );
+      return data.DocumentReferenceConnection.edges.map((x) => new DocumentModel(x.node));
+    } catch (e) {
+      throw new Error(`Failed fetching document information for patient: ${e}`);
+    }
+  };
 }
 
 export async function getDocumentsByIdFromFQS(

@@ -29,6 +29,7 @@ import {
 } from "../medications/patient-medications-outside";
 import { PatientMedicationsOutsideBadge } from "../medications/patient-medications-outside-badge";
 import { UnreadMedicationsNotification } from "../medications/unread-medications-notification";
+import { PatientOverview } from "../overview/patient-overview";
 import { PatientTimeline, PatientTimelineProps } from "../timeline/patient-timeline";
 import {
   PatientAllergies,
@@ -50,14 +51,20 @@ import {
   PatientImmunizations,
   PatientImmunizationsProps,
 } from "@/components/content/immunizations/patient-immunizations";
-import { ZAPResourceName } from "@/components/content/zus-aggregated-profile/zus-aggregated-profile";
+import { ZAPTabName } from "@/components/content/zus-aggregated-profile/zus-aggregated-profile";
 import { BetaLabel } from "@/components/core/beta-label";
 import { TabGroupItem } from "@/components/core/tab-group/tab-group";
 import i18next from "@/i18n";
 
-export type ZusAggregatedProfileTabs = Record<ZAPResourceName, (props: object) => TabGroupItem>;
+export type ZusAggregatedProfileTabs = Record<ZAPTabName, (props: object) => TabGroupItem>;
 
 export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
+  overview: () => ({
+    key: "overview",
+    display: () => <TabHelper name="overview" beta />,
+    render: () => <PatientOverview />,
+  }),
+
   conditions: (props: PatientConditionsProps = {}) => ({
     key: "conditions",
     display: () => i18next.t("zap.tabs.conditions"),
@@ -150,7 +157,7 @@ export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
   immunizations: (props: PatientImmunizationsProps = {}) => ({
     key: "immunizations",
     display: () => (
-      <TabHelper notification={<UnreadImmunizationsNotification />} name="immunizations" beta />
+      <TabHelper notification={<UnreadImmunizationsNotification />} name="immunizations" />
     ),
     render: () => <PatientImmunizations {...props} />,
   }),

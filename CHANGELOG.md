@@ -1,5 +1,43 @@
 # ctw-component-library
 
+## 1.68.9
+
+### Patch Changes
+
+- e457472f: Add Overview tab for users with access to search.
+
+## 1.68.8
+
+### Patch Changes
+
+- ac4e23c8: Update patient-history endpoint
+
+## 1.68.7
+
+### Patch Changes
+
+- 8886a7f9: Fix issue where having no UPID causes clients apps to crash.
+
+## 1.68.6
+
+### Patch Changes
+
+- e52111ac: Fix status check on immunizations and improving de-duping logic for care team.
+
+## 1.68.5
+
+### Patch Changes
+
+- 70d85f63: Update care team component and only show completed immunizations.
+- f6e870f2: Show clinical notes in document details drawer.
+
+## 1.68.4
+
+### Patch Changes
+
+- 3f7593fb: Refactor data access for diagnostic reports.
+- 3e4345bd: Refactor data access for encounters and documents.
+
 ## 1.68.3
 
 ### Patch Changes

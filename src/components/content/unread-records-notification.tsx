@@ -1,34 +1,35 @@
 import fhir4 from "fhir/r4";
-import {
-  defaultZAPResources,
-  ZAPResourceName,
-} from "./zus-aggregated-profile/zus-aggregated-profile";
+import { defaultZAPTabs, ZAPTabName } from "./zus-aggregated-profile/zus-aggregated-profile";
 import { useUserBuilderId } from "../core/providers/user-builder-id";
 import { UnreadNotificationIcon } from "../core/unread-notification-icon";
 import { usePatientAllergies } from "@/fhir/allergies";
 import { usePatientDiagnosticReports } from "@/fhir/diagnostic-report";
 import { usePatientTopLevelDocuments } from "@/fhir/document";
+import { usePatientEncounters } from "@/fhir/encounters";
 import { usePatientImmunizations } from "@/fhir/immunizations";
 import { FHIRModel } from "@/fhir/models/fhir-model";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { usePatientConditionsAll } from "@/services/conditions";
 
+export const numRecordsToLookbackForUnread = 20;
+
 export type UnreadRecordsNotificationProps = {
   className?: string;
-  resources?: ZAPResourceName[];
+  resources?: ZAPTabName[];
   text?: string;
 };
 
 export const UnreadRecordsNotification = ({
   className,
-  resources = defaultZAPResources,
+  resources = defaultZAPTabs,
   text,
 }: UnreadRecordsNotificationProps) => {
   const userBuilderId = useUserBuilderId();
   const allergiesQuery = usePatientAllergies();
   const conditionsQuery = usePatientConditionsAll();
-  const diagnosticReportsQuery = usePatientDiagnosticReports(20);
-  const documentsQuery = usePatientTopLevelDocuments();
+  const diagnosticReportsQuery = usePatientDiagnosticReports(numRecordsToLookbackForUnread);
+  const documentsQuery = usePatientTopLevelDocuments(numRecordsToLookbackForUnread);
+  const encountersQuery = usePatientEncounters(numRecordsToLookbackForUnread);
   const immunizationsQuery = usePatientImmunizations();
   const medicationsQuery = useQueryAllPatientMedications();
 
@@ -46,6 +47,9 @@ export const UnreadRecordsNotification = ({
         break;
       case "documents":
         data = documentsQuery.data;
+        break;
+      case "encounters":
+        data = encountersQuery.data ?? [];
         break;
       case "immunizations":
         data = immunizationsQuery.data;

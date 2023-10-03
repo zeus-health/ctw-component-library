@@ -15,7 +15,7 @@ export interface CareTeamGraphqlResponse {
 export const careTeamsQuery = gql`
   ${fragmentCoding}
   ${fragmentPractitioner}
-  query CareTeam($upid: ID!, $cursor: String!, $sort: CareTeamSortParams!, $first: Int!) {
+  query CareTeams($upid: ID!, $cursor: String!, $sort: CareTeamSortParams!, $first: Int!) {
     CareTeamConnection(upid: $upid, after: $cursor, sort: $sort, first: $first) {
       pageInfo {
         hasNextPage

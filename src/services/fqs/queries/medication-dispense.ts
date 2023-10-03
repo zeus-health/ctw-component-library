@@ -14,7 +14,7 @@ export interface MedicationDispenseGraphqlResponse {
 
 export const medicationDispenseQuery = gql`
   ${fragmentCoding}
-  query MedicationDispense(
+  query MedicationDispenses(
     $upid: ID!
     $cursor: String!
     $filter: MedicationDispenseFilterParams!

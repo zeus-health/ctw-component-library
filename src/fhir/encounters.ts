@@ -1,67 +1,77 @@
 import { SearchParams } from "fhir-kit-client";
-import { getIncludedBasics, getIncludedResources } from "./bundle";
+import { useEffect, useState } from "react";
+import { getIncludedResources } from "./bundle";
 import { usePatientDocuments } from "./document";
 import { PatientModel } from "./models";
-import { DocumentModel } from "./models/document";
 import { EncounterModel } from "./models/encounter";
 import { searchEncounterBuilderRecords } from "./search-helpers";
 import { useQueryWithPatient } from "..";
 import { dedupeAndMergeEncounters } from "@/components/content/encounters/helpers/filters";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
-import {
-  EncounterGraphqlResponse,
-  encountersQuery,
-  EncounterWithProvenance,
-} from "@/services/fqs/queries/encounters";
+import { createGraphqlClient, fqsRequest, MAX_OBJECTS_PER_REQUEST } from "@/services/fqs/client";
+import { EncounterGraphqlResponse, encountersQuery } from "@/services/fqs/queries/encounters";
 import { errorResponse } from "@/utils/errors";
 import { compact, pickBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_ENCOUNTERS } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
-export function usePatientEncounters() {
-  const { data, isFetched } = usePatientDocuments();
+export function usePatientEncounters(limit = MAX_OBJECTS_PER_REQUEST) {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_ENCOUNTERS,
-    [data],
-    (() => {
-      if (!isFetched) {
-        return async () => new Promise<EncounterModel[]>(() => {});
-      }
-      return withTimerMetric(getEncountersFromFQS(data), `req.timing.encounters`);
-    })()
+    [limit],
+    withTimerMetric(getEncountersFromFQS(limit), `req.timing.encounters`)
   );
 }
 
-function setupEncounterModels(
-  resources: EncounterWithProvenance[],
-  documents: DocumentModel[],
-  bundle?: fhir4.Bundle
-): EncounterModel[] {
-  if (bundle) {
-    const basicsMap = getIncludedBasics(bundle);
-    return resources.map(
-      (c) =>
-        new EncounterModel(c, c.ProvenanceList, documents, undefined, basicsMap.get(c.id ?? ""))
-    );
-  }
-  return resources.map((c) => new EncounterModel(c, c.ProvenanceList, documents));
+// Gets patient encounters along with clinical notes from any documents associated with each encounter.
+export function usePatientEncountersWithClinicalNotes(limit = MAX_OBJECTS_PER_REQUEST) {
+  const documentsQuery = usePatientDocuments();
+  const encounterQuery = usePatientEncounters(limit);
+  const [encountersWithClinicalNotes, setEncountersWithClinicalNotes] = useState<EncounterModel[]>(
+    []
+  );
+
+  useEffect(() => {
+    const documents = documentsQuery.data;
+    const encounters = encounterQuery.data ?? [];
+
+    if (documents.length > 0) {
+      setEncountersWithClinicalNotes(
+        encounters.map(
+          (encounter) => new EncounterModel(encounter.resource, encounter.provenance, documents)
+        )
+      );
+    } else {
+      setEncountersWithClinicalNotes(encounters);
+    }
+  }, [documentsQuery.data, encounterQuery.data]);
+
+  const isLoading = documentsQuery.isLoading || encounterQuery.isLoading;
+  const isError = documentsQuery.isError || encounterQuery.isError;
+  const isFetching = documentsQuery.isFetching || encounterQuery.isFetching;
+
+  return {
+    isLoading,
+    isError,
+    isFetching,
+    data: encountersWithClinicalNotes,
+  };
 }
 
-function getEncountersFromFQS(documents: DocumentModel[]) {
+function getEncountersFromFQS(limit: number) {
   return async (requestContext: CTWRequestContext, patient: PatientModel) => {
     try {
       const graphClient = createGraphqlClient(requestContext);
       const { data } = await fqsRequest<EncounterGraphqlResponse>(graphClient, encountersQuery, {
         upid: patient.UPID,
         cursor: "",
-        first: 1000,
+        first: limit,
         sort: {
           lastUpdated: "DESC",
         },
       });
       const nodes = data.EncounterConnection.edges.map((x) => x.node);
-      const results = setupEncounterModels(nodes, documents);
+      const results = nodes.map((c) => new EncounterModel(c, c.ProvenanceList, []));
       if (results.length === 0) {
         Telemetry.countMetric("req.count.encounters.none", 1);
       }
