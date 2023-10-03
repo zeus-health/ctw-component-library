@@ -1,4 +1,4 @@
-import { differenceInYears, format, isValid } from "date-fns";
+import { differenceInYears, format, isValid, parseISO } from "date-fns";
 import xpath from "xpath";
 import { getGuardian } from "./getGuardian";
 import { getHumanName, getId, parseToISOString } from "../../../helpers";
@@ -30,11 +30,11 @@ export const getPatient = (document: Document): Record<string, LabelValueType[] 
         xpath.select1("string(*[name()='administrativeGenderCode']/@displayName)", patient)
       );
 
-      const birthTime = new Date(
+      const birthTime = parseISO(
         parseToISOString(String(xpath.select1("string(*[name()='birthTime']/@value)", patient)))
       );
 
-      const deceasedTime = new Date(
+      const deceasedTime = parseISO(
         parseToISOString(
           String(xpath.select1("string(*[name()='sdtc:deceasedTime']/@value)", patient))
         )

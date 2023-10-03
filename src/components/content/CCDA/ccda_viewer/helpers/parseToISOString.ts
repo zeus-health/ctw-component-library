@@ -88,7 +88,7 @@ const constructISOString = ({
             if (isCorrectValue(timezoneMinute)) result += `:${timezoneMinute}`;
             else result += ":00";
           } else result += "-00:00";
-        } else result += "T00:00:00-00:00";
+        }
       }
     }
   }
