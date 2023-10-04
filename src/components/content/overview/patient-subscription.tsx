@@ -7,6 +7,26 @@ import {
 } from "@/services/subscriptions/subscriptions";
 import { compact, uniq } from "@/utils/nodash";
 
+const demoPatientSubscription = {
+  patientId: "123",
+  package: {
+    id: "st234",
+    description: "asdfasdf",
+    name: "ZAP Pro",
+    meta: {
+      freshmakerProviders: ["commonwell", "surescripts"],
+      initialProviders: ["commonwell", "surescripts"],
+      recurringProvidersWithInterval: [
+        {
+          intervalDays: 28,
+          provider: "commonwell",
+        },
+      ],
+      subscriptionProviders: ["bamboo", "collective", "quest", "surescripts"],
+    },
+  },
+};
+
 export const PatientSubscriptionDetails = () => {
   const patientSubscription = usePatientSubscription();
   const patient = usePatient();
@@ -19,7 +39,7 @@ export const PatientSubscriptionDetails = () => {
     return <ErrorAlert header="Error loading data" />;
   }
 
-  if (!patientSubscription.data.package) {
+  if (!patientSubscription.data.package && !patient.data.isTestPatient) {
     return (
       <>
         <span className="ctw-font-medium">{patient.data.display}</span> is not enrolled for any
@@ -29,13 +49,15 @@ export const PatientSubscriptionDetails = () => {
     );
   }
 
-  const dataSources = getDataSources(patientSubscription.data);
+  const dataSources = getDataSources(
+    patient.data.isTestPatient ? demoPatientSubscription : patientSubscription.data
+  );
 
   return (
     <>
       <div>
         <span className="ctw-font-medium">{patient.data.display}</span> is enrolled in{" "}
-        <span className="ctw-font-medium">{patientSubscription.data.package.name}</span>
+        <span className="ctw-font-medium">{patientSubscription.data.package?.name}</span>
       </div>
       <div className="ctw-pt-3">This provides access to the following data:</div>
       <ul className="ctw-mx-0 ctw-list-disc ctw-pl-4">
