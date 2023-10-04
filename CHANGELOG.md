@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.68.11
+
+### Patch Changes
+
+- 9dd57fdf: IFrame theme is passed to iframe with CTWProviderProps to fix a UX bug caused by the iframe ZAPs ThemeProvider having different context value than the parent window ThemeProvider.
+
 ## 1.68.10
 
 ### Patch Changes
