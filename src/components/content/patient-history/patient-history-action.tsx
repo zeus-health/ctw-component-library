@@ -14,7 +14,6 @@ export const PatientHistoryLastRetrievedWithAction = ({
     <div>
       <PatientHistoryLastRetrieved />
     </div>
-    {/* TODO - hide demographics! */}
     <div>
       {!hideRequestRecords && (
         <RequestRecordsButton includePatientDemographicsForm={includePatientDemographicsForm} />
