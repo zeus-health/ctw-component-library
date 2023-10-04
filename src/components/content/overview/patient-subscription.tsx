@@ -54,6 +54,7 @@ export const getDataSources = (patientSubscription: PatientSubscription) => {
   const translatedPackages = {
     freshmakerProviders:
       patientSubscription.package?.meta.freshmakerProviders?.map((x) =>
+        // All of these ts-ignore's are because the call to i18next.t has a TS error even though there is a check that x exists in the dictionary
         // @ts-ignore
         i18next.exists(x) ? i18next.t(x) : x
       ) ?? [],
