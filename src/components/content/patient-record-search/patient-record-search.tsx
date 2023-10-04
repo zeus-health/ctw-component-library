@@ -76,7 +76,7 @@ function PatientRecordSearchComponent({ className }: PatientRecordSearchProps) {
         <input
           type="text"
           className="ctw-w-full ctw-rounded-md ctw-border ctw-border-solid ctw-border-icon-light ctw-bg-bg-white ctw-px-3 ctw-py-2 ctw-pl-10 ctw-pr-3 ctw-text-sm ctw-shadow-sm"
-          placeholder="Search"
+          placeholder="Search patient conditions, medications, diagnostics, documents and allergies. "
           name="patientRecordSearch"
           value={searchTextInputValue}
           onChange={handleChangeInput}
@@ -95,12 +95,6 @@ function PatientRecordSearchComponent({ className }: PatientRecordSearchProps) {
           <div className="ctw-patient-record-search-results ctw-align-left ctw-ml-0">
             {/* FeedbackProvider will allow all the feedback forms to get the id of the query */}
             <FeedbackProvider id={data.id}>
-              <RenderIf condition={!userHasSearched}>
-                <span className="ctw-text-1xl ctw-text-content-dark ctw-block ctw-text-left ctw-font-medium">
-                  Search patient conditions, medications, documents and allergies.
-                </span>
-              </RenderIf>
-
               <RenderIf condition={isError}>
                 <div className="ctw-w-full">
                   <ErrorAlert header="Error">There was an error running your search.</ErrorAlert>
@@ -150,18 +144,3 @@ export const PatientRecordSearch = withErrorBoundary(
   ),
   "PatientRecordSearch"
 );
-
-export const PatientRecordSearchTab = {
-  key: "patient-record-search",
-  display: () => (
-    <div className="ctw-flex ctw-items-center ctw-space-x-3">
-      <div className="ctw-absolute -ctw-ml-1">
-        <SearchIcon className="ctw-h-3 ctw-w-3" />
-      </div>
-      <div className="ctw-flex ctw-items-center ctw-space-x-1">
-        <span className="ctw-capitalize">search</span>
-      </div>
-    </div>
-  ),
-  render: () => <PatientRecordSearch />,
-};

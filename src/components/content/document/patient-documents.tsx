@@ -1,11 +1,11 @@
 import cx from "classnames";
 import { useRef } from "react";
 import { patientDocumentColumns } from "./helpers/columns";
+import { useDocumentDetailsDrawer } from "./helpers/details";
 import { defaultDocumentsFilters, documentsFilter } from "./helpers/filters";
 import { defaultDocumentSort, documentSortOptions } from "./helpers/sorts";
 import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { PatientResourceTable } from "../resource/patient-resource-table";
-import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { EmptyPatientTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
@@ -40,13 +40,7 @@ function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocument
   const isEmptyQuery = patientDocumentQuery.data.length === 0;
   const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
 
-  const openDetails = useResourceDetailsDrawer({
-    header: (m) => m.title,
-    subHeader: (m) => m.encounterDate,
-    details: documentData,
-    rowActions,
-    enableDismissAndReadActions: true,
-  });
+  const openDetails = useDocumentDetailsDrawer({ rowActions });
 
   return (
     <AnalyticsProvider componentName="PatientDocuments">
@@ -114,8 +108,3 @@ function useRowActions(onAddToRecord?: (document: DocumentModel, binary: fhir4.B
 }
 
 export const PatientDocuments = withErrorBoundary(PatientDocumentsComponent, "PatientDocuments");
-
-export const documentData = (document: DocumentModel) => [
-  { label: "Date Retrieved", value: document.dateCreated },
-  { label: "Author", value: document.custodian },
-];

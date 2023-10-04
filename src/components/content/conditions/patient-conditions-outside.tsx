@@ -1,7 +1,7 @@
 import { useAddConditionForm } from "./helpers/modal-hooks";
 import { PatientConditionsBase } from "./helpers/patient-conditions-base";
 import { useToggleDismiss } from "../hooks/use-toggle-dismiss";
-import { PatientHistoryAction } from "../patient-history/patient-history-action";
+import { PatientHistoryLastRetrievedWithAction } from "../patient-history/patient-history-action";
 import { usePatientHistory } from "../patient-history/use-patient-history";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
@@ -30,7 +30,7 @@ const PatientConditionsOutsideComponent = ({
 
   const rowActions = useRowActions();
   const action = (
-    <PatientHistoryAction
+    <PatientHistoryLastRetrievedWithAction
       hideRequestRecords={
         hideRequestRecords || hasNoOutsideDataAndHasNeverRequestedPatientHistory || readOnly
       }

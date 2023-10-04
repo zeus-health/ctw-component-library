@@ -13,12 +13,13 @@ export type NotesEntryProps = {
   subtitle?: string;
   title?: string;
   versionId?: string;
+  isDetailShownOnOpen?: boolean;
 };
 
 type Props = NotesEntryProps;
 
-export const NotesEntry = ({ details, hideEmpty, title }: Props) => {
-  const [isDetailShown, setIsDetailShown] = useState(false);
+export const NotesEntry = ({ details, hideEmpty, title, isDetailShownOnOpen }: Props) => {
+  const [isDetailShown, setIsDetailShown] = useState(isDetailShownOnOpen ?? false);
 
   return (
     <div className="ctw-space-y-1">

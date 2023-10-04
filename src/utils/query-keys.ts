@@ -22,6 +22,7 @@ export const QUERY_KEY_PATIENT_HISTORY_DETAILS = "patient_history_details";
 export const QUERY_KEY_PATIENT_HISTORY_LIST = "patient_history_list";
 export const QUERY_KEY_PATIENT_IMMUNIZATIONS = "patient_immunizations";
 export const QUERY_KEY_PATIENT_OBSERVATIONS = "patient_observations";
+export const QUERY_KEY_PATIENT_SUBSCRIPTION = "patient_subscription";
 export const QUERY_KEY_PATIENTS_LIST = "patients_list";
 export const QUERY_KEY_PATIENTS_ADT_LIST = "patients_adt_list";
 export const QUERY_KEY_PROVENANCE = "provenance";

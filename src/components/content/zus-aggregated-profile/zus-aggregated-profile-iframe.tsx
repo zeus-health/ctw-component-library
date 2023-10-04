@@ -170,7 +170,10 @@ const ZusAggregatedProfileIFrameComponent = (props: ZusAggregatedProfileProps) =
         enableTelemetry: telemetry.enableTelemetry,
         headers: requestContext.headers as Record<string, string> | undefined,
         locals: theme.locals,
-        theme: theme.theme,
+        theme: {
+          ...theme.theme,
+          iframe: theme.iframeTheme,
+        },
       };
 
       const patientProviderProps = {
@@ -189,6 +192,7 @@ const ZusAggregatedProfileIFrameComponent = (props: ZusAggregatedProfileProps) =
               medicationsOutsideProps: omit("onAddToRecord", props.medicationsOutsideProps),
               medicationsAllProps: omit("onAddToRecord", props.medicationsAllProps),
             },
+            // todo: refactor this out. It is redundant with CTWProviderProps.theme.iframe but it's expected by the standalone ZAP.
             iframeTheme: theme.iframeTheme,
           },
         },
