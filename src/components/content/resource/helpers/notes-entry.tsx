@@ -18,7 +18,12 @@ export type NotesEntrySimpleProps = {
 
 type Props = NotesEntrySimpleProps;
 
-export const NotesEntrySimple = ({ details, hideEmpty, title, isDetailShownOnOpen }: Props) => {
+export const NotesEntrySimple = ({
+  details,
+  hideEmpty,
+  title,
+  isDetailShownOnOpen = false,
+}: Props) => {
   const [isDetailShown, setIsDetailShown] = useState(isDetailShownOnOpen);
 
   return (
