@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.68.12
+
+### Patch Changes
+
+- 5f1a2c2b: Fix type issue where type is incorrect.
+
 ## 1.68.11
 
 ### Patch Changes
