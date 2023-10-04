@@ -50,7 +50,7 @@ export const PatientSubscriptionDetails = () => {
 };
 
 // Take subscription metadata and return a list of translated data sources and the details on their acquisition models
-const getDataSources = (patientSubscription: PatientSubscription) => {
+export const getDataSources = (patientSubscription: PatientSubscription) => {
   const translatedPackages = {
     freshmakerProviders:
       patientSubscription.package?.meta.freshmakerProviders?.map((x) =>
