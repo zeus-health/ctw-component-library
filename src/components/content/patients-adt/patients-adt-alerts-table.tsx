@@ -90,7 +90,6 @@ function ADTTableComponent({
         e.relatedEncounter = new EncounterModel(encounterNode, encounterNode.ProvenanceList);
 
         e.relatedEncounter.binaryId = encAndNote.binary_id.replaceAll('"', "");
-        console.log("binary id log", e.relatedEncounter.binaryId);
       }
     });
   }
