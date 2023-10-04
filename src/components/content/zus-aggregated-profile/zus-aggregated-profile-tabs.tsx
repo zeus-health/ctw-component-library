@@ -29,7 +29,7 @@ import {
 } from "../medications/patient-medications-outside";
 import { PatientMedicationsOutsideBadge } from "../medications/patient-medications-outside-badge";
 import { UnreadMedicationsNotification } from "../medications/unread-medications-notification";
-import { PatientOverview } from "../overview/patient-overview";
+import { PatientOverview, PatientOverviewProps } from "../overview/patient-overview";
 import { PatientTimeline, PatientTimelineProps } from "../timeline/patient-timeline";
 import {
   PatientAllergies,
@@ -59,10 +59,10 @@ import i18next from "@/i18n";
 export type ZusAggregatedProfileTabs = Record<ZAPTabName, (props: object) => TabGroupItem>;
 
 export const zusAggregatedProfileTabs: ZusAggregatedProfileTabs = {
-  overview: () => ({
+  overview: (props: PatientOverviewProps) => ({
     key: "overview",
     display: () => <TabHelper name="overview" beta />,
-    render: () => <PatientOverview />,
+    render: () => <PatientOverview {...props} />,
   }),
 
   conditions: (props: PatientConditionsProps = {}) => ({

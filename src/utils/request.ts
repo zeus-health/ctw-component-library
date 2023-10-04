@@ -26,7 +26,7 @@ export type CTWRequestInit = {
 
 export function ctwFetch(input: RequestInfo | URL, init?: CTWRequestInit): Promise<Response> {
   const headers = init?.headers || {};
-  headers["Zus-Request-Source"] = "component-library";
+  // headers["Zus-Request-Source"] = "component-library";
 
   const newInit: CTWRequestInit = init || {};
   newInit.headers = headers;
