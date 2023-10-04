@@ -25,7 +25,6 @@ function RelatedEncounter({ encounter }: { encounter?: EncounterModel }) {
     <div className="ctw-space-y-4">
       <h4 className="ctw-text-lg ctw-font-semibold">Encounters & Notes</h4>
       <NoteSummary
-        key={encounter.id}
         collapsedRender={
           <div className="ctw-flex ctw-grow ctw-justify-between">
             <div className="ctw-flex ctw-space-x-6">
