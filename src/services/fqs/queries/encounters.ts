@@ -19,7 +19,7 @@ export interface EncounterGraphqlResponse {
 export const encountersQuery = gql`
   ${fragmentEncounter}
 
-  query EncountersAll($upid: ID!, $cursor: String!, $sort: EncounterSortParams!, $first: Int!) {
+  query Encounters($upid: ID!, $cursor: String!, $sort: EncounterSortParams!, $first: Int!) {
     EncounterConnection(upid: $upid, after: $cursor, sort: $sort, first: $first) {
       pageInfo {
         hasNextPage

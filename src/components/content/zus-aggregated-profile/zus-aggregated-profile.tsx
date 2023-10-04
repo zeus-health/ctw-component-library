@@ -1,6 +1,5 @@
 import "./zus-aggregated-profile.scss";
 
-import { useUnleashClient } from "@unleash/proxy-client-react";
 import cx from "classnames";
 import { PatientConditionsAllProps } from "../conditions/patient-conditions-all";
 import { PatientConditionsOutsideProps } from "../conditions/patient-conditions-outside";
@@ -9,7 +8,6 @@ import { PatientEncountersProps } from "../encounters/patient-encounters";
 import { PatientMedicationsProps } from "../medications/patient-medications";
 import { PatientMedicationsAllProps } from "../medications/patient-medications-all";
 import { PatientMedicationsOutsideProps } from "../medications/patient-medications-outside";
-import { PatientRecordSearchTab } from "../patient-record-search/patient-record-search";
 import { PatientTimelineProps } from "../timeline/patient-timeline";
 import ZusSVG from "@/assets/zus.svg";
 import { PatientAllergiesProps } from "@/components/content/allergies/patient-allergies";
@@ -24,12 +22,14 @@ import {
 } from "@/components/content/zus-aggregated-profile/zus-aggregated-profile-tabs";
 import { Title } from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
+import { Loading } from "@/components/core/loading";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { RenderIf } from "@/components/core/render-if";
 import { TabGroup } from "@/components/core/tab-group/tab-group";
+import { useFeatureToggle } from "@/hooks/use-feature-toggle";
 import { intersection } from "@/utils/nodash";
 
-export type ZAPResourceName =
+export type ZAPTabName =
   | "allergies"
   | "care-team"
   | "conditions"
@@ -42,9 +42,11 @@ export type ZAPResourceName =
   | "medications"
   | "medications-outside"
   | "medications-all"
-  | "timeline";
+  | "timeline"
+  | "overview";
 
-export const defaultZAPResources: ZAPResourceName[] = [
+export const defaultZAPTabs: ZAPTabName[] = [
+  "overview",
   "conditions-all",
   "medications-all",
   "diagnostic-reports",
@@ -56,7 +58,7 @@ export const defaultZAPResources: ZAPResourceName[] = [
 ];
 
 export type ZusAggregatedProfileProps = {
-  resources?: ZAPResourceName[];
+  resources?: ZAPTabName[]; // TODO - would prefer to rename this to tabs
   forceHorizontalTabs?: boolean;
   includePatientDemographicsForm?: boolean;
   title?: string;
@@ -97,14 +99,13 @@ const ZusAggregatedProfileComponent = ({
   medicationsAllProps,
   timelineProps,
   encounterProps,
-  resources = defaultZAPResources,
+  resources = defaultZAPTabs,
   hideTitle = false,
   title = "Outside Records",
   removeBranding = false,
   removeRequestRecords = false,
 }: ZusAggregatedProfileProps) => {
-  const unleash = useUnleashClient();
-  const isSearchEnabled = unleash.isEnabled("ctw-patient-record-search");
+  const isSearchEnabledToggle = useFeatureToggle("ctw-patient-record-search");
 
   // Get the configuration for each tab group by resource type
   const subcomponentProps: Record<keyof ZusAggregatedProfileTabs, unknown> = {
@@ -121,22 +122,25 @@ const ZusAggregatedProfileComponent = ({
     "medications-outside": medicationsOutsideProps,
     "medications-all": medicationsAllProps,
     timeline: timelineProps,
+    overview: {},
   };
 
   // Order provided resources by the specified order in zusAggregatedProfileTabs.
   // This way, the tabs will always be in the same order.
   const orderedResources = intersection(
-    Object.keys(zusAggregatedProfileTabs) as ZAPResourceName[],
+    Object.keys(zusAggregatedProfileTabs) as ZAPTabName[],
     resources
   );
 
-  const tabbedContent = orderedResources.map((tabName) => {
-    const props = subcomponentProps[tabName] ?? {};
-    return zusAggregatedProfileTabs[tabName](props);
-  });
+  const tabbedContent = orderedResources
+    .filter((tabName) => tabName !== "overview" || isSearchEnabledToggle.enabled) // only allow overview tab if search is enabled
+    .map((tabName) => {
+      const props = subcomponentProps[tabName] ?? {};
+      return zusAggregatedProfileTabs[tabName](props);
+    });
 
-  if (isSearchEnabled) {
-    tabbedContent.push(PatientRecordSearchTab);
+  if (!isSearchEnabledToggle.ready) {
+    return <Loading />;
   }
 
   return (
@@ -166,7 +170,7 @@ const ZusAggregatedProfileComponent = ({
           content={tabbedContent}
           forceHorizontalTabs={forceHorizontalTabs}
           topRightContent={
-            <RenderIf condition={!removeRequestRecords}>
+            <RenderIf condition={!removeRequestRecords && isSearchEnabledToggle.enabled === false}>
               <RequestRecordsButton
                 className="ctw-mr-1.5"
                 includePatientDemographicsForm={includePatientDemographicsForm}

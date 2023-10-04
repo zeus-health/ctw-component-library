@@ -16,7 +16,7 @@ export type ResourceTableProps<T extends MinRecordItem> = {
   emptyMessage?: string | ReactElement;
   isLoading?: boolean;
   onRowClick?: TableProps<T>["handleRowClick"];
-  RowActions?: TableProps<T>["RowActions"];
+  rowActions?: (r: T) => TableProps<T>["rowActions"];
   showTableHead?: boolean;
   enableDismissAndReadActions?: boolean;
   hidePagination?: boolean;
@@ -30,7 +30,7 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
   emptyMessage,
   isLoading = false,
   onRowClick,
-  RowActions,
+  rowActions,
   showTableHead,
   enableDismissAndReadActions,
   hidePagination = false,
@@ -44,8 +44,9 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
 
   const { toggleRead } = useToggleRead();
 
+  // Create the RowActions react node
   const RowActionsWithAdditions = useAdditionalResourceActions({
-    RowActions,
+    rowActions,
     enableDismissAndReadActions,
   });
 

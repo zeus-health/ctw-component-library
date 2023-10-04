@@ -2,7 +2,7 @@ import type { PatientRecordSearchResult } from "@/services/patient-record-search
 import { SearchResult } from "./search-result";
 import { allergyData, allergyHistory } from "../../allergies/patient-allergies";
 import { useConditionDetailsDrawer } from "../../conditions/helpers/details";
-import { documentData } from "../../document/patient-documents";
+import { useDocumentDetailsDrawer } from "../../document/helpers/details";
 import { useMedicationDetailsDrawer } from "../../medications/helpers/details";
 import { useObservationsDetailsDrawer } from "../../observations/helpers/drawer";
 import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
@@ -31,11 +31,7 @@ export function SearchResultRow(props: ResourceRowProps) {
     renderChild: allergyHistory,
     getSourceDocument: true,
   });
-  const openDocumentDetails = useResourceDetailsDrawer({
-    header: (m) => m.title,
-    subHeader: (m) => m.encounterDate,
-    details: documentData,
-  });
+  const openDocumentDetails = useDocumentDetailsDrawer({});
   const openMedicationDetails = useMedicationDetailsDrawer({});
   const openDiagnosticReportDetails = useObservationsDetailsDrawer();
 
@@ -62,7 +58,7 @@ export function SearchResultRow(props: ResourceRowProps) {
           heading={condition.display}
           label="Condition"
           resource={condition}
-          openDetails={() => openConditionDetails}
+          openDetails={openConditionDetails}
           details={[
             {
               label: "Last Updated",

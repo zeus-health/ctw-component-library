@@ -7,7 +7,7 @@ import {
 import { PatientConditionsBase } from "./helpers/patient-conditions-base";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
-import { RowActionsProps } from "@/components/core/table/table";
+import { RowActionsConfigProp } from "@/components/core/table/table-rows";
 import { ConditionModel } from "@/fhir/models";
 import { useBaseTranslations } from "@/i18n";
 import { usePatientBuilderConditions } from "@/services/conditions";
@@ -21,7 +21,7 @@ const PatientConditionsComponent = ({ className, readOnly = false }: PatientCond
   const query = usePatientBuilderConditions();
   const showAddConditionForm = useAddConditionForm();
   const { t } = useBaseTranslations();
-
+  const rowActions = useRowActions();
   const action = !readOnly && (
     <button type="button" className="ctw-btn-primary" onClick={() => showAddConditionForm()}>
       {t("resource.add", { resource: t("glossary:condition_one") })}
@@ -35,7 +35,7 @@ const PatientConditionsComponent = ({ className, readOnly = false }: PatientCond
         className={cx(className)}
         query={query}
         readOnly={readOnly}
-        RowActions={readOnly ? undefined : RowActions}
+        rowActions={readOnly ? undefined : rowActions}
       />
     </AnalyticsProvider>
   );
@@ -43,29 +43,20 @@ const PatientConditionsComponent = ({ className, readOnly = false }: PatientCond
 
 export const PatientConditions = withErrorBoundary(PatientConditionsComponent, "PatientConditions");
 
-const RowActions = ({ record, onSuccess }: RowActionsProps<ConditionModel>) => {
+function useRowActions(): (r: ConditionModel) => RowActionsConfigProp<ConditionModel> {
   const showEditConditionForm = useEditConditionForm();
   const confirmDelete = useConfirmDeleteCondition();
 
-  return (
-    <div className="ctw-flex ctw-space-x-2">
-      {!record.isDeleted && (
-        <button
-          type="button"
-          className="ctw-btn-default"
-          onClick={() => confirmDelete(record, onSuccess)}
-        >
-          Remove
-        </button>
-      )}
-
-      <button
-        type="button"
-        className="ctw-btn-primary"
-        onClick={() => showEditConditionForm(record)}
-      >
-        Edit
-      </button>
-    </div>
-  );
-};
+  return (record: ConditionModel): RowActionsConfigProp<ConditionModel> => [
+    {
+      text: "Remove",
+      className: "ctw-btn-default",
+      onClick: () => confirmDelete(record),
+    },
+    {
+      text: "Edit",
+      className: "ctw-btn-primary",
+      onClick: () => showEditConditionForm(record),
+    },
+  ];
+}

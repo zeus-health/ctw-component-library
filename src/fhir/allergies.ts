@@ -3,22 +3,19 @@ import { AllergyModel, PatientModel } from "./models";
 import { applyAllergyFilters } from "@/components/content/allergies/helpers/allergies-filter";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
-import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import { AllergyGraphqlResponse, allergyQuery } from "@/services/fqs/queries/allergies";
 import { QUERY_KEY_PATIENT_ALLERGIES } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export function usePatientAllergies() {
-  const fqs = useFQSFeatureToggle("allergies");
-
   const patientAllergiesQuery = useQueryWithPatient(
     QUERY_KEY_PATIENT_ALLERGIES,
     [],
     withTimerMetric(getAllergyIntoleranceFromFQS, "req.timing.allergies")
   );
 
-  return useIncludeBasics(patientAllergiesQuery, fqs);
+  return useIncludeBasics(patientAllergiesQuery);
 }
 
 async function getAllergyIntoleranceFromFQS(

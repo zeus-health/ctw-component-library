@@ -11,7 +11,7 @@
 }
 
 .ctw-btn-clear {
-  @apply ctw-cursor-pointer ctw-border-0 ctw-bg-transparent ctw-p-0 ctw-text-sm ctw-font-medium ctw-text-primary-dark ctw-outline-none hover:ctw-text-primary-main;
+  @apply ctw-cursor-pointer ctw-border-0 ctw-bg-transparent ctw-p-0 ctw-text-primary-dark ctw-outline-none hover:ctw-text-primary-main;
   line-height: 1;
   @include focus-visible;
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;

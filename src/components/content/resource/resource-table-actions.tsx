@@ -30,10 +30,10 @@ export const ResourceTableActions = <T extends MinRecordItem>({
     <div
       className={cx(
         className,
-        "ctw-flex ctw-items-start ctw-justify-between ctw-space-x-2 ctw-pt-2 sm:ctw-pt-1.5"
+        "ctw-flex ctw-flex-col-reverse ctw-items-start ctw-justify-items-end ctw-pt-2 sm:ctw-flex-row sm:ctw-pt-1.5"
       )}
     >
-      <div className="ctw-flex ctw-flex-col ctw-flex-wrap ctw-gap-x-2 sm:ctw-flex-row">
+      <div className="ctw-flex ctw-w-full ctw-flex-col ctw-flex-wrap ctw-gap-x-2 sm:ctw-flex-row">
         {viewOptions && (
           <ViewButton
             className={cx(viewOptions.className, "ctw-mb-2")}
@@ -52,7 +52,9 @@ export const ResourceTableActions = <T extends MinRecordItem>({
         )}
         {filterOptions && filterOptions.filters.length > 0 && <FilterBar {...filterOptions} />}
       </div>
-      <div className="ctw-ml-auto ctw-whitespace-nowrap">{action}</div>
+      <div className="ctw-mb-2 ctw-ml-0 ctw-w-full ctw-whitespace-nowrap sm:ctw-mb-0 sm:ctw-ml-auto sm:ctw-w-auto">
+        {action}
+      </div>
     </div>
   );
 };

@@ -21,7 +21,7 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
 
   public clinicalNotes: DocumentModel[];
 
-  private provenance: fhir4.Provenance[];
+  public provenance: fhir4.Provenance[];
 
   public relatedEncounter: EncounterModel | undefined;
 
@@ -32,6 +32,7 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
     revIncludes?: Resource[]
   ) {
     super(resource, includedResources, revIncludes);
+    this.provenance = provenance;
     this.clinicalNotes = [];
     this.provenance = provenance;
   }

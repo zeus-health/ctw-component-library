@@ -9,7 +9,6 @@ import { searchCommonRecords } from "./search-helpers";
 import { SYSTEM_BASIC_RESOURCE_TYPE, SYSTEM_ZUS_PROFILE_ACTION } from "./system-urls";
 import { useQueryWithPatient } from "..";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { FeatureToggle } from "@/hooks/use-feature-toggle";
 import { cloneDeep } from "@/utils/nodash";
 import { QUERY_KEY_BASIC } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
@@ -61,25 +60,11 @@ export async function recordProfileAction<T extends fhir4.Resource>(
   }
 }
 
-export function useBasic(fqs: FeatureToggle) {
+export function usePatientBasicResources() {
   return useQueryWithPatient(
     QUERY_KEY_BASIC,
-    [fqs.ready, fqs.enabled],
-    (() => {
-      if (!fqs.ready) {
-        return async () =>
-          new Promise<Basic[]>((resolve) => {
-            resolve([]);
-          });
-      }
-      return fqs.enabled
-        ? withTimerMetric(fetchBasic, "req.timing.basic")
-        : // Don't fetch Basic resources if FQS is disabled; the Outside Conditions/Meds ODS queries already fetch them via _revinclude.
-          async () =>
-            new Promise<Basic[]>((resolve) => {
-              resolve([]);
-            });
-    })()
+    [],
+    (() => withTimerMetric(fetchBasic, "req.timing.basic"))()
   );
 }
 
@@ -102,10 +87,9 @@ function mapBasics<R extends fhir4.Resource, T extends FHIRModel<R>>(
 }
 
 export function useIncludeBasics<R extends fhir4.Resource, T extends FHIRModel<R>>(
-  query: UseQueryResult<T[]>,
-  fqs: FeatureToggle
+  query: UseQueryResult<T[]>
 ) {
-  const basicsQuery = useBasic(fqs);
+  const basicsQuery = usePatientBasicResources();
   const initialResources = mapBasics(query.data || [], basicsQuery.data || []);
   const [resources, setResources] = useState<T[]>(initialResources);
 
@@ -116,7 +100,7 @@ export function useIncludeBasics<R extends fhir4.Resource, T extends FHIRModel<R
 
   const isLoading = query.isLoading || basicsQuery.isLoading;
   const isError = query.isError || basicsQuery.isError;
-  const isFetching = query.isFetching || basicsQuery.isFetching || !fqs.ready;
+  const isFetching = query.isFetching || basicsQuery.isFetching;
   const isFetched = query.isFetched && basicsQuery.isFetched;
 
   return {

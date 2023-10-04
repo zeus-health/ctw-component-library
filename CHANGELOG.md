@@ -1,5 +1,89 @@
 # ctw-component-library
 
+## 1.68.10
+
+### Patch Changes
+
+- 84eeab06: Fix bug where ccda date is off by one day.
+
+## 1.68.9
+
+### Patch Changes
+
+- e457472f: Add Overview tab for users with access to search.
+
+## 1.68.8
+
+### Patch Changes
+
+- ac4e23c8: Update patient-history endpoint
+
+## 1.68.7
+
+### Patch Changes
+
+- 8886a7f9: Fix issue where having no UPID causes clients apps to crash.
+
+## 1.68.6
+
+### Patch Changes
+
+- e52111ac: Fix status check on immunizations and improving de-duping logic for care team.
+
+## 1.68.5
+
+### Patch Changes
+
+- 70d85f63: Update care team component and only show completed immunizations.
+- f6e870f2: Show clinical notes in document details drawer.
+
+## 1.68.4
+
+### Patch Changes
+
+- 3f7593fb: Refactor data access for diagnostic reports.
+- 3e4345bd: Refactor data access for encounters and documents.
+
+## 1.68.3
+
+### Patch Changes
+
+- f5b0236a: Add ability to show dismissed records via filter.
+
+## 1.68.2
+
+### Patch Changes
+
+- 3804825f: Adds ability to read and dismiss records.
+
+## 1.68.1
+
+### Patch Changes
+
+- d2946def: Fix whitespace breaking on "add filter" dropdown.
+
+## 1.68.0
+
+### Minor Changes
+
+- dac8f017: Styled ZAP and Drawer for sub 400px viewports.
+
+### Patch Changes
+
+- ea8ecddb: Add tracking events for the ADT table.
+
+## 1.67.4
+
+### Patch Changes
+
+- 835209e8: Fix issue with condition drawer in search results
+
+## 1.67.3
+
+### Patch Changes
+
+- fb673842: Fix relevant content where spans are empty
+
 ## 1.67.2
 
 ### Patch Changes

@@ -1,3 +1,4 @@
+import cx from "classnames";
 import { ReactNode, useEffect, useState } from "react";
 import { useAdditionalResourceActions } from "./use-additional-resource-actions";
 import { DocumentButton } from "../CCDA/document-button";
@@ -7,12 +8,14 @@ import { Drawer } from "@/components/core/drawer";
 import { Loading } from "@/components/core/loading";
 import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
+import { useCtwThemeRef } from "@/components/core/providers/theme/use-ctw-theme-ref";
 import { useCTW } from "@/components/core/providers/use-ctw";
-import { RowActionsProp } from "@/components/core/table/table-rows";
+import { RowActionsConfigProp } from "@/components/core/table/table-rows";
 import { getBinaryId } from "@/fhir/binaries";
 import { DocumentModel } from "@/fhir/models/document";
 import { FHIRModel } from "@/fhir/models/fhir-model";
 import { searchProvenances } from "@/fhir/provenance";
+import { useBreakpoints } from "@/hooks/use-breakpoints";
 import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 
 export type UseResourceDetailsDrawerProps<T extends fhir4.Resource, M extends FHIRModel<T>> = Pick<
@@ -21,7 +24,7 @@ export type UseResourceDetailsDrawerProps<T extends fhir4.Resource, M extends FH
   | "subHeader"
   | "getSourceDocument"
   | "details"
-  | "RowActions"
+  | "rowActions"
   | "enableDismissAndReadActions"
   | "renderChild"
 >;
@@ -49,7 +52,7 @@ type ResourceDetailsDrawerProps<T extends fhir4.Resource, M extends FHIRModel<T>
   isOpen: boolean;
   model: M;
   onClose: () => void;
-  RowActions?: RowActionsProp<M>;
+  rowActions?: (model: M) => RowActionsConfigProp<M>;
   enableDismissAndReadActions?: boolean;
   subHeader?: (model: M) => ReactNode;
   renderChild?: (model: M) => ReactNode;
@@ -63,16 +66,18 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
   isOpen,
   model,
   onClose,
-  RowActions,
+  rowActions,
   enableDismissAndReadActions,
   subHeader,
   renderChild,
 }: ResourceDetailsDrawerProps<T, M>) {
   const openCCDAModal = useCCDAModal();
+  const ctwThemeRef = useCtwThemeRef();
   const [isLoading, setIsLoading] = useState(false);
   const [binaryId, setBinaryId] = useState<string>();
   const { getRequestContext } = useCTW();
   const fqsProvenances = useFQSFeatureToggle("provenances");
+  const breakpoints = useBreakpoints(ctwThemeRef);
 
   // We optionally look for any associated binary CCDAs
   // if getSourceDocument is true.
@@ -94,22 +99,28 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
   }, [getSourceDocument, model, getRequestContext, fqsProvenances.enabled, fqsProvenances.ready]);
 
   const rowActionsWithAdditions = useAdditionalResourceActions({
-    RowActions,
+    rowActions,
     enableDismissAndReadActions,
+    isInFooter: true,
   });
 
   // We call rowActions right away so we'll know if it returns null and thus we should
   // hide our footer.
-  const actions =
-    rowActionsWithAdditions && rowActionsWithAdditions({ record: model, onSuccess: onClose });
+  const actions = rowActionsWithAdditions({
+    record: model,
+    onSuccess: onClose,
+    stacked: breakpoints.xs,
+  });
   const { trackInteraction } = useAnalytics();
 
   return (
     <Drawer className={className} title={model.resourceTypeTitle} isOpen={isOpen} onClose={onClose}>
       <Drawer.Body>
         <div className="ctw-space-y-6">
-          <div className="ctw-space-y-2">
-            <div className="ctw-text-3xl">{header(model)}</div>
+          <div className="ctw-space-y-2 ctw-px-2">
+            <div className={cx(breakpoints.xs ? "ctw-text-2xl" : "ctw-text-3xl")}>
+              {header(model)}
+            </div>
             {subHeader && <div>{subHeader(model)}</div>}
           </div>
 

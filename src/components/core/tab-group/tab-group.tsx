@@ -16,7 +16,6 @@ export type TabGroupProps = {
   className?: string;
   content: TabGroupItem[];
   forceHorizontalTabs?: boolean;
-  patientRecordSearchIsOpen?: boolean;
   onChange?: (index: number) => void; // optional event
   topRightContent?: ReactNode;
 };

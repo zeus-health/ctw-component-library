@@ -47,10 +47,10 @@ export const SortButton = <T extends object>({
       }))}
     >
       <div className="ctw-btn-default ctw-flex ctw-items-center ctw-space-x-2">
-        <span>
-          Sort: <span className="ctw-font-normal">{selected.display}</span>{" "}
+        <span className="ctw-mr-1.5 ctw-w-full">
+          Sort: <span className="ctw-font-normal">{selected.display}</span>
         </span>
-        <FontAwesomeIcon icon={faChevronDown} className="ctw-w-2" />
+        <FontAwesomeIcon icon={faChevronDown} className="ctw-ml-auto ctw-w-2" />
       </div>
     </DropdownMenuAction>
   );

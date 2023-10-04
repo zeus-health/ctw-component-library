@@ -20,7 +20,7 @@ export interface GenericConnection<T extends ResourceTypeString> {
   edges: GraphqlConnectionNode<ResourceType<T>>[];
 }
 
-export const MAX_OBJECTS_PER_REQUEST = 1000;
+export const MAX_OBJECTS_PER_REQUEST = 500;
 
 export const createGraphqlClient = (requestContext: CTWRequestContext) => {
   const endpoint = `${getZusServiceUrl(requestContext.env, "fqs")}/query`;

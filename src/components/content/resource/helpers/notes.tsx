@@ -5,6 +5,7 @@ import { DocumentModel } from "@/fhir/models/document";
 
 export type NotesProps = {
   entries: DocumentModel[];
+  documentIdToStartOpen?: string;
 };
 
 export function getNoteDisplay(noteText: string | undefined) {
@@ -20,7 +21,7 @@ export function getNoteDisplay(noteText: string | undefined) {
   );
 }
 
-export const Notes = ({ entries }: NotesProps) => (
+export const Notes = ({ entries, documentIdToStartOpen }: NotesProps) => (
   <div className="ctw-space-y-4">
     <div className="ctw-text-lg ctw-font-semibold">Notes</div>
     {entries.map((entry, idx) => (
@@ -34,6 +35,7 @@ export const Notes = ({ entries }: NotesProps) => (
             value: getNoteDisplay(entry.text),
             transposeTables: true,
           }}
+          isDetailShownOnOpen={entry.id === documentIdToStartOpen}
         />
       </div>
     ))}

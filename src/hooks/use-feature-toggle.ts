@@ -1,22 +1,12 @@
+import { useFlagsStatus, useUnleashClient } from "@unleash/proxy-client-react";
+import { useContext } from "react";
 import { useFeatureVariant } from "./use-feature-variant";
-
-export function useTrendingLabsFeatureToggle(): FeatureToggle {
-  const variant = useFeatureVariant("ctw-trending-labs");
-
-  if (!variant.ready) {
-    return { enabled: false, ready: false };
-  }
-  let enabled = false;
-  if (variant.enabled) {
-    const value = variant.payload?.value;
-    enabled = value === "true";
-  }
-  return { enabled, ready: true };
-}
+import { FeatureFlagContext } from "@/components/core/providers/feature-flag-provider";
 
 export type FeatureToggle = {
-  enabled: boolean;
+  enabled?: boolean;
   ready: boolean;
+  errorGettingToggles?: boolean;
 };
 
 export function useFQSFeatureToggle(resourceType: string): FeatureToggle {
@@ -38,4 +28,20 @@ export function useFQSFeatureToggle(resourceType: string): FeatureToggle {
     }
   }
   return { enabled, ready: true };
+}
+
+export function useFeatureToggle(name: string): FeatureToggle {
+  const client = useUnleashClient();
+  const status = useFlagsStatus();
+  const { unleashClientFailed } = useContext(FeatureFlagContext);
+
+  if (unleashClientFailed || status.flagsError) {
+    return { ready: true, errorGettingToggles: true };
+  }
+
+  if (!status.flagsReady && !status.flagsError) {
+    return { ready: false };
+  }
+
+  return { ready: true, enabled: client.isEnabled(name) };
 }

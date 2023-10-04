@@ -74,7 +74,7 @@
   }
 
   .ctw-link {
-    @apply ctw-cursor-pointer ctw-text-xs ctw-font-medium ctw-text-primary-dark hover:ctw-text-primary-main;
+    @apply ctw-cursor-pointer ctw-text-sm ctw-font-medium ctw-text-primary-dark ctw-no-underline hover:ctw-text-primary-main;
     // Also handle any icons (svg fill).
     @apply ctw-fill-primary-dark hover:ctw-fill-primary-main;
   }
@@ -142,7 +142,7 @@
 
   .ctw-theme > [data-radix-popper-content-wrapper] {
     // We add important here because radix z-index will take precedence if we don't.
-    z-index: 10000 !important;
+    z-index: 20000 !important;
   }
 
   .ctw-border-top {
@@ -163,5 +163,9 @@
     .ctw-clear-search-icon {
       @apply ctw-h-5 ctw-w-5 ctw-text-content-lighter;
     }
+  }
+  // Tailwind is not generating this css rule for some reason.
+  .ctw-border-r-1 {
+    border-right-width: 1px;
   }
 }

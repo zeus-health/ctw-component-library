@@ -13,12 +13,13 @@ export type NotesEntrySimpleProps = {
   subtitle?: string;
   title?: string;
   versionId?: string;
+  isDetailShownOnOpen?: boolean;
 };
 
 type Props = NotesEntrySimpleProps;
 
-export const NotesEntrySimple = ({ details, hideEmpty, title }: Props) => {
-  const [isDetailShown, setIsDetailShown] = useState(false);
+export const NotesEntrySimple = ({ details, hideEmpty, title, isDetailShownOnOpen }: Props) => {
+  const [isDetailShown, setIsDetailShown] = useState(isDetailShownOnOpen);
 
   return (
     <div className="ctw-space-y-1">
@@ -41,13 +42,28 @@ export const NotesEntrySimple = ({ details, hideEmpty, title }: Props) => {
   );
 };
 
-export type NotesEntryProps = {
-  details: DetailEntry;
-  hideEmpty?: boolean;
-  id: string;
-  subtitle?: string;
-  title?: string;
-  versionId?: string;
+export const NotesEntry = ({ details, hideEmpty, title, isDetailShownOnOpen }: Props) => {
+  const [isDetailShown, setIsDetailShown] = useState(isDetailShownOnOpen ?? false);
+
+  return (
+    <div className="ctw-space-y-1">
+      <NoteSummary
+        collapsedRender={
+          <>
+            {title && (
+              <div>
+                <div className="ctw-font-semibold ctw-text-content-black">{title}</div>
+              </div>
+            )}
+            {!title && <div className="ctw-text-content-lighter">Unknown</div>}
+          </>
+        }
+        isDetailShown={isDetailShown}
+        setIsDetailShown={setIsDetailShown}
+      />
+      {isDetailShown && <DetailsCard details={[details]} hideEmpty={hideEmpty} />}
+    </div>
+  );
 };
 
 export const NoteSummary = ({
