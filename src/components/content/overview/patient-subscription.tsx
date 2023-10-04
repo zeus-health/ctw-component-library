@@ -1,36 +1,15 @@
 import i18next from "i18next";
 import { Loading } from "@/components/core/loading";
 import { ErrorAlert, usePatient } from "@/index";
-import { PatientSubscription } from "@/services/subscriptions/subscriptions";
+import {
+  PatientSubscription,
+  usePatientSubscription,
+} from "@/services/subscriptions/subscriptions";
 import { compact, uniq } from "@/utils/nodash";
 
 export const PatientSubscriptionDetails = () => {
-  // const patientSubscription = usePatientSubscription();
+  const patientSubscription = usePatientSubscription();
   const patient = usePatient();
-
-  const patientSubscription = {
-    isLoading: false,
-    isError: false,
-    data: {
-      patientId: "123",
-      package: {
-        id: "st234",
-        description: "asdfasdf",
-        name: "ZAP Pro",
-        meta: {
-          freshmakerProviders: ["commonwell", "surescripts"],
-          initialProviders: ["commonwell", "surescripts"],
-          recurringProvidersWithInterval: [
-            {
-              intervalDays: 28,
-              provider: "commonwell",
-            },
-          ],
-          subscriptionProviders: ["bamboo", "collective", "quest", "surescripts"],
-        },
-      },
-    },
-  };
 
   if (patientSubscription.isLoading || patient.isLoading) {
     return <Loading />;
