@@ -2,6 +2,7 @@ import i18next from "i18next";
 import { Loading } from "@/components/core/loading";
 import { ErrorAlert, usePatient } from "@/index";
 import {
+  PackageMetaProvider,
   PatientSubscription,
   usePatientSubscription,
 } from "@/services/subscriptions/subscriptions";
@@ -78,24 +79,21 @@ export const getDataSources = (patientSubscription: PatientSubscription) => {
   const translatedPackages = {
     freshmakerProviders:
       patientSubscription.package?.meta.freshmakerProviders?.map((x) =>
-        // All of these ts-ignore's are because the call to i18next.t has a TS error even though there is a check that x exists in the dictionary
-        // @ts-ignore
-        i18next.exists(x) ? i18next.t(x) : x
+        i18next.exists(x) ? i18next.t(x as PackageMetaProvider) : x
       ) ?? [],
     initialProviders:
       patientSubscription.package?.meta.initialProviders?.map((x) =>
-        // @ts-ignore
-        i18next.exists(x) ? i18next.t(x) : x
+        i18next.exists(x) ? i18next.t(x as PackageMetaProvider) : x
       ) ?? [],
     subscriptionProviders:
       patientSubscription.package?.meta.subscriptionProviders?.map((x) =>
-        // @ts-ignore
-        i18next.exists(x) ? i18next.t(x) : x
+        i18next.exists(x) ? i18next.t(x as PackageMetaProvider) : x
       ) ?? [],
     recurringProvidersWithInterval:
       patientSubscription.package?.meta.recurringProvidersWithInterval?.map((x) => ({
-        // @ts-ignore
-        provider: i18next.exists(x.provider) ? i18next.t(x.provider) : x.provider,
+        provider: i18next.exists(x.provider)
+          ? i18next.t(x.provider as PackageMetaProvider)
+          : x.provider,
         intervalDays: x.intervalDays,
       })) ?? [],
   };

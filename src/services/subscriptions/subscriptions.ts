@@ -5,6 +5,8 @@ import { QUERY_KEY_PATIENT_SUBSCRIPTION } from "@/utils/query-keys";
 import { ctwFetch } from "@/utils/request";
 import { Telemetry } from "@/utils/telemetry";
 
+export type PackageMetaProvider = "commonwell" | "surescripts" | "bamboo" | "collective" | "quest";
+
 export type PatientSubscription = {
   patientId: string;
   package?: {
