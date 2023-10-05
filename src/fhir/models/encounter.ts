@@ -37,10 +37,10 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
     this.provenance = provenance;
   }
 
-  set documents(documents: DocumentModel[]) {
+  findAndSetNotesFrom(documentPool: DocumentModel[]) {
     const binaryID = getBinaryIDFromProvenance(this.provenance);
     if (binaryID) {
-      this.clinicalNotes = documents.filter(
+      this.clinicalNotes = documentPool.filter(
         (d) => d.binaryId === binaryID && isSectionDocument(d) && !isEmptyClinicalNote(d)
       );
     }

@@ -1,10 +1,8 @@
 import { faFileLines } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
 import { DocumentButton } from "../CCDA/document-button";
 import { useCCDAModal } from "../CCDA/modal-ccda";
-import { DetailsCard } from "../resource/helpers/details-card";
-import { NoteSummary } from "../resource/helpers/notes-entry";
+import { NotesEntry } from "../resource/helpers/notes-entry";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { EncounterModel } from "@/fhir/models/encounter";
 
@@ -13,7 +11,6 @@ const encountersAndNotes = (adt: EncounterModel) => (
 );
 
 function RelatedEncounter({ encounter }: { encounter?: EncounterModel }) {
-  const [isDetailShown, setIsDetailShown] = useState(false);
   const openCCDAModal = useCCDAModal();
 
   const binaryId = encounter?.binaryId;
@@ -24,8 +21,8 @@ function RelatedEncounter({ encounter }: { encounter?: EncounterModel }) {
   return (
     <div className="ctw-space-y-4">
       <h4 className="ctw-text-lg ctw-font-semibold">Encounters & Notes</h4>
-      <NoteSummary
-        collapsedRender={
+      <NotesEntry
+        summary={
           <div className="ctw-flex ctw-grow ctw-justify-between">
             <div className="ctw-flex ctw-space-x-6">
               <div>{encounter.periodStart}</div>
@@ -36,46 +33,40 @@ function RelatedEncounter({ encounter }: { encounter?: EncounterModel }) {
             </div>
           </div>
         }
-        isDetailShown={isDetailShown}
-        setIsDetailShown={setIsDetailShown}
+        details={[
+          {
+            label: "Start Date",
+            value: encounter.periodStart,
+          },
+          {
+            label: "End Date",
+            value: encounter.periodEnd,
+          },
+          {
+            label: "Location",
+            value: encounter.location,
+          },
+          {
+            label: "Diagnosis",
+            value: encounter.diagnoses?.join(";\n"),
+          },
+          {
+            label: "Discharge Disposition",
+            value: encounter.dischargeDisposition,
+          },
+        ]}
+        documentButton={
+          binaryId && (
+            <DocumentButton
+              onClick={() => {
+                void openCCDAModal(binaryId, "Source Document");
+              }}
+              text="Source Document"
+            />
+          )
+        }
+        hideEmpty={false}
       />
-      {isDetailShown && (
-        <DetailsCard
-          details={[
-            {
-              label: "Start Date",
-              value: encounter.periodStart,
-            },
-            {
-              label: "End Date",
-              value: encounter.periodEnd,
-            },
-            {
-              label: "Location",
-              value: encounter.location,
-            },
-            {
-              label: "Diagnosis",
-              value: encounter.diagnoses?.join(";\n"),
-            },
-            {
-              label: "Discharge Disposition",
-              value: encounter.dischargeDisposition,
-            },
-          ]}
-          documentButton={
-            binaryId && (
-              <DocumentButton
-                onClick={() => {
-                  void openCCDAModal(binaryId, "Source Document");
-                }}
-                text="Source Document"
-              />
-            )
-          }
-          hideEmpty={false}
-        />
-      )}
     </div>
   );
 }

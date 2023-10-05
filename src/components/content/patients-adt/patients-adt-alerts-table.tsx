@@ -14,16 +14,17 @@ import { EmptyTableNoneFound } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Pagination } from "@/components/core/pagination/pagination";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
+import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { SimpleMoreList } from "@/components/core/simple-more-list";
 import { EncounterModel } from "@/fhir/models/encounter";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
-import { encounterADTQuery, EncounterGraphqlResponse } from "@/services/fqs/queries/encounters";
+import { EncounterGraphqlResponse, encountersQuery } from "@/services/fqs/queries/encounters";
 
 const PAGE_SIZE = 10;
 
-type AdtTemplate = Map<
+type RelatedEncounterMap = Map<
   string,
   {
     upid: string;
@@ -36,8 +37,48 @@ export type ADTTableProps = {
   className?: cx.Argument;
   isLoading?: boolean;
   data: EncounterModel[];
-  encounterAndNotesData?: AdtTemplate;
+  encounterAndNotesData?: RelatedEncounterMap;
 } & TableOptionProps<EncounterModel>;
+
+function assignEncountersAndNotes(
+  adtEncounters: EncounterModel[],
+  encounterAndNotesData: RelatedEncounterMap,
+  getRequestContext: () => Promise<CTWRequestContext>
+) {
+  adtEncounters.forEach(async (e: EncounterModel) => {
+    const requestContext = await getRequestContext();
+    if (!encounterAndNotesData.has(e.resource.id ?? "")) {
+      return;
+    }
+    const encAndNote = encounterAndNotesData.get(e.resource.id ?? "");
+    if (encAndNote) {
+      const graphClient = createGraphqlClient(requestContext);
+
+      const { data: encounterFqsData } = await fqsRequest<EncounterGraphqlResponse>(
+        graphClient,
+        encountersQuery,
+        {
+          upid: encAndNote.upid,
+          cursor: "",
+          first: 1,
+          sort: {
+            lastUpdated: "DESC",
+          },
+          filter: {
+            ids: {
+              anymatch: [encAndNote.cwcq_encounter_id],
+            },
+          },
+        }
+      );
+      const encounterNodes = encounterFqsData.EncounterConnection.edges.map((x) => x.node);
+      const encounterNode = encounterNodes[0];
+      e.relatedEncounter = new EncounterModel(encounterNode, encounterNode.ProvenanceList);
+
+      e.relatedEncounter.binaryId = encAndNote.binary_id.replaceAll('"', "");
+    }
+  });
+}
 
 function ADTTableComponent({
   className,
@@ -47,8 +88,8 @@ function ADTTableComponent({
 }: ADTTableProps) {
   const openADTDetails = useADTAlertDetailsDrawer();
   const [currentPage, setCurrentPage] = useState(1);
-  const { viewOptions, past30days } = getDateRangeView<EncounterModel>("periodStart");
   const { getRequestContext } = useCTW();
+  const { viewOptions, past30days } = getDateRangeView<EncounterModel>("periodStart");
   const {
     data: dataFilteredSorted,
     setViewOption,
@@ -62,36 +103,13 @@ function ADTTableComponent({
   });
 
   const dataFilteredSortedDeduped = dedupeAndMergeEncounters(dataFilteredSorted, "patientsADT");
+  const dataOnPage = dataFilteredSortedDeduped.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  );
 
   if (encounterAndNotesData) {
-    dataFilteredSortedDeduped.forEach(async (e: EncounterModel) => {
-      const requestContext = await getRequestContext();
-      if (!encounterAndNotesData.has(e.resource.id ?? "")) {
-        return;
-      }
-      const encAndNote = encounterAndNotesData.get(e.resource.id ?? "");
-      if (encAndNote) {
-        const graphClient = createGraphqlClient(requestContext);
-
-        const { data: encounterFqsData } = await fqsRequest<EncounterGraphqlResponse>(
-          graphClient,
-          encounterADTQuery,
-          {
-            upid: encAndNote.upid,
-            filter: {
-              ids: {
-                anymatch: [encAndNote.cwcq_encounter_id],
-              },
-            },
-          }
-        );
-        const encounterNodes = encounterFqsData.EncounterConnection.edges.map((x) => x.node);
-        const encounterNode = encounterNodes[0];
-        e.relatedEncounter = new EncounterModel(encounterNode, encounterNode.ProvenanceList);
-
-        e.relatedEncounter.binaryId = encAndNote.binary_id.replaceAll('"', "");
-      }
-    });
+    assignEncountersAndNotes(dataOnPage, encounterAndNotesData, getRequestContext);
   }
 
   return (
@@ -115,10 +133,7 @@ function ADTTableComponent({
           }}
         />
         <ResourceTable
-          data={dataFilteredSortedDeduped.slice(
-            (currentPage - 1) * PAGE_SIZE,
-            currentPage * PAGE_SIZE
-          )}
+          data={dataOnPage}
           columns={columns}
           isLoading={isLoading}
           emptyMessage={

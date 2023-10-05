@@ -65,7 +65,7 @@ export function usePatientEncountersWithClinicalNotes(limit = MAX_OBJECTS_PER_RE
       setEncountersWithClinicalNotes(
         encounters.map((encounter) => {
           const model = new EncounterModel(encounter.resource, encounter.provenance);
-          model.documents = documents;
+          model.findAndSetNotesFrom(documents);
           return model;
         })
       );
