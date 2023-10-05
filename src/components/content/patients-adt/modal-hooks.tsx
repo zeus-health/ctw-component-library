@@ -20,6 +20,7 @@ export const encounterData = (adt: EncounterModel) => [
   { label: "End Date", value: adt.periodEnd },
   { label: "Type", value: adt.typeDisplay },
   { label: "Location", value: adt.location },
+  { label: "Location Type", value: adt.locationPhysicalType },
   { label: "Participants", value: adt.participantsDisplay },
   { label: "Diagnosis", value: adt.diagnoses?.join(", ") },
   { label: "Discharge Disposition", value: adt.dischargeDisposition },
