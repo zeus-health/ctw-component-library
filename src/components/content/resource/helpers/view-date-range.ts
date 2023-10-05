@@ -11,6 +11,10 @@ function dateFilter<T extends object>(field: keyof T, days: number) {
 export function getDateRangeView<T extends object>(field: Extract<keyof T, string>) {
   const viewOptions: ViewOption<T>[] = [
     {
+      display: "Past 7 days",
+      filters: [dateFilter<T>(field, 7)],
+    },
+    {
       display: "Past 30 days",
       filters: [dateFilter<T>(field, 30)],
     },
@@ -33,9 +37,11 @@ export function getDateRangeView<T extends object>(field: Extract<keyof T, strin
   ];
   return {
     viewOptions,
-    past30days: viewOptions[0],
-    past3months: viewOptions[1],
-    past6Months: viewOptions[2],
-    allTime: viewOptions[4],
+    past7days: viewOptions[0],
+    past30days: viewOptions[1],
+    past3months: viewOptions[2],
+    past6Months: viewOptions[3],
+    pastYear: viewOptions[4],
+    allTime: viewOptions[5],
   };
 }
