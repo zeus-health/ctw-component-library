@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.68.14
+
+### Patch Changes
+
+- 09d6e295: Add ability to filter by location.
+
 ## 1.68.13
 
 ### Patch Changes
