@@ -8,11 +8,11 @@ import {
 import { compact, uniq } from "@/utils/nodash";
 
 const demoPatientSubscription = {
-  patientId: "123",
+  patientId: "demo",
   package: {
-    id: "st234",
-    description: "asdfasdf",
-    name: "ZAP Pro",
+    id: "demo",
+    description: "Demo Package",
+    name: "Demo Package",
     meta: {
       freshmakerProviders: ["commonwell", "surescripts"],
       initialProviders: ["commonwell", "surescripts"],
@@ -50,7 +50,9 @@ export const PatientSubscriptionDetails = () => {
   }
 
   const dataSources = getDataSources(
-    patient.data.isTestPatient ? demoPatientSubscription : patientSubscription.data
+    patient.data.isTestPatient && !patientSubscription.data.package // If a test/demo patient doesn't have a package then use this demo content
+      ? demoPatientSubscription
+      : patientSubscription.data
   );
 
   return (
