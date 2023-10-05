@@ -120,7 +120,7 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
     return uniqueLocations.length ? uniqueLocations.join(", ") : undefined;
   }
 
-  get physicalTypes() {
+  get locationPhysicalType() {
     const locations = compact(
       this.resource.location?.map((l) => {
         const location = findReference("Location", undefined, undefined, l.location);

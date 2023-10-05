@@ -38,7 +38,7 @@ export function adtFilter(): FilterItem[] {
           return true;
         }
         const encounter = item as EncounterModel;
-        const status = encounter.physicalTypes;
+        const status = encounter.locationPhysicalType;
         return values.includes(status);
       },
     }
