@@ -12,7 +12,7 @@ describe("getDataSources", () => {
       meta: {
         freshmakerProviders: ["commonwell"],
         initialProviders: ["bamboo"],
-        subscriptionProviders: ["test"],
+        subscriptionProviders: ["test", "bamboo"],
         recurringProvidersWithInterval: [{ provider: "commonwell", intervalDays: 7 }],
       },
     },
@@ -24,11 +24,11 @@ describe("getDataSources", () => {
     const expectedOutput = [
       {
         name: "EHR Network",
-        details: ["intelligent refresh", "full refresh at least every 7 days"],
+        details: ["intelligent refresh"],
       },
       {
         name: "ADT",
-        details: ["initial history pull"],
+        details: ["initial history pull", "new data alerts"],
       },
       {
         name: "test",
