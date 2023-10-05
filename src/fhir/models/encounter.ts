@@ -162,7 +162,7 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
   }
 }
 
-export function getBinaryIDFromProvenance(provenance: fhir4.Provenance[]) {
+function getBinaryIDFromProvenance(provenance: fhir4.Provenance[]) {
   if (provenance.length > 0) {
     let binaryIDReference = "";
     for (let i = 0; i < provenance.length; i += 1) {
