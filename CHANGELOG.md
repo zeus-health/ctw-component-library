@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.69.3
+
+### Patch Changes
+
+- 2b1865e2: Modify subscription descriptions and make text smaller
+- 906c1b4e: Changes the views for the ADT table to inclue past 7 days and instead of all time, 90 days.
+
 ## 1.69.2
 
 ### Patch Changes
