@@ -1,6 +1,5 @@
 import DOMPurify from "dompurify";
 import { Interweave } from "interweave";
-import { title } from "process";
 import { NotesEntry } from "./notes-entry";
 import { DocumentModel } from "@/fhir/models/document";
 
@@ -34,7 +33,7 @@ export const Notes = ({ entries, documentIdToStartOpen }: NotesProps) => (
             <>
               {entry.title && (
                 <div>
-                  <div className="ctw-font-semibold ctw-text-content-black">{title}</div>
+                  <div className="ctw-font-semibold ctw-text-content-black">{entry.title}</div>
                 </div>
               )}
               {!entry.title && <div className="ctw-text-content-lighter">Unknown</div>}
