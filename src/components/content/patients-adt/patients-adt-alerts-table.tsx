@@ -13,26 +13,92 @@ import { ResourceTableActions } from "../resource/resource-table-actions";
 import { EmptyTableNoneFound } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Pagination } from "@/components/core/pagination/pagination";
-import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
+import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
+import { CTWRequestContext } from "@/components/core/providers/ctw-context";
+import { useCTW } from "@/components/core/providers/use-ctw";
 import { SimpleMoreList } from "@/components/core/simple-more-list";
 import { EncounterModel } from "@/fhir/models/encounter";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
+import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
+import { EncounterGraphqlResponse, encountersQuery } from "@/services/fqs/queries/encounters";
+import { QUERY_KEY_ENCOUNTERS_RELATED } from "@/utils/query-keys";
+import { queryClient } from "@/utils/request";
 
 const PAGE_SIZE = 10;
+
+// Cache related encounters and notes for 10 minutes.
+const RELATED_ENC_STALE_TIME = 1000 * 60 * 10;
+
+type RelatedEncounterMap = Map<
+  string,
+  {
+    upid: string;
+    cwcq_encounter_id: string;
+    binary_id: string;
+  }
+>;
 
 export type ADTTableProps = {
   className?: cx.Argument;
   isLoading?: boolean;
   data: EncounterModel[];
+  encounterAndNotesData?: RelatedEncounterMap;
 } & TableOptionProps<EncounterModel>;
 
-function ADTTableComponent({ className, isLoading = false, data }: ADTTableProps) {
-  const openADTDetails = useADTAlertDetailsDrawer();
+function assignEncountersAndNotes(
+  adtEncounters: EncounterModel[],
+  encounterAndNotesData: RelatedEncounterMap,
+  getRequestContext: () => Promise<CTWRequestContext>
+) {
+  adtEncounters.forEach(async (e: EncounterModel) => {
+    if (!encounterAndNotesData.has(e.resource.id ?? "")) {
+      return;
+    }
+    const encAndNote = encounterAndNotesData.get(e.resource.id ?? "");
+    if (encAndNote) {
+      const { data: encounterFqsData } = await queryClient.fetchQuery(
+        [QUERY_KEY_ENCOUNTERS_RELATED, e.id],
+        async () => {
+          const requestContext = await getRequestContext();
+          const graphClient = createGraphqlClient(requestContext);
+          return fqsRequest<EncounterGraphqlResponse>(graphClient, encountersQuery, {
+            upid: encAndNote.upid,
+            cursor: "",
+            first: 1,
+            sort: {
+              lastUpdated: "DESC",
+            },
+            filter: {
+              ids: {
+                anymatch: [encAndNote.cwcq_encounter_id],
+              },
+            },
+          });
+        },
+        { staleTime: RELATED_ENC_STALE_TIME }
+      );
 
+      const encounterNodes = encounterFqsData.EncounterConnection.edges.map((x) => x.node);
+      const encounterNode = encounterNodes[0];
+      e.relatedEncounter = new EncounterModel(encounterNode, encounterNode.ProvenanceList);
+
+      e.relatedEncounter.binaryId = encAndNote.binary_id.replaceAll('"', "");
+    }
+  });
+}
+
+function ADTTableComponent({
+  className,
+  isLoading = false,
+  data,
+  encounterAndNotesData,
+}: ADTTableProps) {
+  const openADTDetails = useADTAlertDetailsDrawer();
   const [currentPage, setCurrentPage] = useState(1);
+  const { getRequestContext } = useCTW();
   const { viewOptions, past30days } = getDateRangeView<EncounterModel>("periodStart");
   const {
-    data: data2,
+    data: dataFilteredSorted,
     setViewOption,
     setFilters,
     setSort,
@@ -42,53 +108,59 @@ function ADTTableComponent({ className, isLoading = false, data }: ADTTableProps
     defaultSort: defaultEncounterSort,
     records: data,
   });
-  const dataFinal = dedupeAndMergeEncounters(data2, "patientsADT");
-  const { trackInteraction } = useAnalytics();
+
+  const dataFilteredSortedDeduped = dedupeAndMergeEncounters(dataFilteredSorted, "patientsADT");
+  const dataOnPage = dataFilteredSortedDeduped.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  );
+
+  if (encounterAndNotesData) {
+    assignEncountersAndNotes(dataOnPage, encounterAndNotesData, getRequestContext);
+  }
 
   return (
-    <div className={cx("ctw-scrollable-pass-through-height", className)}>
-      <ResourceTableActions
-        viewOptions={{
-          onChange: setViewOption,
-          options: viewOptions,
-          defaultView: past30days,
-        }}
-        sortOptions={{
-          defaultSort: defaultEncounterSort,
-          options: encounterSortOptions,
-          onChange: setSort,
-        }}
-        filterOptions={{
-          onChange: setFilters,
-          defaultState: defaultADTFilters,
-          filters: adtFilter(),
-        }}
-      />
-      <ResourceTable
-        data={dataFinal.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)}
-        columns={columns}
-        isLoading={isLoading}
-        emptyMessage={
-          <EmptyTableNoneFound
-            hasZeroFilteredRecords={dataFinal.length === 0}
-            resourceName="encounters"
-          />
-        }
-        onRowClick={(enc) => {
-          trackInteraction("view_adt_details");
-          openADTDetails(enc);
-        }}
-        hidePagination
-        enableDismissAndReadActions
-      >
-        <Pagination
-          currentPage={currentPage}
-          pageSize={PAGE_SIZE}
-          setCurrentPage={setCurrentPage}
-          total={dataFinal.length}
+    <AnalyticsProvider componentName="ADTTable">
+      <div className={cx("ctw-scrollable-pass-through-height", className)}>
+        <ResourceTableActions
+          viewOptions={{
+            onChange: setViewOption,
+            options: viewOptions,
+            defaultView: past30days,
+          }}
+          sortOptions={{
+            defaultSort: defaultEncounterSort,
+            options: encounterSortOptions,
+            onChange: setSort,
+          }}
+          filterOptions={{
+            onChange: setFilters,
+            defaultState: defaultADTFilters,
+            filters: adtFilter(),
+          }}
         />
-      </ResourceTable>
-    </div>
+        <ResourceTable
+          data={dataOnPage}
+          columns={columns}
+          isLoading={isLoading}
+          emptyMessage={
+            <EmptyTableNoneFound
+              hasZeroFilteredRecords={dataFilteredSortedDeduped.length === 0}
+              resourceName="encounters"
+            />
+          }
+          onRowClick={openADTDetails}
+          hidePagination
+        >
+          <Pagination
+            currentPage={currentPage}
+            pageSize={PAGE_SIZE}
+            setCurrentPage={setCurrentPage}
+            total={dataFilteredSortedDeduped.length}
+          />
+        </ResourceTable>
+      </div>
+    </AnalyticsProvider>
   );
 }
 

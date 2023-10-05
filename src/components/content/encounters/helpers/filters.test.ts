@@ -41,7 +41,6 @@ describe("encounter dedupe tests", () => {
         },
       ],
     },
-    [],
     []
   );
   vi.spyOn(encNew, "patientUPID", "get").mockReturnValue("a1");
@@ -82,7 +81,6 @@ describe("encounter dedupe tests", () => {
         },
       ],
     },
-    [],
     []
   );
   vi.spyOn(encOld, "patientUPID", "get").mockReturnValue("a1");
@@ -127,7 +125,6 @@ describe("encounter dedupe tests", () => {
         },
       ],
     },
-    [],
     []
   );
 
@@ -175,7 +172,6 @@ describe("encounter dedupe tests", () => {
         },
       ],
     },
-    [],
     []
   );
 
@@ -229,7 +225,6 @@ describe("encounter dedupe tests", () => {
             },
           ],
         },
-        [],
         []
       ),
     ]);
@@ -284,18 +279,16 @@ describe("noteTypePredicate", () => {
     } as fhir4.DocumentReference),
   ];
   const encounters = docs.map((d) => {
-    const encounter = new EncounterModel({ id: `encounter-${d.id}` } as fhir4.Encounter, [], []);
+    const encounter = new EncounterModel({ id: `encounter-${d.id}` } as fhir4.Encounter, []);
     encounter.clinicalNotes = [d];
     return encounter;
   });
   const otherEncounters = otherDocs.map((d) => {
-    const encounter = new EncounterModel({ id: `encounter-${d.id}` } as fhir4.Encounter, [], []);
+    const encounter = new EncounterModel({ id: `encounter-${d.id}` } as fhir4.Encounter, []);
     encounter.clinicalNotes = [d];
     return encounter;
   });
-  const emptyEncounters = [
-    new EncounterModel({ id: "encounter-empty" } as fhir4.Encounter, [], []),
-  ];
+  const emptyEncounters = [new EncounterModel({ id: "encounter-empty" } as fhir4.Encounter, [])];
 
   test("filtering on no value", () => {
     const filteredEncounters = [...encounters, ...otherEncounters, ...emptyEncounters].filter(
