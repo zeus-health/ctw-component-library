@@ -28,6 +28,11 @@ export const resources = {
       "zap.tabs.conditions": "$t(glossary:condition_other) list",
       "zap.tabs.conditionsOutside": "outside $t(glossary:condition_other)",
       "zap.tabs.conditionsAll": "$t(glossary:condition_other)",
+      commonwell: "EHR Network",
+      surescripts: "Pharmacy Data",
+      bamboo: "ADT",
+      collective: "ADT",
+      quest: "Labs",
     },
   },
 };

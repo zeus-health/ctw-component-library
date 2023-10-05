@@ -122,7 +122,7 @@ const ZusAggregatedProfileComponent = ({
     "medications-outside": medicationsOutsideProps,
     "medications-all": medicationsAllProps,
     timeline: timelineProps,
-    overview: {},
+    overview: { includePatientDemographicsForm },
   };
 
   // Order provided resources by the specified order in zusAggregatedProfileTabs.
