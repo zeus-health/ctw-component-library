@@ -149,7 +149,7 @@ export async function fetchDiagnosticReportsFromFQSById(
     const graphClient = createGraphqlClient(requestContext);
     const { data } = await fqsRequest<DiagnosticReportGraphqlResponse>(
       graphClient,
-      getDiagnosticReportQuery(false),
+      getDiagnosticReportQuery(true),
       {
         upid: patient.UPID,
         cursor: "",

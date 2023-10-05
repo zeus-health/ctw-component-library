@@ -1,5 +1,23 @@
 # ctw-component-library
 
+## 1.68.13
+
+### Patch Changes
+
+- 95bab4b0: Fix issue with observations not showing up in drawer for diagnostic result search results.
+
+## 1.68.12
+
+### Patch Changes
+
+- 5f1a2c2b: Fix type issue where type is incorrect.
+
+## 1.68.11
+
+### Patch Changes
+
+- 9dd57fdf: IFrame theme is passed to iframe with CTWProviderProps to fix a UX bug caused by the iframe ZAPs ThemeProvider having different context value than the parent window ThemeProvider.
+
 ## 1.68.10
 
 ### Patch Changes
