@@ -120,7 +120,7 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
     return uniqueLocations.length ? uniqueLocations.join(", ") : undefined;
   }
 
-  get physicalType() {
+  get physicalTypes() {
     const locations = compact(
       this.resource.location?.map((l) => {
         const location = findReference("Location", undefined, undefined, l.location);
@@ -128,11 +128,22 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
       })
     );
 
-    const uniqueLocations = uniq(locations).filter(
-      (l) => l !== "Not Indicated" && l !== "Unknown" && l !== "NoInformation"
-    );
+    const uniqueLocations = uniq(locations).filter((l) => {
+      switch (l) {
+        case "URGENT_CARE":
+          return "Urgent Care";
+        case "Not Indicated":
+        case "Unknown":
+        case "NoInformation":
+        case "No Information":
+        case undefined:
+          return "None";
+        default:
+          return l;
+      }
+    });
 
-    return uniqueLocations.length ? uniqueLocations.join(", ") : undefined;
+    return uniqueLocations.length ? uniqueLocations[0] : "None";
   }
 
   get typeDisplay(): string | undefined {

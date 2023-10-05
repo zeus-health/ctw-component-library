@@ -21,7 +21,7 @@ export function adtFilter(): FilterItem[] {
       display: "ADT Status",
     },
     {
-      key: "physicalType",
+      key: "physicalTypes",
       type: "checkbox",
       display: "Location Type",
       values: [
@@ -32,7 +32,16 @@ export function adtFilter(): FilterItem[] {
         "Rehab Hospital",
         "Skilled Nursing Facility",
         "Urgent Care",
+        "None",
       ],
+      predicate: (values: string[], item: object) => {
+        if (values.length === 0) {
+          return true;
+        }
+        const encounter = item as EncounterModel;
+        const status = encounter.physicalTypes;
+        return values.includes(status);
+      },
     }
   );
   return filters;
