@@ -46,36 +46,38 @@ function assignEncountersAndNotes(
   getRequestContext: () => Promise<CTWRequestContext>
 ) {
   adtEncounters.forEach(async (e: EncounterModel) => {
-    const requestContext = await getRequestContext();
-    if (!encounterAndNotesData.has(e.resource.id ?? "")) {
-      return;
-    }
-    const encAndNote = encounterAndNotesData.get(e.resource.id ?? "");
-    if (encAndNote) {
-      const graphClient = createGraphqlClient(requestContext);
+    if (!e.relatedEncounter) {
+      const requestContext = await getRequestContext();
+      if (!encounterAndNotesData.has(e.resource.id ?? "")) {
+        return;
+      }
+      const encAndNote = encounterAndNotesData.get(e.resource.id ?? "");
+      if (encAndNote) {
+        const graphClient = createGraphqlClient(requestContext);
 
-      const { data: encounterFqsData } = await fqsRequest<EncounterGraphqlResponse>(
-        graphClient,
-        encountersQuery,
-        {
-          upid: encAndNote.upid,
-          cursor: "",
-          first: 1,
-          sort: {
-            lastUpdated: "DESC",
-          },
-          filter: {
-            ids: {
-              anymatch: [encAndNote.cwcq_encounter_id],
+        const { data: encounterFqsData } = await fqsRequest<EncounterGraphqlResponse>(
+          graphClient,
+          encountersQuery,
+          {
+            upid: encAndNote.upid,
+            cursor: "",
+            first: 1,
+            sort: {
+              lastUpdated: "DESC",
             },
-          },
-        }
-      );
-      const encounterNodes = encounterFqsData.EncounterConnection.edges.map((x) => x.node);
-      const encounterNode = encounterNodes[0];
-      e.relatedEncounter = new EncounterModel(encounterNode, encounterNode.ProvenanceList);
+            filter: {
+              ids: {
+                anymatch: [encAndNote.cwcq_encounter_id],
+              },
+            },
+          }
+        );
+        const encounterNodes = encounterFqsData.EncounterConnection.edges.map((x) => x.node);
+        const encounterNode = encounterNodes[0];
+        e.relatedEncounter = new EncounterModel(encounterNode, encounterNode.ProvenanceList);
 
-      e.relatedEncounter.binaryId = encAndNote.binary_id.replaceAll('"', "");
+        e.relatedEncounter.binaryId = encAndNote.binary_id.replaceAll('"', "");
+      }
     }
   });
 }
