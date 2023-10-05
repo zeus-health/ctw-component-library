@@ -38,20 +38,3 @@ export const encountersQuery = gql`
     }
   }
 `;
-
-export const encounterADTQuery = gql`
-  ${fragmentEncounter}
-
-  query EncounterADTConnection($upid: ID!, $filter: EncounterFilterParams! = {}) {
-    EncounterConnection(upid: $upid, filter: $filter) {
-      pageInfo {
-        hasNextPage
-      }
-      edges {
-        node {
-          ...Encounter
-        }
-      }
-    }
-  }
-`;
