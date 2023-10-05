@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.69.2
+
+### Patch Changes
+
+- 3da01af1: Revert "Fix casing"
+
 ## 1.69.1
 
 ### Patch Changes
