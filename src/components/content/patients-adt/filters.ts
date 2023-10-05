@@ -25,14 +25,13 @@ export function adtFilter(): FilterItem[] {
       type: "checkbox",
       display: "Location Type",
       values: [
-        "Building",
         "Home Health",
         "Hospice",
         "Hospital",
         "Rehab Hospital",
         "Skilled Nursing Facility",
         "Urgent Care",
-        "None",
+        "Unknown",
       ],
       predicate: (values: string[], item: object) => {
         if (values.length === 0) {

@@ -136,14 +136,15 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
         case "Unknown":
         case "NoInformation":
         case "No Information":
+        case "Building":
         case undefined:
-          return "None";
+          return "Unknown";
         default:
           return l;
       }
     });
 
-    return uniqueLocations.length ? uniqueLocations[0] : "None";
+    return uniqueLocations.length ? uniqueLocations[0] : "Unknown";
   }
 
   get typeDisplay(): string | undefined {
