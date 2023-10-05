@@ -33,8 +33,8 @@ type RelatedEncounterMap = Map<
   string,
   {
     upid: string;
-    cwcq_encounter_id: string;
-    binary_id: string;
+    cwcqEncounterId: string;
+    binaryId: string;
   }
 >;
 
@@ -70,7 +70,7 @@ function assignEncountersAndNotes(
             },
             filter: {
               ids: {
-                anymatch: [encAndNote.cwcq_encounter_id],
+                anymatch: [encAndNote.cwcqEncounterId],
               },
             },
           });
@@ -82,7 +82,7 @@ function assignEncountersAndNotes(
       const encounterNode = encounterNodes[0];
       e.relatedEncounter = new EncounterModel(encounterNode, encounterNode.ProvenanceList);
 
-      e.relatedEncounter.binaryId = encAndNote.binary_id.replaceAll('"', "");
+      e.relatedEncounter.binaryId = encAndNote.binaryId.replaceAll('"', "");
     }
   });
 }
