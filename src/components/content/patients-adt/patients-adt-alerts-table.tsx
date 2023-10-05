@@ -21,8 +21,13 @@ import { EncounterModel } from "@/fhir/models/encounter";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import { EncounterGraphqlResponse, encountersQuery } from "@/services/fqs/queries/encounters";
+import { QUERY_KEY_ENCOUNTERS_RELATED } from "@/utils/query-keys";
+import { queryClient } from "@/utils/request";
 
 const PAGE_SIZE = 10;
+
+// Cache related encounters and notes for 10 minutes.
+const RELATED_ENC_STALE_TIME = 1000 * 60 * 10;
 
 type RelatedEncounterMap = Map<
   string,
@@ -47,31 +52,33 @@ function assignEncountersAndNotes(
 ) {
   adtEncounters.forEach(async (e: EncounterModel) => {
     if (!e.relatedEncounter) {
-      const requestContext = await getRequestContext();
       if (!encounterAndNotesData.has(e.resource.id ?? "")) {
         return;
       }
       const encAndNote = encounterAndNotesData.get(e.resource.id ?? "");
       if (encAndNote) {
-        const graphClient = createGraphqlClient(requestContext);
-
-        const { data: encounterFqsData } = await fqsRequest<EncounterGraphqlResponse>(
-          graphClient,
-          encountersQuery,
-          {
-            upid: encAndNote.upid,
-            cursor: "",
-            first: 1,
-            sort: {
-              lastUpdated: "DESC",
-            },
-            filter: {
-              ids: {
-                anymatch: [encAndNote.cwcq_encounter_id],
+        const { data: encounterFqsData } = await queryClient.fetchQuery(
+          [QUERY_KEY_ENCOUNTERS_RELATED, e.id],
+          async () => {
+            const requestContext = await getRequestContext();
+            const graphClient = createGraphqlClient(requestContext);
+            return fqsRequest<EncounterGraphqlResponse>(graphClient, encountersQuery, {
+              upid: encAndNote.upid,
+              cursor: "",
+              first: 1,
+              sort: {
+                lastUpdated: "DESC",
               },
-            },
-          }
+              filter: {
+                ids: {
+                  anymatch: [encAndNote.cwcq_encounter_id],
+                },
+              },
+            });
+          },
+          { staleTime: RELATED_ENC_STALE_TIME }
         );
+
         const encounterNodes = encounterFqsData.EncounterConnection.edges.map((x) => x.node);
         const encounterNode = encounterNodes[0];
         e.relatedEncounter = new EncounterModel(encounterNode, encounterNode.ProvenanceList);
