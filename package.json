@@ -131,7 +131,7 @@
     "uuid": "^9.0.0",
     "xml-beautify": "^1.2.3",
     "xpath": "^0.0.32",
-    "zod": "^3.19.0"
+    "zod": "^3.22.3"
   },
   "msw": {
     "workerDirectory": "public"
