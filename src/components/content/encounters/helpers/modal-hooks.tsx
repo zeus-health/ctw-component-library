@@ -3,6 +3,7 @@ import { Notes } from "../../resource/helpers/notes";
 import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
 import { EncounterModel } from "@/fhir/models/encounter";
 import { parseWithoutFormat } from "@/utils/dates";
+import { orderBy } from "@/utils/nodash";
 import { capitalize } from "@/utils/nodash/fp";
 
 export function usePatientEncounterDetailsDrawer() {
@@ -34,7 +35,8 @@ export function usePatientEncounterDetailsDrawer() {
     getSourceDocument: true,
     details: encounterData,
     enableDismissAndReadActions: true,
-    renderChild: (m) => m.clinicalNotes.length > 0 && <Notes entries={m.clinicalNotes} />,
+    renderChild: (m) =>
+      m.clinicalNotes.length > 0 && <Notes entries={orderBy(m.clinicalNotes, "title")} />,
   });
 }
 
