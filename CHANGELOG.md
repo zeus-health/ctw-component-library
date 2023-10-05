@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 1.68.14
+
+### Patch Changes
+
+- 09d6e295: Add ability to filter by location.
+
+## 1.68.13
+
+### Patch Changes
+
+- 95bab4b0: Fix issue with observations not showing up in drawer for diagnostic result search results.
+
 ## 1.68.12
 
 ### Patch Changes
