@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 1.69.0
+
+### Minor Changes
+
+- 039bc97f: Add to ADT Table drawer, an Encounters & Notes section to display the CommonWell/Carequality version of the ADT encounter.
+
+## 1.68.14
+
+### Patch Changes
+
+- 09d6e295: Add ability to filter by location.
+
 ## 1.68.13
 
 ### Patch Changes

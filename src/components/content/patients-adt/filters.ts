@@ -5,20 +5,44 @@ import { EncounterModel } from "@/fhir/models";
 export function adtFilter(): FilterItem[] {
   const filters: FilterItem[] = [dismissFilter];
 
-  filters.push({
-    key: "adtStatus",
-    type: "checkbox",
-    values: ["Active", "Discharged"],
-    predicate: (values: string[], item: object) => {
-      if (values.length === 0) {
-        return true;
-      }
-      const encounter = item as EncounterModel;
-      const status = encounter.periodEnd ? "Discharged" : "Active";
-      return values.includes(status);
+  filters.push(
+    {
+      key: "adtStatus",
+      type: "checkbox",
+      values: ["Active", "Discharged"],
+      predicate: (values: string[], item: object) => {
+        if (values.length === 0) {
+          return true;
+        }
+        const encounter = item as EncounterModel;
+        const status = encounter.periodEnd ? "Discharged" : "Active";
+        return values.includes(status);
+      },
+      display: "ADT Status",
     },
-    display: "ADT Status",
-  });
+    {
+      key: "physicalTypes",
+      type: "checkbox",
+      display: "Location Type",
+      values: [
+        "Home Health",
+        "Hospice",
+        "Hospital",
+        "Rehab Hospital",
+        "Skilled Nursing Facility",
+        "Urgent Care",
+        "Unknown",
+      ],
+      predicate: (values: string[], item: object) => {
+        if (values.length === 0) {
+          return true;
+        }
+        const encounter = item as EncounterModel;
+        const status = encounter.locationPhysicalType;
+        return values.includes(status);
+      },
+    }
+  );
   return filters;
 }
 

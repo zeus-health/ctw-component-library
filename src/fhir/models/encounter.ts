@@ -17,23 +17,30 @@ import { compact, flatten, uniq } from "@/utils/nodash";
 export class EncounterModel extends FHIRModel<fhir4.Encounter> {
   kind = "Encounter" as const;
 
+  public binaryId?: string;
+
   public clinicalNotes: DocumentModel[];
 
   public provenance: fhir4.Provenance[];
 
+  public relatedEncounter: EncounterModel | undefined;
+
   constructor(
     resource: fhir4.Encounter,
     provenance: fhir4.Provenance[],
-    documents: DocumentModel[],
     includedResources?: ResourceMap,
     revIncludes?: Resource[]
   ) {
     super(resource, includedResources, revIncludes);
     this.provenance = provenance;
     this.clinicalNotes = [];
-    const binaryID = getBinaryIDFromProvenace(provenance);
+    this.provenance = provenance;
+  }
+
+  findAndSetNotesFrom(documentPool: DocumentModel[]) {
+    const binaryID = getBinaryIDFromProvenance(this.provenance);
     if (binaryID) {
-      this.clinicalNotes = documents.filter(
+      this.clinicalNotes = documentPool.filter(
         (d) => d.binaryId === binaryID && isSectionDocument(d) && !isEmptyClinicalNote(d)
       );
     }
@@ -120,6 +127,33 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
     return uniqueLocations.length ? uniqueLocations.join(", ") : undefined;
   }
 
+  get locationPhysicalType() {
+    const locations = compact(
+      this.resource.location?.map((l) => {
+        const location = findReference("Location", undefined, undefined, l.location);
+        return codeableConceptLabel(location?.physicalType);
+      })
+    );
+
+    const uniqueLocations = uniq(locations).filter((l) => {
+      switch (l) {
+        case "URGENT_CARE":
+          return "Urgent Care";
+        case "Not Indicated":
+        case "Unknown":
+        case "NoInformation":
+        case "No Information":
+        case "Building":
+        case undefined:
+          return "Unknown";
+        default:
+          return l;
+      }
+    });
+
+    return uniqueLocations.length ? uniqueLocations[0] : "Unknown";
+  }
+
   get typeDisplay(): string | undefined {
     const { display: classDisplay, system: classSystem } = this.resource.class;
     const classCode = (this.resource.class.code ?? "").toUpperCase();
@@ -155,7 +189,7 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
   }
 }
 
-function getBinaryIDFromProvenace(provenance: fhir4.Provenance[]) {
+function getBinaryIDFromProvenance(provenance: fhir4.Provenance[]) {
   if (provenance.length > 0) {
     let binaryIDReference = "";
     for (let i = 0; i < provenance.length; i += 1) {
