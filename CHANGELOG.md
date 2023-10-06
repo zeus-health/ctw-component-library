@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.69.6
+
+### Patch Changes
+
+- 42a117b4: Re-add the dismiss functionality in the table for ADT.
+
 ## 1.69.5
 
 ### Patch Changes
