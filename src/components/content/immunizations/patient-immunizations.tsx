@@ -31,7 +31,6 @@ function PatientImmunizationsComponent({ className }: PatientImmunizationsProps)
   const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
 
   const openDetails = useResourceDetailsDrawer({
-    isOpen: true,
     header: (m) => m.description,
     details: immunizationData,
     getSourceDocument: true,

@@ -18,7 +18,6 @@ export const useConditionDetailsDrawer = ({
   enableDismissAndReadActions?: boolean;
 }) =>
   useResourceDetailsDrawer({
-    isOpen: true,
     header: (condition: ConditionModel) => condition.display,
     subHeader: (condition: ConditionModel) => condition.ccsChapter,
     getSourceDocument: true,

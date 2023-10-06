@@ -27,7 +27,6 @@ export type UseResourceDetailsDrawerProps<T extends fhir4.Resource, M extends FH
   | "rowActions"
   | "enableDismissAndReadActions"
   | "renderChild"
-  | "isOpen"
 >;
 
 export function useResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>(

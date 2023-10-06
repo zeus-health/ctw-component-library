@@ -28,7 +28,6 @@ export const useDocumentDetailsDrawer = ({
   rowActions?: (c: DocumentModel) => RowActionsConfigProp<DocumentModel>;
 }) =>
   useResourceDetailsDrawer({
-    isOpen: true,
     header: (m) => m.title,
     details: documentData,
     rowActions,

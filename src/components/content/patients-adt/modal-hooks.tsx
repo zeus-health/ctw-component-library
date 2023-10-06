@@ -1,11 +1,12 @@
 import { faFileLines } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ArrowRightIcon } from "@heroicons/react/outline";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { DocumentButton } from "../CCDA/document-button";
 import { useCCDAModal } from "../CCDA/modal-ccda";
 import { NotesEntry } from "../resource/helpers/notes-entry";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
+import { useDrawer } from "@/components/core/providers/drawer-provider";
 import { EncounterModel } from "@/fhir/models/encounter";
 
 const encountersAndNotes = (adt: EncounterModel) => (
@@ -74,9 +75,10 @@ function RelatedEncounter({ encounter }: { encounter?: EncounterModel }) {
 }
 
 export function useADTAlertDetailsDrawer() {
-  const [isOpen, setIsOpen] = useState(true);
+  const navigate = useNavigate();
+  const { closeDrawer } = useDrawer();
+
   return useResourceDetailsDrawer({
-    isOpen,
     header: (adt) => (
       <div className="ctw-flex ctw-justify-between">
         {adt.patient?.display}
@@ -85,8 +87,8 @@ export function useADTAlertDetailsDrawer() {
           type="button"
           className="ctw-btn-default ctw-flex ctw-items-center ctw-space-x-2"
           onClick={() => {
-            setIsOpen(false);
-            window.location.href = `/patients/${adt.patientUPID}`;
+            closeDrawer();
+            navigate(`/patients/${adt.patientUPID}`);
           }}
         >
           <div>Go to Profile</div>
