@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.69.7
+
+### Patch Changes
+
+- 1872d2c5: Allows user to view patient's page directly from a hospitalization's drawer.
+
 ## 1.69.6
 
 ### Patch Changes
