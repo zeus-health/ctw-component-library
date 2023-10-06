@@ -171,7 +171,7 @@ function DrawerContent({
                 {showCloseFooter && (
                   <Drawer.Footer>
                     <Drawer.CloseButton
-                      label="Close"
+                      label={showBackButton ? "Back" : "Close"}
                       onClose={() => {
                         onClose();
                         trackInteraction("close_drawer", {
