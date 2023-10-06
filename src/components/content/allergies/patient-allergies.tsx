@@ -36,6 +36,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
   const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
 
   const openDetails = useResourceDetailsDrawer({
+    isOpen: true,
     header: (m) => capitalize(m.display),
     details: allergyData,
     renderChild: allergyHistory,

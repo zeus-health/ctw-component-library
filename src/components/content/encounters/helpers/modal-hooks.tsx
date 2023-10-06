@@ -7,6 +7,7 @@ import { capitalize } from "@/utils/nodash/fp";
 
 export function usePatientEncounterDetailsDrawer() {
   return useResourceDetailsDrawer({
+    isOpen: true,
     header: (m) => {
       if (m.periodStart && m.periodEnd) {
         const parsedStartDate = parseWithoutFormat(m.periodStart);

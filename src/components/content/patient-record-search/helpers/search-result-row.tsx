@@ -26,6 +26,7 @@ export function SearchResultRow(props: ResourceRowProps) {
 
   const openConditionDetails = useConditionDetailsDrawer({});
   const openAllergyDetails = useResourceDetailsDrawer({
+    isOpen: true,
     header: (m) => capitalize(m.display),
     details: allergyData,
     renderChild: allergyHistory,

@@ -36,6 +36,7 @@ export function PatientCareTeam({ className }: PatientCareTeamProps) {
   });
 
   const openDetails = useResourceDetailsDrawer({
+    isOpen: true,
     header: (m) => m.practitionerName,
     details: careTeamData,
   });

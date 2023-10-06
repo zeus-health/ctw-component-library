@@ -1,5 +1,7 @@
 import { faFileLines } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ArrowRightIcon } from "@heroicons/react/outline";
+import { useState } from "react";
 import { DocumentButton } from "../CCDA/document-button";
 import { useCCDAModal } from "../CCDA/modal-ccda";
 import { NotesEntry } from "../resource/helpers/notes-entry";
@@ -72,11 +74,26 @@ function RelatedEncounter({ encounter }: { encounter?: EncounterModel }) {
 }
 
 export function useADTAlertDetailsDrawer() {
+  const [isOpen, setIsOpen] = useState(true);
   return useResourceDetailsDrawer({
-    header: (adt) =>
-      `${adt.patient?.display}${
-        adt.patient?.gender ? ` (${adt.patient.gender[0].toUpperCase()})` : ""
-      }`,
+    isOpen,
+    header: (adt) => (
+      <div className="ctw-flex ctw-justify-between">
+        {adt.patient?.display}
+        {adt.patient?.gender ? ` (${adt.patient.gender[0].toUpperCase()})` : ""}
+        <button
+          type="button"
+          className="ctw-btn-default ctw-flex ctw-items-center ctw-space-x-2"
+          onClick={() => {
+            setIsOpen(false);
+            window.location.href = `/patients/${adt.patientUPID}`;
+          }}
+        >
+          <div>Go to Profile</div>
+          <ArrowRightIcon className="ctw-h-6 ctw-w-6" aria-hidden="true" />
+        </button>
+      </div>
+    ),
     subHeader: (adt) => `${adt.patient?.dob} (${adt.patient?.age})`,
     getSourceDocument: true,
     details: encounterData,

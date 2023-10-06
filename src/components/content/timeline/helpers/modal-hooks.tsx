@@ -5,6 +5,7 @@ import { capitalize } from "@/utils/nodash/fp";
 
 export function usePatientEncounterDetailsDrawer() {
   return useResourceDetailsDrawer({
+    isOpen: true,
     header: (m) => `${m.periodStart} - ${m.periodEnd}`,
     subHeader: (m) => m.typeDisplay,
     getSourceDocument: true,

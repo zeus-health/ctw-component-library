@@ -19,6 +19,7 @@ export const useMedicationDetailsDrawer = ({
   enableDismissAndReadActions?: boolean;
 }) =>
   useResourceDetailsDrawer({
+    isOpen: true,
     header: (medication: MedicationStatementModel) => medication.display,
     renderChild: medicationHistory,
     details: (medication: MedicationStatementModel) => [
