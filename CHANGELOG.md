@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.69.4
+
+### Patch Changes
+
+- f76d7f6f: Update a few dependencies
+- ff1e586c: Hide subscription info until permissions sorted out
+
 ## 1.69.3
 
 ### Patch Changes
