@@ -16,7 +16,7 @@ export const PatientOverviewComponent = ({
         {/* <div className="ctw-px-3 ctw-pt-3">
           <PatientSubscriptionDetails />
         </div> */}
-        <div className="ctw-border-0 ctw-border-t ctw-border-solid ctw-border-divider-light ctw-px-3 ctw-pt-3">
+        <div className="ctw-px-3 ctw-pt-3">
           <PatientHistoryLastRetrievedWithAction
             includePatientDemographicsForm={includePatientDemographicsForm}
           />
