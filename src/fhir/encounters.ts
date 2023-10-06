@@ -15,6 +15,32 @@ import { compact, pickBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_ENCOUNTERS } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
+function getEncountersFromFQS(limit: number) {
+  return async (requestContext: CTWRequestContext, patient: PatientModel) => {
+    try {
+      const graphClient = createGraphqlClient(requestContext);
+      const { data } = await fqsRequest<EncounterGraphqlResponse>(graphClient, encountersQuery, {
+        upid: patient.UPID,
+        cursor: "",
+        first: limit,
+        sort: {
+          lastUpdated: "DESC",
+        },
+      });
+      const nodes = data.EncounterConnection.edges.map((x) => x.node);
+      const results = nodes.map((c) => new EncounterModel(c, c.ProvenanceList));
+      if (results.length === 0) {
+        Telemetry.countMetric("req.count.encounters.none", 1);
+      }
+      Telemetry.histogramMetric("req.count.encounters", results.length);
+      return dedupeAndMergeEncounters(results, "patientEncounter");
+    } catch (e) {
+      Telemetry.logError(e as Error, "Failed fetching encounter timeline information for patient");
+      throw new Error(`Failed fetching encounter timeline information for patient: ${e}`);
+    }
+  };
+}
+
 export function usePatientEncounters(limit = MAX_OBJECTS_PER_REQUEST) {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_ENCOUNTERS,
@@ -37,9 +63,11 @@ export function usePatientEncountersWithClinicalNotes(limit = MAX_OBJECTS_PER_RE
 
     if (documents.length > 0) {
       setEncountersWithClinicalNotes(
-        encounters.map(
-          (encounter) => new EncounterModel(encounter.resource, encounter.provenance, documents)
-        )
+        encounters.map((encounter) => {
+          const model = new EncounterModel(encounter.resource, encounter.provenance);
+          model.findAndSetNotesFrom(documents);
+          return model;
+        })
       );
     } else {
       setEncountersWithClinicalNotes(encounters);
@@ -55,32 +83,6 @@ export function usePatientEncountersWithClinicalNotes(limit = MAX_OBJECTS_PER_RE
     isError,
     isFetching,
     data: encountersWithClinicalNotes,
-  };
-}
-
-function getEncountersFromFQS(limit: number) {
-  return async (requestContext: CTWRequestContext, patient: PatientModel) => {
-    try {
-      const graphClient = createGraphqlClient(requestContext);
-      const { data } = await fqsRequest<EncounterGraphqlResponse>(graphClient, encountersQuery, {
-        upid: patient.UPID,
-        cursor: "",
-        first: limit,
-        sort: {
-          lastUpdated: "DESC",
-        },
-      });
-      const nodes = data.EncounterConnection.edges.map((x) => x.node);
-      const results = nodes.map((c) => new EncounterModel(c, c.ProvenanceList, []));
-      if (results.length === 0) {
-        Telemetry.countMetric("req.count.encounters.none", 1);
-      }
-      Telemetry.histogramMetric("req.count.encounters", results.length);
-      return dedupeAndMergeEncounters(results, "patientEncounter");
-    } catch (e) {
-      Telemetry.logError(e as Error, "Failed fetching encounter timeline information for patient");
-      throw new Error(`Failed fetching encounter timeline information for patient: ${e}`);
-    }
   };
 }
 
@@ -100,7 +102,7 @@ export async function getADTPatientsFromODS(requestContext: CTWRequestContext) {
 
     const includedResources = getIncludedResources(bundle);
 
-    const encounterResources = resources.map((e) => new EncounterModel(e, [], [], undefined, []));
+    const encounterResources = resources.map((e) => new EncounterModel(e, [], undefined, []));
 
     const filteredResources = encounterResources.filter((e) => !!e.periodEnd);
 

@@ -29,12 +29,23 @@ export const Notes = ({ entries, documentIdToStartOpen }: NotesProps) => (
       <div key={`${entry.id}-${idx}`}>
         <NotesEntry
           id={entry.id}
-          title={entry.title}
+          summary={
+            <>
+              {entry.title && (
+                <div>
+                  <div className="ctw-font-semibold ctw-text-content-black">{entry.title}</div>
+                </div>
+              )}
+              {!entry.title && <div className="ctw-text-content-lighter">Unknown</div>}
+            </>
+          }
           hideEmpty={false}
-          details={{
-            value: getNoteDisplay(entry.text),
-            transposeTables: true,
-          }}
+          details={[
+            {
+              value: getNoteDisplay(entry.text),
+              transposeTables: true,
+            },
+          ]}
           isDetailShownOnOpen={entry.id === documentIdToStartOpen}
         />
       </div>

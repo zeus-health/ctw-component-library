@@ -1,5 +1,31 @@
 # ctw-component-library
 
+## 1.69.3
+
+### Patch Changes
+
+- 2b1865e2: Modify subscription descriptions and make text smaller
+- 906c1b4e: Changes the views for the ADT table to inclue past 7 days and instead of all time, 90 days.
+
+## 1.69.2
+
+### Patch Changes
+
+- 3da01af1: Revert "Fix casing"
+
+## 1.69.1
+
+### Patch Changes
+
+- 55dc4609: Fix casing for adt table.
+- dfe0cdfb: Show patient subscription information on summary tab. Also fix an issue with not showing observations in diagnostic search results.
+
+## 1.69.0
+
+### Minor Changes
+
+- 039bc97f: Add to ADT Table drawer, an Encounters & Notes section to display the CommonWell/Carequality version of the ADT encounter.
+
 ## 1.68.14
 
 ### Patch Changes
