@@ -16,6 +16,7 @@ export type OpenDrawerProps = {
 };
 
 export type DrawerState = {
+  closeDrawer: () => void;
   openDrawer: (props: OpenDrawerProps) => void;
 };
 

@@ -20,6 +20,9 @@ export function DrawerProvider({ children }: ProviderProps) {
 
   const state = useMemo(
     () => ({
+      closeDrawer: () => {
+        setIsOpen(false);
+      },
       openDrawer: (props: OpenDrawerProps) => {
         setProps(props);
         // Ensure isOpen starts as false and then async set it to true.
