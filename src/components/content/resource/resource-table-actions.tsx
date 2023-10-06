@@ -52,7 +52,7 @@ export const ResourceTableActions = <T extends MinRecordItem>({
         )}
         {filterOptions && filterOptions.filters.length > 0 && <FilterBar {...filterOptions} />}
       </div>
-      <div className="ctw-mb-2 ctw-ml-0 ctw-w-full ctw-whitespace-nowrap sm:ctw-mb-0 sm:ctw-ml-auto sm:ctw-w-auto">
+      <div className="ctw-mb-2 ctw-ml-0 ctw-w-full ctw-whitespace-nowrap max-sm:ctw-px-2 sm:ctw-mb-0 sm:ctw-ml-auto sm:ctw-w-auto">
         {action}
       </div>
     </div>

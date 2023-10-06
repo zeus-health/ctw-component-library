@@ -1,5 +1,31 @@
 # ctw-component-library
 
+## 1.69.6
+
+### Patch Changes
+
+- 42a117b4: Re-add the dismiss functionality in the table for ADT.
+
+## 1.69.5
+
+### Patch Changes
+
+- 904121a9: Add padding to sides of resource action buttons on xs breakpoints.
+
+## 1.69.4
+
+### Patch Changes
+
+- f76d7f6f: Update a few dependencies
+- ff1e586c: Hide subscription info until permissions sorted out
+
+## 1.69.3
+
+### Patch Changes
+
+- 2b1865e2: Modify subscription descriptions and make text smaller
+- 906c1b4e: Changes the views for the ADT table to inclue past 7 days and instead of all time, 90 days.
+
 ## 1.69.2
 
 ### Patch Changes

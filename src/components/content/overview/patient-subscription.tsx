@@ -50,17 +50,19 @@ export const PatientSubscriptionDetails = () => {
     );
   }
 
-  const dataSources = getDataSources(
-    patient.data.isTestPatient && !patientSubscription.data.package // If a test/demo patient doesn't have a package then use this demo content
+  // If a test/demo patient doesn't have a package then use this demo content
+  const patientPackage =
+    patient.data.isTestPatient && !patientSubscription.data.package
       ? demoPatientSubscription
-      : patientSubscription.data
-  );
+      : patientSubscription.data;
+
+  const dataSources = getDataSources(patientPackage);
 
   return (
-    <>
+    <div className="ctw-text-sm">
       <div>
         <span className="ctw-font-medium">{patient.data.display}</span> is enrolled in{" "}
-        <span className="ctw-font-medium">{patientSubscription.data.package?.name}</span>
+        <span className="ctw-font-medium">{patientPackage.package?.name}</span>
       </div>
       <div className="ctw-pt-3">This provides access to the following data:</div>
       <ul className="ctw-mx-0 ctw-list-disc ctw-pl-4">
@@ -70,7 +72,7 @@ export const PatientSubscriptionDetails = () => {
           </li>
         ))}
       </ul>
-    </>
+    </div>
   );
 };
 
@@ -110,12 +112,9 @@ export const getDataSources = (patientSubscription: PatientSubscription) => {
       name: s,
       details: compact([
         translatedPackages.initialProviders.includes(s) && "initial history pull",
-        translatedPackages.freshmakerProviders.includes(s) && "intelligent refresh",
-        translatedPackages.recurringProvidersWithInterval.some((x) => x.provider === s) &&
-          `full refresh at least every ${
-            translatedPackages.recurringProvidersWithInterval.find((x) => x.provider === s)
-              ?.intervalDays
-          } days`,
+        (translatedPackages.freshmakerProviders.includes(s) ||
+          translatedPackages.recurringProvidersWithInterval.some((x) => x.provider === s)) &&
+          "intelligent refresh",
         translatedPackages.subscriptionProviders.includes(s) && "new data alerts",
       ]),
     };
