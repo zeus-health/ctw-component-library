@@ -86,7 +86,7 @@
     "jsdom": "^20.0.1",
     "msw": "^1.2.1",
     "npm-run-all": "^4.1.5",
-    "postcss": "^8.4.24",
+    "postcss": "^8.4.31",
     "prettier": "^2.8.7",
     "prettier-plugin-tailwindcss": "^0.3.0",
     "react": "^16.14.0",
@@ -98,7 +98,7 @@
     "tsc-alias": "^1.8.6",
     "typescript": "^4.7.4",
     "vite": "^4.4.6",
-    "vite-tsconfig-paths": "^4.0.8",
+    "vite-tsconfig-paths": "^4.2.1",
     "vitest": "^0.32.2",
     "vitest-fetch-mock": "^0.2.2"
   },
@@ -131,7 +131,7 @@
     "uuid": "^9.0.0",
     "xml-beautify": "^1.2.3",
     "xpath": "^0.0.32",
-    "zod": "^3.19.0"
+    "zod": "^3.22.0"
   },
   "msw": {
     "workerDirectory": "public"
