@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.69.5
+
+### Patch Changes
+
+- 904121a9: Add padding to sides of resource action buttons on xs breakpoints.
+
 ## 1.69.4
 
 ### Patch Changes
