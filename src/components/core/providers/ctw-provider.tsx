@@ -69,6 +69,8 @@ export function CTWProvider({
     [env, builderId, featureFlags, onResourceSave, headers]
   );
 
+  console.log("CTWProvider", providerState);
+
   return (
     <ThemeProvider theme={theme} locals={locals}>
       <AuthenticationProvider headers={headers} authToken={authToken} authTokenURL={authTokenURL}>

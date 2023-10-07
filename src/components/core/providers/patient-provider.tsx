@@ -82,12 +82,17 @@ export function usePatient(): UseQueryResult<PatientModel, unknown> {
 
   const { patientID, systemURL, tags } = context;
 
-  return useQuery({ queryKey: [QUERY_KEY_PATIENT, patientID, systemURL, tags], queryFn: withTimerMetric(async () => {
+  return useQuery({
+    queryKey: [QUERY_KEY_PATIENT, patientID, systemURL, tags],
+    queryFn: withTimerMetric(async () => {
       const requestContext = await getRequestContext();
       return getBuilderFhirPatient(requestContext, patientID, systemURL, {
         _tag: tags?.map((tag) => `${tag.system}|${tag.code}`) ?? [],
       });
-    }, "req.get_builder_fhir_patient"), staleTime: PATIENT_STALE_TIME, enabled: !!patientID });
+    }, "req.get_builder_fhir_patient"),
+    staleTime: PATIENT_STALE_TIME,
+    enabled: !!patientID,
+  });
 }
 
 export function usePatientPromise() {
@@ -151,13 +156,17 @@ export function useQueryWithPatient<T, T2>(
     );
   }
 
-  return useQuery({ queryKey: [queryKey, patientResponse.data, ...keys], queryFn: async () => {
+  return useQuery({
+    queryKey: [queryKey, patientResponse.data, ...keys],
+    queryFn: async () => {
       const requestContext = await getRequestContext();
       // Ignore eslint warning as we should always have a valid
       // patient thanks to the enabled check.
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return query(requestContext, patientResponse.data!, keys);
-    }, enabled: !!patientResponse.data?.UPID && enabled });
+    },
+    enabled: !!patientResponse.data?.UPID && enabled,
+  });
 }
 
 // Need to keep this function for builder-scoped queries.
