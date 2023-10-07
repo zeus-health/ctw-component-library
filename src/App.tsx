@@ -2,7 +2,7 @@ import { trim } from "lodash/fp";
 import { Auth0Provider } from "@auth0/auth0-react";
 import { ErrorBoundary } from "./error-boundary";
 import { PatientHistoryTable } from "./components/content/patient-history/patient-history-table";
-import { ReactNode, useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import { SecuredApp } from "@/SecuredApp";
 import "./App.css";
 
@@ -25,14 +25,12 @@ import {
   ZusAggregatedProfile,
   ZusAggregatedProfileIFrame,
   PatientConditionsAll,
-  invalidateQueries,
 } from ".";
 
 import { PatientMedicationDispense } from "./components/content/medication-dispense/patient-medication-dispense";
 import { ADTAlertsTable } from "./components/content/patients-adt/patients-adt-alerts-table";
 import { ThemeProviderProps } from "@/components/core/providers/theme/theme-provider";
 import { UseQueryResult } from "@tanstack/react-query";
-import { use } from "i18next";
 
 const {
   VITE_AUTH0_AUDIENCE,
@@ -126,13 +124,7 @@ const components: DemoComponent[] = [
   {
     name: "zap",
     render: () => {
-      return (
-        <ZusAggregatedProfile
-          title="ZAP"
-          includePatientDemographicsForm={false}
-          resources={["conditions"]}
-        />
-      );
+      return <ZusAggregatedProfile title="ZAP" includePatientDemographicsForm={false} />;
     },
   },
   {
@@ -158,52 +150,31 @@ const demoComponents = components.filter(({ name }) =>
   componentsToRender.some((prefix: string) => name.startsWith(prefix))
 );
 
-const DemoApp = ({ accessToken = "" }) => {
-  const [builderId, setBuilderId] = useState("0b05ee35-aa61-4143-8be2-874cfb90c5b3");
-
-  useEffect(() => {
-    invalidateQueries();
-    console.log("builderId", builderId);
-  }, [builderId]);
-
-  return (
-    <>
-      <select
-        value={builderId}
-        onChange={(e) => {
-          setBuilderId(e.target.value);
-        }}
-      >
-        <option value="0b05ee35-aa61-4143-8be2-874cfb90c5b3">Luthfi</option>
-        <option value="2c4ff9df-7f87-4253-b2a7-0e8f4944131e">Gunther</option>
-      </select>
-
-      <CTWProvider
-        env={VITE_ENV}
-        authToken={accessToken}
-        builderId={builderId}
-        enableTelemetry
-        theme={theme}
-        locals={locals}
-        ehr="test"
-        onResourceSave={(resource, action, error) => {
-          console.log("Result of saving a resource", resource, action, error);
-        }}
-      >
-        <PatientProvider patientID={VITE_PATIENT_ID} systemURL={VITE_SYSTEM_URL}>
-          {demoComponents.map((demo, index) => (
-            <div className="ctw-space-y-5 ctw-bg-white ctw-p-1" key={index}>
-              <h3>
-                {demo.title} <small>{demo.note}</small>
-              </h3>
-              <ErrorBoundary>{demo.render()}</ErrorBoundary>
-            </div>
-          ))}
-        </PatientProvider>
-      </CTWProvider>
-    </>
-  );
-};
+const DemoApp = ({ accessToken = "" }) => (
+  <CTWProvider
+    env={VITE_ENV}
+    authToken={accessToken}
+    builderId={VITE_BUILDER_ID}
+    enableTelemetry
+    theme={theme}
+    locals={locals}
+    ehr="test"
+    onResourceSave={(resource, action, error) => {
+      console.log("Result of saving a resource", resource, action, error);
+    }}
+  >
+    <PatientProvider patientID={VITE_PATIENT_ID} systemURL={VITE_SYSTEM_URL}>
+      {demoComponents.map((demo, index) => (
+        <div className="ctw-space-y-5 ctw-bg-white ctw-p-1" key={index}>
+          <h3>
+            {demo.title} <small>{demo.note}</small>
+          </h3>
+          <ErrorBoundary>{demo.render()}</ErrorBoundary>
+        </div>
+      ))}
+    </PatientProvider>
+  </CTWProvider>
+);
 
 function App() {
   if (VITE_AUTH0_DOMAIN && VITE_AUTH0_CLIENT_ID && VITE_AUTH0_AUDIENCE) {
