@@ -2,8 +2,8 @@
  * @type {import('@types/eslint').Linter.BaseConfig}
  */
 module.exports = {
-  extends: ["@kensho-technologies/eslint-config", "prettier"],
-  plugins: ["unused-imports", "sort-exports"],
+  extends: ["@kensho-technologies/eslint-config"],
+  plugins: ["unused-imports", "sort-exports", "@tanstack/query"],
   // Ignore js files as we now have typescript parsing rules.
   // See https://stackoverflow.com/a/65063702 for more.
   ignorePatterns: [
@@ -21,6 +21,9 @@ module.exports = {
     project: ["./tsconfig.json"],
   },
   rules: {
+    "@tanstack/query/exhaustive-deps": "error",
+    "@tanstack/query/prefer-query-object-syntax": "warn",
+    "@tanstack/query/stable-query-client": "error",
     "@typescript-eslint/await-thenable": "error",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-unnecessary-condition": "error",
