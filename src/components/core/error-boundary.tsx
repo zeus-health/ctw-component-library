@@ -97,13 +97,13 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 }
 
-export function withErrorBoundary<Props extends Object>(
-  component: ComponentType<Props>,
+export function withErrorBoundary<CProps extends Object>(
+  component: ComponentType<CProps>,
   name?: string,
   trackView = true
-): ForwardRefExoticComponent<PropsWithoutRef<Props> & RefAttributes<any>> {
-  const Wrapped = forwardRef<ComponentType<Props>, Props>(
-    (props: Props, ref: ForwardedRef<ComponentType<Props>>) =>
+): ForwardRefExoticComponent<PropsWithoutRef<CProps> & RefAttributes<any>> {
+  const Wrapped = forwardRef<ComponentType<CProps>, CProps>(
+    (props: CProps, ref: ForwardedRef<ComponentType<CProps>>) =>
       createElement(ErrorBoundary, { name, trackView }, createElement(component, { ...props, ref }))
   );
 
