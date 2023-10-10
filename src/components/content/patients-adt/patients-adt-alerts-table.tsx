@@ -43,6 +43,7 @@ export type ADTTableProps = {
   isLoading?: boolean;
   data: EncounterModel[];
   encounterAndNotesData?: RelatedEncounterMap;
+  goToPatient: (upid: string) => void;
 } & TableOptionProps<EncounterModel>;
 
 function assignEncountersAndNotes(
@@ -92,8 +93,9 @@ function ADTTableComponent({
   isLoading = false,
   data,
   encounterAndNotesData,
+  goToPatient,
 }: ADTTableProps) {
-  const openADTDetails = useADTAlertDetailsDrawer();
+  const openADTDetails = useADTAlertDetailsDrawer(goToPatient);
   const [currentPage, setCurrentPage] = useState(1);
   const { getRequestContext } = useCTW();
   const { past7days, past30days, past3months } = getDateRangeView<EncounterModel>("periodStart");
@@ -152,7 +154,6 @@ function ADTTableComponent({
           }
           onRowClick={openADTDetails}
           hidePagination
-          enableDismissAndReadActions
         >
           <Pagination
             currentPage={currentPage}
