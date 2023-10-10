@@ -1,7 +1,7 @@
 import { faFileLines } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ArrowRightIcon } from "@heroicons/react/outline";
-import { useNavigate } from "react-router-dom";
+import { NavigateFunction } from "react-router-dom";
 import { DocumentButton } from "../CCDA/document-button";
 import { useCCDAModal } from "../CCDA/modal-ccda";
 import { NotesEntry } from "../resource/helpers/notes-entry";
@@ -74,8 +74,7 @@ function RelatedEncounter({ encounter }: { encounter?: EncounterModel }) {
   );
 }
 
-export function useADTAlertDetailsDrawer() {
-  const navigate = useNavigate();
+export function useADTAlertDetailsDrawer(navigate: NavigateFunction) {
   const { closeDrawer } = useDrawer();
 
   return useResourceDetailsDrawer({
