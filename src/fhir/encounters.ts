@@ -14,6 +14,7 @@ import { errorResponse } from "@/utils/errors";
 import { compact, pickBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_ENCOUNTERS } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
+import { useIncludeBasics } from "./basic";
 
 function getEncountersFromFQS(limit: number) {
   return async (requestContext: CTWRequestContext, patient: PatientModel) => {
@@ -42,11 +43,12 @@ function getEncountersFromFQS(limit: number) {
 }
 
 export function usePatientEncounters(limit = MAX_OBJECTS_PER_REQUEST) {
-  return useQueryWithPatient(
+  const patientEncountersQuery = useQueryWithPatient(
     QUERY_KEY_PATIENT_ENCOUNTERS,
     [limit],
     withTimerMetric(getEncountersFromFQS(limit), `req.timing.encounters`)
   );
+  return useIncludeBasics(patientEncountersQuery);
 }
 
 // Gets patient encounters along with clinical notes from any documents associated with each encounter.
@@ -64,7 +66,12 @@ export function usePatientEncountersWithClinicalNotes(limit = MAX_OBJECTS_PER_RE
     if (documents.length > 0) {
       setEncountersWithClinicalNotes(
         encounters.map((encounter) => {
-          const model = new EncounterModel(encounter.resource, encounter.provenance);
+          const model = new EncounterModel(
+            encounter.resource,
+            encounter.provenance,
+            undefined,
+            encounter.revIncludes
+          );
           model.findAndSetNotesFrom(documents);
           return model;
         })
