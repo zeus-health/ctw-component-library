@@ -10,12 +10,12 @@ export function useQueryWithCTW<T, T2>(
 ) {
   const { getRequestContext } = useCTW();
 
-  return useQuery(
-    [queryKey, ...keys],
-    async () => {
+  return useQuery({
+    queryKey: [queryKey, ...keys],
+    queryFn: async () => {
       const requestContext = await getRequestContext();
       return query(requestContext, keys);
     },
-    { enabled }
-  );
+    enabled,
+  });
 }
