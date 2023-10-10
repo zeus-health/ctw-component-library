@@ -3,7 +3,7 @@
  */
 module.exports = {
   extends: ["@kensho-technologies/eslint-config"],
-  plugins: ["unused-imports", "sort-exports", "@tanstack/query"],
+  plugins: ["unused-imports", "sort-exports", "prettier", "@tanstack/query"],
   // Ignore js files as we now have typescript parsing rules.
   // See https://stackoverflow.com/a/65063702 for more.
   ignorePatterns: [
