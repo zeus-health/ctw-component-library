@@ -1,5 +1,6 @@
 import { SearchParams } from "fhir-kit-client";
 import { useEffect, useState } from "react";
+import { useIncludeBasics } from "./basic";
 import { getIncludedResources } from "./bundle";
 import { usePatientDocuments } from "./document";
 import { PatientModel } from "./models";
@@ -14,7 +15,6 @@ import { errorResponse } from "@/utils/errors";
 import { compact, pickBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_ENCOUNTERS } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
-import { useIncludeBasics } from "./basic";
 
 function getEncountersFromFQS(limit: number) {
   return async (requestContext: CTWRequestContext, patient: PatientModel) => {
@@ -61,7 +61,7 @@ export function usePatientEncountersWithClinicalNotes(limit = MAX_OBJECTS_PER_RE
 
   useEffect(() => {
     const documents = documentsQuery.data;
-    const encounters = encounterQuery.data ?? [];
+    const encounters = encounterQuery.data;
 
     if (documents.length > 0) {
       setEncountersWithClinicalNotes(

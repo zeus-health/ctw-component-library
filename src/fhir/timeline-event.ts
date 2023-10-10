@@ -14,7 +14,7 @@ export function useTimelineEvents() {
 
   useEffect(() => {
     const models = compact(
-      flatten(concat(queries.map((query) => query.data?.map((m) => new TimelineEventModel(m)))))
+      flatten(concat(queries.map((query) => query.data.map((m) => new TimelineEventModel(m)))))
     );
 
     setTimelineEvents(
