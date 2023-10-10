@@ -1,9 +1,9 @@
 import { faClipboardCheck } from "@fortawesome/free-solid-svg-icons";
+import { dismissFilter } from "../../resource/filters";
 import { FilterChangeEvent, FilterItem } from "@/components/core/filter-bar/filter-bar-types";
 import { EncounterModel } from "@/fhir/models/encounter";
 import { SYSTEM_LOINC } from "@/fhir/system-urls";
 import { compact, mergeWith } from "@/utils/nodash";
-import { dismissFilter } from "../../resource/filters";
 
 export const noteTypeValues = [
   {
