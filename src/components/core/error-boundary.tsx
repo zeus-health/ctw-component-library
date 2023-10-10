@@ -1,4 +1,15 @@
-import { Component, ErrorInfo, ReactNode } from "react";
+import {
+  Component,
+  ComponentType,
+  createElement,
+  ErrorInfo,
+  ForwardedRef,
+  forwardRef,
+  ForwardRefExoticComponent,
+  PropsWithoutRef,
+  ReactNode,
+  RefAttributes,
+} from "react";
 import * as CTWBox from "@/components/core/ctw-box";
 import { pickBy } from "@/utils/nodash";
 import { Telemetry } from "@/utils/telemetry";
@@ -86,14 +97,19 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 }
 
-export function withErrorBoundary<T>(
-  wrappedComponent: (props: T) => ReactNode,
+export function withErrorBoundary<CProps extends object>(
+  component: ComponentType<CProps>,
   name?: string,
   trackView = true
-) {
-  return (props: T) => (
-    <ErrorBoundary name={name} trackView={trackView}>
-      {wrappedComponent(props)}
-    </ErrorBoundary>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): ForwardRefExoticComponent<PropsWithoutRef<CProps> & RefAttributes<any>> {
+  const Wrapped = forwardRef<ComponentType<CProps>, CProps>(
+    (props: CProps, ref: ForwardedRef<ComponentType<CProps>>) =>
+      createElement(ErrorBoundary, { name, trackView }, createElement(component, { ...props, ref }))
   );
+
+  // Format for display in DevTools
+  Wrapped.displayName = `withErrorBoundary(${name})`;
+
+  return Wrapped;
 }
