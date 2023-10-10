@@ -3,6 +3,7 @@ import { FilterChangeEvent, FilterItem } from "@/components/core/filter-bar/filt
 import { EncounterModel } from "@/fhir/models/encounter";
 import { SYSTEM_LOINC } from "@/fhir/system-urls";
 import { compact, mergeWith } from "@/utils/nodash";
+import { dismissFilter } from "../../resource/filters";
 
 export const noteTypeValues = [
   {
@@ -31,7 +32,7 @@ export const defaultEncounterFilters: FilterChangeEvent = {};
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function encounterFilters(encounters: EncounterModel[] | undefined): FilterItem[] {
-  const filters: FilterItem[] = [];
+  const filters: FilterItem[] = [dismissFilter];
 
   const availableNoteTypeValues = noteTypeValues.filter((value) =>
     encounters?.some((encounter) => noteTypePredicate([value.key], encounter))
