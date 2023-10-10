@@ -1,7 +1,6 @@
 import { faFileLines } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ArrowRightIcon } from "@heroicons/react/outline";
-import { NavigateFunction } from "react-router-dom";
 import { DocumentButton } from "../CCDA/document-button";
 import { useCCDAModal } from "../CCDA/modal-ccda";
 import { NotesEntry } from "../resource/helpers/notes-entry";
@@ -74,7 +73,7 @@ function RelatedEncounter({ encounter }: { encounter?: EncounterModel }) {
   );
 }
 
-export function useADTAlertDetailsDrawer(navigate: NavigateFunction) {
+export function useADTAlertDetailsDrawer(goToPatient: (upid: string) => void) {
   const { closeDrawer } = useDrawer();
 
   return useResourceDetailsDrawer({
@@ -87,7 +86,7 @@ export function useADTAlertDetailsDrawer(navigate: NavigateFunction) {
           className="ctw-btn-default ctw-flex ctw-items-center ctw-space-x-2"
           onClick={() => {
             closeDrawer();
-            navigate(`/patients/${adt.patientUPID}`);
+            if (adt.patientUPID) goToPatient(adt.patientUPID);
           }}
         >
           <div>Go to Profile</div>
