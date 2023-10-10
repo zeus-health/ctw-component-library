@@ -222,7 +222,7 @@ const ZusAggregatedProfileIFrameComponent = (props: ZusAggregatedProfileProps) =
   ]);
 
   if (!zapURL) {
-    return false;
+    return null;
   }
   return (
     <iframe

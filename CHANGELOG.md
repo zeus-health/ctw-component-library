@@ -1,5 +1,19 @@
 # ctw-component-library
 
+## 1.69.9
+
+### Patch Changes
+
+- acf9ac92: Fix bug where updating props passed into ctwProvider didnt update the props the callback used.
+- af3453d7: Add react query linting rules.
+
+## 1.69.8
+
+### Patch Changes
+
+- 5e386768: Temporarily remove hover actions in Hospitalizations table.
+- c58d5e62: Fix hospitalization table's handling of renavigating to the patient's page so it works with Remix.
+
 ## 1.69.7
 
 ### Patch Changes
