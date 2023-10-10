@@ -157,7 +157,8 @@ export function useQueryWithPatient<T, T2>(
   }
 
   return useQuery({
-    queryKey: [queryKey, patientResponse.data, ...keys],
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
+    queryKey: [queryKey, patientResponse.data?.UPID, ...keys],
     queryFn: async () => {
       const requestContext = await getRequestContext();
       // Ignore eslint warning as we should always have a valid
