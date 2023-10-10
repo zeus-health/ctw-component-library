@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.69.9
+
+### Patch Changes
+
+- acf9ac92: Fix bug where updating props passed into ctwProvider didnt update the props the callback used.
+- af3453d7: Add react query linting rules.
+
 ## 1.69.8
 
 ### Patch Changes
