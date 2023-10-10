@@ -2,6 +2,7 @@ import type { TableColumn } from "@/components/core/table/table-helpers";
 import type { PatientModel } from "@/fhir/models/patient";
 import cx from "classnames";
 import { useState } from "react";
+import { NavigateFunction } from "react-router-dom";
 import { adtFilter, defaultADTFilters } from "./filters";
 import { useADTAlertDetailsDrawer } from "./modal-hooks";
 import { dedupeAndMergeEncounters } from "../encounters/helpers/filters";
@@ -43,6 +44,7 @@ export type ADTTableProps = {
   isLoading?: boolean;
   data: EncounterModel[];
   encounterAndNotesData?: RelatedEncounterMap;
+  navigate: NavigateFunction;
 } & TableOptionProps<EncounterModel>;
 
 function assignEncountersAndNotes(
@@ -92,8 +94,9 @@ function ADTTableComponent({
   isLoading = false,
   data,
   encounterAndNotesData,
+  navigate,
 }: ADTTableProps) {
-  const openADTDetails = useADTAlertDetailsDrawer();
+  const openADTDetails = useADTAlertDetailsDrawer(navigate);
   const [currentPage, setCurrentPage] = useState(1);
   const { getRequestContext } = useCTW();
   const { past7days, past30days, past3months } = getDateRangeView<EncounterModel>("periodStart");
