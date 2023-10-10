@@ -86,7 +86,9 @@ export function useADTAlertDetailsDrawer(goToPatient: (upid: string) => void) {
           className="ctw-btn-default ctw-flex ctw-items-center ctw-space-x-2"
           onClick={() => {
             closeDrawer();
-            if (adt.patientUPID) goToPatient(adt.patientUPID);
+            if (adt.patientUPID) {
+              goToPatient(adt.patientUPID);
+            }
           }}
         >
           <div>Go to Profile</div>
