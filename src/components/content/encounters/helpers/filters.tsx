@@ -1,4 +1,5 @@
 import { faClipboardCheck } from "@fortawesome/free-solid-svg-icons";
+import { dismissFilter } from "../../resource/filters";
 import { FilterChangeEvent, FilterItem } from "@/components/core/filter-bar/filter-bar-types";
 import { EncounterModel } from "@/fhir/models/encounter";
 import { SYSTEM_LOINC } from "@/fhir/system-urls";
@@ -31,7 +32,7 @@ export const defaultEncounterFilters: FilterChangeEvent = {};
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function encounterFilters(encounters: EncounterModel[] | undefined): FilterItem[] {
-  const filters: FilterItem[] = [];
+  const filters: FilterItem[] = [dismissFilter];
 
   const availableNoteTypeValues = noteTypeValues.filter((value) =>
     encounters?.some((encounter) => noteTypePredicate([value.key], encounter))

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { usePatientDiagnosticReports } from "./diagnostic-report";
 import { usePatientEncounters } from "./encounters";
 import { TimelineEventModel } from "./models/timeline-event";
-import { compact, concat, flatten, some } from "@/utils/nodash";
+import { compact, flatten, some } from "@/utils/nodash";
 import { applySorts } from "@/utils/sort";
 
 export function useTimelineEvents() {
@@ -14,7 +14,7 @@ export function useTimelineEvents() {
 
   useEffect(() => {
     const models = compact(
-      flatten(concat(queries.map((query) => query.data?.map((m) => new TimelineEventModel(m)))))
+      flatten(queries.map((query) => query.data.map((m) => new TimelineEventModel(m))))
     );
 
     setTimelineEvents(

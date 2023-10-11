@@ -49,7 +49,7 @@ export const UnreadRecordsNotification = ({
         data = documentsQuery.data;
         break;
       case "encounters":
-        data = encountersQuery.data ?? [];
+        data = encountersQuery.data;
         break;
       case "immunizations":
         data = immunizationsQuery.data;
