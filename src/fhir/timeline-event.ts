@@ -20,7 +20,7 @@ export function useTimelineEvents() {
     setTimelineEvents(
       applySorts(models, [
         { dir: "desc", key: "date", isDate: true },
-        { dir: "desc", key: "type" }
+        { dir: "desc", key: "type" },
       ])
     );
     // Disabling because including queries will cause infinite loop
@@ -35,6 +35,6 @@ export function useTimelineEvents() {
     isFetching,
     isLoading,
     isError,
-    data: timelineEvents ?? []
+    data: timelineEvents ?? [],
   };
 }
