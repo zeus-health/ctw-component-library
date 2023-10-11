@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.69.10
+
+### Patch Changes
+
+- b0890cc2: Setup with error boundary to better capture errors. This fixes a bug where the wrapped component was being rendered outside ErrorBoundary.
+
 ## 1.69.9
 
 ### Patch Changes
