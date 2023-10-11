@@ -9,7 +9,7 @@ import {
   SYSTEM_ZUS_UNIVERSAL_ID
 } from "../system-urls";
 import { isFHIRDomainResource, ResourceMap, ResourceTypeString } from "../types";
-import { find, isEqual, orderBy, some, startCase } from "@/utils/nodash";
+import { find, orderBy, some, startCase } from "@/utils/nodash";
 
 export abstract class FHIRModel<T extends fhir4.Resource> {
   public resource: T;
