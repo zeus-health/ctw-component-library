@@ -6,7 +6,7 @@ import {
   SYSTEM_ZUS_OWNER,
   SYSTEM_ZUS_PROFILE_ACTION,
   SYSTEM_ZUS_THIRD_PARTY,
-  SYSTEM_ZUS_UNIVERSAL_ID,
+  SYSTEM_ZUS_UNIVERSAL_ID
 } from "../system-urls";
 import { isFHIRDomainResource, ResourceMap, ResourceTypeString } from "../types";
 import { find, isEqual, orderBy, some, startCase } from "@/utils/nodash";
@@ -57,7 +57,7 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
     const basic = this.getLatestBasicResourceByActions(["archive", "unarchive"]);
     return some(basic?.code.coding, {
       system: SYSTEM_ZUS_PROFILE_ACTION,
-      code: "archive",
+      code: "archive"
     });
   }
 
@@ -73,12 +73,10 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
       return this.optimisticIsRead;
     }
     const basic = this.getLatestBasicResourceByActions(["read", "unread"]);
-    const isRead = some(basic?.code.coding, (coding) =>
-      isEqual(coding, {
-        system: SYSTEM_ZUS_PROFILE_ACTION,
-        code: "read",
-      })
-    );
+    const isRead = some(basic?.code.coding, {
+      system: SYSTEM_ZUS_PROFILE_ACTION,
+      code: "read"
+    });
     return isRead;
   }
 
