@@ -19,7 +19,7 @@ export function useFilteredSortedData<T extends object>({
   defaultSort,
   defaultView,
   records,
-  isLoading = false
+  isLoading = false,
 }: UseFilteredSortedDataProps<T>) {
   const [viewOption, setViewOption] = useState(defaultView);
   const [filters, setFilters] = useState(defaultFilters);
@@ -29,7 +29,7 @@ export function useFilteredSortedData<T extends object>({
   useEffect(() => {
     const filteredData = applyFilters(records ?? [], [
       ...compact(Object.values(filters)),
-      ...(viewOption?.filters ?? [])
+      ...(viewOption?.filters ?? []),
     ]);
     const filteredAndSortedData =
       defaultSort && sortOption ? applySorts(filteredData, sortOption.sorts) : filteredData;
@@ -43,6 +43,6 @@ export function useFilteredSortedData<T extends object>({
     setViewOption,
     data,
     filters,
-    sortOption
+    sortOption,
   };
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useIncludeBasics } from "./basic";
+import { useIncludePatientBasics } from "./basic";
 import { DocumentModel } from "./models/document";
 import { PatientModel, useQueryWithPatient } from "..";
 import { applyDocumentFilters } from "@/components/content/document/helpers/filters";
@@ -44,7 +44,7 @@ export function usePatientDocuments(limit = MAX_OBJECTS_PER_REQUEST) {
     withTimerMetric(getDocumentsFromFQS(limit), "req.timing.documents")
   );
 
-  return useIncludeBasics(patientDocumentsQuery);
+  return useIncludePatientBasics(patientDocumentsQuery);
 }
 
 function getDocumentsFromFQS(limit: number) {

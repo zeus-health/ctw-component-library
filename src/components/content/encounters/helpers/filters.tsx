@@ -8,24 +8,24 @@ import { compact, mergeWith } from "@/utils/nodash";
 export const noteTypeValues = [
   {
     name: "Assessments / Plans",
-    key: ["51847-2", "18776-5"].join(",")
+    key: ["51847-2", "18776-5"].join(","),
   },
   {
     name: "Diagnostic Narratives",
-    key: ["34109-9", "30954-2"].join(",")
+    key: ["34109-9", "30954-2"].join(","),
   },
   {
     name: "Discharge Summary",
-    key: "18842-5"
+    key: "18842-5",
   },
   {
     name: "History of Present Illness",
-    key: "10164-2"
+    key: "10164-2",
   },
   {
     name: "Reason for Visit",
-    key: "29299-5"
-  }
+    key: "29299-5",
+  },
 ];
 
 export const defaultEncounterFilters: FilterChangeEvent = {};
@@ -55,10 +55,10 @@ export function encounterFilters(encounters: EncounterModel[] | undefined): Filt
         hasOtherEncounterNoteTypes
           ? {
               name: "Other",
-              key: "other"
+              key: "other",
             }
-          : undefined
-      ])
+          : undefined,
+      ]),
     });
   }
 
@@ -73,25 +73,25 @@ export const ENCOUNTER_DEDUPE_UTILS = {
         periodStart: encounter.periodStart || "",
         class: encounter.resource.class,
         type: encounter.resource.type,
-        location: encounter.location || ""
+        location: encounter.location || "",
       }),
     hasRequiredFields: (encounter: EncounterModel) =>
       encounter.patientUPID &&
       encounter.periodStart &&
       encounter.class &&
       encounter.resource.type &&
-      encounter.location
+      encounter.location,
   },
   patientsADT: {
     generateKey: (encounter: EncounterModel) =>
       JSON.stringify({
         upid: encounter.patientUPID,
         periodStart: encounter.periodStart || "",
-        location: encounter.location || ""
+        location: encounter.location || "",
       }),
     hasRequiredFields: (encounter: EncounterModel) =>
-      encounter.patientUPID && encounter.periodStart && encounter.location
-  }
+      encounter.patientUPID && encounter.periodStart && encounter.location,
+  },
 };
 
 // Dedupes encounters by patient, periodStart, class, type, and location.

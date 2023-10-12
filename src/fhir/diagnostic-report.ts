@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useIncludeBasics } from "./basic";
+import { useIncludePatientBasics } from "./basic";
 import { LOINC_ANALYTES } from "./models/observation";
 import { usePatientObservations } from "./observations";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
@@ -29,7 +29,7 @@ export function usePatientDiagnosticReports(
     )
   );
 
-  return useIncludeBasics(query);
+  return useIncludePatientBasics(query);
 }
 
 // Gets diagnostic reports for the patient with trending data for each observation in the diagnostic report.

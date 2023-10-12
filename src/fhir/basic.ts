@@ -35,19 +35,19 @@ export async function recordProfileAction<T extends fhir4.Resource>(
         {
           system: SYSTEM_BASIC_RESOURCE_TYPE,
           code: "adminact",
-          display: "Administrative Activity"
+          display: "Administrative Activity",
         },
         {
           system: SYSTEM_ZUS_PROFILE_ACTION,
-          code: profileAction
-        }
-      ]
+          code: profileAction,
+        },
+      ],
     },
     subject: {
       reference: `${model.resourceType}/${model.id}`,
-      type: model.resourceType
+      type: model.resourceType,
     },
-    author: await getUsersPractitionerReference(requestContext)
+    author: await getUsersPractitionerReference(requestContext),
   };
 
   const response = (await createOrEditFhirResource(basic, requestContext)) as FhirResource;
@@ -86,7 +86,7 @@ export function mapBasics<R extends fhir4.Resource, T extends FHIRModel<R>>(
   return resources;
 }
 
-export function useIncludeBasics<R extends fhir4.Resource, T extends FHIRModel<R>>(
+export function useIncludePatientBasics<R extends fhir4.Resource, T extends FHIRModel<R>>(
   query: UseQueryResult<T[]>
 ) {
   const basicsQuery = usePatientBasicResources();
@@ -108,7 +108,7 @@ export function useIncludeBasics<R extends fhir4.Resource, T extends FHIRModel<R
     isError,
     isFetching,
     isFetched,
-    data: resources
+    data: resources,
   };
 }
 
@@ -135,7 +135,7 @@ export async function toggleRead<T extends fhir4.Resource>(
 async function fetchBasic(requestContext: CTWRequestContext) {
   try {
     const { resources } = await searchCommonRecords("Basic", requestContext, {
-      _tag: `https://zusapi.com/accesscontrol/owner|builder/${requestContext.builderId}`
+      _tag: `https://zusapi.com/accesscontrol/owner|builder/${requestContext.builderId}`,
     });
     if (resources.length === 0) {
       Telemetry.countMetric("req.count.basic.none");
@@ -147,10 +147,25 @@ async function fetchBasic(requestContext: CTWRequestContext) {
   }
 }
 
-export async function fetchBasicsFor(requestContext: CTWRequestContext, resource: FhirResource) {
+async function fetchBasicsFor(requestContext: CTWRequestContext, resource: FhirResource) {
   const { resources } = await searchCommonRecords("Basic", requestContext, {
     _tag: `https://zusapi.com/accesscontrol/owner|builder/${requestContext.builderId}`,
-    subject: `${resource.resourceType}/${resource.id}`
+    subject: `${resource.resourceType}/${resource.id}`,
   });
   return resources;
+}
+
+export async function enrichWithBasics<R extends fhir4.Resource, T extends FHIRModel<R>>(
+  models: T[],
+  getRequestContext: () => Promise<CTWRequestContext>
+) {
+  const promiseArray: Promise<Basic[]>[] = models.map(async (enc) => {
+    const requestContext = await getRequestContext();
+    return fetchBasicsFor(requestContext, enc);
+  });
+  return Promise.all(promiseArray).then((basicsArray) => {
+    models.forEach((e, i) => {
+      e.revIncludes = basicsArray[i];
+    });
+  });
 }
