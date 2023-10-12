@@ -35,19 +35,19 @@ export async function recordProfileAction<T extends fhir4.Resource>(
         {
           system: SYSTEM_BASIC_RESOURCE_TYPE,
           code: "adminact",
-          display: "Administrative Activity",
+          display: "Administrative Activity"
         },
         {
           system: SYSTEM_ZUS_PROFILE_ACTION,
-          code: profileAction,
-        },
-      ],
+          code: profileAction
+        }
+      ]
     },
     subject: {
       reference: `${model.resourceType}/${model.id}`,
-      type: model.resourceType,
+      type: model.resourceType
     },
-    author: await getUsersPractitionerReference(requestContext),
+    author: await getUsersPractitionerReference(requestContext)
   };
 
   const response = (await createOrEditFhirResource(basic, requestContext)) as FhirResource;
@@ -68,7 +68,7 @@ export function usePatientBasicResources() {
   );
 }
 
-function mapBasics<R extends fhir4.Resource, T extends FHIRModel<R>>(
+export function mapBasics<R extends fhir4.Resource, T extends FHIRModel<R>>(
   queryData: T[],
   basicsData: Basic[]
 ) {
@@ -108,7 +108,7 @@ export function useIncludeBasics<R extends fhir4.Resource, T extends FHIRModel<R
     isError,
     isFetching,
     isFetched,
-    data: resources,
+    data: resources
   };
 }
 
@@ -135,7 +135,7 @@ export async function toggleRead<T extends fhir4.Resource>(
 async function fetchBasic(requestContext: CTWRequestContext) {
   try {
     const { resources } = await searchCommonRecords("Basic", requestContext, {
-      _tag: `https://zusapi.com/accesscontrol/owner|builder/${requestContext.builderId}`,
+      _tag: `https://zusapi.com/accesscontrol/owner|builder/${requestContext.builderId}`
     });
     if (resources.length === 0) {
       Telemetry.countMetric("req.count.basic.none");
@@ -145,4 +145,12 @@ async function fetchBasic(requestContext: CTWRequestContext) {
   } catch (e) {
     throw new Error(`Failed fetching basic resources for builder ${requestContext.builderId}`);
   }
+}
+
+export async function fetchBasicsFor(requestContext: CTWRequestContext, resource: FhirResource) {
+  const { resources } = await searchCommonRecords("Basic", requestContext, {
+    _tag: `https://zusapi.com/accesscontrol/owner|builder/${requestContext.builderId}`,
+    subject: `${resource.resourceType}/${resource.id}`
+  });
+  return resources;
 }

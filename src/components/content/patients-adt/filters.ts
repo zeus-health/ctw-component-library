@@ -18,7 +18,7 @@ export function adtFilter(): FilterItem[] {
         const status = encounter.periodEnd ? "Discharged" : "Active";
         return values.includes(status);
       },
-      display: "ADT Status",
+      display: "ADT Status"
     },
     {
       key: "physicalTypes",
@@ -31,7 +31,7 @@ export function adtFilter(): FilterItem[] {
         "Rehab Hospital",
         "Skilled Nursing Facility",
         "Urgent Care",
-        "Unknown",
+        "Unknown"
       ],
       predicate: (values: string[], item: object) => {
         if (values.length === 0) {
@@ -40,7 +40,7 @@ export function adtFilter(): FilterItem[] {
         const encounter = item as EncounterModel;
         const status = encounter.locationPhysicalType;
         return values.includes(status);
-      },
+      }
     }
   );
   return filters;
