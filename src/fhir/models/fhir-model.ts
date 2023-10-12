@@ -72,12 +72,12 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
     if (this.optimisticIsRead !== undefined) {
       return this.optimisticIsRead;
     }
-
     const basic = this.getLatestBasicResourceByActions(["read", "unread"]);
-    return some(basic?.code.coding, {
+    const isRead = some(basic?.code.coding, {
       system: SYSTEM_ZUS_PROFILE_ACTION,
       code: "read",
     });
+    return isRead;
   }
 
   // Optimistically toggle the isRead state.

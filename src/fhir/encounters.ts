@@ -1,5 +1,6 @@
 import { SearchParams } from "fhir-kit-client";
 import { useEffect, useState } from "react";
+import { useIncludeBasics } from "./basic";
 import { getIncludedResources } from "./bundle";
 import { usePatientDocuments } from "./document";
 import { PatientModel } from "./models";
@@ -42,11 +43,12 @@ function getEncountersFromFQS(limit: number) {
 }
 
 export function usePatientEncounters(limit = MAX_OBJECTS_PER_REQUEST) {
-  return useQueryWithPatient(
+  const patientEncountersQuery = useQueryWithPatient(
     QUERY_KEY_PATIENT_ENCOUNTERS,
     [limit],
     withTimerMetric(getEncountersFromFQS(limit), `req.timing.encounters`)
   );
+  return useIncludeBasics(patientEncountersQuery);
 }
 
 // Gets patient encounters along with clinical notes from any documents associated with each encounter.
@@ -59,12 +61,17 @@ export function usePatientEncountersWithClinicalNotes(limit = MAX_OBJECTS_PER_RE
 
   useEffect(() => {
     const documents = documentsQuery.data;
-    const encounters = encounterQuery.data ?? [];
+    const encounters = encounterQuery.data;
 
     if (documents.length > 0) {
       setEncountersWithClinicalNotes(
         encounters.map((encounter) => {
-          const model = new EncounterModel(encounter.resource, encounter.provenance);
+          const model = new EncounterModel(
+            encounter.resource,
+            encounter.provenance,
+            undefined,
+            encounter.revIncludes
+          );
           model.findAndSetNotesFrom(documents);
           return model;
         })

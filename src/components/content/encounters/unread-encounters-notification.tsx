@@ -8,5 +8,5 @@ export type UnreadEncounterssNotificationProps = {
 
 export const UnreadEncountersNotification = ({ className }: UnreadEncounterssNotificationProps) => {
   const query = usePatientEncounters(numRecordsToLookbackForUnread);
-  return <UnreadNotification className={className} data={query.data || []} />;
+  return <UnreadNotification className={className} data={query.data} />;
 };
