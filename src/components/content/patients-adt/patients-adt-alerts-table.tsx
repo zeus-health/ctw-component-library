@@ -1,7 +1,7 @@
 import type { TableColumn } from "@/components/core/table/table-helpers";
 import type { PatientModel } from "@/fhir/models/patient";
 import cx from "classnames";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { adtFilter, defaultADTFilters } from "./filters";
 import { useADTAlertDetailsDrawer } from "./modal-hooks";
 import { dedupeAndMergeEncounters } from "../encounters/helpers/filters";
@@ -17,7 +17,7 @@ import { AnalyticsProvider } from "@/components/core/providers/analytics/analyti
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { SimpleMoreList } from "@/components/core/simple-more-list";
-import { enrichWithBasics } from "@/fhir/basic";
+import { useBasicsOf } from "@/fhir/basic";
 import { EncounterModel } from "@/fhir/models/encounter";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
@@ -100,15 +100,12 @@ function ADTTableComponent({
 }: ADTTableProps) {
   const openADTDetails = useADTAlertDetailsDrawer(goToPatient);
   const [currentPage, setCurrentPage] = useState(1);
-  const [isLoadingBasics, setIsLoadingBasics] = useState(true);
   const { getRequestContext } = useCTW();
   const { past7days, past30days, past3months } = getDateRangeView<EncounterModel>("periodStart");
-
-  useEffect(() => {
-    void enrichWithBasics(data, getRequestContext).then(() => {
-      setIsLoadingBasics(false);
-    });
-  }, [data, getRequestContext]);
+  const { data: encWithBasics, isLoading: isLoadingBasics } = useBasicsOf(
+    data,
+    `Page ${currentPage}`
+  );
 
   const {
     data: dataFilteredSorted,
@@ -119,7 +116,7 @@ function ADTTableComponent({
     defaultView: past30days,
     defaultFilters: defaultADTFilters,
     defaultSort: defaultEncounterSort,
-    records: data,
+    records: encWithBasics,
     isLoading: isLoadingBasics,
   });
 
