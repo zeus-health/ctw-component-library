@@ -2,7 +2,7 @@ import { Encounter, Patient } from "fhir/r4";
 import { gql } from "graphql-request";
 import { fragmentEncounter } from "./fragments/encounter";
 import { GraphqlConnectionNode, GraphqlPageInfo } from "../client";
-import { fragmentPatient } from "./fragments";
+import { fragmentOrganization, fragmentPatient } from "./fragments";
 
 export interface PatientConnection {
   pageInfo: GraphqlPageInfo;
@@ -15,6 +15,7 @@ export interface PatientGraphqlResponse {
 
 export const patientQuery = gql`
   ${fragmentPatient}
+  ${fragmentOrganization}
 
   query Patients(
     $upid: ID!
