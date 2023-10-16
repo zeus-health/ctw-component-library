@@ -73,10 +73,7 @@ export class PatientModel extends FHIRModel<fhir4.Patient> {
     if (this.organization) {
       return this.organization.name;
     }
-    if (this.isThirdPartyData) {
-      return "Sourced from EHR Network";
-    }
-    return undefined;
+    return this.thirdPartyDataSourceName;
   }
 
   get use(): fhir4.HumanName["use"] | undefined {

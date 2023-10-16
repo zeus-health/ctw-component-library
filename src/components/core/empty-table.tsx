@@ -27,6 +27,10 @@ export const EmptyPatientTable = (props: EmptyTableProps) => {
     );
   }
 
+  if (!patientHistoryQuery.isLoading) {
+    debugger;
+  }
+
   const requestMade = patientHistoryQuery.hasJobs;
   if (!requestMade && !patient.data?.isTestPatient) {
     return (

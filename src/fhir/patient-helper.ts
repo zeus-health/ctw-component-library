@@ -1,11 +1,77 @@
 import { SearchParams } from "fhir-kit-client";
 import { getIncludedResources } from "./bundle";
-import { searchBuilderRecords } from "./search-helpers";
+import { searchBuilderRecords, searchCommonRecords } from "./search-helpers";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { PatientModel } from "@/fhir/models/patient";
+import { PatientModel, PatientModel } from "@/fhir/models/patient";
 import { errorResponse } from "@/utils/errors";
 import { pickBy } from "@/utils/nodash";
 import { hasNumber } from "@/utils/types";
+import { QUERY_KEY_MATCHED_PATIENTS, QUERY_KEY_PATIENT_DOCUMENTS } from "@/utils/query-keys";
+import { withTimerMetric } from "@/utils/telemetry";
+import {
+  DocumentModel,
+  MAX_OBJECTS_PER_REQUEST,
+  MAX_OBJECTS_PER_REQUEST,
+  createGraphqlClient,
+  fqsRequest,
+  useQueryWithPatient,
+} from "..";
+import { SYSTEM_ZUS_UNIVERSAL_ID } from "./system-urls";
+import { DocumentReferenceGraphqlResponse, documentsQuery } from "@/services/fqs/queries/documents";
+import {
+  PatientGraphqlResponse,
+  patientQuery,
+  patientQuery,
+} from "@/services/fqs/queries/patients";
+
+export function useMatchedPatients() {
+  const matchedPatientsQuery = useQueryWithPatient(
+    QUERY_KEY_MATCHED_PATIENTS,
+    [],
+    withTimerMetric(getPatientsForUPIDFQS(), "req.timing.matched_patients")
+  );
+
+  return matchedPatientsQuery;
+}
+
+function getMatchedPatients() {
+  return async (requestContext: CTWRequestContext, patient: PatientModel) => {
+    let patients = [];
+    let bundle: fhir4.Bundle;
+    try {
+      const response = await searchCommonRecords("Patient", requestContext, {
+        identifier: `${SYSTEM_ZUS_UNIVERSAL_ID}|${patient.UPID}`,
+        _include: "Patient:organization",
+      });
+
+      patients = response.resources;
+      bundle = response.bundle;
+
+      return patients.map((p) => new PatientModel(p, getIncludedResources(bundle)));
+    } catch (e) {
+      throw errorResponse(`Failed fetching patient with UPID ${patient.UPID}`, e);
+    }
+  };
+}
+
+function getPatientsForUPIDFQS() {
+  return async (requestContext: CTWRequestContext, patient: PatientModel) => {
+    try {
+      const graphClient = createGraphqlClient(requestContext);
+      const { data } = await fqsRequest<PatientGraphqlResponse>(graphClient, patientQuery, {
+        upid: patient.UPID,
+        cursor: "",
+        first: MAX_OBJECTS_PER_REQUEST,
+        sort: {
+          lastUpdated: "DESC",
+        },
+      });
+      return data.PatientConnection.edges.map((x) => new PatientModel(x.node));
+    } catch (e) {
+      throw new Error(`Failed fetching patients: ${e}`);
+    }
+  };
+}
 
 export async function getBuilderFhirPatient(
   requestContext: CTWRequestContext,

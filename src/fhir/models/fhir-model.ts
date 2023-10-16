@@ -9,7 +9,11 @@ import {
   SYSTEM_ZUS_UNIVERSAL_ID,
 } from "../system-urls";
 import { isFHIRDomainResource, ResourceMap, ResourceTypeString } from "../types";
-import { find, orderBy, some, startCase } from "@/utils/nodash";
+import { find, get, orderBy, some, startCase } from "@/utils/nodash";
+import { resources } from "@/i18n";
+import { set } from "date-fns";
+import { string, boolean } from "zod";
+import { formatDateISOToLocal } from "../formatters";
 
 export abstract class FHIRModel<T extends fhir4.Resource> {
   public resource: T;
@@ -34,6 +38,10 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
 
   get createdAt(): string | undefined {
     return find(this.resource.meta?.extension, { url: SYSTEM_ZUS_CREATED_AT })?.valueInstant;
+  }
+
+  get createdAtDisplay(): string | undefined {
+    return formatDateISOToLocal(this.createdAt);
   }
 
   get id(): string {
@@ -94,6 +102,11 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
 
   get isThirdPartyData(): boolean {
     return this.resource.meta?.tag?.some((t) => t.system === SYSTEM_ZUS_THIRD_PARTY) ?? false;
+  }
+
+  // If the data came from a third party data source then return that name
+  get thirdPartyDataSourceName(): string | undefined {
+    return this.resource.meta?.tag?.find((t) => t.system === SYSTEM_ZUS_THIRD_PARTY)?.code;
   }
 
   get patientUPID(): string | undefined {

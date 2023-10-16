@@ -31,6 +31,7 @@ import { PatientMedicationDispense } from "./components/content/medication-dispe
 import { ADTAlertsTable } from "./components/content/patients-adt/patients-adt-alerts-table";
 import { ThemeProviderProps } from "@/components/core/providers/theme/theme-provider";
 import { UseQueryResult } from "@tanstack/react-query";
+import { MatchedPatients } from "./components/content/matched-patients/matched-patients";
 
 const {
   VITE_AUTH0_AUDIENCE,
@@ -120,6 +121,12 @@ const components: DemoComponent[] = [
     name: "medication-dispense",
     render: () => <PatientMedicationDispense />,
     title: "Patient Medication Dispense",
+  },
+  {
+    name: "matched-patients",
+    render: () => {
+      return <MatchedPatients />;
+    },
   },
   {
     name: "zap",
