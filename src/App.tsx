@@ -25,6 +25,7 @@ import {
   ZusAggregatedProfile,
   ZusAggregatedProfileIFrame,
   PatientConditionsAll,
+  PatientsTable,
 } from ".";
 
 import { PatientMedicationDispense } from "./components/content/medication-dispense/patient-medication-dispense";
@@ -120,6 +121,12 @@ const components: DemoComponent[] = [
     name: "medication-dispense",
     render: () => <PatientMedicationDispense />,
     title: "Patient Medication Dispense",
+  },
+  {
+    name: "patients-table",
+    render: () => {
+      return <PatientsTable handleRowClick={() => {}} />;
+    },
   },
   {
     name: "zap",

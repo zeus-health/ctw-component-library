@@ -10,12 +10,10 @@ import * as CTWBox from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { SimplePagination } from "@/components/core/pagination/simple-pagination";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
-import { useQueryWithCTW } from "@/components/core/providers/use-query-with-ctw";
 import { Table } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
-import { getBuilderPatientsList } from "@/fhir/patient-helper";
+import { usePatientsList } from "@/fhir/patient-helper";
 import { debounce } from "@/utils/nodash";
-import { QUERY_KEY_PATIENTS_LIST } from "@/utils/query-keys";
 
 export type PatientsTableProps = {
   className?: cx.Argument;
@@ -29,14 +27,6 @@ export type TableOptionProps<T extends MinRecordItem> = {
   getRowClasses?: (row: T) => Argument; // Adds a row hover effect and calls onClick.
   onRowClick?: (row: T) => void;
 };
-
-export function usePatientsList(pageSize: number, pageOffset: number, searchNameValue?: string) {
-  return useQueryWithCTW(
-    QUERY_KEY_PATIENTS_LIST,
-    [pageSize, pageOffset, searchNameValue],
-    getBuilderPatientsList
-  );
-}
 
 /**
  * PatientsTable displays a paginated list of all patients for a builder. In
@@ -52,11 +42,11 @@ export const PatientsTable = withErrorBoundary(
     const [currentPage, setCurrentPage] = useState(1);
     const [patients, setPatients] = useState<PatientModel[]>([]);
     const [searchNameValue, setSearchNameValue] = useState<string | undefined>();
-    const {
-      data: { patients: responsePatients, total: responseTotal } = {},
-      isFetching,
-      isError
-    } = usePatientsList(pageSize, currentPage - 1, searchNameValue);
+    const { data, isFetching, isError } = usePatientsList(
+      pageSize,
+      currentPage - 1,
+      searchNameValue
+    );
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const debouncedSearch = useCallback(
@@ -72,10 +62,10 @@ export const PatientsTable = withErrorBoundary(
     // isn't fetching. This will prevent empty intermediate states where there
     // is no data because the value of `usePatientsTable()` hasn't settled yet.
     useEffect(() => {
-      if (!isFetching && responsePatients) {
-        setPatients(responsePatients);
+      if (!isFetching && data) {
+        setPatients(data);
       }
-    }, [responsePatients, responseTotal, isError, isFetching]);
+    }, [data, isError, isFetching]);
 
     // This resets our state when there is an error fetching patients from ODS.
     useEffect(() => {
@@ -114,7 +104,7 @@ export const PatientsTable = withErrorBoundary(
               <SimplePagination
                 setCurrentPage={setCurrentPage}
                 currentPage={currentPage}
-                hasNext={connection.pageInfo.hasNextPage}
+                hasNext={data.pageInfo.hasNextPage}
               />
             </Table>
           </div>
