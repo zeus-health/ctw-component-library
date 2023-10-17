@@ -1,21 +1,19 @@
-import { SearchParams } from "fhir-kit-client";
-import { getIncludedResources } from "./bundle";
-import { searchBuilderRecords } from "./search-helpers";
-import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { PatientModel } from "@/fhir/models/patient";
-import { errorResponse } from "@/utils/errors";
-import { pickBy } from "@/utils/nodash";
-import { hasNumber } from "@/utils/types";
 import { PatientGraphqlResponse, patientsForBuilderQuery } from "@/services/fqs/queries/patients";
+import { errorResponse } from "@/utils/errors";
+import { QUERY_KEY_PATIENTS_LIST } from "@/utils/query-keys";
+import { hasNumber } from "@/utils/types";
+import { SearchParams } from "fhir-kit-client";
+import { pickBy } from "lodash";
 import {
-  GraphqlPageInfo,
+  CTWRequestContext,
+  useQueryWithCTW,
   GraphqlPageInfo,
   createGraphqlClient,
   fqsRequest,
-  useQueryWithCTW,
 } from "..";
-import { QUERY_KEY_PATIENTS_LIST } from "@/utils/query-keys";
-import { first } from "lodash";
+import { getIncludedResources } from "./bundle";
+import { PatientModel } from "./models";
+import { searchBuilderRecords } from "./search-helpers";
 
 export async function getBuilderFhirPatient(
   requestContext: CTWRequestContext,
@@ -91,8 +89,8 @@ export async function getBuilderPatientListWithSearch(
 export async function getBuilderPatientsList(
   requestContext: CTWRequestContext,
   paginationOptions: (number | string | undefined)[] = []
-): Promise<GetPatientsTableResultsFQS> {
-  const [pageSize, pageOffset, searchValue] = paginationOptions;
+): Promise<PatientModel[]> {
+  const [pageSize] = paginationOptions;
 
   try {
     const graphClient = createGraphqlClient(requestContext);

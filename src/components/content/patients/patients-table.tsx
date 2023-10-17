@@ -8,14 +8,12 @@ import cx from "classnames";
 import { useCallback, useEffect, useState } from "react";
 import * as CTWBox from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
-import { Pagination } from "@/components/core/pagination/pagination";
+import { SimplePagination } from "@/components/core/pagination/simple-pagination";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
-import { useQueryWithCTW } from "@/components/core/providers/use-query-with-ctw";
 import { Table } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
-import { getBuilderPatientsList, usePatientsList } from "@/fhir/patient-helper";
+import { usePatientsList } from "@/fhir/patient-helper";
 import { debounce } from "@/utils/nodash";
-import { QUERY_KEY_PATIENTS_LIST } from "@/utils/query-keys";
 
 export type PatientsTableProps = {
   className?: cx.Argument;
@@ -58,12 +56,10 @@ export const PatientsTable = withErrorBoundary(
               pageSize={pageSize}
               hidePagination
             >
-              <Pagination
+              <SimplePagination
                 setCurrentPage={setCurrentPage}
-                total={0}
                 currentPage={currentPage}
-                pageSize={pageSize}
-                isLoading={isFetching}
+                hasNext={data.pageInfo.hasNextPage}
               />
             </Table>
           </div>
