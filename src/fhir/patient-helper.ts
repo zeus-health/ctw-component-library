@@ -6,6 +6,8 @@ import { PatientModel } from "@/fhir/models/patient";
 import { errorResponse } from "@/utils/errors";
 import { pickBy } from "@/utils/nodash";
 import { hasNumber } from "@/utils/types";
+import { PatientGraphqlResponse, patientsForBuilderQuery } from "@/services/fqs/queries/patients";
+import { createGraphqlClient, fqsRequest } from "..";
 
 export async function getBuilderFhirPatient(
   requestContext: CTWRequestContext,
@@ -66,6 +68,31 @@ export async function getBuilderPatientListWithSearch(
     };
   } catch (e) {
     throw errorResponse("Failed fetching patients", e);
+  }
+}
+
+export async function getPatientsForBuilder(
+  requestContext: CTWRequestContext,
+  first: number,
+  cursor?: string
+) {
+  try {
+    const graphClient = createGraphqlClient(requestContext);
+    const { data } = await fqsRequest<PatientGraphqlResponse>(
+      graphClient,
+      patientsForBuilderQuery,
+      {
+        builderID: requestContext.builderId,
+        cursor: cursor ?? "",
+        first: first,
+        sort: {
+          lastUpdated: "DESC",
+        },
+      }
+    );
+    return data.PatientConnection.edges.map((x) => new PatientModel(x.node));
+  } catch (e) {
+    throw new Error(`Failed fetching patients: ${e}`);
   }
 }
 
