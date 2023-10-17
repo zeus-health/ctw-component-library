@@ -39,8 +39,8 @@ export type TableOptionProps<T extends MinRecordItem> = {
 export const PatientsTable = withErrorBoundary(
   ({ className, handleRowClick, pageSize = 5, title = "Patients" }: PatientsTableProps) => {
     const [currentPage, setCurrentPage] = useState(1);
-    const [cursors, setCursors] = useState<string[]>([]);
-    const { data, isLoading, isError } = usePatientsList(pageSize, cursors[currentPage + 1]);
+    const [cursors, setCursors] = useState<string[]>([""]);
+    const { data, isLoading, isError } = usePatientsList(pageSize, cursors[currentPage - 1]);
 
     return isError ? (
       <ErrorAlert header="Error">Could not load list of patients.</ErrorAlert>
