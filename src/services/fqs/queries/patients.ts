@@ -1,7 +1,7 @@
 import { Patient } from "fhir/r4";
 import { gql } from "graphql-request";
-import { GraphqlConnectionNode, GraphqlPageInfo } from "../client";
 import { fragmentOrganization, fragmentPatient } from "./fragments";
+import { GraphqlConnectionNode, GraphqlPageInfo } from "../client";
 
 export interface PatientConnection {
   pageInfo: GraphqlPageInfo;
@@ -56,6 +56,7 @@ export const patientsForBuilderQuery = gql`
     ) {
       pageInfo {
         hasNextPage
+        endCursor
       }
       edges {
         node {

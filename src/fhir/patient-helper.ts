@@ -1,4 +1,5 @@
 import { SearchParams } from "fhir-kit-client";
+import { GraphQLClient } from "graphql-request";
 import { getIncludedResources } from "./bundle";
 import { PatientModel } from "./models";
 import { searchBuilderRecords } from "./search-helpers";
@@ -86,30 +87,58 @@ export async function getBuilderPatientListWithSearch(
   }
 }
 
+async function accumulatePatientsResult(
+  requestContext: CTWRequestContext,
+  graphClient: GraphQLClient,
+  patients: PatientModel[],
+  cursor: string,
+  pageSize: number,
+  iterations = 0
+) {
+  const { data } = await fqsRequest<PatientGraphqlResponse>(graphClient, patientsForBuilderQuery, {
+    builderID: requestContext.builderId,
+    cursor,
+    first: pageSize,
+    sort: {
+      lastUpdated: "DESC"
+    }
+  });
+  const models = data.PatientConnection.edges.map((x) => new PatientModel(x.node));
+  const firstPartyModels = models.filter(
+    (model) => model.ownedByBuilder(requestContext.builderId) && !model.isThirdPartyData
+  );
+  patients.push(...firstPartyModels);
+  if (
+    patients.length < pageSize &&
+    data.PatientConnection.pageInfo.hasNextPage &&
+    iterations < 10
+  ) {
+    return accumulatePatientsResult(
+      requestContext,
+      graphClient,
+      patients,
+      data.PatientConnection.pageInfo.endCursor ?? "",
+      pageSize,
+      iterations + 1
+    );
+  }
+  return { patients, pageInfo: data.PatientConnection.pageInfo };
+}
+
 export async function getBuilderPatientsList(
   requestContext: CTWRequestContext,
   paginationOptions: (number | string | undefined)[] = []
 ): Promise<GetPatientsTableResultsFQS> {
   const [pageSize, cursor] = paginationOptions;
-
   try {
     const graphClient = createGraphqlClient(requestContext);
-    const { data } = await fqsRequest<PatientGraphqlResponse>(
+    return accumulatePatientsResult(
+      requestContext,
       graphClient,
-      patientsForBuilderQuery,
-      {
-        builderID: requestContext.builderId,
-        cursor,
-        first: pageSize,
-        sort: {
-          lastUpdated: "DESC"
-        }
-      }
+      [],
+      cursor as string,
+      pageSize as number
     );
-    return {
-      patients: data.PatientConnection.edges.map((x) => new PatientModel(x.node)),
-      pageInfo: data.PatientConnection.pageInfo
-    };
   } catch (e) {
     throw new Error(`Failed fetching patients: ${e}`);
   }
