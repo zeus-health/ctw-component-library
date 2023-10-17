@@ -8,7 +8,7 @@ import {
   CTWRequestContext,
   fqsRequest,
   GraphqlPageInfo,
-  useQueryWithCTW
+  useQueryWithCTW,
 } from "..";
 import { PatientGraphqlResponse, patientsForBuilderQuery } from "@/services/fqs/queries/patients";
 import { errorResponse } from "@/utils/errors";
@@ -28,7 +28,7 @@ export async function getBuilderFhirPatient(
     const response = await searchBuilderRecords("Patient", requestContext, {
       ...searchParams,
       identifier: `${systemURL}|${patientID}`,
-      _include: "Patient:organization"
+      _include: "Patient:organization",
     });
 
     patients = response.resources;
@@ -72,7 +72,7 @@ export async function getBuilderPatientListWithSearch(
     _count: pageSize,
 
     _offset: offset,
-    ...(hasNumber(searchValue) ? { identifier: searchValue } : { name: searchValue })
+    ...(hasNumber(searchValue) ? { identifier: searchValue } : { name: searchValue }),
   }) as SearchParams;
 
   try {
@@ -80,7 +80,7 @@ export async function getBuilderPatientListWithSearch(
 
     return {
       searchParams,
-      patients: resources.map((patient) => new PatientModel(patient))
+      patients: resources.map((patient) => new PatientModel(patient)),
     };
   } catch (e) {
     throw errorResponse("Failed fetching patients", e);
@@ -94,14 +94,14 @@ async function accumulatePatientsResult(
   cursor: string,
   pageSize: number,
   iterations = 0
-) {
+): Promise<GetPatientsTableResultsFQS> {
   const { data } = await fqsRequest<PatientGraphqlResponse>(graphClient, patientsForBuilderQuery, {
     builderID: requestContext.builderId,
     cursor,
     first: pageSize,
     sort: {
-      lastUpdated: "DESC"
-    }
+      lastUpdated: "DESC",
+    },
   });
   const models = data.PatientConnection.edges.map((x) => new PatientModel(x.node));
   const firstPartyModels = models.filter(
@@ -156,7 +156,7 @@ export async function getBuilderPatientsListByIdentifier(
     _id: identifiers.join(","),
     _count: pageSize,
     _total: "accurate",
-    _offset: offset
+    _offset: offset,
   }) as SearchParams;
 
   try {
@@ -169,7 +169,7 @@ export async function getBuilderPatientsListByIdentifier(
     return {
       searchParams,
       patients: resources.map((patient) => new PatientModel(patient)),
-      total
+      total,
     };
   } catch (e) {
     throw errorResponse("Failed fetching patients", e);

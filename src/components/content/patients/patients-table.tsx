@@ -79,7 +79,7 @@ export const PatientsTable = withErrorBoundary(
 const columns: TableColumn<PatientModel>[] = [
   {
     title: "Name",
-    render: (patient) => <PatientNameColumn patient={patient} />
+    render: (patient) => <PatientNameColumn patient={patient} />,
   },
   {
     title: "Contact",
@@ -88,8 +88,8 @@ const columns: TableColumn<PatientModel>[] = [
         <div className="ctw-patients-table-inputs-email">{email}</div>
         <div className="ctw-patients-table-inputs-phone">{phoneNumber}</div>
       </>
-    )
-  }
+    ),
+  },
 ];
 
 type PatientNameColumnProps = {
