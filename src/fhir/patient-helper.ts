@@ -84,7 +84,7 @@ export async function getPatientsForBuilder(
       {
         builderID: requestContext.builderId,
         cursor: cursor ?? "",
-        first: first,
+        first,
         sort: {
           lastUpdated: "DESC",
         },
