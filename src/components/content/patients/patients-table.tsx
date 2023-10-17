@@ -13,7 +13,7 @@ import { AnalyticsProvider } from "@/components/core/providers/analytics/analyti
 import { useQueryWithCTW } from "@/components/core/providers/use-query-with-ctw";
 import { Table } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
-import { getBuilderPatientsList } from "@/fhir/patient-helper";
+import { getBuilderPatientsList, usePatientsList } from "@/fhir/patient-helper";
 import { debounce } from "@/utils/nodash";
 import { QUERY_KEY_PATIENTS_LIST } from "@/utils/query-keys";
 
@@ -30,14 +30,6 @@ export type TableOptionProps<T extends MinRecordItem> = {
   onRowClick?: (row: T) => void;
 };
 
-export function usePatientsList(pageSize: number, pageOffset: number, searchNameValue?: string) {
-  return useQueryWithCTW(
-    QUERY_KEY_PATIENTS_LIST,
-    [pageSize, pageOffset, searchNameValue],
-    getBuilderPatientsList
-  );
-}
-
 /**
  * PatientsTable displays a paginated list of all patients for a builder. In
  * addition to having configurable page size, lazy loading and name search, the
@@ -53,11 +45,11 @@ export const PatientsTable = withErrorBoundary(
     const [total, setTotal] = useState(0);
     const [patients, setPatients] = useState<PatientModel[]>([]);
     const [searchNameValue, setSearchNameValue] = useState<string | undefined>();
-    const {
-      data: { patients: responsePatients, total: responseTotal } = {},
-      isFetching,
-      isError,
-    } = usePatientsList(pageSize, currentPage - 1, searchNameValue);
+    const { data, isFetching, isError } = usePatientsList(
+      pageSize,
+      currentPage - 1,
+      searchNameValue
+    );
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const debouncedSearch = useCallback(
@@ -74,11 +66,11 @@ export const PatientsTable = withErrorBoundary(
     // isn't fetching. This will prevent empty intermediate states where there
     // is no data because the value of `usePatientsTable()` hasn't settled yet.
     useEffect(() => {
-      if (!isFetching && responsePatients) {
-        setTotal(responseTotal ?? 0);
-        setPatients(responsePatients);
+      if (!isFetching && data) {
+        setTotal(data.length);
+        setPatients(data);
       }
-    }, [responsePatients, responseTotal, isError, isFetching]);
+    }, [data, isError, isFetching]);
 
     // This resets our state when there is an error fetching patients from ODS.
     useEffect(() => {
