@@ -2,10 +2,10 @@ import "./patients-table.scss";
 
 import type { TableColumn } from "@/components/core/table/table-helpers";
 import type { PatientModel } from "@/fhir/models/patient";
-import { SearchIcon } from "@heroicons/react/solid";
 import type { Argument } from "classnames";
 import cx from "classnames";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
+import { ErrorAlert } from "@/components/core/alert";
 import * as CTWBox from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { SimplePagination } from "@/components/core/pagination/simple-pagination";
@@ -13,7 +13,6 @@ import { AnalyticsProvider } from "@/components/core/providers/analytics/analyti
 import { Table } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
 import { usePatientsList } from "@/fhir/patient-helper";
-import { debounce } from "@/utils/nodash";
 
 export type PatientsTableProps = {
   className?: cx.Argument;
@@ -40,9 +39,12 @@ export type TableOptionProps<T extends MinRecordItem> = {
 export const PatientsTable = withErrorBoundary(
   ({ className, handleRowClick, pageSize = 5, title = "Patients" }: PatientsTableProps) => {
     const [currentPage, setCurrentPage] = useState(1);
-    const { data, isFetching, isError } = usePatientsList(pageSize, currentPage - 1);
+    const [cursors, setCursors] = useState<string[]>([]);
+    const { data, isLoading, isError } = usePatientsList(pageSize, cursors[currentPage + 1]);
 
-    return (
+    return isError ? (
+      <ErrorAlert header="Error">Could not load list of patients.</ErrorAlert>
+    ) : (
       <AnalyticsProvider componentName="PatientsTable">
         <CTWBox.StackedWrapper
           className={cx("ctw-patients-border ctw-patients-table-inputs", className)}
@@ -51,15 +53,19 @@ export const PatientsTable = withErrorBoundary(
           <div className="ctw-overflow-hidden">
             <Table
               records={data?.patients || []}
+              isLoading={isLoading}
               columns={columns}
               handleRowClick={handleRowClick}
               pageSize={pageSize}
               hidePagination
             >
               <SimplePagination
-                setCurrentPage={setCurrentPage}
+                setCurrentPage={(p) => {
+                  setCursors([...cursors, data?.pageInfo.endCursor ?? ""]);
+                  setCurrentPage(p);
+                }}
                 currentPage={currentPage}
-                hasNext={data.pageInfo.hasNextPage}
+                hasNext={data?.pageInfo.hasNextPage}
               />
             </Table>
           </div>
@@ -73,7 +79,7 @@ export const PatientsTable = withErrorBoundary(
 const columns: TableColumn<PatientModel>[] = [
   {
     title: "Name",
-    render: (patient) => <PatientNameColumn patient={patient} />,
+    render: (patient) => <PatientNameColumn patient={patient} />
   },
   {
     title: "Contact",
@@ -82,8 +88,8 @@ const columns: TableColumn<PatientModel>[] = [
         <div className="ctw-patients-table-inputs-email">{email}</div>
         <div className="ctw-patients-table-inputs-phone">{phoneNumber}</div>
       </>
-    ),
-  },
+    )
+  }
 ];
 
 type PatientNameColumnProps = {
