@@ -9,6 +9,8 @@ import { Telemetry } from "@/utils/telemetry";
 
 export interface GraphqlPageInfo {
   hasNextPage: boolean;
+  startCursor?: string;
+  endCursor?: string;
 }
 
 export interface GraphqlConnectionNode<T> {

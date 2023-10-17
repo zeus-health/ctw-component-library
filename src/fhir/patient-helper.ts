@@ -7,7 +7,13 @@ import { errorResponse } from "@/utils/errors";
 import { pickBy } from "@/utils/nodash";
 import { hasNumber } from "@/utils/types";
 import { PatientGraphqlResponse, patientsForBuilderQuery } from "@/services/fqs/queries/patients";
-import { createGraphqlClient, fqsRequest, useQueryWithCTW } from "..";
+import {
+  GraphqlPageInfo,
+  GraphqlPageInfo,
+  createGraphqlClient,
+  fqsRequest,
+  useQueryWithCTW,
+} from "..";
 import { QUERY_KEY_PATIENTS_LIST } from "@/utils/query-keys";
 import { first } from "lodash";
 
@@ -41,24 +47,25 @@ export async function getBuilderFhirPatient(
   return new PatientModel(patients[0], getIncludedResources(bundle));
 }
 
-export function usePatientsList(pageSize: number, pageOffset: number, searchNameValue?: string) {
-  return useQueryWithCTW(
-    QUERY_KEY_PATIENTS_LIST,
-    [pageSize, pageOffset, searchNameValue],
-    getBuilderPatientsList
-  );
+export function usePatientsList(pageSize: number, pageOffset: number) {
+  return useQueryWithCTW(QUERY_KEY_PATIENTS_LIST, [pageSize, pageOffset], getBuilderPatientsList);
 }
 
-type GetPatientsTableResults = {
+type GetPatientsTableResultsODS = {
   patients: PatientModel[];
   searchParams: SearchParams;
   total: number;
 };
 
+type GetPatientsTableResultsFQS = {
+  patients: PatientModel[];
+  pageInfo: GraphqlPageInfo;
+};
+
 export async function getBuilderPatientListWithSearch(
   requestContext: CTWRequestContext,
   paginationOptions: (number | string | undefined)[] = []
-): Promise<Omit<GetPatientsTableResults, "total">> {
+): Promise<Omit<GetPatientsTableResultsODS, "total">> {
   const [pageSize, pageOffset, searchValue] = paginationOptions;
   const offset = parseInt(`${pageOffset ?? "0"}`, 10) * parseInt(`${pageSize ?? "1"}`, 10);
 
@@ -84,7 +91,7 @@ export async function getBuilderPatientListWithSearch(
 export async function getBuilderPatientsList(
   requestContext: CTWRequestContext,
   paginationOptions: (number | string | undefined)[] = []
-): Promise<PatientModel[]> {
+): Promise<GetPatientsTableResultsFQS> {
   const [pageSize, pageOffset, searchValue] = paginationOptions;
 
   try {
@@ -101,7 +108,10 @@ export async function getBuilderPatientsList(
         },
       }
     );
-    return data.PatientConnection.edges.map((x) => new PatientModel(x.node));
+    return {
+      patients: data.PatientConnection.edges.map((x) => new PatientModel(x.node)),
+      pageInfo: data.PatientConnection.pageInfo,
+    };
   } catch (e) {
     throw new Error(`Failed fetching patients: ${e}`);
   }
@@ -111,7 +121,7 @@ export async function getBuilderPatientsListByIdentifier(
   requestContext: CTWRequestContext,
   paginationOptions: (number | string | undefined)[] = [],
   identifiers: string[] = []
-): Promise<GetPatientsTableResults> {
+): Promise<GetPatientsTableResultsODS> {
   const [pageSize, pageOffset] = paginationOptions;
   const offset = parseInt(`${pageOffset ?? "0"}`, 10) * parseInt(`${pageSize ?? "1"}`, 10);
 

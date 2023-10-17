@@ -42,66 +42,17 @@ export type TableOptionProps<T extends MinRecordItem> = {
 export const PatientsTable = withErrorBoundary(
   ({ className, handleRowClick, pageSize = 5, title = "Patients" }: PatientsTableProps) => {
     const [currentPage, setCurrentPage] = useState(1);
-    const [total, setTotal] = useState(0);
-    const [patients, setPatients] = useState<PatientModel[]>([]);
-    const [searchNameValue, setSearchNameValue] = useState<string | undefined>();
-    const { data, isFetching, isError } = usePatientsList(
-      pageSize,
-      currentPage - 1,
-      searchNameValue
-    );
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const debouncedSearch = useCallback(
-      debounce((value) => {
-        setSearchNameValue(value);
-        setCurrentPage(1);
-        setTotal(0);
-        setPatients([]);
-      }, 100),
-      []
-    );
-
-    // Here we are setting the total and patients only when we know that useQuery
-    // isn't fetching. This will prevent empty intermediate states where there
-    // is no data because the value of `usePatientsTable()` hasn't settled yet.
-    useEffect(() => {
-      if (!isFetching && data) {
-        setTotal(data.length);
-        setPatients(data);
-      }
-    }, [data, isError, isFetching]);
-
-    // This resets our state when there is an error fetching patients from ODS.
-    useEffect(() => {
-      if (isError) {
-        setTotal(0);
-        setPatients([]);
-      }
-    }, [isError, isFetching]);
+    const { data, isFetching, isError } = usePatientsList(pageSize, currentPage - 1);
 
     return (
       <AnalyticsProvider componentName="PatientsTable">
         <CTWBox.StackedWrapper
           className={cx("ctw-patients-border ctw-patients-table-inputs", className)}
         >
-          <CTWBox.Heading title={title}>
-            <div className="ctw-relative">
-              <div className="ctw-search-icon-wrapper">
-                <SearchIcon className="ctw-search-icon" />
-              </div>
-              <input
-                type="text"
-                className="ctw-patients-table-inputs-search"
-                placeholder="Search"
-                name="searchPatientName"
-                onChange={(e) => debouncedSearch(e.currentTarget.value)}
-              />
-            </div>
-          </CTWBox.Heading>
+          <CTWBox.Heading title={title} />
           <div className="ctw-overflow-hidden">
             <Table
-              records={patients}
+              records={data?.patients || []}
               columns={columns}
               handleRowClick={handleRowClick}
               pageSize={pageSize}
@@ -109,7 +60,7 @@ export const PatientsTable = withErrorBoundary(
             >
               <Pagination
                 setCurrentPage={setCurrentPage}
-                total={total}
+                total={0}
                 currentPage={currentPage}
                 pageSize={pageSize}
                 isLoading={isFetching}
