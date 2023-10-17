@@ -13,7 +13,7 @@ export interface PatientGraphqlResponse {
   PatientConnection: PatientConnection;
 }
 
-export const patientQuery = gql`
+export const patientsForUPIDQuery = gql`
   ${fragmentPatient}
   ${fragmentOrganization}
 
@@ -25,6 +25,36 @@ export const patientQuery = gql`
     $filter: PatientFilterParams! = {}
   ) {
     PatientConnection(upid: $upid, after: $cursor, sort: $sort, first: $first, filter: $filter) {
+      pageInfo {
+        hasNextPage
+      }
+      edges {
+        node {
+          ...Patient
+        }
+      }
+    }
+  }
+`;
+
+export const patientsForBuilderQuery = gql`
+  ${fragmentPatient}
+  ${fragmentOrganization}
+
+  query Patients(
+    $builderID: ID!
+    $cursor: String!
+    $sort: PatientSortParams!
+    $first: Int!
+    $filter: PatientFilterParams! = {}
+  ) {
+    PatientConnection(
+      builderID: $builderID
+      after: $cursor
+      sort: $sort
+      first: $first
+      filter: $filter
+    ) {
       pageInfo {
         hasNextPage
       }

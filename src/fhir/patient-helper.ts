@@ -20,9 +20,11 @@ import { SYSTEM_ZUS_UNIVERSAL_ID } from "./system-urls";
 import { DocumentReferenceGraphqlResponse, documentsQuery } from "@/services/fqs/queries/documents";
 import {
   PatientGraphqlResponse,
-  patientQuery,
-  patientQuery,
+  patientsForBuilderQuery,
+  patientsForBuilderQuery,
+  patientsForUPIDQuery,
 } from "@/services/fqs/queries/patients";
+import { request } from "http";
 
 export function useMatchedPatients() {
   const matchedPatientsQuery = useQueryWithPatient(
@@ -34,31 +36,11 @@ export function useMatchedPatients() {
   return matchedPatientsQuery;
 }
 
-function getMatchedPatients() {
-  return async (requestContext: CTWRequestContext, patient: PatientModel) => {
-    let patients = [];
-    let bundle: fhir4.Bundle;
-    try {
-      const response = await searchCommonRecords("Patient", requestContext, {
-        identifier: `${SYSTEM_ZUS_UNIVERSAL_ID}|${patient.UPID}`,
-        _include: "Patient:organization",
-      });
-
-      patients = response.resources;
-      bundle = response.bundle;
-
-      return patients.map((p) => new PatientModel(p, getIncludedResources(bundle)));
-    } catch (e) {
-      throw errorResponse(`Failed fetching patient with UPID ${patient.UPID}`, e);
-    }
-  };
-}
-
 function getPatientsForUPIDFQS() {
   return async (requestContext: CTWRequestContext, patient: PatientModel) => {
     try {
       const graphClient = createGraphqlClient(requestContext);
-      const { data } = await fqsRequest<PatientGraphqlResponse>(graphClient, patientQuery, {
+      const { data } = await fqsRequest<PatientGraphqlResponse>(graphClient, patientsForUPIDQuery, {
         upid: patient.UPID,
         cursor: "",
         first: MAX_OBJECTS_PER_REQUEST,
@@ -71,6 +53,31 @@ function getPatientsForUPIDFQS() {
       throw new Error(`Failed fetching patients: ${e}`);
     }
   };
+}
+
+export async function getPatientsForBuilder(
+  requestContext: CTWRequestContext,
+  first: number,
+  cursor?: string
+) {
+  try {
+    const graphClient = createGraphqlClient(requestContext);
+    const { data } = await fqsRequest<PatientGraphqlResponse>(
+      graphClient,
+      patientsForBuilderQuery,
+      {
+        builderID: requestContext.builderId,
+        cursor: cursor ?? "",
+        first: first,
+        sort: {
+          lastUpdated: "DESC",
+        },
+      }
+    );
+    return data.PatientConnection.edges.map((x) => new PatientModel(x.node));
+  } catch (e) {
+    throw new Error(`Failed fetching patients: ${e}`);
+  }
 }
 
 export async function getBuilderFhirPatient(
