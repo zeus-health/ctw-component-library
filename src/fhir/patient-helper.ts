@@ -2,29 +2,18 @@ import { SearchParams } from "fhir-kit-client";
 import { getIncludedResources } from "./bundle";
 import { searchBuilderRecords, searchCommonRecords } from "./search-helpers";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { PatientModel, PatientModel } from "@/fhir/models/patient";
+import { PatientModel } from "@/fhir/models/patient";
 import { errorResponse } from "@/utils/errors";
 import { pickBy } from "@/utils/nodash";
 import { hasNumber } from "@/utils/types";
 import { QUERY_KEY_MATCHED_PATIENTS, QUERY_KEY_PATIENT_DOCUMENTS } from "@/utils/query-keys";
 import { withTimerMetric } from "@/utils/telemetry";
-import {
-  DocumentModel,
-  MAX_OBJECTS_PER_REQUEST,
-  MAX_OBJECTS_PER_REQUEST,
-  createGraphqlClient,
-  fqsRequest,
-  useQueryWithPatient,
-} from "..";
-import { SYSTEM_ZUS_UNIVERSAL_ID } from "./system-urls";
-import { DocumentReferenceGraphqlResponse, documentsQuery } from "@/services/fqs/queries/documents";
+import { MAX_OBJECTS_PER_REQUEST, createGraphqlClient, fqsRequest, useQueryWithPatient } from "..";
 import {
   PatientGraphqlResponse,
   patientsForBuilderQuery,
-  patientsForBuilderQuery,
   patientsForUPIDQuery,
 } from "@/services/fqs/queries/patients";
-import { request } from "http";
 
 export function useMatchedPatients() {
   const matchedPatientsQuery = useQueryWithPatient(

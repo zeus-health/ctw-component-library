@@ -8,6 +8,7 @@ export * from "@/components/content/conditions/patient-conditions-all";
 export * from "@/components/content/conditions/patient-conditions-outside-badge";
 export * from "@/components/content/conditions/patient-conditions-profile";
 export * from "@/components/content/conditions/unread-conditions-notification";
+export * from "@/components/content/matched-patients/matched-patients";
 export * from "@/components/content/care-team/patient-careteam";
 export * from "@/components/content/overview/patient-overview";
 export * from "@/components/content/overview/patient-subscription";
