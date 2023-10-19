@@ -3,6 +3,7 @@ import { gql } from "graphql-request";
 import {
   fragmentCoding,
   fragmentEncounterReference,
+  fragmentOrganization,
   fragmentPatient,
   fragmentPractitioner,
 } from "./fragments";
@@ -18,6 +19,7 @@ export interface AllergyGraphqlResponse {
 }
 
 export const allergyQuery = gql`
+  ${fragmentOrganization}
   ${fragmentCoding}
   ${fragmentPatient}
   ${fragmentEncounterReference}

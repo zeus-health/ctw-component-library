@@ -1,6 +1,5 @@
-import { fragmentCoding, fragmentPatient } from "../fragments";
+import { fragmentCoding, fragmentOrganization, fragmentPatient } from "../fragments";
 
-const patientFragment = fragmentPatient;
 const subjectFragment = `subject {
       reference
       resource {
@@ -18,8 +17,9 @@ const subjectFragment = `subject {
     }`;
 
 export const fragmentCondition = `
+    ${fragmentOrganization}      
     ${fragmentCoding}
-    ${patientFragment}
+    ${fragmentPatient}
     fragment Condition on Condition {
       id
       resourceType

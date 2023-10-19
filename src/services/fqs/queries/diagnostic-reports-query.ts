@@ -3,6 +3,7 @@ import { gql } from "graphql-request";
 import {
   fragmentCoding,
   fragmentObservation,
+  fragmentOrganization,
   fragmentPatient,
   fragmentPractitioner,
 } from "./fragments";
@@ -31,6 +32,7 @@ contained {
 }`;
 
 export const getDiagnosticReportQuery = (includeObservations: boolean) => gql`
+  ${fragmentOrganization}  
   ${fragmentCoding}
   ${fragmentPatient}
   ${fragmentPractitioner}
