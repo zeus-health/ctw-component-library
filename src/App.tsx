@@ -159,7 +159,7 @@ const DemoApp = ({ accessToken = "" }) => (
   >
     <PatientProvider patientID={VITE_PATIENT_ID} systemURL={VITE_SYSTEM_URL}>
       {demoComponents.map((demo, index) => (
-        <div className="ctw-space-y-5 ctw-bg-white ctw-p-1" key={index}>
+        <div className="ctw-space-y-5 ctw-bg-white" key={index}>
           <h3>
             {demo.title} <small>{demo.note}</small>
           </h3>
