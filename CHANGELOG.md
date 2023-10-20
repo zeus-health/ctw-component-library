@@ -1,5 +1,15 @@
 # ctw-component-library
 
+## 1.70.0
+
+### Minor Changes
+
+- 9a22da7a: Add env to useCTW.
+
+### Patch Changes
+
+- aa43d1a7: Fix Dismiss/Viewed buttons for Encounters and add a "Show Dismissed" option to the Encounters & Notes Table.
+
 ## 1.69.10
 
 ### Patch Changes
