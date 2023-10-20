@@ -2,4 +2,5 @@
 "@zus-health/ctw-component-library": minor
 ---
 
-Adjusted padding to ZAP at sm/md widths
+Adjusted padding on ZAP actions on all widths.
+Overview tab in ZAP now collapses on small viewports.
