@@ -10,15 +10,11 @@ import {
   PatientRecordSearch,
   CTWProvider,
   PatientAllergies,
-  PatientConditions,
-  PatientConditionsOutside,
   PatientDiagnosticReports,
   PatientDocuments,
   PatientEncounters,
   PatientImmunizations,
-  PatientMedications,
   PatientMedicationsAll,
-  PatientMedicationsOutside,
   PatientProvider,
   PatientSearch,
   PatientTimeline,
@@ -28,9 +24,7 @@ import {
 } from ".";
 
 import { PatientMedicationDispense } from "./components/content/medication-dispense/patient-medication-dispense";
-import { ADTAlertsTable } from "./components/content/patients-adt/patients-adt-alerts-table";
 import { ThemeProviderProps } from "@/components/core/providers/theme/theme-provider";
-import { UseQueryResult } from "@tanstack/react-query";
 
 const {
   VITE_AUTH0_AUDIENCE,
@@ -165,7 +159,7 @@ const DemoApp = ({ accessToken = "" }) => (
   >
     <PatientProvider patientID={VITE_PATIENT_ID} systemURL={VITE_SYSTEM_URL}>
       {demoComponents.map((demo, index) => (
-        <div className="ctw-space-y-5 ctw-bg-white ctw-p-1" key={index}>
+        <div className="ctw-space-y-5 ctw-bg-white" key={index}>
           <h3>
             {demo.title} <small>{demo.note}</small>
           </h3>
