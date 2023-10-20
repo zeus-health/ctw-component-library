@@ -30,7 +30,7 @@ export const ViewButton = <T extends object>({
   return (
     <DropdownMenuAction
       type="select"
-      buttonClassName={cx(className, "ctw-bg-transparent ctw-border-none ctw-p-0 max-sm:ctw-px-2")}
+      buttonClassName={cx(className, "ctw-bg-transparent ctw-border-none ctw-p-0 ctw-px-2")}
       onItemSelect={(item) => {
         const selectedOption = options.filter((option) => option.display === item.key)[0];
         onChange(selectedOption);

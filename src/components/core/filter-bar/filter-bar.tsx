@@ -215,7 +215,7 @@ export const FilterBar = ({ className, onChange, filters, defaultState = {} }: F
           }
         }}
       >
-        <div className="ctw-mb-2 ctw-space-x-1 ctw-whitespace-nowrap ctw-py-2 max-sm:ctw-px-2">
+        <div className="ctw-mb-2 ctw-space-x-1 ctw-whitespace-nowrap ctw-px-2 ctw-py-2">
           <FontAwesomeIcon icon={faPlus} className="ctw-w-4" />
           <span>Add Filters</span>
         </div>
