@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 1.71.1
+
+### Patch Changes
+
+- 71ba308f: Fix "Add to Record" button to show when user builder doesn't own the record already.
+
 ## 1.71.0
 
 ### Minor Changes
