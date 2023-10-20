@@ -25,8 +25,8 @@ function getEncountersFromFQS(limit: number) {
         cursor: "",
         first: limit,
         sort: {
-          lastUpdated: "DESC",
-        },
+          lastUpdated: "DESC"
+        }
       });
       const nodes = data.EncounterConnection.edges.map((x) => x.node);
       const results = nodes.map((c) => new EncounterModel(c, c.ProvenanceList));
@@ -89,7 +89,7 @@ export function usePatientEncountersWithClinicalNotes(limit = MAX_OBJECTS_PER_RE
     isLoading,
     isError,
     isFetching,
-    data: encountersWithClinicalNotes,
+    data: encountersWithClinicalNotes
   };
 }
 
@@ -97,7 +97,7 @@ export async function getADTPatientsFromODS(requestContext: CTWRequestContext) {
   const searchParams = pickBy({
     _tag: "https://zusapi.com/thirdparty/source|bamboohealth,collective-medical",
     status: "in-progress",
-    _include: "Encounter:patient",
+    _include: "Encounter:patient"
   }) as SearchParams;
 
   try {
