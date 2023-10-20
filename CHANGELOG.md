@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.70.1
+
+### Patch Changes
+
+- e36ebeff: Sort results returned by patient search by last name.
+- 2eb400f8: Remove date check for observations now that back-fill is complete.
+
 ## 1.70.0
 
 ### Minor Changes
