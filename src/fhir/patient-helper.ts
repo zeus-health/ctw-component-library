@@ -4,7 +4,7 @@ import { searchBuilderRecords, searchCommonRecords } from "./search-helpers";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { PatientModel } from "@/fhir/models/patient";
 import { errorResponse } from "@/utils/errors";
-import { pickBy } from "@/utils/nodash";
+import { pickBy, sortBy } from "@/utils/nodash";
 import { hasNumber } from "@/utils/types";
 import { QUERY_KEY_MATCHED_PATIENTS, QUERY_KEY_PATIENT_DOCUMENTS } from "@/utils/query-keys";
 import { withTimerMetric } from "@/utils/telemetry";
@@ -14,6 +14,7 @@ import {
   patientsForBuilderQuery,
   patientsForUPIDQuery,
 } from "@/services/fqs/queries/patients";
+import { sort } from "@/utils/sort";
 
 export function useMatchedPatients() {
   const matchedPatientsQuery = useQueryWithPatient(
@@ -69,6 +70,8 @@ export async function getPatientsForBuilder(
   }
 }
 
+// Returns a single FHIR patient given a patientID and systemURL.
+// If multiple patients are found then it returns the last updated.
 export async function getBuilderFhirPatient(
   requestContext: CTWRequestContext,
   patientID: string,
@@ -96,7 +99,10 @@ export async function getBuilderFhirPatient(
     );
   }
 
-  return new PatientModel(patients[0], getIncludedResources(bundle));
+  return new PatientModel(
+    sort(patients, "meta.lastUpdated", "desc", true)[0],
+    getIncludedResources(bundle)
+  );
 }
 
 type GetPatientsTableResults = {
