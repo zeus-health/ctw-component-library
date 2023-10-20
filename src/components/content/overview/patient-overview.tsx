@@ -9,7 +9,7 @@ export type PatientOverviewProps = {
 export const PatientOverviewComponent = ({
   includePatientDemographicsForm,
 }: PatientOverviewProps) => (
-  <div className="ctw-grid-auto-columns ctw-flex ctw-w-full ctw-flex-col ctw-pt-5 max-sm:ctw-space-y-5 sm:ctw-flex-row">
+  <div className="ctw-grid-auto-columns ctw-flex ctw-w-full ctw-flex-col ctw-space-y-5 ctw-pt-5 sm:ctw-flex-row">
     <div className="ctw-mx-2 ctw-h-fit ctw-basis-2/6 ctw-rounded-lg ctw-border ctw-border-solid ctw-border-divider-light">
       <div className="ctw-space-y-2 ctw-p-2">
         <div className="ctw-px-3 ctw-pt-3">

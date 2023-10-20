@@ -75,11 +75,10 @@ function PatientRecordSearchComponent({ className }: PatientRecordSearchProps) {
         <div className="ctw-search-icon-wrapper">
           <SearchIcon className="ctw-search-icon" />
         </div>
-
         <input
           ref={ref}
           type="text"
-          className="ctw-w-full ctw-rounded-md ctw-border ctw-border-solid ctw-border-icon-light ctw-bg-bg-white ctw-px-3 ctw-py-2 ctw-pl-10 ctw-pr-3 ctw-text-sm ctw-shadow-sm"
+          className="ctw-w-full ctw-overflow-hidden ctw-overflow-ellipsis ctw-whitespace-nowrap ctw-rounded-md ctw-border ctw-border-solid ctw-border-icon-light ctw-bg-bg-white ctw-px-3 ctw-py-2 ctw-pl-10 ctw-pr-8 ctw-text-sm ctw-shadow-sm"
           placeholder={
             breakpoints.xs
               ? "Search patient records."
