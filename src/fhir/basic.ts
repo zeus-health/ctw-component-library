@@ -7,7 +7,7 @@ import { FHIRModel } from "./models/fhir-model";
 import { getUsersPractitionerReference } from "./practitioner";
 import { searchCommonRecords } from "./search-helpers";
 import { SYSTEM_BASIC_RESOURCE_TYPE, SYSTEM_ZUS_PROFILE_ACTION } from "./system-urls";
-import { useCTW, useQueryWithCTW, useQueryWithPatient } from "..";
+import { useQueryWithPatient } from "..";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { cloneDeep } from "@/utils/nodash";
 import { QUERY_KEY_BASIC } from "@/utils/query-keys";
@@ -155,7 +155,7 @@ async function fetchBasicsFor(requestContext: CTWRequestContext, resource: FhirR
   return resources;
 }
 
-async function enrichWithBasics<R extends fhir4.Resource, T extends FHIRModel<R>>(
+export async function enrichWithBasics<R extends fhir4.Resource, T extends FHIRModel<R>>(
   models: T[],
   getRequestContext: () => Promise<CTWRequestContext>
 ) {
@@ -168,20 +168,4 @@ async function enrichWithBasics<R extends fhir4.Resource, T extends FHIRModel<R>
       e.revIncludes = basicsArray[i];
     });
   });
-}
-
-export function useBasicsOf<R extends fhir4.Resource, T extends FHIRModel<R>>(
-  models: T[],
-  key: string
-) {
-  const { getRequestContext } = useCTW();
-  return useQueryWithCTW(
-    QUERY_KEY_BASIC,
-    ["hospitalizations", key],
-    withTimerMetric(async () => {
-      const requestContext = await getRequestContext();
-      await enrichWithBasics(models, () => Promise.resolve(requestContext));
-      return models;
-    }, "req.timing.basic")
-  );
 }
