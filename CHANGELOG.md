@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 1.71.0
+
+### Minor Changes
+
+- 130fa952: Adjusted padding on ZAP actions on all widths.
+  Overview tab in ZAP now collapses on small viewports.
+
 ## 1.70.1
 
 ### Patch Changes
