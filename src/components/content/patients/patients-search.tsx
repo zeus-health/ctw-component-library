@@ -1,6 +1,5 @@
 import { Combobox } from "@headlessui/react";
 import { useEffect, useState } from "react";
-import ZusSVG from "@/assets/zus.svg";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { ComboboxField, ComboxboxFieldOption } from "@/components/core/form/combobox-field";
 import { useQueryWithCTW } from "@/components/core/providers/use-query-with-ctw";
@@ -33,18 +32,13 @@ export type PatientSearchProps = {
 };
 
 export const PatientSearch = withErrorBoundary(
-  ({
-    pageSize = 250,
-    removeBranding = false,
-    title = "Search Your Patients",
-    onSearchClick,
-  }: PatientSearchProps) => {
+  ({ pageSize = 250, onSearchClick }: PatientSearchProps) => {
     const [patients, setPatients] = useState<PatientModel[]>([]);
     const [searchValue, setSearchValue] = useState<string | undefined>();
     const {
       data: { patients: responsePatients } = {},
       isFetching,
-      isError,
+      isError
     } = usePatientSearchList(pageSize, 0, searchValue);
 
     // Here we are setting the total and patients only when we know that useQuery
@@ -66,35 +60,26 @@ export const PatientSearch = withErrorBoundary(
     const options = patients.map((patient) => ({
       value: patient,
       label: patient.fullName,
-      key: patient.id,
+      key: patient.id
     }));
 
     return (
-      <div className="ctw-max-w-3xl ctw-space-y-5 ctw-text-center">
-        <h3 className="ctw-my-0 ctw-text-2xl ctw-font-medium">{title}</h3>
-        {!removeBranding && (
-          <div className="ctw-flex ctw-justify-center ctw-space-x-2 ctw-text-sm ctw-font-light ctw-italic ctw-text-content-light">
-            <span>Powered by</span>
-            <img src={ZusSVG} alt="Zus" />
-          </div>
-        )}
-        <ComboboxField
-          enableSearchIcon
-          options={options}
-          readonly={false}
-          isLoading={isFetching}
-          name="patient-search"
-          defaultSearchTerm=""
-          onCustomSelectChange={onSearchClick}
-          renderCustomOption={(e) => <CustomComboBox option={e as CustomPatientOptionValue} />}
-          onSearchChange={(e) => {
-            setSearchValue(e);
-            setPatients([]);
-          }}
-          defaultValue={{}}
-          placeholder="Search by patient name or identifier"
-        />
-      </div>
+      <ComboboxField
+        enableSearchIcon
+        options={options}
+        readonly={false}
+        isLoading={isFetching}
+        name="patient-search"
+        defaultSearchTerm=""
+        onCustomSelectChange={onSearchClick}
+        renderCustomOption={(e) => <CustomComboBox option={e as CustomPatientOptionValue} />}
+        onSearchChange={(e) => {
+          setSearchValue(e);
+          setPatients([]);
+        }}
+        defaultValue={{}}
+        placeholder="Search by patient name or identifier"
+      />
     );
   },
   "PatientsSearch"
