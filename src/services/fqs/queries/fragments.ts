@@ -171,8 +171,65 @@ export const fragmentPatient = gql`
       use
     }
     managingOrganization {
-      resource {
-        ...Organization
+      id
+      resourceType
+      extension {
+        url
+        valueString
+      }
+      name
+      telecom {
+        system
+        value
+        period {
+          start
+          end
+        }
+      }
+      contact {
+        purpose {
+          text
+          coding {
+            code
+            display
+            system
+            extension {
+              url
+              valueString
+            }
+          }
+        }
+        name {
+          family
+          given
+          prefix
+          suffix
+          text
+          use
+        }
+        telecom {
+          system
+          value
+          period {
+            start
+            end
+          }
+        }
+        address {
+          type
+          use
+          text
+          line
+          city
+          district
+          state
+          postalCode
+          country
+          period {
+            start
+            end
+          }
+        }
       }
     }
   }
