@@ -48,6 +48,7 @@ export function useCTW() {
   }, [context, getAuthToken]);
 
   return {
+    env: context.env,
     getRequestContext,
     featureFlags: context.featureFlags,
   };

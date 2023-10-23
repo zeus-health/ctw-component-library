@@ -102,7 +102,7 @@ function useRowActions(onAddToRecord?: (record: MedicationStatementModel) => voi
   const { toggleRead } = useToggleRead();
 
   return (record: MedicationStatementModel): RowActionsConfigProp<MedicationStatementModel> =>
-    !record.ownedByBuilder(userBuilderId)
+    record.ownedByBuilder(userBuilderId)
       ? []
       : [
           {

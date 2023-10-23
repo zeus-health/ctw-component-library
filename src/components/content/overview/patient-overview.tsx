@@ -9,13 +9,9 @@ export type PatientOverviewProps = {
 export const PatientOverviewComponent = ({
   includePatientDemographicsForm,
 }: PatientOverviewProps) => (
-  <div className="ctw-flex ctw-w-full ctw-flex-row">
-    <div className="ctw-mx-2 ctw-my-5 ctw-h-fit ctw-basis-2/6 ctw-rounded-lg ctw-border ctw-border-solid ctw-border-divider-light">
+  <div className="ctw-grid-auto-columns ctw-flex ctw-w-full ctw-flex-col ctw-space-y-5 ctw-pt-5 sm:ctw-flex-row">
+    <div className="ctw-mx-2 ctw-h-fit ctw-basis-2/6 ctw-rounded-lg ctw-border ctw-border-solid ctw-border-divider-light">
       <div className="ctw-space-y-2 ctw-p-2">
-        {/* const searchIsEnabled = useHasFeatureFlag(FeatureFlags.patientRecordSearch); */}
-        {/* <div className="ctw-px-3 ctw-pt-3">
-          <PatientSubscriptionDetails />
-        </div> */}
         <div className="ctw-px-3 ctw-pt-3">
           <PatientHistoryLastRetrievedWithAction
             includePatientDemographicsForm={includePatientDemographicsForm}
@@ -45,7 +41,7 @@ export const PatientOverviewComponent = ({
         </div>
       </div>
     </div>
-    <div className="ctw-basis-4/6 ctw-pr-2">
+    <div className="ctw-basis-4/6 ctw-px-2">
       <PatientRecordSearch />
     </div>
   </div>

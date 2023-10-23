@@ -5,6 +5,7 @@ import { ComboboxField, ComboxboxFieldOption } from "@/components/core/form/comb
 import { useQueryWithCTW } from "@/components/core/providers/use-query-with-ctw";
 import { PatientModel } from "@/fhir/models";
 import { getBuilderPatientListWithSearch } from "@/fhir/patient-helper";
+import { orderBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENTS_LIST } from "@/utils/query-keys";
 
 export function usePatientSearchList(
@@ -57,7 +58,7 @@ export const PatientSearch = withErrorBoundary(
       }
     }, [isError, isFetching]);
 
-    const options = patients.map((patient) => ({
+    const options = orderBy(patients, "lastName", "asc").map((patient) => ({
       value: patient,
       label: patient.fullName,
       key: patient.id
