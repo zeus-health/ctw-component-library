@@ -39,7 +39,7 @@ export const PatientSearch = withErrorBoundary(
     const {
       data: { patients: responsePatients } = {},
       isFetching,
-      isError
+      isError,
     } = usePatientSearchList(pageSize, 0, searchValue);
 
     // Here we are setting the total and patients only when we know that useQuery
@@ -61,7 +61,7 @@ export const PatientSearch = withErrorBoundary(
     const options = orderBy(patients, "lastName", "asc").map((patient) => ({
       value: patient,
       label: patient.fullName,
-      key: patient.id
+      key: patient.id,
     }));
 
     return (

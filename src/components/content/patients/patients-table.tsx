@@ -45,7 +45,7 @@ export const PatientsTable = withErrorBoundary(
     const { data, isLoading, isError } = usePatientsList(pageSize, cursors[currentPage - 1]);
     cursors[currentPage] = data?.pageInfo.endCursor ?? "";
     const dataOnPage = applySorts(data?.patients || [], [
-      { key: "lastUpdated", dir: "desc", isDate: true }
+      { key: "lastUpdated", dir: "desc", isDate: true },
     ]);
 
     return isError ? (
@@ -82,7 +82,7 @@ export const PatientsTable = withErrorBoundary(
 const columns: TableColumn<PatientModel>[] = [
   {
     title: "Name",
-    render: (patient) => <PatientNameColumn patient={patient} />
+    render: (patient) => <PatientNameColumn patient={patient} />,
   },
   {
     title: "Contact",
@@ -91,12 +91,12 @@ const columns: TableColumn<PatientModel>[] = [
         <div className="ctw-patients-table-inputs-email">{email}</div>
         <div className="ctw-patients-table-inputs-phone">{phoneNumber}</div>
       </>
-    )
+    ),
   },
   {
     title: "Last Updated",
-    render: (p) => formatISODateStringToDate(p.lastUpdated)
-  }
+    render: (p) => formatISODateStringToDate(p.lastUpdated),
+  },
 ];
 
 type PatientNameColumnProps = {
