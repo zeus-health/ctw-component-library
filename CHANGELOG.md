@@ -1,5 +1,25 @@
 # ctw-component-library
 
+## 1.71.1
+
+### Patch Changes
+
+- 71ba308f: Fix "Add to Record" button to show when user builder doesn't own the record already.
+
+## 1.71.0
+
+### Minor Changes
+
+- 130fa952: Adjusted padding on ZAP actions on all widths.
+  Overview tab in ZAP now collapses on small viewports.
+
+## 1.70.1
+
+### Patch Changes
+
+- e36ebeff: Sort results returned by patient search by last name.
+- 2eb400f8: Remove date check for observations now that back-fill is complete.
+
 ## 1.70.0
 
 ### Minor Changes
