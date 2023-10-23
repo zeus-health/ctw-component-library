@@ -68,7 +68,7 @@ export function usePatientBasicResources() {
   );
 }
 
-function mapBasics<R extends fhir4.Resource, T extends FHIRModel<R>>(
+export function mapBasics<R extends fhir4.Resource, T extends FHIRModel<R>>(
   queryData: T[],
   basicsData: Basic[]
 ) {
@@ -86,7 +86,7 @@ function mapBasics<R extends fhir4.Resource, T extends FHIRModel<R>>(
   return resources;
 }
 
-export function useIncludeBasics<R extends fhir4.Resource, T extends FHIRModel<R>>(
+export function useIncludePatientBasics<R extends fhir4.Resource, T extends FHIRModel<R>>(
   query: UseQueryResult<T[]>
 ) {
   const basicsQuery = usePatientBasicResources();
@@ -130,6 +130,19 @@ export async function toggleRead<T extends fhir4.Resource>(
   const profileAction = model.isRead ? "unread" : "read";
   model.optimisticToggleIsRead();
   await recordProfileAction(existingBasic, model, requestContext, profileAction);
+}
+
+export async function mapBasicsOf<R extends fhir4.Resource, T extends FHIRModel<R>>(
+  getRequestContext: () => Promise<CTWRequestContext>,
+  resources: T[]
+) {
+  const requestContext = await getRequestContext();
+  const subjects = resources.map((resource) => `${resource.resourceType}/${resource.id}`);
+  const { resources: basics } = await searchCommonRecords("Basic", requestContext, {
+    _tag: `https://zusapi.com/accesscontrol/owner|builder/${requestContext.builderId}`,
+    subject: subjects.join(","),
+  });
+  return mapBasics(resources, basics);
 }
 
 async function fetchBasic(requestContext: CTWRequestContext) {

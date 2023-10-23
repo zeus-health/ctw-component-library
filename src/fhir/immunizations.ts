@@ -1,4 +1,4 @@
-import { useIncludeBasics } from "./basic";
+import { useIncludePatientBasics } from "./basic";
 import { PatientModel } from "./models";
 import { ImmunizationModel } from "./models/immunization";
 import { useQueryWithPatient } from "..";
@@ -20,7 +20,7 @@ export function usePatientImmunizations() {
     withTimerMetric(getImmunizationFromFQS, "req.timing.immunizations")
   );
 
-  return useIncludeBasics(patientImmunizationsQuery);
+  return useIncludePatientBasics(patientImmunizationsQuery);
 }
 
 async function getImmunizationFromFQS(requestContext: CTWRequestContext, patient: PatientModel) {
