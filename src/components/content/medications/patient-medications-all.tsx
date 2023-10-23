@@ -26,8 +26,8 @@ export type PatientMedicationsAllProps = {
 
 function PatientMedicationsAllComponent({
   className,
-  readOnly,
   onAddToRecord,
+  readOnly = true,
 }: PatientMedicationsAllProps) {
   const userBuilderId = useUserBuilderId();
   const query = useQueryAllPatientMedications();

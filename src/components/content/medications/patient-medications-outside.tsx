@@ -23,7 +23,7 @@ export type PatientMedicationsOutsideProps = {
 const PatientMedicationsOutsideComponent = ({
   className,
   onAddToRecord,
-  readOnly = false,
+  readOnly = true,
   onOpenHistoryDrawer,
 }: PatientMedicationsOutsideProps) => {
   const { otherProviderMedications, isLoading } = useQueryAllPatientMedications();

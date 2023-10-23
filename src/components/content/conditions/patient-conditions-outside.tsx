@@ -21,7 +21,7 @@ export type PatientConditionsOutsideProps = {
 const PatientConditionsOutsideComponent = ({
   className,
   hideRequestRecords = false,
-  readOnly = false,
+  readOnly = true,
 }: PatientConditionsOutsideProps) => {
   const query = usePatientConditionsOutside();
   const patientHistoryQuery = usePatientHistory();

@@ -31,7 +31,7 @@ export type PatientConditionsAllProps = {
 
 function PatientConditionsAllComponent({
   className,
-  readOnly = false,
+  readOnly = true,
   onlyAllowAddOutsideConditions = true,
 }: PatientConditionsAllProps) {
   const userBuilderId = useUserBuilderId();
