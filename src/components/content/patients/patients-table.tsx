@@ -14,6 +14,7 @@ import { Table } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
 import { formatISODateStringToDate } from "@/fhir/formatters";
 import { usePatientsList } from "@/fhir/patient-helper";
+import { applySorts } from "@/utils/sort";
 
 export type PatientsTableProps = {
   className?: cx.Argument;
@@ -43,6 +44,9 @@ export const PatientsTable = withErrorBoundary(
     const [cursors] = useState<string[]>([""]);
     const { data, isLoading, isError } = usePatientsList(pageSize, cursors[currentPage - 1]);
     cursors[currentPage] = data?.pageInfo.endCursor ?? "";
+    const dataOnPage = applySorts(data?.patients || [], [
+      { key: "lastUpdated", dir: "desc", isDate: true }
+    ]);
 
     return isError ? (
       <ErrorAlert header="Error">Could not load list of patients.</ErrorAlert>
@@ -54,7 +58,7 @@ export const PatientsTable = withErrorBoundary(
           <CTWBox.Heading title={title} />
           <div className="ctw-overflow-hidden">
             <Table
-              records={data?.patients || []}
+              records={dataOnPage}
               isLoading={isLoading}
               columns={columns}
               handleRowClick={handleRowClick}
