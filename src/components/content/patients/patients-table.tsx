@@ -12,6 +12,7 @@ import { SimplePagination } from "@/components/core/pagination/simple-pagination
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { Table } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
+import { formatISODateStringToDate } from "@/fhir/formatters";
 import { usePatientsList } from "@/fhir/patient-helper";
 
 export type PatientsTableProps = {
@@ -87,6 +88,10 @@ const columns: TableColumn<PatientModel>[] = [
         <div className="ctw-patients-table-inputs-phone">{phoneNumber}</div>
       </>
     )
+  },
+  {
+    title: "Last Updated",
+    render: (p) => formatISODateStringToDate(p.lastUpdated)
   }
 ];
 
