@@ -39,8 +39,9 @@ export type TableOptionProps<T extends MinRecordItem> = {
 export const PatientsTable = withErrorBoundary(
   ({ className, handleRowClick, pageSize = 5, title = "Patients" }: PatientsTableProps) => {
     const [currentPage, setCurrentPage] = useState(1);
-    const [cursors, setCursors] = useState<string[]>([""]);
+    const [cursors] = useState<string[]>([""]);
     const { data, isLoading, isError } = usePatientsList(pageSize, cursors[currentPage - 1]);
+    cursors[currentPage] = data?.pageInfo.endCursor ?? "";
 
     return isError ? (
       <ErrorAlert header="Error">Could not load list of patients.</ErrorAlert>
@@ -60,10 +61,7 @@ export const PatientsTable = withErrorBoundary(
               hidePagination
             >
               <SimplePagination
-                setCurrentPage={(p) => {
-                  setCursors([...cursors, data?.pageInfo.endCursor ?? ""]);
-                  setCurrentPage(p);
-                }}
+                setCurrentPage={(p) => setCurrentPage(p)}
                 currentPage={currentPage}
                 hasNext={data?.pageInfo.hasNextPage}
               />
@@ -79,7 +77,7 @@ export const PatientsTable = withErrorBoundary(
 const columns: TableColumn<PatientModel>[] = [
   {
     title: "Name",
-    render: (patient) => <PatientNameColumn patient={patient} />,
+    render: (patient) => <PatientNameColumn patient={patient} />
   },
   {
     title: "Contact",
@@ -88,8 +86,8 @@ const columns: TableColumn<PatientModel>[] = [
         <div className="ctw-patients-table-inputs-email">{email}</div>
         <div className="ctw-patients-table-inputs-phone">{phoneNumber}</div>
       </>
-    ),
-  },
+    )
+  }
 ];
 
 type PatientNameColumnProps = {
