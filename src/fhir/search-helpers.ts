@@ -6,7 +6,7 @@ import {
   SYSTEM_ZUS_OWNER,
   SYSTEM_ZUS_THIRD_PARTY,
   SYSTEM_ZUS_UNIVERSAL_ID,
-  SYSTEM_ZUS_UPI_RECORD_TYPE,
+  SYSTEM_ZUS_UPI_RECORD_TYPE
 } from "./system-urls";
 import { ResourceType, ResourceTypeString } from "./types";
 import { getLensBuilderId } from "@/api/urls";
@@ -53,7 +53,7 @@ const THIRD_PARTY_TAGS = [
   `${SYSTEM_ZUS_THIRD_PARTY}|commonwell`,
   `${SYSTEM_ZUS_THIRD_PARTY}|elation`,
   `${SYSTEM_ZUS_THIRD_PARTY}|collective-medical`,
-  `${SYSTEM_ZUS_THIRD_PARTY}|quest`,
+  `${SYSTEM_ZUS_THIRD_PARTY}|quest`
 ];
 
 // Enumerating Medication-specific lens tags.
@@ -73,7 +73,7 @@ const FIRST_PARTY_TAG_SUPPORTED_RESOURCES = [
   "Condition",
   "Coverage",
   "Encounter",
-  "MedicationStatement",
+  "MedicationStatement"
 ];
 
 export type SearchReturn<T extends ResourceTypeString> = {
@@ -102,8 +102,8 @@ export async function searchAllRecords<T extends ResourceTypeString>(
     searchParams: {
       ...params,
       _count: count,
-      ...patientSearchParams(resourceType, patientUPID as string),
-    },
+      ...patientSearchParams(resourceType, patientUPID as string)
+    }
   })) as fhir4.Bundle;
 
   if (DEBUG_ODS_FETCH_ALL_PAGES === "true") {
@@ -128,7 +128,7 @@ export async function searchBuilderRecords<T extends ResourceTypeString>(
     ...MEDICATION_LENS_TAGS,
     ...CONDITIONS_LENS_TAGS,
     ...SUMMARY_TAGS,
-    ...UPI_TAGS,
+    ...UPI_TAGS
   ];
   type FirstPartyParams = {
     firstparty?: boolean;
@@ -167,7 +167,7 @@ export async function searchSummaryRecords<T extends ResourceTypeString>(
 ): Promise<SearchReturn<T>> {
   const tagFilter = [...SUMMARY_TAGS];
   const params = mergeParams(searchParams, {
-    _tag: tagFilter,
+    _tag: tagFilter
   });
   const builderId = requestContext.contextBuilderId || requestContext.builderId;
   const records = await searchAllRecords(resourceType, requestContext, params);
@@ -286,7 +286,7 @@ const filterSearchReturnByBuilderId = <T extends ResourceTypeString>(
   const resources = filter(searchReturn.resources, (record) =>
     some(record.meta?.tag, {
       system: SYSTEM_ZUS_OWNER,
-      code: `builder/${matchOwnerBuilderId}`,
+      code: `builder/${matchOwnerBuilderId}`
     })
   );
 
@@ -294,12 +294,12 @@ const filterSearchReturnByBuilderId = <T extends ResourceTypeString>(
     if (record.search?.mode === "include") {
       return some(record.resource?.meta?.tag, {
         system: SYSTEM_ZUS_OWNER,
-        code: `builder/${includedOwnerBuilderId ?? matchOwnerBuilderId}`,
+        code: `builder/${includedOwnerBuilderId ?? matchOwnerBuilderId}`
       });
     }
     return some(record.resource?.meta?.tag, {
       system: SYSTEM_ZUS_OWNER,
-      code: `builder/${matchOwnerBuilderId}`,
+      code: `builder/${matchOwnerBuilderId}`
     });
   });
 
