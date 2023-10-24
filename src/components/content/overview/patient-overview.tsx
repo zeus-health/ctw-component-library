@@ -1,7 +1,7 @@
+import { PatientSubscriptionDetails } from "./patient-subscription-details";
 import { PatientHistoryLastRetrievedWithAction } from "../patient-history/patient-history-action";
 import { PatientRecordSearch } from "../patient-record-search/patient-record-search";
 import { withErrorBoundary } from "@/components/core/error-boundary";
-import { PatientSubscriptionDetails } from "./patient-subscription-details";
 
 export type PatientOverviewProps = {
   includePatientDemographicsForm?: boolean;
