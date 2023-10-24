@@ -1,5 +1,16 @@
 # ctw-component-library
 
+## 2.0.0
+
+### Major Changes
+
+- 99226384: By default PatientConditionsAll will set onlyAllowAddOutsideConditions to true. Previously this defaulted to false.
+
+### Patch Changes
+
+- 99226384: Prevent PatientConditionsAll component from showing "add" button in drawer when readOnly is true.
+- 8f2b641f: Add functioning row actions to the ADT table.
+
 ## 1.71.1
 
 ### Patch Changes
