@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 2.0.2
+
+### Patch Changes
+
+- 8f7980cc: Add subscription info back to overview tab.
+
 ## 2.0.1
 
 ### Patch Changes
