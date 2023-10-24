@@ -3,8 +3,9 @@ import { gql } from "graphql-request";
 import {
   fragmentCoding,
   fragmentEncounterReference,
+  fragmentOrganization,
   fragmentPatient,
-  fragmentPractitioner,
+  fragmentPractitioner
 } from "./fragments";
 import { GraphqlConnectionNode, GraphqlPageInfo } from "../client";
 
@@ -19,6 +20,7 @@ export interface AllergyGraphqlResponse {
 
 export const allergyQuery = gql`
   ${fragmentCoding}
+  ${fragmentOrganization}
   ${fragmentPatient}
   ${fragmentEncounterReference}
   ${fragmentPractitioner}
