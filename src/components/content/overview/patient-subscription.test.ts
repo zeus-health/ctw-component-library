@@ -1,4 +1,4 @@
-import { getDataSources } from "./patient-subscription";
+import { getDataSources } from "./patient-subscription-details";
 import { PatientSubscription } from "@/services/subscriptions/subscriptions";
 
 describe("getDataSources", () => {
