@@ -1,3 +1,4 @@
+import { PatientSubscriptionDetails } from "./patient-subscription-details";
 import { PatientHistoryLastRetrievedWithAction } from "../patient-history/patient-history-action";
 import { PatientRecordSearch } from "../patient-record-search/patient-record-search";
 import { withErrorBoundary } from "@/components/core/error-boundary";
@@ -13,6 +14,9 @@ export const PatientOverviewComponent = ({
     <div className="ctw-mx-2 ctw-h-fit ctw-basis-2/6 ctw-rounded-lg ctw-border ctw-border-solid ctw-border-divider-light">
       <div className="ctw-space-y-2 ctw-p-2">
         <div className="ctw-px-3 ctw-pt-3">
+          <PatientSubscriptionDetails />
+        </div>
+        <div className="ctw-border-0 ctw-border-t ctw-border-solid ctw-border-divider-light ctw-px-3 ctw-pt-3">
           <PatientHistoryLastRetrievedWithAction
             includePatientDemographicsForm={includePatientDemographicsForm}
           />

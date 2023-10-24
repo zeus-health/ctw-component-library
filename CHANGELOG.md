@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 2.0.2
+
+### Patch Changes
+
+- 8f7980cc: Add subscription info back to overview tab.
+
+## 2.0.1
+
+### Patch Changes
+
+- a3fc7eee: Remove query to get practitioner from server
+
 ## 2.0.0
 
 ### Major Changes
