@@ -54,7 +54,7 @@ function ADTTableComponent({
   isLoading = false,
   data,
   encounterAndNotesData,
-  goToPatient,
+  goToPatient
 }: ADTTableProps) {
   const openADTDetails = useADTAlertDetailsDrawer(goToPatient);
   const [currentPage, setCurrentPage] = useState(1);
@@ -62,8 +62,6 @@ function ADTTableComponent({
   const [isLoadingDetails, setIsLoadingDetails] = useState(true);
   const { getRequestContext } = useCTW();
   const { past7days, past30days, past3months } = getDateRangeView<EncounterModel>("periodStart");
-
-  console.log("dataEnriched", dataEnriched);
 
   useEffect(() => {
     void mapEncountersNotesBasics(getRequestContext, data, encounterAndNotesData).then(
@@ -78,12 +76,12 @@ function ADTTableComponent({
     data: dataFilteredSorted,
     setViewOption,
     setFilters,
-    setSort,
+    setSort
   } = useFilteredSortedData({
     defaultView: past30days,
     defaultFilters: defaultADTFilters,
     defaultSort: defaultEncounterSort,
-    records: dataEnriched,
+    records: dataEnriched
   });
 
   const viewOptions = [past7days, past30days, past3months];
@@ -100,17 +98,17 @@ function ADTTableComponent({
           viewOptions={{
             onChange: setViewOption,
             options: viewOptions,
-            defaultView: past30days,
+            defaultView: past30days
           }}
           sortOptions={{
             defaultSort: defaultEncounterSort,
             options: encounterSortOptions,
-            onChange: setSort,
+            onChange: setSort
           }}
           filterOptions={{
             onChange: setFilters,
             defaultState: defaultADTFilters,
-            filters: adtFilter(),
+            filters: adtFilter()
           }}
         />
         <ResourceTable
@@ -144,11 +142,11 @@ export const ADTAlertsTable = withErrorBoundary(ADTTableComponent, "ADTTable");
 const columns: TableColumn<EncounterModel>[] = [
   {
     title: "Patient",
-    render: (e) => e.patient && <PatientColumn patient={e.patient} />,
+    render: (e) => e.patient && <PatientColumn patient={e.patient} />
   },
   {
     title: "Date",
-    render: (e) => e.periodStart,
+    render: (e) => e.periodStart
   },
   {
     title: "Status",
@@ -157,25 +155,25 @@ const columns: TableColumn<EncounterModel>[] = [
         <div>{e.periodEnd ? "Discharged" : "Active"}</div>
         <div>{e.typeDisplay}</div>
       </>
-    ),
+    )
   },
   {
     title: "Location",
-    render: (e) => e.location,
+    render: (e) => e.location
   },
   {
     render: (e) =>
       e.relatedEncounter?.binaryId ? (
         <FontAwesomeIcon icon={faFileLines} className="ctw-h-4 ctw-w-4 ctw-text-content-lighter" />
       ) : undefined,
-    widthPercent: 3,
+    widthPercent: 3
   },
   {
     title: "Diagnosis",
     render: (e) => (
       <SimpleMoreList items={e.diagnoses ?? []} limit={3} total={e.diagnoses?.length ?? 0} />
-    ),
-  },
+    )
+  }
 ];
 
 type PatientColumnProps = {
@@ -207,13 +205,13 @@ async function fetchRelatedEncounter(
     cursor: "",
     first: 1,
     sort: {
-      lastUpdated: "DESC",
+      lastUpdated: "DESC"
     },
     filter: {
       ids: {
-        anymatch: [encAndNote.cwcq_encounter_id],
-      },
-    },
+        anymatch: [encAndNote.cwcq_encounter_id]
+      }
+    }
   });
 }
 
@@ -275,7 +273,6 @@ async function mapEncountersNotesBasics(
 ) {
   const encountersWithBasics = await mapBasicsOf(getRequestContext, data);
   if (encounterAndNotesData) {
-    console.log("if (encounterAndNotesData) passed");
     return mapEncountersAndNotes(encountersWithBasics, encounterAndNotesData, getRequestContext);
   }
   return data;
