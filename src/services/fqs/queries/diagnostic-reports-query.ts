@@ -5,7 +5,7 @@ import {
   fragmentObservation,
   fragmentOrganization,
   fragmentPatient,
-  fragmentPractitioner
+  fragmentPractitioner,
 } from "./fragments";
 import { GraphqlConnectionNode, GraphqlPageInfo } from "../client";
 
