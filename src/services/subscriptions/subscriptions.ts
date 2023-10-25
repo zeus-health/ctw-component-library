@@ -87,9 +87,6 @@ export async function getPackage(requestContext: CTWRequestContext, packageId: s
       {
         headers: {
           Authorization: `Bearer ${requestContext.authToken}`,
-          ...(requestContext.contextBuilderId && {
-            "Zus-Account": requestContext.contextBuilderId,
-          }),
         },
       }
     );
