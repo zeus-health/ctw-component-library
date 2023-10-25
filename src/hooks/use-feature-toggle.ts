@@ -4,7 +4,7 @@ import { useFeatureVariant } from "./use-feature-variant";
 import { FeatureFlagContext } from "@/components/core/providers/feature-flag-provider";
 
 export type FeatureToggle = {
-  enabled?: boolean;
+  enabled?: boolean | undefined;
   ready: boolean;
   errorGettingToggles?: boolean;
 };
