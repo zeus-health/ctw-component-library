@@ -100,17 +100,10 @@ function ADTTableComponent({
 }: ADTTableProps) {
   const openADTDetails = useADTAlertDetailsDrawer(goToPatient);
   const [currentPage, setCurrentPage] = useState(1);
-  const [dataWithBasics, setDataWithBasics] = useState<EncounterModel[]>([]);
+  const [tableData, setTableData] = useState<EncounterModel[]>([]);
   const [isLoadingBasics, setIsLoadingBasics] = useState(true);
   const { getRequestContext } = useCTW();
   const { past7days, past30days, past3months } = getDateRangeView<EncounterModel>("periodStart");
-
-  useEffect(() => {
-    void mapBasicsOf(getRequestContext, data).then((encounters) => {
-      setDataWithBasics(encounters);
-      setIsLoadingBasics(false);
-    });
-  }, [data, getRequestContext]);
 
   const {
     data: dataFilteredSorted,
@@ -121,18 +114,25 @@ function ADTTableComponent({
     defaultView: past30days,
     defaultFilters: defaultADTFilters,
     defaultSort: defaultEncounterSort,
-    records: dataWithBasics,
+    records: tableData,
   });
 
+  useEffect(() => {
+    const dataFilteredSortedDeduped = dedupeAndMergeEncounters(dataFilteredSorted, "patientsADT");
+    const dataOnPage = dataFilteredSortedDeduped.slice(
+      (currentPage - 1) * PAGE_SIZE,
+      currentPage * PAGE_SIZE
+    );
+    void mapBasicsOf(getRequestContext, dataOnPage).then((encounters) => {
+      setTableData(encounters);
+      setIsLoadingBasics(false);
+    });
+  }, [currentPage, data, dataFilteredSorted, getRequestContext]);
+
   const viewOptions = [past7days, past30days, past3months];
-  const dataFilteredSortedDeduped = dedupeAndMergeEncounters(dataFilteredSorted, "patientsADT");
-  const dataOnPage = dataFilteredSortedDeduped.slice(
-    (currentPage - 1) * PAGE_SIZE,
-    currentPage * PAGE_SIZE
-  );
 
   if (encounterAndNotesData) {
-    assignEncountersAndNotes(dataOnPage, encounterAndNotesData, getRequestContext);
+    assignEncountersAndNotes(tableData, encounterAndNotesData, getRequestContext);
   }
 
   return (
@@ -156,12 +156,12 @@ function ADTTableComponent({
           }}
         />
         <ResourceTable
-          data={dataOnPage}
+          data={tableData}
           columns={columns}
           isLoading={isLoading || isLoadingBasics}
           emptyMessage={
             <EmptyTableNoneFound
-              hasZeroFilteredRecords={dataFilteredSortedDeduped.length === 0}
+              hasZeroFilteredRecords={tableData.length === 0}
               resourceName="encounters"
             />
           }
@@ -173,7 +173,7 @@ function ADTTableComponent({
             currentPage={currentPage}
             pageSize={PAGE_SIZE}
             setCurrentPage={setCurrentPage}
-            total={dataFilteredSortedDeduped.length}
+            total={tableData.length}
           />
         </ResourceTable>
       </div>
