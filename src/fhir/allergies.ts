@@ -1,4 +1,4 @@
-import { useIncludePatientBasics } from "./basic";
+import { useIncludeBasics } from "./basic";
 import { AllergyModel, PatientModel } from "./models";
 import { applyAllergyFilters } from "@/components/content/allergies/helpers/allergies-filter";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
@@ -15,7 +15,7 @@ export function usePatientAllergies() {
     withTimerMetric(getAllergyIntoleranceFromFQS, "req.timing.allergies")
   );
 
-  return useIncludePatientBasics(patientAllergiesQuery);
+  return useIncludeBasics(patientAllergiesQuery);
 }
 
 async function getAllergyIntoleranceFromFQS(
