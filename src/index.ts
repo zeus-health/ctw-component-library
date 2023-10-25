@@ -10,7 +10,7 @@ export * from "@/components/content/conditions/patient-conditions-profile";
 export * from "@/components/content/conditions/unread-conditions-notification";
 export * from "@/components/content/care-team/patient-careteam";
 export * from "@/components/content/overview/patient-overview";
-export * from "@/components/content/overview/patient-subscription";
+export * from "@/components/content/overview/patient-subscription-details";
 export * from "@/components/content/diagnostic-reports/patient-diagnostic-reports";
 export * from "@/components/content/diagnostic-reports/unread-diagnostic-reports-notification";
 export * from "@/components/content/document/patient-documents";
