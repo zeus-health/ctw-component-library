@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 2.0.3
+
+### Patch Changes
+
+- c64f77e1: Remove row action functionality from ADT table due to bug.
+- 824ff7cb: Remove zus-account header from package request
+
 ## 2.0.2
 
 ### Patch Changes
