@@ -38,24 +38,24 @@ function RelatedEncounter({ encounter }: { encounter?: EncounterModel }) {
         details={[
           {
             label: "Start Date",
-            value: encounter.periodStart,
+            value: encounter.periodStart
           },
           {
             label: "End Date",
-            value: encounter.periodEnd,
+            value: encounter.periodEnd
           },
           {
             label: "Location",
-            value: encounter.location,
+            value: encounter.location
           },
           {
             label: "Diagnosis",
-            value: encounter.diagnoses?.join(";\n"),
+            value: encounter.diagnoses?.join(";\n")
           },
           {
             label: "Discharge Disposition",
-            value: encounter.dischargeDisposition,
-          },
+            value: encounter.dischargeDisposition
+          }
         ]}
         documentButton={
           binaryId && (
@@ -92,7 +92,7 @@ export function useADTAlertDetailsDrawer(goToPatient: (upid: string) => void) {
           }}
         >
           <div>Go to Profile</div>
-          <ArrowRightIcon className="ctw-h-6 ctw-w-6" aria-hidden="true" />
+          <ArrowRightIcon className="ctw-h-4 ctw-w-4" aria-hidden="true" />
         </button>
       </div>
     ),
@@ -100,7 +100,7 @@ export function useADTAlertDetailsDrawer(goToPatient: (upid: string) => void) {
     getSourceDocument: true,
     details: encounterData,
     renderChild: encountersAndNotes,
-    enableDismissAndReadActions: true,
+    enableDismissAndReadActions: true
   });
 }
 
@@ -112,5 +112,5 @@ export const encounterData = (adt: EncounterModel) => [
   { label: "Location Type", value: adt.locationPhysicalType },
   { label: "Participants", value: adt.participantsDisplay },
   { label: "Diagnosis", value: adt.diagnoses?.join(", ") },
-  { label: "Discharge Disposition", value: adt.dischargeDisposition },
+  { label: "Discharge Disposition", value: adt.dischargeDisposition }
 ];
