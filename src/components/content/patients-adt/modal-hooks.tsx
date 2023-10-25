@@ -92,7 +92,7 @@ export function useADTAlertDetailsDrawer(goToPatient: (upid: string) => void) {
           }}
         >
           <div>Go to Profile</div>
-          <ArrowRightIcon className="ctw-h-4 ctw-w-4" aria-hidden="true" />
+          <ArrowRightIcon className="ctw-h-6 ctw-w-6" aria-hidden="true" />
         </button>
       </div>
     ),

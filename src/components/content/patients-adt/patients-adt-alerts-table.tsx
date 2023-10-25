@@ -1,7 +1,7 @@
 import type { TableColumn } from "@/components/core/table/table-helpers";
 import type { PatientModel } from "@/fhir/models/patient";
 import cx from "classnames";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { adtFilter, defaultADTFilters } from "./filters";
 import { useADTAlertDetailsDrawer } from "./modal-hooks";
 import { dedupeAndMergeEncounters } from "../encounters/helpers/filters";
@@ -17,7 +17,6 @@ import { AnalyticsProvider } from "@/components/core/providers/analytics/analyti
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { SimpleMoreList } from "@/components/core/simple-more-list";
-import { mapBasicsOf } from "@/fhir/basic";
 import { EncounterModel } from "@/fhir/models/encounter";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
@@ -57,7 +56,6 @@ function assignEncountersAndNotes(
       return;
     }
     const encAndNote = encounterAndNotesData.get(e.resource.id ?? "");
-
     if (encAndNote) {
       const { data: encounterFqsData } = await queryClient.fetchQuery(
         [QUERY_KEY_ENCOUNTERS_RELATED, e.id],
@@ -83,9 +81,8 @@ function assignEncountersAndNotes(
 
       const encounterNodes = encounterFqsData.EncounterConnection.edges.map((x) => x.node);
       const encounterNode = encounterNodes[0];
-
-      // Reference enc & note
       e.relatedEncounter = new EncounterModel(encounterNode, encounterNode.ProvenanceList);
+
       e.relatedEncounter.binaryId = encAndNote.binary_id.replaceAll('"', "");
     }
   });
@@ -100,18 +97,8 @@ function ADTTableComponent({
 }: ADTTableProps) {
   const openADTDetails = useADTAlertDetailsDrawer(goToPatient);
   const [currentPage, setCurrentPage] = useState(1);
-  const [dataWithBasics, setDataWithBasics] = useState<EncounterModel[]>([]);
-  const [isLoadingBasics, setIsLoadingBasics] = useState(true);
   const { getRequestContext } = useCTW();
   const { past7days, past30days, past3months } = getDateRangeView<EncounterModel>("periodStart");
-
-  useEffect(() => {
-    void mapBasicsOf(getRequestContext, data).then((encounters) => {
-      setDataWithBasics(encounters);
-      setIsLoadingBasics(false);
-    });
-  }, [data, getRequestContext]);
-
   const {
     data: dataFilteredSorted,
     setViewOption,
@@ -121,7 +108,7 @@ function ADTTableComponent({
     defaultView: past30days,
     defaultFilters: defaultADTFilters,
     defaultSort: defaultEncounterSort,
-    records: dataWithBasics,
+    records: data,
   });
 
   const viewOptions = [past7days, past30days, past3months];
@@ -158,7 +145,7 @@ function ADTTableComponent({
         <ResourceTable
           data={dataOnPage}
           columns={columns}
-          isLoading={isLoading || isLoadingBasics}
+          isLoading={isLoading}
           emptyMessage={
             <EmptyTableNoneFound
               hasZeroFilteredRecords={dataFilteredSortedDeduped.length === 0}

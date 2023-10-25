@@ -1,6 +1,6 @@
 import { SearchParams } from "fhir-kit-client";
 import { useEffect, useState } from "react";
-import { useIncludePatientBasics } from "./basic";
+import { useIncludeBasics } from "./basic";
 import { getIncludedResources } from "./bundle";
 import { usePatientDocuments } from "./document";
 import { PatientModel } from "./models";
@@ -48,7 +48,7 @@ export function usePatientEncounters(limit = MAX_OBJECTS_PER_REQUEST) {
     [limit],
     withTimerMetric(getEncountersFromFQS(limit), `req.timing.encounters`)
   );
-  return useIncludePatientBasics(patientEncountersQuery);
+  return useIncludeBasics(patientEncountersQuery);
 }
 
 // Gets patient encounters along with clinical notes from any documents associated with each encounter.
