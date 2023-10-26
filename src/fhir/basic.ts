@@ -138,10 +138,13 @@ export async function mapBasicsOf<R extends fhir4.Resource, T extends FHIRModel<
 ) {
   const requestContext = await getRequestContext();
   const subjects = resources.map((resource) => `${resource.resourceType}/${resource.id}`);
-  const { resources: basics } = await searchCommonRecords("Basic", requestContext, {
-    _tag: `https://zusapi.com/accesscontrol/owner|builder/${requestContext.builderId}`,
-    subject: subjects.join(","),
-  });
+  const { resources: basics } =
+    subjects.length > 0
+      ? await searchCommonRecords("Basic", requestContext, {
+          _tag: `https://zusapi.com/accesscontrol/owner|builder/${requestContext.builderId}`,
+          subject: subjects.join(","),
+        })
+      : { resources: [] };
   return mapBasics(resources, basics);
 }
 

@@ -100,7 +100,7 @@ function ADTTableComponent({
 }: ADTTableProps) {
   const openADTDetails = useADTAlertDetailsDrawer(goToPatient);
   const [currentPage, setCurrentPage] = useState(1);
-  const [tableData, setTableData] = useState<EncounterModel[]>([]);
+  const [pageDataWithBasics, setPageDataWithBasics] = useState<EncounterModel[]>(data);
   const [isLoadingBasics, setIsLoadingBasics] = useState(true);
   const { getRequestContext } = useCTW();
   const { past7days, past30days, past3months } = getDateRangeView<EncounterModel>("periodStart");
@@ -110,29 +110,38 @@ function ADTTableComponent({
     setViewOption,
     setFilters,
     setSort,
+    viewOption,
+    sortOption,
+    filters,
   } = useFilteredSortedData({
     defaultView: past30days,
     defaultFilters: defaultADTFilters,
     defaultSort: defaultEncounterSort,
-    records: tableData,
+    records: pageDataWithBasics,
   });
 
   useEffect(() => {
-    const dataFilteredSortedDeduped = dedupeAndMergeEncounters(dataFilteredSorted, "patientsADT");
-    const dataOnPage = dataFilteredSortedDeduped.slice(
-      (currentPage - 1) * PAGE_SIZE,
-      currentPage * PAGE_SIZE
-    );
-    void mapBasicsOf(getRequestContext, dataOnPage).then((encounters) => {
-      setTableData(encounters);
-      setIsLoadingBasics(false);
-    });
-  }, [currentPage, data, dataFilteredSorted, getRequestContext]);
+    // User setting changed, so basics must reload
+    setIsLoadingBasics(true);
+  }, [currentPage, getRequestContext, data, viewOption, sortOption, filters]);
+
+  useEffect(() => {
+    if (isLoadingBasics) {
+      const dataDeduped = dedupeAndMergeEncounters(dataFilteredSorted, "patientsADT");
+      const dataOnPage = dataDeduped.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+      void mapBasicsOf(getRequestContext, dataOnPage).then((encounters) => {
+        setPageDataWithBasics(encounters);
+        setIsLoadingBasics(false);
+      });
+    }
+    // Avoid loop where this repeats once data is re-filtered.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoadingBasics]);
 
   const viewOptions = [past7days, past30days, past3months];
 
   if (encounterAndNotesData) {
-    assignEncountersAndNotes(tableData, encounterAndNotesData, getRequestContext);
+    assignEncountersAndNotes(pageDataWithBasics, encounterAndNotesData, getRequestContext);
   }
 
   return (
@@ -156,12 +165,12 @@ function ADTTableComponent({
           }}
         />
         <ResourceTable
-          data={tableData}
+          data={dataFilteredSorted}
           columns={columns}
           isLoading={isLoading || isLoadingBasics}
           emptyMessage={
             <EmptyTableNoneFound
-              hasZeroFilteredRecords={tableData.length === 0}
+              hasZeroFilteredRecords={dataFilteredSorted.length === 0}
               resourceName="encounters"
             />
           }
@@ -173,7 +182,7 @@ function ADTTableComponent({
             currentPage={currentPage}
             pageSize={PAGE_SIZE}
             setCurrentPage={setCurrentPage}
-            total={tableData.length}
+            total={dataFilteredSorted.length}
           />
         </ResourceTable>
       </div>
