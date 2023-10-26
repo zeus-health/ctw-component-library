@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 2.1.0
+
+### Minor Changes
+
+- 165a301f: Hide request records button when feature flag ctw-patient-history-form is disabled.
+
 ## 2.0.4
 
 ### Patch Changes
