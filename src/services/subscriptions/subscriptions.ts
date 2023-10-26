@@ -51,12 +51,14 @@ type GetPatientSubscriptionAPIResponse = {
 };
 
 type GetPackageAPIResponse = {
-  type: string;
-  id: string;
-  attributes: {
-    description: string;
-    name: string;
-    meta: PackageMeta;
+  data: {
+    type: string;
+    id: string;
+    attributes: {
+      description: string;
+      name: string;
+      meta: PackageMeta;
+    };
   };
 };
 
@@ -87,9 +89,6 @@ export async function getPackage(requestContext: CTWRequestContext, packageId: s
       {
         headers: {
           Authorization: `Bearer ${requestContext.authToken}`,
-          ...(requestContext.contextBuilderId && {
-            "Zus-Account": requestContext.contextBuilderId,
-          }),
         },
       }
     );
@@ -120,14 +119,13 @@ export function usePatientSubscription() {
         }
 
         const packageId = patientSubscriptionResponse.data[0].relationships.package.data.id;
-
         const zusPackage = (await getPackage(requestContext, packageId)) as GetPackageAPIResponse;
 
         patientSubscription.package = {
           id: packageId,
-          description: zusPackage.attributes.description,
-          name: zusPackage.attributes.name,
-          meta: zusPackage.attributes.meta,
+          description: zusPackage.data.attributes.description,
+          name: zusPackage.data.attributes.name,
+          meta: zusPackage.data.attributes.meta,
         };
 
         return patientSubscription;

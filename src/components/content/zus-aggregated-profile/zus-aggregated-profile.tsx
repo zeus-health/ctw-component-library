@@ -106,6 +106,7 @@ const ZusAggregatedProfileComponent = ({
   removeRequestRecords = false,
 }: ZusAggregatedProfileProps) => {
   const isSearchEnabledToggle = useFeatureToggle("ctw-patient-record-search");
+  const showRequestRecordsFormToggle = useFeatureToggle("ctw-patient-history-form").enabled;
 
   // Get the configuration for each tab group by resource type
   const subcomponentProps: Record<keyof ZusAggregatedProfileTabs, unknown> = {
@@ -143,6 +144,9 @@ const ZusAggregatedProfileComponent = ({
     return <Loading />;
   }
 
+  const showRequestRecordsButton =
+    !!showRequestRecordsFormToggle && !removeRequestRecords && !isSearchEnabledToggle.enabled;
+
   return (
     <AnalyticsProvider componentName="ZusAggregatedProfile">
       <div className="ctw-zus-aggregated-profile ctw-scrollable-pass-through-height">
@@ -170,7 +174,7 @@ const ZusAggregatedProfileComponent = ({
           content={tabbedContent}
           forceHorizontalTabs={forceHorizontalTabs}
           topRightContent={
-            <RenderIf condition={!removeRequestRecords && isSearchEnabledToggle.enabled === false}>
+            <RenderIf condition={showRequestRecordsButton}>
               <RequestRecordsButton
                 className="ctw-mr-1.5"
                 includePatientDemographicsForm={includePatientDemographicsForm}

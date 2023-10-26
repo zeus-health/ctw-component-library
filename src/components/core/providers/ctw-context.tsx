@@ -5,6 +5,7 @@ import { OnResourceSaveCallback } from "@/fhir/action-helper";
 
 export type FeatureFlags = {
   enableViewFhirButton?: boolean;
+  patientRequestForm?: boolean;
 };
 
 export type CTWState = {

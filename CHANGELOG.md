@@ -1,5 +1,24 @@
 # ctw-component-library
 
+## 2.1.0
+
+### Minor Changes
+
+- 165a301f: Hide request records button when feature flag ctw-patient-history-form is disabled.
+
+## 2.0.4
+
+### Patch Changes
+
+- e3aadc3a: Fix package response type
+
+## 2.0.3
+
+### Patch Changes
+
+- c64f77e1: Remove row action functionality from ADT table due to bug.
+- 824ff7cb: Remove zus-account header from package request
+
 ## 2.0.2
 
 ### Patch Changes
