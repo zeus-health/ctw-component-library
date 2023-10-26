@@ -29,6 +29,7 @@ export function useFilteredSortedData<T extends object>({
       ...compact(Object.values(filters)),
       ...(viewOption?.filters ?? []),
     ]);
+
     const filteredAndSortedData =
       defaultSort && sortOption ? applySorts(filteredData, sortOption.sorts) : filteredData;
     setData(filteredAndSortedData);
