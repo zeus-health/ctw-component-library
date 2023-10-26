@@ -124,7 +124,6 @@ function ADTTableComponent({
           }
           onRowClick={openADTDetails}
           hidePagination
-          enableDismissAndReadActions
         >
           <Pagination
             currentPage={currentPage}
