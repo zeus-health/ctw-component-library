@@ -3,7 +3,7 @@ import type { PatientModel } from "@/fhir/models/patient";
 import { faFileLines } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cx from "classnames";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { adtFilter, defaultADTFilters } from "./filters";
 import { useADTAlertDetailsDrawer } from "./modal-hooks";
 import { dedupeAndMergeEncounters } from "../encounters/helpers/filters";
