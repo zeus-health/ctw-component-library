@@ -19,7 +19,6 @@ import { AnalyticsProvider } from "@/components/core/providers/analytics/analyti
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { SimpleMoreList } from "@/components/core/simple-more-list";
-import { mapBasicsOf } from "@/fhir/basic";
 import { EncounterModel } from "@/fhir/models/encounter";
 import { useFilteredSortedData } from "@/hooks/use-filtered-sorted-data";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
@@ -35,8 +34,8 @@ const RELATED_ENC_STALE_TIME = 1000 * 60 * 10;
 
 type RelatedEncounter = {
   upid: string;
-  cwcq_encounter_id: string;
-  binary_id: string;
+  cwcqEncounterId: string;
+  binaryId: string;
 };
 
 type RelatedEncounterMap = Map<string, RelatedEncounter>;
@@ -64,12 +63,14 @@ function ADTTableComponent({
   const { past7days, past30days, past3months } = getDateRangeView<EncounterModel>("periodStart");
 
   useEffect(() => {
-    void mapEncountersNotesBasics(getRequestContext, data, encounterAndNotesData).then(
-      (newEncounters) => {
-        setDataEnriched(newEncounters);
-        setIsLoadingDetails(false);
-      }
-    );
+    if (encounterAndNotesData) {
+      void mapEncountersAndNotes(data, encounterAndNotesData, getRequestContext).then(
+        (newEncounters) => {
+          setDataEnriched(newEncounters);
+          setIsLoadingDetails(false);
+        }
+      );
+    }
   }, [data, encounterAndNotesData, getRequestContext]);
 
   const {
@@ -209,7 +210,7 @@ async function fetchRelatedEncounter(
     },
     filter: {
       ids: {
-        anymatch: [encAndNote.cwcq_encounter_id],
+        anymatch: [encAndNote.cwcqEncounterId],
       },
     },
   });
@@ -220,12 +221,13 @@ async function fetchQueryRelatedEncounter(
   getRequestContext: () => Promise<CTWRequestContext>
 ) {
   return queryClient.fetchQuery(
-    [QUERY_KEY_ENCOUNTERS_RELATED, encAndNote.cwcq_encounter_id],
+    [QUERY_KEY_ENCOUNTERS_RELATED, encAndNote.cwcqEncounterId],
     async () => fetchRelatedEncounter(encAndNote, getRequestContext),
     { staleTime: RELATED_ENC_STALE_TIME }
   );
 }
 
+// Produces a copy of the encounters, but with the related encounter and notes assigned.
 async function mapEncountersAndNotes(
   adtEncounters: EncounterModel[],
   encounterAndNotesData: RelatedEncounterMap,
@@ -258,22 +260,10 @@ async function mapEncountersAndNotes(
     newEncounter.relatedEncounter = new EncounterModel(encounterNode, encounterNode.ProvenanceList);
     const encAndNote = encounterAndNotesData.get(encounterWithRelated.resource.id ?? "");
     if (encAndNote) {
-      newEncounter.relatedEncounter.binaryId = encAndNote.binary_id.replaceAll('"', "");
+      newEncounter.relatedEncounter.binaryId = encAndNote.binaryId.replaceAll('"', "");
     }
     return newEncounter;
   });
 
   return [...encountersRelated, ...encountersWithoutRelated];
-}
-
-async function mapEncountersNotesBasics(
-  getRequestContext: () => Promise<CTWRequestContext>,
-  data: EncounterModel[],
-  encounterAndNotesData?: RelatedEncounterMap
-) {
-  const encountersWithBasics = await mapBasicsOf(getRequestContext, data);
-  if (encounterAndNotesData) {
-    return mapEncountersAndNotes(encountersWithBasics, encounterAndNotesData, getRequestContext);
-  }
-  return data;
 }
