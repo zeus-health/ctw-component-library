@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 2.0.4
+
+### Patch Changes
+
+- e3aadc3a: Fix package response type
+
 ## 2.0.3
 
 ### Patch Changes
