@@ -44,7 +44,7 @@ function ADTTableComponent({
   const [dataEnriched, setDataEnriched] = useState<EncounterModel[]>([]);
   const [isLoadingDetails, setIsLoadingDetails] = useState(true);
   const { getRequestContext } = useCTW();
-  const { past7days, past30days, past3months } = getDateRangeView<EncounterModel>("periodStart");
+  const { past7days, past30days } = getDateRangeView<EncounterModel>("periodStart");
 
   useEffect(() => {
     if (encounterAndNotesData) {
@@ -69,7 +69,7 @@ function ADTTableComponent({
     records: dataEnriched,
   });
 
-  const viewOptions = [past7days, past30days, past3months];
+  const viewOptions = [past7days, past30days];
   const dataFilteredSortedDeduped = dedupeAndMergeEncounters(dataFilteredSorted, "patientsADT");
   const dataOnPage = dataFilteredSortedDeduped.slice(
     (currentPage - 1) * PAGE_SIZE,
