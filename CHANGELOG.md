@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 2.1.1
+
+### Patch Changes
+
+- 12f4baea: Remove 3 month view from Hospitalizations
+- d3e7b9ae: Fix isLoading for patient history table
+
 ## 2.1.0
 
 ### Minor Changes
