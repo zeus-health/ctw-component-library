@@ -42,6 +42,7 @@ export const PatientHistoryTable = withErrorBoundary(
 
     const {
       data: { patients: responsePatients, total: responseTotal, hasNext } = {},
+      isLoading,
       isFetching,
       isError,
     } = useBuilderPatientHistoryList(pageSize, currentPage - 1, status, excludeFutureJobs);
@@ -96,6 +97,7 @@ export const PatientHistoryTable = withErrorBoundary(
               columns={columns}
               pageSize={pageSize}
               handleRowClick={handleRowClick}
+              isLoading={isLoading}
               hidePagination
             >
               <SimplePagination
