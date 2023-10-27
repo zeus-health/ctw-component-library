@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 2.1.2
+
+### Patch Changes
+
+- df0f981d: Add document indicator to hospitaliations table.
+
 ## 2.1.1
 
 ### Patch Changes
