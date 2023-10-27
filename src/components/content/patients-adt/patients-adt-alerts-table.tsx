@@ -98,7 +98,7 @@ function ADTTableComponent({
   const openADTDetails = useADTAlertDetailsDrawer(goToPatient);
   const [currentPage, setCurrentPage] = useState(1);
   const { getRequestContext } = useCTW();
-  const { past7days, past30days, past3months } = getDateRangeView<EncounterModel>("periodStart");
+  const { past7days, past30days } = getDateRangeView<EncounterModel>("periodStart");
   const {
     data: dataFilteredSorted,
     setViewOption,
@@ -111,7 +111,7 @@ function ADTTableComponent({
     records: data,
   });
 
-  const viewOptions = [past7days, past30days, past3months];
+  const viewOptions = [past7days, past30days];
   const dataFilteredSortedDeduped = dedupeAndMergeEncounters(dataFilteredSorted, "patientsADT");
   const dataOnPage = dataFilteredSortedDeduped.slice(
     (currentPage - 1) * PAGE_SIZE,
