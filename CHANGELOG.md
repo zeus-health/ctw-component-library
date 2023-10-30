@@ -1,5 +1,43 @@
 # ctw-component-library
 
+## 2.1.2
+
+### Patch Changes
+
+- df0f981d: Add document indicator to hospitaliations table.
+
+## 2.1.1
+
+### Patch Changes
+
+- 12f4baea: Remove 3 month view from Hospitalizations
+- d3e7b9ae: Fix isLoading for patient history table
+
+## 2.1.0
+
+### Minor Changes
+
+- 165a301f: Hide request records button when feature flag ctw-patient-history-form is disabled.
+
+## 2.0.4
+
+### Patch Changes
+
+- e3aadc3a: Fix package response type
+
+## 2.0.3
+
+### Patch Changes
+
+- c64f77e1: Remove row action functionality from ADT table due to bug.
+- 824ff7cb: Remove zus-account header from package request
+
+## 2.0.2
+
+### Patch Changes
+
+- 8f7980cc: Add subscription info back to overview tab.
+
 ## 2.0.1
 
 ### Patch Changes
