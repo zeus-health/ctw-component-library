@@ -21,14 +21,12 @@ export function usePatientSearchList(
   );
 }
 
-type CustomPatientOptionValue = Omit<ComboxboxFieldOption, "value"> & {
+export type CustomPatientOptionValue = Omit<ComboxboxFieldOption, "value"> & {
   value: PatientModel;
 };
 
 export type PatientSearchProps = {
   pageSize?: number;
-  removeBranding?: boolean;
-  title?: string;
   onSearchClick?: (e: unknown) => void;
 };
 
@@ -86,7 +84,7 @@ export const PatientSearch = withErrorBoundary(
   "PatientsSearch"
 );
 
-const CustomComboBox = ({ option }: { option: CustomPatientOptionValue }) => (
+export const CustomComboBox = ({ option }: { option: CustomPatientOptionValue }) => (
   <Combobox.Option
     value={option.label}
     className={({ active }) =>
