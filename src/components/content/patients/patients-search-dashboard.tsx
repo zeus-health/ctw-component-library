@@ -1,8 +1,8 @@
-import { PatientSearchProps } from "./patients-search";
+import { PatientSearch, PatientSearchProps } from "./patients-search";
 import ZusSVG from "@/assets/zus.svg";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 
-export const PatientSearch = withErrorBoundary(
+export const PatientSearchDashboard = withErrorBoundary(
   ({ pageSize = 250, onSearchClick }: PatientSearchProps) => (
     <div className="ctw-max-w-3xl ctw-space-y-5 ctw-text-center">
       <h3 className="ctw-my-0 ctw-text-2xl ctw-font-medium">Search Your Patients</h3>
