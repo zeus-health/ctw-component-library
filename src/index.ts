@@ -34,6 +34,7 @@ export * from "@/components/content/patients/patients-search";
 export * from "@/components/content/patients/patients-table";
 export * from "@/components/content/patients-adt/patients-adt-alerts-table";
 export * from "@/components/content/patients-adt/helpers/modal-hooks";
+export * from "@/components/content/patients-adt/helpers/related-encounters";
 export * from "@/components/content/timeline/patient-timeline";
 export * from "@/components/content/zus-aggregated-profile/zus-aggregated-profile";
 export * from "@/components/content/zus-aggregated-profile/zus-aggregated-profile-iframe";
