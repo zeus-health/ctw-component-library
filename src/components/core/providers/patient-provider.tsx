@@ -7,7 +7,7 @@ import { PatientContext, PatientState } from "./patient-context";
 import { useCTW } from "./use-ctw";
 import { editPatient, PatientFormData } from "../../content/forms/actions/patients";
 import { PatientModel } from "@/fhir/models/patient";
-import { getBuilderFhirPatient } from "@/fhir/patient-helper";
+import { getBuilderFhirPatientByExternalIdentifier, getPatientByID } from "@/fhir/patient-helper";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 import { Tag } from "@/fhir/types";
 import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
@@ -30,12 +30,18 @@ type PatientUPIDSpecified = {
   systemURL?: never;
 };
 
+type ZusPatientID = {
+  patientUPID?: never;
+  patientID: string;
+  systemURL?: never;
+};
+
 export type PatientProviderProps = {
   children: ReactNode;
   tags?: Tag[];
   onPatientSave?: (data: PatientFormData) => void;
   onResourceSave?: (data: fhir4.Resource, action: "create" | "update") => void;
-} & (ThirdPartyID | PatientUPIDSpecified);
+} & (ThirdPartyID | PatientUPIDSpecified | ZusPatientID);
 
 export function PatientProvider({
   children,
@@ -86,9 +92,11 @@ export function usePatient(): UseQueryResult<PatientModel, unknown> {
     queryKey: [QUERY_KEY_PATIENT, patientID, systemURL, tags],
     queryFn: withTimerMetric(async () => {
       const requestContext = await getRequestContext();
-      return getBuilderFhirPatient(requestContext, patientID, systemURL, {
-        _tag: tags?.map((tag) => `${tag.system}|${tag.code}`) ?? [],
-      });
+      return systemURL
+        ? getBuilderFhirPatientByExternalIdentifier(requestContext, patientID, systemURL, {
+            _tag: tags?.map((tag) => `${tag.system}|${tag.code}`) ?? [],
+          })
+        : getPatientByID(requestContext, patientID);
     }, "req.get_builder_fhir_patient"),
     staleTime: PATIENT_STALE_TIME,
     enabled: !!patientID,
@@ -109,9 +117,11 @@ export function usePatientPromise() {
         [QUERY_KEY_PATIENT, patientID, systemURL, tags],
         async () => {
           const requestContext = await getRequestContext();
-          return getBuilderFhirPatient(requestContext, patientID, systemURL, {
-            _tag: tags?.map((tag) => `${tag.system}|${tag.code}`) ?? [],
-          });
+          return systemURL
+            ? getBuilderFhirPatientByExternalIdentifier(requestContext, patientID, systemURL, {
+                _tag: tags?.map((tag) => `${tag.system}|${tag.code}`) ?? [],
+              })
+            : getPatientByID(requestContext, patientID);
         },
         { staleTime: PATIENT_STALE_TIME }
       );

@@ -12,10 +12,10 @@ export type PatientHistoryResponseError = {
 
 export const schedulePatientHistory = async (
   requestContext: CTWRequestContext,
-  patientIdentifiers: { systemURL: string; patientID: string },
+  patientIdentifier: { systemURL?: string; patientID: string },
   resultData: { id?: string; npi: string; role: string; name: string }
 ) => {
-  const { systemURL, patientID } = patientIdentifiers;
+  const { systemURL, patientID } = patientIdentifier;
   const endpointUrl = `${getZusProxyApiBaseUrl(
     requestContext.env
     // If patientID is empty, just pass any non-identifying string in url.

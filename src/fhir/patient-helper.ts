@@ -7,7 +7,7 @@ import { errorResponse } from "@/utils/errors";
 import { pickBy } from "@/utils/nodash";
 import { hasNumber } from "@/utils/types";
 
-export async function getBuilderFhirPatient(
+export async function getBuilderFhirPatientByExternalIdentifier(
   requestContext: CTWRequestContext,
   patientID: string,
   systemURL: string,
@@ -35,6 +35,18 @@ export async function getBuilderFhirPatient(
   }
 
   return new PatientModel(patients[0], getIncludedResources(bundle));
+}
+
+export async function getPatientByID(
+  requestContext: CTWRequestContext,
+  patientID: string
+): Promise<PatientModel> {
+  const response = await requestContext.fhirClient.read({
+    resourceType: "Patient",
+    id: patientID,
+  });
+
+  return new PatientModel(response as fhir4.Patient);
 }
 
 type GetPatientsTableResults = {
