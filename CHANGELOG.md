@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 2.1.3
+
+### Patch Changes
+
+- 33566cf1: Add RelatedEncounters to exports.
+
 ## 2.1.2
 
 ### Patch Changes
