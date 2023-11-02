@@ -1,34 +1,25 @@
 import "./patients-table.scss";
-
 import type { TableColumn } from "@/components/core/table/table-helpers";
 import type { PatientModel } from "@/fhir/models/patient";
-import type { Argument } from "classnames";
 import cx from "classnames";
 import { useState } from "react";
-import { PatientNameColumn } from "./patients-table-helper";
+import { PatientNameColumn, TableOptionProps } from "./patients-table-helper";
 import { ErrorAlert } from "@/components/core/alert";
 import * as CTWBox from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { SimplePagination } from "@/components/core/pagination/simple-pagination";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { Table } from "@/components/core/table/table";
-import { MinRecordItem } from "@/components/core/table/table-helpers";
 import { formatISODateStringToDate } from "@/fhir/formatters";
 import { usePatientsListFQS } from "@/fhir/patient-helper";
 import { applySorts } from "@/utils/sort";
 
-export type PatientsTableProps = {
+export type PatientsTableFQSProps = {
   className?: cx.Argument;
   handleRowClick: (row: PatientModel) => void;
   pageSize?: number;
   title?: string;
 } & TableOptionProps<PatientModel>;
-
-// Set of props that are optional configurations for the table.
-export type TableOptionProps<T extends MinRecordItem> = {
-  getRowClasses?: (row: T) => Argument; // Adds a row hover effect and calls onClick.
-  onRowClick?: (row: T) => void;
-};
 
 /**
  * PatientsTable displays a paginated list of all patients for a builder. In
@@ -40,7 +31,7 @@ export type TableOptionProps<T extends MinRecordItem> = {
  *
  */
 export const PatientsTableFQS = withErrorBoundary(
-  ({ className, handleRowClick, pageSize = 5, title = "Patients" }: PatientsTableProps) => {
+  ({ className, handleRowClick, pageSize = 5, title = "Patients" }: PatientsTableFQSProps) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [cursors] = useState<string[]>([""]);
     const { data, isLoading, isError } = usePatientsListFQS(pageSize, cursors[currentPage - 1]);

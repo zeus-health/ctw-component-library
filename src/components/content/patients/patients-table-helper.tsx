@@ -1,3 +1,5 @@
+import { Argument } from "classnames";
+import { MinRecordItem } from "@/components/core/table/table-helpers";
 import { PatientModel } from "@/fhir/models";
 
 export type PatientNameColumnProps = {
@@ -17,3 +19,9 @@ export const PatientNameColumn = ({ patient }: PatientNameColumnProps) => (
     </div>
   </div>
 );
+
+// Set of props that are optional configurations for the table.
+export type TableOptionProps<T extends MinRecordItem> = {
+  getRowClasses?: (row: T) => Argument; // Adds a row hover effect and calls onClick.
+  onRowClick?: (row: T) => void;
+};

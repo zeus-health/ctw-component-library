@@ -3,16 +3,14 @@ import "./patients-table.scss";
 import type { TableColumn } from "@/components/core/table/table-helpers";
 import type { PatientModel } from "@/fhir/models/patient";
 import { SearchIcon } from "@heroicons/react/solid";
-import type { Argument } from "classnames";
 import cx from "classnames";
 import { useCallback, useEffect, useState } from "react";
-import { PatientNameColumn } from "./patients-table-helper";
+import { PatientNameColumn, TableOptionProps } from "./patients-table-helper";
 import * as CTWBox from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Pagination } from "@/components/core/pagination/pagination";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { Table } from "@/components/core/table/table";
-import { MinRecordItem } from "@/components/core/table/table-helpers";
 import { usePatientsListODS } from "@/fhir/patient-helper";
 import { debounce } from "@/utils/nodash";
 
@@ -22,12 +20,6 @@ export type PatientsTableProps = {
   pageSize?: number;
   title?: string;
 } & TableOptionProps<PatientModel>;
-
-// Set of props that are optional configurations for the table.
-export type TableOptionProps<T extends MinRecordItem> = {
-  getRowClasses?: (row: T) => Argument; // Adds a row hover effect and calls onClick.
-  onRowClick?: (row: T) => void;
-};
 
 /**
  * PatientsTable displays a paginated list of all patients for a builder. In
