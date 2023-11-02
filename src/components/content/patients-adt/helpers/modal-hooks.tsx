@@ -1,10 +1,10 @@
 import { faFileLines } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ArrowRightIcon } from "@heroicons/react/outline";
-import { DocumentButton } from "../CCDA/document-button";
-import { useCCDAModal } from "../CCDA/modal-ccda";
-import { NotesEntry } from "../resource/helpers/notes-entry";
-import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
+import { DocumentButton } from "../../CCDA/document-button";
+import { useCCDAModal } from "../../CCDA/modal-ccda";
+import { NotesEntry } from "../../resource/helpers/notes-entry";
+import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
 import { useDrawer } from "@/components/core/providers/drawer-provider";
 import { EncounterModel } from "@/fhir/models/encounter";
 
