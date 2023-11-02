@@ -12,7 +12,7 @@ export type PatientHistoryResponseError = {
 
 export const schedulePatientHistory = async (
   requestContext: CTWRequestContext,
-  patientIdentifier: { systemURL?: string; patientID: string },
+  patientIdentifier: { systemURL?: string; patientID?: string },
   resultData: { id?: string; npi: string; role: string; name: string }
 ) => {
   const { systemURL, patientID } = patientIdentifier;

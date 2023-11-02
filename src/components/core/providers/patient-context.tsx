@@ -3,7 +3,8 @@ import { PatientFormData } from "../../content/forms/actions/patients";
 import { Tag } from "@/fhir/types";
 
 export type PatientState = {
-  patientID: string;
+  patientResourceID?: string;
+  patientID?: string;
   systemURL?: string;
   tags?: Tag[];
   onPatientSave?: (data: PatientFormData) => Promise<void>;

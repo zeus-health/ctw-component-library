@@ -19,20 +19,23 @@ import { withTimerMetric } from "@/utils/telemetry";
 const PATIENT_STALE_TIME = 1000 * 60 * 5;
 
 type ThirdPartyID = {
+  patientResourceId?: never;
   patientUPID?: never;
   patientID: string;
   systemURL: string;
 };
 
 type PatientUPIDSpecified = {
+  patientResourceId?: never;
   patientUPID: string;
   patientID?: never;
   systemURL?: never;
 };
 
-type ZusPatientID = {
+type PatientResourceId = {
+  patientResourceId: string;
   patientUPID?: never;
-  patientID: string;
+  patientID?: never;
   systemURL?: never;
 };
 
@@ -41,10 +44,11 @@ export type PatientProviderProps = {
   tags?: Tag[];
   onPatientSave?: (data: PatientFormData) => void;
   onResourceSave?: (data: fhir4.Resource, action: "create" | "update") => void;
-} & (ThirdPartyID | PatientUPIDSpecified | ZusPatientID);
+} & (ThirdPartyID | PatientUPIDSpecified | PatientResourceId);
 
 export function PatientProvider({
   children,
+  patientResourceId,
   patientUPID,
   patientID,
   systemURL,
@@ -54,13 +58,14 @@ export function PatientProvider({
 }: PatientProviderProps) {
   const providerState = useMemo(
     () => ({
+      patientResourceId,
       patientID: patientUPID || patientID,
       systemURL: patientUPID ? SYSTEM_ZUS_UNIVERSAL_ID : systemURL,
       tags,
       onPatientSave,
       onResourceSave,
     }),
-    [patientID, patientUPID, systemURL, tags, onPatientSave, onResourceSave]
+    [patientResourceId, patientID, patientUPID, systemURL, tags, onPatientSave, onResourceSave]
   );
 
   return (
@@ -86,17 +91,21 @@ export function usePatient(): UseQueryResult<PatientModel, unknown> {
 
   const context = usePatientContext();
 
-  const { patientID, systemURL, tags } = context;
+  const { patientResourceID, patientID, systemURL, tags } = context;
 
   return useQuery({
-    queryKey: [QUERY_KEY_PATIENT, patientID, systemURL, tags],
+    queryKey: [QUERY_KEY_PATIENT, patientResourceID, patientID, systemURL, tags],
     queryFn: withTimerMetric(async () => {
       const requestContext = await getRequestContext();
-      return systemURL
-        ? getBuilderFhirPatientByExternalIdentifier(requestContext, patientID, systemURL, {
-            _tag: tags?.map((tag) => `${tag.system}|${tag.code}`) ?? [],
-          })
-        : getPatientByID(requestContext, patientID);
+      if (systemURL && patientID) {
+        return getBuilderFhirPatientByExternalIdentifier(requestContext, patientID, systemURL, {
+          _tag: tags?.map((tag) => `${tag.system}|${tag.code}`) ?? [],
+        });
+      }
+      if (patientResourceID) {
+        return getPatientByID(requestContext, patientResourceID);
+      }
+      throw new Error("Must specify a patient ID and system URL or a patient FHIR resource ID");
     }, "req.get_builder_fhir_patient"),
     staleTime: PATIENT_STALE_TIME,
     enabled: !!patientID,
@@ -111,17 +120,21 @@ export function usePatientPromise() {
   return {
     context,
     getPatient: useCallback(() => {
-      const { patientID, systemURL, tags } = context;
+      const { patientResourceID, patientID, systemURL, tags } = context;
 
       return queryClient.fetchQuery(
         [QUERY_KEY_PATIENT, patientID, systemURL, tags],
         async () => {
           const requestContext = await getRequestContext();
-          return systemURL
-            ? getBuilderFhirPatientByExternalIdentifier(requestContext, patientID, systemURL, {
-                _tag: tags?.map((tag) => `${tag.system}|${tag.code}`) ?? [],
-              })
-            : getPatientByID(requestContext, patientID);
+          if (systemURL && patientID) {
+            return getBuilderFhirPatientByExternalIdentifier(requestContext, patientID, systemURL, {
+              _tag: tags?.map((tag) => `${tag.system}|${tag.code}`) ?? [],
+            });
+          }
+          if (patientResourceID) {
+            return getPatientByID(requestContext, patientResourceID);
+          }
+          throw new Error("Must specify a patient ID and system URL or a patient FHIR resource ID");
         },
         { staleTime: PATIENT_STALE_TIME }
       );
