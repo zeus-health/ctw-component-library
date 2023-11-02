@@ -37,6 +37,7 @@ const {
   VITE_ENV = "dev",
   VITE_PATIENT_ID,
   VITE_SYSTEM_URL,
+  VITE_PATIENT_RESOURCE_ID,
 } = import.meta.env;
 
 type DemoComponent = {
@@ -157,7 +158,11 @@ const DemoApp = ({ accessToken = "" }) => (
       console.log("Result of saving a resource", resource, action, error);
     }}
   >
-    <PatientProvider patientID={VITE_PATIENT_ID} systemURL={VITE_SYSTEM_URL}>
+    <PatientProvider
+      patientID={VITE_PATIENT_ID}
+      systemURL={VITE_SYSTEM_URL}
+      patientResourceID={VITE_PATIENT_RESOURCE_ID}
+    >
       {demoComponents.map((demo, index) => (
         <div className="ctw-space-y-5 ctw-bg-white" key={index}>
           <h3>

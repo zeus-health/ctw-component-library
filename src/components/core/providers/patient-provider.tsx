@@ -19,21 +19,21 @@ import { withTimerMetric } from "@/utils/telemetry";
 const PATIENT_STALE_TIME = 1000 * 60 * 5;
 
 type ThirdPartyID = {
-  patientResourceId?: never;
+  patientResourceID?: never;
   patientUPID?: never;
   patientID: string;
   systemURL: string;
 };
 
 type PatientUPIDSpecified = {
-  patientResourceId?: never;
+  patientResourceID?: never;
   patientUPID: string;
   patientID?: never;
   systemURL?: never;
 };
 
-type PatientResourceId = {
-  patientResourceId: string;
+type PatientResourceID = {
+  patientResourceID: string;
   patientUPID?: never;
   patientID?: never;
   systemURL?: never;
@@ -44,11 +44,11 @@ export type PatientProviderProps = {
   tags?: Tag[];
   onPatientSave?: (data: PatientFormData) => void;
   onResourceSave?: (data: fhir4.Resource, action: "create" | "update") => void;
-} & (ThirdPartyID | PatientUPIDSpecified | PatientResourceId);
+} & (ThirdPartyID | PatientUPIDSpecified | PatientResourceID);
 
 export function PatientProvider({
   children,
-  patientResourceId,
+  patientResourceID,
   patientUPID,
   patientID,
   systemURL,
@@ -58,14 +58,14 @@ export function PatientProvider({
 }: PatientProviderProps) {
   const providerState = useMemo(
     () => ({
-      patientResourceId,
+      patientResourceID,
       patientID: patientUPID || patientID,
       systemURL: patientUPID ? SYSTEM_ZUS_UNIVERSAL_ID : systemURL,
       tags,
       onPatientSave,
       onResourceSave,
     }),
-    [patientResourceId, patientID, patientUPID, systemURL, tags, onPatientSave, onResourceSave]
+    [patientResourceID, patientID, patientUPID, systemURL, tags, onPatientSave, onResourceSave]
   );
 
   return (
@@ -108,7 +108,7 @@ export function usePatient(): UseQueryResult<PatientModel, unknown> {
       throw new Error("Must specify a patient ID and system URL or a patient FHIR resource ID");
     }, "req.get_builder_fhir_patient"),
     staleTime: PATIENT_STALE_TIME,
-    enabled: !!patientID,
+    enabled: !!patientID || !!patientResourceID,
   });
 }
 
@@ -178,7 +178,6 @@ export function useQueryWithPatient<T, T2>(
       )} does not have a UPID`
     );
   }
-
   return useQuery({
     queryKey: [queryKey, patientResponse.data, ...keys],
     queryFn: async () => {
