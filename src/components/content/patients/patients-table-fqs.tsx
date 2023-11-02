@@ -5,6 +5,7 @@ import type { PatientModel } from "@/fhir/models/patient";
 import type { Argument } from "classnames";
 import cx from "classnames";
 import { useState } from "react";
+import { PatientNameColumn } from "./patients-table-helper";
 import { ErrorAlert } from "@/components/core/alert";
 import * as CTWBox from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
@@ -13,7 +14,7 @@ import { AnalyticsProvider } from "@/components/core/providers/analytics/analyti
 import { Table } from "@/components/core/table/table";
 import { MinRecordItem } from "@/components/core/table/table-helpers";
 import { formatISODateStringToDate } from "@/fhir/formatters";
-import { usePatientsList } from "@/fhir/patient-helper";
+import { usePatientsListFQS } from "@/fhir/patient-helper";
 import { applySorts } from "@/utils/sort";
 
 export type PatientsTableProps = {
@@ -38,11 +39,11 @@ export type TableOptionProps<T extends MinRecordItem> = {
  * object as `.resource`.
  *
  */
-export const PatientsTable = withErrorBoundary(
+export const PatientsTableFQS = withErrorBoundary(
   ({ className, handleRowClick, pageSize = 5, title = "Patients" }: PatientsTableProps) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [cursors] = useState<string[]>([""]);
-    const { data, isLoading, isError } = usePatientsList(pageSize, cursors[currentPage - 1]);
+    const { data, isLoading, isError } = usePatientsListFQS(pageSize, cursors[currentPage - 1]);
     cursors[currentPage] = data?.pageInfo.endCursor ?? "";
     const dataOnPage = applySorts(data?.patients || [], [
       { key: "lastUpdated", dir: "desc", isDate: true },
@@ -98,21 +99,3 @@ const columns: TableColumn<PatientModel>[] = [
     render: (p) => formatISODateStringToDate(p.lastUpdated),
   },
 ];
-
-type PatientNameColumnProps = {
-  patient: PatientModel;
-};
-
-const PatientNameColumn = ({ patient }: PatientNameColumnProps) => (
-  <div className="ctw-flex ctw-items-center">
-    <div className="ctw-ml-4">
-      <div className="ctw-flex ctw-font-medium">
-        <div className="ctw-max-w-xs">{patient.fullName}</div>
-        {patient.gender && <div className="ctw-uppercase"> ({patient.gender[0]})</div>}
-      </div>
-      <div className="ctw-text-content-lighter">
-        {patient.dob} ({patient.age})
-      </div>
-    </div>
-  </div>
-);

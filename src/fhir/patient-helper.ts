@@ -12,7 +12,7 @@ import {
 import { PatientGraphqlResponse, patientsForBuilderQuery } from "@/services/fqs/queries/patients";
 import { errorResponse } from "@/utils/errors";
 import { pickBy } from "@/utils/nodash";
-import { QUERY_KEY_PATIENTS_LIST } from "@/utils/query-keys";
+import { QUERY_KEY_PATIENTS_LIST_FQS, QUERY_KEY_PATIENTS_LIST_ODS } from "@/utils/query-keys";
 import { hasNumber } from "@/utils/types";
 
 export async function getBuilderFhirPatient(
@@ -45,8 +45,20 @@ export async function getBuilderFhirPatient(
   return new PatientModel(patients[0], getIncludedResources(bundle));
 }
 
-export function usePatientsList(pageSize: number, cursor: string) {
-  return useQueryWithCTW(QUERY_KEY_PATIENTS_LIST, [pageSize, cursor], getBuilderPatientsList);
+export function usePatientsListFQS(pageSize: number, cursor: string) {
+  return useQueryWithCTW(
+    QUERY_KEY_PATIENTS_LIST_FQS,
+    [pageSize, cursor],
+    getBuilderPatientsListFQS
+  );
+}
+
+export function usePatientsListODS(pageSize: number, pageOffset: number, searchNameValue?: string) {
+  return useQueryWithCTW(
+    QUERY_KEY_PATIENTS_LIST_ODS,
+    [pageSize, pageOffset, searchNameValue],
+    getBuilderPatientsListODS
+  );
 }
 
 type GetPatientsTableResultsODS = {
@@ -86,7 +98,7 @@ export async function getBuilderPatientListWithSearch(
   }
 }
 
-export async function getBuilderPatientsList(
+export async function getBuilderPatientsListFQS(
   requestContext: CTWRequestContext,
   paginationOptions: (number | string | undefined)[] = []
 ): Promise<GetPatientsTableResultsFQS> {
@@ -117,6 +129,38 @@ export async function getBuilderPatientsList(
     };
   } catch (e) {
     throw new Error(`Failed fetching patients: ${e}`);
+  }
+}
+
+export async function getBuilderPatientsListODS(
+  requestContext: CTWRequestContext,
+  paginationOptions: (number | string | undefined)[] = []
+): Promise<GetPatientsTableResults> {
+  const [pageSize, pageOffset, searchValue] = paginationOptions;
+  const offset = parseInt(`${pageOffset ?? "0"}`, 10) * parseInt(`${pageSize ?? "1"}`, 10);
+
+  const searchParams = pickBy({
+    _count: pageSize,
+    _total: "accurate",
+    _offset: offset,
+    _sort: "family",
+    ...(hasNumber(searchValue) ? { identifier: searchValue } : { name: searchValue }),
+  }) as SearchParams;
+
+  try {
+    const { total, resources } = await searchBuilderRecords(
+      "Patient",
+      requestContext,
+      searchParams
+    );
+
+    return {
+      searchParams,
+      patients: resources.map((patient) => new PatientModel(patient)),
+      total,
+    };
+  } catch (e) {
+    throw errorResponse("Failed fetching patients", e);
   }
 }
 
@@ -151,3 +195,9 @@ export async function getBuilderPatientsListByIdentifier(
     throw errorResponse("Failed fetching patients", e);
   }
 }
+
+type GetPatientsTableResults = {
+  patients: PatientModel[];
+  searchParams: SearchParams;
+  total: number;
+};

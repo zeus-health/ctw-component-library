@@ -6,7 +6,7 @@ import { useQueryWithCTW } from "@/components/core/providers/use-query-with-ctw"
 import { PatientModel } from "@/fhir/models";
 import { getBuilderPatientListWithSearch } from "@/fhir/patient-helper";
 import { orderBy } from "@/utils/nodash";
-import { QUERY_KEY_PATIENTS_LIST } from "@/utils/query-keys";
+import { QUERY_KEY_PATIENTS_LIST_ODS } from "@/utils/query-keys";
 
 export function usePatientSearchList(
   pageSize: number,
@@ -14,7 +14,7 @@ export function usePatientSearchList(
   searchNameValue?: string
 ) {
   return useQueryWithCTW(
-    QUERY_KEY_PATIENTS_LIST,
+    QUERY_KEY_PATIENTS_LIST_ODS,
     [pageSize, pageOffset, searchNameValue],
     getBuilderPatientListWithSearch,
     !!searchNameValue
