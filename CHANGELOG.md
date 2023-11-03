@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 2.1.4
+
+### Patch Changes
+
+- 1a3347d2: Use FQS for patients list instead
+
 ## 2.1.3
 
 ### Patch Changes
