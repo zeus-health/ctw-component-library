@@ -1,20 +1,21 @@
 import { SearchParams } from "fhir-kit-client";
 import { getIncludedResources } from "./bundle";
-import { searchBuilderRecords, searchCommonRecords } from "./search-helpers";
+import { searchBuilderRecords } from "./search-helpers";
+import { SYSTEM_ZUS_UPI_RECORD_TYPE } from "./system-urls";
+import { createGraphqlClient, fqsRequest, MAX_OBJECTS_PER_REQUEST, useQueryWithPatient } from "..";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { PatientModel } from "@/fhir/models/patient";
-import { errorResponse } from "@/utils/errors";
-import { pickBy, sortBy } from "@/utils/nodash";
-import { hasNumber } from "@/utils/types";
-import { QUERY_KEY_MATCHED_PATIENTS, QUERY_KEY_PATIENT_DOCUMENTS } from "@/utils/query-keys";
-import { withTimerMetric } from "@/utils/telemetry";
-import { MAX_OBJECTS_PER_REQUEST, createGraphqlClient, fqsRequest, useQueryWithPatient } from "..";
 import {
   PatientGraphqlResponse,
   patientsForBuilderQuery,
   patientsForUPIDQuery,
 } from "@/services/fqs/queries/patients";
+import { errorResponse } from "@/utils/errors";
+import { pickBy } from "@/utils/nodash";
+import { QUERY_KEY_MATCHED_PATIENTS } from "@/utils/query-keys";
 import { sort } from "@/utils/sort";
+import { withTimerMetric } from "@/utils/telemetry";
+import { hasNumber } from "@/utils/types";
 
 export function useMatchedPatients() {
   const matchedPatientsQuery = useQueryWithPatient(
@@ -38,7 +39,14 @@ function getPatientsForUPIDFQS() {
           lastUpdated: "DESC",
         },
       });
-      return data.PatientConnection.edges.map((x) => new PatientModel(x.node));
+      return data.PatientConnection.edges
+        .filter(
+          (p) =>
+            !p.node.meta?.tag?.some(
+              (t) => t.system === SYSTEM_ZUS_UPI_RECORD_TYPE && t.code === "universal"
+            )
+        )
+        .map((x) => new PatientModel(x.node));
     } catch (e) {
       throw new Error(`Failed fetching patients: ${e}`);
     }
@@ -58,7 +66,7 @@ export async function getPatientsForBuilder(
       {
         builderID: requestContext.builderId,
         cursor: cursor ?? "",
-        first: first,
+        first,
         sort: {
           lastUpdated: "DESC",
         },

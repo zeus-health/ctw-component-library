@@ -76,8 +76,6 @@ export function usePatientContext() {
 }
 
 export function usePatient(): UseQueryResult<PatientModel, unknown> {
-  console.log("test");
-
   const { getRequestContext } = useCTW();
 
   const context = usePatientContext();
