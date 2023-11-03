@@ -36,6 +36,10 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
     return find(this.resource.meta?.extension, { url: SYSTEM_ZUS_CREATED_AT })?.valueInstant;
   }
 
+  get lastUpdated(): string | undefined {
+    return this.resource.meta?.lastUpdated || this.createdAt;
+  }
+
   get id(): string {
     return this.resource.id || "";
   }

@@ -9,7 +9,7 @@ import { useADTAlertDetailsDrawer } from "./helpers/modal-hooks";
 import { mapEncountersAndNotes, RelatedEncounterMap } from "./helpers/related-encounters";
 import { dedupeAndMergeEncounters } from "../encounters/helpers/filters";
 import { defaultEncounterSort, encounterSortOptions } from "../encounters/helpers/sorts";
-import { TableOptionProps } from "../patients/patients-table";
+import { TableOptionProps } from "../patients/patients-table-helper";
 import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { ResourceTable } from "../resource/resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
