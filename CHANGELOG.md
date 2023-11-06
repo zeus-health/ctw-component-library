@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 2.1.6
+
+### Patch Changes
+
+- 6c2d4a21: Fix bug where patient shows no records requested even though they have data.
+
 ## 2.1.5
 
 ### Patch Changes
