@@ -1,5 +1,102 @@
 # ctw-component-library
 
+## 2.1.4
+
+### Patch Changes
+
+- 1a3347d2: Use FQS for patients list instead
+
+## 2.1.3
+
+### Patch Changes
+
+- 33566cf1: Add RelatedEncounters to exports.
+
+## 2.1.2
+
+### Patch Changes
+
+- df0f981d: Add document indicator to hospitaliations table.
+
+## 2.1.1
+
+### Patch Changes
+
+- 12f4baea: Remove 3 month view from Hospitalizations
+- d3e7b9ae: Fix isLoading for patient history table
+
+## 2.1.0
+
+### Minor Changes
+
+- 165a301f: Hide request records button when feature flag ctw-patient-history-form is disabled.
+
+## 2.0.4
+
+### Patch Changes
+
+- e3aadc3a: Fix package response type
+
+## 2.0.3
+
+### Patch Changes
+
+- c64f77e1: Remove row action functionality from ADT table due to bug.
+- 824ff7cb: Remove zus-account header from package request
+
+## 2.0.2
+
+### Patch Changes
+
+- 8f7980cc: Add subscription info back to overview tab.
+
+## 2.0.1
+
+### Patch Changes
+
+- a3fc7eee: Remove query to get practitioner from server
+
+## 2.0.0
+
+### Major Changes
+
+- 99226384: By default PatientConditionsAll will set onlyAllowAddOutsideConditions to true. Previously this defaulted to false.
+
+### Patch Changes
+
+- 99226384: Prevent PatientConditionsAll component from showing "add" button in drawer when readOnly is true.
+- 8f2b641f: Add functioning row actions to the ADT table.
+
+## 1.71.1
+
+### Patch Changes
+
+- 71ba308f: Fix "Add to Record" button to show when user builder doesn't own the record already.
+
+## 1.71.0
+
+### Minor Changes
+
+- 130fa952: Adjusted padding on ZAP actions on all widths.
+  Overview tab in ZAP now collapses on small viewports.
+
+## 1.70.1
+
+### Patch Changes
+
+- e36ebeff: Sort results returned by patient search by last name.
+- 2eb400f8: Remove date check for observations now that back-fill is complete.
+
+## 1.70.0
+
+### Minor Changes
+
+- 9a22da7a: Add env to useCTW.
+
+### Patch Changes
+
+- aa43d1a7: Fix Dismiss/Viewed buttons for Encounters and add a "Show Dismissed" option to the Encounters & Notes Table.
+
 ## 1.69.10
 
 ### Patch Changes

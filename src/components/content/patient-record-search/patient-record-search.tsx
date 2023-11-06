@@ -1,7 +1,7 @@
 import { XIcon } from "@heroicons/react/outline";
 import { SearchIcon } from "@heroicons/react/solid";
 import cx from "classnames";
-import { ChangeEvent, FormEvent, useCallback, useState } from "react";
+import { ChangeEvent, FormEvent, useCallback, useRef, useState } from "react";
 import { SearchResultRow } from "./helpers/search-result-row";
 import { FeedbackForm } from "@/components/content/patient-record-search/helpers/feedback-form";
 import { FeedbackProvider } from "@/components/content/patient-record-search/helpers/feedback-provider";
@@ -12,6 +12,7 @@ import { DEFAULT_PAGE_SIZE, ExpandList } from "@/components/core/pagination/expa
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { useAnalytics } from "@/components/core/providers/analytics/use-analytics";
 import { RenderIf } from "@/components/core/render-if";
+import { useBreakpoints } from "@/hooks/use-breakpoints";
 import {
   EMPTY_SEARCH_RESULTS,
   PatientRecordSearchResult,
@@ -28,6 +29,8 @@ function PatientRecordSearchComponent({ className }: PatientRecordSearchProps) {
   const [searchTextInputValue, setSearchTextInputValue] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const [searchWasQuestion, setSearchWasQuestion] = useState(false);
+  const ref = useRef<HTMLInputElement>(null);
+  const breakpoints = useBreakpoints(ref);
   const {
     data = EMPTY_SEARCH_RESULTS,
     isFetching,
@@ -65,18 +68,22 @@ function PatientRecordSearchComponent({ className }: PatientRecordSearchProps) {
     <div
       className={cx(
         className,
-        "ctw-patient-record-search ctw-scrollable-pass-through-height ctw-space-x-0 ctw-space-y-2 ctw-pt-5 ctw-text-base"
+        "ctw-patient-record-search ctw-scrollable-pass-through-height ctw-space-x-0 ctw-space-y-2 ctw-text-base"
       )}
     >
       <form className="ctw-patient-record-search-input ctw-relative" onSubmit={handleSubmitForm}>
         <div className="ctw-search-icon-wrapper">
           <SearchIcon className="ctw-search-icon" />
         </div>
-
         <input
+          ref={ref}
           type="text"
-          className="ctw-w-full ctw-rounded-md ctw-border ctw-border-solid ctw-border-icon-light ctw-bg-bg-white ctw-px-3 ctw-py-2 ctw-pl-10 ctw-pr-3 ctw-text-sm ctw-shadow-sm"
-          placeholder="Search patient conditions, medications, diagnostics, documents and allergies. "
+          className="ctw-w-full ctw-overflow-hidden ctw-overflow-ellipsis ctw-whitespace-nowrap ctw-rounded-md ctw-border ctw-border-solid ctw-border-icon-light ctw-bg-bg-white ctw-px-3 ctw-py-2 ctw-pl-10 ctw-pr-8 ctw-text-sm ctw-shadow-sm"
+          placeholder={
+            breakpoints.xs
+              ? "Search patient records."
+              : "Search patient conditions, medications, diagnostics, documents and allergies."
+          }
           name="patientRecordSearch"
           value={searchTextInputValue}
           onChange={handleChangeInput}
