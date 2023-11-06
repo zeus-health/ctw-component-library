@@ -13,6 +13,7 @@ import {
 } from "@/components/core/providers/patient-provider";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { PatientModel } from "@/fhir/models";
+import { getPatientsForUPIDFQS } from "@/fhir/patient-helper";
 import {
   PatientHistoryJobResponse,
   PatientHistoryServiceMessage,
@@ -22,7 +23,7 @@ import { errorResponse } from "@/utils/errors";
 import { find, omitBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_HISTORY_DETAILS } from "@/utils/query-keys";
 import { ctwFetch } from "@/utils/request";
-import { Telemetry } from "@/utils/telemetry";
+import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 type PatientHistoryDetails = Partial<{
   status: PatientRefreshHistoryMessageStatus;
@@ -142,40 +143,65 @@ export async function getBuilderRefreshHistoryMessages({
   }
 }
 
+const getPatientHistoryDetails = async (
+  requestContext: CTWRequestContext,
+  patient: PatientModel
+) => {
+  try {
+    const patientsForUPID = await getPatientsForUPIDFQS(requestContext, patient);
+    const requests = patientsForUPID.map(async (p) =>
+      // iterate over each patient and get the patient history details
+      getBuilderRefreshHistoryMessages({
+        requestContext,
+        patientId: p.id,
+      })
+    );
+    const responses = (await Promise.all(requests)) as PatientHistoryJobResponse[];
+
+    // Iterate over each responses and iterate over response data array to find the latest status out of all resposnes
+    const latestDones = responses.map((response) =>
+      find(response.data, (item) =>
+        item.attributes.providers.every((provider) => provider.status === "done")
+      )
+    );
+
+    // Get index of latest done to ensure we get correct matching status
+    // The API returns responses sorted, so we can grab the first non-undefined response and that will be the latest
+    const latestDoneIndex = latestDones.findIndex((latestDone) => latestDone !== undefined);
+
+    // Get latest status from latest done index
+    const latestStatus =
+      latestDoneIndex > -1
+        ? responses[latestDoneIndex].data[0]?.attributes.providers.filter(
+            (provider) => provider.status !== "done"
+          ) ?? []
+        : [];
+
+    return {
+      hasJobs: responses.some((response) => response.data.length > 0),
+      lastRetrievedAt: latestDones[latestDoneIndex]?.attributes.targetDate ?? "",
+      status:
+        latestStatus.length > 0
+          ? latestStatus[0].status
+          : responses[latestDoneIndex].data[0]?.attributes.providers[0].status,
+      createdAt: responses[latestDoneIndex].data[0]?.attributes.createdAt,
+      providers: responses[latestDoneIndex].data[0]?.attributes.providers,
+    };
+  } catch (e) {
+    Telemetry.logError(e as Error, "Failed fetching patient history details");
+    throw new Error(`Failed fetching patient history details for patient: ${e}`);
+  }
+};
+
 export function usePatientHistoryDetails() {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_HISTORY_DETAILS,
     [],
-    async (requestContext, patient) => {
-      try {
-        const response = (await getBuilderRefreshHistoryMessages({
-          requestContext,
-          patientId: patient.id,
-        })) as PatientHistoryJobResponse;
-
-        const latestDone = find(response.data, (item) =>
-          item.attributes.providers.every((provider) => provider.status === "done")
-        );
-
-        const latestStatus =
-          response.data[0]?.attributes.providers.filter((provider) => provider.status !== "done") ??
-          [];
-
-        return {
-          hasJobs: response.data.length > 0,
-          lastRetrievedAt: latestDone?.attributes.targetDate ?? latestDone?.attributes.createdAt,
-          status:
-            latestStatus.length > 0
-              ? latestStatus[0].status
-              : response.data[0]?.attributes.providers[0].status,
-          createdAt: response.data[0]?.attributes.createdAt,
-          providers: response.data[0]?.attributes.providers,
-        };
-      } catch (e) {
-        Telemetry.logError(e as Error, "Failed fetching patient history details");
-        throw new Error(`Failed fetching patient history details for patient: ${e}`);
-      }
-    }
+    withTimerMetric(
+      async (requestContext: CTWRequestContext, patient: PatientModel) =>
+        getPatientHistoryDetails(requestContext, patient),
+      "req.timing.patient_history_details"
+    )
   );
 }
 

@@ -157,6 +157,7 @@ export function useQueryWithPatient<T, T2>(
   }
 
   return useQuery({
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [queryKey, patientResponse.data, ...keys],
     queryFn: async () => {
       const requestContext = await getRequestContext();

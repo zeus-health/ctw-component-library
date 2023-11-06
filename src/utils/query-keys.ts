@@ -29,3 +29,4 @@ export const QUERY_KEY_PATIENTS_LIST_FQS = "patients_list_fqs";
 export const QUERY_KEY_PATIENTS_ADT_LIST = "patients_adt_list";
 export const QUERY_KEY_PROVENANCE = "provenance";
 export const QUERY_KEY_PATIENT_MEDICATION_DISPENSE = "patient_medication_dispense";
+export const QUERY_KEY_MATCHED_PATIENTS = "matched_patients";
