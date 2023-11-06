@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 2.1.5
+
+### Patch Changes
+
+- 67f746c5: Fix condition request.
+- 4c7f3558: Fix issue showing add button for medications even when readonly set
+
 ## 2.1.4
 
 ### Patch Changes
