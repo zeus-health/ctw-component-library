@@ -166,6 +166,7 @@ const getPatientHistoryDetails = async (
     );
 
     // Get index of latest done to ensure we get correct matching status
+    // The API returns responses sorted, so we can grab the first non-undefined response and that will be the latest
     const latestDoneIndex = latestDones.findIndex((latestDone) => latestDone !== undefined);
 
     // Get latest status from latest done index

@@ -1,5 +1,18 @@
 # ctw-component-library
 
+## 2.1.6
+
+### Patch Changes
+
+- 6c2d4a21: Fix bug where patient shows no records requested even though they have data.
+
+## 2.1.5
+
+### Patch Changes
+
+- 67f746c5: Fix condition request.
+- 4c7f3558: Fix issue showing add button for medications even when readonly set
+
 ## 2.1.4
 
 ### Patch Changes
