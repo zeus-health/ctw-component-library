@@ -183,9 +183,9 @@ const getPatientHistoryDetails = async (
       status:
         latestStatus.length > 0
           ? latestStatus[0].status
-          : responses[latestDoneIndex].data[0]?.attributes.providers[0].status,
-      createdAt: responses[latestDoneIndex].data[0]?.attributes.createdAt,
-      providers: responses[latestDoneIndex].data[0]?.attributes.providers,
+          : responses[latestDoneIndex]?.data[0]?.attributes.providers[0].status,
+      createdAt: responses[latestDoneIndex]?.data[0]?.attributes.createdAt,
+      providers: responses[latestDoneIndex]?.data[0]?.attributes.providers,
     };
   } catch (e) {
     Telemetry.logError(e as Error, "Failed fetching patient history details");
