@@ -16,6 +16,17 @@ describe("codeable concept", () => {
           code: "41493",
           display: "meloxicam",
           system: "http://www.nlm.nih.gov/research/umls/rxnorm",
+          extension: [
+            {
+              url: "https://zusapi.com/terminology/enrichment",
+              valueString: "ActiveIngredient",
+            },
+          ],
+        },
+        {
+          code: "41493",
+          display: "meloxicam 7.5 MG Tablet",
+          system: "http://www.nlm.nih.gov/research/umls/rxnorm",
         },
         {
           code: "UNK",
@@ -54,7 +65,7 @@ describe("codeable concept", () => {
     });
 
     test("returns display of specific system", () => {
-      expect(codeableConceptLabel(concept, SYSTEM_RXNORM)).toEqual("meloxicam");
+      expect(codeableConceptLabel(concept, SYSTEM_RXNORM)).toEqual("meloxicam 7.5 MG Tablet");
       expect(codeableConceptLabel(concept, SYSTEM_NULL_FLAVOR)).toEqual("unknown");
     });
 

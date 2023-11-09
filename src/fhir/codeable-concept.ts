@@ -5,12 +5,24 @@
 import { SYSTEM_ENRICHMENT } from "./system-urls";
 import { compact, find } from "@/utils/nodash";
 
+/**
+  Finds the best display text for a CodeableConcept.
+ 
+  Priority order is:
+    1. The display of the coding with the given favoredSystemDisplay
+       (skipping enrichment extensions!).
+    2. The text of the CodeableConcept.
+    3. The display of the first coding with a display.
+    4. The code of the first coding with a code.
+ */
 export const codeableConceptLabel = (
   concept?: fhir4.CodeableConcept,
   favoredSystemDisplay?: string
 ): string => {
   if (favoredSystemDisplay && concept?.coding) {
-    const coding = concept.coding.find((c) => c.system === favoredSystemDisplay && c.display);
+    const coding = concept.coding.find(
+      (c) => c.system === favoredSystemDisplay && c.display && !c.extension
+    );
     if (coding && coding.display) {
       return coding.display;
     }
