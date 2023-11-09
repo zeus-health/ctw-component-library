@@ -23,7 +23,8 @@ import { hasNumber } from "@/utils/types";
 
 export async function getPatientsForUPIDFQS(
   requestContext: CTWRequestContext,
-  patient: PatientModel
+  patient: PatientModel,
+  filter: Record<string, unknown> = {}
 ) {
   try {
     const graphClient = createGraphqlClient(requestContext);
@@ -34,6 +35,7 @@ export async function getPatientsForUPIDFQS(
       sort: {
         lastUpdated: "DESC",
       },
+      filter,
     });
     return data.PatientConnection.edges
       .filter(
