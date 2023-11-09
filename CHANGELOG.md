@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 2.1.7
+
+### Patch Changes
+
+- 8f5587e3: Fix bug where if patient history had never been requested it error out on patient chart.
+
 ## 2.1.6
 
 ### Patch Changes
