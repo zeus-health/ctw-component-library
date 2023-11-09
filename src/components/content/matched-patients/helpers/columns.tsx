@@ -1,16 +1,21 @@
 import { TableColumn } from "@/components/core/table/table-helpers";
 import { PatientModel } from "@/fhir/models";
 import { capitalize } from "@/utils/nodash";
-import { render } from "react-dom";
 
-const differingDataClass = "ctw-font-medium ctw-text-error-main";
-
-export const getMatchedPatientsColumns = (
-  builderPatient: PatientModel
-): TableColumn<PatientModel>[] => [
+export const matchedPatientsColumns: TableColumn<PatientModel>[] = [
   {
     widthPercent: 30,
-    title: "Name/DOB/Gender",
+    title: "Source",
+    render: (matchedPatient) => (
+      <div className="ctw-stacked-concat">
+        <div>{capitalize(matchedPatient.organizationDisplayName)}</div>
+        <div>Created {matchedPatient.createdAtDisplay}</div>
+      </div>
+    ),
+  },
+  {
+    widthPercent: 30,
+    title: "Patient Details",
     render: (matchedPatient) => (
       <div className="ctw-stacked-concat">
         <div>{matchedPatient.display}</div>
@@ -20,7 +25,7 @@ export const getMatchedPatientsColumns = (
           </span>
           <span> {capitalize(matchedPatient.gender)}</span>
         </div>
-        <div></div>
+        <div />
       </div>
     ),
   },
@@ -36,16 +41,6 @@ export const getMatchedPatientsColumns = (
           {matchedPatient.homeAddress?.city} {matchedPatient.homeAddress?.state},{" "}
           {matchedPatient.homeAddress?.postalCode}
         </div>
-      </div>
-    ),
-  },
-  {
-    widthPercent: 30,
-    title: "Data Source",
-    render: (matchedPatient) => (
-      <div className="ctw-stacked-concat">
-        <div>{capitalize(matchedPatient.organizationDisplayName)}</div>
-        <div>Created {matchedPatient.createdAtDisplay}</div>
       </div>
     ),
   },

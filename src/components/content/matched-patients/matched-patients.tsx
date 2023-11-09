@@ -1,14 +1,14 @@
 import cx from "classnames";
 import { useRef } from "react";
+import { matchedPatientsColumns } from "./helpers/columns";
 import { PatientResourceTable } from "../resource/patient-resource-table";
 import { EmptyPatientTable } from "@/components/core/empty-table";
 import { withErrorBoundary } from "@/components/core/error-boundary";
+import { Loading } from "@/components/core/loading";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
 import { useMatchedPatients } from "@/fhir/patient-helper";
-import { sort } from "@/utils/sort";
-import { getMatchedPatientsColumns } from "./helpers/columns";
 import { usePatient } from "@/index";
-import { Loading } from "@/components/core/loading";
+import { sort } from "@/utils/sort";
 
 export type MatchedPatientsProps = {
   className?: string;
@@ -35,7 +35,7 @@ function MatchedPatientsComponent({ className }: MatchedPatientsProps) {
           emptyMessage={
             <EmptyPatientTable hasZeroFilteredRecords={hasNoData} resourceName="patients" />
           }
-          columns={getMatchedPatientsColumns(patient.data)}
+          columns={matchedPatientsColumns}
         />
       </div>
     </AnalyticsProvider>
