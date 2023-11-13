@@ -38,8 +38,11 @@ export const matchedPatientsColumns: TableColumn<PatientModel>[] = [
         <div>{matchedPatient.email}</div>
         <div>{matchedPatient.homeAddress?.line?.join(" ")}</div>
         <div>
-          {matchedPatient.homeAddress?.city} {matchedPatient.homeAddress?.state},{" "}
-          {matchedPatient.homeAddress?.postalCode}
+          {matchedPatient.homeAddress?.city ||
+          matchedPatient.homeAddress?.state ||
+          matchedPatient.homeAddress?.postalCode
+            ? `${matchedPatient.homeAddress.city} ${matchedPatient.homeAddress.state}, ${matchedPatient.homeAddress.postalCode}`
+            : undefined}
         </div>
       </div>
     ),
