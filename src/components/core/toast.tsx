@@ -30,7 +30,6 @@ export const notify = ({
   const defaultOptions = {
     icon: false,
   };
-  // Do switch statement based on type
   switch (type) {
     case "success":
       notifySuccess({ title, body, options: { ...defaultOptions, ...options }, containerId });
