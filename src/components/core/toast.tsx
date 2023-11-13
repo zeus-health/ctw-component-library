@@ -7,7 +7,7 @@ import { toast, ToastOptions } from "react-toastify";
 export type ToastProps = {
   title?: string;
   body?: string;
-  options?: ToastOptions;
+  options?: Omit<ToastOptions, "type" | "containerId" | "className">;
   containerId?: string;
   type: "success" | "info" | "error";
 };
@@ -17,6 +17,9 @@ export const APP_TOAST_CONTAINER_DRAWER_ID = "ctw-toast-container-drawer";
 
 export const drawerToastStyles = { style: { bottom: "40px" } };
 
+export const notifyFromDrawer = ({ type, title, body, options }: Omit<ToastProps, "containerId">) =>
+  notify({ type, title, body, options, containerId: APP_TOAST_CONTAINER_DRAWER_ID });
+
 export const notify = ({
   type,
   title,
@@ -24,16 +27,33 @@ export const notify = ({
   options,
   containerId = APP_TOAST_CONTAINER_ID,
 }: ToastProps) => {
+  const defaultOptions = {
+    icon: false,
+  };
   // Do switch statement based on type
   switch (type) {
     case "success":
-      notifySuccess({ title, body, options, containerId });
+      notifySuccess({ title, body, options: { ...defaultOptions, ...options }, containerId });
       break;
     case "info":
-      notifyInfo({ title, body, options, containerId });
+      notifyInfo({
+        title,
+        body,
+        options: { ...defaultOptions, ...options },
+        containerId,
+      });
       break;
     case "error":
-      notifyError({ title, body, options, containerId });
+      notifyError({
+        title,
+        body,
+        options: {
+          ...defaultOptions,
+          closeButton: <FontAwesomeIcon icon={faXmark} className="ctw-h-4 ctw-text-error-text" />,
+          ...options,
+        },
+        containerId,
+      });
       break;
     default:
       throw new Error(`Unknown toast type: ${type}`);
@@ -49,10 +69,8 @@ export const notifyInfo = ({ title, body, options, containerId }: Omit<ToastProp
     {
       ...options,
       type: "info",
-      icon: false,
       containerId,
       className: "ctw-toast-override !ctw-bg-notification-dark",
-      style: options?.style,
     }
   );
 
@@ -71,11 +89,8 @@ export const notifyError = ({ title, body, options, containerId }: Omit<ToastPro
     </div>,
     {
       ...options,
-      icon: false,
       containerId,
       className: "ctw-toast-override !ctw-bg-error-light",
-      style: options?.style,
-      closeButton: <FontAwesomeIcon icon={faXmark} className="ctw-h-4 ctw-text-error-text" />,
     }
   );
 
@@ -90,9 +105,7 @@ export const notifySuccess = ({ title, body, options, containerId }: Omit<ToastP
     </div>,
     {
       ...options,
-      icon: false,
-      containerId,
       className: "ctw-toast-override !ctw-bg-notification-dark",
-      style: options?.style,
+      containerId,
     }
   );
