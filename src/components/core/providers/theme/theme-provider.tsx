@@ -1,14 +1,11 @@
 import { PropsWithChildren, useEffect, useMemo, useRef, useState } from "react";
-import { ToastContainer, Zoom } from "react-toastify";
 import { ThemeContext } from "./context";
 import { IFrameTheme } from "@/components/content/zus-aggregated-profile/zus-aggregated-profile-iframe";
 import i18next, { Locals } from "@/i18n";
 import { DefaultTheme, EmptyTailwindCSSVars, mapToCSSVar, Theme } from "@/styles/tailwind.theme";
 import { merge } from "@/utils/nodash";
-import "react-toastify/dist/ReactToastify.css";
 
 import "../../main.scss";
-import "../../toast.scss";
 
 export type ThemeProviderProps = {
   theme?: Theme & { iframe?: IFrameTheme };
@@ -95,19 +92,6 @@ export function ThemeProvider({
 
   return (
     <div ref={ctwThemeRef} className="ctw-theme ctw-scrollable-pass-through-height">
-      <ToastContainer
-        className="ctw-toast-override"
-        position="bottom-left"
-        autoClose={4000}
-        hideProgressBar
-        closeOnClick
-        rtl={false}
-        limit={1}
-        transition={Zoom}
-        pauseOnFocusLoss
-        pauseOnHover
-        theme="colored"
-      />
       <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>
     </div>
   );
