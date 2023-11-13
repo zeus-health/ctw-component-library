@@ -2,7 +2,7 @@ import { trim } from "lodash/fp";
 import { Auth0Provider } from "@auth0/auth0-react";
 import { ErrorBoundary } from "./error-boundary";
 import { PatientHistoryTable } from "./components/content/patient-history/patient-history-table";
-import type { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { SecuredApp } from "@/SecuredApp";
 import "./App.css";
 
@@ -27,6 +27,7 @@ import {
 import { PatientMedicationDispense } from "./components/content/medication-dispense/patient-medication-dispense";
 import { ThemeProviderProps } from "@/components/core/providers/theme/theme-provider";
 import { PatientsTable } from "./components/content/patients/patients-table-ods";
+import { notify } from "./components/core/toast";
 
 const {
   VITE_AUTH0_AUDIENCE,
@@ -159,35 +160,43 @@ const demoComponents = components.filter(({ name }) =>
   componentsToRender.some((prefix: string) => name.startsWith(prefix))
 );
 
-const DemoApp = ({ accessToken = "" }) => (
-  <CTWProvider
-    env={VITE_ENV}
-    authToken={accessToken}
-    builderId={VITE_BUILDER_ID}
-    enableTelemetry
-    theme={theme}
-    locals={locals}
-    ehr="test"
-    onResourceSave={(resource, action, error) => {
-      console.log("Result of saving a resource", resource, action, error);
-    }}
-  >
-    <PatientProvider
-      patientID={VITE_PATIENT_ID}
-      systemURL={VITE_SYSTEM_URL}
-      patientResourceID={VITE_PATIENT_RESOURCE_ID}
+const DemoApp = ({ accessToken = "" }) => {
+  useEffect(() => {
+    if (VITE_ENV === "production") {
+      notify({
+        type: "error",
+        title: "Warning",
+        body: "You are using production. Proceed carefully",
+      });
+    }
+  }, []);
+
+  return (
+    <CTWProvider
+      env={VITE_ENV}
+      authToken={accessToken}
+      builderId={VITE_BUILDER_ID}
+      enableTelemetry
+      theme={theme}
+      locals={locals}
+      ehr="test"
+      onResourceSave={(resource, action, error) => {
+        console.log("Result of saving a resource", resource, action, error);
+      }}
     >
-      {demoComponents.map((demo, index) => (
-        <div className="ctw-space-y-5 ctw-bg-white" key={index}>
-          <h3>
-            {demo.title} <small>{demo.note}</small>
-          </h3>
-          <ErrorBoundary>{demo.render()}</ErrorBoundary>
-        </div>
-      ))}
-    </PatientProvider>
-  </CTWProvider>
-);
+      <PatientProvider patientID={VITE_PATIENT_ID} systemURL={VITE_SYSTEM_URL}>
+        {demoComponents.map((demo, index) => (
+          <div className="ctw-space-y-5 ctw-bg-white" key={index}>
+            <h3>
+              {demo.title} <small>{demo.note}</small>
+            </h3>
+            <ErrorBoundary>{demo.render()}</ErrorBoundary>
+          </div>
+        ))}
+      </PatientProvider>
+    </CTWProvider>
+  );
+};
 
 function App() {
   if (VITE_AUTH0_DOMAIN && VITE_AUTH0_CLIENT_ID && VITE_AUTH0_AUDIENCE) {

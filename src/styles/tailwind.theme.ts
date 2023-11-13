@@ -65,6 +65,7 @@ export const TailwindTheme = {
       light: "#F3E8FF",
       main: "#A855F7",
       icon: "#EF4444",
+      dark: "#4B5563",
     },
     info: {
       main: "#0EA5E9",
