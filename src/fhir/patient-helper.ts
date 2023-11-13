@@ -38,7 +38,7 @@ export function useMatchedPatients() {
   return matchedPatientsQuery;
 }
 
-function getPatientsForUPIDFQS() {
+export function getPatientsForUPIDFQS() {
   return async (requestContext: CTWRequestContext, patient: PatientModel) => {
     try {
       const graphClient = createGraphqlClient(requestContext);
