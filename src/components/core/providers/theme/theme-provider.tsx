@@ -1,5 +1,5 @@
 import { PropsWithChildren, useEffect, useMemo, useRef, useState } from "react";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, Zoom } from "react-toastify";
 import { ThemeContext } from "./context";
 import { IFrameTheme } from "@/components/content/zus-aggregated-profile/zus-aggregated-profile-iframe";
 import i18next, { Locals } from "@/i18n";
@@ -98,12 +98,13 @@ export function ThemeProvider({
       <ToastContainer
         className="ctw-toast-override"
         position="bottom-left"
-        autoClose={500000}
+        autoClose={4000}
         hideProgressBar
         closeOnClick
         rtl={false}
+        limit={1}
+        transition={Zoom}
         pauseOnFocusLoss
-        draggable
         pauseOnHover
         theme="colored"
       />
