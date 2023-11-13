@@ -198,7 +198,6 @@ const DemoApp = ({ accessToken = "" }) => {
   );
 };
 
-
 function App() {
   if (VITE_AUTH0_DOMAIN && VITE_AUTH0_CLIENT_ID && VITE_AUTH0_AUDIENCE) {
     return (
