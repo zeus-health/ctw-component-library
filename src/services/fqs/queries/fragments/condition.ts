@@ -20,6 +20,7 @@ export const fragmentCondition = `
     ${fragmentOrganization}      
     ${fragmentCoding}
     ${fragmentPatient}
+    ${fragmentOrganization}
     fragment Condition on Condition {
       id
       resourceType

@@ -1,12 +1,12 @@
 import { Combobox } from "@headlessui/react";
 import { useEffect, useState } from "react";
-import ZusSVG from "@/assets/zus.svg";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { ComboboxField, ComboxboxFieldOption } from "@/components/core/form/combobox-field";
 import { useQueryWithCTW } from "@/components/core/providers/use-query-with-ctw";
 import { PatientModel } from "@/fhir/models";
 import { getBuilderPatientListWithSearch } from "@/fhir/patient-helper";
-import { QUERY_KEY_PATIENTS_LIST } from "@/utils/query-keys";
+import { orderBy } from "@/utils/nodash";
+import { QUERY_KEY_PATIENTS_LIST_ODS } from "@/utils/query-keys";
 
 export function usePatientSearchList(
   pageSize: number,
@@ -14,31 +14,24 @@ export function usePatientSearchList(
   searchNameValue?: string
 ) {
   return useQueryWithCTW(
-    QUERY_KEY_PATIENTS_LIST,
+    QUERY_KEY_PATIENTS_LIST_ODS,
     [pageSize, pageOffset, searchNameValue],
     getBuilderPatientListWithSearch,
     !!searchNameValue
   );
 }
 
-type CustomPatientOptionValue = Omit<ComboxboxFieldOption, "value"> & {
+export type CustomPatientOptionValue = Omit<ComboxboxFieldOption, "value"> & {
   value: PatientModel;
 };
 
 export type PatientSearchProps = {
   pageSize?: number;
-  removeBranding?: boolean;
-  title?: string;
   onSearchClick?: (e: unknown) => void;
 };
 
 export const PatientSearch = withErrorBoundary(
-  ({
-    pageSize = 250,
-    removeBranding = false,
-    title = "Search Your Patients",
-    onSearchClick,
-  }: PatientSearchProps) => {
+  ({ pageSize = 250, onSearchClick }: PatientSearchProps) => {
     const [patients, setPatients] = useState<PatientModel[]>([]);
     const [searchValue, setSearchValue] = useState<string | undefined>();
     const {
@@ -63,44 +56,35 @@ export const PatientSearch = withErrorBoundary(
       }
     }, [isError, isFetching]);
 
-    const options = patients.map((patient) => ({
+    const options = orderBy(patients, "lastName", "asc").map((patient) => ({
       value: patient,
       label: patient.fullName,
       key: patient.id,
     }));
 
     return (
-      <div className="ctw-max-w-3xl ctw-space-y-5 ctw-text-center">
-        <h3 className="ctw-my-0 ctw-text-2xl ctw-font-medium">{title}</h3>
-        {!removeBranding && (
-          <div className="ctw-flex ctw-justify-center ctw-space-x-2 ctw-text-sm ctw-font-light ctw-italic ctw-text-content-light">
-            <span>Powered by</span>
-            <img src={ZusSVG} alt="Zus" />
-          </div>
-        )}
-        <ComboboxField
-          enableSearchIcon
-          options={options}
-          readonly={false}
-          isLoading={isFetching}
-          name="patient-search"
-          defaultSearchTerm=""
-          onCustomSelectChange={onSearchClick}
-          renderCustomOption={(e) => <CustomComboBox option={e as CustomPatientOptionValue} />}
-          onSearchChange={(e) => {
-            setSearchValue(e);
-            setPatients([]);
-          }}
-          defaultValue={{}}
-          placeholder="Search by patient name or identifier"
-        />
-      </div>
+      <ComboboxField
+        enableSearchIcon
+        options={options}
+        readonly={false}
+        isLoading={isFetching}
+        name="patient-search"
+        defaultSearchTerm=""
+        onCustomSelectChange={onSearchClick}
+        renderCustomOption={(e) => <CustomComboBox option={e as CustomPatientOptionValue} />}
+        onSearchChange={(e) => {
+          setSearchValue(e);
+          setPatients([]);
+        }}
+        defaultValue={{}}
+        placeholder="Search by patient name or identifier"
+      />
     );
   },
   "PatientsSearch"
 );
 
-const CustomComboBox = ({ option }: { option: CustomPatientOptionValue }) => (
+export const CustomComboBox = ({ option }: { option: CustomPatientOptionValue }) => (
   <Combobox.Option
     value={option.label}
     className={({ active }) =>
@@ -121,4 +105,14 @@ const CustomComboBox = ({ option }: { option: CustomPatientOptionValue }) => (
       <span>{option.value.age && `(${option.value.age})`}</span>
     </div>
   </Combobox.Option>
+);
+
+export const PatientSearchDashboard = withErrorBoundary(
+  ({ pageSize = 250, onSearchClick }: PatientSearchProps) => (
+    <div className="ctw-max-w-3xl ctw-space-y-5 ctw-text-center">
+      <h3 className="ctw-my-0 ctw-text-2xl ctw-font-medium">Search Your Patients</h3>
+      <PatientSearch pageSize={pageSize} onSearchClick={onSearchClick} />
+    </div>
+  ),
+  "PatientsSearch"
 );

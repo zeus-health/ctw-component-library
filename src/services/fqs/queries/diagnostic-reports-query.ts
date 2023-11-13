@@ -34,6 +34,7 @@ contained {
 export const getDiagnosticReportQuery = (includeObservations: boolean) => gql`
   ${fragmentOrganization}  
   ${fragmentCoding}
+  ${fragmentOrganization}
   ${fragmentPatient}
   ${fragmentPractitioner}
   ${includeObservations ? fragmentObservation : ""}

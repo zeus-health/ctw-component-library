@@ -1,10 +1,5 @@
 import { SearchParams } from "fhir-kit-client";
 import { getIncludedResources } from "./bundle";
-import { searchBuilderRecords } from "./search-helpers";
-import { SYSTEM_ZUS_UPI_RECORD_TYPE } from "./system-urls";
-import { createGraphqlClient, fqsRequest, MAX_OBJECTS_PER_REQUEST, useQueryWithPatient } from "..";
-import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { PatientModel } from "@/fhir/models/patient";
 import {
   PatientGraphqlResponse,
   patientsForBuilderQuery,
@@ -12,10 +7,18 @@ import {
 } from "@/services/fqs/queries/patients";
 import { errorResponse } from "@/utils/errors";
 import { pickBy } from "@/utils/nodash";
-import { QUERY_KEY_MATCHED_PATIENTS } from "@/utils/query-keys";
+
+import { QUERY_KEY_MATCHED_PATIENTS, QUERY_KEY_PATIENTS_LIST_FQS, QUERY_KEY_PATIENTS_LIST_ODS } from "@/utils/query-keys";
 import { sort } from "@/utils/sort";
 import { withTimerMetric } from "@/utils/telemetry";
 import { hasNumber } from "@/utils/types";
+import { useQueryWithPatient } from "..";
+import { CTWRequestContext } from "../components/core/providers/ctw-context";
+import { useQueryWithCTW } from "../components/core/providers/use-query-with-ctw";
+import { createGraphqlClient, fqsRequest, MAX_OBJECTS_PER_REQUEST, GraphqlPageInfo } from "../services/fqs/client";
+import { PatientModel } from "./models";
+import { searchBuilderRecords } from "./search-helpers";
+import { SYSTEM_ZUS_UPI_RECORD_TYPE } from "./system-urls";
 
 export function useMatchedPatients() {
   const matchedPatientsQuery = useQueryWithPatient(
@@ -73,10 +76,7 @@ export async function getPatientsForBuilder(
       }
     );
     return data.PatientConnection.edges.map((x) => new PatientModel(x.node));
-  } catch (e) {
-    throw new Error(`Failed fetching patients: ${e}`);
-  }
-}
+
 
 // Returns a single FHIR patient given a patientID and systemURL.
 // If multiple patients are found then it returns the last updated.
@@ -113,16 +113,37 @@ export async function getBuilderFhirPatient(
   );
 }
 
-type GetPatientsTableResults = {
+export function usePatientsListFQS(pageSize: number, cursor: string) {
+  return useQueryWithCTW(
+    QUERY_KEY_PATIENTS_LIST_FQS,
+    [pageSize, cursor],
+    getBuilderPatientsListFQS
+  );
+}
+
+export function usePatientsListODS(pageSize: number, pageOffset: number, searchNameValue?: string) {
+  return useQueryWithCTW(
+    QUERY_KEY_PATIENTS_LIST_ODS,
+    [pageSize, pageOffset, searchNameValue],
+    getBuilderPatientsListODS
+  );
+}
+
+type GetPatientsTableResultsODS = {
   patients: PatientModel[];
   searchParams: SearchParams;
   total: number;
 };
 
+type GetPatientsTableResultsFQS = {
+  patients: PatientModel[];
+  pageInfo: GraphqlPageInfo;
+};
+
 export async function getBuilderPatientListWithSearch(
   requestContext: CTWRequestContext,
   paginationOptions: (number | string | undefined)[] = []
-): Promise<Omit<GetPatientsTableResults, "total">> {
+): Promise<Omit<GetPatientsTableResultsODS, "total">> {
   const [pageSize, pageOffset, searchValue] = paginationOptions;
   const offset = parseInt(`${pageOffset ?? "0"}`, 10) * parseInt(`${pageSize ?? "1"}`, 10);
 
@@ -145,7 +166,41 @@ export async function getBuilderPatientListWithSearch(
   }
 }
 
-export async function getBuilderPatientsList(
+export async function getBuilderPatientsListFQS(
+  requestContext: CTWRequestContext,
+  paginationOptions: (number | string | undefined)[] = []
+): Promise<GetPatientsTableResultsFQS> {
+  const [pageSize, cursor] = paginationOptions;
+  try {
+    const graphClient = createGraphqlClient(requestContext);
+    const { data } = await fqsRequest<PatientGraphqlResponse>(
+      graphClient,
+      patientsForBuilderQuery,
+      {
+        builderID: requestContext.builderId,
+        cursor,
+        first: pageSize,
+        sort: {
+          lastUpdated: "DESC",
+        },
+        filter: {
+          tag: {
+            nonematch: ["https://zusapi.com/thirdparty/source"],
+          },
+        },
+      }
+    );
+    const models = data.PatientConnection.edges.map((x) => new PatientModel(x.node));
+    return {
+      patients: models,
+      pageInfo: data.PatientConnection.pageInfo,
+    };
+  } catch (e) {
+    throw new Error(`Failed fetching patients: ${e}`);
+  }
+}
+
+export async function getBuilderPatientsListODS(
   requestContext: CTWRequestContext,
   paginationOptions: (number | string | undefined)[] = []
 ): Promise<GetPatientsTableResults> {
@@ -181,7 +236,7 @@ export async function getBuilderPatientsListByIdentifier(
   requestContext: CTWRequestContext,
   paginationOptions: (number | string | undefined)[] = [],
   identifiers: string[] = []
-): Promise<GetPatientsTableResults> {
+): Promise<GetPatientsTableResultsODS> {
   const [pageSize, pageOffset] = paginationOptions;
   const offset = parseInt(`${pageOffset ?? "0"}`, 10) * parseInt(`${pageSize ?? "1"}`, 10);
 
@@ -208,3 +263,9 @@ export async function getBuilderPatientsListByIdentifier(
     throw errorResponse("Failed fetching patients", e);
   }
 }
+
+type GetPatientsTableResults = {
+  patients: PatientModel[];
+  searchParams: SearchParams;
+  total: number;
+};

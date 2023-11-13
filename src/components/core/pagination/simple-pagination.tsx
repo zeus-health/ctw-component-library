@@ -19,25 +19,30 @@ export const SimplePagination = ({
   setCurrentPage,
   currentPage,
   hasNext,
-}: SimplePaginationProps) => (
-  <div className="ctw-simple-pagination ctw-flex ctw-justify-end ctw-space-x-3 ctw-px-6 ctw-py-3">
-    <PaginateButton
-      pageToNavigateTo={currentPage - 1}
-      setCurrentPage={setCurrentPage}
-      className={cx({ "ctw-invisible": currentPage === 1 })}
-    >
-      Prev
-    </PaginateButton>
+}: SimplePaginationProps) => {
+  if (hasNext) {
+    return (
+      <div className="ctw-simple-pagination ctw-flex ctw-justify-end ctw-space-x-3 ctw-px-6 ctw-py-3">
+        <PaginateButton
+          pageToNavigateTo={currentPage - 1}
+          setCurrentPage={setCurrentPage}
+          className={cx({ "ctw-invisible": currentPage === 1 })}
+        >
+          Prev
+        </PaginateButton>
 
-    <PaginateButton
-      pageToNavigateTo={currentPage + 1}
-      setCurrentPage={setCurrentPage}
-      className={cx({ "ctw-invisible": !hasNext })}
-    >
-      Next
-    </PaginateButton>
-  </div>
-);
+        <PaginateButton
+          pageToNavigateTo={currentPage + 1}
+          setCurrentPage={setCurrentPage}
+          className={cx({ "ctw-invisible": !hasNext })}
+        >
+          Next
+        </PaginateButton>
+      </div>
+    );
+  }
+  return <></>;
+};
 
 const PaginateButton = ({
   pageToNavigateTo,

@@ -3,19 +3,16 @@ import "./patients-table.scss";
 import type { TableColumn } from "@/components/core/table/table-helpers";
 import type { PatientModel } from "@/fhir/models/patient";
 import { SearchIcon } from "@heroicons/react/solid";
-import type { Argument } from "classnames";
 import cx from "classnames";
 import { useCallback, useEffect, useState } from "react";
+import { PatientNameColumn, TableOptionProps } from "./patients-table-helper";
 import * as CTWBox from "@/components/core/ctw-box";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { Pagination } from "@/components/core/pagination/pagination";
 import { AnalyticsProvider } from "@/components/core/providers/analytics/analytics-provider";
-import { useQueryWithCTW } from "@/components/core/providers/use-query-with-ctw";
 import { Table } from "@/components/core/table/table";
-import { MinRecordItem } from "@/components/core/table/table-helpers";
-import { getBuilderPatientsList } from "@/fhir/patient-helper";
+import { usePatientsListODS } from "@/fhir/patient-helper";
 import { debounce } from "@/utils/nodash";
-import { QUERY_KEY_PATIENTS_LIST } from "@/utils/query-keys";
 
 export type PatientsTableProps = {
   className?: cx.Argument;
@@ -23,20 +20,6 @@ export type PatientsTableProps = {
   pageSize?: number;
   title?: string;
 } & TableOptionProps<PatientModel>;
-
-// Set of props that are optional configurations for the table.
-export type TableOptionProps<T extends MinRecordItem> = {
-  getRowClasses?: (row: T) => Argument; // Adds a row hover effect and calls onClick.
-  onRowClick?: (row: T) => void;
-};
-
-export function usePatientsList(pageSize: number, pageOffset: number, searchNameValue?: string) {
-  return useQueryWithCTW(
-    QUERY_KEY_PATIENTS_LIST,
-    [pageSize, pageOffset, searchNameValue],
-    getBuilderPatientsList
-  );
-}
 
 /**
  * PatientsTable displays a paginated list of all patients for a builder. In
@@ -57,7 +40,7 @@ export const PatientsTable = withErrorBoundary(
       data: { patients: responsePatients, total: responseTotal } = {},
       isFetching,
       isError,
-    } = usePatientsList(pageSize, currentPage - 1, searchNameValue);
+    } = usePatientsListODS(pageSize, currentPage - 1, searchNameValue);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const debouncedSearch = useCallback(
@@ -146,21 +129,3 @@ const columns: TableColumn<PatientModel>[] = [
     ),
   },
 ];
-
-type PatientNameColumnProps = {
-  patient: PatientModel;
-};
-
-const PatientNameColumn = ({ patient }: PatientNameColumnProps) => (
-  <div className="ctw-flex ctw-items-center">
-    <div className="ctw-ml-4">
-      <div className="ctw-flex ctw-font-medium">
-        <div className="ctw-max-w-xs">{patient.fullName}</div>
-        {patient.gender && <div className="ctw-uppercase"> ({patient.gender[0]})</div>}
-      </div>
-      <div className="ctw-text-content-lighter">
-        {patient.dob} ({patient.age})
-      </div>
-    </div>
-  </div>
-);

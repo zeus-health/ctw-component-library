@@ -1,4 +1,5 @@
 import { Basic, Resource } from "fhir/r4";
+import { formatDateISOToLocal } from "../formatters";
 import {
   SYSTEM_ENRICHMENT,
   SYSTEM_SUMMARY,
@@ -9,11 +10,7 @@ import {
   SYSTEM_ZUS_UNIVERSAL_ID,
 } from "../system-urls";
 import { isFHIRDomainResource, ResourceMap, ResourceTypeString } from "../types";
-import { find, get, orderBy, some, startCase } from "@/utils/nodash";
-import { resources } from "@/i18n";
-import { set } from "date-fns";
-import { string, boolean } from "zod";
-import { formatDateISOToLocal } from "../formatters";
+import { find, orderBy, some, startCase } from "@/utils/nodash";
 
 export abstract class FHIRModel<T extends fhir4.Resource> {
   public resource: T;
@@ -42,6 +39,10 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
 
   get createdAtDisplay(): string | undefined {
     return formatDateISOToLocal(this.createdAt);
+  }
+
+  get lastUpdated(): string | undefined {
+    return this.resource.meta?.lastUpdated || this.createdAt;
   }
 
   get id(): string {

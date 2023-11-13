@@ -15,6 +15,7 @@ export interface ImmunizationGraphqlResponse {
 export const immunizationsQuery = gql`
   ${fragmentOrganization}
   ${fragmentCoding}
+  ${fragmentOrganization}
   ${fragmentPatient}
   query Immunizations($upid: ID!, $cursor: String!, $sort: ImmunizationSortParams!, $first: Int!) {
     ImmunizationConnection(upid: $upid, after: $cursor, sort: $sort, first: $first) {
