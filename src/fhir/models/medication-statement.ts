@@ -20,6 +20,7 @@ import {
   LENS_EXTENSION_MEDICATION_LAST_PRESCRIBER,
   LENS_EXTENSION_MEDICATION_QUANTITY,
   LENS_EXTENSION_MEDICATION_REFILLS,
+  SYSTEM_RXNORM,
 } from "@/fhir/system-urls";
 import { capitalize, compact, find, get } from "@/utils/nodash/fp";
 
@@ -70,7 +71,8 @@ export class MedicationStatementModel extends FHIRModel<fhir4.MedicationStatemen
 
   get display() {
     return codeableConceptLabel(
-      getMedicationCodeableConcept(this.resource, this.includedResources)
+      getMedicationCodeableConcept(this.resource, this.includedResources),
+      SYSTEM_RXNORM
     );
   }
 

@@ -82,9 +82,16 @@ export const fragmentPatient = gql`
   fragment Patient on Patient {
     id
     resourceType
-    extension {
-      url
-      valueString
+    meta {
+      extension {
+        url
+        valueString
+        valueInstant
+      }
+      tag {
+        system
+        code
+      }
     }
     active
     identifier {
@@ -162,6 +169,11 @@ export const fragmentPatient = gql`
       suffix
       text
       use
+    }
+    managingOrganization {
+      resource {
+        ...Organization
+      }
     }
   }
 `;

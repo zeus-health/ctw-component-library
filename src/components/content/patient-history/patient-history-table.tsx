@@ -4,7 +4,7 @@ import cx from "classnames";
 import { useEffect, useState } from "react";
 import { defaultPatientHistoryFilters, patientHistoryFilters } from "./helpers/filters";
 import { useBuilderPatientHistoryList } from "./use-builder-patient-history-list";
-import { TableOptionProps } from "../patients/patients-table";
+import { TableOptionProps } from "../patients/patients-table-helper";
 import { ResourceTableActions } from "../resource/resource-table-actions";
 import { withErrorBoundary } from "@/components/core/error-boundary";
 import { FilterChangeEvent } from "@/components/core/filter-bar/filter-bar-types";

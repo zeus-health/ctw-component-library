@@ -1,5 +1,36 @@
 # ctw-component-library
 
+## 2.1.8
+
+### Patch Changes
+
+- e8afd8d8: Fix bug where if patient history had never been requested it error out on patient chart.
+
+## 2.1.7
+
+### Patch Changes
+
+- 8f5587e3: Fix bug where if patient history had never been requested it error out on patient chart.
+
+## 2.1.6
+
+### Patch Changes
+
+- 6c2d4a21: Fix bug where patient shows no records requested even though they have data.
+
+## 2.1.5
+
+### Patch Changes
+
+- 67f746c5: Fix condition request.
+- 4c7f3558: Fix issue showing add button for medications even when readonly set
+
+## 2.1.4
+
+### Patch Changes
+
+- 1a3347d2: Use FQS for patients list instead
+
 ## 2.1.3
 
 ### Patch Changes

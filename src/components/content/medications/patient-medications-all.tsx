@@ -51,7 +51,7 @@ function PatientMedicationsAllComponent({
   const rowActions = useRowActions(onAddToRecord);
 
   const openDetails = useMedicationDetailsDrawer({
-    rowActions,
+    rowActions: readOnly ? undefined : rowActions,
     enableDismissAndReadActions: true,
   });
 

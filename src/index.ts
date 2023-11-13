@@ -31,7 +31,9 @@ export * from "@/components/content/patient-history/patient-history-last-retriev
 export * from "@/components/content/patient-history/patient-history-table";
 export * from "@/components/content/patient-history/use-patient-history";
 export * from "@/components/content/patients/patients-search";
-export * from "@/components/content/patients/patients-table";
+export * from "@/components/content/patients/patients-table-fqs";
+export * from "@/components/content/patients/patients-table-ods";
+export * from "@/components/content/patients/patients-table-helper";
 export * from "@/components/content/patients-adt/patients-adt-alerts-table";
 export * from "@/components/content/patients-adt/helpers/modal-hooks";
 export * from "@/components/content/patients-adt/helpers/related-encounters";

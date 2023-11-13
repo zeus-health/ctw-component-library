@@ -21,10 +21,12 @@ import {
   ZusAggregatedProfile,
   ZusAggregatedProfileIFrame,
   PatientConditionsAll,
+  PatientsTableFQS,
 } from ".";
 
 import { PatientMedicationDispense } from "./components/content/medication-dispense/patient-medication-dispense";
 import { ThemeProviderProps } from "@/components/core/providers/theme/theme-provider";
+import { PatientsTable } from "./components/content/patients/patients-table-ods";
 
 const {
   VITE_AUTH0_AUDIENCE,
@@ -115,6 +117,18 @@ const components: DemoComponent[] = [
     name: "medication-dispense",
     render: () => <PatientMedicationDispense />,
     title: "Patient Medication Dispense",
+  },
+  {
+    name: "patients-ods", // uses ODS
+    render: () => {
+      return <PatientsTable handleRowClick={() => {}} title="Patients Table (ODS)" />;
+    },
+  },
+  {
+    name: "patients-fqs",
+    render: () => {
+      return <PatientsTableFQS handleRowClick={() => {}} title="Patients Table (FQS)" />;
+    },
   },
   {
     name: "zap",

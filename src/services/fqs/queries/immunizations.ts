@@ -1,6 +1,6 @@
 import { Immunization } from "fhir/r4";
 import { gql } from "graphql-request";
-import { fragmentCoding, fragmentPatient } from "./fragments";
+import { fragmentCoding, fragmentOrganization, fragmentPatient } from "./fragments";
 import { GraphqlConnectionNode, GraphqlPageInfo } from "../client";
 
 export interface ImmunizationConnection {
@@ -14,6 +14,7 @@ export interface ImmunizationGraphqlResponse {
 
 export const immunizationsQuery = gql`
   ${fragmentCoding}
+  ${fragmentOrganization}
   ${fragmentPatient}
   query Immunizations($upid: ID!, $cursor: String!, $sort: ImmunizationSortParams!, $first: Int!) {
     ImmunizationConnection(upid: $upid, after: $cursor, sort: $sort, first: $first) {
