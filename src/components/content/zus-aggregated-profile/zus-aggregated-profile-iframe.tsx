@@ -179,6 +179,7 @@ const ZusAggregatedProfileIFrameComponent = (props: ZusAggregatedProfileProps) =
       const patientProviderProps = {
         patientID: patient.patientID,
         systemURL: patient.systemURL,
+        patientResourceID: patient.patientResourceID,
       };
 
       iframeRef.current?.contentWindow?.postMessage(
@@ -208,6 +209,7 @@ const ZusAggregatedProfileIFrameComponent = (props: ZusAggregatedProfileProps) =
   }, [
     hostedZapReady,
     getRequestContext,
+    patient.patientResourceID,
     patient.patientID,
     patient.systemURL,
     props,
