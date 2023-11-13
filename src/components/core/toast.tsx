@@ -1,5 +1,5 @@
 import { faCircleCheck } from "@fortawesome/free-regular-svg-icons";
-import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
+import { faCircleExclamation, faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cx from "classnames";
 import { toast } from "react-toastify";
@@ -26,7 +26,12 @@ export const notifyError = ({ title, body }: { title?: string; body?: string }) 
         {body}
       </div>
     </div>,
-    { className: "toast-test", icon: false, style: { backgroundColor: "#FEE2E2" } }
+    {
+      className: "toast-test",
+      icon: false,
+      style: { backgroundColor: "#FEE2E2" },
+      closeButton: <FontAwesomeIcon icon={faX} className="ctw-h-4" color="#991B1B" />,
+    }
   );
 
 export const notifySuccess = ({ title, body }: { title?: string; body?: string }) =>
