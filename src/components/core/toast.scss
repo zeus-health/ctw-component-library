@@ -1,5 +1,6 @@
 .ctw-toast-override {
   --toastify-color-info: #4b5563 !important;
+  --toastify-z-index: 10001 !important; /* one higher than the drawer */
 }
 
 .Toastify__close-button {

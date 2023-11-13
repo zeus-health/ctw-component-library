@@ -1,19 +1,30 @@
 import { faCircleCheck } from "@fortawesome/free-regular-svg-icons";
-import { faCircleExclamation, faX } from "@fortawesome/free-solid-svg-icons";
+import { faCircleExclamation, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cx from "classnames";
-import { toast } from "react-toastify";
+import { toast, ToastOptions } from "react-toastify";
 
-export const notifyInfo = ({ title, body }: { title?: string; body?: string }) =>
+export type ToastProps = {
+  title?: string;
+  body?: string;
+  options?: ToastOptions;
+};
+
+export const notifyInfo = ({ title, body, options }: ToastProps) =>
   toast.info(
     <div>
       <div className="ctw-font-medium">{title}</div>
       <div className="ctw-font-normal">{body}</div>
     </div>,
-    { className: "toast-test", type: "info", icon: false, style: { backgroundColor: "#FEE2E2" } }
+    {
+      ...options,
+      type: "info",
+      icon: false,
+      style: { backgroundColor: "#4b5563", ...options?.style },
+    }
   );
 
-export const notifyError = ({ title, body }: { title?: string; body?: string }) =>
+export const notifyError = ({ title, body, options }: ToastProps) =>
   toast.error(
     <div className="ctw-toast-grid-with-icon ">
       <FontAwesomeIcon icon={faCircleExclamation} className="ctw-h-5" color="#EF4444" />
@@ -27,14 +38,14 @@ export const notifyError = ({ title, body }: { title?: string; body?: string }) 
       </div>
     </div>,
     {
-      className: "toast-test",
+      ...options,
       icon: false,
-      style: { backgroundColor: "#FEE2E2" },
-      closeButton: <FontAwesomeIcon icon={faX} className="ctw-h-4" color="#991B1B" />,
+      style: { backgroundColor: "#FEE2E2", zIndex: 99999999, ...options?.style },
+      closeButton: <FontAwesomeIcon icon={faXmark} className="ctw-h-4" color="#991B1B" />,
     }
   );
 
-export const notifySuccess = ({ title, body }: { title?: string; body?: string }) =>
+export const notifySuccess = ({ title, body, options }: ToastProps) =>
   toast.success(
     <div className="ctw-toast-grid-with-icon">
       <FontAwesomeIcon icon={faCircleCheck} className="ctw-h-5" color="#10B981" />
@@ -43,5 +54,10 @@ export const notifySuccess = ({ title, body }: { title?: string; body?: string }
         {body}
       </div>
     </div>,
-    { className: "toast-test", icon: false, style: { backgroundColor: "#4b5563" } }
+    {
+      ...options,
+      className: "toast-test",
+      icon: false,
+      style: { backgroundColor: "#4b5563", ...options?.style },
+    }
   );
