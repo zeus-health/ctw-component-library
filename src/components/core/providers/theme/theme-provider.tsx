@@ -5,10 +5,10 @@ import { IFrameTheme } from "@/components/content/zus-aggregated-profile/zus-agg
 import i18next, { Locals } from "@/i18n";
 import { DefaultTheme, EmptyTailwindCSSVars, mapToCSSVar, Theme } from "@/styles/tailwind.theme";
 import { merge } from "@/utils/nodash";
+import "react-toastify/dist/ReactToastify.css";
+
 import "../../main.scss";
 import "../../toast.scss";
-
-import "react-toastify/dist/ReactToastify.css";
 
 export type ThemeProviderProps = {
   theme?: Theme & { iframe?: IFrameTheme };
