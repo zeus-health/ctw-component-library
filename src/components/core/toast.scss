@@ -1,21 +1,21 @@
 .ctw-toast-override {
-  --toastify-color-info: #4b5563 !important;
-  --toastify-z-index: 10001 !important; /* one higher than the drawer */
+  --toastify-color-info: #4b5563;
+  --toastify-z-index: 10101; /* one higher than modals which are above drawers */
 }
 
 .Toastify__close-button {
-  color: #e5e7eb !important;
+  color: #e5e7eb;
 }
 
 .Toastify__toast {
-  border-radius: 8px !important;
-  padding: 16px !important;
+  border-radius: 8px;
+  padding: 16px;
 }
 
 .Toastify__toast-body {
-  padding: 0px 30px 0px 0px !important;
-  margin: unset !important;
-  align-items: baseline !important;
+  padding: 0 30px 0 0;
+  margin: unset;
+  align-items: baseline;
 }
 
 .ctw-toast-grid-with-icon {
@@ -30,10 +30,10 @@
 }
 
 .Toastify__toast-container {
-  max-width: 528px !important;
-  width: fit-content !important;
+  max-width: 528px;
+  width: fit-content;
 }
 
 :root {
-  --toastify-toast-min-height: unset !important;
+  --toastify-toast-min-height: unset;
 }
