@@ -2,7 +2,7 @@ import { SearchParams } from "fhir-kit-client";
 import { getIncludedResources } from "./bundle";
 import { PatientModel } from "./models";
 import { searchBuilderRecords } from "./search-helpers";
-import { SYSTEM_ZUS_UPI_RECORD_TYPE } from "./system-urls";
+import { SYSTEM_ZUS_OWNER, SYSTEM_ZUS_UPI_RECORD_TYPE } from "./system-urls";
 import { useQueryWithPatient } from "..";
 import { CTWRequestContext } from "../components/core/providers/ctw-context";
 import { useQueryWithCTW } from "../components/core/providers/use-query-with-ctw";
@@ -32,36 +32,47 @@ export function useMatchedPatients() {
   const matchedPatientsQuery = useQueryWithPatient(
     QUERY_KEY_MATCHED_PATIENTS,
     [],
-    withTimerMetric(getPatientsForUPIDFQS(), "req.timing.matched_patients")
+    withTimerMetric(
+      async (requestContext: CTWRequestContext, patient: PatientModel) =>
+        getPatientsForUPIDFQS(requestContext, patient, {
+          tag: {
+            nonematch: [`${SYSTEM_ZUS_OWNER}|builder/${requestContext.builderId}`],
+          },
+        }),
+      "req.timing.matched_patients"
+    )
   );
 
   return matchedPatientsQuery;
 }
 
-export function getPatientsForUPIDFQS() {
-  return async (requestContext: CTWRequestContext, patient: PatientModel) => {
-    try {
-      const graphClient = createGraphqlClient(requestContext);
-      const { data } = await fqsRequest<PatientGraphqlResponse>(graphClient, patientsForUPIDQuery, {
-        upid: patient.UPID,
-        cursor: "",
-        first: MAX_OBJECTS_PER_REQUEST,
-        sort: {
-          lastUpdated: "DESC",
-        },
-      });
-      return data.PatientConnection.edges
-        .filter(
-          (p) =>
-            !p.node.meta?.tag?.some(
-              (t) => t.system === SYSTEM_ZUS_UPI_RECORD_TYPE && t.code === "universal"
-            )
-        )
-        .map((x) => new PatientModel(x.node));
-    } catch (e) {
-      throw new Error(`Failed fetching patients: ${e}`);
-    }
-  };
+export async function getPatientsForUPIDFQS(
+  requestContext: CTWRequestContext,
+  patient: PatientModel,
+  filter: Record<string, unknown> = {}
+) {
+  try {
+    const graphClient = createGraphqlClient(requestContext);
+    const { data } = await fqsRequest<PatientGraphqlResponse>(graphClient, patientsForUPIDQuery, {
+      upid: patient.UPID,
+      cursor: "",
+      first: MAX_OBJECTS_PER_REQUEST,
+      sort: {
+        lastUpdated: "DESC",
+      },
+      filter,
+    });
+    return data.PatientConnection.edges
+      .filter(
+        (p) =>
+          !p.node.meta?.tag?.some(
+            (t) => t.system === SYSTEM_ZUS_UPI_RECORD_TYPE && t.code === "universal"
+          )
+      )
+      .map((x) => new PatientModel(x.node));
+  } catch (e) {
+    throw new Error(`Failed fetching patients: ${e}`);
+  }
 }
 
 // Returns a single FHIR patient given a patientID and systemURL.
