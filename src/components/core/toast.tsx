@@ -28,7 +28,7 @@ export const notifyError = ({ title, body, options }: ToastProps) =>
   toast.error(
     <div className="ctw-toast-grid-with-icon ">
       <FontAwesomeIcon icon={faCircleExclamation} className="ctw-h-5 ctw-text-error-main" />
-      <div className="ctw-font-medium ctw-text-error-text">{title}</div>
+      {title && <div className="ctw-font-medium ctw-text-error-text">{title}</div>}
       <div
         className={cx("ctw-font-normal ctw-text-error-text", {
           "ctw-toast-grid-with-icon-body-text": title,
