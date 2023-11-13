@@ -20,14 +20,14 @@ export const notifyInfo = ({ title, body, options }: ToastProps) =>
       ...options,
       type: "info",
       icon: false,
-      style: { backgroundColor: "#4b5563", ...options?.style },
+      style: { backgroundColor: "var(--ctw-info-background)", ...options?.style },
     }
   );
 
 export const notifyError = ({ title, body, options }: ToastProps) =>
   toast.error(
     <div className="ctw-toast-grid-with-icon ">
-      <FontAwesomeIcon icon={faCircleExclamation} className="ctw-h-5" color="#EF4444" />
+      <FontAwesomeIcon icon={faCircleExclamation} className="ctw-h-5 ctw-text-error-main" />
       <div className="ctw-font-medium ctw-text-error-text">{title}</div>
       <div
         className={cx("ctw-font-normal ctw-text-error-text", {
@@ -40,15 +40,15 @@ export const notifyError = ({ title, body, options }: ToastProps) =>
     {
       ...options,
       icon: false,
-      style: { backgroundColor: "#FEE2E2", zIndex: 99999999, ...options?.style },
-      closeButton: <FontAwesomeIcon icon={faXmark} className="ctw-h-4" color="#991B1B" />,
+      style: { backgroundColor: "var(--ctw-error-background)", ...options?.style },
+      closeButton: <FontAwesomeIcon icon={faXmark} className="ctw-h-4 ctw-text-error-text" />,
     }
   );
 
 export const notifySuccess = ({ title, body, options }: ToastProps) =>
   toast.success(
     <div className="ctw-toast-grid-with-icon">
-      <FontAwesomeIcon icon={faCircleCheck} className="ctw-h-5" color="#10B981" />
+      <FontAwesomeIcon icon={faCircleCheck} className="ctw-h-5 ctw-text-success-main" />
       {title && <div className="ctw-font-medium">{title}</div>}
       <div className={cx(`ctw-font-normal`, { "ctw-toast-grid-with-icon-body-text": title })}>
         {body}
@@ -58,6 +58,6 @@ export const notifySuccess = ({ title, body, options }: ToastProps) =>
       ...options,
       className: "toast-test",
       icon: false,
-      style: { backgroundColor: "#4b5563", ...options?.style },
+      style: { backgroundColor: "var(--ctw-info-background)", ...options?.style },
     }
   );
