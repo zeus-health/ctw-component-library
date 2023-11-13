@@ -15,9 +15,8 @@ export function ToastProvider({ children, containerId }: ProviderProps) {
   return (
     <ToastContext.Provider value={undefined}>
       <ToastContainer
-        className="ctw-toast-override"
         position="bottom-left"
-        autoClose={4000}
+        autoClose={40000}
         hideProgressBar
         closeOnClick
         rtl={false}

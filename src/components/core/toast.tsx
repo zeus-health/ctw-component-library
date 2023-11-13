@@ -51,7 +51,8 @@ export const notifyInfo = ({ title, body, options, containerId }: Omit<ToastProp
       type: "info",
       icon: false,
       containerId,
-      style: { backgroundColor: "var(--ctw-info-background)", ...options?.style },
+      className: "ctw-toast-override !ctw-bg-notification-dark",
+      style: options?.style,
     }
   );
 
@@ -72,7 +73,8 @@ export const notifyError = ({ title, body, options, containerId }: Omit<ToastPro
       ...options,
       icon: false,
       containerId,
-      style: { backgroundColor: "var(--ctw-error-background)", ...options?.style },
+      className: "ctw-toast-override !ctw-bg-error-light",
+      style: options?.style,
       closeButton: <FontAwesomeIcon icon={faXmark} className="ctw-h-4 ctw-text-error-text" />,
     }
   );
@@ -90,6 +92,7 @@ export const notifySuccess = ({ title, body, options, containerId }: Omit<ToastP
       ...options,
       icon: false,
       containerId,
-      style: { backgroundColor: "var(--ctw-info-background)", ...options?.style },
+      className: "ctw-toast-override !ctw-bg-notification-dark",
+      style: options?.style,
     }
   );
