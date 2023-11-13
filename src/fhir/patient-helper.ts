@@ -1,5 +1,17 @@
 import { SearchParams } from "fhir-kit-client";
 import { getIncludedResources } from "./bundle";
+import { PatientModel } from "./models";
+import { searchBuilderRecords } from "./search-helpers";
+import { SYSTEM_ZUS_UPI_RECORD_TYPE } from "./system-urls";
+import { useQueryWithPatient } from "..";
+import { CTWRequestContext } from "../components/core/providers/ctw-context";
+import { useQueryWithCTW } from "../components/core/providers/use-query-with-ctw";
+import {
+  createGraphqlClient,
+  fqsRequest,
+  GraphqlPageInfo,
+  MAX_OBJECTS_PER_REQUEST,
+} from "../services/fqs/client";
 import {
   PatientGraphqlResponse,
   patientsForBuilderQuery,
@@ -7,18 +19,14 @@ import {
 } from "@/services/fqs/queries/patients";
 import { errorResponse } from "@/utils/errors";
 import { pickBy } from "@/utils/nodash";
-
-import { QUERY_KEY_MATCHED_PATIENTS, QUERY_KEY_PATIENTS_LIST_FQS, QUERY_KEY_PATIENTS_LIST_ODS } from "@/utils/query-keys";
+import {
+  QUERY_KEY_MATCHED_PATIENTS,
+  QUERY_KEY_PATIENTS_LIST_FQS,
+  QUERY_KEY_PATIENTS_LIST_ODS,
+} from "@/utils/query-keys";
 import { sort } from "@/utils/sort";
 import { withTimerMetric } from "@/utils/telemetry";
 import { hasNumber } from "@/utils/types";
-import { useQueryWithPatient } from "..";
-import { CTWRequestContext } from "../components/core/providers/ctw-context";
-import { useQueryWithCTW } from "../components/core/providers/use-query-with-ctw";
-import { createGraphqlClient, fqsRequest, MAX_OBJECTS_PER_REQUEST, GraphqlPageInfo } from "../services/fqs/client";
-import { PatientModel } from "./models";
-import { searchBuilderRecords } from "./search-helpers";
-import { SYSTEM_ZUS_UPI_RECORD_TYPE } from "./system-urls";
 
 export function useMatchedPatients() {
   const matchedPatientsQuery = useQueryWithPatient(
@@ -55,28 +63,6 @@ function getPatientsForUPIDFQS() {
     }
   };
 }
-
-export async function getPatientsForBuilder(
-  requestContext: CTWRequestContext,
-  first: number,
-  cursor?: string
-) {
-  try {
-    const graphClient = createGraphqlClient(requestContext);
-    const { data } = await fqsRequest<PatientGraphqlResponse>(
-      graphClient,
-      patientsForBuilderQuery,
-      {
-        builderID: requestContext.builderId,
-        cursor: cursor ?? "",
-        first,
-        sort: {
-          lastUpdated: "DESC",
-        },
-      }
-    );
-    return data.PatientConnection.edges.map((x) => new PatientModel(x.node));
-
 
 // Returns a single FHIR patient given a patientID and systemURL.
 // If multiple patients are found then it returns the last updated.
