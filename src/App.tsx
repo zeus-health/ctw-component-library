@@ -40,6 +40,7 @@ const {
   VITE_ENV = "dev",
   VITE_PATIENT_ID,
   VITE_SYSTEM_URL,
+  VITE_PATIENT_RESOURCE_ID,
 } = import.meta.env;
 
 type DemoComponent = {
@@ -196,6 +197,7 @@ const DemoApp = ({ accessToken = "" }) => {
     </CTWProvider>
   );
 };
+
 
 function App() {
   if (VITE_AUTH0_DOMAIN && VITE_AUTH0_CLIENT_ID && VITE_AUTH0_AUDIENCE) {

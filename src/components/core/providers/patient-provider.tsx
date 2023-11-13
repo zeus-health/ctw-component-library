@@ -7,7 +7,7 @@ import { PatientContext, PatientState } from "./patient-context";
 import { useCTW } from "./use-ctw";
 import { editPatient, PatientFormData } from "../../content/forms/actions/patients";
 import { PatientModel } from "@/fhir/models/patient";
-import { getBuilderFhirPatient } from "@/fhir/patient-helper";
+import { getBuilderFhirPatientByExternalIdentifier, getPatientByID } from "@/fhir/patient-helper";
 import { SYSTEM_ZUS_UNIVERSAL_ID } from "@/fhir/system-urls";
 import { Tag } from "@/fhir/types";
 import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
@@ -19,13 +19,22 @@ import { withTimerMetric } from "@/utils/telemetry";
 const PATIENT_STALE_TIME = 1000 * 60 * 5;
 
 type ThirdPartyID = {
+  patientResourceID?: never;
   patientUPID?: never;
   patientID: string;
   systemURL: string;
 };
 
 type PatientUPIDSpecified = {
+  patientResourceID?: never;
   patientUPID: string;
+  patientID?: never;
+  systemURL?: never;
+};
+
+type PatientResourceID = {
+  patientResourceID: string;
+  patientUPID?: never;
   patientID?: never;
   systemURL?: never;
 };
@@ -35,10 +44,11 @@ export type PatientProviderProps = {
   tags?: Tag[];
   onPatientSave?: (data: PatientFormData) => void;
   onResourceSave?: (data: fhir4.Resource, action: "create" | "update") => void;
-} & (ThirdPartyID | PatientUPIDSpecified);
+} & (ThirdPartyID | PatientUPIDSpecified | PatientResourceID);
 
 export function PatientProvider({
   children,
+  patientResourceID,
   patientUPID,
   patientID,
   systemURL,
@@ -48,13 +58,14 @@ export function PatientProvider({
 }: PatientProviderProps) {
   const providerState = useMemo(
     () => ({
+      patientResourceID,
       patientID: patientUPID || patientID,
       systemURL: patientUPID ? SYSTEM_ZUS_UNIVERSAL_ID : systemURL,
       tags,
       onPatientSave,
       onResourceSave,
     }),
-    [patientID, patientUPID, systemURL, tags, onPatientSave, onResourceSave]
+    [patientResourceID, patientID, patientUPID, systemURL, tags, onPatientSave, onResourceSave]
   );
 
   return (
@@ -80,18 +91,24 @@ export function usePatient(): UseQueryResult<PatientModel, unknown> {
 
   const context = usePatientContext();
 
-  const { patientID, systemURL, tags } = context;
+  const { patientResourceID, patientID, systemURL, tags } = context;
 
   return useQuery({
-    queryKey: [QUERY_KEY_PATIENT, patientID, systemURL, tags],
+    queryKey: [QUERY_KEY_PATIENT, patientResourceID, patientID, systemURL, tags],
     queryFn: withTimerMetric(async () => {
       const requestContext = await getRequestContext();
-      return getBuilderFhirPatient(requestContext, patientID, systemURL, {
-        _tag: tags?.map((tag) => `${tag.system}|${tag.code}`) ?? [],
-      });
+      if (systemURL && patientID) {
+        return getBuilderFhirPatientByExternalIdentifier(requestContext, patientID, systemURL, {
+          _tag: tags?.map((tag) => `${tag.system}|${tag.code}`) ?? [],
+        });
+      }
+      if (patientResourceID) {
+        return getPatientByID(requestContext, patientResourceID);
+      }
+      throw new Error("Must specify a patient ID and system URL or a patient FHIR resource ID");
     }, "req.get_builder_fhir_patient"),
     staleTime: PATIENT_STALE_TIME,
-    enabled: !!patientID,
+    enabled: !!patientID || !!patientResourceID,
   });
 }
 
@@ -103,15 +120,21 @@ export function usePatientPromise() {
   return {
     context,
     getPatient: useCallback(() => {
-      const { patientID, systemURL, tags } = context;
+      const { patientResourceID, patientID, systemURL, tags } = context;
 
       return queryClient.fetchQuery(
         [QUERY_KEY_PATIENT, patientID, systemURL, tags],
         async () => {
           const requestContext = await getRequestContext();
-          return getBuilderFhirPatient(requestContext, patientID, systemURL, {
-            _tag: tags?.map((tag) => `${tag.system}|${tag.code}`) ?? [],
-          });
+          if (systemURL && patientID) {
+            return getBuilderFhirPatientByExternalIdentifier(requestContext, patientID, systemURL, {
+              _tag: tags?.map((tag) => `${tag.system}|${tag.code}`) ?? [],
+            });
+          }
+          if (patientResourceID) {
+            return getPatientByID(requestContext, patientResourceID);
+          }
+          throw new Error("Must specify a patient ID and system URL or a patient FHIR resource ID");
         },
         { staleTime: PATIENT_STALE_TIME }
       );
@@ -155,7 +178,6 @@ export function useQueryWithPatient<T, T2>(
       )} does not have a UPID`
     );
   }
-
   return useQuery({
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [queryKey, patientResponse.data, ...keys],
