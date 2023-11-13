@@ -1,5 +1,12 @@
 # ctw-component-library
 
+## 2.1.9
+
+### Patch Changes
+
+- 76143b7c: Favor showing RxNorm display values for medications.
+- 58246813: Add option for passing patient FHIR resource ID to PatientProvider.
+
 ## 2.1.8
 
 ### Patch Changes

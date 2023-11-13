@@ -77,7 +77,7 @@ export async function getPatientsForUPIDFQS(
 
 // Returns a single FHIR patient given a patientID and systemURL.
 // If multiple patients are found then it returns the last updated.
-export async function getBuilderFhirPatient(
+export async function getBuilderFhirPatientByExternalIdentifier(
   requestContext: CTWRequestContext,
   patientID: string,
   systemURL: string,
@@ -108,6 +108,18 @@ export async function getBuilderFhirPatient(
     sort(patients, "meta.lastUpdated", "desc", true)[0],
     getIncludedResources(bundle)
   );
+}
+
+export async function getPatientByID(
+  requestContext: CTWRequestContext,
+  patientID: string
+): Promise<PatientModel> {
+  const response = await requestContext.fhirClient.read({
+    resourceType: "Patient",
+    id: patientID,
+  });
+
+  return new PatientModel(response as fhir4.Patient);
 }
 
 export function usePatientsListFQS(pageSize: number, cursor: string) {
