@@ -8,9 +8,39 @@ export type ToastProps = {
   title?: string;
   body?: string;
   options?: ToastOptions;
+  containerId?: string;
+  type: "success" | "info" | "error";
 };
 
-export const notifyInfo = ({ title, body, options }: ToastProps) =>
+export const APP_TOAST_CONTAINER_ID = "ctw-toast-container";
+export const APP_TOAST_CONTAINER_DRAWER_ID = "ctw-toast-container-drawer";
+
+export const drawerToastStyles = { style: { bottom: "40px" } };
+
+export const notify = ({
+  type,
+  title,
+  body,
+  options,
+  containerId = APP_TOAST_CONTAINER_ID,
+}: ToastProps) => {
+  // Do switch statement based on type
+  switch (type) {
+    case "success":
+      notifySuccess({ title, body, options, containerId });
+      break;
+    case "info":
+      notifyInfo({ title, body, options, containerId });
+      break;
+    case "error":
+      notifyError({ title, body, options, containerId });
+      break;
+    default:
+      throw new Error(`Unknown toast type: ${type}`);
+  }
+};
+
+export const notifyInfo = ({ title, body, options, containerId }: Omit<ToastProps, "type">) =>
   toast.info(
     <div>
       <div className="ctw-font-medium">{title}</div>
@@ -20,11 +50,12 @@ export const notifyInfo = ({ title, body, options }: ToastProps) =>
       ...options,
       type: "info",
       icon: false,
+      containerId,
       style: { backgroundColor: "var(--ctw-info-background)", ...options?.style },
     }
   );
 
-export const notifyError = ({ title, body, options }: ToastProps) =>
+export const notifyError = ({ title, body, options, containerId }: Omit<ToastProps, "type">) =>
   toast.error(
     <div className="ctw-toast-grid-with-icon ">
       <FontAwesomeIcon icon={faCircleExclamation} className="ctw-h-5 ctw-text-error-main" />
@@ -40,12 +71,13 @@ export const notifyError = ({ title, body, options }: ToastProps) =>
     {
       ...options,
       icon: false,
+      containerId,
       style: { backgroundColor: "var(--ctw-error-background)", ...options?.style },
       closeButton: <FontAwesomeIcon icon={faXmark} className="ctw-h-4 ctw-text-error-text" />,
     }
   );
 
-export const notifySuccess = ({ title, body, options }: ToastProps) =>
+export const notifySuccess = ({ title, body, options, containerId }: Omit<ToastProps, "type">) =>
   toast.success(
     <div className="ctw-toast-grid-with-icon">
       <FontAwesomeIcon icon={faCircleCheck} className="ctw-h-5 ctw-text-success-main" />
@@ -56,8 +88,8 @@ export const notifySuccess = ({ title, body, options }: ToastProps) =>
     </div>,
     {
       ...options,
-      className: "toast-test",
       icon: false,
+      containerId,
       style: { backgroundColor: "var(--ctw-info-background)", ...options?.style },
     }
   );

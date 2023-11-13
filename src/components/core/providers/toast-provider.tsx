@@ -1,15 +1,17 @@
 import { ReactNode } from "react";
 import { ToastContainer, Zoom } from "react-toastify";
 import { ToastContext } from "./toast-context";
+import { APP_TOAST_CONTAINER_ID } from "../toast";
 
 import "react-toastify/dist/ReactToastify.css";
 import "../toast.scss";
 
 interface ProviderProps {
   children: ReactNode;
+  containerId?: string;
 }
 
-export function ToastProvider({ children }: ProviderProps) {
+export function ToastProvider({ children, containerId }: ProviderProps) {
   return (
     <ToastContext.Provider value={undefined}>
       <ToastContainer
@@ -24,6 +26,8 @@ export function ToastProvider({ children }: ProviderProps) {
         pauseOnFocusLoss
         pauseOnHover
         theme="colored"
+        enableMultiContainer
+        containerId={containerId || APP_TOAST_CONTAINER_ID}
       />
       {children}
     </ToastContext.Provider>

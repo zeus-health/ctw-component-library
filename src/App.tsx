@@ -27,7 +27,7 @@ import {
 import { PatientMedicationDispense } from "./components/content/medication-dispense/patient-medication-dispense";
 import { ThemeProviderProps } from "@/components/core/providers/theme/theme-provider";
 import { PatientsTable } from "./components/content/patients/patients-table-ods";
-import { notifyError } from "./components/core/toast";
+import { notify } from "./components/core/toast";
 
 const {
   VITE_AUTH0_AUDIENCE,
@@ -162,7 +162,8 @@ const demoComponents = components.filter(({ name }) =>
 const DemoApp = ({ accessToken = "" }) => {
   useEffect(() => {
     if (VITE_ENV === "production") {
-      notifyError({
+      notify({
+        type: "error",
         title: "Warning",
         body: "You are using production. Proceed carefully",
       });
