@@ -14,19 +14,21 @@ import {
 import { withTimerMetric } from "@/utils/telemetry";
 
 // Gets patient medications for the builder, excluding meds where the information source is patient.
-export function usePatientBuilderMedications() {
+export function usePatientBuilderMedications(enabled = true) {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
     [],
-    withTimerMetric(getBuilderMedicationsFQS, "req.timing.builder_medications")
+    withTimerMetric(getBuilderMedicationsFQS, "req.timing.builder_medications"),
+    enabled
   );
 }
 
-export function usePatientSummaryMedications() {
+export function usePatientSummaryMedications(enabled = true) {
   return useQueryWithPatient(
     QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
     [],
-    withTimerMetric(getSummaryMedicationsFQS, "req.timing.summary_medications")
+    withTimerMetric(getSummaryMedicationsFQS, "req.timing.summary_medications"),
+    enabled
   );
 }
 
@@ -35,7 +37,7 @@ export function usePatientSummaryMedications() {
  * categories ("Builder Medications" and "Other Provider Medications"). This is
  * useful when creating content such as the <PatientMedications /> component.
  */
-export function useQueryAllPatientMedications() {
+export function useQueryAllPatientMedications(enabled = true) {
   const [expandedBuilderMedications, setExpandedBuilderMedications] = useState<
     MedicationStatementModel[]
   >([]);
@@ -44,8 +46,8 @@ export function useQueryAllPatientMedications() {
   >([]);
   const [allMedications, setAllMedications] = useState<MedicationStatementModel[]>([]);
 
-  const summaryMedicationsQuery = usePatientSummaryMedications();
-  const builderMedicationsQuery = usePatientBuilderMedications();
+  const summaryMedicationsQuery = usePatientSummaryMedications(enabled);
+  const builderMedicationsQuery = usePatientBuilderMedications(enabled);
 
   // This query is a noop when FQS is disabled and will just return an empty list of basic resources.
   const basicQuery = usePatientBasicResources();

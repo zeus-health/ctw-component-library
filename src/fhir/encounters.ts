@@ -42,11 +42,12 @@ function getEncountersFromFQS(limit: number) {
   };
 }
 
-export function usePatientEncounters(limit = MAX_OBJECTS_PER_REQUEST) {
+export function usePatientEncounters(limit = MAX_OBJECTS_PER_REQUEST, enabled = true) {
   const patientEncountersQuery = useQueryWithPatient(
     QUERY_KEY_PATIENT_ENCOUNTERS,
     [limit],
-    withTimerMetric(getEncountersFromFQS(limit), `req.timing.encounters`)
+    withTimerMetric(getEncountersFromFQS(limit), `req.timing.encounters`),
+    enabled
   );
   return useIncludeBasics(patientEncountersQuery);
 }

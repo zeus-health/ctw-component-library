@@ -13,11 +13,12 @@ import { QUERY_KEY_PATIENT_IMMUNIZATIONS } from "@/utils/query-keys";
 import { sort } from "@/utils/sort";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
-export function usePatientImmunizations() {
+export function usePatientImmunizations(enabled = true) {
   const patientImmunizationsQuery = useQueryWithPatient(
     QUERY_KEY_PATIENT_IMMUNIZATIONS,
     [],
-    withTimerMetric(getImmunizationFromFQS, "req.timing.immunizations")
+    withTimerMetric(getImmunizationFromFQS, "req.timing.immunizations"),
+    enabled
   );
 
   return useIncludeBasics(patientImmunizationsQuery);

@@ -10,8 +10,8 @@ import { orderBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_DOCUMENTS } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
-export function usePatientTopLevelDocuments(limit = MAX_OBJECTS_PER_REQUEST) {
-  const { data, isError, isFetching, isLoading } = usePatientDocuments(limit);
+export function usePatientTopLevelDocuments(limit = MAX_OBJECTS_PER_REQUEST, enabled = true) {
+  const { data, isError, isFetching, isLoading } = usePatientDocuments(limit, enabled);
   const [filteredData, setFilteredData] = useState([] as DocumentModel[]);
 
   useEffect(() => {
@@ -37,11 +37,12 @@ export function usePatientTopLevelDocuments(limit = MAX_OBJECTS_PER_REQUEST) {
   };
 }
 
-export function usePatientDocuments(limit = MAX_OBJECTS_PER_REQUEST) {
+export function usePatientDocuments(limit = MAX_OBJECTS_PER_REQUEST, enabled = true) {
   const patientDocumentsQuery = useQueryWithPatient(
     QUERY_KEY_PATIENT_DOCUMENTS,
     [limit],
-    withTimerMetric(getDocumentsFromFQS(limit), "req.timing.documents")
+    withTimerMetric(getDocumentsFromFQS(limit), "req.timing.documents"),
+    enabled
   );
 
   return useIncludeBasics(patientDocumentsQuery);

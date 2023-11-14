@@ -74,6 +74,8 @@ export * from "@/hooks/use-medications";
 export * from "@/components/content/resource/resource-table-actions";
 export * from "@/components/content/resource/helpers/filters";
 export * from "@/services/fqs/client";
+export { useUnreadZAPTabsCount } from "@/components/content/unread-records-notification";
+
 // Models
 export * from "@/fhir/models";
 export * from "@/fhir/medications";

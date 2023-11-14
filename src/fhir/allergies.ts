@@ -8,11 +8,12 @@ import { AllergyGraphqlResponse, allergyQuery } from "@/services/fqs/queries/all
 import { QUERY_KEY_PATIENT_ALLERGIES } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
-export function usePatientAllergies() {
+export function usePatientAllergies(enabled = true) {
   const patientAllergiesQuery = useQueryWithPatient(
     QUERY_KEY_PATIENT_ALLERGIES,
     [],
-    withTimerMetric(getAllergyIntoleranceFromFQS, "req.timing.allergies")
+    withTimerMetric(getAllergyIntoleranceFromFQS, "req.timing.allergies"),
+    enabled
   );
 
   return useIncludeBasics(patientAllergiesQuery);
