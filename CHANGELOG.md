@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 2.2.1
+
+### Patch Changes
+
+- 3211324b: Add MatchedPatients component
+
 ## 2.2.0
 
 ### Minor Changes
