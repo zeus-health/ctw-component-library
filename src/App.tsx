@@ -26,6 +26,8 @@ import {
 
 import { PatientMedicationDispense } from "./components/content/medication-dispense/patient-medication-dispense";
 import { ThemeProviderProps } from "@/components/core/providers/theme/theme-provider";
+import { UseQueryResult } from "@tanstack/react-query";
+import { MatchedPatients } from "./components/content/matched-patients/matched-patients";
 import { PatientsTable } from "./components/content/patients/patients-table-ods";
 import { notify } from "./components/core/toast";
 
@@ -120,6 +122,12 @@ const components: DemoComponent[] = [
     title: "Patient Medication Dispense",
   },
   {
+    name: "matched-patients",
+    render: () => {
+      return <MatchedPatients />;
+    },
+  },
+  {
     name: "patients-ods", // uses ODS
     render: () => {
       return <PatientsTable handleRowClick={() => {}} title="Patients Table (ODS)" />;
@@ -184,7 +192,11 @@ const DemoApp = ({ accessToken = "" }) => {
         console.log("Result of saving a resource", resource, action, error);
       }}
     >
-      <PatientProvider patientID={VITE_PATIENT_ID} systemURL={VITE_SYSTEM_URL}>
+      <PatientProvider
+        patientID={VITE_PATIENT_ID}
+        systemURL={VITE_SYSTEM_URL}
+        patientResourceID={VITE_PATIENT_RESOURCE_ID}
+      >
         {demoComponents.map((demo, index) => (
           <div className="ctw-space-y-5 ctw-bg-white" key={index}>
             <h3>
