@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 2.2.2
+
+### Patch Changes
+
+- 43cc0ff2: Fix broken FQS queries
+
 ## 2.2.1
 
 ### Patch Changes
