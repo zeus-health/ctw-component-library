@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 2.2.0
+
+### Minor Changes
+
+- 79982169: Add generic toast component.
+
 ## 2.1.9
 
 ### Patch Changes
