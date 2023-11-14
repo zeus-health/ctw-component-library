@@ -31,8 +31,7 @@ contained {
   }
 }`;
 
-export const getDiagnosticReportQuery = (includeObservations: boolean) => gql`
-  ${fragmentOrganization}  
+export const getDiagnosticReportQuery = (includeObservations: boolean) => gql`    
   ${fragmentCoding}
   ${fragmentOrganization}
   ${fragmentPatient}

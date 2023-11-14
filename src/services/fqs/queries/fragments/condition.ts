@@ -16,8 +16,7 @@ const subjectFragment = `subject {
       }
     }`;
 
-export const fragmentCondition = `
-    ${fragmentOrganization}      
+export const fragmentCondition = `  
     ${fragmentCoding}
     ${fragmentPatient}
     ${fragmentOrganization}

@@ -19,7 +19,6 @@ export interface AllergyGraphqlResponse {
 }
 
 export const allergyQuery = gql`
-  ${fragmentOrganization}
   ${fragmentCoding}
   ${fragmentOrganization}
   ${fragmentPatient}

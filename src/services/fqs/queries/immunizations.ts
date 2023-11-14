@@ -13,7 +13,6 @@ export interface ImmunizationGraphqlResponse {
 }
 
 export const immunizationsQuery = gql`
-  ${fragmentOrganization}
   ${fragmentCoding}
   ${fragmentOrganization}
   ${fragmentPatient}
