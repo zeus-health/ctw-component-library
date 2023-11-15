@@ -12,10 +12,10 @@ export type PatientHistoryResponseError = {
 
 export const schedulePatientHistory = async (
   requestContext: CTWRequestContext,
-  patientIdentifiers: { systemURL: string; patientID: string },
+  patientIdentifier: { systemURL?: string; patientID?: string },
   resultData: { id?: string; npi: string; role: string; name: string }
 ) => {
-  const { systemURL, patientID } = patientIdentifiers;
+  const { systemURL, patientID } = patientIdentifier;
   const endpointUrl = `${getZusProxyApiBaseUrl(
     requestContext.env
     // If patientID is empty, just pass any non-identifying string in url.
@@ -62,7 +62,7 @@ export const schedulePatientHistory = async (
     return await response.json();
   } catch (e) {
     const err = e as Error;
-    const errorMessage = `Error scheduling patient history job with patientID of ${patientID}: ${err.message}`;
+    const errorMessage = `Error requesting patient history.`;
     Telemetry.logError(err, errorMessage);
     return new Error(errorMessage);
   }

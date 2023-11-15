@@ -1,4 +1,5 @@
 import { Basic, Resource } from "fhir/r4";
+import { formatDateISOToLocal } from "../formatters";
 import {
   SYSTEM_ENRICHMENT,
   SYSTEM_SUMMARY,
@@ -34,6 +35,10 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
 
   get createdAt(): string | undefined {
     return find(this.resource.meta?.extension, { url: SYSTEM_ZUS_CREATED_AT })?.valueInstant;
+  }
+
+  get createdAtDisplay(): string | undefined {
+    return formatDateISOToLocal(this.createdAt);
   }
 
   get lastUpdated(): string | undefined {
@@ -98,6 +103,11 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
 
   get isThirdPartyData(): boolean {
     return this.resource.meta?.tag?.some((t) => t.system === SYSTEM_ZUS_THIRD_PARTY) ?? false;
+  }
+
+  // If the data came from a third party data source then return that name
+  get thirdPartyDataSourceName(): string | undefined {
+    return this.resource.meta?.tag?.find((t) => t.system === SYSTEM_ZUS_THIRD_PARTY)?.code;
   }
 
   get patientUPID(): string | undefined {

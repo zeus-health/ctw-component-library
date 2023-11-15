@@ -1,5 +1,30 @@
 # ctw-component-library
 
+## 2.2.2
+
+### Patch Changes
+
+- 43cc0ff2: Fix broken FQS queries
+
+## 2.2.1
+
+### Patch Changes
+
+- 3211324b: Add MatchedPatients component
+
+## 2.2.0
+
+### Minor Changes
+
+- 79982169: Add generic toast component.
+
+## 2.1.9
+
+### Patch Changes
+
+- 76143b7c: Favor showing RxNorm display values for medications.
+- 58246813: Add option for passing patient FHIR resource ID to PatientProvider.
+
 ## 2.1.8
 
 ### Patch Changes

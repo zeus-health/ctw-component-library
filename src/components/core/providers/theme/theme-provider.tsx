@@ -4,6 +4,7 @@ import { IFrameTheme } from "@/components/content/zus-aggregated-profile/zus-agg
 import i18next, { Locals } from "@/i18n";
 import { DefaultTheme, EmptyTailwindCSSVars, mapToCSSVar, Theme } from "@/styles/tailwind.theme";
 import { merge } from "@/utils/nodash";
+
 import "../../main.scss";
 
 export type ThemeProviderProps = {

@@ -5,6 +5,8 @@ import { ArrowLeftIcon, XIcon } from "@heroicons/react/outline";
 import cx from "classnames";
 import type { ReactNode } from "react";
 import { Fragment, useRef } from "react";
+import { ToastProvider } from "./providers/toast-provider";
+import { APP_TOAST_CONTAINER_DRAWER_ID } from "./toast";
 import {
   TrackingMetadata,
   useAnalytics,
@@ -80,9 +82,8 @@ export function Drawer({
             <div className="ctw-h-full ctw-w-full ctw-bg-content-light ctw-opacity-75" />
           </div>
         </Transition.Child>
-
         <DrawerContent onClose={onClose} showCloseFooter={showCloseFooter} title={title}>
-          {children}
+          <ToastProvider containerId={APP_TOAST_CONTAINER_DRAWER_ID}>{children}</ToastProvider>
         </DrawerContent>
       </Dialog>
     </Transition.Root>
@@ -214,6 +215,7 @@ const DrawerCloseButton = ({ label, onClose }: { label: string; onClose: () => v
 const DrawerBody = ({ children }: { children: ReactNode }) => {
   const ref = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(ref);
+
   return (
     <div
       ref={ref}
