@@ -47,20 +47,17 @@ import {
   MedicationStatementGraphqlResponse,
   medicationStatementQuery,
 } from "@/services/fqs/queries/medication-statements";
-import { cloneDeep, sortBy, uniqWith } from "@/utils/nodash";
+import { cloneDeep, compact, groupBy, last, mapValues, sortBy, uniqWith } from "@/utils/nodash";
 import {
-  compact,
   filter,
   find,
+  compact as fpCompact,
+  last as fpLast,
   sortBy as fpSortBy,
   get,
-  groupBy,
-  last,
   map,
-  mapValues,
   pipe,
   propEq,
-  split,
 } from "@/utils/nodash/fp";
 import { QUERY_KEY_MEDICATION_HISTORY } from "@/utils/query-keys";
 import { sort } from "@/utils/sort";
@@ -481,7 +478,7 @@ export function useLastPrescriber(medication?: fhir4.MedicationStatement) {
         // 4. If there are med dispense records, make them models.
         map((mr) => new MedicationModel(mr, includedResources)),
         // 5. Take the last (latest) from our filtered list.
-        last,
+        fpLast,
         // 6. Get the prescriber from the medication model.
         get("prescriber")
       )(medications);
@@ -502,11 +499,11 @@ function getMedicationHistoryFQS(medication?: fhir4.MedicationStatement) {
     try {
       const aggregatedFromReferences = new MedicationStatementModel(medication).aggregatedFrom;
 
-      const getRefId = pipe(get("reference"), split("/"), last);
-      const resources = pipe(
-        groupBy(get("type")),
-        mapValues(map(getRefId))
-      )(aggregatedFromReferences);
+      const groups = groupBy(aggregatedFromReferences, "type");
+      const resources = mapValues(groups, (group) =>
+        compact(group.map((g) => last(g.reference?.split("/"))))
+      );
+
       const [
         medicationStatementResponse,
         medicationAdministrationResponse,
@@ -534,7 +531,7 @@ function getMedicationHistoryFQS(medication?: fhir4.MedicationStatement) {
           resources.MedicationDispense
         ),
       ]);
-      let medicationResources = compact([
+      let medicationResources = fpCompact([
         ...medicationStatementResponse.medications,
         ...medicationAdministrationResponse,
         ...medicationRequestResponse,
