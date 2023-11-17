@@ -36,11 +36,12 @@ export function usePatientTopLevelDocuments(limit = MAX_OBJECTS_PER_REQUEST, ena
   };
 }
 
-export function usePatientDocuments(limit = MAX_OBJECTS_PER_REQUEST) {
+export function usePatientDocuments(limit = MAX_OBJECTS_PER_REQUEST, enabled = true) {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_DOCUMENTS,
     [limit],
-    withTimerMetric(getDocumentsFromFQS(limit), "req.timing.documents")
+    withTimerMetric(getDocumentsFromFQS(limit), "req.timing.documents"),
+    enabled
   );
 }
 
