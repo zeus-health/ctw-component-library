@@ -30,8 +30,6 @@ export const UnreadRecordsNotification = ({
 }: UnreadRecordsNotificationProps) => {
   const unreadRecordsMap = useUnreadRecordsByResource(resources);
 
-  console.log(unreadRecordsMap);
-
   for (const isUnread of unreadRecordsMap.values()) {
     if (isUnread) {
       return <UnreadNotificationIcon className={className} text={text} />;
