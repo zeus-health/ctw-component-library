@@ -19,7 +19,7 @@ interface UseToggleDismissResult {
 /**
  * This hook is toggles the dismiss status for the specified FHIR model.
  *
- * @param queriesToInvalidate  Queries to refetch
+ * @param queryToInvalidate  Query to refetch
  */
 export function useToggleDismiss(queryToInvalidate?: string): UseToggleDismissResult {
   const { getRequestContext } = useCTW();
