@@ -1,0 +1,12 @@
+diff --git a/node_modules/fhir-kit-client/lib/http-client.js b/node_modules/fhir-kit-client/lib/http-client.js
+index 3b4b6ca..0486c4c 100644
+--- a/node_modules/fhir-kit-client/lib/http-client.js
++++ b/node_modules/fhir-kit-client/lib/http-client.js
+@@ -1,6 +1,6 @@
+ /* global Request, Headers */
+ require('es6-promise').polyfill();
+-require('cross-fetch/polyfill');
++// require('cross-fetch/polyfill');
+ 
+ const { logRequestError, logRequestInfo, logResponseInfo } = require('./logging');
+ 
