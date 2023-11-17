@@ -1,0 +1,13 @@
+diff --git a/node_modules/graphql-request/build/esm/index.js b/node_modules/graphql-request/build/esm/index.js
+index 65bf831..18f8855 100644
+--- a/node_modules/graphql-request/build/esm/index.js
++++ b/node_modules/graphql-request/build/esm/index.js
+@@ -3,7 +3,7 @@ import { HeadersInstanceToPlainObject, uppercase } from './helpers.js';
+ import { parseBatchRequestArgs, parseRawRequestArgs, parseRawRequestExtendedArgs, parseRequestArgs, parseRequestExtendedArgs, } from './parseArgs.js';
+ import { resolveRequestDocument } from './resolveRequestDocument.js';
+ import { ClientError, } from './types.js';
+-import crossFetch, * as CrossFetch from 'cross-fetch';
++// import crossFetch, * as CrossFetch from 'cross-fetch';
+ /**
+  * Convert the given headers configuration into a plain object.
+  */
