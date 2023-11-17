@@ -3,6 +3,7 @@ import { patientMedicationColumns } from "./columns";
 import { useMedicationDetailsDrawer } from "./details";
 import { defaultMedicationFilters } from "./filters";
 import { defaultMedicationSort, medicationSortOptions } from "./sorts";
+import { QUERY_KEY_PATIENT_SUMMARY_MEDICATIONS } from "../../../../utils/query-keys";
 import { ViewOption } from "../../resource/helpers/view-button";
 import { PatientResourceTable } from "../../resource/patient-resource-table";
 import {
@@ -92,6 +93,7 @@ export const PatientMedicationsBase = ({
         isLoading={query.isLoading}
         onRowClick={handleRowClick}
         rowActions={rowActions}
+        queryKey={QUERY_KEY_PATIENT_SUMMARY_MEDICATIONS}
       />
     </div>
   );

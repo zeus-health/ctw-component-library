@@ -4,6 +4,7 @@ import { patientMedicationsAllColumns } from "./helpers/columns";
 import { useMedicationDetailsDrawer } from "./helpers/details";
 import { defaultMedicationFilters, medicationFilters } from "./helpers/filters";
 import { defaultMedicationSort, medicationSortOptions } from "./helpers/sorts";
+import { QUERY_KEY_PATIENT_SUMMARY_MEDICATIONS } from "../../../utils/query-keys";
 import { useToggleRead } from "../hooks/use-toggle-read";
 import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { PatientResourceTable } from "../resource/patient-resource-table";
@@ -84,6 +85,7 @@ function PatientMedicationsAllComponent({
           rowActions={readOnly ? undefined : rowActions}
           enableDismissAndReadActions
           emptyMessage={empty}
+          queryKey={QUERY_KEY_PATIENT_SUMMARY_MEDICATIONS}
         />
       </div>
     </AnalyticsProvider>
@@ -99,7 +101,7 @@ function useRowActions(onAddToRecord?: (record: MedicationStatementModel) => voi
   const { t } = useBaseTranslations();
   const userBuilderId = useUserBuilderId();
   const showAddMedicationForm = useAddMedicationForm();
-  const { toggleRead } = useToggleRead();
+  const { toggleRead } = useToggleRead(QUERY_KEY_PATIENT_SUMMARY_MEDICATIONS);
 
   return (record: MedicationStatementModel): RowActionsConfigProp<MedicationStatementModel> =>
     record.ownedByBuilder(userBuilderId)

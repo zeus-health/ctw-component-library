@@ -7,6 +7,7 @@ import { useConditionDetailsDrawer } from "./details";
 import { conditionFilters } from "./filters";
 import { conditionSortOptions, defaultConditionSort } from "./sorts";
 import { ConditionViewOptions, statusView } from "./views";
+import { QUERY_KEY_PATIENT_SUMMARY_CONDITIONS } from "../../../../utils/query-keys";
 import { PatientResourceTable } from "../../resource/patient-resource-table";
 import {
   ResourceTableActions,
@@ -92,6 +93,7 @@ export const PatientConditionsBase = ({
         isLoading={isLoading || query.isLoading}
         onRowClick={openDetailsDrawer}
         rowActions={rowActions}
+        queryKey={QUERY_KEY_PATIENT_SUMMARY_CONDITIONS}
       />
     </div>
   );
