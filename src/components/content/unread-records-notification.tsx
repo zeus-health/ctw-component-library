@@ -42,9 +42,10 @@ export const UnreadRecordsNotification = ({
 // Provides the number of ZAP resources with unread notifications
 export function useUnreadZAPTabsCount(resources = defaultZAPTabs): number {
   const unreadRecordsMap = useUnreadRecordsByResource(resources);
-  return [...unreadRecordsMap.entries()].reduce((count, hasUnread) => {
-    return hasUnread ? count + 1 : count;
-  }, 0);
+  return [...unreadRecordsMap.values()].reduce(
+    (count, hasUnread) => (hasUnread ? count + 1 : count),
+    0
+  );
 }
 
 // Maps whether each ZAP resource has any unread notifications
