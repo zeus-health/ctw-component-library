@@ -7,8 +7,8 @@ import {
 } from "@/fhir/medications";
 import { MedicationStatementModel } from "@/fhir/models/medication-statement";
 import {
-  QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
   QUERY_KEY_PATIENT_BUILDER_MEDICATIONS,
+  QUERY_KEY_PATIENT_SUMMARY_MEDICATIONS,
 } from "@/utils/query-keys";
 import { withTimerMetric } from "@/utils/telemetry";
 
@@ -24,7 +24,7 @@ export function usePatientBuilderMedications(enabled = true) {
 
 export function usePatientSummaryMedications(enabled = true) {
   return useQueryWithPatient(
-    QUERY_KEY_OTHER_PROVIDER_MEDICATIONS,
+    QUERY_KEY_PATIENT_SUMMARY_MEDICATIONS,
     [],
     withTimerMetric(getSummaryMedicationsFQS, "req.timing.summary_medications"),
     enabled

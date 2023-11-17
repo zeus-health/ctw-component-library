@@ -21,8 +21,8 @@ import {
 } from "@/services/fqs/queries/conditions";
 import { cloneDeep, orderBy } from "@/utils/nodash";
 import {
-  QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
   QUERY_KEY_PATIENT_CONDITIONS,
+  QUERY_KEY_PATIENT_SUMMARY_CONDITIONS,
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
@@ -38,7 +38,7 @@ export function usePatientBuilderConditions(enabled = true) {
 
 function usePatientSummaryConditions(enabled = true) {
   return useQueryWithPatient(
-    QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
+    QUERY_KEY_PATIENT_SUMMARY_CONDITIONS,
     [],
     withTimerMetric(fetchPatientSummaryConditionsFQS, "req.timing.summary_conditions"),
     enabled
@@ -72,10 +72,10 @@ export function usePatientConditionsOutside() {
   };
 }
 
-export function usePatientConditionsAll() {
+export function usePatientConditionsAll(enabled = true) {
   const [conditions, setConditions] = useState<ConditionModel[]>([]);
-  const builderConditionsQuery = usePatientBuilderConditions();
-  const summaryConditionsQuery = usePatientSummaryConditions();
+  const builderConditionsQuery = usePatientBuilderConditions(enabled);
+  const summaryConditionsQuery = usePatientSummaryConditions(enabled);
 
   useEffect(() => {
     const builderConditions = builderConditionsQuery.data ?? [];

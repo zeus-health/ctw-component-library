@@ -60,7 +60,7 @@ export function usePatientDiagnosticReportsWithTrendData(limit = MAX_OBJECTS_PER
         observation.diagnosticReport = new DiagnosticReportModel(
           diagnosticReport.resource,
           undefined,
-          undefined,
+          diagnosticReport.basics,
           observations
         );
       }
@@ -73,7 +73,7 @@ export function usePatientDiagnosticReportsWithTrendData(limit = MAX_OBJECTS_PER
           new DiagnosticReportModel(
             dr.resource,
             undefined,
-            undefined,
+            dr.basics,
             observationsWithDiagnosticReportBackLink
           )
       )

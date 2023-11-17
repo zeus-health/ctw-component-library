@@ -1,4 +1,5 @@
 import { isEmptyClinicalNote, isSectionDocument } from "./filters";
+import { QUERY_KEY_PATIENT_DOCUMENTS } from "../../../../utils/query-keys";
 import { Notes } from "../../resource/helpers/notes";
 import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
 import { RowActionsConfigProp } from "@/components/core/table/table-rows";
@@ -33,6 +34,7 @@ export const useDocumentDetailsDrawer = ({
     rowActions,
     enableDismissAndReadActions: true,
     renderChild: DocumentNotes,
+    queryKey: QUERY_KEY_PATIENT_DOCUMENTS,
   });
 
 const documentData = (document: DocumentModel) => [

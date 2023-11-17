@@ -2,6 +2,7 @@ import cx from "classnames";
 import { useRef } from "react";
 import { patientCareTeamColumns } from "./helpers/columns";
 import { careTeamSortOptions, defaultCareTeamSort } from "./helpers/sorts";
+import { QUERY_KEY_CARETEAM } from "../../../utils/query-keys";
 import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { PatientResourceTable } from "../resource/patient-resource-table";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
@@ -38,6 +39,7 @@ export function PatientCareTeam({ className }: PatientCareTeamProps) {
   const openDetails = useResourceDetailsDrawer({
     header: (m) => m.practitionerName,
     details: careTeamData,
+    queryKey: QUERY_KEY_CARETEAM,
   });
 
   const isEmptyQuery = patientCareTeamQuery.data && patientCareTeamQuery.data.length === 0;

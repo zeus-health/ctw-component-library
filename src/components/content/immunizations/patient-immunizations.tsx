@@ -2,6 +2,7 @@ import cx from "classnames";
 import { patientImmunizationsColumns } from "./helpers/columns";
 import { defaultImmunizationsFilters, immunizationsFilter } from "./helpers/filters";
 import { defaultImmunizationSort, immunizationSortOptions } from "./helpers/sort";
+import { QUERY_KEY_PATIENT_IMMUNIZATIONS } from "../../../utils/query-keys";
 import { PatientResourceTable } from "../resource/patient-resource-table";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
 import { ResourceTableActions } from "../resource/resource-table-actions";
@@ -35,6 +36,7 @@ function PatientImmunizationsComponent({ className }: PatientImmunizationsProps)
     details: immunizationData,
     getSourceDocument: true,
     enableDismissAndReadActions: true,
+    queryKey: QUERY_KEY_PATIENT_IMMUNIZATIONS,
   });
 
   return (

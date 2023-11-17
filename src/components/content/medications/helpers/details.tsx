@@ -1,4 +1,5 @@
 import { useMedicationHistoryEntries } from "./history";
+import { QUERY_KEY_PATIENT_SUMMARY_MEDICATIONS } from "../../../../utils/query-keys";
 import { History } from "../../resource/helpers/history";
 import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
 import { entryFromArray } from "@/components/core/data-list";
@@ -37,6 +38,7 @@ export const useMedicationDetailsDrawer = ({
     ],
     rowActions,
     enableDismissAndReadActions,
+    queryKey: QUERY_KEY_PATIENT_SUMMARY_MEDICATIONS,
   });
 
 function LastPrescriber({ medication }: { medication: MedicationStatementModel }) {
