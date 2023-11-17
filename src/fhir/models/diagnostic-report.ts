@@ -16,10 +16,10 @@ export class DiagnosticReportModel extends FHIRModel<fhir4.DiagnosticReport> {
   constructor(
     resource: DiagnosticReport,
     includedResources?: ResourceMap,
-    revIncludes?: fhir4.Resource[],
+    basics?: fhir4.Basic[],
     trendData?: ObservationModel[]
   ) {
-    super(resource, includedResources, revIncludes);
+    super(resource, includedResources, basics);
 
     this.observationModels =
       this.resource.result?.map((result) => {

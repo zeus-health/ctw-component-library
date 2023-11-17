@@ -34,7 +34,7 @@ export const UnreadRecordsNotification = ({
   const medicationsQuery = useQueryAllPatientMedications();
 
   for (const resource of resources) {
-    let data: FHIRModel<fhir4.Resource>[];
+    let data: FHIRModel<fhir4.Resource>[] | undefined;
     switch (resource) {
       case "allergies":
         data = allergiesQuery.data;
@@ -61,7 +61,7 @@ export const UnreadRecordsNotification = ({
         data = [];
     }
     if (
-      data.some(
+      data?.some(
         (record) => !record.isDismissed && !record.isRead && !record.ownedByBuilder(userBuilderId)
       )
     ) {

@@ -13,7 +13,7 @@ export const DocumentNotes = (document: DocumentModel) => {
   const clinicalNotes = isSectionDocument(document)
     ? [document]
     : sortBy(
-        allDocuments.data.filter(
+        allDocuments.data?.filter(
           (d) => d.binaryId === document.binaryId && !isEmptyClinicalNote(d) && isSectionDocument(d)
         ),
         "title"

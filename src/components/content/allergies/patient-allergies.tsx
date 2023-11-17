@@ -32,7 +32,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
     records: patientAllergiesQuery.data,
   });
   const userBuilderId = useUserBuilderId();
-  const isEmptyQuery = patientAllergiesQuery.data.length === 0;
+  const isEmptyQuery = patientAllergiesQuery.data?.length === 0;
   const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
 
   const openDetails = useResourceDetailsDrawer({
