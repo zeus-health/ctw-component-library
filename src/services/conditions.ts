@@ -27,19 +27,21 @@ import {
 import { queryClient } from "@/utils/request";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
-export function usePatientBuilderConditions() {
+export function usePatientBuilderConditions(enabled = true) {
   return useQueryWithPatient(
     QUERY_KEY_PATIENT_CONDITIONS,
     [],
-    withTimerMetric(fetchPatientBuilderConditionsFQS, "req.timing.builder_conditions")
+    withTimerMetric(fetchPatientBuilderConditionsFQS, "req.timing.builder_conditions"),
+    enabled
   );
 }
 
-function usePatientSummaryConditions() {
+function usePatientSummaryConditions(enabled = true) {
   return useQueryWithPatient(
     QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
     [],
-    withTimerMetric(fetchPatientSummaryConditionsFQS, "req.timing.summary_conditions")
+    withTimerMetric(fetchPatientSummaryConditionsFQS, "req.timing.summary_conditions"),
+    enabled
   );
 }
 

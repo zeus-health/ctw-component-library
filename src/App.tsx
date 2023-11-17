@@ -22,6 +22,7 @@ import {
   ZusAggregatedProfileIFrame,
   PatientConditionsAll,
   PatientsTableFQS,
+  UnreadRecordsNotification,
 } from ".";
 
 import { PatientMedicationDispense } from "./components/content/medication-dispense/patient-medication-dispense";

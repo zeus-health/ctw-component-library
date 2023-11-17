@@ -215,7 +215,10 @@ export const FilterBar = ({ className, onChange, filters, defaultState = {} }: F
           }
         }}
       >
-        <div className="ctw-mb-2 ctw-space-x-1 ctw-whitespace-nowrap ctw-px-2 ctw-py-2">
+        {/* ctw-flex and ctw-items-center fixes a brief issue in CTW
+            where the icon is not inlined until the FontAwesome
+            styles load */}
+        <div className="ctw-mb-2 ctw-flex ctw-items-center ctw-space-x-1 ctw-p-2">
           <FontAwesomeIcon icon={faPlus} className="ctw-w-4" />
           <span>Add Filters</span>
         </div>

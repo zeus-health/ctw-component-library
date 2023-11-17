@@ -1,5 +1,9 @@
 import fhir4 from "fhir/r4";
-import { defaultZAPTabs, ZAPTabName } from "./zus-aggregated-profile/zus-aggregated-profile";
+import {
+  defaultZAPTabs,
+  ZAP_TAB_NAMES,
+  ZAPTabName,
+} from "./zus-aggregated-profile/zus-aggregated-profile";
 import { useUserBuilderId } from "../core/providers/user-builder-id";
 import { UnreadNotificationIcon } from "../core/unread-notification-icon";
 import { usePatientAllergies } from "@/fhir/allergies";
@@ -24,14 +28,51 @@ export const UnreadRecordsNotification = ({
   resources = defaultZAPTabs,
   text,
 }: UnreadRecordsNotificationProps) => {
+  const unreadRecordsMap = useUnreadRecordsByResource(resources);
+
+  for (const isUnread of unreadRecordsMap.values()) {
+    if (isUnread) {
+      return <UnreadNotificationIcon className={className} text={text} />;
+    }
+  }
+
+  return null;
+};
+
+// Provides the number of ZAP resources with unread notifications
+export function useUnreadZAPTabsCount(resources = defaultZAPTabs): number {
+  const unreadRecordsMap = useUnreadRecordsByResource(resources);
+  return [...unreadRecordsMap.values()].reduce(
+    (count, hasUnread) => (hasUnread ? count + 1 : count),
+    0
+  );
+}
+
+// Maps whether each ZAP resource has any unread notifications
+function useUnreadRecordsByResource(resources = defaultZAPTabs): Map<ZAPTabName, boolean> {
   const userBuilderId = useUserBuilderId();
-  const allergiesQuery = usePatientAllergies();
-  const conditionsQuery = usePatientConditionsAll();
-  const diagnosticReportsQuery = usePatientDiagnosticReports(numRecordsToLookbackForUnread);
-  const documentsQuery = usePatientTopLevelDocuments(numRecordsToLookbackForUnread);
-  const encountersQuery = usePatientEncounters(numRecordsToLookbackForUnread);
-  const immunizationsQuery = usePatientImmunizations();
-  const medicationsQuery = useQueryAllPatientMedications();
+  const allergiesQuery = usePatientAllergies(resources.includes("allergies"));
+  const conditionsQuery = usePatientConditionsAll(resources.includes("conditions-all"));
+  const diagnosticReportsQuery = usePatientDiagnosticReports(
+    numRecordsToLookbackForUnread,
+    undefined,
+    resources.includes("diagnostic-reports")
+  );
+  const documentsQuery = usePatientTopLevelDocuments(
+    numRecordsToLookbackForUnread,
+    resources.includes("documents")
+  );
+  const encountersQuery = usePatientEncounters(
+    numRecordsToLookbackForUnread,
+    resources.includes("encounters")
+  );
+  const immunizationsQuery = usePatientImmunizations(resources.includes("immunizations"));
+  const medicationsQuery = useQueryAllPatientMedications(resources.includes("medications"));
+
+  const map = new Map<ZAPTabName, boolean>();
+  for (const zapTabName of ZAP_TAB_NAMES) {
+    map.set(zapTabName, false);
+  }
 
   for (const resource of resources) {
     let data: FHIRModel<fhir4.Resource>[] | undefined;
@@ -65,9 +106,8 @@ export const UnreadRecordsNotification = ({
         (record) => !record.isDismissed && !record.isRead && !record.ownedByBuilder(userBuilderId)
       )
     ) {
-      return <UnreadNotificationIcon className={className} text={text} />;
+      map.set(resource, true);
     }
   }
-
-  return null;
-};
+  return map;
+}

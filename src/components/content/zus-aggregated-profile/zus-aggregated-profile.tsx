@@ -29,21 +29,24 @@ import { TabGroup } from "@/components/core/tab-group/tab-group";
 import { useFeatureToggle } from "@/hooks/use-feature-toggle";
 import { intersection } from "@/utils/nodash";
 
-export type ZAPTabName =
-  | "allergies"
-  | "care-team"
-  | "conditions"
-  | "conditions-outside"
-  | "conditions-all"
-  | "diagnostic-reports"
-  | "documents"
-  | "encounters"
-  | "immunizations"
-  | "medications"
-  | "medications-outside"
-  | "medications-all"
-  | "timeline"
-  | "overview";
+export const ZAP_TAB_NAMES = [
+  "allergies",
+  "care-team",
+  "conditions",
+  "conditions-outside",
+  "conditions-all",
+  "diagnostic-reports",
+  "documents",
+  "encounters",
+  "immunizations",
+  "medications",
+  "medications-outside",
+  "medications-all",
+  "timeline",
+  "overview",
+] as const;
+
+export type ZAPTabName = (typeof ZAP_TAB_NAMES)[number];
 
 export const defaultZAPTabs: ZAPTabName[] = [
   "overview",
