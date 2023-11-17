@@ -18,7 +18,8 @@ import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 // including observations increases query time.
 export function usePatientDiagnosticReports(
   limit = MAX_OBJECTS_PER_REQUEST,
-  includeObservations = false
+  includeObservations = false,
+  enabled = true
 ) {
   const query = useQueryWithPatient(
     QUERY_KEY_PATIENT_DIAGNOSTIC_REPORTS,
@@ -26,7 +27,8 @@ export function usePatientDiagnosticReports(
     withTimerMetric(
       getDiagnosticReports(limit, includeObservations),
       "req.timing.diagnostic_reports"
-    )
+    ),
+    enabled
   );
 
   return useIncludeBasics(query);
