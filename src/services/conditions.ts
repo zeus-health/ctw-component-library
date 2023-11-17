@@ -14,9 +14,12 @@ import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
 import { usePatientBasicResources } from "@/fhir/basic";
 import { ConditionModel } from "@/fhir/models/condition";
-import { useFQSFeatureToggle } from "@/hooks/use-feature-toggle";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
-import { ConditionGraphqlResponse, conditionsQuery } from "@/services/fqs/queries/conditions";
+import {
+  ConditionGraphqlResponse,
+  conditionsQuery,
+  ConditionWithBasics,
+} from "@/services/fqs/queries/conditions";
 import { cloneDeep, orderBy } from "@/utils/nodash";
 import {
   QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
@@ -61,7 +64,7 @@ export function usePatientConditionsOutside() {
     if (basics.length > 0) {
       outsideConditions.forEach((c, i) => {
         const filteredBasics = basics.filter((b) => b.subject?.reference === `Condition/${c.id}`);
-        outsideConditions[i].revIncludes = filteredBasics;
+        outsideConditions[i].basics = filteredBasics;
       });
     }
     setConditions(outsideConditions);
@@ -83,43 +86,24 @@ export function usePatientConditionsOutside() {
 }
 
 export function usePatientConditionsAll() {
-  const fqs = useFQSFeatureToggle("conditions");
   const [conditions, setConditions] = useState<ConditionModel[]>([]);
   const builderConditionsQuery = usePatientBuilderConditions();
   const summaryConditionsQuery = usePatientSummaryConditions();
 
-  // This query is a noop when FQS is disabled and will just return an empty list of basic resources.
-  const basicQuery = usePatientBasicResources();
-
   useEffect(() => {
     const builderConditions = builderConditionsQuery.data ?? [];
-    const basics = basicQuery.data ?? [];
     const allConditions = filterOutsideConditions(
       summaryConditionsQuery.data ?? [],
       builderConditions
     );
     allConditions.push(...builderConditions);
 
-    // If basic data came back from the above useBasic call, manually map any basic data to the condition
-    // it corresponds to.
-    if (basics.length > 0) {
-      allConditions.forEach((c, i) => {
-        const filteredBasics = basics.filter((b) => b.subject?.reference === `Condition/${c.id}`);
-        allConditions[i].revIncludes = filteredBasics;
-      });
-    }
     setConditions(allConditions);
-  }, [builderConditionsQuery.data, summaryConditionsQuery.data, basicQuery.data]);
+  }, [builderConditionsQuery.data, summaryConditionsQuery.data]);
 
-  const isLoading =
-    builderConditionsQuery.isLoading || summaryConditionsQuery.isLoading || basicQuery.isLoading;
-  const isError =
-    builderConditionsQuery.isError || summaryConditionsQuery.isError || basicQuery.isError;
-  const isFetching =
-    builderConditionsQuery.isFetching ||
-    summaryConditionsQuery.isFetching ||
-    basicQuery.isFetching ||
-    !fqs.ready;
+  const isLoading = builderConditionsQuery.isLoading || summaryConditionsQuery.isLoading;
+  const isError = builderConditionsQuery.isError || summaryConditionsQuery.isError;
+  const isFetching = builderConditionsQuery.isFetching || summaryConditionsQuery.isFetching;
 
   return {
     isLoading,
@@ -129,8 +113,8 @@ export function usePatientConditionsAll() {
   };
 }
 
-function setupConditionModelsWithFQS(conditionResources: fhir4.Condition[]): ConditionModel[] {
-  return conditionResources.map((c) => new ConditionModel(c));
+function setupConditionModelsWithFQS(conditionResources: ConditionWithBasics[]): ConditionModel[] {
+  return conditionResources.map((c) => new ConditionModel(c, undefined, c.BasicList));
 }
 
 function filterAndSort(conditions: ConditionModel[]): ConditionModel[] {

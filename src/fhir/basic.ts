@@ -80,7 +80,7 @@ function mapBasics<R extends fhir4.Resource, T extends FHIRModel<R>>(
       const filteredBasics = basicsData.filter(
         (b) => b.subject?.reference === `${a.resourceType}/${a.id}`
       );
-      resources[i].revIncludes = filteredBasics;
+      resources[i].basics = filteredBasics;
     });
   }
   return resources;
@@ -116,7 +116,7 @@ export async function toggleDismiss<T extends fhir4.Resource>(
   model: FHIRModel<T>,
   requestContext: CTWRequestContext
 ) {
-  const existingBasic = model.getLatestBasicResourceByActions(["archive", "unarchive"]);
+  const existingBasic = model.getLatestAction(["archive", "unarchive"]);
   const profileAction = model.isDismissed ? "unarchive" : "archive";
   model.optimisticToggleIsDismiss();
   await recordProfileAction(existingBasic, model, requestContext, profileAction);
@@ -126,7 +126,7 @@ export async function toggleRead<T extends fhir4.Resource>(
   model: FHIRModel<T>,
   requestContext: CTWRequestContext
 ) {
-  const existingBasic = model.getLatestBasicResourceByActions(["read", "unread"]);
+  const existingBasic = model.getLatestAction(["read", "unread"]);
   const profileAction = model.isRead ? "unread" : "read";
   model.optimisticToggleIsRead();
   await recordProfileAction(existingBasic, model, requestContext, profileAction);

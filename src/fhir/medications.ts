@@ -437,7 +437,7 @@ export function splitMedications(
       builderMedResource.extension?.push(medHistory);
     }
 
-    return new MedicationStatementModel(builderMedResource, m.includedResources, m.revIncludes);
+    return new MedicationStatementModel(builderMedResource, m.includedResources, m.basics);
   });
 
   return {

@@ -65,7 +65,7 @@ export function useQueryAllPatientMedications() {
         const filteredBasics = basics.filter(
           (b) => b.subject?.reference === `${m.resourceType}/${m.id}`
         );
-        splitData.otherProviderMedications[i].revIncludes = filteredBasics;
+        splitData.otherProviderMedications[i].basics = filteredBasics;
       });
     }
     setExpandedBuilderMedications(splitData.builderMedications);

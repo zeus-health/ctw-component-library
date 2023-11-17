@@ -70,7 +70,7 @@ export function usePatientEncountersWithClinicalNotes(limit = MAX_OBJECTS_PER_RE
             encounter.resource,
             encounter.provenance,
             undefined,
-            encounter.revIncludes
+            encounter.basics
           );
           model.findAndSetNotesFrom(documents);
           return model;
