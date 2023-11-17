@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
-import { usePatientBasicResources } from "@/fhir/basic";
 import {
   getBuilderMedicationsFQS,
   getSummaryMedicationsFQS,
@@ -47,40 +46,20 @@ export function useQueryAllPatientMedications() {
   const summaryMedicationsQuery = usePatientSummaryMedications();
   const builderMedicationsQuery = usePatientBuilderMedications();
 
-  // This query is a noop when FQS is disabled and will just return an empty list of basic resources.
-  const basicQuery = usePatientBasicResources();
-
   useEffect(() => {
     const builderMedications = builderMedicationsQuery.data ?? [];
     const summaryMedications = summaryMedicationsQuery.data ?? [];
-    const basics = basicQuery.data ?? [];
 
     // Split the summarized medications into those known/unknown to the builder
     const splitData = splitMedications(summaryMedications, builderMedications);
-
-    // If basic data came back from the above useBasic call, manually map any basic data to the condition
-    // it corresponds to.
-    if (basics.length > 0) {
-      splitData.otherProviderMedications.forEach((m, i) => {
-        const filteredBasics = basics.filter(
-          (b) => b.subject?.reference === `${m.resourceType}/${m.id}`
-        );
-        splitData.otherProviderMedications[i].basics = filteredBasics;
-      });
-    }
     setExpandedBuilderMedications(splitData.builderMedications);
     setOtherProviderMedications(splitData.otherProviderMedications);
     setAllMedications([...splitData.builderMedications, ...splitData.otherProviderMedications]);
-  }, [builderMedicationsQuery.data, summaryMedicationsQuery.data, basicQuery.data]);
+  }, [builderMedicationsQuery.data, summaryMedicationsQuery.data]);
 
-  const isLoading =
-    builderMedicationsQuery.isLoading || summaryMedicationsQuery.isLoading || basicQuery.isLoading;
-  const isError =
-    builderMedicationsQuery.isError || summaryMedicationsQuery.isError || basicQuery.isError;
-  const isFetching =
-    builderMedicationsQuery.isFetching ||
-    summaryMedicationsQuery.isFetching ||
-    basicQuery.isFetching;
+  const isLoading = builderMedicationsQuery.isLoading || summaryMedicationsQuery.isLoading;
+  const isError = builderMedicationsQuery.isError || summaryMedicationsQuery.isError;
+  const isFetching = builderMedicationsQuery.isFetching || summaryMedicationsQuery.isFetching;
 
   return {
     isLoading,

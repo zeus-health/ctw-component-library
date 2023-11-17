@@ -1,4 +1,3 @@
-import { useIncludeBasics } from "./basic";
 import { AllergyModel, PatientModel } from "./models";
 import { applyAllergyFilters } from "@/components/content/allergies/helpers/allergies-filter";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
@@ -9,13 +8,11 @@ import { QUERY_KEY_PATIENT_ALLERGIES } from "@/utils/query-keys";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export function usePatientAllergies() {
-  const patientAllergiesQuery = useQueryWithPatient(
+  return useQueryWithPatient(
     QUERY_KEY_PATIENT_ALLERGIES,
     [],
     withTimerMetric(getAllergyIntoleranceFromFQS, "req.timing.allergies")
   );
-
-  return useIncludeBasics(patientAllergiesQuery);
 }
 
 async function getAllergyIntoleranceFromFQS(
@@ -32,7 +29,9 @@ async function getAllergyIntoleranceFromFQS(
         lastUpdated: "DESC",
       },
     });
-    const models = data.AllergyIntoleranceConnection.edges.map((x) => new AllergyModel(x.node));
+    const models = data.AllergyIntoleranceConnection.edges.map(
+      (x) => new AllergyModel(x.node, undefined, x.node.BasicList)
+    );
     const results = applyAllergyFilters(models, requestContext.builderId);
     if (results.length === 0) {
       Telemetry.countMetric("req.count.allergies.none", 1);

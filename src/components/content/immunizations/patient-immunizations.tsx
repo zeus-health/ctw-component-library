@@ -27,7 +27,7 @@ function PatientImmunizationsComponent({ className }: PatientImmunizationsProps)
     records: patientImmunizationsQuery.data,
   });
 
-  const isEmptyQuery = patientImmunizationsQuery.data.length === 0;
+  const isEmptyQuery = patientImmunizationsQuery.data?.length === 0;
   const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
 
   const openDetails = useResourceDetailsDrawer({
@@ -58,7 +58,7 @@ function PatientImmunizationsComponent({ className }: PatientImmunizationsProps)
           data={data}
           columns={patientImmunizationsColumns(userBuilderId)}
           onRowClick={openDetails}
-          enableDismissAndReadActions
+          // enableDismissAndReadActions // TODO - re-enable when FQS supports basics on documents
           emptyMessage={
             <EmptyPatientTable
               hasZeroFilteredRecords={hasZeroFilteredRecords}

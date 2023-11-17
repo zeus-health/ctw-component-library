@@ -1,4 +1,3 @@
-import { useIncludeBasics } from "./basic";
 import { PatientModel } from "./models";
 import { ImmunizationModel } from "./models/immunization";
 import { useQueryWithPatient } from "..";
@@ -7,6 +6,7 @@ import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import {
   ImmunizationGraphqlResponse,
   immunizationsQuery,
+  ImmunizationWithBasics,
 } from "@/services/fqs/queries/immunizations";
 import { orderBy, uniqBy } from "@/utils/nodash";
 import { QUERY_KEY_PATIENT_IMMUNIZATIONS } from "@/utils/query-keys";
@@ -14,13 +14,11 @@ import { sort } from "@/utils/sort";
 import { Telemetry, withTimerMetric } from "@/utils/telemetry";
 
 export function usePatientImmunizations() {
-  const patientImmunizationsQuery = useQueryWithPatient(
+  return useQueryWithPatient(
     QUERY_KEY_PATIENT_IMMUNIZATIONS,
     [],
     withTimerMetric(getImmunizationFromFQS, "req.timing.immunizations")
   );
-
-  return useIncludeBasics(patientImmunizationsQuery);
 }
 
 async function getImmunizationFromFQS(requestContext: CTWRequestContext, patient: PatientModel) {
@@ -50,8 +48,10 @@ async function getImmunizationFromFQS(requestContext: CTWRequestContext, patient
   }
 }
 
-export const getFilteredImmunizations = (data: fhir4.Immunization[], builderId: string) => {
-  const immunizations = data.map((immunization) => new ImmunizationModel(immunization));
+export const getFilteredImmunizations = (data: ImmunizationWithBasics[], builderId: string) => {
+  const immunizations = data.map(
+    (immunization) => new ImmunizationModel(immunization, undefined, immunization.BasicList)
+  );
 
   const sortedByDate = sort(
     immunizations.filter((x) => x.status === "Completed"),

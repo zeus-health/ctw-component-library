@@ -12,7 +12,6 @@ import {
 import { getLensBuilderId } from "@/api/urls";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
 import { useQueryWithPatient } from "@/components/core/providers/patient-provider";
-import { usePatientBasicResources } from "@/fhir/basic";
 import { ConditionModel } from "@/fhir/models/condition";
 import { createGraphqlClient, fqsRequest } from "@/services/fqs/client";
 import {
@@ -44,38 +43,24 @@ function usePatientSummaryConditions() {
   );
 }
 
+// TODO - once Canvas is no longer using the Patient Conditions Outside component, we can remove this
 export function usePatientConditionsOutside() {
   const [conditions, setConditions] = useState<ConditionModel[]>([]);
   const builderConditionsQuery = usePatientBuilderConditions();
   const summaryConditionsQuery = usePatientSummaryConditions();
 
-  // This query is a noop when FQS is disabled and will just return an empty list of basic resources.
-  const basicQuery = usePatientBasicResources();
-
   useEffect(() => {
     const builderConditions = builderConditionsQuery.data ?? [];
-    const basics = basicQuery.data ?? [];
     const outsideConditions = filterOutsideConditions(
       summaryConditionsQuery.data ?? [],
       builderConditions
     );
-    // If basic data came back from the above useBasic call, manually map any basic data to the condition
-    // it corresponds to.
-    if (basics.length > 0) {
-      outsideConditions.forEach((c, i) => {
-        const filteredBasics = basics.filter((b) => b.subject?.reference === `Condition/${c.id}`);
-        outsideConditions[i].basics = filteredBasics;
-      });
-    }
     setConditions(outsideConditions);
-  }, [builderConditionsQuery.data, summaryConditionsQuery.data, basicQuery.data]);
+  }, [builderConditionsQuery.data, summaryConditionsQuery.data]);
 
-  const isLoading =
-    builderConditionsQuery.isLoading || summaryConditionsQuery.isLoading || basicQuery.isLoading;
-  const isError =
-    builderConditionsQuery.isError || summaryConditionsQuery.isError || basicQuery.isError;
-  const isFetching =
-    builderConditionsQuery.isFetching || summaryConditionsQuery.isFetching || basicQuery.isFetching;
+  const isLoading = builderConditionsQuery.isLoading || summaryConditionsQuery.isLoading;
+  const isError = builderConditionsQuery.isError || summaryConditionsQuery.isError;
+  const isFetching = builderConditionsQuery.isFetching || summaryConditionsQuery.isFetching;
 
   return {
     isLoading,

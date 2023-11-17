@@ -5,13 +5,18 @@ import { GraphqlConnectionNode, GraphqlPageInfo } from "../client";
 
 export interface DocumentReferenceConnection {
   pageInfo: GraphqlPageInfo;
-  edges: GraphqlConnectionNode<DocumentReference>[];
+  edges: GraphqlConnectionNode<DocumentReferenceWithBasics>[];
 }
+
+export type DocumentReferenceWithBasics = DocumentReference & {
+  BasicList: fhir4.Basic[];
+};
 
 export interface DocumentReferenceGraphqlResponse {
   DocumentReferenceConnection: DocumentReferenceConnection;
 }
 
+// TODO - add BasicList when its supported by FQS
 export const documentsQuery = gql`
   ${fragmentCoding}
   ${fragmentOrganization}

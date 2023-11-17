@@ -5,13 +5,18 @@ import { GraphqlConnectionNode, GraphqlPageInfo } from "../client";
 
 export interface ImmunizationConnection {
   pageInfo: GraphqlPageInfo;
-  edges: GraphqlConnectionNode<Immunization>[];
+  edges: GraphqlConnectionNode<ImmunizationWithBasics>[];
 }
+
+export type ImmunizationWithBasics = Immunization & {
+  BasicList: fhir4.Basic[];
+};
 
 export interface ImmunizationGraphqlResponse {
   ImmunizationConnection: ImmunizationConnection;
 }
 
+// TODO - add BasicList when its supported by FQS
 export const immunizationsQuery = gql`
   ${fragmentCoding}
   ${fragmentOrganization}

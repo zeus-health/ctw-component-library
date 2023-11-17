@@ -116,7 +116,7 @@ export async function getBuilderMedicationsFQS(
       nodes,
       requestContext.contextBuilderId || requestContext.builderId
     );
-    const medStatements = nodes.map((n) => new MedicationStatementModel(n));
+    const medStatements = nodes.map((n) => new MedicationStatementModel(n, undefined, n.BasicList));
     const models = applySearchFiltersToFQSResponse(medStatements, searchFilters, false);
     if (models.length === 0) {
       Telemetry.countMetric("req.count.builder_medications.none", 1);
@@ -338,7 +338,7 @@ export async function getSummaryMedicationsFQS(
       Telemetry.countMetric("req.count.summary_medications.none", 1);
     }
     Telemetry.histogramMetric("req.count.summary_medications", nodes.length);
-    return nodes.map((n) => new MedicationStatementModel(n));
+    return nodes.map((n) => new MedicationStatementModel(n, undefined, n.BasicList));
   } catch (e) {
     throw Telemetry.logError(
       e as Error,
@@ -371,7 +371,7 @@ export async function getMedicationStatementsByIdFQS(
     );
 
     return data.MedicationStatementConnection.edges.map(
-      (x) => new MedicationStatementModel(x.node)
+      (x) => new MedicationStatementModel(x.node, undefined, x.node.BasicList)
     );
   } catch (e) {
     throw Telemetry.logError(

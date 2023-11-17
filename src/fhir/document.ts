@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useIncludeBasics } from "./basic";
 import { DocumentModel } from "./models/document";
 import { PatientModel, useQueryWithPatient } from "..";
 import { applyDocumentFilters } from "@/components/content/document/helpers/filters";
@@ -16,7 +15,7 @@ export function usePatientTopLevelDocuments(limit = MAX_OBJECTS_PER_REQUEST) {
 
   useEffect(() => {
     const filteredDocuments = orderBy(
-      applyDocumentFilters(data),
+      applyDocumentFilters(data ?? []),
       "resource.content[0].attachment.creation",
       ["desc"]
     ) as DocumentModel[];
@@ -38,13 +37,11 @@ export function usePatientTopLevelDocuments(limit = MAX_OBJECTS_PER_REQUEST) {
 }
 
 export function usePatientDocuments(limit = MAX_OBJECTS_PER_REQUEST) {
-  const patientDocumentsQuery = useQueryWithPatient(
+  return useQueryWithPatient(
     QUERY_KEY_PATIENT_DOCUMENTS,
     [limit],
     withTimerMetric(getDocumentsFromFQS(limit), "req.timing.documents")
   );
-
-  return useIncludeBasics(patientDocumentsQuery);
 }
 
 function getDocumentsFromFQS(limit: number) {
@@ -63,7 +60,9 @@ function getDocumentsFromFQS(limit: number) {
           },
         }
       );
-      return data.DocumentReferenceConnection.edges.map((x) => new DocumentModel(x.node));
+      return data.DocumentReferenceConnection.edges.map(
+        (x) => new DocumentModel(x.node, undefined, x.node.BasicList)
+      );
     } catch (e) {
       throw new Error(`Failed fetching document information for patient: ${e}`);
     }

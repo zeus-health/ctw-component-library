@@ -74,7 +74,7 @@ function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocument
           columns={patientDocumentColumns}
           onRowClick={openDetails}
           rowActions={rowActions}
-          enableDismissAndReadActions
+          // enableDismissAndReadActions // TODO - re-enable when FQS supports basics on documents
         />
       </div>
     </AnalyticsProvider>

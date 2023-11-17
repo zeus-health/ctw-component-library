@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useIncludeBasics } from "./basic";
 import { LOINC_ANALYTES } from "./models/observation";
 import { usePatientObservations } from "./observations";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
@@ -20,7 +19,7 @@ export function usePatientDiagnosticReports(
   limit = MAX_OBJECTS_PER_REQUEST,
   includeObservations = false
 ) {
-  const query = useQueryWithPatient(
+  return useQueryWithPatient(
     QUERY_KEY_PATIENT_DIAGNOSTIC_REPORTS,
     [limit, includeObservations], // Only use the IDs in our key (fixes issue with ciruclar references).
     withTimerMetric(
@@ -28,8 +27,6 @@ export function usePatientDiagnosticReports(
       "req.timing.diagnostic_reports"
     )
   );
-
-  return useIncludeBasics(query);
 }
 
 // Gets diagnostic reports for the patient with trending data for each observation in the diagnostic report.
@@ -106,7 +103,7 @@ function getDiagnosticReports(limit: number, includeObservations: boolean) {
         Telemetry.countMetric(`req.count.diagnostic_reports.none`, 1);
       }
       const result = data.DiagnosticReportConnection.edges.map(
-        (x) => new DiagnosticReportModel(x.node)
+        (x) => new DiagnosticReportModel(x.node, undefined, x.node.BasicList)
       );
 
       Telemetry.histogramMetric(`req.count.diagnostic_reports`, result.length);
@@ -164,7 +161,9 @@ export async function fetchDiagnosticReportsFromFQSById(
         },
       }
     );
-    return data.DiagnosticReportConnection.edges.map((x) => new DiagnosticReportModel(x.node));
+    return data.DiagnosticReportConnection.edges.map(
+      (x) => new DiagnosticReportModel(x.node, undefined, x.node.BasicList)
+    );
   } catch (e) {
     throw new Error(`Failed fetching document information for patient: ${e}`);
   }

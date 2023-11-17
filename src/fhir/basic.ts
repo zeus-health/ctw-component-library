@@ -1,17 +1,11 @@
-import { UseQueryResult } from "@tanstack/react-query";
 import { Basic } from "fhir/r4";
 import { FhirResource } from "fhir-kit-client";
-import { useEffect, useState } from "react";
 import { createOrEditFhirResource } from "./action-helper";
 import { FHIRModel } from "./models/fhir-model";
 import { getUsersPractitionerReference } from "./practitioner";
-import { searchCommonRecords } from "./search-helpers";
 import { SYSTEM_BASIC_RESOURCE_TYPE, SYSTEM_ZUS_PROFILE_ACTION } from "./system-urls";
-import { useQueryWithPatient } from "..";
 import { CTWRequestContext } from "@/components/core/providers/ctw-context";
-import { cloneDeep } from "@/utils/nodash";
-import { QUERY_KEY_BASIC } from "@/utils/query-keys";
-import { Telemetry, withTimerMetric } from "@/utils/telemetry";
+import { Telemetry } from "@/utils/telemetry";
 
 export async function recordProfileAction<T extends fhir4.Resource>(
   existingBasic: Basic | undefined,
@@ -60,58 +54,6 @@ export async function recordProfileAction<T extends fhir4.Resource>(
   }
 }
 
-export function usePatientBasicResources() {
-  return useQueryWithPatient(
-    QUERY_KEY_BASIC,
-    [],
-    (() => withTimerMetric(fetchBasic, "req.timing.basic"))()
-  );
-}
-
-function mapBasics<R extends fhir4.Resource, T extends FHIRModel<R>>(
-  queryData: T[],
-  basicsData: Basic[]
-) {
-  const resources = cloneDeep(queryData);
-  // If basic data came back from the above useBasic call, manually map any basic data to the resources
-  // it corresponds to.
-  if (basicsData.length > 0) {
-    resources.forEach((a, i) => {
-      const filteredBasics = basicsData.filter(
-        (b) => b.subject?.reference === `${a.resourceType}/${a.id}`
-      );
-      resources[i].basics = filteredBasics;
-    });
-  }
-  return resources;
-}
-
-export function useIncludeBasics<R extends fhir4.Resource, T extends FHIRModel<R>>(
-  query: UseQueryResult<T[]>
-) {
-  const basicsQuery = usePatientBasicResources();
-  const initialResources = mapBasics(query.data || [], basicsQuery.data || []);
-  const [resources, setResources] = useState<T[]>(initialResources);
-
-  useEffect(() => {
-    const resources2 = mapBasics(query.data || [], basicsQuery.data || []);
-    setResources([...resources2]); // spread syntax here needed to make sure the array is a new reference in order to trigger a re-render
-  }, [basicsQuery.data, query.data]);
-
-  const isLoading = query.isLoading || basicsQuery.isLoading;
-  const isError = query.isError || basicsQuery.isError;
-  const isFetching = query.isFetching || basicsQuery.isFetching;
-  const isFetched = query.isFetched && basicsQuery.isFetched;
-
-  return {
-    isLoading,
-    isError,
-    isFetching,
-    isFetched,
-    data: resources,
-  };
-}
-
 export async function toggleDismiss<T extends fhir4.Resource>(
   model: FHIRModel<T>,
   requestContext: CTWRequestContext
@@ -130,19 +72,4 @@ export async function toggleRead<T extends fhir4.Resource>(
   const profileAction = model.isRead ? "unread" : "read";
   model.optimisticToggleIsRead();
   await recordProfileAction(existingBasic, model, requestContext, profileAction);
-}
-
-async function fetchBasic(requestContext: CTWRequestContext) {
-  try {
-    const { resources } = await searchCommonRecords("Basic", requestContext, {
-      _tag: `https://zusapi.com/accesscontrol/owner|builder/${requestContext.builderId}`,
-    });
-    if (resources.length === 0) {
-      Telemetry.countMetric("req.count.basic.none");
-    }
-    Telemetry.histogramMetric("req.count.basic", resources.length);
-    return resources;
-  } catch (e) {
-    throw new Error(`Failed fetching basic resources for builder ${requestContext.builderId}`);
-  }
 }
