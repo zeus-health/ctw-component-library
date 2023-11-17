@@ -1,5 +1,17 @@
 # ctw-component-library
 
+## 2.3.0
+
+### Minor Changes
+
+- f9b0ee64: Upgrade typescript, i18next, react-i18next and lodash types.
+
+### Patch Changes
+
+- f9aea808: Add patch to remove a polyfill that may be causing auth issues for CTW stand alone.
+- aa860c65: Provides a method of detecting how many ZAP tabs have notifications.
+- cd17dce2: Minor CSS fix for add filters in CTW
+
 ## 2.2.2
 
 ### Patch Changes
