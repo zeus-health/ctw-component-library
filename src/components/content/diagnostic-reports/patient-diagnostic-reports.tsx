@@ -3,6 +3,7 @@ import "./diagnostic-reports.scss";
 import { patientDiagnosticReportsColumns } from "./helpers/columns";
 import { defaultDiagnosticReportFilters, diagnosticReportFilter } from "./helpers/filters";
 import { defaultDiagnosticReportSort, diagnosticReportSortOptions } from "./helpers/sorts";
+import { QUERY_KEY_PATIENT_DIAGNOSTIC_REPORTS } from "../../../utils/query-keys";
 import { useObservationsDetailsDrawer } from "../observations/helpers/drawer";
 import { PatientResourceTable } from "../resource/patient-resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
@@ -60,6 +61,7 @@ function PatientDiagnosticReportsComponent({ className }: PatientDiagnosticRepor
               resourceName="diagnostics"
             />
           }
+          queryKey={QUERY_KEY_PATIENT_DIAGNOSTIC_REPORTS}
         />
       </div>
     </AnalyticsProvider>

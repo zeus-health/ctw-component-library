@@ -1,6 +1,7 @@
 import { AllergyIntolerance } from "fhir/r4";
 import { gql } from "graphql-request";
 import {
+  fragmentBasic,
   fragmentCoding,
   fragmentEncounterReference,
   fragmentOrganization,
@@ -11,8 +12,12 @@ import { GraphqlConnectionNode, GraphqlPageInfo } from "../client";
 
 export interface AllergyIntoleranceConnection {
   pageInfo: GraphqlPageInfo;
-  edges: GraphqlConnectionNode<AllergyIntolerance>[];
+  edges: GraphqlConnectionNode<AllergyIntoleranceWithBasics>[];
 }
+
+export type AllergyIntoleranceWithBasics = AllergyIntolerance & {
+  BasicList: fhir4.Basic[];
+};
 
 export interface AllergyGraphqlResponse {
   AllergyIntoleranceConnection: AllergyIntoleranceConnection;
@@ -24,6 +29,7 @@ export const allergyQuery = gql`
   ${fragmentPatient}
   ${fragmentEncounterReference}
   ${fragmentPractitioner}
+  ${fragmentBasic}
   query Allergies(
     $upid: ID!
     $cursor: String!
@@ -45,6 +51,9 @@ export const allergyQuery = gql`
         node {
           id
           resourceType
+          BasicList(_reference: "subject") {
+            ...Basic
+          }
           meta {
             tag {
               system

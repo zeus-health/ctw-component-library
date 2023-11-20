@@ -12,8 +12,8 @@ import {
 } from "@/fhir/system-urls";
 import { cloneDeep, isUndefined, omitBy } from "@/utils/nodash";
 import {
-  QUERY_KEY_OTHER_PROVIDER_CONDITIONS,
   QUERY_KEY_PATIENT_CONDITIONS,
+  QUERY_KEY_PATIENT_SUMMARY_CONDITIONS,
 } from "@/utils/query-keys";
 import { queryClient } from "@/utils/request";
 
@@ -129,7 +129,7 @@ export const createOrEditCondition = async (
 
   await Promise.all([
     queryClient.invalidateQueries([QUERY_KEY_PATIENT_CONDITIONS]),
-    queryClient.invalidateQueries([QUERY_KEY_OTHER_PROVIDER_CONDITIONS]),
+    queryClient.invalidateQueries([QUERY_KEY_PATIENT_SUMMARY_CONDITIONS]),
   ]);
 
   return response;

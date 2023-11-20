@@ -1,4 +1,5 @@
 import { differenceInDays } from "date-fns";
+import { QUERY_KEY_PATIENT_ENCOUNTERS } from "../../../../utils/query-keys";
 import { Notes } from "../../resource/helpers/notes";
 import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
 import { EncounterModel } from "@/fhir/models/encounter";
@@ -37,6 +38,7 @@ export function usePatientEncounterDetailsDrawer() {
     enableDismissAndReadActions: true,
     renderChild: (m) =>
       m.clinicalNotes.length > 0 && <Notes entries={orderBy(m.clinicalNotes, "title")} />,
+    queryKey: QUERY_KEY_PATIENT_ENCOUNTERS,
   });
 }
 

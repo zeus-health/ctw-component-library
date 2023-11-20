@@ -1,12 +1,16 @@
 import { MedicationStatement } from "fhir/r4";
 import { gql } from "graphql-request";
-import { fragmentCoding, fragmentReference } from "./fragments";
+import { fragmentBasic, fragmentCoding, fragmentReference } from "./fragments";
 import { GraphqlConnectionNode, GraphqlPageInfo } from "../client";
 
 export interface MedicationStatementConnection {
   pageInfo: GraphqlPageInfo;
-  edges: GraphqlConnectionNode<MedicationStatement>[];
+  edges: GraphqlConnectionNode<MedicationStatementWithBasics>[];
 }
+
+export type MedicationStatementWithBasics = MedicationStatement & {
+  BasicList: fhir4.Basic[];
+};
 
 export interface MedicationStatementGraphqlResponse {
   MedicationStatementConnection: MedicationStatementConnection;
@@ -15,6 +19,7 @@ export interface MedicationStatementGraphqlResponse {
 export const medicationStatementQuery = gql`
   ${fragmentCoding}
   ${fragmentReference}
+  ${fragmentBasic}
   query MedicationStatements(
     $upid: ID!
     $cursor: String!
@@ -36,6 +41,9 @@ export const medicationStatementQuery = gql`
         node {
           id
           resourceType
+          BasicList(_reference: "subject") {
+            ...Basic
+          }
           meta {
             tag {
               system

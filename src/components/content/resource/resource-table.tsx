@@ -21,6 +21,7 @@ export type ResourceTableProps<T extends MinRecordItem> = {
   enableDismissAndReadActions?: boolean;
   hidePagination?: boolean;
   children?: ReactNode;
+  queryKey?: string;
 };
 
 export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>({
@@ -35,6 +36,7 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
   enableDismissAndReadActions,
   hidePagination = false,
   children,
+  queryKey,
 }: ResourceTableProps<M>) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoints = useBreakpoints(containerRef);
@@ -42,12 +44,13 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
 
   const shouldShowTableHead = typeof showTableHead === "boolean" ? showTableHead : !breakpoints.sm;
 
-  const { toggleRead } = useToggleRead();
+  const { toggleRead } = useToggleRead(queryKey);
 
   // Create the RowActions react node
   const RowActionsWithAdditions = useAdditionalResourceActions({
     rowActions,
     enableDismissAndReadActions,
+    queryKey,
   });
 
   const onRowClickWithRead = onRowClick
