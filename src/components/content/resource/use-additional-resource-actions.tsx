@@ -17,13 +17,13 @@ import { RowActionsConfigProp } from "@/components/core/table/table-rows";
 import { ViewFHIR } from "@/components/core/view-fhir";
 import { FHIRModel } from "@/fhir/models/fhir-model";
 import { useBaseTranslations } from "@/i18n";
-import { QUERY_KEY_BASIC } from "@/utils/query-keys";
 
 export type ResourceTableProps<T extends MinRecordItem> = {
   rowActions?: (r: T) => TableProps<T>["rowActions"];
   enableDismissAndReadActions?: boolean;
   // Will adjust the way the dropdown menu appears if the content will be rendered in a footer
   isInFooter?: boolean;
+  queryKey?: string;
 };
 
 export const useAdditionalResourceActions = <T extends Resource, M extends FHIRModel<T>>({
@@ -110,7 +110,7 @@ function useDismissAndReadActions(enableDismissAndReadActions = false) {
   const requestContext = useRequestContext();
   const { trackInteraction } = useAnalytics();
 
-  const { isLoading: isToggleDismissLoading, toggleDismiss } = useToggleDismiss(QUERY_KEY_BASIC);
+  const { isLoading: isToggleDismissLoading, toggleDismiss } = useToggleDismiss();
   const { isLoading: isToggleReadLoading, toggleRead } = useToggleRead();
   return (record: FHIRModel<Resource>): RowActionsConfigProp<FHIRModel<Resource>> => {
     const archiveLabel = record.isDismissed

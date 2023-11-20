@@ -2,6 +2,7 @@ import cx from "classnames";
 import { allergyFilter, defaultAllergyFilters } from "./helpers/filters";
 import { useAllergiesHistory } from "./helpers/history";
 import { allergySortOptions, defaultAllergySort } from "./helpers/sort";
+import { QUERY_KEY_PATIENT_ALLERGIES } from "../../../utils/query-keys";
 import { History } from "../resource/helpers/history";
 import { PatientResourceTable } from "../resource/patient-resource-table";
 import { useResourceDetailsDrawer } from "../resource/resource-details-drawer";
@@ -32,7 +33,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
     records: patientAllergiesQuery.data,
   });
   const userBuilderId = useUserBuilderId();
-  const isEmptyQuery = patientAllergiesQuery.data.length === 0;
+  const isEmptyQuery = patientAllergiesQuery.data?.length === 0;
   const hasZeroFilteredRecords = !isEmptyQuery && data.length === 0;
 
   const openDetails = useResourceDetailsDrawer({
@@ -41,6 +42,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
     renderChild: allergyHistory,
     getSourceDocument: true,
     enableDismissAndReadActions: true,
+    queryKey: QUERY_KEY_PATIENT_ALLERGIES,
   });
 
   return (
@@ -71,6 +73,7 @@ function PatientAllergiesComponent({ className }: PatientAllergiesProps) {
               resourceName="allergies"
             />
           }
+          queryKey={QUERY_KEY_PATIENT_ALLERGIES}
         />
       </div>
     </AnalyticsProvider>

@@ -1,4 +1,5 @@
 import { useConditionHistory } from "./history";
+import { QUERY_KEY_PATIENT_SUMMARY_CONDITIONS } from "../../../../utils/query-keys";
 import { History } from "../../resource/helpers/history";
 import { useResourceDetailsDrawer } from "../../resource/resource-details-drawer";
 import { NotesList } from "@/components/core/notes-list";
@@ -40,4 +41,5 @@ export const useConditionDetailsDrawer = ({
     rowActions,
     renderChild: conditionHistory,
     enableDismissAndReadActions,
+    queryKey: QUERY_KEY_PATIENT_SUMMARY_CONDITIONS,
   });

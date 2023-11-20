@@ -2,8 +2,6 @@ import { useCallback, useState } from "react";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { toggleRead } from "@/fhir/basic";
 import { FHIRModel } from "@/fhir/models/fhir-model";
-import { QUERY_KEY_BASIC } from "@/utils/query-keys";
-import { queryClient } from "@/utils/request";
 
 interface UseToggleReadResult {
   /**
@@ -34,7 +32,6 @@ export function useToggleRead(): UseToggleReadResult {
     }
     setIsLoading(true);
     await toggleRead(model, await getRequestContext());
-    await queryClient.invalidateQueries([QUERY_KEY_BASIC]);
     setIsLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

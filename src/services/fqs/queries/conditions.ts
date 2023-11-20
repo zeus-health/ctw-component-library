@@ -5,8 +5,12 @@ import { GraphqlConnectionNode, GraphqlPageInfo } from "../client";
 
 export interface ConditionConnection {
   pageInfo: GraphqlPageInfo;
-  edges: GraphqlConnectionNode<Condition>[];
+  edges: GraphqlConnectionNode<ConditionWithBasics>[];
 }
+
+export type ConditionWithBasics = Condition & {
+  BasicList: fhir4.Basic[];
+};
 
 export interface ConditionGraphqlResponse {
   ConditionConnection: ConditionConnection;

@@ -55,7 +55,7 @@ export async function createOrEditFhirResource(
     // This way callers can safely refetch/invalidateQueries
     // and be sure to get fresh data from FQS.
     if (
-      response.resourceType !== "Basic" && // explicit carve-out for Basics until we are querying FQS for them
+      resource.resourceType !== "Basic" &&
       isFHIRDomainResource(response) &&
       response.id &&
       response.meta?.lastUpdated
