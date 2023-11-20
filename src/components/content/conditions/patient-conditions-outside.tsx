@@ -10,7 +10,6 @@ import { RowActionsConfigProp } from "@/components/core/table/table-rows";
 import { ConditionModel } from "@/fhir/models";
 import { useBaseTranslations } from "@/i18n";
 import { usePatientConditionsOutside } from "@/services/conditions";
-import { QUERY_KEY_PATIENT_SUMMARY_CONDITIONS } from "@/utils/query-keys";
 
 export type PatientConditionsOutsideProps = {
   className?: string;
@@ -60,7 +59,7 @@ export const PatientConditionsOutside = withErrorBoundary(
 function useRowActions(): (r: ConditionModel) => RowActionsConfigProp<ConditionModel> {
   const { t } = useBaseTranslations();
   const showAddConditionForm = useAddConditionForm();
-  const { isLoading, toggleDismiss } = useToggleDismiss(QUERY_KEY_PATIENT_SUMMARY_CONDITIONS);
+  const { isLoading, toggleDismiss } = useToggleDismiss();
 
   return (record: ConditionModel): RowActionsConfigProp<ConditionModel> => {
     const archiveLabel = record.isDismissed

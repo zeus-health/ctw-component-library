@@ -30,11 +30,10 @@ export const useAdditionalResourceActions = <T extends Resource, M extends FHIRM
   rowActions,
   enableDismissAndReadActions,
   isInFooter = false,
-  queryKey,
 }: ResourceTableProps<M>) => {
   const { featureFlags } = useCTW();
   const [selectedAction, setSelectedAction] = useState("card");
-  const dismissAndReadActions = useDismissAndReadActions(enableDismissAndReadActions, queryKey);
+  const dismissAndReadActions = useDismissAndReadActions(enableDismissAndReadActions);
 
   return ({ record, onSuccess, stacked = false }: RowActionsProps<M>) => {
     const extraActions = dismissAndReadActions(record) ?? [];
@@ -105,14 +104,14 @@ export const useAdditionalResourceActions = <T extends Resource, M extends FHIRM
   };
 };
 
-function useDismissAndReadActions(enableDismissAndReadActions = false, queryKey?: string) {
+function useDismissAndReadActions(enableDismissAndReadActions = false) {
   const userBuilderId = useUserBuilderId();
   const { t } = useBaseTranslations();
   const requestContext = useRequestContext();
   const { trackInteraction } = useAnalytics();
 
-  const { isLoading: isToggleDismissLoading, toggleDismiss } = useToggleDismiss(queryKey);
-  const { isLoading: isToggleReadLoading, toggleRead } = useToggleRead(queryKey);
+  const { isLoading: isToggleDismissLoading, toggleDismiss } = useToggleDismiss();
+  const { isLoading: isToggleReadLoading, toggleRead } = useToggleRead();
   return (record: FHIRModel<Resource>): RowActionsConfigProp<FHIRModel<Resource>> => {
     const archiveLabel = record.isDismissed
       ? t("resourceTable.restore")
