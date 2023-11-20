@@ -1,13 +1,60 @@
 diff --git a/node_modules/graphql-request/build/esm/index.js b/node_modules/graphql-request/build/esm/index.js
-index 65bf831..18f8855 100644
+index 65bf831..3daac79 100644
 --- a/node_modules/graphql-request/build/esm/index.js
 +++ b/node_modules/graphql-request/build/esm/index.js
-@@ -3,7 +3,7 @@ import { HeadersInstanceToPlainObject, uppercase } from './helpers.js';
+@@ -3,15 +3,14 @@ import { HeadersInstanceToPlainObject, uppercase } from './helpers.js';
  import { parseBatchRequestArgs, parseRawRequestArgs, parseRawRequestExtendedArgs, parseRequestArgs, parseRequestExtendedArgs, } from './parseArgs.js';
  import { resolveRequestDocument } from './resolveRequestDocument.js';
  import { ClientError, } from './types.js';
 -import crossFetch, * as CrossFetch from 'cross-fetch';
-+// import crossFetch, * as CrossFetch from 'cross-fetch';
++
  /**
   * Convert the given headers configuration into a plain object.
   */
+ const resolveHeaders = (headers) => {
+     let oHeaders = {};
+     if (headers) {
+-        if ((typeof Headers !== `undefined` && headers instanceof Headers) ||
+-            (CrossFetch && CrossFetch.Headers && headers instanceof CrossFetch.Headers)) {
++        if (headers instanceof Headers) {
+             oHeaders = HeadersInstanceToPlainObject(headers);
+         }
+         else if (Array.isArray(headers)) {
+@@ -113,7 +112,7 @@ class GraphQLClient {
+         this.rawRequest = async (...args) => {
+             const [queryOrOptions, variables, requestHeaders] = args;
+             const rawRequestOptions = parseRawRequestArgs(queryOrOptions, variables, requestHeaders);
+-            const { headers, fetch = crossFetch, method = `POST`, requestMiddleware, responseMiddleware, ...fetchOptions } = this.requestConfig;
++            const { headers, fetch = globalThis.fetch, method = `POST`, requestMiddleware, responseMiddleware, ...fetchOptions } = this.requestConfig;
+             const { url } = this;
+             if (rawRequestOptions.signal !== undefined) {
+                 fetchOptions.signal = rawRequestOptions.signal;
+@@ -150,7 +149,7 @@ class GraphQLClient {
+     async request(documentOrOptions, ...variablesAndRequestHeaders) {
+         const [variables, requestHeaders] = variablesAndRequestHeaders;
+         const requestOptions = parseRequestArgs(documentOrOptions, variables, requestHeaders);
+-        const { headers, fetch = crossFetch, method = `POST`, requestMiddleware, responseMiddleware, ...fetchOptions } = this.requestConfig;
++        const { headers, fetch = globalThis.fetch, method = `POST`, requestMiddleware, responseMiddleware, ...fetchOptions } = this.requestConfig;
+         const { url } = this;
+         if (requestOptions.signal !== undefined) {
+             fetchOptions.signal = requestOptions.signal;
+@@ -202,7 +201,7 @@ class GraphQLClient {
+                 ...resolveHeaders(batchRequestOptions.requestHeaders),
+             },
+             operationName: undefined,
+-            fetch: this.requestConfig.fetch ?? crossFetch,
++            fetch: this.requestConfig.fetch ?? globalThis.fetch,
+             method: this.requestConfig.method || `POST`,
+             fetchOptions,
+             middleware: this.requestConfig.requestMiddleware,
+diff --git a/node_modules/graphql-request/build/esm/types.d.ts b/node_modules/graphql-request/build/esm/types.d.ts
+index 2c0535a..31c4a06 100644
+--- a/node_modules/graphql-request/build/esm/types.d.ts
++++ b/node_modules/graphql-request/build/esm/types.d.ts
+@@ -1,6 +1,5 @@
+ import type { RemoveIndex } from './helpers.js';
+ import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
+-import type { fetch } from 'cross-fetch';
+ import type { GraphQLError } from 'graphql/error/GraphQLError.js';
+ import type { DocumentNode } from 'graphql/language/ast.js';
+ export type Fetch = typeof fetch;
