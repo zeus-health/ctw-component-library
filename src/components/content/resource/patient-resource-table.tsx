@@ -15,6 +15,7 @@ export const PatientResourceTable = <T extends fhir4.Resource, M extends FHIRMod
   showTableHead,
   enableDismissAndReadActions,
   hidePagination = false,
+  queryKey,
 }: ResourceTableProps<M>) => {
   const patient = usePatient();
 
@@ -50,6 +51,7 @@ export const PatientResourceTable = <T extends fhir4.Resource, M extends FHIRMod
       rowActions={rowActions}
       enableDismissAndReadActions={enableDismissAndReadActions}
       hidePagination={hidePagination}
+      queryKey={queryKey}
     />
   );
 };

@@ -75,7 +75,7 @@ function useUnreadRecordsByResource(resources = defaultZAPTabs): Map<ZAPTabName,
   }
 
   for (const resource of resources) {
-    let data: FHIRModel<fhir4.Resource>[];
+    let data: FHIRModel<fhir4.Resource>[] | undefined;
     switch (resource) {
       case "allergies":
         data = allergiesQuery.data;
@@ -102,7 +102,7 @@ function useUnreadRecordsByResource(resources = defaultZAPTabs): Map<ZAPTabName,
         data = [];
     }
     if (
-      data.some(
+      data?.some(
         (record) => !record.isDismissed && !record.isRead && !record.ownedByBuilder(userBuilderId)
       )
     ) {

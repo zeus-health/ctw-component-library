@@ -1,6 +1,7 @@
 import { faFileLines } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ArrowRightIcon } from "@heroicons/react/outline";
+import { QUERY_KEY_PATIENTS_ADT_LIST } from "../../../../utils/query-keys";
 import { DocumentButton } from "../../CCDA/document-button";
 import { useCCDAModal } from "../../CCDA/modal-ccda";
 import { NotesEntry } from "../../resource/helpers/notes-entry";
@@ -101,6 +102,7 @@ export function useADTAlertDetailsDrawer(goToPatient: (upid: string) => void) {
     details: encounterData,
     renderChild: encountersAndNotes,
     enableDismissAndReadActions: true,
+    queryKey: QUERY_KEY_PATIENTS_ADT_LIST,
   });
 }
 

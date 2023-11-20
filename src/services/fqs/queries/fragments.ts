@@ -1,5 +1,25 @@
 import { gql } from "graphql-request";
 
+export const fragmentBasic = gql`
+  fragment Basic on Basic {
+    id
+    resourceType
+    meta {
+      lastUpdated
+    }
+    code {
+      coding {
+        code
+        display
+        system
+      }
+    }
+    author {
+      display
+    }
+  }
+`;
+
 export const fragmentCoding = gql`
   fragment Coding on Coding {
     code

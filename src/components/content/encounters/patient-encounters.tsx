@@ -4,6 +4,7 @@ import { patientEncounterColumns } from "./helpers/columns";
 import { defaultEncounterFilters, encounterFilters } from "./helpers/filters";
 import { usePatientEncounterDetailsDrawer } from "./helpers/modal-hooks";
 import { defaultEncounterSort, encounterSortOptions } from "./helpers/sorts";
+import { QUERY_KEY_PATIENT_ENCOUNTERS } from "../../../utils/query-keys";
 import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { PatientResourceTable } from "../resource/patient-resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
@@ -69,6 +70,7 @@ function PatientEncountersComponent({ className }: PatientEncountersProps) {
           }
           enableDismissAndReadActions
           onRowClick={openEncounterDetails}
+          queryKey={QUERY_KEY_PATIENT_ENCOUNTERS}
         />
       </div>
     </AnalyticsProvider>

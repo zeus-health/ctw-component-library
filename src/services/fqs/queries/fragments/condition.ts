@@ -1,4 +1,4 @@
-import { fragmentCoding, fragmentOrganization, fragmentPatient } from "../fragments";
+import { fragmentBasic, fragmentCoding, fragmentOrganization, fragmentPatient } from "../fragments";
 
 const subjectFragment = `subject {
       reference
@@ -20,9 +20,13 @@ export const fragmentCondition = `
     ${fragmentCoding}
     ${fragmentPatient}
     ${fragmentOrganization}
+    ${fragmentBasic}
     fragment Condition on Condition {
       id
       resourceType
+      BasicList(_reference: "subject") {
+        ...Basic
+      }
       meta {
         tag {
           system

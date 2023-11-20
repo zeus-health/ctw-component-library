@@ -1,6 +1,7 @@
 import { DiagnosticReport } from "fhir/r4";
 import { gql } from "graphql-request";
 import {
+  fragmentBasic,
   fragmentCoding,
   fragmentObservation,
   fragmentOrganization,
@@ -11,8 +12,12 @@ import { GraphqlConnectionNode, GraphqlPageInfo } from "../client";
 
 export interface DiagnosticReportConnection {
   pageInfo: GraphqlPageInfo;
-  edges: GraphqlConnectionNode<DiagnosticReport>[];
+  edges: GraphqlConnectionNode<DiagnosticReportWithBasics>[];
 }
+
+export type DiagnosticReportWithBasics = DiagnosticReport & {
+  BasicList: fhir4.Basic[];
+};
 
 export interface DiagnosticReportGraphqlResponse {
   DiagnosticReportConnection: DiagnosticReportConnection;
@@ -36,6 +41,7 @@ export const getDiagnosticReportQuery = (includeObservations: boolean) => gql`
   ${fragmentOrganization}
   ${fragmentPatient}
   ${fragmentPractitioner}
+  ${fragmentBasic}
   ${includeObservations ? fragmentObservation : ""}
   query DiagnosticReports(
     $upid: ID!
@@ -58,6 +64,9 @@ export const getDiagnosticReportQuery = (includeObservations: boolean) => gql`
         node {
           id
           resourceType
+          BasicList(_reference: "subject") {
+            ...Basic
+          }
           meta {
             extension {
               url
