@@ -44,7 +44,7 @@ export const ResourceTable = <T extends fhir4.Resource, M extends FHIRModel<T>>(
 
   const shouldShowTableHead = typeof showTableHead === "boolean" ? showTableHead : !breakpoints.sm;
 
-  const { toggleRead } = useToggleRead(queryKey);
+  const { toggleRead } = useToggleRead();
 
   // Create the RowActions react node
   const RowActionsWithAdditions = useAdditionalResourceActions({

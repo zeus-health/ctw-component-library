@@ -101,7 +101,7 @@ function useRowActions(onAddToRecord?: (record: MedicationStatementModel) => voi
   const { t } = useBaseTranslations();
   const userBuilderId = useUserBuilderId();
   const showAddMedicationForm = useAddMedicationForm();
-  const { toggleRead } = useToggleRead(QUERY_KEY_PATIENT_SUMMARY_MEDICATIONS);
+  const { toggleRead } = useToggleRead();
 
   return (record: MedicationStatementModel): RowActionsConfigProp<MedicationStatementModel> =>
     record.ownedByBuilder(userBuilderId)

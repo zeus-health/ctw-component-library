@@ -2,7 +2,6 @@ import { useCallback, useState } from "react";
 import { useCTW } from "@/components/core/providers/use-ctw";
 import { toggleRead } from "@/fhir/basic";
 import { FHIRModel } from "@/fhir/models/fhir-model";
-import { queryClient } from "@/utils/request";
 
 interface UseToggleReadResult {
   /**
@@ -19,7 +18,7 @@ interface UseToggleReadResult {
 /**
  * This hook toggles the read status for the specified FHIR model.
  */
-export function useToggleRead(queryToInvalidate?: string): UseToggleReadResult {
+export function useToggleRead(): UseToggleReadResult {
   const { getRequestContext } = useCTW();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -33,7 +32,6 @@ export function useToggleRead(queryToInvalidate?: string): UseToggleReadResult {
     }
     setIsLoading(true);
     await toggleRead(model, await getRequestContext());
-    await queryClient.invalidateQueries([queryToInvalidate]);
     setIsLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -11,7 +11,6 @@ import { MedicationStatementModel } from "@/fhir/models";
 import { useQueryAllPatientMedications } from "@/hooks/use-medications";
 import { useBaseTranslations } from "@/i18n";
 import { Spinner } from "@/index";
-import { QUERY_KEY_PATIENT_SUMMARY_MEDICATIONS } from "@/utils/query-keys";
 
 export type PatientMedicationsOutsideProps = {
   className?: string;
@@ -55,9 +54,7 @@ function useRowActions(onAddToRecord?: (record: MedicationStatementModel) => voi
   const { t } = useBaseTranslations();
   const { trackInteraction } = useAnalytics();
   const showAddMedicationForm = useAddMedicationForm();
-  const { isLoading, toggleDismiss: toggleArchive } = useToggleDismiss(
-    QUERY_KEY_PATIENT_SUMMARY_MEDICATIONS
-  );
+  const { isLoading, toggleDismiss: toggleArchive } = useToggleDismiss();
 
   return (record: MedicationStatementModel): RowActionsConfigProp<MedicationStatementModel> => {
     const archiveLabel = record.isDismissed

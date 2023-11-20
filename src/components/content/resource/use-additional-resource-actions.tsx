@@ -111,8 +111,8 @@ function useDismissAndReadActions(enableDismissAndReadActions = false, queryKey?
   const requestContext = useRequestContext();
   const { trackInteraction } = useAnalytics();
 
-  const { isLoading: isToggleDismissLoading, toggleDismiss } = useToggleDismiss(queryKey);
-  const { isLoading: isToggleReadLoading, toggleRead } = useToggleRead(queryKey);
+  const { isLoading: isToggleDismissLoading, toggleDismiss } = useToggleDismiss();
+  const { isLoading: isToggleReadLoading, toggleRead } = useToggleRead();
   return (record: FHIRModel<Resource>): RowActionsConfigProp<FHIRModel<Resource>> => {
     const archiveLabel = record.isDismissed
       ? t("resourceTable.restore")
