@@ -60,7 +60,8 @@ function PatientImmunizationsComponent({ className }: PatientImmunizationsProps)
           data={data}
           columns={patientImmunizationsColumns(userBuilderId)}
           onRowClick={openDetails}
-          // enableDismissAndReadActions // TODO - re-enable when FQS supports basics on documents
+          enableDismissAndReadActions
+          queryKey={QUERY_KEY_PATIENT_IMMUNIZATIONS}
           emptyMessage={
             <EmptyPatientTable
               hasZeroFilteredRecords={hasZeroFilteredRecords}

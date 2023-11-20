@@ -1,6 +1,6 @@
 import { Immunization } from "fhir/r4";
 import { gql } from "graphql-request";
-import { fragmentCoding, fragmentOrganization, fragmentPatient } from "./fragments";
+import { fragmentBasic, fragmentCoding, fragmentOrganization, fragmentPatient } from "./fragments";
 import { GraphqlConnectionNode, GraphqlPageInfo } from "../client";
 
 export interface ImmunizationConnection {
@@ -16,11 +16,11 @@ export interface ImmunizationGraphqlResponse {
   ImmunizationConnection: ImmunizationConnection;
 }
 
-// TODO - add BasicList when its supported by FQS
 export const immunizationsQuery = gql`
   ${fragmentCoding}
   ${fragmentOrganization}
   ${fragmentPatient}
+  ${fragmentBasic}
   query Immunizations($upid: ID!, $cursor: String!, $sort: ImmunizationSortParams!, $first: Int!) {
     ImmunizationConnection(upid: $upid, after: $cursor, sort: $sort, first: $first) {
       pageInfo {
@@ -30,6 +30,9 @@ export const immunizationsQuery = gql`
         node {
           id
           resourceType
+          BasicList(_reference: "subject") {
+            ...Basic
+          }
           meta {
             tag {
               system

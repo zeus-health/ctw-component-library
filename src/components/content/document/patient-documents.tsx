@@ -4,6 +4,7 @@ import { patientDocumentColumns } from "./helpers/columns";
 import { useDocumentDetailsDrawer } from "./helpers/details";
 import { defaultDocumentsFilters, documentsFilter } from "./helpers/filters";
 import { defaultDocumentSort, documentSortOptions } from "./helpers/sorts";
+import { QUERY_KEY_PATIENT_DOCUMENTS } from "../../../utils/query-keys";
 import { getDateRangeView } from "../resource/helpers/view-date-range";
 import { PatientResourceTable } from "../resource/patient-resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
@@ -74,7 +75,8 @@ function PatientDocumentsComponent({ className, onAddToRecord }: PatientDocument
           columns={patientDocumentColumns}
           onRowClick={openDetails}
           rowActions={rowActions}
-          // enableDismissAndReadActions // TODO - re-enable when FQS supports basics on documents
+          enableDismissAndReadActions
+          queryKey={QUERY_KEY_PATIENT_DOCUMENTS}
         />
       </div>
     </AnalyticsProvider>

@@ -1,6 +1,6 @@
 import { DocumentReference } from "fhir/r4";
 import { gql } from "graphql-request";
-import { fragmentCoding, fragmentOrganization } from "./fragments";
+import { fragmentBasic, fragmentCoding, fragmentOrganization } from "./fragments";
 import { GraphqlConnectionNode, GraphqlPageInfo } from "../client";
 
 export interface DocumentReferenceConnection {
@@ -16,10 +16,10 @@ export interface DocumentReferenceGraphqlResponse {
   DocumentReferenceConnection: DocumentReferenceConnection;
 }
 
-// TODO - add BasicList when its supported by FQS
 export const documentsQuery = gql`
   ${fragmentCoding}
   ${fragmentOrganization}
+  ${fragmentBasic}
   query Documents(
     $upid: ID!
     $cursor: String!
@@ -41,6 +41,9 @@ export const documentsQuery = gql`
         node {
           id
           resourceType
+          BasicList(_reference: "subject") {
+            ...Basic
+          }
           meta {
             extension {
               url
