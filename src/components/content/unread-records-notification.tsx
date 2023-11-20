@@ -39,17 +39,8 @@ export const UnreadRecordsNotification = ({
   return null;
 };
 
-// Provides the number of ZAP resources with unread notifications
-export function useUnreadZAPTabsCount(resources = defaultZAPTabs): number {
-  const unreadRecordsMap = useUnreadRecordsByResource(resources);
-  return [...unreadRecordsMap.values()].reduce(
-    (count, hasUnread) => (hasUnread ? count + 1 : count),
-    0
-  );
-}
-
 // Maps whether each ZAP resource has any unread notifications
-function useUnreadRecordsByResource(resources = defaultZAPTabs): Map<ZAPTabName, boolean> {
+export function useUnreadRecordsByResource(resources = defaultZAPTabs): Map<ZAPTabName, boolean> {
   const userBuilderId = useUserBuilderId();
   const allergiesQuery = usePatientAllergies(resources.includes("allergies"));
   const conditionsQuery = usePatientConditionsAll(resources.includes("conditions-all"));
@@ -67,7 +58,7 @@ function useUnreadRecordsByResource(resources = defaultZAPTabs): Map<ZAPTabName,
     resources.includes("encounters")
   );
   const immunizationsQuery = usePatientImmunizations(resources.includes("immunizations"));
-  const medicationsQuery = useQueryAllPatientMedications(resources.includes("medications"));
+  const medicationsQuery = useQueryAllPatientMedications(resources.includes("medications-all"));
 
   const map = new Map<ZAPTabName, boolean>();
   for (const zapTabName of ZAP_TAB_NAMES) {
