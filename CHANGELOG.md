@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 2.3.1
+
+### Patch Changes
+
+- 1354dc14: Refactor read/dismiss to query Basic resources via FQS.
+
 ## 2.3.0
 
 ### Minor Changes
