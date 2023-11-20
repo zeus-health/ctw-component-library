@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 2.3.3
+
+### Patch Changes
+
+- 290f5d80: Patch graphql-request lib to not use cross-fetch
+
 ## 2.3.2
 
 ### Patch Changes
