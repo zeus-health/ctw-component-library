@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 2.3.4
+
+### Patch Changes
+
+- 00571ac6: Make a function unavailable because it wasn't working in CTW.
+
 ## 2.3.3
 
 ### Patch Changes
