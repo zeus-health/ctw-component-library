@@ -1,6 +1,5 @@
 import { SearchParams } from "fhir-kit-client";
 import { useEffect, useState } from "react";
-import { useIncludeBasics } from "./basic";
 import { getIncludedResources } from "./bundle";
 import { usePatientDocuments } from "./document";
 import { PatientModel } from "./models";
@@ -29,7 +28,9 @@ function getEncountersFromFQS(limit: number) {
         },
       });
       const nodes = data.EncounterConnection.edges.map((x) => x.node);
-      const results = nodes.map((c) => new EncounterModel(c, c.ProvenanceList));
+      const results = nodes.map(
+        (c) => new EncounterModel(c, c.ProvenanceList, undefined, c.BasicList)
+      );
       if (results.length === 0) {
         Telemetry.countMetric("req.count.encounters.none", 1);
       }
@@ -43,13 +44,12 @@ function getEncountersFromFQS(limit: number) {
 }
 
 export function usePatientEncounters(limit = MAX_OBJECTS_PER_REQUEST, enabled = true) {
-  const patientEncountersQuery = useQueryWithPatient(
+  return useQueryWithPatient(
     QUERY_KEY_PATIENT_ENCOUNTERS,
     [limit],
     withTimerMetric(getEncountersFromFQS(limit), `req.timing.encounters`),
     enabled
   );
-  return useIncludeBasics(patientEncountersQuery);
 }
 
 // Gets patient encounters along with clinical notes from any documents associated with each encounter.
@@ -61,8 +61,8 @@ export function usePatientEncountersWithClinicalNotes(limit = MAX_OBJECTS_PER_RE
   );
 
   useEffect(() => {
-    const documents = documentsQuery.data;
-    const encounters = encounterQuery.data;
+    const documents = documentsQuery.data ?? [];
+    const encounters = encounterQuery.data ?? [];
 
     if (documents.length > 0) {
       setEncountersWithClinicalNotes(
@@ -71,7 +71,7 @@ export function usePatientEncountersWithClinicalNotes(limit = MAX_OBJECTS_PER_RE
             encounter.resource,
             encounter.provenance,
             undefined,
-            encounter.revIncludes
+            encounter.basics
           );
           model.findAndSetNotesFrom(documents);
           return model;

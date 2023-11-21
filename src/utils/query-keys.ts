@@ -1,15 +1,14 @@
 export const QUERY_KEY_AI_SEARCH = "ai_search";
 export const QUERY_KEY_AUTH_TOKEN = "auth_token";
-export const QUERY_KEY_BASIC = "basic";
 export const QUERY_KEY_BINARY = "binary";
 export const QUERY_KEY_CARETEAM = "patient_care_team";
 export const QUERY_KEY_ENCOUNTERS_RELATED = "encounters_related";
 export const QUERY_KEY_ALLERGY_HISTORY = "allergy_history";
 export const QUERY_KEY_CONDITION_HISTORY = "condition_history";
 export const QUERY_KEY_MEDICATION_HISTORY = "medication_history";
-export const QUERY_KEY_OTHER_PROVIDER_CONDITIONS = "other_provider_conditions";
+export const QUERY_KEY_PATIENT_SUMMARY_CONDITIONS = "patient_summary_conditions";
 export const QUERY_KEY_PATIENT_DIAGNOSTIC_REPORTS = "patient_diagnostic_reports";
-export const QUERY_KEY_OTHER_PROVIDER_MEDICATIONS = "other_provider_medications";
+export const QUERY_KEY_PATIENT_SUMMARY_MEDICATIONS = "patient_summary_medications";
 export const QUERY_KEY_PATIENT = "patient";
 export const QUERY_KEY_PATIENT_ALLERGIES = "patient_allergies";
 export const QUERY_KEY_PATIENT_MEDICATION_REQUESTS_COMMON = "patient_medication_requests_common";

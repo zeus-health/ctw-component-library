@@ -5,11 +5,12 @@ import { GraphqlConnectionNode, GraphqlPageInfo } from "../client";
 
 export interface EncounterConnection {
   pageInfo: GraphqlPageInfo;
-  edges: GraphqlConnectionNode<EncounterWithProvenance>[];
+  edges: GraphqlConnectionNode<EncounterWithReferences>[];
 }
 
-export type EncounterWithProvenance = Encounter & {
+export type EncounterWithReferences = Encounter & {
   ProvenanceList: fhir4.Provenance[];
+  BasicList: fhir4.Basic[];
 };
 
 export interface EncounterGraphqlResponse {
@@ -18,7 +19,6 @@ export interface EncounterGraphqlResponse {
 
 export const encountersQuery = gql`
   ${fragmentEncounter}
-
   query Encounters(
     $upid: ID!
     $cursor: String!

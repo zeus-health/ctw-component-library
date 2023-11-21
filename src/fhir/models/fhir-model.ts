@@ -21,16 +21,16 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
 
   readonly includedResources?: ResourceMap;
 
-  private revIncludedResources?: Resource[];
+  private basicResources?: fhir4.Basic[];
 
   private optimisticIsRead?: boolean;
 
   private optimisticIsDismissed?: boolean;
 
-  constructor(resource: T, includedResources?: ResourceMap, revIncludes?: Resource[]) {
+  constructor(resource: T, includedResources?: ResourceMap, basics?: fhir4.Basic[]) {
     this.resource = resource;
     this.includedResources = includedResources;
-    this.revIncludedResources = revIncludes;
+    this.basicResources = basics;
   }
 
   get createdAt(): string | undefined {
@@ -63,7 +63,7 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
       return this.optimisticIsDismissed;
     }
 
-    const basic = this.getLatestBasicResourceByActions(["archive", "unarchive"]);
+    const basic = this.getLatestAction(["archive", "unarchive"]);
     return some(basic?.code.coding, {
       system: SYSTEM_ZUS_PROFILE_ACTION,
       code: "archive",
@@ -81,7 +81,7 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
     if (this.optimisticIsRead !== undefined) {
       return this.optimisticIsRead;
     }
-    const basic = this.getLatestBasicResourceByActions(["read", "unread"]);
+    const basic = this.getLatestAction(["read", "unread"]);
     const isRead = some(basic?.code.coding, {
       system: SYSTEM_ZUS_PROFILE_ACTION,
       code: "read",
@@ -125,32 +125,27 @@ export abstract class FHIRModel<T extends fhir4.Resource> {
     return startCase(this.resourceType);
   }
 
-  get revIncludes(): Resource[] | undefined {
-    return this.revIncludedResources;
+  get basics(): fhir4.Basic[] | undefined {
+    return this.basicResources;
   }
 
-  set revIncludes(resources: Resource[] | undefined) {
-    this.revIncludedResources = resources;
+  set basics(basics: fhir4.Basic[] | undefined) {
+    this.basicResources = basics;
   }
 
   // Returns the latest Basic resource that has a code that matches
   // one of profileActions.
-  // This way we get the latest action for either "archive" or "unarchive".
   // In practice, there should only be a single Basic resource, but
   // we need to handle the case where there may be several.
-  getLatestBasicResourceByActions(profileActions: string[]): Basic | undefined {
-    const ordered = orderBy(this.revIncludes, "meta.lastUpdated", "desc") as Resource[];
-    return find(ordered, (resource) => {
-      if (resource.resourceType === "Basic") {
-        return some(
-          (resource as Basic).code.coding,
-          (coding) =>
-            coding.system === SYSTEM_ZUS_PROFILE_ACTION &&
-            profileActions.includes(coding.code ?? "")
-        );
-      }
-      return false;
-    }) as Basic | undefined;
+  getLatestAction(profileActions: string[]): Basic | undefined {
+    const ordered = orderBy(this.basics, "meta.lastUpdated", "desc") as Resource[];
+    return find(ordered, (resource) =>
+      some(
+        (resource as Basic).code.coding,
+        (coding) =>
+          coding.system === SYSTEM_ZUS_PROFILE_ACTION && profileActions.includes(coding.code ?? "")
+      )
+    ) as Basic | undefined;
   }
 
   // Returns true if this resource is enriched with additional data

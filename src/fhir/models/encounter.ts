@@ -1,4 +1,4 @@
-import { Coding, Resource } from "fhir/r4";
+import { Coding } from "fhir/r4";
 import { DocumentModel } from "./document";
 import { FHIRModel } from "./fhir-model";
 import { PatientModel } from "./patient";
@@ -29,9 +29,9 @@ export class EncounterModel extends FHIRModel<fhir4.Encounter> {
     resource: fhir4.Encounter,
     provenance: fhir4.Provenance[],
     includedResources?: ResourceMap,
-    revIncludes?: Resource[]
+    basics?: fhir4.Basic[]
   ) {
-    super(resource, includedResources, revIncludes);
+    super(resource, includedResources, basics);
     this.provenance = provenance;
     this.clinicalNotes = [];
     this.provenance = provenance;

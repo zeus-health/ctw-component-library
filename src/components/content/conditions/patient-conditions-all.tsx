@@ -10,6 +10,7 @@ import {
 } from "./helpers/modal-hooks";
 import { conditionSortOptions, defaultConditionSort } from "./helpers/sorts";
 import { ConditionViewOptions, statusView } from "./helpers/views";
+import { QUERY_KEY_PATIENT_SUMMARY_CONDITIONS } from "../../../utils/query-keys";
 import { useToggleRead } from "../hooks/use-toggle-read";
 import { PatientResourceTable } from "../resource/patient-resource-table";
 import { ResourceTableActions } from "../resource/resource-table-actions";
@@ -105,6 +106,7 @@ function PatientConditionsAllComponent({
           rowActions={readOnly ? undefined : rowActions}
           enableDismissAndReadActions
           emptyMessage={empty}
+          queryKey={QUERY_KEY_PATIENT_SUMMARY_CONDITIONS}
         />
       </div>
     </AnalyticsProvider>

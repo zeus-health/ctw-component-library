@@ -27,6 +27,7 @@ export type UseResourceDetailsDrawerProps<T extends fhir4.Resource, M extends FH
   | "rowActions"
   | "enableDismissAndReadActions"
   | "renderChild"
+  | "queryKey"
 >;
 
 export function useResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>(
@@ -56,6 +57,7 @@ type ResourceDetailsDrawerProps<T extends fhir4.Resource, M extends FHIRModel<T>
   enableDismissAndReadActions?: boolean;
   subHeader?: (model: M) => ReactNode;
   renderChild?: (model: M) => ReactNode;
+  queryKey?: string;
 };
 
 function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>({
@@ -70,6 +72,7 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
   enableDismissAndReadActions,
   subHeader,
   renderChild,
+  queryKey,
 }: ResourceDetailsDrawerProps<T, M>) {
   const openCCDAModal = useCCDAModal();
   const ctwThemeRef = useCtwThemeRef();
@@ -102,6 +105,7 @@ function ResourceDetailsDrawer<T extends fhir4.Resource, M extends FHIRModel<T>>
     rowActions,
     enableDismissAndReadActions,
     isInFooter: true,
+    queryKey,
   });
 
   // We call rowActions right away so we'll know if it returns null and thus we should

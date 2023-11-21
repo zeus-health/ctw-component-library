@@ -1,14 +1,18 @@
 import { gql } from "graphql-request";
 import { fragmentCodeableConcept } from "./codeable-concept";
-import { fragmentReference } from "../fragments";
+import { fragmentBasic, fragmentReference } from "../fragments";
 
 export const fragmentEncounter = gql`
   ${fragmentCodeableConcept}
   ${fragmentReference}
+  ${fragmentBasic}
 
   fragment Encounter on Encounter {
     id
     resourceType
+    BasicList(_reference: "subject") {
+      ...Basic
+    }
     meta {
       tag {
         system

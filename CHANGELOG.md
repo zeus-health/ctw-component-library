@@ -1,5 +1,23 @@
 # ctw-component-library
 
+## 2.3.3
+
+### Patch Changes
+
+- 290f5d80: Patch graphql-request lib to not use cross-fetch
+
+## 2.3.2
+
+### Patch Changes
+
+- f9feda7b: Remove FQS poll and query invalidation for read/dismiss
+
+## 2.3.1
+
+### Patch Changes
+
+- 1354dc14: Refactor read/dismiss to query Basic resources via FQS.
+
 ## 2.3.0
 
 ### Minor Changes
