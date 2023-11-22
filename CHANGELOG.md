@@ -1,5 +1,11 @@
 # ctw-component-library
 
+## 2.3.5
+
+### Patch Changes
+
+- 72ef7320: Fix ComboBoxField to select the correct option when multiple options have identical labels
+
 ## 2.3.4
 
 ### Patch Changes
