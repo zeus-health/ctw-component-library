@@ -22,12 +22,10 @@ import {
   ZusAggregatedProfileIFrame,
   PatientConditionsAll,
   PatientsTableFQS,
-  UnreadRecordsNotification,
 } from ".";
 
 import { PatientMedicationDispense } from "./components/content/medication-dispense/patient-medication-dispense";
 import { ThemeProviderProps } from "@/components/core/providers/theme/theme-provider";
-import { UseQueryResult } from "@tanstack/react-query";
 import { MatchedPatients } from "./components/content/matched-patients/matched-patients";
 import { PatientsTable } from "./components/content/patients/patients-table-ods";
 import { notify } from "./components/core/toast";

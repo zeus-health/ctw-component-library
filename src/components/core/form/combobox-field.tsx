@@ -15,8 +15,8 @@ export type ComboboxFieldProps<T> = {
   options: ComboxboxFieldOption[];
   isLoading: boolean;
   name: string;
-  defaultValue: T;
-  defaultSearchTerm: string;
+  defaultValue?: T;
+  defaultSearchTerm?: string;
   onSearchChange: (searchTerm: string) => void;
   readonly: boolean | undefined;
   enableSearchIcon?: boolean;
@@ -29,8 +29,8 @@ export const ComboboxField = <T,>({
   options,
   isLoading,
   name,
-  defaultSearchTerm,
-  defaultValue,
+  defaultSearchTerm = "",
+  defaultValue = {} as T,
   onSearchChange,
   readonly,
   enableSearchIcon = false,
@@ -66,11 +66,11 @@ export const ComboboxField = <T,>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onSearchChange]);
 
-  const onSelectChange = (eventValue: string) => {
-    const currentItem = options.filter((item) => item.label === eventValue)[0];
-    setInputValue(currentItem.value);
-    setSearchTerm(eventValue);
-    onCustomSelectChange?.(currentItem);
+  const onSelectChange = (e: unknown) => {
+    const option = e as ComboxboxFieldOption;
+    setSearchTerm(option.label);
+    setInputValue(option.value);
+    onCustomSelectChange?.(option);
   };
 
   return (
@@ -174,7 +174,7 @@ const ComboboxOptions = ({
 
 const ComboboxOption = ({ option }: { option: ComboxboxFieldOption }) => (
   <Combobox.Option
-    value={option.label}
+    value={option}
     className={({ active }) =>
       `ctw-relative ctw-cursor-default ctw-select-none ctw-py-2 ctw-pl-4 ctw-pr-4 ${
         active ? "ctw-bg-primary-light ctw-text-primary-dark" : "ctw-text-content-black"
