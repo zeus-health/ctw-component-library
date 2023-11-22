@@ -67,10 +67,10 @@ export const ComboboxField = <T,>({
   }, [onSearchChange]);
 
   const onSelectChange = (e: unknown) => {
-    const { label, value } = e as ComboxboxFieldOption;
-    setSearchTerm(label);
-    setInputValue(value);
-    onCustomSelectChange?.(value);
+    const option = e as ComboxboxFieldOption;
+    setSearchTerm(option.label);
+    setInputValue(option.value);
+    onCustomSelectChange?.(option);
   };
 
   return (
