@@ -69,14 +69,12 @@ export const PatientSearch = withErrorBoundary(
         readonly={false}
         isLoading={isFetching}
         name="patient-search"
-        defaultSearchTerm=""
         onCustomSelectChange={onSearchClick}
         renderCustomOption={(e) => <CustomComboBox option={e as CustomPatientOptionValue} />}
         onSearchChange={(e) => {
           setSearchValue(e);
           setPatients([]);
         }}
-        defaultValue={{}}
         placeholder="Search by patient name or identifier"
       />
     );
@@ -86,7 +84,7 @@ export const PatientSearch = withErrorBoundary(
 
 export const CustomComboBox = ({ option }: { option: CustomPatientOptionValue }) => (
   <Combobox.Option
-    value={option.label}
+    value={option}
     className={({ active }) =>
       `ctw-relative ctw-flex ctw-cursor-default ctw-select-none ctw-space-x-2 ctw-py-2 ctw-pl-4 ctw-pr-4 ${
         active ? "ctw-bg-primary-light ctw-text-primary-dark" : "ctw-text-content-black"
